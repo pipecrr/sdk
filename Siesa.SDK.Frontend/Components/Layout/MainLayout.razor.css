@@ -1,0 +1,35 @@
+﻿.gridlayout-content-parent {
+    display:flex;
+    justify-content: center;
+}
+.gridlayout-content {
+    padding: 10px;
+    background: #ffffff;
+    margin-top: 20px;
+    min-width: 90%;
+    border-radius: 7px;
+    
+}
+
+.gridlayout-header {
+    background: #1F4281 0% 0% no-repeat padding-box;
+    opacity: 1;
+    color: #fff;
+    height: 60px;
+}
+.gridlayout-bar-parent{
+    background-color: #fff;
+    height: 50px;
+    -webkit-box-shadow: 0px 10px 13px -7px #0000001c, 0px 0px 0px 0px rgba(0,0,0,0); 
+    box-shadow: 0px 10px 13px -7px #0000001c, 0px 0px 0px 0px rgba(0,0,0,0);
+    align-items:center;
+}
+.gridlayout-bar {
+    min-width: 90%;
+}
+/* Mobile */
+@media only screen and (max-width: 600px) {
+    .gridlayout-content {
+        min-width: 100%;
+    }
+}

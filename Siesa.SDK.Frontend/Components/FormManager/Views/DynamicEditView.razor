@@ -1,0 +1,15 @@
+﻿@page "/{BusinessName}/edit/{BusinessObjId}/"
+@using Siesa.SDK.Business;
+@inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicEditViewModel
+@if (ErrorMsg != null && ErrorMsg != "")
+{
+    <text>@ErrorMsg</text>
+}
+else if (BusinessObj.BaseObj == null)
+{
+    <text>Loading...</text>
+}
+else if (BusinessObj.BaseObj.RowID != 0)
+{
+    @CreateDynamicComponent();
+}

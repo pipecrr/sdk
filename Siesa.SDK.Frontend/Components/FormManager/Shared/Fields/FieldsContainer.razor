@@ -1,0 +1,13 @@
+﻿<ORow>
+    @foreach(FieldOptions fld in Fields)
+    {
+        <DynamicField FieldOpt="@fld" ModelObj="@ModelObj" />
+    }
+</ORow>
+
+
+@code {
+    [Parameter]public List<FieldOptions> Fields { get; set; }
+
+    [Parameter] public object ModelObj { get; set; }
+}

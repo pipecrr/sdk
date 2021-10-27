@@ -1,0 +1,42 @@
+﻿@using Siesa.SDK.Frontend.Components.FormManager.Shared.Fields
+@if (Paneles == null || Paneles.Count <= 0)
+{
+    <label>No hay definicion para la vista</label>
+}
+else if (ModelLoaded == true)
+{
+
+
+            
+
+<OForm>
+    <FieldsContainer Fields="@Paneles[0].Fields" ModelObj="@BusinessObj" />
+    @if (Paneles.Count > 1)
+    {
+        <OTabSet>
+            <TabList>
+
+                @for (int i = 1; i < Paneles.Count; i++)
+                {
+
+                    <OTab Id="@Paneles[@i].PanelId" Label="@Paneles[@i].Label" />
+                }
+            </TabList>
+            <ContentList>
+                @foreach (var j in Enumerable.Range(1, Paneles.Count - 1))
+                {
+
+                    <TabContent Id="@Paneles[@j].PanelId" PreserveDOM="@Paneles[@j].PreserveDOM">
+                        <FieldsContainer Fields="@Paneles[@j].Fields" ModelObj="@BusinessObj" />
+                    </TabContent>
+
+                }
+
+            </ContentList>
+        </OTabSet>
+
+    }
+</OForm>
+
+
+}

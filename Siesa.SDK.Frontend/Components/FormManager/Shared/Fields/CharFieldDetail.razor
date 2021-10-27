@@ -1,0 +1,17 @@
+﻿@inherits FieldClass<string>
+
+
+<OFormGroup FieldId="@FieldOpt.Id" Label="@FieldOpt.Label"
+            SM="@(FieldOpt.ColSize.ContainsKey("SM") ? FieldOpt.ColSize["SM"].ToString() : null)"
+            MD="@(FieldOpt.ColSize.ContainsKey("MD") ? FieldOpt.ColSize["MD"].ToString() : null)"
+            XS="@(FieldOpt.ColSize.ContainsKey("XS") ? FieldOpt.ColSize["XS"].ToString() : null)"
+            LG="@(FieldOpt.ColSize.ContainsKey("LG") ? FieldOpt.ColSize["LG"].ToString() : null)"
+            XL="@(FieldOpt.ColSize.ContainsKey("XL") ? FieldOpt.ColSize["XL"].ToString() : null)">
+    <p style="word-wrap: break-word">@GetValue @Switcher?.CustomLogicDetail()</p>
+</OFormGroup>
+
+@code{
+    [CascadingParameter]
+    public FieldViewSwitcher Switcher { get; set; }
+}
+

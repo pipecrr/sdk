@@ -1,0 +1,62 @@
+﻿<div class="@GetClass()">
+    <label for="@FieldId"><strong>@Label</strong></label>
+    @ChildContent
+</div>
+
+@code {
+    [Parameter]
+    public string SM { get; set; }
+
+    [Parameter]
+    public string MD { get; set; }
+
+    [Parameter]
+    public string XS { get; set; }
+
+    [Parameter]
+    public string LG { get; set; }
+
+    [Parameter]
+    public string XL { get; set; }
+
+    [Parameter]
+    public string Class { get; set; } = "";
+
+    [Parameter]
+    public string FieldId { get; set; }
+
+    [Parameter]
+    public string Label { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+
+    private string GetClass()
+    {
+        string strRes = $"{Class} form-group";
+
+        if(SM != null)
+        {
+            strRes += $" col-sm-{SM}";
+        }
+        if(MD != null)
+        {
+            strRes += $" col-md-{MD}";
+        }
+        if(XS != null)
+        {
+            strRes += $" col-xs-{XS}";
+        }
+        if(LG != null)
+        {
+            strRes += $" col-lg-{LG}";
+        }
+        if(XL != null)
+        {
+            strRes += $" col-xl-{XL}";
+        }
+        return strRes;
+
+    }
+}

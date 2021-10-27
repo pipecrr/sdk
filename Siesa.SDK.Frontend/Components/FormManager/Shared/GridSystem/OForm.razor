@@ -1,0 +1,30 @@
+﻿
+<CascadingValue Value="@IsForm" Name="IsForm">
+    <form class="@GetClass()">
+        @ChildContent
+    </form>
+</CascadingValue>
+@code {
+    private readonly Boolean IsForm = true;
+
+    [Parameter]
+    public bool IsInline { get; set; } = false;
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public string Class { get; set; } = "";
+
+
+    private string GetClass()
+    {
+        string strRes = Class;
+        if (IsInline)
+        {
+            strRes += " form-inline ";
+        }
+        return strRes;
+    }
+
+}

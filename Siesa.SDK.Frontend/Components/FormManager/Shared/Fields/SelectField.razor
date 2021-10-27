@@ -1,0 +1,13 @@
+﻿@inherits FieldClass<ListOption>
+
+    <OFormGroup FieldId="@FieldOpt.Id" Label="@FieldOpt.Label"
+                SM="@(FieldOpt.ColSize.ContainsKey("SM") ? FieldOpt.ColSize["SM"].ToString() : null)"
+                MD="@(FieldOpt.ColSize.ContainsKey("MD") ? FieldOpt.ColSize["MD"].ToString() : null)"
+                XS="@(FieldOpt.ColSize.ContainsKey("XS") ? FieldOpt.ColSize["XS"].ToString() : null)"
+                LG="@(FieldOpt.ColSize.ContainsKey("LG") ? FieldOpt.ColSize["LG"].ToString() : null)"
+                XL="@(FieldOpt.ColSize.ContainsKey("XL") ? FieldOpt.ColSize["XL"].ToString() : null)">
+        <DxComboBox Data="@FieldOpt.Options" TData="ListOption" TValue="string" CssClass="@FieldOpt.CssClass" SelectedItemChanged="@((newSel) => SetAttr( newSel))"
+                    TextFieldName="Label" SelectedItem="@GetValue" NullText="@FieldOpt.Placeholder" ReadOnly="@FieldOpt.Disabled" 
+                    @attributes="FieldOpt.CustomAtributes" ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                    FilteringMode="DataGridFilteringMode.Contains"></DxComboBox>
+    </OFormGroup>

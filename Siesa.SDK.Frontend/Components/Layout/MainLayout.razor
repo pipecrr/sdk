@@ -1,0 +1,33 @@
+﻿@inherits LayoutComponentBase
+<DxGridLayout>
+    <Rows>
+        <DxGridLayoutRow Height="auto" />
+        <DxGridLayoutRow />
+    </Rows>
+    <Columns>
+        <DxGridLayoutColumn />
+    </Columns>
+    <Items>
+        <DxGridLayoutItem Row="0" Column="0">
+            <Template>
+                <div class="gridlayout-header gridlayout-item">
+                    <NavMenu />
+                </div>
+            </Template>
+        </DxGridLayoutItem>
+        <DxGridLayoutItem Row="1" Column="0">
+            <Template>
+                <div class="gridlayout-content-parent gridlayout-bar-parent gridlayout-item">
+                    <div class="gridlayout-bar">
+                        White
+                    </div>
+                </div>
+                    <div class="gridlayout-content-parent gridlayout-item">
+                        <div class="gridlayout-content">
+                            @Body
+                        </div>
+                    </div>
+            </Template>
+        </DxGridLayoutItem>
+    </Items>
+</DxGridLayout>

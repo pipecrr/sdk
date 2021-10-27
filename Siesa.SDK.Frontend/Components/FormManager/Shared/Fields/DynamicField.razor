@@ -1,0 +1,87 @@
+﻿
+@switch (FieldType)
+{
+    case "CharField":
+        @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
+        {
+            <FieldViewSwitcher ViewContext="@FieldOpt.ViewContext">
+                <FieldDetailViewDef>
+                    <CharFieldDetail BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" />
+                </FieldDetailViewDef>
+                <FieldEditViewDef>
+                    <CharField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" EscucharA="@FieldOpt.EscucharA" />
+                </FieldEditViewDef>
+            </FieldViewSwitcher>
+        }
+        else
+        {
+            <CharField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  EscucharA="@FieldOpt.EscucharA" />
+        }
+        break;
+    case "DecimalField":
+        <DecimalField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" EscucharA="@FieldOpt.EscucharA" />
+        break;
+    case "IntegerField":
+        @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
+        {
+            <FieldViewSwitcher ViewContext="@FieldOpt.ViewContext">
+                <FieldDetailViewDef>
+                    <IntegerFieldDetail BindModel="@fieldModelObj" FieldName="@fieldName"  FieldOpt="@FieldOpt" />
+                </FieldDetailViewDef>
+                <FieldEditViewDef>
+                    <IntegerField BindModel="@fieldModelObj"  FieldName="@fieldName"  FieldOpt="@FieldOpt" EscucharA="@FieldOpt.EscucharA" />
+                </FieldEditViewDef>
+            </FieldViewSwitcher>
+        }
+        else
+        {
+            <IntegerField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  EscucharA="@FieldOpt.EscucharA" />
+        }
+        break;
+    case "MultiSelectField":
+        <MultiSelectField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  EscucharA="@FieldOpt.EscucharA" />
+        break;
+    case "SelectField":
+        <SelectField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  EscucharA="@FieldOpt.EscucharA" />
+        break;
+    case "DateField":
+    case "DateTimeField":
+        @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
+        {
+            <FieldViewSwitcher ViewContext="@FieldOpt.ViewContext">
+                <FieldDetailViewDef>
+                    <DateFieldDetail BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+                </FieldDetailViewDef>
+                <FieldEditViewDef>
+                    <DateField BindModel="@fieldModelObj" FieldName="@fieldName"  FieldOpt="@FieldOpt" EscucharA="@FieldOpt.EscucharA" />
+                </FieldEditViewDef>
+            </FieldViewSwitcher>
+        }
+        else
+        {
+            <DateField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  EscucharA="@FieldOpt.EscucharA" />
+        }
+        break;
+    case "TextField":
+        <TextField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  EscucharA="@FieldOpt.EscucharA" />
+        break;
+    case "BooleanField":
+    @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
+        {
+        <FieldViewSwitcher ViewContext="@FieldOpt.ViewContext">
+            <FieldDetailViewDef>
+                <BooleanFieldDetail BindModel="@fieldModelObj" FieldName="@fieldName"  FieldOpt="@FieldOpt" />
+            </FieldDetailViewDef>
+            <FieldEditViewDef>
+                <BooleanField BindModel="@fieldModelObj" FieldName="@fieldName"  FieldOpt="@FieldOpt" EscucharA="@FieldOpt.EscucharA" />
+            </FieldEditViewDef>
+        </FieldViewSwitcher>
+        }else{
+            <BooleanField BindModel="@fieldModelObj" FieldName="@fieldName"  FieldOpt="@FieldOpt" EscucharA="@FieldOpt.EscucharA" />
+
+        }
+        break;
+    default:
+        <span>@FieldOpt.FieldType No implementado</span>
+        break;
+}

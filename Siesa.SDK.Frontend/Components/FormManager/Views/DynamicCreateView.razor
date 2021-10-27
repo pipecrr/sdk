@@ -1,0 +1,15 @@
+﻿@page "/{BusinessName}/create/"
+@using Siesa.SDK.Business;
+@inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicCreateViewModel
+@if (ErrorMsg != null && ErrorMsg != "")
+{
+    <text>@ErrorMsg</text>
+}
+else if (BusinessObj == null)
+{
+    <text>Loading...</text>
+}
+else if (BusinessObj != null)
+{
+    @CreateDynamicComponent();
+}

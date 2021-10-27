@@ -1,0 +1,49 @@
+﻿@if (Show || PreserveDOM)
+{
+    <div class="tab-pane @GetClassCss()" id="@Id" role="tabpanel" aria-labelledby="@Id">
+        @ChildContent
+    </div>
+}
+
+
+@code {
+
+    [CascadingParameter] OTabSet TabSet { get; set; }
+
+
+    [Parameter] public bool PreserveDOM { get; set; } = true;
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public string Id { get; set; }
+
+    protected bool Show { get; set; } = false;
+
+    protected override void OnInitialized()
+    {
+        TabSet.AddContent(this);
+
+    }
+
+    private string GetClassCss()
+    {
+        if (Show)
+        {
+            return "show active";
+        }
+        else
+        {
+            return "fade";
+        }
+
+    }
+
+    public void ChildRender()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Toggle()
+    {
+        Show = !Show;
+        InvokeAsync(StateHasChanged);
+    }
+}

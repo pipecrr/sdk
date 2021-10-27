@@ -1,0 +1,26 @@
+﻿@inherits FieldClass<DateTime>
+
+
+<OFormGroup FieldId="@FieldOpt.Id" Label="@FieldOpt.Label"
+            SM="@(FieldOpt.ColSize.ContainsKey("SM") ? FieldOpt.ColSize["SM"].ToString() : null)"
+            MD="@(FieldOpt.ColSize.ContainsKey("MD") ? FieldOpt.ColSize["MD"].ToString() : null)"
+            XS="@(FieldOpt.ColSize.ContainsKey("XS") ? FieldOpt.ColSize["XS"].ToString() : null)"
+            LG="@(FieldOpt.ColSize.ContainsKey("LG") ? FieldOpt.ColSize["LG"].ToString() : null)"
+            XL="@(FieldOpt.ColSize.ContainsKey("XL") ? FieldOpt.ColSize["XL"].ToString() : null)">
+    <InputGroup>
+        <InputFragment>
+            <DxDateEdit Date="@(BindProperty != DateTime.MinValue ? (DateTime)GetValue : DateTime.Today)" @attributes="FieldOpt.CustomAtributes" DateChanged="@((DateTime newValue) => SetAttr(newValue))"
+                        PickerDisplayMode="DatePickerDisplayMode.Auto" NullText="@FieldOpt.Placeholder"
+                        CssClass="@FieldOpt.CssClass" ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                        ReadOnly="@FieldOpt.Disabled" Id="@FieldOpt.Id"></DxDateEdit>
+        </InputFragment>
+        <BtnFragment>
+            @Switcher?.CustomLogicEdit()
+        </BtnFragment>
+    </InputGroup>
+</OFormGroup>
+
+@code{
+    [CascadingParameter]
+    public FieldViewSwitcher Switcher { get; set; }
+}

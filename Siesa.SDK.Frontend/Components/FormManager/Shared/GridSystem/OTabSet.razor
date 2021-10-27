@@ -1,0 +1,80 @@
+﻿
+    <CascadingValue Value="this">
+        <ul class="nav nav-pills bg-light p-2" id="myTab" role="tablist">
+            @TabList
+            
+            @*@foreach (var tb in Tabs)
+            {
+                @tb.RenderContent
+            }*@
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+            @ContentList
+        </div>
+
+    </CascadingValue>
+@code{
+    [Parameter] public RenderFragment SelectedContent { get; set; }
+
+    [Parameter] public RenderFragment TabList { get; set; }
+    [Parameter] public RenderFragment ContentList { get; set; }
+
+
+    private string ActiveId;
+
+    Dictionary<string, OTab> Tabs = new Dictionary<string, OTab>();
+    Dictionary<string, TabContent> Contents = new Dictionary<string, TabContent>();
+
+
+    public void AddContent(TabContent cnt)
+    {
+        if (!Contents.ContainsKey(cnt.Id))
+        {
+
+            Contents.Add(cnt.Id, cnt);
+            if(Contents.Count == 1)
+            {
+                cnt.Toggle();
+            }
+            cnt.ChildRender();
+
+        }
+
+    }
+
+
+    public void AddTab(OTab tab)
+    {
+        if (!Tabs.ContainsKey(tab.Id))
+        {
+            Tabs.Add(tab.Id, tab);
+            if(Tabs.Count == 1)
+            {
+                tab.Toggle();
+                ActiveId = tab.Id;
+            }
+
+        }
+
+    }
+
+    public void ActivateTab(string id)
+    {
+        if(ActiveId != null)
+        {
+            Contents[ActiveId].Toggle();
+            Tabs[ActiveId].Toggle();
+
+        }
+        Contents[id].Toggle();
+        Tabs[id].Toggle();
+        ActiveId = id;
+
+    }
+
+    public void RefreshMe()
+    {
+        StateHasChanged();
+    }
+}

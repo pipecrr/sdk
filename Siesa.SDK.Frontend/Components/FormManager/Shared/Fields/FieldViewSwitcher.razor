@@ -1,0 +1,63 @@
+﻿@if (ViewContext == DetailView)
+{
+    <CascadingValue Value=this>
+        @FieldDetailViewDef
+    </CascadingValue>
+}
+else
+{
+    <CascadingValue Value=this>
+        @FieldEditViewDef
+    </CascadingValue>
+}
+
+@code {
+
+    public const string DetailView = "DetailView";
+    public const string EditView = "EditView";
+
+    [Parameter]
+    public RenderFragment FieldDetailViewDef { get; set; }
+
+    [Parameter]
+    public RenderFragment FieldEditViewDef { get; set; }
+
+    [Parameter]
+    public string ViewContext { get; set; }
+
+    public RenderFragment BtnAccept =@<div></div>;
+
+    public RenderFragment BtnCancel = @<div></div>;
+
+    public RenderFragment BtnEditInline = @<div></div>;
+
+    protected override void OnInitialized()
+    {
+        BtnAccept = @<button class="btn btn-outline-secondary btn-sm" type="button" @onclick="LockInDetailView" @onclick:preventDefault="true">Aceptar</button>;
+        BtnCancel = @<button class="btn btn-outline-secondary btn-sm" type="button" @onclick="LockInDetailView" @onclick:preventDefault="true">Cancelar</button>;
+        BtnEditInline = @<span class="badge badge-light" style="cursor: pointer" @onclick="LockInEditView" @onclick:preventDefault="true">Editar</span>;
+    }
+
+    public RenderFragment CustomLogicEdit()
+    {
+        return @<div>
+            @BtnAccept
+            @BtnCancel
+        </div>;
+    }
+
+    public RenderFragment CustomLogicDetail()
+    {
+        return @BtnEditInline;
+    }
+
+    public void LockInEditView(MouseEventArgs args)
+    {
+        ViewContext = EditView;
+    }
+
+    public void LockInDetailView(MouseEventArgs args)
+    {
+        ViewContext = DetailView;
+    }
+}
