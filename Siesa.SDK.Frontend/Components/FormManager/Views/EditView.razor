@@ -8,8 +8,8 @@ else if (Loading == true)
     <label>Cargando...</label>
 }else if(BusinessObj.BaseObj.RowID != 0) {
 <OForm>
-    <DxButton RenderStyle="ButtonRenderStyle.Primary" Click="SaveBusiness"
-              Text="Guardar" />
+    <DxButton RenderStyle="ButtonRenderStyle.Primary" Click="SaveBusiness" Text="Guardar" />
+    <DxButton RenderStyle="ButtonRenderStyle.Secondary" Click="GoToList" Text="Cancelar" />
     <FieldsContainer Fields="@Paneles[0].Fields" ModelObj="@BusinessObj" />
     @if (Paneles.Count > 1)
     {

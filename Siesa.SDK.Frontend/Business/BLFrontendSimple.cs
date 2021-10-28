@@ -53,9 +53,16 @@ namespace Siesa.SDK.Business
             throw new NotImplementedException();
         }
 
-        public virtual void Delete()
+        public virtual int Delete()
         {
-            throw new NotImplementedException();
+            return DeleteAsync().GetAwaiter().GetResult();
+        }
+
+        public async virtual Task<int> DeleteAsync()
+        {
+            var businness = Frontend.BusinessManager.Instance.GetBusiness(BusinessName);
+            var result = await businness.Delete(BaseObj.RowID);
+            return result;
         }
 
         public virtual IEnumerable<T> List(int page, int pageSize)

@@ -61,13 +61,14 @@ namespace Siesa.SDK.Business
             throw new NotImplementedException();
         }
 
-        public virtual void Delete()
+        public virtual int Delete()
         {
             using (SDKContext context = _dbFactory.CreateDbContext())
             {
                 context.Set<T>().Remove(BaseObj);
                 context.SaveChanges();
             }
+            return 0;
         }
 
         public virtual IEnumerable<T> List(int page = 0, int pageSize = 30)

@@ -79,5 +79,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         {
             NavManager.NavigateTo($"{BusinessName}/");
         }
+
+        private async Task DeleteBusiness()
+        {
+            await BusinessObj.DeleteAsync();
+            NavManager.NavigateTo($"{BusinessName}/");
+        }
     }
 }

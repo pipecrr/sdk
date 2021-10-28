@@ -13,7 +13,7 @@ namespace Siesa.SDK.Business
         Task<T> GetAsync(int id);
         int Save();
         void Update();
-        void Delete();
+        int Delete();
         IEnumerable<T> List(int page, int pageSize);
 
     }

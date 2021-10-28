@@ -67,6 +67,20 @@ namespace Siesa.SDK.GRPCServices
             return Task.FromResult(response);
         }
 
+        public override Task<Protos.DeleteBusinessObjResponse> DeleteBusinessObj(Protos.DeleteBusinessObjRequest request, ServerCallContext context)
+        {
+            BusinessModel businessRegistry = BusinessManager.Instance.GetBusiness(request.BusinessName);
+            var businessType = FindType(businessRegistry.Namespace + "." + businessRegistry.Name);
+            dynamic businessObj = Activator.CreateInstance(businessType);
+            businessObj.SetProvider(_provider);
+
+            var response = new Protos.DeleteBusinessObjResponse();
+            var result = businessObj.Get(request.Id);
+            businessObj.BaseObj = result;
+            response.Id = businessObj.Delete();
+            return Task.FromResult(response);
+        }
+
 
     }
 }

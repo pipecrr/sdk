@@ -9,6 +9,7 @@ service SDK {
   rpc GetBusinessObj (GetBusinessObjRequest) returns (BusinessObjResponse);
 
   rpc SaveBusinessObj (SaveBusinessObjRequest) returns (SaveBusinessObjResponse);
+  rpc DeleteBusinessObj (DeleteBusinessObjRequest) returns (DeleteBusinessObjResponse);
 }
 
 message GetBusinessesRequest {
@@ -38,5 +39,14 @@ message SaveBusinessObjRequest {
 }
 
 message SaveBusinessObjResponse {
+  int32 id = 1;
+}
+
+message DeleteBusinessObjRequest {
+  int32 id = 1;
+  string businessName = 2;
+}
+
+message DeleteBusinessObjResponse {
   int32 id = 1;
 }

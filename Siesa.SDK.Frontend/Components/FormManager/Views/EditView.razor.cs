@@ -71,5 +71,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             Loading = false;
             NavManager.NavigateTo($"{BusinessName}/detail/{id}/");
         }
+
+        private void GoToList()
+        {
+            NavManager.NavigateTo($"{BusinessName}/");
+        }
     }
 }

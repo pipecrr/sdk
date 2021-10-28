@@ -65,5 +65,19 @@ namespace Siesa.SDK.Frontend.Backend
             return response.Response;
 
         }
+
+        public async Task<int> DeleteBusinessObj(string business_name, int id)
+        {
+            using var channel = GrpcChannel.ForAddress(this.Url);
+            var client = new Protos.SDK.SDKClient(channel);
+            var request = new Protos.DeleteBusinessObjRequest
+            {
+                Id = id,
+                BusinessName = business_name
+            };
+            var response = await client.DeleteBusinessObjAsync(request);
+            return response.Id;
+
+        }
     }
 }
