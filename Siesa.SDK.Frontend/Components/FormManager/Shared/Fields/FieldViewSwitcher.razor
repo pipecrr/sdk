@@ -35,7 +35,8 @@ else
     {
         BtnAccept = @<button class="btn btn-outline-secondary btn-sm" type="button" @onclick="LockInDetailView" @onclick:preventDefault="true">Aceptar</button>;
         BtnCancel = @<button class="btn btn-outline-secondary btn-sm" type="button" @onclick="LockInDetailView" @onclick:preventDefault="true">Cancelar</button>;
-        BtnEditInline = @<span class="badge badge-light" style="cursor: pointer" @onclick="LockInEditView" @onclick:preventDefault="true">Editar</span>;
+        BtnEditInline = null;
+        //BtnEditInline = @<span class="badge badge-light" style="cursor: pointer" @onclick="LockInEditView" @onclick:preventDefault="true">Editar</span>;
     }
 
     public RenderFragment CustomLogicEdit()
