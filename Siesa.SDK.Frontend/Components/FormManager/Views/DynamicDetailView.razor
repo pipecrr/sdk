@@ -1,6 +1,5 @@
 ﻿@page "/{BusinessName}/detail/{BusinessObjId}/"
-@using Siesa.SDK.Business;
-@inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicDetailViewModel
+@inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
 @if (ErrorMsg != null && ErrorMsg != "")
 {
     <text>@ErrorMsg</text>

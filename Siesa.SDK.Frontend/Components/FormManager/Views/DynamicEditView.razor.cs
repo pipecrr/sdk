@@ -1,18 +1,13 @@
-﻿using Microsoft.AspNetCore.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
+﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
+using Siesa.SDK.Business;
+using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
 
-
-namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
+namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
-    public class DynamicDetailViewModel: DynamicBaseViewModel
+    public partial class DynamicEditView : DynamicBaseViewModel
     {
-
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
@@ -22,7 +17,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             }
             catch (System.Exception e)
             {
-                Console.WriteLine("Error DetailViewModel", e.ToString());
+                Console.WriteLine("Error EditViewModel", e.ToString());
                 ErrorMsg = e.ToString();
             }
 
@@ -30,7 +25,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         public new RenderFragment CreateDynamicComponent() => builder =>
         {
-            var viewType = typeof(Views.DetailView);
+            var viewType = typeof(Views.EditView);
             builder.OpenComponent(0, viewType);
             builder.AddAttribute(1, "BusinessObj", BusinessObj);
             builder.AddAttribute(2, "BusinessName", BusinessName);
