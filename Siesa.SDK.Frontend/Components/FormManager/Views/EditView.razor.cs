@@ -17,15 +17,17 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public dynamic BusinessObj { get; set; }
 
         [Inject] public IJSRuntime JSRuntime { get; set; }
+        [Inject] public NavigationManager NavManager { get; set; }
 
         [Inject] public RefreshService RService { get; set; }
         protected List<Panel> Paneles = new List<Panel>();
 
-        public Boolean ModelLoaded = false;
+        public Boolean Loading = true;
 
         public String ErrorMsg = "";
 
         protected void InitView(string bName = null) {
+            Loading = true;
             if (bName == null) {
                 bName = BusinessName;
             }
@@ -37,8 +39,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             else
             {
                 Paneles = JsonConvert.DeserializeObject<List<Panel>>(metadata);
-                ModelLoaded = true;
             }
+            Loading = false;
             StateHasChanged();
         }
 
@@ -55,15 +57,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 if (value != null)
                 {
-                    this.ModelLoaded = false;
+                    Loading = false;
                     InitView(value);
                 }
             }            
         }
 
-        private void SaveBusiness()
+        private async Task SaveBusiness()
         {
-            BusinessObj.Save();
+            Loading = true;
+            StateHasChanged();
+            var id = await BusinessObj.SaveAsync();
+            Loading = false;
+            NavManager.NavigateTo($"{BusinessName}/detail/{id}/");
         }
     }
 }

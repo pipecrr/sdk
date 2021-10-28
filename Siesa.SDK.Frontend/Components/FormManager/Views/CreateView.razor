@@ -3,8 +3,11 @@
 @if (Paneles == null || Paneles.Count <= 0)
 {
     <label>No hay definicion para la vista</label>
+}else if (Loading == true)
+{
+    <label>Cargando...</label>
 }
-else if (ModelLoaded == true)
+else if (BusinessObj.BaseObj != null)
 {
 
 
@@ -32,7 +35,8 @@ else if (ModelLoaded == true)
             
 
 <OForm>
-    <button @onclick="SaveBusiness">Guardar</button>
+    <DxButton RenderStyle="ButtonRenderStyle.Primary" Click="SaveBusiness"
+              Text="Guardar" />
     <FieldsContainer Fields="@Paneles[0].Fields" ModelObj="@BusinessObj" />
     @if (Paneles.Count > 1)
     {

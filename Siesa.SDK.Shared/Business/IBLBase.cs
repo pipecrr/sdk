@@ -11,7 +11,7 @@ namespace Siesa.SDK.Business
         T BaseObj { get; set; }
         T Get(int id);
         Task<T> GetAsync(int id);
-        void Save();
+        int Save();
         void Update();
         void Delete();
         IEnumerable<T> List(int page, int pageSize);

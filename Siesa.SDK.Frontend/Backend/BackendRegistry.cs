@@ -37,11 +37,10 @@ namespace Siesa.SDK.Frontend.Backend
 
         }
 
-        public async Task<string> SaveBusiness(string business_name, dynamic obj)
+        public async Task<int> SaveBusiness(string business_name, dynamic obj)
         {
             using var channel = GrpcChannel.ForAddress(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
-            //obj to json
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(obj);
             var request = new Protos.SaveBusinessObjRequest
             {
@@ -49,7 +48,7 @@ namespace Siesa.SDK.Frontend.Backend
                 BusinessName = business_name
             };
             var response = await client.SaveBusinessObjAsync(request);
-            return "todo";
+            return response.Id;
 
         }
 

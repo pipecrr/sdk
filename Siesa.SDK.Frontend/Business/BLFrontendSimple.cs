@@ -12,6 +12,7 @@ namespace Siesa.SDK.Business
     {
         public string BusinessName { get; set; }
         public T BaseObj { get; set; }
+
         public BLFrontendSimple()
         {
             BaseObj = Activator.CreateInstance<T>();
@@ -30,15 +31,21 @@ namespace Siesa.SDK.Business
             return result;
         }
 
+        public async virtual Task<int> SaveAsync()
+        {
+            var businness = Frontend.BusinessManager.Instance.GetBusiness(BusinessName);
+            var result = await businness.Save(this);
+            return result;
+        }
+
         public async virtual Task InitializeBusiness(int id)
         {
             BaseObj = await GetAsync(id);
         }
 
-        public virtual void Save()
+        public virtual int Save()
         {
-            var businness = Frontend.BusinessManager.Instance.GetBusiness(BusinessName);
-            businness.Save(this);
+            return SaveAsync().GetAwaiter().GetResult();
         }
 
         public virtual void Update()

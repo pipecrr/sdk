@@ -63,8 +63,7 @@ namespace Siesa.SDK.GRPCServices
             //json deserialize using Newtonsoft.Json
             dynamic businessObj = Newtonsoft.Json.JsonConvert.DeserializeObject(request.Business, businessType);
             businessObj.SetProvider(_provider);
-
-            businessObj.Save();
+            response.Id = businessObj.Save();
             return Task.FromResult(response);
         }
 

@@ -3,14 +3,13 @@
 {
     <label>No hay definicion para la vista</label>
 }
-else if (ModelLoaded == true)
+else if (Loading == true)
 {
-
-
-            
-
+    <label>Cargando...</label>
+}else if(BusinessObj.BaseObj.RowID != 0) {
 <OForm>
-    <button @onclick="SaveBusiness">Guardar</button>
+    <DxButton RenderStyle="ButtonRenderStyle.Primary" Click="SaveBusiness"
+              Text="Guardar" />
     <FieldsContainer Fields="@Paneles[0].Fields" ModelObj="@BusinessObj" />
     @if (Paneles.Count > 1)
     {
@@ -38,6 +37,5 @@ else if (ModelLoaded == true)
 
     }
 </OForm>
-
 
 }

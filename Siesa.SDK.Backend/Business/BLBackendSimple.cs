@@ -37,7 +37,7 @@ namespace Siesa.SDK.Business
             } 
         }
 
-        public virtual void Save()
+        public virtual int Save()
         {
             using (SDKContext context = _dbFactory.CreateDbContext())
             {
@@ -53,6 +53,7 @@ namespace Siesa.SDK.Business
                 
                 context.SaveChanges(); //TODO: Capturar errores db y hacer rollback
             }
+            return BaseObj.RowID;
         }
 
         public virtual void Update()

@@ -10,6 +10,8 @@ else if (ModelLoaded == true)
             
 
 <OForm>
+    <DxButton RenderStyle="ButtonRenderStyle.Primary" Click="GoToEdit" Text="Editar" />
+    <DxButton RenderStyle="ButtonRenderStyle.Primary" Click="GoToList" Text="Listar" />
     <FieldsContainer Fields="@Paneles[0].Fields" ModelObj="@BusinessObj" />
     @if (Paneles.Count > 1)
     {

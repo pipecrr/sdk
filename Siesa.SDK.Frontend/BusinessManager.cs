@@ -17,11 +17,10 @@ namespace Siesa.SDK.Frontend
         public string Entity { get; set; }
         public string BackendName { get; set; }
 
-        public string Save(dynamic obj)
+        public dynamic Save(dynamic obj)
         {
             BackendRegistry backend = BackendManager.Instance.GetBackend(BackendName);
-            string result = backend.SaveBusiness(Name, obj).GetAwaiter().GetResult();
-            return result;
+            return backend.SaveBusiness(Name, obj);
         }
 
         public dynamic Get(int id)
