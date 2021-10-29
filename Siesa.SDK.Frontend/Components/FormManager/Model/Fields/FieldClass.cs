@@ -68,6 +68,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             }            
         }
 
+        public void SetValue(TProperty value)
+        {
+            BindValue = value;
+        }
+
         public RenderFragment? FieldValidationTemplate
         {
             get
