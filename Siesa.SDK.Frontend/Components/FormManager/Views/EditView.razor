@@ -16,7 +16,6 @@ else if (BusinessObj.BaseObj.RowID != 0)
               OnValidSubmit="@HandleValidSubmit"
               OnInvalidSubmit="@HandleInvalidSubmit"
               Context="EditFormContext">
-        <DataAnnotationsValidator />
         <ObjectGraphDataAnnotationsValidator />
         <DxButton RenderStyle="ButtonRenderStyle.Primary" SubmitFormOnClick="true" Text="Guardar" />
         <DxButton RenderStyle="ButtonRenderStyle.Secondary" Click="GoToList" Text="Cancelar" />
@@ -41,7 +40,6 @@ else if (BusinessObj.BaseObj.RowID != 0)
 
             }
         </DxFormLayout>
-        <ValidationSummary />
     </EditForm>
 
 }

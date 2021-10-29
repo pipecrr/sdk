@@ -2,9 +2,10 @@
 
 <DxTextBox @bind-Text="@BindValue"
            NullText="@FieldOpt.Placeholder"
-           CssClass="@FieldOpt.CssClass"
-           @attributes="FieldOpt.CustomAtributes"
+           CssClass="@((IsRequired && (BindValue == null || BindValue.Length == 0) ? "invalid" : "") + FieldOpt.CssClass)"
            ReadOnly="@FieldOpt.Disabled"
            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+           maxlength="@(MaxLength > 0 ? MaxLength : null)"
+           required="@(IsRequired ? IsRequired : null)"
            ></DxTextBox>
-<ValidationMessage For="@(()=>BindValue)" />
+@FieldValidationTemplate

@@ -1,10 +1,9 @@
 ﻿@inherits FieldClass<int>
 
-<DxSpinEdit 
-            @bind-Value="@BindValue"
-            NullText="@FieldOpt.Placeholder" 
+<DxSpinEdit @bind-Value="@BindValue"
+            NullText="@FieldOpt.Placeholder"
             ReadOnly="@FieldOpt.Disabled"
-            @attributes="FieldOpt.CustomAtributes" 
-            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" 
-            CssClass="@FieldOpt.CssClass"
-            ></DxSpinEdit>
+            @attributes="FieldOpt.CustomAtributes"
+            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+            CssClass="@FieldOpt.CssClass"></DxSpinEdit>
+@FieldValidationTemplate

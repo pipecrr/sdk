@@ -25,8 +25,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Inject] public IJSRuntime JSRuntime { get; set; }
         [Inject] public NavigationManager NavManager { get; set; }
 
-        [Inject] public RefreshService RService { get; set; }
-
         public Boolean Loading = true;
 
         public String ErrorMsg = "";

@@ -1,13 +1,13 @@
 ﻿@inherits FieldClass<string>
 
-
-
-
 <DxMemo @bind-Text="@BindValue"
+        maxlength="@(MaxLength > 0 ? MaxLength : null)"
+        required="@(IsRequired ? IsRequired : null)"
         NullText="@FieldOpt.Placeholder"
         CssClass="@FieldOpt.CssClass"
         @attributes="FieldOpt.CustomAtributes"
         ReadOnly="@(FieldOpt.Disabled || @FieldOpt.ViewContext == "DetailView")"
         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"></DxMemo>
+@FieldValidationTemplate
 
 

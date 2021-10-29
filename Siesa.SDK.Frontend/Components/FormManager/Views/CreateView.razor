@@ -16,8 +16,8 @@ else if (BusinessObj.BaseObj != null)
     <EditForm Model="@BusinessObj"
               OnValidSubmit="@HandleValidSubmit"
               OnInvalidSubmit="@HandleInvalidSubmit"
-              Context="EditFormContext">
-        <DataAnnotationsValidator />
+              Context="EditFormContext"
+              >
         <ObjectGraphDataAnnotationsValidator />
 
         <DxButton RenderStyle="ButtonRenderStyle.Primary" SubmitFormOnClick="true" Text="Guardar" />
@@ -42,7 +42,6 @@ else if (BusinessObj.BaseObj != null)
 
             }
         </DxFormLayout>
-        <ValidationSummary />
     </EditForm>
 
 }
