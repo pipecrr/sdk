@@ -2,21 +2,24 @@
 using Microsoft.JSInterop;
 using System.Collections.Generic;
 using System;
+using System.Reflection;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 {
     public class FieldClass<TProperty> : ComponentBase 
-    {
-        protected TProperty GetValue { get {
-
-                    return (TProperty)BindModel.GetType().GetProperty(FieldName)?.GetValue(BindModel, null);
-
-         } } //getAttr
+    {         
+        public TProperty BindValue { get {
+                return (TProperty)BindModel.GetType().GetProperty(FieldName)?.GetValue(BindModel, null);
+            }
+            set {
+                BindModel.GetType().GetProperty(FieldName).SetValue(BindModel, value);
+            }
+        }
         [Parameter] public FieldOptions FieldOpt { get; set; }
 
         [Parameter] public object BindModel { get; set; }
 
-        [Parameter] public TProperty BindProperty { get; set; }
+        public TProperty BindProperty { get; set; }
 
         [Parameter] public TProperty Text { get; set; }
 
@@ -63,7 +66,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         
         public void SetAttr(TProperty value)
         {
-            BindModel.GetType().GetProperty(FieldName).SetValue(BindModel, value); //setattr
+            BindValue = value;
             RService.Transmit(FieldName); //TODO Considerar ID o tener un customID en esta clase para modelos mas complejos
         }
 

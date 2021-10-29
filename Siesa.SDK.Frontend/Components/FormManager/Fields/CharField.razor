@@ -1,0 +1,10 @@
+﻿@inherits FieldClass<string>
+
+<DxTextBox @bind-Text="@BindValue"
+           NullText="@FieldOpt.Placeholder"
+           CssClass="@FieldOpt.CssClass"
+           @attributes="FieldOpt.CustomAtributes"
+           ReadOnly="@FieldOpt.Disabled"
+           ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+           ></DxTextBox>
+<ValidationMessage For="@(()=>BindValue)" />

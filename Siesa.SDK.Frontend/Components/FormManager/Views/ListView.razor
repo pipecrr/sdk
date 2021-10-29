@@ -1,0 +1,22 @@
+﻿@using Siesa.SDK.Frontend.Components.FormManager.Fields
+@if (ErrorMsg != "")
+{
+    <label>@ErrorMsg</label>
+}
+else
+{
+    <DxDataGrid T="@object" 
+                CustomData="@LoadData" 
+                ShowFilterRow="true" 
+                ShowPager="true" 
+                PagerNavigationMode="PagerNavigationMode.InputBox"
+                PagerPageSizeSelectorVisible="true"
+                PagerAllDataRowsItemVisible="true"
+                PagerAllowedPageSizes="ListViewModel.Paging.AllowedPageSizes"
+                PageSize="ListViewModel.Paging.PageSize"
+                ColumnResizeMode="DataGridColumnResizeMode.Component"
+                >
+        <DxDataGridCommandColumn Width="100px" NewButtonVisible="false" DeleteButtonVisible="false"></DxDataGridCommandColumn>
+        @BuildColumns();
+    </DxDataGrid>
+}

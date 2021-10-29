@@ -1,45 +1,33 @@
-﻿@using Siesa.SDK.Frontend.Components.FormManager.Shared.Fields
+﻿@using Siesa.SDK.Frontend.Components.FormManager.Fields
 @if (Paneles == null || Paneles.Count <= 0)
 {
     <label>No hay definicion para la vista</label>
 }
 else if (ModelLoaded == true)
 {
-
-
-            
-
-<OForm>
     <DxButton RenderStyle="ButtonRenderStyle.Primary" Click="GoToEdit" Text="Editar" />
     <DxButton RenderStyle="ButtonRenderStyle.Info" Click="GoToList" Text="Listar" />
     <DxButton RenderStyle="ButtonRenderStyle.Danger" Click="DeleteBusiness" Text="Eliminar" />
-    <FieldsContainer Fields="@Paneles[0].Fields" ModelObj="@BusinessObj" />
-    @if (Paneles.Count > 1)
-    {
-        <OTabSet>
-            <TabList>
+    <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
 
-                @for (int i = 1; i < Paneles.Count; i++)
+        @if (Paneles.Count > 1)
+        {
+            <DxFormLayoutTabPages>
+                @foreach (var panel in Paneles)
                 {
-
-                    <OTab Id="@Paneles[@i].PanelId" Label="@Paneles[@i].Label" />
-                }
-            </TabList>
-            <ContentList>
-                @foreach (var j in Enumerable.Range(1, Paneles.Count - 1))
-                {
-
-                    <TabContent Id="@Paneles[@j].PanelId" PreserveDOM="@Paneles[@j].PreserveDOM">
-                        <FieldsContainer Fields="@Paneles[@j].Fields" ModelObj="@BusinessObj" />
-                    </TabContent>
-
+                    <DxFormLayoutTabPage Caption="@panel.Label">
+                        <FieldsContainer Fields="@panel.Fields" ModelObj="@BusinessObj" />
+                    </DxFormLayoutTabPage>
                 }
 
-            </ContentList>
-        </OTabSet>
 
-    }
-</OForm>
+            </DxFormLayoutTabPages>
 
+        }
+        else
+        {
+            <FieldsContainer Fields="@Paneles[0].Fields" ModelObj="@BusinessObj" />
 
+        }
+    </DxFormLayout>
 }

@@ -1,0 +1,7 @@
+limpiar el caché de los recursos
+
+
+El frontend le manda al masterbackend el viewdef y éste se lo devuelve traducido (implementar sistema de caché en ambas partes)
+
+
+

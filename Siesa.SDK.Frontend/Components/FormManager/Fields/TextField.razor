@@ -1,0 +1,13 @@
+﻿@inherits FieldClass<string>
+
+
+
+
+<DxMemo @bind-Text="@BindValue"
+        NullText="@FieldOpt.Placeholder"
+        CssClass="@FieldOpt.CssClass"
+        @attributes="FieldOpt.CustomAtributes"
+        ReadOnly="@(FieldOpt.Disabled || @FieldOpt.ViewContext == "DetailView")"
+        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"></DxMemo>
+
+

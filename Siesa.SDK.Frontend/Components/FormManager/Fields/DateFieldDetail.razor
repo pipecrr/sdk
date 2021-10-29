@@ -1,0 +1,11 @@
+﻿@inherits FieldClass<DateTime>
+
+
+
+<DxDateEdit @bind-Date="@BindValue" 
+            @attributes="FieldOpt.CustomAtributes"
+            PickerDisplayMode="DatePickerDisplayMode.Auto" NullText="@FieldOpt.Placeholder"
+            CssClass="@FieldOpt.CssClass" ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+            ReadOnly="true" Id="@FieldOpt.Id"></DxDateEdit>
+
+

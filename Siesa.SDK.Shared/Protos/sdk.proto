@@ -7,6 +7,7 @@ import "google/protobuf/struct.proto";
 service SDK {
   rpc GetBusinesses (GetBusinessesRequest) returns (BusinessesResponse);
   rpc GetBusinessObj (GetBusinessObjRequest) returns (BusinessObjResponse);
+  rpc GetListBusinessObj (GetListBusinessObjRequest) returns (stream BusinessObjResponse);
 
   rpc SaveBusinessObj (SaveBusinessObjRequest) returns (SaveBusinessObjResponse);
   rpc DeleteBusinessObj (DeleteBusinessObjRequest) returns (DeleteBusinessObjResponse);
@@ -49,4 +50,8 @@ message DeleteBusinessObjRequest {
 
 message DeleteBusinessObjResponse {
   int32 id = 1;
+}
+
+message GetListBusinessObjRequest {
+  string businessName = 1;
 }

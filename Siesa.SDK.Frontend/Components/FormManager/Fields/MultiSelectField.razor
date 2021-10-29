@@ -1,0 +1,7 @@
+﻿@inherits FieldClass<IEnumerable<ListOption>>
+
+
+<DxTagBox Data="@FieldOpt.Options" TData="ListOption" TValue="string" CssClass="@FieldOpt.CssClass" SelectedItemsChanged="@((newSel) => SetAttr( newSel))"
+            @attributes="FieldOpt.CustomAtributes" ReadOnly="@FieldOpt.Disabled" TextFieldName="Label" SelectedItems="@BindValue" NullText="@FieldOpt.Placeholder"
+            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+            FilteringMode="DataGridFilteringMode.Contains"></DxTagBox>

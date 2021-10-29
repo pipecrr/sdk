@@ -9,7 +9,7 @@ using Siesa.SDK.Business;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
-    public partial class CreateView: ComponentBase
+    public partial class CreateView : ComponentBase
     {
         [Parameter]
         public string BusinessName { get; set; }
@@ -26,9 +26,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         public String ErrorMsg = "";
 
-        protected void InitView(string bName = null) {
+        protected void InitView(string bName = null)
+        {
             Loading = true;
-            if (bName == null) {
+            if (bName == null)
+            {
                 bName = BusinessName;
             }
             var metadata = BusinessManager.Instance.GetViewdef(bName, "create");
@@ -60,7 +62,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     Loading = false;
                     InitView(value);
                 }
-            }            
+            }
         }
 
         private async Task SaveBusiness()
@@ -70,6 +72,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             var id = await BusinessObj.SaveAsync();
             Loading = false;
             NavManager.NavigateTo($"{BusinessName}/detail/{id}/");
+        }
+
+        async Task HandleValidSubmit()
+        {
+            ErrorMsg = @"Form data is valid";
+            await SaveBusiness();
+        }
+        void HandleInvalidSubmit()
+        {
+            ErrorMsg = @"Form data is invalid";
         }
     }
 }

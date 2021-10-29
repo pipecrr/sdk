@@ -1,4 +1,4 @@
-﻿@using Siesa.SDK.Frontend.Components.FormManager.Shared.Fields
+﻿@using Siesa.SDK.Frontend.Components.FormManager.Fields
 @if (Paneles == null || Paneles.Count <= 0)
 {
     <label>No hay definicion para la vista</label>
@@ -6,36 +6,42 @@
 else if (Loading == true)
 {
     <label>Cargando...</label>
-}else if(BusinessObj.BaseObj.RowID != 0) {
-<OForm>
-    <DxButton RenderStyle="ButtonRenderStyle.Primary" Click="SaveBusiness" Text="Guardar" />
-    <DxButton RenderStyle="ButtonRenderStyle.Secondary" Click="GoToList" Text="Cancelar" />
-    <FieldsContainer Fields="@Paneles[0].Fields" ModelObj="@BusinessObj" />
-    @if (Paneles.Count > 1)
-    {
-        <OTabSet>
-            <TabList>
+}
+else if (BusinessObj.BaseObj.RowID != 0)
+{
 
-                @for (int i = 1; i < Paneles.Count; i++)
-                {
+    <label>@ErrorMsg</label>
 
-                    <OTab Id="@Paneles[@i].PanelId" Label="@Paneles[@i].Label" />
-                }
-            </TabList>
-            <ContentList>
-                @foreach (var j in Enumerable.Range(1, Paneles.Count - 1))
-                {
+    <EditForm Model="@BusinessObj"
+              OnValidSubmit="@HandleValidSubmit"
+              OnInvalidSubmit="@HandleInvalidSubmit"
+              Context="EditFormContext">
+        <DataAnnotationsValidator />
+        <ObjectGraphDataAnnotationsValidator />
+        <DxButton RenderStyle="ButtonRenderStyle.Primary" SubmitFormOnClick="true" Text="Guardar" />
+        <DxButton RenderStyle="ButtonRenderStyle.Secondary" Click="GoToList" Text="Cancelar" />
+        <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
+            @if (Paneles.Count > 1)
+            {
+                <DxFormLayoutTabPages>
+                    @foreach (var panel in Paneles)
+                    {
+                        <DxFormLayoutTabPage Caption="@panel.Label">
+                            <FieldsContainer Fields="@panel.Fields" ModelObj="@BusinessObj" />
+                        </DxFormLayoutTabPage>
+                    }
 
-                    <TabContent Id="@Paneles[@j].PanelId" PreserveDOM="@Paneles[@j].PreserveDOM">
-                        <FieldsContainer Fields="@Paneles[@j].Fields" ModelObj="@BusinessObj" />
-                    </TabContent>
 
-                }
+                </DxFormLayoutTabPages>
 
-            </ContentList>
-        </OTabSet>
+            }
+            else
+            {
+                <FieldsContainer Fields="@Paneles[0].Fields" ModelObj="@BusinessObj" />
 
-    }
-</OForm>
+            }
+        </DxFormLayout>
+        <ValidationSummary />
+    </EditForm>
 
 }

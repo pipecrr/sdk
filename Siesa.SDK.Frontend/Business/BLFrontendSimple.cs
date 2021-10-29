@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ namespace Siesa.SDK.Business
     public class BLFrontendSimple<T> : IBLBase<T> where T : BaseEntity
     {
         public string BusinessName { get; set; }
+        [ValidateComplexType]
         public T BaseObj { get; set; }
 
         public BLFrontendSimple()

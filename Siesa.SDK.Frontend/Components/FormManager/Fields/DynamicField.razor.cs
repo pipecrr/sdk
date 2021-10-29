@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components;
 using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
 using Siesa.SDK.Entities;
 
-namespace Siesa.SDK.Frontend.Components.FormManager.Shared.Fields
+namespace Siesa.SDK.Frontend.Components.FormManager.Fields
 {
     public partial class DynamicField : ComponentBase
     {
@@ -17,11 +17,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Shared.Fields
         private string fieldName { get; set; }
 
         private string FieldType { get; set; }
-
-        //public string GetProp(string prop)
-        //{
-        //    return (string)fieldModelObj.GetType().GetProperty(prop).GetValue(fieldModelObj, null);
-        //}
 
         private void initField()
         {

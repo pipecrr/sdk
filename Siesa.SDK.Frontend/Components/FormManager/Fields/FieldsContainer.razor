@@ -1,0 +1,21 @@
+﻿@foreach(FieldOptions fld in Fields)
+{
+    <DxFormLayoutItem Caption="@fld.Label"
+                    ColSpanMd="@(fld.ColSize.ContainsKey("MD") ? fld.ColSize["MD"] : 0)"
+                    ColSpanLg="@(fld.ColSize.ContainsKey("LG") ? fld.ColSize["LG"] : 0)"
+                    ColSpanXl="@(fld.ColSize.ContainsKey("XL") ? fld.ColSize["XL"] : 0)"
+                    ColSpanSm="@(fld.ColSize.ContainsKey("SM") ? fld.ColSize["SM"] : 0)"
+                    ColSpanXs="@(fld.ColSize.ContainsKey("XS") ? fld.ColSize["XS"] : 0)">
+        <Template>
+            <DynamicField FieldOpt="@fld" ModelObj="@ModelObj" />
+        </Template>
+    </DxFormLayoutItem>
+    
+}
+
+
+@code {
+    [Parameter] public List<FieldOptions> Fields { get; set; }
+
+    [Parameter] public object ModelObj { get; set; }
+}

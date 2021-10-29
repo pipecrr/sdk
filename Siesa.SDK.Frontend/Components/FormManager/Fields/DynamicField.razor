@@ -4,14 +4,7 @@
     case "CharField":
         @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
         {
-            <FieldViewSwitcher ViewContext="@FieldOpt.ViewContext">
-                <FieldDetailViewDef>
-                    <CharFieldDetail BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" />
-                </FieldDetailViewDef>
-                <FieldEditViewDef>
-                    <CharField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" EscucharA="@FieldOpt.EscucharA" />
-                </FieldEditViewDef>
-            </FieldViewSwitcher>
+            <CharFieldDetail BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" />    
         }
         else
         {
@@ -24,14 +17,8 @@
     case "IntegerField":
         @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
         {
-            <FieldViewSwitcher ViewContext="@FieldOpt.ViewContext">
-                <FieldDetailViewDef>
-                    <IntegerFieldDetail BindModel="@fieldModelObj" FieldName="@fieldName"  FieldOpt="@FieldOpt" />
-                </FieldDetailViewDef>
-                <FieldEditViewDef>
-                    <IntegerField BindModel="@fieldModelObj"  FieldName="@fieldName"  FieldOpt="@FieldOpt" EscucharA="@FieldOpt.EscucharA" />
-                </FieldEditViewDef>
-            </FieldViewSwitcher>
+
+            <IntegerFieldDetail BindModel="@fieldModelObj" FieldName="@fieldName"  FieldOpt="@FieldOpt" />
         }
         else
         {
@@ -48,14 +35,7 @@
     case "DateTimeField":
         @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
         {
-            <FieldViewSwitcher ViewContext="@FieldOpt.ViewContext">
-                <FieldDetailViewDef>
-                    <DateFieldDetail BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
-                </FieldDetailViewDef>
-                <FieldEditViewDef>
-                    <DateField BindModel="@fieldModelObj" FieldName="@fieldName"  FieldOpt="@FieldOpt" EscucharA="@FieldOpt.EscucharA" />
-                </FieldEditViewDef>
-            </FieldViewSwitcher>
+            <DateFieldDetail BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
         }
         else
         {
@@ -68,14 +48,7 @@
     case "BooleanField":
     @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
         {
-        <FieldViewSwitcher ViewContext="@FieldOpt.ViewContext">
-            <FieldDetailViewDef>
-                <BooleanFieldDetail BindModel="@fieldModelObj" FieldName="@fieldName"  FieldOpt="@FieldOpt" />
-            </FieldDetailViewDef>
-            <FieldEditViewDef>
-                <BooleanField BindModel="@fieldModelObj" FieldName="@fieldName"  FieldOpt="@FieldOpt" EscucharA="@FieldOpt.EscucharA" />
-            </FieldEditViewDef>
-        </FieldViewSwitcher>
+            <BooleanFieldDetail BindModel="@fieldModelObj" FieldName="@fieldName"  FieldOpt="@FieldOpt" />
         }else{
             <BooleanField BindModel="@fieldModelObj" FieldName="@fieldName"  FieldOpt="@FieldOpt" EscucharA="@FieldOpt.EscucharA" />
 
