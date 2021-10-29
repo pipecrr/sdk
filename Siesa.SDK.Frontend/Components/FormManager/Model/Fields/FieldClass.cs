@@ -75,7 +75,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 
                 return _fieldValidationTemplate != null ? _fieldValidationTemplate : builder =>
                 {
-                    // () => Owner.Property
                     var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
                     var lambda = Expression.Lambda(typeof(Func<>).MakeGenericType(typeof(TProperty)), access);
 
