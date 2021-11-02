@@ -10,7 +10,7 @@
         <img class="menu-title-template-img" src="_content/Siesa.SDK.Frontend/images/header_logo.svg" alt="@context" />
     </TitleTemplate>
     <Items>
-        <DxMenuItem Text="Home" IconCssClass="oi oi-home" />
+        <DxMenuItem Text="Home" IconCssClass="oi oi-home" NavigateUrl="/" />
         @foreach (KeyValuePair<string, BackendRegistry> entry in BackendManager.Instance.GetBackendDict())
         {
             @foreach (var backendBusiness in entry.Value.businessRegisters.Businesses)

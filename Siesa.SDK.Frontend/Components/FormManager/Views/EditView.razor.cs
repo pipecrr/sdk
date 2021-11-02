@@ -50,7 +50,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            InitView();
+            //InitView();
         }
 
         public override async Task SetParametersAsync(ParameterView parameters)
@@ -61,6 +61,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 if (value != null)
                 {
                     Loading = false;
+                    ErrorMsg = "";
                     InitView(value);
                 }
             }

@@ -58,6 +58,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 if (value != null)
                 {
                     this.ModelLoaded = false;
+                    ErrorMsg = "";
                     InitView(value);
                 }
             }            
@@ -66,7 +67,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            InitView();
+            //InitView();
         }
 
         private void GoToEdit()

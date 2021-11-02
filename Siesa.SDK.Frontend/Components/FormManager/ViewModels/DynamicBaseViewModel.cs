@@ -84,7 +84,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                         BusinessObj = null;
                         businessType = null;
                         BusinessModel = null;
-                        
+                        ErrorMsg = "";
+
+
                         InitGenericView(value);
                     }
 
