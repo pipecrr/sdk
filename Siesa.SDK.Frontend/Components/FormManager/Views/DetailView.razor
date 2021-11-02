@@ -5,9 +5,6 @@
 }
 else if (ModelLoaded == true)
 {
-    <DxButton RenderStyle="ButtonRenderStyle.Primary" Click="GoToEdit" Text="Editar" />
-    <DxButton RenderStyle="ButtonRenderStyle.Info" Click="GoToList" Text="Listar" />
-    <DxButton RenderStyle="ButtonRenderStyle.Danger" Click="DeleteBusiness" Text="Eliminar" />
     <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
 
         @if (Paneles.Count > 1)
@@ -19,8 +16,6 @@ else if (ModelLoaded == true)
                         <FieldsContainer Fields="@panel.Fields" ModelObj="@BusinessObj" />
                     </DxFormLayoutTabPage>
                 }
-
-
             </DxFormLayoutTabPages>
 
         }
@@ -30,4 +25,12 @@ else if (ModelLoaded == true)
 
         }
     </DxFormLayout>
+    <SetTopBar>
+        <TopBarTitle>@BusinessObj</TopBarTitle>
+        <TopBarButtons>
+            <DxButton RenderStyle="ButtonRenderStyle.Primary" Click="GoToEdit" Text="Editar" />
+            <DxButton RenderStyle="ButtonRenderStyle.Info" Click="GoToList" Text="Listar" />
+            <DxButton RenderStyle="ButtonRenderStyle.Danger" Click="DeleteBusiness" Text="Eliminar" />
+        </TopBarButtons>
+    </SetTopBar>
 }

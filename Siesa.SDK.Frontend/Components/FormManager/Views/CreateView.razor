@@ -1,5 +1,4 @@
 ﻿@using Siesa.SDK.Frontend.Components.FormManager.Fields
-<h2>Crear @BusinessName</h2>
 @if (Paneles == null || Paneles.Count <= 0)
 {
     <label>No hay definicion para la vista</label>
@@ -10,17 +9,11 @@ else if (Loading == true)
 }
 else if (BusinessObj.BaseObj != null)
 {
-    <label>@ErrorMsg</label>
-
-
-    <EditForm Model="@BusinessObj"
+    <EditForm id="@FormID" Model="@BusinessObj"
               OnValidSubmit="@HandleValidSubmit"
               OnInvalidSubmit="@HandleInvalidSubmit"
-              Context="EditFormContext"
-              >
+              Context="EditFormContext">
         <ObjectGraphDataAnnotationsValidator />
-
-        <DxButton RenderStyle="ButtonRenderStyle.Primary" SubmitFormOnClick="true" Text="Guardar" />
         <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
             @if (Paneles.Count > 1)
             {
@@ -43,6 +36,13 @@ else if (BusinessObj.BaseObj != null)
             }
         </DxFormLayout>
         <ValidationSummary />
+        <label>@ErrorMsg</label>
     </EditForm>
+    <SetTopBar>
+        <TopBarTitle>Crear @BusinessName</TopBarTitle>
+        <TopBarButtons>
+            <DxButton form="@FormID" RenderStyle="ButtonRenderStyle.Primary" SubmitFormOnClick="true" Text="Guardar" />
+        </TopBarButtons>
+    </SetTopBar>
 
 }

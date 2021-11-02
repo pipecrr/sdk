@@ -1,0 +1,39 @@
+﻿@implements IDisposable
+
+@if (LayoutService.TopBarTitle != null || LayoutService.TopBarButtons != null)
+{
+    <div class="gridlayout-content-parent gridlayout-bar-parent gridlayout-item">
+        <div class="gridlayout-bar">
+            <div class="topbar-title">@LayoutService.TopBarTitle</div>
+            <div class="topbar-buttons">@LayoutService.TopBarButtons</div>
+        </div>
+    </div>
+}
+
+@code {
+    [Inject]
+    public ILayoutService LayoutService { get; set; }
+
+    protected override void OnInitialized()
+    {
+        LayoutService.PropertyChanged += LayoutService_PropertyChanged;
+        base.OnInitialized();
+    }
+
+    private void LayoutService_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(ILayoutService.TopBarTitle) || e.PropertyName == nameof(ILayoutService.TopBarButtons))
+        {
+            StateHasChanged();
+        }
+    }
+
+    public void Dispose()
+    {
+        if (LayoutService != null)
+        {
+            LayoutService.PropertyChanged -= LayoutService_PropertyChanged;
+        }
+    }
+
+}

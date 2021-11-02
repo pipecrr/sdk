@@ -24,6 +24,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public Boolean Loading = true;
 
         public String ErrorMsg = "";
+        public string FormID { get; set; } = Guid.NewGuid().ToString();
 
         protected void InitView(string bName = null)
         {

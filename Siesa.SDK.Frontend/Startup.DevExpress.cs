@@ -17,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.JSInterop;
 using Siesa.SDK.Frontend.Components.FormManager.Model;
+using Siesa.SDK.Frontend.Components.Layout;
 
 [assembly: HostingStartup(typeof(Siesa.SDK.Frontend.DevExpressHostingStartup))]
 
@@ -35,7 +36,7 @@ namespace Siesa.SDK.Frontend {
         {
             services.AddDevExpressBlazor();
             services.AddScoped<StateContainer>();
-
+            services.AddScoped<ILayoutService, LayoutService>();
         }
 
     }

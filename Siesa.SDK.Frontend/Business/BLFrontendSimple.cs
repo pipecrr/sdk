@@ -71,5 +71,10 @@ namespace Siesa.SDK.Business
         {
             throw new NotImplementedException();
         }
+
+        public override string ToString()
+        {
+            return BaseObj.ToString();
+        }
     }
 }

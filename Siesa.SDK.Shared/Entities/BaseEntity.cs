@@ -20,7 +20,7 @@ namespace Siesa.SDK.Entities
         //source of data
         public virtual string Source { get; set; }
 
-        //Todo: Owner: foreign key with User, LastEditUser and Owner_team
+        //Todo: Owner: foreign key with User, LastEditUser, Usuario creador and Owner_team
         [Timestamp]
         public virtual byte[] RowVersion { get; set; }
 

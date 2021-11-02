@@ -9,16 +9,11 @@ else if (Loading == true)
 }
 else if (BusinessObj.BaseObj.RowID != 0)
 {
-
-    <label>@ErrorMsg</label>
-
-    <EditForm Model="@BusinessObj"
+    <EditForm id="@FormID" Model="@BusinessObj"
               OnValidSubmit="@HandleValidSubmit"
               OnInvalidSubmit="@HandleInvalidSubmit"
               Context="EditFormContext">
         <ObjectGraphDataAnnotationsValidator />
-        <DxButton RenderStyle="ButtonRenderStyle.Primary" SubmitFormOnClick="true" Text="Guardar" />
-        <DxButton RenderStyle="ButtonRenderStyle.Secondary" Click="GoToList" Text="Cancelar" />
         <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
             @if (Paneles.Count > 1)
             {
@@ -41,6 +36,14 @@ else if (BusinessObj.BaseObj.RowID != 0)
             }
         </DxFormLayout>
         <ValidationSummary />
+        <label>@ErrorMsg</label>
     </EditForm>
+    <SetTopBar>
+        <TopBarTitle>Editar @BusinessObj</TopBarTitle>
+        <TopBarButtons>
+            <DxButton form="@FormID" RenderStyle="ButtonRenderStyle.Primary" SubmitFormOnClick="true" Text="Guardar" />
+            <DxButton RenderStyle="ButtonRenderStyle.Secondary" Click="GoToList" Text="Cancelar" />
+        </TopBarButtons>
+    </SetTopBar>
 
 }

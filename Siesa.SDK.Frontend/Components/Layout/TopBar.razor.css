@@ -1,0 +1,42 @@
+﻿.gridlayout-content-parent {
+    display: flex;
+    justify-content: center;
+}
+
+.gridlayout-bar-parent {
+    background-color: #fff;
+    height: 50px;
+    -webkit-box-shadow: 0px 10px 13px -7px #0000001c, 0px 0px 0px 0px rgba(0,0,0,0);
+    box-shadow: 0px 10px 13px -7px #0000001c, 0px 0px 0px 0px rgba(0,0,0,0);
+    align-items: center;
+}
+
+.gridlayout-bar {
+    min-width: 90%;
+    width: 90%;
+    max-width: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.topbar-title {
+    font-size: 14pt;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 500;
+}
+
+.topbar-buttons{
+
+}
+
+/* Mobile */
+@media only screen and (max-width: 600px) {
+    .gridlayout-bar {
+        min-width: 100%;
+        width: 100%;
+        max-width: 100%;
+    }
+}
