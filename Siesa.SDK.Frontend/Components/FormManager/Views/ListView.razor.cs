@@ -76,13 +76,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         protected async Task<LoadResult> LoadData(DataSourceLoadOptionsBase options, CancellationToken cancellationToken)
         {
-            await Task.Delay(5000);
             string tableOptions = options.ConvertToGetRequestUri("/");
-            /*using var response = await Client.GetAsync(options.ConvertToGetRequestUri(dataEndpointUri), cancellationToken);
-            response.EnsureSuccessStatusCode();*/
-            //using var responseStream = await response.Content.ReadAsStreamAsync();
-            var responseStream = "{}";
-            return await Task.Run(() => JsonConvert.DeserializeObject<LoadResult>(responseStream), cancellationToken: cancellationToken);
+            var result =  await BusinessObj.ListAsync(0,30,tableOptions); //TODO: Paginación
+            var response = new LoadResult
+            {
+                data = result.Data,
+                totalCount = result.TotalCount,
+                groupCount = result.GroupCount
+            };
+            return response;
+
         }
 
         private RenderFragment BuildColumns()
@@ -116,14 +119,34 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     
                         //default
                     }
-                   
-                    b.AddAttribute(0, "Field", field.Name);
+                    var fieldName = field.Name;
+                    //remove "BaseObj." from field name if exists
+                    if (fieldName.StartsWith("BaseObj."))
+                    {
+                        fieldName = fieldName.Substring(8);
+                    }
+                    b.AddAttribute(0, "Field", fieldName);
                     b.AddAttribute(1, "Caption", field.Label);
+
+                    if(field.Name == ListViewModel.LinkTo)
+                    {
+                        //TODO: Link al detalle
+                    }
                     b.CloseComponent();
                     counter++;
                 }
             };
             return columns;
+        }
+
+        private void GoToEdit(int id)
+        {
+            NavManager.NavigateTo($"{BusinessName}/edit/{id}/");
+        }
+
+        private void GoToDetail(int id)
+        {
+            NavManager.NavigateTo($"{BusinessName}/detail/{id}/");
         }
     }
 }

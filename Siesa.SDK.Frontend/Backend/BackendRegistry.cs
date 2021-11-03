@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Grpc.Net.Client;
 using Siesa.SDK.Protos;
 using Siesa.SDK.Frontend;
+using Grpc.Core;
 
 namespace Siesa.SDK.Frontend.Backend
 {
@@ -78,6 +79,21 @@ namespace Siesa.SDK.Frontend.Backend
             var response = await client.DeleteBusinessObjAsync(request);
             return response.Id;
 
+        }
+
+        public async Task<LoadResult> GetListBusinessObj(string business_name, int page, int pageSize, string options)
+        {
+            using var channel = GrpcChannel.ForAddress(this.Url);
+            var client = new Protos.SDK.SDKClient(channel);
+            var request = new Protos.GetListBusinessObjRequest
+            {
+                BusinessName = business_name,
+                Page = page,
+                PageSize = pageSize,
+                Options = options
+            };
+            var response = await client.GetListBusinessObjAsync(request);
+            return response;
         }
     }
 }

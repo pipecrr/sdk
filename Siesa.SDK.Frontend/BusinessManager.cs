@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Siesa.SDK.Protos;
 using Grpc.Net.Client;
 using Siesa.SDK.Frontend.Backend;
+using Grpc.Core;
 
 namespace Siesa.SDK.Frontend
 {
@@ -33,6 +34,12 @@ namespace Siesa.SDK.Frontend
         {
             BackendRegistry backend = BackendManager.Instance.GetBackend(BackendName);
             return backend.GetBusinessObj(Name, id);
+        }
+
+        public async Task<LoadResult> List(int page , int pageSize, string options)
+        {
+            BackendRegistry backend = BackendManager.Instance.GetBackend(BackendName);
+            return await backend.GetListBusinessObj(Name, page, pageSize, options);
         }
     }
 

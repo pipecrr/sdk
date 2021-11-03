@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Siesa.SDK.Backend.Access;
 using Siesa.SDK.Entities;
+using Siesa.SDK.Shared.Business;
 
 namespace Siesa.SDK.Business
 {
@@ -71,12 +72,17 @@ namespace Siesa.SDK.Business
             return 0;
         }
 
-        public virtual IEnumerable<T> List(int page = 0, int pageSize = 30)
+        public virtual LoadResult List(int page = 0, int pageSize = 30, string options = "")
         {
+            var result = new LoadResult();
             using (SDKContext context = _dbFactory.CreateDbContext())
             {
-                return context.Set<T>().Skip(page * pageSize).Take(pageSize).ToList();
+                //total data
+                result.TotalCount = context.Set<T>().Count();
+                //data
+                result.Data = context.Set<T>().Skip(page * pageSize).Take(pageSize).ToList();
             }
+            return result;
         }
 
         public Task<T> GetAsync(int id)

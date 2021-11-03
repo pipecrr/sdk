@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Siesa.SDK.Entities;
+using Siesa.SDK.Shared.Business;
 
 namespace Siesa.SDK.Business
 {
@@ -67,14 +69,25 @@ namespace Siesa.SDK.Business
             return result;
         }
 
-        public virtual IEnumerable<T> List(int page, int pageSize)
-        {
-            throw new NotImplementedException();
-        }
-
         public override string ToString()
         {
             return BaseObj.ToString();
+        }
+
+        public virtual LoadResult List(int page = 0, int pageSize = 30, string options = "")
+        {
+            return ListAsync(page, pageSize, options).GetAwaiter().GetResult();
+        }
+
+        public async virtual Task<LoadResult> ListAsync(int page = 0, int pageSize = 30, string options = "")
+        {
+            var businness = Frontend.BusinessManager.Instance.GetBusiness(BusinessName);
+            var result = await businness.List(page, pageSize, options);
+            LoadResult response = new LoadResult();
+            response.Data = result.Data.Select(x => JsonConvert.DeserializeObject<T>(x)).ToList();
+            response.TotalCount = result.TotalCount;
+            response.GroupCount = result.GroupCount;
+            return response;
         }
     }
 }

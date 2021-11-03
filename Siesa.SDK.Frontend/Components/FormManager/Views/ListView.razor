@@ -1,4 +1,5 @@
 ﻿@using Siesa.SDK.Frontend.Components.FormManager.Fields
+@using Siesa.SDK.Entities;
 @if (ErrorMsg != "")
 {
     <label>@ErrorMsg</label>
@@ -15,7 +16,14 @@ else
                 PagerAllowedPageSizes="ListViewModel.Paging.AllowedPageSizes"
                 PageSize="ListViewModel.Paging.PageSize"
                 ColumnResizeMode="DataGridColumnResizeMode.Component">
-        <DxDataGridCommandColumn Width="100px" NewButtonVisible="false" DeleteButtonVisible="false"></DxDataGridCommandColumn>
+        <DxDataGridColumn Field="Actions" AllowSort="false" Width="90px" Caption="Acciones" TextAlignment="DataGridTextAlign.Center">
+            <DisplayTemplate>
+                <div class="action-buttons">
+                    <button class="btn btn-link grid-btn-link" @onclick="() => GoToEdit(((BaseEntity)context).RowID)"><span class="oi oi-pencil"></span></button>
+                    <button class="btn btn-link grid-btn-link" @onclick="() => GoToDetail(((BaseEntity)context).RowID)"><span class="oi oi-eye"></span></button>
+                </div>
+            </DisplayTemplate>
+        </DxDataGridColumn>
         @BuildColumns();
     </DxDataGrid>
 

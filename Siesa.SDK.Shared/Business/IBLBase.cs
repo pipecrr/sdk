@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Siesa.SDK.Entities;
+using Siesa.SDK.Shared.Business;
 
 namespace Siesa.SDK.Business
 {
+
     public interface IBLBase<T> where T: BaseEntity
     {
         string BusinessName { get; set; }
@@ -14,8 +16,7 @@ namespace Siesa.SDK.Business
         int Save();
         void Update();
         int Delete();
-        IEnumerable<T> List(int page, int pageSize);
-
+        LoadResult List(int page, int pageSize, string options);
     }
 
 }
