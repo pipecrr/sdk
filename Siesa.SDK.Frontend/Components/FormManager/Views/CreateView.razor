@@ -9,10 +9,10 @@ else if (Loading == true)
 }
 else if (BusinessObj.BaseObj != null)
 {
-    <EditForm id="@FormID" Model="@BusinessObj"
+    <EditForm id="@FormID" 
               OnValidSubmit="@HandleValidSubmit"
               OnInvalidSubmit="@HandleInvalidSubmit"
-              Context="EditFormContext">
+              EditContext="@EditFormContext">
         <ObjectGraphDataAnnotationsValidator />
         <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
             @if (Paneles.Count > 1)

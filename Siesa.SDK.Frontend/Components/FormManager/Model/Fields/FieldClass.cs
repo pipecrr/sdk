@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.EntityFrameworkCore;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 {
@@ -42,6 +43,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         public bool IsRequired { get; set; }
         public int MaxLength { get; set; }
 
+        public bool IsUnique { get; set; }
         private RenderFragment? _fieldValidationTemplate;
 
         protected void RefreshMe()
@@ -65,12 +67,54 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                         MaxLength = ((MaxLengthAttribute)attr).Length;
                         break;
                 }
-            }            
+            }
+            if (FieldOpt.Required)
+            {
+                IsRequired = true;
+            }
+            //TODO: Optimizar, el parametro deberia entrar por parametro y no consultar la entidad por cada campo
+            var entityAttributes = BindModel.GetType().GetCustomAttributes();
+            foreach (var attr in entityAttributes)
+            {
+                switch (attr)
+                {
+                    case IndexAttribute _:
+                        if(((IndexAttribute)attr).IsUnique)
+                        {
+                            var propNames = ((IndexAttribute)attr).PropertyNames;
+                            foreach (var propName in propNames)
+                            {
+                                if (propName == FieldName)
+                                {
+                                    IsUnique = true;
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                }
+            }
+
         }
 
         public void SetValue(TProperty value)
         {
-            BindValue = value;
+            var setValue = true;
+            if (IsUnique)
+            {
+                Console.WriteLine($"El campo {FieldName} es único y debe revisar el valor {value}");
+                //setValue = CheckUnique(value);
+            }
+
+            if (setValue)
+            {
+                BindValue = value;
+            }
+            else
+            {
+                //MuestreError();
+            }
+            
         }
 
         public RenderFragment? FieldValidationTemplate

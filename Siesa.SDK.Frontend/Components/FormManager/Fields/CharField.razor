@@ -10,24 +10,29 @@
     {
         get
         {
-
-            return _fieldValidationTemplate != null ? _fieldValidationTemplate : builder =>
+            if (FieldOpt.Hidden)
             {
-                var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
-                var lambda = Expression.Lambda(typeof(Func<>).MakeGenericType(typeof(string)), access);
+                return null;
+            }
+            else {
+                return _fieldValidationTemplate != null ? _fieldValidationTemplate : builder =>
+                {
+                    var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
+                    var lambda = Expression.Lambda(typeof(Func<>).MakeGenericType(typeof(string)), access);
 
-                builder.OpenComponent(0, typeof(DxTextBox));
-                builder.AddAttribute(1, "TextExpression", lambda);
-                builder.AddAttribute(2, "Text", (string)BindValue);
-                builder.AddAttribute(3, "TextChanged", EventCallback.Factory.Create<System.String>(this, str => { SetValue(str); }));
-                builder.AddAttribute(4, "NullText", FieldOpt.Placeholder);
-                builder.AddAttribute(5, "CssClass", (IsRequired && (BindValue == null || BindValue.Length == 0) ? "invalid" : "") + FieldOpt.CssClass);
-                builder.AddAttribute(6, "ReadOnly", FieldOpt.Disabled);
-                builder.AddAttribute(7, "ClearButtonDisplayMode", DataEditorClearButtonDisplayMode.Auto);
-                builder.AddAttribute(8, "maxlength", MaxLength > 0 ? MaxLength : null);
+                    builder.OpenComponent(0, typeof(DxTextBox));
+                    builder.AddAttribute(1, "TextExpression", lambda);
+                    builder.AddAttribute(2, "Text", (string)BindValue);
+                    builder.AddAttribute(3, "TextChanged", EventCallback.Factory.Create<System.String>(this, str => { SetValue(str); }));
+                    builder.AddAttribute(4, "NullText", FieldOpt.Placeholder);
+                    builder.AddAttribute(5, "CssClass", (IsRequired && (BindValue == null || BindValue.Length == 0) ? "invalid" : "") + FieldOpt.CssClass);
+                    builder.AddAttribute(6, "ReadOnly", FieldOpt.Disabled);
+                    builder.AddAttribute(7, "ClearButtonDisplayMode", DataEditorClearButtonDisplayMode.Auto);
+                    builder.AddAttribute(8, "maxlength", MaxLength > 0 ? MaxLength : null);
 
-                builder.CloseComponent();
-            };
+                    builder.CloseComponent();
+                };
+            }
         }
     }
 }

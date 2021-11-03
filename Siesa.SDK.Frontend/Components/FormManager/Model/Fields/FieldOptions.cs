@@ -17,6 +17,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
     public class FieldOptions
     {
         public string Name { get; set; }
+        public string PropertyName { get; set; }
         public string Placeholder { get; set; } = "";
         public string Label { get; set; }
         public Boolean PureField { get; set; } = false;
@@ -36,6 +37,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         public Dictionary<string, object> CustomAtributes { get; set; }
         public int TextFieldCols { get; set; } = 20;
         public int TextFieldRows { get; set; } = 6;
+
+        public bool Hidden { get; set; } = false;
+        public bool Required { get; set; } = false;
 
         //Para Listas
         public IEnumerable<ListOption> Options { get; set; }
@@ -70,6 +74,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             }
             field.ModelObj = currentObject;
             field.Name = fieldPath[fieldPath.Length - 1];
+            PropertyName = fieldPath[fieldPath.Length - 1];
 
             if (CustomFieldType != null && CustomFieldType != "")
             {
