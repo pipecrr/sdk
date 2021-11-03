@@ -12,6 +12,7 @@ using System.Threading;
 using System.Reflection;
 using DevExpress.Blazor;
 using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
+using Siesa.SDK.Frontend.Components.FormManager.Fields;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -44,6 +45,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             else
             {
                 ListViewModel = JsonConvert.DeserializeObject<ListViewModel>(metadata);
+                foreach (var field in ListViewModel.Fields)
+                {
+                    field.InitField(BusinessObj);
+                }
             }
             Loading = false;
             StateHasChanged();
@@ -87,7 +92,31 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 int counter = 0;
                 foreach (var field in ListViewModel.Fields)
                 {
-                    b.OpenComponent(counter, typeof(DxDataGridColumn));
+                    
+                    switch (field.FieldType)
+                    {
+                        case FieldTypes.CharField:
+                        case FieldTypes.TextField:
+                            b.OpenComponent(counter, typeof(DxDataGridColumn));
+                            break;
+                        case FieldTypes.DateField:
+                        case FieldTypes.DateTimeField:
+                            b.OpenComponent(counter, typeof(DxDataGridDateEditColumn));
+                            break;
+                        case FieldTypes.DecimalField:
+                        case FieldTypes.IntegerField:
+                            b.OpenComponent(counter, typeof(DxDataGridSpinEditColumn));
+                            break;
+                        case FieldTypes.BooleanField:
+                            b.OpenComponent(counter, typeof(DxDataGridCheckBoxColumn));
+                            break;
+
+                        default:
+                            continue;
+                    
+                        //default
+                    }
+                   
                     b.AddAttribute(0, "Field", field.Name);
                     b.AddAttribute(1, "Caption", field.Label);
                     b.CloseComponent();

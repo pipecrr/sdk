@@ -1,60 +1,67 @@
 ﻿
 @switch (FieldType)
 {
-    case "CharField":
+    case FieldTypes.CharField:
         @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
         {
-            <CharFieldDetail BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" />    
+            <CharFieldDetail BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" />
+
         }
         else
         {
-            <CharField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  EscucharA="@FieldOpt.EscucharA" />
+            <CharField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" EscucharA="@FieldOpt.EscucharA" />
         }
         break;
-    case "DecimalField":
+    case FieldTypes.DecimalField:
         <DecimalField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" EscucharA="@FieldOpt.EscucharA" />
         break;
-    case "IntegerField":
+    case FieldTypes.IntegerField:
         @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
         {
 
-            <IntegerFieldDetail BindModel="@fieldModelObj" FieldName="@fieldName"  FieldOpt="@FieldOpt" />
+            <IntegerFieldDetail BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
         }
         else
         {
-            <IntegerField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  EscucharA="@FieldOpt.EscucharA" />
+            <IntegerField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" EscucharA="@FieldOpt.EscucharA" />
         }
         break;
-    case "MultiSelectField":
-        <MultiSelectField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  EscucharA="@FieldOpt.EscucharA" />
+    case FieldTypes.MultiSelectField:
+        <MultiSelectField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" EscucharA="@FieldOpt.EscucharA" />
         break;
-    case "SelectField":
-        <SelectField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  EscucharA="@FieldOpt.EscucharA" />
+    case FieldTypes.SelectField:
+        <SelectField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" EscucharA="@FieldOpt.EscucharA" />
         break;
-    case "DateField":
-    case "DateTimeField":
+    case FieldTypes.DateField:
+    case FieldTypes.DateTimeField:
         @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
         {
             <DateFieldDetail BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
         }
         else
         {
-            <DateField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  EscucharA="@FieldOpt.EscucharA" />
+            <DateField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" EscucharA="@FieldOpt.EscucharA" />
         }
         break;
-    case "TextField":
-        <TextField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  EscucharA="@FieldOpt.EscucharA" />
+    case FieldTypes.TextField:
+        <TextField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" EscucharA="@FieldOpt.EscucharA" />
         break;
-    case "BooleanField":
-    @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
+    case FieldTypes.BooleanField:
+        @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
         {
-            <BooleanFieldDetail BindModel="@fieldModelObj" FieldName="@fieldName"  FieldOpt="@FieldOpt" />
-        }else{
-            <BooleanField BindModel="@fieldModelObj" FieldName="@fieldName"  FieldOpt="@FieldOpt" EscucharA="@FieldOpt.EscucharA" />
+            <BooleanFieldDetail BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+        }
+        else
+        {
+            <BooleanField BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" EscucharA="@FieldOpt.EscucharA" />
 
         }
         break;
+    case FieldTypes.Unknown:
+        <span>@UnknownFieldType No implementado</span>
+        break;
+    case FieldTypes.Custom:
     default:
-        <span>@FieldOpt.FieldType No implementado</span>
+        <span>@FieldType No implementado</span>
         break;
 }
