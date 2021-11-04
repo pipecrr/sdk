@@ -99,7 +99,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                         break;
                 }
             }
-            OnChange = (string)FieldOpt.CustomAtributes?.Where(x => x.Key == "sdk-change").FirstOrDefault().Value;
+            OnChange = (string)FieldOpt.CustomAttributes?.Where(x => x.Key == "sdk-change").FirstOrDefault().Value;
 
         }
 

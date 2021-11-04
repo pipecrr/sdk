@@ -5,7 +5,7 @@
         required="@(IsRequired ? IsRequired : null)"
         NullText="@FieldOpt.Placeholder"
         CssClass="@FieldOpt.CssClass"
-        @attributes="FieldOpt.CustomAtributes"
+        @attributes="FieldOpt.CustomAttributes"
         ReadOnly="@(FieldOpt.Disabled || @FieldOpt.ViewContext == "DetailView")"
         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"></DxMemo>
 @FieldValidationTemplate

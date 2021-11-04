@@ -80,12 +80,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 {
                     var field_index = fieldItem.i;
                     var field = fieldItem.value;
-                    if(field.CustomAtributes == null)
+                    if(field.CustomAttributes == null)
                     {
                         continue;
                     }
 
-                    var fieldCustomAttr = field.CustomAtributes.Where(x => x.Key.StartsWith("sdk-") && x.Key != "sdk-change");
+                    var fieldCustomAttr = field.CustomAttributes.Where(x => x.Key.StartsWith("sdk-") && x.Key != "sdk-change");
                     foreach (var attr in fieldCustomAttr)
                     {
                         //hacer casteo a enum y refactorizar

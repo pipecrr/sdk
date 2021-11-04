@@ -34,7 +34,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 
         public List<string> EscucharA { get; set; }
 
-        public Dictionary<string, object> CustomAtributes { get; set; }
+        public Dictionary<string, object> CustomAttributes { get; set; }
         public int TextFieldCols { get; set; } = 20;
         public int TextFieldRows { get; set; } = 6;
 
