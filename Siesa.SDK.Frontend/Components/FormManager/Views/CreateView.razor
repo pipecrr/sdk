@@ -10,7 +10,7 @@ else if (Loading == true)
 }
 else if (BusinessObj.BaseObj != null)
 {
-    <EditForm id="@FormID" 
+    <EditForm id="@FormID"
               OnValidSubmit="@HandleValidSubmit"
               OnInvalidSubmit="@HandleInvalidSubmit"
               EditContext="@EditFormContext">
@@ -22,7 +22,9 @@ else if (BusinessObj.BaseObj != null)
                     @foreach (var panel in Paneles)
                     {
                         <DxFormLayoutTabPage Caption="@panel.Label">
-                            <FieldsContainer Fields="@panel.Fields" ModelObj="@BusinessObj" />
+                            <CascadingValue Value="@EditFormContext">
+                                <FieldsContainer Fields="@panel.Fields" ModelObj="@BusinessObj" />
+                            </CascadingValue>
                         </DxFormLayoutTabPage>
                     }
 
@@ -32,7 +34,9 @@ else if (BusinessObj.BaseObj != null)
             }
             else
             {
-                <FieldsContainer Fields="@Paneles[0].Fields" ModelObj="@BusinessObj" />
+                <CascadingValue Value="@EditFormContext">
+                    <FieldsContainer Fields="@Paneles[0].Fields" ModelObj="@BusinessObj" />
+                </CascadingValue>
 
             }
         </DxFormLayout>

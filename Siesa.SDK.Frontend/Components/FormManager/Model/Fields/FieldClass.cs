@@ -8,6 +8,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using Siesa.SDK.Frontend.Utils;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 {
@@ -45,6 +47,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 
         public bool IsUnique { get; set; }
         private RenderFragment? _fieldValidationTemplate;
+
+        private string OnChange { get; set; }
+
+        [CascadingParameter] EditContext EditFormContext { get; set; }
 
         protected void RefreshMe()
         {
@@ -94,12 +100,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                         break;
                 }
             }
-
+            OnChange = (string)FieldOpt.CustomAtributes?.Where(x => x.Key == "sdk-change").FirstOrDefault().Value;
         }
 
         public void SetValue(TProperty value)
         {
             var setValue = true;
+            
             if (IsUnique)
             {
                 Console.WriteLine($"El campo {FieldName} es único y debe revisar el valor {value}");
@@ -109,6 +116,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             if (setValue)
             {
                 BindValue = value;
+                if (OnChange != null && OnChange != "") {
+                    _ = Evaluator.EvaluateCode(OnChange, EditFormContext.Model);
+                }
             }
             else
             {
@@ -132,6 +142,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                     builder.CloseComponent();
                 };
             }
+        }
+
+        public override async Task SetParametersAsync(ParameterView parameters)
+        {
+            await base.SetParametersAsync(parameters);
+            //Console.WriteLine($"Entra setparamasync {FieldName}");
         }
 
     }

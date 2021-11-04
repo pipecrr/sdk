@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using System.Linq;
+using Siesa.SDK.Frontend.Utils;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 {
@@ -57,22 +58,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             StateHasChanged();
         }
 
-        private async Task<object> EvaluateCode(string code, object globals)
-        {
-            object result;
-            try
-            {
-                result = await CSharpScript.EvaluateAsync(code, globals: globals);
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("error, eval");
-                return null;
-            }
-
-            return result;
-        }
-
         private void EditContext_OnFieldChanged(object sender, FieldChangedEventArgs e)
         {
             Console.WriteLine("algo cambió en el form");
@@ -95,27 +80,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                         continue;
                     }
 
-                    var fieldCustomAttr = field.CustomAtributes.Where(x => x.Key.StartsWith("sdk-"));
+                    var fieldCustomAttr = field.CustomAtributes.Where(x => x.Key.StartsWith("sdk-") && x.Key != "sdk-change");
                     foreach (var attr in fieldCustomAttr)
                     {
                         //hacer casteo a enum y refactorizar
                         switch (attr.Key)
                         {
-                            case "sdk-change":
-                                if (e != null && e.FieldIdentifier.FieldName == field.PropertyName) //TODO: Arreglar error de campos con el mismo nombre y diferente modelo
-                                {
-                                    _ = Task.Run(async () =>
-                                    {
-                                        var result = await EvaluateCode((string)attr.Value, BusinessObj);
-
-                                        _ = InvokeAsync(() => StateHasChanged());
-                                    });
-                                }
-                                break;
                             case "sdk-show":
                                 _ = Task.Run(async () =>
                                 {
-                                    var result = (bool)await EvaluateCode((string)attr.Value, BusinessObj);
+                                    var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
                                     field.Hidden = !result;
                                     _ = InvokeAsync(() => StateHasChanged());
                                 });
@@ -123,7 +97,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                             case "sdk-hide":
                                 _ = Task.Run(async () =>
                                 {
-                                    var result = (bool)await EvaluateCode((string)attr.Value, BusinessObj);
+                                    var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
                                     field.Hidden = result;
                                     _ = InvokeAsync(() => StateHasChanged());
                                 });
@@ -131,7 +105,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                             case "sdk-required":
                                 _ = Task.Run(async () =>
                                 {
-                                    var result = (bool)await EvaluateCode((string)attr.Value, BusinessObj);
+                                    var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
                                     field.Required = result;
                                     _ = InvokeAsync(() => StateHasChanged());
                                 });
@@ -140,7 +114,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                             case "sdk-disabled":
                                 _ = Task.Run(async () =>
                                 {
-                                    var result = (bool)await EvaluateCode((string)attr.Value, BusinessObj);
+                                    var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
                                     field.Disabled = result;
                                     _ = InvokeAsync(() => StateHasChanged());
                                 });
