@@ -1,8 +1,38 @@
 ﻿@inherits FieldClass<DateTime>
+@using System.Linq.Expressions
+@if (!FieldOpt.Hidden)
+{
+    @FieldTemplate
+    @FieldValidationTemplate
+}
 
-<DxDateEdit @bind-Date="@BindValue"
-            @attributes="FieldOpt.CustomAttributes"
-            PickerDisplayMode="DatePickerDisplayMode.Auto" NullText="@FieldOpt.Placeholder"
-            CssClass="@FieldOpt.CssClass" ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
-            ReadOnly="@FieldOpt.Disabled"></DxDateEdit>
-@FieldValidationTemplate
+
+@code {
+    private RenderFragment? _fieldValidationTemplate;
+    public RenderFragment? FieldTemplate
+    {
+        get
+        {
+
+            return _fieldValidationTemplate != null ? _fieldValidationTemplate : builder =>
+            {
+                var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
+                var lambda = Expression.Lambda(typeof(Func<>).MakeGenericType(typeof(DateTime)), access);
+
+                builder.OpenComponent(0, typeof(DxDateEdit<DateTime>));
+                builder.AddAttribute(1, "DateExpression", lambda);
+                builder.AddAttribute(2, "Date", (DateTime)BindValue);
+                builder.AddAttribute(3, "DateChanged", EventCallback.Factory.Create<System.DateTime>(this, str => { SetValue(str); }));
+                builder.AddAttribute(4, "NullText", FieldOpt.Placeholder);
+                builder.AddAttribute(5, "CssClass", (IsRequired && (BindValue == null) ? "invalid" : "") + FieldOpt.CssClass);
+                builder.AddAttribute(6, "ReadOnly", FieldOpt.Disabled);
+                builder.AddAttribute(7, "ClearButtonDisplayMode", DataEditorClearButtonDisplayMode.Auto);
+                builder.AddAttribute(8, "field-name", FieldOpt.Name);
+                builder.AddAttribute(9, "PickerDisplayMode", DatePickerDisplayMode.Auto);
+
+                builder.CloseComponent();
+            };
+
+        }
+    }
+}
