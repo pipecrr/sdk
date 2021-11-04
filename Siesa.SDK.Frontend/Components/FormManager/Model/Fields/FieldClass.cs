@@ -57,9 +57,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
            InvokeAsync(StateHasChanged);
         }
 
-        protected override async Task OnInitializedAsync()
+        protected async Task Init()
         {
-            await base.OnInitializedAsync();
             BindProperty = BindModel.GetType().GetProperty(FieldName);
             var customAttr = BindProperty.GetCustomAttributes();
             foreach (var attr in customAttr)
@@ -85,7 +84,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 switch (attr)
                 {
                     case IndexAttribute _:
-                        if(((IndexAttribute)attr).IsUnique)
+                        if (((IndexAttribute)attr).IsUnique)
                         {
                             var propNames = ((IndexAttribute)attr).PropertyNames;
                             foreach (var propName in propNames)
@@ -101,6 +100,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 }
             }
             OnChange = (string)FieldOpt.CustomAtributes?.Where(x => x.Key == "sdk-change").FirstOrDefault().Value;
+
+        }
+
+        protected override async Task OnInitializedAsync()
+        {
+            
+            await base.OnInitializedAsync();
+            //await Init();
         }
 
         public void SetValue(TProperty value)
@@ -147,7 +154,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         public override async Task SetParametersAsync(ParameterView parameters)
         {
             await base.SetParametersAsync(parameters);
-            //Console.WriteLine($"Entra setparamasync {FieldName}");
+            await Init();
         }
 
     }
