@@ -37,7 +37,7 @@ namespace Siesa.SDK.Backend.Access
         {
             foreach (var entity in modelBuilder.Model.GetEntityTypes())
             {
-                string table_name = entity.ShortName().Trim().ToLower();
+                string table_name = entity.ShortName().Trim();
                 // table names
                 modelBuilder.Entity(entity.Name).ToTable(table_name);
                 var table_name_parts = table_name.Split('_');
@@ -50,9 +50,10 @@ namespace Siesa.SDK.Backend.Access
                 // properties
                 foreach (var property in entity.GetProperties())
                 {
-                    var column_name = property.GetColumnName().Trim().ToLower();
-                    if (table_name_parts.Length > 1 && column_name == "rowid" || column_name == "id") {
-                        column_name += "_" + String.Join("_", table_name_parts.Skip(1));
+                    var column_name = property.GetColumnName().Trim();
+                    if (table_name_parts.Length > 1 && (column_name.ToLower() == "rowid" || column_name.ToLower() == "id")) {
+                        var tmp_name = column_name;
+                        column_name = String.Join("", table_name_parts.Skip(1)) + tmp_name;
                     }
                     property.SetColumnName(prefix + "_" + column_name);
                 }
