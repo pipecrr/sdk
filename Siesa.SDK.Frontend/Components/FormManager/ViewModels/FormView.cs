@@ -53,6 +53,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             Loading = false;
             EditFormContext = new EditContext(BusinessObj);
             EditFormContext.OnFieldChanged += EditContext_OnFieldChanged;
+            EvaluateDynamicAttributes(null);
             StateHasChanged();
         }
 
@@ -75,6 +76,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         private void EditContext_OnFieldChanged(object sender, FieldChangedEventArgs e)
         {
             Console.WriteLine("algo cambió en el form");
+            EvaluateDynamicAttributes(e);
+        }
+
+        private void EvaluateDynamicAttributes(FieldChangedEventArgs e)
+        {
             foreach (var item in Paneles)
             {
                 if (item.Fields == null)
@@ -96,12 +102,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                         switch (attr.Key)
                         {
                             case "sdk-change":
-                                if (e.FieldIdentifier.FieldName == field.PropertyName) //TODO: Arreglar error de campos con el mismo nombre y diferente modelo
+                                if (e != null && e.FieldIdentifier.FieldName == field.PropertyName) //TODO: Arreglar error de campos con el mismo nombre y diferente modelo
                                 {
                                     _ = Task.Run(async () =>
                                     {
                                         var result = await EvaluateCode((string)attr.Value, BusinessObj);
-  
+
                                         _ = InvokeAsync(() => StateHasChanged());
                                     });
                                 }
@@ -135,9 +141,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                         }
                     }
                 }
-                
+
             }
         }
+
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
