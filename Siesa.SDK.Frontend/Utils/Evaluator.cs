@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Scripting;
+using Microsoft.CodeAnalysis.Scripting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +15,9 @@ namespace Siesa.SDK.Frontend.Utils
             object result;
             try
             {
-                result = await CSharpScript.EvaluateAsync(code, globals: globals);
+                result = await CSharpScript.EvaluateAsync(code, options: ScriptOptions.Default.WithImports("System"), globals: globals);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 Console.WriteLine("error, eval");
                 return null;

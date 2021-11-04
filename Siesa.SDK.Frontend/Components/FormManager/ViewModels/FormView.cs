@@ -66,15 +66,20 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         private void EvaluateDynamicAttributes(FieldChangedEventArgs e)
         {
-            foreach (var item in Paneles)
+            string code = "";
+            foreach (var item in Paneles.Select((value, i) => (value, i)))
             {
-                if (item.Fields == null)
+                var panel_index = item.i;
+                var panel = item.value;
+                if (panel.Fields == null)
                 {
                     continue;
                 }
 
-                foreach (var field in item.Fields)
+                foreach (var fieldItem in panel.Fields.Select((value, i) => (value, i)))
                 {
+                    var field_index = fieldItem.i;
+                    var field = fieldItem.value;
                     if(field.CustomAtributes == null)
                     {
                         continue;
@@ -87,44 +92,61 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                         switch (attr.Key)
                         {
                             case "sdk-show":
-                                _ = Task.Run(async () =>
+                                code += @$"
+try {{ Paneles[{panel_index}].Fields[{field_index}].Hidden = !({(string)attr.Value}); }} catch (Exception ex) {{ throw;  }}";
+                                /*_ = Task.Run(async () =>
                                 {
                                     var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
                                     field.Hidden = !result;
                                     _ = InvokeAsync(() => StateHasChanged());
-                                });
+                                });*/
                                 break;
                             case "sdk-hide":
-                                _ = Task.Run(async () =>
+                                code += @$"
+try {{ Paneles[{panel_index}].Fields[{field_index}].Hidden = ({(string)attr.Value}); }} catch (Exception ex) {{ throw;  }}";
+                                /*_ = Task.Run(async () =>
                                 {
                                     var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
                                     field.Hidden = result;
                                     _ = InvokeAsync(() => StateHasChanged());
-                                });
+                                });*/
                                 break;
                             case "sdk-required":
-                                _ = Task.Run(async () =>
+                                code += @$"
+try {{ Paneles[{panel_index}].Fields[{field_index}].Required = ({(string)attr.Value}); }} catch (Exception ex) {{ throw;  }}";
+                                /*_ = Task.Run(async () =>
                                 {
                                     var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
                                     field.Required = result;
                                     _ = InvokeAsync(() => StateHasChanged());
-                                });
+                                });*/
                                 break;
                             case "sdk-readonly":
                             case "sdk-disabled":
-                                _ = Task.Run(async () =>
+                                code += @$"
+try {{ Paneles[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Value}); }} catch (Exception ex) {{ throw; }}";
+                                /*_ = Task.Run(async () =>
                                 {
                                     var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
                                     field.Disabled = result;
                                     _ = InvokeAsync(() => StateHasChanged());
-                                });
+                                });*/
                                 break;
                             default:
                                 break;
                         }
                     }
                 }
-
+            }
+            //Console.WriteLine(code);
+            if(code != null & code != "")
+            {
+                _ = Task.Run(async () =>
+                 {
+                     BusinessObj.Paneles = Paneles;
+                     await Evaluator.EvaluateCode(code, BusinessObj);
+                     _ = InvokeAsync(() => StateHasChanged());
+                 });
             }
         }
 

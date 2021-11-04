@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Siesa.SDK.Entities;
+using Siesa.SDK.Frontend.Components.FormManager.Model;
 using Siesa.SDK.Shared.Business;
 
 namespace Siesa.SDK.Business
@@ -14,6 +15,8 @@ namespace Siesa.SDK.Business
     public class BLFrontendSimple<T> : IBLBase<T> where T : BaseEntity
     {
         public string BusinessName { get; set; }
+        [JsonIgnore]
+        public List<Panel> Paneles = new List<Panel>();
         [ValidateComplexType]
         public T BaseObj { get; set; }
 
