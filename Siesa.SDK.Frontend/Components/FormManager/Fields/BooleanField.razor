@@ -1,4 +1,37 @@
 ﻿@inherits FieldClass<Boolean>
 
-<DxCheckBox @bind-Checked="@BindValue" />
-@FieldValidationTemplate
+@using System.Linq.Expressions
+@if (!FieldOpt.Hidden)
+{
+    @FieldTemplate
+    @FieldValidationTemplate
+}
+
+
+@code {
+    private RenderFragment? _fieldValidationTemplate;
+    public RenderFragment? FieldTemplate
+    {
+        get
+        {
+
+            return _fieldValidationTemplate != null ? _fieldValidationTemplate : builder =>
+            {
+                var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
+                var lambda = Expression.Lambda(typeof(Func<>).MakeGenericType(typeof(bool)), access);
+
+                builder.OpenComponent(0, typeof(DxCheckBox<bool>));
+                builder.AddAttribute(1, "CheckedExpression", lambda);
+                builder.AddAttribute(2, "Checked", (bool)BindValue);
+                builder.AddAttribute(3, "CheckedChanged", EventCallback.Factory.Create<System.Boolean>(this, str => { SetValue(str); }));
+                builder.AddAttribute(4, "NullText", FieldOpt.Placeholder);
+                builder.AddAttribute(5, "CssClass", FieldOpt.CssClass);
+                builder.AddAttribute(6, "ReadOnly", FieldOpt.Disabled);
+                builder.AddAttribute(7, "field-name", FieldOpt.Name);
+
+                builder.CloseComponent();
+            };
+
+        }
+    }
+}
