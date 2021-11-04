@@ -136,6 +136,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                                     _ = InvokeAsync(() => StateHasChanged());
                                 });
                                 break;
+                            case "sdk-readonly":
+                            case "sdk-disabled":
+                                _ = Task.Run(async () =>
+                                {
+                                    var result = (bool)await EvaluateCode((string)attr.Value, BusinessObj);
+                                    field.Disabled = result;
+                                    _ = InvokeAsync(() => StateHasChanged());
+                                });
+                                break;
                             default:
                                 break;
                         }
