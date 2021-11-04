@@ -70,8 +70,17 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         {
             Loading = true;
             StateHasChanged();
-            var id = await BusinessObj.SaveAsync();
+            //var id = await BusinessObj.SaveAsync();
+            var result = await BusinessObj.ValidateAndSaveAsync();
             Loading = false;
+            ErrorMsg = string.Empty;
+            if (!result.Succesfull)
+            {
+                ErrorMsg = result.ResumeHTML();
+               
+                return;
+            }
+            var id = result.Rowid;
             NavManager.NavigateTo($"{BusinessName}/detail/{id}/");
         }
 
