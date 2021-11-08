@@ -96,6 +96,8 @@ namespace Siesa.SDK.Business
         {
             var operationResult = new SaveSimpleOperationResult ();
             BaseOperationResult baseOperation = operationResult;
+            ValidateBussines(ref baseOperation);
+            
             K validator = Activator.CreateInstance<K>();
             SDKValidator.Validate<T>(BaseObj, validator, ref baseOperation);
             if(operationResult.Succesfull)
@@ -105,6 +107,11 @@ namespace Siesa.SDK.Business
                 operationResult.Rowid = result;
             }
             return operationResult;
+        }
+
+        protected virtual void ValidateBussines(ref BaseOperationResult operationResult)
+        {
+            // Do nothing
         }
 
     }
