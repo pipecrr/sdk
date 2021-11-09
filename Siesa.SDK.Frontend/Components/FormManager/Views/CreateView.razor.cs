@@ -76,7 +76,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             ErrorMsg = string.Empty;
             if (result.Errors.Count > 0)
             {
-                ErrorMsg = $"{result.Errors.Count}";
+                ErrorMsg = "<ul>";
+                foreach (var error in result.Errors)
+                {
+                    ErrorMsg += $"<li>{error.Attribute} - {error.Message}</li>";
+                }
+                ErrorMsg += "</ul>";
 
 
                 return;

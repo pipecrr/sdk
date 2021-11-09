@@ -7,7 +7,6 @@ using Grpc.Net.Client;
 using Siesa.SDK.Protos;
 using Siesa.SDK.Frontend;
 using Grpc.Core;
-using Siesa.SDK.Shared.Results;
 
 namespace Siesa.SDK.Frontend.Backend
 {

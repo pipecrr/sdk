@@ -9,7 +9,6 @@ using Newtonsoft.Json;
 using Siesa.SDK.Entities;
 using Siesa.SDK.Protos;
 using Siesa.SDK.Shared.Business;
-using Siesa.SDK.Shared.Results;
 using Siesa.SDK.Shared.Validators;
 
 namespace Siesa.SDK.Business
@@ -100,9 +99,22 @@ namespace Siesa.SDK.Business
 
         public async virtual Task<ValidateAndSaveBusinessObjResponse> ValidateAndSaveAsync()
         {
+            ValidateAndSaveBusinessObjResponse resultValidationFront = new();
+            Validate(ref resultValidationFront);
+            if (resultValidationFront.Errors.Count > 0)
+            {
+                return resultValidationFront;
+            }
             var businness = Frontend.BusinessManager.Instance.GetBusiness(BusinessName);
             var result = await businness.ValidateAndSave(this);
             return result;
+        }
+
+        private void Validate(ref ValidateAndSaveBusinessObjResponse baseOperation)
+        {
+            ValidateBussines(ref baseOperation);
+            K validator = Activator.CreateInstance<K>();
+            SDKValidator.Validate<T>(BaseObj, validator, ref baseOperation);
         }
 
         protected virtual void ValidateBussines(ref ValidateAndSaveBusinessObjResponse operationResult)

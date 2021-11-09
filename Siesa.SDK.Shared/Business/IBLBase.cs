@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Siesa.SDK.Entities;
 using Siesa.SDK.Protos;
 using Siesa.SDK.Shared.Business;
-using Siesa.SDK.Shared.Results;
 
 namespace Siesa.SDK.Business
 {

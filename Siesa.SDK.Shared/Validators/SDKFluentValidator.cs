@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using FluentValidation;
 using FluentValidation.Results;
 using Siesa.SDK.Protos;
-using Siesa.SDK.Shared.Results;
 
 namespace Siesa.SDK.Shared.Validators
 {

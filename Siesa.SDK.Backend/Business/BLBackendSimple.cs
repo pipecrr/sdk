@@ -8,7 +8,6 @@ using Siesa.SDK.Backend.Access;
 using Siesa.SDK.Entities;
 using Siesa.SDK.Protos;
 using Siesa.SDK.Shared.Business;
-using Siesa.SDK.Shared.Results;
 using Siesa.SDK.Shared.Validators;
 
 namespace Siesa.SDK.Business
