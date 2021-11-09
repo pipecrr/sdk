@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Siesa.SDK.Backend.Access;
 using Siesa.SDK.Entities;
+using Siesa.SDK.Protos;
 using Siesa.SDK.Shared.Business;
 using Siesa.SDK.Shared.Results;
 using Siesa.SDK.Shared.Validators;
@@ -40,13 +41,13 @@ namespace Siesa.SDK.Business
             } 
         }
 
-        public virtual SaveSimpleOperationResult ValidateAndSave()
+        public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave()
         {
-            SaveSimpleOperationResult result = new ();
-            BaseOperationResult baseOperation = result;
-            Validate(ref baseOperation);
+            ValidateAndSaveBusinessObjResponse result = new ();
             
-            if(!result.Succesfull)
+            Validate(ref result);
+            
+            if(result.Errors.Count > 0)
             {
                 return result;
             }
@@ -59,7 +60,7 @@ namespace Siesa.SDK.Business
             return result;
         }
 
-        private void Validate(ref BaseOperationResult baseOperation)
+        private void Validate(ref ValidateAndSaveBusinessObjResponse baseOperation)
         {   
             ValidateBussines(ref baseOperation);
             K validator = Activator.CreateInstance<K>();
@@ -97,9 +98,9 @@ namespace Siesa.SDK.Business
             return 0;
         }
 
-        public virtual LoadResult List(int page = 0, int pageSize = 30, string options = "")
+        public virtual Siesa.SDK.Shared.Business.LoadResult List(int page = 0, int pageSize = 30, string options = "")
         {
-            var result = new LoadResult();
+            var result = new Siesa.SDK.Shared.Business.LoadResult();
             using (SDKContext context = _dbFactory.CreateDbContext())
             {
                 //total data
@@ -114,7 +115,7 @@ namespace Siesa.SDK.Business
         {
             throw new NotImplementedException();
         }
-        protected virtual void ValidateBussines(ref BaseOperationResult operationResult)
+        protected virtual void ValidateBussines(ref ValidateAndSaveBusinessObjResponse operationResult)
         {
             // Do nothing
         }

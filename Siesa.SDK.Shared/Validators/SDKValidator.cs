@@ -1,4 +1,5 @@
-﻿using Siesa.SDK.Shared.Results;
+﻿using Siesa.SDK.Protos;
+using Siesa.SDK.Shared.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Siesa.SDK.Shared.Validators
     public class SDKValidator
     {
 
-        public static void Validate<T>(T obj, BLBaseValidator<T> validator,  ref BaseOperationResult operationResult)
+        public static void Validate<T>(T obj, BLBaseValidator<T> validator,  ref ValidateAndSaveBusinessObjResponse operationResult)
         {
             SDKDataAnnotationValidator.Validate<T>(obj, ref operationResult);
             SDKFluentValidator.Validate<T>(validator, obj, ref operationResult);

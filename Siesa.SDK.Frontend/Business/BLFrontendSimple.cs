@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Siesa.SDK.Entities;
+using Siesa.SDK.Protos;
 using Siesa.SDK.Shared.Business;
 using Siesa.SDK.Shared.Results;
 using Siesa.SDK.Shared.Validators;
@@ -54,7 +55,7 @@ namespace Siesa.SDK.Business
             return SaveAsync().GetAwaiter().GetResult();
         }
 
-        public virtual SaveSimpleOperationResult ValidateAndSave()
+        public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave()
         {
             return ValidateAndSaveAsync().GetAwaiter().GetResult();
         }
@@ -81,30 +82,30 @@ namespace Siesa.SDK.Business
             return BaseObj.ToString();
         }
 
-        public virtual LoadResult List(int page = 0, int pageSize = 30, string options = "")
+        public virtual Siesa.SDK.Shared.Business.LoadResult List(int page = 0, int pageSize = 30, string options = "")
         {
             return ListAsync(page, pageSize, options).GetAwaiter().GetResult();
         }
 
-        public async virtual Task<LoadResult> ListAsync(int page = 0, int pageSize = 30, string options = "")
+        public async virtual Task<Siesa.SDK.Shared.Business.LoadResult> ListAsync(int page = 0, int pageSize = 30, string options = "")
         {
             var businness = Frontend.BusinessManager.Instance.GetBusiness(BusinessName);
             var result = await businness.List(page, pageSize, options);
-            LoadResult response = new LoadResult();
+            Siesa.SDK.Shared.Business.LoadResult response = new Siesa.SDK.Shared.Business.LoadResult();
             response.Data = result.Data.Select(x => JsonConvert.DeserializeObject<T>(x)).ToList();
             response.TotalCount = result.TotalCount;
             response.GroupCount = result.GroupCount;
             return response;
         }
 
-        public async virtual Task<SaveSimpleOperationResult> ValidateAndSaveAsync()
+        public async virtual Task<ValidateAndSaveBusinessObjResponse> ValidateAndSaveAsync()
         {
             var businness = Frontend.BusinessManager.Instance.GetBusiness(BusinessName);
             var result = await businness.ValidateAndSave(this);
             return result;
         }
 
-        protected virtual void ValidateBussines(ref BaseOperationResult operationResult)
+        protected virtual void ValidateBussines(ref ValidateAndSaveBusinessObjResponse operationResult)
         {
             // Do nothing
         }

@@ -95,6 +95,18 @@ namespace Siesa.SDK.GRPCServices
             return Task.FromResult(response);
         }
 
+        public override Task<ValidateAndSaveBusinessObjResponse> ValidateAndSaveBusinessObj(ValidateAndSaveBusinessObjRequest request, ServerCallContext context)
+        {
+            BusinessModel businessRegistry = BusinessManager.Instance.GetBusiness(request.BusinessName);
+            var businessType = FindType(businessRegistry.Namespace + "." + businessRegistry.Name);
+            //dynamic x = Activator.CreateInstance(businessType);
+            //json deserialize using Newtonsoft.Json
+            dynamic businessObj = Newtonsoft.Json.JsonConvert.DeserializeObject(request.Business, businessType);
+            var response = businessObj.ValidateAndSave();
+            return Task.FromResult(response);
+
+        }
+
 
     }
 }

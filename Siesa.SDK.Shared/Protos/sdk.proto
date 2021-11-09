@@ -49,8 +49,15 @@ message ValidateAndSaveBusinessObjRequest {
   string businessName = 2;
 }
 
+message OperationError {
+	string message = 1;
+	string attribute = 2;
+}
+
 message ValidateAndSaveBusinessObjResponse {
-  string json = 1;
+  //string json = 1;
+  int32 Rowid = 1;
+  repeated OperationError errors = 2;
 }
 
 message DeleteBusinessObjRequest {

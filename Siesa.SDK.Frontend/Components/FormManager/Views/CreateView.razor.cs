@@ -74,10 +74,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             var result = await BusinessObj.ValidateAndSaveAsync();
             Loading = false;
             ErrorMsg = string.Empty;
-            if (!result.Succesfull)
+            if (result.Errors.Count > 0)
             {
-                ErrorMsg = result.ResumeHTML();
-               
+                ErrorMsg = $"{result.Errors.Count}";
+
+
                 return;
             }
             var id = result.Rowid;

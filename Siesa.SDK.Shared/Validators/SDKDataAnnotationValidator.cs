@@ -1,4 +1,5 @@
-﻿using Siesa.SDK.Shared.Results;
+﻿using Siesa.SDK.Protos;
+using Siesa.SDK.Shared.Results;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,7 +11,7 @@ namespace Siesa.SDK.Shared.Validators
 {
     public static class SDKDataAnnotationValidator
     {
-        public static bool Validate<T>(T obj, ref BaseOperationResult operationResult)
+        public static bool Validate<T>(T obj, ref ValidateAndSaveBusinessObjResponse operationResult)
         {
             var resultsDataAnnotation = new List<ValidationResult>();            
 
@@ -19,7 +20,10 @@ namespace Siesa.SDK.Shared.Validators
 
             foreach (var resultDataAnnotation in resultsDataAnnotation)
             {
-                operationResult.AddOperationError(new BasicOperationError(resultDataAnnotation.MemberNames.FirstOrDefault(), resultDataAnnotation.ErrorMessage));
+                operationResult.Errors.Add(new OperationError { 
+                    Attribute = resultDataAnnotation.MemberNames.FirstOrDefault(),
+                    Message = resultDataAnnotation.ErrorMessage
+                });
             }
 
             return validate;
