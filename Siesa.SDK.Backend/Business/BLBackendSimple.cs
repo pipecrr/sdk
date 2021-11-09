@@ -7,10 +7,12 @@ using Microsoft.EntityFrameworkCore;
 using Siesa.SDK.Backend.Access;
 using Siesa.SDK.Entities;
 using Siesa.SDK.Shared.Business;
+using Siesa.SDK.Shared.Results;
+using Siesa.SDK.Shared.Validators;
 
 namespace Siesa.SDK.Business
 {
-    public class BLBackendSimple<T> : IBLBase<T> where T : BaseEntity
+    public class BLBackendSimple<T, K> : IBLBase<T> where T : BaseEntity where K : BLBaseValidator<T>
     {
         private IServiceProvider _provider;
         private dynamic _dbFactory;
@@ -38,22 +40,45 @@ namespace Siesa.SDK.Business
             } 
         }
 
-        public virtual int Save()
+        public virtual SaveSimpleOperationResult ValidateAndSave()
         {
+            SaveSimpleOperationResult result = new ();
+            BaseOperationResult baseOperation = result;
+            Validate(ref baseOperation);
+            
+            if(!result.Succesfull)
+            {
+                return result;
+            }
+            
             using (SDKContext context = _dbFactory.CreateDbContext())
             {
-                if (BaseObj.RowID == 0)
-                {
-                    context.Add<T>(BaseObj);
-                }
-                else
-                {
-                    BaseObj.LastUpdateDate = DateTime.Now;
-                    context.Update<T>(BaseObj); //TODO: Validar que el ID exista al actualizar
-                }
-                
-                context.SaveChanges(); //TODO: Capturar errores db y hacer rollback
+                result.Rowid = Save(context);
             }
+            
+            return result;
+        }
+
+        private void Validate(ref BaseOperationResult baseOperation)
+        {   
+            ValidateBussines(ref baseOperation);
+            K validator = Activator.CreateInstance<K>();
+            SDKValidator.Validate<T>(BaseObj, validator, ref baseOperation);
+        }
+
+        private int Save(SDKContext context)
+        {
+            if (BaseObj.RowID == 0)
+            {
+                context.Add<T>(BaseObj);
+            }
+            else
+            {
+                BaseObj.LastUpdateDate = DateTime.Now;
+                context.Update<T>(BaseObj); //TODO: Validar que el ID exista al actualizar
+            }
+
+            context.SaveChanges(); //TODO: Capturar errores db y hacer rollback
             return BaseObj.RowID;
         }
 
@@ -88,6 +113,10 @@ namespace Siesa.SDK.Business
         public Task<T> GetAsync(int id)
         {
             throw new NotImplementedException();
+        }
+        protected virtual void ValidateBussines(ref BaseOperationResult operationResult)
+        {
+            // Do nothing
         }
     }
 

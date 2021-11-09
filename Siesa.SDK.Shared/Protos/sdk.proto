@@ -10,6 +10,7 @@ service SDK {
   rpc GetListBusinessObj (GetListBusinessObjRequest) returns (LoadResult);
 
   rpc SaveBusinessObj (SaveBusinessObjRequest) returns (SaveBusinessObjResponse);
+  rpc ValidateAndSaveBusinessObj (ValidateAndSaveBusinessObjRequest) returns (ValidateAndSaveBusinessObjResponse);
   rpc DeleteBusinessObj (DeleteBusinessObjRequest) returns (DeleteBusinessObjResponse);
 }
 
@@ -41,6 +42,15 @@ message SaveBusinessObjRequest {
 
 message SaveBusinessObjResponse {
   int32 id = 1;
+}
+
+message ValidateAndSaveBusinessObjRequest {
+  string business = 1;
+  string businessName = 2;
+}
+
+message ValidateAndSaveBusinessObjResponse {
+  string json = 1;
 }
 
 message DeleteBusinessObjRequest {

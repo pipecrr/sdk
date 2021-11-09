@@ -7,6 +7,7 @@ using Grpc.Net.Client;
 using Siesa.SDK.Protos;
 using Siesa.SDK.Frontend;
 using Grpc.Core;
+using Siesa.SDK.Shared.Results;
 
 namespace Siesa.SDK.Frontend.Backend
 {
@@ -36,6 +37,20 @@ namespace Siesa.SDK.Frontend.Backend
 
             }
 
+        }
+
+        public async Task<SaveSimpleOperationResult> ValidateAndSaveBusiness(string business_name, dynamic obj)
+        {
+            using var channel = GrpcChannel.ForAddress(this.Url);
+            var client = new Protos.SDK.SDKClient(channel);
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(obj);
+            var request = new Protos.SaveBusinessObjRequest
+            {
+                Business = json,
+                BusinessName = business_name
+            };
+            var response = await client.SaveBusinessObjAsync(request);
+            return null;
         }
 
         public async Task<int> SaveBusiness(string business_name, dynamic obj)

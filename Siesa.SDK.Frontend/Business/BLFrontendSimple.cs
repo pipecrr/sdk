@@ -13,7 +13,7 @@ using Siesa.SDK.Shared.Validators;
 
 namespace Siesa.SDK.Business
 {
-    public class BLFrontendSimple<T,K> : IBLBase<T> where T : BaseEntity where K : BLBaseValidator<T>
+    public class BLFrontendSimple<T, K> : IBLBase<T> where T : BaseEntity where K : BLBaseValidator<T>
     {
         public string BusinessName { get; set; }
         [ValidateComplexType]
@@ -52,6 +52,11 @@ namespace Siesa.SDK.Business
         public virtual int Save()
         {
             return SaveAsync().GetAwaiter().GetResult();
+        }
+
+        public virtual SaveSimpleOperationResult ValidateAndSave()
+        {
+            return ValidateAndSaveAsync().GetAwaiter().GetResult();
         }
 
         public virtual void Update()
@@ -94,19 +99,9 @@ namespace Siesa.SDK.Business
 
         public async virtual Task<SaveSimpleOperationResult> ValidateAndSaveAsync()
         {
-            var operationResult = new SaveSimpleOperationResult ();
-            BaseOperationResult baseOperation = operationResult;
-            ValidateBussines(ref baseOperation);
-            
-            K validator = Activator.CreateInstance<K>();
-            SDKValidator.Validate<T>(BaseObj, validator, ref baseOperation);
-            if(operationResult.Succesfull)
-            { 
-                var businness = Frontend.BusinessManager.Instance.GetBusiness(BusinessName);
-                var result = await businness.Save(this);
-                operationResult.Rowid = result;
-            }
-            return operationResult;
+            var businness = Frontend.BusinessManager.Instance.GetBusiness(BusinessName);
+            var result = await businness.ValidateAndSave(this);
+            return result;
         }
 
         protected virtual void ValidateBussines(ref BaseOperationResult operationResult)
