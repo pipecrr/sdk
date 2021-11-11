@@ -11,6 +11,7 @@ using Siesa.SDK.Protos;
 using Siesa.SDK.Shared.Business;
 using Siesa.SDK.Shared.Validators;
 using Siesa.SDK.Shared.Exceptions;
+using Siesa.SDK.Backend.Exceptions;
 
 namespace Siesa.SDK.Business
 {
@@ -73,6 +74,13 @@ namespace Siesa.SDK.Business
             return result;            
         }
 
+        private void AddErrorToResult(ValidateAndSaveBusinessObjResponse result, DbUpdateException exception)
+        {
+            var message = BackendExceptionManager.ExceptionToString(exception);
+            message += $"\nBussiness Name: {BusinessName}";
+            message += $"\nObject {BaseObj}";
+            result.Errors.Add(new OperationError() { Message = message });
+        }
         private void AddErrorToResult(ValidateAndSaveBusinessObjResponse result, Exception exception)
         {
             var message = ExceptionManager.ExceptionToString(exception);
