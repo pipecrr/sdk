@@ -64,29 +64,33 @@ namespace Siesa.SDK.Business
             }
             catch(DbUpdateException exception)
             {
-                AddErrorToResult(result, exception);
+                AddExceptionToResult(exception, result);
             }
             catch (Exception exception)
             {
-                AddErrorToResult(result, exception);
+                AddExceptionToResult(exception,result);
             }
             
             return result;            
         }
 
-        private void AddErrorToResult(ValidateAndSaveBusinessObjResponse result, DbUpdateException exception)
+        private void AddExceptionToResult(DbUpdateException exception, ValidateAndSaveBusinessObjResponse result)
         {
             var message = BackendExceptionManager.ExceptionToString(exception);
+            AddMessageToResult(message, result);
+        }
+
+        private void AddExceptionToResult(Exception exception, ValidateAndSaveBusinessObjResponse result)
+        {
+            var message = ExceptionManager.ExceptionToString(exception);
+            AddMessageToResult(message, result);
+        }
+
+        private void AddMessageToResult(string message, ValidateAndSaveBusinessObjResponse result)
+        {
             message += $"Bussiness Name: {BusinessName}";
             message += $"\nObject {BaseObj}";
             result.Errors.Add(new OperationError() { Message = message });
-        }
-        private void AddErrorToResult(ValidateAndSaveBusinessObjResponse result, Exception exception)
-        {
-            var message = ExceptionManager.ExceptionToString(exception);
-            message += $"Bussiness Name: {BusinessName}";
-            message += $"\nObject {BaseObj}";
-            result.Errors.Add(new OperationError() { Message = message});
         }
 
         private void Validate(ref ValidateAndSaveBusinessObjResponse baseOperation)
