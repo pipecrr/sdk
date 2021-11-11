@@ -77,14 +77,14 @@ namespace Siesa.SDK.Business
         private void AddErrorToResult(ValidateAndSaveBusinessObjResponse result, DbUpdateException exception)
         {
             var message = BackendExceptionManager.ExceptionToString(exception);
-            message += $"\nBussiness Name: {BusinessName}";
+            message += $"Bussiness Name: {BusinessName}";
             message += $"\nObject {BaseObj}";
             result.Errors.Add(new OperationError() { Message = message });
         }
         private void AddErrorToResult(ValidateAndSaveBusinessObjResponse result, Exception exception)
         {
             var message = ExceptionManager.ExceptionToString(exception);
-            message += $"\nBussiness Name: {BusinessName}";
+            message += $"Bussiness Name: {BusinessName}";
             message += $"\nObject {BaseObj}";
             result.Errors.Add(new OperationError() { Message = message});
         }

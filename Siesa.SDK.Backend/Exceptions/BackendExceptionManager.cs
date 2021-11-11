@@ -15,30 +15,55 @@ namespace Siesa.SDK.Backend.Exceptions
             messageBuilder.AppendLine("Exception updating record(s) in the database: ");
             if (exception.InnerException != null)
             {
-                messageBuilder.AppendLine(ExceptionToString((Microsoft.Data.SqlClient.SqlException) exception.InnerException));
+                messageBuilder.Append(ExceptionToString((Microsoft.Data.SqlClient.SqlException) exception.InnerException));
             }
             return messageBuilder.ToString();
         }
 
         private static string ExceptionToString(Microsoft.Data.SqlClient.SqlException exception)
-        {
+        { 
+            string errorMessage = string.Empty;
             var messageBuilder = new StringBuilder();
             foreach(Microsoft.Data.SqlClient.SqlError error in exception.Errors)
             {
-                messageBuilder.AppendLine(ErrorToString(error));
+                errorMessage = ErrorToString(error);
+                if (!string.IsNullOrWhiteSpace(errorMessage))
+                {
+                    messageBuilder.AppendLine(errorMessage);
+                }                
             }
             return messageBuilder.ToString();
         }
         private static string ErrorToString(Microsoft.Data.SqlClient.SqlError error)
         {
-            if(error.Number == 547)
+            string message = string.Empty;
+
+            if (error.Number == 547)
             {
-                return "Error to insert record";
+                var errorMessage = error.Message.Replace("\"","'");
+                var regex = @"\A(\s?\w+\s?)*\'(?<ForeingKey>.+?)\'\.(\s?\w+\s?)*\'(?<DataBase>.+?)\'\,(\s?\w+\s?)*\'(?<TableName>.+?)\'\,(\s?\w+\s?)*\'(?<ColumnName>.+?)\'.";
+                var match = new System.Text.RegularExpressions.Regex(regex, System.Text.RegularExpressions.RegexOptions.Compiled).Match(errorMessage);
+
+                message += $"Foreing key: { match?.Groups["ForeingKey"].Value}";
+                message += $"\nData base: { match?.Groups["DataBase"].Value}";
+                message += $"\nTable name: { match?.Groups["TableName"].Value}";
+                message += $"\nColumn name: { match?.Groups["ColumnName"].Value}";
+
+                return message;
             }
+
             if(error.Number == 2601)
-            {
-                return error.Message;
+            { 
+                var regex = @"\A(\s?\w+\s?)*\'(?<TableName>.+?)\'(\s?\w+\s?)*\'(?<IndexName>.+?)\'\.(\s?\w+\s?)*\((?<KeyValues>.+?)\)";
+                var match = new System.Text.RegularExpressions.Regex(regex, System.Text.RegularExpressions.RegexOptions.Compiled).Match(error.Message);
+            
+                message += $"Table: { match?.Groups["TableName"].Value}";
+                message += $"\nIndex name: { match?.Groups["IndexName"].Value}";
+                message += $"\nKey values: { match?.Groups["KeyValues"].Value}";
+
+                return message;
             }
+            
             if (error.Number == 3621)
             {
                 return string.Empty;
