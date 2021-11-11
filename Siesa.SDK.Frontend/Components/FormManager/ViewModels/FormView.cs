@@ -173,8 +173,23 @@ try {{ Paneles[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Va
         {
             Loading = true;
             StateHasChanged();
-            var id = await BusinessObj.SaveAsync();
+            //var id = await BusinessObj.SaveAsync();
+            var result = await BusinessObj.ValidateAndSaveAsync();
             Loading = false;
+            ErrorMsg = string.Empty;
+            if (result.Errors.Count > 0)
+            {
+                ErrorMsg = "<ul>";
+                foreach (var error in result.Errors)
+                {
+                    ErrorMsg += $"<li>{error.Attribute} - {error.Message}</li>";
+                }
+                ErrorMsg += "</ul>";
+
+
+                return;
+            }
+            var id = result.Rowid;
             NavManager.NavigateTo($"{BusinessName}/detail/{id}/");
         }
 

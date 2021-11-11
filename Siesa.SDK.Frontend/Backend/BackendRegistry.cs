@@ -38,6 +38,20 @@ namespace Siesa.SDK.Frontend.Backend
 
         }
 
+        public async Task<ValidateAndSaveBusinessObjResponse> ValidateAndSaveBusiness(string business_name, dynamic obj)
+        {
+            using var channel = GrpcChannel.ForAddress(this.Url);
+            var client = new Protos.SDK.SDKClient(channel);
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(obj);
+            var request = new Protos.ValidateAndSaveBusinessObjRequest
+            {
+                Business = json,
+                BusinessName = business_name
+            };
+            var response = await client.ValidateAndSaveBusinessObjAsync(request);
+            return response;
+        }
+
         public async Task<int> SaveBusiness(string business_name, dynamic obj)
         {
             using var channel = GrpcChannel.ForAddress(this.Url);

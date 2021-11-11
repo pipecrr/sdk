@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Siesa.SDK.Entities;
+using Siesa.SDK.Protos;
 using Siesa.SDK.Shared.Business;
 
 namespace Siesa.SDK.Business
@@ -13,10 +14,10 @@ namespace Siesa.SDK.Business
         T BaseObj { get; set; }
         T Get(int id);
         Task<T> GetAsync(int id);
-        int Save();
+        ValidateAndSaveBusinessObjResponse ValidateAndSave();
         void Update();
         int Delete();
-        LoadResult List(int page, int pageSize, string options);
+        Siesa.SDK.Shared.Business.LoadResult List(int page, int pageSize, string options);
     }
 
 }

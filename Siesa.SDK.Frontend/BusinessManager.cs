@@ -24,6 +24,12 @@ namespace Siesa.SDK.Frontend
             return backend.SaveBusiness(Name, obj);
         }
 
+        public dynamic ValidateAndSave(dynamic obj)
+        {
+            BackendRegistry backend = BackendManager.Instance.GetBackend(BackendName);
+            return backend.ValidateAndSaveBusiness(Name, obj);
+        }
+
         public dynamic Delete(int id)
         {
             BackendRegistry backend = BackendManager.Instance.GetBackend(BackendName);
