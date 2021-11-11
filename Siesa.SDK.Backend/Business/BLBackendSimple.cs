@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Siesa.SDK.Backend.Access;
 using Siesa.SDK.Entities;
 using Siesa.SDK.Shared.Business;

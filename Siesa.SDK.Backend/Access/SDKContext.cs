@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,25 +10,6 @@ namespace Siesa.SDK.Backend.Access
 {
     public abstract class SDKContext: DbContext
     {
-        private string ToSnakeCase(string input)
-        {
-            var returnString = "";
-            foreach (var chr in input)
-            {
-                if (chr.ToString().ToUpper() == chr.ToString())
-                {
-                    // is uppercase character
-                    returnString += '_' + chr.ToString().ToLower();
-                }
-                else
-                {
-                    returnString += chr;
-                }
-            }
-
-            returnString = returnString.TrimStart('_');
-            return returnString;
-        }
         public SDKContext(DbContextOptions options) : base(options)
         {
 
@@ -50,7 +32,7 @@ namespace Siesa.SDK.Backend.Access
                 // properties
                 foreach (var property in entity.GetProperties())
                 {
-                    var column_name = property.GetColumnName().Trim();
+                    var column_name = property.GetColumnName(StoreObjectIdentifier.Table(table_name, entity.GetSchema())).Trim();
                     if (table_name_parts.Length > 1 && (column_name.ToLower() == "rowid" || column_name.ToLower() == "id")) {
                         var tmp_name = column_name;
                         column_name = String.Join("", table_name_parts.Skip(1)) + tmp_name;
