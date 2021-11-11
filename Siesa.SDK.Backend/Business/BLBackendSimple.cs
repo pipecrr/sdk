@@ -10,6 +10,7 @@ using Siesa.SDK.Entities;
 using Siesa.SDK.Protos;
 using Siesa.SDK.Shared.Business;
 using Siesa.SDK.Shared.Validators;
+using Siesa.SDK.Shared.Exceptions;
 
 namespace Siesa.SDK.Business
 {
@@ -38,30 +39,50 @@ namespace Siesa.SDK.Business
             using (SDKContext context = _dbFactory.CreateDbContext())
             {
                 return context.Set<T>().Find(id);
-            } 
+            }
         }
 
         public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave()
         {
-            ValidateAndSaveBusinessObjResponse result = new ();
-            
-            Validate(ref result);
-            
-            if(result.Errors.Count > 0)
+            ValidateAndSaveBusinessObjResponse result = new();
+
+            try
             {
-                return result;
+
+                Validate(ref result);
+
+                if (result.Errors.Count > 0)
+                {
+                    return result;
+                }
+
+                using (SDKContext context = _dbFactory.CreateDbContext())
+                {
+                    result.Rowid = Save(context);
+                }
+            }
+            catch(DbUpdateException exception)
+            {
+                AddErrorToResult(result, exception);
+            }
+            catch (Exception exception)
+            {
+                AddErrorToResult(result, exception);
             }
             
-            using (SDKContext context = _dbFactory.CreateDbContext())
-            {
-                result.Rowid = Save(context);
-            }
-            
-            return result;
+            return result;            
+        }
+
+        private void AddErrorToResult(ValidateAndSaveBusinessObjResponse result, Exception exception)
+        {
+            var message = ExceptionManager.ExceptionToString(exception);
+            message += $"\nBussiness Name: {BusinessName}";
+            message += $"\nObject {BaseObj}";
+            result.Errors.Add(new OperationError() { Message = message});
         }
 
         private void Validate(ref ValidateAndSaveBusinessObjResponse baseOperation)
-        {   
+        {
             ValidateBussines(ref baseOperation);
             K validator = Activator.CreateInstance<K>();
             SDKValidator.Validate<T>(BaseObj, validator, ref baseOperation);
