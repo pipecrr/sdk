@@ -5,26 +5,26 @@
 }
 else if (ModelLoaded == true)
 {
-    <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
+        <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
 
-        @if (Paneles.Count > 1)
-        {
-            <DxFormLayoutTabPages>
-                @foreach (var panel in Paneles)
-                {
-                    <DxFormLayoutTabPage Caption="@panel.Label">
-                        <FieldsContainer Fields="@panel.Fields" ModelObj="@BusinessObj" />
-                    </DxFormLayoutTabPage>
-                }
-            </DxFormLayoutTabPages>
+            @if (Paneles.Count > 1)
+            {
+                <DxFormLayoutTabPages>
+                    @foreach (var panel in Paneles)
+                    {
+                        <DxFormLayoutTabPage Caption="@panel.Label">
+                            <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" ModelObj="@BusinessObj" />
+                        </DxFormLayoutTabPage>
+                    }
+                </DxFormLayoutTabPages>
 
-        }
-        else
-        {
-            <FieldsContainer Fields="@Paneles[0].Fields" ModelObj="@BusinessObj" />
+            }
+            else
+            {
+                <FieldsContainer Fields="@Paneles[0].Fields" SubViewdef="@Paneles[0].SubViewdef" ModelObj="@BusinessObj" />
 
-        }
-    </DxFormLayout>
+            }
+        </DxFormLayout>
     <SetTopBar>
         <TopBarTitle>@BusinessObj</TopBarTitle>
         <TopBarButtons>

@@ -60,7 +60,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         private void EditContext_OnFieldChanged(object sender, FieldChangedEventArgs e)
         {
-            Console.WriteLine("algo cambió en el form");
             EvaluateDynamicAttributes(e);
         }
 

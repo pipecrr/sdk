@@ -10,6 +10,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
 
         public bool PreserveDOM { get; set; } = true;
         public string PanelId { get; set; } = Guid.NewGuid().ToString();
-        public List<FieldOptions> Fields { get; set; }
+        public List<FieldOptions> Fields { get; set; } = new List<FieldOptions>();
+        public SubViewdef SubViewdef { get; set; }
     }
 }

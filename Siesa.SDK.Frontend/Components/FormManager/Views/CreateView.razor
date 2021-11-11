@@ -23,7 +23,7 @@ else if (BusinessObj.BaseObj != null)
                     {
                         <DxFormLayoutTabPage Caption="@panel.Label">
                             <CascadingValue Value="@EditFormContext">
-                                <FieldsContainer Fields="@panel.Fields" ModelObj="@BusinessObj" />
+                                <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" ModelObj="@BusinessObj" />
                             </CascadingValue>
                         </DxFormLayoutTabPage>
                     }
@@ -35,7 +35,7 @@ else if (BusinessObj.BaseObj != null)
             else
             {
                 <CascadingValue Value="@EditFormContext">
-                    <FieldsContainer Fields="@Paneles[0].Fields" ModelObj="@BusinessObj" />
+                    <FieldsContainer Fields="@Paneles[0].Fields" SubViewdef="@Paneles[0].SubViewdef" ModelObj="@BusinessObj" />
                 </CascadingValue>
 
             }
