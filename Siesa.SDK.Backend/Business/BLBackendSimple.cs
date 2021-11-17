@@ -75,8 +75,13 @@ namespace Siesa.SDK.Business
             }
             else
             {
-                BaseObj.LastUpdateDate = DateTime.Now;
-                context.Update<T>(BaseObj); //TODO: Validar que el ID exista al actualizar
+                //demo borrar
+                //get by rowid
+                T entity = context.Set<T>().Find(BaseObj.RowID);
+                context.Entry(entity).CurrentValues.SetValues(BaseObj);
+                //set updated values
+                entity.LastUpdateDate = DateTime.Now;
+                //context.Update<T>(entity); //TODO: Validar que el ID exista al actualizar
             }
 
             context.SaveChanges(); //TODO: Capturar errores db y hacer rollback
