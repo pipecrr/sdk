@@ -182,7 +182,10 @@ try {{ Paneles[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Va
                 ErrorMsg = "<ul>";
                 foreach (var error in result.Errors)
                 {
-                    ErrorMsg += $"<li>{error.Attribute} - {error.Message}</li>";
+                    ErrorMsg += $"<li>";
+                    ErrorMsg += !string.IsNullOrWhiteSpace(error.Attribute) ?  $"{error.Attribute} - " : string.Empty;
+                    ErrorMsg += error.Message.Replace("\n", "<br />");
+                    ErrorMsg += $"</li>";
                 }
                 ErrorMsg += "</ul>";
 
