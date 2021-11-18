@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Siesa.SDK.Shared.Logs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,25 @@ namespace Siesa.SDK.Backend.Access
         public SDKContext(DbContextOptions options) : base(options)
         {
 
+        }
+
+        public override int SaveChanges()
+        {
+            LogCreator logCreator = new(ChangeTracker.Entries().ToList());
+            logCreator.ProccessBeforeSaveChanges();
+            var result = base.SaveChanges();
+            logCreator.ProccessAfterSaveChanges();
+            CollectChanges(logCreator);
+            return result;
+        }
+
+        private static void CollectChanges(LogCreator logCreator)
+        {
+            try
+            {
+                new LogService().SaveDataEntityLog(logCreator.DataEntityLogs);
+            }
+            catch (Exception) { }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)  
