@@ -18,7 +18,7 @@ namespace Siesa.SDK.Backend.Access
 
         public override int SaveChanges()
         {
-            LogCreator logCreator = new(ChangeTracker.Entries().ToList());
+            LogCreator logCreator = new(ChangeTracker.Entries());
             logCreator.ProccessBeforeSaveChanges();
             var result = base.SaveChanges();
             logCreator.ProccessAfterSaveChanges();

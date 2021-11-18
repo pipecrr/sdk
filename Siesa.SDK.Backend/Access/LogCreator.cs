@@ -18,6 +18,8 @@ namespace Siesa.SDK.Backend.Access
         private readonly List<EntityEntry> _entityEntriesDeleted;
         private readonly List<DataEntityLog> _dataEntityLogs;
 
+        private readonly List<string> _entitiesToLog;
+
         public List<DataEntityLog> DataEntityLogs
         {
             get
@@ -35,11 +37,12 @@ namespace Siesa.SDK.Backend.Access
 
         private LogCreator() { }
 
-        public LogCreator(List<EntityEntry> entityEntries)
+        public LogCreator(IEnumerable<EntityEntry> entityEntries)
         {
-            _entityEntriesAdded = entityEntries.Where(e => e.State == EntityState.Added).ToList();
-            _entityEntriesModified = entityEntries.Where(e => e.State == EntityState.Modified).ToList();
-            _entityEntriesDeleted = entityEntries.Where(e => e.State == EntityState.Deleted).ToList();
+            _entitiesToLog = new List<string> { "Siesa.Demo.Entities.E100_Regional", "Siesa.Demo.Entities.E101_OperationCenter", "Siesa.Demo.Entities.E102_Contact" };
+            _entityEntriesAdded = entityEntries.Where(e => e.State == EntityState.Added && _entitiesToLog.Any(entityName => entityName.Equals(e.Metadata.Name))).ToList();
+            _entityEntriesModified = entityEntries.Where(e => e.State == EntityState.Modified && _entitiesToLog.Any(entityName => entityName.Equals(e.Metadata.Name))).ToList();
+            _entityEntriesDeleted = entityEntries.Where(e => e.State == EntityState.Deleted && _entitiesToLog.Any(entityName => entityName.Equals(e.Metadata.Name))).ToList();
             _dataEntityLogs = new List<DataEntityLog>();
         }
 
@@ -64,6 +67,7 @@ namespace Siesa.SDK.Backend.Access
                     new DataEntityLog()
                     {
                         ID = Guid.NewGuid(),
+                        EntityName = change.Metadata.Name,
                         UserID = "undefined",
                         SessionID = "undefined",
                         Operation = type.ToString(),
