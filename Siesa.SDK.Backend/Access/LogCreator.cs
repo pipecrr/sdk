@@ -66,7 +66,7 @@ namespace Siesa.SDK.Backend.Access
                 result.Add(
                     new DataEntityLog()
                     {
-                        ID = Guid.NewGuid(),
+                        ID = Guid.NewGuid().ToString(),
                         EntityName = change.Metadata.Name,
                         UserID = "undefined",
                         SessionID = "undefined",
@@ -91,32 +91,22 @@ namespace Siesa.SDK.Backend.Access
 
         private static LogProperty GetLogPropertyFromPropertyEntry(PropertyEntry property, LogType type)
         {
+            var logProperty = new LogProperty();
+            logProperty.Name = property.Metadata.Name;
             switch (type)
             {
                 case LogType.Add:
-                    var logPropertyAdded = new LogPropertyAdded
-                    {
-                        Name = property.Metadata.Name,
-                        Value = property.CurrentValue?.ToString()
-                    };
-                    return logPropertyAdded;
+                    logProperty.CurrentValue = property.CurrentValue?.ToString();
+                    break;
                 case LogType.Modify:
-                    var logPropertyModified = new LogPropertyModified
-                    {
-                        Name = property.Metadata.Name,
-                        OldValue = property.OriginalValue?.ToString(),
-                        CurrentValue = property.CurrentValue?.ToString()
-                    };
-                    return logPropertyModified;
+                    logProperty.OldValue = property.OriginalValue?.ToString();
+                    logProperty.CurrentValue = property.CurrentValue?.ToString();
+                    break;
                 case LogType.Delete:
-                    var logPropertyDeleted = new LogPropertyDeleted
-                    {
-                        Name = property.Metadata.Name,
-                        Value = property.CurrentValue?.ToString()
-                    };
-                    return logPropertyDeleted;
+                    logProperty.OldValue = property.OriginalValue?.ToString();
+                    break ;
             }
-            return new LogProperty();
+            return logProperty;
         }
 
         private static IEnumerable<PropertyEntry> FilterProperties(EntityEntry change, LogType type)

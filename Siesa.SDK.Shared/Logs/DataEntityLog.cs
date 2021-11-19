@@ -8,7 +8,7 @@ namespace Siesa.SDK.Shared.Log
 {
     public class DataEntityLog
     {
-        public Guid ID { get; set; }
+        public string ID { get; set; } = string.Empty;
         public string UserID { get; set; } 
         public string SessionID { get; set; }
         public string Operation { get; set; }
