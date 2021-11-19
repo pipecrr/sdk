@@ -48,11 +48,19 @@ namespace Siesa.SDK.Backend.Access
 
         internal void ProccessAfterSaveChanges()
         {
+            if (!AreThereEntitiesToProcess())
+            {
+                return;
+            }
             _dataEntityLogs.AddRange(ProccessList(LogType.Add));
         }
 
         internal void ProccessBeforeSaveChanges()
         {
+            if (!AreThereEntitiesToProcess())
+            {
+                return;
+            }
             _dataEntityLogs.AddRange(ProccessList(LogType.Modify));
             _dataEntityLogs.AddRange(ProccessList(LogType.Delete));
         }
@@ -66,7 +74,7 @@ namespace Siesa.SDK.Backend.Access
                 result.Add(
                     new DataEntityLog()
                     {
-                        ID = Guid.NewGuid().ToString(),
+                        GUID = Guid.NewGuid().ToString(),
                         EntityName = change.Metadata.Name,
                         UserID = "undefined",
                         SessionID = "undefined",
@@ -142,6 +150,13 @@ namespace Siesa.SDK.Backend.Access
                 LogType.Delete => _entityEntriesDeleted,
                 _ => new List<EntityEntry>(),
             };
+        }
+
+        private bool AreThereEntitiesToProcess()
+        {
+            return _entityEntriesAdded.Count() > 0 
+                && _entityEntriesDeleted.Count() > 0
+                && _entityEntriesModified.Count() > 0;
         }
 
 

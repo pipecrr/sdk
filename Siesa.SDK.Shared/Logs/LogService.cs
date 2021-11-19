@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Siesa.SDK.Shared.Logs
 {
-    public class LogService
+    public static class LogService
     {
-        public void SaveDataEntityLog(List<DataEntityLog> logs)
+        public static void SaveDataEntityLog(List<DataEntityLog> logs)
         {
             foreach(var log in logs) { 
                 string result = JsonConvert.SerializeObject(log);

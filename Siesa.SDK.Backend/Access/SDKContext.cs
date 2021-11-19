@@ -30,7 +30,7 @@ namespace Siesa.SDK.Backend.Access
         {
             try
             {
-                new LogService().SaveDataEntityLog(logCreator.DataEntityLogs);
+                LogService.SaveDataEntityLog(logCreator.DataEntityLogs);
             }
             catch (Exception) { }
         }
