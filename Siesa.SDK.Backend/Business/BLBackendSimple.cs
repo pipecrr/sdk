@@ -97,6 +97,7 @@ namespace Siesa.SDK.Business
         {
             ValidateBussines(ref baseOperation);
             K validator = Activator.CreateInstance<K>();
+            validator.ValidatorType = "Entity";
             SDKValidator.Validate<T>(BaseObj, validator, ref baseOperation);
         }
 

@@ -9,5 +9,6 @@ namespace Siesa.SDK.Shared.Validators
 {
     public class BLBaseValidator<T> : AbstractValidator<T>
     {
+        public string ValidatorType { get; set; }
     }
 }
