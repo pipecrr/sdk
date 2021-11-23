@@ -12,9 +12,10 @@ namespace Siesa.SDK.Shared.Logs
     {
         public static void SaveDataEntityLog(List<DataEntityLog> logs)
         {
+            Console.WriteLine("Saving DataEntityLogs");
             foreach(var log in logs) { 
                 string result = JsonConvert.SerializeObject(log);
-                Console.WriteLine(result);
+                Console.WriteLine($"LogService: {result}");
                 //TODO Call web api to storage in NOSQL Database
             }
         }

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Siesa.SDK.Shared.Log;
 using Microsoft.EntityFrameworkCore;
+using Siesa.SDK.Shared.DataAnnotations;
 
 namespace Siesa.SDK.Backend.Access
 {
@@ -18,7 +19,6 @@ namespace Siesa.SDK.Backend.Access
         private readonly List<EntityEntry> _entityEntriesDeleted;
         private readonly List<DataEntityLog> _dataEntityLogs;
 
-        private readonly List<string> _entitiesToLog;
 
         public List<DataEntityLog> DataEntityLogs
         {
@@ -39,10 +39,9 @@ namespace Siesa.SDK.Backend.Access
 
         public LogCreator(IEnumerable<EntityEntry> entityEntries)
         {
-            _entitiesToLog = new List<string> { "Siesa.Demo.Entities.E100_Regional", "Siesa.Demo.Entities.E101_OperationCenter", "Siesa.Demo.Entities.E102_Contact" };
-            _entityEntriesAdded = entityEntries.Where(e => e.State == EntityState.Added && _entitiesToLog.Any(entityName => entityName.Equals(e.Metadata.Name))).ToList();
-            _entityEntriesModified = entityEntries.Where(e => e.State == EntityState.Modified && _entitiesToLog.Any(entityName => entityName.Equals(e.Metadata.Name))).ToList();
-            _entityEntriesDeleted = entityEntries.Where(e => e.State == EntityState.Deleted && _entitiesToLog.Any(entityName => entityName.Equals(e.Metadata.Name))).ToList();
+            _entityEntriesAdded = entityEntries.Where(e => e.State == EntityState.Added && e.Entity.GetType().GetCustomAttributes(typeof(SDKLogEntity), false).Any()).ToList();
+            _entityEntriesModified = entityEntries.Where(e => e.State == EntityState.Modified && e.Entity.GetType().GetCustomAttributes(typeof(SDKLogEntity), false).Any()).ToList();
+            _entityEntriesDeleted = entityEntries.Where(e => e.State == EntityState.Deleted && e.Entity.GetType().GetCustomAttributes(typeof(SDKLogEntity), false).Any()).ToList();
             _dataEntityLogs = new List<DataEntityLog>();
         }
 
@@ -71,6 +70,11 @@ namespace Siesa.SDK.Backend.Access
             var listToProcess = GetListToProcess(type);
             foreach (var change in listToProcess)
             {
+                var properties = GetProperties(change, type);
+                if (properties.Count == 0)
+                {
+                    continue;
+                }
                 result.Add(
                     new DataEntityLog()
                     {
@@ -80,7 +84,7 @@ namespace Siesa.SDK.Backend.Access
                         SessionID = "undefined",
                         Operation = type.ToString(),
                         KeyValues = GetKeyValues(change),
-                        Properties = GetProperties(change, type)
+                        Properties = properties
                     });
             }
             return result;
@@ -119,11 +123,18 @@ namespace Siesa.SDK.Backend.Access
 
         private static IEnumerable<PropertyEntry> FilterProperties(EntityEntry change, LogType type)
         {
+            var result = change.Properties;
             if (type == LogType.Modify)
             {
-                return change.Properties.Where(x => x.IsModified);
+                result = result.Where(p => p.IsModified);
             }
-            return change.Properties;
+            var logEntity = change.Entity.GetType().GetCustomAttributes(typeof(SDKLogEntity), false).FirstOrDefault() as SDKLogEntity;
+            if (logEntity != null && logEntity.Fields.Count() > 0)
+            {
+                result = result.Where(p => logEntity.Fields.Contains(p.Metadata.Name));
+            }
+
+            return result;
         }
 
         private static List<KeyValue> GetKeyValues(EntityEntry change)
@@ -155,8 +166,8 @@ namespace Siesa.SDK.Backend.Access
         private bool AreThereEntitiesToProcess()
         {
             return _entityEntriesAdded.Count() > 0 
-                && _entityEntriesDeleted.Count() > 0
-                && _entityEntriesModified.Count() > 0;
+                || _entityEntriesDeleted.Count() > 0
+                || _entityEntriesModified.Count() > 0;
         }
 
 
