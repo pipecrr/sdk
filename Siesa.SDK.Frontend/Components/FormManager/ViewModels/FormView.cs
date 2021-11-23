@@ -30,7 +30,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         public String ErrorMsg = "";
         public string FormID { get; set; } = Guid.NewGuid().ToString();
-
+        protected ValidationMessageStore _messageStore;
         protected EditContext EditFormContext;
 
         public string ViewdefName { get; set; }
@@ -54,12 +54,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             Loading = false;
             EditFormContext = new EditContext(BusinessObj);
             EditFormContext.OnFieldChanged += EditContext_OnFieldChanged;
+            _messageStore = new ValidationMessageStore(EditFormContext);
+            EditFormContext.OnValidationRequested += (s, e) => _messageStore.Clear();
             EvaluateDynamicAttributes(null);
             StateHasChanged();
         }
 
         private void EditContext_OnFieldChanged(object sender, FieldChangedEventArgs e)
         {
+            _messageStore.Clear(e.FieldIdentifier);
             EvaluateDynamicAttributes(e);
         }
 
@@ -180,14 +183,49 @@ try {{ Paneles[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Va
             if (result.Errors.Count > 0)
             {
                 ErrorMsg = "<ul>";
+                Type editFormCurrentType = EditFormContext.Model.GetType();
                 foreach (var error in result.Errors)
                 {
+                    FieldIdentifier fieldIdentifier;
+                    bool fieldInContext = false;
+                    //check if attribute is in Model
+                    // if(editFormCurrentType.GetProperty(error.Attribute) != null)
+                    // {
+                    //     fieldIdentifier = new FieldIdentifier(EditFormContext.Model, error.Attribute);
+                    //     fieldInContext = true;
+                    // }
+                    // else if(((string)error.Attribute).Split('.').Count() > 1)
+                    // {
+                    //     var attr = ((string)error.Attribute).Split('.');
+                    //     foreach(string item in attr)
+                    //     {
+                    //         if(editFormCurrentType.GetProperty(item) != null)
+                    //         {
+                    //             editFormCurrentType = editFormCurrentType.GetProperty(item).PropertyType;
+                    //         }
+
+                    //     }
+                    //     fieldIdentifier = new FieldIdentifier(EditFormContext.Model, $"BaseObj.{error.Attribute}");
+                    //     fieldInContext = true;
+                    // }
+                    // if(fieldInContext)
+                    // {
+                    //     _messageStore.Add(fieldIdentifier, (string)error.Message);
+                    // }
+
+                    fieldIdentifier = new FieldIdentifier(EditFormContext.Model, error.Attribute);
+                    _messageStore.Add(fieldIdentifier, (string)error.Message);
+                    
+                    
+
+
                     ErrorMsg += $"<li>";
                     ErrorMsg += !string.IsNullOrWhiteSpace(error.Attribute) ?  $"{error.Attribute} - " : string.Empty;
                     ErrorMsg += error.Message.Replace("\n", "<br />");
                     ErrorMsg += $"</li>";
                 }
                 ErrorMsg += "</ul>";
+                EditFormContext.NotifyValidationStateChanged();
 
 
                 return;

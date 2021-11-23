@@ -19,7 +19,7 @@ namespace Siesa.SDK.Shared.Validators
             {
                 operationResult.Errors.Add(new OperationError
                 {
-                    Attribute = resultFluent.PropertyName,
+                    Attribute = $"{validator.ValidatorType}.{resultFluent.PropertyName}",
                     Message = resultFluent.ErrorMessage
                 });
             }
