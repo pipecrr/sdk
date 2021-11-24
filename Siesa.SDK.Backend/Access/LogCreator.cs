@@ -12,8 +12,8 @@ namespace Siesa.SDK.Backend.Access
 {
     internal class LogCreator
     {
-        
-        
+
+
         private readonly List<EntityEntry> _entityEntriesAdded;
         private readonly List<EntityEntry> _entityEntriesModified;
         private readonly List<EntityEntry> _entityEntriesDeleted;
@@ -47,7 +47,7 @@ namespace Siesa.SDK.Backend.Access
 
         internal void ProccessAfterSaveChanges()
         {
-            if (!AreThereEntitiesToProcess())
+            if (!AreThereEntitiesToProcessAfterSaveChanges())
             {
                 return;
             }
@@ -56,7 +56,7 @@ namespace Siesa.SDK.Backend.Access
 
         internal void ProccessBeforeSaveChanges()
         {
-            if (!AreThereEntitiesToProcess())
+            if (!AreThereEntitiesToProcessBeforeSaveChanges())
             {
                 return;
             }
@@ -75,26 +75,31 @@ namespace Siesa.SDK.Backend.Access
                 {
                     continue;
                 }
-                result.Add(
-                    new DataEntityLog()
-                    {
-                        GUID = Guid.NewGuid().ToString(),
-                        EntityName = change.Metadata.Name,
-                        UserID = "undefined",
-                        SessionID = "undefined",
-                        Operation = type.ToString(),
-                        KeyValues = GetKeyValues(change),
-                        Properties = properties
-                    });
+                result.Add(CreateDataEntityLogFromChange(change, type, properties));
             }
             return result;
+        }
+
+        private static DataEntityLog CreateDataEntityLogFromChange(EntityEntry change, LogType type, List<LogProperty> logProperties)
+        {
+            return new DataEntityLog()
+            {
+                GUID = Guid.NewGuid().ToString(),
+                EntityName = change.Metadata.Name,
+                UserID = "undefined",
+                SessionID = "undefined",
+                Operation = type.ToString(),
+                OperationDate = DateTime.Now,
+                KeyValues = GetKeyValues(change),
+                Properties = logProperties
+            };
         }
 
         private static List<LogProperty> GetProperties(EntityEntry change, LogType type)
         {
             var result = new List<LogProperty>();
             var propertiesList = FilterProperties(change, type);
-            foreach(var property in propertiesList)
+            foreach (var property in propertiesList)
             {
                 result.Add(GetLogPropertyFromPropertyEntry(property, type));
             }
@@ -103,8 +108,10 @@ namespace Siesa.SDK.Backend.Access
 
         private static LogProperty GetLogPropertyFromPropertyEntry(PropertyEntry property, LogType type)
         {
-            var logProperty = new LogProperty();
-            logProperty.Name = property.Metadata.Name;
+            var logProperty = new LogProperty
+            {
+                Name = property.Metadata.Name
+            };
             switch (type)
             {
                 case LogType.Add:
@@ -116,7 +123,7 @@ namespace Siesa.SDK.Backend.Access
                     break;
                 case LogType.Delete:
                     logProperty.OldValue = property.OriginalValue?.ToString();
-                    break ;
+                    break;
             }
             return logProperty;
         }
@@ -129,7 +136,7 @@ namespace Siesa.SDK.Backend.Access
                 result = result.Where(p => p.IsModified);
             }
             var logEntity = change.Entity.GetType().GetCustomAttributes(typeof(SDKLogEntity), false).FirstOrDefault() as SDKLogEntity;
-            if (logEntity != null && logEntity.Fields.Count() > 0)
+            if (logEntity != null && logEntity.Fields.Length > 0)
             {
                 result = result.Where(p => logEntity.Fields.Contains(p.Metadata.Name));
             }
@@ -141,7 +148,7 @@ namespace Siesa.SDK.Backend.Access
         {
             var keyValues = new List<KeyValue>();
             var keyFields = change.Metadata.FindPrimaryKey().Properties;
-            foreach(var field in keyFields)
+            foreach (var field in keyFields)
             {
                 keyValues.Add(new KeyValue()
                 {
@@ -163,11 +170,15 @@ namespace Siesa.SDK.Backend.Access
             };
         }
 
-        private bool AreThereEntitiesToProcess()
+        private bool AreThereEntitiesToProcessAfterSaveChanges()
         {
-            return _entityEntriesAdded.Count() > 0 
-                || _entityEntriesDeleted.Count() > 0
-                || _entityEntriesModified.Count() > 0;
+            return _entityEntriesAdded.Count > 0;
+        }
+
+        private bool AreThereEntitiesToProcessBeforeSaveChanges()
+        {
+            return _entityEntriesDeleted.Count > 0
+                || _entityEntriesModified.Count > 0;
         }
 
 
