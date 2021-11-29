@@ -3,6 +3,7 @@ using AuditAppGrpc;
 using AuditAppGrpcClient;
 using Grpc.Net.Client;
 using System;
+using System.Threading.Tasks;
 using static AuditAppGrpc.DataLogChange;
 
 namespace Siesa.SDK.Shared.Logs.DataChangeLog
@@ -19,7 +20,7 @@ namespace Siesa.SDK.Shared.Logs.DataChangeLog
             _client = new DataLogChangeClient(_channel);
         }
 
-        public void Save(string json)
+        public async Task Save(string json)
         {
             // TODO - Async
             if (_writeInConsole)
@@ -34,15 +35,14 @@ namespace Siesa.SDK.Shared.Logs.DataChangeLog
             };
             try
             {
-                var respuesta = _client.StoreLog(request);
-                return;
+                var respuesta = await _client.StoreLogAsync(request);
             }
             catch (Grpc.Core.RpcException e)
             {
 #if DEBUG
             _writeInConsole = true;
             Console.WriteLine("¡Warning! The log Grpc Service is unavaible");
-            Save(json);
+            Save(json).Wait();
             return;
 #endif
                 throw e;
