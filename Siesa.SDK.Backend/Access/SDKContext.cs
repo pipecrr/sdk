@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Siesa.SDK.Shared.Logs.DataChangeLog;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Siesa.SDK.Backend.Access
 {

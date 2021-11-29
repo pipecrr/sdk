@@ -8,6 +8,6 @@ namespace AuditAppGrpcClient
 {
     public interface ISDKLogStorageService
     {
-        void Save(string json);
+        Task Save(string json);
     }
 }
