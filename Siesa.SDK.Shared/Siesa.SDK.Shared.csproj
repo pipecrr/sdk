@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="..\..\AuditAppGrpc\AuditAppGrpc\Protos\DataLogChange.proto" GrpcServices="Client">
+    <Protobuf Include="..\..\logservice\AuditAppGrpc\Protos\DataLogChange.proto" GrpcServices="Client">
       <Link>Protos\DataLogChange.proto</Link>
     </Protobuf>
     <Protobuf Include="Protos\sdk.proto" />
