@@ -1,4 +1,4 @@
-﻿namespace Siesa.SDK.Shared.Log
+﻿namespace Siesa.SDK.Shared.Logs.DataChangeLog
 {
     public class KeyValue
     {

@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Siesa.SDK.Shared.Log
+namespace Siesa.SDK.Shared.Logs.DataChangeLog
 {
     public class DataEntityLog
     {

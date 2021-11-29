@@ -2,11 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Siesa.SDK.Shared.Log;
 using Microsoft.EntityFrameworkCore;
 using Siesa.SDK.Shared.DataAnnotations;
+using Siesa.SDK.Shared.Logs.DataChangeLog;
 
 namespace Siesa.SDK.Backend.Access
 {

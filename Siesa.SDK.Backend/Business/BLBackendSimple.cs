@@ -12,12 +12,15 @@ using Siesa.SDK.Shared.Business;
 using Siesa.SDK.Shared.Validators;
 using Siesa.SDK.Shared.Exceptions;
 using Siesa.SDK.Backend.Exceptions;
+using Microsoft.Extensions.Logging;
+using Siesa.SDK.GRPCServices;
 
 namespace Siesa.SDK.Business
 {
     public class BLBackendSimple<T, K> : IBLBase<T> where T : BaseEntity where K : BLBaseValidator<T>
     {
         private IServiceProvider _provider;
+        private ILogger<SDKService> _logger;
         private dynamic _dbFactory;
 
         public string BusinessName { get; set; }
@@ -33,6 +36,11 @@ namespace Siesa.SDK.Business
             _provider = provider;
 
             _dbFactory = _provider.GetService(typeof(IDbContextFactory<SDKContext>));
+        }
+
+        public void SetLogger(ILogger<SDKService> logger)
+        {
+            _logger = logger;
         }
 
         public virtual T Get(int id)
@@ -64,11 +72,15 @@ namespace Siesa.SDK.Business
             }
             catch(DbUpdateException exception)
             {
+                exception.Data.Add("Entity:","entityName");
                 AddExceptionToResult(exception, result);
+                _logger.LogError(exception, "Error saving in BLBackend");
+                _logger.LogError("Text information");
             }
             catch (Exception exception)
             {
                 AddExceptionToResult(exception,result);
+                _logger.LogError(exception, "Error saving in BLBackend");
             }
             
             return result;            
