@@ -35,7 +35,7 @@ namespace Siesa.SDK.Shared.Logs.DataEventLog
             };
             try
             {
-                var respuesta = _client.StoreLog(request);
+                var respuesta = await _client.StoreLogAsync(request);
                 return;
             }
             catch (Grpc.Core.RpcException e)
