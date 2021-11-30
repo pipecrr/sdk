@@ -20,7 +20,7 @@ namespace Siesa.SDK.Business
     public class BLBackendSimple<T, K> : IBLBase<T> where T : BaseEntity where K : BLBaseValidator<T>
     {
         private IServiceProvider _provider;
-        private ILogger<SDKService> _logger;
+        private ILogger _logger;
         private dynamic _dbFactory;
 
         public string BusinessName { get; set; }
@@ -36,11 +36,9 @@ namespace Siesa.SDK.Business
             _provider = provider;
 
             _dbFactory = _provider.GetService(typeof(IDbContextFactory<SDKContext>));
-        }
 
-        public void SetLogger(ILogger<SDKService> logger)
-        {
-            _logger = logger;
+            ILoggerFactory loggerFactory = (ILoggerFactory)_provider.GetService(typeof(ILoggerFactory));
+            _logger = loggerFactory.CreateLogger(this.GetType().FullName);
         }
 
         public virtual T Get(int id)

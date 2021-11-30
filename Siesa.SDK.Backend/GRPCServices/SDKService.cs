@@ -33,7 +33,6 @@ namespace Siesa.SDK.GRPCServices
             var businessType = FindType(businessRegistry.Namespace + "." + businessRegistry.Name);
             dynamic businessObj = Activator.CreateInstance(businessType);
             businessObj.SetProvider(_provider);
-            businessObj.SetLogger(_logger);
 
             var response = new Protos.BusinessObjResponse();
             var result = businessObj.Get(request.Id);
@@ -64,7 +63,6 @@ namespace Siesa.SDK.GRPCServices
             //json deserialize using Newtonsoft.Json
             dynamic businessObj = Newtonsoft.Json.JsonConvert.DeserializeObject(request.Business, businessType);
             businessObj.SetProvider(_provider);
-            businessObj.SetLogger(_logger);
             response.Id = businessObj.Save();
             return Task.FromResult(response);
         }
@@ -75,7 +73,6 @@ namespace Siesa.SDK.GRPCServices
             var businessType = FindType(businessRegistry.Namespace + "." + businessRegistry.Name);
             dynamic businessObj = Activator.CreateInstance(businessType);
             businessObj.SetProvider(_provider);
-            businessObj.SetLogger(_logger);
 
             var response = new Protos.DeleteBusinessObjResponse();
             var result = businessObj.Get(request.Id);
@@ -90,7 +87,6 @@ namespace Siesa.SDK.GRPCServices
             var businessType = FindType(businessRegistry.Namespace + "." + businessRegistry.Name);
             dynamic businessObj = Activator.CreateInstance(businessType);
             businessObj.SetProvider(_provider);
-            businessObj.SetLogger(_logger);
 
             var result = businessObj.List(request.Page, request.PageSize, request.Options);
             var response = new Protos.LoadResult();
@@ -108,7 +104,6 @@ namespace Siesa.SDK.GRPCServices
             //json deserialize using Newtonsoft.Json
             dynamic businessObj = Newtonsoft.Json.JsonConvert.DeserializeObject(request.Business, businessType);
             businessObj.SetProvider(_provider);
-            businessObj.SetLogger(_logger);
 
             var response = businessObj.ValidateAndSave();
             return Task.FromResult(response);
