@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Siesa.SDK.Frontend.Components.FormManager.Model;
 using Microsoft.JSInterop;
 using Siesa.SDK.Business;
+using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -25,6 +26,21 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         public String ErrorMsg = "";
 
+        private void setViewContext(List<Panel> panels) { 
+            for (int i = 0; i < panels.Count; i++)
+            {
+                for(int j = 0; j < panels[i].Fields.Count; j++)
+                {
+                    panels[i].Fields[j].ViewContext = "DetailView";
+                }
+                if(panels[i].SubViewdef != null && panels[i].SubViewdef.Paneles.Count > 0)
+                {
+                    setViewContext(panels[i].SubViewdef.Paneles);
+                }
+            }
+
+        }
+
         protected void InitView(string bName = null) {
             if (bName == null) {
                 bName = BusinessName;
@@ -37,14 +53,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             else
             {
                 Paneles = JsonConvert.DeserializeObject<List<Panel>>(metadata);
-                for (int i = 0; i < Paneles.Count; i++)
-                {
-                    for(int j = 0; j < Paneles[i].Fields.Count; j++)
-                    {
-                        Paneles[i].Fields[j].ViewContext = "DetailView";
-
-                    }
-                }
+                setViewContext(Paneles);
                 ModelLoaded = true;
             }
             StateHasChanged();

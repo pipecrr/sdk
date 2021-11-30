@@ -26,9 +26,12 @@ namespace Siesa.SDK.Business
         public string BusinessName { get; set; }
         public T BaseObj { get; set; }
 
+        private string[] _relatedProperties = null;
+
         public BLBackendSimple()
         {
             BaseObj = Activator.CreateInstance<T>();
+            _relatedProperties = BaseObj.GetType().GetProperties().Where(p => p.PropertyType.IsClass && !p.PropertyType.IsPrimitive && !p.PropertyType.IsEnum && p.PropertyType != typeof(string) && p.Name != "RowVersion").Select(p => p.Name).ToArray();
         }
 
         public void SetProvider(IServiceProvider provider)
@@ -41,11 +44,17 @@ namespace Siesa.SDK.Business
             _logger = loggerFactory.CreateLogger(this.GetType().FullName);
         }
 
-        public virtual T Get(int id)
+        public virtual T Get(int rowid)
         {
             using (SDKContext context = _dbFactory.CreateDbContext())
             {
-                return context.Set<T>().Find(id);
+                var query = context.Set<T>().AsQueryable();
+                foreach (var relatedProperty in _relatedProperties)
+                {
+                    query = query.Include(relatedProperty);
+                }
+
+                return query.FirstOrDefault(x => x.RowID == rowid);
             }
         }
 

@@ -11,7 +11,6 @@ namespace Siesa.SDK.Backend.Access
     {
         public SDKContext(DbContextOptions options) : base(options)
         {
-
         }
 
         public override int SaveChanges()
