@@ -161,10 +161,15 @@ namespace Siesa.SDK.Business
             var result = new Siesa.SDK.Shared.Business.LoadResult();
             using (SDKContext context = _dbFactory.CreateDbContext())
             {
+                var query = context.Set<T>().AsQueryable();
                 //total data
-                result.TotalCount = context.Set<T>().Count();
+                result.TotalCount = query.Count();
+                foreach (var relatedProperty in _relatedProperties)
+                {
+                    query = query.Include(relatedProperty);
+                }
                 //data
-                result.Data = context.Set<T>().Skip(page * pageSize).Take(pageSize).ToList();
+                result.Data = query.Skip(page * pageSize).Take(pageSize).ToList();
             }
             return result;
         }

@@ -109,6 +109,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                         field.UnknownFieldType = propertyType.Name;
                         break;
                 }
+
+                if(propertyType.IsClass && !propertyType.IsPrimitive && !propertyType.IsEnum && propertyType != typeof(string)){
+                    FieldType = FieldTypes.EntityField;
+                }
             }
             field.FieldType = FieldType;
             return field;
