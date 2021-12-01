@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Siesa.SDK.Entities;
 using Siesa.SDK.Shared.Logs.DataChangeLog;
 using System;
 using System.Linq;
@@ -13,6 +14,8 @@ namespace Siesa.SDK.Backend.Access
         {
 
         }
+
+        public DbSet<S004_User> S004_Users { get; set; }
 
         public override int SaveChanges()
         {
