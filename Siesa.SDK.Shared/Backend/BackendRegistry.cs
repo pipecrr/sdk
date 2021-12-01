@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Grpc.Net.Client;
 using Siesa.SDK.Protos;
-using Siesa.SDK.Frontend;
 using Grpc.Core;
+using Siesa.SDK.Shared.Business;
 
-namespace Siesa.SDK.Frontend.Backend
+namespace Siesa.SDK.Shared.Backend
 {
     public class BackendRegistry
     {
@@ -21,20 +21,35 @@ namespace Siesa.SDK.Frontend.Backend
             this.Name = name;
             this.Url = url;
             this.GetBusinesses();
-
         }
 
-        public async void GetBusinesses()
+        public BackendRegistry(string name, string url, Google.Protobuf.Collections.RepeatedField<Protos.BusinessModel> businesses)
+        {
+            this.Name = name;
+            this.Url = url;
+            var businessResponse = new BusinessesResponse();
+            businessResponse.Businesses.AddRange(businesses);
+            businessRegisters = businessResponse;
+            addBusiness();
+        }
+
+        private void addBusiness()
+        {
+            foreach (var business in this.businessRegisters.Businesses)
+            {
+                BusinessManager.Instance.AddBusiness(business);
+            }
+        }
+
+        public void GetBusinesses()
         {
             using var channel = GrpcChannel.ForAddress(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
-            var response = await client.GetBusinessesAsync(new Protos.GetBusinessesRequest());
+            var response = client.GetBusinesses(new Protos.GetBusinessesRequest());
             this.businessRegisters = response;
-            foreach (var business in this.businessRegisters.Businesses)
-            {
-                BusinessManager.Instance.AddBusiness(business, this.Name);
+            addBusiness();
 
-            }
+
 
         }
 
@@ -95,7 +110,7 @@ namespace Siesa.SDK.Frontend.Backend
 
         }
 
-        public async Task<LoadResult> GetListBusinessObj(string business_name, int page, int pageSize, string options)
+        public async Task<Protos.LoadResult> GetListBusinessObj(string business_name, int page, int pageSize, string options)
         {
             using var channel = GrpcChannel.ForAddress(this.Url);
             var client = new Protos.SDK.SDKClient(channel);

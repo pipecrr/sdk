@@ -5,7 +5,7 @@ using Siesa.SDK.Entities;
 using Siesa.SDK.Protos;
 using Siesa.SDK.Shared.Business;
 
-namespace Siesa.SDK.Business
+namespace Siesa.SDK.Shared.Business
 {
 
     public interface IBLBase<T> where T: BaseEntity

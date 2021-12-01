@@ -42,7 +42,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             {
                 bName = BusinessName;
             }
-            var metadata = BusinessManager.Instance.GetViewdef(bName, ViewdefName);
+            var metadata = BusinessManagerFrontend.Instance.GetViewdef(bName, ViewdefName);
             if (metadata == null || metadata == "")
             {
                 ErrorMsg = $"No hay definición para la vista {ViewdefName}";

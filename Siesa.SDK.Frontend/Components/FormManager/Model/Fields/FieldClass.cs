@@ -38,7 +38,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 
         [Parameter] public EventCallback RefreshParent { get; set; }
 
-        private object FinalBindModel { get; set; }
 
         [Parameter] public string FieldName { get; set; }
 

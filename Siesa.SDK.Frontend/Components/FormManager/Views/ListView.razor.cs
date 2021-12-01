@@ -38,7 +38,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if (bName == null) {
                 bName = BusinessName;
             }
-            var metadata = BusinessManager.Instance.GetViewdef(bName, "list");
+            var metadata = BusinessManagerFrontend.Instance.GetViewdef(bName, "list");
             if (metadata == null || metadata == "")
             {
                 ErrorMsg = "No hay definición para la vista de lista";

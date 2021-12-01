@@ -1,0 +1,71 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "Siesa.SDK.Protos";
+
+message GetBusinessesRequest {
+}
+
+message BusinessModel {
+  string namespace = 1;
+  string name = 2;
+}
+
+message BusinessesResponse {
+  repeated BusinessModel businesses = 1;
+}
+
+message GetBusinessObjRequest {
+	int32 id = 1;
+	string businessName = 2;
+}
+
+message BusinessObjResponse {
+	string response = 1;
+}
+
+message SaveBusinessObjRequest {
+  string business = 1;
+  string businessName = 2;
+}
+
+message SaveBusinessObjResponse {
+  int32 id = 1;
+}
+
+message ValidateAndSaveBusinessObjRequest {
+  string business = 1;
+  string businessName = 2;
+}
+
+message OperationError {
+	string message = 1;
+	string attribute = 2;
+}
+
+message ValidateAndSaveBusinessObjResponse {
+  //string json = 1;
+  int32 Rowid = 1;
+  repeated OperationError errors = 2;
+}
+
+message DeleteBusinessObjRequest {
+  int32 id = 1;
+  string businessName = 2;
+}
+
+message DeleteBusinessObjResponse {
+  int32 id = 1;
+}
+
+message GetListBusinessObjRequest {
+  string businessName = 1;
+  int32 page = 2;
+  int32 pageSize = 3;
+  string options = 4;
+}
+
+message LoadResult {
+	repeated string data = 1;
+	int32 totalCount = 2;
+	int32 groupCount = 3;
+}

@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Siesa.SDK.Protos;
 using Grpc.Net.Client;
-using Siesa.SDK.Frontend.Backend;
 using Grpc.Core;
+using Siesa.SDK.Shared.Backend;
 
 namespace Siesa.SDK.Frontend
 {
@@ -49,20 +49,20 @@ namespace Siesa.SDK.Frontend
         }
     }
 
-    public class BusinessManager
+    public class BusinessManagerFrontend
     {
-        private static BusinessManager _instance;
+        private static BusinessManagerFrontend _instance;
         public Dictionary<string, BusinessFrontendModel> Businesses { get; set; }
-        private BusinessManager()
+        private BusinessManagerFrontend()
         {
         }
-        public static BusinessManager Instance
+        public static BusinessManagerFrontend Instance
         {
             get
             {
                 if (_instance == null)
                 {
-                    _instance = new BusinessManager();
+                    _instance = new BusinessManagerFrontend();
                     _instance.Businesses = new Dictionary<string, BusinessFrontendModel>();
                 }
                 return _instance;
@@ -71,11 +71,13 @@ namespace Siesa.SDK.Frontend
 
         public void AddBusiness(BusinessModel business, string backendName)
         {
-            var businessFrontendModel = new BusinessFrontendModel();
-            businessFrontendModel.Name = business.Name;
-            businessFrontendModel.Namespace = business.Namespace;
-            businessFrontendModel.BackendName = backendName;
-            Businesses.Add(business.Name, businessFrontendModel);
+            if (!Businesses.ContainsKey(business.Name)) { 
+                var businessFrontendModel = new BusinessFrontendModel();
+                businessFrontendModel.Name = business.Name;
+                businessFrontendModel.Namespace = business.Namespace;
+                businessFrontendModel.BackendName = backendName;
+                Businesses.Add(business.Name, businessFrontendModel);
+            }
         }
 
         public string GetViewdef(string businessName, string viewName) {
