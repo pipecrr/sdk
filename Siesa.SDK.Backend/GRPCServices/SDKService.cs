@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Siesa.SDK.Business;
 using Siesa.SDK.Protos;
 using System.Reflection;
+using Siesa.SDK.Shared.Business;
 
 namespace Siesa.SDK.GRPCServices
 {

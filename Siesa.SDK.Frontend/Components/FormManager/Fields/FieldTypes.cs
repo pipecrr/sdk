@@ -13,6 +13,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
         TextField,
         BooleanField,
         Custom,
-        Unknown
+        Unknown,
+        EntityField
     }
 }

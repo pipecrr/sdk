@@ -60,6 +60,16 @@
     case FieldTypes.Unknown:
         <span>@UnknownFieldType No implementado</span>
         break;
+    case FieldTypes.EntityField:
+        @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
+        {
+            <EntityFieldDetail BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" />
+        }
+        else
+        {
+            <span>@FieldType No implementado</span>
+        }
+        break;
     case FieldTypes.Custom:
     default:
         <span>@FieldType No implementado</span>

@@ -1,0 +1,17 @@
+﻿@*TODO: Definir cada cuanto el frontend va a consultar los backend en MasterBackend y borrar este componente*@
+@using Siesa.SDK.Shared.Backend;
+@page "/reload" 
+
+<h1>Loading</h1>
+
+@code {
+
+    protected override void OnInitialized(){
+        BackendManager.Instance.SyncWithMasterBackend();  
+        foreach(var backend in BackendManager.Instance.GetBackendDict()){
+            foreach(var business in backend.Value.businessRegisters.Businesses){
+                BusinessManagerFrontend.Instance.AddBusiness(business, backend.Value.Name);
+            }
+        }
+    }
+}

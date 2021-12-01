@@ -2,7 +2,6 @@
 using System;
 using System.Threading.Tasks;
 using Siesa.SDK.Business;
-using Siesa.SDK.Frontend.Backend;
 using Siesa.SDK.Frontend.Utils;
 
 
@@ -34,7 +33,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 bName = this.BusinessName;
             }
 
-            BusinessManager.Instance.Businesses.TryGetValue(bName, out businessModel);
+            BusinessManagerFrontend.Instance.Businesses.TryGetValue(bName, out businessModel);
             if (businessModel != null)
             {
                 try

@@ -9,7 +9,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         public string Business { get; set; }
         public string ParentField { get; set; }
         public string Viewdef { get; set; }
-        public List<Panel> Paneles = new List<Panel>();
+        public List<Panel> Paneles = new();
 
         [JsonConstructor]
         public SubViewdef(string? Business, string? ParentField, string? Viewdef) { 
@@ -17,7 +17,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
             this.ParentField = ParentField;
             this.Viewdef = Viewdef;
 
-            var metadata = BusinessManager.Instance.GetViewdef(Business, Viewdef);
+            var metadata = BusinessManagerFrontend.Instance.GetViewdef(Business, Viewdef);
             if (metadata != "" && metadata != null)
             {
                 //replace all the ocurrences of "BaseObj" with the parent field

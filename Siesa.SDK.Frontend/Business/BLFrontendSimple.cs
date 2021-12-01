@@ -34,7 +34,7 @@ namespace Siesa.SDK.Business
 
         public async virtual Task<T> GetAsync(int id)
         {
-            var businness = Frontend.BusinessManager.Instance.GetBusiness(BusinessName);
+            var businness = Frontend.BusinessManagerFrontend.Instance.GetBusiness(BusinessName);
             var message = await businness.Get(id);
             var result = JsonConvert.DeserializeObject<T>(message);
             return result;
@@ -42,7 +42,7 @@ namespace Siesa.SDK.Business
 
         public async virtual Task<int> SaveAsync()
         {
-            var businness = Frontend.BusinessManager.Instance.GetBusiness(BusinessName);
+            var businness = Frontend.BusinessManagerFrontend.Instance.GetBusiness(BusinessName);
             var result = await businness.Save(this);
             return result;
         }
@@ -74,7 +74,7 @@ namespace Siesa.SDK.Business
 
         public async virtual Task<int> DeleteAsync()
         {
-            var businness = Frontend.BusinessManager.Instance.GetBusiness(BusinessName);
+            var businness = Frontend.BusinessManagerFrontend.Instance.GetBusiness(BusinessName);
             var result = await businness.Delete(BaseObj.RowID);
             return result;
         }
@@ -91,7 +91,7 @@ namespace Siesa.SDK.Business
 
         public async virtual Task<Siesa.SDK.Shared.Business.LoadResult> ListAsync(int page = 0, int pageSize = 30, string options = "")
         {
-            var businness = Frontend.BusinessManager.Instance.GetBusiness(BusinessName);
+            var businness = Frontend.BusinessManagerFrontend.Instance.GetBusiness(BusinessName);
             var result = await businness.List(page, pageSize, options);
             Siesa.SDK.Shared.Business.LoadResult response = new Siesa.SDK.Shared.Business.LoadResult();
             response.Data = result.Data.Select(x => JsonConvert.DeserializeObject<T>(x)).ToList();
@@ -108,7 +108,7 @@ namespace Siesa.SDK.Business
             {
                 return resultValidationFront;
             }
-            var businness = Frontend.BusinessManager.Instance.GetBusiness(BusinessName);
+            var businness = Frontend.BusinessManagerFrontend.Instance.GetBusiness(BusinessName);
             var result = await businness.ValidateAndSave(this);
             return result;
         }

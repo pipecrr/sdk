@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Siesa.SDK.Business
+namespace Siesa.SDK.Shared.Business
 {
 //Create a singleton class to manage the business layer
     public class BusinessManager

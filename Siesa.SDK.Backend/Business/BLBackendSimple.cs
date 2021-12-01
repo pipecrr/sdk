@@ -26,9 +26,12 @@ namespace Siesa.SDK.Business
         public string BusinessName { get; set; }
         public T BaseObj { get; set; }
 
+        private string[] _relatedProperties = null;
+
         public BLBackendSimple()
         {
             BaseObj = Activator.CreateInstance<T>();
+            _relatedProperties = BaseObj.GetType().GetProperties().Where(p => p.PropertyType.IsClass && !p.PropertyType.IsPrimitive && !p.PropertyType.IsEnum && p.PropertyType != typeof(string) && p.Name != "RowVersion").Select(p => p.Name).ToArray();
         }
 
         public void SetProvider(IServiceProvider provider)
@@ -41,11 +44,17 @@ namespace Siesa.SDK.Business
             _logger = loggerFactory.CreateLogger(this.GetType().FullName);
         }
 
-        public virtual T Get(int id)
+        public virtual T Get(int rowid)
         {
             using (SDKContext context = _dbFactory.CreateDbContext())
             {
-                return context.Set<T>().Find(id);
+                var query = context.Set<T>().AsQueryable();
+                foreach (var relatedProperty in _relatedProperties)
+                {
+                    query = query.Include(relatedProperty);
+                }
+
+                return query.FirstOrDefault(x => x.RowID == rowid);
             }
         }
 
@@ -152,10 +161,15 @@ namespace Siesa.SDK.Business
             var result = new Siesa.SDK.Shared.Business.LoadResult();
             using (SDKContext context = _dbFactory.CreateDbContext())
             {
+                var query = context.Set<T>().AsQueryable();
                 //total data
-                result.TotalCount = context.Set<T>().Count();
+                result.TotalCount = query.Count();
+                foreach (var relatedProperty in _relatedProperties)
+                {
+                    query = query.Include(relatedProperty);
+                }
                 //data
-                result.Data = context.Set<T>().Skip(page * pageSize).Take(pageSize).ToList();
+                result.Data = query.Skip(page * pageSize).Take(pageSize).ToList();
             }
             return result;
         }

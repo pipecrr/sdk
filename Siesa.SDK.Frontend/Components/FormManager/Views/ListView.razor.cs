@@ -32,12 +32,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private ListViewModel ListViewModel { get; set; }
 
+        public DxDataGrid<object> _gridRef;
         protected void InitView(string bName = null) {
             Loading = true;
             if (bName == null) {
                 bName = BusinessName;
             }
-            var metadata = BusinessManager.Instance.GetViewdef(bName, "list");
+            var metadata = BusinessManagerFrontend.Instance.GetViewdef(bName, "list");
             if (metadata == null || metadata == "")
             {
                 ErrorMsg = "No hay definición para la vista de lista";
@@ -52,6 +53,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
             Loading = false;
             StateHasChanged();
+
         }
 
         protected override async Task OnInitializedAsync()
@@ -100,6 +102,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     {
                         case FieldTypes.CharField:
                         case FieldTypes.TextField:
+                        case FieldTypes.EntityField:
                             b.OpenComponent(counter, typeof(DxDataGridColumn));
                             break;
                         case FieldTypes.DateField:
@@ -142,6 +145,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private void GoToEdit(int id)
         {
             NavManager.NavigateTo($"{BusinessName}/edit/{id}/");
+        }
+        private void GoToCreate()
+        {
+            NavManager.NavigateTo($"{BusinessName}/create/");
         }
 
         private void GoToDetail(int id)
