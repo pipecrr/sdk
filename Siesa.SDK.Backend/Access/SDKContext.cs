@@ -14,7 +14,7 @@ namespace Siesa.SDK.Backend.Access
         {
         }
 
-        public DbSet<S004_User> S004_Users { get; set; }
+        
 
         public override int SaveChanges()
         {
