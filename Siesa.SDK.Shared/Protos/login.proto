@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option csharp_namespace = "Siesa.SDK.Protos";
+
+package login;
+
+// The greeting service definition.
+
+service Login {
+  // Sends a greeting
+  rpc signIn (LoginRequest) returns (LoginReply);
+}
+
+// The request message containing the user's name.
+message LoginRequest {
+  string userName = 1;
+  string password = 2;
+}
+
+// The response message containing the greetings.
+message LoginReply {
+  string autorized = 1;
+  string token = 2;
+}

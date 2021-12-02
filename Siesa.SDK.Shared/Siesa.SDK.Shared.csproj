@@ -12,6 +12,7 @@
     <None Remove="Protos\BackendManager.proto" />
     <None Remove="Protos\business.proto" />
     <None Remove="Protos\BusinessMessages.proto" />
+    <None Remove="Protos\login.proto" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,6 +40,7 @@
     </Protobuf>
     <Protobuf Include="Protos\BackendManager.proto" />
     <Protobuf Include="Protos\BusinessMessages.proto" />
+    <Protobuf Include="Protos\login.proto" GrpcServices="Server" />
     <Protobuf Include="Protos\sdk.proto" />
   </ItemGroup>
 
