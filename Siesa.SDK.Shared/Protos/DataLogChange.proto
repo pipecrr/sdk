@@ -1,0 +1,44 @@
+﻿syntax = "proto3";
+option csharp_namespace = "Siesa.SDK.Protos";
+
+service DataLogChange {
+  rpc StoreLog (StoreLogRequest) returns (StoreLogReply);
+  rpc QueryLog (QueryLogRequest) returns (QueryLogReply);
+}
+
+service DataLogEvent {
+  rpc StoreLog (StoreEventRequest) returns (StoreEventReply);
+}
+
+message StoreLogRequest {
+  string json = 1;
+}
+
+message StoreLogReply {
+  string message = 1;
+}
+
+message QueryLogRequest {
+	string EntityName = 1;
+	repeated Filter Filters = 2;
+}
+
+message Filter 
+{
+	string PropertyName = 1;
+	string Operator = 2;
+	repeated string Value = 3;
+}
+
+message QueryLogReply {
+  string message = 1;
+  repeated string logs = 2;
+}
+
+message StoreEventRequest {
+  string json = 1;
+}
+
+message StoreEventReply {
+  string message = 1;
+}

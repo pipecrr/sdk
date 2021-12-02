@@ -1,10 +1,10 @@
 ﻿
-using AuditAppGrpc;
 using AuditAppGrpcClient;
 using Grpc.Net.Client;
+using Siesa.SDK.Protos;
 using System;
 using System.Threading.Tasks;
-using static AuditAppGrpc.DataLogEvent;
+using static Siesa.SDK.Protos.DataLogEvent;
 
 namespace Siesa.SDK.Shared.Logs.DataEventLog
 {

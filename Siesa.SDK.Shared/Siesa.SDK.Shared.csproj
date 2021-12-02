@@ -12,6 +12,7 @@
     <None Remove="Protos\BackendManager.proto" />
     <None Remove="Protos\business.proto" />
     <None Remove="Protos\BusinessMessages.proto" />
+    <None Remove="Protos\DataLogChange.proto" />
     <None Remove="Protos\login.proto" />
   </ItemGroup>
 
@@ -35,12 +36,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="..\..\logservice\AuditAppGrpc\Protos\DataLogChange.proto" GrpcServices="Client">
-      <Link>Protos\DataLogChange.proto</Link>
-    </Protobuf>
+    <Protobuf Include="Protos\DataLogChange.proto" />
     <Protobuf Include="Protos\BackendManager.proto" />
     <Protobuf Include="Protos\BusinessMessages.proto" />
-    <Protobuf Include="Protos\login.proto" GrpcServices="Server" />
+    <Protobuf Include="Protos\login.proto" GrpcServices="Both" />
     <Protobuf Include="Protos\sdk.proto" />
   </ItemGroup>
 
