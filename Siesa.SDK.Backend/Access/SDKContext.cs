@@ -61,6 +61,11 @@ namespace Siesa.SDK.Backend.Access
                 }
 
             }
-        }  
+        }
+
+        public DbSet<S001_Resource> S001_Resources { get; set; }
+        public DbSet<S002_Resource_Value> S002_Resource_Values { get; set; }
+        public DbSet<S003_Language> S003_Languages { get; set; }
+        public DbSet<S004_User> S004_Users { get; set; }
     }
 }

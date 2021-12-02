@@ -9,7 +9,8 @@ namespace Siesa.SDK.Backend.Access
     {
         public SDKEntitiesContext(DbContextOptions options) : base(options)
         {
+            
         }
-        public DbSet<S004_User> S004_Users { get; set; }
+                
     }
 }
