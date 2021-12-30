@@ -1,45 +1,48 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<AnalysisLevel>latest</AnalysisLevel>
+		<AnalysisMode>All</AnalysisMode>
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath></OutputPath>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<OutputPath></OutputPath>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Components\Layout\MainLayout.razor.css" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove="Components\Layout\MainLayout.razor.css" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Content Include="Components\Layout\MainLayout.razor.css" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="Components\Layout\MainLayout.razor.css" />
+	</ItemGroup>
 
-  
-  <ItemGroup>
-    <SupportedPlatform Include="browser" />
-  </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="DevExpress.Blazor" Version="21.2.3" />
-    <PackageReference Include="DevExpress.Blazor.es" Version="21.2.3" />
-    <PackageReference Include="DevExtreme.AspNet.Core" Version="21.2.3" />
-    <PackageReference Include="Google.Protobuf" Version="3.19.1" />
-    <PackageReference Include="Grpc.Net.Client" Version="2.40.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.DataAnnotations.Validation" Version="3.2.0-rc1.20223.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.0.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="6.0.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<SupportedPlatform Include="browser" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Siesa.SDK.Shared\Siesa.SDK.Shared.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="DevExpress.Blazor" Version="21.2.3" />
+		<PackageReference Include="DevExpress.Blazor.es" Version="21.2.3" />
+		<PackageReference Include="DevExtreme.AspNet.Core" Version="21.2.3" />
+		<PackageReference Include="Google.Protobuf" Version="3.19.1" />
+		<PackageReference Include="Grpc.Net.Client" Version="2.40.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.DataAnnotations.Validation" Version="3.2.0-rc1.20223.4" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.0.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="6.0.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\images\" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Siesa.SDK.Shared\Siesa.SDK.Shared.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="wwwroot\images\" />
+	</ItemGroup>
 
 
 </Project>
