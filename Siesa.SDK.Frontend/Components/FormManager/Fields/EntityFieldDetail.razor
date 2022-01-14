@@ -1,3 +1,27 @@
 ﻿@inherits FieldClass<object>
 
-<p style="word-wrap: break-word">@BindValue</p>
+<a href="@RelatedEntityURL"><p style="word-wrap: break-word">@BindValue</p></a>
+
+@code {
+    private string _relatedEntityURL;
+
+    private string ObtainEntityURL(){
+
+        if (FieldOpt.RelatedBusiness == "" || BindValue == null)
+        {
+            return "";
+        }
+        var typeRelatedEntity = BindValue.GetType();
+        // Checks if contains a property named "ID" or "Rowid" and returns the value of it
+        var idProperty = typeRelatedEntity.GetProperty("ID") ?? typeRelatedEntity.GetProperty("Rowid");
+        if (idProperty != null)
+            return $"/{FieldOpt.RelatedBusiness}/detail/{idProperty.GetValue(BindValue)}/";
+        
+        return "";
+    } 
+
+    public string RelatedEntityURL { get
+        {
+            return _relatedEntityURL != "" && _relatedEntityURL != null ? _relatedEntityURL : ObtainEntityURL();
+        } }
+}

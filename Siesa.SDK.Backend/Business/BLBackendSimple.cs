@@ -137,7 +137,21 @@ namespace Siesa.SDK.Business
         {
             if (BaseObj.Rowid == 0)
             {
-                context.Add<T>(BaseObj);
+                var entry = context.Add<T>(BaseObj);
+                foreach (var relatedProperty in _relatedProperties)
+                {
+                    var entityValue = BaseObj.GetType().GetProperty(relatedProperty).GetValue(BaseObj);
+                    
+                    //Does not save the related object
+                    //TODO: No guardar ninguna entidad relacionada, se deja activa hasta completar el transaction manager (se utiliza en el guardado del contacto desde el centro de operación
+                    if (entityValue != null)
+                    {
+                        var entityValueRowid = (int)entityValue.GetType().GetProperty("Rowid").GetValue(entityValue);
+                        if (entityValueRowid != 0) {
+                            context.Entry(entityValue).State = EntityState.Unchanged;
+                        }
+                    }
+                }
             }
             else
             {
@@ -145,6 +159,19 @@ namespace Siesa.SDK.Business
                 //get by rowid
                 T entity = context.Set<T>().Find(BaseObj.Rowid);
                 context.Entry(entity).CurrentValues.SetValues(BaseObj);
+                
+
+                //Loop through all foreign keys and set the values
+                foreach (var relatedProperty in _relatedProperties)
+                {
+                    var bodyValue = BaseObj.GetType().GetProperty(relatedProperty).GetValue(BaseObj);
+                    context.Entry(entity).Reference(relatedProperty).CurrentValue = bodyValue;
+                    //Does not save the related object
+                    if (bodyValue != null) {
+                        context.Entry(bodyValue).State = EntityState.Unchanged;
+                    }
+                }
+
                 //set updated values
                 entity.LastUpdateDate = DateTime.Now;
             }

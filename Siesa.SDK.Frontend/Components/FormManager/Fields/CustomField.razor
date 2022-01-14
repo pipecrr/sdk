@@ -1,0 +1,31 @@
+﻿@if (!FieldOpt.Hidden)
+{
+    @FieldTemplate
+}
+
+@code {
+    [Parameter] public CustomComponent Definition { get; set; }
+    [Parameter] public FieldOptions FieldOpt { get; set; }
+    [Parameter] public object BindModel { get; set; }
+    [Parameter] public string FieldName { get; set; }
+    private RenderFragment? _fieldTemplate;
+    public RenderFragment? FieldTemplate
+    {
+        get
+        {
+            return _fieldTemplate != null ? _fieldTemplate : builder =>
+            {
+                var component_name = Definition.Name;
+                var component_namespace = Definition.Namespace;
+
+                Type ComponentType = Utils.Utils.SearchType($"{component_namespace}.{component_name}");
+
+                builder.OpenComponent(0, ComponentType);
+
+
+                builder.CloseComponent();
+            };
+
+        }
+    }
+}

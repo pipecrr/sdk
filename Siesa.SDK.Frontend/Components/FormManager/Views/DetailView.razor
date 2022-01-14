@@ -13,7 +13,7 @@ else if (ModelLoaded == true)
                     @foreach (var panel in Paneles)
                     {
                         <DxFormLayoutTabPage Caption="@panel.Label">
-                            <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" ModelObj="@BusinessObj" />
+                            <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" ModelObj="@BusinessObj" DefaultColSize="@panel.ColSize" />
                         </DxFormLayoutTabPage>
                     }
                 </DxFormLayoutTabPages>
@@ -21,7 +21,7 @@ else if (ModelLoaded == true)
             }
             else
             {
-                <FieldsContainer Fields="@Paneles[0].Fields" SubViewdef="@Paneles[0].SubViewdef" ModelObj="@BusinessObj" />
+                <FieldsContainer Fields="@Paneles[0].Fields" SubViewdef="@Paneles[0].SubViewdef" ModelObj="@BusinessObj" DefaultColSize="@Paneles[0].ColSize"/>
 
             }
         </DxFormLayout>

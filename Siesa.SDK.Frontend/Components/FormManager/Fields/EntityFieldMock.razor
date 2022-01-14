@@ -1,0 +1,86 @@
+﻿@inherits FieldClass<dynamic>
+@using Siesa.SDK.Entities
+@using System.Linq.Expressions
+<DxComboBox Value="@((E00102_User) BindValue)"
+            ValueExpression="@ValueExpression"
+            ValueChanged="@((E00102_User user) => SetSelectedObj(user))"
+            CssClass="cw-480"
+            TValue="E00102_User"
+            TData="E00102_User"
+            Data="@Data"
+            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+            FilteringMode="DataGridFilteringMode.Contains">
+    <DxListEditorColumn FieldName="@nameof(E00102_User.UserName)"
+                        Caption="Id" />
+    <DxListEditorColumn FieldName="@nameof(E00102_User.Name)"
+                        Caption="Name" />
+    <DxListEditorColumn FieldName="@nameof(E00102_User.Email)"
+                        Caption="Email" />
+</DxComboBox>
+@code {
+    IEnumerable<E00102_User> Data { get; set; }
+    E00102_User SelectedObj { get; set; }
+    Expression<Func<E00102_User>> ValueExpression { get; set;  }
+
+
+    void SetSelectedObj(E00102_User user)
+    {
+        SelectedObj = user;
+        SetValue(user);
+    }
+
+    protected override async Task OnInitializedAsync() {
+        var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
+        ValueExpression = (Expression<Func<E00102_User>>)Expression.Lambda(typeof(Func<>).MakeGenericType(BindModel.GetType()), access);
+
+        Data = new List<E00102_User> {
+            new E00102_User {
+                UserName = "agr",
+                Name = "Abel Gonzalez",
+                Email = "abel.gonzalez@siesa.com",
+                Rowid = 1 
+            },
+            new E00102_User {
+                UserName = "rrf",
+                Name = "Rodolfo Reina",
+                Email = "rodolfo.reina@siesa.com",
+                Rowid = 2 
+            },
+            new E00102_User {
+                UserName = "jtoledo",
+                Name = "Jonathan Toledo",
+                Email = "jtoledo@siesa.com",
+                Rowid = 3 
+            },
+            new E00102_User {
+                UserName = "dmesa",
+                Name = "Daniel Mesa",
+                Email = "daniel.mesa@siesa.com",
+                Rowid = 4 
+            },
+            new E00102_User {
+                UserName = "chr",
+                Name = "Carlos Rengifo",
+                Email = "carlos.rengifo@siesa.com",
+                Rowid = 5 
+            },
+            new E00102_User {
+                UserName = "pepito",
+                Name = "Pepito",
+                Email = "p@siesa.com",
+                Rowid = 6
+            },
+        };
+        try
+        {
+            var rowid = BindValue.GetType().GetProperty("Rowid").GetValue(BindValue);
+            SelectedObj = Data.Where(x => x.Rowid == rowid).FirstOrDefault();
+        }
+        catch(Exception e)
+        {
+            //SelectedObj = Data.FirstOrDefault();
+        }
+
+        
+    }
+}

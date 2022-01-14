@@ -12,5 +12,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         public string PanelId { get; set; } = Guid.NewGuid().ToString();
         public List<FieldOptions> Fields { get; set; } = new List<FieldOptions>();
         public SubViewdef SubViewdef { get; set; }
+
+        public Dictionary<string, int> ColSize { get; set; } = new Dictionary<string, int>()
+        {
+            {"MD", 4},
+            {"SM", 6},
+            {"XS", 12},
+        };
     }
 }

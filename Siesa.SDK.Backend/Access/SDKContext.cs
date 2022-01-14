@@ -111,13 +111,13 @@ namespace Siesa.SDK.Backend.Access
                 //check if entity inherits from BaseEntity
                 if (typeof(BaseEntity).IsAssignableFrom(entity.ClrType))
                 {
+                    /*
                     var newParam = Expression.Parameter(entity.ClrType);
                     Expression<Func<BaseEntity, bool>> test_delegate = x => x.Source == "SDK2";
                     var newBody = ReplacingExpressionVisitor.Replace(test_delegate.Parameters.Single(), newParam, test_delegate.Body);
                     var filter = Expression.Lambda(newBody, newParam);
-
-                    //var filter = Expression.Lambda(Expression.Equal(Expression.Property(newParam, "Source"), Expression.Constant("SDK")), newParam);
                     modelBuilder.Entity(entity.Name).HasQueryFilter(filter);
+                    */
                 }
 
                 

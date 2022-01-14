@@ -67,10 +67,17 @@
         }
         else
         {
+            @if(fieldModelObj.GetType().Name == "E00102_User") @*TODO: Eliminar cuando se tenga el generico*@
+            {
+                <EntityFieldMock BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" EscucharA="@FieldOpt.EscucharA" />
+            }
+            
             @*<EntityField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" EscucharA="@FieldOpt.EscucharA" />*@
         }
         break;
     case FieldTypes.Custom:
+        <CustomField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  Definition="@FieldOpt.CustomComponent"/>
+        break;
     default:
         <span>@FieldType No implementado</span>
         break;

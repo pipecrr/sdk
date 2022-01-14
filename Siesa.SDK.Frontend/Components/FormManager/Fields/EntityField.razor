@@ -1,0 +1,56 @@
+﻿@inherits FieldClass<dynamic>
+
+@using System.Linq.Expressions
+@using System.Reflection
+@if (!FieldOpt.Hidden)
+{
+    @FieldTemplate
+    //@FieldValidationTemplate
+}
+
+
+@code {
+    private RenderFragment? _fieldValidationTemplate;
+    public RenderFragment? FieldTemplate
+    {
+        get
+        {
+
+            return _fieldValidationTemplate != null ? _fieldValidationTemplate : builder =>
+            {
+                var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
+                var lambda = Expression.Lambda(typeof(Func<>).MakeGenericType(BindModel.GetType()), access);
+
+                Type dxDataType = typeof(IEnumerable<>).MakeGenericType(BindModel.GetType());
+                Type dxType = typeof(DxComboBox<,>).MakeGenericType(dxDataType, BindModel.GetType());
+
+                var dxEventCallbackMethod = typeof(EventCallbackFactory).GetMethods()[8]; //TODO: traer por medio de la firma {Microsoft.AspNetCore.Components.EventCallback`1[TValue] Create[TValue](System.Object, System.Action`1[TValue])}
+                var dxEventCallback = dxEventCallbackMethod.MakeGenericMethod(BindModel.GetType());
+
+
+                var thisParam = Expression.Parameter(this.GetType(), "i"); // the name is optional
+                ParameterExpression lambdaDxValue = Expression.Parameter(BindModel.GetType(), "t");
+                var body = Expression.Call(thisParam, this.GetType().GetMethod("SetValue"), lambdaDxValue);
+                var eventCallbackLambda = Expression.Lambda(typeof(Action<>).MakeGenericType(BindModel.GetType()), body, lambdaDxValue).Compile();
+                //var eventCallbackLambda = Expression.Lambda(Expression.Call(thisParam, this.GetType().GetMethod("SetValue"), lambdaDxValue), lambdaDxValue, thisParam);
+                var dxEventCallbackCall = dxEventCallback.Invoke(EventCallback.Factory, new object[] { this, eventCallbackLambda });
+               
+                //MethodInfo generic = dxEventCallbackMethod.MakeGenericMethod(dxType);
+                //generic.Invoke(this, null);
+
+                builder.OpenComponent(0, dxType);
+                builder.AddAttribute(1, "ValueExpression", lambda);
+                builder.AddAttribute(2, "Value", (string)BindValue);
+                builder.AddAttribute(3, "ValueChanged", EventCallback.Factory.Create<dynamic>(this, str => { SetValue(str); }));
+                builder.AddAttribute(4, "NullText", FieldOpt.Placeholder);
+                //builder.AddAttribute(5, "CssClass", (IsRequired && (BindValue == null || BindValue.Length == 0) ? "invalid" : "") + FieldOpt.CssClass);
+                builder.AddAttribute(5, "Enabled", !FieldOpt.Disabled);
+                builder.AddAttribute(6, "ClearButtonDisplayMode", DataEditorClearButtonDisplayMode.Auto);
+                builder.AddAttribute(7, "field-name", FieldOpt.Name);
+
+                builder.CloseComponent();
+            };
+
+        }
+    }
+}

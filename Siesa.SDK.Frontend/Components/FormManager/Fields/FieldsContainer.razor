@@ -5,7 +5,7 @@
             @foreach (var panel in SubViewdef.Paneles)
             {
                 <DxFormLayoutTabPage Caption="@panel.Label">
-                    <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" ModelObj="@ModelObj" />
+                    <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" ModelObj="@ModelObj" DefaultColSize="@panel.ColSize" />
                 </DxFormLayoutTabPage>
             }
         </DxFormLayoutTabPages>
@@ -13,7 +13,7 @@
     }
     else
     {
-        <FieldsContainer Fields="@SubViewdef.Paneles[0].Fields" SubViewdef="@SubViewdef.Paneles[0].SubViewdef" ModelObj="@ModelObj" />
+        <FieldsContainer Fields="@SubViewdef.Paneles[0].Fields" SubViewdef="@SubViewdef.Paneles[0].SubViewdef" ModelObj="@ModelObj" DefaultColSize="@SubViewdef.Paneles[0].ColSize" />
     }
 }else{
 
@@ -21,11 +21,11 @@
     {
         @if(!fld.Hidden){
             <DxFormLayoutItem Caption="@fld.Label"
-                            ColSpanMd="@(fld.ColSize.ContainsKey("MD") ? fld.ColSize["MD"] : 0)"
-                            ColSpanLg="@(fld.ColSize.ContainsKey("LG") ? fld.ColSize["LG"] : 0)"
-                            ColSpanXl="@(fld.ColSize.ContainsKey("XL") ? fld.ColSize["XL"] : 0)"
-                            ColSpanSm="@(fld.ColSize.ContainsKey("SM") ? fld.ColSize["SM"] : 0)"
-                            ColSpanXs="@(fld.ColSize.ContainsKey("XS") ? fld.ColSize["XS"] : 0)">
+                            ColSpanMd="@GetColSize(fld,"MD")"
+                            ColSpanLg="@GetColSize(fld,"LG")"
+                            ColSpanXl="@GetColSize(fld,"XL")"
+                            ColSpanSm="@GetColSize(fld,"SM")"
+                            ColSpanXs="@GetColSize(fld,"XS")">
                 <Template>
                     <DynamicField FieldOpt="@fld" ModelObj="@ModelObj" />
                 </Template>
@@ -42,4 +42,18 @@
     [Parameter] public SubViewdef SubViewdef { get; set; }
 
     [Parameter] public object ModelObj { get; set; }
+    [Parameter] public Dictionary<string, int> DefaultColSize { get; set; }
+
+    private int GetColSize(FieldOptions fld, string screen_size)
+    {
+        var colsize = DefaultColSize.ContainsKey(screen_size) ? DefaultColSize[screen_size] : 0;
+
+        if (fld.ColSize.ContainsKey(screen_size))
+        {
+            colsize = fld.ColSize[screen_size];
+        }
+
+        return colsize;
+
+    }
 }

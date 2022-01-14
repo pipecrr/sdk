@@ -70,7 +70,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     ErrorMsg = "";
                     InitView(value);
                 }
-            }            
+            }
         }
 
         protected override async Task OnInitializedAsync()

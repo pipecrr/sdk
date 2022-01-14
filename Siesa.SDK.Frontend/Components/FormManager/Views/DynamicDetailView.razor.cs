@@ -8,19 +8,23 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
     public partial class DynamicDetailView : DynamicBaseViewModel
     {
-        protected override async Task OnInitializedAsync()
+        private async Task InitDetail(int business_obj_id)
         {
-            await base.OnInitializedAsync();
             try
             {
-                await BusinessObj.InitializeBusiness(Convert.ToInt32(BusinessObjId));
+                await BusinessObj.InitializeBusiness(business_obj_id);
             }
             catch (System.Exception e)
             {
                 Console.WriteLine("Error DetailViewModel", e.ToString());
                 ErrorMsg = e.ToString();
             }
+        }
 
+        protected override async Task OnInitializedAsync()
+        {
+            await base.OnInitializedAsync();
+            await InitDetail(Convert.ToInt32(BusinessObjId));
         }
 
         public new RenderFragment CreateDynamicComponent() => builder =>
@@ -31,5 +35,30 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             builder.AddAttribute(2, "BusinessName", BusinessName);
             builder.CloseComponent();
         };
+
+        public override async Task SetParametersAsync(ParameterView parameters)
+        {
+            await base.SetParametersAsync(parameters);
+            try
+            {
+
+                if (parameters.TryGetValue<string>(nameof(BusinessObjId), out var value))
+                {
+                    if (value != null)
+                    {
+                        //BusinessObj = null;
+                        ErrorMsg = "";
+
+                        await InitDetail(Convert.ToInt32(BusinessObjId));
+                        StateHasChanged();
+                    }
+
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
     }
 }

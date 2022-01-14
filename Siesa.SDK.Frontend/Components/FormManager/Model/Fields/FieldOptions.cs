@@ -14,6 +14,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         public string UnknownFieldType { get; set; }
     }
 
+    public class CustomComponent
+    {
+        public string Name { get; set; }
+        public string Namespace { get; set; }
+        public Dictionary<string, string> Attributes { get; set; } = new Dictionary<string, string>()
+        {
+        };
+
+    }
+
     public class FieldOptions
     {
         public string Name { get; set; }
@@ -28,7 +38,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         public bool Disabled { get; set; } = false;
         public string CssClass { get; set; }
         public FieldTypes FieldType { get; set; }
-        public string CustomFieldType { get; set; }
 
         public string ViewContext { get; set; }
 
@@ -46,11 +55,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 
         public Dictionary<string, int> ColSize { get; set; } = new Dictionary<string, int>()
         {
-            {"MD", 4},
-            {"SM", 6},
-            {"XS", 12},
-
         };
+        public CustomComponent CustomComponent { get; set; }
+
+        public string RelatedBusiness { get; set; } = "";
 
         public FieldObj InitField(object modelObj)
         {
@@ -76,7 +84,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             field.Name = fieldPath[fieldPath.Length - 1];
             PropertyName = fieldPath[fieldPath.Length - 1];
 
-            if (CustomFieldType != null && CustomFieldType != "")
+            if (CustomComponent != null)
             {
                 FieldType = FieldTypes.Custom;   
             }
