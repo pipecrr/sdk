@@ -66,10 +66,17 @@ namespace Siesa.SDK.Shared.Backend
 
         public async void RegisterBackendInMaster(string backendName, string backendUrl)
         {
-            using var channel = GrpcChannel.ForAddress(_masterBackendURL);
-            var client = new Protos.GRPCBackendManagerService.GRPCBackendManagerServiceClient(channel);
-            var request = new Protos.RegisterBackendRequest { BackendInfo = new Protos.BackendInfo { BackendName = backendName, BackendUrl = backendUrl } };
-            var response = await client.RegisterBackendAsync(request);
+            try
+            {
+                using var channel = GrpcChannel.ForAddress(_masterBackendURL);
+                var client = new Protos.GRPCBackendManagerService.GRPCBackendManagerServiceClient(channel);
+                var request = new Protos.RegisterBackendRequest { BackendInfo = new Protos.BackendInfo { BackendName = backendName, BackendUrl = backendUrl } };
+                var response = await client.RegisterBackendAsync(request);
+            }catch (Exception ex)
+            {
+
+            }
+            
                        
         }
 

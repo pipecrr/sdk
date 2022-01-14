@@ -75,7 +75,7 @@ namespace Siesa.SDK.Business
         public async virtual Task<int> DeleteAsync()
         {
             var businness = Frontend.BusinessManagerFrontend.Instance.GetBusiness(BusinessName);
-            var result = await businness.Delete(BaseObj.RowID);
+            var result = await businness.Delete(BaseObj.Rowid);
             return result;
         }
 

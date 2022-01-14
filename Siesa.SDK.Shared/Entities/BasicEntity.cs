@@ -22,7 +22,7 @@ namespace Siesa.SDK.Entities
 
     public abstract class BasicStatusEntity<T>: BasicEntity<T>
     {
-        public virtual bool Status { get; set; } //TODO: Default?
+        public virtual bool Status { get; set; }
     }
 
 }

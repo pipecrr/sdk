@@ -28,6 +28,15 @@ namespace Siesa.SDK.Business
 
         private string[] _relatedProperties = null;
 
+        private SDKContext myContext;
+
+        public void DetachedBaseObj()
+        {
+            //TODO: Complete
+            //myContext.Entry(BaseObj).State = EntityState.Detached;
+            //BaseObj = (T)myContext.Entry(BaseObj).CurrentValues.ToObject();
+        }
+
         public BLBackendSimple()
         {
             BaseObj = Activator.CreateInstance<T>();
@@ -42,20 +51,24 @@ namespace Siesa.SDK.Business
 
             ILoggerFactory loggerFactory = (ILoggerFactory)_provider.GetService(typeof(ILoggerFactory));
             _logger = loggerFactory.CreateLogger(this.GetType().FullName);
+
+            myContext = _dbFactory.CreateDbContext();
         }
 
         public virtual T Get(int rowid)
         {
-            using (SDKContext context = _dbFactory.CreateDbContext())
+            var context = myContext;
+            //var query = context.Set<T>().AsQueryable();
+            var query = context.Set<T>().Where(x => x.Rowid == rowid).AsQueryable();
+            foreach (var relatedProperty in _relatedProperties)
             {
-                var query = context.Set<T>().AsQueryable();
-                foreach (var relatedProperty in _relatedProperties)
-                {
-                    query = query.Include(relatedProperty);
-                }
-
-                return query.FirstOrDefault(x => x.RowID == rowid);
+                query = query.Include(relatedProperty);
             }
+
+            return query.FirstOrDefault();
+
+
+            
         }
 
         public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave()
@@ -122,7 +135,7 @@ namespace Siesa.SDK.Business
 
         private int Save(SDKContext context)
         {
-            if (BaseObj.RowID == 0)
+            if (BaseObj.Rowid == 0)
             {
                 context.Add<T>(BaseObj);
             }
@@ -130,15 +143,14 @@ namespace Siesa.SDK.Business
             {
                 //demo borrar
                 //get by rowid
-                T entity = context.Set<T>().Find(BaseObj.RowID);
+                T entity = context.Set<T>().Find(BaseObj.Rowid);
                 context.Entry(entity).CurrentValues.SetValues(BaseObj);
                 //set updated values
                 entity.LastUpdateDate = DateTime.Now;
-                //context.Update<T>(entity); //TODO: Validar que el ID exista al actualizar
             }
 
             context.SaveChanges(); //TODO: Capturar errores db y hacer rollback
-            return BaseObj.RowID;
+            return BaseObj.Rowid;
         }
 
         public virtual void Update()
@@ -164,12 +176,13 @@ namespace Siesa.SDK.Business
                 var query = context.Set<T>().AsQueryable();
                 //total data
                 result.TotalCount = query.Count();
+                
                 foreach (var relatedProperty in _relatedProperties)
                 {
                     query = query.Include(relatedProperty);
                 }
                 //data
-                result.Data = query.Skip(page * pageSize).Take(pageSize).ToList();
+                result.Data = query.Skip(page).Take(pageSize).ToList();
             }
             return result;
         }

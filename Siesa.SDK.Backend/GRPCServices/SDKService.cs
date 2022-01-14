@@ -9,6 +9,7 @@ using Siesa.SDK.Business;
 using Siesa.SDK.Protos;
 using System.Reflection;
 using Siesa.SDK.Shared.Business;
+using Newtonsoft.Json;
 
 namespace Siesa.SDK.GRPCServices
 {
@@ -37,7 +38,11 @@ namespace Siesa.SDK.GRPCServices
 
             var response = new Protos.BusinessObjResponse();
             var result = businessObj.Get(request.Id);
-            response.Response = Newtonsoft.Json.JsonConvert.SerializeObject(result);
+
+            businessObj.DetachedBaseObj();
+
+
+            response.Response = Newtonsoft.Json.JsonConvert.SerializeObject(result, Newtonsoft.Json.Formatting.None, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
             return Task.FromResult(response);
         }
 

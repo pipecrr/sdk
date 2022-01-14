@@ -20,8 +20,8 @@ else
         <DxDataGridColumn Field="Actions" AllowSort="false" Width="90px" Caption="Acciones" TextAlignment="DataGridTextAlign.Center">
             <DisplayTemplate>
                 <div class="action-buttons">
-                    <button class="btn btn-link grid-btn-link" @onclick="() => GoToEdit(((BaseEntity)context).RowID)"><span class="oi oi-pencil"></span></button>
-                    <button class="btn btn-link grid-btn-link" @onclick="() => GoToDetail(((BaseEntity)context).RowID)"><span class="oi oi-eye"></span></button>
+                    <button class="btn btn-link grid-btn-link" @onclick="() => GoToEdit(((BaseEntity)context).Rowid)"><span class="oi oi-pencil"></span></button>
+                    <button class="btn btn-link grid-btn-link" @onclick="() => GoToDetail(((BaseEntity)context).Rowid)"><span class="oi oi-eye"></span></button>
                 </div>
             </DisplayTemplate>
         </DxDataGridColumn>

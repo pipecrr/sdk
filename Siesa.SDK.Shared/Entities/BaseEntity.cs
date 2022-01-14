@@ -9,20 +9,27 @@ namespace Siesa.SDK.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public virtual int RowID { get; set; }
+        public virtual int Rowid { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime CreationDate { get; set; } = DateTime.UtcNow;
             
-        //[DatabaseGenerated(DatabaseGeneratedOption.Computed)] TODO: Revisar, la db genera un nulo
         public DateTime? LastUpdateDate { get; set; } = DateTime.UtcNow;
 
         //source of data
         public virtual string Source { get; set; }
 
-        //Todo: Owner: foreign key with User, LastEditUser, Usuario creador and Owner_team
         [Timestamp]
         public virtual byte[] RowVersion { get; set; }
+
+        //[Required]
+        public int? RowidCreator { get; set; }
+        [ForeignKey(nameof(RowidCreator))]
+        public virtual E00102_User Creator { get; set; }
+
+        public int? RowidLastEditUser { get; set; }
+        [ForeignKey(nameof(RowidLastEditUser))]
+        public virtual E00102_User LastEditUser { get; set; }
 
     }
 }

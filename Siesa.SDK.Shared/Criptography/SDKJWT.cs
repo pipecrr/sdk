@@ -57,14 +57,14 @@ namespace Siesa.SDK.Shared.Criptography
             }
         }
 
-        public string Generate(S004_User? user)
+        public string Generate(E00102_User? user)
         {
             // generate token that is valid for 7 days
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_secretKey);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] { new Claim("rowid", user.RowID.ToString()) }),
+                Subject = new ClaimsIdentity(new[] { new Claim("rowid", user.Rowid.ToString()) }),
                 Expires = DateTime.UtcNow.AddMinutes(_minutesExp),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };

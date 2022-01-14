@@ -81,7 +81,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private void GoToEdit()
         {
-            NavManager.NavigateTo($"{BusinessName}/edit/{BusinessObj.BaseObj.RowID}/");
+            NavManager.NavigateTo($"{BusinessName}/edit/{BusinessObj.BaseObj.Rowid}/");
         }
 
         private void GoToList()
