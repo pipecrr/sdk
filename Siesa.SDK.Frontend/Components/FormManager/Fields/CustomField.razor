@@ -8,6 +8,8 @@
     [Parameter] public FieldOptions FieldOpt { get; set; }
     [Parameter] public object BindModel { get; set; }
     [Parameter] public string FieldName { get; set; }
+    [Parameter] public object BaseModelObj { get; set; }
+
     private RenderFragment? _fieldTemplate;
     public RenderFragment? FieldTemplate
     {
@@ -15,12 +17,26 @@
         {
             return _fieldTemplate != null ? _fieldTemplate : builder =>
             {
-                var component_name = Definition.Name;
-                var component_namespace = Definition.Namespace;
-
-                Type ComponentType = Utils.Utils.SearchType($"{component_namespace}.{component_name}");
+                Type ComponentType = Utils.Utils.SearchType($"{Definition.Namespace}.{Definition.Name}");
+                Dictionary<string, string> Attributes = Definition.Attributes;
 
                 builder.OpenComponent(0, ComponentType);
+                if(Attributes != null)
+                {
+                    builder.AddAttribute(1, "Business", BaseModelObj);
+
+                    for(int i = 0; i < Attributes.Count; i++)
+                    {
+                        var key = Attributes.ElementAt(i).Key;
+                        var value = Attributes.ElementAt(i).Value;
+                        dynamic dynamicValue = Utils.Evaluator.EvaluateCode(value, BaseModelObj).GetAwaiter().GetResult();
+                        //wait for the value to be evaluated
+                        if(dynamicValue == null){
+                            dynamicValue = "";
+                        }
+                        builder.AddAttribute(i + 2, key, dynamicValue);
+                    }
+                }
 
 
                 builder.CloseComponent();

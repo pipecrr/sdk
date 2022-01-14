@@ -76,7 +76,7 @@
         }
         break;
     case FieldTypes.Custom:
-        <CustomField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  Definition="@FieldOpt.CustomComponent"/>
+        <CustomField BaseModelObj="@ModelObj" BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  Definition="@FieldOpt.CustomComponent"/>
         break;
     default:
         <span>@FieldType No implementado</span>
