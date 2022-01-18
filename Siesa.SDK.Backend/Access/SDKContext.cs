@@ -116,8 +116,8 @@ namespace Siesa.SDK.Backend.Access
                     Expression<Func<BaseEntity, bool>> test_delegate = x => x.Source == "SDK2";
                     var newBody = ReplacingExpressionVisitor.Replace(test_delegate.Parameters.Single(), newParam, test_delegate.Body);
                     var filter = Expression.Lambda(newBody, newParam);
-                    modelBuilder.Entity(entity.Name).HasQueryFilter(filter);
-                    */
+                    modelBuilder.Entity(entity.Name).HasQueryFilter(filter);*/
+                    
                 }
 
                 
