@@ -10,17 +10,18 @@ namespace Siesa.SDK.Shared.Configurations
     public class ServiceConfiguration: IServiceConfiguration
     {
         public string MasterBackendUrl { get; set; } = String.Empty;
+        public string AuditServerUrl { get; set; } = String.Empty;
 
     }
 
     public static class ServiceConfigurationExtension
     {
         public static void AddSDKServices(this IServiceCollection services, IConfiguration serviceConfiguration)
-        {            
-            services.AddLogging(builder => SDKLogger.Configure(builder));
+        {
+            ServiceConfiguration sc = serviceConfiguration.Get<ServiceConfiguration>();
             services.Configure<ServiceConfiguration>(serviceConfiguration);
             services.AddOptions();
-            ServiceConfiguration sc = serviceConfiguration.Get<ServiceConfiguration>();
+            services.AddLogging(builder => SDKLogger.Configure(builder, sc));
             BackendManager.SetMasterBackendUrl(sc.MasterBackendUrl);
             
         }

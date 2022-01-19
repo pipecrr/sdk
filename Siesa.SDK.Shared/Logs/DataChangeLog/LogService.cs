@@ -9,7 +9,7 @@ namespace Siesa.SDK.Shared.Logs.DataChangeLog
     {
         public static void SaveDataEntityLog(List<DataEntityLog> logs)
         {
-            var dataChangeLog = new SDKGrpcChangeLogStorageService("https://localhost:7168");
+            var dataChangeLog = new SDKGrpcChangeLogStorageService("http://172.16.1.88:5000");
             Parallel.ForEach(logs, log => ConvertAndSave(log, dataChangeLog));
         }
 

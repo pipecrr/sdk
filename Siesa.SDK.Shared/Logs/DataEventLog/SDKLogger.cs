@@ -2,12 +2,13 @@
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
+using Siesa.SDK.Shared.Configurations;
 
 namespace Siesa.SDK.Shared.Logs.DataEventLog
 {
     public static class SDKLogger
     {
-        public static void Configure(ILoggingBuilder loggingBuilder)
+        public static void Configure(ILoggingBuilder loggingBuilder, ServiceConfiguration serviceConfiguration)
         {
             loggingBuilder.ClearProviders();
             loggingBuilder.AddSerilog(new LoggerConfiguration()
@@ -15,7 +16,7 @@ namespace Siesa.SDK.Shared.Logs.DataEventLog
                 .MinimumLevel.Warning()
                 .MinimumLevel.Override("Siesa.SDK.Business", LogEventLevel.Information)
                 .Enrich.FromLogContext()
-                .WriteTo.StealthConsoleSink(logStorageService: new SDKGrpcLogStorageService("https://localhost:7168"))
+                .WriteTo.StealthConsoleSink(logStorageService: new SDKGrpcLogStorageService(serviceConfiguration.AuditServerUrl))
                 .CreateLogger());
         }
     }
