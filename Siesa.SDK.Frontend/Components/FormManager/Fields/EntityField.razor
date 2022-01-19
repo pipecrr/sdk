@@ -1,7 +1,11 @@
 ﻿@inherits FieldClass<dynamic>
 
-@using System.Linq.Expressions
-@using System.Reflection
+@using System.Linq.Expressions;
+@using System.Reflection;
+@using System.Threading;
+@using System.Threading.Tasks;
+@using DevExtreme.AspNet.Data
+@using DevExtreme.AspNet.Data.ResponseModel
 @if (!FieldOpt.Hidden)
 {
     @FieldTemplate
@@ -11,6 +15,29 @@
 
 @code {
     private RenderFragment? _fieldValidationTemplate;
+    [Parameter] public dynamic BaseModelObj { get; set; }
+
+    public dynamic RelBusinessObj { get; set; }
+
+
+
+    public static void EntitySetValue(EntityField field, dynamic value)
+    {
+        field.SetValue(value);
+    }
+
+    protected async Task<LoadResult> LoadCustomData(DataSourceLoadOptionsBase options, CancellationToken cancellationToken) {
+        string tableOptions = options.ConvertToGetRequestUri("/");
+        var result =  await RelBusinessObj.ListAsync(0,30,tableOptions); //TODO: Paginación
+        var response = new LoadResult
+        {
+            data = result.Data,
+            totalCount = result.TotalCount,
+            groupCount = result.GroupCount
+        };
+        return response;
+    }
+
     public RenderFragment? FieldTemplate
     {
         get
@@ -18,35 +45,64 @@
 
             return _fieldValidationTemplate != null ? _fieldValidationTemplate : builder =>
             {
-                var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
-                var lambda = Expression.Lambda(typeof(Func<>).MakeGenericType(BindModel.GetType()), access);
+                BusinessFrontendModel relBusinessModel;
+                BusinessManagerFrontend.Instance.Businesses.TryGetValue(FieldOpt.RelatedBusiness, out relBusinessModel);
+                if (relBusinessModel == null)
+                {
+                    throw new Exception("Business not found");
+                }
 
-                Type dxDataType = typeof(IEnumerable<>).MakeGenericType(BindModel.GetType());
-                Type dxType = typeof(DxComboBox<,>).MakeGenericType(dxDataType, BindModel.GetType());
+                var relBusinessType = Utils.Utils.SearchType(relBusinessModel.Namespace + "." + relBusinessModel.Name); 
+                RelBusinessObj = Activator.CreateInstance(relBusinessType);
+                RelBusinessObj.BusinessName = FieldOpt.RelatedBusiness;
+                var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
+                var lambda = Expression.Lambda(typeof(Func<>).MakeGenericType(BindProperty.PropertyType), access);
+
+                Type dxType = typeof(DxComboBox<,>).MakeGenericType(BindProperty.PropertyType, BindProperty.PropertyType);
 
                 var dxEventCallbackMethod = typeof(EventCallbackFactory).GetMethods()[8]; //TODO: traer por medio de la firma {Microsoft.AspNetCore.Components.EventCallback`1[TValue] Create[TValue](System.Object, System.Action`1[TValue])}
-                var dxEventCallback = dxEventCallbackMethod.MakeGenericMethod(BindModel.GetType());
+                var dxEventCallback = dxEventCallbackMethod.MakeGenericMethod(BindProperty.PropertyType);
 
 
-                var thisParam = Expression.Parameter(this.GetType(), "i"); // the name is optional
-                ParameterExpression lambdaDxValue = Expression.Parameter(BindModel.GetType(), "t");
-                var body = Expression.Call(thisParam, this.GetType().GetMethod("SetValue"), lambdaDxValue);
-                var eventCallbackLambda = Expression.Lambda(typeof(Action<>).MakeGenericType(BindModel.GetType()), body, lambdaDxValue).Compile();
+                var lambdadxValue = Expression.Parameter(BindProperty.PropertyType, "t");
+                var thisExpresionConstant = Expression.Constant(this, this.GetType());
+                var body = Expression.Call(null,this.GetType().GetMethod("EntitySetValue"),thisExpresionConstant, lambdadxValue);
+                var actionGenericType = typeof(Action<>).MakeGenericType(BindProperty.PropertyType);
+
+                var eventCallbackLambda = Expression.Lambda(actionGenericType, body, lambdadxValue).Compile();
                 //var eventCallbackLambda = Expression.Lambda(Expression.Call(thisParam, this.GetType().GetMethod("SetValue"), lambdaDxValue), lambdaDxValue, thisParam);
                 var dxEventCallbackCall = dxEventCallback.Invoke(EventCallback.Factory, new object[] { this, eventCallbackLambda });
-               
+
                 //MethodInfo generic = dxEventCallbackMethod.MakeGenericMethod(dxType);
                 //generic.Invoke(this, null);
 
+                var dxValue = (BindValue != null ? Convert.ChangeType(BindValue, BindProperty.PropertyType) : null);
+
+                /*//Create an empty List of type BindModel.GetType()
+                var dataList = Activator.CreateInstance(typeof(List<>).MakeGenericType(BindModel.GetType()));
+               
+                
+                //Add the value to the list if it is not null
+                if (BindValue != null)
+                {
+                    ((dynamic)dataList).Add(dxValue);
+                }*/
+               
+
+
                 builder.OpenComponent(0, dxType);
                 builder.AddAttribute(1, "ValueExpression", lambda);
-                builder.AddAttribute(2, "Value", (string)BindValue);
-                builder.AddAttribute(3, "ValueChanged", EventCallback.Factory.Create<dynamic>(this, str => { SetValue(str); }));
+                builder.AddAttribute(2, "Value", (object)dxValue);
+                //builder.AddAttribute(3, "ValueChanged", EventCallback.Factory.Create<dynamic>(this, str => { SetValue(str); }));
+                builder.AddAttribute(3, "ValueChanged", dxEventCallbackCall);
                 builder.AddAttribute(4, "NullText", FieldOpt.Placeholder);
-                //builder.AddAttribute(5, "CssClass", (IsRequired && (BindValue == null || BindValue.Length == 0) ? "invalid" : "") + FieldOpt.CssClass);
+                builder.AddAttribute(5, "CssClass", "cw-480");
                 builder.AddAttribute(5, "Enabled", !FieldOpt.Disabled);
                 builder.AddAttribute(6, "ClearButtonDisplayMode", DataEditorClearButtonDisplayMode.Auto);
                 builder.AddAttribute(7, "field-name", FieldOpt.Name);
+                builder.AddAttribute(8, "FilteringMode", DataGridFilteringMode.Contains);
+                //builder.AddAttribute(9, "Data", dataList);
+                builder.AddAttribute(9, "CustomData", LoadCustomData);
 
                 builder.CloseComponent();
             };
