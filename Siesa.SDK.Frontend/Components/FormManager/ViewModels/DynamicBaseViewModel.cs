@@ -98,8 +98,5 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
             await base.SetParametersAsync(parameters);
         }
-        protected override void OnParametersSet(){
-            InitGenericView();
-        }
     }
 }
