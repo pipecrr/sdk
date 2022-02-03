@@ -76,7 +76,7 @@ namespace Siesa.SDK.Backend.Access
         {
             foreach (var entity in modelBuilder.Model.GetEntityTypes())
             {
-                string table_name = entity.ShortName().Trim();
+                string table_name = entity.ShortName().Trim().ToLower();
                 // table names
                 modelBuilder.Entity(entity.Name).ToTable(table_name);
                 var table_name_parts = table_name.Split('_');
@@ -119,6 +119,9 @@ namespace Siesa.SDK.Backend.Access
                     modelBuilder.Entity(entity.Name).HasQueryFilter(filter);*/
                     
                 }
+
+                //remove cascade delete
+                //entity.GetForeignKeys().Where(fk => !fk.IsOwnership && fk.DeleteBehavior == DeleteBehavior.Cascade).ToList().ForEach(fk => fk.DeleteBehavior = DeleteBehavior.Restrict);
 
                 
 
