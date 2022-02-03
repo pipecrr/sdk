@@ -9,7 +9,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         public string Business { get; set; }
         public string ParentField { get; set; }
         public string Viewdef { get; set; }
-        public List<Panel> Paneles = new();
+        public List<Panel> Panels = new();
 
         [JsonConstructor]
         public SubViewdef(string? Business, string? ParentField, string? Viewdef) { 
@@ -22,7 +22,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
             {
                 //replace all the ocurrences of "BaseObj" with the parent field
                 var sub_metadata = metadata.Replace("BaseObj", ParentField);
-                Paneles = JsonConvert.DeserializeObject<List<Panel>>(sub_metadata);
+                
+                try
+                {
+                    var formViewModel = JsonConvert.DeserializeObject<FormViewModel>(sub_metadata);
+                    Panels = formViewModel.Panels;
+                }
+                catch (System.Exception)
+                {
+                    Panels = JsonConvert.DeserializeObject<List<Panel>>(sub_metadata);
+                }
             }
         }
     }

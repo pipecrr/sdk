@@ -30,14 +30,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 
         [Parameter] public TProperty Text { get; set; }
 
-        //[Parameter] public Func<int> RefresParent { get; set; }
-
-        [Parameter] public List<string> EscucharA { get; set; } = new List<string>();
-
         [Inject] protected IJSRuntime jsRuntime { get; set; }
-
-        [Parameter] public EventCallback RefreshParent { get; set; }
-
 
         [Parameter] public string FieldName { get; set; }
 
@@ -50,11 +43,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         private string OnChange { get; set; }
 
         [CascadingParameter] EditContext EditFormContext { get; set; }
-
-        protected void RefreshMe()
-        {
-           InvokeAsync(StateHasChanged);
-        }
 
         protected async Task Init()
         {

@@ -1,8 +1,8 @@
-﻿@if(SubViewdef != null && SubViewdef.Paneles != null && SubViewdef.Paneles.Count > 0){
-     @if (SubViewdef.Paneles.Count > 1)
+﻿@if(SubViewdef != null && SubViewdef.Panels != null && SubViewdef.Panels.Count > 0){
+     @if (SubViewdef.Panels.Count > 1)
     {
         <DxFormLayoutTabPages>
-            @foreach (var panel in SubViewdef.Paneles)
+            @foreach (var panel in SubViewdef.Panels)
             {
                 <DxFormLayoutTabPage Caption="@panel.Label">
                     <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" ModelObj="@ModelObj" DefaultColSize="@panel.ColSize" />
@@ -13,7 +13,7 @@
     }
     else
     {
-        <FieldsContainer Fields="@SubViewdef.Paneles[0].Fields" SubViewdef="@SubViewdef.Paneles[0].SubViewdef" ModelObj="@ModelObj" DefaultColSize="@SubViewdef.Paneles[0].ColSize" />
+        <FieldsContainer Fields="@SubViewdef.Panels[0].Fields" SubViewdef="@SubViewdef.Panels[0].SubViewdef" ModelObj="@ModelObj" DefaultColSize="@SubViewdef.Panels[0].ColSize" />
     }
 }else{
 

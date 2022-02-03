@@ -24,7 +24,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Inject] public IJSRuntime JSRuntime { get; set; }
         [Inject] public NavigationManager NavManager { get; set; }
 
-        protected List<Panel> Paneles = new List<Panel>();
+        protected FormViewModel FormViewModel { get; set; } = new FormViewModel();
+
+        protected List<Panel> Panels {get { return FormViewModel.Panels; } }
 
         public Boolean Loading = true;
 
@@ -49,7 +51,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             }
             else
             {
-                Paneles = JsonConvert.DeserializeObject<List<Panel>>(metadata);
+                try
+                {
+                    FormViewModel = JsonConvert.DeserializeObject<FormViewModel>(metadata);
+                }
+                catch (System.Exception)
+                {
+                    //Soporte a viewdefs anteriores
+                    var panels = JsonConvert.DeserializeObject<List<Panel>>(metadata);
+                    FormViewModel.Panels = panels;
+                }
             }
             Loading = false;
             EditFormContext = new EditContext(BusinessObj);
@@ -69,7 +80,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         private void EvaluateDynamicAttributes(FieldChangedEventArgs e)
         {
             string code = "";
-            foreach (var item in Paneles.Select((value, i) => (value, i)))
+            foreach (var item in Panels.Select((value, i) => (value, i)))
             {
                 var panel_index = item.i;
                 var panel = item.value;
@@ -95,7 +106,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                         {
                             case "sdk-show":
                                 code += @$"
-try {{ Paneles[{panel_index}].Fields[{field_index}].Hidden = !({(string)attr.Value}); }} catch (Exception ex) {{ throw;  }}";
+try {{ Panels[{panel_index}].Fields[{field_index}].Hidden = !({(string)attr.Value}); }} catch (Exception ex) {{ throw;  }}";
                                 /*_ = Task.Run(async () =>
                                 {
                                     var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
@@ -105,7 +116,7 @@ try {{ Paneles[{panel_index}].Fields[{field_index}].Hidden = !({(string)attr.Val
                                 break;
                             case "sdk-hide":
                                 code += @$"
-try {{ Paneles[{panel_index}].Fields[{field_index}].Hidden = ({(string)attr.Value}); }} catch (Exception ex) {{ throw;  }}";
+try {{ Panels[{panel_index}].Fields[{field_index}].Hidden = ({(string)attr.Value}); }} catch (Exception ex) {{ throw;  }}";
                                 /*_ = Task.Run(async () =>
                                 {
                                     var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
@@ -115,7 +126,7 @@ try {{ Paneles[{panel_index}].Fields[{field_index}].Hidden = ({(string)attr.Valu
                                 break;
                             case "sdk-required":
                                 code += @$"
-try {{ Paneles[{panel_index}].Fields[{field_index}].Required = ({(string)attr.Value}); }} catch (Exception ex) {{ throw;  }}";
+try {{ Panels[{panel_index}].Fields[{field_index}].Required = ({(string)attr.Value}); }} catch (Exception ex) {{ throw;  }}";
                                 /*_ = Task.Run(async () =>
                                 {
                                     var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
@@ -126,7 +137,7 @@ try {{ Paneles[{panel_index}].Fields[{field_index}].Required = ({(string)attr.Va
                             case "sdk-readonly":
                             case "sdk-disabled":
                                 code += @$"
-try {{ Paneles[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Value}); }} catch (Exception ex) {{ throw; }}";
+try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Value}); }} catch (Exception ex) {{ throw; }}";
                                 /*_ = Task.Run(async () =>
                                 {
                                     var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
@@ -145,7 +156,7 @@ try {{ Paneles[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Va
             {
                 _ = Task.Run(async () =>
                  {
-                     BusinessObj.Paneles = Paneles;
+                     BusinessObj.Panels = Panels;
                      await Evaluator.EvaluateCode(code, BusinessObj);
                      _ = InvokeAsync(() => StateHasChanged());
                  });
@@ -246,6 +257,27 @@ try {{ Paneles[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Va
         protected void GoToList()
         {
             NavManager.NavigateTo($"{BusinessName}/");
+        }
+
+        public void OnClickCustomButton(Button button)
+        {
+            if (!string.IsNullOrEmpty(button.Href))
+            {
+                if (button.Target == "_blank")
+                {
+                    _ = JSRuntime.InvokeVoidAsync("window.open", button.Href, "_blank");
+                }
+                else
+                {
+                    NavManager.NavigateTo(button.Href);
+                }
+
+
+            }
+            else if (!string.IsNullOrEmpty(button.Action))
+            {
+                Evaluator.EvaluateCode(button.Action, BusinessObj);
+            }
         }
     }
 }

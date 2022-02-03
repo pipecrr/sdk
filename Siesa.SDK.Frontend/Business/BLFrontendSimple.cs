@@ -18,7 +18,7 @@ namespace Siesa.SDK.Business
     {
         public string BusinessName { get; set; }
         [JsonIgnore]
-        public List<Panel> Paneles = new List<Panel>();
+        public List<Panel> Panels = new List<Panel>();
         [ValidateComplexType]
         public T BaseObj { get; set; }
 
