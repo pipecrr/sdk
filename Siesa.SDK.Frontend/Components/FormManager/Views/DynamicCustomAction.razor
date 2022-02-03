@@ -1,0 +1,25 @@
+﻿@page "/{BusinessName}/{ActionName}/"
+@inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
+@if (ErrorMsg != null && ErrorMsg != "")
+{
+    <text>@ErrorMsg</text>
+}
+else if (BusinessObj != null)
+{
+    @GetRenderFragment()
+}
+
+@code {
+    [Parameter] public string ActionName { get; set; }
+    private RenderFragment GetRenderFragment(){
+        var method = BusinessObj.GetType().GetMethod(ActionName);
+        if (method == null)
+        {
+            ErrorMsg = "Method not found";
+            StateHasChanged();
+            return null;
+        }
+
+        return (RenderFragment)method.Invoke(BusinessObj, null);
+    }
+}
