@@ -12,6 +12,7 @@ using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
 using Siesa.SDK.Frontend.Components.FormManager.Fields;
 using Radzen;
 using Radzen.Blazor;
+using Siesa.SDK.Frontend.Utils;
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
     public partial class ListView: ComponentBase
@@ -161,6 +162,27 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private void GoToDetail(int id)
         {
             NavManager.NavigateTo($"{BusinessName}/detail/{id}/");
+        }
+
+        private void OnClickCustomButton(Button button)
+        {
+            if (!string.IsNullOrEmpty(button.Href))
+            {
+                if (button.Target == "_blank")
+                {
+                    _ = JSRuntime.InvokeVoidAsync("window.open", button.Href, "_blank");
+                }
+                else
+                {
+                    NavManager.NavigateTo(button.Href);
+                }
+
+
+            }
+            else if (!string.IsNullOrEmpty(button.Action))
+            {
+                Evaluator.EvaluateCode(button.Action, BusinessObj);
+            }
         }
     }
 }

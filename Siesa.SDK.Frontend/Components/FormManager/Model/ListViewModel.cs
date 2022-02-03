@@ -24,5 +24,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
 
         public string LinkTo { get; set; }
 
+        public List<Button> Buttons { get; set; } = new List<Button>();
+
     }
 }
