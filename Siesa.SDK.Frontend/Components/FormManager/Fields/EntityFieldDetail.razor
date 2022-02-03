@@ -13,7 +13,11 @@
         }
         var typeRelatedEntity = BindValue.GetType();
         // Checks if contains a property named "ID" or "Rowid" and returns the value of it
-        var idProperty = typeRelatedEntity.GetProperty("ID") ?? typeRelatedEntity.GetProperty("Rowid");
+        var idProperty = typeRelatedEntity.GetProperty("Rowid");
+        if(idProperty == null)
+        {
+            idProperty = typeRelatedEntity.GetProperty("ID");
+        }
         if (idProperty != null)
             return $"/{FieldOpt.RelatedBusiness}/detail/{idProperty.GetValue(BindValue)}/";
         
