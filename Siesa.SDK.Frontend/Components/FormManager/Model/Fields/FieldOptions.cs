@@ -61,33 +61,38 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         public FieldObj InitField(object modelObj)
         {
             FieldObj field = new FieldObj();
-            //Split Name
-            string[] fieldPath = Name.Split('.');
-            //loop through the path
-            object currentObject = modelObj;
-            for (int i = 0; i < (fieldPath.Length - 1); i++)
-            {
-                var tmpType = currentObject.GetType();
-                var tmpProperty = tmpType.GetProperty(fieldPath[i]);
-                var tmpValue = tmpProperty.GetValue(currentObject, null);
-                var isEntity = tmpProperty.PropertyType.IsSubclassOf(typeof(BaseEntity));
-                if (tmpValue == null && isEntity)
-                {
-                    tmpValue = Activator.CreateInstance(tmpProperty.PropertyType);
-                    tmpProperty.SetValue(currentObject, tmpValue);
-                }
-                currentObject = tmpValue;
-            }
-            field.ModelObj = currentObject;
-            field.Name = fieldPath[fieldPath.Length - 1];
-            PropertyName = fieldPath[fieldPath.Length - 1];
+
 
             if (CustomComponent != null)
             {
-                FieldType = FieldTypes.Custom;   
+                //Name guid
+                Name = Guid.NewGuid().ToString();
+                FieldType = FieldTypes.Custom;
+                field.Name = Name;
+                field.ModelObj = modelObj;
             }
             else
             {
+                //Split Name
+                string[] fieldPath = Name.Split('.');
+                //loop through the path
+                object currentObject = modelObj;
+                for (int i = 0; i < (fieldPath.Length - 1); i++)
+                {
+                    var tmpType = currentObject.GetType();
+                    var tmpProperty = tmpType.GetProperty(fieldPath[i]);
+                    var tmpValue = tmpProperty.GetValue(currentObject, null);
+                    var isEntity = tmpProperty.PropertyType.IsSubclassOf(typeof(BaseEntity));
+                    if (tmpValue == null && isEntity)
+                    {
+                        tmpValue = Activator.CreateInstance(tmpProperty.PropertyType);
+                        tmpProperty.SetValue(currentObject, tmpValue);
+                    }
+                    currentObject = tmpValue;
+                }
+                field.ModelObj = currentObject;
+                field.Name = fieldPath[fieldPath.Length - 1];
+                PropertyName = fieldPath[fieldPath.Length - 1];
                 var propertyType = field.ModelObj.GetType().GetProperty(field.Name).PropertyType;
                 //Console.WriteLine(fieldName + " , " + propertyType);
                 switch (propertyType.Name)
