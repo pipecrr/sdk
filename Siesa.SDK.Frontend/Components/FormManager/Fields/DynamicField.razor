@@ -9,11 +9,11 @@
         }
         else
         {
-            <CharField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" EscucharA="@FieldOpt.EscucharA" />
+            <CharField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  />
         }
         break;
     case FieldTypes.DecimalField:
-        <DecimalField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" EscucharA="@FieldOpt.EscucharA" />
+        <DecimalField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  />
         break;
     case FieldTypes.IntegerField:
         @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
@@ -23,14 +23,14 @@
         }
         else
         {
-            <IntegerField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" EscucharA="@FieldOpt.EscucharA" />
+            <IntegerField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  />
         }
         break;
     case FieldTypes.MultiSelectField:
-        <MultiSelectField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" EscucharA="@FieldOpt.EscucharA" />
+        <MultiSelectField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  />
         break;
     case FieldTypes.SelectField:
-        <SelectField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" EscucharA="@FieldOpt.EscucharA" />
+        <SelectField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  />
         break;
     case FieldTypes.DateField:
     case FieldTypes.DateTimeField:
@@ -40,11 +40,11 @@
         }
         else
         {
-            <DateField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" EscucharA="@FieldOpt.EscucharA" />
+            <DateField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  />
         }
         break;
     case FieldTypes.TextField:
-        <TextField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" EscucharA="@FieldOpt.EscucharA" />
+        <TextField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  />
         break;
     case FieldTypes.BooleanField:
         @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
@@ -53,7 +53,7 @@
         }
         else
         {
-            <BooleanField BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" EscucharA="@FieldOpt.EscucharA" />
+            <BooleanField BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt"  />
 
         }
         break;
@@ -67,7 +67,7 @@
         }
         else
         {
-            <EntityField BaseModelObj="@ModelObj" BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" EscucharA="@FieldOpt.EscucharA" />
+            <EntityField BaseModelObj="@ModelObj" BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  />
         }
         break;
     case FieldTypes.Custom:

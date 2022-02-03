@@ -7,10 +7,11 @@ using Siesa.SDK.Frontend.Components.FormManager.Model;
 using Microsoft.JSInterop;
 using Siesa.SDK.Business;
 using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
+using Siesa.SDK.Frontend.Utils;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
-    public partial class DetailView: ComponentBase
+    public partial class DetailView : ComponentBase
     {
         [Parameter]
         public string BusinessName { get; set; }
@@ -20,29 +21,34 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Inject] public IJSRuntime JSRuntime { get; set; }
         [Inject] public NavigationManager NavManager { get; set; }
 
-        protected List<Panel> Paneles = new List<Panel>();
+
+        protected FormViewModel FormViewModel { get; set; } = new FormViewModel();
+        protected List<Panel> Panels { get { return FormViewModel.Panels; } }
 
         public Boolean ModelLoaded = false;
 
         public String ErrorMsg = "";
 
-        private void setViewContext(List<Panel> panels) { 
+        private void setViewContext(List<Panel> panels)
+        {
             for (int i = 0; i < panels.Count; i++)
             {
-                for(int j = 0; j < panels[i].Fields.Count; j++)
+                for (int j = 0; j < panels[i].Fields.Count; j++)
                 {
                     panels[i].Fields[j].ViewContext = "DetailView";
                 }
-                if(panels[i].SubViewdef != null && panels[i].SubViewdef.Paneles.Count > 0)
+                if (panels[i].SubViewdef != null && panels[i].SubViewdef.Panels.Count > 0)
                 {
-                    setViewContext(panels[i].SubViewdef.Paneles);
+                    setViewContext(panels[i].SubViewdef.Panels);
                 }
             }
 
         }
 
-        protected void InitView(string bName = null) {
-            if (bName == null) {
+        protected void InitView(string bName = null)
+        {
+            if (bName == null)
+            {
                 bName = BusinessName;
             }
             var metadata = BusinessManagerFrontend.Instance.GetViewdef(bName, "detail");
@@ -52,8 +58,17 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
             else
             {
-                Paneles = JsonConvert.DeserializeObject<List<Panel>>(metadata);
-                setViewContext(Paneles);
+                try
+                {
+                    FormViewModel = JsonConvert.DeserializeObject<FormViewModel>(metadata);
+                }
+                catch (System.Exception)
+                {
+                    //Soporte a viewdefs anteriores
+                    var panels = JsonConvert.DeserializeObject<List<Panel>>(metadata);
+                    FormViewModel.Panels = panels;
+                }
+                setViewContext(Panels);
                 ModelLoaded = true;
             }
             StateHasChanged();
@@ -93,6 +108,27 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         {
             await BusinessObj.DeleteAsync();
             NavManager.NavigateTo($"{BusinessName}/");
+        }
+
+        private void OnClickCustomButton(Button button)
+        {
+            if (!string.IsNullOrEmpty(button.Href))
+            {
+                if (button.Target == "_blank")
+                {
+                    _ = JSRuntime.InvokeVoidAsync("window.open", button.Href, "_blank");
+                }
+                else
+                {
+                    NavManager.NavigateTo(button.Href);
+                }
+
+
+            }
+            else if (!string.IsNullOrEmpty(button.Action))
+            {
+                Evaluator.EvaluateCode(button.Action, BusinessObj);
+            }
         }
     }
 }

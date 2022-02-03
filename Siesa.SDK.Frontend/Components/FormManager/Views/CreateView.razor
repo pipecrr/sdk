@@ -1,6 +1,6 @@
 ﻿@using Siesa.SDK.Frontend.Components.FormManager.Fields
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
-@if (Paneles == null || Paneles.Count <= 0)
+@if (Panels == null || Panels.Count <= 0)
 {
     <label>No hay definicion para la vista</label>
 }
@@ -16,10 +16,10 @@ else if (BusinessObj.BaseObj != null)
               EditContext="@EditFormContext">
         <ObjectGraphDataAnnotationsValidator />
         <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
-            @if (Paneles.Count > 1)
+            @if (Panels.Count > 1)
             {
                 <DxFormLayoutTabPages>
-                    @foreach (var panel in Paneles)
+                    @foreach (var panel in Panels)
                     {
                         <DxFormLayoutTabPage Caption="@panel.Label">
                             <CascadingValue Value="@EditFormContext">
@@ -35,7 +35,7 @@ else if (BusinessObj.BaseObj != null)
             else
             {
                 <CascadingValue Value="@EditFormContext">
-                    <FieldsContainer Fields="@Paneles[0].Fields" SubViewdef="@Paneles[0].SubViewdef" DefaultColSize="@Paneles[0].ColSize" ModelObj="@BusinessObj" />
+                    <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef" DefaultColSize="@Panels[0].ColSize" ModelObj="@BusinessObj" />
                 </CascadingValue>
 
             }
@@ -48,6 +48,10 @@ else if (BusinessObj.BaseObj != null)
         <TopBarButtons>
             <DxButton form="@FormID" RenderStyle="ButtonRenderStyle.Primary" SubmitFormOnClick="true" Text="Guardar" />
             <DxButton RenderStyle="ButtonRenderStyle.Secondary" Click="GoToList" Text="Cancelar" />
+            @foreach (var btn in FormViewModel.Buttons)
+            {
+                <DxButton RenderStyle="@btn.RenderStyle" Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />
+            }
         </TopBarButtons>
     </SetTopBar>
 
