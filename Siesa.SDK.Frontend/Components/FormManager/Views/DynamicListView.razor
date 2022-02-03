@@ -6,5 +6,28 @@
 }
 else if (BusinessObj != null)
 {
-    @CreateDynamicComponent();
+    <DynamicComponent Type="@componentType" Parameters="@parameters" />
+}
+
+@code {
+    private Type componentType = typeof(Views.ListView);
+    private IDictionary<string, object> parameters = new Dictionary<string, object>();
+    private void SetParameters(dynamic businessObj, string businessName){
+        parameters.Clear();
+        parameters.Add("BusinessObj", businessObj);
+        parameters.Add("BusinessName", businessName);
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        SetParameters(BusinessObj, BusinessName);
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        SetParameters(BusinessObj, BusinessName);        
+    }
+    
 }

@@ -6,14 +6,12 @@ using Newtonsoft.Json;
 using Siesa.SDK.Frontend.Components.FormManager.Model;
 using Microsoft.JSInterop;
 using Siesa.SDK.Business;
-using DevExtreme.AspNet.Data.ResponseModel;
-using DevExtreme.AspNet.Data;
 using System.Threading;
 using System.Reflection;
-using DevExpress.Blazor;
 using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
 using Siesa.SDK.Frontend.Components.FormManager.Fields;
-
+using Radzen;
+using Radzen.Blazor;
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
     public partial class ListView: ComponentBase
@@ -26,13 +24,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Inject] public IJSRuntime JSRuntime { get; set; }
         [Inject] public NavigationManager NavManager { get; set; }
 
-        public Boolean Loading = true;
+        public bool Loading;
 
         public String ErrorMsg = "";
 
         private ListViewModel ListViewModel { get; set; }
 
-        public DxDataGrid<object> _gridRef;
+
+        private IEnumerable<object> data;
+        int count;
+        public RadzenDataGrid<object> _gridRef;
+
+        Guid needUpdate;
         protected void InitView(string bName = null) {
             Loading = true;
             if (bName == null) {
@@ -51,6 +54,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     field.InitField(BusinessObj);
                 }
             }
+            data = null;
             Loading = false;
             StateHasChanged();
 
@@ -62,74 +66,77 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             //InitView();
         }
 
-        public override async Task SetParametersAsync(ParameterView parameters)
+        protected override void OnParametersSet()
         {
-            await base.SetParametersAsync(parameters);
-            if (parameters.TryGetValue<string>(nameof(BusinessName), out var value))
+            Loading = false;
+            ErrorMsg = "";
+            InitView();
+            data = null;
+            if (_gridRef != null)
             {
-                if (value != null)
-                {
-                    Loading = false;
-                    ErrorMsg = "";
-                    InitView(value);
-                }
-            }            
+                needUpdate = Guid.NewGuid();
+                _gridRef.Reload();
+            }
+            StateHasChanged();      
         }
 
-        protected async Task<LoadResult> LoadData(DataSourceLoadOptionsBase options, CancellationToken cancellationToken)
+        async Task LoadData(LoadDataArgs args)
         {
-            string tableOptions = options.ConvertToGetRequestUri("/");
-            var result =  await BusinessObj.ListAsync(0,30,tableOptions); //TODO: Paginación
-            var response = new LoadResult
-            {
-                data = result.Data,
-                totalCount = result.TotalCount,
-                groupCount = result.GroupCount
-            };
-            return response;
-
+            Loading = true;
+            data = null;
+            var skip = args.Skip;
+            var top = args.Top;
+            // var dbData = await TableViewObj.GetData(skip,top, args.Filter, args.OrderBy);
+            var dbData = await BusinessObj.ListAsync(0,30,""); //TODO: Paginación
+            data = dbData.Data;
+            count = dbData.TotalCount;
+            Loading = false;
         }
 
         private RenderFragment BuildColumns()
         {
             RenderFragment columns = b =>
-            {
+            { 
+                Type radzenColumnType = typeof(RadzenDataGridColumn<>).MakeGenericType(typeof(object));
                 int counter = 0;
                 foreach (var field in ListViewModel.Fields)
                 {
                     
-                    switch (field.FieldType)
-                    {
-                        case FieldTypes.CharField:
-                        case FieldTypes.TextField:
-                        case FieldTypes.EntityField:
-                            b.OpenComponent(counter, typeof(DxDataGridColumn));
-                            break;
-                        case FieldTypes.DateField:
-                        case FieldTypes.DateTimeField:
-                            b.OpenComponent(counter, typeof(DxDataGridDateEditColumn));
-                            break;
-                        case FieldTypes.DecimalField:
-                        case FieldTypes.IntegerField:
-                            b.OpenComponent(counter, typeof(DxDataGridSpinEditColumn));
-                            break;
-                        case FieldTypes.BooleanField:
-                            b.OpenComponent(counter, typeof(DxDataGridCheckBoxColumn));
-                            break;
+                    // switch (field.FieldType)
+                    // {
+                    //     case FieldTypes.CharField:
+                    //     case FieldTypes.TextField:
+                    //     case FieldTypes.EntityField:
+                    //         b.OpenComponent(counter, radzenColumnType);
+                    //         break;
+                    //     case FieldTypes.DateField:
+                    //     case FieldTypes.DateTimeField:
+                    //         b.OpenComponent(counter, typeof(DxDataGridDateEditColumn));
+                    //         break;
+                    //     case FieldTypes.DecimalField:
+                    //     case FieldTypes.IntegerField:
+                    //         b.OpenComponent(counter, typeof(DxDataGridSpinEditColumn));
+                    //         break;
+                    //     case FieldTypes.BooleanField:
+                    //         b.OpenComponent(counter, typeof(DxDataGridCheckBoxColumn));
+                    //         break;
 
-                        default:
-                            continue;
+                    //     default:
+                    //         continue;
                     
-                        //default
-                    }
+                    //     //default
+                    // }
+                    b.OpenComponent(counter, radzenColumnType);
+                    
                     var fieldName = field.Name;
                     //remove "BaseObj." from field name if exists
                     if (fieldName.StartsWith("BaseObj."))
                     {
                         fieldName = fieldName.Substring(8);
                     }
-                    b.AddAttribute(0, "Field", fieldName);
-                    b.AddAttribute(1, "Caption", field.Label);
+                    b.AddAttribute(0, "Property", fieldName);
+                    b.AddAttribute(1, "Title", field.Label);
+                    b.AddAttribute(2, "Type", typeof(string));
 
                     if(field.Name == ListViewModel.LinkTo)
                     {

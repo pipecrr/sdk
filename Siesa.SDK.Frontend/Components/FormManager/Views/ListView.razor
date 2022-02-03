@@ -6,27 +6,30 @@
 }
 else
 {
-    <DxDataGrid T="@object"
-                 @ref="@_gridRef"
-                CustomData="@LoadData"
-                ShowFilterRow="true"
-                ShowPager="true"
-                PagerNavigationMode="PagerNavigationMode.InputBox"
-                PagerPageSizeSelectorVisible="true"
-                PagerAllDataRowsItemVisible="true"
-                PagerAllowedPageSizes="ListViewModel.Paging.AllowedPageSizes"
-                PageSize="ListViewModel.Paging.PageSize"
-                ColumnResizeMode="DataGridColumnResizeMode.Component">
-        <DxDataGridColumn Field="Actions" AllowSort="false" Width="90px" Caption="Acciones" TextAlignment="DataGridTextAlign.Center">
-            <DisplayTemplate>
-                <div class="action-buttons">
-                    <button class="btn btn-link grid-btn-link" @onclick="() => GoToEdit(((BaseEntity)context).Rowid)"><span class="oi oi-pencil"></span></button>
-                    <button class="btn btn-link grid-btn-link" @onclick="() => GoToDetail(((BaseEntity)context).Rowid)"><span class="oi oi-eye"></span></button>
-                </div>
-            </DisplayTemplate>
-        </DxDataGridColumn>
-        @BuildColumns();
-    </DxDataGrid>
+
+    <RadzenDataGrid 
+            AllowFiltering="true" 
+            FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" 
+            FilterMode="FilterMode.Advanced"
+            AllowPaging="true" 
+            PageSize="ListViewModel.Paging.PageSize" 
+            PagerHorizontalAlign="HorizontalAlign.Center" 
+            AllowSorting="true" 
+            Data="@data" 
+            TItem="object"
+            IsLoading="@Loading" 
+            @ref="@_gridRef"
+            Count="@count" 
+            LoadData="@LoadData"
+            ShowPagingSummary="true"
+            PageSizeOptions="ListViewModel.Paging.AllowedPageSizes"
+            @key="needUpdate"
+
+>
+        <Columns>
+            @BuildColumns()
+        </Columns>
+    </RadzenDataGrid>
 
     <SetTopBar>
         <TopBarTitle>@BusinessName</TopBarTitle>

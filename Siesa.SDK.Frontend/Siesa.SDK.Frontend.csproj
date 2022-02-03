@@ -2,6 +2,9 @@
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
+		<AnalysisLevel>latest</AnalysisLevel>
+		<AnalysisMode>All</AnalysisMode>
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -22,15 +25,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DevExpress.Blazor" Version="21.2.3" />
-		<PackageReference Include="DevExpress.Blazor.es" Version="21.2.3" />
-		<PackageReference Include="DevExtreme.AspNet.Core" Version="21.2.3" />
+		<PackageReference Include="DevExpress.Blazor" Version="21.2.4" />
+		<PackageReference Include="DevExpress.Blazor.es" Version="21.2.4" />
+		<PackageReference Include="DevExtreme.AspNet.Core" Version="21.2.4" />
 		<PackageReference Include="Google.Protobuf" Version="3.19.1" />
 		<PackageReference Include="Grpc.Net.Client" Version="2.40.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.DataAnnotations.Validation" Version="3.2.0-rc1.20223.4" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.0.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="6.0.0" />
+		<PackageReference Include="Radzen.Blazor" Version="3.14.7" />
 	</ItemGroup>
 
 	<ItemGroup>
