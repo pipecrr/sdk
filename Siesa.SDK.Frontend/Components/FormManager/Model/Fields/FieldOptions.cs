@@ -95,6 +95,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 PropertyName = fieldPath[fieldPath.Length - 1];
                 var propertyType = field.ModelObj.GetType().GetProperty(field.Name).PropertyType;
                 //Console.WriteLine(fieldName + " , " + propertyType);
+                if(propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                {
+                    propertyType = propertyType.GetGenericArguments()[0];
+                }
                 switch (propertyType.Name)
                 {
                     case "String":

@@ -7,34 +7,74 @@
 else
 {
 
-    <RadzenDataGrid 
-            AllowFiltering="true" 
-            FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" 
-            FilterMode="FilterMode.Advanced"
-            AllowPaging="true" 
-            PageSize="ListViewModel.Paging.PageSize" 
-            PagerHorizontalAlign="HorizontalAlign.Center" 
-            AllowSorting="true" 
-            Data="@data" 
-            TItem="object"
-            IsLoading="@Loading" 
-            @ref="@_gridRef"
-            Count="@count" 
-            LoadData="@LoadData"
-            ShowPagingSummary="true"
-            PageSizeOptions="ListViewModel.Paging.AllowedPageSizes"
-            @key="needUpdate"
-
->
+    <RadzenDataGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+    FilterMode="FilterMode.Advanced" AllowPaging="true" PageSize="ListViewModel.Paging.PageSize"
+    PagerHorizontalAlign="HorizontalAlign.Center" AllowSorting="true" Data="@data" TItem="object" IsLoading="@Loading"
+    @ref="@_gridRef" Count="@count" LoadData="@LoadData" ShowPagingSummary="true"
+    PageSizeOptions="ListViewModel.Paging.AllowedPageSizes" @key="needUpdate">
         <Columns>
-            @BuildColumns()
+            <RadzenDataGridColumn TItem="object" Title="Acciones" Width="100px" Filterable="false" Sortable="false" >
+                <Template Context="data">
+                    <div class="action-buttons">
+                        <button class="btn btn-link grid-btn-link" @onclick="() => GoToEdit(((BaseEntity)data).Rowid)"><span
+                            class="oi oi-pencil"></span></button>
+                        @* <button class="btn btn-link grid-btn-link"
+                        @onclick="() => GoToDetail(((BaseEntity)data).Rowid)"><span class="oi oi-eye"></span></button> *@
+                    </div>
+                </Template>
+            </RadzenDataGridColumn>
+            @foreach (var field in ListViewModel.Fields)
+            {
+                var fieldName = field.Name;
+                if (fieldName.StartsWith("BaseObj."))
+                {
+                    fieldName = fieldName.Substring(8);
+                }
+                var columnType = typeof(string);
+                switch (field.FieldType)
+                {
+                    case FieldTypes.CharField:
+                    case FieldTypes.TextField:
+                    case FieldTypes.EntityField:
+                        break;
+                    case FieldTypes.DateField:
+                    case FieldTypes.DateTimeField:
+                        columnType = typeof(DateTime);
+                        break;
+                    case FieldTypes.DecimalField:
+                    case FieldTypes.IntegerField:
+                        columnType = typeof(int);
+                        break;
+                    case FieldTypes.BooleanField:
+                        columnType = typeof(bool);
+                        break;
+
+                    default:
+                        continue;
+
+                        //default
+                }
+                
+
+                if(field.Name == ListViewModel.LinkTo)
+                {
+                    <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="@field.Label" Type="@columnType">
+                        <Template Context="data">
+                            <a href="/@BusinessName/detail/@(((BaseEntity)data).Rowid)/">@data</a>
+                        </Template>
+                    </RadzenDataGridColumn>
+                }else{
+                    <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="@field.Label" Type="@columnType" />
+                }
+            }
         </Columns>
     </RadzenDataGrid>
 
     <SetTopBar>
         <TopBarTitle>@BusinessName</TopBarTitle>
         <TopBarButtons>
-            <DxButton RenderStyle="ButtonRenderStyle.Primary" RenderStyleMode="ButtonRenderStyleMode.Text" Click="GoToCreate" Text="Crear" />
+            <DxButton RenderStyle="ButtonRenderStyle.Primary" RenderStyleMode="ButtonRenderStyleMode.Text"
+            Click="GoToCreate" Text="Crear" />
             @foreach (var btn in ListViewModel.Buttons)
             {
                 <DxButton RenderStyle="@btn.RenderStyle" Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />

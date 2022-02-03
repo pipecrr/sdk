@@ -71,6 +71,33 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             builder.CloseComponent();
         };
 
+        public override async Task SetParametersAsync(ParameterView parameters)
+        {
+            try
+            {
+                
+                if (parameters.TryGetValue<string>(nameof(BusinessName), out var value))
+                {
+                    if (value != null)
+                    {
+                        BusinessObj = null;
+                        businessType = null;
+                        BusinessModel = null;
+                        ErrorMsg = "";
+
+
+                        InitGenericView(value);
+                    }
+
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            await base.SetParametersAsync(parameters);
+        }
         protected override void OnParametersSet(){
             InitGenericView();
         }

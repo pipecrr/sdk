@@ -94,62 +94,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             Loading = false;
         }
 
-        private RenderFragment BuildColumns()
-        {
-            RenderFragment columns = b =>
-            { 
-                Type radzenColumnType = typeof(RadzenDataGridColumn<>).MakeGenericType(typeof(object));
-                int counter = 0;
-                foreach (var field in ListViewModel.Fields)
-                {
-                    
-                    // switch (field.FieldType)
-                    // {
-                    //     case FieldTypes.CharField:
-                    //     case FieldTypes.TextField:
-                    //     case FieldTypes.EntityField:
-                    //         b.OpenComponent(counter, radzenColumnType);
-                    //         break;
-                    //     case FieldTypes.DateField:
-                    //     case FieldTypes.DateTimeField:
-                    //         b.OpenComponent(counter, typeof(DxDataGridDateEditColumn));
-                    //         break;
-                    //     case FieldTypes.DecimalField:
-                    //     case FieldTypes.IntegerField:
-                    //         b.OpenComponent(counter, typeof(DxDataGridSpinEditColumn));
-                    //         break;
-                    //     case FieldTypes.BooleanField:
-                    //         b.OpenComponent(counter, typeof(DxDataGridCheckBoxColumn));
-                    //         break;
-
-                    //     default:
-                    //         continue;
-                    
-                    //     //default
-                    // }
-                    b.OpenComponent(counter, radzenColumnType);
-                    
-                    var fieldName = field.Name;
-                    //remove "BaseObj." from field name if exists
-                    if (fieldName.StartsWith("BaseObj."))
-                    {
-                        fieldName = fieldName.Substring(8);
-                    }
-                    b.AddAttribute(0, "Property", fieldName);
-                    b.AddAttribute(1, "Title", field.Label);
-                    b.AddAttribute(2, "Type", typeof(string));
-
-                    if(field.Name == ListViewModel.LinkTo)
-                    {
-                        //TODO: Link al detalle
-                    }
-                    b.CloseComponent();
-                    counter++;
-                }
-            };
-            return columns;
-        }
-
         private void GoToEdit(int id)
         {
             NavManager.NavigateTo($"{BusinessName}/edit/{id}/");
