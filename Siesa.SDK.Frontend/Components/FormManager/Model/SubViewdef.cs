@@ -22,7 +22,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
             {
                 //replace all the ocurrences of "BaseObj" with the parent field
                 var sub_metadata = metadata.Replace("BaseObj", ParentField);
-                Panels = JsonConvert.DeserializeObject<List<Panel>>(sub_metadata);
+                
+                try
+                {
+                    var formViewModel = JsonConvert.DeserializeObject<FormViewModel>(sub_metadata);
+                    Panels = formViewModel.Panels;
+                }
+                catch (System.Exception)
+                {
+                    Panels = JsonConvert.DeserializeObject<List<Panel>>(sub_metadata);
+                }
             }
         }
     }
