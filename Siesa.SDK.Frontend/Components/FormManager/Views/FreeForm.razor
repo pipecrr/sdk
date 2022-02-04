@@ -1,0 +1,56 @@
+﻿@using Siesa.SDK.Frontend.Components.FormManager.Fields
+@inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+@if (Panels == null || Panels.Count <= 0)
+{
+    <label>No hay definicion para la vista</label>
+}
+else if (Loading == true)
+{
+    <label>Cargando...</label>
+}
+else if (BusinessObj.BaseObj != null)
+{
+    <EditForm id="@FormID"
+              OnValidSubmit="@HandleValidSubmit"
+              OnInvalidSubmit="@HandleInvalidSubmit"
+              EditContext="@EditFormContext">
+        <ObjectGraphDataAnnotationsValidator />
+        <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
+            @if (Panels.Count > 1)
+            {
+                <DxFormLayoutTabPages>
+                    @foreach (var panel in Panels)
+                    {
+                        <DxFormLayoutTabPage Caption="@panel.Label">
+                            <CascadingValue Value="@EditFormContext">
+                                <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                            </CascadingValue>
+                        </DxFormLayoutTabPage>
+                    }
+
+
+                </DxFormLayoutTabPages>
+
+            }
+            else
+            {
+                <CascadingValue Value="@EditFormContext">
+                    <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef" DefaultColSize="@Panels[0].ColSize" ModelObj="@BusinessObj" />
+                </CascadingValue>
+
+            }
+        </DxFormLayout>
+        <ValidationSummary />
+        <label>@((MarkupString)ErrorMsg)</label>
+    </EditForm>
+    <SetTopBar>
+        <TopBarTitle>@Title</TopBarTitle>
+        <TopBarButtons>
+            @foreach (var btn in FormViewModel.Buttons)
+            {
+                <DxButton RenderStyle="@btn.RenderStyle" Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />
+            }
+        </TopBarButtons>
+    </SetTopBar>
+
+}
