@@ -124,5 +124,36 @@ namespace Siesa.SDK.Shared.Backend
             var response = await client.GetListBusinessObjAsync(request);
             return response;
         }
+
+        public async Task<Protos.MenuGroupsResponse> GetMenuGroupsAsync()
+        {
+            using var channel = GrpcChannel.ForAddress(this.Url);
+            var client = new Protos.SDK.SDKClient(channel);
+            var request = new Protos.GetMenuGroupsRequest();
+            var response = await client.GetMenuGroupsAsync(request);
+            return response;
+        }
+
+        public async Task<Protos.MenuItemsResponse> GetMenuItemsAsync(int groupId)
+        {
+            using var channel = GrpcChannel.ForAddress(this.Url);
+            var client = new Protos.SDK.SDKClient(channel);
+            var request = new Protos.GetMenuItemsRequest
+            {
+                GroupId = groupId
+            };
+            var response = await client.GetMenuItemsAsync(request);
+            return response;
+        }
+
+        public Protos.MenuGroupsResponse GetMenuGroups()
+        {
+            return GetMenuGroupsAsync().GetAwaiter().GetResult();
+        }
+
+        public Protos.MenuItemsResponse GetMenuItems(int groupId)
+        {
+            return GetMenuItemsAsync(groupId).GetAwaiter().GetResult();
+        }
     }
 }

@@ -10,4 +10,23 @@ service SDK {
   rpc SaveBusinessObj (SaveBusinessObjRequest) returns (SaveBusinessObjResponse);
   rpc ValidateAndSaveBusinessObj (ValidateAndSaveBusinessObjRequest) returns (ValidateAndSaveBusinessObjResponse);
   rpc DeleteBusinessObj (DeleteBusinessObjRequest) returns (DeleteBusinessObjResponse);
+
+  rpc GetMenuGroups (GetMenuGroupsRequest) returns (MenuGroupsResponse);
+
+  rpc GetMenuItems (GetMenuItemsRequest) returns (MenuItemsResponse);
+}
+
+message GetMenuGroupsRequest {
+}
+
+message MenuGroupsResponse {
+  string response = 1;
+}
+
+message GetMenuItemsRequest {
+  int32 groupId = 1;
+}
+
+message MenuItemsResponse {
+  string response = 1;
 }

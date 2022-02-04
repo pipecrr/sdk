@@ -135,6 +135,7 @@ namespace Siesa.SDK.Backend.Access
         public DbSet<E00110_Team> E00110_Team { get; set; }
         public DbSet<E00103_Role> E00103_Role { get; set; }
         public DbSet<E00108_AuthorizedOperation> E00108_AuthorizedOperation { get; set; }
+        public DbSet<E00105_Feature> E00105_Feature { get; set; }
         public DbSet<E00109_OverwriteAuthorizedOperation> E00109_OverwriteAuthorizedOperation { get; set; }
         public DbSet<U00102_User> U00102_User { get; set; }
 

@@ -1,0 +1,17 @@
+@using Siesa.SDK.Entities;
+@if(MenuItem.SubMenus?.Count > 0){
+    <DxMenuItem Text="@MenuItem.Title" IconCssClass="@MenuItem.Image"> 
+        <Items>
+        @foreach(var subMenuItem in MenuItem.SubMenus){
+            <SDKMenuItem MenuItem="@subMenuItem" />
+        }
+        </Items>
+    </DxMenuItem>       
+}else{
+    <DxMenuItem Text="@MenuItem.Title" IconCssClass="@MenuItem.Image" NavigateUrl="/prueba/" />
+}
+
+@code {
+    [Parameter] public E00131_Menu MenuItem { get; set; }
+
+}

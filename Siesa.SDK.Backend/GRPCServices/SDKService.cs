@@ -10,6 +10,9 @@ using Siesa.SDK.Protos;
 using System.Reflection;
 using Siesa.SDK.Shared.Business;
 using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore;
+using Siesa.SDK.Backend.Access;
+using Siesa.SDK.Entities;
 
 namespace Siesa.SDK.GRPCServices
 {
@@ -23,7 +26,8 @@ namespace Siesa.SDK.GRPCServices
             _provider = provider;
         }
 
-        public override Task<Protos.BusinessesResponse> GetBusinesses(Protos.GetBusinessesRequest request, ServerCallContext context){
+        public override Task<Protos.BusinessesResponse> GetBusinesses(Protos.GetBusinessesRequest request, ServerCallContext context)
+        {
             var response = new Protos.BusinessesResponse();
             response.Businesses.AddRange(BusinessManager.Instance.Businesses.Values);
             return Task.FromResult(response);
@@ -116,6 +120,37 @@ namespace Siesa.SDK.GRPCServices
 
         }
 
+        public override Task<Protos.MenuGroupsResponse> GetMenuGroups(Protos.GetMenuGroupsRequest request, ServerCallContext context)
+        {
+            dynamic dbFactory = _provider.GetService(typeof(IDbContextFactory<SDKContext>));
+            List<E00130_MenuGroup> menuGroups = new();
+            using (SDKContext dbContext = dbFactory.CreateDbContext())
+            {
+                menuGroups = dbContext.Set<E00130_MenuGroup>().AsQueryable().ToList();
+            }
+
+            var response = new Protos.MenuGroupsResponse
+            {
+                Response = JsonConvert.SerializeObject(menuGroups, Formatting.None, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore })
+            };
+            return Task.FromResult(response);
+        }
+
+        public override Task<Protos.MenuItemsResponse> GetMenuItems(Protos.GetMenuItemsRequest request, ServerCallContext context)
+        {
+            dynamic dbFactory = _provider.GetService(typeof(IDbContextFactory<SDKContext>));
+            List<E00131_Menu> menuItems = new();
+            using (SDKContext dbContext = dbFactory.CreateDbContext())
+            {
+                menuItems = dbContext.Set<E00132_MenuGroupDetail>().AsQueryable().Where(x => x.MenuGroup.Rowid == request.GroupId).Include(x => x.Menu.SubMenus).ThenInclude(x=>x.SubMenus).Select(x => x.Menu).ToList();
+            }
+
+            var response = new Protos.MenuItemsResponse
+            {
+                Response = JsonConvert.SerializeObject(menuItems, Formatting.None, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore })
+            };
+            return Task.FromResult(response);
+        }
 
     }
 }
