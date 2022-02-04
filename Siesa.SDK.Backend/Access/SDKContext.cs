@@ -137,5 +137,14 @@ namespace Siesa.SDK.Backend.Access
         public DbSet<E00108_AuthorizedOperation> E00108_AuthorizedOperation { get; set; }
         public DbSet<E00109_OverwriteAuthorizedOperation> E00109_OverwriteAuthorizedOperation { get; set; }
         public DbSet<U00102_User> U00102_User { get; set; }
+
+        public DbSet<E00130_MenuGroup> E00130_MenuGroup { get; set; }
+        public DbSet<U00130_MenuGroup> U00130_MenuGroup { get; set; }
+
+        public DbSet<E00131_Menu> E00131_Menu { get; set; }
+        public DbSet<E00132_MenuGroupDetail> E00132_MenuGroupDetail { get; set; }
+        public DbSet<U00132_MenuGroupDetail> U00132_MenuGroupDetail { get; set; }
+        public DbSet<E00133_FavoritesMenu> E00133_FavoritesMenu { get; set; }
+
     }
 }
