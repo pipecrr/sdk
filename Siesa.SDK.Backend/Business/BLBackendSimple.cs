@@ -17,6 +17,40 @@ using Siesa.SDK.GRPCServices;
 
 namespace Siesa.SDK.Business
 {
+    public class BLBackendSimple : IBLBase<BaseEntity>
+    {
+        public string BusinessName { get;set; }
+        public BaseEntity BaseObj { get;set; }
+
+        public int Delete()
+        {
+            return 0;
+        }
+
+        public BaseEntity Get(int id)
+        {
+            return null;
+        }
+
+        public Task<BaseEntity> GetAsync(int id)
+        {
+            return null;
+        }
+
+        public Shared.Business.LoadResult List(int page, int pageSize, string options)
+        {
+            return null;
+        }
+
+        public void Update()
+        {
+        }
+
+        public ValidateAndSaveBusinessObjResponse ValidateAndSave()
+        {
+            return null;
+        }
+    }
     public class BLBackendSimple<T, K> : IBLBase<T> where T : BaseEntity where K : BLBaseValidator<T>
     {
         private IServiceProvider _provider;

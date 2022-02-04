@@ -14,6 +14,44 @@ using Siesa.SDK.Shared.Validators;
 
 namespace Siesa.SDK.Business
 {
+    public class BLFrontendSimple : IBLBase<BaseEntity>
+    {
+        public string BusinessName { get; set; }
+        [JsonIgnore]
+        public List<Panel> Panels = new List<Panel>();
+        public BaseEntity BaseObj { get; set; }
+
+        public int Delete()
+        {
+            return 0;
+        }
+
+        public BaseEntity Get(int id)
+        {
+            return null;
+        }
+
+        public Task<BaseEntity> GetAsync(int id)
+        {
+            return null;
+        }
+
+        public Shared.Business.LoadResult List(int page, int pageSize, string options)
+        {
+            return null;
+        }
+
+        public void Update()
+        {
+        }
+
+        public ValidateAndSaveBusinessObjResponse ValidateAndSave()
+        {
+            return null;
+        }
+    }
+
+    
     public class BLFrontendSimple<T, K> : IBLBase<T> where T : BaseEntity where K : BLBaseValidator<T>
     {
         public string BusinessName { get; set; }
