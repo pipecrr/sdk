@@ -35,9 +35,9 @@ namespace Siesa.SDK.Backend.Access
             {
                 if (char.IsUpper(text[i]))
                 {
-                    if ((i - lastUpperIndex) > 1)
+                    if ((i - lastUpperIndex) > 1 && (i - 1) >= 0 && text[i - 1] != '_')
                     {
-                        sb.Append("_");
+                        sb.Append('_');
                     }
                     lastUpperIndex = i;
                 }
@@ -76,7 +76,7 @@ namespace Siesa.SDK.Backend.Access
         {
             foreach (var entity in modelBuilder.Model.GetEntityTypes())
             {
-                string table_name = entity.ShortName().Trim().ToLower();
+                string table_name = ToSnakeCase(entity.ShortName().Trim());
                 // table names
                 modelBuilder.Entity(entity.Name).ToTable(table_name);
                 var table_name_parts = table_name.Split('_');
