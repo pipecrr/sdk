@@ -1,0 +1,22 @@
+<DxDateEdit 
+    Date="@Value" 
+    DateChanged="@ValueChanged" 
+    NullText="@Placeholder"
+    ReadOnly="@ReadOnly"
+    CssClass="@CssClass"
+>
+@ChildContent
+</DxDateEdit>
+
+@code {
+    [Parameter] public DateTime Value { get; set; }
+    [Parameter] public Action<DateTime> ValueChanged { get; set; } = (value) => { };
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter] public string Placeholder { get; set; }
+    [Parameter] public bool ReadOnly { get; set; }
+    [Parameter] public bool Required { get; set; }
+    [Parameter] public string CssClass { get; set; }
+
+    
+}

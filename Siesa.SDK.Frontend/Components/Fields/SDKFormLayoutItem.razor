@@ -1,0 +1,22 @@
+<DxFormLayoutItem Caption="@Label"
+                ColSpanMd="@ColSizeMd"
+                ColSpanLg="@ColSizeLg"
+                ColSpanXl="@ColSizeXl"
+                ColSpanSm="@ColSizeSm"
+                ColSpanXs="@ColSizeXs">
+    <Template>
+        @ChildContent
+    </Template>
+</DxFormLayoutItem>
+
+@code {
+    [Parameter] public string Label { get; set; }
+    [Parameter] public int ColSizeMd { get; set; }
+    [Parameter] public int ColSizeLg { get; set; }
+    [Parameter] public int ColSizeXl { get; set; }
+    [Parameter] public int ColSizeSm { get; set; }
+    [Parameter] public int ColSizeXs { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    
+    
+}
