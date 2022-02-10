@@ -88,7 +88,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             var skip = args.Skip;
             var top = args.Top;
             // var dbData = await TableViewObj.GetData(skip,top, args.Filter, args.OrderBy);
-            var dbData = await BusinessObj.ListAsync(0,30,""); //TODO: Paginación
+            var dbData = await BusinessObj.GetDataAsync(args.Skip,args.Top, args.Filter, args.OrderBy); //TODO: Paginación
             data = dbData.Data;
             count = dbData.TotalCount;
             Loading = false;

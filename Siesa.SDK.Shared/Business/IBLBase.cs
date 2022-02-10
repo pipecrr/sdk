@@ -17,7 +17,7 @@ namespace Siesa.SDK.Shared.Business
         ValidateAndSaveBusinessObjResponse ValidateAndSave();
         void Update();
         int Delete();
-        Siesa.SDK.Shared.Business.LoadResult List(int page, int pageSize, string options);
+        Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter, string orderBy);
     }
 
 }

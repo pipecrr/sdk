@@ -36,7 +36,7 @@ namespace Siesa.SDK.Business
             return null;
         }
 
-        public Shared.Business.LoadResult List(int page, int pageSize, string options)
+        public Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "")
         {
             return null;
         }
@@ -122,15 +122,15 @@ namespace Siesa.SDK.Business
             return BaseObj.ToString();
         }
 
-        public virtual Siesa.SDK.Shared.Business.LoadResult List(int page = 0, int pageSize = 30, string options = "")
+        public virtual Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "")
         {
-            return ListAsync(page, pageSize, options).GetAwaiter().GetResult();
+            return GetDataAsync(skip, take, filter, orderBy).GetAwaiter().GetResult();
         }
 
-        public async virtual Task<Siesa.SDK.Shared.Business.LoadResult> ListAsync(int page = 0, int pageSize = 30, string options = "")
+        public async virtual Task<Siesa.SDK.Shared.Business.LoadResult> GetDataAsync(int? skip, int? take, string filter = "", string orderBy = "")
         {
             var businness = Frontend.BusinessManagerFrontend.Instance.GetBusiness(BusinessName);
-            var result = await businness.List(page, pageSize, options);
+            var result = await businness.GetData(skip, take, filter, orderBy);
             Siesa.SDK.Shared.Business.LoadResult response = new Siesa.SDK.Shared.Business.LoadResult();
             response.Data = result.Data.Select(x => JsonConvert.DeserializeObject<T>(x)).ToList();
             response.TotalCount = result.TotalCount;

@@ -28,7 +28,7 @@
 
     protected async Task<LoadResult> LoadCustomData(DataSourceLoadOptionsBase options, CancellationToken cancellationToken) {
         string tableOptions = options.ConvertToGetRequestUri("/");
-        var result =  await RelBusinessObj.ListAsync(0,30,tableOptions); //TODO: Paginación
+        var result =  await RelBusinessObj.GetDataAsync(0,30); //TODO: Paginación
         var response = new LoadResult
         {
             data = result.Data,

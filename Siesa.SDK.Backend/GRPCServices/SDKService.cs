@@ -91,14 +91,14 @@ namespace Siesa.SDK.GRPCServices
             return Task.FromResult(response);
         }
 
-        public override Task<Protos.LoadResult> GetListBusinessObj(Protos.GetListBusinessObjRequest request, ServerCallContext context)
+        public override Task<Protos.LoadResult> GetDataBusinessObj(Protos.GetDataBusinessObjRequest request, ServerCallContext context)
         {
             BusinessModel businessRegistry = BusinessManager.Instance.GetBusiness(request.BusinessName);
             var businessType = FindType(businessRegistry.Namespace + "." + businessRegistry.Name);
             dynamic businessObj = Activator.CreateInstance(businessType);
             businessObj.SetProvider(_provider);
 
-            var result = businessObj.List(request.Page, request.PageSize, request.Options);
+            var result = businessObj.GetData(request.Skip, request.Take, request.Filter, request.OrderBy);
             var response = new Protos.LoadResult();
             response.TotalCount = result.TotalCount;
             response.GroupCount = result.GroupCount;

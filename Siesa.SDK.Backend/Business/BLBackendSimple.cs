@@ -14,6 +14,7 @@ using Siesa.SDK.Shared.Exceptions;
 using Siesa.SDK.Backend.Exceptions;
 using Microsoft.Extensions.Logging;
 using Siesa.SDK.GRPCServices;
+using System.Linq.Dynamic.Core;
 
 namespace Siesa.SDK.Business
 {
@@ -37,7 +38,7 @@ namespace Siesa.SDK.Business
             return null;
         }
 
-        public Shared.Business.LoadResult List(int page, int pageSize, string options)
+        public Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "")
         {
             return null;
         }
@@ -229,21 +230,40 @@ namespace Siesa.SDK.Business
             return 0;
         }
 
-        public virtual Siesa.SDK.Shared.Business.LoadResult List(int page = 0, int pageSize = 30, string options = "")
+        public virtual Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "")
         {
             var result = new Siesa.SDK.Shared.Business.LoadResult();
             using (SDKContext context = _dbFactory.CreateDbContext())
             {
                 var query = context.Set<T>().AsQueryable();
-                //total data
-                result.TotalCount = query.Count();
-                
+                var total = query.Count();
                 foreach (var relatedProperty in _relatedProperties)
                 {
                     query = query.Include(relatedProperty);
                 }
+                if (skip.HasValue)
+                {
+                    query = query.Skip(skip.Value);
+                }
+                if (take.HasValue)
+                {
+                    query = query.Take(take.Value);
+                }
+
+                if(!string.IsNullOrEmpty(filter))
+                {
+                    query = query.Where(filter);
+                }
+
+                if (!string.IsNullOrEmpty(orderBy))
+                {
+                    query = query.OrderBy(orderBy);
+                }
+                //total data
+                result.TotalCount = total;
+                
                 //data
-                result.Data = query.Skip(page).Take(pageSize).ToList();
+                result.Data = query.ToList();
             }
             return result;
         }

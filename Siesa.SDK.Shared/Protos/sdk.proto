@@ -5,7 +5,7 @@ import "Protos/BusinessMessages.proto";
 service SDK {
   rpc GetBusinesses (GetBusinessesRequest) returns (BusinessesResponse);
   rpc GetBusinessObj (GetBusinessObjRequest) returns (BusinessObjResponse);
-  rpc GetListBusinessObj (GetListBusinessObjRequest) returns (LoadResult);
+  rpc GetDataBusinessObj (GetDataBusinessObjRequest) returns (LoadResult);
 
   rpc SaveBusinessObj (SaveBusinessObjRequest) returns (SaveBusinessObjResponse);
   rpc ValidateAndSaveBusinessObj (ValidateAndSaveBusinessObjRequest) returns (ValidateAndSaveBusinessObjResponse);

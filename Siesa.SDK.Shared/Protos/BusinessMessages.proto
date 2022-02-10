@@ -1,5 +1,5 @@
 ﻿syntax = "proto3";
-
+import "google/protobuf/wrappers.proto";
 option csharp_namespace = "Siesa.SDK.Protos";
 
 message GetBusinessesRequest {
@@ -57,11 +57,12 @@ message DeleteBusinessObjResponse {
   int32 id = 1;
 }
 
-message GetListBusinessObjRequest {
+message GetDataBusinessObjRequest {
   string businessName = 1;
-  int32 page = 2;
-  int32 pageSize = 3;
-  string options = 4;
+  google.protobuf.Int32Value skip = 2;
+  google.protobuf.Int32Value take = 3;
+  string filter = 4;
+  string orderBy = 5;
 }
 
 message LoadResult {

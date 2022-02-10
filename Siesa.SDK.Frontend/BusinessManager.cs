@@ -42,10 +42,19 @@ namespace Siesa.SDK.Frontend
             return backend.GetBusinessObj(Name, id);
         }
 
-        public async Task<LoadResult> List(int page , int pageSize, string options)
+        public async Task<LoadResult> GetData(int? skip, int? take, string filter = "", string orderBy = "")
         {
             BackendRegistry backend = BackendManager.Instance.GetBackend(BackendName);
-            return await backend.GetListBusinessObj(Name, page, pageSize, options);
+            LoadResult result = new();
+            try
+            {
+                result = await backend.GetDataBusinessObj(Name, skip, take, filter, orderBy);
+            }
+            catch (RpcException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return result;
         }
     }
 

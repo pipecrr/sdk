@@ -110,19 +110,29 @@ namespace Siesa.SDK.Shared.Backend
 
         }
 
-        public async Task<Protos.LoadResult> GetListBusinessObj(string business_name, int page, int pageSize, string options)
+        public async Task<Protos.LoadResult> GetDataBusinessObj(string business_name, int? skip, int? take, string filter = "", string orderBy = "")
         {
-            using var channel = GrpcChannel.ForAddress(this.Url);
+            var channel = GrpcChannel.ForAddress(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
-            var request = new Protos.GetListBusinessObjRequest
+            var request = new Protos.GetDataBusinessObjRequest
             {
                 BusinessName = business_name,
-                Page = page,
-                PageSize = pageSize,
-                Options = options
+                Skip = skip,
+                Take = take,
+                Filter = filter,
+                OrderBy = orderBy
             };
-            var response = await client.GetListBusinessObjAsync(request);
-            return response;
+            try
+            {
+                var response = await client.GetDataBusinessObjAsync(request);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return null;
+            
         }
 
         public async Task<Protos.MenuGroupsResponse> GetMenuGroupsAsync()
