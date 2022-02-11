@@ -66,6 +66,27 @@ namespace Siesa.SDK.Shared.Backend
             var response = await client.ValidateAndSaveBusinessObjAsync(request);
             return response;
         }
+        public async Task<Protos.LoadResult> EntityFieldSearch(string business_name, string searchText)
+        {
+            var channel = GrpcChannel.ForAddress(this.Url);
+            var client = new Protos.SDK.SDKClient(channel);
+            var request = new Protos.EntityFieldSearchRequest
+            {
+                BusinessName = business_name,
+                SearchText = searchText
+            };
+            try
+            {
+                var response = await client.EntityFieldSearchAsync(request);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return null;
+            
+        }
 
         public async Task<int> SaveBusiness(string business_name, dynamic obj)
         {

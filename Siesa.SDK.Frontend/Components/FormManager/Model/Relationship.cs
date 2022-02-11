@@ -7,7 +7,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
     public enum RelationshipType
     {
         OneToMany,
-        ManyToOne,
         ManyToMany
     }
 

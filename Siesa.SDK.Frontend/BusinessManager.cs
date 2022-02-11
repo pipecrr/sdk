@@ -56,6 +56,21 @@ namespace Siesa.SDK.Frontend
             }
             return result;
         }
+
+         public async Task<LoadResult> EntityFieldSearch(string searchText)
+        {
+            BackendRegistry backend = BackendManager.Instance.GetBackend(BackendName);
+            LoadResult result = new();
+            try
+            {
+                result = await backend.EntityFieldSearch(Name, searchText);
+            }
+            catch (RpcException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return result;
+        }
     }
 
     public class BusinessManagerFrontend

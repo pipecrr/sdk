@@ -127,6 +127,22 @@ namespace Siesa.SDK.Business
             return GetDataAsync(skip, take, filter, orderBy).GetAwaiter().GetResult();
         }
 
+        public virtual Siesa.SDK.Shared.Business.LoadResult EntityFieldSearch(string searchText)
+        {
+            return EntityFieldSearchAsync(searchText).GetAwaiter().GetResult();
+        }
+
+        public async virtual Task<Siesa.SDK.Shared.Business.LoadResult> EntityFieldSearchAsync(string searchText)
+        {
+            var businness = Frontend.BusinessManagerFrontend.Instance.GetBusiness(BusinessName);
+            var result = await businness.EntityFieldSearch(searchText);
+            Siesa.SDK.Shared.Business.LoadResult response = new Siesa.SDK.Shared.Business.LoadResult();
+            response.Data = result.Data.Select(x => JsonConvert.DeserializeObject<T>(x)).ToList();
+            response.TotalCount = result.TotalCount;
+            response.GroupCount = result.GroupCount;
+            return response;
+        }
+
         public async virtual Task<Siesa.SDK.Shared.Business.LoadResult> GetDataAsync(int? skip, int? take, string filter = "", string orderBy = "")
         {
             var businness = Frontend.BusinessManagerFrontend.Instance.GetBusiness(BusinessName);

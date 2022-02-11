@@ -1,0 +1,58 @@
+﻿@typeparam RelEntityType
+@inherits FieldClass<RelEntityType>
+
+@using System.Linq.Expressions;
+@using System.Reflection;
+@using System.Threading;
+@using System.Threading.Tasks;
+@using DevExtreme.AspNet.Data
+@using DevExtreme.AspNet.Data.ResponseModel
+@if (!FieldOpt.Hidden)
+{
+    <DxComboBox Value="@((RelEntityType) BindValue)"
+            ValueExpression="@ValueExpression"
+            ValueChanged="@((RelEntityType user) => SetValue(user))"
+            CssClass="cw-480"
+            TValue="RelEntityType"
+            TData="RelEntityType"
+            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+            NullText="@FieldOpt.Placeholder"
+            Enabled="@(!FieldOpt.Disabled)"
+            field-name="@FieldOpt.Name"
+            CustomData="@LoadCustomData"
+            FilteringMode="DataGridFilteringMode.Contains">
+    </DxComboBox>
+}
+
+@code {
+    Expression<Func<RelEntityType>> ValueExpression { get; set;  }
+    [Parameter] public dynamic BaseModelObj { get; set; }
+
+    public dynamic RelBusinessObj { get; set; }
+
+    protected async Task<LoadResult> LoadCustomData(DataSourceLoadOptionsBase options, CancellationToken cancellationToken) {
+        string tableOptions = options.ConvertToGetRequestUri("/");
+        var result =  await RelBusinessObj.EntityFieldSearchAsync("prueba"); //TODO: Paginación
+        var response = new LoadResult
+        {
+            data = result.Data,
+            totalCount = result.TotalCount,
+            groupCount = result.GroupCount
+        };
+        return response;
+    }
+    protected override async Task OnInitializedAsync() {
+        BusinessFrontendModel relBusinessModel;
+        BusinessManagerFrontend.Instance.Businesses.TryGetValue(FieldOpt.RelatedBusiness, out relBusinessModel);
+        if (relBusinessModel == null)
+        {
+            throw new Exception("Business not found");
+        }
+
+        var relBusinessType = Utils.Utils.SearchType(relBusinessModel.Namespace + "." + relBusinessModel.Name); 
+        RelBusinessObj = Activator.CreateInstance(relBusinessType);
+        RelBusinessObj.BusinessName = FieldOpt.RelatedBusiness;
+        var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
+        ValueExpression = (Expression<Func<RelEntityType>>)Expression.Lambda(typeof(Func<>).MakeGenericType(BindModel.GetType()), access);
+    }
+}

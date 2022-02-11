@@ -6,6 +6,7 @@
 @using System.Threading.Tasks;
 @using DevExtreme.AspNet.Data
 @using DevExtreme.AspNet.Data.ResponseModel
+@using System.Linq;
 @if (!FieldOpt.Hidden)
 {
     @FieldTemplate
@@ -16,6 +17,8 @@
 @code {
     private RenderFragment? _fieldValidationTemplate;
     [Parameter] public dynamic BaseModelObj { get; set; }
+
+    private LoadResult CacheLoadResult;
 
     public dynamic RelBusinessObj { get; set; }
 
@@ -28,14 +31,25 @@
 
     protected async Task<LoadResult> LoadCustomData(DataSourceLoadOptionsBase options, CancellationToken cancellationToken) {
         string tableOptions = options.ConvertToGetRequestUri("/");
-        var result =  await RelBusinessObj.GetDataAsync(0,30); //TODO: Paginación
-        var response = new LoadResult
-        {
-            data = result.Data,
-            totalCount = result.TotalCount,
-            groupCount = result.GroupCount
-        };
-        return response;
+        var searchText = "";
+        if (options.Filter != null) {
+            searchText = Convert. ToString(((List<object>)options.Filter[0])[2]);
+        }
+        //check length of search text
+        if(searchText.Length > 2 || CacheLoadResult == null) {
+            var result =  await RelBusinessObj.EntityFieldSearchAsync(searchText); //TODO: Paginación
+            var response = new LoadResult
+            {
+                data = result.Data,
+                totalCount = result.TotalCount,
+                groupCount = result.GroupCount
+            };
+            CacheLoadResult = response;
+            return response;
+        }else{
+            return CacheLoadResult;
+        }
+        
     }
 
     public RenderFragment? FieldTemplate
@@ -103,7 +117,6 @@
                 builder.AddAttribute(8, "FilteringMode", DataGridFilteringMode.Contains);
                 //builder.AddAttribute(9, "Data", dataList);
                 builder.AddAttribute(9, "CustomData", LoadCustomData);
-
                 builder.CloseComponent();
             };
 

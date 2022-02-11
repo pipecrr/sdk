@@ -230,6 +230,24 @@ namespace Siesa.SDK.Business
             return 0;
         }
 
+        public virtual Siesa.SDK.Shared.Business.LoadResult EntityFieldSearch(string searchText)
+        {
+            //TODO: Define the search logic using the search text and the entity properties 
+
+            var string_fields = BaseObj.GetType().GetProperties().Where(p => p.PropertyType == typeof(string)).Select(p => p.Name).ToArray();
+            var filter = "";
+            foreach (var field in string_fields)
+            {
+                if(!string.IsNullOrEmpty(filter))
+                {
+                    filter += " || ";
+                }
+                //"(Name == null ? \"\" : Name).ToLower().Contains(\"tole\".ToLower())"
+                filter += $"({field} == null ? \"\" : {field}).ToLower().Contains(\"{searchText}\".ToLower())";
+            }
+            return this.GetData(0, 100, filter);
+        }
+
         public virtual Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "")
         {
             var result = new Siesa.SDK.Shared.Business.LoadResult();

@@ -65,6 +65,11 @@ message GetDataBusinessObjRequest {
   string orderBy = 5;
 }
 
+message EntityFieldSearchRequest {
+  string businessName = 1;
+  string searchText = 2;
+}
+
 message LoadResult {
 	repeated string data = 1;
 	int32 totalCount = 2;
