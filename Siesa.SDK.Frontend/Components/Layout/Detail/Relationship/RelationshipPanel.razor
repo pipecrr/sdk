@@ -39,7 +39,16 @@
         {
             field = field.Substring(8);
         }
-        filter = $"({field}.RowID == {ParentRowid})";
+        if(Relationship.Type == RelationshipType.ManyToMany)
+        {
+            var filter_parts = field.Split('.');
+            filter = $"({filter_parts[0]} != NULL && {filter_parts[0]}.Any({filter_parts[1]}.RowID == {ParentRowid}))";
+        }
+        else
+        {
+            filter = $"({field}.RowID == {ParentRowid})";
+        }
+        
     }
 
 
