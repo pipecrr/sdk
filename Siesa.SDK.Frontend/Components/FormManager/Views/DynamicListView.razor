@@ -10,12 +10,19 @@ else if (BusinessObj != null)
 }
 
 @code {
+    [Parameter] public bool IsSubpanel { get; set; }
+    [Parameter] public string SubpanelFilter { get; set; }
     private Type componentType = typeof(Views.ListView);
     private IDictionary<string, object> parameters = new Dictionary<string, object>();
     private void SetParameters(dynamic businessObj, string businessName){
         parameters.Clear();
         parameters.Add("BusinessObj", businessObj);
         parameters.Add("BusinessName", businessName);
+        if (IsSubpanel)
+        {
+            parameters.Add("SetTopBar", false);
+            parameters.Add("ConstantFilters", new List<string>() { SubpanelFilter });
+        }
     }
 
     protected override void OnInitialized()

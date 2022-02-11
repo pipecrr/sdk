@@ -1,4 +1,5 @@
 ﻿@using Siesa.SDK.Frontend.Components.FormManager.Fields
+@using Siesa.SDK.Frontend.Components.Layout.Detail.Relationship
 @if (Panels == null || Panels.Count <= 0)
 {
     <label>No hay definicion para la vista</label>
@@ -25,6 +26,10 @@ else if (ModelLoaded == true)
 
             }
         </DxFormLayout>
+         @foreach (var rel in FormViewModel.Relationships)
+            {
+               <RelationshipPanel Relationship="@rel" ParentRowid="@BusinessObj.BaseObj.Rowid" />
+            }
     <SetTopBar>
         <TopBarTitle>@BusinessObj</TopBarTitle>
         <TopBarButtons>

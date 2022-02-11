@@ -8,5 +8,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
     {
         public List<Button> Buttons { get; set; } = new List<Button>();
         public List<Panel> Panels { get; set; } = new List<Panel>();
+
+        public List<Relationship> Relationships { get; set; } = new List<Relationship>(); //Used for relationships in detailview
     }
 }

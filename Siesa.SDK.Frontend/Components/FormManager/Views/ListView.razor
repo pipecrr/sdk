@@ -69,16 +69,18 @@ else
             }
         </Columns>
     </RadzenDataGrid>
-
-    <SetTopBar>
-        <TopBarTitle>@BusinessName</TopBarTitle>
-        <TopBarButtons>
-            <DxButton RenderStyle="ButtonRenderStyle.Primary" RenderStyleMode="ButtonRenderStyleMode.Text"
-            Click="GoToCreate" Text="Crear" />
-            @foreach (var btn in ListViewModel.Buttons)
-            {
-                <DxButton RenderStyle="@btn.RenderStyle" Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />
-            }
-        </TopBarButtons>
-    </SetTopBar>
+    @if(SetTopBar)
+    {
+        <SetTopBar>
+            <TopBarTitle>@BusinessName</TopBarTitle>
+            <TopBarButtons>
+                <DxButton RenderStyle="ButtonRenderStyle.Primary" RenderStyleMode="ButtonRenderStyleMode.Text"
+                Click="GoToCreate" Text="Crear" />
+                @foreach (var btn in ListViewModel.Buttons)
+                {
+                    <DxButton RenderStyle="@btn.RenderStyle" Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />
+                }
+            </TopBarButtons>
+        </SetTopBar>
+    }
 }

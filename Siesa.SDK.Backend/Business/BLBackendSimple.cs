@@ -236,11 +236,17 @@ namespace Siesa.SDK.Business
             using (SDKContext context = _dbFactory.CreateDbContext())
             {
                 var query = context.Set<T>().AsQueryable();
-                var total = query.Count();
                 foreach (var relatedProperty in _relatedProperties)
                 {
                     query = query.Include(relatedProperty);
                 }
+
+                if(!string.IsNullOrEmpty(filter))
+                {
+                    query = query.Where(filter);
+                }
+                var total = query.Count();
+
                 if (skip.HasValue)
                 {
                     query = query.Skip(skip.Value);
@@ -250,10 +256,6 @@ namespace Siesa.SDK.Business
                     query = query.Take(take.Value);
                 }
 
-                if(!string.IsNullOrEmpty(filter))
-                {
-                    query = query.Where(filter);
-                }
 
                 if (!string.IsNullOrEmpty(orderBy))
                 {

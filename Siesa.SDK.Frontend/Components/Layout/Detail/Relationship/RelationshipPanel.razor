@@ -1,0 +1,46 @@
+<div class="relationship-panel">
+    <div class="relationship-panel-header" @onclick="Toggle">
+        <span class="relationship-panel-header-title">@Relationship.Label</span>
+        
+        <span class="relationship-panel-header-close">
+            @if(isOpen){
+                <span class="oi oi-chevron-bottom"></span>
+            }else{
+                <span class="oi oi-chevron-right"></span>
+            }
+        </span>
+        <span class="relationship-panel-header-count">@count</span>
+    </div>
+    @if(isOpen){
+        <div class="relationship-panel-body">
+            <DynamicListView BusinessName="@Relationship.RelatedBusiness" IsSubpanel="true" SubpanelFilter="@filter" />
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public Relationship Relationship { get; set; }
+    [Parameter] public int ParentRowid { get; set; }
+    int? count = null;
+    bool isOpen = false;
+
+    string filter = "";
+
+    public void Toggle()
+    {
+        isOpen = !isOpen;
+    }
+
+    protected override void OnInitialized()
+    {
+        var field = Relationship.RelatedField;
+        //remove "BaseObj" from the field name if it exists
+        if (field.StartsWith("BaseObj."))
+        {
+            field = field.Substring(8);
+        }
+        filter = $"({field}.RowID == {ParentRowid})";
+    }
+
+
+}

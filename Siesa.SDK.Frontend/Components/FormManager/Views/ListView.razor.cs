@@ -22,6 +22,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter]
         public dynamic BusinessObj { get; set; }
 
+        [Parameter]
+        public bool SetTopBar { get; set; } = true;
+
+        [Parameter]
+        public List<string> ConstantFilters { get; set; } = new List<string>();
+
         [Inject] public IJSRuntime JSRuntime { get; set; }
         [Inject] public NavigationManager NavManager { get; set; }
 
@@ -88,7 +94,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             var skip = args.Skip;
             var top = args.Top;
             // var dbData = await TableViewObj.GetData(skip,top, args.Filter, args.OrderBy);
-            var dbData = await BusinessObj.GetDataAsync(args.Skip,args.Top, args.Filter, args.OrderBy); //TODO: Paginación
+            var filters = $"{args.Filter}";
+            if (ConstantFilters != null)
+            {
+                foreach (var filter in ConstantFilters)
+                {
+                    if(!string.IsNullOrEmpty(filters))
+                    {
+                        filters += " && ";
+                    }
+                    filters += $"{filter}";
+                }
+            }
+            var dbData = await BusinessObj.GetDataAsync(args.Skip,args.Top, filters, args.OrderBy); //TODO: Paginación
             data = dbData.Data;
             count = dbData.TotalCount;
             Loading = false;
