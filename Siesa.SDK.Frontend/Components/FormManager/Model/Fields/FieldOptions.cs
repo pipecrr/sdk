@@ -58,6 +58,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 
         public string RelatedBusiness { get; set; } = "";
 
+        public Dictionary<string,string> RelatedFilters { get; set; } = new Dictionary<string, string>()
+        {
+        };
+
         public FieldObj InitField(object modelObj)
         {
             FieldObj field = new FieldObj();
@@ -111,6 +115,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                         FieldType = FieldTypes.DecimalField;
                         break;
                     case "DateTime":
+                        FieldType = FieldTypes.DateTimeField;
+                        break;
+                    case "TimeOnly":
+                    case "TimeSpan":
+                        FieldType = FieldTypes.TimeField;
+                        break;
+                    case "DateOnly":
                         FieldType = FieldTypes.DateField;
                         break;
                     case "Boolean":

@@ -1,15 +1,16 @@
-﻿@inherits FieldClass<DateOnly>
+﻿@typeparam TDate
+@inherits FieldClass<TDate>
 @using System.Linq.Expressions
 @if (!FieldOpt.Hidden)
 {
     @FieldValidationTemplate
 
     <DxDateEdit 
-        T="DateTime"
+        T="TDate"
         NullText="@FieldOpt.Placeholder"
         ReadOnly="@(FieldOpt.Disabled)"
-        Date="@(BindValue.ToDateTime(TimeOnly.MinValue))"
-        DateChanged="@((str) => { SetValue(DateOnly.FromDateTime(str)); })"
+        Date="@(BindValue)"
+        DateChanged="@((str) => { SetValue(str); })"
         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
         PickerDisplayMode="DatePickerDisplayMode.Auto"
         field-name="@FieldOpt.Name"
@@ -20,7 +21,7 @@
 
 
 @code {
-    Expression<Func<DateTime>> DateExpression { get; set; }
+    Expression<Func<TDate>> DateExpression { get; set; }
     private RenderFragment? _fieldValidationTemplate;
 
     [Parameter] public bool ShowTime { get; set; }
@@ -29,6 +30,6 @@
     {
         base.OnInitialized();
         var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
-        DateExpression = (Expression<Func<DateTime>>)Expression.Lambda(typeof(Func<>).MakeGenericType(typeof(DateTime)), access);
+        DateExpression = (Expression<Func<TDate>>)Expression.Lambda(typeof(Func<>).MakeGenericType(typeof(TDate)), access);
     }
 }

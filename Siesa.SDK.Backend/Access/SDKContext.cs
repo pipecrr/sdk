@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Query;
 //using Siesa.SDK.Backend.Interceptors;
 using Siesa.SDK.Entities;
+using Siesa.SDK.Entities.Converters;
 using Siesa.SDK.Shared.Logs.DataChangeLog;
 using System;
 using System.Linq;
@@ -71,6 +72,17 @@ namespace Siesa.SDK.Backend.Access
         {
             return new DbSetProxy<TEntity>(this, base.Set<TEntity>());
         }*/
+
+        protected override void ConfigureConventions(ModelConfigurationBuilder builder)
+        {
+            builder.Properties<DateOnly>()
+                .HaveConversion<DateOnlyConverter, DateOnlyComparer>()
+                .HaveColumnType("date");
+
+            // builder.Properties<TimeOnly>()
+            //     .HaveConversion<TimeOnlyConverter, TimeOnlyComparer>()
+            //     .HaveColumnType("time");
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)  
         {

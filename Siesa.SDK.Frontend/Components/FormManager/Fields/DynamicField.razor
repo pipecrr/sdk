@@ -33,14 +33,33 @@
         <SelectField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  />
         break;
     case FieldTypes.DateField:
-    case FieldTypes.DateTimeField:
         @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
         {
             <DateFieldDetail BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
         }
         else
         {
-            <DateField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  />
+            <DateField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" ShowTime="false"  />
+        }
+        break;
+    case FieldTypes.TimeField:
+        @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
+        {
+            <TimeFieldDetail BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+        }
+        else
+        {
+            <TimeField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"/>
+        }
+        break;
+    case FieldTypes.DateTimeField:
+        @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
+        {
+            <DateTimeFieldDetail BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+        }
+        else
+        {
+            <DateTimeField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TDate="DateTime" ShowTime="true"  />
         }
         break;
     case FieldTypes.TextField:

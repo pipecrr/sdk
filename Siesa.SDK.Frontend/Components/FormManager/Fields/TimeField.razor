@@ -1,34 +1,32 @@
-﻿@inherits FieldClass<DateOnly>
+﻿@inherits FieldClass<TimeSpan>
 @using System.Linq.Expressions
 @if (!FieldOpt.Hidden)
 {
     @FieldValidationTemplate
 
-    <DxDateEdit 
-        T="DateTime"
+    <DxTimeEdit 
+        T="TimeSpan"
         NullText="@FieldOpt.Placeholder"
         ReadOnly="@(FieldOpt.Disabled)"
-        Date="@(BindValue.ToDateTime(TimeOnly.MinValue))"
-        DateChanged="@((str) => { SetValue(DateOnly.FromDateTime(str)); })"
+        Time="@(BindValue)"
+        TimeChanged="@((str) => { SetValue(str); })"
         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
         PickerDisplayMode="DatePickerDisplayMode.Auto"
         field-name="@FieldOpt.Name"
-        DateExpression="@DateExpression"
-        TimeSectionVisible="@ShowTime"        
+        TimeExpression="@TimeExpression"
+        
     />
 }
 
 
 @code {
-    Expression<Func<DateTime>> DateExpression { get; set; }
+    Expression<Func<TimeSpan>> TimeExpression { get; set; }
     private RenderFragment? _fieldValidationTemplate;
-
-    [Parameter] public bool ShowTime { get; set; }
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
         var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
-        DateExpression = (Expression<Func<DateTime>>)Expression.Lambda(typeof(Func<>).MakeGenericType(typeof(DateTime)), access);
+        TimeExpression = (Expression<Func<TimeSpan>>)Expression.Lambda(typeof(Func<>).MakeGenericType(typeof(TimeSpan)), access);
     }
 }

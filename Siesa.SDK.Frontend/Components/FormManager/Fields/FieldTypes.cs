@@ -10,6 +10,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
         SelectField,
         DateField,
         DateTimeField,
+        TimeField,
         TextField,
         BooleanField,
         Custom,
