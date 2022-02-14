@@ -1,0 +1,35 @@
+<RadzenDataGrid 
+    AllowFiltering="@AllowFiltering" 
+    FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+    FilterMode="FilterMode.Advanced" 
+    AllowPaging="@AllowPaging" 
+    PageSize="@PageSize"
+    PagerHorizontalAlign="HorizontalAlign.Center" 
+    AllowSorting="@AllowSorting" 
+    Data="@Data" 
+    TItem="object" 
+    IsLoading="@Loading"
+    Count="@Count"
+    Columns="@Columns"
+    ShowPagingSummary="@ShowPagingSummary"
+    PageSizeOptions="@AllowedPageSizes">
+</RadzenDataGrid>
+
+@code {
+    [Parameter] public RenderFragment? Columns { get; set; }
+    [Parameter] public bool AllowFiltering { get; set; }
+    [Parameter] public bool Loading { get; set; }
+    [Parameter] public int PageSize { get; set; } = 10;
+    [Parameter] public bool AllowSorting { get; set; }
+    [Parameter] public bool AllowPaging { get; set; }
+
+    [Parameter] public IEnumerable<dynamic> Data { get; set; }
+    [Parameter] public int Count { get; set; }
+    [Parameter] public EventCallback LoadData { get; set; }
+    [Parameter] public bool ShowPagingSummary { get; set; }
+    [Parameter] public IEnumerable<int> AllowedPageSizes { get; set; } = new int[] { 10, 20, 50, 100 };
+
+
+
+    
+}
