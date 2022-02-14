@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Siesa.SDK.Shared.DataAnnotations;
+//using System.Linq.Dynamic.Core;
 
 namespace Siesa.SDK.Backend.Access
 {
@@ -41,7 +42,7 @@ namespace Siesa.SDK.Backend.Access
                 var dataAnnotation = typeof(TEntity).GetCustomAttributes(typeof(SDKAuthorization), false);
                 if (dataAnnotation.Length > 0)
                 {
-                    var prueba_rowid_user = 3; //TODO: Cambiar por el usuario logueado
+                    var prueba_rowid_user = 2; //TODO: Cambiar por el usuario logueado
 
                     //Get the table name
                     var authorizationTableName = ((SDKAuthorization)dataAnnotation[0]).TableName;
@@ -49,22 +50,41 @@ namespace Siesa.SDK.Backend.Access
                     if (string.IsNullOrEmpty(authorizationTableName))
                     {
                         //Get table name from the context
-                        var tableNameFromContext = _context.Model.FindEntityType(typeof(TEntity)).GetTableName();
-                        authorizationTableName = tableNameFromContext;
+                        authorizationTableName = typeof(TEntity).Name;
 
                         //Replace the first character of the table name with the letter "u"
                         if (authorizationTableName.Length > 0)
                         {
                             authorizationTableName = "U" + authorizationTableName.Substring(1);
                         }
+
+                        authorizationTableName = $"{typeof(TEntity).Namespace}.{authorizationTableName}";
                     }
 
-                    //IQueryable<BaseUserPermissionEntity> prueba = from permission in _context.Set<BaseUserPermissionEntity>(authorizationTableName)
+                    if(authorizationTableName == "Siesa.SDK.Entities.U00102_User"){ //TODO: Quitar
+                        //Get EntityType from string
+                        //var entityType = _context.Model.FindEntityType(authorizationTableName);
+                        Type authEntityType = typeof(TEntity).Assembly.GetType(authorizationTableName);
+                        var authSet = (IQueryable<BaseUserPermissionEntity<TEntity>>)_context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(authEntityType).Invoke(_context, null);
 
+                        var sdk_query = ((IQueryable<BaseEntity>)query);
+                        var join_sql = sdk_query.Join(authSet,
+                            e => e.Rowid,
+                            u => u.RowidRecord,
+                            (e, u) => new { e, u })
+                            .Where(
+                                x => x.u.RowidRelUser == prueba_rowid_user 
+                                && (
+                                    x.u.AuthorizationType == PermissionAuthTypes.Query_Tx
+                                    //TODO: Add other authorization types
+                                )
+                            );
+                        sdk_query = join_sql.Select(x => x.e);
+                        this.query = sdk_query.Cast<TEntity>();
+                    }
+                    
 
-                    var sdk_query = ((IQueryable<BaseEntity>)query);
-                    sdk_query = sdk_query.Where(x => x.Source == authorizationTableName);
-                    this.query = sdk_query.Cast<TEntity>();
+                   
                 }
 
                 
