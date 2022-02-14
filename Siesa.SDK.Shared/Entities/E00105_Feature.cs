@@ -14,5 +14,7 @@ namespace Siesa.SDK.Entities
         public int Rowid { get; set; }
 
         public string Description { get; set; }
+
+        public string BusinessName { get; set; }
     }
 }

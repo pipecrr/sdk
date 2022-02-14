@@ -35,6 +35,8 @@ namespace Siesa.SDK.Entities
         public string Description { get; set; } //Todo: make this a localized string
         public string Image { get; set; } //Fontawesome icon or image URL
 
+        public string Url { get; set; }
+
         public virtual ICollection<E00131_Menu> SubMenus { get; set; }
 	}
 }

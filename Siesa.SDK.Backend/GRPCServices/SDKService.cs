@@ -157,7 +157,7 @@ namespace Siesa.SDK.GRPCServices
             List<E00131_Menu> menuItems = new();
             using (SDKContext dbContext = dbFactory.CreateDbContext())
             {
-                menuItems = dbContext.Set<E00132_MenuGroupDetail>().AsQueryable().Where(x => x.MenuGroup.Rowid == request.GroupId).Include(x => x.Menu.SubMenus).ThenInclude(x=>x.SubMenus).Select(x => x.Menu).ToList();
+                menuItems = dbContext.Set<E00132_MenuGroupDetail>().AsQueryable().Where(x => x.MenuGroup.Rowid == request.GroupId).Include(x => x.Menu.SubMenus).ThenInclude(x=>x.SubMenus).ThenInclude(x => x.Feature).Select(x => x.Menu).ToList();
             }
 
             var response = new Protos.MenuItemsResponse
