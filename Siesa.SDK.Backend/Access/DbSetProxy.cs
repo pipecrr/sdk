@@ -61,9 +61,6 @@ namespace Siesa.SDK.Backend.Access
                         authorizationTableName = $"{typeof(TEntity).Namespace}.{authorizationTableName}";
                     }
 
-                    if(authorizationTableName == "Siesa.SDK.Entities.U00102_User"){ //TODO: Quitar
-                        //Get EntityType from string
-                        //var entityType = _context.Model.FindEntityType(authorizationTableName);
                         Type authEntityType = typeof(TEntity).Assembly.GetType(authorizationTableName);
                         var authSet = (IQueryable<BaseUserPermissionEntity<TEntity>>)_context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(authEntityType).Invoke(_context, null);
 
@@ -73,21 +70,16 @@ namespace Siesa.SDK.Backend.Access
                             u => u.RowidRecord,
                             (e, u) => new { e, u })
                             .Where(
-                                x => x.u.RowidRelUser == prueba_rowid_user 
-                                && (
-                                    x.u.AuthorizationType == PermissionAuthTypes.Query_Tx
-                                    //TODO: Add other authorization types
+                                x => ((
+                                    x.u.UserType == PermissionUserTypes.User && x.u.RowidRelUser == prueba_rowid_user
+                                    &&  x.u.AuthorizationType == PermissionAuthTypes.Query_Tx
+                                )
+                                || false //TODO: Add other authorization types
                                 )
                             );
                         sdk_query = join_sql.Select(x => x.e);
                         this.query = sdk_query.Cast<TEntity>();
-                    }
-                    
-
-                   
                 }
-
-                
             }
         }
 

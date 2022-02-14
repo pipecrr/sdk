@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Siesa.SDK.Entities
 {
-    [SDKAuthorization]
+    //[SDKAuthorization]
     public class E00132_MenuGroupDetail
     {
         [Key]

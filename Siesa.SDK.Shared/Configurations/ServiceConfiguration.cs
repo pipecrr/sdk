@@ -21,7 +21,7 @@ namespace Siesa.SDK.Shared.Configurations
             ServiceConfiguration sc = serviceConfiguration.Get<ServiceConfiguration>();
             services.Configure<ServiceConfiguration>(serviceConfiguration);
             services.AddOptions();
-            services.AddLogging(builder => SDKLogger.Configure(builder, sc));
+            //services.AddLogging(builder => SDKLogger.Configure(builder, sc));
             BackendManager.SetMasterBackendUrl(sc.MasterBackendUrl);
             
         }
