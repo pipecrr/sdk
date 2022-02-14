@@ -8,10 +8,23 @@
         </Items>
     </DxMenuItem>       
 }else{
-    <DxMenuItem Text="@MenuItem.Title" IconCssClass="@MenuItem.Image" NavigateUrl="/prueba/" />
+    <DxMenuItem Text="@MenuItem.Title" IconCssClass="@MenuItem.Image" NavigateUrl="@NavigateUrl" />
 }
 
 @code {
     [Parameter] public E00131_Menu MenuItem { get; set; }
+
+    private string NavigateUrl { get { 
+        if (!string.IsNullOrEmpty(MenuItem.Url)) {
+            return MenuItem.Url;
+        }else{
+            if(MenuItem.Feature != null){
+                return $"/{MenuItem.Feature.BusinessName}/";
+            }
+            return "/";
+            
+        }
+        } 
+    }
 
 }
