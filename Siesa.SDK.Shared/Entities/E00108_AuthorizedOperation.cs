@@ -12,7 +12,7 @@ namespace Siesa.SDK.Entities
     public class E00108_AuthorizedOperation: BasicEntity<string>
     {
         public virtual E00105_Feature Feature { get; set; }
-        public virtual E00099_GroupCompany GroupCompany { get; set; }
+        public virtual E00200_GroupCompany GroupCompany { get; set; }
         public virtual E00103_Role Role { get; set; }
         public int? RowidUser { get; set; }
         [ForeignKey(nameof(RowidUser))]
