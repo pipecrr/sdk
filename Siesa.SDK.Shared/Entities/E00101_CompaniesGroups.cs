@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,9 +9,11 @@ using System.Threading.Tasks;
 
 namespace Siesa.SDK.Entities
 {
-    public class E00200_GroupCompany: BasicEntity<string>
+    public class E00101_CompaniesGroups
     {
-        [JsonIgnore]
-        public virtual ICollection<E00201_Company> Companies { get; set; }
+        [Key]
+        public int Rowid { get; set; }
+        public virtual E00100_Company Company { get; set; }
+        public virtual E00099_GroupCompany GroupCompany { get; set; }
     }
 }

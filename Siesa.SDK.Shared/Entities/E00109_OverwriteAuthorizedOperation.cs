@@ -12,7 +12,7 @@ namespace Siesa.SDK.Entities
     public class E00109_OverwriteAuthorizedOperation: BasicEntity<string>
     {
         public virtual E00107_Operation Feature_Operation { get; set; }
-        public virtual E00201_Company Company { get; set; }
+        public virtual E00100_Company Company { get; set; }
         public int? RowidUser { get; set; }
         [ForeignKey(nameof(RowidUser))]
         public virtual E00102_User User { get; set; }
