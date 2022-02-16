@@ -1,4 +1,4 @@
-<RadzenDataGridColumn TItem="object" Title="@Title" Width="@Width" Filterable="@Filterable" Sortable="@Sortable" Property="@Property" Type="@ColumnType" Template="@Template">
+<RadzenDataGridColumn TItem="object" Title="@Title" Width="@Width" Filterable="@Filterable" Sortable="@Sortable" Property="@Property" Type="@ColumnType" Template="@Template" TextAlign="@TextAlignInternal" FormatString="@FormatString">
 </RadzenDataGridColumn>
 
 @code {
@@ -9,5 +9,28 @@
     [Parameter] public string Width { get; set; } = "auto";
     [Parameter] public string? Property { get; set; }
     [Parameter] public Type? ColumnType { get; set; }
+    [Parameter] public ColumnAlign TextAlign { get; set; } = ColumnAlign.Left;
+    [Parameter] public string FormatString { get; set; } 
+    
+
+    private Radzen.TextAlign TextAlignInternal
+    {
+        get{
+            return TextAlign switch 
+            {
+                ColumnAlign.Left => Radzen.TextAlign.Left,
+                ColumnAlign.Center => Radzen.TextAlign.Center,
+                ColumnAlign.Right => Radzen.TextAlign.Right,
+                _ =>Radzen.TextAlign.Left
+            };
+        }
+        
+    }
+
+    public enum ColumnAlign {
+        Left,
+        Right,
+        Center
+    }
     
 }
