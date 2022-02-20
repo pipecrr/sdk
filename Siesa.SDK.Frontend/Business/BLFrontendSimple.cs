@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Siesa.SDK.Entities;
+using Siesa.SDK.Frontend;
 using Siesa.SDK.Frontend.Components.FormManager.Model;
 using Siesa.SDK.Protos;
 using Siesa.SDK.Shared.Business;
@@ -56,6 +57,8 @@ namespace Siesa.SDK.Business
     {
         public string BusinessName { get; set; }
         [JsonIgnore]
+        public BusinessFrontendModel Backend {get { return Frontend.BusinessManagerFrontend.Instance.GetBusiness(BusinessName); } }
+        [JsonIgnore]
         public List<Panel> Panels = new List<Panel>();
         [ValidateComplexType]
         public T BaseObj { get; set; }
@@ -72,16 +75,14 @@ namespace Siesa.SDK.Business
 
         public async virtual Task<T> GetAsync(int id)
         {
-            var businness = Frontend.BusinessManagerFrontend.Instance.GetBusiness(BusinessName);
-            var message = await businness.Get(id);
+            var message = await Backend.Get(id);
             var result = JsonConvert.DeserializeObject<T>(message);
             return result;
         }
 
         public async virtual Task<int> SaveAsync()
         {
-            var businness = Frontend.BusinessManagerFrontend.Instance.GetBusiness(BusinessName);
-            var result = await businness.Save(this);
+            var result = await Backend.Save(this);
             return result;
         }
 
@@ -112,8 +113,7 @@ namespace Siesa.SDK.Business
 
         public async virtual Task<int> DeleteAsync()
         {
-            var businness = Frontend.BusinessManagerFrontend.Instance.GetBusiness(BusinessName);
-            var result = await businness.Delete(BaseObj.Rowid);
+            var result = await Backend.Delete(BaseObj.Rowid);
             return result;
         }
 
@@ -134,8 +134,7 @@ namespace Siesa.SDK.Business
 
         public async virtual Task<Siesa.SDK.Shared.Business.LoadResult> EntityFieldSearchAsync(string searchText)
         {
-            var businness = Frontend.BusinessManagerFrontend.Instance.GetBusiness(BusinessName);
-            var result = await businness.EntityFieldSearch(searchText);
+            var result = await Backend.EntityFieldSearch(searchText);
             Siesa.SDK.Shared.Business.LoadResult response = new Siesa.SDK.Shared.Business.LoadResult();
             response.Data = result.Data.Select(x => JsonConvert.DeserializeObject<T>(x)).ToList();
             response.TotalCount = result.TotalCount;
@@ -145,8 +144,7 @@ namespace Siesa.SDK.Business
 
         public async virtual Task<Siesa.SDK.Shared.Business.LoadResult> GetDataAsync(int? skip, int? take, string filter = "", string orderBy = "")
         {
-            var businness = Frontend.BusinessManagerFrontend.Instance.GetBusiness(BusinessName);
-            var result = await businness.GetData(skip, take, filter, orderBy);
+            var result = await Backend.GetData(skip, take, filter, orderBy);
             Siesa.SDK.Shared.Business.LoadResult response = new Siesa.SDK.Shared.Business.LoadResult();
             response.Data = result.Data.Select(x => JsonConvert.DeserializeObject<T>(x)).ToList();
             response.TotalCount = result.TotalCount;
@@ -162,8 +160,7 @@ namespace Siesa.SDK.Business
             {
                 return resultValidationFront;
             }
-            var businness = Frontend.BusinessManagerFrontend.Instance.GetBusiness(BusinessName);
-            var result = await businness.ValidateAndSave(this);
+            var result = await Backend.ValidateAndSave(this);
             return result;
         }
 

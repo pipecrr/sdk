@@ -91,9 +91,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         {
             Loading = true;
             data = null;
-            var skip = args.Skip;
-            var top = args.Top;
-            // var dbData = await TableViewObj.GetData(skip,top, args.Filter, args.OrderBy);
             var filters = $"{args.Filter}";
             if (ConstantFilters != null)
             {
@@ -106,7 +103,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     filters += $"{filter}";
                 }
             }
-            var dbData = await BusinessObj.GetDataAsync(args.Skip,args.Top, filters, args.OrderBy); //TODO: Paginación
+            var dbData = await BusinessObj.GetDataAsync(args.Skip,args.Top, filters, args.OrderBy);
             data = dbData.Data;
             count = dbData.TotalCount;
             Loading = false;
