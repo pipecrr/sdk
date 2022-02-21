@@ -58,6 +58,10 @@ namespace Siesa.SDK.Business
         public string BusinessName { get; set; }
         [JsonIgnore]
         public BusinessFrontendModel Backend {get { return Frontend.BusinessManagerFrontend.Instance.GetBusiness(BusinessName); } }
+
+        public BusinessFrontendModel GetBackend(string business_name){
+            return Frontend.BusinessManagerFrontend.Instance.GetBusiness(business_name);
+        }
         [JsonIgnore]
         public List<Panel> Panels = new List<Panel>();
         [ValidateComplexType]
