@@ -68,10 +68,10 @@ namespace Siesa.SDK.Backend.Access
             catch (Exception) { }
         }
 
-        public override DbSet<TEntity> Set<TEntity>()
+        /*public override DbSet<TEntity> Set<TEntity>()
         {
             return new DbSetProxy<TEntity>(this, base.Set<TEntity>());
-        }
+        }*/
 
         protected override void ConfigureConventions(ModelConfigurationBuilder builder)
         {

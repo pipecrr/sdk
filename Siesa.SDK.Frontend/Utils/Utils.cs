@@ -26,7 +26,7 @@ namespace Siesa.SDK.Frontend.Utils
             return null;
         }
         //TODO: Refactorizar esos 2 métodos
-        public static Type SearchType(string name) {
+        public static Type SearchType(string name, bool fullSearch = false) {
             Type type = Type.GetType(name);
             if (type != null)
             {
@@ -38,6 +38,18 @@ namespace Siesa.SDK.Frontend.Utils
                 if (type != null)
                     return type;
             }
+
+            if(fullSearch){
+                foreach (Assembly ass in AppDomain.CurrentDomain.GetAssemblies())
+                {
+                    
+                    type = ass.GetType(name);
+                    if (type != null)
+                        return type;
+                }
+            }
+
+            
             return null;
         }
 

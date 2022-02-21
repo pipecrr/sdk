@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
 using Siesa.SDK.Backend.Access;
 using Siesa.SDK.Entities;
+using Siesa.SDK.Shared.DataAnnotations;
 
 namespace Siesa.SDK.GRPCServices
 {
@@ -50,12 +51,12 @@ namespace Siesa.SDK.GRPCServices
             return Task.FromResult(response);
         }
 
-        private Type FindType(string name)
+        private Type FindType(string name, bool includeSystemLibs = false)
         {
             Type businessType = null;
             foreach (Assembly ass in AppDomain.CurrentDomain.GetAssemblies())
             {
-                if (ass.FullName.StartsWith("System.") || ass.FullName.StartsWith("Microsoft.") || ass.FullName.StartsWith("mscorlib") || ass.FullName.StartsWith("netstandard") || ass.FullName.StartsWith("GRPC."))
+                if (!includeSystemLibs && (ass.FullName.StartsWith("System.") || ass.FullName.StartsWith("Microsoft.") || ass.FullName.StartsWith("mscorlib") || ass.FullName.StartsWith("netstandard") || ass.FullName.StartsWith("GRPC.")))
                     continue;
                 businessType = ass.GetType(name);
                 if (businessType != null)
@@ -166,6 +167,91 @@ namespace Siesa.SDK.GRPCServices
             };
             return Task.FromResult(response);
         }
+
+        public override Task<Protos.ExposedMethodResponse> ExecuteExposedMethod(Protos.ExposedMethodRequest request, ServerCallContext context)
+        {
+            var response = new Protos.ExposedMethodResponse();
+            try
+            {
+                BusinessModel businessRegistry = BusinessManager.Instance.GetBusiness(request.BusinessName);
+                var businessType = FindType(businessRegistry.Namespace + "." + businessRegistry.Name);
+                dynamic businessObj = Activator.CreateInstance(businessType);
+                businessObj.SetProvider(_provider);
+
+
+                var methodName = request.MethodName;
+                var method = businessType.GetMethod(methodName, BindingFlags.Public | BindingFlags.Instance);
+                if(method == null)
+                {
+                    response.Success = false;
+                    response.Errors.Add($"Method {methodName} not found in business {businessRegistry.Name}");
+                    return Task.FromResult(response);
+                }
+                //check if method has custom attribute (SDKExposedMethod)
+                var customAttributes = method.GetCustomAttributes(typeof(SDKExposedMethod), false);
+                if (customAttributes.Length == 0)
+                {
+                    response.Success = false;
+                    response.Errors.Add($"Method {methodName} not exposed in business {businessRegistry.Name}");
+                    return Task.FromResult(response);
+                }
+
+                ICollection<ExposedMethodParam> methodParameters = request.Parameters;
+                object[] parameters = new object[]{};
+                bool useNamedParams = !(request.Parameters.Any(x => x.Name == null || x.Name == ""));
+                if (useNamedParams)
+                {
+                    string[] paramNames = method.GetParameters().Select(x => x.Name).ToArray();
+                    parameters = new object[paramNames.Length];
+                    for (int i = 0; i < parameters.Length; ++i) 
+                    {
+                        parameters[i] = Type.Missing;
+                    }
+                    foreach (var methodParameter in methodParameters)
+                    {
+                        var paramName = methodParameter.Name;
+                        var paramType = FindType(methodParameter.Type, true);
+                        var paramValue = JsonConvert.DeserializeObject(methodParameter.Value, paramType);
+                        var paramIndex = Array.IndexOf(paramNames, paramName);
+                        if(paramIndex >= 0)
+                        {
+                            parameters[paramIndex] = paramValue;
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var methodParameter in methodParameters)
+                    {
+                        var paramName = methodParameter.Name;
+                        var paramType = FindType(methodParameter.Type, true);
+                        var paramValue = JsonConvert.DeserializeObject(methodParameter.Value, paramType);
+                        parameters = parameters.Append(paramValue).ToArray();
+                    }
+                }
+                var resultMethod = method.Invoke(businessObj, parameters);
+
+                response.Success = resultMethod.GetType().GetProperty("Success").GetValue(resultMethod);
+                if(response.Success){
+                    var resultValue = resultMethod.GetType().GetProperty("Data").GetValue(resultMethod);
+                    response.Data = JsonConvert.SerializeObject(resultValue);
+                    if(resultValue != null){
+                        response.DataType = resultValue.GetType().FullName;
+                    }                    
+                }else{
+                    response.Errors.AddRange(((IEnumerable<string>)resultMethod.GetType().GetProperty("Errors").GetValue(resultMethod)).Select(x => x));
+                }
+                
+                return Task.FromResult(response);
+            }
+            catch (System.Exception ex)
+            {
+                response.Success = false;
+                response.Errors.Add($"Error executing exposed method {ex.Message}");
+                return Task.FromResult(response);
+            }
+            
+        } 
 
     }
 }

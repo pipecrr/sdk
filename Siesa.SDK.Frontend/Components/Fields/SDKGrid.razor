@@ -1,3 +1,4 @@
+@typeparam TItem
 <RadzenDataGrid 
     AllowFiltering="@AllowFiltering" 
     FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
@@ -7,7 +8,7 @@
     PagerHorizontalAlign="HorizontalAlign.Center" 
     AllowSorting="@AllowSorting" 
     Data="@Data" 
-    TItem="object" 
+    TItem="@TItem" 
     IsLoading="@Loading"
     Count="@Count"
     Columns="@Columns"
@@ -23,7 +24,7 @@
     [Parameter] public bool AllowSorting { get; set; }
     [Parameter] public bool AllowPaging { get; set; }
 
-    [Parameter] public IEnumerable<dynamic> Data { get; set; }
+    [Parameter] public IEnumerable<TItem> Data { get; set; }
     [Parameter] public int Count { get; set; }
     [Parameter] public EventCallback LoadData { get; set; }
     [Parameter] public bool ShowPagingSummary { get; set; }

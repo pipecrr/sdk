@@ -1,5 +1,6 @@
 ﻿syntax = "proto3";
 import "google/protobuf/wrappers.proto";
+import "google/protobuf/any.proto";
 option csharp_namespace = "Siesa.SDK.Protos";
 
 message GetBusinessesRequest {
@@ -75,3 +76,23 @@ message LoadResult {
 	int32 totalCount = 2;
 	int32 groupCount = 3;
 }
+
+message ExposedMethodResponse{
+  bool success = 1;
+  string data = 2;
+  repeated string errors = 3;
+  string dataType = 4;
+}
+
+message ExposedMethodParam{
+  string name = 1;
+  string value = 2;
+  string type = 3;
+}
+
+message ExposedMethodRequest {
+  string businessName = 1;
+  string methodName = 2;
+  repeated ExposedMethodParam parameters = 3;
+}
+

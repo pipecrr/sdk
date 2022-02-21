@@ -186,5 +186,31 @@ namespace Siesa.SDK.Shared.Backend
         {
             return GetMenuItemsAsync(groupId).GetAwaiter().GetResult();
         }
+
+        public async Task<Protos.ExposedMethodResponse> CallBusinessMethod(string business_name, string method, ICollection<ExposedMethodParam> parameters)
+        {
+            var channel = GrpcChannel.ForAddress(this.Url);
+            var client = new Protos.SDK.SDKClient(channel);
+            var request = new Protos.ExposedMethodRequest
+            {
+                BusinessName = business_name,
+                MethodName = method
+            };
+            if(parameters != null)
+            {
+                request.Parameters.AddRange(parameters);
+            }
+            try
+            {
+                var response = await client.ExecuteExposedMethodAsync(request);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return null;
+            
+        }
     }
 }
