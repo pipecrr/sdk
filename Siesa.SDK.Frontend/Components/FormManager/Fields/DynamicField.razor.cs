@@ -19,6 +19,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
         private FieldTypes FieldType { get; set; }
         private string UnknownFieldType { get; set; }
 
+        private Type SelectFieldType { get; set; }
+        private Type SelectFieldDetailType { get; set; }
+
+        private IDictionary<string, object> parameters = new Dictionary<string, object>();
+
         private void initField()
         {
             var field = FieldOpt.InitField(ModelObj);
@@ -26,6 +31,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
             fieldName = field.Name;
             FieldType = field.FieldType;
             UnknownFieldType = field.UnknownFieldType;
+            if(field.SelectFieldType != null)
+            {
+                SelectFieldType = typeof(SelectField<>).MakeGenericType(field.SelectFieldType);
+                SelectFieldDetailType = typeof(SelectFieldDetail<>).MakeGenericType(field.SelectFieldType);
+                parameters.Clear();
+
+                parameters.Add("BindModel", fieldModelObj);
+                parameters.Add("FieldName", fieldName);
+                parameters.Add("FieldOpt", FieldOpt);
+                //parameters.Add("TItem", field.SelectFieldType);
+            }
+
+            
             StateHasChanged();
         }
 

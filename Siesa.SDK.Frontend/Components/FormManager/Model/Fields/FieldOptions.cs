@@ -10,6 +10,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         public object ModelObj { get; set; }
         public string Name { get; set; }
         public FieldTypes FieldType { get; set; }
+        public Type SelectFieldType { get; set; }
 
         public string UnknownFieldType { get; set; }
     }
@@ -49,7 +50,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         public bool Required { get; set; } = false;
 
         //Para Listas
-        public IEnumerable<ListOption> Options { get; set; }
+        public IEnumerable<object> Options { get; set; }
 
         public Dictionary<string, int> ColSize { get; set; } = new Dictionary<string, int>()
         {
@@ -138,6 +139,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 
                 if(propertyType.IsClass && !propertyType.IsPrimitive && !propertyType.IsEnum && propertyType != typeof(string)){
                     FieldType = FieldTypes.EntityField;
+                }
+
+                if (propertyType.IsEnum)
+                {
+                    FieldType = FieldTypes.SelectField;
+                    field.SelectFieldType = propertyType;
                 }
             }
             field.FieldType = FieldType;

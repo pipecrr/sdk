@@ -1,4 +1,5 @@
 ﻿
+@using Siesa.SDK.Frontend.Components.Fields
 @switch (FieldType)
 {
     case FieldTypes.CharField:
@@ -30,7 +31,14 @@
         <MultiSelectField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  />
         break;
     case FieldTypes.SelectField:
-        <SelectField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  />
+        @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
+        {
+            <DynamicComponent Type="@SelectFieldDetailType" Parameters="@parameters" />
+        }
+        else
+        {
+            <DynamicComponent Type="@SelectFieldType" Parameters="@parameters" />
+        }
         break;
     case FieldTypes.DateField:
         @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
