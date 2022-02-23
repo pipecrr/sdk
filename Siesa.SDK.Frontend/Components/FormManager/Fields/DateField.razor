@@ -25,10 +25,16 @@
 
     [Parameter] public bool ShowTime { get; set; }
 
+    DateTime _value {get{
+       return BindValue.ToDateTime(TimeOnly.MinValue);
+    }}
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
         var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
-        DateExpression = (Expression<Func<DateTime>>)Expression.Lambda(typeof(Func<>).MakeGenericType(typeof(DateTime)), access);
+        //DateExpression = (Expression<Func<DateTime>>)Expression.Lambda(typeof(Func<>).MakeGenericType(typeof(DateTime)), access);
+
+        DateExpression = () => _value;
     }
 }
