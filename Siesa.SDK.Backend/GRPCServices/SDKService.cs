@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Siesa.SDK.Backend.Access;
 using Siesa.SDK.Entities;
 using Siesa.SDK.Shared.DataAnnotations;
+using Siesa.SDK.Shared.Json;
 
 namespace Siesa.SDK.GRPCServices
 {
@@ -25,6 +26,12 @@ namespace Siesa.SDK.GRPCServices
         {
             _logger = logger;
             _provider = provider;
+
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented,
+                ContractResolver = new SDKContractResolver()
+            };
         }
 
         public override Task<Protos.BusinessesResponse> GetBusinesses(Protos.GetBusinessesRequest request, ServerCallContext context)

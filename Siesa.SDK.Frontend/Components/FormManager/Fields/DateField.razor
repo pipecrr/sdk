@@ -13,7 +13,7 @@
         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
         PickerDisplayMode="DatePickerDisplayMode.Auto"
         field-name="@FieldOpt.Name"
-        DateExpression="@DateExpression"
+        DateExpression="@(()=> _value)"
         TimeSectionVisible="@ShowTime"        
     />
 }
