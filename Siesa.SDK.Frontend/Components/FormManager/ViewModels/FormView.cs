@@ -259,7 +259,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
             NavManager.NavigateTo($"{BusinessName}/");
         }
 
-        public void OnClickCustomButton(Button button)
+        public async Task OnClickCustomButton(Button button)
         {
             if (!string.IsNullOrEmpty(button.Href))
             {
@@ -276,7 +276,8 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
             }
             else if (!string.IsNullOrEmpty(button.Action))
             {
-                Evaluator.EvaluateCode(button.Action, BusinessObj);
+                await Evaluator.EvaluateCode(button.Action, BusinessObj);
+                StateHasChanged();
             }
         }
     }
