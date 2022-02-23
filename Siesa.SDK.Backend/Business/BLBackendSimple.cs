@@ -56,6 +56,7 @@ namespace Siesa.SDK.Business
     {
         private IServiceProvider _provider;
         private ILogger _logger;
+        protected ILogger Logger { get { return _logger; } }
         private dynamic _dbFactory;
 
         public string BusinessName { get; set; }
@@ -64,6 +65,7 @@ namespace Siesa.SDK.Business
         private string[] _relatedProperties = null;
 
         private SDKContext myContext;
+        protected SDKContext Context { get { return myContext; } }
 
         public void DetachedBaseObj()
         {
@@ -76,6 +78,11 @@ namespace Siesa.SDK.Business
         {
             BaseObj = Activator.CreateInstance<T>();
             _relatedProperties = BaseObj.GetType().GetProperties().Where(p => p.PropertyType.IsClass && !p.PropertyType.IsPrimitive && !p.PropertyType.IsEnum && p.PropertyType != typeof(string) && p.Name != "RowVersion").Select(p => p.Name).ToArray();
+        }
+
+        public void ShareProvider(dynamic bl)
+        {
+            bl.SetProvider(_provider);
         }
 
         public void SetProvider(IServiceProvider provider)
