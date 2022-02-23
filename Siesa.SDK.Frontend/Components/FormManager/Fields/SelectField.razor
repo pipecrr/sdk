@@ -1,7 +1,44 @@
-﻿@inherits FieldClass<ListOption>
+﻿@using Siesa.SDK.Frontend.Components.Fields
+@using System.Linq.Expressions
+@typeparam TItem
+@inherits FieldClass<TItem>
 
 @*<DxComboBox Data="@FieldOpt.Options" TData="ListOption" TValue="string" CssClass="@FieldOpt.CssClass" SelectedItemChanged="@((newSel) => SetAttr( newSel))"
     TextFieldName="Label" SelectedItem="@BindValue" NullText="@FieldOpt.Placeholder" ReadOnly="@FieldOpt.Disabled"
     @attributes="FieldOpt.CustomAttributes" ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
     FilteringMode="DataGridFilteringMode.Contains"></DxComboBox>*@
+
+
+<SDKSelectField 
+    ItemType="TItem"
+    Options="@_options" 
+    Placeholder="@FieldOpt.Placeholder"
+    ReadOnly="@(FieldOpt.Disabled)"
+    Value="@BindValue"
+    ValueChanged="@((newVal) => SetValue(newVal))"
+    ValueExpression="@ValueExpression"
+    />
 @FieldValidationTemplate
+
+@code{
+    Expression<Func<TItem>> ValueExpression { get; set; }
+    [Parameter] public IEnumerable<TItem> Options {get; set;}
+    private IEnumerable<TItem> _options {
+        get{
+            if(Options == null){
+                //Options = new List<TItem>();
+                Options = Enum.GetValues(typeof(TItem)).Cast<TItem>();
+                //add empty option
+
+            }
+            return Options;
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
+        ValueExpression = (Expression<Func<TItem>>)Expression.Lambda(typeof(Func<>).MakeGenericType(typeof(TItem)), access);
+    }
+}

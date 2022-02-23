@@ -1,4 +1,5 @@
 @typeparam ItemType
+@using System.Linq.Expressions
 <DxComboBox  
     Value="@Value" 
     ValueChanged="@ValueChanged" 
@@ -6,11 +7,14 @@
     ReadOnly="@ReadOnly"
     CssClass="@CssClass"
     Data="@Options"
+    ValueExpression="@ValueExpression"
+    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
 >
 @ChildContent
 </DxComboBox>
 
 @code {
+    [Parameter] public Expression<Func<ItemType>> ValueExpression { get; set; }
     [Parameter] public ItemType Value { get; set; } = default!;
     [Parameter] public Action<ItemType> ValueChanged { get; set; } = (value) => {};
     [Parameter] public RenderFragment? ChildContent { get; set; }
