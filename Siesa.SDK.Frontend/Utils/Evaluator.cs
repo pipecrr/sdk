@@ -21,6 +21,8 @@ namespace Siesa.SDK.Frontend.Utils
             {
                 Console.WriteLine("error, eval");
                 return null;
+            }finally{
+                GC.Collect(); //TODO: Check performance
             }
 
             return result;
