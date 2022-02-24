@@ -9,6 +9,12 @@ using Grpc.Core;
 using Siesa.SDK.Shared.Backend;
 using Newtonsoft.Json;
 using Siesa.SDK.Shared.Business;
+using Google.Protobuf;
+using System.Net.Http;
+using System.Runtime.InteropServices;
+using Siesa.SDK.Shared.Json;
+using System.Reflection;
+using System.IO;
 
 namespace Siesa.SDK.Frontend
 {
@@ -42,14 +48,32 @@ namespace Siesa.SDK.Frontend
             return Backend.GetBusinessObj(Name, id);
         }
 
-        private ActionResult<dynamic> transformCallResponse(ExposedMethodResponse grpcResult){
+        private async Task<ActionResult<dynamic>> transformCallResponse(ExposedMethodResponse grpcResult){
             var response = new ActionResult<dynamic>() { Success = grpcResult.Success, Errors = grpcResult.Errors };
             if(response.Success){
                 Type t = null;
                 if(!string.IsNullOrEmpty(grpcResult.DataType)){
                     t = Utils.Utils.SearchType(grpcResult.DataType, true);
                 }
-                response.Data = JsonConvert.DeserializeObject(grpcResult.Data, t);
+                //response.Data = JsonConvert.DeserializeObject(grpcResult.Data, t);
+   
+                var byteString = grpcResult.Data;
+                ByteArrayContent content;
+                if (MemoryMarshal.TryGetArray(byteString.Memory, out var segment))
+                {
+                    // Success. Use the ByteString's underlying array.
+                    content = new ByteArrayContent(segment.Array, segment.Offset, segment.Count);
+                }
+                else
+                {
+                    // TryGetArray didn't succeed. Fall back to creating a copy of the data with ToByteArray.
+                    content = new ByteArrayContent(byteString.ToByteArray());
+                }
+                var decompressor = typeof(StreamUtilities).GetMethod("Decompress", BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(t);
+                Stream stream = await content.ReadAsStreamAsync();
+                response.Data = decompressor.Invoke(null, new object[] { stream });
+
+
             }
             return response;
         }
@@ -63,7 +87,7 @@ namespace Siesa.SDK.Frontend
                 exposedMethodParams.Add(new ExposedMethodParam() { Name = "", Value = value, Type = arg.GetType().FullName });
             }
             var grpcResult = await Backend.CallBusinessMethod(Name, method, exposedMethodParams);
-            return transformCallResponse(grpcResult);
+            return await transformCallResponse(grpcResult);
         }
 
         public async Task<ActionResult<dynamic>> Call(string method, Dictionary<string, dynamic> args)
@@ -75,7 +99,7 @@ namespace Siesa.SDK.Frontend
                 exposedMethodParams.Add(new ExposedMethodParam() { Name = arg.Key, Value = value, Type = arg.Value.GetType().FullName });
             }
             var grpcResult = await Backend.CallBusinessMethod(Name, method, exposedMethodParams);
-            return transformCallResponse(grpcResult);
+            return await transformCallResponse(grpcResult);
         }
 
 

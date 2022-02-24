@@ -15,6 +15,7 @@ using Siesa.SDK.Backend.Access;
 using Siesa.SDK.Entities;
 using Siesa.SDK.Shared.DataAnnotations;
 using Siesa.SDK.Shared.Json;
+using Google.Protobuf;
 
 namespace Siesa.SDK.GRPCServices
 {
@@ -241,7 +242,11 @@ namespace Siesa.SDK.GRPCServices
                 response.Success = resultMethod.GetType().GetProperty("Success").GetValue(resultMethod);
                 if(response.Success){
                     var resultValue = resultMethod.GetType().GetProperty("Data").GetValue(resultMethod);
-                    response.Data = JsonConvert.SerializeObject(resultValue);
+                    //response.Data = JsonConvert.SerializeObject(resultValue);
+                    var compressor = typeof(StreamUtilities).GetMethod("Compress", BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(resultValue.GetType());
+                    response.Data = UnsafeByteOperations.UnsafeWrap(compressor.Invoke(null, new object[] { resultValue }));
+                    //var bodyString = JsonConvert.SerializeObject(resultValue);
+                    //response.Data = UnsafeByteOperations.UnsafeWrap(Encoding.UTF8.GetBytes(bodyString));
                     if(resultValue != null){
                         response.DataType = resultValue.GetType().FullName;
                     }                    

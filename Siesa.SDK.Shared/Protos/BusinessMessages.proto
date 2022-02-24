@@ -79,7 +79,7 @@ message LoadResult {
 
 message ExposedMethodResponse{
   bool success = 1;
-  string data = 2;
+  bytes data = 2;
   repeated string errors = 3;
   string dataType = 4;
 }
