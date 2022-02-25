@@ -19,7 +19,7 @@ namespace Siesa.SDK.Frontend.Utils
             }
             catch (Exception ex)
             {
-                Console.WriteLine("error, eval");
+                Console.WriteLine($"error, evaluating code: {ex.Message}");
                 return null;
             }finally{
                 GC.Collect(); //TODO: Check performance
