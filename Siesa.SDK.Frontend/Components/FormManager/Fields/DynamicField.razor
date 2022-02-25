@@ -27,6 +27,17 @@
             <IntegerField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  />
         }
         break;
+    case FieldTypes.ByteField:
+        @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
+        {
+
+            <ByteFieldDetail BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+        }
+        else
+        {
+            <ByteField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  />
+        }
+        break;
     case FieldTypes.MultiSelectField:
         <MultiSelectField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  />
         break;
