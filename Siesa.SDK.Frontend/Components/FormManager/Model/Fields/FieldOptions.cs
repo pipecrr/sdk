@@ -112,6 +112,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                     case "Int32":
                         FieldType = FieldTypes.IntegerField;
                         break;
+                    case "Byte":
+                        FieldType = FieldTypes.ByteField;
+                        break;
                     case "Decimal":
                         FieldType = FieldTypes.DecimalField;
                         break;
