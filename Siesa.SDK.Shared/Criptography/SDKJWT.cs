@@ -10,6 +10,17 @@ using System.Threading.Tasks;
 
 namespace Siesa.SDK.Shared.Criptography
 {
+    public class JwtUserData {
+        public int Rowid { get; set; }
+        public string UserName { get; set; }
+        public string Email { get; set; }
+        public string Name { get; set; }
+
+        public override string ToString()
+        {
+            return $"{UserName} - {Name}";
+        }
+    }
     public class SDKJWT 
     {
         private readonly string _secretKey;
@@ -25,7 +36,7 @@ namespace Siesa.SDK.Shared.Criptography
             _minutesExp = minutesExp;
         }
 
-        public int? Validate(string token)
+        public JwtUserData? Validate(string token)
         {
             if (token == null)
                 return null;
@@ -45,10 +56,9 @@ namespace Siesa.SDK.Shared.Criptography
                 }, out SecurityToken validatedToken);
 
                 var jwtToken = (JwtSecurityToken)validatedToken;
-                var userId = int.Parse(jwtToken.Claims.First(x => x.Type == "rowid").Value);
-
-                // return user id from JWT token if validation successful
-                return userId;
+                var userData = jwtToken.Claims.First(x => x.Type == "user");
+                var user = Newtonsoft.Json.JsonConvert.DeserializeObject<JwtUserData>(userData.Value);
+                return user;
             }
             catch
             {
@@ -62,9 +72,17 @@ namespace Siesa.SDK.Shared.Criptography
             // generate token that is valid for 7 days
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_secretKey);
+             var userToken = new JwtUserData() {
+                Rowid = user.Rowid,
+                UserName = user.UserName,
+                Email = user.Email,
+                Name = user.Name
+            };
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] { new Claim("rowid", user.Rowid.ToString()) }),
+                Subject = new ClaimsIdentity(new[] { 
+                    new Claim("user", Newtonsoft.Json.JsonConvert.SerializeObject(userToken)),
+                }),
                 Expires = DateTime.UtcNow.AddMinutes(_minutesExp),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };

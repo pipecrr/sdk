@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
+using System;
 
 namespace Siesa.SDK.Shared.Criptography
 {
@@ -34,7 +35,13 @@ namespace Siesa.SDK.Shared.Criptography
 
         public bool Compare(string password, string encryptText)
         {
-            return encryptText.Equals(Encrypt(password));
+            if(string.IsNullOrEmpty(password) || string.IsNullOrEmpty(encryptText))
+            {
+                return false;
+            }else
+            {
+                return encryptText.Equals(Encrypt(password));
+            }
         }
 
         

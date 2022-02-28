@@ -49,6 +49,14 @@ namespace Siesa.SDK.Frontend
         }
 
         private async Task<ActionResult<dynamic>> transformCallResponse(ExposedMethodResponse grpcResult){
+            if(grpcResult == null){
+                return new ActionResult<dynamic>(){
+                    Success = false,
+                    Errors = new List<string>(){
+                        "No response from backend"
+                    }
+                };
+            }
             var response = new ActionResult<dynamic>() { Success = grpcResult.Success, Errors = grpcResult.Errors };
             if(response.Success){
                 Type t = null;

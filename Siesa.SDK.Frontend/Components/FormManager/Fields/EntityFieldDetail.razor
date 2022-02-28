@@ -19,7 +19,10 @@
             idProperty = typeRelatedEntity.GetProperty("ID");
         }
         if (idProperty != null)
-            return $"/{FieldOpt.RelatedBusiness}/detail/{idProperty.GetValue(BindValue)}/";
+        {
+            _relatedEntityURL = $"/{FieldOpt.RelatedBusiness}/detail/{idProperty.GetValue(BindValue)}/";
+            return _relatedEntityURL;
+        }
         
         return "";
     } 

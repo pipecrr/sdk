@@ -6,15 +6,20 @@ using Siesa.SDK.Frontend.Components.Layout;
 using Microsoft.Extensions.Configuration;
 using Siesa.SDK.Shared.Configurations;
 using Siesa.SDK.Shared.Backend;
+using Blazored.LocalStorage;
+using Siesa.SDK.Frontend.Services;
 
 namespace Siesa.SDK.Frontend {
     public static class SiesaSecurityExtensions
     {
         public static void AddSiesaSDKFrontend(this IServiceCollection services, IConfiguration serviceConfiguration)
         {
+            services.AddBlazoredLocalStorage();
+            services.AddBlazoredLocalStorage(config => config.JsonSerializerOptions.WriteIndented = true);  // local storage
             services.AddDevExpressBlazor();
             services.AddScoped<StateContainer>();
             services.AddScoped<ILayoutService, LayoutService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
             ServiceConfiguration sc = serviceConfiguration.Get<ServiceConfiguration>();
             BackendManager.SetMasterBackendUrl(sc.MasterBackendUrl);
 
