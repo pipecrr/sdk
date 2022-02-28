@@ -9,43 +9,31 @@ using System.Threading.Tasks;
 
 namespace Siesa.SDK.Shared.Backend
 {
-    public class BackendManager
+    public interface IBackendManager {
+        public void RegisterBackend(string backendName, string backendUrl);
+        public void RegisterBackend(string backendName, string backendUrl, Google.Protobuf.Collections.RepeatedField<Protos.BusinessModel> businesses);
+        public void RegisterBackendInMaster(string backendName, string backendUrl);
+        public void SyncWithMasterBackend();
+        public BackendRegistry GetBackend(string backendName);
+        public bool IsBackendRegistered(string backendName);
+        public BackendRegistry GetBackendByBusinessName(string businessName);
+        public Dictionary<string, BackendRegistry> GetBackendDict();
+    }
+    public class BackendManager: IBackendManager
     {
-        private static BackendManager _instance;
         private Dictionary<string, BackendRegistry> backendDict = new Dictionary<string, BackendRegistry>();
+
+        private readonly IServiceConfiguration serviceConfiguration;
 
         public string _masterBackendURL;
 
-        private BackendManager(string masterBackendUrl)
+        public static BackendManager Instance { get; private set; }
+
+        public BackendManager(IOptions<ServiceConfiguration> serviceConfiguration)
         {
-            _masterBackendURL = masterBackendUrl;
-
-        }
-
-        public static BackendManager SetMasterBackendUrl(string masterBackendUrl)
-        {
-            if (_instance == null)
-            {
-                _instance = new BackendManager(masterBackendUrl);
-            }
-            else
-            {
-                _instance._masterBackendURL = masterBackendUrl;
-            }
-            return _instance;
-        }
-
-        
-
-        public static BackendManager Instance
-        {
-            get { 
-                if (_instance == null)
-                {
-                    _instance = new BackendManager("");
-                }
-                return _instance;
-            }
+            this.serviceConfiguration = serviceConfiguration.Value;
+            _masterBackendURL = this.serviceConfiguration.MasterBackendUrl;
+            Instance = this;
         }
 
         public void RegisterBackend(string backendName, string backendUrl)

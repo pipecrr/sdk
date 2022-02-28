@@ -20,7 +20,7 @@
         }
         <DxMenuItem Text="DevMenu" IconCssClass="oi oi-list-rich  menu-icon">
             <Items>
-                @foreach (KeyValuePair<string, BackendRegistry> entry in BackendManager.Instance.GetBackendDict())
+                @foreach (KeyValuePair<string, BackendRegistry> entry in backendManager.GetBackendDict())
                 {
                     @foreach (var backendBusiness in entry.Value.businessRegisters.Businesses)
                     {

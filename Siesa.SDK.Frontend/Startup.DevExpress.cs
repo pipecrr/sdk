@@ -20,18 +20,6 @@ namespace Siesa.SDK.Frontend {
             services.AddScoped<StateContainer>();
             services.AddScoped<ILayoutService, LayoutService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
-            ServiceConfiguration sc = serviceConfiguration.Get<ServiceConfiguration>();
-            BackendManager.SetMasterBackendUrl(sc.MasterBackendUrl);
-
-            //TODO: Definir en donde se debe hacer esto
-            BackendManager.Instance.SyncWithMasterBackend();
-            foreach (var backend in BackendManager.Instance.GetBackendDict())
-            {
-                foreach (var business in backend.Value.businessRegisters.Businesses)
-                {
-                    BusinessManagerFrontend.Instance.AddBusiness(business, backend.Value.Name);
-                }
-            }
         }
 
     }
