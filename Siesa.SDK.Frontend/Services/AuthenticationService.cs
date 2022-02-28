@@ -5,17 +5,10 @@ using Siesa.SDK.Shared.Criptography;
 using System;
 using System.Threading.Tasks;
 using System.Linq;
+using Siesa.SDK.Shared.Services;
+
 namespace Siesa.SDK.Frontend.Services
 {
-    public interface IAuthenticationService
-    {
-        string UserToken { get; }
-        JwtUserData User { get; }
-        Task Initialize();
-        Task Login(string username, string password);
-        Task Logout();
-    }
-
     public class AuthenticationService : IAuthenticationService
     {
         private NavigationManager _navigationManager;
@@ -23,7 +16,7 @@ namespace Siesa.SDK.Frontend.Services
         private string _secretKey;
         private int _minutesExp;
 
-        public string UserToken { get; private set; }
+        public string UserToken { get; private set; } = "";
         public JwtUserData User { get {
              return new SDKJWT(_secretKey, _minutesExp).Validate(UserToken);
         }}
@@ -68,7 +61,7 @@ namespace Siesa.SDK.Frontend.Services
 
         public async Task Logout()
         {
-            UserToken = null;
+            UserToken = "";
             await _localStorageService.RemoveItemAsync("usertoken");
             _navigationManager.NavigateTo("login");
         }

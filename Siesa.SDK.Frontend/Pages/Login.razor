@@ -1,10 +1,12 @@
 @page "/login"
 @using System.ComponentModel.DataAnnotations
-@using Siesa.SDK.Frontend.Services
+@using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Shared.Backend
 @using Siesa.SDK.Frontend.Navigation
 @using Siesa.SDK.Frontend.Components.Layout
 @inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavigationManager
+@inject IBackendManager backendManager
 @layout EmptyLayout
 
 <div class="col-md-6 offset-md-3 mt-5">
@@ -48,6 +50,13 @@
         if (AuthenticationService.User != null)
         {
             NavigationManager.NavigateTo("");
+        }
+
+        backendManager.SyncWithMasterBackend();  
+        foreach(var backend in backendManager.GetBackendDict()){
+            foreach(var business in backend.Value.businessRegisters.Businesses){
+                BusinessManagerFrontend.Instance.AddBusiness(business, backend.Value.Name);
+            }
         }
     }
 

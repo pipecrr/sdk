@@ -1,5 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using Siesa.SDK.Entities;
+using Siesa.SDK.Shared.Services;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -10,17 +11,6 @@ using System.Threading.Tasks;
 
 namespace Siesa.SDK.Shared.Criptography
 {
-    public class JwtUserData {
-        public int Rowid { get; set; }
-        public string UserName { get; set; }
-        public string Email { get; set; }
-        public string Name { get; set; }
-
-        public override string ToString()
-        {
-            return $"{UserName} - {Name}";
-        }
-    }
     public class SDKJWT 
     {
         private readonly string _secretKey;

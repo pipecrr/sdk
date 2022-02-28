@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Siesa.SDK.Shared.Configurations;
 using Siesa.SDK.Shared.Backend;
 using Blazored.LocalStorage;
+using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Frontend.Services;
 
 namespace Siesa.SDK.Frontend {

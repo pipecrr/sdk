@@ -1,6 +1,8 @@
 ﻿syntax = "proto3";
 option csharp_namespace = "Siesa.SDK.Protos";
 import "Protos/BusinessMessages.proto";
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/any.proto";
 
 service SDK {
   rpc GetBusinesses (GetBusinessesRequest) returns (BusinessesResponse);
@@ -20,6 +22,8 @@ service SDK {
 }
 
 message GetMenuGroupsRequest {
+  string currentUserToken = 1;
+  google.protobuf.Int32Value currentUserRowid = 2;
 }
 
 message MenuGroupsResponse {
@@ -28,6 +32,8 @@ message MenuGroupsResponse {
 
 message GetMenuItemsRequest {
   int32 groupId = 1;
+  string currentUserToken = 2;
+  google.protobuf.Int32Value currentUserRowid = 3;
 }
 
 message MenuItemsResponse {

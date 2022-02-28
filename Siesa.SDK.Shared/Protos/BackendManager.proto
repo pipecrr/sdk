@@ -1,6 +1,7 @@
 ﻿syntax = "proto3";
 option csharp_namespace = "Siesa.SDK.Protos";
 import "Protos/BusinessMessages.proto";
+import "google/protobuf/wrappers.proto";
 
 service GRPCBackendManagerService {
   rpc RegisterBackend (RegisterBackendRequest) returns (RegisterBackendResponse);
@@ -25,6 +26,8 @@ message RegisterBackendResponse {
 
 message GetBackendRequest {
   string backend_name = 1;
+  string currentUserToken = 2;
+  google.protobuf.Int32Value currentUserRowid = 3;
 }
 
 message GetBackendResponse {
@@ -40,6 +43,8 @@ message GetBackendsResponse {
 
 message IsBackendRegisteredRequest {
   string backend_name = 1;
+  string currentUserToken = 2;
+  google.protobuf.Int32Value currentUserRowid = 3;
 }
 
 message IsBackendRegisteredResponse {
@@ -48,5 +53,7 @@ message IsBackendRegisteredResponse {
 
 message GetBackendByBusinessNameRequest {
   string business_name = 1;
+  string currentUserToken = 2;
+  google.protobuf.Int32Value currentUserRowid = 3;
 }
 

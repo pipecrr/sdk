@@ -1,6 +1,8 @@
 ﻿using Grpc.Net.Client;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Siesa.SDK.Shared.Configurations;
+using Siesa.SDK.Shared.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,10 +31,13 @@ namespace Siesa.SDK.Shared.Backend
 
         public static BackendManager Instance { get; private set; }
 
-        public BackendManager(IOptions<ServiceConfiguration> serviceConfiguration)
+        private readonly IServiceScopeFactory _scopeFactory;
+
+        public BackendManager(IOptions<ServiceConfiguration> serviceConfiguration, IServiceProvider provider)
         {
             this.serviceConfiguration = serviceConfiguration.Value;
             _masterBackendURL = this.serviceConfiguration.MasterBackendUrl;
+            _scopeFactory = provider.GetService<IServiceScopeFactory>();
             Instance = this;
         }
 
@@ -40,7 +45,7 @@ namespace Siesa.SDK.Shared.Backend
         {
             if (!backendDict.ContainsKey(backendName))
             {
-                backendDict.Add(backendName, new BackendRegistry(backendName, backendUrl));
+                backendDict.Add(backendName, new BackendRegistry(backendName, backendUrl, _scopeFactory));
             }
         }
 
@@ -48,7 +53,7 @@ namespace Siesa.SDK.Shared.Backend
         {
             if (!backendDict.ContainsKey(backendName))
             {
-                backendDict.Add(backendName, new BackendRegistry(backendName, backendUrl, businesses));
+                backendDict.Add(backendName, new BackendRegistry(backendName, backendUrl, businesses, _scopeFactory));
             }
         }
 
