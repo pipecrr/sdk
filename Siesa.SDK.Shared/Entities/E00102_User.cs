@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace Siesa.SDK.Entities
 {
     [Index(nameof(UserName), IsUnique = true)]
-    [SDKAuthorization]
+    //[SDKAuthorization]
     [SDKLogEntity]
     public class E00102_User: BaseEntity
     {
