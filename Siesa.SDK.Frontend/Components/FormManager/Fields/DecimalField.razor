@@ -1,4 +1,4 @@
-﻿@inherits FieldClass<Double>
+﻿@inherits FieldClass<decimal>
 @using System.Linq.Expressions
 @if (!FieldOpt.Hidden)
 {
@@ -17,12 +17,12 @@
             return _fieldValidationTemplate != null ? _fieldValidationTemplate : builder =>
             {
                 var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
-                var lambda = Expression.Lambda(typeof(Func<>).MakeGenericType(typeof(Double)), access);
+                var lambda = Expression.Lambda(typeof(Func<>).MakeGenericType(typeof(decimal)), access);
 
-                builder.OpenComponent(0, typeof(DxSpinEdit<Double>));
+                builder.OpenComponent(0, typeof(DxSpinEdit<decimal>));
                 builder.AddAttribute(1, "ValueExpression", lambda);
-                builder.AddAttribute(2, "Value", (Double)BindValue);
-                builder.AddAttribute(3, "ValueChanged", EventCallback.Factory.Create<System.Double>(this, str => { SetValue(str); }));
+                builder.AddAttribute(2, "Value", (decimal)BindValue);
+                builder.AddAttribute(3, "ValueChanged", EventCallback.Factory.Create<decimal>(this, str => { SetValue(str); }));
                 builder.AddAttribute(4, "NullText", FieldOpt.Placeholder);
                 builder.AddAttribute(5, "CssClass", (IsRequired && (BindValue == null || BindValue == 0) ? "invalid" : "") + FieldOpt.CssClass);
                 builder.AddAttribute(6, "ReadOnly", FieldOpt.Disabled);
