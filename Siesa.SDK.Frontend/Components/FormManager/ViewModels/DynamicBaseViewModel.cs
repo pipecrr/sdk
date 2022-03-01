@@ -3,7 +3,8 @@ using System;
 using System.Threading.Tasks;
 using Siesa.SDK.Business;
 using Siesa.SDK.Frontend.Utils;
-
+using Microsoft.Extensions.DependencyInjection;
+using Siesa.SDK.Shared.Services;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 {
@@ -14,6 +15,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         [Parameter]
         public string BusinessObjId { get; set; }
+
+        [Inject]
+        public IServiceProvider ServiceProvider { get; set; }
+
+        [Inject]
+        private IAuthenticationService AuthenticationService {get; set;}
 
         //[Inject]
         //public SGFState SGFState { get; set; }
@@ -39,7 +46,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 try
                 {
                     businessType = Utils.Utils.SearchType(businessModel.Namespace + "." + businessModel.Name); 
-                    BusinessObj = Activator.CreateInstance(businessType);
+                    BusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider, businessType);
                     BusinessModel = businessModel;
                     BusinessObj.BusinessName = BusinessName;
                 }

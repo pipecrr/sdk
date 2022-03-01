@@ -9,5 +9,6 @@ namespace Siesa.SDK.Shared.Configurations
     public interface IServiceConfiguration
     {
         string MasterBackendUrl { get; set; }
+        string AuditServerUrl { get; set; }
     }
 }

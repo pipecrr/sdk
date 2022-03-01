@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.DependencyInjection;
 //using Siesa.SDK.Backend.Interceptors;
 using Siesa.SDK.Entities;
 using Siesa.SDK.Entities.Converters;
 using Siesa.SDK.Shared.Logs.DataChangeLog;
+using Siesa.SDK.Shared.Services;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
@@ -15,8 +17,14 @@ namespace Siesa.SDK.Backend.Access
 {
     public abstract class SDKContext: DbContext
     {
+        private IServiceProvider ServiceProvider {get; set;}
         public SDKContext(DbContextOptions options) : base(options)
         {
+        }
+
+        public void SetProvider(IServiceProvider serviceProvider)
+        {
+            ServiceProvider = serviceProvider;
         }
 
         private string ToSnakeCase(string text)
@@ -68,10 +76,21 @@ namespace Siesa.SDK.Backend.Access
             catch (Exception) { }
         }
 
-        /*public override DbSet<TEntity> Set<TEntity>()
+        public DbSet<TEntity> AllSet<TEntity>() where TEntity : class {
+            return base.Set<TEntity>();
+        }
+
+        public override DbSet<TEntity> Set<TEntity>()
         {
-            return new DbSetProxy<TEntity>(this, base.Set<TEntity>());
-        }*/
+            if(ServiceProvider != null){
+                try {
+                    return ActivatorUtilities.CreateInstance(ServiceProvider, typeof(DbSetProxy<TEntity>), new object[] { this, base.Set<TEntity>() }) as DbSet<TEntity>;
+                }catch(Exception e){
+                    Console.WriteLine($"{e.Message}***********");
+                }                
+            }
+            return new DbSetProxy<TEntity>(null ,this, base.Set<TEntity>()); 
+        }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder builder)
         {

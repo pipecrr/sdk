@@ -7,6 +7,7 @@
 @using DevExtreme.AspNet.Data
 @using DevExtreme.AspNet.Data.ResponseModel
 @using System.Linq;
+@using Microsoft.Extensions.DependencyInjection
 @if (!FieldOpt.Hidden)
 {
     @FieldTemplate
@@ -17,6 +18,7 @@
 @code {
     private RenderFragment? _fieldValidationTemplate;
     [Parameter] public dynamic BaseModelObj { get; set; }
+    [Inject] private IServiceProvider ServiceProvider {get; set;}     
 
     private LoadResult CacheLoadResult;
 
@@ -33,10 +35,30 @@
         string tableOptions = options.ConvertToGetRequestUri("/");
         var searchText = "";
         if (options.Filter != null) {
-            searchText = Convert. ToString(((List<object>)options.Filter[0])[2]);
+            searchText = Convert.ToString(((List<object>)options.Filter[0])[2]);
         }
+        
         //check length of search text
         if(searchText.Length > 2 || CacheLoadResult == null) {
+            var filters = "";
+            foreach (var item in FieldOpt.RelatedFilters)
+            {
+                if(!string.IsNullOrEmpty(filters))
+                {
+                    filters += " && ";
+                }
+                var value = item.Value;
+                var key = item.Key;
+                //remove "RelBaseObj." from key
+                key = key.Replace("RelBaseObj.", "");
+                dynamic dynamicValue;
+                try {
+                    dynamicValue = await Utils.Evaluator.EvaluateCode(value, BaseModelObj);
+                } catch (Exception ex) {
+                    dynamicValue = value;
+                }
+                filters += $"({key} == null ? \"\" : {key}).Equals(\"{dynamicValue.ToString()}\")";
+            }
             var result =  await RelBusinessObj.EntityFieldSearchAsync(searchText); //TODO: Paginación
             var response = new LoadResult
             {
@@ -67,7 +89,7 @@
                 }
 
                 var relBusinessType = Utils.Utils.SearchType(relBusinessModel.Namespace + "." + relBusinessModel.Name); 
-                RelBusinessObj = Activator.CreateInstance(relBusinessType);
+                RelBusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider, relBusinessType);
                 RelBusinessObj.BusinessName = FieldOpt.RelatedBusiness;
                 var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
                 var lambda = Expression.Lambda(typeof(Func<>).MakeGenericType(BindProperty.PropertyType), access);

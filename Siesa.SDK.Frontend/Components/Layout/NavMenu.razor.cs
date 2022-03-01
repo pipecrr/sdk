@@ -11,6 +11,8 @@ namespace Siesa.SDK.Frontend.Components.Layout
 {
     public partial class NavMenu : ComponentBase
     {
+        [Inject]
+        public IBackendManager backendManager { get; set; }
         public E00130_MenuGroup SelectedMenuGroup { get; set; }
         public List<E00131_Menu> Menus { get; set; }
         protected override void OnInitialized()
@@ -22,8 +24,15 @@ namespace Siesa.SDK.Frontend.Components.Layout
         private async Task LoadMenu()
         {
             //TODO: Check Performance, Call only once
-            var backends = BackendManager.Instance.GetBackendDict();
+            backendManager.SyncWithMasterBackend();  
+            foreach(var backend in backendManager.GetBackendDict()){
+                foreach(var business in backend.Value.businessRegisters.Businesses){
+                    BusinessManagerFrontend.Instance.AddBusiness(business, backend.Value.Name);
+                }
+            }
+            var backends = backendManager.GetBackendDict();
             BackendRegistry backendRegistry = backends[backends.Keys.First()];
+            backendRegistry.SetAuthenticationService(AuthenticationService);
             var jsonResponse = await backendRegistry.GetMenuGroupsAsync();
             SelectedMenuGroup = Newtonsoft.Json.JsonConvert.DeserializeObject<List<E00130_MenuGroup>>(jsonResponse.Response).First(); //TODO: UX difines how to select the menu group
 

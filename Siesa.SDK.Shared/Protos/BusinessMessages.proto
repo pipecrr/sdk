@@ -4,6 +4,8 @@ import "google/protobuf/any.proto";
 option csharp_namespace = "Siesa.SDK.Protos";
 
 message GetBusinessesRequest {
+  string currentUserToken = 1;
+  google.protobuf.Int32Value currentUserRowid = 2;
 }
 
 message BusinessModel {
@@ -18,6 +20,8 @@ message BusinessesResponse {
 message GetBusinessObjRequest {
 	int32 id = 1;
 	string businessName = 2;
+  string currentUserToken = 3;
+  google.protobuf.Int32Value currentUserRowid = 4;
 }
 
 message BusinessObjResponse {
@@ -27,6 +31,8 @@ message BusinessObjResponse {
 message SaveBusinessObjRequest {
   string business = 1;
   string businessName = 2;
+  string currentUserToken = 3;
+  google.protobuf.Int32Value currentUserRowid = 4;
 }
 
 message SaveBusinessObjResponse {
@@ -36,6 +42,8 @@ message SaveBusinessObjResponse {
 message ValidateAndSaveBusinessObjRequest {
   string business = 1;
   string businessName = 2;
+  string currentUserToken = 3;
+  google.protobuf.Int32Value currentUserRowid = 4;
 }
 
 message OperationError {
@@ -52,6 +60,8 @@ message ValidateAndSaveBusinessObjResponse {
 message DeleteBusinessObjRequest {
   int32 id = 1;
   string businessName = 2;
+  string currentUserToken = 3;
+  google.protobuf.Int32Value currentUserRowid = 4;
 }
 
 message DeleteBusinessObjResponse {
@@ -64,11 +74,15 @@ message GetDataBusinessObjRequest {
   google.protobuf.Int32Value take = 3;
   string filter = 4;
   string orderBy = 5;
+  string currentUserToken = 6;
+  google.protobuf.Int32Value currentUserRowid = 7;
 }
 
 message EntityFieldSearchRequest {
   string businessName = 1;
   string searchText = 2;
+  string currentUserToken = 3;
+  google.protobuf.Int32Value currentUserRowid = 4;
 }
 
 message LoadResult {
@@ -94,5 +108,7 @@ message ExposedMethodRequest {
   string businessName = 1;
   string methodName = 2;
   repeated ExposedMethodParam parameters = 3;
+  string currentUserToken = 4;
+  google.protobuf.Int32Value currentUserRowid = 5;
 }
 

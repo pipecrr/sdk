@@ -15,11 +15,21 @@ using Siesa.SDK.Backend.Exceptions;
 using Microsoft.Extensions.Logging;
 using Siesa.SDK.GRPCServices;
 using System.Linq.Dynamic.Core;
+using Siesa.SDK.Shared.Services;
+using Newtonsoft.Json;
 
 namespace Siesa.SDK.Business
 {
     public class BLBackendSimple : IBLBase<BaseEntity>
     {
+        [JsonIgnore]
+        private IAuthenticationService AuthenticationService {get; set;}
+
+        public BLBackendSimple(IAuthenticationService authenticationService)
+        {
+            AuthenticationService = authenticationService;
+        }
+        
         public string BusinessName { get;set; }
         public BaseEntity BaseObj { get;set; }
 
@@ -54,10 +64,12 @@ namespace Siesa.SDK.Business
     }
     public class BLBackendSimple<T, K> : IBLBase<T> where T : BaseEntity where K : BLBaseValidator<T>
     {
+        [JsonIgnore]
+        private IAuthenticationService AuthenticationService {get; set;}        
         private IServiceProvider _provider;
         private ILogger _logger;
         protected ILogger Logger { get { return _logger; } }
-        private dynamic _dbFactory;
+        protected dynamic _dbFactory;
 
         public string BusinessName { get; set; }
         public T BaseObj { get; set; }
@@ -74,8 +86,9 @@ namespace Siesa.SDK.Business
             //BaseObj = (T)myContext.Entry(BaseObj).CurrentValues.ToObject();
         }
 
-        public BLBackendSimple()
+        public BLBackendSimple(IAuthenticationService authenticationService)
         {
+            AuthenticationService = authenticationService;
             BaseObj = Activator.CreateInstance<T>();
             _relatedProperties = BaseObj.GetType().GetProperties().Where(p => p.PropertyType.IsClass && !p.PropertyType.IsPrimitive && !p.PropertyType.IsEnum && p.PropertyType != typeof(string) && p.Name != "RowVersion").Select(p => p.Name).ToArray();
         }
@@ -95,6 +108,7 @@ namespace Siesa.SDK.Business
             _logger = loggerFactory.CreateLogger(this.GetType().FullName);
 
             myContext = _dbFactory.CreateDbContext();
+            myContext.SetProvider(_provider);
         }
 
         public virtual T Get(int rowid)
@@ -129,6 +143,7 @@ namespace Siesa.SDK.Business
 
                 using (SDKContext context = _dbFactory.CreateDbContext())
                 {
+                    context.SetProvider(_provider);
                     result.Rowid = Save(context);
                 }
             }
@@ -231,6 +246,7 @@ namespace Siesa.SDK.Business
         {
             using (SDKContext context = _dbFactory.CreateDbContext())
             {
+                context.SetProvider(_provider);
                 context.Set<T>().Remove(BaseObj);
                 context.SaveChanges();
             }
@@ -260,6 +276,7 @@ namespace Siesa.SDK.Business
             var result = new Siesa.SDK.Shared.Business.LoadResult();
             using (SDKContext context = _dbFactory.CreateDbContext())
             {
+                context.SetProvider(_provider);
                 var query = context.Set<T>().AsQueryable();
                 foreach (var relatedProperty in _relatedProperties)
                 {

@@ -14,15 +14,11 @@ namespace Siesa.SDK.Entities
         public virtual T ID { get; set; }
         public virtual string Notes { get; set; }
 
+        public virtual bool Status { get; set; }
+
         public override string ToString()
         {
             return $"({ID}) - {Description}";
         }
     }
-
-    public abstract class BasicStatusEntity<T>: BasicEntity<T>
-    {
-        public virtual bool Status { get; set; }
-    }
-
 }

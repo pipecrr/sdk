@@ -1,4 +1,6 @@
 ﻿@page "/{BusinessName}/create/"
+@attribute [Authorize]
+@using Microsoft.AspNetCore.Authorization
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
 @if (ErrorMsg != null && ErrorMsg != "")
 {

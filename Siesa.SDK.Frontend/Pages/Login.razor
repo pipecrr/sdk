@@ -1,0 +1,91 @@
+@page "/login"
+@using System.ComponentModel.DataAnnotations
+@using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Shared.Backend
+@using Siesa.SDK.Frontend.Navigation
+@using Siesa.SDK.Frontend.Components.Layout
+@inject IAuthenticationService AuthenticationService
+@inject NavigationManager NavigationManager
+@inject IBackendManager backendManager
+@layout EmptyLayout
+
+<div class="col-md-6 offset-md-3 mt-5">
+    <div class="card">
+        <h4 class="card-header">Login</h4>
+        <div class="card-body">
+            <EditForm Model="@model" OnValidSubmit="HandleValidSubmit">
+                <DataAnnotationsValidator />
+                <div class="form-group">
+                    <label>Username</label>
+                    <InputText @bind-Value="model.Username" class="form-control" />
+                    <ValidationMessage For="@(() => model.Username)" />
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <InputText @bind-Value="model.Password" type="password" class="form-control" />
+                    <ValidationMessage For="@(() => model.Password)" />
+                </div>
+                <button class="btn btn-primary">
+                    @if (loading) {
+                        <span class="spinner-border spinner-border-sm mr-1"></span>
+                    }
+                    Login
+                </button>
+                @if (!string.IsNullOrEmpty(error)) {
+                    <div class="alert alert-danger mt-3 mb-0">@error</div>
+                }
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    private Model model = new Model();
+    private bool loading;
+    private string error;
+
+    protected override void OnInitialized()
+    {
+        // redirect to home if already logged in
+        if (AuthenticationService.User != null)
+        {
+            NavigationManager.NavigateTo("");
+        }
+
+        backendManager.SyncWithMasterBackend();  
+        foreach(var backend in backendManager.GetBackendDict()){
+            foreach(var business in backend.Value.businessRegisters.Businesses){
+                BusinessManagerFrontend.Instance.AddBusiness(business, backend.Value.Name);
+            }
+        }
+    }
+
+    private async void HandleValidSubmit()
+    {
+        loading = true;
+        try
+        {
+            await AuthenticationService.Login(model.Username, model.Password);
+            NavigationManager.TryGetQueryString("returnUrl", out string returnUrl);
+            if(returnUrl == null || returnUrl == "null"){
+                returnUrl = "/";
+            }
+            NavigationManager.NavigateTo(returnUrl);
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            loading = false;
+            StateHasChanged();
+        }
+    }
+
+    private class Model
+    {
+        [Required]
+        public string Username { get; set; }
+
+        [Required]
+        public string Password { get; set; }
+    }
+}

@@ -14,7 +14,16 @@
         }
         break;
     case FieldTypes.DecimalField:
-        <DecimalField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  />
+        
+        @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
+        {
+
+            <DecimalFieldDetail BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  />
+        }
+        else
+        {
+            <DecimalField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  />
+        }
         break;
     case FieldTypes.IntegerField:
         @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
