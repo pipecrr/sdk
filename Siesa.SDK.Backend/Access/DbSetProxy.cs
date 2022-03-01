@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Siesa.SDK.Shared.DataAnnotations;
 using Siesa.SDK.Shared.Services;
+using Microsoft.EntityFrameworkCore.Utilities;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 //using System.Linq.Dynamic.Core;
 
 namespace Siesa.SDK.Backend.Access
@@ -26,7 +29,29 @@ namespace Siesa.SDK.Backend.Access
         private readonly IQueryable<TEntity> query;
         private SDKContext _context;
 
-        private IAuthenticationService AuthenticationService {get; set;}      
+        private IAuthenticationService AuthenticationService {get; set;}     
+
+        private EntityEntry<TEntity> EntryWithoutDetectChanges(TEntity entity)
+        => new(_context.GetDependencies().StateManager.GetOrCreateEntry(entity, EntityType)); 
+
+        private void SetEntityState(InternalEntityEntry entry, EntityState entityState)
+        {
+            if (entry.EntityState == EntityState.Detached)
+            {
+                _context.GetDependencies().EntityGraphAttacher.AttachGraph(
+                    entry,
+                    entityState,
+                    entityState,
+                    forceStateWhenUnknownKey: true);
+            }
+            else
+            {
+                entry.SetEntityState(
+                    entityState,
+                    acceptChanges: true,
+                    forceStateWhenUnknownKey: entityState);
+            }
+        }
 
         public DbSetProxy(IAuthenticationService authenticationService, SDKContext context, DbSet<TEntity> set)
         : this(authenticationService, context, set, set)
@@ -136,6 +161,30 @@ namespace Siesa.SDK.Backend.Access
 
         public override LocalView<TEntity> Local => set.Local;
         //Type IQueryable.ElementType => ;
+
+        public override EntityEntry<TEntity> Remove(TEntity entity)
+        {
+            if(entity == null){
+                throw new ArgumentNullException(nameof(entity));
+            }
+
+            var entry = EntryWithoutDetectChanges(entity);
+
+            var initialState = entry.State;
+            if (initialState == EntityState.Detached)
+            {
+                SetEntityState(entry.GetInfrastructure(), EntityState.Unchanged);
+            }
+
+            // An Added entity does not yet exist in the database. If it is then marked as deleted there is
+            // nothing to delete because it was not yet inserted, so just make sure it doesn't get inserted.
+            entry.State =
+                initialState == EntityState.Added
+                    ? EntityState.Detached
+                    : EntityState.Deleted;
+
+            return entry;
+        }
 
     }
 }
