@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using System.Linq;
 using Siesa.SDK.Frontend.Utils;
+using Siesa.SDK.Shared.Services;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 {
@@ -23,6 +24,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         [Inject] public IJSRuntime JSRuntime { get; set; }
         [Inject] public NavigationManager NavManager { get; set; }
+
+        [Inject] protected IAuthenticationService AuthenticationService { get; set; }
 
         protected FormViewModel FormViewModel { get; set; } = new FormViewModel();
 

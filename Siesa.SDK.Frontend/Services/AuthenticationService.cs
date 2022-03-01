@@ -35,11 +35,12 @@ namespace Siesa.SDK.Frontend.Services
         public async Task Initialize()
         {
             UserToken = await _localStorageService.GetItemAsync<string>("usertoken");
+            Console.WriteLine($"UserToken: {UserToken}");
         }
 
         public async Task Login(string username, string password)
         {
-            var BLuser =  Frontend.BusinessManagerFrontend.Instance.GetBusiness("BLUser");
+            var BLuser =  Frontend.BusinessManagerFrontend.Instance.GetBusiness("BLUser", this);
             if(BLuser == null)
             {
                 throw new Exception("Login Service not found");
@@ -64,6 +65,11 @@ namespace Siesa.SDK.Frontend.Services
             UserToken = "";
             await _localStorageService.RemoveItemAsync("usertoken");
             _navigationManager.NavigateTo("login");
+        }
+
+        public void SetToken(string token)
+        {
+            UserToken = token;
         }
     }
 }

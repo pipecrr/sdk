@@ -15,11 +15,21 @@ using Siesa.SDK.Backend.Exceptions;
 using Microsoft.Extensions.Logging;
 using Siesa.SDK.GRPCServices;
 using System.Linq.Dynamic.Core;
+using Siesa.SDK.Shared.Services;
+using Newtonsoft.Json;
 
 namespace Siesa.SDK.Business
 {
     public class BLBackendSimple : IBLBase<BaseEntity>
     {
+        [JsonIgnore]
+        private IAuthenticationService AuthenticationService {get; set;}
+
+        public BLBackendSimple(IAuthenticationService authenticationService)
+        {
+            AuthenticationService = authenticationService;
+        }
+        
         public string BusinessName { get;set; }
         public BaseEntity BaseObj { get;set; }
 
@@ -54,6 +64,8 @@ namespace Siesa.SDK.Business
     }
     public class BLBackendSimple<T, K> : IBLBase<T> where T : BaseEntity where K : BLBaseValidator<T>
     {
+        [JsonIgnore]
+        private IAuthenticationService AuthenticationService {get; set;}        
         private IServiceProvider _provider;
         private ILogger _logger;
         protected ILogger Logger { get { return _logger; } }
@@ -74,8 +86,9 @@ namespace Siesa.SDK.Business
             //BaseObj = (T)myContext.Entry(BaseObj).CurrentValues.ToObject();
         }
 
-        public BLBackendSimple()
+        public BLBackendSimple(IAuthenticationService authenticationService)
         {
+            AuthenticationService = authenticationService;
             BaseObj = Activator.CreateInstance<T>();
             _relatedProperties = BaseObj.GetType().GetProperties().Where(p => p.PropertyType.IsClass && !p.PropertyType.IsPrimitive && !p.PropertyType.IsEnum && p.PropertyType != typeof(string) && p.Name != "RowVersion").Select(p => p.Name).ToArray();
         }

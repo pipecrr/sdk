@@ -21,6 +21,7 @@ namespace Siesa.SDK.Shared.Services
         Task Initialize();
         Task Login(string username, string password);
         Task Logout();
+        public void SetToken(string token);
     }
 
     

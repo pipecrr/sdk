@@ -16,7 +16,7 @@ namespace Siesa.SDK.Shared.Backend
         public void RegisterBackend(string backendName, string backendUrl, Google.Protobuf.Collections.RepeatedField<Protos.BusinessModel> businesses);
         public void RegisterBackendInMaster(string backendName, string backendUrl);
         public void SyncWithMasterBackend();
-        public BackendRegistry GetBackend(string backendName);
+        public BackendRegistry GetBackend(string backendName, IAuthenticationService authenticationService);
         public bool IsBackendRegistered(string backendName);
         public BackendRegistry GetBackendByBusinessName(string businessName);
         public Dictionary<string, BackendRegistry> GetBackendDict();
@@ -31,13 +31,10 @@ namespace Siesa.SDK.Shared.Backend
 
         public static BackendManager Instance { get; private set; }
 
-        private readonly IServiceScopeFactory _scopeFactory;
-
-        public BackendManager(IOptions<ServiceConfiguration> serviceConfiguration, IServiceProvider provider)
+        public BackendManager(IOptions<ServiceConfiguration> serviceConfiguration)
         {
             this.serviceConfiguration = serviceConfiguration.Value;
             _masterBackendURL = this.serviceConfiguration.MasterBackendUrl;
-            _scopeFactory = provider.GetService<IServiceScopeFactory>();
             Instance = this;
         }
 
@@ -45,7 +42,7 @@ namespace Siesa.SDK.Shared.Backend
         {
             if (!backendDict.ContainsKey(backendName))
             {
-                backendDict.Add(backendName, new BackendRegistry(backendName, backendUrl, _scopeFactory));
+                backendDict.Add(backendName, new BackendRegistry(backendName, backendUrl));
             }
         }
 
@@ -53,7 +50,7 @@ namespace Siesa.SDK.Shared.Backend
         {
             if (!backendDict.ContainsKey(backendName))
             {
-                backendDict.Add(backendName, new BackendRegistry(backendName, backendUrl, businesses, _scopeFactory));
+                backendDict.Add(backendName, new BackendRegistry(backendName, backendUrl, businesses));
             }
         }
 
@@ -92,11 +89,13 @@ namespace Siesa.SDK.Shared.Backend
             }
         }
 
-        public BackendRegistry GetBackend(string backendName)
+        public BackendRegistry GetBackend(string backendName, IAuthenticationService authenticationService)
         {
             if (backendDict.ContainsKey(backendName))
             {
-                return backendDict[backendName];
+                var backend = backendDict[backendName];
+                backend.SetAuthenticationService(authenticationService);
+                return backend;
             }
             else
             {

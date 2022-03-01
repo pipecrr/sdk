@@ -18,31 +18,28 @@ namespace Siesa.SDK.Shared.Backend
         public BusinessesResponse businessRegisters = new BusinessesResponse();
         private readonly IServiceScopeFactory _scopeFactory;
 
-        public BackendRegistry(string name, string url, IServiceScopeFactory scopeFactory)
+        private IAuthenticationService AuthenticationService { get; set; }
+
+        public BackendRegistry(string name, string url)
         {
             this.Name = name;
             this.Url = url;
-            _scopeFactory = scopeFactory;
             this.GetBusinesses();
         }
 
-        public BackendRegistry(string name, string url, Google.Protobuf.Collections.RepeatedField<Protos.BusinessModel> businesses, IServiceScopeFactory scopeFactory)
+        public BackendRegistry(string name, string url, Google.Protobuf.Collections.RepeatedField<Protos.BusinessModel> businesses)
         {
             this.Name = name;
             this.Url = url;
-            _scopeFactory = scopeFactory;
             var businessResponse = new BusinessesResponse();
             businessResponse.Businesses.AddRange(businesses);
             businessRegisters = businessResponse;
             addBusiness();
         }
 
-        private IAuthenticationService GetAuthenticationService(){
-            using(var scope = _scopeFactory.CreateScope())
-            {
-                IAuthenticationService authenticationService  = (IAuthenticationService)scope.ServiceProvider.GetService(typeof(IAuthenticationService));
-                return authenticationService;
-            }
+        public void SetAuthenticationService(IAuthenticationService authenticationService)
+        {
+            AuthenticationService = authenticationService;
         }
 
         private void addBusiness()
@@ -55,12 +52,11 @@ namespace Siesa.SDK.Shared.Backend
 
         public void GetBusinesses()
         {
-            var authenticationService = GetAuthenticationService();
             using var channel = GrpcChannel.ForAddress(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
             var response = client.GetBusinesses(new Protos.GetBusinessesRequest{
-                CurrentUserToken = authenticationService.UserToken,
-                CurrentUserRowid = authenticationService.User?.Rowid
+                CurrentUserToken = AuthenticationService.UserToken,
+                CurrentUserRowid = AuthenticationService.User?.Rowid
             });
             this.businessRegisters = response;
             addBusiness();
@@ -68,7 +64,6 @@ namespace Siesa.SDK.Shared.Backend
 
         public async Task<ValidateAndSaveBusinessObjResponse> ValidateAndSaveBusiness(string business_name, dynamic obj)
         {
-            var authenticationService = GetAuthenticationService();
             using var channel = GrpcChannel.ForAddress(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(obj);
@@ -76,23 +71,22 @@ namespace Siesa.SDK.Shared.Backend
             {
                 Business = json,
                 BusinessName = business_name,
-                CurrentUserToken = authenticationService.UserToken,
-                CurrentUserRowid = authenticationService.User?.Rowid
+                CurrentUserToken = AuthenticationService.UserToken,
+                CurrentUserRowid = AuthenticationService.User?.Rowid
             };
             var response = await client.ValidateAndSaveBusinessObjAsync(request);
             return response;
         }
         public async Task<Protos.LoadResult> EntityFieldSearch(string business_name, string searchText)
         {
-            var authenticationService = GetAuthenticationService();
             var channel = GrpcChannel.ForAddress(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
             var request = new Protos.EntityFieldSearchRequest
             {
                 BusinessName = business_name,
                 SearchText = searchText,
-                CurrentUserToken = authenticationService.UserToken,
-                CurrentUserRowid = authenticationService.User?.Rowid
+                CurrentUserToken = AuthenticationService.UserToken,
+                CurrentUserRowid = AuthenticationService.User?.Rowid
             };
             try
             {
@@ -109,7 +103,6 @@ namespace Siesa.SDK.Shared.Backend
 
         public async Task<int> SaveBusiness(string business_name, dynamic obj)
         {
-            var authenticationService = GetAuthenticationService();
             using var channel = GrpcChannel.ForAddress(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(obj);
@@ -117,8 +110,8 @@ namespace Siesa.SDK.Shared.Backend
             {
                 Business = json,
                 BusinessName = business_name,
-                CurrentUserToken = authenticationService.UserToken,
-                CurrentUserRowid = authenticationService.User?.Rowid
+                CurrentUserToken = AuthenticationService.UserToken,
+                CurrentUserRowid = AuthenticationService.User?.Rowid
             };
             var response = await client.SaveBusinessObjAsync(request);
             return response.Id;
@@ -127,15 +120,14 @@ namespace Siesa.SDK.Shared.Backend
 
         public async Task<dynamic> GetBusinessObj(string business_name, int id)
         {
-            var authenticationService = GetAuthenticationService();
             using var channel = GrpcChannel.ForAddress(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
             var request = new Protos.GetBusinessObjRequest
             {
                 Id = id,
                 BusinessName = business_name,
-                CurrentUserToken = authenticationService.UserToken,
-                CurrentUserRowid = authenticationService.User?.Rowid
+                CurrentUserToken = AuthenticationService.UserToken,
+                CurrentUserRowid = AuthenticationService.User?.Rowid
             };
             var response = await client.GetBusinessObjAsync(request);
             return response.Response;
@@ -144,15 +136,14 @@ namespace Siesa.SDK.Shared.Backend
 
         public async Task<int> DeleteBusinessObj(string business_name, int id)
         {
-            var authenticationService = GetAuthenticationService();
             using var channel = GrpcChannel.ForAddress(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
             var request = new Protos.DeleteBusinessObjRequest
             {
                 Id = id,
                 BusinessName = business_name,
-                CurrentUserToken = authenticationService.UserToken,
-                CurrentUserRowid = authenticationService.User?.Rowid
+                CurrentUserToken = AuthenticationService.UserToken,
+                CurrentUserRowid = AuthenticationService.User?.Rowid
             };
             var response = await client.DeleteBusinessObjAsync(request);
             return response.Id;
@@ -161,7 +152,6 @@ namespace Siesa.SDK.Shared.Backend
 
         public async Task<Protos.LoadResult> GetDataBusinessObj(string business_name, int? skip, int? take, string filter = "", string orderBy = "")
         {
-            var authenticationService = GetAuthenticationService();
             var channel = GrpcChannel.ForAddress(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
             var request = new Protos.GetDataBusinessObjRequest
@@ -171,8 +161,8 @@ namespace Siesa.SDK.Shared.Backend
                 Take = take,
                 Filter = filter,
                 OrderBy = orderBy,
-                CurrentUserToken = authenticationService.UserToken,
-                CurrentUserRowid = authenticationService.User?.Rowid
+                CurrentUserToken = AuthenticationService.UserToken,
+                CurrentUserRowid = AuthenticationService.User?.Rowid
             };
             try
             {
@@ -189,12 +179,11 @@ namespace Siesa.SDK.Shared.Backend
 
         public async Task<Protos.MenuGroupsResponse> GetMenuGroupsAsync()
         {
-            var authenticationService = GetAuthenticationService();
             using var channel = GrpcChannel.ForAddress(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
             var request = new Protos.GetMenuGroupsRequest{
-                CurrentUserToken = authenticationService.UserToken,
-                CurrentUserRowid = authenticationService.User?.Rowid
+                CurrentUserToken = AuthenticationService.UserToken,
+                CurrentUserRowid = AuthenticationService.User?.Rowid
             };
             var response = await client.GetMenuGroupsAsync(request);
             return response;
@@ -202,14 +191,13 @@ namespace Siesa.SDK.Shared.Backend
 
         public async Task<Protos.MenuItemsResponse> GetMenuItemsAsync(int groupId)
         {
-            var authenticationService = GetAuthenticationService();
             using var channel = GrpcChannel.ForAddress(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
             var request = new Protos.GetMenuItemsRequest
             {
                 GroupId = groupId,
-                CurrentUserToken = authenticationService.UserToken,
-                CurrentUserRowid = authenticationService.User?.Rowid
+                CurrentUserToken = AuthenticationService.UserToken,
+                CurrentUserRowid = AuthenticationService.User?.Rowid
             };
             var response = await client.GetMenuItemsAsync(request);
             return response;
@@ -227,15 +215,14 @@ namespace Siesa.SDK.Shared.Backend
 
         public async Task<Protos.ExposedMethodResponse> CallBusinessMethod(string business_name, string method, ICollection<ExposedMethodParam> parameters)
         {
-            var authenticationService = GetAuthenticationService();
             var channel = GrpcChannel.ForAddress(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
             var request = new Protos.ExposedMethodRequest
             {
                 BusinessName = business_name,
                 MethodName = method,
-                CurrentUserToken = authenticationService.UserToken,
-                CurrentUserRowid = authenticationService.User?.Rowid
+                CurrentUserToken = AuthenticationService.UserToken,
+                CurrentUserRowid = AuthenticationService.User?.Rowid
             };
             if(parameters != null)
             {

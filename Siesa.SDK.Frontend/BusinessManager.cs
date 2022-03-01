@@ -15,18 +15,25 @@ using System.Runtime.InteropServices;
 using Siesa.SDK.Shared.Json;
 using System.Reflection;
 using System.IO;
+using Siesa.SDK.Shared.Services;
 
 namespace Siesa.SDK.Frontend
 {
 
     public class BusinessFrontendModel
     {
+        private IAuthenticationService AuthenticationService { get; set; }
         public string Name { get; set; }
         public string Namespace { get; set; }
         public string Entity { get; set; }
         public string BackendName { get; set; }
 
-        public BackendRegistry Backend {get { return BackendManager.Instance.GetBackend(BackendName); } }
+        public void SetAuthenticationService(IAuthenticationService authenticationService)
+        {
+            AuthenticationService = authenticationService;
+        }
+
+        public BackendRegistry Backend {get { return BackendManager.Instance.GetBackend(BackendName, AuthenticationService); } }
 
         public dynamic Save(dynamic obj)
         {
@@ -185,13 +192,14 @@ namespace Siesa.SDK.Frontend
         }
 
         //get business
-        public BusinessFrontendModel GetBusiness(string businessName)
+        public BusinessFrontendModel GetBusiness(string businessName, IAuthenticationService authenticationService)
         {
             var business = Businesses[businessName];
             if (business == null)
             {
                 return null;
             }
+            business.SetAuthenticationService(authenticationService);
             return business;
         }
     }

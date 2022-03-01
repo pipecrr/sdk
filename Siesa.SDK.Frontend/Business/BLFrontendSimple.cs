@@ -5,12 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
 using Siesa.SDK.Entities;
 using Siesa.SDK.Frontend;
 using Siesa.SDK.Frontend.Components.FormManager.Model;
 using Siesa.SDK.Protos;
 using Siesa.SDK.Shared.Business;
+using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Shared.Validators;
 
 namespace Siesa.SDK.Business
@@ -21,6 +23,14 @@ namespace Siesa.SDK.Business
         [JsonIgnore]
         public List<Panel> Panels = new List<Panel>();
         public BaseEntity BaseObj { get; set; }
+
+        [JsonIgnore]
+        private IAuthenticationService AuthenticationService {get; set;}
+
+        public BLFrontendSimple(IAuthenticationService authenticationService)
+        {
+            AuthenticationService = authenticationService;
+        }
 
         public int Delete()
         {
@@ -57,18 +67,23 @@ namespace Siesa.SDK.Business
     {
         public string BusinessName { get; set; }
         [JsonIgnore]
-        public BusinessFrontendModel Backend {get { return Frontend.BusinessManagerFrontend.Instance.GetBusiness(BusinessName); } }
+        public BusinessFrontendModel Backend {get { return Frontend.BusinessManagerFrontend.Instance.GetBusiness(BusinessName, AuthenticationService); } }
 
         public BusinessFrontendModel GetBackend(string business_name){
-            return Frontend.BusinessManagerFrontend.Instance.GetBusiness(business_name);
+            return Frontend.BusinessManagerFrontend.Instance.GetBusiness(business_name, AuthenticationService);
         }
         [JsonIgnore]
         public List<Panel> Panels = new List<Panel>();
         [ValidateComplexType]
         public T BaseObj { get; set; }
 
-        public BLFrontendSimple()
+ 
+        [JsonIgnore]
+        private IAuthenticationService AuthenticationService {get; set;}
+
+        public BLFrontendSimple(IAuthenticationService authenticationService)
         {
+            AuthenticationService = authenticationService;
             BaseObj = Activator.CreateInstance<T>();
         }
 
