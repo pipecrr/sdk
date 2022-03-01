@@ -31,12 +31,12 @@ namespace Siesa.SDK.Backend.Access
         public DbSetProxy(IAuthenticationService authenticationService, SDKContext context, DbSet<TEntity> set)
         : this(authenticationService, context, set, set)
         {
-            AuthenticationService = authenticationService;
         }
 
         public DbSetProxy(IAuthenticationService authenticationService, SDKContext context, DbSet<TEntity> set, IQueryable<TEntity> query)
         {
             AuthenticationService = authenticationService;
+            this.set = set;
             this._context = context;
             this.query = query;
             //Check if the entity is a BaseEntity
