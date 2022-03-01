@@ -69,7 +69,7 @@ namespace Siesa.SDK.Business
         private IServiceProvider _provider;
         private ILogger _logger;
         protected ILogger Logger { get { return _logger; } }
-        private dynamic _dbFactory;
+        protected dynamic _dbFactory;
 
         public string BusinessName { get; set; }
         public T BaseObj { get; set; }
@@ -108,6 +108,7 @@ namespace Siesa.SDK.Business
             _logger = loggerFactory.CreateLogger(this.GetType().FullName);
 
             myContext = _dbFactory.CreateDbContext();
+            myContext.SetProvider(_provider);
         }
 
         public virtual T Get(int rowid)
@@ -142,6 +143,7 @@ namespace Siesa.SDK.Business
 
                 using (SDKContext context = _dbFactory.CreateDbContext())
                 {
+                    context.SetProvider(_provider);
                     result.Rowid = Save(context);
                 }
             }
@@ -244,6 +246,7 @@ namespace Siesa.SDK.Business
         {
             using (SDKContext context = _dbFactory.CreateDbContext())
             {
+                context.SetProvider(_provider);
                 context.Set<T>().Remove(BaseObj);
                 context.SaveChanges();
             }
@@ -273,6 +276,7 @@ namespace Siesa.SDK.Business
             var result = new Siesa.SDK.Shared.Business.LoadResult();
             using (SDKContext context = _dbFactory.CreateDbContext())
             {
+                context.SetProvider(_provider);
                 var query = context.Set<T>().AsQueryable();
                 foreach (var relatedProperty in _relatedProperties)
                 {

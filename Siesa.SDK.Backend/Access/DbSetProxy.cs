@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Siesa.SDK.Shared.DataAnnotations;
+using Siesa.SDK.Shared.Services;
 //using System.Linq.Dynamic.Core;
 
 namespace Siesa.SDK.Backend.Access
@@ -25,14 +26,17 @@ namespace Siesa.SDK.Backend.Access
         private readonly IQueryable<TEntity> query;
         private SDKContext _context;
 
+        private IAuthenticationService AuthenticationService {get; set;}      
 
-        public DbSetProxy(SDKContext context, DbSet<TEntity> set)
-        : this(context, set, set)
+        public DbSetProxy(IAuthenticationService authenticationService, SDKContext context, DbSet<TEntity> set)
+        : this(authenticationService, context, set, set)
         {
+            AuthenticationService = authenticationService;
         }
 
-        public DbSetProxy(SDKContext context, DbSet<TEntity> set, IQueryable<TEntity> query)
+        public DbSetProxy(IAuthenticationService authenticationService, SDKContext context, DbSet<TEntity> set, IQueryable<TEntity> query)
         {
+            AuthenticationService = authenticationService;
             this._context = context;
             this.query = query;
             //Check if the entity is a BaseEntity
@@ -42,7 +46,11 @@ namespace Siesa.SDK.Backend.Access
                 var dataAnnotation = typeof(TEntity).GetCustomAttributes(typeof(SDKAuthorization), false);
                 if (dataAnnotation.Length > 0)
                 {
-                    var prueba_rowid_user = 2; //TODO: Cambiar por el usuario logueado
+                    int current_user = 0;
+                    if(AuthenticationService != null && AuthenticationService.User != null)
+                    {
+                        current_user = AuthenticationService.User.Rowid;
+                    }
 
                     //Get the table name
                     var authorizationTableName = ((SDKAuthorization)dataAnnotation[0]).TableName;
@@ -71,7 +79,7 @@ namespace Siesa.SDK.Backend.Access
                             (e, u) => new { e, u })
                             .Where(
                                 x => ((
-                                    x.u.UserType == PermissionUserTypes.User && x.u.RowidRelUser == prueba_rowid_user
+                                    x.u.UserType == PermissionUserTypes.User && x.u.RowidRelUser == current_user
                                     &&  x.u.AuthorizationType == PermissionAuthTypes.Query_Tx
                                 )
                                 || false //TODO: Add other authorization types

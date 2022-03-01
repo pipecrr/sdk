@@ -55,8 +55,8 @@ namespace Siesa.SDK.Shared.Backend
             using var channel = GrpcChannel.ForAddress(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
             var response = client.GetBusinesses(new Protos.GetBusinessesRequest{
-                CurrentUserToken = (AuthenticationService != null ? AuthenticationService.UserToken : ""),
-                CurrentUserRowid = (AuthenticationService != null ? AuthenticationService.User?.Rowid: 0)
+                CurrentUserToken = (AuthenticationService != null && AuthenticationService.UserToken != null ? AuthenticationService.UserToken : ""),
+                CurrentUserRowid = (AuthenticationService != null && AuthenticationService.User != null ? AuthenticationService.User.Rowid: 0)
             });
             this.businessRegisters = response;
             addBusiness();
@@ -71,8 +71,8 @@ namespace Siesa.SDK.Shared.Backend
             {
                 Business = json,
                 BusinessName = business_name,
-                CurrentUserToken = (AuthenticationService != null ? AuthenticationService.UserToken : ""),
-                CurrentUserRowid = (AuthenticationService != null ? AuthenticationService.User?.Rowid: 0)
+                CurrentUserToken = (AuthenticationService != null && AuthenticationService.UserToken != null ? AuthenticationService.UserToken : ""),
+                CurrentUserRowid = (AuthenticationService != null && AuthenticationService.User != null ? AuthenticationService.User.Rowid: 0)
             };
             var response = await client.ValidateAndSaveBusinessObjAsync(request);
             return response;
@@ -85,8 +85,8 @@ namespace Siesa.SDK.Shared.Backend
             {
                 BusinessName = business_name,
                 SearchText = searchText,
-                CurrentUserToken = (AuthenticationService != null ? AuthenticationService.UserToken : ""),
-                CurrentUserRowid = (AuthenticationService != null ? AuthenticationService.User?.Rowid: 0)
+                CurrentUserToken = (AuthenticationService != null && AuthenticationService.UserToken != null ? AuthenticationService.UserToken : ""),
+                CurrentUserRowid = (AuthenticationService != null && AuthenticationService.User != null ? AuthenticationService.User.Rowid: 0)
             };
             try
             {
@@ -110,8 +110,8 @@ namespace Siesa.SDK.Shared.Backend
             {
                 Business = json,
                 BusinessName = business_name,
-                CurrentUserToken = (AuthenticationService != null ? AuthenticationService.UserToken : ""),
-                CurrentUserRowid = (AuthenticationService != null ? AuthenticationService.User?.Rowid: 0)
+                CurrentUserToken = (AuthenticationService != null && AuthenticationService.UserToken != null ? AuthenticationService.UserToken : ""),
+                CurrentUserRowid = (AuthenticationService != null && AuthenticationService.User != null ? AuthenticationService.User.Rowid: 0)
             };
             var response = await client.SaveBusinessObjAsync(request);
             return response.Id;
@@ -126,8 +126,8 @@ namespace Siesa.SDK.Shared.Backend
             {
                 Id = id,
                 BusinessName = business_name,
-                CurrentUserToken = (AuthenticationService != null ? AuthenticationService.UserToken : ""),
-                CurrentUserRowid = (AuthenticationService != null ? AuthenticationService.User?.Rowid: 0)
+                CurrentUserToken = (AuthenticationService != null && AuthenticationService.UserToken != null ? AuthenticationService.UserToken : ""),
+                CurrentUserRowid = (AuthenticationService != null && AuthenticationService.User != null ? AuthenticationService.User.Rowid: 0)
             };
             var response = await client.GetBusinessObjAsync(request);
             return response.Response;
@@ -142,8 +142,8 @@ namespace Siesa.SDK.Shared.Backend
             {
                 Id = id,
                 BusinessName = business_name,
-                CurrentUserToken = (AuthenticationService != null ? AuthenticationService.UserToken : ""),
-                CurrentUserRowid = (AuthenticationService != null ? AuthenticationService.User?.Rowid: 0)
+                CurrentUserToken = (AuthenticationService != null && AuthenticationService.UserToken != null ? AuthenticationService.UserToken : ""),
+                CurrentUserRowid = (AuthenticationService != null && AuthenticationService.User != null ? AuthenticationService.User.Rowid: 0)
             };
             var response = await client.DeleteBusinessObjAsync(request);
             return response.Id;
@@ -161,8 +161,8 @@ namespace Siesa.SDK.Shared.Backend
                 Take = take,
                 Filter = filter,
                 OrderBy = orderBy,
-                CurrentUserToken = (AuthenticationService != null ? AuthenticationService.UserToken : ""),
-                CurrentUserRowid = (AuthenticationService != null ? AuthenticationService.User?.Rowid: 0)
+                CurrentUserToken = (AuthenticationService != null && AuthenticationService.UserToken != null ? AuthenticationService.UserToken : ""),
+                CurrentUserRowid = (AuthenticationService != null && AuthenticationService.User != null ? AuthenticationService.User.Rowid: 0)
             };
             try
             {
@@ -182,8 +182,8 @@ namespace Siesa.SDK.Shared.Backend
             using var channel = GrpcChannel.ForAddress(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
             var request = new Protos.GetMenuGroupsRequest{
-                CurrentUserToken = (AuthenticationService != null ? AuthenticationService.UserToken : ""),
-                CurrentUserRowid = (AuthenticationService != null ? AuthenticationService.User?.Rowid: 0)
+                CurrentUserToken = (AuthenticationService != null && AuthenticationService.UserToken != null ? AuthenticationService.UserToken : ""),
+                CurrentUserRowid = (AuthenticationService != null && AuthenticationService.User != null ? AuthenticationService.User.Rowid: 0)
             };
             var response = await client.GetMenuGroupsAsync(request);
             return response;
@@ -196,8 +196,8 @@ namespace Siesa.SDK.Shared.Backend
             var request = new Protos.GetMenuItemsRequest
             {
                 GroupId = groupId,
-                CurrentUserToken = (AuthenticationService != null ? AuthenticationService.UserToken : ""),
-                CurrentUserRowid = (AuthenticationService != null ? AuthenticationService.User?.Rowid: 0)
+                CurrentUserToken = (AuthenticationService != null && AuthenticationService.UserToken != null ? AuthenticationService.UserToken : ""),
+                CurrentUserRowid = (AuthenticationService != null && AuthenticationService.User != null ? AuthenticationService.User.Rowid: 0)
             };
             var response = await client.GetMenuItemsAsync(request);
             return response;
@@ -221,8 +221,8 @@ namespace Siesa.SDK.Shared.Backend
             {
                 BusinessName = business_name,
                 MethodName = method,
-                CurrentUserToken = (AuthenticationService != null ? AuthenticationService.UserToken : ""),
-                CurrentUserRowid = (AuthenticationService != null ? AuthenticationService.User?.Rowid: 0)
+                CurrentUserToken = (AuthenticationService != null && AuthenticationService.UserToken != null ? AuthenticationService.UserToken : ""),
+                CurrentUserRowid = (AuthenticationService != null && AuthenticationService.User != null ? AuthenticationService.User.Rowid: 0)
             };
             if(parameters != null)
             {
