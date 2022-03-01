@@ -32,6 +32,7 @@ namespace Siesa.SDK.Frontend.Components.Layout
             }
             var backends = backendManager.GetBackendDict();
             BackendRegistry backendRegistry = backends[backends.Keys.First()];
+            backendRegistry.SetAuthenticationService(AuthenticationService);
             var jsonResponse = await backendRegistry.GetMenuGroupsAsync();
             SelectedMenuGroup = Newtonsoft.Json.JsonConvert.DeserializeObject<List<E00130_MenuGroup>>(jsonResponse.Response).First(); //TODO: UX difines how to select the menu group
 
