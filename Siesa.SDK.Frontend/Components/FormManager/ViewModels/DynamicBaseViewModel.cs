@@ -48,7 +48,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     businessType = Utils.Utils.SearchType(businessModel.Namespace + "." + businessModel.Name); 
                     BusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider, businessType);
                     BusinessModel = businessModel;
-                    BusinessObj.BusinessName = BusinessName;
+                    BusinessObj.BusinessName = bName;
                 }
                 catch (System.Exception e)
                 {
@@ -66,7 +66,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            InitGenericView();
+            //InitGenericView();
         }
 
         public RenderFragment CreateDynamicComponent() => builder =>
@@ -85,7 +85,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 
                 if (parameters.TryGetValue<string>(nameof(BusinessName), out var value))
                 {
-                    if (value != null)
+                    if (value != null && value != BusinessName)
                     {
                         BusinessObj = null;
                         businessType = null;

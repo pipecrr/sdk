@@ -27,6 +27,13 @@ namespace Siesa.SDK.Backend.Access
             ServiceProvider = serviceProvider;
         }
 
+        public void ResetConcurrencyValues(Object entity, Object UpdatedEntity) {
+            var lEntry = this.Entry(entity);
+            foreach (var lProperty in lEntry.Metadata.GetProperties().Where(x => x.IsConcurrencyToken)) {
+                lEntry.OriginalValues[lProperty] = UpdatedEntity.GetType().GetProperty(lProperty.Name).GetValue(UpdatedEntity);
+            }
+        }
+
         private string ToSnakeCase(string text)
         {
             if (string.IsNullOrEmpty(text))

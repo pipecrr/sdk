@@ -79,6 +79,8 @@ namespace Siesa.SDK.Business
         private SDKContext myContext;
         protected SDKContext Context { get { return myContext; } }
 
+        public List<string> RelFieldsToSave {get;set;} = new List<string>();
+
         public void DetachedBaseObj()
         {
             //TODO: Complete
@@ -194,13 +196,10 @@ namespace Siesa.SDK.Business
         {
             if (BaseObj.Rowid == 0)
             {
-                var entry = context.Add<T>(BaseObj);
                 foreach (var relatedProperty in _relatedProperties)
                 {
                     var entityValue = BaseObj.GetType().GetProperty(relatedProperty).GetValue(BaseObj);
                     
-                    //Does not save the related object
-                    //TODO: No guardar ninguna entidad relacionada, se deja activa hasta completar el transaction manager (se utiliza en el guardado del contacto desde el centro de operación
                     if (entityValue != null)
                     {
                         var entityValueRowid = (int)entityValue.GetType().GetProperty("Rowid").GetValue(entityValue);
@@ -209,12 +208,16 @@ namespace Siesa.SDK.Business
                         }
                     }
                 }
+
+                var entry = context.Add<T>(BaseObj);
             }
             else
             {
                 //demo borrar
                 //get by rowid
                 T entity = context.Set<T>().Find(BaseObj.Rowid);
+                //context.Entry(entity).OriginalValues["RowVersion"] = BaseObj.RowVersion;
+                context.ResetConcurrencyValues(entity, BaseObj);
                 context.Entry(entity).CurrentValues.SetValues(BaseObj);
                 
 
@@ -225,7 +228,10 @@ namespace Siesa.SDK.Business
                     context.Entry(entity).Reference(relatedProperty).CurrentValue = bodyValue;
                     //Does not save the related object
                     if (bodyValue != null) {
-                        context.Entry(bodyValue).State = EntityState.Unchanged;
+                        var entityValueRowid = (int)bodyValue.GetType().GetProperty("Rowid").GetValue(bodyValue);
+                        if (entityValueRowid != 0 && !RelFieldsToSave.Contains(relatedProperty)) {
+                            context.Entry(bodyValue).State = EntityState.Unchanged;
+                        }
                     }
                 }
 

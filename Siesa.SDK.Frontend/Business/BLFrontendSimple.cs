@@ -77,6 +77,16 @@ namespace Siesa.SDK.Business
         [ValidateComplexType]
         public T BaseObj { get; set; }
 
+        public List<string> RelFieldsToSave {get;set;} = new List<string>();
+
+        public void AddRelFieldToSave(string fieldName)
+        {
+            if (!RelFieldsToSave.Contains(fieldName))
+            {
+                RelFieldsToSave.Add(fieldName);
+            }
+        }
+
  
         [JsonIgnore]
         private IAuthenticationService AuthenticationService {get; set;}
