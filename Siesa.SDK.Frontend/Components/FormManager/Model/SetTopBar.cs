@@ -40,7 +40,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
 
         public void Dispose()
         {
-            if (Layout != null)
+            if (Layout != null && Layout.TopBarSetter == this)
             {
                 Layout.TopBarSetter = null;
             }
