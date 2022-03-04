@@ -64,7 +64,17 @@ else
                         </Template>
                     </RadzenDataGridColumn>
                 }else{
-                    <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="@field.Label" Type="@columnType" />
+                    if(columnType == typeof(bool)){
+                        <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="@field.Label" Type="@columnType" TextAlign="TextAlign.Center" >
+                            <Template Context="data">
+                                <input type="checkbox" checked="@(data.GetType().GetProperty(fieldName).GetValue(data))" disabled />
+                            </Template>
+                        </RadzenDataGridColumn>
+
+                    }else{
+                        <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="@field.Label" Type="@columnType" />
+                    }
+                    
                 }
             }
         </Columns>
