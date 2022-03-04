@@ -41,6 +41,9 @@
         //check length of search text
         if(searchText.Length > 2 || CacheLoadResult == null) {
             var filters = "";
+            if(BaseModelObj != null && BaseModelObj.BaseObj != null && BaseModelObj.BaseObj.Rowid != 0 && RelBusinessObj != null && RelBusinessObj.BaseObj != null && RelBusinessObj.BaseObj.GetType() == BaseModelObj.BaseObj.GetType()) {
+                filters = $"(Rowid != {BaseModelObj.BaseObj.Rowid})";
+            }
             foreach (var item in FieldOpt.RelatedFilters)
             {
                 if(!string.IsNullOrEmpty(filters))
@@ -59,7 +62,7 @@
                 }
                 filters += $"({key} == null ? \"\" : {key}).Equals(\"{dynamicValue.ToString()}\")";
             }
-            var result =  await RelBusinessObj.EntityFieldSearchAsync(searchText); //TODO: Paginación
+            var result =  await RelBusinessObj.EntityFieldSearchAsync(searchText, filters); //TODO: Paginación
             var response = new LoadResult
             {
                 data = result.Data,

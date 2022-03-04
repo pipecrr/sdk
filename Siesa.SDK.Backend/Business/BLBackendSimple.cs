@@ -259,20 +259,20 @@ namespace Siesa.SDK.Business
             return 0;
         }
 
-        public virtual Siesa.SDK.Shared.Business.LoadResult EntityFieldSearch(string searchText)
+        public virtual Siesa.SDK.Shared.Business.LoadResult EntityFieldSearch(string searchText, string prefilters = "")
         {
-            //TODO: Define the search logic using the search text and the entity properties 
-
             var string_fields = BaseObj.GetType().GetProperties().Where(p => p.PropertyType == typeof(string)).Select(p => p.Name).ToArray();
-            var filter = "";
+            string filter = "";
             foreach (var field in string_fields)
             {
                 if(!string.IsNullOrEmpty(filter))
                 {
                     filter += " || ";
                 }
-                //"(Name == null ? \"\" : Name).ToLower().Contains(\"tole\".ToLower())"
                 filter += $"({field} == null ? \"\" : {field}).ToLower().Contains(\"{searchText}\".ToLower())";
+            }
+            if(!string.IsNullOrEmpty(prefilters) && !string.IsNullOrEmpty(filter)){
+                filter = $"({prefilters}) && ({filter})";
             }
             return this.GetData(0, 100, filter);
         }
