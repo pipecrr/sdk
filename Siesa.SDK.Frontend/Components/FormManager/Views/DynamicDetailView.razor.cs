@@ -21,12 +21,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
         }
 
-        protected override async Task OnInitializedAsync()
-        {
-            await base.OnInitializedAsync();
-            await InitDetail(Convert.ToInt32(BusinessObjId));
-        }
-
         public new RenderFragment CreateDynamicComponent() => builder =>
         {
             var viewType = typeof(Views.DetailView);
@@ -38,13 +32,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         public override async Task SetParametersAsync(ParameterView parameters)
         {
+            var originalBusinessObjId = BusinessObjId;
+            var originalBusinessName = BusinessName;
             await base.SetParametersAsync(parameters);
             try
             {
 
                 if (parameters.TryGetValue<string>(nameof(BusinessObjId), out var value))
                 {
-                    if (value != null)
+                    if (value != null && (value != originalBusinessObjId || originalBusinessName != BusinessName))
                     {
                         //BusinessObj = null;
                         ErrorMsg = "";

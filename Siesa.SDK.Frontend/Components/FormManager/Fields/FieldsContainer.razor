@@ -1,4 +1,5 @@
 ﻿@if(SubViewdef != null && SubViewdef.Panels != null && SubViewdef.Panels.Count > 0){
+    ModelObj.AddRelFieldToSave(SubViewdef.ParentField.Replace("BaseObj.",""));
      @if (SubViewdef.Panels.Count > 1)
     {
         <DxFormLayoutTabPages>
@@ -41,7 +42,7 @@
     [Parameter] public List<FieldOptions> Fields { get; set; }
     [Parameter] public SubViewdef SubViewdef { get; set; }
 
-    [Parameter] public object ModelObj { get; set; }
+    [Parameter] public dynamic ModelObj { get; set; }
     [Parameter] public Dictionary<string, int> DefaultColSize { get; set; }
 
     private int GetColSize(FieldOptions fld, string screen_size)

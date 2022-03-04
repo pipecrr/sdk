@@ -83,6 +83,7 @@ message EntityFieldSearchRequest {
   string searchText = 2;
   string currentUserToken = 3;
   google.protobuf.Int32Value currentUserRowid = 4;
+  string filters = 5;
 }
 
 message LoadResult {
