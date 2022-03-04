@@ -5,28 +5,31 @@
     @FieldValidationTemplate
 
     <DxDateEdit 
-        T="DateTime"
+        T="DateTime?"
         NullText="@FieldOpt.Placeholder"
         ReadOnly="@(FieldOpt.Disabled)"
-        Date="@(BindValue.ToDateTime(TimeOnly.MinValue))"
-        DateChanged="@((str) => { SetValue(DateOnly.FromDateTime(str)); })"
+        Date="@(_value)"
+        DateChanged="@((str) => { SetValue(DateOnly.FromDateTime(str.Value)); })"
         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
         PickerDisplayMode="DatePickerDisplayMode.Auto"
         field-name="@FieldOpt.Name"
         DateExpression="@(()=> _value)"
-        TimeSectionVisible="@ShowTime"        
+        TimeSectionVisible="@ShowTime"
     />
 }
 
 
 @code {
-    Expression<Func<DateTime>> DateExpression { get; set; }
+    Expression<Func<DateTime?>> DateExpression { get; set; }
     private RenderFragment? _fieldValidationTemplate;
 
     [Parameter] public bool ShowTime { get; set; }
 
-    DateTime _value {get{
-       return BindValue.ToDateTime(TimeOnly.MinValue);
+    DateTime? _value {get{
+        if(BindValue != null && BindValue.ToDateTime(TimeOnly.MinValue) != DateTime.MinValue){
+            return BindValue.ToDateTime(TimeOnly.MinValue);
+        }
+        return null;
     }}
 
     protected override void OnInitialized()
