@@ -23,7 +23,11 @@
 
         if(Attributes != null)
         {
-            parameters.Add("Business", BaseModelObj);
+            //check if the component has a parameter named "Business"
+            if(componentType.GetProperties().Any(x => x.Name == "Business"))
+            {
+                parameters.Add("Business", BaseModelObj);
+            }
 
             for(int i = 0; i < Attributes.Count; i++)
             {
