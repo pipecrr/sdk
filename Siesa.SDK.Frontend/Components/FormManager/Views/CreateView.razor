@@ -1,4 +1,6 @@
 ﻿@using Siesa.SDK.Frontend.Components.FormManager.Fields
+@using System;
+@using Siesa.SDK.Entities;
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
 @if (Panels == null || Panels.Count <= 0)
 {
@@ -55,4 +57,32 @@ else if (BusinessObj.BaseObj != null)
         </TopBarButtons>
     </SetTopBar>
 
+}
+
+@code {
+    protected override void InitView(string bName = null){
+        base.InitView(bName);
+
+        if(Panels.Count > 1){
+             foreach (var panel in Panels){
+                 if(panel.SubViewdef != null && panel.SubViewdef.ParentField != ""){
+                     string[] fieldPath = panel.SubViewdef.ParentField.Split('.');
+                    object currentObject = BusinessObj;
+                    for (int i = 0; i < fieldPath.Length; i++)
+                    {
+                        var tmpType = currentObject.GetType();
+                        var tmpProperty = tmpType.GetProperty(fieldPath[i]);
+                        var tmpValue = tmpProperty.GetValue(currentObject, null);
+                        var isEntity = tmpProperty.PropertyType.IsSubclassOf(typeof(BaseEntity));
+                        if (tmpValue == null && isEntity)
+                        {
+                            tmpValue = Activator.CreateInstance(tmpProperty.PropertyType);
+                            tmpProperty.SetValue(currentObject, tmpValue);
+                        }
+                        currentObject = tmpValue;
+                    }
+                 }
+             }
+        }
+    }
 }
