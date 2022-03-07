@@ -15,6 +15,9 @@
 
 
     private void SetParameters(){
+        if(componentType == null){
+            componentType = Utils.Utils.SearchType($"{Definition.Namespace}.{Definition.Name}");
+        }
         parameters.Clear();
         Dictionary<string, string> Attributes = Definition.Attributes;
 
@@ -41,7 +44,13 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        componentType = Utils.Utils.SearchType($"{Definition.Namespace}.{Definition.Name}");
         SetParameters();
     }
+
+    @* protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        SetParameters();
+    } *@
 }
+

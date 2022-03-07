@@ -1,0 +1,47 @@
+@using SDK.Components.Visualization
+@using System.Drawing
+<RadzenRadialGauge Style="width: 100%; height: 300px;">
+    <RadzenRadialGaugeScale StartAngle="@StartAngle" EndAngle="@EndAngle" Step="@Step" Min="@Min" Max="@Max">
+        <RadzenRadialGaugeScalePointer Value=@Value Length="@PointerLength" />
+        @foreach (var item in ScaleRanges)
+        {
+            <RadzenRadialGaugeScaleRange From="@item.From" To="@item.To" Fill="@item.Fill" />
+        }
+    </RadzenRadialGaugeScale>
+</RadzenRadialGauge>
+
+@code {
+    [Parameter] public dynamic? Business {get;set;}
+    
+    [Parameter] public string Style { get; set; }
+    [Parameter] public double StartAngle { get; set; } = -90;
+    [Parameter] public double EndAngle { get; set; } = 90;
+    [Parameter] public double Step { get; set; } = 20;
+    [Parameter] public double Min { get; set; } = 0;
+    [Parameter] public double Max { get; set; } = 100;
+    [Parameter] public double Value { get; set; }
+
+    [Parameter] public double PointerLength { get; set; } = 1.0;
+
+    [Parameter] public List<SDKRadialGaugeScaleRange> ScaleRanges { get; set; } = new List<SDKRadialGaugeScaleRange>();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        if(ScaleRanges.Count == 0)
+        {
+            var scaleRangesCount = (int)((Max - Min) / Step);
+            for (int i = 0; i < scaleRangesCount; i++)
+            {
+                var range = new SDKRadialGaugeScaleRange();
+                range.From = Min + i * Step;
+                range.To = Min + (i + 1) * Step;
+                var stepColor = Color.FromArgb(255,(byte)(255 * (scaleRangesCount - i) / scaleRangesCount), (byte)(255 * (i + 1) / scaleRangesCount), 0);
+                range.Fill = $"#{stepColor.R:X2}{stepColor.G:X2}{stepColor.B:X2}";
+                ScaleRanges.Add(range);
+            }
+        }
+    }
+
+}
+
