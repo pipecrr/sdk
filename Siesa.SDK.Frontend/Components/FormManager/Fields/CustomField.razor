@@ -1,6 +1,6 @@
 ﻿@if (!FieldOpt.Hidden)
 {
-    @FieldTemplate
+    <DynamicComponent Type="@componentType" Parameters="@parameters" />
 }
 
 @code {
@@ -10,38 +10,38 @@
     [Parameter] public string FieldName { get; set; }
     [Parameter] public object BaseModelObj { get; set; }
 
-    private RenderFragment? _fieldTemplate;
-    public RenderFragment? FieldTemplate
-    {
-        get
+    private Type componentType;
+    private IDictionary<string, object> parameters = new Dictionary<string, object>();
+
+
+    private void SetParameters(){
+        parameters.Clear();
+        Dictionary<string, string> Attributes = Definition.Attributes;
+
+        if(Attributes != null)
         {
-            return _fieldTemplate != null ? _fieldTemplate : builder =>
+            parameters.Add("Business", BaseModelObj);
+
+            for(int i = 0; i < Attributes.Count; i++)
             {
-                Type ComponentType = Utils.Utils.SearchType($"{Definition.Namespace}.{Definition.Name}");
-                Dictionary<string, string> Attributes = Definition.Attributes;
-
-                builder.OpenComponent(0, ComponentType);
-                if(Attributes != null)
-                {
-                    builder.AddAttribute(1, "Business", BaseModelObj);
-
-                    for(int i = 0; i < Attributes.Count; i++)
-                    {
-                        var key = Attributes.ElementAt(i).Key;
-                        var value = Attributes.ElementAt(i).Value;
-                        dynamic dynamicValue = Utils.Evaluator.EvaluateCode(value, BaseModelObj).GetAwaiter().GetResult();
-                        //wait for the value to be evaluated
-                        if(dynamicValue == null){
-                            dynamicValue = "";
-                        }
-                        builder.AddAttribute(i + 2, key, dynamicValue);
-                    }
+                var key = Attributes.ElementAt(i).Key;
+                var value = Attributes.ElementAt(i).Value;
+                dynamic dynamicValue = Utils.Evaluator.EvaluateCode(value, BaseModelObj).GetAwaiter().GetResult();
+                //wait for the value to be evaluated
+                if(dynamicValue == null){
+                    dynamicValue = "";
                 }
-
-
-                builder.CloseComponent();
-            };
-
+                parameters.Add(key, dynamicValue);
+            }
         }
+
+    }
+
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        componentType = Utils.Utils.SearchType($"{Definition.Namespace}.{Definition.Name}");
+        SetParameters();
     }
 }
