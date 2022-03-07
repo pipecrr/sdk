@@ -12,6 +12,7 @@
     IsLoading="@Loading"
     Count="@Count"
     Columns="@Columns"
+    LoadData="@LoadData"
     ShowPagingSummary="@ShowPagingSummary"
     PageSizeOptions="@AllowedPageSizes">
 </RadzenDataGrid>
@@ -29,6 +30,15 @@
     [Parameter] public EventCallback LoadData { get; set; }
     [Parameter] public bool ShowPagingSummary { get; set; }
     [Parameter] public IEnumerable<int> AllowedPageSizes { get; set; } = new int[] { 10, 20, 50, 100 };
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (Data != null && !LoadData.HasDelegate)
+        {
+            Count = Data.Count();
+        }
+    }
 
 
 

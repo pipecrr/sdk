@@ -40,7 +40,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         public string ViewdefName { get; set; }
 
-        protected void InitView(string bName = null)
+        protected virtual void InitView(string bName = null)
         {
             Loading = true;
             if (bName == null)

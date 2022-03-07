@@ -1,6 +1,6 @@
 ﻿@if (!FieldOpt.Hidden)
 {
-    @FieldTemplate
+    <DynamicComponent Type="@componentType" Parameters="@parameters" />
 }
 
 @code {
@@ -10,38 +10,51 @@
     [Parameter] public string FieldName { get; set; }
     [Parameter] public object BaseModelObj { get; set; }
 
-    private RenderFragment? _fieldTemplate;
-    public RenderFragment? FieldTemplate
-    {
-        get
-        {
-            return _fieldTemplate != null ? _fieldTemplate : builder =>
-            {
-                Type ComponentType = Utils.Utils.SearchType($"{Definition.Namespace}.{Definition.Name}");
-                Dictionary<string, string> Attributes = Definition.Attributes;
-
-                builder.OpenComponent(0, ComponentType);
-                if(Attributes != null)
-                {
-                    builder.AddAttribute(1, "Business", BaseModelObj);
-
-                    for(int i = 0; i < Attributes.Count; i++)
-                    {
-                        var key = Attributes.ElementAt(i).Key;
-                        var value = Attributes.ElementAt(i).Value;
-                        dynamic dynamicValue = Utils.Evaluator.EvaluateCode(value, BaseModelObj).GetAwaiter().GetResult();
-                        //wait for the value to be evaluated
-                        if(dynamicValue == null){
-                            dynamicValue = "";
-                        }
-                        builder.AddAttribute(i + 2, key, dynamicValue);
-                    }
-                }
+    private Type componentType;
+    private IDictionary<string, object> parameters = new Dictionary<string, object>();
 
 
-                builder.CloseComponent();
-            };
-
+    private void SetParameters(){
+        if(componentType == null){
+            componentType = Utils.Utils.SearchType($"{Definition.Namespace}.{Definition.Name}");
         }
+        parameters.Clear();
+        Dictionary<string, string> Attributes = Definition.Attributes;
+
+        if(Attributes != null)
+        {
+            //check if the component has a parameter named "Business"
+            if(componentType.GetProperties().Any(x => x.Name == "Business"))
+            {
+                parameters.Add("Business", BaseModelObj);
+            }
+
+            for(int i = 0; i < Attributes.Count; i++)
+            {
+                var key = Attributes.ElementAt(i).Key;
+                var value = Attributes.ElementAt(i).Value;
+                dynamic dynamicValue = Utils.Evaluator.EvaluateCode(value, BaseModelObj).GetAwaiter().GetResult();
+                //wait for the value to be evaluated
+                if(dynamicValue == null){
+                    dynamicValue = "";
+                }
+                parameters.Add(key, dynamicValue);
+            }
+        }
+
     }
+
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        SetParameters();
+    }
+
+    @* protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        SetParameters();
+    } *@
 }
+

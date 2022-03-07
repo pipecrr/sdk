@@ -1,11 +1,13 @@
 ﻿@inherits FieldClass<DateOnly>
+@using System.Linq.Expressions
 
-<p style="word-wrap: break-word">@BindValue</p>
-@* 
-<DxDateEdit @bind-Date="@BindValue" 
-            @attributes="FieldOpt.CustomAttributes"
-            PickerDisplayMode="DatePickerDisplayMode.Auto" NullText="@FieldOpt.Placeholder"
-            CssClass="@FieldOpt.CssClass" ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
-            ReadOnly="true" Id="@FieldOpt.Id"></DxDateEdit> *@
-
+<p style="word-wrap: break-word">@_value</p>
+@code {
+    DateTime? _value {get{
+        if(BindValue != null && BindValue.ToDateTime(TimeOnly.MinValue) != DateTime.MinValue){
+            return BindValue.ToDateTime(TimeOnly.MinValue);
+        }
+        return null;
+    }}
+}
 
