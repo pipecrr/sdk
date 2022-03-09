@@ -22,7 +22,7 @@ namespace Siesa.SDK.Shared.Configurations
             services.Configure<ServiceConfiguration>(serviceConfiguration);
             services.AddScoped<IServiceConfiguration, ServiceConfiguration>();
             services.AddOptions();
-            //services.AddLogging(builder => SDKLogger.Configure(builder, sc));
+            services.AddLogging(builder => SDKLogger.Configure(builder, sc));
             services.AddSingleton<IBackendManager, BackendManager>();
         }
     }
