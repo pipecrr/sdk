@@ -18,22 +18,10 @@
         {
             <SDKMenuItem MenuItem="@menuItem" />
         }
-        <DxMenuItem Text="DevMenu" IconCssClass="oi oi-list-rich  menu-icon">
-            <Items>
-                @foreach (KeyValuePair<string, BackendRegistry> entry in backendManager.GetBackendDict())
-                {
-                    @foreach (var backendBusiness in entry.Value.businessRegisters.Businesses)
-                    {
-                        <DxMenuItem Text="@backendBusiness.Name" IconCssClass="oi oi-list-rich  menu-icon">
-                            <Items>
-                                <DxMenuItem Text="Consultar" NavigateUrl="@(backendBusiness.Name + "/")" />
-                                <DxMenuItem Text="Crear" NavigateUrl="@(backendBusiness.Name + "/create/")" />
-                            </Items>
-                        </DxMenuItem>
-                    }
-                }
-            </Items>
-        </DxMenuItem>
+        @foreach (var menuItem in DevMenu)
+        {
+            <SDKMenuItem MenuItem="@menuItem" />
+        }
         @if (AuthenticationService.User != null)
         {
             <DxMenuItem CssClass="notoggle" Position="ItemPosition.End">
