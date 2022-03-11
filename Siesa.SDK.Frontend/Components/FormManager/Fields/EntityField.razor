@@ -46,10 +46,6 @@
             }
             foreach (var item in FieldOpt.RelatedFilters)
             {
-                if(!string.IsNullOrEmpty(filters))
-                {
-                    filters += " && ";
-                }
                 var value = item.Value;
                 var key = item.Key;
                 //remove "RelBaseObj." from key
@@ -60,7 +56,30 @@
                 } catch (Exception ex) {
                     dynamicValue = value;
                 }
-                filters += $"({key} == null ? \"\" : {key}).Equals(\"{dynamicValue.ToString()}\")";
+                if(dynamicValue == null){
+                    continue;
+                }
+                if(!string.IsNullOrEmpty(filters))
+                {
+                    filters += " && ";
+                }
+                switch (dynamicValue)
+                {
+                    case System.Boolean boolean:
+                        filters += $"({key} == {dynamicValue})";
+                        break;
+
+                    case System.Int64 int64:
+                    case System.Int32 int32:
+                    case System.Double doubleValue:
+                    case System.Decimal decimalValue:
+                        filters += $"({key} == {dynamicValue})";
+                        break;
+                    default:
+                        filters += $"({key} == null ? \"\" : {key}).Equals(\"{dynamicValue.ToString()}\")";
+                        break;
+                } 
+                
             }
             var result =  await RelBusinessObj.EntityFieldSearchAsync(searchText, filters); //TODO: Paginación
             var response = new LoadResult
