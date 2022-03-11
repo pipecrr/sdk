@@ -48,7 +48,7 @@ namespace Siesa.SDK.Business
             return null;
         }
 
-        public Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "")
+        public Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<BaseEntity> queryFilter = null)
         {
             return null;
         }
@@ -259,6 +259,10 @@ namespace Siesa.SDK.Business
             return 0;
         }
 
+        public virtual IQueryable<T> EntityFieldFilters(IQueryable<T> query){
+            return query;
+        }
+
         public virtual Siesa.SDK.Shared.Business.LoadResult EntityFieldSearch(string searchText, string prefilters = "")
         {
             var string_fields = BaseObj.GetType().GetProperties().Where(p => p.PropertyType == typeof(string)).Select(p => p.Name).ToArray();
@@ -274,10 +278,11 @@ namespace Siesa.SDK.Business
             if(!string.IsNullOrEmpty(prefilters) && !string.IsNullOrEmpty(filter)){
                 filter = $"({prefilters}) && ({filter})";
             }
-            return this.GetData(0, 100, filter);
+            QueryFilterDelegate<T> filterDelegate = EntityFieldFilters;
+            return this.GetData(0, 100, filter, "", filterDelegate);
         }
 
-        public virtual Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "")
+        public virtual Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null)
         {
             var result = new Siesa.SDK.Shared.Business.LoadResult();
             using (SDKContext context = _dbFactory.CreateDbContext())
@@ -308,6 +313,9 @@ namespace Siesa.SDK.Business
                 if (!string.IsNullOrEmpty(orderBy))
                 {
                     query = query.OrderBy(orderBy);
+                }
+                if(queryFilter != null){
+                    query = queryFilter(query);
                 }
                 //total data
                 result.TotalCount = total;

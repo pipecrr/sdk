@@ -15,10 +15,18 @@ namespace Siesa.SDK.Frontend.Components.Layout
         public IBackendManager backendManager { get; set; }
         public E00130_MenuGroup SelectedMenuGroup { get; set; }
         public List<E00131_Menu> Menus { get; set; }
+        public List<E00131_Menu> DevMenu { get; set; }
         protected override void OnInitialized()
         {
             base.OnInitialized();
             Menus = new List<E00131_Menu>();
+            DevMenu = new List<E00131_Menu> { 
+                new E00131_Menu { 
+                    Title = "DevMenu",
+                    Image  ="oi oi-code",
+                    SubMenus = new List<E00131_Menu>()
+                } 
+            };
             _ = LoadMenu();
         }
         private async Task LoadMenu()
@@ -28,6 +36,37 @@ namespace Siesa.SDK.Frontend.Components.Layout
             foreach(var backend in backendManager.GetBackendDict()){
                 foreach(var business in backend.Value.businessRegisters.Businesses){
                     BusinessManagerFrontend.Instance.AddBusiness(business, backend.Value.Name);
+                    var submenuItem = new E00131_Menu {
+                        Title = business.Name,
+                        Image = "oi oi-list-rich  menu-icon",
+                        SubMenus = new List<E00131_Menu>{
+                            new E00131_Menu{
+                                Title = "Crear",
+                                Url = $"/{business.Name}/create/"
+                            },
+                            new E00131_Menu{
+                                Title = "Consultar",
+                                Url = $"/{business.Name}/"
+                            }
+                        }
+                    };
+                    var businessType = Utils.Utils.SearchType(business.Namespace + "." + business.Name); 
+                    if(businessType == null){
+                        continue;
+                    }
+                    //search methods that return a RenderFragment
+                    var customActions = businessType.GetMethods().Where(m => m.ReturnType == typeof(RenderFragment));
+                    foreach (var customAction in customActions)
+                    {
+                        var customActionMenu = new E00131_Menu {
+                            Title = customAction.Name,
+                            Url = $"/{business.Name}/{customAction.Name}/",
+                            Image = "oi oi-project "
+                        };
+                        submenuItem.SubMenus.Add(customActionMenu);
+                    }
+
+                    DevMenu.First().SubMenus.Add(submenuItem);
                 }
             }
             var backends = backendManager.GetBackendDict();

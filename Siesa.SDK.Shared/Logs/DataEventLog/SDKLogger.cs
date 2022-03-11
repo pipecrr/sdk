@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
 using Siesa.SDK.Shared.Configurations;
+using Microsoft.Extensions.Logging;
 
 namespace Siesa.SDK.Shared.Logs.DataEventLog
 {
@@ -11,6 +12,7 @@ namespace Siesa.SDK.Shared.Logs.DataEventLog
         public static void Configure(ILoggingBuilder loggingBuilder, ServiceConfiguration serviceConfiguration)
         {
             loggingBuilder.ClearProviders();
+            loggingBuilder.AddConsole();
             loggingBuilder.AddSerilog(new LoggerConfiguration()
 
                 .MinimumLevel.Warning()
