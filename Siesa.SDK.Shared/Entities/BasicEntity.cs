@@ -9,6 +9,7 @@ namespace Siesa.SDK.Entities
     [Index(nameof(ID), IsUnique = true)]
     public abstract class BasicEntity<T>: BaseEntity
     {
+        [Required]
         public virtual string Description { get; set; }
         [Required]
         public virtual T ID { get; set; }
