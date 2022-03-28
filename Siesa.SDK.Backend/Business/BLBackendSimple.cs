@@ -192,22 +192,34 @@ namespace Siesa.SDK.Business
             SDKValidator.Validate<T>(BaseObj, validator, ref baseOperation);
         }
 
+        private void SetUnchangeStateForChildProperties(SDKContext context, object entityValue)
+        {
+            if (entityValue != null)
+            {
+                var relatedPropertiesChild = entityValue.GetType().GetProperties().Where(p => p.PropertyType.IsClass && !p.PropertyType.IsPrimitive && !p.PropertyType.IsEnum && p.PropertyType != typeof(string) && p.Name != "RowVersion").Select(p => p.Name).ToArray();
+                foreach (var relatedProperty in relatedPropertiesChild)
+                {
+                    var entityValueChild = entityValue.GetType().GetProperty(relatedProperty).GetValue(entityValue);
+
+                    if (entityValueChild != null)
+                    {
+                        var entityValueRowid = (int)entityValueChild.GetType().GetProperty("Rowid").GetValue(entityValueChild);
+                        if (entityValueRowid != 0) {
+                            context.Entry(entityValueChild).State = EntityState.Unchanged;
+                        }
+                        
+                        SetUnchangeStateForChildProperties(context, entityValueChild);
+                    }
+                    
+                }
+            }
+        }
+
         private int Save(SDKContext context)
         {
             if (BaseObj.Rowid == 0)
             {
-                foreach (var relatedProperty in _relatedProperties)
-                {
-                    var entityValue = BaseObj.GetType().GetProperty(relatedProperty).GetValue(BaseObj);
-                    
-                    if (entityValue != null)
-                    {
-                        var entityValueRowid = (int)entityValue.GetType().GetProperty("Rowid").GetValue(entityValue);
-                        if (entityValueRowid != 0) {
-                            context.Entry(entityValue).State = EntityState.Unchanged;
-                        }
-                    }
-                }
+                SetUnchangeStateForChildProperties(context, BaseObj);
 
                 var entry = context.Add<T>(BaseObj);
             }
