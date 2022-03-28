@@ -14,7 +14,7 @@ namespace Siesa.SDK.Entities
 	/// Tabla para personalizar el texto de los recursos
 	/// </summary>
 
-	public class E00023_ResourceCustomDescription : BaseEntity<int>
+	public class E00023_ResourceCustomDescription : BaseEntity
 	{
 		[Key]
 		[Required]
