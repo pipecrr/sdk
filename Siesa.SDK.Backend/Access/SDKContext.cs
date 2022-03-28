@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +17,16 @@ namespace Siesa.SDK.Backend.Access
 {
     public abstract class SDKContext: DbContext
     {
+		public DbSet<E00024_GenericEnumCode>? E00024_GenericEnumCode { get; set; }
+
+		public DbSet<E00023_ResourceCustomDescription>? E00023_ResourceCustomDescription { get; set; }
+
+		public DbSet<E00022_ResourceDescription>? E00022_ResourceDescription { get; set; }
+
+		public DbSet<E00021_Culture>? E00021_Culture { get; set; }
+
+		public DbSet<E00020_Resource>? E00020_Resource { get; set; }
+
         private IServiceProvider ServiceProvider {get; set;}
         public SDKContext(DbContextOptions options) : base(options)
         {
