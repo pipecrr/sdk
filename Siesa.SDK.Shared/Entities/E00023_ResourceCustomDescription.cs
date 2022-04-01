@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Siesa.SDK.Shared.Json;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace Siesa.SDK.Entities
@@ -14,7 +15,8 @@ namespace Siesa.SDK.Entities
 	/// Tabla para personalizar el texto de los recursos
 	/// </summary>
 
-	public class E00023_ResourceCustomDescription : BaseEntity
+	[Index(nameof(RowidResourceDescription), nameof(Description), Name = "IX_e00023_1", IsUnique = true)]
+	public class E00023_ResourceCustomDescription : BaseEntity<int>
 	{
 		[Key]
 		[Required]
@@ -23,6 +25,10 @@ namespace Siesa.SDK.Entities
 		[ForeignKey("ResourceDescription")]
 		[Required]
 		public  int RowidResourceDescription { get; set; }
+
+		[Required]
+		[StringLength(2000)]
+		public  string Description { get; set; }
 
 
 		public E00020_Resource ResourceDescription { get; set; }
