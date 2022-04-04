@@ -15,18 +15,15 @@ namespace Siesa.SDK.Entities
 	/// Enums en BD
 	/// </summary>
 
+	[Index(nameof(EnumCode), nameof(ID), nameof(Code), Name = "IX_e00024_1", IsUnique = true)]
 	public class E00024_GenericEnumCode
 	{
-		[Key]
 		[Required]
-		public  long Rowid { get; set; }
+		public  int Rowid { get; set; }
 
 		[Required]
 		[StringLength(100)]
 		public  string EnumCode { get; set; }
-
-		[StringLength(100)]
-		public  string? Modifier { get; set; }
 
 		[Required]
 		[StringLength(100)]
