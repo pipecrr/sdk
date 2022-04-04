@@ -18,6 +18,7 @@ namespace Siesa.SDK.Entities
 	[Index(nameof(EnumCode), nameof(ID), nameof(Code), Name = "IX_e00024_1", IsUnique = true)]
 	public class E00024_GenericEnumCode
 	{
+		[Key]
 		[Required]
 		public  int Rowid { get; set; }
 
