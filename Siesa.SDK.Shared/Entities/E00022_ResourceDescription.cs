@@ -15,7 +15,7 @@ namespace Siesa.SDK.Entities
 	/// Cadenas de texto que se le muestran al usuario dependiendo de la cultura.
 	/// </summary>
 
-	[Index(nameof(RowidResource), nameof(RowidCulture), Name = "IX_e00022_1", IsUnique = true)]
+	[Index(nameof(RowidResource), nameof(RowidCulture), nameof(Description), Name = "IX_e00022_1", IsUnique = true)]
 	public class E00022_ResourceDescription
 	{
 		[Key]
