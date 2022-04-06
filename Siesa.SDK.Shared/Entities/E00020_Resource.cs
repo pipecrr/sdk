@@ -15,7 +15,7 @@ namespace Siesa.SDK.Entities
 	/// Tabla con los ID de los recursos
 	/// </summary>
 
-	[Index(nameof(ID), Name = "IX_e00020_1", IsUnique = true)]
+	[Index(nameof(Id), Name = "IX_e00020_1", IsUnique = true)]
 	public class E00020_Resource
 	{
 		[Key]
@@ -24,7 +24,7 @@ namespace Siesa.SDK.Entities
 
 		[Required]
 		[StringLength(500)]
-		public  string ID { get; set; }
+		public  string Id { get; set; }
 
 
 	}
