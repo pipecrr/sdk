@@ -19,8 +19,6 @@ namespace Siesa.SDK.Backend.Access
     {
 		public DbSet<E00024_GenericEnumCode>? E00024_GenericEnumCode { get; set; }
 
-		public DbSet<E00023_ResourceCustomDescription>? E00023_ResourceCustomDescription { get; set; }
-
 		public DbSet<E00022_ResourceDescription>? E00022_ResourceDescription { get; set; }
 
 		public DbSet<E00021_Culture>? E00021_Culture { get; set; }
