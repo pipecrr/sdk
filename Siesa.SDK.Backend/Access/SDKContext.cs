@@ -19,7 +19,7 @@ namespace Siesa.SDK.Backend.Access
     {
 	public DbSet<E00010_Module>? E00010_Module { get; set; }
 
-	public DbSet<E00025_GenericEnumCodeModules>? E00025_GenericEnumCodeModules { get; set; }
+	public DbSet<E00025_GenericEnumCodeModule>? E00025_GenericEnumCodeModule { get; set; }
 
 		public DbSet<E00023_ResourceCustomDescription>? E00023_ResourceCustomDescription { get; set; }
 

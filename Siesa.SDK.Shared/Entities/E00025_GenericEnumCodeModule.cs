@@ -16,7 +16,7 @@ namespace Siesa.SDK.Entities
 	/// </summary>
 
 	[Index(nameof(RowidGenericEnum), nameof(RowidModule), Name = "IX_e00025_1", IsUnique = true)]
-	public class E00025_GenericEnumCodeModules
+	public class E00025_GenericEnumCodeModule
 	{
 		[Key]
 		[Required]
