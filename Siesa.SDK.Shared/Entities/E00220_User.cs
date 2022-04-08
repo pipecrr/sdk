@@ -30,8 +30,11 @@ namespace Siesa.SDK.Entities
 		[StringLength(500)]
 		public string Description { get; set; }
 
+		[ForeignKey("UserReportTo")]
 		public int? RowidUserReportTo { get; set; }
 
+
+		public E00220_User UserReportTo { get; set; }
 
 	}
 }
