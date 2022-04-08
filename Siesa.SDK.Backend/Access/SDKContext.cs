@@ -17,6 +17,8 @@ namespace Siesa.SDK.Backend.Access
 {
     public abstract class SDKContext: DbContext
     {
+	public DbSet<E00221_Rol>? E00221_Rol { get; set; }
+
 	public DbSet<E00220_User>? E00220_User { get; set; }
 
 	public DbSet<E00201_Company>? E00201_Company { get; set; }
