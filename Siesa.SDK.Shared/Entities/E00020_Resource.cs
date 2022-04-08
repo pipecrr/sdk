@@ -20,11 +20,14 @@ namespace Siesa.SDK.Entities
 	{
 		[Key]
 		[Required]
-		public  int Rowid { get; set; }
+		public int Rowid { get; set; }
 
 		[Required]
 		[StringLength(500)]
-		public  string Id { get; set; }
+		public string Id { get; set; }
+
+		[Required]
+		public byte Type { get; set; } = 0;
 
 
 	}
