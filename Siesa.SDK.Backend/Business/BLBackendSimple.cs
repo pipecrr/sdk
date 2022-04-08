@@ -17,21 +17,22 @@ using Siesa.SDK.GRPCServices;
 using System.Linq.Dynamic.Core;
 using Siesa.SDK.Shared.Services;
 using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Siesa.SDK.Business
 {
     public class BLBackendSimple : IBLBase<BaseEntity>
     {
         [JsonIgnore]
-        private IAuthenticationService AuthenticationService {get; set;}
+        private IAuthenticationService AuthenticationService { get; set; }
 
         public BLBackendSimple(IAuthenticationService authenticationService)
         {
             AuthenticationService = authenticationService;
         }
-        
-        public string BusinessName { get;set; }
-        public BaseEntity BaseObj { get;set; }
+
+        public string BusinessName { get; set; }
+        public BaseEntity BaseObj { get; set; }
 
         public int Delete()
         {
@@ -65,7 +66,7 @@ namespace Siesa.SDK.Business
     public class BLBackendSimple<T, K> : IBLBase<T> where T : BaseEntity where K : BLBaseValidator<T>
     {
         [JsonIgnore]
-        private IAuthenticationService AuthenticationService {get; set;}        
+        private IAuthenticationService AuthenticationService { get; set; }
         private IServiceProvider _provider;
         private ILogger _logger;
         protected ILogger Logger { get { return _logger; } }
@@ -79,7 +80,9 @@ namespace Siesa.SDK.Business
         private SDKContext myContext;
         protected SDKContext Context { get { return myContext; } }
 
-        public List<string> RelFieldsToSave {get;set;} = new List<string>();
+        public List<string> RelFieldsToSave { get; set; } = new List<string>();
+
+        private IEnumerable<INavigation> _navigationProperties = null;
 
         public void DetachedBaseObj()
         {
@@ -93,6 +96,8 @@ namespace Siesa.SDK.Business
             AuthenticationService = authenticationService;
             BaseObj = Activator.CreateInstance<T>();
             _relatedProperties = BaseObj.GetType().GetProperties().Where(p => p.PropertyType.IsClass && !p.PropertyType.IsPrimitive && !p.PropertyType.IsEnum && p.PropertyType != typeof(string) && p.Name != "RowVersion").Select(p => p.Name).ToArray();
+
+
         }
 
         public void ShareProvider(dynamic bl)
@@ -111,6 +116,8 @@ namespace Siesa.SDK.Business
 
             myContext = _dbFactory.CreateDbContext();
             myContext.SetProvider(_provider);
+
+            _navigationProperties = myContext.Model.FindEntityType(typeof(T)).GetNavigations();
         }
 
         public virtual T Get(int rowid)
@@ -126,7 +133,7 @@ namespace Siesa.SDK.Business
             return query.FirstOrDefault();
 
 
-            
+
         }
 
         public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave()
@@ -149,20 +156,20 @@ namespace Siesa.SDK.Business
                     result.Rowid = Save(context);
                 }
             }
-            catch(DbUpdateException exception)
+            catch (DbUpdateException exception)
             {
-                exception.Data.Add("Entity:","entityName");
+                exception.Data.Add("Entity:", "entityName");
                 AddExceptionToResult(exception, result);
                 _logger.LogError(exception, "Error saving in BLBackend");
                 _logger.LogError("Text information");
             }
             catch (Exception exception)
             {
-                AddExceptionToResult(exception,result);
+                AddExceptionToResult(exception, result);
                 _logger.LogError(exception, "Error saving in BLBackend");
             }
-            
-            return result;            
+
+            return result;
         }
 
         private void AddExceptionToResult(DbUpdateException exception, ValidateAndSaveBusinessObjResponse result)
@@ -192,48 +199,65 @@ namespace Siesa.SDK.Business
             SDKValidator.Validate<T>(BaseObj, validator, ref baseOperation);
         }
 
-        private int Save(SDKContext context)
+        private void DisableRelatedProperties(object obj, IEnumerable<INavigation> relatedProperties , List<string> propertiesToKeep = null)
         {
-            if (BaseObj.Rowid == 0)
+            //TODO: Probar el desvinculado de las propiedades relacionadas
+            if (relatedProperties != null)
             {
-                foreach (var relatedProperty in _relatedProperties)
+                foreach (var navProperty in relatedProperties)
                 {
-                    var entityValue = BaseObj.GetType().GetProperty(relatedProperty).GetValue(BaseObj);
-                    
-                    if (entityValue != null)
-                    {
-                        var entityValueRowid = (int)entityValue.GetType().GetProperty("Rowid").GetValue(entityValue);
-                        if (entityValueRowid != 0) {
-                            context.Entry(entityValue).State = EntityState.Unchanged;
+                    var foreignKey = navProperty.ForeignKey;
+                    var fkProperties = foreignKey.Properties;
+                    var principalProperties = foreignKey.PrincipalKey.Properties;
+                    if(foreignKey.DependentToPrincipal != null){
+                        var fkFieldName = foreignKey.DependentToPrincipal.Name;
+                        var fkFieldValue = obj.GetType().GetProperty(fkFieldName).GetValue(obj);
+                        if (fkFieldValue !=  null)
+                        {
+                            if (propertiesToKeep != null && propertiesToKeep.Contains(fkFieldName))
+                            {
+                                var relNavigations = myContext.Model.FindEntityType(fkFieldValue.GetType()).GetNavigations();
+                                DisableRelatedProperties(fkFieldValue, relNavigations);
+                                continue;
+                            }
+                            var principalFieldName = principalProperties[0].Name;
+                            var principalFieldValue = fkFieldValue.GetType().GetProperty(principalFieldName).GetValue(fkFieldValue);
+                            if(principalFieldValue != null){
+                                if((int)principalFieldValue != 0){
+                                    obj.GetType().GetProperty(fkProperties[0].Name).SetValue(obj, principalFieldValue);
+                                }
+                                
+                                //empty the navigation property
+                                obj.GetType().GetProperty(fkFieldName).SetValue(obj, null);
+                            }
                         }
                     }
                 }
+            }
+        }
 
+        private int Save(SDKContext context)
+        {
+            if (BaseObj.Rowid == 0)
+            { 
+                DisableRelatedProperties(BaseObj, _navigationProperties, RelFieldsToSave);
                 var entry = context.Add<T>(BaseObj);
             }
             else
             {
                 //demo borrar
                 //get by rowid
-                T entity = context.Set<T>().Find(BaseObj.Rowid);
+                T entity = context.Set<T>().Where(x => x.Rowid == BaseObj.Rowid).FirstOrDefault();
                 //context.Entry(entity).OriginalValues["RowVersion"] = BaseObj.RowVersion;
                 context.ResetConcurrencyValues(entity, BaseObj);
+                DisableRelatedProperties(BaseObj, _navigationProperties, RelFieldsToSave);
                 context.Entry(entity).CurrentValues.SetValues(BaseObj);
-                
-
-                //Loop through all foreign keys and set the values
-                foreach (var relatedProperty in _relatedProperties)
+                foreach (var relatedProperty in RelFieldsToSave)
                 {
-                    var bodyValue = BaseObj.GetType().GetProperty(relatedProperty).GetValue(BaseObj);
-                    context.Entry(entity).Reference(relatedProperty).CurrentValue = bodyValue;
-                    //Does not save the related object
-                    if (bodyValue != null) {
-                        var entityValueRowid = (int)bodyValue.GetType().GetProperty("Rowid").GetValue(bodyValue);
-                        if (entityValueRowid != 0 && !RelFieldsToSave.Contains(relatedProperty)) {
-                            context.Entry(bodyValue).State = EntityState.Unchanged;
-                        }
-                    }
+                    entity.GetType().GetProperty(relatedProperty).SetValue(entity, BaseObj.GetType().GetProperty(relatedProperty).GetValue(BaseObj));
                 }
+                //DisableRelatedProperties(entity, _navigationProperties, RelFieldsToSave);
+                
 
                 //set updated values
                 entity.LastUpdateDate = DateTime.Now;
@@ -259,7 +283,8 @@ namespace Siesa.SDK.Business
             return 0;
         }
 
-        public virtual IQueryable<T> EntityFieldFilters(IQueryable<T> query){
+        public virtual IQueryable<T> EntityFieldFilters(IQueryable<T> query)
+        {
             return query;
         }
 
@@ -269,13 +294,14 @@ namespace Siesa.SDK.Business
             string filter = "";
             foreach (var field in string_fields)
             {
-                if(!string.IsNullOrEmpty(filter))
+                if (!string.IsNullOrEmpty(filter))
                 {
                     filter += " || ";
                 }
                 filter += $"({field} == null ? \"\" : {field}).ToLower().Contains(\"{searchText}\".ToLower())";
             }
-            if(!string.IsNullOrEmpty(prefilters) && !string.IsNullOrEmpty(filter)){
+            if (!string.IsNullOrEmpty(prefilters) && !string.IsNullOrEmpty(filter))
+            {
                 filter = $"({prefilters}) && ({filter})";
             }
             QueryFilterDelegate<T> filterDelegate = EntityFieldFilters;
@@ -294,7 +320,7 @@ namespace Siesa.SDK.Business
                     query = query.Include(relatedProperty);
                 }
 
-                if(!string.IsNullOrEmpty(filter))
+                if (!string.IsNullOrEmpty(filter))
                 {
                     query = query.Where(filter);
                 }
@@ -314,12 +340,13 @@ namespace Siesa.SDK.Business
                 {
                     query = query.OrderBy(orderBy);
                 }
-                if(queryFilter != null){
+                if (queryFilter != null)
+                {
                     query = queryFilter(query);
                 }
                 //total data
                 result.TotalCount = total;
-                
+
                 //data
                 result.Data = query.ToList();
             }
