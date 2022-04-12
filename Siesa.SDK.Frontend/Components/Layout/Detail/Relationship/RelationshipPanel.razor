@@ -1,34 +1,50 @@
+@inject DialogService DialogService
 <div class="relationship-panel">
-    <div class="relationship-panel-header" @onclick="Toggle">
-        <span class="relationship-panel-header-title">@Relationship.Label</span>
+    <div class="relationship-panel-header">
+        <span class="relationship-panel-header-title"  @onclick="Toggle">@Relationship.Label</span>
         
         <span class="relationship-panel-header-close">
+            @if(Relationship.Type != RelationshipType.ManyToMany){
+                <span class="oi oi-plus" @onclick="OpenModal" ></span>
+            }
+            
             @if(isOpen){
-                <span class="oi oi-chevron-bottom"></span>
+                <span class="oi oi-chevron-bottom"  @onclick="Toggle"></span>
             }else{
-                <span class="oi oi-chevron-right"></span>
+                <span class="oi oi-chevron-right"  @onclick="Toggle"></span>
             }
         </span>
-        <span class="relationship-panel-header-count">@count</span>
+        @* <span class="relationship-panel-header-count">@count</span> *@
     </div>
     @if(isOpen){
         <div class="relationship-panel-body">
-            <DynamicListView BusinessName="@Relationship.RelatedBusiness" IsSubpanel="true" SubpanelFilter="@filter" />
+            <DynamicListView BusinessName="@Relationship.RelatedBusiness" IsSubpanel=true SubpanelFilter="@filter" @key="listview_key" />
         </div>
     }
 </div>
 
 @code {
     [Parameter] public Relationship Relationship { get; set; }
-    [Parameter] public int ParentRowid { get; set; }
+    [Parameter] public dynamic Parent { get; set; }
     int? count = null;
     bool isOpen = false;
-
     string filter = "";
+    Guid listview_key = Guid.NewGuid();
 
     public void Toggle()
     {
         isOpen = !isOpen;
+    }
+
+     public async Task OpenModal()
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+        parameters.Add(Relationship.RelatedField, Parent);
+        var modal_result = await DialogService.OpenAsync("", 
+        ds => @<DynamicCreateView BusinessName="@Relationship.RelatedBusiness" IsSubpanel=true  DefaultFields="@parameters" />, 
+        new DialogOptions() { Width = "700px", ShowTitle=false,   Resizable = true});
+        listview_key = Guid.NewGuid();
+        isOpen = true;
     }
 
     protected override void OnInitialized()
@@ -42,11 +58,11 @@
         if(Relationship.Type == RelationshipType.ManyToMany)
         {
             var filter_parts = field.Split('.');
-            filter = $"({filter_parts[0]} != NULL && {filter_parts[0]}.Any({filter_parts[1]}.RowID == {ParentRowid}))";
+            filter = $"({filter_parts[0]} != NULL && {filter_parts[0]}.Any({filter_parts[1]}.RowID == {Parent.Rowid}))";
         }
         else
         {
-            filter = $"({field}.RowID == {ParentRowid})";
+            filter = $"({field}.RowID == {Parent.Rowid})";
         }
         
     }

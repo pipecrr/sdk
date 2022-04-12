@@ -12,5 +12,5 @@ else if (BusinessObj.BaseObj == null)
 }
 else if (BusinessObj.BaseObj.Rowid != 0)
 {
-    @CreateDynamicComponent();
+    <DynamicComponent Type="@(typeof(Views.DetailView))" Parameters="@parameters" />
 }

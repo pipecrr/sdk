@@ -22,6 +22,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Parameter]
         public dynamic BusinessObj { get; set; }
 
+        [Parameter] 
+        public bool IsSubpanel { get; set; }
+        [Inject] public  Radzen.DialogService dialogService { get; set; }
+
         [Inject] public IJSRuntime JSRuntime { get; set; }
         [Inject] public NavigationManager NavManager { get; set; }
 
@@ -245,7 +249,11 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
                 return;
             }
             var id = result.Rowid;
-            NavManager.NavigateTo($"{BusinessName}/detail/{id}/");
+            if(IsSubpanel){
+                dialogService.Close(id);
+            }else{
+                NavManager.NavigateTo($"{BusinessName}/detail/{id}/");
+            }
         }
 
         protected async Task HandleValidSubmit()

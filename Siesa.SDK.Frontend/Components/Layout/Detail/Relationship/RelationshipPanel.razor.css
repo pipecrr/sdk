@@ -12,24 +12,23 @@
     padding: 0 10px;
     background-color: #f5f5f5;
     border-bottom: 1px solid #ccc;
+    display: flex;
+    justify-content: space-between;
 }
 .relationship-panel .relationship-panel-header .relationship-panel-header-title{
-    float: left;
     font-size: 14px;
     font-weight: bold;
 }
 .relationship-panel .relationship-panel-header .relationship-panel-header-close{
-    float: right;
     font-size: 14px;
     font-weight: bold;
     cursor: pointer;
 }
-.relationship-panel .relationship-panel-body{
-    padding: 10px;
+
+.relationship-panel .relationship-panel-header .relationship-panel-header-close > span{
+    margin-right: 5px;
 }
 
-.relationship-panel .relationship-panel-header .relationship-panel-header-count{
-    float: right;
-    font-size: 14px;
-    font-weight: bold;
+.relationship-panel .relationship-panel-body{
+    padding: 10px;
 }

@@ -5,6 +5,7 @@ using Siesa.SDK.Business;
 using Siesa.SDK.Frontend.Utils;
 using Microsoft.Extensions.DependencyInjection;
 using Siesa.SDK.Shared.Services;
+using System.Collections.Generic;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 {
@@ -32,6 +33,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public dynamic BusinessObj { get; set; }
 
         public BusinessFrontendModel BusinessModel { get; set; }
+
+        protected IDictionary<string, object> parameters = new Dictionary<string, object>();
+
+        [Parameter] 
+        public bool IsSubpanel { get; set; }
 
         protected void InitGenericView(string bName=null)
         {
@@ -61,23 +67,31 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 this.ErrorMsg = "404 Not Found.";
             }
             StateHasChanged();
-        } 
-
-        protected override async Task OnInitializedAsync()
-        {
-            await base.OnInitializedAsync();
-            //InitGenericView();
         }
 
-        public RenderFragment CreateDynamicComponent() => builder =>
+        protected override void OnInitialized()
         {
-            var viewType = typeof(Views.CreateView);
-            builder.OpenComponent(0, viewType);
-            builder.AddAttribute(1, "BusinessObj", BusinessObj);
-            builder.AddAttribute(2, "BusinessName", BusinessName);
-            builder.CloseComponent();
-        };
+            base.OnInitialized();
+            SetParameters(BusinessObj, BusinessName);
+        }
 
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+            SetParameters(BusinessObj, BusinessName);        
+        }
+
+        protected virtual void SetParameters(dynamic businessObj, string businessName){
+            parameters.Clear();
+            parameters.Add("BusinessObj", businessObj);
+            parameters.Add("BusinessName", businessName);
+            parameters.Add("IsSubpanel", IsSubpanel);
+            if (IsSubpanel)
+            {
+                parameters.Add("SetTopBar", false);
+                
+            }
+        }
         public override async Task SetParametersAsync(ParameterView parameters)
         {
             try

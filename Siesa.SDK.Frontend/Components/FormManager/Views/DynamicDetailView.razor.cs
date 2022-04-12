@@ -21,15 +21,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
         }
 
-        public new RenderFragment CreateDynamicComponent() => builder =>
-        {
-            var viewType = typeof(Views.DetailView);
-            builder.OpenComponent(0, viewType);
-            builder.AddAttribute(1, "BusinessObj", BusinessObj);
-            builder.AddAttribute(2, "BusinessName", BusinessName);
-            builder.CloseComponent();
-        };
-
         public override async Task SetParametersAsync(ParameterView parameters)
         {
             var originalBusinessObjId = BusinessObjId;

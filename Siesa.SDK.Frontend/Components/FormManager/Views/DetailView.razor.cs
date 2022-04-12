@@ -18,6 +18,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter]
         public dynamic BusinessObj { get; set; }
 
+        [Parameter]
+        public bool SetTopBar { get; set; } = true;
+
+        [Parameter] 
+        public bool IsSubpanel { get; set; }
+
         [Inject] public IJSRuntime JSRuntime { get; set; }
         [Inject] public NavigationManager NavManager { get; set; }
 

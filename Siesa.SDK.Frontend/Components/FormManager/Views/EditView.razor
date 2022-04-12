@@ -44,17 +44,20 @@ else if (BusinessObj.BaseObj.Rowid != 0)
         <ValidationSummary />
         <label>@ErrorMsg</label>
     </EditForm>
-    <SetTopBar>
-        <TopBarTitle>Editar @BusinessObj</TopBarTitle>
-        <TopBarButtons>
-            <DxButton form="@FormID" RenderStyle="ButtonRenderStyle.Primary" SubmitFormOnClick="true" Text="Guardar" />
-            <DxButton RenderStyle="ButtonRenderStyle.Secondary" Click="GoToList" Text="Cancelar" />
-            @foreach (var btn in FormViewModel.Buttons)
-            {
-                <DxButton RenderStyle="@btn.RenderStyle" Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />
-            }
-        </TopBarButtons>
-    </SetTopBar>
+    @if(SetTopBar)
+    {
+        <SetTopBar>
+            <TopBarTitle>Editar @BusinessObj</TopBarTitle>
+            <TopBarButtons>
+                <DxButton form="@FormID" RenderStyle="ButtonRenderStyle.Primary" SubmitFormOnClick="true" Text="Guardar" />
+                <DxButton RenderStyle="ButtonRenderStyle.Secondary" Click="GoToList" Text="Cancelar" />
+                @foreach (var btn in FormViewModel.Buttons)
+                {
+                    <DxButton RenderStyle="@btn.RenderStyle" Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />
+                }
+            </TopBarButtons>
+        </SetTopBar>
+    }
 
 }
 @code {

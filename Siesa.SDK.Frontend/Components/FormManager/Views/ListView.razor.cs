@@ -25,6 +25,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter]
         public bool SetTopBar { get; set; } = true;
 
+        [Parameter] 
+        public bool IsSubpanel { get; set; }
+
         [Parameter]
         public List<string> ConstantFilters { get; set; } = new List<string>();
 

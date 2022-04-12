@@ -9,6 +9,7 @@ using Siesa.SDK.Shared.Backend;
 using Blazored.LocalStorage;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Frontend.Services;
+using Radzen;
 
 namespace Siesa.SDK.Frontend {
     public static class SiesaSecurityExtensions
@@ -21,6 +22,7 @@ namespace Siesa.SDK.Frontend {
             services.AddScoped<StateContainer>();
             services.AddScoped<ILayoutService, LayoutService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<DialogService>();
         }
 
     }

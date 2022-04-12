@@ -206,5 +206,32 @@ namespace Siesa.SDK.Business
             // Do nothing
         }
 
+        public void SetPropertyValue(string propertyName, object value)
+        {
+            string[] fieldPath = propertyName.Split('.');
+            object currentObject = this;
+            for (int i = 0; i < fieldPath.Length - 1; i++)
+            {
+                var tmpType = currentObject.GetType();
+                var tmpProperty = tmpType.GetProperty(fieldPath[i]);
+                var tmpValue = tmpProperty.GetValue(currentObject, null);
+                var isEntity = tmpProperty.PropertyType.IsSubclassOf(typeof(BaseEntity));
+                if (tmpValue == null && isEntity)
+                {
+                    tmpValue = Activator.CreateInstance(tmpProperty.PropertyType);
+                    tmpProperty.SetValue(currentObject, tmpValue);
+                }
+                currentObject = tmpValue;
+            }
+            if(currentObject != null)
+            {
+                var property = currentObject.GetType().GetProperty(fieldPath.Last());
+                if (property != null)
+                {
+                    property.SetValue(currentObject, value);
+                }
+            }
+        }
+
     }
 }

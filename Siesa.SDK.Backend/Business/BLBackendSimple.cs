@@ -118,6 +118,7 @@ namespace Siesa.SDK.Business
             myContext.SetProvider(_provider);
 
             _navigationProperties = myContext.Model.FindEntityType(typeof(T)).GetNavigations();
+            AuthenticationService = (IAuthenticationService)_provider.GetService(typeof(IAuthenticationService));
         }
 
         public virtual T Get(int rowid)
@@ -241,6 +242,9 @@ namespace Siesa.SDK.Business
             if (BaseObj.Rowid == 0)
             { 
                 DisableRelatedProperties(BaseObj, _navigationProperties, RelFieldsToSave);
+                BaseObj.LastUpdateDate = DateTime.Now;
+                BaseObj.RowidCreator = AuthenticationService.User.Rowid;
+                BaseObj.RowidLastEditUser = AuthenticationService.User.Rowid;
                 var entry = context.Add<T>(BaseObj);
             }
             else
@@ -261,6 +265,7 @@ namespace Siesa.SDK.Business
 
                 //set updated values
                 entity.LastUpdateDate = DateTime.Now;
+                entity.RowidLastEditUser = AuthenticationService.User.Rowid;
             }
 
             context.SaveChanges(); //TODO: Capturar errores db y hacer rollback

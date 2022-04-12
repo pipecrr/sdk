@@ -12,5 +12,22 @@ else if (BusinessObj == null)
 }
 else if (BusinessObj != null)
 {
-    @CreateDynamicComponent();
+    <DynamicComponent Type="@(typeof(Views.CreateView))" Parameters="@parameters" />
+}
+
+@code {
+    [Parameter] public Dictionary<string, object> DefaultFields { get; set; }
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        if (DefaultFields != null)
+        {
+            foreach (var item in DefaultFields)
+            {
+                BusinessObj.SetPropertyValue(item.Key, item.Value);
+            }
+        }
+    }
+
+
 }

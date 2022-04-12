@@ -45,14 +45,5 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
             }
         }
-
-        public new RenderFragment CreateDynamicComponent() => builder =>
-        {
-            var viewType = typeof(Views.EditView);
-            builder.OpenComponent(0, viewType);
-            builder.AddAttribute(1, "BusinessObj", BusinessObj);
-            builder.AddAttribute(2, "BusinessName", BusinessName);
-            builder.CloseComponent();
-        };
     }
 }

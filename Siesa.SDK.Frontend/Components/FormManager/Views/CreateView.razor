@@ -12,6 +12,10 @@ else if (Loading == true)
 }
 else if (BusinessObj.BaseObj != null)
 {
+    @if(IsSubpanel){
+        <h5>Crear @BusinessName</h5>
+        <hr />
+    }
     <EditForm id="@FormID"
               OnValidSubmit="@HandleValidSubmit"
               OnInvalidSubmit="@HandleInvalidSubmit"
@@ -45,17 +49,26 @@ else if (BusinessObj.BaseObj != null)
         <ValidationSummary />
         <label>@((MarkupString)ErrorMsg)</label>
     </EditForm>
-    <SetTopBar>
-        <TopBarTitle>Crear @BusinessName</TopBarTitle>
-        <TopBarButtons>
+    @if(IsSubpanel){
+        <div class="buttons-container">
             <DxButton form="@FormID" RenderStyle="ButtonRenderStyle.Primary" SubmitFormOnClick="true" Text="Guardar" />
-            <DxButton RenderStyle="ButtonRenderStyle.Secondary" Click="GoToList" Text="Cancelar" />
-            @foreach (var btn in FormViewModel.Buttons)
-            {
-                <DxButton RenderStyle="@btn.RenderStyle" Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />
-            }
-        </TopBarButtons>
-    </SetTopBar>
+            <DxButton RenderStyle="ButtonRenderStyle.Secondary" Click="@((args) => dialogService.Close(false))" Text="Cancelar" />
+        </div>
+    }
+    @if(SetTopBar && !IsSubpanel)
+    {
+        <SetTopBar>
+            <TopBarTitle>Crear @BusinessName</TopBarTitle>
+            <TopBarButtons>
+                <DxButton form="@FormID" RenderStyle="ButtonRenderStyle.Primary" SubmitFormOnClick="true" Text="Guardar" />
+                <DxButton RenderStyle="ButtonRenderStyle.Secondary" Click="GoToList" Text="Cancelar" />
+                @foreach (var btn in FormViewModel.Buttons)
+                {
+                    <DxButton RenderStyle="@btn.RenderStyle" Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />
+                }
+            </TopBarButtons>
+        </SetTopBar>
+    }
 
 }
 
