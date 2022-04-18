@@ -27,6 +27,8 @@ else if (BusinessObj != null)
                 BusinessObj.SetPropertyValue(item.Key, item.Value);
             }
         }
+
+        BusinessObj.OnReady();
     }
 
 
