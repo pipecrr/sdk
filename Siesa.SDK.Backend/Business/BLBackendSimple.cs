@@ -18,6 +18,9 @@ using System.Linq.Dynamic.Core;
 using Siesa.SDK.Shared.Services;
 using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore.Metadata;
+using System.Reflection;
+using Siesa.SDK.Shared.Utilities;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Siesa.SDK.Business
 {
@@ -145,6 +148,7 @@ namespace Siesa.SDK.Business
             {
 
                 Validate(ref result);
+                ValidateIndex(ref result);
 
                 if (result.Errors.Count > 0)
                 {
@@ -199,6 +203,83 @@ namespace Siesa.SDK.Business
             validator.ValidatorType = "Entity";
             SDKValidator.Validate<T>(BaseObj, validator, ref baseOperation);
         }
+
+        private void  ValidateIndex(ref ValidateAndSaveBusinessObjResponse baseOperation)
+        {     
+            //TODO: Refactorizar, soportar las 2 formas de definir los indices 
+            var attrs_types = System.Attribute.GetCustomAttributes(BaseObj.GetType());
+            var attrs = System.Attribute.GetCustomAttributes(BaseObj.GetType()).ToList()
+                                                                                                                                                                   .Where(x=> x is IndexAttribute)
+                                                                            .Where(x=> ((IndexAttribute)x).IsUnique);
+  
+            foreach (var attr in attrs){ 
+
+                var dictionaryByIndex =GetPropertiesToIndex((IndexAttribute)attr);
+
+                if(ExistsRowByIndex(Utilities.GetDinamycWhere(dictionaryByIndex))){
+                    baseOperation.Errors.Add(new OperationError
+                    {
+                        Attribute = (dictionaryByIndex.Count>1)?string.Join("", dictionaryByIndex):dictionaryByIndex.First().Key,
+                        Message = (dictionaryByIndex.Count>1)?string.Join("Los campos ", dictionaryByIndex," deben ser unicos") :"El campo "+dictionaryByIndex.First().Key+" debe ser unico"
+                    });
+                }
+            }
+        }
+
+        private Dictionary<string,object> GetPropertiesToIndex(IndexAttribute index)
+        {
+           
+                Dictionary<string,object>  returnValue = new Dictionary<string, object>();
+                Dictionary<string,object>  collectionFks = new Dictionary<string, object>();
+
+                var propNames = index.PropertyNames; 
+
+                foreach (var propName in propNames)
+                {  
+                    PropertyInfo prop = BaseObj.GetType().GetProperty(propName);
+                    var valueProp = prop.GetValue(BaseObj);
+
+                    // Filtra solo los custom attributes que sean de tipo foraneo y que coincidan con el nombre del PropName  
+                    var properties = BaseObj.GetType().GetProperties()
+                                                            .Where(x=>(x.GetCustomAttributes()
+                                                                        .Where(x=>x.GetType()==typeof(ForeignKeyAttribute)
+                                                                                    && ((ForeignKeyAttribute)x).Name==propName
+                                                                              ).ToList().Count>0
+                                                                      )
+                                                                  );                    
+
+                    var property = properties.FirstOrDefault();
+
+                    if(property is not null){ 
+
+                        var bodyValue = BaseObj.GetType().GetProperty(property.Name).GetValue(BaseObj);
+                        var entityValueRowid = (int)bodyValue.GetType().GetProperty("Rowid").GetValue(bodyValue);
+                                
+                        valueProp = entityValueRowid;  
+                    }
+ 
+                    returnValue.Add(propName,valueProp.ToString()); 
+                }
+  
+                return returnValue;
+        }
+
+        private bool ExistsRowByIndex(string filter){
+            using (SDKContext context = _dbFactory.CreateDbContext())
+            {
+                context.SetProvider(_provider);
+                var query = context.Set<T>().AsQueryable();
+
+                foreach (var relatedProperty in _relatedProperties)
+                {
+                    query = query.Include(relatedProperty);
+                }
+
+                query = query.Where(filter);
+
+                return query.Count()>0;
+            }
+        } 
 
         private void DisableRelatedProperties(object obj, IEnumerable<INavigation> relatedProperties , List<string> propertiesToKeep = null)
         {
