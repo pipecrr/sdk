@@ -16,7 +16,7 @@ namespace Siesa.SDK.Entities
 	/// </summary>
 
 	[Index(nameof(Id), nameof(Description), Name = "IX_e00220_1", IsUnique = true)]
-	public class E00220_User : BaseEntity<int>
+	public class E00220_User : BaseEntity
 	{
 		[Key]
 		[Required]

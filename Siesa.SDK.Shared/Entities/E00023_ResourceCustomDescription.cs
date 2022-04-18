@@ -16,7 +16,7 @@ namespace Siesa.SDK.Entities
 	/// </summary>
 	[SDKLogEntity]
 	[Index(nameof(RowidResourceDescription), nameof(Description), Name = "IX_e00023_1")]
-	public class E00023_ResourceCustomDescription : BaseEntity<int>
+	public class E00023_ResourceCustomDescription : BaseEntity
 	{
 		[Key]
 		[Required]
