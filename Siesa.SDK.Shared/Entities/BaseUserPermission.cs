@@ -25,15 +25,17 @@ namespace Siesa.SDK.Entities
         Enabled = 1,
         Disabled = 2,
     }
-    public abstract class BaseUserPermissionEntity<T>: BaseEntity
+    public abstract class BaseUserPermission<T>: BaseAudit<int>
     {
         public PermissionUserTypes UserType { get; set; }
         public PermissionAuthTypes AuthorizationType { get; set; }
         public PermissionRestrictionType RestrictionType { get; set; }
 
+        public int? RowidTeam { get; set; }
+        [ForeignKey(nameof(RowidTeam))]
         public virtual E00110_Team Team { get; set; }
-        public int? RowidRelUser { get; set; }
-        [ForeignKey(nameof(RowidRelUser))]
+        public int? RowidUser { get; set; }
+        [ForeignKey(nameof(RowidUser))]
         public virtual E00102_User User { get; set; }
 
         public int? RowidRecord { get; set; }

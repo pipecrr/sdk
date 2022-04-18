@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Siesa.SDK.Entities
 {
-    public class E00002_ResourceValue: BaseEntity
+    public class E00002_ResourceValue: BaseSDK<int>
     {
         public virtual E00001_Resource Resource { get; set; }
         public virtual E00003_Language Language { get; set; }

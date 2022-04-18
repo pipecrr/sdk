@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Siesa.SDK.Entities
 {
-    public class E00003_Language: BaseEntity
+    public class E00003_Language: BaseSDK<int>
     {
         public string LanguageCode { get; set; }
         public string CountryCode { get; set; }

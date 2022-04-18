@@ -5,8 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Siesa.SDK.Entities
 {
-    public class E00001_Resource: BaseSDK<int>
+    public abstract class BaseCompanyTransaction<T>: BaseCompany<T>
     {
-        public string ID { get; set; }
+        //TODO: Agregar relación con attachment
     }
 }

@@ -14,7 +14,7 @@ namespace Siesa.SDK.Entities
     [Index(nameof(UserName), IsUnique = true)]
     //[SDKAuthorization]
     [SDKLogEntity]
-    public class E00102_User: BaseEntity
+    public class E00102_User: BaseSDK<int>
     {
         [Required]
         public string UserName { get; set; }
