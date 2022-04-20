@@ -17,36 +17,6 @@ namespace Siesa.SDK.Backend.Access
 {
     public abstract class SDKContext: DbContext
     {
-	public DbSet<E00221_Rol>? E00221_Rol { get; set; }
-
-	public DbSet<E00220_User>? E00220_User { get; set; }
-
-	public DbSet<E00201_Company>? E00201_Company { get; set; }
-
-	public DbSet<E00200_GroupCompany>? E00200_GroupCompany { get; set; }
-
-	public DbSet<E00043_Operation>? E00043_Operation { get; set; }
-
-	public DbSet<E00042_Action>? E00042_Action { get; set; }
-
-	public DbSet<E00041_ModuleFeature>? E00041_ModuleFeature { get; set; }
-
-	public DbSet<E00040_Feature>? E00040_Feature { get; set; }
-
-	public DbSet<E00010_Module>? E00010_Module { get; set; }
-
-	public DbSet<E00025_GenericEnumCodeModule>? E00025_GenericEnumCodeModule { get; set; }
-
-		public DbSet<E00023_ResourceCustomDescription>? E00023_ResourceCustomDescription { get; set; }
-
-		public DbSet<E00024_GenericEnumCode>? E00024_GenericEnumCode { get; set; }
-
-		public DbSet<E00022_ResourceDescription>? E00022_ResourceDescription { get; set; }
-
-		public DbSet<E00021_Culture>? E00021_Culture { get; set; }
-
-		public DbSet<E00020_Resource>? E00020_Resource { get; set; }
-
         private IServiceProvider ServiceProvider {get; set;}
         public SDKContext(DbContextOptions options) : base(options)
         {
