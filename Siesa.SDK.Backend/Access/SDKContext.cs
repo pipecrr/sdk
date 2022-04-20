@@ -17,6 +17,8 @@ namespace Siesa.SDK.Backend.Access
 {
     public abstract class SDKContext: DbContext
     {
+	public DbSet<E00010_Module>? E00010_Module { get; set; }
+
         private IServiceProvider ServiceProvider {get; set;}
         public SDKContext(DbContextOptions options) : base(options)
         {
