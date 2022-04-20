@@ -12,7 +12,7 @@ namespace Siesa.SDK.Shared.Utilities
 
         }
 
-        public static string  GetDinamycWhere(Dictionary<string,object> inDictionary){
+        public static string  GetDinamycWhere(Dictionary<string,object> inDictionary, Dictionary<string,object> PrimaryKey){
 
             string filter=string.Empty;
 
@@ -22,6 +22,17 @@ namespace Siesa.SDK.Shared.Utilities
 
                 filter+=$"{field.Key}==\"{field.Value}\"";  
 
+            }
+
+            foreach(var keyPropertie in PrimaryKey)
+            {
+                if(keyPropertie.Value !=null){
+                    
+                    if(!String.IsNullOrEmpty(filter))  filter+=" AND ";
+                    
+                    filter+=$"{keyPropertie.Key}!=\"{keyPropertie.Value}\"";  
+                }
+                
             }
 
             return filter;

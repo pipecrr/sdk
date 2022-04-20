@@ -219,7 +219,7 @@ namespace Siesa.SDK.Business
 
                 var primaryKey = GetPrimaryKey();
 
-                if(ExistsRowByIndex(Utilities.GetDinamycWhere(dictionaryByIndex))){
+                if(ExistsRowByIndex(Utilities.GetDinamycWhere(dictionaryByIndex,primaryKey))){
                     baseOperation.Errors.Add(new OperationError
                     {
                         Attribute = (dictionaryByIndex.Count>1)?string.Join("", dictionaryByIndex):dictionaryByIndex.First().Key,
@@ -243,10 +243,9 @@ namespace Siesa.SDK.Business
             var property = properties.FirstOrDefault();
             
             if(property is not null){ 
-
-                var bodyValue = BaseObj.GetType().GetProperty(property.Name).GetValue(BaseObj);
-                var valueProp = (int)bodyValue.GetType().GetProperty("Rowid").GetValue(bodyValue);
-                
+ 
+                var valueProp = (int)BaseObj.GetType().GetProperty(property.Name).GetValue(BaseObj);
+                returnValue.Add(property.Name,(valueProp==0)?null:valueProp.ToString()); 
             }
 
             return returnValue;
