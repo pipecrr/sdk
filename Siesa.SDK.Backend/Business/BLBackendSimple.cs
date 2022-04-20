@@ -21,6 +21,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using System.Reflection;
 using Siesa.SDK.Shared.Utilities;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace Siesa.SDK.Business
 {
@@ -209,12 +210,14 @@ namespace Siesa.SDK.Business
             //TODO: Refactorizar, soportar las 2 formas de definir los indices 
             var attrs_types = System.Attribute.GetCustomAttributes(BaseObj.GetType());
             var attrs = System.Attribute.GetCustomAttributes(BaseObj.GetType()).ToList()
-                                                                                                                                                                   .Where(x=> x is IndexAttribute)
-                                                                            .Where(x=> ((IndexAttribute)x).IsUnique);
+                .Where(x=> x is IndexAttribute)
+                .Where(x=> ((IndexAttribute)x).IsUnique);
   
             foreach (var attr in attrs){ 
 
                 var dictionaryByIndex =GetPropertiesToIndex((IndexAttribute)attr);
+
+                var primaryKey = GetPrimaryKey();
 
                 if(ExistsRowByIndex(Utilities.GetDinamycWhere(dictionaryByIndex))){
                     baseOperation.Errors.Add(new OperationError
@@ -225,7 +228,29 @@ namespace Siesa.SDK.Business
                 }
             }
         }
+        private Dictionary<string,object> GetPrimaryKey()
+        {
+            
+            Dictionary<string,object>  returnValue = new Dictionary<string, object>();
+            
+            var properties = BaseObj.GetType().GetProperties()
+                .Where(x=>(x.GetCustomAttributes()
+                    .Where(x=>x.GetType()==typeof(KeyAttribute)
+                            ).ToList().Count>0
+                    )
+                );    
 
+            var property = properties.FirstOrDefault();
+            
+            if(property is not null){ 
+
+                var bodyValue = BaseObj.GetType().GetProperty(property.Name).GetValue(BaseObj);
+                var valueProp = (int)bodyValue.GetType().GetProperty("Rowid").GetValue(bodyValue);
+                
+            }
+
+            return returnValue;
+        }
         private Dictionary<string,object> GetPropertiesToIndex(IndexAttribute index)
         {
            
