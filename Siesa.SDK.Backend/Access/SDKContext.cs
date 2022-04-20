@@ -19,8 +19,6 @@ namespace Siesa.SDK.Backend.Access
     {
 	public DbSet<E00200_GroupCompany>? E00200_GroupCompany { get; set; }
 
-	public DbSet<E00043_Operation>? E00043_Operation { get; set; }
-
 	public DbSet<E00042_Action>? E00042_Action { get; set; }
 
 	public DbSet<E00041_ModuleFeature>? E00041_ModuleFeature { get; set; }
