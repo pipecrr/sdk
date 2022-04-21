@@ -12,34 +12,26 @@ using Microsoft.EntityFrameworkCore;
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
-	/// Cadenas de texto que se le muestran al usuario dependiendo de la cultura.
+	/// Descripción recurso
 	/// </summary>
 
-	[Index(nameof(RowidResource), nameof(RowidCulture), nameof(Description), Name = "IX_e00022_1", IsUnique = true)]
-	public class E00022_ResourceDescription
+	[Index(nameof(RowidCulture), nameof(RowidResource), nameof(Description), Name = "IX_e00022_1", IsUnique = true)]
+	public class E00022_ResourceDescription : BaseSDK<int>
 	{
 		[Key]
 		[Required]
-		public  int Rowid { get; set; }
-
-		[ForeignKey("Resource")]
-		[Required]
-		public  int RowidResource { get; set; }
-
-		[ForeignKey("Culture")]
-		[Required]
-		public  int RowidCulture { get; set; }
+		public override int Rowid { get; set; }
 
 		[Required]
-		[StringLength(2000)]
-		public  string Description { get; set; }
-
+		public short RowidCulture { get; set; }
 
 		[Required]
-		public E00020_Resource Resource { get; set; }
+		public int RowidResource { get; set; }
 
 		[Required]
-		public E00021_Culture Culture { get; set; }
+		[StringLength(500)]
+		public string Description { get; set; }
+
 
 	}
 }
