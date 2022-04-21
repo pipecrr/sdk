@@ -15,6 +15,7 @@ namespace Siesa.SDK.Entities
 	/// Suite Menú personalizado 
 	/// </summary>
 	[SDKLogEntity]
+	[Index(nameof(RowidSuiteCustom), nameof(RowidMenuCustom), nameof(RowidMenu), nameof(Order), nameof(IsPrivate), Name = "IX_e00067_1", IsUnique = true)]
 	public class E00067_SuiteMenuCustom : BaseAudit<int>
 	{
 		[Key]
