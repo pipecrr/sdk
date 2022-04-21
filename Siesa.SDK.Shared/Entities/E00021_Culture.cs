@@ -12,26 +12,26 @@ using Microsoft.EntityFrameworkCore;
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
-	/// Tabla para almacenar las culturas con que la aplicación trabaja
+	/// Cultura
 	/// </summary>
 
-	[Index(nameof(LanguageCode), nameof(CountryCode), Name = "IX_e00021_1", IsUnique = true)]
-	public class E00021_Culture
+	[Index(nameof(LanguageCode), nameof(CountryCode), nameof(Description), Name = "IX_e00021_1", IsUnique = true)]
+	public class E00021_Culture : BaseSDK<short>
 	{
 		[Key]
 		[Required]
-		public  int Rowid { get; set; }
+		public override short Rowid { get; set; }
 
 		[Required]
 		[StringLength(3)]
-		public  string LanguageCode { get; set; }
+		public string LanguageCode { get; set; }
 
 		[StringLength(3)]
-		public  string? CountryCode { get; set; }
+		public string? CountryCode { get; set; }
 
 		[Required]
 		[StringLength(500)]
-		public  string Description { get; set; }
+		public string Description { get; set; }
 
 
 	}
