@@ -16,11 +16,11 @@ namespace Siesa.SDK.Entities
 	/// </summary>
 
 	[Index(nameof(Id), nameof(Type), Name = "IX_e00020_1", IsUnique = true)]
-	public class E00020_Resource : BaseSDK<int>
+	public class E00020_Resource  
 	{
-		[Key]
-		[Required]
-		public override int Rowid { get; set; }
+		// [Key]
+		// [Required]
+		// public override int Rowid { get; set; }
 
 		[Required]
 		[StringLength(500)]

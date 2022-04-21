@@ -16,11 +16,11 @@ namespace Siesa.SDK.Entities
 	/// </summary>
 
 	[Index(nameof(Id), nameof(Description), nameof(RowidResource), nameof(LicenceType), Name = "IX_e00010_1", IsUnique = true)]
-	public class E00010_Module : BaseSDK<short>
+	public class E00010_Module 
 	{
-		[Key]
-		[Required]
-		public override short Rowid { get; set; }
+		// [Key]
+		// [Required]
+		// public override short Rowid { get; set; }
 
 		[Required]
 		[StringLength(20)]
