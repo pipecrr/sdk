@@ -12,34 +12,30 @@ using Microsoft.EntityFrameworkCore;
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
-	/// Módulos
+	/// Modulos
 	/// </summary>
 
-	[Index(nameof(Id), nameof(LicenseType), nameof(RowidResource), Name = "IX_e00010_1", IsUnique = true)]
-	public class E00010_Module
+	[Index(nameof(Id), nameof(Description), nameof(RowidResource), nameof(LicenceType), Name = "IX_e00010_1", IsUnique = true)]
+	public class E00010_Module : BaseSDK<short>
 	{
 		[Key]
 		[Required]
-		public int Rowid { get; set; }
+		public override short Rowid { get; set; }
 
-		[RegularExpression(@"1|2|3")]
 		[Required]
-		public byte Id { get; set; }
+		[StringLength(20)]
+		public string Id { get; set; }
 
 		[Required]
 		[StringLength(250)]
 		public string Description { get; set; }
 
-		[ForeignKey("Resource")]
 		[Required]
 		public int RowidResource { get; set; }
 
 		[Required]
-		public byte LicenseType { get; set; } = 1;
+		public byte LicenceType { get; set; }
 
-
-		[Required]
-		public E00020_Resource Resource { get; set; }
 
 	}
 }
