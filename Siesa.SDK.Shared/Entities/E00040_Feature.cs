@@ -12,23 +12,19 @@ using Microsoft.EntityFrameworkCore;
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
-	/// Tablas de programas del sistema
+	/// Características
 	/// </summary>
 
 	[Index(nameof(RowidResource), Name = "IX_e00040_1", IsUnique = true)]
-	public class E00040_Feature
+	public class E00040_Feature : BaseSDK<int>
 	{
 		[Key]
 		[Required]
-		public int Rowid { get; set; }
+		public override int Rowid { get; set; }
 
-		[ForeignKey("Resource")]
 		[Required]
 		public int RowidResource { get; set; }
 
-
-		[Required]
-		public E00020_Resource Resource { get; set; }
 
 	}
 }
