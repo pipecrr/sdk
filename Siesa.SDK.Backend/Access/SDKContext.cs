@@ -17,6 +17,8 @@ namespace Siesa.SDK.Backend.Access
 {
     public abstract class SDKContext: DbContext
     {
+	public DbSet<U00067_SuiteMenuCustom>? U00067_SuiteMenuCustom { get; set; }
+
 	public DbSet<E00067_SuiteMenuCustom>? E00067_SuiteMenuCustom { get; set; }
 
 	public DbSet<E00025_GenericEnumValueModule>? E00025_GenericEnumValueModule { get; set; }
