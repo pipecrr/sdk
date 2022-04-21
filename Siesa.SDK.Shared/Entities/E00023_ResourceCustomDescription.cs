@@ -12,27 +12,23 @@ using Microsoft.EntityFrameworkCore;
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
-	/// Recursos personalizados
+	/// Descripción recurso personalizado
 	/// </summary>
 	[SDKLogEntity]
-	[Index(nameof(RowidResourceDescription), nameof(Description), Name = "IX_e00023_1")]
-	public class E00023_ResourceCustomDescription : BaseSDK<int>
+	[Index(nameof(RowidResourceDescription), nameof(Description), Name = "IX_e00023_1", IsUnique = true)]
+	public class E00023_ResourceCustomDescription : BaseAudit<int>
 	{
 		[Key]
 		[Required]
 		public override int Rowid { get; set; }
 
-		[ForeignKey("ResourceDescription")]
 		[Required]
-		public  int RowidResourceDescription { get; set; }
+		public int RowidResourceDescription { get; set; }
 
 		[Required]
-		[StringLength(2000)]
-		public  string Description { get; set; }
+		[StringLength(500)]
+		public string Description { get; set; }
 
-
-		[Required]
-		public E00022_ResourceDescription ResourceDescription { get; set; }
 
 	}
 }
