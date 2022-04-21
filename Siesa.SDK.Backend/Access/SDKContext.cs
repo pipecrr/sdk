@@ -17,6 +17,8 @@ namespace Siesa.SDK.Backend.Access
 {
     public abstract class SDKContext: DbContext
     {
+	public DbSet<E00062_SuiteMenu>? E00062_SuiteMenu { get; set; }
+
 	public DbSet<E00063_FavoritesMenu>? E00063_FavoritesMenu { get; set; }
 
 	public DbSet<E00064_RecentMenu>? E00064_RecentMenu { get; set; }
