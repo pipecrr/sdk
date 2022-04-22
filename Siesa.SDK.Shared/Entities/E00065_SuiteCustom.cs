@@ -15,7 +15,7 @@ namespace Siesa.SDK.Entities
 	/// Suite personalizada
 	/// </summary>
 	[SDKLogEntity]
-	[Index(nameof(Id), nameof(Order), nameof(Image), Name = "IX_e00065_1", IsUnique = true)]
+	[Index(nameof(Id), nameof(Order), Name = "IX_e00065_1", IsUnique = true)]
 	public class E00065_SuiteCustom : BaseAudit<short>
 	{
 		[Key]
@@ -29,8 +29,7 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public byte Order { get; set; }
 
-		[Required]
-		public int Image { get; set; }
+		public int? RowidImage { get; set; }
 
 		[Required]
 		public bool IsPrivate { get; set; }
