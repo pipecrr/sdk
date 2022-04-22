@@ -22,12 +22,20 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public override int Rowid { get; set; }
 
+		[ForeignKey("Module")]
 		[Required]
 		public short RowidModule { get; set; }
 
+		[ForeignKey("Feature")]
 		[Required]
 		public int RowidFeature { get; set; }
 
+
+		[Required]
+		public E00010_Module Module { get; set; }
+
+		[Required]
+		public E00040_Feature Feature { get; set; }
 
 	}
 }
