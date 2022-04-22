@@ -22,11 +22,14 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public override int Rowid { get; set; }
 
+		[ForeignKey("SuiteCustom")]
 		[Required]
 		public short RowidSuiteCustom { get; set; }
 
+		[ForeignKey("MenuCustom")]
 		public int? RowidMenuCustom { get; set; }
 
+		[ForeignKey("Menu")]
 		public int? RowidMenu { get; set; }
 
 		[Required]
@@ -35,6 +38,13 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public bool IsPrivate { get; set; }
 
+
+		public E00066_MenuCustom MenuCustom { get; set; }
+
+		public E00061_Menu Menu { get; set; }
+
+		[Required]
+		public E00065_SuiteCustom SuiteCustom { get; set; }
 
 	}
 }
