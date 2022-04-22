@@ -15,17 +15,20 @@ namespace Siesa.SDK.Entities
 	/// Menú
 	/// </summary>
 
-	[Index(nameof(RowidMenuParent), nameof(RowidResource), nameof(RowidFeature), nameof(Order), nameof(Type), nameof(Level), nameof(Image), Name = "IX_e00061_1", IsUnique = true)]
+	[Index(nameof(RowidMenuParent), nameof(RowidResource), nameof(RowidFeature), nameof(Order), nameof(Type), nameof(Level), nameof(RowidImage), Name = "IX_e00061_1", IsUnique = true)]
 	public class E00061_Menu : BaseSDK<int>
 	{
 		[Key]
 		[Required]
 		public override int Rowid { get; set; }
 
+		[ForeignKey("MenuParent")]
 		public int? RowidMenuParent { get; set; }
 
+		[ForeignKey("Resource")]
 		public int? RowidResource { get; set; }
 
+		[ForeignKey("Feature")]
 		public int? RowidFeature { get; set; }
 
 		[Required]
@@ -37,9 +40,14 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public byte Level { get; set; }
 
-		[Required]
-		public int Image { get; set; }
+		public int? RowidImage { get; set; }
 
+
+		public E00061_Menu MenuParent { get; set; }
+
+		public E00020_Resource Resource { get; set; }
+
+		public E00040_Feature Feature { get; set; }
 
 	}
 }
