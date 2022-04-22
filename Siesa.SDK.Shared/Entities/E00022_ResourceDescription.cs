@@ -22,9 +22,11 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public override int Rowid { get; set; }
 
+		[ForeignKey("Culture")]
 		[Required]
 		public short RowidCulture { get; set; }
 
+		[ForeignKey("Resource")]
 		[Required]
 		public int RowidResource { get; set; }
 
@@ -32,6 +34,12 @@ namespace Siesa.SDK.Entities
 		[StringLength(500)]
 		public string Description { get; set; }
 
+
+		[Required]
+		public E00020_Resource Resource { get; set; }
+
+		[Required]
+		public E00021_Culture Culture { get; set; }
 
 	}
 }
