@@ -18,9 +18,21 @@
         {
             <SDKMenuItem MenuItem="@menuItem" />
         }
-        @foreach (var menuItem in DevMenu)
+        @if(DevMenu != null)
         {
-            <SDKMenuItem MenuItem="@menuItem" />
+            <DxMenuItem Text="DevMenu" IconCssClass="oi oi-code">
+                <Items>
+                    <DxMenuItem>
+                        <Template>
+                            <DxTextBox @bind-Text="@DevMenuSearchString"></DxTextBox>
+                        </Template>
+                    </DxMenuItem>
+                    @foreach (var menuItem in DevMenu.Where(x => !String.IsNullOrEmpty(DevMenuSearchString) ? x.Title.ToLower().Contains(DevMenuSearchString.ToLower()) : true))
+                    {
+                        <SDKMenuItem MenuItem="@menuItem" />
+                    }
+                </Items>
+            </DxMenuItem>
         }
         @if (AuthenticationService.User != null)
         {

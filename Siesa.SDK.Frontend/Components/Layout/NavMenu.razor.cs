@@ -16,17 +16,13 @@ namespace Siesa.SDK.Frontend.Components.Layout
         public E00130_MenuGroup SelectedMenuGroup { get; set; }
         public List<E00131_Menu> Menus { get; set; }
         public List<E00131_Menu> DevMenu { get; set; }
+
+        public string DevMenuSearchString { get; set; }
         protected override void OnInitialized()
         {
             base.OnInitialized();
             Menus = new List<E00131_Menu>();
-            DevMenu = new List<E00131_Menu> { 
-                new E00131_Menu { 
-                    Title = "DevMenu",
-                    Image  ="oi oi-code",
-                    SubMenus = new List<E00131_Menu>()
-                } 
-            };
+            DevMenu = new List<E00131_Menu>();
             _ = LoadMenu();
         }
         private async Task LoadMenu()
@@ -66,7 +62,7 @@ namespace Siesa.SDK.Frontend.Components.Layout
                         submenuItem.SubMenus.Add(customActionMenu);
                     }
 
-                    DevMenu.First().SubMenus.Add(submenuItem);
+                    DevMenu.Add(submenuItem);
                 }
             }
             var backends = backendManager.GetBackendDict();
