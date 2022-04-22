@@ -15,18 +15,20 @@ namespace Siesa.SDK.Entities
 	/// Menú  personalizado 
 	/// </summary>
 	[SDKLogEntity]
-	[Index(nameof(RowidMenuCustomParent), nameof(Id), nameof(RowidFeature), nameof(Order), nameof(Type), nameof(Level), nameof(Image), nameof(IsPrivate), Name = "IX_e00066_1", IsUnique = true)]
+	[Index(nameof(RowidMenuCustomParent), nameof(Id), nameof(RowidFeature), nameof(Order), nameof(Type), nameof(Level), nameof(IsPrivate), nameof(RowidImage), Name = "IX_e00066_1", IsUnique = true)]
 	public class E00066_MenuCustom : BaseAudit<int>
 	{
 		[Key]
 		[Required]
 		public override int Rowid { get; set; }
 
+		[ForeignKey("MenuCustomParent")]
 		public int? RowidMenuCustomParent { get; set; }
 
 		[StringLength(500)]
 		public string? Id { get; set; }
 
+		[ForeignKey("Feature")]
 		public int? RowidFeature { get; set; }
 
 		[Required]
@@ -38,12 +40,15 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public byte Level { get; set; }
 
-		[Required]
-		public int Image { get; set; }
+		public int? RowidImage { get; set; }
 
 		[Required]
 		public bool IsPrivate { get; set; }
 
+
+		public E00066_MenuCustom MenuCustomParent { get; set; }
+
+		public E00040_Feature Feature { get; set; }
 
 	}
 }
