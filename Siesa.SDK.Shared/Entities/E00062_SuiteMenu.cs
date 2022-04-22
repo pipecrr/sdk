@@ -22,15 +22,23 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public override int Rowid { get; set; }
 
+		[ForeignKey("Suite")]
 		[Required]
 		public short RowidSuite { get; set; }
 
+		[ForeignKey("Menu")]
 		[Required]
 		public int RowidMenu { get; set; }
 
 		[Required]
 		public byte Order { get; set; }
 
+
+		[Required]
+		public E00060_Suite Suite { get; set; }
+
+		[Required]
+		public E00061_Menu Menu { get; set; }
 
 	}
 }
