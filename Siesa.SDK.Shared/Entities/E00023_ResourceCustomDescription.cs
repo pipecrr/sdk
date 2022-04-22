@@ -22,6 +22,7 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public override int Rowid { get; set; }
 
+		[ForeignKey("ResourceDescription")]
 		[Required]
 		public int RowidResourceDescription { get; set; }
 
@@ -29,6 +30,9 @@ namespace Siesa.SDK.Entities
 		[StringLength(500)]
 		public string Description { get; set; }
 
+
+		[Required]
+		public E00022_ResourceDescription ResourceDescription { get; set; }
 
 	}
 }
