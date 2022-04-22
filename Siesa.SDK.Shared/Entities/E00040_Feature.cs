@@ -22,9 +22,13 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public override int Rowid { get; set; }
 
+		[ForeignKey("Resource")]
 		[Required]
 		public int RowidResource { get; set; }
 
+
+		[Required]
+		public E00020_Resource Resource { get; set; }
 
 	}
 }
