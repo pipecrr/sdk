@@ -33,8 +33,6 @@ namespace Siesa.SDK.Backend.Access
 
 	public DbSet<E00046_ModuleFeature>? E00046_ModuleFeature { get; set; }
 
-	public DbSet<U00067_SuiteMenuCustom>? U00067_SuiteMenuCustom { get; set; }
-
 	public DbSet<E00042_Operation>? E00042_Operation { get; set; }
 
 	public DbSet<U00066_MenuCustom>? U00066_MenuCustom { get; set; }
