@@ -25,8 +25,10 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public int RowidUser { get; set; }
 
+		[ForeignKey("Menu")]
 		public int? RowidMenu { get; set; }
 
+		[ForeignKey("MenuCustom")]
 		public int? RowidMenuCustom { get; set; }
 
 		[Required]
@@ -37,6 +39,10 @@ namespace Siesa.SDK.Entities
 		[MaxLength(7)]
 		public DateTime DateLastUse { get; set; }
 
+
+		public E00061_Menu Menu { get; set; }
+
+		public E00066_MenuCustom MenuCustom { get; set; }
 
 	}
 }
