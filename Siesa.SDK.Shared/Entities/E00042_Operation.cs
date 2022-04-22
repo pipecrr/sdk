@@ -16,6 +16,7 @@ namespace Siesa.SDK.Entities
 	/// </summary>
 
 	[Index(nameof(RowidFeature), nameof(RowidAction), nameof(Index), Name = "IX_e00042_1", IsUnique = true)]
+	[Index(nameof(RowidFeature), nameof(Index), Name = "IX_e00042_2", IsUnique = true)]
 	public class E00042_Operation : BaseSDK<int>
 	{
 		[Key]
