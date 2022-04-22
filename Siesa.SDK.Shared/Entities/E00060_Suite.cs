@@ -22,6 +22,7 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public override short Rowid { get; set; }
 
+		[ForeignKey("Resource")]
 		[Required]
 		public int RowidResource { get; set; }
 
@@ -31,6 +32,9 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public int Image { get; set; }
 
+
+		[Required]
+		public E00020_Resource Resource { get; set; }
 
 	}
 }
