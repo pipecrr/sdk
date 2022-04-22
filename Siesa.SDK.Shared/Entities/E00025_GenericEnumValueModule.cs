@@ -25,9 +25,13 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public int RowidGenericEnumValue { get; set; }
 
+		[ForeignKey("Module")]
 		[Required]
 		public short RowidModule { get; set; }
 
+
+		[Required]
+		public E00010_Module Module { get; set; }
 
 	}
 }
