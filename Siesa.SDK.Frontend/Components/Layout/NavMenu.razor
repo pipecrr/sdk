@@ -22,9 +22,9 @@
         {
             <DxMenuItem Text="DevMenu" IconCssClass="oi oi-code">
                 <Items>
-                    <DxMenuItem>
+                    <DxMenuItem Enabled="false" CssClass="menuitem-dev-search-box">
                         <Template>
-                            <DxTextBox @bind-Text="@DevMenuSearchString"></DxTextBox>
+                            <DxTextBox @bind-Text="@DevMenuSearchString" NullText="Search..." ></DxTextBox>
                         </Template>
                     </DxMenuItem>
                     @foreach (var menuItem in DevMenu.Where(x => !String.IsNullOrEmpty(DevMenuSearchString) ? x.Title.ToLower().Contains(DevMenuSearchString.ToLower()) : true))

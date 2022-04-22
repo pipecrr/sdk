@@ -1,3 +1,8 @@
 ﻿body {
     background: #F0F3F4 0% 0% no-repeat padding-box;
 }
+
+/* DevMenu SearchBox Patch */
+.menuitem-dev-search-box .dxbs-menu-item-tmpl {
+    width: 100%;
+}
