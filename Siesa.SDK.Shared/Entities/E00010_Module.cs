@@ -30,12 +30,16 @@ namespace Siesa.SDK.Entities
 		[StringLength(250)]
 		public string Description { get; set; }
 
+		[ForeignKey("Resource")]
 		[Required]
 		public int RowidResource { get; set; }
 
 		[Required]
 		public byte LicenceType { get; set; }
 
+
+		[Required]
+		public E00020_Resource Resource { get; set; }
 
 	}
 }
