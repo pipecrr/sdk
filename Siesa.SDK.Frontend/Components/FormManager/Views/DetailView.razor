@@ -35,12 +35,14 @@ else if (ModelLoaded == true)
         <SetTopBar>
             <TopBarTitle>@BusinessObj</TopBarTitle>
             <TopBarButtons>
-                <DxButton RenderStyle="ButtonRenderStyle.Primary" Click="GoToEdit" Text="Editar" />
-                <DxButton RenderStyle="ButtonRenderStyle.Info" Click="GoToList" Text="Listar" />
-                <DxButton RenderStyle="ButtonRenderStyle.Danger" Click="DeleteBusiness" Text="Eliminar" />
+                <DxButton RenderStyle="ButtonRenderStyle.Primary" RenderStyleMode="ButtonRenderStyleMode.Text"
+                Click="GoToCreate" Text="Crear" />
+                <DxButton RenderStyle="ButtonRenderStyle.Primary" RenderStyleMode="ButtonRenderStyleMode.Text" Click="GoToEdit" Text="Editar" />
+                <DxButton RenderStyle="ButtonRenderStyle.Info" RenderStyleMode="ButtonRenderStyleMode.Text" Click="GoToList" Text="Listar" />
+                <DxButton RenderStyle="ButtonRenderStyle.Danger" RenderStyleMode="ButtonRenderStyleMode.Text" Click="DeleteBusiness" Text="Eliminar" />
                 @foreach (var btn in FormViewModel.Buttons)
                 {
-                    <DxButton RenderStyle="@btn.RenderStyle" Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />
+                    <DxButton RenderStyle="@btn.RenderStyle" RenderStyleMode="ButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />
                 }
             </TopBarButtons>
         </SetTopBar>

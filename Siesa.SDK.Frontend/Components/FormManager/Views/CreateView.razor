@@ -64,11 +64,11 @@ else if (BusinessObj.BaseObj != null)
         <SetTopBar>
             <TopBarTitle>Crear @BusinessName</TopBarTitle>
             <TopBarButtons>
-                <DxButton form="@FormID" RenderStyle="ButtonRenderStyle.Primary" SubmitFormOnClick="true" Text="Guardar" />
-                <DxButton RenderStyle="ButtonRenderStyle.Secondary" Click="GoToList" Text="Cancelar" />
+                <DxButton form="@FormID" RenderStyle="ButtonRenderStyle.Primary" RenderStyleMode="ButtonRenderStyleMode.Text" SubmitFormOnClick="true" Text="Guardar" />
+                <DxButton RenderStyle="ButtonRenderStyle.Secondary"  RenderStyleMode="ButtonRenderStyleMode.Text" Click="GoToList" Text="Cancelar" />
                 @foreach (var btn in FormViewModel.Buttons)
                 {
-                    <DxButton RenderStyle="@btn.RenderStyle" Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />
+                    <DxButton RenderStyle="@btn.RenderStyle" RenderStyleMode="ButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />
                 }
             </TopBarButtons>
         </SetTopBar>

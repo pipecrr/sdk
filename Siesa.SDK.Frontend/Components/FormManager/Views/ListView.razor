@@ -88,7 +88,7 @@ else
                 Click="GoToCreate" Text="Crear" />
                 @foreach (var btn in ListViewModel.Buttons)
                 {
-                    <DxButton RenderStyle="@btn.RenderStyle" Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />
+                    <DxButton RenderStyle="@btn.RenderStyle" RenderStyleMode="ButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />
                 }
             </TopBarButtons>
         </SetTopBar>

@@ -99,6 +99,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             await base.OnInitializedAsync();
             //InitView();
         }
+        private void GoToCreate()
+        {
+            NavManager.NavigateTo($"{BusinessName}/create/");
+        }
 
         private void GoToEdit()
         {
