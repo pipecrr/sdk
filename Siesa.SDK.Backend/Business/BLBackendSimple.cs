@@ -121,7 +121,7 @@ namespace Siesa.SDK.Business
             myContext = _dbFactory.CreateDbContext();
             myContext.SetProvider(_provider);
 
-            _navigationProperties = myContext.Model.FindEntityType(typeof(T)).GetNavigations().Where(p => p.Inverse == null);
+            _navigationProperties = myContext.Model.FindEntityType(typeof(T)).GetNavigations().Where(p => p.IsOnDependent);
             AuthenticationService = (IAuthenticationService)_provider.GetService(typeof(IAuthenticationService));
         }
 
@@ -322,7 +322,7 @@ namespace Siesa.SDK.Business
                         {
                             if (propertiesToKeep != null && propertiesToKeep.Contains(fkFieldName))
                             {
-                                var relNavigations = myContext.Model.FindEntityType(fkFieldValue.GetType()).GetNavigations().Where(p => p.Inverse == null);
+                                var relNavigations = myContext.Model.FindEntityType(fkFieldValue.GetType()).GetNavigations().Where(p => p.IsOnDependent);
                                 DisableRelatedProperties(fkFieldValue, relNavigations);
                                 continue;
                             }
