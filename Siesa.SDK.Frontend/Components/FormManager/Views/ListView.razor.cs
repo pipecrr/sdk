@@ -15,7 +15,7 @@ using Radzen.Blazor;
 using Siesa.SDK.Frontend.Utils;
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
-    public partial class ListView: ComponentBase
+    public partial class ListView : ComponentBase
     {
         [Parameter]
         public string BusinessName { get; set; }
@@ -25,7 +25,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter]
         public bool SetTopBar { get; set; } = true;
 
-        [Parameter] 
+        [Parameter]
         public bool IsSubpanel { get; set; }
 
         [Parameter]
@@ -40,18 +40,50 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private ListViewModel ListViewModel { get; set; }
 
+        [Parameter]
+        public string ViewdefName { get; set; }
+
+        [Parameter]
+        public string DefaultViewdefName { get; set; } = "list";
+
+        [Parameter]
+        public Action<string> OnClickEdit { get; set; } = null;
+
+        [Parameter]
+        public Action<string> OnClickDetail { get; set; } = null;
 
         private IEnumerable<object> data;
         int count;
         public RadzenDataGrid<object> _gridRef;
 
         Guid needUpdate;
-        protected void InitView(string bName = null) {
+
+        private string GetViewdef(string businessName)
+        {
+            var viewdef = "";
+            if (String.IsNullOrEmpty(ViewdefName))
+            {
+                viewdef = DefaultViewdefName;
+            }else{
+                viewdef = ViewdefName;
+            }
+
+            var data = BusinessManagerFrontend.Instance.GetViewdef(businessName, viewdef);
+            if (String.IsNullOrEmpty(data) && viewdef != DefaultViewdefName)
+            {
+                data = BusinessManagerFrontend.Instance.GetViewdef(businessName, DefaultViewdefName);
+            }
+            return data;
+        }
+
+        protected void InitView(string bName = null)
+        {
             Loading = true;
-            if (bName == null) {
+            if (bName == null)
+            {
                 bName = BusinessName;
             }
-            var metadata = BusinessManagerFrontend.Instance.GetViewdef(bName, "list");
+            var metadata = GetViewdef(bName);
             if (metadata == null || metadata == "")
             {
                 ErrorMsg = "No hay definición para la vista de lista";
@@ -87,7 +119,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 needUpdate = Guid.NewGuid();
                 _gridRef.Reload();
             }
-            StateHasChanged();      
+            StateHasChanged();
         }
 
         async Task LoadData(LoadDataArgs args)
@@ -99,14 +131,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 foreach (var filter in ConstantFilters)
                 {
-                    if(!string.IsNullOrEmpty(filters))
+                    if (!string.IsNullOrEmpty(filters))
                     {
                         filters += " && ";
                     }
                     filters += $"{filter}";
                 }
             }
-            var dbData = await BusinessObj.GetDataAsync(args.Skip,args.Top, filters, args.OrderBy);
+            var dbData = await BusinessObj.GetDataAsync(args.Skip, args.Top, filters, args.OrderBy);
             data = dbData.Data;
             count = dbData.TotalCount;
             Loading = false;
@@ -114,7 +146,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private void GoToEdit(int id)
         {
-            NavManager.NavigateTo($"{BusinessName}/edit/{id}/");
+            if (OnClickEdit != null)
+            {
+                OnClickEdit(id.ToString());
+            }
+            else
+            {
+                NavManager.NavigateTo($"{BusinessName}/edit/{id}/");
+            }
+            
         }
         private void GoToCreate()
         {
@@ -123,7 +163,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private void GoToDetail(int id)
         {
-            NavManager.NavigateTo($"{BusinessName}/detail/{id}/");
+            if (OnClickDetail != null)
+            {
+                OnClickDetail(id.ToString());
+            }
+            else
+            {
+                NavManager.NavigateTo($"{BusinessName}/detail/{id}/");
+            }
         }
 
         private void OnClickCustomButton(Button button)

@@ -5,7 +5,7 @@
         
         <span class="relationship-panel-header-close">
             @if(Relationship.Type != RelationshipType.ManyToMany){
-                <span class="oi oi-plus" @onclick="OpenModal" ></span>
+                <span class="oi oi-plus" @onclick="OpenModalCreate" ></span>
             }
             
             @if(isOpen){
@@ -18,7 +18,7 @@
     </div>
     @if(isOpen){
         <div class="relationship-panel-body">
-            <DynamicListView BusinessName="@Relationship.RelatedBusiness" IsSubpanel=true SubpanelFilter="@filter" @key="listview_key" />
+            <DynamicListView BusinessName="@Relationship.RelatedBusiness" IsSubpanel=true SubpanelFilter="@filter" @key="listview_key" OnClickEdit="@(async (string item_rowid)=> { await OpenModalEdit(item_rowid); })" OnClickDetail="@(async (string item_rowid)=> { await OpenModalDetail(item_rowid); })" />
         </div>
     }
 </div>
@@ -36,7 +36,7 @@
         isOpen = !isOpen;
     }
 
-     public async Task OpenModal()
+     public async Task OpenModalCreate()
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
         parameters.Add(Relationship.RelatedField, Parent);
@@ -45,6 +45,27 @@
         new DialogOptions() { Width = "700px", ShowTitle=false,   Resizable = true});
         listview_key = Guid.NewGuid();
         isOpen = true;
+        StateHasChanged();
+    }
+
+    public async Task OpenModalEdit(string item_rowid)
+    {
+        var modal_result = await DialogService.OpenAsync("", 
+        ds => @<DynamicEditView BusinessName="@Relationship.RelatedBusiness" IsSubpanel=true  BusinessObjId="@item_rowid" />, 
+        new DialogOptions() { Width = "700px", ShowTitle=false,   Resizable = true});
+        listview_key = Guid.NewGuid();
+        isOpen = true;
+        StateHasChanged();
+    }
+    
+    public async Task OpenModalDetail(string item_rowid)
+    {
+        var modal_result = await DialogService.OpenAsync("", 
+        ds => @<DynamicDetailView BusinessName="@Relationship.RelatedBusiness" IsSubpanel=true  BusinessObjId="@item_rowid" />, 
+        new DialogOptions() { Width = "700px", ShowTitle=false,   Resizable = true});
+        listview_key = Guid.NewGuid();
+        isOpen = true;
+        StateHasChanged();
     }
 
     protected override void OnInitialized()

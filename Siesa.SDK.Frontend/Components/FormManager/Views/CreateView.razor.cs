@@ -12,7 +12,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         protected override async Task OnInitializedAsync()
         {
-            ViewdefName = "create";
+            DefaultViewdefName = String.IsNullOrEmpty(DefaultViewdefName) ? "create" : DefaultViewdefName;
             await base.OnInitializedAsync();
         }
         

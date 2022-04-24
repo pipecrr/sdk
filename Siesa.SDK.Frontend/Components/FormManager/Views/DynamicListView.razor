@@ -13,6 +13,9 @@ else if (BusinessObj != null)
 
 @code {
     [Parameter] public string SubpanelFilter { get; set; }
+
+    [Parameter] public Action<string> OnClickEdit { get; set; } = null;
+    [Parameter] public Action<string> OnClickDetail { get; set; } = null;
     protected override void SetParameters(dynamic businessObj, string businessName){
         parameters.Clear();
         parameters.Add("BusinessObj", businessObj);
@@ -21,6 +24,15 @@ else if (BusinessObj != null)
         {
             parameters.Add("SetTopBar", false);
             parameters.Add("ConstantFilters", new List<string>() { SubpanelFilter });
+            parameters.Add("ViewdefName", "related_list");
+            if (OnClickEdit != null)
+            {
+                parameters.Add("OnClickEdit", OnClickEdit);
+            }
+            if (OnClickDetail != null)
+            {
+                parameters.Add("OnClickDetail", OnClickDetail);
+            }
         }
     }
 }

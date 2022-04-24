@@ -13,6 +13,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
     public partial class DetailView : ComponentBase
     {
+        [Inject] public  Radzen.DialogService dialogService { get; set; }
         [Parameter]
         public string BusinessName { get; set; }
         [Parameter]
@@ -117,7 +118,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private async Task DeleteBusiness()
         {
             await BusinessObj.DeleteAsync();
-            NavManager.NavigateTo($"{BusinessName}/");
+            if(IsSubpanel){
+                dialogService.Close(false);
+            }else{
+                NavManager.NavigateTo($"{BusinessName}/");
+            }
         }
 
         private void OnClickCustomButton(Button button)

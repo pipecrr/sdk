@@ -31,5 +31,17 @@ else if (BusinessObj != null)
         BusinessObj.OnReady();
     }
 
+    protected override void SetParameters(dynamic businessObj, string businessName){
+        parameters.Clear();
+        parameters.Add("BusinessObj", businessObj);
+        parameters.Add("BusinessName", businessName);
+        parameters.Add("IsSubpanel", IsSubpanel);
+        if (IsSubpanel)
+        {
+            parameters.Add("SetTopBar", false);
+            parameters.Add("ViewdefName", "related_create");
+        }
+    }
+
 
 }

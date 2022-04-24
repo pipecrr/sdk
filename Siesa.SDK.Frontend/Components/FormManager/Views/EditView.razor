@@ -11,6 +11,10 @@ else if (Loading == true)
 }
 else if (BusinessObj.BaseObj.Rowid != 0)
 {
+    @if(IsSubpanel){
+        <h5>Editar @BusinessObj</h5>
+        <hr />
+    }
     <EditForm id="@FormID"
               OnValidSubmit="@HandleValidSubmit"
               OnInvalidSubmit="@HandleInvalidSubmit"
@@ -44,17 +48,27 @@ else if (BusinessObj.BaseObj.Rowid != 0)
         <ValidationSummary />
         <label>@ErrorMsg</label>
     </EditForm>
-    @if(SetTopBar)
+    @if(IsSubpanel){
+        <div class="buttons-container">
+            @foreach (var btn in FormViewModel.Buttons)
+            {
+                <DxButton RenderStyle="@btn.RenderStyle" RenderStyleMode="ButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />
+            }
+            <DxButton form="@FormID" RenderStyle="ButtonRenderStyle.Primary" RenderStyleMode="ButtonRenderStyleMode.Text" SubmitFormOnClick="true" Text="Guardar" />
+            <DxButton RenderStyle="ButtonRenderStyle.Secondary" RenderStyleMode="ButtonRenderStyleMode.Text" Click="@((args) => dialogService.Close(false))" Text="Cancelar" />
+        </div>
+    }
+    @if(SetTopBar && !IsSubpanel)
     {
         <SetTopBar>
             <TopBarTitle>Editar @BusinessObj</TopBarTitle>
             <TopBarButtons>
-                <DxButton form="@FormID" RenderStyle="ButtonRenderStyle.Primary" RenderStyleMode="ButtonRenderStyleMode.Text" SubmitFormOnClick="true" Text="Guardar" />
-                <DxButton RenderStyle="ButtonRenderStyle.Secondary" RenderStyleMode="ButtonRenderStyleMode.Text" Click="GoToList" Text="Cancelar" />
                 @foreach (var btn in FormViewModel.Buttons)
                 {
                     <DxButton RenderStyle="@btn.RenderStyle" RenderStyleMode="ButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />
                 }
+                <DxButton form="@FormID" RenderStyle="ButtonRenderStyle.Primary" RenderStyleMode="ButtonRenderStyleMode.Text" SubmitFormOnClick="true" Text="Guardar" />
+                <DxButton RenderStyle="ButtonRenderStyle.Secondary" RenderStyleMode="ButtonRenderStyleMode.Text" Click="GoToList" Text="Cancelar" />
             </TopBarButtons>
         </SetTopBar>
     }

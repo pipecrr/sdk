@@ -11,7 +11,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public bool SetTopBar { get; set; } = true;
         protected override async Task OnInitializedAsync()
         {
-            ViewdefName = "edit";
+            DefaultViewdefName = String.IsNullOrEmpty(DefaultViewdefName) ? "edit" : DefaultViewdefName;
             await base.OnInitializedAsync();
         }
 
