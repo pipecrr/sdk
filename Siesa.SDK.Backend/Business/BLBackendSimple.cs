@@ -22,6 +22,7 @@ using System.Reflection;
 using Siesa.SDK.Shared.Utilities;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Siesa.SDK.Business
 {
@@ -200,7 +201,8 @@ namespace Siesa.SDK.Business
         private void Validate(ref ValidateAndSaveBusinessObjResponse baseOperation)
         {
             ValidateBussines(ref baseOperation);
-            K validator = Activator.CreateInstance<K>();
+            //K validator = Activator.CreateInstance<K>();
+            K validator = ActivatorUtilities.CreateInstance(_provider, typeof(K)) as K;
             validator.ValidatorType = "Entity";
             SDKValidator.Validate<T>(BaseObj, validator, ref baseOperation);
         }
