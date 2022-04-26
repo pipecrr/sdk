@@ -21,8 +21,6 @@ namespace Siesa.SDK.Backend.Access
 
 	public DbSet<U00066_MenuCustom>? U00066_MenuCustom { get; set; }
 
-	public DbSet<U00065_SuiteCustom>? U00065_SuiteCustom { get; set; }
-
 	public DbSet<E00061_Menu>? E00061_Menu { get; set; }
 
 	public DbSet<E00062_SuiteMenu>? E00062_SuiteMenu { get; set; }
