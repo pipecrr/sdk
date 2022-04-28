@@ -12,23 +12,15 @@ using Microsoft.EntityFrameworkCore;
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
-	/// Compañias
+	/// Compañía
 	/// </summary>
 
-	[Index(nameof(RowidGroupCompany), Name = "IX_e00201_1")]
-	public class E00201_Company
+	public class E00201_Company : BaseSDK<short>
 	{
 		[Key]
 		[Required]
-		public int Rowid { get; set; }
+		public override short Rowid { get; set; }
 
-		[ForeignKey("GroupCompany")]
-		[Required]
-		public int RowidGroupCompany { get; set; }
-
-
-		[Required]
-		public E00200_GroupCompany GroupCompany { get; set; }
 
 	}
 }
