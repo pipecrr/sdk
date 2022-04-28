@@ -15,7 +15,7 @@ namespace Siesa.SDK.Entities
 	/// Grupos de trabajo
 	/// </summary>
 
-	public class E00224_DataVisibilityGroup : BaseMasterCompanyGroup<int, int, string>
+	public class E00224_DataVisibilityGroup : BaseMasterCompanyGroup<string>
 	{
 		[Required]
 		[StringLength(20)]

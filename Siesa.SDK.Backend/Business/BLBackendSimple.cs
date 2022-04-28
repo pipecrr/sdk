@@ -24,7 +24,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Siesa.SDK.Business
 {
-    public class BLBackendSimple : IBLBase<BaseEntity>
+    public class BLBackendSimple : IBLBase<BaseSDK<int>>
     {
         [JsonIgnore]
         private IAuthenticationService AuthenticationService { get; set; }
@@ -35,24 +35,24 @@ namespace Siesa.SDK.Business
         }
 
         public string BusinessName { get; set; }
-        public BaseEntity BaseObj { get; set; }
+        public BaseSDK<int> BaseObj { get; set; }
 
         public int Delete()
         {
             return 0;
         }
 
-        public BaseEntity Get(int id)
+        public BaseSDK<int> Get(int id)
         {
             return null;
         }
 
-        public Task<BaseEntity> GetAsync(int id)
+        public Task<BaseSDK<int>> GetAsync(int id)
         {
             return null;
         }
 
-        public Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<BaseEntity> queryFilter = null)
+        public Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<BaseSDK<int>> queryFilter = null)
         {
             return null;
         }
@@ -66,7 +66,7 @@ namespace Siesa.SDK.Business
             return null;
         }
     }
-    public class BLBackendSimple<T, K> : IBLBase<T> where T : BaseSDK<class> where K : BLBaseValidator<T> where L
+    public class BLBackendSimple<T, K> : IBLBase<T> where T : class,IBaseSDK where K : BLBaseValidator<T>
     {
         [JsonIgnore]
         private IAuthenticationService AuthenticationService { get; set; }
@@ -128,7 +128,7 @@ namespace Siesa.SDK.Business
         {
             var context = myContext;
             //var query = context.Set<T>().AsQueryable();
-            var query = context.Set<T>().Where(x => x.Rowid == rowid).AsQueryable();
+            var query = context.Set<T>().Where(x => x.CheckRowid(rowid)).AsQueryable();
             foreach (var relatedProperty in _relatedProperties)
             {
                 query = query.Include(relatedProperty);
@@ -253,7 +253,7 @@ namespace Siesa.SDK.Business
                     if(property is not null){ 
 
                         var bodyValue = BaseObj.GetType().GetProperty(property.Name).GetValue(BaseObj);
-                        var entityValueRowid = (int)bodyValue.GetType().GetProperty("Rowid").GetValue(bodyValue);
+                        var entityValueRowid = (Int64)bodyValue.GetType().GetProperty("Rowid").GetValue(bodyValue);
                                 
                         valueProp = entityValueRowid;  
                     }
@@ -305,7 +305,7 @@ namespace Siesa.SDK.Business
                             var principalFieldName = principalProperties[0].Name;
                             var principalFieldValue = fkFieldValue.GetType().GetProperty(principalFieldName).GetValue(fkFieldValue);
                             if(principalFieldValue != null){
-                                if((int)principalFieldValue != 0){
+                                if((Int64)principalFieldValue != 0){
                                     obj.GetType().GetProperty(fkProperties[0].Name).SetValue(obj, principalFieldValue);
                                 }
                                 
@@ -318,22 +318,16 @@ namespace Siesa.SDK.Business
             }
         }
 
-        private int Save(SDKContext context)
+        private Int64 Save(SDKContext context)
         {
-            if (BaseObj.Rowid == 0)
+            if (BaseObj.GetRowid() == 0)
             { 
                 DisableRelatedProperties(BaseObj, _navigationProperties, RelFieldsToSave);
-                BaseObj.LastUpdateDate = DateTime.Now;
-                BaseObj.RowidCreator = AuthenticationService.User.Rowid;
-                BaseObj.RowidLastEditUser = AuthenticationService.User.Rowid;
                 var entry = context.Add<T>(BaseObj);
             }
             else
             {
-                //demo borrar
-                //get by rowid
-                T entity = context.Set<T>().Where(x => x.Rowid == BaseObj.Rowid).FirstOrDefault();
-                //context.Entry(entity).OriginalValues["RowVersion"] = BaseObj.RowVersion;
+                T entity = context.Set<T>().Where(x => x.CheckRowid(BaseObj.GetRowid())).FirstOrDefault();
                 context.ResetConcurrencyValues(entity, BaseObj);
                 DisableRelatedProperties(BaseObj, _navigationProperties, RelFieldsToSave);
                 context.Entry(entity).CurrentValues.SetValues(BaseObj);
@@ -341,16 +335,10 @@ namespace Siesa.SDK.Business
                 {
                     entity.GetType().GetProperty(relatedProperty).SetValue(entity, BaseObj.GetType().GetProperty(relatedProperty).GetValue(BaseObj));
                 }
-                //DisableRelatedProperties(entity, _navigationProperties, RelFieldsToSave);
-                
-
-                //set updated values
-                entity.LastUpdateDate = DateTime.Now;
-                entity.RowidLastEditUser = AuthenticationService.User.Rowid;
             }
 
             context.SaveChanges(); //TODO: Capturar errores db y hacer rollback
-            return BaseObj.Rowid;
+            return BaseObj.GetRowid();
         }
 
         public virtual void Update()

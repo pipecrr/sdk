@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Siesa.SDK.Entities
 {
-    public abstract class BaseMasterCompany<T>: BaseCompany<int>
+    public abstract class BaseMaster<T>: BaseAudit<int>
     {
         [StringLength(2000)]
         public virtual string Description { get; set; }

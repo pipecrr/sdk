@@ -15,7 +15,7 @@ namespace Siesa.SDK.Entities
 	/// Tabla de roles
 	/// </summary>
 
-	public class E00226_Rol : BaseMasterCompanyGroup<int, int, string>
+	public class E00226_Rol : BaseMasterCompanyGroup<string>
 	{
 		[Required]
 		[StringLength(20)]

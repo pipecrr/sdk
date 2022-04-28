@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Siesa.SDK.Entities
 {
-    public class E00108_AuthorizedOperation: BasicEntity<string>
+    public class E00108_AuthorizedOperation: BaseAudit<int>
     {
         public virtual E00105_Feature Feature { get; set; }
         public virtual E00099_GroupCompany GroupCompany { get; set; }

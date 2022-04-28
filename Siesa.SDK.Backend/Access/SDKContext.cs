@@ -85,10 +85,6 @@ namespace Siesa.SDK.Backend.Access
 
 	public DbSet<E00221_Rol>? E00221_Rol { get; set; }
 
-	public DbSet<E00220_User>? E00220_User { get; set; }
-
-	public DbSet<E00201_Company>? E00201_Company { get; set; }
-
 	public DbSet<E00200_GroupCompany>? E00200_GroupCompany { get; set; }
 
 	public DbSet<E00043_Operation>? E00043_Operation { get; set; }
@@ -97,19 +93,12 @@ namespace Siesa.SDK.Backend.Access
 
 	public DbSet<E00041_ModuleFeature>? E00041_ModuleFeature { get; set; }
 
-	public DbSet<E00040_Feature>? E00040_Feature { get; set; }
-
 	public DbSet<E00010_Module>? E00010_Module { get; set; }
 
 	public DbSet<E00025_GenericEnumCodeModule>? E00025_GenericEnumCodeModule { get; set; }
 
-		public DbSet<E00023_ResourceCustomDescription>? E00023_ResourceCustomDescription { get; set; }
 
 		public DbSet<E00024_GenericEnumCode>? E00024_GenericEnumCode { get; set; }
-
-		public DbSet<E00022_ResourceDescription>? E00022_ResourceDescription { get; set; }
-
-		public DbSet<E00021_Culture>? E00021_Culture { get; set; }
 
 		public DbSet<E00020_Resource>? E00020_Resource { get; set; }
 
@@ -162,6 +151,21 @@ namespace Siesa.SDK.Backend.Access
 
         public override int SaveChanges()
         {
+            foreach (var entry in ChangeTracker.Entries())
+            {
+                //Check if the entry inherits from the BaseAudit<> class
+                if(typeof(BaseAudit<>).IsAssignableFrom(entry.Entity.GetType()))
+                {
+                    var lEntity = (BaseAudit<Int64>)entry.Entity;
+                    lEntity.LastUpdateDate = DateTime.Now;
+                    lEntity.RowidUserLastUpdate = 1; //todo
+
+                    if (entry.State == EntityState.Added)
+                    {
+                        lEntity.RowidUserCreates = 1; //todo
+                    }
+                }
+            }
             LogCreator logCreator = new(ChangeTracker.Entries());
             logCreator.ProccessBeforeSaveChanges();
             var result = base.SaveChanges();
@@ -242,12 +246,12 @@ namespace Siesa.SDK.Backend.Access
                     property.SetColumnName(prefix + "_" + column_name);
                 }
 
-                //check if entity inherits from BaseEntity
-                if (typeof(BaseEntity).IsAssignableFrom(entity.ClrType))
+                //check if entity inherits from BaseSDK
+                if (typeof(BaseSDK<>).IsAssignableFrom(entity.ClrType))
                 {
                     /*
                     var newParam = Expression.Parameter(entity.ClrType);
-                    Expression<Func<BaseEntity, bool>> test_delegate = x => x.Source == "SDK2";
+                    Expression<Func<BaseSDK, bool>> test_delegate = x => x.Source == "SDK2";
                     var newBody = ReplacingExpressionVisitor.Replace(test_delegate.Parameters.Single(), newParam, test_delegate.Body);
                     var filter = Expression.Lambda(newBody, newParam);
                     modelBuilder.Entity(entity.Name).HasQueryFilter(filter);*/
@@ -262,9 +266,6 @@ namespace Siesa.SDK.Backend.Access
             }
         }
 
-        public DbSet<E00001_Resource> E00001_Resource { get; set; }
-        public DbSet<E00002_ResourceValue> E00002_ResourceValue { get; set; }
-        public DbSet<E00003_Language> E00003_Language { get; set; }
         public DbSet<E00102_User> E00102_User { get; set; }
         public DbSet<E00110_Team> E00110_Team { get; set; }
         public DbSet<E00103_Role> E00103_Role { get; set; }

@@ -64,8 +64,8 @@ namespace Siesa.SDK.Backend.Access
             this.set = set;
             this._context = context;
             this.query = query;
-            //Check if the entity is a BaseEntity
-            if (typeof(BaseEntity).IsAssignableFrom(typeof(TEntity)))
+            //Check if the entity is a BaseSDK
+            if (typeof(BaseSDK<>).IsAssignableFrom(typeof(TEntity)))
             {
                 //Check if the entity has a dataannotation named "SDKAuthorization"
                 var dataAnnotation = typeof(TEntity).GetCustomAttributes(typeof(SDKAuthorization), false);
@@ -95,16 +95,16 @@ namespace Siesa.SDK.Backend.Access
                     }
 
                         Type authEntityType = typeof(TEntity).Assembly.GetType(authorizationTableName);
-                        var authSet = (IQueryable<BaseUserPermissionEntity<TEntity>>)_context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(authEntityType).Invoke(_context, null);
+                        var authSet = (IQueryable<BaseUserPermission<TEntity>>)_context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(authEntityType).Invoke(_context, null);
 
-                        var sdk_query = ((IQueryable<BaseEntity>)query);
+                        var sdk_query = ((IQueryable<BaseSDK<int>>)query); //TODO: Cambiar tipo de dato en el generic, según la clase
                         var join_sql = sdk_query.Join(authSet,
                             e => e.Rowid,
                             u => u.RowidRecord,
                             (e, u) => new { e, u })
                             .Where(
                                 x => ((
-                                    x.u.UserType == PermissionUserTypes.User && x.u.RowidRelUser == current_user
+                                    x.u.UserType == PermissionUserTypes.User && x.u.RowidUser == current_user
                                     &&  x.u.AuthorizationType == PermissionAuthTypes.Query_Tx
                                 )
                                 || false //TODO: Add other authorization types

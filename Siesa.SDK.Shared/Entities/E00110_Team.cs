@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Siesa.SDK.Entities
 {
-    public class E00110_Team: BasicEntity<string>
+    public class E00110_Team: BaseAudit<int>
     {
         public virtual ICollection<E00111_UsersTeams> Users { get; set; }
 	}

@@ -16,10 +16,10 @@ else
             <RadzenDataGridColumn TItem="object" Title="Acciones" Width="100px" Filterable="false" Sortable="false" >
                 <Template Context="data">
                     <div class="action-buttons">
-                        <button class="btn btn-link grid-btn-link" @onclick="() => GoToEdit(((BaseEntity)data).Rowid)"><span
+                        <button class="btn btn-link grid-btn-link" @onclick="() => GoToEdit(((IBaseSDK)data).GetRowid())"><span
                             class="oi oi-pencil"></span></button>
                         @* <button class="btn btn-link grid-btn-link"
-                        @onclick="() => GoToDetail(((BaseEntity)data).Rowid)"><span class="oi oi-eye"></span></button> *@
+                        @onclick="() => GoToDetail(((BaseSDK<>)data).Rowid)"><span class="oi oi-eye"></span></button> *@
                     </div>
                 </Template>
             </RadzenDataGridColumn>
@@ -60,7 +60,7 @@ else
                 {
                     <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="@field.Label" Type="@columnType">
                         <Template Context="data">
-                            <a href="/@BusinessName/detail/@(((BaseEntity)data).Rowid)/">@data</a>
+                            <a href="/@BusinessName/detail/@(((IBaseSDK)data).GetRowid()).Rowid)/">@data</a>
                         </Template>
                     </RadzenDataGridColumn>
                 }else{

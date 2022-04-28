@@ -17,12 +17,12 @@ using Siesa.SDK.Shared.Validators;
 
 namespace Siesa.SDK.Business
 {
-    public class BLFrontendSimple : IBLBase<BaseEntity>
+    public class BLFrontendSimple : IBLBase<BaseSDK<int>>
     {
         public string BusinessName { get; set; }
         [JsonIgnore]
         public List<Panel> Panels = new List<Panel>();
-        public BaseEntity BaseObj { get; set; }
+        public BaseSDK<int> BaseObj { get; set; }
 
         [JsonIgnore]
         private IAuthenticationService AuthenticationService {get; set;}
@@ -37,17 +37,17 @@ namespace Siesa.SDK.Business
             return 0;
         }
 
-        public BaseEntity Get(int id)
+        public BaseSDK<int> Get(int id)
         {
             return null;
         }
 
-        public Task<BaseEntity> GetAsync(int id)
+        public Task<BaseSDK<int>> GetAsync(int id)
         {
             return null;
         }
 
-        public Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<BaseEntity> queryFilter = null)
+        public Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<BaseSDK<int>> queryFilter = null)
         {
             return null;
         }
@@ -63,7 +63,7 @@ namespace Siesa.SDK.Business
     }
 
     
-    public class BLFrontendSimple<T, K> : IBLBase<T> where T : BaseEntity where K : BLBaseValidator<T>
+    public class BLFrontendSimple<T, K> : IBLBase<T> where T : class,IBaseSDK where K : BLBaseValidator<T>
     {
         public string BusinessName { get; set; }
         [JsonIgnore]
@@ -142,7 +142,7 @@ namespace Siesa.SDK.Business
 
         public async virtual Task<int> DeleteAsync()
         {
-            var result = await Backend.Delete(BaseObj.Rowid);
+            var result = await Backend.Delete(BaseObj.GetRowid());
             return result;
         }
 
@@ -215,7 +215,7 @@ namespace Siesa.SDK.Business
                 var tmpType = currentObject.GetType();
                 var tmpProperty = tmpType.GetProperty(fieldPath[i]);
                 var tmpValue = tmpProperty.GetValue(currentObject, null);
-                var isEntity = tmpProperty.PropertyType.IsSubclassOf(typeof(BaseEntity));
+                var isEntity = tmpProperty.PropertyType.IsSubclassOf(typeof(BaseSDK<>));
                 if (tmpValue == null && isEntity)
                 {
                     tmpValue = Activator.CreateInstance(tmpProperty.PropertyType);

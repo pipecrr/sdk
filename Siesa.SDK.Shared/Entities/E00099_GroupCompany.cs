@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Siesa.SDK.Entities
 {
-    public class E00099_GroupCompany: BasicEntity<string>
+    public class E00099_GroupCompany: BaseSDK<Int16>
     {
         [JsonIgnore]
         public virtual ICollection<E00101_CompaniesGroups> Companies { get; set; }

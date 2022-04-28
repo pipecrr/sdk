@@ -6,15 +6,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Siesa.SDK.Entities
 {
-    [Index(nameof(ID), IsUnique = true)]
-    public abstract class BaseMasterCompanyGroup<T,K>: BaseCompanyGroup<T>
+    public abstract class BaseMasterCompanyGroup<T>: BaseCompanyGroup<int>
     {
         [StringLength(2000)]
         public virtual string Description { get; set; }
         [StringLength(250)]
         public virtual string Name { get; set; }
         [Required]
-        public virtual K ID { get; set; }
+        public virtual T Id { get; set; }
 
         public virtual bool Status { get; set; }
         public virtual bool IsPrivate { get; set; }
@@ -23,7 +22,7 @@ namespace Siesa.SDK.Entities
 
         public override string ToString()
         {
-            return $"({ID}) - {Description}";
+            return $"({Id}) - {Description}";
         }
     }
 }

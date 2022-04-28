@@ -102,7 +102,7 @@ namespace Siesa.SDK.Shared.Backend
             
         }
 
-        public async Task<int> SaveBusiness(string business_name, dynamic obj)
+        public async Task<Int64> SaveBusiness(string business_name, dynamic obj)
         {
             using var channel = GrpcChannel.ForAddress(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
@@ -119,7 +119,7 @@ namespace Siesa.SDK.Shared.Backend
 
         }
 
-        public async Task<dynamic> GetBusinessObj(string business_name, int id)
+        public async Task<dynamic> GetBusinessObj(string business_name, Int64 id)
         {
             using var channel = GrpcChannel.ForAddress(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
@@ -135,7 +135,7 @@ namespace Siesa.SDK.Shared.Backend
 
         }
 
-        public async Task<int> DeleteBusinessObj(string business_name, int id)
+        public async Task<Int64> DeleteBusinessObj(string business_name, Int64 id)
         {
             using var channel = GrpcChannel.ForAddress(this.Url);
             var client = new Protos.SDK.SDKClient(channel);

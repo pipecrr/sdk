@@ -7,7 +7,7 @@ namespace Siesa.SDK.Entities
 {
     public abstract class BaseCompany<T>: BaseAudit<T>
     {
-        public int? RowidCompany { get; set; }
+        public Int16? RowidCompany { get; set; }
         [ForeignKey(nameof(RowidCompany))]
         public virtual E00200_GroupCompany Company { get; set; }
 

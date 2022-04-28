@@ -87,7 +87,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                     var tmpType = currentObject.GetType();
                     var tmpProperty = tmpType.GetProperty(fieldPath[i]);
                     var tmpValue = tmpProperty.GetValue(currentObject, null);
-                    var isEntity = tmpProperty.PropertyType.IsSubclassOf(typeof(BaseEntity));
+                    var isEntity = tmpProperty.PropertyType.IsSubclassOf(typeof(BaseSDK<>));
                     if (tmpValue == null && isEntity)
                     {
                         tmpValue = Activator.CreateInstance(tmpProperty.PropertyType);

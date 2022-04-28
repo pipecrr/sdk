@@ -112,7 +112,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             Loading = false;
         }
 
-        private void GoToEdit(int id)
+        private void GoToEdit(Int64 id)
         {
             NavManager.NavigateTo($"{BusinessName}/edit/{id}/");
         }
@@ -121,7 +121,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             NavManager.NavigateTo($"{BusinessName}/create/");
         }
 
-        private void GoToDetail(int id)
+        private void GoToDetail(Int64 id)
         {
             NavManager.NavigateTo($"{BusinessName}/detail/{id}/");
         }

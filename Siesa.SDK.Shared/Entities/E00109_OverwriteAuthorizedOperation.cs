@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Siesa.SDK.Entities
 {
-    public class E00109_OverwriteAuthorizedOperation: BasicEntity<string>
+    public class E00109_OverwriteAuthorizedOperation: BaseAudit<int>
     {
         public virtual E00107_Operation Feature_Operation { get; set; }
         public virtual E00100_Company Company { get; set; }

@@ -8,9 +8,9 @@ using Siesa.SDK.Shared.Business;
 
 namespace Siesa.SDK.Shared.Business
 {
-    public delegate IQueryable<T> QueryFilterDelegate<T>(IQueryable<T> query) where T : BaseEntity;
+    public delegate IQueryable<T> QueryFilterDelegate<T>(IQueryable<T> query) where T: IBaseSDK;
 
-    public interface IBLBase<T> where T: BaseEntity
+    public interface IBLBase<T> where T: IBaseSDK
     {
         string BusinessName { get; set; }
         T BaseObj { get; set; }
