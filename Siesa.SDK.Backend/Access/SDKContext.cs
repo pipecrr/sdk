@@ -17,6 +17,8 @@ namespace Siesa.SDK.Backend.Access
 {
     public abstract class SDKContext: DbContext
     {
+	public DbSet<E00222_UserAccessSchedulingJournal>? E00222_UserAccessSchedulingJournal { get; set; }
+
 	public DbSet<E00224_DataVisibilityGroup>? E00224_DataVisibilityGroup { get; set; }
 
 	public DbSet<E00221_UserPasswordHistory>? E00221_UserPasswordHistory { get; set; }
