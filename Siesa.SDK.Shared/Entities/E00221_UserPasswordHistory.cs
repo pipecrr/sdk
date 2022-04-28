@@ -22,6 +22,7 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public override int Rowid { get; set; }
 
+		[ForeignKey("User")]
 		[Required]
 		public int RowidUser { get; set; }
 
@@ -38,6 +39,9 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public DateTime PasswordLastUpdate { get; set; }
 
+
+		[Required]
+		public E00220_User User { get; set; }
 
 	}
 }
