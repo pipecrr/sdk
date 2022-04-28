@@ -22,11 +22,14 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public override int Rowid { get; set; }
 
+		[ForeignKey("RolAuthorizedOperation")]
 		[Required]
 		public int RowidRolAuthorizedOperation { get; set; }
 
-		public int? RowidCompany { get; set; }
+		[ForeignKey("Company")]
+		public short? RowidCompany { get; set; }
 
+		[ForeignKey("User")]
 		[Required]
 		public int RowidUser { get; set; }
 
@@ -34,6 +37,14 @@ namespace Siesa.SDK.Entities
 		[StringLength(225)]
 		public string Operation { get; set; }
 
+
+		[Required]
+		public E00220_User User { get; set; }
+
+		public E00201_Company Company { get; set; }
+
+		[Required]
+		public E00228_RolAuthorizedOperation RolAuthorizedOperation { get; set; }
 
 	}
 }
