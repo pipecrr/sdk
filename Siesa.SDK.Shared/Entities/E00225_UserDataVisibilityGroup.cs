@@ -22,12 +22,16 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public override int Rowid { get; set; }
 
+		[ForeignKey("DataVisibilityGroup")]
 		[Required]
 		public int RowidDataVisibilityGroup { get; set; }
 
 		[Required]
 		public int RowidUser { get; set; }
 
+
+		[Required]
+		public E00224_DataVisibilityGroup DataVisibilityGroup { get; set; }
 
 	}
 }
