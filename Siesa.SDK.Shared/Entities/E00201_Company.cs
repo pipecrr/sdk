@@ -21,6 +21,13 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public override short Rowid { get; set; }
 
+		[ForeignKey("CompanyGroup")]
+		[Required]
+		public short RowidCompanyGroup { get; set; }
+
+
+		[Required]
+		public E00200_CompanyGroup CompanyGroup { get; set; }
 
 	}
 }
