@@ -41,8 +41,30 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public string FormID { get; set; } = Guid.NewGuid().ToString();
         protected ValidationMessageStore _messageStore;
         protected EditContext EditFormContext;
-
+        [Parameter]
         public string ViewdefName { get; set; }
+
+        [Parameter]
+        public string DefaultViewdefName { get; set; }
+
+        private string GetViewdef(string businessName)
+        {
+            var viewdef = "";
+            if (String.IsNullOrEmpty(ViewdefName))
+            {
+                viewdef = DefaultViewdefName;
+            }else{
+                viewdef = ViewdefName;
+            }
+
+            var data = BusinessManagerFrontend.Instance.GetViewdef(businessName, viewdef);
+            if (String.IsNullOrEmpty(data) && viewdef != DefaultViewdefName)
+            {
+                data = BusinessManagerFrontend.Instance.GetViewdef(businessName, DefaultViewdefName);
+            }
+            return data;
+        }
+
 
         protected virtual void InitView(string bName = null)
         {
@@ -51,7 +73,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             {
                 bName = BusinessName;
             }
-            var metadata = BusinessManagerFrontend.Instance.GetViewdef(bName, ViewdefName);
+            var metadata = GetViewdef(bName);
             if (metadata == null || metadata == "")
             {
                 ErrorMsg = $"No hay definición para la vista {ViewdefName}";

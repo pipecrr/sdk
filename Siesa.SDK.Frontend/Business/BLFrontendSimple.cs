@@ -206,6 +206,10 @@ namespace Siesa.SDK.Business
             // Do nothing
         }
 
+        public virtual void OnReady(){
+
+        }
+
         public void SetPropertyValue(string propertyName, object value)
         {
             string[] fieldPath = propertyName.Split('.');

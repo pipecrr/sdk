@@ -21,6 +21,8 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using System.Reflection;
 using Siesa.SDK.Shared.Utilities;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Siesa.SDK.Business
 {
@@ -120,7 +122,7 @@ namespace Siesa.SDK.Business
             myContext = _dbFactory.CreateDbContext();
             myContext.SetProvider(_provider);
 
-            _navigationProperties = myContext.Model.FindEntityType(typeof(T)).GetNavigations();
+            _navigationProperties = myContext.Model.FindEntityType(typeof(T)).GetNavigations().Where(p => p.IsOnDependent);
             AuthenticationService = (IAuthenticationService)_provider.GetService(typeof(IAuthenticationService));
         }
 
@@ -199,7 +201,8 @@ namespace Siesa.SDK.Business
         private void Validate(ref ValidateAndSaveBusinessObjResponse baseOperation)
         {
             ValidateBussines(ref baseOperation);
-            K validator = Activator.CreateInstance<K>();
+            //K validator = Activator.CreateInstance<K>();
+            K validator = ActivatorUtilities.CreateInstance(_provider, typeof(K)) as K;
             validator.ValidatorType = "Entity";
             SDKValidator.Validate<T>(BaseObj, validator, ref baseOperation);
         }
@@ -209,14 +212,16 @@ namespace Siesa.SDK.Business
             //TODO: Refactorizar, soportar las 2 formas de definir los indices 
             var attrs_types = System.Attribute.GetCustomAttributes(BaseObj.GetType());
             var attrs = System.Attribute.GetCustomAttributes(BaseObj.GetType()).ToList()
-                                                                                                                                                                   .Where(x=> x is IndexAttribute)
-                                                                            .Where(x=> ((IndexAttribute)x).IsUnique);
+                .Where(x=> x is IndexAttribute)
+                .Where(x=> ((IndexAttribute)x).IsUnique);
   
             foreach (var attr in attrs){ 
 
                 var dictionaryByIndex =GetPropertiesToIndex((IndexAttribute)attr);
 
-                if(ExistsRowByIndex(Utilities.GetDinamycWhere(dictionaryByIndex))){
+                var primaryKey = GetPrimaryKey();
+
+                if(ExistsRowByIndex(Utilities.GetDinamycWhere(dictionaryByIndex,primaryKey))){
                     baseOperation.Errors.Add(new OperationError
                     {
                         Attribute = (dictionaryByIndex.Count>1)?string.Join("", dictionaryByIndex):dictionaryByIndex.First().Key,
@@ -225,7 +230,28 @@ namespace Siesa.SDK.Business
                 }
             }
         }
+        private Dictionary<string,object> GetPrimaryKey()
+        {
+            
+            Dictionary<string,object>  returnValue = new Dictionary<string, object>();
+            
+            var properties = BaseObj.GetType().GetProperties()
+                .Where(x=>(x.GetCustomAttributes()
+                    .Where(x=>x.GetType()==typeof(KeyAttribute)
+                            ).ToList().Count>0
+                    )
+                );    
 
+            var property = properties.FirstOrDefault();
+            
+            if(property is not null){ 
+ 
+                var valueProp = (int)BaseObj.GetType().GetProperty(property.Name).GetValue(BaseObj);
+                returnValue.Add(property.Name,(valueProp==0)?null:valueProp.ToString()); 
+            }
+
+            return returnValue;
+        }
         private Dictionary<string,object> GetPropertiesToIndex(IndexAttribute index)
         {
            
@@ -298,7 +324,7 @@ namespace Siesa.SDK.Business
                         {
                             if (propertiesToKeep != null && propertiesToKeep.Contains(fkFieldName))
                             {
-                                var relNavigations = myContext.Model.FindEntityType(fkFieldValue.GetType()).GetNavigations();
+                                var relNavigations = myContext.Model.FindEntityType(fkFieldValue.GetType()).GetNavigations().Where(p => p.IsOnDependent);
                                 DisableRelatedProperties(fkFieldValue, relNavigations);
                                 continue;
                             }

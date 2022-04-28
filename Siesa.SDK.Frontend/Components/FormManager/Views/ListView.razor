@@ -50,7 +50,7 @@ else
                         break;
 
                     default:
-                        continue;
+                        break;
 
                         //default
                 }
@@ -60,7 +60,11 @@ else
                 {
                     <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="@field.Label" Type="@columnType">
                         <Template Context="data">
-                            <a href="/@BusinessName/detail/@(((IBaseSDK)data).GetRowid()).Rowid)/">@data</a>
+                            @if(OnClickDetail != null){
+                                <a href="#" @onclick="() => GoToDetail(((IBaseSDK)data).GetRowid())" @onclick:preventDefault>@data</a>
+                            }else{
+                                <a href="/@BusinessName/detail/@(((IBaseSDK)data).GetRowid())/">@data</a>
+                            }
                         </Template>
                     </RadzenDataGridColumn>
                 }else{
@@ -81,6 +85,7 @@ else
     </RadzenDataGrid>
     @if(SetTopBar)
     {
+        <PageTitle>@BusinessName</PageTitle>
         <SetTopBar>
             <TopBarTitle>@BusinessName</TopBarTitle>
             <TopBarButtons>
@@ -88,7 +93,7 @@ else
                 Click="GoToCreate" Text="Crear" />
                 @foreach (var btn in ListViewModel.Buttons)
                 {
-                    <DxButton RenderStyle="@btn.RenderStyle" Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />
+                    <DxButton RenderStyle="@btn.RenderStyle" RenderStyleMode="ButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />
                 }
             </TopBarButtons>
         </SetTopBar>
