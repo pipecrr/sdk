@@ -15,7 +15,7 @@ namespace Siesa.SDK.Entities
     public abstract class BaseSDK<T>: IBaseSDK
     {
         [Key]
-        // [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public virtual T Rowid { get; set; }
 
         [Timestamp]
