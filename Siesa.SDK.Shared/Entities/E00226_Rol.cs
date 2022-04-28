@@ -21,8 +21,11 @@ namespace Siesa.SDK.Entities
 		[StringLength(20)]
 		public override string Id { get; set; }
 
-		public int? RowidCompany { get; set; }
+		[ForeignKey("Company")]
+		public short? RowidCompany { get; set; }
 
+
+		public E00201_Company Company { get; set; }
 
 	}
 }
