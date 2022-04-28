@@ -22,12 +22,20 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public override int Rowid { get; set; }
 
+		[ForeignKey("Rol")]
 		[Required]
 		public int RowidRol { get; set; }
 
+		[ForeignKey("User")]
 		[Required]
 		public int RowidUser { get; set; }
 
+
+		[Required]
+		public E00226_Rol Rol { get; set; }
+
+		[Required]
+		public E00220_User User { get; set; }
 
 	}
 }
