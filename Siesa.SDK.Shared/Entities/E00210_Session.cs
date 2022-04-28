@@ -28,6 +28,7 @@ namespace Siesa.SDK.Entities
 		[StringLength(200)]
 		public string Service { get; set; }
 
+		[ForeignKey("User")]
 		[Required]
 		public int RowidUser { get; set; }
 
@@ -44,6 +45,9 @@ namespace Siesa.SDK.Entities
 		[StringLength(2000)]
 		public string? AditionalInformation { get; set; }
 
+
+		[Required]
+		public E00220_User User { get; set; }
 
 	}
 }
