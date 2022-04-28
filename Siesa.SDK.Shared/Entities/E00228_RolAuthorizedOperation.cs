@@ -22,9 +22,11 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public override int Rowid { get; set; }
 
+		[ForeignKey("Rol")]
 		[Required]
 		public int RowidRol { get; set; }
 
+		[ForeignKey("Feature")]
 		[Required]
 		public int RowidFeature { get; set; }
 
@@ -32,6 +34,12 @@ namespace Siesa.SDK.Entities
 		[StringLength(255)]
 		public string Operation { get; set; }
 
+
+		[Required]
+		public E00226_Rol Rol { get; set; }
+
+		[Required]
+		public E00040_Feature Feature { get; set; }
 
 	}
 }
