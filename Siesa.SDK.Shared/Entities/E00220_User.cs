@@ -31,8 +31,9 @@ namespace Siesa.SDK.Entities
 		[StringLength(128)]
 		public string? Password { get; set; }
 
+		[ForeignKey("Culture")]
 		[Required]
-		public int RowidCulture { get; set; }
+		public short RowidCulture { get; set; }
 
 		[Required]
 		public DateTime PasswordAssignmentDate { get; set; }
@@ -40,6 +41,7 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public DateTime PasswordLastUpdate { get; set; }
 
+		[ForeignKey("Policy")]
 		[Required]
 		public int RowidPolicy { get; set; }
 
@@ -66,6 +68,7 @@ namespace Siesa.SDK.Entities
 		[StringLength(256)]
 		public string? PasswordRecoveryEmail { get; set; }
 
+		[ForeignKey("UserSubstitute")]
 		public int? RowidUserSubstitute { get; set; }
 
 		public DateTime? SubstitutionStartDate { get; set; }
@@ -99,8 +102,19 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public bool HasTotalAccessSunday { get; set; }
 
+		[ForeignKey("UserReportTo")]
 		public int? RowidUserReportTo { get; set; }
 
+
+		[Required]
+		public E00021_Culture Culture { get; set; }
+
+		[Required]
+		public E00223_UserAcountPolicy Policy { get; set; }
+
+		public E00220_User UserSubstitute { get; set; }
+
+		public E00220_User UserReportTo { get; set; }
 
 	}
 }
