@@ -15,6 +15,7 @@ namespace Siesa.SDK.Entities
 	/// Grupos
 	/// </summary>
 
+	[Index(nameof(RowidDataVisibilityGroup), nameof(RowidUser), Name = "IX_e00225_1", IsUnique = true)]
 	public class E00225_UserDataVisibilityGroup : BaseAudit<int>
 	{
 		[Key]
