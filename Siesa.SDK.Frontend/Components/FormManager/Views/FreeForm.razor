@@ -10,6 +10,7 @@ else if (Loading == true)
 }
 else if (BusinessObj != null)
 {
+    <CascadingValue Value="@this">
     <EditForm id="@FormID"
               OnValidSubmit="@HandleValidSubmit"
               OnInvalidSubmit="@HandleInvalidSubmit"
@@ -43,6 +44,7 @@ else if (BusinessObj != null)
         <ValidationSummary />
         <label>@((MarkupString)ErrorMsg)</label>
     </EditForm>
+    </CascadingValue>
     <SetTopBar>
         <TopBarTitle>@Title</TopBarTitle>
         <TopBarButtons>

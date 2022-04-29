@@ -65,7 +65,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             return data;
         }
 
-
+        public void Refresh(){
+            StateHasChanged();
+        }
         protected virtual void InitView(string bName = null)
         {
             Loading = true;

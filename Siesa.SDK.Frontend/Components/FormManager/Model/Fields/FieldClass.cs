@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Siesa.SDK.Frontend.Utils;
+using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 {
@@ -43,6 +44,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         private string OnChange { get; set; }
 
         [CascadingParameter] EditContext EditFormContext { get; set; }
+        [CascadingParameter] FormView formView { get; set; }
 
         protected async Task Init()
         {
@@ -115,7 +117,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                     _ = Task.Run(async () =>
                     {
                         await Evaluator.EvaluateCode(OnChange, EditFormContext.Model);
-                        StateHasChanged();
+                        if (formView != null){
+                            _ = InvokeAsync(() => formView.Refresh());
+                        }
                     });
                 }
             }
