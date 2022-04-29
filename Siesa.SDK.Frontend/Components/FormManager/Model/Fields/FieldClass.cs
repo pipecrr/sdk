@@ -115,7 +115,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                     _ = Task.Run(async () =>
                     {
                         await Evaluator.EvaluateCode(OnChange, EditFormContext.Model);
-                        _ = InvokeAsync(() => StateHasChanged());
+                        StateHasChanged();
                     });
                 }
             }
