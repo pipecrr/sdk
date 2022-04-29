@@ -12,35 +12,22 @@ using Microsoft.EntityFrameworkCore;
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
-	/// Roles
+	/// Recursos
 	/// </summary>
 
-	[Index(nameof(Id), nameof(Description), Name = "IX_e00221_1", IsUnique = true)]
-	public class E00221_Rol : BaseSDK<int>
+	public class E00001_Resource : BaseSDK<int>
 	{
 		[Key]
 		[Required]
 		public override int Rowid { get; set; }
-
-		[ForeignKey("GroupCompany")]
-		[Required]
-		public short RowidGroupCompany { get; set; }
 
 		[Required]
 		[StringLength(500)]
 		public string Id { get; set; }
 
 		[Required]
-		[StringLength(500)]
-		public string Description { get; set; }
+		public byte Type { get; set; }
 
-
-		public E00220_User UserCreate { get; set; }
-
-		public E00220_User UserLastUpdate { get; set; }
-
-		[Required]
-		public E00200_GroupCompany GroupCompany { get; set; }
 
 	}
 }

@@ -27,7 +27,7 @@ namespace Siesa.SDK.Entities
 
 		[ForeignKey("Module")]
 		[Required]
-		public int RowidModule { get; set; }
+		public short RowidModule { get; set; }
 
 
 		[Required]

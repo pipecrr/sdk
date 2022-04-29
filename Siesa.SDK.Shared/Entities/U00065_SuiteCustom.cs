@@ -15,8 +15,7 @@ namespace Siesa.SDK.Entities
 	/// Permisos por registro
 	/// </summary>
 
-	public class U00065_SuiteCustom : BaseUserPermission<E00065_SuiteCustom>
+	public class U00065_SuiteCustom : BaseUserPermission<E00065_SuiteCustom, short>
 	{
-
 	}
 }

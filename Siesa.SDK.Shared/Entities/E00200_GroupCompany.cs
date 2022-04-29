@@ -19,7 +19,7 @@ namespace Siesa.SDK.Entities
 	{
 		[Key]
 		[Required]
-		public int Rowid { get; set; }
+		public short Rowid { get; set; }
 
 
 	}

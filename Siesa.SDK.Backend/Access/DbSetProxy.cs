@@ -95,7 +95,7 @@ namespace Siesa.SDK.Backend.Access
                     }
 
                         Type authEntityType = typeof(TEntity).Assembly.GetType(authorizationTableName);
-                        var authSet = (IQueryable<BaseUserPermission<TEntity>>)_context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(authEntityType).Invoke(_context, null);
+                        var authSet = (IQueryable<BaseUserPermission<TEntity, Int64>>)_context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(authEntityType).Invoke(_context, null);
 
                         var sdk_query = ((IQueryable<BaseSDK<int>>)query); //TODO: Cambiar tipo de dato en el generic, según la clase
                         var join_sql = sdk_query.Join(authSet,

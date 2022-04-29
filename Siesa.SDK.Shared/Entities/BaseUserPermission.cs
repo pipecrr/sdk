@@ -25,7 +25,7 @@ namespace Siesa.SDK.Entities
         Enabled = 1,
         Disabled = 2,
     }
-    public abstract class BaseUserPermission<T>: BaseAudit<int>
+    public abstract class BaseUserPermission<T,K>: BaseAudit<int>
     {
         public PermissionUserTypes UserType { get; set; }
         public PermissionAuthTypes AuthorizationType { get; set; }
@@ -38,7 +38,7 @@ namespace Siesa.SDK.Entities
         [ForeignKey(nameof(RowidUser))]
         public virtual E00102_User User { get; set; }
 
-        public int? RowidRecord { get; set; }
+        public K? RowidRecord { get; set; }
         [ForeignKey(nameof(RowidRecord))]
         public virtual T Record { get; set; }
     }
