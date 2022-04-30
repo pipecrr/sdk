@@ -16,6 +16,7 @@ else if (BusinessObj.BaseObj != null)
         <h5>Crear @BusinessName</h5>
         <hr />
     }
+    <CascadingValue Value="@this">
     <EditForm id="@FormID"
               OnValidSubmit="@HandleValidSubmit"
               OnInvalidSubmit="@HandleInvalidSubmit"
@@ -49,6 +50,7 @@ else if (BusinessObj.BaseObj != null)
         <ValidationSummary />
         <label>@((MarkupString)ErrorMsg)</label>
     </EditForm>
+    </CascadingValue>
     @if(IsSubpanel){
         <div class="buttons-container">
             @foreach (var btn in FormViewModel.Buttons)
