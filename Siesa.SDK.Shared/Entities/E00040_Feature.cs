@@ -26,6 +26,10 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public int RowidResource { get; set; }
 
+		[Required]
+		[StringLength(100)]
+		public string BusinessName { get; set; }
+
 
 		[Required]
 		public E00020_Resource Resource { get; set; }
