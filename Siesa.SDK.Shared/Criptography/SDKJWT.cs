@@ -66,7 +66,10 @@ namespace Siesa.SDK.Shared.Criptography
                 Rowid = user.Rowid,
                 UserName = user.UserName,
                 Email = user.Email,
-                Name = user.Name
+                Name = user.Name,
+                // Roles = user.Roles.Select(x => x.RoleName).ToArray(),
+                // Teams = user.Teams.Select(x => x.TeamName).ToArray(),
+                IsSuperAdmin = user.IsSuperAdmin
             };
             var tokenDescriptor = new SecurityTokenDescriptor
             {

@@ -8,6 +8,11 @@ namespace Siesa.SDK.Shared.Services
         public string Email { get; set; }
         public string Name { get; set; }
 
+        public string[] Roles { get; set; }
+        public string[] Teams { get; set; }
+
+        public bool IsSuperAdmin { get; set; }
+
         public override string ToString()
         {
             return $"{UserName} - {Name}";

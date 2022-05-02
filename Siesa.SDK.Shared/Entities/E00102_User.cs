@@ -32,7 +32,7 @@ namespace Siesa.SDK.Entities
         [JsonIgnore]
         public virtual ICollection<E00104_UsersRoles> Roles { get; set; }
 
-        
+        public bool IsSuperAdmin { get; set; }
 
         //public virtual ICollection<S010_Operation_Permission> Operation_Permissions { get; set; }
         //public virtual ICollection<S011_Operation_Override> Operation_Override { get; set; }

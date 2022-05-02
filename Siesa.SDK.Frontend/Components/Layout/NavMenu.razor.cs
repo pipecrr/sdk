@@ -6,6 +6,8 @@ using Siesa.SDK.Entities;
 using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
 using Siesa.SDK.Shared.Backend;
 using System.Linq;
+using Siesa.SDK.Shared.Utilities;
+using Siesa.SDK.Business;
 
 namespace Siesa.SDK.Frontend.Components.Layout
 {
@@ -28,41 +30,63 @@ namespace Siesa.SDK.Frontend.Components.Layout
         private async Task LoadMenu()
         {
             //TODO: Check Performance, Call only once
-            backendManager.SyncWithMasterBackend();  
-            foreach(var backend in backendManager.GetBackendDict()){
-                foreach(var business in backend.Value.businessRegisters.Businesses){
+            backendManager.SyncWithMasterBackend();
+            foreach (var backend in backendManager.GetBackendDict())
+            {
+                foreach (var business in backend.Value.businessRegisters.Businesses)
+                {
                     BusinessManagerFrontend.Instance.AddBusiness(business, backend.Value.Name);
-                    var submenuItem = new E00131_Menu {
-                        Title = business.Name,
-                        Image = "oi oi-list-rich  menu-icon",
-                        SubMenus = new List<E00131_Menu>{
-                            new E00131_Menu{
-                                Title = "Crear",
-                                Url = $"/{business.Name}/create/"
-                            },
-                            new E00131_Menu{
-                                Title = "Consultar",
-                                Url = $"/{business.Name}/"
-                            }
-                        }
-                    };
-                    var businessType = Utils.Utils.SearchType(business.Namespace + "." + business.Name); 
-                    if(businessType == null){
+                    var businessType = Utils.Utils.SearchType(business.Namespace + "." + business.Name);
+                    if (businessType == null)
+                    {
                         continue;
                     }
-                    //search methods that return a RenderFragment
-                    var customActions = businessType.GetMethods().Where(m => m.ReturnType == typeof(RenderFragment));
-                    foreach (var customAction in customActions)
+                    var isBLExplorer = Utilities.IsAssignableToGenericType(businessType, typeof(BLFrontendExplorer<>));
+                    if (isBLExplorer)
                     {
-                        var customActionMenu = new E00131_Menu {
-                            Title = customAction.Name,
-                            Url = $"/{business.Name}/{customAction.Name}/",
+                        var customActionMenu = new E00131_Menu
+                        {
+                            Title = business.Name,
+                            Url = $"/{business.Name}/explorer/",
                             Image = "oi oi-project "
                         };
-                        submenuItem.SubMenus.Add(customActionMenu);
+                        DevMenu.Add(customActionMenu);
+                    }
+                    else
+                    {
+                        var submenuItem = new E00131_Menu
+                        {
+                            Title = business.Name,
+                            Image = "oi oi-list-rich  menu-icon",
+                            SubMenus = new List<E00131_Menu>{
+                                new E00131_Menu{
+                                    Title = "Crear",
+                                    Url = $"/{business.Name}/create/"
+                                },
+                                new E00131_Menu{
+                                    Title = "Consultar",
+                                    Url = $"/{business.Name}/"
+                                }
+                            }
+                        };
+                        //search methods that return a RenderFragment
+                        var customActions = businessType.GetMethods().Where(m => m.ReturnType == typeof(RenderFragment));
+                        foreach (var customAction in customActions)
+                        {
+                            var customActionMenu = new E00131_Menu
+                            {
+                                Title = customAction.Name,
+                                Url = $"/{business.Name}/{customAction.Name}/",
+                                Image = "oi oi-project "
+                            };
+                            submenuItem.SubMenus.Add(customActionMenu);
+                        }
+
+                        DevMenu.Add(submenuItem);
                     }
 
-                    DevMenu.Add(submenuItem);
+
+
                 }
             }
             var backends = backendManager.GetBackendDict();

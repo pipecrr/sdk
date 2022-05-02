@@ -36,6 +36,15 @@
         }
         @if (AuthenticationService.User != null)
         {
+            @if(AuthenticationService.User.IsSuperAdmin)
+            {
+                <DxMenuItem IconCssClass="oi oi-wrench" Position="ItemPosition.End">
+                    <Items>
+                        <DxMenuItem Text="Menu Builder" NavigateUrl="/admin/menu" />
+                    </Items>
+                </DxMenuItem>
+            }
+            
             <DxMenuItem CssClass="notoggle" Position="ItemPosition.End">
                     <TextTemplate>
                         <div class="menu-icon-user-profile menu-icon" />

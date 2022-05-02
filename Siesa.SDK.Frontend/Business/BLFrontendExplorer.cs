@@ -59,7 +59,7 @@ namespace Siesa.SDK.Business
             // }
         }
 
-        public RenderFragment Explorer()
+        public RenderFragment explorer()
         {
             return (builder) =>
             {
