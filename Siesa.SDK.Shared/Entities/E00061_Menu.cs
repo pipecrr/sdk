@@ -43,7 +43,7 @@ namespace Siesa.SDK.Entities
 		public int? RowidImage { get; set; }
 
 		[Required]
-		[StringLength(2048)]
+		[StringLength(250)]
 		public string Url { get; set; }
 
 		[Required]
