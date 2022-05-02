@@ -2,13 +2,18 @@
 @if(MenuItem.SubMenus?.Count > 0){
     <DxMenuItem Text="@MenuItem.Title" IconCssClass="@MenuItem.Image"> 
         <Items>
-        @foreach(var subMenuItem in MenuItem.SubMenus){
+        @foreach(var subMenuItem in MenuItem.SubMenus.OrderBy(x => x.Order)){
             <SDKMenuItem MenuItem="@subMenuItem" />
         }
         </Items>
     </DxMenuItem>       
 }else{
-    <DxMenuItem Text="@MenuItem.Title" IconCssClass="@MenuItem.Image" NavigateUrl="@NavigateUrl" />
+    @if(MenuItem.Type == MenuType.Separator)
+    {
+        <DxMenuItem CssClass="separator" />
+    }else{
+        <DxMenuItem Text="@MenuItem.Title" IconCssClass="@MenuItem.Image" NavigateUrl="@NavigateUrl" />
+    }
 }
 
 @code {

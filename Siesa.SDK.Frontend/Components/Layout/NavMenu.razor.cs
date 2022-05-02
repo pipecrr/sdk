@@ -97,6 +97,7 @@ namespace Siesa.SDK.Frontend.Components.Layout
 
             var menusJsonResponse = await backendRegistry.GetMenuItemsAsync(SelectedMenuGroup.Rowid);
             Menus = Newtonsoft.Json.JsonConvert.DeserializeObject<List<E00131_Menu>>(menusJsonResponse.Response);
+            Menus = Menus.OrderBy(x => x.Order).ToList();
             Console.WriteLine(Menus.Count);
             StateHasChanged();
         }

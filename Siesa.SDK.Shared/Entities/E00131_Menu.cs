@@ -16,10 +16,8 @@ namespace Siesa.SDK.Entities
         Menu = 2,
         Feature = 3
     }
-    public class E00131_Menu
+    public class E00131_Menu: BaseSDK<int>
     {
-        [Key]
-        public int Rowid { get; set; }
         public string ID { get; set; }
         public bool IsInternal { get; set; }
         public MenuType Type { get; set; }
