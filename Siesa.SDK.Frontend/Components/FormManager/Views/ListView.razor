@@ -18,6 +18,12 @@ else
                     <div class="action-buttons">
                         <button class="btn btn-link grid-btn-link" @onclick="() => GoToEdit(((IBaseSDK)data).GetRowid())"><span
                             class="oi oi-pencil"></span></button>
+                        
+                        @if(IsSubpanel){
+                            <button class="btn btn-link grid-btn-link" @onclick="() => GoToDelete(((IBaseSDK)data).GetRowid(), data.ToString())"><span
+                            class="oi oi-circle-x" style="color:red"></span></button>
+                            
+                        }
                         @* <button class="btn btn-link grid-btn-link"
                         @onclick="() => GoToDetail(((BaseSDK<>)data).Rowid)"><span class="oi oi-eye"></span></button> *@
                     </div>

@@ -52,6 +52,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter]
         public Action<string> OnClickDetail { get; set; } = null;
 
+        [Parameter]
+        public Action<string,string> OnClickDelete { get; set; } = null;
+
         private IEnumerable<object> data;
         int count;
         public RadzenDataGrid<object> _gridRef;
@@ -170,6 +173,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             else
             {
                 NavManager.NavigateTo($"{BusinessName}/detail/{id}/");
+            }
+        }
+
+        private void GoToDelete(Int64 id, string object_string)
+        {
+            if (OnClickDelete != null)
+            {
+                OnClickDelete(id.ToString(), object_string);
             }
         }
 

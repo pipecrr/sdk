@@ -1,4 +1,6 @@
+@using Siesa.SDK.Shared.Services
 @inject DialogService DialogService
+@inject IAuthenticationService AuthenticationService
 <div class="relationship-panel">
     <div class="relationship-panel-header">
         <span class="relationship-panel-header-title"  @onclick="Toggle">@Relationship.Label</span>
@@ -18,7 +20,7 @@
     </div>
     @if(isOpen){
         <div class="relationship-panel-body">
-            <DynamicListView BusinessName="@Relationship.RelatedBusiness" IsSubpanel=true SubpanelFilter="@filter" @key="listview_key" OnClickEdit="@(async (string item_rowid)=> { await OpenModalEdit(item_rowid); })" OnClickDetail="@(async (string item_rowid)=> { await OpenModalDetail(item_rowid); })" />
+            <DynamicListView BusinessName="@Relationship.RelatedBusiness" IsSubpanel=true SubpanelFilter="@filter" @key="listview_key" OnClickEdit="@(async (string item_rowid)=> { await OpenModalEdit(item_rowid); })" OnClickDetail="@(async (string item_rowid)=> { await OpenModalDetail(item_rowid); })" OnClickDelete="@(async (string item_rowid, string object_string)=> { await OpenModalDelete(item_rowid, object_string); })" />
         </div>
     }
 </div>
@@ -63,6 +65,18 @@
         var modal_result = await DialogService.OpenAsync("", 
         ds => @<DynamicDetailView BusinessName="@Relationship.RelatedBusiness" IsSubpanel=true  BusinessObjId="@item_rowid" />, 
         new DialogOptions() { Width = "700px", ShowTitle=false,   Resizable = true});
+        listview_key = Guid.NewGuid();
+        isOpen = true;
+        StateHasChanged();
+    }
+
+    public async Task OpenModalDelete(string item_rowid, string object_string)
+    {
+        var modal_result = await DialogService.Confirm($"¿Desea eliminar el registro \"{object_string}\"?", "Elminar registro", new ConfirmOptions() { OkButtonText = "Eliminar", CancelButtonText = "Cancelar" });
+        if(modal_result == true) {
+            var backend = BusinessManagerFrontend.Instance.GetBusiness(Relationship.RelatedBusiness, AuthenticationService);
+            await backend.DeleteAsync(Convert.ToInt64(item_rowid));
+        }
         listview_key = Guid.NewGuid();
         isOpen = true;
         StateHasChanged();

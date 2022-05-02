@@ -16,12 +16,16 @@ else if (BusinessObj != null)
 
     [Parameter] public Action<string> OnClickEdit { get; set; } = null;
     [Parameter] public Action<string> OnClickDetail { get; set; } = null;
+    [Parameter] public Action<string,string> OnClickDelete { get; set; } = null;
+
+        
     protected override void SetParameters(dynamic businessObj, string businessName){
         parameters.Clear();
         parameters.Add("BusinessObj", businessObj);
         parameters.Add("BusinessName", businessName);
         if (IsSubpanel)
         {
+            parameters.Add("IsSubpanel", true);
             parameters.Add("SetTopBar", false);
             parameters.Add("ConstantFilters", new List<string>() { SubpanelFilter });
             parameters.Add("ViewdefName", "related_list");
@@ -32,6 +36,10 @@ else if (BusinessObj != null)
             if (OnClickDetail != null)
             {
                 parameters.Add("OnClickDetail", OnClickDetail);
+            }
+            if (OnClickDelete != null)
+            {
+                parameters.Add("OnClickDelete", OnClickDelete);
             }
         }
     }
