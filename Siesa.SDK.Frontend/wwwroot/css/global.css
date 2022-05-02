@@ -6,3 +6,7 @@
 .menuitem-dev-search-box .dxbs-menu-item-tmpl {
     width: 100%;
 }
+
+.sdk-cursor-pointer {
+    cursor: pointer;
+}

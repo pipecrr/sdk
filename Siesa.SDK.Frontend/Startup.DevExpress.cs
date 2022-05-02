@@ -10,7 +10,7 @@ using Blazored.LocalStorage;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Frontend.Services;
 using Radzen;
-
+using Plk.Blazor.DragDrop;
 namespace Siesa.SDK.Frontend {
     public static class SiesaSecurityExtensions
     {
@@ -23,6 +23,7 @@ namespace Siesa.SDK.Frontend {
             services.AddScoped<ILayoutService, LayoutService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<DialogService>();
+            services.AddBlazorDragDrop();
         }
 
     }
