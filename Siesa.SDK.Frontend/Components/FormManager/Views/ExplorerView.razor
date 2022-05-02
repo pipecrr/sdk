@@ -1,0 +1,90 @@
+﻿@using Siesa.SDK.Frontend.Components.FormManager.Fields
+@inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+@using Siesa.SDK.Frontend.Components.Layout.Detail.Relationship
+@if (Panels == null || Panels.Count <= 0)
+{
+    <label>No hay definicion para la vista</label>
+}
+else if (Loading == true)
+{
+    <label>Cargando...</label>
+}
+else if (BusinessObj != null)
+{
+    <CascadingValue Value="@this">
+        <EditForm id="@FormID" OnValidSubmit="@HandleValidSubmit" OnInvalidSubmit="@HandleInvalidSubmit"
+        EditContext="@EditFormContext">
+            <ObjectGraphDataAnnotationsValidator />
+            <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
+                <CascadingValue Value="@EditFormContext">
+                    <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef"
+                    DefaultColSize="@Panels[0].ColSize" ModelObj="@BusinessObj" />
+                </CascadingValue>
+            </DxFormLayout>
+            <ValidationSummary />
+            <label>@((MarkupString)ErrorMsg)</label>
+        </EditForm>
+        @if (FormViewModel.Relationships.Count > 0)
+        {
+            <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
+                <DxFormLayoutTabPages>
+                    @foreach (var rel in FormViewModel.Relationships)
+                    {
+                        <DxFormLayoutTabPage Caption="@rel.Label">
+                            <RelationshipPanel Relationship="@rel" Parent="@BusinessObj.BaseObj" ShowHeader="false" />
+                        </DxFormLayoutTabPage>
+                    }
+                </DxFormLayoutTabPages>
+            </DxFormLayout>
+
+        }
+    </CascadingValue>
+    <PageTitle>@Title</PageTitle>
+    <SetTopBar>
+        <TopBarTitle>@Title</TopBarTitle>
+        <TopBarButtons>
+            @foreach (var btn in FormViewModel.Buttons)
+            {
+                <DxButton RenderStyle="@btn.RenderStyle" RenderStyleMode="ButtonRenderStyleMode.Text"
+            Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />
+            }
+            <DxButton RenderStyle="ButtonRenderStyle.Info" RenderStyleMode="ButtonRenderStyleMode.Text"
+                Click="GetFirstRowid" Text="<<" />
+            <DxButton RenderStyle="ButtonRenderStyle.Info" RenderStyleMode="ButtonRenderStyleMode.Text"
+                Click="GetPreviousRowid" Text="<" />
+            <DxButton RenderStyle="ButtonRenderStyle.Info" RenderStyleMode="ButtonRenderStyleMode.Text"
+                Click="GetNextRowid" Text=">" />
+            <DxButton RenderStyle="ButtonRenderStyle.Info" RenderStyleMode="ButtonRenderStyleMode.Text"
+                Click="GetLastRowid" Text=">>" />
+            
+
+        </TopBarButtons>
+    </SetTopBar>
+
+}
+
+@code{
+    private async void GetFirstRowid()
+    {
+        await BusinessObj.GetFirstRowid();
+        StateHasChanged();
+    }
+
+    private async void GetPreviousRowid()
+    {
+        await BusinessObj.GetPreviousRowid();
+        StateHasChanged();
+    }
+
+    private async void GetNextRowid()
+    {
+        await BusinessObj.GetNextRowid();
+        StateHasChanged();
+    }
+
+    private async void GetLastRowid()
+    {
+        await BusinessObj.GetLastRowid();
+        StateHasChanged();
+    }
+}

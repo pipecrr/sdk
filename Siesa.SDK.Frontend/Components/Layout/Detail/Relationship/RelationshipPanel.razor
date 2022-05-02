@@ -1,33 +1,55 @@
 @using Siesa.SDK.Shared.Services
 @inject DialogService DialogService
 @inject IAuthenticationService AuthenticationService
-<div class="relationship-panel">
-    <div class="relationship-panel-header">
-        <span class="relationship-panel-header-title"  @onclick="Toggle">@Relationship.Label</span>
-        
-        <span class="relationship-panel-header-close">
-            @if(Relationship.Type != RelationshipType.ManyToMany){
-                <span class="oi oi-plus" @onclick="OpenModalCreate" ></span>
-            }
+
+@if(ShowHeader){
+    <div class="relationship-panel">
+        <div class="relationship-panel-header">
+            <span class="relationship-panel-header-title"  @onclick="Toggle">@Relationship.Label</span>
             
-            @if(isOpen){
-                <span class="oi oi-chevron-bottom"  @onclick="Toggle"></span>
-            }else{
-                <span class="oi oi-chevron-right"  @onclick="Toggle"></span>
-            }
-        </span>
-        @* <span class="relationship-panel-header-count">@count</span> *@
-    </div>
-    @if(isOpen){
-        <div class="relationship-panel-body">
-            <DynamicListView BusinessName="@Relationship.RelatedBusiness" IsSubpanel=true SubpanelFilter="@filter" @key="listview_key" OnClickEdit="@(async (string item_rowid)=> { await OpenModalEdit(item_rowid); })" OnClickDetail="@(async (string item_rowid)=> { await OpenModalDetail(item_rowid); })" OnClickDelete="@(async (string item_rowid, string object_string)=> { await OpenModalDelete(item_rowid, object_string); })" />
+            <span class="relationship-panel-header-close">
+                @if(isOpen){
+                    <span class="oi oi-chevron-bottom"  @onclick="Toggle"></span>
+                }else{
+                    <span class="oi oi-chevron-right"  @onclick="Toggle"></span>
+                }
+            </span>
+            @* <span class="relationship-panel-header-count">@count</span> *@
         </div>
-    }
-</div>
+        @if(isOpen){
+            <div class="relationship-panel-body">
+                <DynamicListView 
+                    BusinessName="@Relationship.RelatedBusiness" 
+                    IsSubpanel=true 
+                    SubpanelFilter="@filter" 
+                    @key="listview_key" 
+                    OnClickEdit="@(async (string item_rowid)=> { await OpenModalEdit(item_rowid); })" 
+                    OnClickDetail="@(async (string item_rowid)=> { await OpenModalDetail(item_rowid); })" 
+                    OnClickDelete="@(async (string item_rowid, string object_string)=> { await OpenModalDelete(item_rowid, object_string); })" 
+                    OnClickNew="@(async ()=> { await OpenModalCreate(); })"
+                    />
+            </div>
+        }
+    </div>
+} else {
+    <DynamicListView
+        BusinessName="@Relationship.RelatedBusiness"
+        IsSubpanel=true
+        SubpanelFilter="@filter"
+        @key="listview_key"
+        OnClickEdit="@(async (string item_rowid)=> { await OpenModalEdit(item_rowid); })"
+        OnClickDetail="@(async (string item_rowid)=> { await OpenModalDetail(item_rowid); })"
+        OnClickDelete="@(async (string item_rowid, string object_string)=> { await OpenModalDelete(item_rowid, object_string); })" 
+        OnClickNew="@(async ()=> { await OpenModalCreate(); })"
+        />
+}
+
 
 @code {
     [Parameter] public Relationship Relationship { get; set; }
     [Parameter] public dynamic Parent { get; set; }
+
+    [Parameter] public bool ShowHeader { get; set; } = true;
     int? count = null;
     bool isOpen = false;
     string filter = "";
@@ -40,6 +62,10 @@
 
      public async Task OpenModalCreate()
     {
+        if(Parent == null || Parent.Rowid == 0)
+        {
+            return;
+        }
         Dictionary<string, object> parameters = new Dictionary<string, object>();
         parameters.Add(Relationship.RelatedField, Parent);
         var modal_result = await DialogService.OpenAsync("", 
@@ -82,9 +108,14 @@
         StateHasChanged();
     }
 
-    protected override void OnInitialized()
+    private void CalculateFilter()
     {
         var field = Relationship.RelatedField;
+        var parent_rowid = 0;
+        if(Parent != null)
+        {
+            parent_rowid = Parent.Rowid;
+        }
         //remove "BaseObj" from the field name if it exists
         if (field.StartsWith("BaseObj."))
         {
@@ -93,14 +124,26 @@
         if(Relationship.Type == RelationshipType.ManyToMany)
         {
             var filter_parts = field.Split('.');
-            filter = $"({filter_parts[0]} != NULL && {filter_parts[0]}.Any({filter_parts[1]}.Rowid == {Parent.Rowid}))";
+            filter = $"({filter_parts[0]} != NULL && {filter_parts[0]}.Any({filter_parts[1]}.Rowid == {parent_rowid}))";
         }
         else
         {
-            filter = $"({field}.Rowid == {Parent.Rowid})";
+            filter = $"({field}.Rowid == {parent_rowid})";
         }
-        
     }
+
+    protected override void OnInitialized()
+    {
+        CalculateFilter();
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        CalculateFilter();
+        listview_key = Guid.NewGuid();
+        StateHasChanged();     
+    } 
 
 
 }

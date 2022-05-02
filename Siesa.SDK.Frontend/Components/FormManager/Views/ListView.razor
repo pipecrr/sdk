@@ -13,7 +13,17 @@ else
     @ref="@_gridRef" Count="@count" LoadData="@LoadData" ShowPagingSummary="true"
     PageSizeOptions="ListViewModel.Paging.AllowedPageSizes" @key="needUpdate">
         <Columns>
-            <RadzenDataGridColumn TItem="object" Title="Acciones" Width="100px" Filterable="false" Sortable="false" >
+            <RadzenDataGridColumn TItem="object" Title="Acciones" Width="100px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+                
+                    <HeaderTemplate>
+                        @if(IsSubpanel){
+                        <span
+                            class="oi oi-plus cursor-pointer" @onclick="() => GoToCreate()"></span>
+                        }else{
+                            <span>Acciones</span>
+                        }
+                    </HeaderTemplate>
+               
                 <Template Context="data">
                     <div class="action-buttons">
                         <button class="btn btn-link grid-btn-link" @onclick="() => GoToEdit(((IBaseSDK)data).GetRowid())"><span

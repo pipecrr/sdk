@@ -11,20 +11,19 @@ else if (Loading == true)
 else if (BusinessObj != null)
 {
     <CascadingValue Value="@this">
-    <EditForm id="@FormID"
-              OnValidSubmit="@HandleValidSubmit"
-              OnInvalidSubmit="@HandleInvalidSubmit"
-              EditContext="@EditFormContext">
-        <ObjectGraphDataAnnotationsValidator />
-        <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
-            @if (Panels.Count > 1)
+        <EditForm id="@FormID" OnValidSubmit="@HandleValidSubmit" OnInvalidSubmit="@HandleInvalidSubmit"
+        EditContext="@EditFormContext">
+            <ObjectGraphDataAnnotationsValidator />
+            <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
+                @if (Panels.Count > 1)
             {
                 <DxFormLayoutTabPages>
                     @foreach (var panel in Panels)
                     {
                         <DxFormLayoutTabPage Caption="@panel.Label">
                             <CascadingValue Value="@EditFormContext">
-                                <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                                <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef"
+                            DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
                             </CascadingValue>
                         </DxFormLayoutTabPage>
                     }
@@ -36,7 +35,8 @@ else if (BusinessObj != null)
             else
             {
                 <CascadingValue Value="@EditFormContext">
-                    <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef" DefaultColSize="@Panels[0].ColSize" ModelObj="@BusinessObj" />
+                    <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef"
+                    DefaultColSize="@Panels[0].ColSize" ModelObj="@BusinessObj" />
                 </CascadingValue>
 
             }
@@ -44,13 +44,14 @@ else if (BusinessObj != null)
         <ValidationSummary />
         <label>@((MarkupString)ErrorMsg)</label>
     </EditForm>
-    </CascadingValue>
+</CascadingValue>
     <SetTopBar>
         <TopBarTitle>@Title</TopBarTitle>
         <TopBarButtons>
             @foreach (var btn in FormViewModel.Buttons)
             {
-                <DxButton RenderStyle="@btn.RenderStyle" RenderStyleMode="ButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />
+                <DxButton RenderStyle="@btn.RenderStyle" RenderStyleMode="ButtonRenderStyleMode.Text"
+            Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />
             }
         </TopBarButtons>
     </SetTopBar>

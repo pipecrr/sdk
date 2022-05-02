@@ -148,6 +148,10 @@ namespace Siesa.SDK.Business
 
         public override string ToString()
         {
+            if (BaseObj == null)
+            {
+                return "";
+            }
             return BaseObj.ToString();
         }
 

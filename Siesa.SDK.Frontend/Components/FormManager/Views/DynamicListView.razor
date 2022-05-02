@@ -17,6 +17,7 @@ else if (BusinessObj != null)
     [Parameter] public Action<string> OnClickEdit { get; set; } = null;
     [Parameter] public Action<string> OnClickDetail { get; set; } = null;
     [Parameter] public Action<string,string> OnClickDelete { get; set; } = null;
+    [Parameter] public Action OnClickNew { get; set; } = null;
 
         
     protected override void SetParameters(dynamic businessObj, string businessName){
@@ -40,6 +41,10 @@ else if (BusinessObj != null)
             if (OnClickDelete != null)
             {
                 parameters.Add("OnClickDelete", OnClickDelete);
+            }
+            if (OnClickNew != null)
+            {
+                parameters.Add("OnClickNew", OnClickNew);
             }
         }
     }
