@@ -14,11 +14,11 @@ namespace Siesa.SDK.Shared.Business
     {
         string BusinessName { get; set; }
         T BaseObj { get; set; }
-        T Get(int id);
-        Task<T> GetAsync(int id);
+        T Get(Int64 rowid);
+        Task<T> GetAsync(Int64 rowid);
         ValidateAndSaveBusinessObjResponse ValidateAndSave();
         void Update();
-        int Delete();
+        Int64 Delete();
         Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter, string orderBy, QueryFilterDelegate<T> queryFilter);
     }
 

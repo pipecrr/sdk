@@ -12,6 +12,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Siesa.SDK.Shared.Utilities;
 
 namespace Siesa.SDK.Backend.Access
 {
@@ -103,6 +104,7 @@ namespace Siesa.SDK.Backend.Access
 		public DbSet<E00020_Resource>? E00020_Resource { get; set; }
 
         private IServiceProvider ServiceProvider {get; set;}
+
         public SDKContext(DbContextOptions options) : base(options)
         {
         }
@@ -154,15 +156,16 @@ namespace Siesa.SDK.Backend.Access
             foreach (var entry in ChangeTracker.Entries())
             {
                 //Check if the entry inherits from the BaseAudit<> class
-                if(typeof(BaseAudit<>).IsAssignableFrom(entry.Entity.GetType()))
+                if(Utilities.IsAssignableToGenericType(entry.Entity.GetType(), typeof(BaseAudit<>)))
                 {
-                    var lEntity = (BaseAudit<Int64>)entry.Entity;
-                    lEntity.LastUpdateDate = DateTime.Now;
-                    lEntity.RowidUserLastUpdate = 1; //todo
+                    var loggedUser = 1; //TODO: Get logged user
+
+                    entry.Context.Entry(entry.Entity).Property("LastUpdateDate").CurrentValue = DateTime.Now;
+                    entry.Context.Entry(entry.Entity).Property("RowidUserLastUpdate").CurrentValue = loggedUser;
 
                     if (entry.State == EntityState.Added)
                     {
-                        lEntity.RowidUserCreates = 1; //todo
+                        entry.Context.Entry(entry.Entity).Property("RowidUserCreates").CurrentValue = loggedUser;
                     }
                 }
             }

@@ -39,17 +39,17 @@ namespace Siesa.SDK.Business
         public string BusinessName { get; set; }
         public BaseSDK<int> BaseObj { get; set; }
 
-        public int Delete()
+        public Int64 Delete()
         {
             return 0;
         }
 
-        public BaseSDK<int> Get(int id)
+        public BaseSDK<int> Get(Int64 rowid)
         {
             return null;
         }
 
-        public Task<BaseSDK<int>> GetAsync(int id)
+        public Task<BaseSDK<int>> GetAsync(Int64 rowid)
         {
             return null;
         }
@@ -68,7 +68,7 @@ namespace Siesa.SDK.Business
             return null;
         }
     }
-    public class BLBackendSimple<T, K> : IBLBase<T> where T : class,IBaseSDK where K : BLBaseValidator<T>
+    public class BLBackendSimple<T, K> : IBLBase<T> where T : class, IBaseSDK where K : BLBaseValidator<T>
     {
         [JsonIgnore]
         private IAuthenticationService AuthenticationService { get; set; }
@@ -126,20 +126,19 @@ namespace Siesa.SDK.Business
             AuthenticationService = (IAuthenticationService)_provider.GetService(typeof(IAuthenticationService));
         }
 
-        public virtual T Get(int rowid)
+        public virtual T Get(Int64 rowid)
         {
-            var context = myContext;
-            //var query = context.Set<T>().AsQueryable();
-            var query = context.Set<T>().Where(x => x.CheckRowid(rowid)).AsQueryable();
-            foreach (var relatedProperty in _relatedProperties)
+            using (SDKContext context = _dbFactory.CreateDbContext())
             {
-                query = query.Include(relatedProperty);
+                context.SetProvider(_provider);
+                var query = context.Set<T>().AsQueryable();
+                foreach (var relatedProperty in _relatedProperties)
+                {
+                    query = query.Include(relatedProperty);
+                }
+                query = query.Where("Rowid == @0", rowid);
+                return query.FirstOrDefault();
             }
-
-            return query.FirstOrDefault();
-
-
-
         }
 
         public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave()
@@ -157,11 +156,7 @@ namespace Siesa.SDK.Business
                     return result;
                 }
 
-                using (SDKContext context = _dbFactory.CreateDbContext())
-                {
-                    context.SetProvider(_provider);
-                    result.Rowid = Save(context);
-                }
+                result.Rowid = Save();
             }
             catch (DbUpdateException exception)
             {
@@ -207,90 +202,95 @@ namespace Siesa.SDK.Business
             SDKValidator.Validate<T>(BaseObj, validator, ref baseOperation);
         }
 
-        private void  ValidateIndex(ref ValidateAndSaveBusinessObjResponse baseOperation)
-        {     
+        private void ValidateIndex(ref ValidateAndSaveBusinessObjResponse baseOperation)
+        {
             //TODO: Refactorizar, soportar las 2 formas de definir los indices 
             var attrs_types = System.Attribute.GetCustomAttributes(BaseObj.GetType());
             var attrs = System.Attribute.GetCustomAttributes(BaseObj.GetType()).ToList()
-                .Where(x=> x is IndexAttribute)
-                .Where(x=> ((IndexAttribute)x).IsUnique);
-  
-            foreach (var attr in attrs){ 
+                .Where(x => x is IndexAttribute)
+                .Where(x => ((IndexAttribute)x).IsUnique);
 
-                var dictionaryByIndex =GetPropertiesToIndex((IndexAttribute)attr);
+            foreach (var attr in attrs)
+            {
+
+                var dictionaryByIndex = GetPropertiesToIndex((IndexAttribute)attr);
 
                 var primaryKey = GetPrimaryKey();
 
-                if(ExistsRowByIndex(Utilities.GetDinamycWhere(dictionaryByIndex,primaryKey))){
+                if (ExistsRowByIndex(Utilities.GetDinamycWhere(dictionaryByIndex, primaryKey)))
+                {
                     baseOperation.Errors.Add(new OperationError
                     {
-                        Attribute = (dictionaryByIndex.Count>1)?string.Join("", dictionaryByIndex):dictionaryByIndex.First().Key,
-                        Message = (dictionaryByIndex.Count>1)?string.Join("Los campos ", dictionaryByIndex," deben ser unicos") :"El campo "+dictionaryByIndex.First().Key+" debe ser unico"
+                        Attribute = (dictionaryByIndex.Count > 1) ? string.Join("", dictionaryByIndex) : dictionaryByIndex.First().Key,
+                        Message = (dictionaryByIndex.Count > 1) ? string.Join("Los campos ", dictionaryByIndex, " deben ser unicos") : "El campo " + dictionaryByIndex.First().Key + " debe ser unico"
                     });
                 }
             }
         }
-        private Dictionary<string,object> GetPrimaryKey()
+        private Dictionary<string, object> GetPrimaryKey()
         {
-            
-            Dictionary<string,object>  returnValue = new Dictionary<string, object>();
-            
+
+            Dictionary<string, object> returnValue = new Dictionary<string, object>();
+
             var properties = BaseObj.GetType().GetProperties()
-                .Where(x=>(x.GetCustomAttributes()
-                    .Where(x=>x.GetType()==typeof(KeyAttribute)
-                            ).ToList().Count>0
+                .Where(x => (x.GetCustomAttributes()
+                    .Where(x => x.GetType() == typeof(KeyAttribute)
+                            ).ToList().Count > 0
                     )
-                );    
+                );
 
             var property = properties.FirstOrDefault();
-            
-            if(property is not null){ 
- 
+
+            if (property is not null)
+            {
+
                 var valueProp = (int)BaseObj.GetType().GetProperty(property.Name).GetValue(BaseObj);
-                returnValue.Add(property.Name,(valueProp==0)?null:valueProp.ToString()); 
+                returnValue.Add(property.Name, (valueProp == 0) ? null : valueProp.ToString());
             }
 
             return returnValue;
         }
-        private Dictionary<string,object> GetPropertiesToIndex(IndexAttribute index)
+        private Dictionary<string, object> GetPropertiesToIndex(IndexAttribute index)
         {
-           
-                Dictionary<string,object>  returnValue = new Dictionary<string, object>();
-                Dictionary<string,object>  collectionFks = new Dictionary<string, object>();
 
-                var propNames = index.PropertyNames; 
+            Dictionary<string, object> returnValue = new Dictionary<string, object>();
+            Dictionary<string, object> collectionFks = new Dictionary<string, object>();
 
-                foreach (var propName in propNames)
-                {  
-                    PropertyInfo prop = BaseObj.GetType().GetProperty(propName);
-                    var valueProp = prop.GetValue(BaseObj);
+            var propNames = index.PropertyNames;
 
-                    // Filtra solo los custom attributes que sean de tipo foraneo y que coincidan con el nombre del PropName  
-                    var properties = BaseObj.GetType().GetProperties()
-                                                            .Where(x=>(x.GetCustomAttributes()
-                                                                        .Where(x=>x.GetType()==typeof(ForeignKeyAttribute)
-                                                                                    && ((ForeignKeyAttribute)x).Name==propName
-                                                                              ).ToList().Count>0
-                                                                      )
-                                                                  );                    
+            foreach (var propName in propNames)
+            {
+                PropertyInfo prop = BaseObj.GetType().GetProperty(propName);
+                var valueProp = prop.GetValue(BaseObj);
 
-                    var property = properties.FirstOrDefault();
+                // Filtra solo los custom attributes que sean de tipo foraneo y que coincidan con el nombre del PropName  
+                var properties = BaseObj.GetType().GetProperties()
+                                                        .Where(x => (x.GetCustomAttributes()
+                                                                    .Where(x => x.GetType() == typeof(ForeignKeyAttribute)
+                                                                                && ((ForeignKeyAttribute)x).Name == propName
+                                                                          ).ToList().Count > 0
+                                                                  )
+                                                              );
 
-                    if(property is not null){ 
+                var property = properties.FirstOrDefault();
 
-                        var bodyValue = BaseObj.GetType().GetProperty(property.Name).GetValue(BaseObj);
-                        var entityValueRowid = (Int64)bodyValue.GetType().GetProperty("Rowid").GetValue(bodyValue);
-                                
-                        valueProp = entityValueRowid;  
-                    }
- 
-                    returnValue.Add(propName,valueProp.ToString()); 
+                if (property is not null)
+                {
+
+                    var bodyValue = BaseObj.GetType().GetProperty(property.Name).GetValue(BaseObj);
+                    var entityValueRowid = bodyValue.GetType().GetProperty("Rowid").GetValue(bodyValue);
+
+                    valueProp = entityValueRowid;
                 }
-  
-                return returnValue;
+
+                returnValue.Add(propName, valueProp.ToString());
+            }
+
+            return returnValue;
         }
 
-        private bool ExistsRowByIndex(string filter){
+        private bool ExistsRowByIndex(string filter)
+        {
             using (SDKContext context = _dbFactory.CreateDbContext())
             {
                 context.SetProvider(_provider);
@@ -303,11 +303,11 @@ namespace Siesa.SDK.Business
 
                 query = query.Where(filter);
 
-                return query.Count()>0;
+                return query.Count() > 0;
             }
-        } 
+        }
 
-        private void DisableRelatedProperties(object obj, IEnumerable<INavigation> relatedProperties , List<string> propertiesToKeep = null)
+        private void DisableRelatedProperties(object obj, IEnumerable<INavigation> relatedProperties, List<string> propertiesToKeep = null)
         {
             //TODO: Probar el desvinculado de las propiedades relacionadas
             if (relatedProperties != null)
@@ -317,10 +317,11 @@ namespace Siesa.SDK.Business
                     var foreignKey = navProperty.ForeignKey;
                     var fkProperties = foreignKey.Properties;
                     var principalProperties = foreignKey.PrincipalKey.Properties;
-                    if(foreignKey.DependentToPrincipal != null){
+                    if (foreignKey.DependentToPrincipal != null)
+                    {
                         var fkFieldName = foreignKey.DependentToPrincipal.Name;
                         var fkFieldValue = obj.GetType().GetProperty(fkFieldName).GetValue(obj);
-                        if (fkFieldValue !=  null)
+                        if (fkFieldValue != null)
                         {
                             if (propertiesToKeep != null && propertiesToKeep.Contains(fkFieldName))
                             {
@@ -330,11 +331,13 @@ namespace Siesa.SDK.Business
                             }
                             var principalFieldName = principalProperties[0].Name;
                             var principalFieldValue = fkFieldValue.GetType().GetProperty(principalFieldName).GetValue(fkFieldValue);
-                            if(principalFieldValue != null){
-                                if((Int64)principalFieldValue != 0){
+                            if (principalFieldValue != null)
+                            {
+                                if (Convert.ToInt64(principalFieldValue) != 0)
+                                {
                                     obj.GetType().GetProperty(fkProperties[0].Name).SetValue(obj, principalFieldValue);
                                 }
-                                
+
                                 //empty the navigation property
                                 obj.GetType().GetProperty(fkFieldName).SetValue(obj, null);
                             }
@@ -344,27 +347,40 @@ namespace Siesa.SDK.Business
             }
         }
 
-        private Int64 Save(SDKContext context)
+        private Int64 Save()
         {
-            if (BaseObj.GetRowid() == 0)
-            { 
-                DisableRelatedProperties(BaseObj, _navigationProperties, RelFieldsToSave);
-                var entry = context.Add<T>(BaseObj);
-            }
-            else
+            using (SDKContext context = _dbFactory.CreateDbContext())
             {
-                T entity = context.Set<T>().Where(x => x.CheckRowid(BaseObj.GetRowid())).FirstOrDefault();
-                context.ResetConcurrencyValues(entity, BaseObj);
-                DisableRelatedProperties(BaseObj, _navigationProperties, RelFieldsToSave);
-                context.Entry(entity).CurrentValues.SetValues(BaseObj);
-                foreach (var relatedProperty in RelFieldsToSave)
+                context.SetProvider(_provider);
+                if (BaseObj.GetRowid() == 0)
                 {
-                    entity.GetType().GetProperty(relatedProperty).SetValue(entity, BaseObj.GetType().GetProperty(relatedProperty).GetValue(BaseObj));
+                    DisableRelatedProperties(BaseObj, _navigationProperties, RelFieldsToSave);
+                    var entry = context.Add<T>(BaseObj);
                 }
+                else
+                {
+
+                    var query = context.Set<T>().AsQueryable();
+                    foreach (var relatedProperty in _relatedProperties)
+                    {
+                        query = query.Include(relatedProperty);
+                    }
+                    query = query.Where("Rowid == @0", BaseObj.GetRowid());
+                    T entity = query.FirstOrDefault();
+                    context.ResetConcurrencyValues(entity, BaseObj);
+                    DisableRelatedProperties(BaseObj, _navigationProperties, RelFieldsToSave);
+                    context.Entry(entity).CurrentValues.SetValues(BaseObj);
+                    foreach (var relatedProperty in RelFieldsToSave)
+                    {
+                        entity.GetType().GetProperty(relatedProperty).SetValue(entity, BaseObj.GetType().GetProperty(relatedProperty).GetValue(BaseObj));
+                    }
+                }
+
+                context.SaveChanges(); //TODO: Capturar errores db y hacer rollback
+                return BaseObj.GetRowid();
+
             }
 
-            context.SaveChanges(); //TODO: Capturar errores db y hacer rollback
-            return BaseObj.GetRowid();
         }
 
         public virtual void Update()
@@ -372,7 +388,7 @@ namespace Siesa.SDK.Business
             throw new NotImplementedException();
         }
 
-        public virtual int Delete()
+        public virtual Int64 Delete()
         {
             using (SDKContext context = _dbFactory.CreateDbContext())
             {
@@ -453,7 +469,7 @@ namespace Siesa.SDK.Business
             return result;
         }
 
-        public Task<T> GetAsync(int id)
+        public Task<T> GetAsync(Int64 rowid)
         {
             throw new NotImplementedException();
         }

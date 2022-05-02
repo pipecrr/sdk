@@ -32,17 +32,17 @@ namespace Siesa.SDK.Business
             AuthenticationService = authenticationService;
         }
 
-        public int Delete()
+        public Int64 Delete()
         {
             return 0;
         }
 
-        public BaseSDK<int> Get(int id)
+        public BaseSDK<int> Get(Int64 rowid)
         {
             return null;
         }
 
-        public Task<BaseSDK<int>> GetAsync(int id)
+        public Task<BaseSDK<int>> GetAsync(Int64 rowid)
         {
             return null;
         }
@@ -97,30 +97,30 @@ namespace Siesa.SDK.Business
             BaseObj = Activator.CreateInstance<T>();
         }
 
-        public virtual T Get(int id)
+        public virtual T Get(Int64 rowid)
         {
-            return GetAsync(id).GetAwaiter().GetResult();
+            return GetAsync(rowid).GetAwaiter().GetResult();
         }
 
-        public async virtual Task<T> GetAsync(int id)
+        public async virtual Task<T> GetAsync(Int64 rowid)
         {
-            var message = await Backend.Get(id);
+            var message = await Backend.Get(rowid);
             var result = JsonConvert.DeserializeObject<T>(message);
             return result;
         }
 
-        public async virtual Task<int> SaveAsync()
+        public async virtual Task<Int64> SaveAsync()
         {
             var result = await Backend.Save(this);
             return result;
         }
 
-        public async virtual Task InitializeBusiness(int id)
+        public async virtual Task InitializeBusiness(Int64 rowid)
         {
-            BaseObj = await GetAsync(id);
+            BaseObj = await GetAsync(rowid);
         }
 
-        public virtual int Save()
+        public virtual Int64 Save()
         {
             return SaveAsync().GetAwaiter().GetResult();
         }
@@ -135,12 +135,12 @@ namespace Siesa.SDK.Business
             throw new NotImplementedException();
         }
 
-        public virtual int Delete()
+        public virtual Int64 Delete()
         {
             return DeleteAsync().GetAwaiter().GetResult();
         }
 
-        public async virtual Task<int> DeleteAsync()
+        public async virtual Task<Int64> DeleteAsync()
         {
             var result = await Backend.Delete(BaseObj.GetRowid());
             return result;
