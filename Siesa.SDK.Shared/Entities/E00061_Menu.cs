@@ -15,7 +15,7 @@ namespace Siesa.SDK.Entities
 	/// Menú
 	/// </summary>
 
-	[Index(nameof(RowidMenuParent), nameof(RowidResource), nameof(RowidFeature), nameof(Order), nameof(Type), nameof(Level), nameof(RowidImage), Name = "IX_e00061_1", IsUnique = true)]
+	[Index(nameof(RowidMenuParent), nameof(RowidResource), nameof(RowidFeature), nameof(Order), nameof(Type), nameof(Level), nameof(IconClass), Name = "IX_e00061_1", IsUnique = true)]
 	public class E00061_Menu : BaseSDK<int>
 	{
 		[Key]
@@ -42,13 +42,11 @@ namespace Siesa.SDK.Entities
 
 		public int? RowidImage { get; set; }
 
-		[Required]
 		[StringLength(250)]
-		public string Url { get; set; }
+		public string? Url { get; set; }
 
-		[Required]
 		[StringLength(250)]
-		public string IconClass { get; set; }
+		public string? IconClass { get; set; }
 
 
 		public E00061_Menu MenuParent { get; set; }
