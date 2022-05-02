@@ -42,6 +42,14 @@ namespace Siesa.SDK.Entities
 
 		public int? RowidImage { get; set; }
 
+		[Required]
+		[StringLength(2048)]
+		public string Url { get; set; }
+
+		[Required]
+		[StringLength(250)]
+		public string IconClass { get; set; }
+
 
 		public E00061_Menu MenuParent { get; set; }
 
