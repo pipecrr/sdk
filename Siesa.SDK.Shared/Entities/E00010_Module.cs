@@ -15,7 +15,7 @@ namespace Siesa.SDK.Entities
 	/// Modulos
 	/// </summary>
 
-	[Index(nameof(Id), nameof(Description), nameof(RowidResource), nameof(LicenceType), Name = "IX_e00010_1", IsUnique = true)]
+	[Index(nameof(Id), Name = "IX_e00010_1", IsUnique = true)]
 	public class E00010_Module : BaseSDK<short>
 	{
 		[Key]

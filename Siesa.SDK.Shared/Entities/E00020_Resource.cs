@@ -15,7 +15,7 @@ namespace Siesa.SDK.Entities
 	/// Recursos
 	/// </summary>
 
-	[Index(nameof(Id), nameof(Type), Name = "IX_e00020_1", IsUnique = true)]
+	[Index(nameof(Id), Name = "IX_e00020_1", IsUnique = true)]
 	public class E00020_Resource : BaseSDK<int>
 	{
 		[Key]

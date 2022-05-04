@@ -109,12 +109,12 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public E00021_Culture Culture { get; set; }
 
-		[Required]
-		public E00223_UserAcountPolicy Policy { get; set; }
-
 		public E00220_User UserSubstitute { get; set; }
 
 		public E00220_User UserReportTo { get; set; }
+
+		[Required]
+		public E00223_UserAcountPolicy Policy { get; set; }
 
 	}
 }

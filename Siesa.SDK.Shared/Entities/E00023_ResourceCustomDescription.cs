@@ -15,7 +15,7 @@ namespace Siesa.SDK.Entities
 	/// Descripción recurso personalizado
 	/// </summary>
 	[SDKLogEntity]
-	[Index(nameof(RowidResourceDescription), nameof(Description), Name = "IX_e00023_1", IsUnique = true)]
+	[Index(nameof(RowidResourceDescription), Name = "IX_e00023_1", IsUnique = true)]
 	public class E00023_ResourceCustomDescription : BaseAudit<int>
 	{
 		[Key]

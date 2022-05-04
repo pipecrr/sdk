@@ -15,7 +15,7 @@ namespace Siesa.SDK.Entities
 	/// Cultura
 	/// </summary>
 
-	[Index(nameof(LanguageCode), nameof(CountryCode), nameof(Description), Name = "IX_e00021_1", IsUnique = true)]
+	[Index(nameof(LanguageCode), nameof(CountryCode), Name = "IX_e00021_1", IsUnique = true)]
 	public class E00021_Culture : BaseSDK<short>
 	{
 		[Key]

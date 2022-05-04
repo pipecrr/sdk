@@ -15,7 +15,7 @@ namespace Siesa.SDK.Entities
 	/// Descripción recurso
 	/// </summary>
 
-	[Index(nameof(RowidCulture), nameof(RowidResource), nameof(Description), Name = "IX_e00022_1", IsUnique = true)]
+	[Index(nameof(RowidCulture), nameof(RowidResource), Name = "IX_e00022_1", IsUnique = true)]
 	public class E00022_ResourceDescription : BaseSDK<int>
 	{
 		[Key]

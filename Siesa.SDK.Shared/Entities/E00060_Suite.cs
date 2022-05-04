@@ -15,7 +15,7 @@ namespace Siesa.SDK.Entities
 	/// Suite
 	/// </summary>
 
-	[Index(nameof(RowidResource), nameof(Order), nameof(RowidImage), Name = "IX_e00060_1", IsUnique = true)]
+	[Index(nameof(RowidResource), Name = "IX_e00060_1", IsUnique = true)]
 	public class E00060_Suite : BaseSDK<short>
 	{
 		[Key]

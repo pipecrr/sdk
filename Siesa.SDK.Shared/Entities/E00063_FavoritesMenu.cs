@@ -15,7 +15,7 @@ namespace Siesa.SDK.Entities
 	/// Menu favorito
 	/// </summary>
 
-	[Index(nameof(RowidUser), nameof(RowidMenu), nameof(RowidMenuCustom), nameof(Description), nameof(DateLastUse), Name = "IX_e00063_1", IsUnique = true)]
+	[Index(nameof(RowidUser), nameof(RowidMenu), nameof(RowidMenuCustom), Name = "IX_e00063_1", IsUnique = true)]
 	public class E00063_FavoritesMenu : BaseAudit<int>
 	{
 		[Key]
@@ -36,13 +36,12 @@ namespace Siesa.SDK.Entities
 		public string Description { get; set; }
 
 		[Required]
-		[MaxLength(7)]
 		public DateTime DateLastUse { get; set; }
 
 
-		public E00061_Menu Menu { get; set; }
-
 		public E00066_MenuCustom MenuCustom { get; set; }
+
+		public E00061_Menu Menu { get; set; }
 
 	}
 }
