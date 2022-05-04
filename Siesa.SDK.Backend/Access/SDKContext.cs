@@ -18,8 +18,6 @@ namespace Siesa.SDK.Backend.Access
 {
     public abstract class SDKContext: DbContext
     {
-	public DbSet<E00884_SDKRecreacion>? E00884_SDKRecreacion { get; set; }
-
 	public DbSet<E00223_UserAcountPolicy>? E00223_UserAcountPolicy { get; set; }
 
 	public DbSet<E00222_UserAccessSchedulingJournal>? E00222_UserAccessSchedulingJournal { get; set; }
