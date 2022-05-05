@@ -18,7 +18,7 @@ namespace Siesa.SDK.Shared.Business
         Task<T> GetAsync(int id);
         ValidateAndSaveBusinessObjResponse ValidateAndSave();
         void Update();
-        int Delete();
+        DeleteBusinessObjResponse Delete();
         Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter, string orderBy, QueryFilterDelegate<T> queryFilter);
     }
 
