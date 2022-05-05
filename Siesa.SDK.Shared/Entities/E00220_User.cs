@@ -21,7 +21,7 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public override int Rowid { get; set; }
 
-		[StringLength(128)]
+		[MaxLength(128)]
 		public byte[]? Sid { get; set; }
 
 		[Required]
