@@ -38,7 +38,7 @@ namespace Siesa.SDK.Backend.Access
 
 	public DbSet<E00228_RolAuthorizedOperation>? E00228_RolAuthorizedOperation { get; set; }
 
-	public DbSet<E00229_OverwirteRolAuthorizedOperation>? E00229_OverwirteRolAuthorizedOperation { get; set; }
+	public DbSet<E00229_OverwriteRolAuthorizedOperation>? E00229_OverwriteRolAuthorizedOperation { get; set; }
 
 	public DbSet<E00201_Company>? E00201_Company { get; set; }
 
