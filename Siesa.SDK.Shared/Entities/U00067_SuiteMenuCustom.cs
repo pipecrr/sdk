@@ -15,7 +15,7 @@ namespace Siesa.SDK.Entities
 	/// Permisos por usuario
 	/// </summary>
 
-	public class U00067_SuiteMenuCustom : BaseUserPermission<E00067_SuiteMenuCustom>
+	public class U00067_SuiteMenuCustom : BaseUserPermission<E00067_SuiteMenuCustom, int>
 	{
 
 	}
