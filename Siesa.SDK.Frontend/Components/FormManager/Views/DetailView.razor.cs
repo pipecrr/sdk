@@ -117,7 +117,20 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private async Task DeleteBusiness()
         {
-            await BusinessObj.DeleteAsync();
+            var result = await BusinessObj.DeleteAsync();
+            if (result.Errors.Count > 0)
+            {
+                ErrorMsg = "<ul>";
+                foreach (var error in result.Errors)
+                {
+                    ErrorMsg += $"<li>";
+                    ErrorMsg += !string.IsNullOrWhiteSpace(error.Attribute) ?  $"{error.Attribute} - " : string.Empty;
+                    ErrorMsg += error.Message.Replace("\n", "<br />");
+                    ErrorMsg += $"</li>";
+                }
+                ErrorMsg += "</ul>";
+                return;
+            }
             if(IsSubpanel){
                 dialogService.Close(false);
             }else{

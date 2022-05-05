@@ -65,7 +65,7 @@ message DeleteBusinessObjRequest {
 }
 
 message DeleteBusinessObjResponse {
-  int64 id = 1;
+  repeated OperationError errors = 2;
 }
 
 message GetDataBusinessObjRequest {

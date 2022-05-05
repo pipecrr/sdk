@@ -39,9 +39,9 @@ namespace Siesa.SDK.Business
         public string BusinessName { get; set; }
         public BaseSDK<int> BaseObj { get; set; }
 
-        public Int64 Delete()
+        public DeleteBusinessObjResponse Delete()
         {
-            return 0;
+            return new DeleteBusinessObjResponse();
         }
 
         public BaseSDK<int> Get(Int64 rowid)
@@ -195,7 +195,7 @@ namespace Siesa.SDK.Business
 
         private void Validate(ref ValidateAndSaveBusinessObjResponse baseOperation)
         {
-            ValidateBussines(ref baseOperation);
+            ValidateBussines(ref baseOperation, BaseObj.GetRowid() == 0 ? BLUserActionEnum.Create : BLUserActionEnum.Update);
             //K validator = Activator.CreateInstance<K>();
             K validator = ActivatorUtilities.CreateInstance(_provider, typeof(K)) as K;
             validator.ValidatorType = "Entity";
@@ -388,15 +388,34 @@ namespace Siesa.SDK.Business
             throw new NotImplementedException();
         }
 
-        public virtual Int64 Delete()
+        public virtual DeleteBusinessObjResponse Delete()
         {
-            using (SDKContext context = _dbFactory.CreateDbContext())
+            ValidateAndSaveBusinessObjResponse result = new();
+            try
             {
-                context.SetProvider(_provider);
-                context.Set<T>().Remove(BaseObj);
-                context.SaveChanges();
+                ValidateBussines(ref result, BLUserActionEnum.Delete);
+
+                if (result.Errors.Count > 0)
+                {
+                    var response = new DeleteBusinessObjResponse();
+                    response.Errors.AddRange(result.Errors);
+                    return response;
+                }
+
+                using (SDKContext context = _dbFactory.CreateDbContext())
+                {
+                    context.SetProvider(_provider);
+                    context.Set<T>().Remove(BaseObj);
+                    context.SaveChanges();
+                }
             }
-            return 0;
+            catch (System.Exception)
+            {
+                
+                throw;
+            }
+            
+            return new DeleteBusinessObjResponse();
         }
 
         public virtual IQueryable<T> EntityFieldFilters(IQueryable<T> query)
@@ -473,7 +492,7 @@ namespace Siesa.SDK.Business
         {
             throw new NotImplementedException();
         }
-        protected virtual void ValidateBussines(ref ValidateAndSaveBusinessObjResponse operationResult)
+        protected virtual void ValidateBussines(ref ValidateAndSaveBusinessObjResponse operationResult, BLUserActionEnum action)
         {
             // Do nothing
         }

@@ -111,7 +111,7 @@ namespace Siesa.SDK.GRPCServices
             var response = new Protos.DeleteBusinessObjResponse();
             var result = businessObj.Get(request.Id);
             businessObj.BaseObj = result;
-            response.Id = businessObj.Delete();
+            response = businessObj.Delete();
             return Task.FromResult(response);
         }
 

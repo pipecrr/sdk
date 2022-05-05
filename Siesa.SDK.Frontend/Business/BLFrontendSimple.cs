@@ -32,9 +32,9 @@ namespace Siesa.SDK.Business
             AuthenticationService = authenticationService;
         }
 
-        public Int64 Delete()
+        public DeleteBusinessObjResponse Delete()
         {
-            return 0;
+            return new DeleteBusinessObjResponse();
         }
 
         public BaseSDK<int> Get(Int64 rowid)
@@ -135,12 +135,12 @@ namespace Siesa.SDK.Business
             throw new NotImplementedException();
         }
 
-        public virtual Int64 Delete()
+        public virtual DeleteBusinessObjResponse Delete()
         {
             return DeleteAsync().GetAwaiter().GetResult();
         }
 
-        public async virtual Task<Int64> DeleteAsync()
+        public async virtual Task<DeleteBusinessObjResponse> DeleteAsync()
         {
             var result = await Backend.Delete(BaseObj.GetRowid());
             return result;
@@ -199,13 +199,13 @@ namespace Siesa.SDK.Business
 
         private void Validate(ref ValidateAndSaveBusinessObjResponse baseOperation)
         {
-            ValidateBussines(ref baseOperation);
+            ValidateBussines(ref baseOperation, BaseObj.GetRowid() == 0 ? BLUserActionEnum.Create : BLUserActionEnum.Update);
             K validator = Activator.CreateInstance<K>();
             validator.ValidatorType = "Entity";
             SDKValidator.Validate<T>(BaseObj, validator, ref baseOperation);
         }
 
-        protected virtual void ValidateBussines(ref ValidateAndSaveBusinessObjResponse operationResult)
+        protected virtual void ValidateBussines(ref ValidateAndSaveBusinessObjResponse operationResult, BLUserActionEnum action)
         {
             // Do nothing
         }

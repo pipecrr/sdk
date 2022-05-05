@@ -135,7 +135,7 @@ namespace Siesa.SDK.Shared.Backend
 
         }
 
-        public async Task<Int64> DeleteBusinessObj(string business_name, Int64 id)
+        public async Task<DeleteBusinessObjResponse> DeleteBusinessObj(string business_name, Int64 id)
         {
             using var channel = GrpcChannel.ForAddress(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
@@ -147,7 +147,7 @@ namespace Siesa.SDK.Shared.Backend
                 CurrentUserRowid = (AuthenticationService != null && AuthenticationService.User != null ? AuthenticationService.User.Rowid: 0)
             };
             var response = await client.DeleteBusinessObjAsync(request);
-            return response.Id;
+            return response;
 
         }
 
