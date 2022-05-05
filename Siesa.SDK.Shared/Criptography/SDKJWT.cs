@@ -57,19 +57,19 @@ namespace Siesa.SDK.Shared.Criptography
             }
         }
 
-        public string Generate(E00102_User? user)
+        public string Generate(E00220_User? user)
         {
             // generate token that is valid for 7 days
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_secretKey);
              var userToken = new JwtUserData() {
                 Rowid = user.Rowid,
-                UserName = user.UserName,
-                Email = user.Email,
-                Name = user.Name,
+                Path = user.Path,
+                PasswordRecoveryEmail = user.PasswordRecoveryEmail,
+                //Name = user.Name,
                 // Roles = user.Roles.Select(x => x.RoleName).ToArray(),
                 // Teams = user.Teams.Select(x => x.TeamName).ToArray(),
-                IsSuperAdmin = user.IsSuperAdmin
+                //IsSuperAdmin = user.IsSuperAdmin
             };
             var tokenDescriptor = new SecurityTokenDescriptor
             {

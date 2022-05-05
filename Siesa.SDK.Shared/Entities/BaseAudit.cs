@@ -14,11 +14,11 @@ namespace Siesa.SDK.Entities
         public virtual string Source { get; set; }
         public int? RowidUserCreates { get; set; }
         [ForeignKey(nameof(RowidUserCreates))]
-        public virtual E00102_User UserCreates { get; set; }
+        public virtual E00220_User UserCreates { get; set; }
 
         public int? RowidUserLastUpdate { get; set; }
         [ForeignKey(nameof(RowidUserLastUpdate))]
-        public virtual E00102_User UserLastUpdate { get; set; }
+        public virtual E00220_User UserLastUpdate { get; set; }
 
         public int? RowidSession { get; set; } //TODO: Agregar relación con entidad
         

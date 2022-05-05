@@ -22,12 +22,13 @@
         {
             <DxMenuItem Text="DevMenu" IconCssClass="oi oi-code">
                 <Items>
-                    <DxMenuItem Enabled="false" CssClass="menuitem-dev-search-box">
+                    @* <DxMenuItem Enabled="false" CssClass="menuitem-dev-search-box">
                         <Template>
                             <DxTextBox @bind-Text="@DevMenuSearchString" NullText="Search..." ></DxTextBox>
                         </Template>
-                    </DxMenuItem>
-                    @foreach (var menuItem in DevMenu.Where(x => !String.IsNullOrEmpty(DevMenuSearchString) ? x.Title.ToLower().Contains(DevMenuSearchString.ToLower()) : true))
+                    </DxMenuItem> *@
+                    @* @foreach (var menuItem in DevMenu.Where(x => !String.IsNullOrEmpty(DevMenuSearchString) ? x.Title.ToLower().Contains(DevMenuSearchString.ToLower()) : true)) *@
+                    @foreach (var menuItem in DevMenu)
                     {
                         <SDKMenuItem MenuItem="@menuItem" />
                     }
@@ -36,14 +37,14 @@
         }
         @if (AuthenticationService.User != null)
         {
-            @if(AuthenticationService.User.IsSuperAdmin)
-            {
+            @* @if(AuthenticationService.User.IsSuperAdmin)
+            { *@
                 <DxMenuItem IconCssClass="oi oi-wrench" Position="ItemPosition.End">
                     <Items>
                         <DxMenuItem Text="Menu Builder" NavigateUrl="/admin/menu/" />
                     </Items>
                 </DxMenuItem>
-            }
+            @* } *@
             
             <DxMenuItem CssClass="notoggle" Position="ItemPosition.End">
                     <TextTemplate>

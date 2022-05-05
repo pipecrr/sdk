@@ -9,7 +9,7 @@ namespace Siesa.SDK.Entities
     {
         public short? RowidCompanyGroup { get; set; }
         [ForeignKey(nameof(RowidCompanyGroup))]
-        public virtual E00200_GroupCompany CompanyGroup { get; set; }
+        public virtual E00200_CompanyGroup CompanyGroup { get; set; }
 
 
     }

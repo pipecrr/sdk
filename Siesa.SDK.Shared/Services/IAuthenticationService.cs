@@ -4,18 +4,18 @@ namespace Siesa.SDK.Shared.Services
 {
     public class JwtUserData {
         public int Rowid { get; set; }
-        public string UserName { get; set; }
-        public string Email { get; set; }
-        public string Name { get; set; }
+        public string Path { get; set; }
+        public string PasswordRecoveryEmail { get; set; }
+        // public string Name { get; set; }
 
-        public string[] Roles { get; set; }
-        public string[] Teams { get; set; }
+        // public string[] Roles { get; set; }
+        // public string[] Teams { get; set; }
 
-        public bool IsSuperAdmin { get; set; }
+        // public bool IsSuperAdmin { get; set; }
 
         public override string ToString()
         {
-            return $"{UserName} - {Name}";
+            return $"{Path}";
         }
     }
     

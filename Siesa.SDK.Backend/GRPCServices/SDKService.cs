@@ -166,10 +166,10 @@ namespace Siesa.SDK.GRPCServices
         {
             SetCurrentUser(request.CurrentUserToken);
             dynamic dbFactory = _provider.GetService(typeof(IDbContextFactory<SDKContext>));
-            List<E00130_MenuGroup> menuGroups = new();
+            List<E00060_Suite> menuGroups = new();
             using (SDKContext dbContext = dbFactory.CreateDbContext())
             {
-                menuGroups = dbContext.Set<E00130_MenuGroup>().AsQueryable().ToList();
+                menuGroups = dbContext.Set<E00060_Suite>().AsQueryable().ToList();
             }
 
             var response = new Protos.MenuGroupsResponse
@@ -183,11 +183,11 @@ namespace Siesa.SDK.GRPCServices
         {
             SetCurrentUser(request.CurrentUserToken);
             dynamic dbFactory = _provider.GetService(typeof(IDbContextFactory<SDKContext>));
-            List<E00131_Menu> menuItems = new();
+            List<E00061_Menu> menuItems = new();
             using (SDKContext dbContext = dbFactory.CreateDbContext())
             {
-                menuItems = dbContext.Set<E00132_MenuGroupDetail>().AsQueryable()
-                    .Where(x => x.MenuGroup.Rowid == request.GroupId)
+                menuItems = dbContext.Set<E00062_SuiteMenu>().AsQueryable()
+                    .Where(x => x.Suite.Rowid == request.GroupId)
                     .Include(x => x.Menu.SubMenus)
                     .ThenInclude(x=>x.SubMenus)
                     .ThenInclude(x => x.Feature)

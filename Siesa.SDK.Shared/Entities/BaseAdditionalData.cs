@@ -14,7 +14,7 @@ namespace Siesa.SDK.Entities
 
         public int? RowidCompanyGroup { get; set; }
         [ForeignKey(nameof(RowidCompanyGroup))]
-        public virtual E00200_GroupCompany CompanyGroup { get; set; }
+        public virtual E00200_CompanyGroup CompanyGroup { get; set; }
 
         public Int16? RowidCompany { get; set; }
         [ForeignKey(nameof(RowidCompany))]

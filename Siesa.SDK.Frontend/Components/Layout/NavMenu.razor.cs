@@ -15,16 +15,16 @@ namespace Siesa.SDK.Frontend.Components.Layout
     {
         [Inject]
         public IBackendManager backendManager { get; set; }
-        public E00130_MenuGroup SelectedMenuGroup { get; set; }
-        public List<E00131_Menu> Menus { get; set; }
-        public List<E00131_Menu> DevMenu { get; set; }
+        public E00060_Suite SelectedSuite { get; set; }
+        public List<E00061_Menu> Menus { get; set; }
+        public List<E00061_Menu> DevMenu { get; set; }
 
         public string DevMenuSearchString { get; set; }
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            Menus = new List<E00131_Menu>();
-            DevMenu = new List<E00131_Menu>();
+            Menus = new List<E00061_Menu>();
+            DevMenu = new List<E00061_Menu>();
             _ = LoadMenu();
         }
         private async Task LoadMenu()
@@ -44,27 +44,27 @@ namespace Siesa.SDK.Frontend.Components.Layout
                     var isBLExplorer = Utilities.IsAssignableToGenericType(businessType, typeof(BLFrontendExplorer<>));
                     if (isBLExplorer)
                     {
-                        var customActionMenu = new E00131_Menu
+                        var customActionMenu = new E00061_Menu
                         {
-                            Title = business.Name,
+                            //Title = business.Name,
                             Url = $"/{business.Name}/explorer/",
-                            Image = "oi oi-project "
+                            IconClass = "oi oi-project "
                         };
                         DevMenu.Add(customActionMenu);
                     }
                     else
                     {
-                        var submenuItem = new E00131_Menu
+                        var submenuItem = new E00061_Menu
                         {
-                            Title = business.Name,
-                            Image = "oi oi-list-rich  menu-icon",
-                            SubMenus = new List<E00131_Menu>{
-                                new E00131_Menu{
-                                    Title = "Crear",
+                            //Title = business.Name,
+                            IconClass = "oi oi-list-rich  menu-icon",
+                            SubMenus = new List<E00061_Menu>{
+                                new E00061_Menu{
+                                    //Title = "Crear",
                                     Url = $"/{business.Name}/create/"
                                 },
-                                new E00131_Menu{
-                                    Title = "Consultar",
+                                new E00061_Menu{
+                                    //Title = "Consultar",
                                     Url = $"/{business.Name}/"
                                 }
                             }
@@ -73,11 +73,11 @@ namespace Siesa.SDK.Frontend.Components.Layout
                         var customActions = businessType.GetMethods().Where(m => m.ReturnType == typeof(RenderFragment));
                         foreach (var customAction in customActions)
                         {
-                            var customActionMenu = new E00131_Menu
+                            var customActionMenu = new E00061_Menu
                             {
-                                Title = customAction.Name,
+                                //Title = customAction.Name,
                                 Url = $"/{business.Name}/{customAction.Name}/",
-                                Image = "oi oi-project "
+                                IconClass = "oi oi-project "
                             };
                             submenuItem.SubMenus.Add(customActionMenu);
                         }
@@ -93,10 +93,10 @@ namespace Siesa.SDK.Frontend.Components.Layout
             BackendRegistry backendRegistry = backends[backends.Keys.First()];
             backendRegistry.SetAuthenticationService(AuthenticationService);
             var jsonResponse = await backendRegistry.GetMenuGroupsAsync();
-            SelectedMenuGroup = Newtonsoft.Json.JsonConvert.DeserializeObject<List<E00130_MenuGroup>>(jsonResponse.Response).First(); //TODO: UX difines how to select the menu group
+            SelectedSuite = Newtonsoft.Json.JsonConvert.DeserializeObject<List<E00060_Suite>>(jsonResponse.Response).First(); //TODO: UX difines how to select the menu group
 
-            var menusJsonResponse = await backendRegistry.GetMenuItemsAsync(SelectedMenuGroup.Rowid);
-            Menus = Newtonsoft.Json.JsonConvert.DeserializeObject<List<E00131_Menu>>(menusJsonResponse.Response);
+            var menusJsonResponse = await backendRegistry.GetMenuItemsAsync(SelectedSuite.Rowid);
+            Menus = Newtonsoft.Json.JsonConvert.DeserializeObject<List<E00061_Menu>>(menusJsonResponse.Response);
             Menus = Menus.OrderBy(x => x.Order).ToList();
             Console.WriteLine(Menus.Count);
             StateHasChanged();

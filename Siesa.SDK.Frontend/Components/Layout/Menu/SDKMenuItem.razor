@@ -1,6 +1,6 @@
 @using Siesa.SDK.Entities;
 @if(MenuItem.SubMenus?.Count > 0){
-    <DxMenuItem Text="@MenuItem.Title" IconCssClass="@MenuItem.Image"> 
+    <DxMenuItem Text="@MenuItem.Resource?.ToString()" IconCssClass="@MenuItem.IconClass"> 
         <Items>
         @foreach(var subMenuItem in MenuItem.SubMenus.OrderBy(x => x.Order)){
             <SDKMenuItem MenuItem="@subMenuItem" />
@@ -12,12 +12,12 @@
     {
         <DxMenuItem CssClass="separator" />
     }else{
-        <DxMenuItem Text="@MenuItem.Title" IconCssClass="@MenuItem.Image" NavigateUrl="@NavigateUrl" />
+        <DxMenuItem Text="@MenuItem.Resource?.ToString()" IconCssClass="@MenuItem.IconClass" NavigateUrl="@NavigateUrl" />
     }
 }
 
 @code {
-    [Parameter] public E00131_Menu MenuItem { get; set; }
+    [Parameter] public E00061_Menu MenuItem { get; set; }
 
     private string NavigateUrl { get { 
         if (!string.IsNullOrEmpty(MenuItem.Url)) {

@@ -33,10 +33,10 @@ namespace Siesa.SDK.Entities
 
         public int? RowidTeam { get; set; }
         [ForeignKey(nameof(RowidTeam))]
-        public virtual E00110_Team Team { get; set; }
+        public virtual E00224_DataVisibilityGroup DataVisibilityGroup { get; set; }
         public int? RowidUser { get; set; }
         [ForeignKey(nameof(RowidUser))]
-        public virtual E00102_User User { get; set; }
+        public virtual E00220_User User { get; set; }
 
         public K? RowidRecord { get; set; }
         [ForeignKey(nameof(RowidRecord))]

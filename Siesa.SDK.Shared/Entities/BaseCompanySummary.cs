@@ -9,6 +9,6 @@ namespace Siesa.SDK.Entities
     {
         public Int16? RowidCompany { get; set; }
         [ForeignKey(nameof(RowidCompany))]
-        public virtual E00200_GroupCompany Company { get; set; }
+        public virtual E00201_Company Company { get; set; }
     }
 }
