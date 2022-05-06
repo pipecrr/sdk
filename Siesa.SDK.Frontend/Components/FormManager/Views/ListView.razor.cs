@@ -13,6 +13,8 @@ using Siesa.SDK.Frontend.Components.FormManager.Fields;
 using Radzen;
 using Radzen.Blazor;
 using Siesa.SDK.Frontend.Utils;
+using System.Linq;
+
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
     public partial class ListView : ComponentBase
@@ -31,12 +33,22 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter]
         public List<string> ConstantFilters { get; set; } = new List<string>();
 
+        [Parameter] 
+        public bool AllowCreate { get; set; } = true;
+        [Parameter] 
+        public bool AllowEdit { get; set; } = true;
+        [Parameter] 
+        public bool AllowDelete { get; set; } = true;
+        [Parameter] 
+        public bool AllowDetail { get; set; } = true;
+
         [Inject] public IJSRuntime JSRuntime { get; set; }
         [Inject] public NavigationManager NavManager { get; set; }
 
         public bool Loading;
 
         public String ErrorMsg = "";
+        private IList<object> SelectedObjects { get; set; }
 
         private ListViewModel ListViewModel { get; set; }
 
@@ -58,11 +70,26 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter]
         public Action OnClickNew { get; set; } = null;
 
+        [Parameter]
+        public Action<object> OnSelectedRow { get; set; } = null;
+
         private IEnumerable<object> data;
         int count;
         public RadzenDataGrid<object> _gridRef;
 
         Guid needUpdate;
+
+        private void OnSelectionChanged(IList<object> objects){
+            if(OnSelectedRow != null){
+                SelectedObjects = objects;
+                if (SelectedObjects?.Any() == true){
+                    OnSelectedRow(objects.First());
+                }else{
+                    OnSelectedRow(null);
+                }
+                
+            }
+        }
 
         private string GetViewdef(string businessName)
         {

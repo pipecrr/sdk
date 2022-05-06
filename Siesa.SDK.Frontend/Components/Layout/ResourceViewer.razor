@@ -23,5 +23,11 @@
         await base.OnInitializedAsync();
         Text = await GetText();
     }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+        Text = await GetText();
+    }
 }
 

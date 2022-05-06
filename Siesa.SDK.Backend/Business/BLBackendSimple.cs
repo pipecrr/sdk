@@ -244,8 +244,12 @@ namespace Siesa.SDK.Business
             if (property is not null)
             {
 
-                var valueProp = (int)BaseObj.GetType().GetProperty(property.Name).GetValue(BaseObj);
-                returnValue.Add(property.Name, (valueProp == 0) ? null : valueProp.ToString());
+                var valueProp = BaseObj.GetType().GetProperty(property.Name).GetValue(BaseObj);
+                if(valueProp != null){
+                    var valuePropBigInt = Convert.ToInt64(valueProp);
+                    returnValue.Add(property.Name, (valuePropBigInt == 0) ? null : valuePropBigInt.ToString());
+                }
+                
             }
 
             return returnValue;
@@ -425,7 +429,7 @@ namespace Siesa.SDK.Business
 
         public virtual Siesa.SDK.Shared.Business.LoadResult EntityFieldSearch(string searchText, string prefilters = "")
         {
-            var string_fields = BaseObj.GetType().GetProperties().Where(p => p.PropertyType == typeof(string)).Select(p => p.Name).ToArray();
+            var string_fields = BaseObj.GetType().GetProperties().Where(p => p.PropertyType == typeof(string) && p.GetCustomAttributes().Where(x => x.GetType() == typeof(NotMappedAttribute)).Count() == 0).Select(p => p.Name).ToArray();
             string filter = "";
             foreach (var field in string_fields)
             {

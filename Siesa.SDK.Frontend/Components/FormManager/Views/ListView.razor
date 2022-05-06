@@ -9,16 +9,31 @@
 else
 {
 
-    <RadzenDataGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-    FilterMode="FilterMode.Advanced" AllowPaging="true" PageSize="ListViewModel.Paging.PageSize"
-    PagerHorizontalAlign="HorizontalAlign.Center" AllowSorting="true" Data="@data" TItem="object" IsLoading="@Loading"
-    @ref="@_gridRef" Count="@count" LoadData="@LoadData" ShowPagingSummary="true"
-    PageSizeOptions="ListViewModel.Paging.AllowedPageSizes" @key="needUpdate">
+    <RadzenDataGrid 
+        AllowFiltering="true" 
+        FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+        FilterMode="FilterMode.Advanced" 
+        AllowPaging="true" 
+        PageSize="ListViewModel.Paging.PageSize"
+        PagerHorizontalAlign="HorizontalAlign.Center" 
+        AllowSorting="true" 
+        Data="@data" 
+        TItem="object" 
+        IsLoading="@Loading"
+        @ref="@_gridRef" 
+        Count="@count" 
+        LoadData="@LoadData" 
+        ShowPagingSummary="true"
+        PageSizeOptions="ListViewModel.Paging.AllowedPageSizes" 
+        SelectionMode="Radzen.DataGridSelectionMode.Single"
+        Value=@SelectedObjects
+        ValueChanged="((objects) => OnSelectionChanged(objects))"
+        @key="needUpdate">
         <Columns>
             <RadzenDataGridColumn TItem="object" Title="Acciones" Width="100px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
                 
                     <HeaderTemplate>
-                        @if(IsSubpanel){
+                        @if(IsSubpanel && AllowCreate){
                         <span
                             class="oi oi-plus cursor-pointer" @onclick="() => GoToCreate()"></span>
                         }else{
@@ -28,10 +43,13 @@ else
                
                 <Template Context="data">
                     <div class="action-buttons">
-                        <button class="btn btn-link grid-btn-link" @onclick="() => GoToEdit(((IBaseSDK)data).GetRowid())"><span
+                        @if(AllowEdit){
+                            <button class="btn btn-link grid-btn-link" @onclick="() => GoToEdit(((IBaseSDK)data).GetRowid())"><span
                             class="oi oi-pencil"></span></button>
+                        }
                         
-                        @if(IsSubpanel){
+                        
+                        @if(IsSubpanel && AllowDelete){
                             <button class="btn btn-link grid-btn-link" @onclick="() => GoToDelete(((IBaseSDK)data).GetRowid(), data.ToString())"><span
                             class="oi oi-circle-x" style="color:red"></span></button>
                             

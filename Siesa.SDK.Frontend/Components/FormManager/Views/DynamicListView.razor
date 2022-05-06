@@ -19,33 +19,54 @@ else if (BusinessObj != null)
     [Parameter] public Action<string,string> OnClickDelete { get; set; } = null;
     [Parameter] public Action OnClickNew { get; set; } = null;
 
+    [Parameter] public bool AllowCreate { get; set; } = true;
+    [Parameter] public bool AllowEdit { get; set; } = true;
+    [Parameter] public bool AllowDelete { get; set; } = true;
+    [Parameter] public bool AllowDetail { get; set; } = true;
+    [Parameter] public Action<object> OnSelectedRow { get; set; } = null;
+
         
     protected override void SetParameters(dynamic businessObj, string businessName){
-        parameters.Clear();
-        parameters.Add("BusinessObj", businessObj);
-        parameters.Add("BusinessName", businessName);
+        var new_params = new Dictionary<string, object>();
+        new_params.Add("BusinessObj", businessObj);
+        new_params.Add("BusinessName", businessName);
+        new_params.Add("AllowCreate", AllowCreate);
+        new_params.Add("AllowEdit", AllowEdit);
+        new_params.Add("AllowDelete", AllowDelete);
+        new_params.Add("AllowDetail", AllowDetail);
+        new_params.Add("OnSelectedRow", OnSelectedRow);
         if (IsSubpanel)
         {
-            parameters.Add("IsSubpanel", true);
-            parameters.Add("SetTopBar", false);
-            parameters.Add("ConstantFilters", new List<string>() { SubpanelFilter });
-            parameters.Add("ViewdefName", "related_list");
+            new_params.Add("IsSubpanel", true);
+            new_params.Add("SetTopBar", false);
+            if(!String.IsNullOrEmpty(SubpanelFilter))
+            {
+                new_params.Add("ConstantFilters", new List<string>() { SubpanelFilter });
+            }
+            
+            new_params.Add("ViewdefName", "related_list");
             if (OnClickEdit != null)
             {
-                parameters.Add("OnClickEdit", OnClickEdit);
+                new_params.Add("OnClickEdit", OnClickEdit);
             }
             if (OnClickDetail != null)
             {
-                parameters.Add("OnClickDetail", OnClickDetail);
+                new_params.Add("OnClickDetail", OnClickDetail);
             }
             if (OnClickDelete != null)
             {
-                parameters.Add("OnClickDelete", OnClickDelete);
+                new_params.Add("OnClickDelete", OnClickDelete);
             }
             if (OnClickNew != null)
             {
-                parameters.Add("OnClickNew", OnClickNew);
+                new_params.Add("OnClickNew", OnClickNew);
             }
+        }
+
+        //check if new_params is equal to parametersm, if not, set parameters to new_params
+        if (!new_params.SequenceEqual(parameters))
+        {
+            parameters = new_params;
         }
     }
 }

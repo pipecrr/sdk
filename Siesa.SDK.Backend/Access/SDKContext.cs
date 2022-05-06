@@ -18,13 +18,12 @@ namespace Siesa.SDK.Backend.Access
 {
     public abstract class SDKContext: DbContext
     {
-	public DbSet<U00223_UserAccountPolicy>? U00223_UserAccountPolicy { get; set; }
+    public DbSet<U00223_UserAccountPolicy>? U00223_UserAccountPolicy { get; set; }
 
 	public DbSet<U00222_UserAccessSchedulingJournal>? U00222_UserAccessSchedulingJournal { get; set; }
 
 	public DbSet<U00220_User>? U00220_User { get; set; }
-
-	public DbSet<E00223_UserAccountPolicy>? E00223_UserAccountPolicy { get; set; }
+	// public DbSet<E00223_UserAccountPolicy>? E00223_UserAccountPolicy { get; set; }
 
 	public DbSet<E00222_UserAccessSchedulingJournal>? E00222_UserAccessSchedulingJournal { get; set; }
 
@@ -181,17 +180,17 @@ namespace Siesa.SDK.Backend.Access
             return base.Set<TEntity>();
         }
 
-        public override DbSet<TEntity> Set<TEntity>()
-        {
-            if(ServiceProvider != null){
-                try {
-                    return ActivatorUtilities.CreateInstance(ServiceProvider, typeof(DbSetProxy<TEntity>), new object[] { this, base.Set<TEntity>() }) as DbSet<TEntity>;
-                }catch(Exception e){
-                    Console.WriteLine($"{e.Message}***********");
-                }                
-            }
-            return new DbSetProxy<TEntity>(null ,this, base.Set<TEntity>()); 
-        }
+        // public override DbSet<TEntity> Set<TEntity>()
+        // {
+        //     if(ServiceProvider != null){
+        //         try {
+        //             return ActivatorUtilities.CreateInstance(ServiceProvider, typeof(DbSetProxy<TEntity>), new object[] { this, base.Set<TEntity>() }) as DbSet<TEntity>;
+        //         }catch(Exception e){
+        //             Console.WriteLine($"{e.Message}***********");
+        //         }                
+        //     }
+        //     return new DbSetProxy<TEntity>(null ,this, base.Set<TEntity>()); 
+        // }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder builder)
         {
