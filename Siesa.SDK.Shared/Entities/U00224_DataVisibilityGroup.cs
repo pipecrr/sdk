@@ -14,7 +14,7 @@ namespace Siesa.SDK.Entities
 	/// <summary>
 	/// Permisos de usuario por fila
 	/// </summary>
-
+	[SDKLogEntity]
 	public class U00224_DataVisibilityGroup : BaseUserPermission<E00224_DataVisibilityGroup, int>
 	{
 
