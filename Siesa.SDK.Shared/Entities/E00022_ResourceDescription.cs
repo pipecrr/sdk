@@ -18,6 +18,7 @@ namespace Siesa.SDK.Entities
 	[Index(nameof(RowidCulture), nameof(RowidResource), Name = "IX_e00022_1", IsUnique = true)]
 	public class E00022_ResourceDescription : BaseSDK<int>
 	{
+		[SDKIdentity]
 		[Key]
 		[Required]
 		public override int Rowid { get; set; }
