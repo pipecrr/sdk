@@ -29,6 +29,10 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public byte Type { get; set; }
 
+		public override string ToString()
+		{
+			return $"{Id}";
+		}
 
 	}
 }
