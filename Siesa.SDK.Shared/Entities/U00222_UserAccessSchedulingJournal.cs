@@ -14,7 +14,7 @@ namespace Siesa.SDK.Entities
 	/// <summary>
 	/// Permisos de usuario por fila
 	/// </summary>
-
+	[SDKLogEntity]
 	public class U00222_UserAccessSchedulingJournal : BaseUserPermission<E00222_UserAccessSchedulingJournal, int>
 	{
 
