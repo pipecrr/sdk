@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Siesa.SDK.Shared.Json;
 using Microsoft.EntityFrameworkCore;
-using Siesa.SDK.Shared.DataAnnotations;
+
 
 namespace Siesa.SDK.Entities
 {
@@ -18,7 +18,6 @@ namespace Siesa.SDK.Entities
 	[Index(nameof(Id), Name = "IX_e00020_1", IsUnique = true)]
 	public class E00020_Resource : BaseSDK<int>
 	{
-		[SDKIdentity]
 		[Key]
 		[Required]
 		public override int Rowid { get; set; }
@@ -30,9 +29,6 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public byte Type { get; set; }
 
-		public override string ToString()
-		{
-			return $"{Id}";
-		}
+
 	}
 }
