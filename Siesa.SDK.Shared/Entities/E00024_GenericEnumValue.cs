@@ -18,6 +18,7 @@ namespace Siesa.SDK.Entities
 	[Index(nameof(Enum), nameof(Id), Name = "IX_e00024_1", IsUnique = true)]
 	public class E00024_GenericEnumValue : BaseSDK<int>
 	{
+		[SDKIdentity]
 		[Key]
 		[Required]
 		public override int Rowid { get; set; }
