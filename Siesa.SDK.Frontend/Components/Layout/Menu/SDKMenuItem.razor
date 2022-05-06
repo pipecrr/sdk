@@ -1,6 +1,12 @@
-@using Siesa.SDK.Entities;
+@using Siesa.SDK.Entities
+@using Siesa.SDK.Frontend.Application
+@using Siesa.SDK.Shared.Services
+@inject IResourceManager ResourceManager
+@inject IAuthenticationService AuthenticationService
+
+
 @if(MenuItem.SubMenus?.Count > 0){
-    <DxMenuItem Text="@MenuItem.Resource?.ToString()" IconCssClass="@MenuItem.IconClass"> 
+    <DxMenuItem Text="@Title" IconCssClass="@MenuItem.IconClass"> 
         <Items>
         @foreach(var subMenuItem in MenuItem.SubMenus.OrderBy(x => x.Order)){
             <SDKMenuItem MenuItem="@subMenuItem" />
@@ -12,12 +18,25 @@
     {
         <DxMenuItem CssClass="separator" />
     }else{
-        <DxMenuItem Text="@MenuItem.Resource?.ToString()" IconCssClass="@MenuItem.IconClass" NavigateUrl="@NavigateUrl" />
+        <DxMenuItem Text="@Title" IconCssClass="@MenuItem.IconClass" NavigateUrl="@NavigateUrl" />
     }
 }
 
 @code {
     [Parameter] public E00061_Menu MenuItem { get; set; }
+
+    private string Title { get; set; } = "";
+
+    private async Task<string> GetTitle(){
+        if((MenuItem.RowidResource == null || MenuItem.RowidResource == 0) && MenuItem.ResourceTag != null){
+            return await ResourceManager.GetResource(MenuItem.ResourceTag, AuthenticationService);
+        }
+        return await ResourceManager.GetResource(Convert.ToInt64(MenuItem.RowidResource), AuthenticationService);
+    }
+
+    protected override async Task OnInitializedAsync(){
+        Title = await GetTitle();
+    }
 
     private string NavigateUrl { get { 
         if (!string.IsNullOrEmpty(MenuItem.Url)) {

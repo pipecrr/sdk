@@ -1,0 +1,27 @@
+@using Siesa.SDK.Frontend.Application
+@using Siesa.SDK.Shared.Services
+@inject IResourceManager ResourceManager
+@inject IAuthenticationService AuthenticationService
+
+@Text
+
+@code {
+    [Parameter] public string ResourceTag { get; set; }
+    [Parameter] public Int64? RowidResource { get; set; }
+
+    private string Text { get; set; }
+
+    private async Task<string> GetText(){
+        if((RowidResource == null || RowidResource == 0) && ResourceTag != null){
+            return await ResourceManager.GetResource(ResourceTag, AuthenticationService);
+        }
+        return await ResourceManager.GetResource(Convert.ToInt64(RowidResource), AuthenticationService);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        Text = await GetText();
+    }
+}
+

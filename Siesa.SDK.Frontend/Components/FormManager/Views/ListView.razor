@@ -1,5 +1,7 @@
-﻿@using Siesa.SDK.Frontend.Components.FormManager.Fields
+﻿@using SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Components.FormManager.Fields
 @using Siesa.SDK.Entities;
+@using Siesa.SDK.Frontend.Components.Visualization
 @if (ErrorMsg != "")
 {
     <label>@ErrorMsg</label>
@@ -20,7 +22,7 @@ else
                         <span
                             class="oi oi-plus cursor-pointer" @onclick="() => GoToCreate()"></span>
                         }else{
-                            <span>Acciones</span>
+                            <span><ResourceViewer ResourceTag="Generic.Actions" /></span>
                         }
                     </HeaderTemplate>
                
@@ -101,15 +103,15 @@ else
     </RadzenDataGrid>
     @if(SetTopBar)
     {
-        <PageTitle>@BusinessName</PageTitle>
+        <PageTitle><ResourceViewer ResourceTag="@($"{BusinessName}.Plural")" /></PageTitle>
         <SetTopBar>
-            <TopBarTitle>@BusinessName</TopBarTitle>
+            <TopBarTitle><ResourceViewer ResourceTag="@($"{BusinessName}.Plural")" /></TopBarTitle>
             <TopBarButtons>
-                <DxButton RenderStyle="ButtonRenderStyle.Primary" RenderStyleMode="ButtonRenderStyleMode.Text"
-                Click="GoToCreate" Text="Crear" />
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" RenderStyleMode="SDKButtonRenderStyleMode.Text"
+                Click="GoToCreate" ResourceTag="Generic.ActionCreate" />
                 @foreach (var btn in ListViewModel.Buttons)
                 {
-                    <DxButton RenderStyle="@btn.RenderStyle" RenderStyleMode="ButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />
+                    <SDKButton RenderStyle="@btn.RenderStyle" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" />
                 }
             </TopBarButtons>
         </SetTopBar>

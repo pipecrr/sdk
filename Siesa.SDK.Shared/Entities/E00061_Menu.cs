@@ -14,6 +14,13 @@ namespace Siesa.SDK.Entities
 	/// <summary>
 	/// Menú
 	/// </summary>
+	public enum MenuType
+    {
+        Separator = 1,
+        Menu = 2,
+        Feature = 3
+    }
+
 
 	[Index(nameof(RowidMenuParent), nameof(RowidResource), nameof(RowidFeature), nameof(Order), Name = "IX_e00061_1", IsUnique = true)]
 	public class E00061_Menu : BaseSDK<int>
@@ -35,7 +42,7 @@ namespace Siesa.SDK.Entities
 		public byte Order { get; set; }
 
 		[Required]
-		public byte Type { get; set; }
+		public MenuType Type { get; set; }
 
 		[Required]
 		public byte Level { get; set; }
@@ -54,6 +61,11 @@ namespace Siesa.SDK.Entities
 		public E00040_Feature Feature { get; set; }
 
 		public E00061_Menu MenuParent { get; set; }
+
+		public virtual ICollection<E00061_Menu> SubMenus { get; set; }
+
+		[NotMapped]
+		public virtual string ResourceTag { get; set; }
 
 	}
 }

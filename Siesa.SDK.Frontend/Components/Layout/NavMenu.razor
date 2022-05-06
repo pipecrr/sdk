@@ -1,4 +1,6 @@
-﻿@using Siesa.SDK.Shared.Backend;
+﻿@using SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Shared.Backend;
 @using Siesa.SDK.Frontend.Components.Layout.Menu;
 @using Siesa.SDK.Shared.Services;
 @inject IAuthenticationService AuthenticationService;
@@ -61,7 +63,7 @@
                                     <div class="user-name text-center">@AuthenticationService.User</div>
                                 </div>
                                 <div class="d-flex justify-content-center log-off-btn">
-                                    <DxButton Text="Log Off" RenderStyle="@ButtonRenderStyle.Secondary" NavigateUrl="/logout"></DxButton>
+                                    <SDKButton ResourceTag="BLUser.Logout" RenderStyle="@SDKButtonRenderStyle.Secondary" NavigateUrl="/logout"></SDKButton>
                                 </div>
                             </div>
                         </div>

@@ -1,5 +1,7 @@
-﻿@using Siesa.SDK.Frontend.Components.FormManager.Fields
+﻿@using SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Components.FormManager.Fields
 @using Siesa.SDK.Frontend.Components.Layout.Detail.Relationship
+@using Siesa.SDK.Frontend.Components.Visualization
 @if (Panels == null || Panels.Count <= 0)
 {
     <label>No hay definicion para la vista</label>
@@ -39,10 +41,10 @@ else if (ModelLoaded == true)
         <div class="buttons-container">
             @foreach (var btn in FormViewModel.Buttons)
             {
-                <DxButton RenderStyle="@btn.RenderStyle" RenderStyleMode="ButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />
+                <SDKButton RenderStyle="@btn.RenderStyle" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" />
             }
-            <DxButton RenderStyle="ButtonRenderStyle.Danger" RenderStyleMode="ButtonRenderStyleMode.Text" Click="DeleteBusiness" Text="Eliminar" />
-            <DxButton RenderStyle="ButtonRenderStyle.Secondary" RenderStyleMode="ButtonRenderStyleMode.Text" Click="@((args) => dialogService.Close(false))" Text="Cerrar" />
+            <SDKButton RenderStyle="SDKButtonRenderStyle.Danger" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="DeleteBusiness" ResourceTag="Generic.ActionDelete" />
+            <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@((args) => dialogService.Close(false))" ResourceTag="Generic.Close"/>
         </div>
     }
     @if(SetTopBar)
@@ -53,13 +55,12 @@ else if (ModelLoaded == true)
             <TopBarButtons>
                 @foreach (var btn in FormViewModel.Buttons)
                 {
-                    <DxButton RenderStyle="@btn.RenderStyle" RenderStyleMode="ButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />
+                    <SDKButton RenderStyle="@btn.RenderStyle" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" />
                 }
-                <DxButton RenderStyle="ButtonRenderStyle.Primary" RenderStyleMode="ButtonRenderStyleMode.Text"
-                Click="GoToCreate" Text="Crear" />
-                <DxButton RenderStyle="ButtonRenderStyle.Primary" RenderStyleMode="ButtonRenderStyleMode.Text" Click="GoToEdit" Text="Editar" />
-                <DxButton RenderStyle="ButtonRenderStyle.Info" RenderStyleMode="ButtonRenderStyleMode.Text" Click="GoToList" Text="Listar" />
-                <DxButton RenderStyle="ButtonRenderStyle.Danger" RenderStyleMode="ButtonRenderStyleMode.Text" Click="DeleteBusiness" Text="Eliminar" />
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="GoToCreate" ResourceTag="Generic.ActionCreate" />
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="GoToEdit" ResourceTag="Generic.ActionEdit" />
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Info" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="GoToList" ResourceTag="Generic.ActionList" />
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Danger" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="DeleteBusiness" ResourceTag="Generic.ActionDelete" />
             </TopBarButtons>
         </SetTopBar>
     }

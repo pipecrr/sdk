@@ -1,4 +1,6 @@
-﻿@using Siesa.SDK.Frontend.Components.FormManager.Fields
+﻿@using SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Components.FormManager.Fields
+@using Siesa.SDK.Frontend.Components.Visualization
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
 @if (Panels == null || Panels.Count <= 0)
 {
@@ -50,8 +52,8 @@ else if (BusinessObj != null)
         <TopBarButtons>
             @foreach (var btn in FormViewModel.Buttons)
             {
-                <DxButton RenderStyle="@btn.RenderStyle" RenderStyleMode="ButtonRenderStyleMode.Text"
-            Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />
+                <SDKButton RenderStyle="@btn.RenderStyle" RenderStyleMode="SDKButtonRenderStyleMode.Text"
+            Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" />
             }
         </TopBarButtons>
     </SetTopBar>

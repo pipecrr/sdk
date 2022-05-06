@@ -46,7 +46,7 @@ namespace Siesa.SDK.Frontend.Components.Layout
                     {
                         var customActionMenu = new E00061_Menu
                         {
-                            //Title = business.Name,
+                            ResourceTag = $"{business.Name}.Plural",
                             Url = $"/{business.Name}/explorer/",
                             IconClass = "oi oi-project "
                         };
@@ -56,15 +56,15 @@ namespace Siesa.SDK.Frontend.Components.Layout
                     {
                         var submenuItem = new E00061_Menu
                         {
-                            //Title = business.Name,
+                            ResourceTag = $"{business.Name}.Plural",
                             IconClass = "oi oi-list-rich  menu-icon",
                             SubMenus = new List<E00061_Menu>{
                                 new E00061_Menu{
-                                    //Title = "Crear",
+                                    ResourceTag = "Generic.ActionCreate",
                                     Url = $"/{business.Name}/create/"
                                 },
                                 new E00061_Menu{
-                                    //Title = "Consultar",
+                                    ResourceTag = "Generic.ActionList",
                                     Url = $"/{business.Name}/"
                                 }
                             }
@@ -75,7 +75,7 @@ namespace Siesa.SDK.Frontend.Components.Layout
                         {
                             var customActionMenu = new E00061_Menu
                             {
-                                //Title = customAction.Name,
+                                ResourceTag = $"{business.Name}.CustomAction.{customAction.Name}",
                                 Url = $"/{business.Name}/{customAction.Name}/",
                                 IconClass = "oi oi-project "
                             };

@@ -1,6 +1,8 @@
-﻿@using Siesa.SDK.Frontend.Components.FormManager.Fields
+﻿@using SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Components.FormManager.Fields
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
 @using Siesa.SDK.Entities;
+@using Siesa.SDK.Frontend.Components.Visualization
 @if (Panels == null || Panels.Count <= 0)
 {
     <label>No hay definicion para la vista</label>
@@ -12,7 +14,7 @@ else if (Loading == true)
 else if (BusinessObj.BaseObj.Rowid != 0)
 {
     @if(IsSubpanel){
-        <h5>Editar @BusinessObj</h5>
+        <h5><ResourceViewer ResourceTag="Generic.ActionEdit" /> @BusinessObj</h5>
         <hr />
     }
     <CascadingValue Value="@this">
@@ -54,24 +56,24 @@ else if (BusinessObj.BaseObj.Rowid != 0)
         <div class="buttons-container">
             @foreach (var btn in FormViewModel.Buttons)
             {
-                <DxButton RenderStyle="@btn.RenderStyle" RenderStyleMode="ButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />
+                <SDKButton RenderStyle="@btn.RenderStyle" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag"  />
             }
-            <DxButton form="@FormID" RenderStyle="ButtonRenderStyle.Primary" RenderStyleMode="ButtonRenderStyleMode.Text" SubmitFormOnClick="true" Text="Guardar" />
-            <DxButton RenderStyle="ButtonRenderStyle.Secondary" RenderStyleMode="ButtonRenderStyleMode.Text" Click="@((args) => dialogService.Close(false))" Text="Cancelar" />
+            <SDKButton form="@FormID" RenderStyle="SDKButtonRenderStyle.Primary" RenderStyleMode="SDKButtonRenderStyleMode.Text" SubmitFormOnClick="true" ResourceTag="Generic.ActionSave" />
+            <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@((args) => dialogService.Close(false))" ResourceTag="Generic.ActionCancel" />
         </div>
     }
     @if(SetTopBar && !IsSubpanel)
     {
-        <PageTitle>Editar @BusinessObj</PageTitle>
+        <PageTitle><ResourceViewer ResourceTag="Generic.ActionEdit" /> @BusinessObj</PageTitle>
         <SetTopBar>
-            <TopBarTitle>Editar @BusinessObj</TopBarTitle>
+            <TopBarTitle><ResourceViewer ResourceTag="Generic.ActionEdit" /> @BusinessObj</TopBarTitle>
             <TopBarButtons>
                 @foreach (var btn in FormViewModel.Buttons)
                 {
-                    <DxButton RenderStyle="@btn.RenderStyle" RenderStyleMode="ButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />
+                    <SDKButton RenderStyle="@btn.RenderStyle" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" />
                 }
-                <DxButton form="@FormID" RenderStyle="ButtonRenderStyle.Primary" RenderStyleMode="ButtonRenderStyleMode.Text" SubmitFormOnClick="true" Text="Guardar" />
-                <DxButton RenderStyle="ButtonRenderStyle.Secondary" RenderStyleMode="ButtonRenderStyleMode.Text" Click="GoToList" Text="Cancelar" />
+                <SDKButton form="@FormID" RenderStyle="SDKButtonRenderStyle.Primary" RenderStyleMode="SDKButtonRenderStyleMode.Text" SubmitFormOnClick="true" ResourceTag="Generic.ActionSave" />
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="GoToList" ResourceTag="Generic.ActionCancel" />
             </TopBarButtons>
         </SetTopBar>
     }

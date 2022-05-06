@@ -6,7 +6,10 @@ namespace Siesa.SDK.Shared.Services
         public int Rowid { get; set; }
         public string Path { get; set; }
         public string PasswordRecoveryEmail { get; set; }
-        // public string Name { get; set; }
+        public string Name { get; set; }
+        public string Id { get; set; }
+        public string Description { get; set; }
+        public short RowidCulture { get; set; }
 
         // public string[] Roles { get; set; }
         // public string[] Teams { get; set; }
@@ -15,7 +18,7 @@ namespace Siesa.SDK.Shared.Services
 
         public override string ToString()
         {
-            return $"{Path}";
+            return $"({Id}) - {Name}";
         }
     }
     

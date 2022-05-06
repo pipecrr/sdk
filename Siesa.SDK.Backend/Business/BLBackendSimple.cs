@@ -283,7 +283,7 @@ namespace Siesa.SDK.Business
                     valueProp = entityValueRowid;
                 }
 
-                returnValue.Add(propName, valueProp.ToString());
+                returnValue.Add(propName, (valueProp != null? valueProp.ToString() : null));
             }
 
             return returnValue;
