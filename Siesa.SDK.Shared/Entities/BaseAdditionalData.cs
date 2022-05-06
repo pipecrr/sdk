@@ -6,9 +6,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Siesa.SDK.Entities
 {
-    public abstract class BaseAdditionalData<T>: BaseAudit<int>
+    public abstract class BaseAdditionalData<T, K>: BaseAudit<int>
     {
-        public int? RowidRecord { get; set; }
+        public K? RowidRecord { get; set; }
         [ForeignKey(nameof(RowidRecord))]
         public virtual T Record { get; set; }
 
