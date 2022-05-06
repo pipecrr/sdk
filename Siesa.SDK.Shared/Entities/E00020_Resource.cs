@@ -18,6 +18,7 @@ namespace Siesa.SDK.Entities
 	[Index(nameof(Id), Name = "IX_e00020_1", IsUnique = true)]
 	public class E00020_Resource : BaseSDK<int>
 	{
+		[SDKIdentity]
 		[Key]
 		[Required]
 		public override int Rowid { get; set; }
