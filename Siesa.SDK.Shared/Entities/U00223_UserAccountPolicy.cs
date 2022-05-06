@@ -14,7 +14,7 @@ namespace Siesa.SDK.Entities
 	/// <summary>
 	/// Permisos de usuario por fila
 	/// </summary>
-
+	[SDKLogEntity]
 	public class U00223_UserAccountPolicy : BaseUserPermission<E00223_UserAccountPolicy, int>
 	{
 
