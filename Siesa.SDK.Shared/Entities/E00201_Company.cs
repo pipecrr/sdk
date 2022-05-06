@@ -17,6 +17,7 @@ namespace Siesa.SDK.Entities
 
 	public class E00201_Company : BaseSDK<short>
 	{
+		[SDKIdentity]
 		[Key]
 		[Required]
 		public override short Rowid { get; set; }
