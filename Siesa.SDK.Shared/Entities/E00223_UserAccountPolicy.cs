@@ -15,7 +15,7 @@ namespace Siesa.SDK.Entities
 	/// Politicas de la cuenta de usuario
 	/// </summary>
 
-	public class E00223_UserAcountPolicy : BaseMaster<string>
+	public class E00223_UserAccountPolicy : BaseMaster<string>
 	{
 		[Required]
 		[StringLength(20)]
