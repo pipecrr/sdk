@@ -14,7 +14,7 @@ namespace Siesa.SDK.Entities
 	/// <summary>
 	/// Grupos de trabajo
 	/// </summary>
-
+	[SDKLogEntity]
 	public class E00224_DataVisibilityGroup : BaseMasterCompanyGroup<string>
 	{
 		[Required]
