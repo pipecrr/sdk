@@ -11,7 +11,7 @@ namespace Siesa.SDK.Entities
         public DateTime CreationDate { get; set; } = DateTime.UtcNow;
             
         public DateTime? LastUpdateDate { get; set; } = DateTime.UtcNow;
-        public virtual string Source { get; set; }
+        public virtual string? Source { get; set; }
         public int? RowidUserCreates { get; set; }
         [ForeignKey(nameof(RowidUserCreates))]
         public virtual E00220_User UserCreates { get; set; }
