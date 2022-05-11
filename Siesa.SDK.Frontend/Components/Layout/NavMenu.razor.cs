@@ -93,8 +93,8 @@ namespace Siesa.SDK.Frontend.Components.Layout
             var request = await menuBL.Call("GetSuites");
             if (request.Success)
             {
-                SelectedSuite = request.Data.First(); //TODO: UX difines how to select the menu group
-                var menuRequest = await menuBL.Call("GetMenuItems", SelectedSuite.Rowid);
+                SelectedSuite = ((List<E00060_Suite>)request.Data).First(); //TODO: UX difines how to select the menu group
+                var menuRequest = await menuBL.Call("GetMenuItems", Convert.ToInt64(SelectedSuite.Rowid));
                 if (menuRequest.Success)
                 {
                     Menus = menuRequest.Data;
