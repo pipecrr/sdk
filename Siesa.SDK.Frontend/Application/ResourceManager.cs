@@ -11,10 +11,10 @@ namespace Siesa.SDK.Frontend.Application
 {
     public interface IResourceManager {
         public Task<string> GetResource(Int64 resourceRowid, Int64 cultureRowid);
-        public Task<string> GetResource(string tag, Int64 cultureRowid);
+        public Task<string> GetResource(string resourceTag, Int64 cultureRowid);
 
         public Task<string> GetResource(Int64 resourceRowid, IAuthenticationService authenticationService);
-        public Task<string> GetResource(string tag, IAuthenticationService authenticationService);
+        public Task<string> GetResource(string resourceTag, IAuthenticationService authenticationService);
 
         public Task<string> GetResourcesByModule(Int64 moduleRowid, Int64 cultureRowid);
         public Task<string> GetEnumValues(string enumName, Int64 cultureRowid, Int64 moduleRowid);
@@ -52,7 +52,7 @@ namespace Siesa.SDK.Frontend.Application
                 }
             }
 
-            var resourceTag = resourceDict[resourceRowid];
+            string resourceTag = resourceDict[resourceRowid];
             return await GetResource(resourceTag, cultureRowid);
         }
         public async Task<string> GetResource(string resourceTag, Int64 cultureRowid)

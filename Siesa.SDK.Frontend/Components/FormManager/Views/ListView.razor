@@ -16,6 +16,7 @@ else
         AllowPaging="true" 
         PageSize="ListViewModel.Paging.PageSize"
         PagerHorizontalAlign="HorizontalAlign.Center" 
+        PagingSummaryFormat="@PageSummaryFormat"
         AllowSorting="true" 
         Data="@data" 
         TItem="object" 
@@ -94,7 +95,10 @@ else
 
                 if(field.Name == ListViewModel.LinkTo)
                 {
-                    <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="@field.Label" Type="@columnType">
+                    <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType">
+                        <HeaderTemplate>
+                            <span><ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" /></span>
+                        </HeaderTemplate>
                         <Template Context="data">
                             @if(OnClickDetail != null){
                                 <a href="#" @onclick="() => GoToDetail(((IBaseSDK)data).GetRowid())" @onclick:preventDefault>@data</a>
@@ -105,14 +109,21 @@ else
                     </RadzenDataGridColumn>
                 }else{
                     if(columnType == typeof(bool)){
-                        <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="@field.Label" Type="@columnType" TextAlign="TextAlign.Center" >
+                        <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" TextAlign="TextAlign.Center" >
+                            <HeaderTemplate>
+                                 <span><ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" /></span>
+                             </HeaderTemplate>
                             <Template Context="data">
                                 <input type="checkbox" checked="@(data.GetType().GetProperty(fieldName).GetValue(data))" disabled />
                             </Template>
                         </RadzenDataGridColumn>
 
                     }else{
-                        <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="@field.Label" Type="@columnType" />
+                        <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType">
+                             <HeaderTemplate>
+                                 <span><ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" /></span>
+                             </HeaderTemplate>
+                        </RadzenDataGridColumn>
                     }
                     
                 }
