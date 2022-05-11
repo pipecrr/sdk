@@ -89,15 +89,18 @@ namespace Siesa.SDK.Frontend.Components.Layout
 
                 }
             }
-            var backends = backendManager.GetBackendDict();
-            BackendRegistry backendRegistry = backends[backends.Keys.First()];
-            backendRegistry.SetAuthenticationService(AuthenticationService);
-            var jsonResponse = await backendRegistry.GetMenuGroupsAsync();
-            SelectedSuite = Newtonsoft.Json.JsonConvert.DeserializeObject<List<E00060_Suite>>(jsonResponse.Response).First(); //TODO: UX difines how to select the menu group
-
-            var menusJsonResponse = await backendRegistry.GetMenuItemsAsync(SelectedSuite.Rowid);
-            Menus = Newtonsoft.Json.JsonConvert.DeserializeObject<List<E00061_Menu>>(menusJsonResponse.Response);
-            Menus = Menus.OrderBy(x => x.Order).ToList();
+            var menuBL = Frontend.BusinessManagerFrontend.Instance.GetBusiness("BLAdminMenu", AuthenticationService);
+            var request = await menuBL.Call("GetSuites");
+            if (request.Success)
+            {
+                SelectedSuite = request.Data.First(); //TODO: UX difines how to select the menu group
+                var menuRequest = await menuBL.Call("GetMenuItems", SelectedSuite.Rowid);
+                if (menuRequest.Success)
+                {
+                    Menus = menuRequest.Data;
+                    Menus = Menus.OrderBy(x => x.Order).ToList();
+                }
+            }
             Console.WriteLine(Menus.Count);
             StateHasChanged();
         }
