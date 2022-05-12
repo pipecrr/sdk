@@ -5,7 +5,7 @@
 @if(ShowHeader){
     <div class="relationship-panel">
         <div class="relationship-panel-header">
-            <span class="relationship-panel-header-title"  @onclick="Toggle">@Relationship.Label</span>
+            <span class="relationship-panel-header-title"  @onclick="Toggle"><ResourceViewer ResourceTag=@Relationship.ResourceTag /></span>
             
             <span class="relationship-panel-header-close">
                 @if(isOpen){

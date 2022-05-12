@@ -3,12 +3,6 @@
 @typeparam TItem
 @inherits FieldClass<TItem>
 
-@*<DxComboBox Data="@FieldOpt.Options" TData="ListOption" TValue="string" CssClass="@FieldOpt.CssClass" SelectedItemChanged="@((newSel) => SetAttr( newSel))"
-    TextFieldName="Label" SelectedItem="@BindValue" NullText="@FieldOpt.Placeholder" ReadOnly="@FieldOpt.Disabled"
-    @attributes="FieldOpt.CustomAttributes" ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
-    FilteringMode="DataGridFilteringMode.Contains"></DxComboBox>*@
-
-
 <SDKSelectField 
     ItemType="TItem"
     Options="@_options" 

@@ -1,4 +1,5 @@
 ﻿@using SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Fields
 @using Siesa.SDK.Frontend.Components.FormManager.Fields
 @using System;
 @using Siesa.SDK.Entities;
@@ -11,11 +12,11 @@
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
 @if (Panels == null || Panels.Count <= 0)
 {
-    <label>No hay definicion para la vista</label>
+    <ResourceViewer ResourceTag="SDK.ViewdefNotFound" />
 }
 else if (Loading == true)
 {
-    <label>Cargando...</label>
+    <ResourceViewer ResourceTag="Generic.Loading" />
 }
 else if (BusinessObj.BaseObj != null)
 {
@@ -35,11 +36,11 @@ else if (BusinessObj.BaseObj != null)
                 <DxFormLayoutTabPages>
                     @foreach (var panel in Panels)
                     {
-                        <DxFormLayoutTabPage Caption="@panel.Label">
+                        <SDKFormLayoutTabPage ResourceTag="@panel.ResourceTag">
                             <CascadingValue Value="@EditFormContext">
                                 <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
                             </CascadingValue>
-                        </DxFormLayoutTabPage>
+                        </SDKFormLayoutTabPage>
                     }
 
 

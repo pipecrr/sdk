@@ -30,11 +30,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         public string Name { get; set; }
         public string PropertyName { get; set; }
         public string Placeholder { get; set; } = "";
-        public string Label { get; set; }
         public Boolean PureField { get; set; } = false;
         public string Id { get; set; }
         public string Value { get; set; }
         public string Msg { get; set; }
+
+        public string ResourceTag { get; set; }
 
         public bool Disabled { get; set; } = false;
         public string CssClass { get; set; }
@@ -63,7 +64,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         {
         };
 
-        public FieldObj InitField(object modelObj)
+        private FieldObj fieldObj = null;
+
+        public FieldObj GetFieldObj(object modelObj)
+        {
+            if (fieldObj == null)
+            {
+                fieldObj = InitField(modelObj);
+            }
+            return fieldObj;
+        }
+
+        private FieldObj InitField(object modelObj)
         {
             FieldObj field = new FieldObj();
 
@@ -98,6 +110,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 field.ModelObj = currentObject;
                 field.Name = fieldPath[fieldPath.Length - 1];
                 PropertyName = fieldPath[fieldPath.Length - 1];
+                if(String.IsNullOrEmpty(ResourceTag))
+                {
+                    ResourceTag = $"{field.ModelObj.GetType().Name}.{field.Name}";
+                }
                 var propertyType = field.ModelObj.GetType().GetProperty(field.Name).PropertyType;
                 //Console.WriteLine(fieldName + " , " + propertyType);
                 if(propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))

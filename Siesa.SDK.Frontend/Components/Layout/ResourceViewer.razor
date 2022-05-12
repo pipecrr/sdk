@@ -9,13 +9,26 @@
     [Parameter] public string ResourceTag { get; set; }
     [Parameter] public Int64? RowidResource { get; set; }
 
+    [Parameter] public Int64 RowidCulture { get; set; }
+
     private string Text { get; set; }
 
     private async Task<string> GetText(){
-        if((RowidResource == null || RowidResource == 0) && ResourceTag != null){
-            return await ResourceManager.GetResource(ResourceTag, AuthenticationService);
+        if(!String.IsNullOrEmpty(ResourceTag)){
+            if(RowidCulture != 0 && (AuthenticationService == null || AuthenticationService.User == null || AuthenticationService.User.RowidCulture == 0)){
+                return await ResourceManager.GetResource(ResourceTag, RowidCulture);
+            }else{
+                return await ResourceManager.GetResource(ResourceTag, AuthenticationService);
+            }
         }
-        return await ResourceManager.GetResource(Convert.ToInt64(RowidResource), AuthenticationService);
+        if(RowidResource != 0 && RowidResource != null){
+            if(RowidCulture != 0 && (AuthenticationService == null || AuthenticationService.User == null || AuthenticationService.User.RowidCulture == 0)){
+                return await ResourceManager.GetResource(Convert.ToInt64(RowidResource), RowidCulture);
+            }else{
+                return await ResourceManager.GetResource(Convert.ToInt64(RowidResource), AuthenticationService);
+            }
+        }
+        return Text;
     }
 
     protected override async Task OnInitializedAsync()

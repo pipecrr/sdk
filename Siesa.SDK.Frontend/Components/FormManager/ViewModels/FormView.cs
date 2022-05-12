@@ -93,6 +93,20 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     FormViewModel.Panels = panels;
                 }
             }
+            try
+            {
+                foreach (var panel in FormViewModel.Panels)
+                {
+                    foreach (var field in panel.Fields)
+                    {
+                        field.GetFieldObj(BusinessObj);
+                    }
+                }
+            }
+            catch (System.Exception)
+            {
+                Console.WriteLine("Error");
+            }
             Loading = false;
             EditFormContext = new EditContext(BusinessObj);
             EditFormContext.OnFieldChanged += EditContext_OnFieldChanged;

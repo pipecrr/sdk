@@ -1,10 +1,11 @@
 ﻿@using SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Fields
 @using Siesa.SDK.Frontend.Components.FormManager.Fields
 @using Siesa.SDK.Frontend.Components.Layout.Detail.Relationship
 @using Siesa.SDK.Frontend.Components.Visualization
 @if (Panels == null || Panels.Count <= 0)
 {
-    <label>No hay definicion para la vista</label>
+    <ResourceViewer ResourceTag="SDK.ViewdefNotFound" />
 }
 else if (ModelLoaded == true)
 {
@@ -19,9 +20,9 @@ else if (ModelLoaded == true)
                 <DxFormLayoutTabPages>
                     @foreach (var panel in Panels)
                     {
-                        <DxFormLayoutTabPage Caption="@panel.Label">
+                        <SDKFormLayoutTabPage ResourceTag="@panel.ResourceTag">
                             <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" ModelObj="@BusinessObj" DefaultColSize="@panel.ColSize" />
-                        </DxFormLayoutTabPage>
+                        </SDKFormLayoutTabPage>
                     }
                 </DxFormLayoutTabPages>
 

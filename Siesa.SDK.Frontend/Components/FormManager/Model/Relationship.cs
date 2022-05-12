@@ -12,7 +12,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
 
     public class Relationship
     {
-        public string Label { get; set; }
+        public string Name { get; set; }
+        public string ResourceTag { get; set; }
         public RelationshipType Type { get; set; }
         public string RelatedBusiness { get; set; }
         public string RelatedField { get; set; }

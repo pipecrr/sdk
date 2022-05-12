@@ -142,7 +142,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 ListViewModel = JsonConvert.DeserializeObject<ListViewModel>(metadata);
                 foreach (var field in ListViewModel.Fields)
                 {
-                    field.InitField(BusinessObj);
+                    field.GetFieldObj(BusinessObj);
                 }
             }
             data = null;

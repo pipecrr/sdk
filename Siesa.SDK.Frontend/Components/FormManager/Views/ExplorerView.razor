@@ -5,11 +5,11 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @if (Panels == null || Panels.Count <= 0)
 {
-    <label>No hay definicion para la vista</label>
+    <ResourceViewer ResourceTag="SDK.ViewdefNotFound" />
 }
 else if (Loading == true)
 {
-    <label>Cargando...</label>
+    <ResourceViewer ResourceTag="Generic.Loading" />
 }
 else if (BusinessObj != null)
 {
@@ -32,7 +32,7 @@ else if (BusinessObj != null)
                 <DxFormLayoutTabPages>
                     @foreach (var rel in FormViewModel.Relationships)
                     {
-                        <DxFormLayoutTabPage Caption="@rel.Label">
+                        <DxFormLayoutTabPage Caption="@rel.ResourceTag">
                             <RelationshipPanel Relationship="@rel" Parent="@BusinessObj.BaseObj" ShowHeader="false" />
                         </DxFormLayoutTabPage>
                     }
@@ -41,9 +41,9 @@ else if (BusinessObj != null)
 
         }
     </CascadingValue>
-    <PageTitle>@Title</PageTitle>
+    <PageTitle><ResourceViewer ResourceTag=@Title /></PageTitle>
     <SetTopBar>
-        <TopBarTitle>@Title</TopBarTitle>
+        <TopBarTitle><ResourceViewer ResourceTag=@Title /></TopBarTitle>
         <TopBarButtons>
             @foreach (var btn in FormViewModel.Buttons)
             {

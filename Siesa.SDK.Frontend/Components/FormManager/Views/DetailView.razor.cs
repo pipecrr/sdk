@@ -43,6 +43,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 for (int j = 0; j < panels[i].Fields.Count; j++)
                 {
                     panels[i].Fields[j].ViewContext = "DetailView";
+                    panels[i].Fields[j].GetFieldObj(BusinessObj);
                 }
                 if (panels[i].SubViewdef != null && panels[i].SubViewdef.Panels.Count > 0)
                 {
