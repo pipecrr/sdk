@@ -15,8 +15,7 @@ namespace Siesa.SDK.Entities
 	/// Valor enum genérico
 	/// </summary>
 
-	[Index(nameof(Enum), nameof(Id), Name = "IX_e00024_1", IsUnique = true)]
-	public class E00024_GenericEnumValue : BaseSDK<int>
+	public class E00024_Enum : BaseSDK<int>
 	{
 		[SDKIdentity]
 		[Key]
@@ -25,14 +24,7 @@ namespace Siesa.SDK.Entities
 
 		[Required]
 		[StringLength(100)]
-		public string Enum { get; set; }
-
-		[Required]
-		[StringLength(100)]
 		public string Id { get; set; }
-
-		[Required]
-		public byte Value { get; set; }
 
 
 	}
