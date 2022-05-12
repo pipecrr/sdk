@@ -37,12 +37,14 @@
 
     protected override async Task OnInitializedAsync()
     {
+        Label = ResourceTag;
         await base.OnInitializedAsync();
         Label = await GetText();
     }
 
     protected override async Task OnParametersSetAsync()
     {
+        Label = ResourceTag;
         await base.OnParametersSetAsync();
         Label = await GetText();
     }

@@ -38,6 +38,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        Text = ResourceTag;
         await base.OnInitializedAsync();
         Text = await GetText();
     }

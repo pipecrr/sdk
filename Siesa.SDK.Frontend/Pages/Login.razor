@@ -29,7 +29,7 @@
                     @if (loading) {
                         <span class="spinner-border spinner-border-sm mr-1"></span>
                     }
-                    Login
+                    <ResourceViewer ResourceTag="BLUser.Login" RowidCulture=1 />
                 </button>
                 @if (!string.IsNullOrEmpty(error)) {
                     <div class="alert alert-danger mt-3 mb-0">@error</div>
