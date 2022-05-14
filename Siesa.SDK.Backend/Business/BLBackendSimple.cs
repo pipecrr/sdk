@@ -23,6 +23,7 @@ using Siesa.SDK.Shared.Utilities;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.Extensions.DependencyInjection;
+using Siesa.SDK.Shared.DataAnnotations;
 
 namespace Siesa.SDK.Business
 {
@@ -499,6 +500,28 @@ namespace Siesa.SDK.Business
         protected virtual void ValidateBussines(ref ValidateAndSaveBusinessObjResponse operationResult, BLUserActionEnum action)
         {
             // Do nothing
+        }
+
+        [SDKExposedMethod]
+        public virtual ActionResult<string> GetObjectString(Int64 rowid)
+        {
+            using(SDKContext context = _dbFactory.CreateDbContext())
+            {
+                context.SetProvider(_provider);
+                var query = context.Set<T>().AsQueryable();
+                context.ChangeTracker.LazyLoadingEnabled = true;
+                query = query.Where("Rowid == @0", rowid);
+                var entity = query.FirstOrDefault();
+                if(entity != null)
+                {
+                    return new ActionResult<string>{
+                        Data = entity.ToString()
+                    };
+                }
+                return new ActionResult<string>{
+                    Data = ""
+                };
+            }
         }
     }
 

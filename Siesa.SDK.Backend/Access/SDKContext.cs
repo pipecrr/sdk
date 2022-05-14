@@ -101,6 +101,7 @@ namespace Siesa.SDK.Backend.Access
 
         public SDKContext(DbContextOptions options) : base(options)
         {
+            ChangeTracker.LazyLoadingEnabled = false;
         }
 
         public void SetProvider(IServiceProvider serviceProvider)

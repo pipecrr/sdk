@@ -25,7 +25,7 @@ namespace Siesa.SDK.Entities
 		public short? RowidCompany { get; set; }
 
 
-		public E00201_Company Company { get; set; }
+		public virtual E00201_Company Company { get; set; }
 
 	}
 }

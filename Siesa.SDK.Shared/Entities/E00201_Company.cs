@@ -28,7 +28,7 @@ namespace Siesa.SDK.Entities
 
 
 		[Required]
-		public E00200_CompanyGroup CompanyGroup { get; set; }
+		public virtual E00200_CompanyGroup CompanyGroup { get; set; }
 
 	}
 }

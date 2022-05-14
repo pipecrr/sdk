@@ -31,7 +31,7 @@ namespace Siesa.SDK.Entities
 
 
 		[Required]
-		public E00224_DataVisibilityGroup DataVisibilityGroup { get; set; }
+		public virtual E00224_DataVisibilityGroup DataVisibilityGroup { get; set; }
 
 	}
 }

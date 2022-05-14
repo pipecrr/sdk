@@ -42,9 +42,9 @@ namespace Siesa.SDK.Entities
         public string? Url { get; set; }
         [StringLength(250)]
         public string? IconClass { get; set; }
-        public E00020_Resource Resource { get; set; }
-        public E00040_Feature Feature { get; set; }
-        public E00061_Menu MenuParent { get; set; }
+        public virtual E00020_Resource Resource { get; set; }
+        public virtual E00040_Feature Feature { get; set; }
+        public virtual E00061_Menu MenuParent { get; set; }
         public virtual ICollection<E00061_Menu> SubMenus { get; set; }
         [NotMapped]
         public virtual string ResourceTag { get; set; }

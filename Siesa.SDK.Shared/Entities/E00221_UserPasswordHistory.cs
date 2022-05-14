@@ -41,7 +41,7 @@ namespace Siesa.SDK.Entities
 
 
 		[Required]
-		public E00220_User User { get; set; }
+		public virtual E00220_User User { get; set; }
 
 	}
 }

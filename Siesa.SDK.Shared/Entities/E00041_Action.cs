@@ -29,7 +29,7 @@ namespace Siesa.SDK.Entities
 
 
 		[Required]
-		public E00020_Resource Resource { get; set; }
+		public virtual E00020_Resource Resource { get; set; }
 
 	}
 }

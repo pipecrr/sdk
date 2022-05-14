@@ -106,11 +106,11 @@ namespace Siesa.SDK.Entities
 
 
 		[Required]
-		public E00021_Culture Culture { get; set; }
+		public virtual E00021_Culture Culture { get; set; }
 
-		public E00220_User UserSubstitute { get; set; }
+		public virtual E00220_User UserSubstitute { get; set; }
 
-		public E00220_User UserReportTo { get; set; }
+		public virtual E00220_User UserReportTo { get; set; }
 
 		// public E00223_UserAccountPolicy UserAccountPolicy { get; set; }
 
