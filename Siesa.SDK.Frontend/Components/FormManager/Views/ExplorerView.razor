@@ -1,4 +1,5 @@
 ﻿@using SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Fields
 @using Siesa.SDK.Frontend.Components.FormManager.Fields
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
 @using Siesa.SDK.Frontend.Components.Layout.Detail.Relationship
@@ -32,9 +33,9 @@ else if (BusinessObj != null)
                 <DxFormLayoutTabPages>
                     @foreach (var rel in FormViewModel.Relationships)
                     {
-                        <DxFormLayoutTabPage Caption="@rel.ResourceTag">
+                        <SDKFormLayoutTabPage ResourceTag="@rel.ResourceTag">
                             <RelationshipPanel Relationship="@rel" Parent="@BusinessObj.BaseObj" ShowHeader="false" />
-                        </DxFormLayoutTabPage>
+                        </SDKFormLayoutTabPage>
                     }
                 </DxFormLayoutTabPages>
             </DxFormLayout>

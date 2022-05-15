@@ -1,7 +1,7 @@
 ﻿@typeparam TItem
 @inherits FieldClass<TItem>
 
-<p style="word-wrap: break-word">@BindValue</p>
+<p style="word-wrap: break-word"><ResourceViewer ResourceTag="@($"Enum.{typeof(TItem).Name}.{BindValue}")" /></p>
 
 @code {
     [Parameter] public IEnumerable<TItem> Options {get; set;}

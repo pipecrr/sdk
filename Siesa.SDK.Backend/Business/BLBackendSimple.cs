@@ -366,10 +366,10 @@ namespace Siesa.SDK.Business
                 {
 
                     var query = context.Set<T>().AsQueryable();
-                    foreach (var relatedProperty in _relatedProperties)
-                    {
-                        query = query.Include(relatedProperty);
-                    }
+                    // foreach (var relatedProperty in _relatedProperties)
+                    // {
+                    //     query = query.Include(relatedProperty);
+                    // }
                     query = query.Where("Rowid == @0", BaseObj.GetRowid());
                     T entity = query.FirstOrDefault();
                     context.ResetConcurrencyValues(entity, BaseObj);

@@ -40,6 +40,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         {
             for (int i = 0; i < panels.Count; i++)
             {
+                if(String.IsNullOrEmpty(panels[i].ResourceTag))
+                {
+                    if(String.IsNullOrEmpty(panels[i].ResourceTag)){
+                        panels[i].ResourceTag = $"{BusinessName}.Viewdef.detail.Panel.{panels[i].Name}";
+                    }
+                }
+                
                 for (int j = 0; j < panels[i].Fields.Count; j++)
                 {
                     panels[i].Fields[j].ViewContext = "DetailView";
@@ -77,6 +84,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     FormViewModel.Panels = panels;
                 }
                 setViewContext(Panels);
+                if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
+                {
+                    foreach (var relationship in FormViewModel.Relationships)
+                    {
+                        if(String.IsNullOrEmpty(relationship.ResourceTag))
+                        {
+                            relationship.ResourceTag = $"{BusinessName}.Relationship.{relationship.Name}";
+                        }
+                    }
+                }
                 ModelLoaded = true;
             }
             StateHasChanged();

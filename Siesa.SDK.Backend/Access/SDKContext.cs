@@ -185,17 +185,17 @@ namespace Siesa.SDK.Backend.Access
             return base.Set<TEntity>();
         }
 
-        // public override DbSet<TEntity> Set<TEntity>()
-        // {
-        //     if(ServiceProvider != null){
-        //         try {
-        //             return ActivatorUtilities.CreateInstance(ServiceProvider, typeof(DbSetProxy<TEntity>), new object[] { this, base.Set<TEntity>() }) as DbSet<TEntity>;
-        //         }catch(Exception e){
-        //             Console.WriteLine($"{e.Message}***********");
-        //         }                
-        //     }
-        //     return new DbSetProxy<TEntity>(null ,this, base.Set<TEntity>()); 
-        // }
+        public override DbSet<TEntity> Set<TEntity>()
+        {
+            if(ServiceProvider != null){
+                try {
+                    return ActivatorUtilities.CreateInstance(ServiceProvider, typeof(DbSetProxy<TEntity>), new object[] { this, base.Set<TEntity>() }) as DbSet<TEntity>;
+                }catch(Exception e){
+                    Console.WriteLine($"{e.Message}***********");
+                }                
+            }
+            return new DbSetProxy<TEntity>(null ,this, base.Set<TEntity>()); 
+        }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder builder)
         {

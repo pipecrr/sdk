@@ -97,6 +97,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             {
                 foreach (var panel in FormViewModel.Panels)
                 {
+                    if(String.IsNullOrEmpty(panel.ResourceTag))
+                    {
+                        panel.ResourceTag = $"{BusinessName}.Viewdef.{ViewdefName}.Panel.{panel.Name}";
+                    }
+
                     foreach (var field in panel.Fields)
                     {
                         field.GetFieldObj(BusinessObj);
@@ -106,6 +111,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             catch (System.Exception)
             {
                 Console.WriteLine("Error");
+            }
+            if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
+            {
+                foreach (var relationship in FormViewModel.Relationships)
+                {
+                    if(String.IsNullOrEmpty(relationship.ResourceTag))
+                    {
+                        relationship.ResourceTag = $"{BusinessName}.Relationship.{relationship.Name}";
+                    }
+                }
             }
             Loading = false;
             EditFormContext = new EditContext(BusinessObj);
