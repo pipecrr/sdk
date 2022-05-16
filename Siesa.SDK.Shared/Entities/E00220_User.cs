@@ -114,5 +114,8 @@ namespace Siesa.SDK.Entities
 
 		// public E00223_UserAccountPolicy UserAccountPolicy { get; set; }
 
+		[InverseProperty("User")]
+		public virtual ICollection<E00227_UserRol> RolesUser { get; set; }
+
 	}
 }

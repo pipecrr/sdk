@@ -22,6 +22,11 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public override short Rowid { get; set; }
 
+		public override string ToString()
+		{
+			return $"{Rowid}";
+		}
+
 
 	}
 }

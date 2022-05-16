@@ -21,7 +21,7 @@ else if (Loading == true)
 else if (BusinessObj.BaseObj != null)
 {
     @if(IsSubpanel){
-        <h5><ResourceViewer ResourceTag="Generic.ActionCreate" /> <ResourceViewer ResourceTag="@($"{BusinessName}.Singular")" /></h5>
+        <h5><ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer ResourceTag="@($"{BusinessName}.Singular")" /></h5>
         <hr />
     }
     <CascadingValue Value="@this">
@@ -71,9 +71,9 @@ else if (BusinessObj.BaseObj != null)
     }
     @if(SetTopBar && !IsSubpanel)
     {
-        <PageTitle><ResourceViewer ResourceTag="Generic.ActionCreate" /> <ResourceViewer ResourceTag="@($"{BusinessName}.Singular")" /></PageTitle>
+        <PageTitle><ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer ResourceTag="@($"{BusinessName}.Singular")" /></PageTitle>
         <SetTopBar>
-            <TopBarTitle><ResourceViewer ResourceTag="Generic.ActionCreate" /> <ResourceViewer ResourceTag="@($"{BusinessName}.Singular")" /></TopBarTitle>
+            <TopBarTitle><ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer ResourceTag="@($"{BusinessName}.Singular")" /></TopBarTitle>
             <TopBarButtons>
                 @foreach (var btn in FormViewModel.Buttons)
                 {

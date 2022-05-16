@@ -34,6 +34,10 @@ namespace Siesa.SDK.Entities
 		[StringLength(500)]
 		public string Description { get; set; }
 
+		public override string ToString()
+		{
+			return $"({LanguageCode}{(CountryCode != null ? '_'+CountryCode : CountryCode)}) - {Description}";
+		}
 
 	}
 }

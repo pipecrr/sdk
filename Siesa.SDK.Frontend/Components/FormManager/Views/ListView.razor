@@ -137,7 +137,7 @@ else
             <TopBarTitle><ResourceViewer ResourceTag="@($"{BusinessName}.Plural")" /></TopBarTitle>
             <TopBarButtons>
                 <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" RenderStyleMode="SDKButtonRenderStyleMode.Text"
-                Click="GoToCreate" ResourceTag="Generic.ActionCreate" />
+                Click="GoToCreate" ResourceTag="Action.Create" />
                 @foreach (var btn in ListViewModel.Buttons)
                 {
                     <SDKButton RenderStyle="@btn.RenderStyle" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" />

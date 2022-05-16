@@ -15,7 +15,7 @@ else if (Loading == true)
 else if (BusinessObj.BaseObj.Rowid != 0)
 {
     @if(IsSubpanel){
-        <h5><ResourceViewer ResourceTag="Generic.ActionEdit" /> @BusinessObj</h5>
+        <h5><ResourceViewer ResourceTag="Action.Modify" /> @BusinessObj</h5>
         <hr />
     }
     <CascadingValue Value="@this">
@@ -65,9 +65,9 @@ else if (BusinessObj.BaseObj.Rowid != 0)
     }
     @if(SetTopBar && !IsSubpanel)
     {
-        <PageTitle><ResourceViewer ResourceTag="Generic.ActionEdit" /> @BusinessObj</PageTitle>
+        <PageTitle><ResourceViewer ResourceTag="Action.Modify" /> @BusinessObj</PageTitle>
         <SetTopBar>
-            <TopBarTitle><ResourceViewer ResourceTag="Generic.ActionEdit" /> @BusinessObj</TopBarTitle>
+            <TopBarTitle><ResourceViewer ResourceTag="Action.Modify" /> @BusinessObj</TopBarTitle>
             <TopBarButtons>
                 @foreach (var btn in FormViewModel.Buttons)
                 {

@@ -101,7 +101,8 @@ namespace Siesa.SDK.Business
         {
             AuthenticationService = authenticationService;
             BaseObj = Activator.CreateInstance<T>();
-            _relatedProperties = BaseObj.GetType().GetProperties().Where(p => p.PropertyType.IsClass && !p.PropertyType.IsPrimitive && !p.PropertyType.IsEnum && p.PropertyType != typeof(string) && p.Name != "RowVersion").Select(p => p.Name).ToArray();
+            var _bannedTypes = new List<Type>() { typeof(string), typeof(byte[]) };
+            _relatedProperties = BaseObj.GetType().GetProperties().Where(p => p.PropertyType.IsClass && !p.PropertyType.IsPrimitive && !p.PropertyType.IsEnum && !_bannedTypes.Contains(p.PropertyType) && p.Name != "RowVersion").Select(p => p.Name).ToArray();
 
 
         }

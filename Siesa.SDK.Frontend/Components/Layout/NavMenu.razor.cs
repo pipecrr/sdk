@@ -60,11 +60,11 @@ namespace Siesa.SDK.Frontend.Components.Layout
                             IconClass = "oi oi-list-rich  menu-icon",
                             SubMenus = new List<E00061_Menu>{
                                 new E00061_Menu{
-                                    ResourceTag = "Generic.ActionCreate",
+                                    ResourceTag = "Action.Create",
                                     Url = $"/{business.Name}/create/"
                                 },
                                 new E00061_Menu{
-                                    ResourceTag = "Generic.ActionList",
+                                    ResourceTag = "Action.List",
                                     Url = $"/{business.Name}/"
                                 }
                             }

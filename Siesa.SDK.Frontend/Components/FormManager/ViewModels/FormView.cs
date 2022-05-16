@@ -47,18 +47,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Parameter]
         public string DefaultViewdefName { get; set; }
 
+        private string _viewdefName = "";
+
         private string GetViewdef(string businessName)
         {
-            var viewdef = "";
             if (String.IsNullOrEmpty(ViewdefName))
             {
-                viewdef = DefaultViewdefName;
+                _viewdefName = DefaultViewdefName;
             }else{
-                viewdef = ViewdefName;
+                _viewdefName = ViewdefName;
             }
 
-            var data = BusinessManagerFrontend.Instance.GetViewdef(businessName, viewdef);
-            if (String.IsNullOrEmpty(data) && viewdef != DefaultViewdefName)
+            var data = BusinessManagerFrontend.Instance.GetViewdef(businessName, _viewdefName);
+            if (String.IsNullOrEmpty(data) && _viewdefName != DefaultViewdefName)
             {
                 data = BusinessManagerFrontend.Instance.GetViewdef(businessName, DefaultViewdefName);
             }
@@ -78,7 +79,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             var metadata = GetViewdef(bName);
             if (metadata == null || metadata == "")
             {
-                ErrorMsg = $"No hay definición para la vista {ViewdefName}";
+                ErrorMsg = $"No hay definición para la vista {_viewdefName}";
             }
             else
             {
@@ -99,7 +100,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 {
                     if(String.IsNullOrEmpty(panel.ResourceTag))
                     {
-                        panel.ResourceTag = $"{BusinessName}.Viewdef.{ViewdefName}.Panel.{panel.Name}";
+                        panel.ResourceTag = $"{BusinessName}.Viewdef.{_viewdefName}.Panel.{panel.Name}";
                     }
 
                     foreach (var field in panel.Fields)

@@ -27,5 +27,7 @@ namespace Siesa.SDK.Entities
 
 		public virtual E00201_Company Company { get; set; }
 
+		[InverseProperty("Rol")]
+        public virtual ICollection<E00227_UserRol> UsersRol { get; set; }
 	}
 }

@@ -82,6 +82,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 
             if (CustomComponent != null)
             {
+                if(String.IsNullOrEmpty(ResourceTag))
+                {
+                    ResourceTag = $"{modelObj.GetType().Name}.{Name}";
+                }
                 //Name guid
                 Name = Guid.NewGuid().ToString();
                 FieldType = FieldTypes.Custom;
