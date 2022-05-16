@@ -8,8 +8,12 @@ namespace Siesa.SDK.Entities
 {
     public abstract class BaseMaster<T>: BaseAudit<int>
     {
+
+        [Required]
         [StringLength(2000)]
         public virtual string Description { get; set; }
+        
+        [Required]
         [StringLength(250)]
         public virtual string Name { get; set; }
         [Required]
