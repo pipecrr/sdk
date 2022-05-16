@@ -35,7 +35,7 @@ namespace Siesa.SDK.Entities
 
 
 		[Required]
-		public E00024_Enum Enum { get; set; }
+		public virtual E00024_Enum Enum { get; set; }
 
 	}
 }
