@@ -27,6 +27,10 @@ namespace Siesa.SDK.Entities
 		[StringLength(100)]
 		public string Id { get; set; }
 
+		[Required]
+		[StringLength(100)]
+		public string Nombre { get; set; }
+
 
 	}
 }
