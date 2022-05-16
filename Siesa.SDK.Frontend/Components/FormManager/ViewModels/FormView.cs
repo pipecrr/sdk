@@ -47,18 +47,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Parameter]
         public string DefaultViewdefName { get; set; }
 
+        private string _viewdefName = "";
+
         private string GetViewdef(string businessName)
         {
-            var viewdef = "";
             if (String.IsNullOrEmpty(ViewdefName))
             {
-                viewdef = DefaultViewdefName;
+                _viewdefName = DefaultViewdefName;
             }else{
-                viewdef = ViewdefName;
+                _viewdefName = ViewdefName;
             }
 
-            var data = BusinessManagerFrontend.Instance.GetViewdef(businessName, viewdef);
-            if (String.IsNullOrEmpty(data) && viewdef != DefaultViewdefName)
+            var data = BusinessManagerFrontend.Instance.GetViewdef(businessName, _viewdefName);
+            if (String.IsNullOrEmpty(data) && _viewdefName != DefaultViewdefName)
             {
                 data = BusinessManagerFrontend.Instance.GetViewdef(businessName, DefaultViewdefName);
             }
@@ -78,7 +79,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             var metadata = GetViewdef(bName);
             if (metadata == null || metadata == "")
             {
-                ErrorMsg = $"No hay definición para la vista {ViewdefName}";
+                ErrorMsg = $"No hay definición para la vista {_viewdefName}";
             }
             else
             {
@@ -91,6 +92,35 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     //Soporte a viewdefs anteriores
                     var panels = JsonConvert.DeserializeObject<List<Panel>>(metadata);
                     FormViewModel.Panels = panels;
+                }
+            }
+            try
+            {
+                foreach (var panel in FormViewModel.Panels)
+                {
+                    if(String.IsNullOrEmpty(panel.ResourceTag))
+                    {
+                        panel.ResourceTag = $"{BusinessName}.Viewdef.{_viewdefName}.Panel.{panel.Name}";
+                    }
+
+                    foreach (var field in panel.Fields)
+                    {
+                        field.GetFieldObj(BusinessObj);
+                    }
+                }
+            }
+            catch (System.Exception)
+            {
+                Console.WriteLine("Error");
+            }
+            if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
+            {
+                foreach (var relationship in FormViewModel.Relationships)
+                {
+                    if(String.IsNullOrEmpty(relationship.ResourceTag))
+                    {
+                        relationship.ResourceTag = $"{BusinessName}.Relationship.{relationship.Name}";
+                    }
                 }
             }
             Loading = false;

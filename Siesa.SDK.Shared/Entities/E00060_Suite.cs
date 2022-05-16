@@ -18,6 +18,7 @@ namespace Siesa.SDK.Entities
 	[Index(nameof(RowidResource), Name = "IX_e00060_1", IsUnique = true)]
 	public class E00060_Suite : BaseSDK<short>
 	{
+		[SDKIdentity]
 		[Key]
 		[Required]
 		public override short Rowid { get; set; }
@@ -33,7 +34,7 @@ namespace Siesa.SDK.Entities
 
 
 		[Required]
-		public E00020_Resource Resource { get; set; }
+		public virtual E00020_Resource Resource { get; set; }
 
 	}
 }

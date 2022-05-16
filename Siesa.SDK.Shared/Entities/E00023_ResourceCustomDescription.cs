@@ -18,6 +18,7 @@ namespace Siesa.SDK.Entities
 	[Index(nameof(RowidResourceDescription), Name = "IX_e00023_1", IsUnique = true)]
 	public class E00023_ResourceCustomDescription : BaseAudit<int>
 	{
+		[SDKIdentity]
 		[Key]
 		[Required]
 		public override int Rowid { get; set; }
@@ -32,7 +33,7 @@ namespace Siesa.SDK.Entities
 
 
 		[Required]
-		public E00022_ResourceDescription ResourceDescription { get; set; }
+		public virtual E00022_ResourceDescription ResourceDescription { get; set; }
 
 	}
 }

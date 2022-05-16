@@ -1,9 +1,27 @@
 ﻿@inherits FieldClass<object>
+@using Siesa.SDK.Shared.Services
+@inject IAuthenticationService AuthenticationService
 
-<a href="@RelatedEntityURL"><p style="word-wrap: break-word">@BindValue</p></a>
+<a href="@RelatedEntityURL"><p style="word-wrap: break-word">@Label</p></a>
 
 @code {
     private string _relatedEntityURL;
+    private string Label;
+
+    private async Task GetObjectString(string relBusiness, Int64 relRowid)
+    {
+        if(Label != null)
+        {
+            return;
+        }
+        var backend =  BusinessManagerFrontend.Instance.GetBusiness(relBusiness, AuthenticationService);
+        var request = await backend.Call("GetObjectString", relRowid);
+        if(request.Success)
+        {
+            Label = (string)request.Data;
+        }
+        StateHasChanged();
+    }
 
     private string ObtainEntityURL(){
 
@@ -20,7 +38,9 @@
         }
         if (idProperty != null)
         {
-            _relatedEntityURL = $"/{FieldOpt.RelatedBusiness}/detail/{idProperty.GetValue(BindValue)}/";
+            var rowidValue = idProperty.GetValue(BindValue);
+            _relatedEntityURL = $"/{FieldOpt.RelatedBusiness}/detail/{rowidValue}/";
+            GetObjectString(FieldOpt.RelatedBusiness, Convert.ToInt64(rowidValue));
             return _relatedEntityURL;
         }
         

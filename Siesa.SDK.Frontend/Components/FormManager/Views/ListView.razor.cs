@@ -13,6 +13,10 @@ using Siesa.SDK.Frontend.Components.FormManager.Fields;
 using Radzen;
 using Radzen.Blazor;
 using Siesa.SDK.Frontend.Utils;
+using System.Linq;
+using Siesa.SDK.Frontend.Application;
+using Siesa.SDK.Shared.Services;
+
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
     public partial class ListView : ComponentBase
@@ -31,12 +35,25 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter]
         public List<string> ConstantFilters { get; set; } = new List<string>();
 
+        [Parameter] 
+        public bool AllowCreate { get; set; } = true;
+        [Parameter] 
+        public bool AllowEdit { get; set; } = true;
+        [Parameter] 
+        public bool AllowDelete { get; set; } = true;
+        [Parameter] 
+        public bool AllowDetail { get; set; } = true;
+
         [Inject] public IJSRuntime JSRuntime { get; set; }
         [Inject] public NavigationManager NavManager { get; set; }
+
+        [Inject] public IResourceManager ResourceManager { get; set; }
+        [Inject] public IAuthenticationService AuthenticationService { get; set; }
 
         public bool Loading;
 
         public String ErrorMsg = "";
+        private IList<object> SelectedObjects { get; set; }
 
         private ListViewModel ListViewModel { get; set; }
 
@@ -58,11 +75,37 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter]
         public Action OnClickNew { get; set; } = null;
 
+        [Parameter]
+        public Action<object> OnSelectedRow { get; set; } = null;
+
         private IEnumerable<object> data;
         int count;
         public RadzenDataGrid<object> _gridRef;
 
+        public string BLEntityName { get; set; }
+
+        //resources
+        public string PageSummaryFormat { get; set; } = "Page {0} of {1} ({2} items)";
+
         Guid needUpdate;
+
+        private async Task GetResources()
+        {
+            PageSummaryFormat = await ResourceManager.GetResource("PageSummaryFormat", AuthenticationService);
+            StateHasChanged();
+        }
+
+        private void OnSelectionChanged(IList<object> objects){
+            if(OnSelectedRow != null){
+                SelectedObjects = objects;
+                if (SelectedObjects?.Any() == true){
+                    OnSelectedRow(objects.First());
+                }else{
+                    OnSelectedRow(null);
+                }
+                
+            }
+        }
 
         private string GetViewdef(string businessName)
         {
@@ -99,11 +142,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 ListViewModel = JsonConvert.DeserializeObject<ListViewModel>(metadata);
                 foreach (var field in ListViewModel.Fields)
                 {
-                    field.InitField(BusinessObj);
+                    field.GetFieldObj(BusinessObj);
                 }
             }
             data = null;
             Loading = false;
+            if(BusinessObj != null && BusinessObj.BaseObj != null){
+                BLEntityName = BusinessObj.BaseObj.GetType().Name;
+            }
             StateHasChanged();
 
         }

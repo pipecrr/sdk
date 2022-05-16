@@ -161,6 +161,10 @@ namespace Siesa.SDK.Backend.Access
 
         public override LocalView<TEntity> Local => set.Local;
         //Type IQueryable.ElementType => ;
+        Type IQueryable.ElementType
+        {
+            get { return query.ElementType; }
+        }
 
         public override EntityEntry<TEntity> Remove(TEntity entity)
         {

@@ -23,6 +23,7 @@ using Siesa.SDK.Shared.Utilities;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.Extensions.DependencyInjection;
+using Siesa.SDK.Shared.DataAnnotations;
 
 namespace Siesa.SDK.Business
 {
@@ -100,7 +101,8 @@ namespace Siesa.SDK.Business
         {
             AuthenticationService = authenticationService;
             BaseObj = Activator.CreateInstance<T>();
-            _relatedProperties = BaseObj.GetType().GetProperties().Where(p => p.PropertyType.IsClass && !p.PropertyType.IsPrimitive && !p.PropertyType.IsEnum && p.PropertyType != typeof(string) && p.Name != "RowVersion").Select(p => p.Name).ToArray();
+            var _bannedTypes = new List<Type>() { typeof(string), typeof(byte[]) };
+            _relatedProperties = BaseObj.GetType().GetProperties().Where(p => p.PropertyType.IsClass && !p.PropertyType.IsPrimitive && !p.PropertyType.IsEnum && !_bannedTypes.Contains(p.PropertyType) && p.Name != "RowVersion").Select(p => p.Name).ToArray();
 
 
         }
@@ -244,8 +246,12 @@ namespace Siesa.SDK.Business
             if (property is not null)
             {
 
-                var valueProp = (int)BaseObj.GetType().GetProperty(property.Name).GetValue(BaseObj);
-                returnValue.Add(property.Name, (valueProp == 0) ? null : valueProp.ToString());
+                var valueProp = BaseObj.GetType().GetProperty(property.Name).GetValue(BaseObj);
+                if(valueProp != null){
+                    var valuePropBigInt = Convert.ToInt64(valueProp);
+                    returnValue.Add(property.Name, (valuePropBigInt == 0) ? null : valuePropBigInt.ToString());
+                }
+                
             }
 
             return returnValue;
@@ -283,7 +289,7 @@ namespace Siesa.SDK.Business
                     valueProp = entityValueRowid;
                 }
 
-                returnValue.Add(propName, valueProp.ToString());
+                returnValue.Add(propName, (valueProp != null? valueProp.ToString() : null));
             }
 
             return returnValue;
@@ -361,10 +367,10 @@ namespace Siesa.SDK.Business
                 {
 
                     var query = context.Set<T>().AsQueryable();
-                    foreach (var relatedProperty in _relatedProperties)
-                    {
-                        query = query.Include(relatedProperty);
-                    }
+                    // foreach (var relatedProperty in _relatedProperties)
+                    // {
+                    //     query = query.Include(relatedProperty);
+                    // }
                     query = query.Where("Rowid == @0", BaseObj.GetRowid());
                     T entity = query.FirstOrDefault();
                     context.ResetConcurrencyValues(entity, BaseObj);
@@ -425,7 +431,7 @@ namespace Siesa.SDK.Business
 
         public virtual Siesa.SDK.Shared.Business.LoadResult EntityFieldSearch(string searchText, string prefilters = "")
         {
-            var string_fields = BaseObj.GetType().GetProperties().Where(p => p.PropertyType == typeof(string)).Select(p => p.Name).ToArray();
+            var string_fields = BaseObj.GetType().GetProperties().Where(p => p.PropertyType == typeof(string) && p.GetCustomAttributes().Where(x => x.GetType() == typeof(NotMappedAttribute)).Count() == 0).Select(p => p.Name).ToArray();
             string filter = "";
             foreach (var field in string_fields)
             {
@@ -495,6 +501,28 @@ namespace Siesa.SDK.Business
         protected virtual void ValidateBussines(ref ValidateAndSaveBusinessObjResponse operationResult, BLUserActionEnum action)
         {
             // Do nothing
+        }
+
+        [SDKExposedMethod]
+        public virtual ActionResult<string> GetObjectString(Int64 rowid)
+        {
+            using(SDKContext context = _dbFactory.CreateDbContext())
+            {
+                context.SetProvider(_provider);
+                var query = context.Set<T>().AsQueryable();
+                context.ChangeTracker.LazyLoadingEnabled = true;
+                query = query.Where("Rowid == @0", rowid);
+                var entity = query.FirstOrDefault();
+                if(entity != null)
+                {
+                    return new ActionResult<string>{
+                        Data = entity.ToString()
+                    };
+                }
+                return new ActionResult<string>{
+                    Data = ""
+                };
+            }
         }
     }
 

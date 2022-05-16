@@ -25,7 +25,9 @@ namespace Siesa.SDK.Entities
 		public short? RowidCompany { get; set; }
 
 
-		public E00201_Company Company { get; set; }
+		public virtual E00201_Company Company { get; set; }
 
+		[InverseProperty("Rol")]
+        public virtual ICollection<E00227_UserRol> UsersRol { get; set; }
 	}
 }

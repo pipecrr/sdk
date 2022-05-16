@@ -39,12 +39,12 @@ namespace Siesa.SDK.Entities
 		public bool IsPrivate { get; set; }
 
 
-		public E00066_MenuCustom MenuCustom { get; set; }
+		public virtual E00066_MenuCustom MenuCustom { get; set; }
 
 		[Required]
-		public E00065_SuiteCustom SuiteCustom { get; set; }
+		public virtual E00065_SuiteCustom SuiteCustom { get; set; }
 
-		public E00061_Menu Menu { get; set; }
+		public virtual E00061_Menu Menu { get; set; }
 
 	}
 }

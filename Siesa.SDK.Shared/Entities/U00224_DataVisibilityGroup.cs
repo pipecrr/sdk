@@ -12,24 +12,11 @@ using Microsoft.EntityFrameworkCore;
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
-	/// Recursos
+	/// Permisos de usuario por fila
 	/// </summary>
-
-	[Index(nameof(Id), Name = "IX_e00020_1", IsUnique = true)]
-	public class E00020_Resource : BaseSDK<int>
+	[SDKLogEntity]
+	public class U00224_DataVisibilityGroup : BaseUserPermission<E00224_DataVisibilityGroup, int>
 	{
-		[SDKIdentity]
-		[Key]
-		[Required]
-		public override int Rowid { get; set; }
-
-		[Required]
-		[StringLength(500)]
-		public string Id { get; set; }
-
-		[Required]
-		public byte Type { get; set; }
-
 
 	}
 }

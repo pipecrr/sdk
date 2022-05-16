@@ -46,7 +46,7 @@ namespace Siesa.SDK.Frontend.Components.Layout
                     {
                         var customActionMenu = new E00061_Menu
                         {
-                            //Title = business.Name,
+                            ResourceTag = $"{business.Name}.Plural",
                             Url = $"/{business.Name}/explorer/",
                             IconClass = "oi oi-project "
                         };
@@ -56,15 +56,15 @@ namespace Siesa.SDK.Frontend.Components.Layout
                     {
                         var submenuItem = new E00061_Menu
                         {
-                            //Title = business.Name,
+                            ResourceTag = $"{business.Name}.Plural",
                             IconClass = "oi oi-list-rich  menu-icon",
                             SubMenus = new List<E00061_Menu>{
                                 new E00061_Menu{
-                                    //Title = "Crear",
+                                    ResourceTag = "Action.Create",
                                     Url = $"/{business.Name}/create/"
                                 },
                                 new E00061_Menu{
-                                    //Title = "Consultar",
+                                    ResourceTag = "Action.List",
                                     Url = $"/{business.Name}/"
                                 }
                             }
@@ -75,7 +75,7 @@ namespace Siesa.SDK.Frontend.Components.Layout
                         {
                             var customActionMenu = new E00061_Menu
                             {
-                                //Title = customAction.Name,
+                                ResourceTag = $"{business.Name}.CustomAction.{customAction.Name}",
                                 Url = $"/{business.Name}/{customAction.Name}/",
                                 IconClass = "oi oi-project "
                             };
@@ -89,15 +89,18 @@ namespace Siesa.SDK.Frontend.Components.Layout
 
                 }
             }
-            var backends = backendManager.GetBackendDict();
-            BackendRegistry backendRegistry = backends[backends.Keys.First()];
-            backendRegistry.SetAuthenticationService(AuthenticationService);
-            var jsonResponse = await backendRegistry.GetMenuGroupsAsync();
-            SelectedSuite = Newtonsoft.Json.JsonConvert.DeserializeObject<List<E00060_Suite>>(jsonResponse.Response).First(); //TODO: UX difines how to select the menu group
-
-            var menusJsonResponse = await backendRegistry.GetMenuItemsAsync(SelectedSuite.Rowid);
-            Menus = Newtonsoft.Json.JsonConvert.DeserializeObject<List<E00061_Menu>>(menusJsonResponse.Response);
-            Menus = Menus.OrderBy(x => x.Order).ToList();
+            var menuBL = Frontend.BusinessManagerFrontend.Instance.GetBusiness("BLAdminMenu", AuthenticationService);
+            var request = await menuBL.Call("GetSuites");
+            if (request.Success)
+            {
+                SelectedSuite = ((List<E00060_Suite>)request.Data).First(); //TODO: UX difines how to select the menu group
+                var menuRequest = await menuBL.Call("GetMenuItems", Convert.ToInt64(SelectedSuite.Rowid));
+                if (menuRequest.Success)
+                {
+                    Menus = menuRequest.Data;
+                    Menus = Menus.OrderBy(x => x.Order).ToList();
+                }
+            }
             Console.WriteLine(Menus.Count);
             StateHasChanged();
         }

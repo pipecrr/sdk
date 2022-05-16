@@ -46,9 +46,9 @@ namespace Siesa.SDK.Entities
 		public bool IsPrivate { get; set; }
 
 
-		public E00040_Feature Feature { get; set; }
+		public virtual E00040_Feature Feature { get; set; }
 
-		public E00066_MenuCustom MenuCustomParent { get; set; }
+		public virtual E00066_MenuCustom MenuCustomParent { get; set; }
 
 	}
 }

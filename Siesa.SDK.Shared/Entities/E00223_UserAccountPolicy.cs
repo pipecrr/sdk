@@ -14,7 +14,7 @@ namespace Siesa.SDK.Entities
 	/// <summary>
 	/// Politicas de la cuenta de usuario
 	/// </summary>
-
+	[SDKLogEntity]
 	public class E00223_UserAccountPolicy : BaseMaster<string>
 	{
 		[Required]

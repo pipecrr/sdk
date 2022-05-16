@@ -66,7 +66,10 @@ namespace Siesa.SDK.Shared.Criptography
                 Rowid = user.Rowid,
                 Path = user.Path,
                 PasswordRecoveryEmail = user.PasswordRecoveryEmail,
-                //Name = user.Name,
+                Name = user.Name,
+                Id = user.Id,
+                Description = user.Description,
+                RowidCulture = user.RowidCulture,
                 // Roles = user.Roles.Select(x => x.RoleName).ToArray(),
                 // Teams = user.Teams.Select(x => x.TeamName).ToArray(),
                 //IsSuperAdmin = user.IsSuperAdmin

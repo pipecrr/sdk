@@ -18,6 +18,7 @@ namespace Siesa.SDK.Entities
 	[Index(nameof(RowidCulture), nameof(RowidResource), Name = "IX_e00022_1", IsUnique = true)]
 	public class E00022_ResourceDescription : BaseSDK<int>
 	{
+		[SDKIdentity]
 		[Key]
 		[Required]
 		public override int Rowid { get; set; }
@@ -36,10 +37,10 @@ namespace Siesa.SDK.Entities
 
 
 		[Required]
-		public E00020_Resource Resource { get; set; }
+		public virtual E00020_Resource Resource { get; set; }
 
 		[Required]
-		public E00021_Culture Culture { get; set; }
+		public virtual E00021_Culture Culture { get; set; }
 
 	}
 }

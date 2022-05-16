@@ -67,7 +67,7 @@ namespace Siesa.SDK.Business
                 builder.AddAttribute(1, "Viewdef", "explorer");
                 builder.AddAttribute(2, "BusinessObj", this);
                 builder.AddAttribute(3, "BusinessName", this.BusinessName);
-                builder.AddAttribute(4, "Title", "Explorador");
+                builder.AddAttribute(4, "Title", $"{BusinessName}.Name");
                 builder.CloseComponent();
             };
         }

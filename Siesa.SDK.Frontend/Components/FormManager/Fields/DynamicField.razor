@@ -36,6 +36,17 @@
             <IntegerField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  />
         }
         break;
+    case FieldTypes.SmallIntegerField:
+        @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
+        {
+
+            <SmallIntegerFieldDetail BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+        }
+        else
+        {
+            <SmallIntegerField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  />
+        }
+        break;        
     case FieldTypes.ByteField:
         @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
         {

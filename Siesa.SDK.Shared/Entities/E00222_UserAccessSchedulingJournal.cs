@@ -14,7 +14,7 @@ namespace Siesa.SDK.Entities
 	/// <summary>
 	/// Acceso diario programado
 	/// </summary>
-
+	[SDKLogEntity]
 	[Index(nameof(RowidUser), nameof(DayWeek), nameof(StartTime), Name = "IX_e00222_1", IsUnique = true)]
 	public class E00222_UserAccessSchedulingJournal : BaseAudit<int>
 	{
@@ -37,7 +37,7 @@ namespace Siesa.SDK.Entities
 
 
 		[Required]
-		public E00220_User User { get; set; }
+		public virtual E00220_User User { get; set; }
 
 	}
 }

@@ -6,7 +6,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
 {
     public class Panel
     {
-        public string Label { get; set; }
+        public string Name { get; set; }
+        public string ResourceTag { get; set; }
 
         public bool PreserveDOM { get; set; } = true;
         public string PanelId { get; set; } = Guid.NewGuid().ToString();

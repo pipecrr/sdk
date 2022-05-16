@@ -12,19 +12,15 @@ using Microsoft.EntityFrameworkCore;
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
-	/// Valor enum genérico
+	/// Valores de los enums
 	/// </summary>
 
-	[Index(nameof(Enum), nameof(Id), Name = "IX_e00024_1", IsUnique = true)]
-	public class E00024_GenericEnumValue : BaseSDK<int>
+	[Index(nameof(Id), nameof(Value), Name = "IX_e00025_1", IsUnique = true)]
+	public class E00025_EnumValue : BaseSDK<int>
 	{
 		[Key]
 		[Required]
 		public override int Rowid { get; set; }
-
-		[Required]
-		[StringLength(100)]
-		public string Enum { get; set; }
 
 		[Required]
 		[StringLength(100)]
@@ -33,6 +29,13 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public byte Value { get; set; }
 
+		[ForeignKey("Enum")]
+		[Required]
+		public int RowidEnum { get; set; }
+
+
+		[Required]
+		public virtual E00024_Enum Enum { get; set; }
 
 	}
 }

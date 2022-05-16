@@ -18,7 +18,18 @@ namespace Siesa.SDK.Backend.Access
 {
     public abstract class SDKContext: DbContext
     {
-	public DbSet<E00223_UserAccountPolicy>? E00223_UserAccountPolicy { get; set; }
+	public DbSet<E00025_EnumValue>? E00025_EnumValue { get; set; }
+
+	public DbSet<U00225_UserDataVisibilityGroup>? U00225_UserDataVisibilityGroup { get; set; }
+
+	public DbSet<U00224_DataVisibilityGroup>? U00224_DataVisibilityGroup { get; set; }
+
+    public DbSet<U00223_UserAccountPolicy>? U00223_UserAccountPolicy { get; set; }
+
+	public DbSet<U00222_UserAccessSchedulingJournal>? U00222_UserAccessSchedulingJournal { get; set; }
+
+	public DbSet<U00220_User>? U00220_User { get; set; }
+	// public DbSet<E00223_UserAccountPolicy>? E00223_UserAccountPolicy { get; set; }
 
 	public DbSet<E00222_UserAccessSchedulingJournal>? E00222_UserAccessSchedulingJournal { get; set; }
 
@@ -74,9 +85,7 @@ namespace Siesa.SDK.Backend.Access
 
 	public DbSet<E00067_SuiteMenuCustom>? E00067_SuiteMenuCustom { get; set; }
 
-	public DbSet<E00025_GenericEnumValueModule>? E00025_GenericEnumValueModule { get; set; }
-
-	public DbSet<E00024_GenericEnumValue>? E00024_GenericEnumValue { get; set; }
+	public DbSet<E00024_Enum>? E00024_Enum { get; set; }
 
 	public DbSet<E00023_ResourceCustomDescription>? E00023_ResourceCustomDescription { get; set; }
 
@@ -92,6 +101,7 @@ namespace Siesa.SDK.Backend.Access
 
         public SDKContext(DbContextOptions options) : base(options)
         {
+            ChangeTracker.LazyLoadingEnabled = false;
         }
 
         public void SetProvider(IServiceProvider serviceProvider)

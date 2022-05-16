@@ -26,7 +26,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
 
         private void initField()
         {
-            var field = FieldOpt.InitField(ModelObj);
+            var field = FieldOpt.GetFieldObj(ModelObj);
             fieldModelObj = field.ModelObj;
             fieldName = field.Name;
             FieldType = field.FieldType;

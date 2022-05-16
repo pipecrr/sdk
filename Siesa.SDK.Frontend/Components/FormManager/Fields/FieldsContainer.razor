@@ -1,13 +1,15 @@
-﻿@if(SubViewdef != null && SubViewdef.Panels != null && SubViewdef.Panels.Count > 0){
+﻿@using Siesa.SDK.Frontend.Components.Fields
+
+@if(SubViewdef != null && SubViewdef.Panels != null && SubViewdef.Panels.Count > 0){
     ModelObj.AddRelFieldToSave(SubViewdef.ParentField.Replace("BaseObj.",""));
      @if (SubViewdef.Panels.Count > 1)
     {
         <DxFormLayoutTabPages>
             @foreach (var panel in SubViewdef.Panels)
             {
-                <DxFormLayoutTabPage Caption="@panel.Label">
+                <SDKFormLayoutTabPage ResourceTag="@panel.ResourceTag">
                     <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" ModelObj="@ModelObj" DefaultColSize="@panel.ColSize" />
-                </DxFormLayoutTabPage>
+                </SDKFormLayoutTabPage>
             }
         </DxFormLayoutTabPages>
 
@@ -21,16 +23,14 @@
     @foreach(FieldOptions fld in Fields)
     {
         @if(!fld.Hidden){
-            <DxFormLayoutItem Caption="@fld.Label"
-                            ColSpanMd="@GetColSize(fld,"MD")"
-                            ColSpanLg="@GetColSize(fld,"LG")"
-                            ColSpanXl="@GetColSize(fld,"XL")"
-                            ColSpanSm="@GetColSize(fld,"SM")"
-                            ColSpanXs="@GetColSize(fld,"XS")">
-                <Template>
-                    <DynamicField FieldOpt="@fld" ModelObj="@ModelObj" />
-                </Template>
-            </DxFormLayoutItem>
+            <SDKFormLayoutItem ResourceTag="@fld.ResourceTag"
+                            ColSizeMd="@GetColSize(fld,"MD")"
+                            ColSizeLg="@GetColSize(fld,"LG")"
+                            ColSizeXl="@GetColSize(fld,"XL")"
+                            ColSizeSm="@GetColSize(fld,"SM")"
+                            ColSizeXs="@GetColSize(fld,"XS")">
+                <DynamicField FieldOpt="@fld" ModelObj="@ModelObj" />
+            </SDKFormLayoutItem>
         }
         
     }

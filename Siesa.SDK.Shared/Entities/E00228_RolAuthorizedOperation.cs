@@ -36,10 +36,10 @@ namespace Siesa.SDK.Entities
 
 
 		[Required]
-		public E00040_Feature Feature { get; set; }
+		public virtual E00040_Feature Feature { get; set; }
 
 		[Required]
-		public E00226_Rol Rol { get; set; }
+		public virtual E00226_Rol Rol { get; set; }
 
 	}
 }

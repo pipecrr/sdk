@@ -5,7 +5,7 @@
 @if(ShowHeader){
     <div class="relationship-panel">
         <div class="relationship-panel-header">
-            <span class="relationship-panel-header-title"  @onclick="Toggle">@Relationship.Label</span>
+            <span class="relationship-panel-header-title"  @onclick="Toggle"><ResourceViewer ResourceTag=@Relationship.ResourceTag /></span>
             
             <span class="relationship-panel-header-close">
                 @if(isOpen){
@@ -18,29 +18,19 @@
         </div>
         @if(isOpen){
             <div class="relationship-panel-body">
-                <DynamicListView 
-                    BusinessName="@Relationship.RelatedBusiness" 
-                    IsSubpanel=true 
-                    SubpanelFilter="@filter" 
-                    @key="listview_key" 
-                    OnClickEdit="@(async (string item_rowid)=> { await OpenModalEdit(item_rowid); })" 
-                    OnClickDetail="@(async (string item_rowid)=> { await OpenModalDetail(item_rowid); })" 
-                    OnClickDelete="@(async (string item_rowid, string object_string)=> { await OpenModalDelete(item_rowid, object_string); })" 
-                    OnClickNew="@(async ()=> { await OpenModalCreate(); })"
-                    />
+                <InlineCrud
+                    BusinessName="@Relationship.RelatedBusiness"
+                    Filter="@filter"
+                    DefaultFieldsCreate="@DefaultFieldsCreate"
+                />
             </div>
         }
     </div>
 } else {
-    <DynamicListView
+    <InlineCrud
         BusinessName="@Relationship.RelatedBusiness"
-        IsSubpanel=true
-        SubpanelFilter="@filter"
-        @key="listview_key"
-        OnClickEdit="@(async (string item_rowid)=> { await OpenModalEdit(item_rowid); })"
-        OnClickDetail="@(async (string item_rowid)=> { await OpenModalDetail(item_rowid); })"
-        OnClickDelete="@(async (string item_rowid, string object_string)=> { await OpenModalDelete(item_rowid, object_string); })" 
-        OnClickNew="@(async ()=> { await OpenModalCreate(); })"
+        Filter="@filter"
+        DefaultFieldsCreate="@DefaultFieldsCreate"
         />
 }
 
@@ -55,57 +45,17 @@
     string filter = "";
     Guid listview_key = Guid.NewGuid();
 
+    private Dictionary<string, object> DefaultFieldsCreate { get; set; }
+
+    private void OnInit()
+    {
+        CalculateFilter();
+        DefaultFieldsCreate = new Dictionary<string, object>();
+        DefaultFieldsCreate.Add(Relationship.RelatedField, Parent);
+    }
     public void Toggle()
     {
         isOpen = !isOpen;
-    }
-
-     public async Task OpenModalCreate()
-    {
-        if(Parent == null || Parent.Rowid == 0)
-        {
-            return;
-        }
-        Dictionary<string, object> parameters = new Dictionary<string, object>();
-        parameters.Add(Relationship.RelatedField, Parent);
-        var modal_result = await DialogService.OpenAsync("", 
-        ds => @<DynamicCreateView BusinessName="@Relationship.RelatedBusiness" IsSubpanel=true  DefaultFields="@parameters" />, 
-        new DialogOptions() { Width = "700px", ShowTitle=false,   Resizable = true});
-        listview_key = Guid.NewGuid();
-        isOpen = true;
-        StateHasChanged();
-    }
-
-    public async Task OpenModalEdit(string item_rowid)
-    {
-        var modal_result = await DialogService.OpenAsync("", 
-        ds => @<DynamicEditView BusinessName="@Relationship.RelatedBusiness" IsSubpanel=true  BusinessObjId="@item_rowid" />, 
-        new DialogOptions() { Width = "700px", ShowTitle=false,   Resizable = true});
-        listview_key = Guid.NewGuid();
-        isOpen = true;
-        StateHasChanged();
-    }
-    
-    public async Task OpenModalDetail(string item_rowid)
-    {
-        var modal_result = await DialogService.OpenAsync("", 
-        ds => @<DynamicDetailView BusinessName="@Relationship.RelatedBusiness" IsSubpanel=true  BusinessObjId="@item_rowid" />, 
-        new DialogOptions() { Width = "700px", ShowTitle=false,   Resizable = true});
-        listview_key = Guid.NewGuid();
-        isOpen = true;
-        StateHasChanged();
-    }
-
-    public async Task OpenModalDelete(string item_rowid, string object_string)
-    {
-        var modal_result = await DialogService.Confirm($"¿Desea eliminar el registro \"{object_string}\"?", "Elminar registro", new ConfirmOptions() { OkButtonText = "Eliminar", CancelButtonText = "Cancelar" });
-        if(modal_result == true) {
-            var backend = BusinessManagerFrontend.Instance.GetBusiness(Relationship.RelatedBusiness, AuthenticationService);
-            await backend.DeleteAsync(Convert.ToInt64(item_rowid));
-        }
-        listview_key = Guid.NewGuid();
-        isOpen = true;
-        StateHasChanged();
     }
 
     private void CalculateFilter()
@@ -134,13 +84,14 @@
 
     protected override void OnInitialized()
     {
-        CalculateFilter();
+        base.OnInitialized();
+        OnInit();
     }
 
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        CalculateFilter();
+        OnInit();
         listview_key = Guid.NewGuid();
         StateHasChanged();     
     } 

@@ -1,13 +1,16 @@
-﻿@using Siesa.SDK.Frontend.Components.FormManager.Fields
+﻿@using SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.FormManager.Fields
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
 @using Siesa.SDK.Frontend.Components.Layout.Detail.Relationship
+@using Siesa.SDK.Frontend.Components.Visualization
 @if (Panels == null || Panels.Count <= 0)
 {
-    <label>No hay definicion para la vista</label>
+    <ResourceViewer ResourceTag="SDK.ViewdefNotFound" />
 }
 else if (Loading == true)
 {
-    <label>Cargando...</label>
+    <ResourceViewer ResourceTag="Generic.Loading" />
 }
 else if (BusinessObj != null)
 {
@@ -30,32 +33,32 @@ else if (BusinessObj != null)
                 <DxFormLayoutTabPages>
                     @foreach (var rel in FormViewModel.Relationships)
                     {
-                        <DxFormLayoutTabPage Caption="@rel.Label">
+                        <SDKFormLayoutTabPage ResourceTag="@rel.ResourceTag">
                             <RelationshipPanel Relationship="@rel" Parent="@BusinessObj.BaseObj" ShowHeader="false" />
-                        </DxFormLayoutTabPage>
+                        </SDKFormLayoutTabPage>
                     }
                 </DxFormLayoutTabPages>
             </DxFormLayout>
 
         }
     </CascadingValue>
-    <PageTitle>@Title</PageTitle>
+    <PageTitle><ResourceViewer ResourceTag=@Title /></PageTitle>
     <SetTopBar>
-        <TopBarTitle>@Title</TopBarTitle>
+        <TopBarTitle><ResourceViewer ResourceTag=@Title /></TopBarTitle>
         <TopBarButtons>
             @foreach (var btn in FormViewModel.Buttons)
             {
-                <DxButton RenderStyle="@btn.RenderStyle" RenderStyleMode="ButtonRenderStyleMode.Text"
-            Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />
+                <SDKButton RenderStyle="@btn.RenderStyle" RenderStyleMode="SDKButtonRenderStyleMode.Text"
+            Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" />
             }
-            <DxButton RenderStyle="ButtonRenderStyle.Info" RenderStyleMode="ButtonRenderStyleMode.Text"
-                Click="GetFirstRowid" Text="<<" />
-            <DxButton RenderStyle="ButtonRenderStyle.Info" RenderStyleMode="ButtonRenderStyleMode.Text"
-                Click="GetPreviousRowid" Text="<" />
-            <DxButton RenderStyle="ButtonRenderStyle.Info" RenderStyleMode="ButtonRenderStyleMode.Text"
-                Click="GetNextRowid" Text=">" />
-            <DxButton RenderStyle="ButtonRenderStyle.Info" RenderStyleMode="ButtonRenderStyleMode.Text"
-                Click="GetLastRowid" Text=">>" />
+            <SDKButton RenderStyle="SDKButtonRenderStyle.Info" RenderStyleMode="SDKButtonRenderStyleMode.Text"
+                Click="GetFirstRowid" ResourceTag="<<" />
+            <SDKButton RenderStyle="SDKButtonRenderStyle.Info" RenderStyleMode="SDKButtonRenderStyleMode.Text"
+                Click="GetPreviousRowid" ResourceTag="<" />
+            <SDKButton RenderStyle="SDKButtonRenderStyle.Info" RenderStyleMode="SDKButtonRenderStyleMode.Text"
+                Click="GetNextRowid" ResourceTag=">" />
+            <SDKButton RenderStyle="SDKButtonRenderStyle.Info" RenderStyleMode="SDKButtonRenderStyleMode.Text"
+                Click="GetLastRowid" ResourceTag=">>" />
             
 
         </TopBarButtons>

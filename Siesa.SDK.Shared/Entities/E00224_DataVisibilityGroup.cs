@@ -14,7 +14,7 @@ namespace Siesa.SDK.Entities
 	/// <summary>
 	/// Grupos de trabajo
 	/// </summary>
-
+	[SDKLogEntity]
 	public class E00224_DataVisibilityGroup : BaseMasterCompanyGroup<string>
 	{
 		[Required]
@@ -25,7 +25,7 @@ namespace Siesa.SDK.Entities
 		public short? RowidCompany { get; set; }
 
 
-		public E00201_Company Company { get; set; }
+		public virtual E00201_Company Company { get; set; }
 
 	}
 }

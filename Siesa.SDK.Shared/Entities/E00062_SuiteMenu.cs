@@ -18,6 +18,7 @@ namespace Siesa.SDK.Entities
 	[Index(nameof(RowidSuite), nameof(RowidMenu), Name = "IX_e00062_1", IsUnique = true)]
 	public class E00062_SuiteMenu : BaseSDK<int>
 	{
+		[SDKIdentity]
 		[Key]
 		[Required]
 		public override int Rowid { get; set; }
@@ -35,10 +36,10 @@ namespace Siesa.SDK.Entities
 
 
 		[Required]
-		public E00060_Suite Suite { get; set; }
+		public virtual E00060_Suite Suite { get; set; }
 
 		[Required]
-		public E00061_Menu Menu { get; set; }
+		public virtual E00061_Menu Menu { get; set; }
 
 	}
 }
