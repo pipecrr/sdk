@@ -3,7 +3,7 @@
 @using Siesa.SDK.Shared.Services
 @inject IResourceManager ResourceManager
 @inject IAuthenticationService AuthenticationService
-
+@using Siesa.SDK.Shared.Utilities
 
 @if(MenuItem.SubMenus?.Count > 0){
     <DxMenuItem Text="@Title" IconCssClass="@MenuItem.IconClass"> 
@@ -18,7 +18,16 @@
     {
         <DxMenuItem CssClass="separator" />
     }else{
-        <DxMenuItem Text="@Title" IconCssClass="@MenuItem.IconClass" NavigateUrl="@NavigateUrl" />
+        @if(MenuItem.Feature != null)
+        {
+            @if(Utilities.CheckUserActionPermission(MenuItem.Feature.Rowid, 4, AuthenticationService))
+            {
+                <DxMenuItem Text="@Title" IconCssClass="@MenuItem.IconClass" NavigateUrl="@NavigateUrl" />
+            }
+
+        }else{
+            <DxMenuItem Text="@Title" IconCssClass="@MenuItem.IconClass" NavigateUrl="@NavigateUrl" />
+        }
     }
 }
 

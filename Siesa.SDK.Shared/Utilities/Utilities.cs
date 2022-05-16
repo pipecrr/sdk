@@ -1,7 +1,7 @@
 
 using System;
 using System.Collections.Generic;
-
+using Siesa.SDK.Shared.Services;
 
 namespace Siesa.SDK.Shared.Utilities
 {
@@ -58,6 +58,27 @@ namespace Siesa.SDK.Shared.Utilities
 
             return filter;
 
+        }
+
+
+        public static bool CheckUserActionPermission(int rowidFeature, int actionRowid, IAuthenticationService authenticationService)
+        {
+            if(authenticationService == null || authenticationService.User == null)
+            {
+                return false;
+            }
+
+            if(!authenticationService.User.FeaturePermissions.ContainsKey(rowidFeature))
+            {
+                return false;
+            }
+
+            if(!authenticationService.User.FeaturePermissions[rowidFeature].ContainsKey(actionRowid))
+            {
+                return false;
+            }else{
+                return true;
+            }
         }
 
     }

@@ -1,7 +1,12 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Siesa.SDK.Shared.Services
 {
+    public class SessionRol {
+        public int Rowid { get; set; }
+        public string Name { get; set; }
+    }
     public class JwtUserData {
         public int Rowid { get; set; }
         public string Path { get; set; }
@@ -11,7 +16,9 @@ namespace Siesa.SDK.Shared.Services
         public string Description { get; set; }
         public short RowidCulture { get; set; }
 
-        // public string[] Roles { get; set; }
+        public List<SessionRol> Roles { get; set; } = new List<SessionRol>();
+
+        public Dictionary<int, Dictionary<int, bool>> FeaturePermissions { get; set; } = new Dictionary<int, Dictionary<int, bool>>();
         // public string[] Teams { get; set; }
 
         // public bool IsSuperAdmin { get; set; }
