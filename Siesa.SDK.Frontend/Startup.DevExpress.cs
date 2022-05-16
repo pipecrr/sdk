@@ -27,6 +27,7 @@ namespace Siesa.SDK.Frontend {
             services.AddScoped<DialogService>();
             services.AddBlazorDragDrop();
             services.AddSingleton<IResourceManager, ResourceManager>();
+            services.AddSingleton<IFeaturePermissionService, FeaturePermissionService>();
         }
 
     }

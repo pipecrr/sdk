@@ -63,22 +63,31 @@ namespace Siesa.SDK.Shared.Utilities
 
         public static bool CheckUserActionPermission(int rowidFeature, int actionRowid, IAuthenticationService authenticationService)
         {
-            if(authenticationService == null || authenticationService.User == null)
+            try
             {
-                return false;
-            }
+                if(authenticationService == null || authenticationService.User == null)
+                {
+                    return false;
+                }
 
-            if(!authenticationService.User.FeaturePermissions.ContainsKey(rowidFeature))
-            {
-                return false;
-            }
+                if(!authenticationService.User.FeaturePermissions.ContainsKey(rowidFeature))
+                {
+                    return false;
+                }
 
-            if(!authenticationService.User.FeaturePermissions[rowidFeature].ContainsKey(actionRowid))
+                if(!authenticationService.User.FeaturePermissions[rowidFeature].ContainsKey(actionRowid))
+                {
+                    return false;
+                }else{
+                    return true;
+                }
+                
+            }
+            catch (System.Exception)
             {
                 return false;
-            }else{
-                return true;
             }
+            
         }
 
     }

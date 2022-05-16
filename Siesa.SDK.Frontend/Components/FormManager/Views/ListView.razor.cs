@@ -48,6 +48,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Inject] public NavigationManager NavManager { get; set; }
 
         [Inject] public IResourceManager ResourceManager { get; set; }
+        [Inject] public IFeaturePermissionService FeaturePermissionService { get; set; }
         [Inject] public IAuthenticationService AuthenticationService { get; set; }
 
         public bool Loading;
@@ -132,6 +133,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 bName = BusinessName;
             }
+            CheckPermission();
             var metadata = GetViewdef(bName);
             if (metadata == null || metadata == "")
             {
@@ -154,8 +156,23 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         }
 
+        private async Task CheckPermission()
+        {
+            // if(FeaturePermissionService != null){
+            //     var canList = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 4, AuthenticationService);
+            //     if(!canList){
+            //         ErrorMsg = "Permission Denied";
+            //         Loading = false;
+            //         StateHasChanged();
+            //         return;
+            //     }
+            // }
+            
+        }
+
         protected override async Task OnInitializedAsync()
         {
+            await CheckPermission();
             await base.OnInitializedAsync();
             //InitView();
         }
