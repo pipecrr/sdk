@@ -10,13 +10,20 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Siesa.SDK.Frontend.Utils;
+using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 {
     public class FieldClass<TProperty> : ComponentBase 
     {         
         public TProperty BindValue { get {
-                return (TProperty)BindProperty?.GetValue(BindModel, null);
+                var modelValue = BindProperty?.GetValue(BindModel, null);
+                if(modelValue == null)
+                {
+                    return default(TProperty);
+                }
+                    
+                return (TProperty)modelValue;
             }
             set {
                 BindProperty.SetValue(BindModel, value);
@@ -38,11 +45,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         public int MaxLength { get; set; }
 
         public bool IsUnique { get; set; }
+
+        public bool IsNullable { get; set; }
         private RenderFragment? _fieldValidationTemplate;
 
         private string OnChange { get; set; }
 
         [CascadingParameter] EditContext EditFormContext { get; set; }
+        [CascadingParameter] FormView formView { get; set; }
 
         protected async Task Init()
         {
@@ -115,7 +125,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                     _ = Task.Run(async () =>
                     {
                         await Evaluator.EvaluateCode(OnChange, EditFormContext.Model);
-                        _ = InvokeAsync(() => StateHasChanged());
+                        if (formView != null){
+                            _ = InvokeAsync(() => formView.Refresh());
+                        }
                     });
                 }
             }
@@ -134,9 +146,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 return _fieldValidationTemplate != null ? _fieldValidationTemplate : builder =>
                 {
                     var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
-                    var lambda = Expression.Lambda(typeof(Func<>).MakeGenericType(typeof(TProperty)), access);
-
-                    builder.OpenComponent(0, typeof(ValidationMessage<>).MakeGenericType(typeof(TProperty)));
+                    var lambda = Expression.Lambda(typeof(Func<>).MakeGenericType(access.Type), access);
+                    builder.OpenComponent(0, typeof(ValidationMessage<>).MakeGenericType(access.Type));
                     builder.AddAttribute(1, "For", lambda);
                     builder.CloseComponent();
                 };

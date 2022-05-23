@@ -1,11 +1,12 @@
-﻿@inherits FieldClass<TimeSpan>
+﻿@typeparam TTime
+@inherits FieldClass<TTime>
 @using System.Linq.Expressions
 @if (!FieldOpt.Hidden)
 {
     @FieldValidationTemplate
 
     <DxTimeEdit 
-        T="TimeSpan"
+        T="TTime"
         NullText="@FieldOpt.Placeholder"
         ReadOnly="@(FieldOpt.Disabled)"
         Time="@(BindValue)"
@@ -20,13 +21,13 @@
 
 
 @code {
-    Expression<Func<TimeSpan>> TimeExpression { get; set; }
+    Expression<Func<TTime>> TimeExpression { get; set; }
     private RenderFragment? _fieldValidationTemplate;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
         var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
-        TimeExpression = (Expression<Func<TimeSpan>>)Expression.Lambda(typeof(Func<>).MakeGenericType(typeof(TimeSpan)), access);
+        TimeExpression = (Expression<Func<TTime>>)Expression.Lambda(typeof(Func<>).MakeGenericType(typeof(TTime)), access);
     }
 }

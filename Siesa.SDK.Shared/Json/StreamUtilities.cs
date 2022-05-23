@@ -3,6 +3,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Runtime.Serialization.Json;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace Siesa.SDK.Shared.Json
 {
@@ -15,13 +16,21 @@ namespace Siesa.SDK.Shared.Json
         }
         public static byte[] Compress<T>(T setting)
         {
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T));
+            JsonSerializer serializer = new JsonSerializer();
+            serializer.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             byte[] compressedBytes;
             using (MemoryStream memoryStream = new MemoryStream())
             {
                 using (GZipStream compressedStream = new GZipStream(memoryStream, CompressionMode.Compress, true))
                 {
-                    serializer.WriteObject(compressedStream, setting);
+                    using (StreamWriter streamWriter = new StreamWriter(compressedStream))
+                    {
+                        using (JsonWriter writer = new JsonTextWriter(streamWriter))
+                        {
+                            serializer.Serialize(writer, setting);
+                        }
+                    }
+                    //serializer.Serialize(compressedStream, setting);
                 }
 
                 compressedBytes = memoryStream.ToArray();
@@ -32,11 +41,19 @@ namespace Siesa.SDK.Shared.Json
 
         public static T Decompress<T>(Stream compressedStream)
         {
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T));
+            JsonSerializer serializer = new JsonSerializer();
+            serializer.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             T restoredData;
             using (GZipStream decompressedStream = new GZipStream(compressedStream, CompressionMode.Decompress, true))
             {
-                restoredData = (T)serializer.ReadObject(decompressedStream);
+                using (StreamReader streamReader = new StreamReader(decompressedStream))
+                {
+                    using (JsonReader reader = new JsonTextReader(streamReader))
+                    {
+                        restoredData = serializer.Deserialize<T>(reader);
+                    }
+                }
+                //restoredData = (T)serializer.ReadObject(decompressedStream);
             }
 
             return restoredData;

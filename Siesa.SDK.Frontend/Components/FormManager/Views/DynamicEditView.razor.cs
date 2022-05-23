@@ -8,7 +8,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
     public partial class DynamicEditView : DynamicBaseViewModel
     {
-        private async Task InitEdit(int business_obj_id){
+        private async Task InitEdit(Int64 business_obj_id){
             try
             {
                 await BusinessObj.InitializeBusiness(business_obj_id);
@@ -19,6 +19,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 ErrorMsg = e.ToString();
             }
         }
+
+        protected override void SetParameters(dynamic businessObj, string businessName){
+            parameters.Clear();
+            parameters.Add("BusinessObj", businessObj);
+            parameters.Add("BusinessName", businessName);
+            parameters.Add("IsSubpanel", IsSubpanel);
+            if (IsSubpanel)
+            {
+                parameters.Add("SetTopBar", false);
+                parameters.Add("ViewdefName", "related_edit");
+            }
+        }
+
 
         public override async Task SetParametersAsync(ParameterView parameters)
         {
@@ -34,7 +47,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         //BusinessObj = null;
                         ErrorMsg = "";
 
-                        await InitEdit(Convert.ToInt32(value));
+                        await InitEdit(Convert.ToInt64(value));
                         StateHasChanged();
                     }
 
@@ -45,14 +58,5 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
             }
         }
-
-        public new RenderFragment CreateDynamicComponent() => builder =>
-        {
-            var viewType = typeof(Views.EditView);
-            builder.OpenComponent(0, viewType);
-            builder.AddAttribute(1, "BusinessObj", BusinessObj);
-            builder.AddAttribute(2, "BusinessName", BusinessName);
-            builder.CloseComponent();
-        };
     }
 }

@@ -8,35 +8,65 @@
 }
 else if (BusinessObj != null)
 {
-    <DynamicComponent Type="@componentType" Parameters="@parameters" />
+    <DynamicComponent Type="@(typeof(Views.ListView))" Parameters="@parameters" />
 }
 
 @code {
-    [Parameter] public bool IsSubpanel { get; set; }
     [Parameter] public string SubpanelFilter { get; set; }
-    private Type componentType = typeof(Views.ListView);
-    private IDictionary<string, object> parameters = new Dictionary<string, object>();
-    private void SetParameters(dynamic businessObj, string businessName){
-        parameters.Clear();
-        parameters.Add("BusinessObj", businessObj);
-        parameters.Add("BusinessName", businessName);
+
+    [Parameter] public Action<string> OnClickEdit { get; set; } = null;
+    [Parameter] public Action<string> OnClickDetail { get; set; } = null;
+    [Parameter] public Action<string,string> OnClickDelete { get; set; } = null;
+    [Parameter] public Action OnClickNew { get; set; } = null;
+
+    [Parameter] public bool AllowCreate { get; set; } = true;
+    [Parameter] public bool AllowEdit { get; set; } = true;
+    [Parameter] public bool AllowDelete { get; set; } = true;
+    [Parameter] public bool AllowDetail { get; set; } = true;
+    [Parameter] public Action<object> OnSelectedRow { get; set; } = null;
+
+        
+    protected override void SetParameters(dynamic businessObj, string businessName){
+        var new_params = new Dictionary<string, object>();
+        new_params.Add("BusinessObj", businessObj);
+        new_params.Add("BusinessName", businessName);
+        new_params.Add("AllowCreate", AllowCreate);
+        new_params.Add("AllowEdit", AllowEdit);
+        new_params.Add("AllowDelete", AllowDelete);
+        new_params.Add("AllowDetail", AllowDetail);
+        new_params.Add("OnSelectedRow", OnSelectedRow);
         if (IsSubpanel)
         {
-            parameters.Add("SetTopBar", false);
-            parameters.Add("ConstantFilters", new List<string>() { SubpanelFilter });
+            new_params.Add("IsSubpanel", true);
+            new_params.Add("SetTopBar", false);
+            if(!String.IsNullOrEmpty(SubpanelFilter))
+            {
+                new_params.Add("ConstantFilters", new List<string>() { SubpanelFilter });
+            }
+            
+            new_params.Add("ViewdefName", "related_list");
+            if (OnClickEdit != null)
+            {
+                new_params.Add("OnClickEdit", OnClickEdit);
+            }
+            if (OnClickDetail != null)
+            {
+                new_params.Add("OnClickDetail", OnClickDetail);
+            }
+            if (OnClickDelete != null)
+            {
+                new_params.Add("OnClickDelete", OnClickDelete);
+            }
+            if (OnClickNew != null)
+            {
+                new_params.Add("OnClickNew", OnClickNew);
+            }
+        }
+
+        //check if new_params is equal to parametersm, if not, set parameters to new_params
+        if (!new_params.SequenceEqual(parameters))
+        {
+            parameters = new_params;
         }
     }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        SetParameters(BusinessObj, BusinessName);
-    }
-
-    protected override void OnParametersSet()
-    {
-        base.OnParametersSet();
-        SetParameters(BusinessObj, BusinessName);        
-    }
-    
 }

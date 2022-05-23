@@ -14,7 +14,7 @@ namespace Siesa.SDK.Shared.Json
         JsonContract contract = base.CreateContract(objectType);
 
         // this will only be called once and then cached
-        if (objectType == typeof(DateOnly))
+        if (objectType == typeof(DateOnly) || objectType == typeof(DateOnly?))
         {
             contract.Converter = new DateOnlyJsonConverter();
         }

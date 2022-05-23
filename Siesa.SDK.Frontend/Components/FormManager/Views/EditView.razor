@@ -1,16 +1,24 @@
-﻿@using Siesa.SDK.Frontend.Components.FormManager.Fields
+﻿@using SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.FormManager.Fields
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
 @using Siesa.SDK.Entities;
+@using Siesa.SDK.Frontend.Components.Visualization
 @if (Panels == null || Panels.Count <= 0)
 {
-    <label>No hay definicion para la vista</label>
+    <ResourceViewer ResourceTag="SDK.ViewdefNotFound" />
 }
 else if (Loading == true)
 {
-    <label>Cargando...</label>
+    <ResourceViewer ResourceTag="Generic.Loading" />
 }
 else if (BusinessObj.BaseObj.Rowid != 0)
 {
+    @if(IsSubpanel){
+        <h5><ResourceViewer ResourceTag="Action.Modify" /> @BusinessObj</h5>
+        <hr />
+    }
+    <CascadingValue Value="@this">
     <EditForm id="@FormID"
               OnValidSubmit="@HandleValidSubmit"
               OnInvalidSubmit="@HandleInvalidSubmit"
@@ -22,11 +30,11 @@ else if (BusinessObj.BaseObj.Rowid != 0)
                 <DxFormLayoutTabPages>
                     @foreach (var panel in Panels)
                     {
-                        <DxFormLayoutTabPage Caption="@panel.Label">
+                        <SDKFormLayoutTabPage ResourceTag="@panel.ResourceTag">
                             <CascadingValue Value="@EditFormContext">
                                 <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" ModelObj="@BusinessObj" DefaultColSize="@panel.ColSize" />
                             </CascadingValue>
-                        </DxFormLayoutTabPage>
+                        </SDKFormLayoutTabPage>
                     }
 
 
@@ -44,17 +52,32 @@ else if (BusinessObj.BaseObj.Rowid != 0)
         <ValidationSummary />
         <label>@ErrorMsg</label>
     </EditForm>
-    <SetTopBar>
-        <TopBarTitle>Editar @BusinessObj</TopBarTitle>
-        <TopBarButtons>
-            <DxButton form="@FormID" RenderStyle="ButtonRenderStyle.Primary" SubmitFormOnClick="true" Text="Guardar" />
-            <DxButton RenderStyle="ButtonRenderStyle.Secondary" Click="GoToList" Text="Cancelar" />
+    </CascadingValue>
+    @if(IsSubpanel){
+        <div class="buttons-container">
             @foreach (var btn in FormViewModel.Buttons)
             {
-                <DxButton RenderStyle="@btn.RenderStyle" Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />
+                <SDKButton RenderStyle="@btn.RenderStyle" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag"  />
             }
-        </TopBarButtons>
-    </SetTopBar>
+            <SDKButton form="@FormID" RenderStyle="SDKButtonRenderStyle.Primary" RenderStyleMode="SDKButtonRenderStyleMode.Text" SubmitFormOnClick="true" ResourceTag="Generic.ActionSave" />
+            <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@((args) => dialogService.Close(false))" ResourceTag="Generic.ActionCancel" />
+        </div>
+    }
+    @if(SetTopBar && !IsSubpanel)
+    {
+        <PageTitle><ResourceViewer ResourceTag="Action.Modify" /> @BusinessObj</PageTitle>
+        <SetTopBar>
+            <TopBarTitle><ResourceViewer ResourceTag="Action.Modify" /> @BusinessObj</TopBarTitle>
+            <TopBarButtons>
+                @foreach (var btn in FormViewModel.Buttons)
+                {
+                    <SDKButton RenderStyle="@btn.RenderStyle" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" />
+                }
+                <SDKButton form="@FormID" RenderStyle="SDKButtonRenderStyle.Primary" RenderStyleMode="SDKButtonRenderStyleMode.Text" SubmitFormOnClick="true" ResourceTag="Generic.ActionSave" />
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="GoToList" ResourceTag="Generic.ActionCancel" />
+            </TopBarButtons>
+        </SetTopBar>
+    }
 
 }
 @code {
@@ -71,7 +94,7 @@ else if (BusinessObj.BaseObj.Rowid != 0)
                         var tmpType = currentObject.GetType();
                         var tmpProperty = tmpType.GetProperty(fieldPath[i]);
                         var tmpValue = tmpProperty.GetValue(currentObject, null);
-                        var isEntity = tmpProperty.PropertyType.IsSubclassOf(typeof(BaseEntity));
+                        var isEntity = tmpProperty.PropertyType.IsSubclassOf(typeof(BaseSDK<>));
                         if (tmpValue == null && isEntity)
                         {
                             tmpValue = Activator.CreateInstance(tmpProperty.PropertyType);

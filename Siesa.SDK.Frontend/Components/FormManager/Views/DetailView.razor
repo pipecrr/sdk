@@ -1,11 +1,18 @@
-﻿@using Siesa.SDK.Frontend.Components.FormManager.Fields
+﻿@using SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.FormManager.Fields
 @using Siesa.SDK.Frontend.Components.Layout.Detail.Relationship
+@using Siesa.SDK.Frontend.Components.Visualization
 @if (Panels == null || Panels.Count <= 0)
 {
-    <label>No hay definicion para la vista</label>
+    <ResourceViewer ResourceTag="SDK.ViewdefNotFound" />
 }
 else if (ModelLoaded == true)
 {
+        @if(IsSubpanel){
+            <h5>@BusinessObj</h5>
+            <hr />
+        }
         <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
 
             @if (Panels.Count > 1)
@@ -13,9 +20,9 @@ else if (ModelLoaded == true)
                 <DxFormLayoutTabPages>
                     @foreach (var panel in Panels)
                     {
-                        <DxFormLayoutTabPage Caption="@panel.Label">
+                        <SDKFormLayoutTabPage ResourceTag="@panel.ResourceTag">
                             <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" ModelObj="@BusinessObj" DefaultColSize="@panel.ColSize" />
-                        </DxFormLayoutTabPage>
+                        </SDKFormLayoutTabPage>
                     }
                 </DxFormLayoutTabPages>
 
@@ -26,20 +33,36 @@ else if (ModelLoaded == true)
 
             }
         </DxFormLayout>
+        <label>@((MarkupString)ErrorMsg)</label>
          @foreach (var rel in FormViewModel.Relationships)
             {
-               <RelationshipPanel Relationship="@rel" ParentRowid="@BusinessObj.BaseObj.Rowid" />
+               <RelationshipPanel Relationship="@rel" Parent="@BusinessObj.BaseObj" />
             }
-    <SetTopBar>
-        <TopBarTitle>@BusinessObj</TopBarTitle>
-        <TopBarButtons>
-            <DxButton RenderStyle="ButtonRenderStyle.Primary" Click="GoToEdit" Text="Editar" />
-            <DxButton RenderStyle="ButtonRenderStyle.Info" Click="GoToList" Text="Listar" />
-            <DxButton RenderStyle="ButtonRenderStyle.Danger" Click="DeleteBusiness" Text="Eliminar" />
+    @if(IsSubpanel){
+        <div class="buttons-container">
             @foreach (var btn in FormViewModel.Buttons)
             {
-                <DxButton RenderStyle="@btn.RenderStyle" Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />
+                <SDKButton RenderStyle="@btn.RenderStyle" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" />
             }
-        </TopBarButtons>
-    </SetTopBar>
+            <SDKButton RenderStyle="SDKButtonRenderStyle.Danger" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="DeleteBusiness" ResourceTag="Action.Delete" />
+            <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@((args) => dialogService.Close(false))" ResourceTag="Generic.Close"/>
+        </div>
+    }
+    @if(SetTopBar)
+    {
+        <PageTitle>@BusinessObj</PageTitle>
+        <SetTopBar>
+            <TopBarTitle>@BusinessObj</TopBarTitle>
+            <TopBarButtons>
+                @foreach (var btn in FormViewModel.Buttons)
+                {
+                    <SDKButton RenderStyle="@btn.RenderStyle" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" />
+                }
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="GoToCreate" ResourceTag="Action.Create" />
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="GoToEdit" ResourceTag="Action.Modify" />
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Info" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="GoToList" ResourceTag="Action.List" />
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Danger" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="DeleteBusiness" ResourceTag="Action.Delete" />
+            </TopBarButtons>
+        </SetTopBar>
+    }
 }

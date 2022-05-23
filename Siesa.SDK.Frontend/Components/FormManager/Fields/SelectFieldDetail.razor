@@ -1,8 +1,16 @@
 ﻿@typeparam TItem
 @inherits FieldClass<TItem>
 
-<p style="word-wrap: break-word">@BindValue</p>
+<p style="word-wrap: break-word">@if(BindValue != null){<ResourceViewer ResourceTag="@_value" />}</p>
 
 @code {
     [Parameter] public IEnumerable<TItem> Options {get; set;}
+    string? _value {get {
+        if(BindValue == null) return null;
+        Type enumType = typeof(TItem);
+        if(typeof(TItem).IsGenericType && typeof(TItem).GetGenericTypeDefinition() == typeof(Nullable<>)){
+            enumType = typeof(TItem).GetGenericArguments()[0];
+        }
+        return $"Enum.{enumType.Name}.{BindValue}";
+    }}
 }

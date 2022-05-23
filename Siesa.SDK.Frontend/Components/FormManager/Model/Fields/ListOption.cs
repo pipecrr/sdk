@@ -9,7 +9,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
     {
         public string Id { get; set; }
         public string Key { get; set; }
-        public string Label { get; set; }
+        public string ResourceTag { get; set; }
         public string ListId { get; set; }
     }
 }

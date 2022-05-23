@@ -17,12 +17,12 @@ using Siesa.SDK.Shared.Validators;
 
 namespace Siesa.SDK.Business
 {
-    public class BLFrontendSimple : IBLBase<BaseEntity>
+    public class BLFrontendSimple : IBLBase<BaseSDK<int>>
     {
         public string BusinessName { get; set; }
         [JsonIgnore]
         public List<Panel> Panels = new List<Panel>();
-        public BaseEntity BaseObj { get; set; }
+        public BaseSDK<int> BaseObj { get; set; }
 
         [JsonIgnore]
         private IAuthenticationService AuthenticationService {get; set;}
@@ -32,22 +32,22 @@ namespace Siesa.SDK.Business
             AuthenticationService = authenticationService;
         }
 
-        public int Delete()
+        public DeleteBusinessObjResponse Delete()
         {
-            return 0;
+            return new DeleteBusinessObjResponse();
         }
 
-        public BaseEntity Get(int id)
-        {
-            return null;
-        }
-
-        public Task<BaseEntity> GetAsync(int id)
+        public BaseSDK<int> Get(Int64 rowid)
         {
             return null;
         }
 
-        public Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<BaseEntity> queryFilter = null)
+        public Task<BaseSDK<int>> GetAsync(Int64 rowid)
+        {
+            return null;
+        }
+
+        public Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<BaseSDK<int>> queryFilter = null)
         {
             return null;
         }
@@ -63,7 +63,7 @@ namespace Siesa.SDK.Business
     }
 
     
-    public class BLFrontendSimple<T, K> : IBLBase<T> where T : BaseEntity where K : BLBaseValidator<T>
+    public class BLFrontendSimple<T, K> : IBLBase<T> where T : class,IBaseSDK where K : BLBaseValidator<T>
     {
         public string BusinessName { get; set; }
         [JsonIgnore]
@@ -97,30 +97,30 @@ namespace Siesa.SDK.Business
             BaseObj = Activator.CreateInstance<T>();
         }
 
-        public virtual T Get(int id)
+        public virtual T Get(Int64 rowid)
         {
-            return GetAsync(id).GetAwaiter().GetResult();
+            return GetAsync(rowid).GetAwaiter().GetResult();
         }
 
-        public async virtual Task<T> GetAsync(int id)
+        public async virtual Task<T> GetAsync(Int64 rowid)
         {
-            var message = await Backend.Get(id);
+            var message = await Backend.Get(rowid);
             var result = JsonConvert.DeserializeObject<T>(message);
             return result;
         }
 
-        public async virtual Task<int> SaveAsync()
+        public async virtual Task<Int64> SaveAsync()
         {
             var result = await Backend.Save(this);
             return result;
         }
 
-        public async virtual Task InitializeBusiness(int id)
+        public async virtual Task InitializeBusiness(Int64 rowid)
         {
-            BaseObj = await GetAsync(id);
+            BaseObj = await GetAsync(rowid);
         }
 
-        public virtual int Save()
+        public virtual Int64 Save()
         {
             return SaveAsync().GetAwaiter().GetResult();
         }
@@ -135,19 +135,23 @@ namespace Siesa.SDK.Business
             throw new NotImplementedException();
         }
 
-        public virtual int Delete()
+        public virtual DeleteBusinessObjResponse Delete()
         {
             return DeleteAsync().GetAwaiter().GetResult();
         }
 
-        public async virtual Task<int> DeleteAsync()
+        public async virtual Task<DeleteBusinessObjResponse> DeleteAsync()
         {
-            var result = await Backend.Delete(BaseObj.Rowid);
+            var result = await Backend.Delete(BaseObj.GetRowid());
             return result;
         }
 
         public override string ToString()
         {
+            if (BaseObj == null)
+            {
+                return "";
+            }
             return BaseObj.ToString();
         }
 
@@ -195,15 +199,46 @@ namespace Siesa.SDK.Business
 
         private void Validate(ref ValidateAndSaveBusinessObjResponse baseOperation)
         {
-            ValidateBussines(ref baseOperation);
+            ValidateBussines(ref baseOperation, BaseObj.GetRowid() == 0 ? BLUserActionEnum.Create : BLUserActionEnum.Update);
             K validator = Activator.CreateInstance<K>();
             validator.ValidatorType = "Entity";
             SDKValidator.Validate<T>(BaseObj, validator, ref baseOperation);
         }
 
-        protected virtual void ValidateBussines(ref ValidateAndSaveBusinessObjResponse operationResult)
+        protected virtual void ValidateBussines(ref ValidateAndSaveBusinessObjResponse operationResult, BLUserActionEnum action)
         {
             // Do nothing
+        }
+
+        public virtual void OnReady(){
+
+        }
+
+        public void SetPropertyValue(string propertyName, object value)
+        {
+            string[] fieldPath = propertyName.Split('.');
+            object currentObject = this;
+            for (int i = 0; i < fieldPath.Length - 1; i++)
+            {
+                var tmpType = currentObject.GetType();
+                var tmpProperty = tmpType.GetProperty(fieldPath[i]);
+                var tmpValue = tmpProperty.GetValue(currentObject, null);
+                var isEntity = tmpProperty.PropertyType.IsSubclassOf(typeof(BaseSDK<>));
+                if (tmpValue == null && isEntity)
+                {
+                    tmpValue = Activator.CreateInstance(tmpProperty.PropertyType);
+                    tmpProperty.SetValue(currentObject, tmpValue);
+                }
+                currentObject = tmpValue;
+            }
+            if(currentObject != null)
+            {
+                var property = currentObject.GetType().GetProperty(fieldPath.Last());
+                if (property != null)
+                {
+                    property.SetValue(currentObject, value);
+                }
+            }
         }
 
     }

@@ -6,6 +6,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
         CharField,
         DecimalField,
         IntegerField,
+        SmallIntegerField,
         MultiSelectField,
         SelectField,
         DateField,
@@ -16,6 +17,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
         Custom,
         Unknown,
         EntityField,
-        ByteField
+        ByteField,
+        BigIntegerField,
     }
 }

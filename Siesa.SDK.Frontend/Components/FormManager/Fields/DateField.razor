@@ -1,4 +1,5 @@
-﻿@inherits FieldClass<DateOnly>
+﻿@typeparam TDate
+@inherits FieldClass<TDate>
 @using System.Linq.Expressions
 @if (!FieldOpt.Hidden)
 {
@@ -9,7 +10,7 @@
         NullText="@FieldOpt.Placeholder"
         ReadOnly="@(FieldOpt.Disabled)"
         Date="@(_value)"
-        DateChanged="@((str) => { SetValue(DateOnly.FromDateTime(str.Value)); })"
+        DateChanged="@((str) => { OnDateChanged(str); })"
         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
         PickerDisplayMode="DatePickerDisplayMode.Auto"
         field-name="@FieldOpt.Name"
@@ -26,11 +27,26 @@
     [Parameter] public bool ShowTime { get; set; }
 
     DateTime? _value {get{
-        if(BindValue != null && BindValue.ToDateTime(TimeOnly.MinValue) != DateTime.MinValue){
-            return BindValue.ToDateTime(TimeOnly.MinValue);
+        TDate currentValue = BindValue;
+        DateOnly? dateOnly = currentValue as DateOnly?;
+        if(!dateOnly.HasValue)
+        {
+            return null;
+        }
+        DateTime? currentValueDt = (currentValue as DateOnly?).Value.ToDateTime(TimeOnly.MinValue);
+
+
+        if(currentValueDt != null && currentValueDt != DateTime.MinValue){
+            return currentValueDt;
         }
         return null;
     }}
+
+    void OnDateChanged(DateTime? newValue) {
+        TDate valueToSet = (TDate)(object)DateOnly.FromDateTime(newValue.Value);
+        SetValue(valueToSet);
+
+    }
 
     protected override void OnInitialized()
     {

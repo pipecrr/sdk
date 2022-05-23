@@ -17,8 +17,16 @@ namespace Siesa.SDK.Frontend.Services
         private int _minutesExp;
 
         public string UserToken { get; private set; } = "";
+
+        private JwtUserData? _user;
         public JwtUserData User { get {
-             return new SDKJWT(_secretKey, _minutesExp).Validate(UserToken);
+            if(UserToken == ""){
+                return null;
+            }
+            if(_user == null){
+                _user = new SDKJWT(_secretKey, _minutesExp).Validate(UserToken);
+            }
+            return _user;
         }}
 
         public AuthenticationService(

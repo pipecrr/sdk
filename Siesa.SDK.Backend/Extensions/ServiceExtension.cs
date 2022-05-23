@@ -15,6 +15,7 @@ namespace Siesa.SDK.Backend.Extensions
         public static void AddSiesaSDKBackend(this IServiceCollection services)
         {
             services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddSingleton<IFeaturePermissionService, FeaturePermissionService>();
         }
     }
 }

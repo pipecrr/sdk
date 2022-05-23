@@ -1,0 +1,84 @@
+@using Siesa.SDK.Shared.Services
+@inject DialogService DialogService
+@inject IAuthenticationService AuthenticationService
+
+
+<DynamicListView
+    BusinessName="@BusinessName"
+    IsSubpanel=true
+    SubpanelFilter="@Filter"
+    @key="listview_key"
+    OnClickEdit="@(async (string item_rowid)=> { await OpenModalEdit(item_rowid); })"
+    OnClickDetail="@(async (string item_rowid)=> { await OpenModalDetail(item_rowid); })"
+    OnClickDelete="@(async (string item_rowid, string object_string)=> { await OpenModalDelete(item_rowid, object_string); })" 
+    OnClickNew="@(async ()=> { await OpenModalCreate(); })"
+    AllowCreate="@AllowCreate"
+    AllowEdit="@AllowEdit"
+    AllowDelete="@AllowDelete"
+    AllowDetail="@AllowDetail"
+    OnSelectedRow=@OnSelectedRow
+    />
+
+
+
+@code {
+    [Parameter] public string BusinessName { get; set; }
+    [Parameter] public Dictionary<string, object> DefaultFieldsCreate { get; set; }
+
+    [Parameter] public string Filter { get; set; }
+    [Parameter] public bool AllowCreate { get; set; } = true;
+    [Parameter] public bool AllowEdit { get; set; } = true;
+    [Parameter] public bool AllowDelete { get; set; } = true;
+    [Parameter] public bool AllowDetail { get; set; } = true;
+    [Parameter] public Action<object> OnSelectedRow { get; set; } = null;
+
+    
+    Guid listview_key = Guid.NewGuid();
+
+     public async Task OpenModalCreate()
+    {
+        var modal_result = await DialogService.OpenAsync("", 
+        ds => @<DynamicCreateView BusinessName="@BusinessName" IsSubpanel=true  DefaultFields="@DefaultFieldsCreate" />, 
+        new DialogOptions() { Width = "700px", ShowTitle=false,   Resizable = true});
+        listview_key = Guid.NewGuid();
+        StateHasChanged();
+    }
+
+    public async Task OpenModalEdit(string item_rowid)
+    {
+        var modal_result = await DialogService.OpenAsync("", 
+        ds => @<DynamicEditView BusinessName="@BusinessName" IsSubpanel=true  BusinessObjId="@item_rowid" />, 
+        new DialogOptions() { Width = "700px", ShowTitle=false,   Resizable = true});
+        listview_key = Guid.NewGuid();
+        StateHasChanged();
+    }
+    
+    public async Task OpenModalDetail(string item_rowid)
+    {
+        var modal_result = await DialogService.OpenAsync("", 
+        ds => @<DynamicDetailView BusinessName="@BusinessName" IsSubpanel=true  BusinessObjId="@item_rowid" />, 
+        new DialogOptions() { Width = "700px", ShowTitle=false,   Resizable = true});
+        listview_key = Guid.NewGuid();
+        StateHasChanged();
+    }
+
+    public async Task OpenModalDelete(string item_rowid, string object_string)
+    {
+        var modal_result = await DialogService.Confirm($"¿Desea eliminar el registro \"{object_string}\"?", "Elminar registro", new ConfirmOptions() { OkButtonText = "Eliminar", CancelButtonText = "Cancelar" });
+        if(modal_result == true) {
+            var backend = BusinessManagerFrontend.Instance.GetBusiness(BusinessName, AuthenticationService);
+            await backend.DeleteAsync(Convert.ToInt64(item_rowid));
+        }
+        listview_key = Guid.NewGuid();
+        StateHasChanged();
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        listview_key = Guid.NewGuid();
+        StateHasChanged();     
+    }
+
+
+}

@@ -26,7 +26,7 @@ namespace Siesa.SDK.Backend.Access
             }
         }
 
-        private enum LogType
+        public enum LogType
         {
             Add,
             Modify,
@@ -157,7 +157,7 @@ namespace Siesa.SDK.Backend.Access
             return keyValues;
         }
 
-        private List<EntityEntry> GetListToProcess(LogType type)
+        public List<EntityEntry> GetListToProcess(LogType type)
         {
             return type switch
             {

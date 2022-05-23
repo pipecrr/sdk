@@ -1,11 +1,21 @@
-﻿@inherits FieldClass<DateOnly>
+﻿@typeparam TDate
+@inherits FieldClass<TDate>
 @using System.Linq.Expressions
 
-<p style="word-wrap: break-word">@_value</p>
+<p style="word-wrap: break-word">@(_value != null ? _value.Value.Date.ToString("dd/MM/yyyy") : null)</p>
 @code {
-    DateTime? _value {get{
-        if(BindValue != null && BindValue.ToDateTime(TimeOnly.MinValue) != DateTime.MinValue){
-            return BindValue.ToDateTime(TimeOnly.MinValue);
+DateTime? _value {get{
+        TDate currentValue = BindValue;
+        DateOnly? dateOnly = currentValue as DateOnly?;
+        if(!dateOnly.HasValue)
+        {
+            return null;
+        }
+        DateTime? currentValueDt = (currentValue as DateOnly?).Value.ToDateTime(TimeOnly.MinValue);
+
+
+        if(currentValueDt != null && currentValueDt != DateTime.MinValue){
+            return currentValueDt;
         }
         return null;
     }}

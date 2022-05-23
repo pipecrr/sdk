@@ -28,9 +28,9 @@ namespace Siesa.SDK.Shared.Criptography
 
         public JwtUserData? Validate(string token)
         {
-            if (token == null)
+            if (String.IsNullOrEmpty(token)){
                 return null;
-
+            }
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_secretKey);
             try
@@ -57,17 +57,27 @@ namespace Siesa.SDK.Shared.Criptography
             }
         }
 
-        public string Generate(E00102_User? user)
+        public string Generate(E00220_User? user, Dictionary<int, Dictionary<int, bool>>? featurePermissions, List<SessionRol> roles)
         {
             // generate token that is valid for 7 days
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_secretKey);
              var userToken = new JwtUserData() {
                 Rowid = user.Rowid,
-                UserName = user.UserName,
-                Email = user.Email,
-                Name = user.Name
+                Path = user.Path,
+                PasswordRecoveryEmail = user.PasswordRecoveryEmail,
+                Name = user.Name,
+                Id = user.Id,
+                Description = user.Description,
+                RowidCulture = user.RowidCulture,
+                Roles = roles,
+                FeaturePermissions = featurePermissions
+                // Teams = user.Teams.Select(x => x.TeamName).ToArray(),
+                //IsSuperAdmin = user.IsSuperAdmin
             };
+
+
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] { 

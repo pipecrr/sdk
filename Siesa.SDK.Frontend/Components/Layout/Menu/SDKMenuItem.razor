@@ -1,18 +1,52 @@
-@using Siesa.SDK.Entities;
+@using Siesa.SDK.Entities
+@using Siesa.SDK.Frontend.Application
+@using Siesa.SDK.Shared.Services
+@inject IResourceManager ResourceManager
+@inject IAuthenticationService AuthenticationService
+@using Siesa.SDK.Shared.Utilities
+
 @if(MenuItem.SubMenus?.Count > 0){
-    <DxMenuItem Text="@MenuItem.Title" IconCssClass="@MenuItem.Image"> 
+    <DxMenuItem Text="@Title" IconCssClass="@MenuItem.IconClass"> 
         <Items>
-        @foreach(var subMenuItem in MenuItem.SubMenus){
+        @foreach(var subMenuItem in MenuItem.SubMenus.OrderBy(x => x.Order)){
             <SDKMenuItem MenuItem="@subMenuItem" />
         }
         </Items>
     </DxMenuItem>       
 }else{
-    <DxMenuItem Text="@MenuItem.Title" IconCssClass="@MenuItem.Image" NavigateUrl="@NavigateUrl" />
+    @if(MenuItem.Type == MenuType.Separator)
+    {
+        <DxMenuItem CssClass="separator" />
+    }else{
+        @if(MenuItem.Feature != null)
+        {
+            @if(Utilities.CheckUserActionPermission(MenuItem.Feature.Rowid, 4, AuthenticationService))
+            {
+                <DxMenuItem Text="@Title" IconCssClass="@MenuItem.IconClass" NavigateUrl="@NavigateUrl" />
+            }
+
+        }else{
+            <DxMenuItem Text="@Title" IconCssClass="@MenuItem.IconClass" NavigateUrl="@NavigateUrl" />
+        }
+    }
 }
 
 @code {
-    [Parameter] public E00131_Menu MenuItem { get; set; }
+    [Parameter] public E00061_Menu MenuItem { get; set; }
+
+    private string Title { get; set; } = "";
+
+    private async Task<string> GetTitle(){
+        if((MenuItem.RowidResource == null || MenuItem.RowidResource == 0) && MenuItem.ResourceTag != null){
+            return await ResourceManager.GetResource(MenuItem.ResourceTag, AuthenticationService);
+        }
+        return await ResourceManager.GetResource(Convert.ToInt64(MenuItem.RowidResource), AuthenticationService);
+    }
+
+    protected override async Task OnInitializedAsync(){
+        Title = MenuItem.ResourceTag;
+        Title = await GetTitle();
+    }
 
     private string NavigateUrl { get { 
         if (!string.IsNullOrEmpty(MenuItem.Url)) {

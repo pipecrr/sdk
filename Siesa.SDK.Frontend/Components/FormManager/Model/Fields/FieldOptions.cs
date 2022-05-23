@@ -13,6 +13,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         public Type SelectFieldType { get; set; }
 
         public string UnknownFieldType { get; set; }
+
+        public bool IsNullable { get; set; }
     }
 
     public class CustomComponent
@@ -30,15 +32,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         public string Name { get; set; }
         public string PropertyName { get; set; }
         public string Placeholder { get; set; } = "";
-        public string Label { get; set; }
         public Boolean PureField { get; set; } = false;
         public string Id { get; set; }
         public string Value { get; set; }
         public string Msg { get; set; }
 
+        public string ResourceTag { get; set; }
+
         public bool Disabled { get; set; } = false;
         public string CssClass { get; set; }
         public FieldTypes FieldType { get; set; }
+
+        public bool IsNullable { get; set; } = false;
 
         public string ViewContext { get; set; }
 
@@ -63,13 +68,28 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         {
         };
 
-        public FieldObj InitField(object modelObj)
+        private FieldObj fieldObj = null;
+
+        public FieldObj GetFieldObj(object modelObj)
+        {
+            if (fieldObj == null)
+            {
+                fieldObj = InitField(modelObj);
+            }
+            return fieldObj;
+        }
+
+        private FieldObj InitField(object modelObj)
         {
             FieldObj field = new FieldObj();
 
 
             if (CustomComponent != null)
             {
+                if(String.IsNullOrEmpty(ResourceTag))
+                {
+                    ResourceTag = $"{modelObj.GetType().Name}.{Name}";
+                }
                 //Name guid
                 Name = Guid.NewGuid().ToString();
                 FieldType = FieldTypes.Custom;
@@ -87,7 +107,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                     var tmpType = currentObject.GetType();
                     var tmpProperty = tmpType.GetProperty(fieldPath[i]);
                     var tmpValue = tmpProperty.GetValue(currentObject, null);
-                    var isEntity = tmpProperty.PropertyType.IsSubclassOf(typeof(BaseEntity));
+                    var isEntity = tmpProperty.PropertyType.IsSubclassOf(typeof(BaseSDK<>));
                     if (tmpValue == null && isEntity)
                     {
                         tmpValue = Activator.CreateInstance(tmpProperty.PropertyType);
@@ -98,19 +118,31 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 field.ModelObj = currentObject;
                 field.Name = fieldPath[fieldPath.Length - 1];
                 PropertyName = fieldPath[fieldPath.Length - 1];
+                if(String.IsNullOrEmpty(ResourceTag))
+                {
+                    ResourceTag = $"{field.ModelObj.GetType().Name}.{field.Name}";
+                }
                 var propertyType = field.ModelObj.GetType().GetProperty(field.Name).PropertyType;
+                var originalPropertyType = propertyType;
                 //Console.WriteLine(fieldName + " , " + propertyType);
                 if(propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
                 {
                     propertyType = propertyType.GetGenericArguments()[0];
+                    IsNullable = true;
                 }
                 switch (propertyType.Name)
                 {
                     case "String":
                         FieldType = FieldTypes.CharField;
                         break;
+                    case "Int64":
+                        FieldType = FieldTypes.BigIntegerField;
+                        break;
                     case "Int32":
                         FieldType = FieldTypes.IntegerField;
+                        break;
+                    case "Int16":
+                        FieldType = FieldTypes.SmallIntegerField;
                         break;
                     case "Byte":
                         FieldType = FieldTypes.ByteField;
@@ -140,17 +172,20 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                         break;
                 }
 
-                if(propertyType.IsClass && !propertyType.IsPrimitive && !propertyType.IsEnum && propertyType != typeof(string)){
+                var _bannedTypes = new List<Type>() { typeof(string), typeof(byte[]) };
+
+                if(propertyType.IsClass && !propertyType.IsPrimitive && !propertyType.IsEnum && !_bannedTypes.Contains(propertyType)){
                     FieldType = FieldTypes.EntityField;
                 }
 
                 if (propertyType.IsEnum)
                 {
                     FieldType = FieldTypes.SelectField;
-                    field.SelectFieldType = propertyType;
+                    field.SelectFieldType = originalPropertyType;
                 }
             }
             field.FieldType = FieldType;
+            field.IsNullable = IsNullable;
             return field;
         }
     }

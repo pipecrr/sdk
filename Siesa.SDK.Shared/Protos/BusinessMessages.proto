@@ -18,7 +18,7 @@ message BusinessesResponse {
 }
 
 message GetBusinessObjRequest {
-	int32 id = 1;
+	int64 id = 1;
 	string businessName = 2;
   string currentUserToken = 3;
   google.protobuf.Int32Value currentUserRowid = 4;
@@ -36,7 +36,7 @@ message SaveBusinessObjRequest {
 }
 
 message SaveBusinessObjResponse {
-  int32 id = 1;
+  int64 id = 1;
 }
 
 message ValidateAndSaveBusinessObjRequest {
@@ -53,19 +53,19 @@ message OperationError {
 
 message ValidateAndSaveBusinessObjResponse {
   //string json = 1;
-  int32 Rowid = 1;
+  int64 Rowid = 1;
   repeated OperationError errors = 2;
 }
 
 message DeleteBusinessObjRequest {
-  int32 id = 1;
+  int64 id = 1;
   string businessName = 2;
   string currentUserToken = 3;
   google.protobuf.Int32Value currentUserRowid = 4;
 }
 
 message DeleteBusinessObjResponse {
-  int32 id = 1;
+  repeated OperationError errors = 2;
 }
 
 message GetDataBusinessObjRequest {

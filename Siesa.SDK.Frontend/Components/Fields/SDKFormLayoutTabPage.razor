@@ -1,0 +1,41 @@
+@using Siesa.SDK.Frontend.Application
+@using Siesa.SDK.Shared.Services
+@inject IResourceManager ResourceManager
+@inject IAuthenticationService AuthenticationService
+
+<DxFormLayoutTabPage Caption="@Label">
+    @ChildContent
+</DxFormLayoutTabPage>
+
+@code {
+    private string Label { get; set; }
+    [Parameter] public string ResourceTag { get; set; }
+    [Parameter] public Int64 RowidResource { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; }
+
+    private async Task<string> GetText(){
+        if(!String.IsNullOrEmpty(ResourceTag)){
+             return await ResourceManager.GetResource(ResourceTag, AuthenticationService);
+        }
+        if(RowidResource != 0 && RowidResource != null){
+            return await ResourceManager.GetResource(Convert.ToInt64(RowidResource), AuthenticationService);
+        }
+        return Label;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Label = ResourceTag;
+        await base.OnInitializedAsync();
+        Label = await GetText();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        Label = ResourceTag;
+        await base.OnParametersSetAsync();
+        Label = await GetText();
+    }
+    
+    
+}

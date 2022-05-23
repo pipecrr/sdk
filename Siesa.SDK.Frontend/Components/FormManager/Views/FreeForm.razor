@@ -1,31 +1,34 @@
-﻿@using Siesa.SDK.Frontend.Components.FormManager.Fields
+﻿@using SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.FormManager.Fields
+@using Siesa.SDK.Frontend.Components.Visualization
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
 @if (Panels == null || Panels.Count <= 0)
 {
-    <label>No hay definicion para la vista</label>
+    <ResourceViewer ResourceTag="SDK.ViewdefNotFound" />
 }
 else if (Loading == true)
 {
-    <label>Cargando...</label>
+    <ResourceViewer ResourceTag="Generic.Loading" />
 }
 else if (BusinessObj != null)
 {
-    <EditForm id="@FormID"
-              OnValidSubmit="@HandleValidSubmit"
-              OnInvalidSubmit="@HandleInvalidSubmit"
-              EditContext="@EditFormContext">
-        <ObjectGraphDataAnnotationsValidator />
-        <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
-            @if (Panels.Count > 1)
+    <CascadingValue Value="@this">
+        <EditForm id="@FormID" OnValidSubmit="@HandleValidSubmit" OnInvalidSubmit="@HandleInvalidSubmit"
+        EditContext="@EditFormContext">
+            <ObjectGraphDataAnnotationsValidator />
+            <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
+                @if (Panels.Count > 1)
             {
                 <DxFormLayoutTabPages>
                     @foreach (var panel in Panels)
                     {
-                        <DxFormLayoutTabPage Caption="@panel.Label">
+                        <SDKFormLayoutTabPage ResourceTag="@panel.ResourceTag">
                             <CascadingValue Value="@EditFormContext">
-                                <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                                <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef"
+                            DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
                             </CascadingValue>
-                        </DxFormLayoutTabPage>
+                        </SDKFormLayoutTabPage>
                     }
 
 
@@ -35,7 +38,8 @@ else if (BusinessObj != null)
             else
             {
                 <CascadingValue Value="@EditFormContext">
-                    <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef" DefaultColSize="@Panels[0].ColSize" ModelObj="@BusinessObj" />
+                    <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef"
+                    DefaultColSize="@Panels[0].ColSize" ModelObj="@BusinessObj" />
                 </CascadingValue>
 
             }
@@ -43,12 +47,14 @@ else if (BusinessObj != null)
         <ValidationSummary />
         <label>@((MarkupString)ErrorMsg)</label>
     </EditForm>
+</CascadingValue>
     <SetTopBar>
         <TopBarTitle>@Title</TopBarTitle>
         <TopBarButtons>
             @foreach (var btn in FormViewModel.Buttons)
             {
-                <DxButton RenderStyle="@btn.RenderStyle" Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />
+                <SDKButton RenderStyle="@btn.RenderStyle" RenderStyleMode="SDKButtonRenderStyleMode.Text"
+            Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" />
             }
         </TopBarButtons>
     </SetTopBar>

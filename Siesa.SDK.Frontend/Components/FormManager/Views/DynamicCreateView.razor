@@ -12,5 +12,36 @@ else if (BusinessObj == null)
 }
 else if (BusinessObj != null)
 {
-    @CreateDynamicComponent();
+    <DynamicComponent Type="@(typeof(Views.CreateView))" Parameters="@parameters" />
+}
+
+@code {
+    [Parameter] public Dictionary<string, object> DefaultFields { get; set; }
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        if (DefaultFields != null)
+        {
+            foreach (var item in DefaultFields)
+            {
+                BusinessObj.SetPropertyValue(item.Key, item.Value);
+            }
+        }
+
+        BusinessObj.OnReady();
+    }
+
+    protected override void SetParameters(dynamic businessObj, string businessName){
+        parameters.Clear();
+        parameters.Add("BusinessObj", businessObj);
+        parameters.Add("BusinessName", businessName);
+        parameters.Add("IsSubpanel", IsSubpanel);
+        if (IsSubpanel)
+        {
+            parameters.Add("SetTopBar", false);
+            parameters.Add("ViewdefName", "related_create");
+        }
+    }
+
+
 }

@@ -1,4 +1,6 @@
-﻿@using Siesa.SDK.Shared.Backend;
+﻿@using SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Shared.Backend;
 @using Siesa.SDK.Frontend.Components.Layout.Menu;
 @using Siesa.SDK.Shared.Services;
 @inject IAuthenticationService AuthenticationService;
@@ -18,12 +20,34 @@
         {
             <SDKMenuItem MenuItem="@menuItem" />
         }
-        @foreach (var menuItem in DevMenu)
+        @if(DevMenu != null)
         {
-            <SDKMenuItem MenuItem="@menuItem" />
+            <DxMenuItem Text="DevMenu" IconCssClass="oi oi-code">
+                <Items>
+                    @* <DxMenuItem Enabled="false" CssClass="menuitem-dev-search-box">
+                        <Template>
+                            <DxTextBox @bind-Text="@DevMenuSearchString" NullText="Search..." ></DxTextBox>
+                        </Template>
+                    </DxMenuItem> *@
+                    @* @foreach (var menuItem in DevMenu.Where(x => !String.IsNullOrEmpty(DevMenuSearchString) ? x.Title.ToLower().Contains(DevMenuSearchString.ToLower()) : true)) *@
+                    @foreach (var menuItem in DevMenu)
+                    {
+                        <SDKMenuItem MenuItem="@menuItem" />
+                    }
+                </Items>
+            </DxMenuItem>
         }
         @if (AuthenticationService.User != null)
         {
+            @* @if(AuthenticationService.User.IsSuperAdmin)
+            { *@
+                <DxMenuItem IconCssClass="oi oi-wrench" Position="ItemPosition.End">
+                    <Items>
+                        <DxMenuItem Text="Menu Builder" NavigateUrl="/admin/menu/" />
+                    </Items>
+                </DxMenuItem>
+            @* } *@
+            
             <DxMenuItem CssClass="notoggle" Position="ItemPosition.End">
                     <TextTemplate>
                         <div class="menu-icon-user-profile menu-icon" />
@@ -35,11 +59,10 @@
                                     <div class="menu-icon-user-profile menu-icon menu-icon-large" />
                                 </div>
                                 <div class="user-name-container bm-3 mb-2">
-                                    <div class="user-name-title text-muted text-center">Hello</div>
                                     <div class="user-name text-center">@AuthenticationService.User</div>
                                 </div>
                                 <div class="d-flex justify-content-center log-off-btn">
-                                    <DxButton Text="Log Off" RenderStyle="@ButtonRenderStyle.Secondary" NavigateUrl="/logout"></DxButton>
+                                    <SDKButton ResourceTag="BLUser.Logout" RenderStyle="@SDKButtonRenderStyle.Secondary" NavigateUrl="/logout"></SDKButton>
                                 </div>
                             </div>
                         </div>

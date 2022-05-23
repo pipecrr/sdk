@@ -8,7 +8,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
     public partial class DynamicDetailView : DynamicBaseViewModel
     {
-        private async Task InitDetail(int business_obj_id)
+        private async Task InitDetail(Int64 business_obj_id)
         {
             try
             {
@@ -20,15 +20,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 ErrorMsg = e.ToString();
             }
         }
-
-        public new RenderFragment CreateDynamicComponent() => builder =>
-        {
-            var viewType = typeof(Views.DetailView);
-            builder.OpenComponent(0, viewType);
-            builder.AddAttribute(1, "BusinessObj", BusinessObj);
-            builder.AddAttribute(2, "BusinessName", BusinessName);
-            builder.CloseComponent();
-        };
 
         public override async Task SetParametersAsync(ParameterView parameters)
         {
@@ -45,7 +36,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         //BusinessObj = null;
                         ErrorMsg = "";
 
-                        await InitDetail(Convert.ToInt32(BusinessObjId));
+                        await InitDetail(Convert.ToInt64(BusinessObjId));
                         StateHasChanged();
                     }
 

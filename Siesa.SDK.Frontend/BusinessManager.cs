@@ -45,12 +45,17 @@ namespace Siesa.SDK.Frontend
             return Backend.ValidateAndSaveBusiness(Name, obj);
         }
 
-        public dynamic Delete(int id)
+        public dynamic Delete(Int64 id)
         {
             return Backend.DeleteBusinessObj(Name, id);
         }
 
-        public dynamic Get(int id)
+        public async Task<dynamic> DeleteAsync(Int64 id)
+        {
+            return await Backend.DeleteBusinessObj(Name, id);
+        }
+
+        public dynamic Get(Int64 id)
         {
             return Backend.GetBusinessObj(Name, id);
         }

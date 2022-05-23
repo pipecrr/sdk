@@ -8,20 +8,20 @@
 @inject NavigationManager NavigationManager
 @inject IBackendManager backendManager
 @layout EmptyLayout
-
+<PageTitle>Login</PageTitle>
 <div class="col-md-6 offset-md-3 mt-5">
     <div class="card">
-        <h4 class="card-header">Login</h4>
+        <h4 class="card-header"><ResourceViewer ResourceTag="Project.Name" RowidCulture=1 /></h4>
         <div class="card-body">
             <EditForm Model="@model" OnValidSubmit="HandleValidSubmit">
                 <DataAnnotationsValidator />
                 <div class="form-group">
-                    <label>Username</label>
+                    <label><ResourceViewer ResourceTag="BLUser.Username" RowidCulture=1/></label>
                     <InputText @bind-Value="model.Username" class="form-control" />
                     <ValidationMessage For="@(() => model.Username)" />
                 </div>
                 <div class="form-group">
-                    <label>Password</label>
+                    <label><ResourceViewer ResourceTag="BLUser.Password" RowidCulture=1 /></label>
                     <InputText @bind-Value="model.Password" type="password" class="form-control" />
                     <ValidationMessage For="@(() => model.Password)" />
                 </div>
@@ -29,7 +29,7 @@
                     @if (loading) {
                         <span class="spinner-border spinner-border-sm mr-1"></span>
                     }
-                    Login
+                    <ResourceViewer ResourceTag="BLUser.Login" RowidCulture=1 />
                 </button>
                 @if (!string.IsNullOrEmpty(error)) {
                     <div class="alert alert-danger mt-3 mb-0">@error</div>

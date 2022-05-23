@@ -1,17 +1,31 @@
-﻿@using Siesa.SDK.Frontend.Components.FormManager.Fields
+﻿@using SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.FormManager.Fields
 @using System;
 @using Siesa.SDK.Entities;
+@using Siesa.SDK.Frontend.Application
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Shared.Services
+@inject IResourceManager ResourceManager
+@inject IAuthenticationService AuthenticationService
+
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+
 @if (Panels == null || Panels.Count <= 0)
 {
-    <label>No hay definicion para la vista</label>
+    <ResourceViewer ResourceTag="SDK.ViewdefNotFound" />
 }
 else if (Loading == true)
 {
-    <label>Cargando...</label>
+    <ResourceViewer ResourceTag="Generic.Loading" />
 }
 else if (BusinessObj.BaseObj != null)
 {
+    @if(IsSubpanel){
+        <h5><ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer ResourceTag="@($"{BusinessName}.Singular")" /></h5>
+        <hr />
+    }
+    <CascadingValue Value="@this">
     <EditForm id="@FormID"
               OnValidSubmit="@HandleValidSubmit"
               OnInvalidSubmit="@HandleInvalidSubmit"
@@ -23,11 +37,11 @@ else if (BusinessObj.BaseObj != null)
                 <DxFormLayoutTabPages>
                     @foreach (var panel in Panels)
                     {
-                        <DxFormLayoutTabPage Caption="@panel.Label">
+                        <SDKFormLayoutTabPage ResourceTag="@panel.ResourceTag">
                             <CascadingValue Value="@EditFormContext">
                                 <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
                             </CascadingValue>
-                        </DxFormLayoutTabPage>
+                        </SDKFormLayoutTabPage>
                     }
 
 
@@ -45,17 +59,32 @@ else if (BusinessObj.BaseObj != null)
         <ValidationSummary />
         <label>@((MarkupString)ErrorMsg)</label>
     </EditForm>
-    <SetTopBar>
-        <TopBarTitle>Crear @BusinessName</TopBarTitle>
-        <TopBarButtons>
-            <DxButton form="@FormID" RenderStyle="ButtonRenderStyle.Primary" SubmitFormOnClick="true" Text="Guardar" />
-            <DxButton RenderStyle="ButtonRenderStyle.Secondary" Click="GoToList" Text="Cancelar" />
+    </CascadingValue>
+    @if(IsSubpanel){
+        <div class="buttons-container">
             @foreach (var btn in FormViewModel.Buttons)
             {
-                <DxButton RenderStyle="@btn.RenderStyle" Click="@(()=> { OnClickCustomButton(@btn); })" Text="@btn.Label" />
+                <SDKButton RenderStyle="@btn.RenderStyle" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag"  />
             }
-        </TopBarButtons>
-    </SetTopBar>
+            <SDKButton form="@FormID" RenderStyle="SDKButtonRenderStyle.Primary" RenderStyleMode="SDKButtonRenderStyleMode.Text" SubmitFormOnClick="true" ResourceTag="Generic.ActionSave" />
+            <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@((args) => dialogService.Close(false))" ResourceTag="Generic.ActionCancel" />
+        </div>
+    }
+    @if(SetTopBar && !IsSubpanel)
+    {
+        <PageTitle><ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer ResourceTag="@($"{BusinessName}.Singular")" /></PageTitle>
+        <SetTopBar>
+            <TopBarTitle><ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer ResourceTag="@($"{BusinessName}.Singular")" /></TopBarTitle>
+            <TopBarButtons>
+                @foreach (var btn in FormViewModel.Buttons)
+                {
+                    <SDKButton RenderStyle="@btn.RenderStyle" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag"  />
+                }
+                <SDKButton form="@FormID" RenderStyle="SDKButtonRenderStyle.Primary" RenderStyleMode="SDKButtonRenderStyleMode.Text" SubmitFormOnClick="true" ResourceTag="Generic.ActionSave" />
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary"  RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="GoToList" ResourceTag="Generic.ActionCancel" />
+            </TopBarButtons>
+        </SetTopBar>
+    }
 
 }
 
@@ -73,7 +102,7 @@ else if (BusinessObj.BaseObj != null)
                         var tmpType = currentObject.GetType();
                         var tmpProperty = tmpType.GetProperty(fieldPath[i]);
                         var tmpValue = tmpProperty.GetValue(currentObject, null);
-                        var isEntity = tmpProperty.PropertyType.IsSubclassOf(typeof(BaseEntity));
+                        var isEntity = tmpProperty.PropertyType.IsSubclassOf(typeof(BaseSDK<>));
                         if (tmpValue == null && isEntity)
                         {
                             tmpValue = Activator.CreateInstance(tmpProperty.PropertyType);

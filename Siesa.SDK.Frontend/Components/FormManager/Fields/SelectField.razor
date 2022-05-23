@@ -2,12 +2,8 @@
 @using System.Linq.Expressions
 @typeparam TItem
 @inherits FieldClass<TItem>
-
-@*<DxComboBox Data="@FieldOpt.Options" TData="ListOption" TValue="string" CssClass="@FieldOpt.CssClass" SelectedItemChanged="@((newSel) => SetAttr( newSel))"
-    TextFieldName="Label" SelectedItem="@BindValue" NullText="@FieldOpt.Placeholder" ReadOnly="@FieldOpt.Disabled"
-    @attributes="FieldOpt.CustomAttributes" ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
-    FilteringMode="DataGridFilteringMode.Contains"></DxComboBox>*@
-
+@using Siesa.SDK.Shared.Services
+@inject IAuthenticationService AuthenticationService
 
 <SDKSelectField 
     ItemType="TItem"
@@ -19,22 +15,52 @@
     ValueExpression="@ValueExpression"
     TextProperty="DisplayText"
     ValueProperty="Type"
+    @ref="_refField"
     />
 @FieldValidationTemplate
 
 @code{
-
+    private SDKSelectField<TItem> _refField;
     Expression<Func<TItem>> ValueExpression { get; set; }
     [Parameter] public IEnumerable<SDKEnumWrapper<TItem>> Options {get; set;}
+
+    private Type enumType { get; set; }
     private IEnumerable<SDKEnumWrapper<TItem>> _options {
         get{
             if(Options == null){
-                Options = Enum.GetValues(typeof(TItem)).OfType<TItem>().Select(x => new SDKEnumWrapper<TItem>{
+                
+                enumType = typeof(TItem);
+                if(typeof(TItem).IsGenericType && typeof(TItem).GetGenericTypeDefinition() == typeof(Nullable<>)){
+                    enumType = typeof(TItem).GetGenericArguments()[0];
+                }
+                GetEnumValues();
+                Options = Enum.GetValues(enumType).OfType<TItem>().Select(x => new SDKEnumWrapper<TItem>{
                     Type = x,
-                    DisplayText = x.ToString() //todo: get displayname attribute
+                    DisplayText = $"Enum.{enumType.Name}.{x.ToString()}"
                 });
             }
             return Options;
+        }
+    }
+
+    private async Task GetEnumValues()
+    {
+        var resourceBL = Frontend.BusinessManagerFrontend.Instance.GetBusiness("BLResource", AuthenticationService);
+        var request = await resourceBL.Call("GetEnumValues", enumType.Name, Convert.ToInt64(AuthenticationService.User.RowidCulture));
+        if(request.Success){
+            var enumValues = (Dictionary<byte, string>)request.Data;
+            if(enumValues == null || enumValues.Count == 0){
+                return;
+            }
+            Options = enumValues.Select(x => new SDKEnumWrapper<TItem>{
+                Type = (TItem)Enum.Parse(enumType, x.Key.ToString()),
+                DisplayText = x.Value
+            });
+            if(_refField != null){
+                _refField.RefreshCurrentText();
+            }
+
+            //StateHasChanged();
         }
     }
 

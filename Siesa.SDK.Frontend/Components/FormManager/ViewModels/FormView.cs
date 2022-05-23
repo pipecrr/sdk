@@ -22,6 +22,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Parameter]
         public dynamic BusinessObj { get; set; }
 
+        [Parameter] 
+        public bool IsSubpanel { get; set; }
+        [Inject] public  Radzen.DialogService dialogService { get; set; }
+
         [Inject] public IJSRuntime JSRuntime { get; set; }
         [Inject] public NavigationManager NavManager { get; set; }
 
@@ -37,9 +41,34 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public string FormID { get; set; } = Guid.NewGuid().ToString();
         protected ValidationMessageStore _messageStore;
         protected EditContext EditFormContext;
-
+        [Parameter]
         public string ViewdefName { get; set; }
 
+        [Parameter]
+        public string DefaultViewdefName { get; set; }
+
+        private string _viewdefName = "";
+
+        private string GetViewdef(string businessName)
+        {
+            if (String.IsNullOrEmpty(ViewdefName))
+            {
+                _viewdefName = DefaultViewdefName;
+            }else{
+                _viewdefName = ViewdefName;
+            }
+
+            var data = BusinessManagerFrontend.Instance.GetViewdef(businessName, _viewdefName);
+            if (String.IsNullOrEmpty(data) && _viewdefName != DefaultViewdefName)
+            {
+                data = BusinessManagerFrontend.Instance.GetViewdef(businessName, DefaultViewdefName);
+            }
+            return data;
+        }
+
+        public void Refresh(){
+            StateHasChanged();
+        }
         protected virtual void InitView(string bName = null)
         {
             Loading = true;
@@ -47,10 +76,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             {
                 bName = BusinessName;
             }
-            var metadata = BusinessManagerFrontend.Instance.GetViewdef(bName, ViewdefName);
+            var metadata = GetViewdef(bName);
             if (metadata == null || metadata == "")
             {
-                ErrorMsg = $"No hay definición para la vista {ViewdefName}";
+                ErrorMsg = $"No hay definición para la vista {_viewdefName}";
             }
             else
             {
@@ -63,6 +92,35 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     //Soporte a viewdefs anteriores
                     var panels = JsonConvert.DeserializeObject<List<Panel>>(metadata);
                     FormViewModel.Panels = panels;
+                }
+            }
+            try
+            {
+                foreach (var panel in FormViewModel.Panels)
+                {
+                    if(String.IsNullOrEmpty(panel.ResourceTag))
+                    {
+                        panel.ResourceTag = $"{BusinessName}.Viewdef.{_viewdefName}.Panel.{panel.Name}";
+                    }
+
+                    foreach (var field in panel.Fields)
+                    {
+                        field.GetFieldObj(BusinessObj);
+                    }
+                }
+            }
+            catch (System.Exception)
+            {
+                Console.WriteLine("Error");
+            }
+            if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
+            {
+                foreach (var relationship in FormViewModel.Relationships)
+                {
+                    if(String.IsNullOrEmpty(relationship.ResourceTag))
+                    {
+                        relationship.ResourceTag = $"{BusinessName}.Relationship.{relationship.Name}";
+                    }
                 }
             }
             Loading = false;
@@ -245,7 +303,11 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
                 return;
             }
             var id = result.Rowid;
-            NavManager.NavigateTo($"{BusinessName}/detail/{id}/");
+            if(IsSubpanel){
+                dialogService.Close(id);
+            }else{
+                NavManager.NavigateTo($"{BusinessName}/detail/{id}/");
+            }
         }
 
         protected async Task HandleValidSubmit()
