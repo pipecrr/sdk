@@ -13,6 +13,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         public Type SelectFieldType { get; set; }
 
         public string UnknownFieldType { get; set; }
+
+        public bool IsNullable { get; set; }
     }
 
     public class CustomComponent
@@ -40,6 +42,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         public bool Disabled { get; set; } = false;
         public string CssClass { get; set; }
         public FieldTypes FieldType { get; set; }
+
+        public bool IsNullable { get; set; } = false;
 
         public string ViewContext { get; set; }
 
@@ -123,11 +127,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 if(propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
                 {
                     propertyType = propertyType.GetGenericArguments()[0];
+                    IsNullable = true;
                 }
                 switch (propertyType.Name)
                 {
                     case "String":
                         FieldType = FieldTypes.CharField;
+                        break;
+                    case "Int64":
+                        FieldType = FieldTypes.BigIntegerField;
                         break;
                     case "Int32":
                         FieldType = FieldTypes.IntegerField;
@@ -163,7 +171,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                         break;
                 }
 
-                if(propertyType.IsClass && !propertyType.IsPrimitive && !propertyType.IsEnum && propertyType != typeof(string)){
+                var _bannedTypes = new List<Type>() { typeof(string), typeof(byte[]) };
+
+                if(propertyType.IsClass && !propertyType.IsPrimitive && !propertyType.IsEnum && !_bannedTypes.Contains(propertyType)){
                     FieldType = FieldTypes.EntityField;
                 }
 
@@ -174,6 +184,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 }
             }
             field.FieldType = FieldType;
+            field.IsNullable = IsNullable;
             return field;
         }
     }

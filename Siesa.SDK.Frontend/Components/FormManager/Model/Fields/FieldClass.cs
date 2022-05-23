@@ -17,7 +17,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
     public class FieldClass<TProperty> : ComponentBase 
     {         
         public TProperty BindValue { get {
-                return (TProperty)BindProperty?.GetValue(BindModel, null);
+                var modelValue = BindProperty?.GetValue(BindModel, null);
+                if(modelValue == null)
+                {
+                    return default(TProperty);
+                }
+                    
+                return (TProperty)modelValue;
             }
             set {
                 BindProperty.SetValue(BindModel, value);
@@ -39,6 +45,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         public int MaxLength { get; set; }
 
         public bool IsUnique { get; set; }
+
+        public bool IsNullable { get; set; }
         private RenderFragment? _fieldValidationTemplate;
 
         private string OnChange { get; set; }
@@ -138,9 +146,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 return _fieldValidationTemplate != null ? _fieldValidationTemplate : builder =>
                 {
                     var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
-                    var lambda = Expression.Lambda(typeof(Func<>).MakeGenericType(typeof(TProperty)), access);
-
-                    builder.OpenComponent(0, typeof(ValidationMessage<>).MakeGenericType(typeof(TProperty)));
+                    var lambda = Expression.Lambda(typeof(Func<>).MakeGenericType(access.Type), access);
+                    builder.OpenComponent(0, typeof(ValidationMessage<>).MakeGenericType(access.Type));
                     builder.AddAttribute(1, "For", lambda);
                     builder.CloseComponent();
                 };

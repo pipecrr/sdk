@@ -13,6 +13,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Siesa.SDK.Shared.Utilities;
+using Siesa.SDK.Backend.Extensions;
 
 namespace Siesa.SDK.Backend.Access
 {
@@ -116,36 +117,6 @@ namespace Siesa.SDK.Backend.Access
             }
         }
 
-        private string ToSnakeCase(string text)
-        {
-            if (string.IsNullOrEmpty(text))
-                return text;
-
-            var sb = new StringBuilder();
-            sb.Append(text[0].ToString().ToLower());
-            var lastUpperIndex = -1;
-            //check if first character is upper case
-            if (char.IsUpper(text[0]))
-            {
-                lastUpperIndex = 0;
-            }
-            for (var i = 1; i < text.Length; i++)
-            {
-                if (char.IsUpper(text[i]))
-                {
-                    if ((i - lastUpperIndex) > 1 && (i - 1) >= 0 && text[i - 1] != '_')
-                    {
-                        sb.Append('_');
-                    }
-                    lastUpperIndex = i;
-                }
-                    
-                sb.Append(text[i].ToString().ToLower());
-            }
-            return sb.ToString();
-        }
-        
-
         public override int SaveChanges()
         {
             foreach (var entry in ChangeTracker.Entries())
@@ -210,58 +181,14 @@ namespace Siesa.SDK.Backend.Access
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)  
         {
-            foreach (var entity in modelBuilder.Model.GetEntityTypes())
-            {
-                string table_name = ToSnakeCase(entity.ShortName().Trim());
-                // table names
-                modelBuilder.Entity(entity.Name).ToTable(table_name);
-                var table_name_parts = table_name.Split('_');
-                //get text before first underscore
-                var prefix = table_name_parts[0];
-                //if first character is an "U" then replaceit with "CU"
-                if (prefix.StartsWith("U"))
-                {
-                    prefix = "cu" + prefix.Substring(1);
-                }else{
-                    prefix = "c" + prefix.Substring(1);
-                }
+            if (modelBuilder == null)
+                throw new ArgumentNullException("modelBuilder");
 
-                // properties
-                foreach (var property in entity.GetProperties())
-                {
-                    var column_name = property.GetColumnName(StoreObjectIdentifier.Table(table_name, entity.GetSchema())).Trim();
-                    column_name = ToSnakeCase(column_name);
-                    
-                    //Check if property is a foreign key and it ends with "rowid"
-                    if (property.IsForeignKey() && column_name.EndsWith("rowid")) {
-                        column_name = column_name.Substring(0, column_name.Length - 6);
-                        column_name = "rowid_" + column_name;
-                    }
+            modelBuilder.AddNamingConvention();
+            modelBuilder.AddRemoveOneToManyCascadeConvention();
 
-
-
-                    
-                    property.SetColumnName(prefix + "_" + column_name);
-                }
-
-                //check if entity inherits from BaseSDK
-                if (typeof(BaseSDK<>).IsAssignableFrom(entity.ClrType))
-                {
-                    /*
-                    var newParam = Expression.Parameter(entity.ClrType);
-                    Expression<Func<BaseSDK, bool>> test_delegate = x => x.Source == "SDK2";
-                    var newBody = ReplacingExpressionVisitor.Replace(test_delegate.Parameters.Single(), newParam, test_delegate.Body);
-                    var filter = Expression.Lambda(newBody, newParam);
-                    modelBuilder.Entity(entity.Name).HasQueryFilter(filter);*/
-                    
-                }
-
-                //remove cascade delete
-                entity.GetForeignKeys().Where(fk => !fk.IsOwnership && fk.DeleteBehavior == DeleteBehavior.Cascade).ToList().ForEach(fk => fk.DeleteBehavior = DeleteBehavior.Restrict);
-
-                
-
-            }
+            modelBuilder.ApplyConventions();
+            base.OnModelCreating(modelBuilder);
         }
 
     }

@@ -5,8 +5,12 @@
     case FieldTypes.CharField:
         @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
         {
-            <CharFieldDetail BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" />
-
+            if(IsNullable)
+            {
+                <GenericFieldDetail TValue="string?" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+            }else{
+                <GenericFieldDetail TValue="string" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+            }
         }
         else
         {
@@ -18,44 +22,101 @@
         @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
         {
 
-            <DecimalFieldDetail BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  />
+            if(IsNullable)
+            {
+                <GenericFieldDetail TValue="decimal?" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+            }else{
+                <GenericFieldDetail TValue="decimal" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+            }
         }
         else
         {
-            <DecimalField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  />
+            if(IsNullable){
+                <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="decimal?"  />
+            }else{
+                <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="decimal" />
+            }
+        }
+        break;
+    case FieldTypes.BigIntegerField:
+        @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
+        {
+            if(IsNullable)
+            {
+                <GenericFieldDetail TValue="Int64?" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+            }else{
+                <GenericFieldDetail TValue="Int64" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+            }
+        }
+        else
+        {
+            if(IsNullable){
+                <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="Int64?"  />
+            }else{
+                <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="Int64" />
+            }
+            
         }
         break;
     case FieldTypes.IntegerField:
         @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
         {
-
-            <IntegerFieldDetail BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+            if(IsNullable)
+            {
+                <GenericFieldDetail TValue="int?" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+            }else{
+                <GenericFieldDetail TValue="int" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+            }
         }
         else
         {
-            <IntegerField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  />
+            if(IsNullable){
+                <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="int?"  />
+            }else{
+                <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="int" />
+            }
+            
         }
         break;
     case FieldTypes.SmallIntegerField:
         @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
         {
 
-            <SmallIntegerFieldDetail BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+            if(IsNullable)
+            {
+                <GenericFieldDetail TValue="Int16?" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+            }else{
+                <GenericFieldDetail TValue="Int16" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+            }
         }
         else
         {
-            <SmallIntegerField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  />
+            if(IsNullable){
+                <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="Int16?"  />
+            }else{
+                <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="Int16" />
+            }
         }
         break;        
     case FieldTypes.ByteField:
         @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
         {
 
-            <ByteFieldDetail BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+            if(IsNullable)
+            {
+                <GenericFieldDetail TValue="byte?" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+            }else{
+                <GenericFieldDetail TValue="byte" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+            }
         }
         else
         {
-            <ByteField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  />
+            if(IsNullable)
+            {
+                <ByteField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TByte="byte?" />
+            }else{
+                <ByteField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TByte="byte"  />
+            }
         }
         break;
     case FieldTypes.MultiSelectField:
@@ -74,31 +135,60 @@
     case FieldTypes.DateField:
         @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
         {
-            <DateFieldDetail BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+            if(IsNullable){
+                <DateFieldDetail BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TDate="DateOnly?" />
+            }else{
+                <DateFieldDetail BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TDate="DateOnly" />
+            }
+            
         }
         else
         {
-            <DateField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" ShowTime="false"  />
+            if(IsNullable){
+                <DateField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" ShowTime="false" TDate="DateOnly?" />
+            }else{
+                <DateField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" ShowTime="false" TDate="DateOnly" />
+            }
+            
         }
         break;
     case FieldTypes.TimeField:
         @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
         {
-            <TimeFieldDetail BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+            if(IsNullable)
+            {
+                <GenericFieldDetail TValue="TimeSpan?" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+            }else{
+                <GenericFieldDetail TValue="TimeSpan" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+            }
         }
         else
         {
-            <TimeField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"/>
+            if(IsNullable){
+                <TimeField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TTime="TimeSpan?" />
+            }else{
+                <TimeField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TTime="TimeSpan"/>
+            }
         }
         break;
     case FieldTypes.DateTimeField:
         @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
         {
-            <DateTimeFieldDetail BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+            if(IsNullable)
+            {
+                <GenericFieldDetail TValue="DateTime?" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+            }else{
+                <GenericFieldDetail TValue="DateTime" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+            }
         }
         else
         {
-            <DateTimeField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TDate="DateTime" ShowTime="true"  />
+            if(IsNullable){
+                <DateTimeField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TDate="DateTime?" ShowTime="true"  />
+            }else{
+                <DateTimeField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TDate="DateTime" ShowTime="true"  />
+            }
+            
         }
         break;
     case FieldTypes.TextField:
@@ -111,7 +201,12 @@
         }
         else
         {
-            <BooleanField BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt"  />
+            if(IsNullable){
+                <BooleanField BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" TBool="bool?"  />
+            }else{
+                <BooleanField BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" TBool="bool"  />
+            }
+            
 
         }
         break;

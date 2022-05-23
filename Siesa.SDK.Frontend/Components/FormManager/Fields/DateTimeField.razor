@@ -21,7 +21,7 @@
 
 
 @code {
-    Expression<Func<TDate>> DateExpression { get; set; }
+    Expression<System.Func<TDate>> DateExpression { get; set; }
     private RenderFragment? _fieldValidationTemplate;
 
     [Parameter] public bool ShowTime { get; set; }
@@ -30,6 +30,6 @@
     {
         base.OnInitialized();
         var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
-        DateExpression = (Expression<Func<TDate>>)Expression.Lambda(typeof(Func<>).MakeGenericType(typeof(TDate)), access);
+        DateExpression = (Expression<Func<TDate>>)Expression.Lambda(typeof(Func<>).MakeGenericType(access.Type), access);
     }
 }

@@ -24,6 +24,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
 
         private IDictionary<string, object> parameters = new Dictionary<string, object>();
 
+        private bool IsNullable { get; set; }
+
         private void initField()
         {
             var field = FieldOpt.GetFieldObj(ModelObj);
@@ -31,6 +33,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
             fieldName = field.Name;
             FieldType = field.FieldType;
             UnknownFieldType = field.UnknownFieldType;
+            IsNullable = field.IsNullable;
             if(field.SelectFieldType != null)
             {
                 SelectFieldType = typeof(SelectField<>).MakeGenericType(field.SelectFieldType);
