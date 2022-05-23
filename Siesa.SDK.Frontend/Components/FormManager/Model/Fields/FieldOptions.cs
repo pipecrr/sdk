@@ -123,6 +123,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                     ResourceTag = $"{field.ModelObj.GetType().Name}.{field.Name}";
                 }
                 var propertyType = field.ModelObj.GetType().GetProperty(field.Name).PropertyType;
+                var originalPropertyType = propertyType;
                 //Console.WriteLine(fieldName + " , " + propertyType);
                 if(propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
                 {
@@ -180,7 +181,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 if (propertyType.IsEnum)
                 {
                     FieldType = FieldTypes.SelectField;
-                    field.SelectFieldType = propertyType;
+                    field.SelectFieldType = originalPropertyType;
                 }
             }
             field.FieldType = FieldType;

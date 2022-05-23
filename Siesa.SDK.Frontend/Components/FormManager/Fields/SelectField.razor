@@ -26,9 +26,13 @@
         get{
             if(Options == null){
                 GetEnumValues();
-                Options = Enum.GetValues(typeof(TItem)).OfType<TItem>().Select(x => new SDKEnumWrapper<TItem>{
+                Type enumType = typeof(TItem);
+                if(typeof(TItem).IsGenericType && typeof(TItem).GetGenericTypeDefinition() == typeof(Nullable<>)){
+                    enumType = typeof(TItem).GetGenericArguments()[0];
+                }
+                Options = Enum.GetValues(enumType).OfType<TItem>().Select(x => new SDKEnumWrapper<TItem>{
                     Type = x,
-                    DisplayText = $"Enum.{typeof(TItem).Name}.{x.ToString()}"
+                    DisplayText = $"Enum.{enumType.Name}.{x.ToString()}"
                 });
             }
             return Options;
@@ -41,6 +45,9 @@
         var request = await resourceBL.Call("GetEnumValues", typeof(TItem).Name, Convert.ToInt64(AuthenticationService.User.RowidCulture));
         if(request.Success){
             var enumValues = (Dictionary<byte, string>)request.Data;
+            if(enumValues == null || enumValues.Count == 0){
+                return;
+            }
             Options = enumValues.Select(x => new SDKEnumWrapper<TItem>{
                 Type = (TItem)Enum.Parse(typeof(TItem), x.Key.ToString()),
                 DisplayText = x.Value
