@@ -28,9 +28,9 @@ namespace Siesa.SDK.Shared.Criptography
 
         public JwtUserData? Validate(string token)
         {
-            if (token == null)
+            if (String.IsNullOrEmpty(token)){
                 return null;
-
+            }
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_secretKey);
             try

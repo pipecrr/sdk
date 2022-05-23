@@ -12,12 +12,13 @@
     TextFieldName="@TextProperty"
     ValueFieldName="@ValueProperty"
     FilteringMode="DataGridFilteringMode.Contains"
-
+    @ref="_refField"
 >
 @ChildContent
 </DxComboBox>
 
 @code {
+    private DxComboBox<SDKEnumWrapper<ItemType>,ItemType> _refField;
     [Parameter] public Expression<Func<ItemType>> ValueExpression { get; set; }
     [Parameter] public ItemType Value { get; set; } = default!;
     [Parameter] public Action<ItemType> ValueChanged { get; set; } = (value) => {};
@@ -31,6 +32,12 @@
     [Parameter] public string CssClass { get; set; }
     [Parameter] public string TextProperty { get; set; }
     [Parameter] public string ValueProperty { get; set; }
+
+    public void RefreshCurrentText()
+    {
+
+
+    }
 
     
 }
