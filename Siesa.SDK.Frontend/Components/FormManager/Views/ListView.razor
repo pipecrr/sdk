@@ -119,6 +119,16 @@ else
                             </Template>
                         </RadzenDataGridColumn>
 
+                    }else if(field.FieldType == FieldTypes.SelectField){
+                        <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType">
+                            <HeaderTemplate>
+                                 <span><ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" /></span>
+                             </HeaderTemplate>
+                            <Template Context="data">
+                                <DynamicComponent Type="@typeof(SelectFieldDetail<>).MakeGenericType(field.GetFieldObj(data).SelectFieldType)" Parameters="@GetSelectFieldParameters(data, field, fieldName)" />
+                            </Template>
+                        </RadzenDataGridColumn>
+
                     }else{
                         <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType">
                              <HeaderTemplate>

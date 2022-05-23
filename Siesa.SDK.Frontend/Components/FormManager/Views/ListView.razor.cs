@@ -277,5 +277,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 Evaluator.EvaluateCode(button.Action, BusinessObj);
             }
         }
+
+        private IDictionary<string, object> GetSelectFieldParameters(object data, FieldOptions field, string fieldName)
+        {
+            IDictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("BindModel", data);
+            parameters.Add("FieldName", fieldName);
+            parameters.Add("FieldOpt", field);
+            return parameters;
+        }
     }
 }
