@@ -43,7 +43,14 @@
     }}
 
     void OnDateChanged(DateTime? newValue) {
-        TDate valueToSet = (TDate)(object)DateOnly.FromDateTime(newValue.Value);
+        TDate valueToSet;
+        if(newValue == null)
+        {
+            valueToSet = (TDate)(object)DateOnly.FromDateTime(DateTime.MinValue);
+        }else{
+            valueToSet = (TDate)(object)DateOnly.FromDateTime(newValue.Value);
+        }
+        
         SetValue(valueToSet);
 
     }
