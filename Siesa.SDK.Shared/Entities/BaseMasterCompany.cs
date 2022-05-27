@@ -22,7 +22,7 @@ namespace Siesa.SDK.Entities
 
         public override string ToString()
         {
-            return $"({Id}) - {Description}";
+            return $"({Id}) - {Name}";
         }
     }
 }
