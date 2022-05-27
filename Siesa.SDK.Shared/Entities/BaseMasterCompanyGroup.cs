@@ -8,8 +8,10 @@ namespace Siesa.SDK.Entities
 {
     public abstract class BaseMasterCompanyGroup<T>: BaseCompanyGroup<int>
     {
+        [Required]
         [StringLength(2000)]
         public virtual string Description { get; set; }
+        [Required]
         [StringLength(250)]
         public virtual string Name { get; set; }
         [Required]
