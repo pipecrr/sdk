@@ -46,7 +46,7 @@
         TDate valueToSet;
         if(newValue == null)
         {
-            valueToSet = (TDate)(object)DateOnly.FromDateTime(DateTime.MinValue);
+            valueToSet = default(TDate);
         }else{
             valueToSet = (TDate)(object)DateOnly.FromDateTime(newValue.Value);
         }
