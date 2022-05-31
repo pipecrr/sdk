@@ -151,7 +151,7 @@ namespace Siesa.SDK.Business
             {
 
                 Validate(ref result);
-                ValidateIndex(ref result);
+                // ValidateIndex(ref result);
 
                 if (result.Errors.Count > 0)
                 {
