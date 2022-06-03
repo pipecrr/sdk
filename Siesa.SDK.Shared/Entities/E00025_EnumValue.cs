@@ -15,7 +15,7 @@ namespace Siesa.SDK.Entities
 	/// Valores de los enums
 	/// </summary>
 
-	[Index(nameof(Id), nameof(Value), Name = "IX_e00025_1", IsUnique = true)]
+	[Index(nameof(RowidEnum), nameof(Id), nameof(Value), Name = "IX_e00025_1", IsUnique = true)]
 	public class E00025_EnumValue : BaseSDK<int>
 	{
 		[Key]
