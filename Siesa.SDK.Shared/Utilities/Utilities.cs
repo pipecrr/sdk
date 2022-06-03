@@ -31,36 +31,6 @@ namespace Siesa.SDK.Shared.Utilities
             return IsAssignableToGenericType(baseType, genericType);
         }
 
-        public static string GetDinamycWhere(Dictionary<string, object> inDictionary, Dictionary<string, object> PrimaryKey)
-        {
-
-            string filter = string.Empty;
-
-            foreach (var field in inDictionary)
-            {
-                if (!String.IsNullOrEmpty(filter)) filter += " AND ";
-
-                filter += $"{field.Key}==\"{field.Value}\"";
-
-            }
-
-            foreach (var keyPropertie in PrimaryKey)
-            {
-                if (keyPropertie.Value != null)
-                {
-
-                    if (!String.IsNullOrEmpty(filter)) filter += " AND ";
-
-                    filter += $"{keyPropertie.Key}!=\"{keyPropertie.Value}\"";
-                }
-
-            }
-
-            return filter;
-
-        }
-
-
         public static bool CheckUserActionPermission(int rowidFeature, int actionRowid, IAuthenticationService authenticationService)
         {
             try
