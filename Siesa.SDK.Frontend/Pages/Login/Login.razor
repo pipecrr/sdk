@@ -1,0 +1,247 @@
+@page "/login"
+@using System.ComponentModel.DataAnnotations
+@using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Shared.Backend
+@using Siesa.SDK.Frontend.Navigation
+@using Siesa.SDK.Frontend.Components.Layout
+@inject IAuthenticationService AuthenticationService
+@inject NavigationManager NavigationManager
+@inject IBackendManager backendManager
+@layout EmptyLayout
+<PageTitle>Login</PageTitle>
+<div class="login">
+
+    <div class="col-12 offset-md-1 col-md-10 px-0 px-md-3">
+        <div class="card_login col-12">
+            <div class="row image_back">
+                <div class="info_area col-md-12 col-lg-7 p-3 p-lg-4">
+                    <div class="col-12 p-0 pb-5 mb-5 mb-md-4 d-flex justify-content-between">
+                        <div>
+                            <img src="_content/Siesa.SDK.Frontend/assets/img/LogoSiesaBlanco.svg" height="38px" alt="logo_siesa_blanco">
+                        </div>
+                        <div class="d-sm-block d-md-none">
+                            <button class="btn btn-primary btn_ghost_def_1 btn-sm ml-2" data-toggle="modal"
+                                data-target="#infoModal"><i class="fa-solid fa-info"></i></button>
+                        </div>
+                    </div>
+                    <div class="info_card d-none d-sm-none d-md-block col-12 p-3 p-md-3 p-lg-4 mt-4">
+                        <h2 class="mb-md-2 mb-lg-3">Software para empresas</h2>
+                        <p class="mb-md-2 mb-lg-3">El software ERP Siesa Enterprise le permite acceder a toda la
+                            información de su compañía en tiempo real y desde cualquier dispositivo al contar con una
+                            plataforma segura en la nube.</p>
+                        <div class="d-flex justify-content-between">
+                            <button class="btn btn-primary btn_ghost_def_1 btn-sm px-4">+ Información</button>
+                            <div>
+                                <button class="btn btn-primary btn_ghost_def_1 btn-sm"><i
+                                        class="fa-solid fa-chevron-left"></i></button>
+                                <button class="btn btn-primary btn_ghost_def_1 btn-sm ml-2"><i
+                                        class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="login_area col-12 col-lg-5 p-3 p-lg-4">
+                    <div class="col-12 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
+                        <select class="select_connect" id="SelectConnect">
+                            <option>Esta_es_la_conexion_de_Desarrollo</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                        </select>
+
+                        <i class="ml-2 fa-solid fa-globe"></i>   
+                        <div id="lang">
+                        <DxButton class="btn ml-2 d-flex btn_region fi fi-co fi fi-co fis rounded-circle" style="height:20px" Click="() => IsOpen = !IsOpen" >
+
+                        </DxButton>                                                                     
+                        </div>
+                    </div>
+                    <div class="row align-items-center py-5">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-12">
+                            <div class="row">
+                                <div class="col-12 p-0 d-flex justify-content-center pb-4">
+                                    <img src="_content/Siesa.SDK.Frontend/assets/img/LogoSiesaNoSub.svg" height="48px" alt="logo_siesa_color">
+                                </div>
+                                <div class="col-12 p-0 pb-4 pb-md-0 pb-lg-5">
+                                    <div class="col-12 text-center title_1">
+                                        <ResourceViewer ResourceTag="Project.Name" RowidCulture=1 />
+                                    </div>
+                                    <div class="col-12 text-center title_2">
+                                        <ResourceViewer ResourceTag="Project.Welcome" RowidCulture=1 />                                        
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border_left_md col-12 col-sm-12 col-md-6 col-lg-12">
+                            <div class="col-12 offset-sm-2 col-sm-8 offset-md-1 col-md-10 offset-lg-2 col-lg-8 px-md-3 px-lg-0">
+                                <EditForm Model="@model" OnValidSubmit="HandleValidSubmit">
+                                    <DataAnnotationsValidator />
+                                    <div class="form-group">
+                                        <label class="col_form_label col_form_label-sm font-weight-bold"
+                                            for="Username">
+                                            <ResourceViewer ResourceTag="BLUser.Username" RowidCulture=1 />
+                                        </label>
+                                        <InputText @bind-Value="model.Username" class="form-control form-control-sm" />
+                                        <ValidationMessage For="@(() => model.Username)" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col_form_label col_form_label-sm font-weight-bold"
+                                            for="Password">
+                                            <ResourceViewer ResourceTag="BLUser.Password" RowidCulture=1 />
+                                        </label>
+                                        <InputText @bind-Value="model.Password" type="password" class="form-control form-control-sm" />
+                                        <ValidationMessage For="@(() => model.Password)" />
+                                    </div>
+                                    <button class="btn btn-primary btn_primary_def_1 btn-sm w-100 mt-2">
+                                        @if (loading)
+                                        {
+                                            <span class="spinner-border spinner-border-sm mr-1"></span>
+                                        }
+                                        <ResourceViewer ResourceTag="BLUser.Login" RowidCulture=1 />
+                                    </button>
+                                    @if (!string.IsNullOrEmpty(error))
+                                    {
+                                        <div class="alert alert-danger mt-3 mb-0">@error</div>
+                                    }
+                                </EditForm>                                
+                            </div>
+                            <div class="col-12 p-0 text-center pt-4">
+                                <a class="link_login" href="">
+                                    <ResourceViewer ResourceTag="Project.ForgotPassword" RowidCulture=1 /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 p-0 text-center copy_right_text">
+                        <ResourceViewer ResourceTag="Project.Version" RowidCulture=1 /> -
+                        <ResourceViewer ResourceTag="Project.Copy" RowidCulture=1 />                                                                
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content info_card_modal">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span class="text-white" aria-hidden="true">&times;</span>
+                    </button>
+                    <h2 class="mb-2 pr-3">Software para empresas</h2>
+                    <p class="mb-2">El software ERP Siesa Enterprise le permite acceder a toda la información de su
+                        compañía en tiempo real y desde cualquier dispositivo al contar con una plataforma segura en la
+                        nube.</p>
+                    <div class="d-flex justify-content-between">
+                        <button class="btn btn-primary btn_ghost_def_1 btn-sm px-4">+ Información</button>
+                        <div>
+                            <button class="btn btn-primary btn_ghost_def_1 btn-sm"><i
+                                    class="fa-solid fa-chevron-left"></i></button>
+                            <button class="btn btn-primary btn_ghost_def_1 btn-sm ml-2"><i
+                                    class="fa-solid fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="LangModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span class="text-white" aria-hidden="true">&times;</span>
+                    </button>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="login_loading">
+        <div>
+            <div class="text-center fa-4x font_color_3 mb-4">
+                <i class="fas fa-spinner fa-pulse"></i>
+            </div>
+            <div class="text-center">
+                <img src="_content/Siesa.SDK.Frontend/assets/img/LogoSiesa.svg" height="82px" alt="logo_siesa">
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<DxDropDown
+    @bind-IsOpen="@IsOpen"
+    MinWidth="max(25vw, 250px)"
+    PositionMode="DropDownPositionMode.Bottom"
+    PositionTarget="#lang"
+    RestrictionTarget="#Navigation-DropDown-Customization"
+    CloseMode="DropDownCloseMode.Close"
+    PreventCloseOnPositionTargetClick="true"
+    HeaderVisible="false"    
+    FooterVisible="false">
+    <BodyTemplate>
+        <Lang/>
+    </BodyTemplate>    
+</DxDropDown>
+
+@code {
+    private Model model = new Model();
+    private bool loading;
+    private string error;
+    bool IsOpen { get; set; } = false;
+
+    protected override void OnInitialized()
+    {
+        // redirect to home if already logged in
+        if (AuthenticationService.User != null)
+        {
+            NavigationManager.NavigateTo("");
+        }
+
+        backendManager.SyncWithMasterBackend();
+        foreach (var backend in backendManager.GetBackendDict())
+        {
+            foreach (var business in backend.Value.businessRegisters.Businesses)
+            {
+                BusinessManagerFrontend.Instance.AddBusiness(business, backend.Value.Name);
+            }
+        }
+    }
+
+    private async void HandleValidSubmit()
+    {
+        loading = true;
+        try
+        {
+            await AuthenticationService.Login(model.Username, model.Password);
+            NavigationManager.TryGetQueryString("returnUrl", out string returnUrl);
+            if (returnUrl == null || returnUrl == "null")
+            {
+                returnUrl = "/";
+            }
+            NavigationManager.NavigateTo(returnUrl);
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            loading = false;
+            StateHasChanged();
+        }
+    }
+
+    private class Model
+    {
+        [Required]
+        public string Username { get; set; }
+
+        [Required]
+        public string Password { get; set; }
+    }
+}
