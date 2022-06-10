@@ -4,6 +4,7 @@
 @using Siesa.SDK.Shared.Backend
 @using Siesa.SDK.Frontend.Navigation
 @using Siesa.SDK.Frontend.Components.Layout
+@using Siesa.SDK.Entities;
 @inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavigationManager
 @inject IBackendManager backendManager
@@ -65,10 +66,10 @@
                                 </div>
                                 <div class="col-12 p-0 pb-4 pb-md-0 pb-lg-5">
                                     <div class="col-12 text-center title_1">
-                                        <ResourceViewer ResourceTag="Project.Name" RowidCulture=1 />
+                                        <ResourceViewer ResourceTag="Project.Name" RowidCulture=@RowidCulture />
                                     </div>
                                     <div class="col-12 text-center title_2">
-                                        <ResourceViewer ResourceTag="Project.Welcome" RowidCulture=1 />                                        
+                                        <ResourceViewer ResourceTag="Project.Welcome" RowidCulture=@RowidCulture />                                        
                                     </div>
                                     
                                 </div>
@@ -81,7 +82,7 @@
                                     <div class="form-group">
                                         <label class="col_form_label col_form_label-sm font-weight-bold"
                                             for="Username">
-                                            <ResourceViewer ResourceTag="BLUser.Username" RowidCulture=1 />
+                                            <ResourceViewer ResourceTag="BLUser.Username" RowidCulture=@RowidCulture />
                                         </label>
                                         <InputText @bind-Value="model.Username" class="form-control form-control-sm" />
                                         <ValidationMessage For="@(() => model.Username)" />
@@ -89,7 +90,7 @@
                                     <div class="form-group">
                                         <label class="col_form_label col_form_label-sm font-weight-bold"
                                             for="Password">
-                                            <ResourceViewer ResourceTag="BLUser.Password" RowidCulture=1 />
+                                            <ResourceViewer ResourceTag="BLUser.Password" RowidCulture=@RowidCulture />
                                         </label>
                                         <InputText @bind-Value="model.Password" type="password" class="form-control form-control-sm" />
                                         <ValidationMessage For="@(() => model.Password)" />
@@ -99,7 +100,7 @@
                                         {
                                             <span class="spinner-border spinner-border-sm mr-1"></span>
                                         }
-                                        <ResourceViewer ResourceTag="BLUser.Login" RowidCulture=1 />
+                                        <ResourceViewer ResourceTag="BLUser.Login" RowidCulture=@RowidCulture />
                                     </button>
                                     @if (!string.IsNullOrEmpty(error))
                                     {
@@ -109,13 +110,13 @@
                             </div>
                             <div class="col-12 p-0 text-center pt-4">
                                 <a class="link_login" href="">
-                                    <ResourceViewer ResourceTag="Project.ForgotPassword" RowidCulture=1 /></a>
+                                    <ResourceViewer ResourceTag="Project.ForgotPassword" RowidCulture=@RowidCulture /></a>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 p-0 text-center copy_right_text">
-                        <ResourceViewer ResourceTag="Project.Version" RowidCulture=1 /> -
-                        <ResourceViewer ResourceTag="Project.Copy" RowidCulture=1 />                                                                
+                        <ResourceViewer ResourceTag="Project.Version" RowidCulture=@RowidCulture /> -
+                        <ResourceViewer ResourceTag="Project.Copy" RowidCulture=@RowidCulture />                                                                
                     </div>
                 </div>
             </div>
@@ -187,7 +188,7 @@
     HeaderVisible="false"    
     FooterVisible="false">
     <BodyTemplate>
-        <Lang/>
+        <Lang _Cultures = "@cultures" _idRow="@RowidCulture" />
     </BodyTemplate>    
 </DxDropDown>
 
@@ -196,6 +197,17 @@
     private bool loading;
     private string error;
     bool IsOpen { get; set; } = false;
+
+    private short RowidCulture {get;set;} = 1;
+
+    List<E00021_Culture> cultures = new List<E00021_Culture>()
+        {
+            new E00021_Culture(){Rowid =1, CountryCode="co",Description="Colombia",LanguageCode="Es-co"},
+            new E00021_Culture(){Rowid =2, CountryCode="br",Description="Brasil",LanguageCode="pr-br"},
+            new E00021_Culture(){Rowid =3, CountryCode="de",Description="Alemain",LanguageCode="de-de"},
+            new E00021_Culture(){Rowid =4, CountryCode="us",Description="United States",LanguageCode="en-us"},
+            new E00021_Culture(){Rowid =4, CountryCode="fr",Description="French",LanguageCode="fr-fr"}
+        };
 
     protected override void OnInitialized()
     {
