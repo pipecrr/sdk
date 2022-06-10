@@ -10,7 +10,7 @@
 @inject IBackendManager backendManager
 @layout EmptyLayout
 <PageTitle>Login</PageTitle>
-<div class="login">
+<div class="back_login">
 
     <div class="col-12 offset-md-1 col-md-10 px-0 px-md-3">
         <div class="card_login col-12">
@@ -53,8 +53,8 @@
 
                         <i class="ml-2 fa-solid fa-globe"></i>   
                         <div id="lang">
-                        <DxButton class="btn ml-2 d-flex btn_region fi fi-co fi fi-co fis rounded-circle" style="height:20px" Click="() => IsOpen = !IsOpen" >
-
+                        <DxButton class="btn ml-2 d-flex btn_region " style="padding:0"  Click="() => IsOpen = !IsOpen" >
+                            <span class="fi fi-co fi fi-co fis rounded-circle" style="height:16px" ></span>
                         </DxButton>                                                                     
                         </div>
                     </div>
@@ -188,7 +188,7 @@
     HeaderVisible="false"    
     FooterVisible="false">
     <BodyTemplate>
-        <Lang _Cultures = "@cultures" _idRow="@RowidCulture" />
+        <Lang _Cultures = "@cultures" _idRow="@RowidCulture" OnChangeCulture=@OnChangeCulture />
     </BodyTemplate>    
 </DxDropDown>
 
@@ -225,6 +225,13 @@
                 BusinessManagerFrontend.Instance.AddBusiness(business, backend.Value.Name);
             }
         }
+    }
+
+    private async void OnChangeCulture(short rowidCulture)
+    {
+        RowidCulture = rowidCulture;
+        IsOpen = false;
+        StateHasChanged();
     }
 
     private async void HandleValidSubmit()

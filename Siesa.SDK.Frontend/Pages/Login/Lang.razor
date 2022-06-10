@@ -7,7 +7,7 @@
                     <label class="col-12 text-center">Selecciona tu Pais</label>
                     @foreach (var culture in _Cultures)
                     {
-                        <label class="col-12 btn btn-light text-left rounded-pill">                            
+                        <label class="col-12 btn btn-light text-left rounded-pill" @onclick=@((e) => OnChangeCulture(culture.Rowid) )>                            
                         <i class="btn ml-2 btn_region fi fi-@culture.CountryCode fi fi-@culture.CountryCode fis rounded-pill" style="height: 15px;"></i>                        
                         @culture.Description
                     </label>    
@@ -31,5 +31,8 @@
     public short _idRow {get;set;} 
     [Parameter]
     public List<E00021_Culture> _Cultures {get;set;}
+
+    [Parameter]
+    public Action<short> OnChangeCulture {get;set;}
     
 }
