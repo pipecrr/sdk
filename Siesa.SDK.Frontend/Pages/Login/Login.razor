@@ -56,9 +56,11 @@
 
                         <i class="ml-2 fa-solid fa-globe"></i>   
                         <div id="lang">
-                        <DxButton class="btn ml-2 d-flex btn_region " style="padding:0"  Click="() => IsOpen = !IsOpen" >
-                            <span class="fi fi-co fi fi-co fis rounded-circle" style="height:16px" ></span>
-                        </DxButton>                                                                     
+                            <div class="position-relative">
+                                <DxButton class="btn ml-2 d-flex btn_region" style="padding:0" Click="() => IsOpen = !IsOpen" >
+                                    <span class="fi fi-co fi fi-co fis rounded-circle" style="height:16px" ></span>
+                                </DxButton>                         
+                            </div>                                            
                         </div>
                     </div>
                     <div class="row align-items-center py-5">
@@ -182,12 +184,13 @@
 
 <DxDropDown
     @bind-IsOpen="@IsOpen"
-    MinWidth="max(25vw, 250px)"
     PositionMode="DropDownPositionMode.Bottom"
     PositionTarget="#lang"
     RestrictionTarget="#Navigation-DropDown-Customization"
     CloseMode="DropDownCloseMode.Close"
     PreventCloseOnPositionTargetClick="true"
+    Id = "boxRegion"
+    CssClass="region_tooltip"
     HeaderVisible="false"    
     FooterVisible="false">
     <BodyTemplate>
