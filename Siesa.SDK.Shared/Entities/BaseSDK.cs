@@ -21,6 +21,7 @@ namespace Siesa.SDK.Entities
         [Timestamp]
         public virtual byte[] RowVersion { get; set; }
 
+        public uint xmin { get; set; }
         public virtual bool CheckRowid(Int64 rowid)
         {
             return Rowid.Equals(rowid);

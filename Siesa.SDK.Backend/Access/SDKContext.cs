@@ -117,6 +117,24 @@ namespace Siesa.SDK.Backend.Access
             }
         }
 
+        public EnumDBType GetEnumDBType()
+        {
+            var dataBaseProvider = this.Database.ProviderName;
+            if (dataBaseProvider.Contains("SqlServer"))
+            {
+                return EnumDBType.SQLServer;
+            }
+            else if (dataBaseProvider.Contains("PostgreSQL"))
+            {
+                return EnumDBType.PostgreSQL;
+            }
+            else
+            {
+                return EnumDBType.Unknown;
+            }
+
+        }
+
         public override int SaveChanges()
         {
             foreach (var entry in ChangeTracker.Entries())
@@ -186,7 +204,14 @@ namespace Siesa.SDK.Backend.Access
 
             modelBuilder.AddNamingConvention();
             modelBuilder.AddRemoveOneToManyCascadeConvention();
-
+            var dbEnumType = GetEnumDBType();
+            if(dbEnumType == EnumDBType.PostgreSQL)
+            {
+                modelBuilder.AddConcurrencyTokenConvention();
+            }else if(dbEnumType == EnumDBType.SQLServer)
+            {
+                modelBuilder.RemoveXMINConvention();
+            }
             modelBuilder.ApplyConventions();
             base.OnModelCreating(modelBuilder);
         }

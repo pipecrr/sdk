@@ -80,6 +80,32 @@ namespace Siesa.SDK.Backend.Extensions
                 .ToList()
                 .ForEach(fk => fk.DeleteBehavior = DeleteBehavior.Restrict));
         }
+
+        public static void RemoveXMINConvention(this ModelBuilder builder)
+        {
+            Conventions.Add(et => {
+                var xmin_property = et.FindProperty("xmin");
+                if(xmin_property != null)
+                {
+                    builder.Entity(et.Name).Ignore(xmin_property.Name);
+                }
+            });
+        }
+
+        public static void AddConcurrencyTokenConvention(this ModelBuilder builder)
+        {
+            Conventions.Add(et => {
+                var xmin_property = et.FindProperty("xmin");
+                if(xmin_property != null)
+                {
+                    // xmin_property.IsConcurrencyToken = true;
+                    // xmin_property.SetColumnType("xid");
+                    // xmin_property.ValueGenerated = ValueGenerated.OnAddOrUpdate;
+
+                    builder.Entity(et.Name).Property(xmin_property.Name).HasColumnName("xmin").HasColumnType("xid").ValueGeneratedOnAddOrUpdate().IsConcurrencyToken();
+                }
+            });
+        }
         
         public static void ApplyConventions(this ModelBuilder builder)
         {

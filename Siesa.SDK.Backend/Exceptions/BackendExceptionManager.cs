@@ -16,12 +16,24 @@ namespace Siesa.SDK.Backend.Exceptions
             messageBuilder.AppendLine("Exception updating record(s) in the database: ");
             if (exception.InnerException != null)
             {
-                messageBuilder.Append(ExceptionToString((Microsoft.Data.SqlClient.SqlException) exception.InnerException, dbContext));
+                if(exception.InnerException is Microsoft.Data.SqlClient.SqlException)
+                {
+                    messageBuilder.Append(ExceptionToStringSQL((Microsoft.Data.SqlClient.SqlException) exception.InnerException, dbContext));
+                }else if(exception.InnerException is Npgsql.PostgresException)
+                {
+                    messageBuilder.Append(ExceptionToPostgreSQL((Npgsql.PostgresException) exception.InnerException, dbContext));
+                }
+                
             }
             return messageBuilder.ToString();
         }
 
-        private static string ExceptionToString(Microsoft.Data.SqlClient.SqlException exception, SDKContext dbContext)
+        private static string ExceptionToPostgreSQL(Npgsql.PostgresException exception, SDKContext dbContext)
+        {
+            return exception.Message;
+        }
+
+        private static string ExceptionToStringSQL(Microsoft.Data.SqlClient.SqlException exception, SDKContext dbContext)
         { 
             string errorMessage = string.Empty;
             var messageBuilder = new StringBuilder();
