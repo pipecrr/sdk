@@ -3,23 +3,16 @@
     <DxFormLayout Data="@_Cultures" CssClass="w-100">
             <div class="container-fluid">
             <div class="row">
-                <div class="col-6">
-                    <label class="col-12 text-center">Selecciona tu Pais</label>
+                <div class="col-12">
+                    <label class="col-12 text-center"><ResourceViewer ResourceTag="BLLogin.SelectCulture" RowidCulture=@_idRow /></label>
                     @foreach (var culture in _Cultures)
                     {
-                        <label class="col-12 btn btn-light text-left rounded-pill" @onclick=@((e) => OnChangeCulture(culture.Rowid) )>                            
-                        <i class="btn ml-2 btn_region fi fi-@culture.CountryCode fi fi-@culture.CountryCode fis rounded-pill" style="height: 15px;"></i>                        
-                        @culture.Description
-                    </label>    
+                        <DxButton class="col-12 btn btn-light text-left rounded-pill" style="margin-bottom: 5px;"  Click="((e) => OnChangeCulture(culture.Rowid))" >
+                            <span class="ml-2 btn_region fi fi-@culture.CountryCode fis rounded-circle" style="height:16px" ></span>
+                            @culture.Description - @culture.LanguageCode.ToUpper()
+                        </DxButton>                          
                     }                    
-                </div>
-                <div class="col-6">
-                    <label class="col-12 text-center">Selecciona tu Idioma</label>
-                    <label class="col-12 btn btn-light text-left rounded-pill">Español AR</label>
-                    <label class="col-12 btn btn-light text-left rounded-pill active">Español CO</label>
-                    <label class="col-12 btn btn-light text-left rounded-pill">Español ES</label>
-                    <label class="col-12 btn btn-light text-left rounded-pill">Español MX</label>
-                </div>
+                </div>                
             </div>
         </div>                    
     </DxFormLayout>

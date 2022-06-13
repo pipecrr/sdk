@@ -5,6 +5,9 @@
 @using Siesa.SDK.Frontend.Navigation
 @using Siesa.SDK.Frontend.Components.Layout
 @using Siesa.SDK.Entities;
+@using Siesa.SDK.Shared.Business;
+@using Siesa.SDK.Protos;
+@using Newtonsoft.Json;
 @inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavigationManager
 @inject IBackendManager backendManager
@@ -194,20 +197,14 @@
 
 @code {
     private Model model = new Model();
+    
     private bool loading;
     private string error;
     bool IsOpen { get; set; } = false;
 
     private short RowidCulture {get;set;} = 1;
 
-    List<E00021_Culture> cultures = new List<E00021_Culture>()
-        {
-            new E00021_Culture(){Rowid =1, CountryCode="co",Description="Colombia",LanguageCode="Es-co"},
-            new E00021_Culture(){Rowid =2, CountryCode="br",Description="Brasil",LanguageCode="pr-br"},
-            new E00021_Culture(){Rowid =3, CountryCode="de",Description="Alemain",LanguageCode="de-de"},
-            new E00021_Culture(){Rowid =4, CountryCode="us",Description="United States",LanguageCode="en-us"},
-            new E00021_Culture(){Rowid =4, CountryCode="fr",Description="French",LanguageCode="fr-fr"}
-        };
+    List<E00021_Culture> cultures;
 
     protected override void OnInitialized()
     {
@@ -218,6 +215,7 @@
         }
 
         backendManager.SyncWithMasterBackend();
+        
         foreach (var backend in backendManager.GetBackendDict())
         {
             foreach (var business in backend.Value.businessRegisters.Businesses)
@@ -225,6 +223,7 @@
                 BusinessManagerFrontend.Instance.AddBusiness(business, backend.Value.Name);
             }
         }
+        getCultures();
     }
 
     private async void OnChangeCulture(short rowidCulture)
@@ -253,6 +252,18 @@
             loading = false;
             StateHasChanged();
         }
+    }
+
+    private async void getCultures(){        
+        var cultureBL = Frontend.BusinessManagerFrontend.Instance.GetBusiness("BLCulture", AuthenticationService);
+            if(cultureBL == null)
+            {
+                throw new Exception("Culture Service not found");
+            }
+            var _Allcultures= await cultureBL.GetData(null,null);
+            if(_Allcultures != null){
+                cultures = _Allcultures.Data.Select(x => JsonConvert.DeserializeObject<E00021_Culture>(x)).Where(x=>x.CountryCode != null).ToList();
+            }    
     }
 
     private class Model
