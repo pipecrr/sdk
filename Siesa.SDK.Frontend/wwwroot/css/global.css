@@ -1,4 +1,30 @@
-﻿body {
+﻿:root {
+    --color_primary: #1031A3;
+    --color_secondary: #2D71E6;
+    --color_text: #19283F;
+    --color_border: #CCCCCC;
+    --color_back: #FCFCFC;
+    --color_primary_dark: #011865;
+    --color_primary_light: #585AD5;
+    --color_light: #FFFFFF;
+    --color_siesa_1: #1031A3;
+    --color_siesa_2: #2D71E6;
+    --color_siesa_3: #20CAE1;
+}
+*{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+.font_color_1{
+    color: var(--color_siesa_1);
+}
+.font_color_2{
+    color: var(--color_siesa_2);
+}
+.font_color_3{
+    color: var(--color_siesa_3);
+}
+
+body {
     background: #F0F3F4 0% 0% no-repeat padding-box;
 }
 
