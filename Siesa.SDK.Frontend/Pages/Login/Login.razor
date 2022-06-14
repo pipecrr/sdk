@@ -57,9 +57,9 @@
                         <i class="ml-2 fa-solid fa-globe"></i>   
                         <div id="lang">
                             <div class="position-relative">
-                                <DxButton class="btn ml-2 d-flex btn_region" style="padding:0" Click="() => IsOpen = !IsOpen" >
+                                <button class="btn ml-2 d-flex btn_region" style="padding:0" @onclick="() => IsOpen = !IsOpen">
                                     <span class="fi fi-@selectedCulture.CountryCode fis rounded-circle" style="height:16px" ></span>
-                                </DxButton>                         
+                                </button>                                
                             </div>                                            
                         </div>
                     </div>
@@ -280,8 +280,8 @@
                 Description="Colombia",
                 LanguageCode="Es-co"};            
             }
-        }
-        
+    }
+       
     
     private class Model
     {

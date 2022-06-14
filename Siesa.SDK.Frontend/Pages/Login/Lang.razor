@@ -1,4 +1,6 @@
 @using Siesa.SDK.Entities;
+
+
 <div class="d-flex flex-fill pt-1 pb-2 popup-demo-item">
     <DxFormLayout Data="@_Cultures" CssClass="w-100">           
             
@@ -7,20 +9,20 @@
             <div class="p-3">
                 @foreach (var culture in _Cultures)
                 {
-                    <DxButton class="btn btn_ghost_def_2 btn-sm px-2 mb-1 w-100 d-flex align-items-center" Click="((e) => OnChangeCulture(culture.Rowid))" >
+                    <Button class="btn btn_ghost_def_2 btn-sm px-2 mb-1 w-100 d-flex align-items-center" @onclick="((e) => OnChangeCulture(culture.Rowid))" >
                         <div class="d-flex mr-2 btn_region">
                             <span class="fi fi-@culture.CountryCode fis"></span>
                         </div>
                         <div class="region_tooltip_text">
                             <span>@culture.Description - @culture.LanguageCode.ToUpper()</span>
                         </div>                                
-                    </DxButton>                          
+                    </Button>                          
                 }                
             </div>                    
         </div>                    
     </DxFormLayout>
     
-</div>
+    </div>
 
 @code{
     [Parameter]

@@ -1,4 +1,3 @@
-
 .login_loading{
     background-color: var(--color_back);
     width: 140vw;
@@ -132,7 +131,48 @@
     max-width: calc(100% - 60px);
     text-overflow: ellipsis;
 }
-
+.btn_region{
+    min-width: 16px;
+    min-height: 16px;
+    border-radius: 50% !important;
+    padding: 0 !important;
+    overflow: hidden;
+    border: none !important;
+}
+.region_tooltip{
+    min-width: 230px;
+    max-width: 230px;
+    max-height: 280px;
+    border-radius: 4px;
+    background-color: var(--color_light);
+    position: absolute;
+    top: 28px;
+    right: -16px;
+    z-index: 1;
+    box-shadow: 3px 3px 12px rgba(25, 48, 157, 0.2);
+    display: none;
+}
+.region_tooltip::before {
+    content: "";
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    top: -8px;
+    right: 15px;
+    border-top: 0px solid transparent;
+    border-right: 9px solid transparent;
+    border-bottom: 9px solid white;
+    border-left: 9px solid transparent;
+}
+.region_tooltip>div{
+    max-height:240px; 
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+.region_tooltip_text{
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
 .title_1{
     font-size: 2rem;
     color: var(--color_primary);
@@ -157,6 +197,39 @@
     font-size: 0.75rem;
     color: var(--color_text);
 }
+
+.btn_primary_def_1{
+    background-color: var(--color_primary) !important;
+    border-color: var(--color_primary) !important;
+    border-radius: 1rem !important;
+    font-weight: 700 !important;
+}
+.btn_primary_def_1:hover{
+    background-color: var(--color_primary_dark) !important;
+    border-color: var(--color_primary_dark) !important;
+}
+.btn_ghost_def_1{
+    background-color: transparent !important;
+    border-color: transparent !important;
+    border-radius: 1rem !important;
+    font-weight: 700 !important;
+    color: var(--color_light);
+    min-width: 31px;
+    box-shadow: inset 0px 0px 0px 2px var(--color_light);
+}
+.btn_ghost_def_1:hover{
+    background-color: var(--color_primary_light) !important;
+    border-color: transparent !important;
+    border-radius: 1rem !important;
+    font-weight: 700 !important;
+    color: var(--color_light);
+    min-width: 31px;
+    box-shadow: inset 0px 0px 0px 2px var(--color_light);
+}
+.btn_ghost_def_1:focus{
+    box-shadow: inset 0px 0px 0px 2px var(--color_light) !important;
+}
+
 
 /* ------------ RESPONSIVE INICIO ------------ */
 @media (max-width: 991.98px) { 
