@@ -58,7 +58,7 @@
                         <div id="lang">
                             <div class="position-relative">
                                 <DxButton class="btn ml-2 d-flex btn_region" style="padding:0" Click="() => IsOpen = !IsOpen" >
-                                    <span class="fi fi-co fi fi-co fis rounded-circle" style="height:16px" ></span>
+                                    <span class="fi fi-@selectedCulture.CountryCode fis rounded-circle" style="height:16px" ></span>
                                 </DxButton>                         
                             </div>                                            
                         </div>
@@ -200,13 +200,13 @@
 
 @code {
     private Model model = new Model();
-    
+
     private bool loading;
     private string error;
     bool IsOpen { get; set; } = false;
 
     private short RowidCulture {get;set;} = 1;
-
+    private E00021_Culture selectedCulture {get;set;}
     List<E00021_Culture> cultures;
 
     protected override void OnInitialized()
@@ -227,6 +227,7 @@
             }
         }
         getCultures();
+        getSelectedCulture();
     }
 
     private async void OnChangeCulture(short rowidCulture)
@@ -234,6 +235,7 @@
         RowidCulture = rowidCulture;
         IsOpen = false;
         StateHasChanged();
+        getSelectedCulture();
     }
 
     private async void HandleValidSubmit()
@@ -268,7 +270,19 @@
                 cultures = _Allcultures.Data.Select(x => JsonConvert.DeserializeObject<E00021_Culture>(x)).Where(x=>x.CountryCode != null).ToList();
             }    
     }
-
+    private  void getSelectedCulture(){
+        if(cultures != null){
+            selectedCulture = cultures.FirstOrDefault(x=>x.Rowid==RowidCulture);
+        }else{
+            selectedCulture = new E00021_Culture(){
+                Rowid =1, 
+                CountryCode="co",
+                Description="Colombia",
+                LanguageCode="Es-co"};            
+            }
+        }
+        
+    
     private class Model
     {
         [Required]
