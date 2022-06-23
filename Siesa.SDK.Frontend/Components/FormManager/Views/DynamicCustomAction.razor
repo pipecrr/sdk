@@ -2,17 +2,25 @@
 @attribute [Authorize]
 @using Microsoft.AspNetCore.Authorization
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
+@layout EmptyLayout
 @if (ErrorMsg != null && ErrorMsg != "")
 {
     <text>@ErrorMsg</text>
 }
 else if (BusinessObj != null)
 {
-    @GetRenderFragment()
+    <CascadingValue Value="this">
+        <LayoutView Layout="@CustomLayout">
+            @GetRenderFragment()
+        </LayoutView>
+    </CascadingValue>
 }
+
 
 @code {
     [Parameter] public string ActionName { get; set; }
+    private Type CustomLayout { get; set; } = typeof(MainLayout);
+
     private RenderFragment GetRenderFragment(){
         var method = BusinessObj.GetType().GetMethod(ActionName);
         if (method == null)
@@ -23,5 +31,14 @@ else if (BusinessObj != null)
         }
 
         return (RenderFragment)method.Invoke(BusinessObj, null);
+    }
+
+    public void SetLayout(Type layout)
+    {
+        if (layout != CustomLayout)
+        {
+            this.CustomLayout = layout;
+            StateHasChanged();
+        }
     }
 }
