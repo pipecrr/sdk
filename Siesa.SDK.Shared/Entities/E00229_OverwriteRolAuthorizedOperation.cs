@@ -14,7 +14,7 @@ namespace Siesa.SDK.Entities
 	/// <summary>
 	/// Sobrescritura de operaciones  autorizadas por rol  y usuario
 	/// </summary>
-
+	[SDKLogEntity]
 	[Index(nameof(RowidRolAuthorizedOperation), nameof(RowidCompany), nameof(RowidUser), Name = "IX_e00229_1", IsUnique = true)]
 	public class E00229_OverwriteRolAuthorizedOperation : BaseAudit<int>
 	{
