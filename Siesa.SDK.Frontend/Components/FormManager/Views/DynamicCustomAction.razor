@@ -1,8 +1,13 @@
 ﻿@page "/{BusinessName}/{ActionName}/"
-@attribute [Authorize]
-@using Microsoft.AspNetCore.Authorization
+@using Siesa.SDK.Shared.DataAnnotations
+@using System.Net;
+@using Siesa.SDK.Shared.Services
+@using System.Reflection
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
 @layout EmptyLayout
+@inject NavigationManager NavigationManager
+@inject IAuthenticationService AuthenticationService
+
 @if (ErrorMsg != null && ErrorMsg != "")
 {
     <text>@ErrorMsg</text>
@@ -20,13 +25,31 @@ else if (BusinessObj != null)
 @code {
     [Parameter] public string ActionName { get; set; }
     private Type CustomLayout { get; set; } = typeof(MainLayout);
+    private void RedirectToLogin()
+    {
+        var returnUrl = WebUtility.UrlEncode(new Uri(NavigationManager.Uri).PathAndQuery);
+        NavigationManager.NavigateTo($"login?returnUrl={returnUrl}");
+    }
 
     private RenderFragment GetRenderFragment(){
-        var method = BusinessObj.GetType().GetMethod(ActionName);
+        MethodInfo method = BusinessObj.GetType().GetMethod(ActionName);
         if (method == null)
         {
+            if(AuthenticationService.User == null)
+            {
+                RedirectToLogin();
+                return null;
+            }
+
             ErrorMsg = "Method not found";
             StateHasChanged();
+            return null;
+        }
+
+        var externalView = method.GetCustomAttributes(typeof(SDKExternalView), false).FirstOrDefault() as SDKExternalView;
+        if (externalView == null && AuthenticationService.User == null)
+        {
+            RedirectToLogin();
             return null;
         }
 
