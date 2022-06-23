@@ -14,7 +14,7 @@ namespace Siesa.SDK.Entities
 	/// <summary>
 	/// Operaciones autorizadas por rol
 	/// </summary>
-
+	[SDKLogEntity]
 	[Index(nameof(RowidRol), nameof(RowidFeature), Name = "IX_e00228_1", IsUnique = true)]
 	public class E00228_RolAuthorizedOperation : BaseAudit<int>
 	{
