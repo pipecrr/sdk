@@ -100,22 +100,25 @@
 
     protected async override Task OnInitializedAsync()
     {
-        ProfileMenu = new E00061_Menu()
+        if(AuthenticationService.User != null)
         {
-            ResourceTag = "BLUser.Profile",
-            SubMenus = new List<E00061_Menu>(),
-            CurrentText = "",
-        };
-        ProfileMenu.SubMenus.Add(new E00061_Menu()
-        {
-            ResourceTag = "BLUser.EditProfile",
-            Url = $"/BLUser/edit/{AuthenticationService.User.Rowid}/",
-        });
-        ProfileMenu.SubMenus.Add(new E00061_Menu()
-        {
-            ResourceTag = "BLUser.Logout",
-            Url = "/logout"
-        });
+            ProfileMenu = new E00061_Menu()
+            {
+                ResourceTag = "BLUser.Profile",
+                SubMenus = new List<E00061_Menu>(),
+                CurrentText = "",
+            };
+            ProfileMenu.SubMenus.Add(new E00061_Menu()
+            {
+                ResourceTag = "BLUser.EditProfile",
+                Url = $"/BLUser/edit/{AuthenticationService.User.Rowid}/",
+            });
+            ProfileMenu.SubMenus.Add(new E00061_Menu()
+            {
+                ResourceTag = "BLUser.Logout",
+                Url = "/logout"
+            });
+        }
         await base.OnInitializedAsync();
     }
 
