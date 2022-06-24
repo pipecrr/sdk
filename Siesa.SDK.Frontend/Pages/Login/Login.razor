@@ -11,6 +11,8 @@
 @inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavigationManager
 @inject IBackendManager backendManager
+@inject IJSRuntime JSRuntime
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService;
 @layout EmptyLayout
 <PageTitle>Login</PageTitle>
 <div class="back_login">
@@ -21,7 +23,8 @@
                 <div class="info_area col-md-12 col-lg-7 p-3 p-lg-4">
                     <div class="col-12 p-0 pb-5 mb-5 mb-md-4 d-flex justify-content-between">
                         <div>
-                            <img src="_content/Siesa.SDK.Frontend/assets/img/LogoSiesaBlanco.svg" height="38px" alt="logo_siesa_blanco">
+                            <img src="_content/Siesa.SDK.Frontend/assets/img/LogoSiesaBlanco.svg" height="38px"
+                                alt="logo_siesa_blanco">
                         </div>
                         <div class="d-sm-block d-md-none">
                             <button class="btn btn-primary btn_ghost_def_1 btn-sm ml-2" data-toggle="modal"
@@ -54,50 +57,53 @@
                             <option>5</option>
                         </select>
 
-                        <i class="ml-2 fa-solid fa-globe"></i>   
+                        <i class="ml-2 fa-solid fa-globe"></i>
                         <div id="lang">
                             <div class="position-relative">
-                                <DxButton class="btn ml-2 d-flex btn_region" style="padding:0" Click="() => IsOpen = !IsOpen" >
-                                    <span class="fi fi-co fi fi-co fis rounded-circle" style="height:16px" ></span>
-                                </DxButton>                         
-                            </div>                                            
+                                <button class="btn ml-2 d-flex btn_region" style="padding:0"
+                                    @onclick="() => IsOpen = !IsOpen">
+                                    <span class="fi fi-@selectedCulture.CountryCode fis rounded-circle"
+                                        style="height:16px"></span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div class="row align-items-center py-5">
                         <div class="col-12 col-sm-12 col-md-6 col-lg-12">
                             <div class="row">
                                 <div class="col-12 p-0 d-flex justify-content-center pb-4">
-                                    <img src="_content/Siesa.SDK.Frontend/assets/img/LogoSiesaNoSub.svg" height="48px" alt="logo_siesa_color">
+                                    <img src="_content/Siesa.SDK.Frontend/assets/img/LogoSiesaNoSub.svg" height="48px"
+                                        alt="logo_siesa_color">
                                 </div>
                                 <div class="col-12 p-0 pb-4 pb-md-0 pb-lg-5">
                                     <div class="col-12 text-center title_1">
                                         <ResourceViewer ResourceTag="Project.Name" RowidCulture=@RowidCulture />
                                     </div>
                                     <div class="col-12 text-center title_2">
-                                        <ResourceViewer ResourceTag="Project.Welcome" RowidCulture=@RowidCulture />                                        
+                                        <ResourceViewer ResourceTag="Project.Welcome" RowidCulture=@RowidCulture />
                                     </div>
-                                    
+
                                 </div>
                             </div>
                         </div>
                         <div class="border_left_md col-12 col-sm-12 col-md-6 col-lg-12">
-                            <div class="col-12 offset-sm-2 col-sm-8 offset-md-1 col-md-10 offset-lg-2 col-lg-8 px-md-3 px-lg-0">
+                            <div
+                                class="col-12 offset-sm-2 col-sm-8 offset-md-1 col-md-10 offset-lg-2 col-lg-8 px-md-3 px-lg-0">
                                 <EditForm Model="@model" OnValidSubmit="HandleValidSubmit">
                                     <DataAnnotationsValidator />
                                     <div class="form-group">
-                                        <label class="col_form_label col_form_label-sm font-weight-bold"
-                                            for="Username">
+                                        <label class="col_form_label col_form_label-sm font-weight-bold" for="Username">
                                             <ResourceViewer ResourceTag="BLUser.Username" RowidCulture=@RowidCulture />
                                         </label>
                                         <InputText @bind-Value="model.Username" class="form-control form-control-sm" />
                                         <ValidationMessage For="@(() => model.Username)" />
                                     </div>
                                     <div class="form-group">
-                                        <label class="col_form_label col_form_label-sm font-weight-bold"
-                                            for="Password">
+                                        <label class="col_form_label col_form_label-sm font-weight-bold" for="Password">
                                             <ResourceViewer ResourceTag="BLUser.Password" RowidCulture=@RowidCulture />
                                         </label>
-                                        <InputText @bind-Value="model.Password" type="password" class="form-control form-control-sm" />
+                                        <InputText @bind-Value="model.Password" type="password"
+                                            class="form-control form-control-sm" />
                                         <ValidationMessage For="@(() => model.Password)" />
                                     </div>
                                     <button class="btn btn-primary btn_primary_def_1 btn-sm w-100 mt-2">
@@ -111,23 +117,24 @@
                                     {
                                         <div class="alert alert-danger mt-3 mb-0">@error</div>
                                     }
-                                </EditForm>                                
+                                </EditForm>
                             </div>
                             <div class="col-12 p-0 text-center pt-4">
                                 <a class="link_login" href="">
-                                    <ResourceViewer ResourceTag="BLUser.ForgotPassword" RowidCulture=@RowidCulture /></a>
+                                    <ResourceViewer ResourceTag="Project.ForgotPassword" RowidCulture=@RowidCulture />
+                                </a>
+
                             </div>
                         </div>
                     </div>
                     <div class="col-12 p-0 text-center copy_right_text">
                         <ResourceViewer ResourceTag="Project.Version" RowidCulture=@RowidCulture /> -
-                        <ResourceViewer ResourceTag="Project.Copy" RowidCulture=@RowidCulture />                                                                
+                        <ResourceViewer ResourceTag="Project.Copy" RowidCulture=@RowidCulture />
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
     <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -154,6 +161,7 @@
         </div>
     </div>
 
+
     <div class="modal fade" id="LangModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -162,7 +170,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span class="text-white" aria-hidden="true">&times;</span>
                     </button>
-                    
+
                 </div>
             </div>
         </div>
@@ -182,31 +190,24 @@
 
 </div>
 
-<DxDropDown
-    @bind-IsOpen="@IsOpen"
-    PositionMode="DropDownPositionMode.Bottom"
-    PositionTarget="#lang"
-    RestrictionTarget="#Navigation-DropDown-Customization"
-    CloseMode="DropDownCloseMode.Close"
-    PreventCloseOnPositionTargetClick="true"
-    Id = "boxRegion"
-    CssClass="region_tooltip"
-    HeaderVisible="false"    
+<DxDropDown @bind-IsOpen="@IsOpen" PositionMode="DropDownPositionMode.Bottom" PositionTarget="#lang"
+    RestrictionTarget="#Navigation-DropDown-Customization" CloseMode="DropDownCloseMode.Close"
+    PreventCloseOnPositionTargetClick="true" Id="boxRegion" CssClass="region_tooltip" HeaderVisible="false"
     FooterVisible="false">
     <BodyTemplate>
-        <Lang _Cultures = "@cultures" _idRow="@RowidCulture" OnChangeCulture=@OnChangeCulture />
-    </BodyTemplate>    
+        <Lang _Cultures="@cultures" _idRow="@RowidCulture" OnChangeCulture=@OnChangeCulture />
+    </BodyTemplate>
 </DxDropDown>
 
 @code {
     private Model model = new Model();
-    
+
     private bool loading;
     private string error;
     bool IsOpen { get; set; } = false;
 
-    private short RowidCulture {get;set;} = 1;
-
+    private short RowidCulture { get; set; } = 1;
+    private E00021_Culture selectedCulture { get; set; }
     List<E00021_Culture> cultures;
 
     protected override void OnInitialized()
@@ -218,7 +219,7 @@
         }
 
         backendManager.SyncWithMasterBackend();
-        
+
         foreach (var backend in backendManager.GetBackendDict())
         {
             foreach (var business in backend.Value.businessRegisters.Businesses)
@@ -226,7 +227,11 @@
                 BusinessManagerFrontend.Instance.AddBusiness(business, backend.Value.Name);
             }
         }
+
         getCultures();
+        getSelectedCulture();
+        getUserlang();
+
     }
 
     private async void OnChangeCulture(short rowidCulture)
@@ -234,6 +239,8 @@
         RowidCulture = rowidCulture;
         IsOpen = false;
         StateHasChanged();
+        getSelectedCulture();
+        await localStorageService.SetItemAsync("userlang", RowidCulture.ToString());
     }
 
     private async void HandleValidSubmit()
@@ -256,18 +263,88 @@
             StateHasChanged();
         }
     }
+   
 
-    private async void getCultures(){        
-        var cultureBL = Frontend.BusinessManagerFrontend.Instance.GetBusiness("BLCulture", AuthenticationService);
-            if(cultureBL == null)
-            {
-                throw new Exception("Culture Service not found");
-            }
-            var _Allcultures= await cultureBL.GetData(null,null);
-            if(_Allcultures != null){
-                cultures = _Allcultures.Data.Select(x => JsonConvert.DeserializeObject<E00021_Culture>(x)).Where(x=>x.CountryCode != null).ToList();
-            }    
+    private async void getCultures()
+    {
+        cultures = await getCulturesAsync();
     }
+
+    private async Task<List<E00021_Culture>> getCulturesAsync(){
+        List<E00021_Culture> _cultures = new List<E00021_Culture>();
+                        var cultureBL = Frontend.BusinessManagerFrontend.Instance.GetBusiness("BLCulture", AuthenticationService);
+        if (cultureBL == null)
+        {
+            throw new Exception("Culture Service not found");
+        }
+        var _Allcultures = await cultureBL.GetData(null, null);
+        if (_Allcultures != null)
+        {
+            _cultures = _Allcultures.Data.Select(x => JsonConvert.DeserializeObject<E00021_Culture>(x)).Where(x => x.CountryCode !=
+            null).ToList();
+        }    
+        return _cultures;
+    }
+    private void getSelectedCulture()
+    {
+
+        if (cultures != null)
+        {
+            selectedCulture = cultures.FirstOrDefault(x => x.Rowid == RowidCulture);
+        }
+        else
+        {
+            cultureDefault();
+        }
+    }
+
+    private async void getUserlang()
+    {
+        string userlang;
+        try
+        {
+            userlang = await localStorageService.GetItemAsync<string>("userlang");
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.ToString());
+        }
+
+        if (cultures == null)
+        {
+           cultures = await getCulturesAsync();
+
+        }
+
+        if (userlang == null)
+            {
+                var BrowserLang = await JSRuntime.InvokeAsync<string>("getBrowserLang");
+                string[] language = BrowserLang.Split('-');
+                selectedCulture = cultures.FirstOrDefault(x => x.LanguageCode.ToLower() == language[0].ToLower() && x.CountryCode.ToLower() == language[1].ToLower());
+            }
+            else
+            {
+                selectedCulture = cultures.FirstOrDefault(x => x.Rowid == short.Parse(userlang));
+            }
+
+            if (selectedCulture == null){
+                cultureDefault();
+            }else{
+                OnChangeCulture(selectedCulture.Rowid);
+            }
+    }
+
+    private void cultureDefault(){
+        selectedCulture = new E00021_Culture()
+            {
+                Rowid = 1,
+                CountryCode = "co",
+                Description = "Colombia",
+                LanguageCode = "Es-co"
+            };
+    }
+
+
 
     private class Model
     {

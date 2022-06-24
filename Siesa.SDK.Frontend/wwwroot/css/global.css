@@ -19,7 +19,6 @@
     --color_primary_shadow: #1031A333;
     --shadow_standar: 0px 3px 12px var(--color_primary_shadow);
 }
-
 ::-webkit-scrollbar{
     width: 7px;
 }
@@ -30,7 +29,6 @@
     background-color: var(--color_border);
     border-radius: 10px;
 }
-
 *{
     font-family: Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
