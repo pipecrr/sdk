@@ -1,4 +1,21 @@
 ﻿@inherits LayoutComponentBase
+@using Siesa.SDK.Frontend.Components.Layout.Header
+@using Siesa.SDK.Entities
+@using System
+@using System.Collections.Generic
+@using System.Threading.Tasks
+@using Microsoft.AspNetCore.Components
+@using Siesa.SDK.Shared.Backend
+@using System.Linq
+@using Siesa.SDK.Shared.Utilities
+@using Siesa.SDK.Business
+@using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Frontend.Components.Layout.NavMenu
+@using Siesa.SDK.Frontend.Application
+@inject IAuthenticationService AuthenticationService
+@inject NavigationManager NavigationManager
+@inject IResourceManager ResourceManager
+
 <RadzenDialog />
 <DxGridLayout>
     <Rows>
@@ -11,20 +28,182 @@
     <Items>
         <DxGridLayoutItem Row="0" Column="0">
             <Template>
-                <div class="gridlayout-header gridlayout-item">
-                    <NavMenu />
-                </div>
+                <SDKHeader Menus="@Menus" />
             </Template>
         </DxGridLayoutItem>
         <DxGridLayoutItem Row="1" Column="0">
             <Template>
-                <TopBar />
-                <div class="gridlayout-content-parent gridlayout-item">
-                    <div class="gridlayout-content">
-                        @Body
-                    </div>
+                <div class="sdk_nav">
+                    <NavMenu ShowMenu="@showNavMenu" Menus="@Menus" />
+
+
+                    <aside class="col-12 sdk_home_content">
+                        <div class="offset-sm-0 col-sm-12 offset-lg-1 col-lg-10 p-0">
+                            <div class="row">
+                                <div class="col-12 area1 pb-3">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb p-0">
+                                            <li class="breadcrumb-item"><a href="#">Gestión de personal</a></li>
+                                            <li class="breadcrumb-item"><a href="#">Hojas de vida</a></li>
+                                            <li class="breadcrumb-item active" aria-current="page">Prospectos</li>
+                                        </ol>
+                                    </nav>
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb p-0">
+                                            <li class="bullet-edicion"></li>
+                                            <li class="estado">En edición</li>
+                                        </ol>
+                                    </nav>
+                                </div>
+                            </div>
+                            @* <div class="gridlayout-content-parent gridlayout-item">
+                                <div class="gridlayout-content">
+                                    @Body
+                                </div>
+                            </div> *@
+                            <div class="row">
+                                <div class="col-12">
+                                    <TopBar />
+                                </div>
+                            </div>
+
+                            <div class="gridlayout-content-parent area1 gridlayout-item">
+                                <div class="gridlayout-content">
+                                    @Body
+                                </div>
+                            </div> 
+         
+                        </div>
+                    </aside>
                 </div>
+
             </Template>
         </DxGridLayoutItem>
     </Items>
 </DxGridLayout>
+
+@code {
+    private bool showNavMenu = false;
+    [Inject]
+    public IBackendManager backendManager { get; set; }
+    public E00060_Suite SelectedSuite { get; set; }
+    public List<E00061_Menu> Menus { get; set; }
+    [Parameter]
+    public bool ShowMenu { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        Menus = new List<E00061_Menu>();
+        Menus.Add(new E00061_Menu()
+        {
+            ResourceTag = "DevMenu",
+            IconClass = "fa-solid fa-code",
+            SubMenus = new List<E00061_Menu>(),
+            CurrentText = "DevMenu",
+        });
+        _ = LoadMenu();
+    }
+
+
+    private void ToggleNavMenu()
+    {
+        showNavMenu = !showNavMenu;
+        StateHasChanged();
+    }
+
+    private void HideNavMenu()
+    {
+        showNavMenu = false;
+        StateHasChanged();
+    }
+
+    private async Task LoadMenu()
+    {
+        //TODO: Check Performance, Call only once
+        backendManager.SyncWithMasterBackend();
+        var DevMenu = Menus.FirstOrDefault(x => x.ResourceTag == "DevMenu").SubMenus;
+        foreach (var backend in backendManager.GetBackendDict())
+        {
+            foreach (var business in backend.Value.businessRegisters.Businesses)
+            {
+                BusinessManagerFrontend.Instance.AddBusiness(business, backend.Value.Name);
+                var businessType = Utils.Utils.SearchType(business.Namespace + "." + business.Name);
+                if (businessType == null)
+                {
+                    continue;
+                }
+                var isBLExplorer = Utilities.IsAssignableToGenericType(businessType, typeof(BLFrontendExplorer<>));
+                if (isBLExplorer)
+                {
+                    var customActionMenu = new E00061_Menu
+                    {
+                        ResourceTag = $"{business.Name}.Plural",
+                        Url = $"/{business.Name}/explorer/",
+                    };
+                    DevMenu.Add(customActionMenu);
+                }
+                else
+                {
+                    var submenuItem = new E00061_Menu
+                    {
+                        ResourceTag = $"{business.Name}.Plural",
+                        Url = $"/{business.Name}/",
+                        SubMenus = new List<E00061_Menu>()
+                    };
+                    //search methods that return a RenderFragment
+                    var customActions = businessType.GetMethods().Where(m => m.ReturnType == typeof(RenderFragment));
+                    foreach (var customAction in customActions)
+                    {
+                        var customActionMenu = new E00061_Menu
+                        {
+                            ResourceTag = $"{business.Name}.CustomAction.{customAction.Name}",
+                            Url = $"/{business.Name}/{customAction.Name}/"
+                        };
+                        submenuItem.SubMenus.Add(customActionMenu);
+                    }
+
+                    DevMenu.Add(submenuItem);
+                }
+
+
+
+            }
+        }
+        var menuBL = Frontend.BusinessManagerFrontend.Instance.GetBusiness("BLAdminMenu", AuthenticationService);
+        var request = await menuBL.Call("GetSuites");
+        if (request.Success)
+        {
+            SelectedSuite = ((List<E00060_Suite>)request.Data).First(); //TODO: UX difines how to select the menu group
+            var menuRequest = await menuBL.Call("GetMenuItems", Convert.ToInt64(SelectedSuite.Rowid));
+            if (menuRequest.Success)
+            {
+                List<E00061_Menu> menuResponse = menuRequest.Data;
+                menuResponse = menuResponse.OrderBy(x => x.Order).ToList();
+                //add menuResponse to Menus
+                Menus.AddRange(menuResponse);
+                GetMenuResources(Menus);
+            }
+        }
+        Console.WriteLine(Menus.Count);
+        StateHasChanged();
+    }
+
+    private async Task GetMenuResources(ICollection<E00061_Menu> _menus)
+    {
+        foreach (var menuItem in _menus)
+        {
+            if ((menuItem.RowidResource == null || menuItem.RowidResource == 0) && menuItem.ResourceTag != null)
+            {
+                menuItem.CurrentText = await ResourceManager.GetResource(menuItem.ResourceTag, AuthenticationService);
+            }else{
+                menuItem.CurrentText = await ResourceManager.GetResource(Convert.ToInt64(menuItem.RowidResource), AuthenticationService);
+            }
+            
+            if(menuItem.SubMenus != null && menuItem.SubMenus.Count > 0)
+            {
+                await GetMenuResources(menuItem.SubMenus);
+            }
+        }
+    }
+}

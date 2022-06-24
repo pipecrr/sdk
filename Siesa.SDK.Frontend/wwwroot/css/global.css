@@ -4,15 +4,35 @@
     --color_text: #19283F;
     --color_border: #CCCCCC;
     --color_back: #FCFCFC;
+    --color_back_2: #F0F0F0;
+    --color_back_body: #F0F3F4;
     --color_primary_dark: #011865;
     --color_primary_light: #585AD5;
+    --color_text_2: #808791;
     --color_light: #FFFFFF;
+
     --color_siesa_1: #1031A3;
     --color_siesa_2: #2D71E6;
     --color_siesa_3: #20CAE1;
+
+    --color_button_back: linear-gradient(135deg, rgba(88,90,213,.3) 0%, rgba(88,90,213,1) 100%);
+    --color_primary_shadow: #1031A333;
+    --shadow_standar: 0px 3px 12px var(--color_primary_shadow);
 }
+
+::-webkit-scrollbar{
+    width: 7px;
+}
+::-webkit-scrollbar-thumb{
+    background-color: var(--color_border);
+}
+::-webkit-scrollbar-thumb{
+    background-color: var(--color_border);
+    border-radius: 10px;
+}
+
 *{
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 .font_color_1{
     color: var(--color_siesa_1);
@@ -24,15 +44,31 @@
     color: var(--color_siesa_3);
 }
 
+.font_size_112{
+    font-size: 1.125rem !important;
+}
+.font_size_087{
+    font-size: 0.875rem !important;
+}
+.font_size_125{
+    font-size: 1.25rem !important;
+}
+.whcm_home_body{
+    background-color: var(--color_back_body);
+}
+
 body {
     background: #F0F3F4 0% 0% no-repeat padding-box;
 }
 
-/* DevMenu SearchBox Patch */
-.menuitem-dev-search-box .dxbs-menu-item-tmpl {
-    width: 100%;
-}
-
 .sdk-cursor-pointer {
     cursor: pointer;
+}
+
+.rz-grid-table{
+    z-index: 0;
+}
+
+.search_tooltip_result {
+    color: var(--color_primary);
 }

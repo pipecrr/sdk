@@ -1,0 +1,10 @@
+.sdk-submenu {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+.submenu-title {
+    font-size: 1.0rem;
+    font-weight: bold;
+}

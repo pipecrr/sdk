@@ -1,0 +1,134 @@
+﻿@using Siesa.SDK.Entities
+@using SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Shared.Backend
+@using Siesa.SDK.Frontend.Components.Layout.Menu
+@using Siesa.SDK.Shared.Services
+@inject IAuthenticationService AuthenticationService
+@inject NavigationManager NavigationManager
+
+<input type="checkbox" name="" id="menu">
+<label class="sdk_nav_head" for="menu">
+    <div class="nav_btn_standar" data-toggle="tooltip" data-placement="right" title="Mostrar/Ocultar">
+        <div class="nav_btn_standar_icon">
+            <i class="fa-solid fa-bars font_size_112"></i>
+        </div>
+    </div>
+</label>
+
+<input type="checkbox" name="" id="collapse_open">
+<label class="collapse_open_btn" for="collapse_open">
+    <div class="nav_btn_standar_icon">
+        <i class="fa-solid fa-angles-right font_size_112"></i>
+    </div>
+    <div class="nav_btn_standar_text">
+        <ResourceViewer ResourceTag="Menu.Collapse" />
+    </div>
+</label>
+<nav class="menu_content">
+    <div class="nav_section_1 w-100">
+        <a class="nav_logo" href="index.html">
+            <img src="_content/Siesa.SDK.Frontend/assets/img/LogoSiesa.svg" height="30px" alt="Logo compania">
+        </a>
+        <a href="/" @onclick="()=> OnMenuItemClick(null)" class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right" title="Home">
+            <div class="nav_btn_standar_icon">
+                <i class="fa-solid fa-house font_size_112"></i>
+            </div>
+            <div class="nav_btn_standar_text">
+                Home
+            </div>
+        </a>
+        @foreach (var menuItem in Menus)
+        {
+            <NavMenuItem MenuItem="@menuItem" OnClick="@OnMenuItemClick" />
+        }
+    </div>
+    @if (AuthenticationService.User != null)
+    {
+        <div class="nav_section_2 w-100">
+            <hr class="mb-2">
+            <div class="nav_profile_btn" @onclick="@(()=> ShowProfileMenu())">
+                <div class="nav_btn_standar_icon nav_profile_photo">
+                    <img src="_content/Siesa.SDK.Frontend/assets/img/Profile_default.png" height="36px" alt="imagen perfil">
+                </div>
+                <div class="nav_btn_standar_text">
+                    @AuthenticationService.User
+                </div>
+            </div>
+            <label class="collapse_open_btn" for="collapse_open">
+                <div class="nav_btn_standar_icon">
+                    <i class="fa-solid fa-angles-right font_size_112"></i>
+                </div>
+                <div class="nav_btn_standar_text">
+                    <ResourceViewer ResourceTag="Menu.Collapse" />
+                </div>
+            </label>
+        </div>
+    }
+</nav>
+@if (SelectedMenu != null && ShowSubMenu && SelectedMenu.SubMenus?.Count > 0)
+{
+    <div class="nav_dx_menu">
+        <CascadingValue Value="HideSubmenu">
+            <SubMenu MainItem="@SelectedMenu" OnClick="@OnMenuItemClick" />
+        </CascadingValue>
+    </div>
+}
+@code {
+    [Parameter]
+    public bool ShowMenu { get; set; }
+    [Parameter]
+    public List<E00061_Menu> Menus { get; set; }
+
+    private E00061_Menu SelectedMenu { get; set; }
+
+    private bool ShowSubMenu { get; set; }
+
+    private E00061_Menu ProfileMenu { get; set; }
+
+    public void OnMenuItemClick(E00061_Menu menuItem)
+    {
+        SelectedMenu = menuItem;
+        if(menuItem?.SubMenus?.Count > 0)
+        {
+            ShowSubMenu = true;
+        }else{
+            ShowSubMenu = false;
+        }
+        StateHasChanged();
+    }
+
+    protected async override Task OnInitializedAsync()
+    {
+        ProfileMenu = new E00061_Menu()
+        {
+            ResourceTag = "BLUser.Profile",
+            SubMenus = new List<E00061_Menu>(),
+            CurrentText = "",
+        };
+        ProfileMenu.SubMenus.Add(new E00061_Menu()
+        {
+            ResourceTag = "BLUser.EditProfile",
+            Url = $"/BLUser/edit/{AuthenticationService.User.Rowid}/",
+        });
+        ProfileMenu.SubMenus.Add(new E00061_Menu()
+        {
+            ResourceTag = "BLUser.Logout",
+            Url = "/logout"
+        });
+        await base.OnInitializedAsync();
+    }
+
+    private void ShowProfileMenu()
+    {
+        ShowSubMenu = true;
+        SelectedMenu = ProfileMenu;
+        StateHasChanged();
+    }
+
+    private void HideSubmenu()
+    {
+        ShowSubMenu = false;
+        StateHasChanged();
+    }
+}

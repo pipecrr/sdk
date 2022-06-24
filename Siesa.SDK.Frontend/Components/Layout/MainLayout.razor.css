@@ -5,20 +5,21 @@
 .gridlayout-content {
     padding: 10px;
     background: #ffffff;
-    margin-top: 20px;
+    /* margin-top: 50px; */
     min-width: 90%;
-    width: 90%;
-    max-width: 90%;
+    /* width: 90%;
+    max-width: 90%; */
     border-radius: 7px;
+    /* padding-top: 48px; */
     
 }
 
-.gridlayout-header {
+/* .gridlayout-header {
     background: #1F4281 0% 0% no-repeat padding-box;
     opacity: 1;
     color: #fff;
     height: 60px;
-}
+} */
 /* Mobile */
 @media only screen and (max-width: 600px) {
     .gridlayout-content {
@@ -26,4 +27,70 @@
         width: 100%;
         max-width: 100%;
     }
+}
+
+.sdk_home_content{
+    height: 1200px;
+    padding-top: 4.5rem;
+    transition: .25s;
+}
+
+
+/*borrar */
+.area1{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.breadcrumb{
+    background-color: transparent !important;
+    margin-bottom: 0px !important;
+}
+.breadcrumb-item{
+    text-align: left;
+    font: normal normal normal 0.75rem/0.938 Roboto !important;
+    color: var(--color_text_2) !important;
+    opacity: 1 !important;
+}
+.breadcrumb-item a{
+    text-align: left;
+    font: normal normal normal 0.75rem/0.938 Roboto !important;
+    color: var(--color_text_2) !important;
+    opacity: 1 !important;
+}
+.breadcrumb .active{
+    text-align: left;
+    font: 500 normal normal 0.75rem/0.938 Roboto !important;
+}
+.estado{
+    padding-left: 6px;
+    align-items: center;
+    opacity: 1 !important;
+    font: 500 normal normal 0.75rem/0.938 Roboto !important;
+    color: var(--color_text_2) !important;
+    list-style: none;
+}
+.bullet-edicion{
+   height:12px;
+   width:12px;
+   background:#FFC500;
+   -moz-border-radius:50px;
+   -webkit-border-radius:50px;
+   border-radius:50px;
+}
+.bullet-creacion{
+   height:12px;
+   width:12px;
+   background:#FF6C00;
+   -moz-border-radius:50px;
+   -webkit-border-radius:50px;
+   border-radius:50px;
+}
+.bullet-persistencia{
+   height:12px;
+   width:12px;
+   background:#00B100;
+   -moz-border-radius:50px;
+   -webkit-border-radius:50px;
+   border-radius:50px;
 }

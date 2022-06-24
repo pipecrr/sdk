@@ -1,0 +1,201 @@
+@using Siesa.SDK.Entities
+<header class="col-12 pl-5 sdk_header">
+    <div class="header_circles_box">
+        <div class="header_circles_box_1">
+        </div>
+        <div class="header_circles_box_2">
+        </div>
+        <div class="header_circles_box_3">
+        </div>
+        <div class="header_circles_box_4">
+        </div>
+    </div>
+    <div class="col-5 sdk_company_logo">
+        <img src="_content/Siesa.SDK.Frontend/assets/img/LogoSiesa.svg" height="30px" alt="Logo siesa">
+    </div>
+    <div class="col-2 p-0">
+        <div class="sdk_search" @onclick="()=>ShowSearch()">
+            <input type="search" class="form-control form-control-sm pr-4" id="busqueda" placeholder="Buscar..."
+               @bind-value:event="onchange" @oninput="@((ChangeEventArgs __e) => OnChangeSearch(__e?.Value?.ToString()))"  @bind-value="searchString" >
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+        @if (SearchEnabled && LastSearch.Count > 0)
+        {
+            <div id="boxSearch" class="search_tooltip py-2" style="display:block;" tabindex="0" @onfocusout="@(() => HideSearch())">
+                @foreach (var menuItem in LastSearch)
+                {
+                    var bread = "";
+                    @for (int i = 0; i < menuItem.Breadcrumb.Count; i++)
+                    {
+                        if (i == menuItem.Breadcrumb.Count - 1)
+                        {
+                            bread += "<span class=\"search_tooltip_result\">" + @menuItem.Breadcrumb[i] + "</span>";
+                        }
+                        else
+                        {
+                            bread += @menuItem.Breadcrumb[i] + " / ";
+                        }
+                    }
+                    <a href="@menuItem.CurrentUrl" class="px-3 py-2 m-0" @onclick="()=>HideSearch()" >@((MarkupString)bread)</a>
+                }
+            </div>
+        }
+    </div>
+    <div class="col-5 p-0 d-flex justify-content-end info_head">
+        <div class="sdk_conection">
+            <div class="position-relative">
+                <button @onclick="()=> ToogleConnect()" class="btn btn_connect d-flex align-items-center">
+                    <div>
+                        <p class="font-weight-bold m-0">Grupo Siesa</p>
+                        <p class="m-0">Conexión_login_desarrollo</p>
+                    </div>
+                    <div class="pl-3">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                </button>
+                @if (ConnectEnabled)
+                {
+                    <div id="boxConnect" class="connect_tooltip" style="display:block;">
+                        <label class="pt-3 px-3 pb-0 col-form-label font-weight-bold">Configurar</label>
+                        <div class="p-3">
+                            <form>
+                                <div class="form-group connect_select_search">
+                                    <label class="col-form-label col-form-label-sm font-weight-bold"
+                                    for="inputGrupo">Grupo</label>
+                                    <div class="d-flex form-control form-control-sm p-0">
+                                        <select id="inputGrupo" class="">
+                                            <option selected>Grupo Siesa</option>
+                                            <option>...</option>
+                                        </select>
+                                        <button>
+                                            <i class="fa-solid fa-magnifying-glass"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="form-group connect_select_search">
+                                    <label class="col-form-label col-form-label-sm font-weight-bold"
+                                    for="inputCompania">Compañía</label>
+                                    <div class="d-flex form-control form-control-sm p-0">
+                                        <select id="inputGrupo" class="">
+                                            <option selected>Conexión_login_desarrollo</option>
+                                            <option>...</option>
+                                        </select>
+                                        <button>
+                                            <i class="fa-solid fa-magnifying-glass"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn_primary_def_1 btn-sm w-100 mt-2">Cambiar
+                                    configuración</button>
+                            </form>
+                            <div class="alert alert-info alert alert-info text-center mt-3 mb-0 font_size_087" role="alert">
+                                Al cambiar la configuración se refrescará la ventana
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="sdk_version px-3">
+            <p class="font-weight-bold m-0">
+                <ResourceViewer ResourceTag="Project.Copy" />
+            </p>
+            <p class="m-0">
+                <ResourceViewer ResourceTag="Project.Version" />
+            </p>
+        </div>
+        <div class="sdk_logo pl-3">
+            <img src="_content/Siesa.SDK.Frontend/assets/img/LogoSiesaWHCMBlanco.png" height="30px" alt="Logo siesa">
+        </div>
+    </div>
+</header>
+
+@code {
+
+    [Parameter]
+    public List<E00061_Menu> Menus { get; set; }
+
+    private string searchString = "";
+
+    private bool SearchEnabled = false;
+
+    private bool ConnectEnabled = false;
+
+    public class HeaderSearchResult
+    {
+        public string CurrentUrl { get; set; }
+        public List<string> Breadcrumb { get; set; }
+    }
+
+    private List<HeaderSearchResult> LastSearch = new List<HeaderSearchResult>();
+
+    private void ShowSearch()
+    {
+        SearchEnabled = true;
+    }
+
+    private void HideSearch()
+    {
+        SearchEnabled = false;
+    }
+
+    private void ToogleSearch()
+    {
+        SearchEnabled = !SearchEnabled;
+    }
+
+    private void ShowConnect()
+    {
+        ConnectEnabled = true;
+    }
+
+    private void HideConnect()
+    {
+        ConnectEnabled = false;
+    }
+
+    private void ToogleConnect()
+    {
+        ConnectEnabled = !ConnectEnabled;
+    }
+
+    private void SearchInMenu(string searchString, List<E00061_Menu> menus, ref List<HeaderSearchResult> result,
+    List<string> bread = null)
+    {
+        bread = bread ?? new List<string>();
+        foreach (var item in menus)
+        {
+            var tmpText = item.CurrentText ?? "";
+            bread.Add(tmpText);
+            if (tmpText.ToLower().Contains(searchString.ToLower()))
+            {
+                result.Add(new HeaderSearchResult
+                {
+                    CurrentUrl = item.CurrentURL,
+                    Breadcrumb = new List<string>(bread)
+                });
+            }
+            if (item.SubMenus != null && item.SubMenus.Count > 0)
+            {
+                SearchInMenu(searchString, item.SubMenus.ToList(), ref result, bread);
+            }
+            bread.RemoveAt(bread.Count - 1);
+           
+        }
+
+    }
+
+
+    private void OnChangeSearch(string value)
+    {
+        searchString = value;
+        List<HeaderSearchResult> result = new List<HeaderSearchResult>();
+
+        if (!String.IsNullOrEmpty(searchString))
+        {
+            SearchInMenu(searchString, Menus, ref result);
+        }
+
+        LastSearch = result;
+    }
+}

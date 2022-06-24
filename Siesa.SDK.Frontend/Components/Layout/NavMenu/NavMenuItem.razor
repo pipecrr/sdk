@@ -1,0 +1,116 @@
+@using Siesa.SDK.Entities
+@using Siesa.SDK.Frontend.Application
+@using Siesa.SDK.Shared.Services
+@inject IResourceManager ResourceManager
+@inject IAuthenticationService AuthenticationService
+@using Siesa.SDK.Shared.Utilities
+@inject NavigationManager NavigationManager
+
+@if(MenuItem.SubMenus?.Count > 0){
+    @* <DxMenuItem Text="@Title" IconCssClass="@MenuItem.IconClass"> 
+        <Items>
+        @foreach(var subMenuItem in MenuItem.SubMenus.OrderBy(x => x.Order)){
+            <SDKMenuItem MenuItem="@subMenuItem" />
+        }
+        </Items>
+    </DxMenuItem>        *@
+    <a href="#" @onclick:stopPropagation="true" @onclick="()=> OnClick(MenuItem)"  @onclick:preventDefault class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
+        title="@Title">
+        @if(MenuItem.IconClass != null){
+            <div class="nav_btn_standar_icon">
+                <i class=@(MenuItem.IconClass + " font_size_112")></i>
+            </div>
+        }
+        
+        <div class="nav_btn_standar_text">
+            @Title
+        </div>
+
+        <span class="dropdown-toggle right"></span>
+    </a>
+
+}else{
+    @if(MenuItem.Type == MenuType.Separator)
+    {
+        @* <DxMenuItem CssClass="separator" /> *@
+    }else{
+        @if(MenuItem.Feature != null)
+        {
+            @if(Utilities.CheckUserActionPermission(MenuItem.Feature.Rowid, 4, AuthenticationService))
+            {
+                <a href="@MenuItem.CurrentURL" @onclick:stopPropagation="true" @onclick="()=> OnClickItem(MenuItem)"  @onclick:preventDefault  class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
+                    title="@Title">
+                    @if(MenuItem.IconClass != null){
+                        <div class="nav_btn_standar_icon">
+                            <i class=@(MenuItem.IconClass + " font_size_112")></i>
+                        </div>
+                    }
+                    <div class="nav_btn_standar_text">
+                        @Title
+                    </div>
+                </a>
+
+            }
+
+        }else{
+            <a href="@MenuItem.CurrentURL" @onclick:stopPropagation="true" @onclick="()=> OnClickItem(MenuItem)"  @onclick:preventDefault class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
+                title="@Title">
+                @if(MenuItem.IconClass != null){
+                    <div class="nav_btn_standar_icon">
+                        <i class=@(MenuItem.IconClass + " font_size_112")></i>
+                    </div>
+                }
+                <div class="nav_btn_standar_text">
+                    @Title
+                </div>
+            </a>
+        }
+    }
+}
+
+@code {
+    [Parameter] public E00061_Menu MenuItem { get; set; }
+
+    [Parameter] public Action<E00061_Menu> OnClick { get; set; }
+    [CascadingParameter] public Action HideSubmenu { get; set; }
+
+    private string Title { get; set; } = "";
+
+    private async Task<string> GetTitle(){
+        if((MenuItem.RowidResource == null || MenuItem.RowidResource == 0) && MenuItem.ResourceTag != null){
+            return await ResourceManager.GetResource(MenuItem.ResourceTag, AuthenticationService);
+        }
+        return await ResourceManager.GetResource(Convert.ToInt64(MenuItem.RowidResource), AuthenticationService);
+    }
+
+    protected override async Task OnInitializedAsync(){
+        if(String.IsNullOrEmpty(MenuItem.CurrentText))
+        {
+            Title = MenuItem.ResourceTag;
+            Title = await GetTitle();
+            MenuItem.CurrentText = Title;
+        }else{
+            Title = MenuItem.CurrentText;
+        }
+    }
+
+    //on parameter change
+    protected override async Task OnParametersSetAsync(){
+        if(String.IsNullOrEmpty(MenuItem.CurrentText))
+        {
+            Title = MenuItem.ResourceTag;
+            Title = await GetTitle();
+            MenuItem.CurrentText = Title;
+        }else{
+            Title = MenuItem.CurrentText;
+        }
+    }
+
+    private void OnClickItem(E00061_Menu menuItem){
+        NavigationManager.NavigateTo(menuItem.CurrentURL);
+        if(HideSubmenu != null){
+            HideSubmenu();
+        }
+    }
+
+}

@@ -22,11 +22,11 @@
         {
             @if(Utilities.CheckUserActionPermission(MenuItem.Feature.Rowid, 4, AuthenticationService))
             {
-                <DxMenuItem Text="@Title" IconCssClass="@MenuItem.IconClass" NavigateUrl="@NavigateUrl" />
+                <DxMenuItem Text="@Title" IconCssClass="@MenuItem.IconClass" NavigateUrl="@NavigateUrl()" />
             }
 
         }else{
-            <DxMenuItem Text="@Title" IconCssClass="@MenuItem.IconClass" NavigateUrl="@NavigateUrl" />
+            <DxMenuItem Text="@Title" IconCssClass="@MenuItem.IconClass" NavigateUrl="@NavigateUrl()" />
         }
     }
 }
@@ -46,19 +46,22 @@
     protected override async Task OnInitializedAsync(){
         Title = MenuItem.ResourceTag;
         Title = await GetTitle();
+        MenuItem.CurrentText = Title;
     }
+    
 
-    private string NavigateUrl { get { 
+    private string NavigateUrl() {
+        var url = "";
         if (!string.IsNullOrEmpty(MenuItem.Url)) {
-            return MenuItem.Url;
+            url = MenuItem.Url;
         }else{
             if(MenuItem.Feature != null){
-                return $"/{MenuItem.Feature.BusinessName}/";
+                url = $"/{MenuItem.Feature.BusinessName}/";
+            }else{
+                url = "/";
             }
-            return "/";
-            
         }
-        } 
+        //MenuItem.CurrentURL = url;
+        return url;
     }
-
 }
