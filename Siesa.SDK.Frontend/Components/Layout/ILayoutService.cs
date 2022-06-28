@@ -13,6 +13,9 @@ namespace Siesa.SDK.Frontend.Components.Layout
     {
         RenderFragment TopBarTitle { get; }
         RenderFragment TopBarButtons { get; }
+        RenderFragment TopBarExtraButtons { get; }
+        string StyleName { get; }
+        bool HasExtraButtons { get; }
         SetTopBar TopBarSetter { get; set; }
         event PropertyChangedEventHandler PropertyChanged;
         void UpdateTopBar();

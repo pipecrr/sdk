@@ -7,7 +7,7 @@
 @inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavigationManager
 
-<input type="checkbox" name="" id="menu">
+<input type="checkbox" name="" checked id="menu">
 <label class="sdk_nav_head" for="menu">
     <div class="nav_btn_standar" data-toggle="tooltip" data-placement="right" title="Mostrar/Ocultar">
         <div class="nav_btn_standar_icon">
@@ -49,7 +49,7 @@
             <hr class="mb-2">
             <div class="nav_profile_btn" @onclick="@(()=> ShowProfileMenu())">
                 <div class="nav_btn_standar_icon nav_profile_photo">
-                    <img src="_content/Siesa.SDK.Frontend/assets/img/Profile_default.png" height="36px" alt="imagen perfil">
+                    <img src="_content/Siesa.SDK.Frontend/assets/img/profile_img.jpg" height="36px" alt="imagen perfil">
                 </div>
                 <div class="nav_btn_standar_text">
                     @AuthenticationService.User
@@ -68,11 +68,10 @@
 </nav>
 @if (SelectedMenu != null && ShowSubMenu && SelectedMenu.SubMenus?.Count > 0)
 {
-    <div class="nav_dx_menu">
-        <CascadingValue Value="HideSubmenu">
-            <SubMenu MainItem="@SelectedMenu" OnClick="@OnMenuItemClick" />
-        </CascadingValue>
-    </div>
+    
+    <CascadingValue Value="HideSubmenu">
+        <SubMenu MainItem="@SelectedMenu" OnClick="@OnMenuItemClick" />
+    </CascadingValue>
 }
 @code {
     [Parameter]

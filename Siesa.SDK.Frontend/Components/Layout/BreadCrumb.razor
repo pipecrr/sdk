@@ -1,0 +1,47 @@
+@implements IDisposable
+@inject ILayoutService LayoutService
+
+@if(LayoutService != null && LayoutService.TopBarSetter != null)
+{
+    <div class="col-12 area1 pb-3 px-0">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb p-0">
+                <li class="breadcrumb-item"><a href="#">Gestión de personal</a></li>
+                <li class="breadcrumb-item"><a href="#">Hojas de vida</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Prospectos</li>
+            </ol>
+        </nav>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb p-0">
+                <li class="@("bullet-breadcrumb " + LayoutService.StyleName)"></li>
+                <li class="estado">En edición</li>
+            </ol>
+        </nav>
+    </div>
+}
+
+
+@code {
+    protected override void OnInitialized()
+    {
+        LayoutService.PropertyChanged += LayoutService_PropertyChanged;
+        base.OnInitialized();
+    }
+
+    private void LayoutService_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(ILayoutService.StyleName))
+        {
+            StateHasChanged();
+        }
+    }
+
+    public void Dispose()
+    {
+        if (LayoutService != null)
+        {
+            LayoutService.PropertyChanged -= LayoutService_PropertyChanged;
+        }
+    }
+
+}

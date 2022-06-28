@@ -73,16 +73,18 @@ else if (BusinessObj.BaseObj != null)
     @if(SetTopBar && !IsSubpanel)
     {
         <PageTitle><ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer ResourceTag="@($"{BusinessName}.Singular")" /></PageTitle>
-        <SetTopBar>
+        <SetTopBar StyleName="toolbar_creation" HasExtraButtons="@(FormViewModel.Buttons != null && FormViewModel.Buttons.Count > 0 ? true: false)">
             <TopBarTitle><ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer ResourceTag="@($"{BusinessName}.Singular")" /></TopBarTitle>
             <TopBarButtons>
+                <TopBarButton form="@FormID" SubmitFormOnClick="true" ResourceTag="Generic.ActionSave" IconCssClass="fa-solid fa-floppy-disk" />
+                @* <TopBarButton Click="GoToList" ResourceTag="Generic.ActionCancel"  IconCssClass="fa-solid fa-floppy-disk"  /> *@
+            </TopBarButtons>
+            <TopBarExtraButtons>
                 @foreach (var btn in FormViewModel.Buttons)
                 {
                     <SDKButton RenderStyle="@btn.RenderStyle" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag"  />
                 }
-                <SDKButton form="@FormID" RenderStyle="SDKButtonRenderStyle.Primary" RenderStyleMode="SDKButtonRenderStyleMode.Text" SubmitFormOnClick="true" ResourceTag="Generic.ActionSave" />
-                <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary"  RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="GoToList" ResourceTag="Generic.ActionCancel" />
-            </TopBarButtons>
+            </TopBarExtraButtons>
         </SetTopBar>
     }
 

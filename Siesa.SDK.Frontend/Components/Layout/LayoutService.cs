@@ -15,6 +15,9 @@ namespace Siesa.SDK.Frontend.Components.Layout
 
         public RenderFragment TopBarTitle => TopBarSetter?.TopBarTitle;
         public RenderFragment TopBarButtons => TopBarSetter?.TopBarButtons;
+        public RenderFragment TopBarExtraButtons => TopBarSetter?.TopBarExtraButtons;
+        public string StyleName => TopBarSetter?.StyleName;
+        public bool HasExtraButtons => TopBarSetter != null ? TopBarSetter.HasExtraButtons : false;
 
         public SetTopBar TopBarSetter
         {
@@ -30,6 +33,9 @@ namespace Siesa.SDK.Frontend.Components.Layout
         public void UpdateTopBar() {
             NotifyPropertyChanged(nameof(TopBarTitle));
             NotifyPropertyChanged(nameof(TopBarButtons));
+            NotifyPropertyChanged(nameof(TopBarExtraButtons));
+            NotifyPropertyChanged(nameof(StyleName));
+            NotifyPropertyChanged(nameof(HasExtraButtons));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

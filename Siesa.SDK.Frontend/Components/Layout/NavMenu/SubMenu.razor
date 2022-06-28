@@ -1,18 +1,20 @@
 @using Entities
-<div>
-     <a href="#" @onclick="()=> OnClickTitle()" @onclick:stopPropagation="true"  @onclick:preventDefault class="nav_btn_standar my-1">
-        <div class="nav_btn_standar_text submenu-title">
-            <i class="fa-solid fa-chevron-left"></i> @MainItem.CurrentText
-        </div>
-    </a>
-    <div class="nav_section_1 w-100">
-        @if(MainItem.SubMenus != null)
-        {
-            @foreach (var item in MainItem.SubMenus)
+<div class="nav_dx_menu" @onclick="()=> HideSubmenu()" @onclick:stopPropagation="true"  @onclick:preventDefault>
+    <div class="submenu-content">
+        <a href="#" @onclick="()=> OnClickTitle()" @onclick:stopPropagation="true"  @onclick:preventDefault class="nav_btn_standar my-1">
+            <div class="nav_btn_standar_text submenu-title">
+                <i class="fa-solid fa-chevron-left"></i> @MainItem.CurrentText
+            </div>
+        </a>
+        <div class="nav_section_1 w-100">
+            @if(MainItem.SubMenus != null)
             {
-                <NavMenuItem MenuItem="item" OnClick="@OnClickSubMenu" />
+                @foreach (var item in MainItem.SubMenus)
+                {
+                    <NavMenuItem MenuItem="item" OnClick="@OnClickSubMenu" />
+                }
             }
-        }
+        </div>
     </div>
 </div>
 @code {
@@ -21,6 +23,8 @@
     [Parameter] public E00061_Menu MainItem { get; set; }
 
     [Parameter] public List<E00061_Menu> PreviousItems { get; set; } = new List<E00061_Menu>();
+
+    [CascadingParameter] public Action HideSubmenu { get; set; }
 
     public void OnClickSubMenu(E00061_Menu MenuItem)
     {

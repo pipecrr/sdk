@@ -38,41 +38,20 @@
 
 
                     <aside class="col-12 sdk_home_content">
-                        <div class="offset-sm-0 col-sm-12 offset-lg-1 col-lg-10 p-0">
-                            <div class="row">
-                                <div class="col-12 area1 pb-3">
-                                    <nav aria-label="breadcrumb">
-                                        <ol class="breadcrumb p-0">
-                                            <li class="breadcrumb-item"><a href="#">Gestión de personal</a></li>
-                                            <li class="breadcrumb-item"><a href="#">Hojas de vida</a></li>
-                                            <li class="breadcrumb-item active" aria-current="page">Prospectos</li>
-                                        </ol>
-                                    </nav>
-                                    <nav aria-label="breadcrumb">
-                                        <ol class="breadcrumb p-0">
-                                            <li class="bullet-edicion"></li>
-                                            <li class="estado">En edición</li>
-                                        </ol>
-                                    </nav>
-                                </div>
-                            </div>
-                            @* <div class="gridlayout-content-parent gridlayout-item">
-                                <div class="gridlayout-content">
-                                    @Body
-                                </div>
-                            </div> *@
-                            <div class="row">
-                                <div class="col-12">
-                                    <TopBar />
-                                </div>
-                            </div>
+                        <div class="offset-sm-0 col-sm-12 offset-lg-1 col-lg-10">
 
-                            <div class="gridlayout-content-parent area1 gridlayout-item">
-                                <div class="gridlayout-content">
+                            <BreadCrumb />
+                            <div class="col-12 area2">
+                                <TopBar />
+                                <div class="col-12 px-0 py-3">
                                     @Body
                                 </div>
-                            </div> 
-         
+                            </div>
+@* 
+                            <div class="col-12 area2 p-3 my-4">
+                                @Body
+                            </div> *@
+
                         </div>
                     </aside>
                 </div>

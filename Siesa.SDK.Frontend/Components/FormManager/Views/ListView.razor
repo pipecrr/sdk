@@ -144,16 +144,17 @@ else
     @if(SetTopBar)
     {
         <PageTitle><ResourceViewer ResourceTag="@($"{BusinessName}.Plural")" /></PageTitle>
-        <SetTopBar>
+        <SetTopBar HasExtraButtons="@(ListViewModel.Buttons != null && ListViewModel.Buttons.Count > 0 ? true: false)">
             <TopBarTitle><ResourceViewer ResourceTag="@($"{BusinessName}.Plural")" /></TopBarTitle>
             <TopBarButtons>
-                <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" RenderStyleMode="SDKButtonRenderStyleMode.Text"
-                Click="GoToCreate" ResourceTag="Action.Create" />
+                <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-file" />
+            </TopBarButtons>
+            <TopBarExtraButtons>
                 @foreach (var btn in ListViewModel.Buttons)
                 {
                     <SDKButton RenderStyle="@btn.RenderStyle" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" />
                 }
-            </TopBarButtons>
+            </TopBarExtraButtons>
         </SetTopBar>
     }
 }

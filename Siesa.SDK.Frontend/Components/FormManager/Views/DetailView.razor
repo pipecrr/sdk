@@ -51,18 +51,20 @@ else if (ModelLoaded == true)
     @if(SetTopBar)
     {
         <PageTitle>@BusinessObj</PageTitle>
-        <SetTopBar>
+        <SetTopBar HasExtraButtons="@(FormViewModel.Buttons != null && FormViewModel.Buttons.Count > 0 ? true: false)">
             <TopBarTitle>@BusinessObj</TopBarTitle>
             <TopBarButtons>
+                <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-file"  />
+                <TopBarButton Click="GoToEdit" ResourceTag="Action.Modify"  IconCssClass="fa-solid fa-pen"  />
+                <TopBarButton Click="GoToList" ResourceTag="Action.List"  IconCssClass="fa-solid fa-list"  />
+                <TopBarButton Click="DeleteBusiness" ResourceTag="Action.Delete" IconCssClass="fa-solid fa-trash-can" />
+            </TopBarButtons>
+            <TopBarExtraButtons>
                 @foreach (var btn in FormViewModel.Buttons)
                 {
                     <SDKButton RenderStyle="@btn.RenderStyle" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" />
                 }
-                <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="GoToCreate" ResourceTag="Action.Create" />
-                <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="GoToEdit" ResourceTag="Action.Modify" />
-                <SDKButton RenderStyle="SDKButtonRenderStyle.Info" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="GoToList" ResourceTag="Action.List" />
-                <SDKButton RenderStyle="SDKButtonRenderStyle.Danger" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="DeleteBusiness" ResourceTag="Action.Delete" />
-            </TopBarButtons>
+            </TopBarExtraButtons>
         </SetTopBar>
     }
 }
