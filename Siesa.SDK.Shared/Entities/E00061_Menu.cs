@@ -36,7 +36,7 @@ namespace Siesa.SDK.Entities
 		public byte Order { get; set; }
 
 		[Required]
-		public int Type { get; set; }
+		public MenuType Type { get; set; }
 
 		[Required]
 		public byte Level { get; set; }
