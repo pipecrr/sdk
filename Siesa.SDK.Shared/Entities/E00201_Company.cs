@@ -15,7 +15,7 @@ namespace Siesa.SDK.Entities
 	/// Compañía
 	/// </summary>
 
-	public class E00201_Company : BaseSDK<short>
+	public partial class E00201_Company : BaseSDK<short>
 	{
 		[SDKIdentity]
 		[Key]
