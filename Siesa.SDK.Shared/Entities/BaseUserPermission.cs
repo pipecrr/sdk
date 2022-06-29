@@ -14,15 +14,12 @@ namespace Siesa.SDK.Entities
 		[ForeignKey("Record")]
 		public virtual U RowidRecord { get; set; }
 
-		[RegularExpression(@"1|2")]
 		[Required]
 		public virtual byte UserType { get; set; }
 
-		[RegularExpression(@"1|2|3")]
 		[Required]
 		public virtual byte AuthorizarionType { get; set; }
 
-		[RegularExpression(@"0|1|2")]
 		[Required]
 		public virtual byte RestrictionType { get; set; }
 
