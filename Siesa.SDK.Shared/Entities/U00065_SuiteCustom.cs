@@ -15,7 +15,8 @@ namespace Siesa.SDK.Entities
 	/// Permisos por registro
 	/// </summary>
 
-	public class U00065_SuiteCustom : BaseUserPermission<E00065_SuiteCustom, short>
+	[Index(nameof(RowidUser), nameof(RowidRecord), nameof(RowidDataVisibilityGroup), Name = "IX_u00065_1", IsUnique = true)]
+	public partial class U00065_SuiteCustom : BaseUserPermission<E00065_SuiteCustom, short>
 	{
 
 	}

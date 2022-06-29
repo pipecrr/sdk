@@ -15,7 +15,8 @@ namespace Siesa.SDK.Entities
 	/// Permisos por usuario
 	/// </summary>
 
-	public class U00066_MenuCustom : BaseUserPermission<E00066_MenuCustom, int>
+	[Index(nameof(RowidUser), nameof(RowidRecord), nameof(RowidDataVisibilityGroup), Name = "IX_u00066_1", IsUnique = true)]
+	public partial class U00066_MenuCustom : BaseUserPermission<E00066_MenuCustom, int>
 	{
 
 	}

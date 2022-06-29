@@ -15,7 +15,8 @@ namespace Siesa.SDK.Entities
 	/// Permisos por registro para la tabla de usuarios
 	/// </summary>
 	[SDKLogEntity]
-	public class U00220_User : BaseUserPermission<E00220_User, int>
+	[Index(nameof(RowidUser), nameof(RowidRecord), nameof(RowidDataVisibilityGroup), Name = "IX_u00220_1", IsUnique = true)]
+	public partial class U00220_User : BaseUserPermission<E00220_User, int>
 	{
 
 	}
