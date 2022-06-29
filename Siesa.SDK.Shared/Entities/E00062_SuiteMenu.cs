@@ -16,7 +16,7 @@ namespace Siesa.SDK.Entities
 	/// </summary>
 
 	[Index(nameof(RowidSuite), nameof(RowidMenu), Name = "IX_e00062_1", IsUnique = true)]
-	public class E00062_SuiteMenu : BaseSDK<int>
+	public partial class E00062_SuiteMenu : BaseSDK<int>
 	{
 		[SDKIdentity]
 		[Key]
