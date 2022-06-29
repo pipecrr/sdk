@@ -1,24 +1,30 @@
-﻿
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Siesa.SDK.Entities
 {
-    public abstract class BaseAdditionalData<T, K>: BaseAudit<int>
-    {
-        public K? RowidRecord { get; set; }
-        [ForeignKey(nameof(RowidRecord))]
-        public virtual T Record { get; set; }
 
-        public int? RowidCompanyGroup { get; set; }
-        [ForeignKey(nameof(RowidCompanyGroup))]
-        public virtual E00200_CompanyGroup CompanyGroup { get; set; }
+	public abstract partial class BaseAdditionalData<T, U> : BaseAudit<int>
+	{
+		[Key]
+		[Required]
+		public override int Rowid { get; set; }
 
-        public Int16? RowidCompany { get; set; }
-        [ForeignKey(nameof(RowidCompany))]
-        public virtual E00201_Company Company { get; set; }
-        //TODO: Agregar relación con attachment
-    }
+		[ForeignKey("Record")]
+		public virtual U RowidRecord { get; set; }
+
+		[ForeignKey("Company")]
+		public virtual short? RowidCompany { get; set; }
+
+		public virtual int? RowidAttachment { get; set; }
+
+
+		public virtual T Record { get; set; }
+
+
+
+		public virtual E00201_Company Company { get; set; }
+
+	}
 }

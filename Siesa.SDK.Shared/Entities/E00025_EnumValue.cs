@@ -16,7 +16,7 @@ namespace Siesa.SDK.Entities
 	/// </summary>
 
 	[Index(nameof(RowidEnum), nameof(Id), nameof(Value), Name = "IX_e00025_1", IsUnique = true)]
-	public class E00025_EnumValue : BaseSDK<int>
+	public partial class E00025_EnumValue : BaseSDK<int>
 	{
 		[Key]
 		[Required]

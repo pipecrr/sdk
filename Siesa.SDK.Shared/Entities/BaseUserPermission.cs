@@ -1,46 +1,42 @@
-﻿
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Siesa.SDK.Entities
 {
-    public enum PermissionUserTypes
-    {
-        User = 1,
-        Team = 2,
-    }
 
-    public enum PermissionAuthTypes
-    {
-        Query = 1,
-        Transaction = 2,
-        Query_Tx = 3,
-    }
+	public abstract partial class BaseUserPermission<T, U> : BaseAudit<int>
+	{
+		[Key]
+		[Required]
+		public override int Rowid { get; set; }
 
-    public enum PermissionRestrictionType
-    {
-        Not_Applicable = 0,
-        Enabled = 1,
-        Disabled = 2,
-    }
-    public abstract class BaseUserPermission<T,K>: BaseAudit<int>
-    {
-        public PermissionUserTypes UserType { get; set; }
-        public PermissionAuthTypes AuthorizationType { get; set; }
-        public PermissionRestrictionType RestrictionType { get; set; }
+		[ForeignKey("Record")]
+		public virtual U RowidRecord { get; set; }
 
-        public int? RowidTeam { get; set; }
-        [ForeignKey(nameof(RowidTeam))]
-        public virtual E00224_DataVisibilityGroup DataVisibilityGroup { get; set; }
-        public int? RowidUser { get; set; }
-        [ForeignKey(nameof(RowidUser))]
-        public virtual E00220_User User { get; set; }
+		[Required]
+		public virtual PermissionUserTypes UserType { get; set; }
 
-        public K? RowidRecord { get; set; }
-        [ForeignKey(nameof(RowidRecord))]
-        public virtual T Record { get; set; }
-    }
+		[Required]
+		public virtual PermissionAuthTypes AuthorizarionType { get; set; }
 
+		[Required]
+		public virtual PermissionRestrictionType RestrictionType { get; set; }
+
+		[ForeignKey("DataVisibilityGroup")]
+		public virtual int? RowidDataVisibilityGroup { get; set; }
+
+		[ForeignKey("User")]
+		public virtual int? RowidUser { get; set; }
+
+
+		public virtual T Record { get; set; }
+
+
+
+		public virtual E00220_User User { get; set; }
+
+		public virtual E00224_DataVisibilityGroup DataVisibilityGroup { get; set; }
+
+	}
 }

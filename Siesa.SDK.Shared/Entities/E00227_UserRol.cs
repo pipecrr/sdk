@@ -14,9 +14,9 @@ namespace Siesa.SDK.Entities
 	/// <summary>
 	/// Relaciona los usuarios y los roles
 	/// </summary>
-
+	[SDKLogEntity]
 	[Index(nameof(RowidRol), nameof(RowidUser), Name = "IX_e00227_1", IsUnique = true)]
-	public class E00227_UserRol : BaseAudit<int>
+	public partial class E00227_UserRol : BaseAudit<int>
 	{
 		[Key]
 		[Required]

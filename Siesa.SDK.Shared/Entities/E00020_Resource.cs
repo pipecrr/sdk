@@ -16,7 +16,7 @@ namespace Siesa.SDK.Entities
 	/// </summary>
 
 	[Index(nameof(Id), Name = "IX_e00020_1", IsUnique = true)]
-	public class E00020_Resource : BaseSDK<int>
+	public partial class E00020_Resource : BaseSDK<int>
 	{
 		[SDKIdentity]
 		[Key]

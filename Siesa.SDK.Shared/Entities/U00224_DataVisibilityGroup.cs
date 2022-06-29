@@ -15,7 +15,8 @@ namespace Siesa.SDK.Entities
 	/// Permisos de usuario por fila
 	/// </summary>
 	[SDKLogEntity]
-	public class U00224_DataVisibilityGroup : BaseUserPermission<E00224_DataVisibilityGroup, int>
+	[Index(nameof(RowidUser), nameof(RowidRecord), nameof(RowidDataVisibilityGroup), Name = "IX_u00224_1", IsUnique = true)]
+	public partial class U00224_DataVisibilityGroup : BaseUserPermission<E00224_DataVisibilityGroup, int>
 	{
 
 	}

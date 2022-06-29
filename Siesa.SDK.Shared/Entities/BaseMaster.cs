@@ -1,32 +1,34 @@
-﻿
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Siesa.SDK.Entities
 {
-    public abstract class BaseMaster<T>: BaseAudit<int>
-    {
 
-        [Required]
-        [StringLength(2000)]
-        public virtual string Description { get; set; }
-        
-        [Required]
-        [StringLength(250)]
-        public virtual string Name { get; set; }
-        [Required]
-        public virtual T Id { get; set; }
+	public abstract partial class BaseMaster<T> : BaseAudit<int>
+	{
+		[Key]
+		[Required]
+		public override int Rowid { get; set; }
 
-        public virtual bool Status { get; set; }
-        public virtual bool IsPrivate { get; set; }
+		public virtual T Id { get; set; }
 
-        //TODO: Agregar relación con attachment
+		[Required]
+		[StringLength(250)]
+		public virtual string Name { get; set; }
 
-        public override string ToString()
-        {
-            return $"({Id}) - {Name}";
-        }
-    }
+		[Required]
+		[StringLength(2000)]
+		public virtual string Description { get; set; }
+
+		[Required]
+		public virtual bool Status { get; set; }
+
+		[Required]
+		public virtual bool IsPrivate { get; set; }
+
+		public virtual int? RowidAttachment { get; set; }
+
+
+	}
 }

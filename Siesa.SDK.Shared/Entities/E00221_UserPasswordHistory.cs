@@ -16,7 +16,7 @@ namespace Siesa.SDK.Entities
 	/// </summary>
 
 	[Index(nameof(RowidUser), nameof(PasswordSequence), Name = "IX_e00221_1", IsUnique = true)]
-	public class E00221_UserPasswordHistory : BaseSDK<int>
+	public partial class E00221_UserPasswordHistory : BaseSDK<int>
 	{
 		[Key]
 		[Required]

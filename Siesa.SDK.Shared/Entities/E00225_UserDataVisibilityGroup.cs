@@ -16,7 +16,7 @@ namespace Siesa.SDK.Entities
 	/// </summary>
 	[SDKLogEntity]
 	[Index(nameof(RowidDataVisibilityGroup), nameof(RowidUser), Name = "IX_e00225_1", IsUnique = true)]
-	public class E00225_UserDataVisibilityGroup : BaseAudit<int>
+	public partial class E00225_UserDataVisibilityGroup : BaseAudit<int>
 	{
 		[Key]
 		[Required]

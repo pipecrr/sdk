@@ -14,8 +14,9 @@ namespace Siesa.SDK.Entities
 	/// <summary>
 	/// Tabla de roles
 	/// </summary>
-
-	public class E00226_Rol : BaseMasterCompanyGroup<string>
+	[SDKLogEntity]
+	[Index(nameof(RowidCompanyGroup), nameof(Id), Name = "IX_e00226_1", IsUnique = true)]
+	public partial class E00226_Rol : BaseMasterCompanyGroup<string>
 	{
 		[Required]
 		[StringLength(20)]
@@ -27,7 +28,5 @@ namespace Siesa.SDK.Entities
 
 		public virtual E00201_Company Company { get; set; }
 
-		[InverseProperty("Rol")]
-        public virtual ICollection<E00227_UserRol> UsersRol { get; set; }
 	}
 }

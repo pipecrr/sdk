@@ -15,7 +15,7 @@ namespace Siesa.SDK.Entities
 	/// Sesión
 	/// </summary>
 
-	public class E00210_Session : BaseSDK<int>
+	public partial class E00210_Session : BaseSDK<int>
 	{
 		[Key]
 		[Required]

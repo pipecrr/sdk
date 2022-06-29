@@ -16,7 +16,7 @@ namespace Siesa.SDK.Entities
 	/// </summary>
 	[SDKLogEntity]
 	[Index(nameof(RowidUser), nameof(DayWeek), nameof(StartTime), Name = "IX_e00222_1", IsUnique = true)]
-	public class E00222_UserAccessSchedulingJournal : BaseAudit<int>
+	public partial class E00222_UserAccessSchedulingJournal : BaseAudit<int>
 	{
 		[Key]
 		[Required]

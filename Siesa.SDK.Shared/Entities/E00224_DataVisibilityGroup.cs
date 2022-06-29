@@ -15,7 +15,8 @@ namespace Siesa.SDK.Entities
 	/// Grupos de trabajo
 	/// </summary>
 	[SDKLogEntity]
-	public class E00224_DataVisibilityGroup : BaseMasterCompanyGroup<string>
+	[Index(nameof(RowidCompanyGroup), nameof(Id), Name = "IX_e00224_1", IsUnique = true)]
+	public partial class E00224_DataVisibilityGroup : BaseMasterCompanyGroup<string>
 	{
 		[Required]
 		[StringLength(20)]

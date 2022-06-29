@@ -15,17 +15,12 @@ namespace Siesa.SDK.Entities
 	/// Grupo compañía
 	/// </summary>
 
-	public class E00200_CompanyGroup : BaseSDK<short>
+	public partial class E00200_CompanyGroup : BaseSDK<short>
 	{
 		[SDKIdentity]
 		[Key]
 		[Required]
 		public override short Rowid { get; set; }
-
-		public override string ToString()
-		{
-			return $"{Rowid}";
-		}
 
 
 	}
