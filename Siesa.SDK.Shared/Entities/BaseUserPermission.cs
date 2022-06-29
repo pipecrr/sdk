@@ -26,14 +26,20 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public virtual byte RestrictionType { get; set; }
 
+		[ForeignKey("DataVisibilityGroup")]
 		public virtual int? RowidDataVisibilityGroup { get; set; }
 
+		[ForeignKey("User")]
 		public virtual int? RowidUser { get; set; }
 
 
 		public virtual T Record { get; set; }
 
 
+
+		public virtual E00220_User User { get; set; }
+
+		public virtual E00224_DataVisibilityGroup DataVisibilityGroup { get; set; }
 
 	}
 }
