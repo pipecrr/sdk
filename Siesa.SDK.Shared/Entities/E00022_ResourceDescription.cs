@@ -16,7 +16,7 @@ namespace Siesa.SDK.Entities
 	/// </summary>
 
 	[Index(nameof(RowidCulture), nameof(RowidResource), Name = "IX_e00022_1", IsUnique = true)]
-	public class E00022_ResourceDescription : BaseSDK<int>
+	public partial class E00022_ResourceDescription : BaseSDK<int>
 	{
 		[SDKIdentity]
 		[Key]
