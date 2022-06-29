@@ -14,17 +14,17 @@ namespace Siesa.SDK.Entities.Enums
 		Team = 2
 	}
 
-	public enum PermissionAuthTypes
-	{
-		Query = 1,
-		Transaction = 2,
-		Query_Ix = 3
-	}
-
 	public enum PermissionRestrictionType
 	{
 		Not_Applicable = 0,
 		Enabled = 1,
 		Disabled = 2
+	}
+
+	public enum PermissionAuthTypes
+	{
+		Query = 1,
+		Transaction = 2,
+		Query_Tx = 3
 	}
 }
