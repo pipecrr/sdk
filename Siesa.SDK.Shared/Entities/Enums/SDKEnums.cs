@@ -20,4 +20,11 @@ namespace Siesa.SDK.Entities.Enums
 		Transaction = 2,
 		Query_Ix = 3
 	}
+
+	public enum PermissionRestrictionType
+	{
+		Not_Applicable = 0,
+		Enabled = 1,
+		Disabled = 2
+	}
 }
