@@ -8,13 +8,6 @@ namespace Siesa.SDK.Entities.Enums
 		Female = 1
 	}
 
-	public enum PermissionRestrictionType
-	{
-		Not_Applicable = 0,
-		Enabled = 1,
-		Disabled = 2
-	}
-
 	public enum MenuType
 	{
 		Separator = 1,
@@ -33,5 +26,12 @@ namespace Siesa.SDK.Entities.Enums
 		Query = 1,
 		Transaction = 2,
 		Query_Tx = 3
+	}
+
+	public enum PermissionRestrictionType
+	{
+		Not_Applicable = 0,
+		Enabled = 1,
+		Disabled = 2
 	}
 }
