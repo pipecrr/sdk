@@ -5,12 +5,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Siesa.SDK.Entities
 {
 
-	public abstract partial class BaseCompanyGroup<T> : BaseAudit<T>
+	public abstract partial class BaseCompanyTransation<T> : BaseCompany<T>
 	{
 		
 
-		[Required]
-		public virtual short RowidCompanyGroup { get; set; }
+		public virtual int? RowidAttachment { get; set; }
 
 
 	}

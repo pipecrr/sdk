@@ -16,7 +16,7 @@ namespace Siesa.SDK.Entities
 	/// </summary>
 	[SDKLogEntity]
 	[Index(nameof(RowidRolAuthorizedOperation), nameof(RowidCompany), nameof(RowidUser), Name = "IX_e00229_1", IsUnique = true)]
-	public class E00229_OverwriteRolAuthorizedOperation : BaseAudit<int>
+	public partial class E00229_OverwriteRolAuthorizedOperation : BaseAudit<int>
 	{
 		[Key]
 		[Required]

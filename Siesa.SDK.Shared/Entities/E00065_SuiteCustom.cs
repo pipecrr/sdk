@@ -16,7 +16,7 @@ namespace Siesa.SDK.Entities
 	/// </summary>
 	[SDKLogEntity]
 	[Index(nameof(Id), Name = "IX_e00065_1", IsUnique = true)]
-	public class E00065_SuiteCustom : BaseAudit<short>
+	public partial class E00065_SuiteCustom : BaseAudit<short>
 	{
 		[Key]
 		[Required]

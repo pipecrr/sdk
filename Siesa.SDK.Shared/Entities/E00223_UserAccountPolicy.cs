@@ -15,7 +15,8 @@ namespace Siesa.SDK.Entities
 	/// Politicas de la cuenta de usuario
 	/// </summary>
 	[SDKLogEntity]
-	public class E00223_UserAccountPolicy : BaseMaster<string>
+	[Index(nameof(Id), Name = "IX_e00223_1", IsUnique = true)]
+	public partial class E00223_UserAccountPolicy : BaseMaster<string>
 	{
 		[Required]
 		[StringLength(20)]

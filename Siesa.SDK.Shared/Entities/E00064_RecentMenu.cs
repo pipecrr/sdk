@@ -16,7 +16,7 @@ namespace Siesa.SDK.Entities
 	/// </summary>
 
 	[Index(nameof(RowidUser), nameof(RowidMenu), nameof(RowidMenuCustom), Name = "IX_e00064_1", IsUnique = true)]
-	public class E00064_RecentMenu : BaseAudit<int>
+	public partial class E00064_RecentMenu : BaseAudit<int>
 	{
 		[Key]
 		[Required]

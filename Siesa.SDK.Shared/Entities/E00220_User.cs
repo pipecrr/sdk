@@ -15,7 +15,8 @@ namespace Siesa.SDK.Entities
 	/// Usuario
 	/// </summary>
 	[SDKLogEntity]
-	public class E00220_User : BaseMaster<string>
+	[Index(nameof(Id), Name = "IX_e00220_1", IsUnique = true)]
+	public partial class E00220_User : BaseMaster<string>
 	{
 		[Required]
 		[StringLength(20)]
@@ -41,8 +42,8 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public DateTime PasswordLastUpdate { get; set; }
 
-		// [ForeignKey("UserAccountPolicy")]
-		// public int? RowidUserAccountPolicy { get; set; }
+		[ForeignKey("UserAccountPolicy")]
+		public int? RowidUserAccountPolicy { get; set; }
 
 		[Required]
 		public bool ChangePasswordFirstLogin { get; set; }
@@ -112,10 +113,7 @@ namespace Siesa.SDK.Entities
 
 		public virtual E00220_User UserReportTo { get; set; }
 
-		// public E00223_UserAccountPolicy UserAccountPolicy { get; set; }
-
-		[InverseProperty("User")]
-		public virtual ICollection<E00227_UserRol> RolesUser { get; set; }
+		public virtual E00223_UserAccountPolicy UserAccountPolicy { get; set; }
 
 	}
 }
