@@ -15,13 +15,6 @@ namespace Siesa.SDK.Entities.Enums
 		Disabled = 2
 	}
 
-	public enum PermissionAuthTypes
-	{
-		Query = 1,
-		Transaction = 2,
-		Query_Tx = 3
-	}
-
 	public enum MenuType
 	{
 		Separator = 1,
@@ -33,5 +26,12 @@ namespace Siesa.SDK.Entities.Enums
 	{
 		User = 1,
 		Team = 2
+	}
+
+	public enum PermissionAuthTypes
+	{
+		Query = 1,
+		Transaction = 2,
+		Query_Tx = 3
 	}
 }
