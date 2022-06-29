@@ -9,6 +9,7 @@ namespace Siesa.SDK.Entities
 	{
 		
 
+		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		[Required]
 		public virtual DateTime CreationDate { get; set; }
 
