@@ -14,6 +14,7 @@ namespace Siesa.SDK.Entities
 		[ForeignKey("Record")]
 		public virtual U RowidRecord { get; set; }
 
+		[ForeignKey("Company")]
 		public virtual short? RowidCompany { get; set; }
 
 		public virtual int? RowidAttachment { get; set; }
@@ -22,6 +23,8 @@ namespace Siesa.SDK.Entities
 		public virtual T Record { get; set; }
 
 
+
+		public virtual E00201_Company Company { get; set; }
 
 	}
 }
