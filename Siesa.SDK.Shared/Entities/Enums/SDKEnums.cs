@@ -8,12 +8,6 @@ namespace Siesa.SDK.Entities.Enums
 		Female = 1
 	}
 
-	public enum PermissionUserTypes
-	{
-		User = 1,
-		Team = 2
-	}
-
 	public enum PermissionRestrictionType
 	{
 		Not_Applicable = 0,
@@ -33,5 +27,11 @@ namespace Siesa.SDK.Entities.Enums
 		Separator = 1,
 		Menu = 2,
 		Feature = 3
+	}
+
+	public enum PermissionUserTypes
+	{
+		User = 1,
+		Team = 2
 	}
 }
