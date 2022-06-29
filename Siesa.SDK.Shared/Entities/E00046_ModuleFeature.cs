@@ -16,7 +16,7 @@ namespace Siesa.SDK.Entities
 	/// </summary>
 
 	[Index(nameof(RowidModule), nameof(RowidFeature), Name = "IX_e00046_1", IsUnique = true)]
-	public class E00046_ModuleFeature : BaseSDK<int>
+	public partial class E00046_ModuleFeature : BaseSDK<int>
 	{
 		[SDKIdentity]
 		[Key]
