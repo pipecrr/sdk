@@ -11,9 +11,9 @@ namespace Siesa.SDK.Entities
 
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		[Required]
-		public virtual DateTime CreationDate { get; set; }
+		public virtual DateTime CreationDate { get; set; } = DateTime.UtcNow;
 
-		public virtual DateTime? LastUpdateDate { get; set; }
+		public virtual DateTime? LastUpdateDate { get; set; } = DateTime.UtcNow;
 
 		[StringLength(2000)]
 		public virtual string? Source { get; set; }
