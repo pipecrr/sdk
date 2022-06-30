@@ -30,6 +30,7 @@ else
         SelectionMode="Radzen.DataGridSelectionMode.Single"
         Value=@SelectedObjects
         ValueChanged="((objects) => OnSelectionChanged(objects))"
+        class="whcm_table"
         @key="needUpdate">
         <Columns>
             <RadzenDataGridColumn TItem="object" Title="Acciones" Width="100px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
