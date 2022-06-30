@@ -8,17 +8,17 @@ namespace Siesa.SDK.Entities.Enums
 		Female = 1
 	}
 
+	public enum MenuType
+	{
+		Separator = 1,
+		Menu = 2,
+		Feature = 3
+	}
+
 	public enum PermissionUserTypes
 	{
 		User = 1,
 		Team = 2
-	}
-
-	public enum PermissionRestrictionType
-	{
-		Not_Applicable = 0,
-		Enabled = 1,
-		Disabled = 2
 	}
 
 	public enum PermissionAuthTypes
@@ -28,10 +28,10 @@ namespace Siesa.SDK.Entities.Enums
 		Query_Tx = 3
 	}
 
-	public enum MenuType
+	public enum PermissionRestrictionType
 	{
-		Separator = 1,
-		Menu = 2,
-		Feature = 3
+		Not_Applicable = 0,
+		Enabled = 1,
+		Disabled = 2
 	}
 }
