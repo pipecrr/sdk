@@ -19,7 +19,7 @@ namespace Siesa.SDK.Entities
 		public virtual PermissionUserTypes UserType { get; set; }
 
 		[Required]
-		public virtual PermissionAuthTypes AuthorizarionType { get; set; }
+		public virtual PermissionAuthTypes AuthorizationType { get; set; }
 
 		[Required]
 		public virtual PermissionRestrictionType RestrictionType { get; set; }
