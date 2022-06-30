@@ -27,4 +27,11 @@ namespace Siesa.SDK.Entities.Enums
 		Transaction = 2,
 		Query_Tx = 3
 	}
+
+	public enum MenuType
+	{
+		Separator = 1,
+		Menu = 2,
+		Feature = 3
+	}
 }
