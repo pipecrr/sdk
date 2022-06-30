@@ -43,8 +43,8 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public DateTime PasswordLastUpdate { get; set; }
 
-		[ForeignKey("UserAccountPolicy")]
-		public int? RowidUserAccountPolicy { get; set; }
+		// [ForeignKey("UserAccountPolicy")]
+		// public int? RowidUserAccountPolicy { get; set; }
 
 		[Required]
 		public bool ChangePasswordFirstLogin { get; set; }
@@ -114,7 +114,7 @@ namespace Siesa.SDK.Entities
 
 		public virtual E00220_User UserReportTo { get; set; }
 
-		public virtual E00223_UserAccountPolicy UserAccountPolicy { get; set; }
+		// public virtual E00223_UserAccountPolicy UserAccountPolicy { get; set; }
 
 	}
 }
