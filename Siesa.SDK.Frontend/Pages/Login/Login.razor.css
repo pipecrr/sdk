@@ -12,12 +12,12 @@
     justify-content: center;
     animation-name: login_loading_out;
     animation-duration: 0.6s;
-    animation-delay: 2.4s;
+    animation-delay: 1.0s;
     animation-fill-mode: forwards;
 }
 .login_loading>div{
     animation-name: login_loading_frames;
-    animation-duration: 2.4s;
+    animation-duration: 1.0s;
     animation-delay: 0s;
     animation-fill-mode: forwards;
 }
@@ -74,7 +74,7 @@
     transform-style: preserve-3d;
     -webkit-animation: flip-in-hor-bottom 0.6s linear forwards;
 	        animation: flip-in-hor-bottom 0.6s linear forwards;
-            animation-delay: 3s;
+            animation-delay: 1.6s;
     
 }
 .info_card_modal{
@@ -120,7 +120,7 @@
     opacity: 0;
     -webkit-animation: slide-in-top 0.6s ease-in forwards;
 	        animation: slide-in-top 0.6s ease-in forwards;
-            animation-delay: 3s;
+            animation-delay: 1.6s;
 }
 .select_connect{
     padding: 0 !important;
