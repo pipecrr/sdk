@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@using Microsoft.Extensions.Hosting
 @using Siesa.SDK.Frontend.Components.Layout.Header
 @using Siesa.SDK.Entities
 @using System
@@ -70,17 +71,24 @@
     [Parameter]
     public bool ShowMenu { get; set; }
 
+    public string environment;
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
         Menus = new List<E00061_Menu>();
-        Menus.Add(new E00061_Menu()
+        environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        if(environment == Environments.Development)
         {
-            ResourceTag = "DevMenu",
-            IconClass = "fa-solid fa-code",
-            SubMenus = new List<E00061_Menu>(),
-            CurrentText = "DevMenu",
-        });
+            Menus.Add(new E00061_Menu()
+            {
+                ResourceTag = "DevMenu",
+                IconClass = "fa-solid fa-code",
+                SubMenus = new List<E00061_Menu>(),
+                CurrentText = "DevMenu",
+            });
+        }
+        
         _ = LoadMenu();
     }
 
@@ -101,12 +109,16 @@
     {
         //TODO: Check Performance, Call only once
         backendManager.SyncWithMasterBackend();
-        var DevMenu = Menus.FirstOrDefault(x => x.ResourceTag == "DevMenu").SubMenus;
+        var DevMenu = Menus.FirstOrDefault(x => x.ResourceTag == "DevMenu")?.SubMenus;
         foreach (var backend in backendManager.GetBackendDict())
         {
             foreach (var business in backend.Value.businessRegisters.Businesses)
             {
                 BusinessManagerFrontend.Instance.AddBusiness(business, backend.Value.Name);
+                if(DevMenu == null)
+                {
+                    continue;
+                }
                 var businessType = Utils.Utils.SearchType(business.Namespace + "." + business.Name);
                 if (businessType == null)
                 {
@@ -144,11 +156,9 @@
 
                     DevMenu.Add(submenuItem);
                 }
-
-
-
             }
         }
+        
         var menuBL = Frontend.BusinessManagerFrontend.Instance.GetBusiness("BLAdminMenu", AuthenticationService);
         var request = await menuBL.Call("GetSuites");
         if (request.Success)

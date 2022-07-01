@@ -6,6 +6,7 @@
 @using Siesa.SDK.Shared.Utilities
 @using Siesa.SDK.Entities.Enums
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 
 @if(MenuItem.SubMenus?.Count > 0){
     @* <DxMenuItem Text="@Title" IconCssClass="@MenuItem.IconClass"> 
@@ -15,7 +16,7 @@
         }
         </Items>
     </DxMenuItem>        *@
-    <a href="#" @onclick:stopPropagation="true" @onclick="()=> OnClick(MenuItem)"  @onclick:preventDefault class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
+    <a href="#" @ref="btnRef" @onclick:stopPropagation="true" @onclick="()=> OnClick(MenuItem)"  @onclick:preventDefault class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
         title="@Title">
         @if(MenuItem.IconClass != null){
             <div class="nav_btn_standar_icon">
@@ -75,7 +76,11 @@
     [Parameter] public Action<E00061_Menu> OnClick { get; set; }
     [CascadingParameter] public Action HideSubmenu { get; set; }
 
+    [Parameter] public bool Focus { get; set; }
+
     private string Title { get; set; } = "";
+
+    private ElementReference btnRef;
 
     private async Task<string> GetTitle(){
         if((MenuItem.RowidResource == null || MenuItem.RowidResource == 0) && MenuItem.ResourceTag != null){
@@ -97,6 +102,10 @@
 
     //on parameter change
     protected override async Task OnParametersSetAsync(){
+        if(btnRef.Context != null && Focus)
+        {
+            btnRef.FocusAsync();
+        }
         if(String.IsNullOrEmpty(MenuItem.CurrentText))
         {
             Title = MenuItem.ResourceTag;

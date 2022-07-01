@@ -130,6 +130,7 @@
     font-size: .875rem;
     max-width: calc(100% - 60px);
     text-overflow: ellipsis;
+    text-align: right;
 }
 .btn_region{
     min-width: 16px;

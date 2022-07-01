@@ -16,8 +16,8 @@
     --color_siesa_3: #20CAE1;
 
     --color_estado_edición: #FFC500;
-    --color_estado_creación: #FF6C00;
-    --color_estado_persistencia: #00B100;
+    --color_estado_creación: #00B100;
+    --color_estado_persistencia: #FF6C00;
 
     --color_button_back: linear-gradient(135deg, rgba(88,90,213,.3) 0%, rgba(88,90,213,1) 100%);
     --color_primary_shadow: #1031A333;
@@ -103,6 +103,7 @@ body {
     border: none;
     outline: none !important;
     background: transparent;
+    z-index: 0;
 }
 .nav_btn_standar::before{
     content: "";
@@ -242,4 +243,43 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
 }
 .w-100-max{
     max-width: 100% !important;
+}
+
+.layout_btn_standar-sm{
+    max-width: 31px;
+    min-width: 31px;
+    max-height: 31px;
+    min-height: 31px;
+    color: var(--color_primary);
+    padding: 0.25rem !important;
+    font-size: 1.2rem !important;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background: none;
+}
+.layout_btn_standar-sm::before{
+    content: "";
+    border-radius: 0.2rem;
+    width: 20%;
+    height: 100%;
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    box-shadow: var(--shadow_standar);
+    background: var(--color_button_back);
+    transition-duration: .2s; 
+}
+.layout_btn_standar-sm:hover::before, .layout_btn_standar-sm:focus::before{
+    width: 100%;
+    opacity: 1;
+    transition-duration: .2s;
+}
+.layout_btn_standar-sm:hover i, .layout_btn_standar-sm:focus i{
+    color: var(--color_light);
+    z-index: 1;
+    transition-duration: .2s; 
 }

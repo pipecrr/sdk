@@ -37,7 +37,7 @@
     width: 0px;
 }
 
-::deep .nav_btn_standar:hover{
+/* ::deep .nav_btn_standar:hover{
     background: var(--color_button_back);
     transition-duration: .2s; 
-}
+} */

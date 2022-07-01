@@ -45,16 +45,16 @@ else
                     </HeaderTemplate>
                
                 <Template Context="data">
-                    <div class="action-buttons">
+                    <div class="action-buttons d-flex justify-content-center">
                         @if(AllowEdit){
-                            <button class="btn btn-link grid-btn-link" @onclick="() => GoToEdit(((IBaseSDK)data).GetRowid())"><span
-                            class="oi oi-pencil"></span></button>
+                            <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToEdit(((IBaseSDK)data).GetRowid())"><i
+                            class="fa-solid fa-pen"></i></button>
                         }
                         
                         
                         @if(IsSubpanel && AllowDelete){
-                            <button class="btn btn-link grid-btn-link" @onclick="() => GoToDelete(((IBaseSDK)data).GetRowid(), data.ToString())"><span
-                            class="oi oi-circle-x" style="color:red"></span></button>
+                            <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToDelete(((IBaseSDK)data).GetRowid(), data.ToString())"><span
+                            class="fa-solid fa-trash-can"></span></button>
                             
                         }
                         @* <button class="btn btn-link grid-btn-link"

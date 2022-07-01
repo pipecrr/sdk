@@ -13,7 +13,10 @@ namespace Siesa.SDK.Entities
 {
 	public partial class E00201_Company
 	{
-
+		public override string ToString()
+		{
+			return $"({Rowid})";
+		}
 
 
 	}

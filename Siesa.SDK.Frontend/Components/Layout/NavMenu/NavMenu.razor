@@ -27,20 +27,12 @@
 </label>
 <nav class="menu_content">
     <div class="nav_section_1 w-100">
-        <a class="nav_logo" href="index.html">
-            <img src="_content/Siesa.SDK.Frontend/assets/img/LogoSiesa.svg" height="30px" alt="Logo compania">
-        </a>
-        <a href="/" @onclick="()=> OnMenuItemClick(null)" class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right" title="Home">
-            <div class="nav_btn_standar_icon">
-                <i class="fa-solid fa-house font_size_112"></i>
-            </div>
-            <div class="nav_btn_standar_text">
-                Home
-            </div>
+        <a class="nav_logo" href="/">
+            <img src="_content/Siesa.SDK.Frontend/assets/img/logo_empresa.png" height="30px" alt="Logo compania">
         </a>
         @foreach (var menuItem in Menus)
         {
-            <NavMenuItem MenuItem="@menuItem" OnClick="@OnMenuItemClick" />
+            <NavMenuItem MenuItem="@menuItem" OnClick="@OnMenuItemClick" Focus="@(SelectedMainMenu == menuItem)" />
         }
     </div>
     @if (AuthenticationService.User != null)
@@ -81,18 +73,29 @@
 
     private E00061_Menu SelectedMenu { get; set; }
 
+    private E00061_Menu SelectedMainMenu { get; set; }
+
     private bool ShowSubMenu { get; set; }
 
     private E00061_Menu ProfileMenu { get; set; }
 
     public void OnMenuItemClick(E00061_Menu menuItem)
     {
+        
         SelectedMenu = menuItem;
         if(menuItem?.SubMenus?.Count > 0)
         {
             ShowSubMenu = true;
         }else{
             ShowSubMenu = false;
+        }
+        if(menuItem?.RowidMenuParent == null)
+        {
+            SelectedMainMenu = menuItem;
+        }else{
+            if(!ShowSubMenu){
+                SelectedMainMenu = null;
+            }
         }
         StateHasChanged();
     }
@@ -131,6 +134,7 @@
     private void HideSubmenu()
     {
         ShowSubMenu = false;
+        SelectedMainMenu = null;
         StateHasChanged();
     }
 }

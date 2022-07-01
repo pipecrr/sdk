@@ -11,7 +11,9 @@
         </div>
     </div>
     <div class="col-5 sdk_company_logo">
-        <img src="_content/Siesa.SDK.Frontend/assets/img/LogoSiesa.svg" height="30px" alt="Logo siesa">
+        <a class="nav_logo" href="/">
+            <img src="_content/Siesa.SDK.Frontend/assets/img/logo_empresa.png" height="30px" alt="Logo compania">
+        </a>
     </div>
     <div class="col-2 p-0">
         <div class="sdk_search" @onclick="()=>ShowSearch()">
@@ -46,8 +48,8 @@
             <div class="position-relative">
                 <button @onclick="()=> ToogleConnect()" class="btn btn_connect d-flex align-items-center">
                     <div>
-                        <p class="font-weight-bold m-0">Grupo Siesa</p>
-                        <p class="m-0">Conexión_login_desarrollo</p>
+                        <p class="font-weight-bold m-0">Grupo @SelectedGroup.Rowid</p>
+                        <p class="m-0">Compañía @SelectedCompany.Rowid</p>
                     </div>
                     <div class="pl-3">
                         <i class="fa-solid fa-chevron-down"></i>
@@ -63,9 +65,11 @@
                                     <label class="col-form-label col-form-label-sm font-weight-bold"
                                     for="inputGrupo">Grupo</label>
                                     <div class="d-flex form-control form-control-sm p-0">
-                                        <select id="inputGrupo" class="">
-                                            <option selected>Grupo Siesa</option>
-                                            <option>...</option>
+                                        <select id="inputGrupo" class="" @bind="SelectedGroup.Rowid">
+                                            @foreach (var group in CompanyGroups)
+                                            {
+                                                <option value="@group.Rowid">Grupo @group.Rowid</option>
+                                            }
                                         </select>
                                         <button>
                                             <i class="fa-solid fa-magnifying-glass"></i>
@@ -76,9 +80,11 @@
                                     <label class="col-form-label col-form-label-sm font-weight-bold"
                                     for="inputCompania">Compañía</label>
                                     <div class="d-flex form-control form-control-sm p-0">
-                                        <select id="inputGrupo" class="">
-                                            <option selected>Conexión_login_desarrollo</option>
-                                            <option>...</option>
+                                        <select id="inputGrupo" class="" @bind="SelectedCompany.Rowid">
+                                            @foreach (var company in Companies.Where(c => c.RowidCompanyGroup == SelectedGroup.Rowid))
+                                            {
+                                                <option value="@company.Rowid">Compañía @company.Rowid</option>
+                                            }
                                         </select>
                                         <button>
                                             <i class="fa-solid fa-magnifying-glass"></i>
@@ -120,6 +126,47 @@
     private bool SearchEnabled = false;
 
     private bool ConnectEnabled = false;
+
+    private List<E00200_CompanyGroup> CompanyGroups { get; set; } = new List<E00200_CompanyGroup>();
+    
+    private List<E00201_Company> Companies { get; set; } = new List<E00201_Company>();
+    
+    private E00200_CompanyGroup SelectedGroup { get; set; } = new E00200_CompanyGroup();
+
+    private E00201_Company SelectedCompany { get; set; } = new E00201_Company();
+
+    protected override void OnInitialized()
+    {
+
+        CompanyGroups = new List<E00200_CompanyGroup>();
+        Companies = new List<E00201_Company>();
+
+        short nTestGroups = 3;
+        short nMaxTestCompaniesByGroup = 5;
+        for (short i = 0; i < nTestGroups; i++)
+        {
+            var group = new E00200_CompanyGroup();
+            group.Rowid = Convert.ToInt16(i + 1);
+            var groupCompanies = new List<E00201_Company>();
+            //get random companies
+            var random = new Random();
+            var nCompanies = random.Next(1, nMaxTestCompaniesByGroup);
+            for (short j = 0; j < nCompanies; j++)
+            {
+                var company = new E00201_Company();
+                var rowid = Companies.Count + 1 + j;
+                company.Rowid = Convert.ToInt16(rowid);
+                company.CompanyGroup = group;
+                company.RowidCompanyGroup = group.Rowid;
+                groupCompanies.Add(company);
+            }
+            Companies.AddRange(groupCompanies);
+            CompanyGroups.Add(group);
+        }
+        SelectedGroup = CompanyGroups.FirstOrDefault();
+        SelectedCompany = Companies.Where(c => c.RowidCompanyGroup == SelectedGroup.Rowid).FirstOrDefault();
+        base.OnInitialized();
+    }
 
     public class HeaderSearchResult
     {
