@@ -123,6 +123,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             NavManager.NavigateTo($"{BusinessName}/create/");
         }
 
+        private void GoToDuplicate()
+        {
+            NavManager.NavigateTo($"{BusinessName}/create/{BusinessObj.BaseObj.Rowid}/");
+        }
+
         private void GoToEdit()
         {
             NavManager.NavigateTo($"{BusinessName}/edit/{BusinessObj.BaseObj.Rowid}/");
