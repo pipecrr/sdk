@@ -19,6 +19,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
     {
         public OrderBy OrderBy { get; set; }
         public Paging Paging { get; set; }
+        public bool InfiniteScroll { get; set; } = true;
         public List<object> Filters { get; set; } //TODO: Filtrar desde metadata
         public List<FieldOptions> Fields { get; set; } 
 
