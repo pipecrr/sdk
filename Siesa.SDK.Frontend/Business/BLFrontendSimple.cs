@@ -13,6 +13,7 @@ using Siesa.SDK.Frontend.Components.FormManager.Model;
 using Siesa.SDK.Protos;
 using Siesa.SDK.Shared.Business;
 using Siesa.SDK.Shared.Services;
+using Siesa.SDK.Shared.Utilities;
 using Siesa.SDK.Shared.Validators;
 
 namespace Siesa.SDK.Business
@@ -119,6 +120,28 @@ namespace Siesa.SDK.Business
         {
             BaseObj = await GetAsync(rowid);
         }
+
+        public async virtual Task GetDuplicateInfo(Int64 rowid)
+        {
+            BaseObj = await GetAsync(rowid);
+            //clear rowid
+            BaseObj.SetRowid(0);
+            var blankBaseObj = Activator.CreateInstance<T>();
+            if(Utilities.IsAssignableToGenericType(BaseObj.GetType(), typeof(BaseAudit<>)))
+            {
+                foreach(var field in typeof(BaseAudit<>).GetProperties())
+                {
+                    //if field is nullable, set it to null
+                    if(field.PropertyType.IsGenericType && field.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                    {
+                        BaseObj.GetType().GetProperty(field.Name).SetValue(BaseObj, null);
+                    }else{
+                        BaseObj.GetType().GetProperty(field.Name).SetValue(BaseObj, blankBaseObj.GetType().GetProperty(field.Name).GetValue(blankBaseObj));
+                    }
+                }
+            }
+        }
+
 
         public virtual Int64 Save()
         {
