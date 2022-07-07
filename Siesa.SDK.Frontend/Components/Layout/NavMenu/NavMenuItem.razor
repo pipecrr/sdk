@@ -40,7 +40,7 @@
         {
             @if(Utilities.CheckUserActionPermission(MenuItem.Feature.Rowid, 4, AuthenticationService))
             {
-                <a href="@MenuItem.CurrentURL" @onclick:stopPropagation="true" @onclick="()=> OnClickItem(MenuItem)"  @onclick:preventDefault  class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
+                <a href="@MenuItem.CurrentURL" @onmouseover="MouseOver" @onmouseout="MouseOut" @onclick:stopPropagation="true" @onclick="()=> OnClickItem(MenuItem)"  @onclick:preventDefault  class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
                     title="@Title">
                     @if(MenuItem.IconClass != null){
                         <div class="nav_btn_standar_icon">
@@ -50,12 +50,13 @@
                     <div class="nav_btn_standar_text">
                         @Title
                     </div>
+                    <div class="nav_btn_standar_text nav_btn_external" hidden="@(!ShowIconExternal)"  @onclick:stopPropagation="true"  @onclick="()=> OnClickItem(MenuItem, true)"  @onclick:preventDefault ><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
                 </a>
 
             }
 
         }else{
-            <a href="@MenuItem.CurrentURL" @onclick:stopPropagation="true" @onclick="()=> OnClickItem(MenuItem)"  @onclick:preventDefault class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
+            <a href="@MenuItem.CurrentURL" @onmouseover="MouseOver" @onmouseout="MouseOut" @onclick:stopPropagation="true" @onclick="()=> OnClickItem(MenuItem)"  @onclick:preventDefault class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
                 title="@Title">
                 @if(MenuItem.IconClass != null){
                     <div class="nav_btn_standar_icon">
@@ -65,6 +66,7 @@
                 <div class="nav_btn_standar_text">
                     @Title
                 </div>
+                <div class="nav_btn_standar_text nav_btn_external" hidden="@(!ShowIconExternal)"  @onclick:stopPropagation="true"  @onclick="()=> OnClickItem(MenuItem, true)"  @onclick:preventDefault ><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
             </a>
         }
     }
@@ -81,6 +83,8 @@
     private string Title { get; set; } = "";
 
     private ElementReference btnRef;
+
+    private bool ShowIconExternal { get; set; }
 
     private async Task<string> GetTitle(){
         if((MenuItem.RowidResource == null || MenuItem.RowidResource == 0) && MenuItem.ResourceTag != null){
@@ -116,11 +120,31 @@
         }
     }
 
-    private void OnClickItem(E00061_Menu menuItem){
-        NavigationManager.NavigateTo(menuItem.CurrentURL);
+    private void OnClickItem(E00061_Menu menuItem, bool newTab = false){
+        if(newTab)
+        {
+            try
+            {
+                JSRuntime.InvokeAsync<object>("open", menuItem.CurrentURL, "_blank");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }else{
+            NavigationManager.NavigateTo(menuItem.CurrentURL);
+        }
         if(HideSubmenu != null){
             HideSubmenu();
         }
+    }
+    private void MouseOver(MouseEventArgs e)
+    { 
+        ShowIconExternal=true; 
+    }
+    private void MouseOut(MouseEventArgs e)
+    { 
+        ShowIconExternal=false; 
     }
 
 }
