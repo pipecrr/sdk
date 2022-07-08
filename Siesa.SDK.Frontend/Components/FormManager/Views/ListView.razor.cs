@@ -84,6 +84,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         public string BLEntityName { get; set; }
 
+        public string LastFilter { get; set; }
+
 
         Guid needUpdate;
 
@@ -192,6 +194,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 Loading = true;
             }
             var filters = $"{args.Filter}";
+            if(LastFilter != filters){
+                LastFilter = filters;
+                Loading = true;
+                data = null;
+            }
             if (ConstantFilters != null)
             {
                 foreach (var filter in ConstantFilters)
