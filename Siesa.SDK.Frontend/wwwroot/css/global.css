@@ -283,3 +283,7 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
     z-index: 1;
     transition-duration: .2s; 
 }
+
+.whcm_table{
+    height: calc(100vh - 300px);
+}
