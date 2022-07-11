@@ -47,7 +47,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Inject] public IJSRuntime JSRuntime { get; set; }
         [Inject] public NavigationManager NavManager { get; set; }
 
-        [Inject] public IResourceManager ResourceManager { get; set; }
         [Inject] public IFeaturePermissionService FeaturePermissionService { get; set; }
         [Inject] public IAuthenticationService AuthenticationService { get; set; }
 
@@ -85,16 +84,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         public string BLEntityName { get; set; }
 
-        //resources
-        public string PageSummaryFormat { get; set; } = "Page {0} of {1} ({2} items)";
+        public string LastFilter { get; set; }
+
 
         Guid needUpdate;
-
-        private async Task GetResources()
-        {
-            PageSummaryFormat = await ResourceManager.GetResource("PageSummaryFormat", AuthenticationService);
-            StateHasChanged();
-        }
 
         private void OnSelectionChanged(IList<object> objects){
             if(OnSelectedRow != null){
@@ -193,9 +186,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         async Task LoadData(LoadDataArgs args)
         {
-            Loading = true;
-            data = null;
+            if(!ListViewModel.InfiniteScroll)
+            {
+                data = null;
+            }
+            if(data == null){
+                Loading = true;
+            }
             var filters = $"{args.Filter}";
+            if(LastFilter != filters){
+                LastFilter = filters;
+                Loading = true;
+                data = null;
+            }
             if (ConstantFilters != null)
             {
                 foreach (var filter in ConstantFilters)
