@@ -40,7 +40,7 @@ namespace Siesa.SDK.Backend.Services
             throw new NotImplementedException();
         }
 
-        public Task Login(string username, string password)
+        public Task Login(string username, string password, short rowIdDBConnection)
         {
             throw new NotImplementedException();
         }

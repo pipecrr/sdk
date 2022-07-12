@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.DependencyInjection;
-//using Siesa.SDK.Backend.Interceptors;
 using Siesa.SDK.Entities;
 using Siesa.SDK.Entities.Converters;
 using Siesa.SDK.Shared.Logs.DataChangeLog;
@@ -17,7 +16,7 @@ using Siesa.SDK.Backend.Extensions;
 
 namespace Siesa.SDK.Backend.Access
 {
-    public abstract class SDKContext: DbContext
+    public class SDKContext: DbContext
     {
 	public DbSet<E00025_EnumValue>? E00025_EnumValue { get; set; }
 
@@ -100,7 +99,7 @@ namespace Siesa.SDK.Backend.Access
 
         private IServiceProvider ServiceProvider {get; set;}
 
-        public SDKContext(DbContextOptions options) : base(options)
+       public SDKContext(DbContextOptions options) : base(options)
         {
             ChangeTracker.LazyLoadingEnabled = false;
         }
@@ -150,6 +149,11 @@ namespace Siesa.SDK.Backend.Access
                     if (entry.State == EntityState.Added)
                     {
                         entry.Context.Entry(entry.Entity).Property("RowidUserCreates").CurrentValue = loggedUser;
+                        //if created date is not set, set it to now
+                        if (entry.Context.Entry(entry.Entity).Property("CreationDate").CurrentValue == null)
+                        {
+                            entry.Context.Entry(entry.Entity).Property("CreationDate").CurrentValue = DateTime.Now;
+                        }
                     }
                 }
             }

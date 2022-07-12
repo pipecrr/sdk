@@ -27,12 +27,19 @@ namespace Siesa.SDK.GRPCServices
         private readonly IServiceProvider _provider;
 
         private IAuthenticationService _authenticationService;
+        private ITenantProvider _tenantProvider;
         
-        public SDKService(ILogger<SDKService> logger, IServiceProvider provider, IAuthenticationService AuthenticationService)
+        public SDKService(
+            ILogger<SDKService> logger,
+            IServiceProvider provider,
+            IAuthenticationService AuthenticationService,
+            ITenantProvider tenantProvider
+        )
         {
             _logger = logger;
             _provider = provider;
             _authenticationService = AuthenticationService;
+            _tenantProvider = tenantProvider;
 
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
@@ -44,6 +51,10 @@ namespace Siesa.SDK.GRPCServices
         private void SetCurrentUser(string token)
         {
             _authenticationService.SetToken(token);
+            if(_tenantProvider != null && _authenticationService?.User != null)
+            {
+                _tenantProvider.SetTenantByRowId(_authenticationService.User.RowIdDBConnection);
+            }
         }
 
         public override Task<Protos.BusinessesResponse> GetBusinesses(Protos.GetBusinessesRequest request, ServerCallContext context)

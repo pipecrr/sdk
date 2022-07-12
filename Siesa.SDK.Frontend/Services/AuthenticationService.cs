@@ -46,14 +46,14 @@ namespace Siesa.SDK.Frontend.Services
             Console.WriteLine($"UserToken: {UserToken}");
         }
 
-        public async Task Login(string username, string password)
+        public async Task Login(string username, string password, short rowIdDBConnection)
         {
             var BLuser =  Frontend.BusinessManagerFrontend.Instance.GetBusiness("BLUser", this);
             if(BLuser == null)
             {
                 throw new Exception("Login Service not found");
             }
-            var loginRequest = await BLuser.Call("SignIn", username, password);
+            var loginRequest = await BLuser.Call("SignIn", username, password, rowIdDBConnection);
             if (loginRequest.Success)
             {
                 UserToken = loginRequest.Data;

@@ -82,10 +82,7 @@ namespace Siesa.SDK.Business
         public T BaseObj { get; set; }
 
         private string[] _relatedProperties = null;
-
-        private SDKContext myContext;
-        protected SDKContext Context { get { return myContext; } }
-
+        protected SDKContext ContextMetadata;
         public List<string> RelFieldsToSave { get; set; } = new List<string>();
 
         private IEnumerable<INavigation> _navigationProperties = null;
@@ -112,6 +109,11 @@ namespace Siesa.SDK.Business
             bl.SetProvider(_provider);
         }
 
+        public IServiceProvider GetProvider()
+        {
+            return _provider;
+        }
+
         public void SetProvider(IServiceProvider provider)
         {
             _provider = provider;
@@ -121,10 +123,10 @@ namespace Siesa.SDK.Business
             ILoggerFactory loggerFactory = (ILoggerFactory)_provider.GetService(typeof(ILoggerFactory));
             _logger = loggerFactory.CreateLogger(this.GetType().FullName);
 
-            myContext = _dbFactory.CreateDbContext();
-            myContext.SetProvider(_provider);
+            ContextMetadata = _dbFactory.CreateDbContext();
+            ContextMetadata.SetProvider(_provider);
 
-            _navigationProperties = myContext.Model.FindEntityType(typeof(T)).GetNavigations().Where(p => p.IsOnDependent);
+            _navigationProperties = ContextMetadata.Model.FindEntityType(typeof(T)).GetNavigations().Where(p => p.IsOnDependent);
             AuthenticationService = (IAuthenticationService)_provider.GetService(typeof(IAuthenticationService));
         }
 
@@ -177,7 +179,7 @@ namespace Siesa.SDK.Business
 
         private void AddExceptionToResult(DbUpdateException exception, ValidateAndSaveBusinessObjResponse result)
         {
-            var message = BackendExceptionManager.ExceptionToString(exception, Context);
+            var message = BackendExceptionManager.ExceptionToString(exception, ContextMetadata);
             AddMessageToResult(message, result);
         }
 
@@ -231,24 +233,6 @@ namespace Siesa.SDK.Business
             return returnValue;
         }
 
-        private bool ExistsRowByIndex(string filter)
-        {
-            using (SDKContext context = _dbFactory.CreateDbContext())
-            {
-                context.SetProvider(_provider);
-                var query = context.Set<T>().AsQueryable();
-
-                foreach (var relatedProperty in _relatedProperties)
-                {
-                    query = query.Include(relatedProperty);
-                }
-
-                query = query.Where(filter);
-
-                return query.Count() > 0;
-            }
-        }
-
         private void DisableRelatedProperties(object obj, IEnumerable<INavigation> relatedProperties, List<string> propertiesToKeep = null)
         {
             //TODO: Probar el desvinculado de las propiedades relacionadas
@@ -267,7 +251,7 @@ namespace Siesa.SDK.Business
                         {
                             if (propertiesToKeep != null && propertiesToKeep.Contains(fkFieldName))
                             {
-                                var relNavigations = myContext.Model.FindEntityType(fkFieldValue.GetType()).GetNavigations().Where(p => p.IsOnDependent);
+                                var relNavigations = ContextMetadata.Model.FindEntityType(fkFieldValue.GetType()).GetNavigations().Where(p => p.IsOnDependent);
                                 DisableRelatedProperties(fkFieldValue, relNavigations);
                                 continue;
                             }

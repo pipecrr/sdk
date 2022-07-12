@@ -47,19 +47,31 @@
                 </div>
                 <div class="login_area col-12 col-lg-5 p-3 p-lg-4">
                     <div class="col-12 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
-                        <select class="select_connect" id="SelectConnect">
-                            <option>DB Producción</option>
-                            <option>DB Pruebas HCM</option>
-                            <option>DB Pruebas Nómina</option>
+                        <select class="select_connect" id="SelectConnect" @bind="SelectedDbConnection">
+                            <option value=""><ResourceViewer ResourceTag="BLLogin.SelectDbConnection" RowidCulture=@RowidCulture /></option>
+                            @if(DbConnections != null && DbConnections.Count > 0)
+                            {
+                                @foreach(var db in DbConnections)
+                                {
+                                    <option value="@db.Item1">@db.Item2</option>
+                                }
+                            }
                         </select>
+                    
 
                         <i class="ml-2 fa-solid fa-globe"></i>
                         <div id="lang">
                             <div class="position-relative">
                                 <button class="btn ml-2 d-flex btn_region" style="padding:0"
                                     @onclick="() => IsOpen = !IsOpen">
-                                    <span class="fi fi-@selectedCulture.CountryCode fis rounded-circle"
+                                    @if(selectedCulture != null)
+                                    {
+                                        <span class="fi fi-@selectedCulture.CountryCode fis rounded-circle"
                                         style="height:16px"></span>
+                                    }else{
+                                        <span class="fi fi-globe fis rounded-circle" style="height:16px"></span>
+                                    }
+                                    
                                 </button>
                             </div>
                         </div>
@@ -204,6 +216,9 @@
     private E00021_Culture selectedCulture { get; set; }
     List<E00021_Culture> cultures;
 
+    List<(short,string)> DbConnections { get; set; } = new List<(short,string)>();
+    private string SelectedDbConnection { get; set; } = "";
+
     protected override void OnInitialized()
     {
         // redirect to home if already logged in
@@ -221,11 +236,16 @@
                 BusinessManagerFrontend.Instance.AddBusiness(business, backend.Value.Name);
             }
         }
+        InitLogin();
+    }
 
-        getCultures();
+    private async Task InitLogin()
+    {
+        await getDbConnections();
+        await getCultures();
         getSelectedCulture();
-        getUserlang();
-
+        await getUserlang();
+        StateHasChanged();
     }
 
     private async void OnChangeCulture(short rowidCulture)
@@ -240,9 +260,16 @@
     private async void HandleValidSubmit()
     {
         loading = true;
+        if(String.IsNullOrEmpty(SelectedDbConnection))
+        {
+            error = "BLLogin.SelectDbConnection";
+            loading = false;
+            StateHasChanged();
+            return;
+        }
         try
         {
-            await AuthenticationService.Login(model.Username, model.Password);
+            await AuthenticationService.Login(model.Username, model.Password, Convert.ToInt16(SelectedDbConnection));
             NavigationManager.TryGetQueryString("returnUrl", out string returnUrl);
             if (returnUrl == null || returnUrl == "null")
             {
@@ -257,9 +284,23 @@
             StateHasChanged();
         }
     }
-   
+    
+    private async Task getDbConnections()
+    {
+        var userBL = Frontend.BusinessManagerFrontend.Instance.GetBusiness("BLUser", AuthenticationService);
+        if(userBL == null)
+        {
+            return;
+        }
+        var result = await userBL.Call("GetDBConnections");
+        if(result.Success)
+        {
+            DbConnections = result.Data as List<(short,string)>;
+            SelectedDbConnection = DbConnections.First().Item1.ToString();
+        }
+    }
 
-    private async void getCultures()
+    private async Task getCultures()
     {
         cultures = await getCulturesAsync();
     }
@@ -292,7 +333,7 @@
         }
     }
 
-    private async void getUserlang()
+    private async Task getUserlang()
     {
         string userlang;
         try
