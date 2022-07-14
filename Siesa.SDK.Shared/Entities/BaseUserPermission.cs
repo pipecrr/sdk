@@ -13,7 +13,7 @@ namespace Siesa.SDK.Entities
 		public override int Rowid { get; set; }
 
 		[ForeignKey("Record")]
-		public virtual U RowidRecord { get; set; }
+		public virtual U? RowidRecord { get; set; }
 
 		[Required]
 		public virtual PermissionUserTypes UserType { get; set; }
