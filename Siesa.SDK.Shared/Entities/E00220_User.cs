@@ -106,7 +106,8 @@ namespace Siesa.SDK.Entities
 		[ForeignKey("UserReportTo")]
 		public int? RowidUserReportTo { get; set; }
 
-		public bool? IsAdministrator { get; set; }
+		[Required]
+		public bool IsAdministrator { get; set; }
 
 
 		public virtual E00220_User UserSubstitute { get; set; }
