@@ -106,13 +106,15 @@ namespace Siesa.SDK.Entities
 		[ForeignKey("UserReportTo")]
 		public int? RowidUserReportTo { get; set; }
 
+		public bool? IsAdministrator { get; set; }
 
-		[Required]
-		public virtual E00021_Culture Culture { get; set; }
 
 		public virtual E00220_User UserSubstitute { get; set; }
 
 		public virtual E00220_User UserReportTo { get; set; }
+
+		[Required]
+		public virtual E00021_Culture Culture { get; set; }
 
 		public virtual E00223_UserAccountPolicy UserAccountPolicy { get; set; }
 
