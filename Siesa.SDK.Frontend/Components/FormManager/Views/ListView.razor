@@ -153,7 +153,7 @@ else
             <TopBarExtraButtons>
                 @foreach (var btn in ListViewModel.Buttons)
                 {
-                    <SDKButton RenderStyle="@btn.RenderStyle" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" />
+                    <TopBarButton Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" IconCssClass="@btn.IconClass" />
                 }
             </TopBarExtraButtons>
         </SetTopBar>

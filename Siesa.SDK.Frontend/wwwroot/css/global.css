@@ -287,3 +287,28 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
 .whcm_table{
     height: calc(100vh - 300px);
 }
+
+.whcm_toolbar_tooltip{
+    max-width: 64px;
+    border-radius: 4px;
+    color: var(--color_text);
+    background-color: var(--color_light);
+    position: absolute;
+    top: 42px;
+    right: -0.5rem;
+    z-index: 1;
+    box-shadow: var(--shadow_standar);
+    font-size: 0.875rem;
+}
+.whcm_toolbar_tooltip::before {
+    content: "";
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    top: -8px;
+    left: 0.4rem;
+    border-top: 0px solid transparent;
+    border-right: 9px solid transparent;
+    border-bottom: 9px solid white;
+    border-left: 9px solid transparent;
+}
