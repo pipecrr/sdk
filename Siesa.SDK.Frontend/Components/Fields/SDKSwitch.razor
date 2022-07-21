@@ -1,11 +1,9 @@
 @using Siesa.SDK.Frontend.Components.Fields
 
-    <RadzenSwitch @bind-Value=@value/>
+    <RadzenSwitch Value="@Value" Change="@ValueChanged"/>
 
 
 @code {
-    bool value;
-
-    [Parameter]
-    public dynamic Business { get; set; }
+    [Parameter] public bool Value {get; set;}
+    [Parameter] public EventCallback<bool> ValueChanged {get; set;}
 }

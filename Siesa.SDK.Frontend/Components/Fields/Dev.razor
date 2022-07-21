@@ -1,6 +1,11 @@
-
 @page "/develop"
 
 <h1>Switch Status</h1>
+<br>
+<p>Estado: @myStatus </p>
 
-<SDKSwitch></SDKSwitch>
+<SDKSwitch @bind-Value="@myStatus"></SDKSwitch>
+
+@code {
+    bool myStatus;
+}
