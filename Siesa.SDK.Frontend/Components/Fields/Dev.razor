@@ -1,0 +1,16 @@
+
+@page "/develop"
+
+<h1>Hola Mundo</h1>
+
+<SDKSelectBar Data=@ListaPrueba ></SDKSelectBar>
+
+@code
+{
+    List<SelectBarItemWrap> ListaPrueba = new List<SelectBarItemWrap>()
+        {
+            new SelectBarItemWrap (){Key = 1, Name= "prueba01"},
+            new SelectBarItemWrap() {Key = 2 , Name = "prueba02"},
+            new SelectBarItemWrap() {Key = 3 , Name = "prueba03" }
+        };
+}
