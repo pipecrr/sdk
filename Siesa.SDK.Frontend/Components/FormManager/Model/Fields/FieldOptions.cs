@@ -1,4 +1,5 @@
 ﻿using Siesa.SDK.Entities;
+using Siesa.SDK.Frontend.Components.Fields;
 using Siesa.SDK.Frontend.Components.FormManager.Fields;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,8 @@ using System.Collections.Generic;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 {
-    public class FieldObj {
+    public class FieldObj
+    {
         public object ModelObj { get; set; }
         public string Name { get; set; }
         public FieldTypes FieldType { get; set; }
@@ -42,6 +44,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         public bool Disabled { get; set; } = false;
         public string CssClass { get; set; }
         public FieldTypes FieldType { get; set; }
+        public string CustomType { get; set; }
 
         public bool IsNullable { get; set; } = false;
 
@@ -64,7 +67,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 
         public string RelatedBusiness { get; set; } = "";
 
-        public Dictionary<string,string> RelatedFilters { get; set; } = new Dictionary<string, string>()
+        public Dictionary<string, string> RelatedFilters { get; set; } = new Dictionary<string, string>()
         {
         };
 
@@ -78,15 +81,27 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             }
             return fieldObj;
         }
-
+        private List<Type> SupportedTypes = new List<Type>(){
+            typeof(SDKSelectBar)
+        };
         private FieldObj InitField(object modelObj)
         {
             FieldObj field = new FieldObj();
 
+            if (!String.IsNullOrEmpty(CustomType))
+            {
+                Type fieldType = SupportedTypes.Find(x=> x.Name == CustomType);
+                if (fieldType != null)
+                {
+                    CustomComponent = new CustomComponent();
+                    CustomComponent.Name = fieldType.Name;
+                    CustomComponent.Namespace = fieldType.Namespace;
+                }
+            }
 
             if (CustomComponent != null)
             {
-                if(String.IsNullOrEmpty(ResourceTag))
+                if (String.IsNullOrEmpty(ResourceTag))
                 {
                     ResourceTag = $"{modelObj.GetType().Name}.{Name}";
                 }
@@ -118,14 +133,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 field.ModelObj = currentObject;
                 field.Name = fieldPath[fieldPath.Length - 1];
                 PropertyName = fieldPath[fieldPath.Length - 1];
-                if(String.IsNullOrEmpty(ResourceTag))
+                if (String.IsNullOrEmpty(ResourceTag))
                 {
                     ResourceTag = $"{field.ModelObj.GetType().Name}.{field.Name}";
                 }
                 var propertyType = field.ModelObj.GetType().GetProperty(field.Name).PropertyType;
                 var originalPropertyType = propertyType;
                 //Console.WriteLine(fieldName + " , " + propertyType);
-                if(propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
                 {
                     propertyType = propertyType.GetGenericArguments()[0];
                     IsNullable = true;
@@ -174,7 +189,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 
                 var _bannedTypes = new List<Type>() { typeof(string), typeof(byte[]) };
 
-                if(propertyType.IsClass && !propertyType.IsPrimitive && !propertyType.IsEnum && !_bannedTypes.Contains(propertyType)){
+                if (propertyType.IsClass && !propertyType.IsPrimitive && !propertyType.IsEnum && !_bannedTypes.Contains(propertyType))
+                {
                     FieldType = FieldTypes.EntityField;
                 }
 
@@ -190,5 +206,5 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         }
     }
 
-   
+
 }

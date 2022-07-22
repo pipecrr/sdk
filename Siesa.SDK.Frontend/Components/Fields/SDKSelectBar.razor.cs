@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Components;
+using System;
 using System.Collections.Generic;
 
 
@@ -13,6 +14,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
         [Parameter] public int Value { get; set; }
 
-        [Parameter] public EventCallback<int> ValueChanged {get; set;}
+        [Parameter] public Action<int> ValueChanged {get; set;}
+
     }
 }
