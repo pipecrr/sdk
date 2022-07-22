@@ -1,15 +1,12 @@
-<p>Te saludo @Name</p>
-
 <RadzenSteps SelectedIndex="@SelectedIndex" ShowStepsButtons="@ShowStepsButtons" Change=@SelectedIndexChanged PreviousText="@Previous" NextText="@Next" Steps="@Steps">
 </RadzenSteps>
 
 @code{
-    [Parameter] public string Name {get; set;}
     [Parameter] public string Previous {get; set;}
     [Parameter] public string Next {get; set;}
     [Parameter] public RenderFragment Steps{get; set;}
     [Parameter] public bool ShowStepsButtons{get;set;} = true;
     [Parameter] public int SelectedIndex{get; set;}
-    [Parameter] public EventCallback<int> SelectedIndexChanged{get;set;}
+    [Parameter] public EventCallback<int> SelectedIndexChanged {get;set;}
     
 }
