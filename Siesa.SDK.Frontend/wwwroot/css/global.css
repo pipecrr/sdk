@@ -312,3 +312,7 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
     border-bottom: 9px solid white;
     border-left: 9px solid transparent;
 }
+
+.whcm_table > ::-webkit-scrollbar{
+    width: 13px;
+}
