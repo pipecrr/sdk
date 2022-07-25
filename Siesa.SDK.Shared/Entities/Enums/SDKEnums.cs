@@ -34,4 +34,10 @@ namespace Siesa.SDK.Entities.Enums
 		Enabled = 1,
 		Disabled = 2
 	}
+
+	public enum enumYesNo
+	{
+		Yes = 1,
+		No = 0
+	}
 }
