@@ -9,6 +9,7 @@
     [Parameter] public object BindModel { get; set; }
     [Parameter] public string FieldName { get; set; }
     [Parameter] public object BaseModelObj { get; set; }
+    [Parameter] public object BaseObj { get; set; }
 
     private Type componentType;
     private IDictionary<string, object> parameters = new Dictionary<string, object>();
@@ -27,6 +28,10 @@
             if(componentType.GetProperties().Any(x => x.Name == "Business"))
             {
                 parameters.Add("Business", BaseModelObj);
+            }
+            if(componentType.GetProperties().Any(x => x.Name == "BaseObj"))
+            {
+                parameters.Add("BaseObj", BaseObj);
             }
 
             for(int i = 0; i < Attributes.Count; i++)
