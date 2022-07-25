@@ -316,3 +316,7 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
 .whcm_table > ::-webkit-scrollbar{
     width: 13px;
 }
+
+.whcm_table > ::-webkit-scrollbar-thumb{
+    background-color: var(--color_border) !important; 
+}
