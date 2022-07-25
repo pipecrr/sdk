@@ -1,0 +1,26 @@
+@inherits FieldClass<bool>
+@using Siesa.SDK.Frontend.Components.Fields
+
+@if (!FieldOpt.Hidden){
+
+    bool valor = false;
+
+    @if (FieldOpt.Disabled || FieldOpt.ViewContext == "DetailView")
+    {
+        valor = true;
+    }
+
+    <SDKSwitch Value="@(BindValue)" 
+    ValueChanged="@((value) => {SetValue(value);})" 
+    Disabled="@valor"  />
+
+
+    @if (FieldOpt.ViewContext != "DetailView"){
+
+        @FieldValidationTemplate
+    }
+
+}
+
+
+

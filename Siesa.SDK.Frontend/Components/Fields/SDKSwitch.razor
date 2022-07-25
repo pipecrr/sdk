@@ -1,9 +1,12 @@
 @using Siesa.SDK.Frontend.Components.Fields
 
-    <RadzenSwitch Value="@Value" Change="@ValueChanged"/>
+<RadzenSwitch Value="@Value" Change="@ValueChanged" Disabled="@Disabled" />
 
 
 @code {
-    [Parameter] public bool Value {get; set;}
-    [Parameter] public EventCallback<bool> ValueChanged {get; set;}
+    [Parameter] public bool Value { get; set; }
+    [Parameter] public EventCallback<bool> ValueChanged { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public bool Required { get; set; }
+    [Parameter] public string CssClass { get; set; }
 }
