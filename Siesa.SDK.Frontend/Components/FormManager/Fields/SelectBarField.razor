@@ -1,0 +1,15 @@
+@using Siesa.SDK.Frontend.Components.Fields
+@using System.Linq.Expressions
+@typeparam TItem
+@inherits FieldClass<TItem>
+@using Siesa.SDK.Shared.Services
+@inject IAuthenticationService AuthenticationService
+
+<SDKSelectBar
+Value="@BindValue"
+
+/>
+
+@code{
+    [Parameter] public IEnumerable<SelectBarItemWrap> Options {get; set;}
+}
