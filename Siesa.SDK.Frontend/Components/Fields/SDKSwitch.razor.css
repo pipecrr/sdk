@@ -1,0 +1,30 @@
+.sdk-switch-container {
+    display: flex;
+    align-items: center;
+    height: 2rem;
+}
+
+.sdk-switch-container > ::deep .rz-switch {
+    display: inherit;
+    height: 20px;
+    width: 38px;
+    min-width: 38px;
+}
+
+.sdk-switch-container > ::deep .rz-switch.rz-switch-checked .rz-switch-circle {
+    background: var(--color_primary);
+}
+
+.sdk-switch-container > ::deep .rz-switch.rz-switch-checked .rz-switch-circle::before {
+    height: 16px;
+    width: 16px;
+    left: 0.1rem;
+    margin-top: -0.5rem;
+}
+
+.sdk-switch-container > ::deep .rz-switch .rz-switch-circle::before {
+    height: 16px;
+    width: 16px;
+    left: 0.1rem;
+    margin-top: -0.5rem;
+}
