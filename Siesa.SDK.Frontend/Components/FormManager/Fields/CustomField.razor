@@ -20,7 +20,7 @@
             componentType = Utils.Utils.SearchType($"{Definition.Namespace}.{Definition.Name}");
         }
         parameters.Clear();
-        Dictionary<string, string> Attributes = Definition.Attributes;
+        Dictionary<string, object> Attributes = Definition.Attributes;
 
         if(Attributes != null)
         {
@@ -38,12 +38,17 @@
             {
                 var key = Attributes.ElementAt(i).Key;
                 var value = Attributes.ElementAt(i).Value;
-                dynamic dynamicValue = Utils.Evaluator.EvaluateCode(value, BaseModelObj).GetAwaiter().GetResult();
-                //wait for the value to be evaluated
-                if(dynamicValue == null){
-                    dynamicValue = "";
+                if(value.GetType().Name == "String" && Definition.EvaluateAttributes)
+                {
+                    dynamic dynamicValue = Utils.Evaluator.EvaluateCode(value.ToString(), BaseModelObj).GetAwaiter().GetResult();
+                    //wait for the value to be evaluated
+                    if(dynamicValue == null){
+                        dynamicValue = "";
+                    }
+                    parameters.Add(key, dynamicValue);
+                }else{
+                    parameters.Add(key, value);
                 }
-                parameters.Add(key, dynamicValue);
             }
         }
 
