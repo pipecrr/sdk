@@ -29,10 +29,9 @@ namespace Siesa.SDK.Entities
 		public virtual int? RowidSession { get; set; }
 
 
-		[Required]
-		public virtual E00220_User UserCreates { get; set; }
-
 		public virtual E00220_User UserLastUpdate { get; set; }
+
+		public virtual E00220_User UserCreates { get; set; }
 
 	}
 }
