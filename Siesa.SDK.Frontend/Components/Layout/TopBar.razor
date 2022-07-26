@@ -14,13 +14,22 @@
             @LayoutService.TopBarButtons
             @if(LayoutService.HasExtraButtons)
             {
-                <button @onclick="@(()=>ShowMoreOptions = !ShowMoreOptions)" class="btn btn-sm layout_btn_standar-sm ml-1"
+                <button id="TopBarExtraButtons" @onclick="@(()=>ShowMoreOptions = !ShowMoreOptions)" class="btn btn-sm layout_btn_standar-sm ml-1"
                     data-toggle="tooltip" data-placement="top" title="Más opciones">
                     <i class="fa-solid fa-ellipsis-vertical"></i>
                 </button>
-                <div id="boxToolbar" class="whcm_toolbar_tooltip px-2 pt-3 pb-2" hidden="@(!ShowMoreOptions)">
-                    @LayoutService.TopBarExtraButtons
-                </div>
+
+                <DxDropDown @bind-IsOpen="@ShowMoreOptions" PositionMode="DropDownPositionMode.Bottom" PositionTarget="#TopBarExtraButtons"
+                    CloseMode="DropDownCloseMode.Close"
+                    PreventCloseOnPositionTargetClick="true" CssClass="whcm_toolbar_tooltip px-2 pt-3 pb-2" HeaderVisible="false"
+                    FooterVisible="false">
+                    <BodyTemplate>
+                        <CascadingValue Value="this">
+                            @LayoutService.TopBarExtraButtons
+                        </CascadingValue>
+                    </BodyTemplate>
+                </DxDropDown>
+                
             }
         </div>
     </div>
@@ -56,6 +65,15 @@
         if (LayoutService != null)
         {
             LayoutService.PropertyChanged -= LayoutService_PropertyChanged;
+        }
+    }
+
+    public async Task CloseExtraButtons()
+    {
+        if (ShowMoreOptions)
+        {
+            ShowMoreOptions = false;
+            StateHasChanged();
         }
     }
 

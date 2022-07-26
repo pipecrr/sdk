@@ -6,13 +6,11 @@ using Siesa.SDK.Entities.Enums;
 namespace Siesa.SDK.Entities
 {
 
-	public abstract partial class BaseMaster<T> : BaseAudit<int>
+	public abstract partial class BaseMaster<T, U> : BaseAudit<T>
 	{
-		[Key]
-		[Required]
-		public override int Rowid { get; set; }
+		
 
-		public virtual T Id { get; set; }
+		public virtual U Id { get; set; }
 
 		[Required]
 		[StringLength(250)]

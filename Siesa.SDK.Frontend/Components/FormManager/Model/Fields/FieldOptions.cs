@@ -23,10 +23,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
     {
         public string Name { get; set; }
         public string Namespace { get; set; }
-        public Dictionary<string, string> Attributes { get; set; } = new Dictionary<string, string>()
+        public Dictionary<string, object> Attributes { get; set; } = new Dictionary<string, object>()
         {
         };
 
+        public bool EvaluateAttributes {get;set;} = true;
     }
 
     public class FieldOptions
@@ -49,6 +50,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         public bool IsNullable { get; set; } = false;
 
         public string ViewContext { get; set; }
+
+        public string CustomType { get; set; }
 
         public Dictionary<string, object> CustomAttributes { get; set; }
         public int TextFieldCols { get; set; } = 20;
@@ -81,23 +84,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             }
             return fieldObj;
         }
+
         private List<Type> SupportedTypes = new List<Type>(){
-            typeof(SDKSelectBar)
+            typeof(SwitchField)
         };
+
         private FieldObj InitField(object modelObj)
         {
             FieldObj field = new FieldObj();
-
-            if (!String.IsNullOrEmpty(CustomType))
-            {
-                Type fieldType = SupportedTypes.Find(x=> x.Name == CustomType);
-                if (fieldType != null)
-                {
-                    CustomComponent = new CustomComponent();
-                    CustomComponent.Name = fieldType.Name;
-                    CustomComponent.Namespace = fieldType.Namespace;
-                }
-            }
 
             if (CustomComponent != null)
             {
@@ -106,7 +100,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                     ResourceTag = $"{modelObj.GetType().Name}.{Name}";
                 }
                 //Name guid
-                Name = Guid.NewGuid().ToString();
+                if(String.IsNullOrEmpty(Name))
+                {
+                    Name = Guid.NewGuid().ToString();
+                }
                 FieldType = FieldTypes.Custom;
                 field.Name = Name;
                 field.ModelObj = modelObj;
@@ -198,6 +195,21 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 {
                     FieldType = FieldTypes.SelectField;
                     field.SelectFieldType = originalPropertyType;
+                }
+            }
+            if (!String.IsNullOrEmpty(CustomType))
+            {
+                Type fieldType = SupportedTypes.Find(x => x.Name == CustomType);
+                if (fieldType != null)
+                {
+                    CustomComponent = new CustomComponent();
+                    CustomComponent.Name = fieldType.Name;
+                    CustomComponent.Namespace = fieldType.Namespace;
+                    CustomComponent.EvaluateAttributes = false;
+                    CustomComponent.Attributes.Add("BindModel",field.ModelObj);
+                    CustomComponent.Attributes.Add("FieldOpt", this);
+                    CustomComponent.Attributes.Add("FieldName",field.Name);
+                    FieldType = FieldTypes.Custom;
                 }
             }
             field.FieldType = FieldType;
