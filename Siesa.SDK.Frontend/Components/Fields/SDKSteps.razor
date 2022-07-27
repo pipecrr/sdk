@@ -1,0 +1,26 @@
+@inject UtilsManager UtilManager
+
+<RadzenSteps SelectedIndex="@SelectedIndex" ShowStepsButtons="@ShowStepsButtons" Change=@SelectedIndexChanged PreviousText="@Previous" NextText="@Next" Steps="@Steps">
+</RadzenSteps>
+
+@code{
+    [Parameter] public string PreviousResourceTag {get; set;} = "SDKSteps.Previous";
+    [Parameter] public string NextResourceTag {get; set;} = "SDKSteps.Next";
+    [Parameter] public RenderFragment Steps{get; set;}
+    [Parameter] public bool ShowStepsButtons{get;set;} = true;
+    [Parameter] public int SelectedIndex{get; set;}
+    [Parameter] public EventCallback<int> SelectedIndexChanged {get;set;}
+
+    private string Previous {get; set;} 
+    private string Next {get; set;}
+
+    protected override async Task OnInitializedAsync(){
+        Previous = PreviousResourceTag;
+        Next = NextResourceTag;
+        Previous = await UtilManager.GetResource(PreviousResourceTag);
+        Next = await UtilManager.GetResource(NextResourceTag);
+    }
+
+
+    
+}

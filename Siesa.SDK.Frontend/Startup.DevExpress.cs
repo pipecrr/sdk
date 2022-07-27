@@ -21,13 +21,13 @@ namespace Siesa.SDK.Frontend {
             services.AddBlazoredLocalStorage();
             services.AddBlazoredLocalStorage(config => config.JsonSerializerOptions.WriteIndented = true);  // local storage
             services.AddDevExpressBlazor();
-            services.AddScoped<StateContainer>();
             services.AddScoped<ILayoutService, LayoutService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<DialogService>();
             services.AddBlazorDragDrop();
             services.AddSingleton<IResourceManager, ResourceManager>();
             services.AddSingleton<IFeaturePermissionService, FeaturePermissionService>();
+            services.AddScoped<UtilsManager>(sp => ActivatorUtilities.CreateInstance<UtilsManager>(sp));
         }
 
     }
