@@ -14,5 +14,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
         [Parameter] public Action<ItemType> ValueChanged {get; set;}
 
+        [Parameter] public bool Disabled { get; set; }
+
     }
 }
