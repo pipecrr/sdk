@@ -6,10 +6,35 @@
 @inject IAuthenticationService AuthenticationService
 
 <SDKSelectBar
-Value="@BindValue"
-
+    ItemType="TItem"
+    Value="@BindValue"
+    ValueChanged="@((newVal) => SetValue(newVal))"
+    Data="@Options"
 />
 
 @code{
-    [Parameter] public IEnumerable<SelectBarItemWrap> Options {get; set;}
+
+    [Parameter] public IEnumerable<SelectBarItemWrap<TItem>> Options {get; set;}
+
+    private Type enumType { get; set; }
+
+    private IEnumerable<SelectBarItemWrap<TItem>> _options {
+        get{
+            if(Options == null){
+                
+                enumType = typeof(TItem);
+                if(typeof(TItem).IsGenericType && typeof(TItem).GetGenericTypeDefinition() == typeof(Nullable<>)){
+                    enumType = typeof(TItem).GetGenericArguments()[0];
+                }
+                //GetEnumValues();
+                Options = Enum.GetValues(enumType).OfType<TItem>().Select(x => new SelectBarItemWrap<TItem>{
+                    Key = x,
+                    Name = $"Enum.{enumType.Name}.{x.ToString()}"
+                });
+            }
+            return Options;
+        }
+    }
+
+    
 }

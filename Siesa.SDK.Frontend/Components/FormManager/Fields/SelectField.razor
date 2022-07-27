@@ -25,6 +25,7 @@
     [Parameter] public IEnumerable<SDKEnumWrapper<TItem>> Options {get; set;}
 
     private Type enumType { get; set; }
+    
     private IEnumerable<SDKEnumWrapper<TItem>> _options {
         get{
             if(Options == null){

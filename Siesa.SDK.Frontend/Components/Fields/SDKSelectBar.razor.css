@@ -1,0 +1,12 @@
+.sdk-selectbar-container {
+    display: flex;
+    align-items: center;
+    height: 2rem;
+}
+
+.sdk-selectbar-container > ::deep .rz-selectbutton .rz-button.rz-state-active {
+    background: var(--color_primary);
+    color: var(--color_back_2);
+    border: var(--color_primary_dark);
+}
+

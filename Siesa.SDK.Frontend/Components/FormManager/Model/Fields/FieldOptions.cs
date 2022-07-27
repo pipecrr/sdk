@@ -51,8 +51,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 
         public string ViewContext { get; set; }
 
-        public string CustomType { get; set; }
-
         public Dictionary<string, object> CustomAttributes { get; set; }
         public int TextFieldCols { get; set; } = 20;
         public int TextFieldRows { get; set; } = 6;
@@ -86,12 +84,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         }
 
         private List<Type> SupportedTypes = new List<Type>(){
-            typeof(SwitchField)
+            typeof(SwitchField),
+            typeof(SelectBarField<>),
+
         };
 
         private FieldObj InitField(object modelObj)
         {
             FieldObj field = new FieldObj();
+            Type originalPropertyType = null; //Used for enums
 
             if (CustomComponent != null)
             {
@@ -109,7 +110,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 field.ModelObj = modelObj;
             }
             else
-            {
+            {             
                 //Split Name
                 string[] fieldPath = Name.Split('.');
                 //loop through the path
@@ -135,7 +136,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                     ResourceTag = $"{field.ModelObj.GetType().Name}.{field.Name}";
                 }
                 var propertyType = field.ModelObj.GetType().GetProperty(field.Name).PropertyType;
-                var originalPropertyType = propertyType;
+                originalPropertyType = propertyType;
                 //Console.WriteLine(fieldName + " , " + propertyType);
                 if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
                 {
@@ -209,6 +210,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                     CustomComponent.Attributes.Add("BindModel",field.ModelObj);
                     CustomComponent.Attributes.Add("FieldOpt", this);
                     CustomComponent.Attributes.Add("FieldName",field.Name);
+
+                    if(fieldType.IsGenericType && originalPropertyType != null){
+                        CustomComponent.Attributes.Add("ItemType",originalPropertyType);
+                    }
                     FieldType = FieldTypes.Custom;
                 }
             }

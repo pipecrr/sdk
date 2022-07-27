@@ -1,8 +1,8 @@
 namespace Siesa.SDK.Frontend.Components
 {
-    public class SelectBarItemWrap
+    public class SelectBarItemWrap<T>
     {
-        public int Key { get; set; }
+        public T Key { get; set; }
         public string Name { get; set; }
     }
 }

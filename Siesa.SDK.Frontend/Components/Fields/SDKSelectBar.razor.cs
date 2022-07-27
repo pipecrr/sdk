@@ -5,14 +5,14 @@ using System.Collections.Generic;
 
 namespace Siesa.SDK.Frontend.Components.Fields
 {
-    public partial class SDKSelectBar : ComponentBase
+    public partial class SDKSelectBar<ItemType> : ComponentBase
     {
 
-        [Parameter] public IEnumerable<SelectBarItemWrap> Data { get; set; }
+        [Parameter] public IEnumerable<SelectBarItemWrap<ItemType>> Data { get; set; }
 
-        [Parameter] public int Value { get; set; }
+        [Parameter] public ItemType Value { get; set; }
 
-        [Parameter] public Action<int> ValueChanged {get; set;}
+        [Parameter] public Action<ItemType> ValueChanged {get; set;}
 
     }
 }
