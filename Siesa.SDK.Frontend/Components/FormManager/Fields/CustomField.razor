@@ -1,20 +1,13 @@
 ﻿@if (!FieldOpt.Hidden)
 {
-    <DynamicComponent Type="@componentType" Parameters="@parameters" />
-}
+    @if(Definition.Generics.Count > 0){
+        @RenderGemericComponent()
+    }else{
+        <DynamicComponent Type="@componentType" Parameters="@parameters" />
+    }
+} 
 
 @code {
-    [Parameter] public CustomComponent Definition { get; set; }
-    [Parameter] public FieldOptions FieldOpt { get; set; }
-    [Parameter] public object BindModel { get; set; }
-    [Parameter] public string FieldName { get; set; }
-    [Parameter] public object BaseModelObj { get; set; }
-    [Parameter] public object BaseObj { get; set; }
-
-    private Type componentType;
-    private IDictionary<string, object> parameters = new Dictionary<string, object>();
-
-
     private void SetParameters(){
         if(componentType == null){
             componentType = Utils.Utils.SearchType($"{Definition.Namespace}.{Definition.Name}");

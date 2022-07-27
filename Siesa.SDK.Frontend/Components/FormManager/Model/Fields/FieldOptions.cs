@@ -28,6 +28,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         };
 
         public bool EvaluateAttributes {get;set;} = true;
+
+        public ICollection<Type> Generics {get; set;} = new List<Type>();
     }
 
     public class FieldOptions
@@ -212,7 +214,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                     CustomComponent.Attributes.Add("FieldName",field.Name);
 
                     if(fieldType.IsGenericType && originalPropertyType != null){
-                        CustomComponent.Attributes.Add("ItemType",originalPropertyType);
+                        CustomComponent.Generics.Add(originalPropertyType);
                     }
                     FieldType = FieldTypes.Custom;
                 }
