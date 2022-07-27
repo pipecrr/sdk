@@ -26,8 +26,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         }
 
         public async Task<string> GetResource(string resourceTag){
-
-            var t = AuthenticationService.User;
             if(AuthenticationService.User != null){
                 Int64 cultureRowid = AuthenticationService.User.RowidCulture;
                 return await ResourceManager.GetResource(resourceTag, cultureRowid);
