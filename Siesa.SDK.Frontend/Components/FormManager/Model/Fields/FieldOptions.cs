@@ -202,7 +202,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             }
             if (!String.IsNullOrEmpty(CustomType))
             {
-                Type fieldType = SupportedTypes.Find(x => x.Name == CustomType);
+                Type fieldType = SupportedTypes.Find(x => x.Name.Split("`")[0] == CustomType);
                 if (fieldType != null)
                 {
                     CustomComponent = new CustomComponent();
