@@ -1,3 +1,4 @@
+@using Radzen;
 @typeparam TItem
 <RadzenDataGrid 
     AllowFiltering="@AllowFiltering" 
@@ -15,7 +16,11 @@
     LoadData="@LoadData"
     ShowPagingSummary="@ShowPagingSummary"
     class="whcm_table"
-    PageSizeOptions="@AllowedPageSizes">
+    PageSizeOptions="@AllowedPageSizes"
+    SelectionMode="@SelectionMode.Get()"
+    Value="@Value"
+    ValueChanged="@ValueChanged"
+    >
 </RadzenDataGrid>
 
 @code {
@@ -32,6 +37,11 @@
     [Parameter] public bool ShowPagingSummary { get; set; }
     [Parameter] public IEnumerable<int> AllowedPageSizes { get; set; } = new int[] { 10, 20, 50, 100 };
 
+    [Parameter] public SDKSelectionMode SelectionMode {get; set;}
+    [Parameter] public IList<TItem> Value {get; set;} 
+    [Parameter] public EventCallback<IList<TItem>> ValueChanged {get; set;}
+
+
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
@@ -39,9 +49,5 @@
         {
             Count = Data.Count();
         }
-    }
-
-
-
-    
+    }    
 }
