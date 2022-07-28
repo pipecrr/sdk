@@ -10,12 +10,10 @@
         <div class="header_circles_box_4">
         </div>
     </div>
-    <div class="col-5 sdk_company_logo">
-        <a class="nav_logo" href="/">
-            <img src="_content/Siesa.SDK.Frontend/assets/img/logo_empresa.png" height="30px" alt="Logo compania">
-        </a>
+    <div class="col-xl-5 col-lg-4 col-md-4 col-sm-5 col-5 sdk_company_logo">
+        <img class="whcm_logo_compania" src="_content/Siesa.SDK.Frontend/assets/img/logo_empresa.png" height="30px" alt="Logo compania">
     </div>
-    <div class="col-2 p-0">
+    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-0 p-0 d-none d-sm-block">
         <div class="sdk_search" @onclick="()=>ShowSearch()">
             <input type="search" class="form-control form-control-sm pr-4" id="busqueda" placeholder="Buscar..."
                @bind-value:event="onchange" @oninput="@((ChangeEventArgs __e) => OnChangeSearch(__e?.Value?.ToString()))"  @bind-value="searchString" >
@@ -43,15 +41,15 @@
             </div>
         }
     </div>
-    <div class="col-5 p-0 d-flex justify-content-end info_head">
+    <div class="col-xl-5 col-lg-6 col-md-6 col-sm-4 col-7 p-0 d-flex justify-content-end align-items-center info_head">
         <div class="sdk_conection">
             <div class="position-relative">
-                <button @onclick="()=> ToogleConnect()" class="btn btn_connect d-flex align-items-center">
+                <button @onclick="()=> ToogleConnect()" class="btn btn_connect py-0 px-2 px-lg-3 d-flex align-items-center">
                     <div>
-                        <p class="font-weight-bold m-0">Grupo @SelectedGroup.Rowid</p>
-                        <p class="m-0">Compañía @SelectedCompany.Rowid</p>
+                        <p class="font-weight-bold m-0 text-truncate" data-toggle="tooltip" data-placement="bottom" title="@SelectedGroup.Rowid">Grupo @SelectedGroup.Rowid</p>
+                        <p class="m-0 text-truncate" data-toggle="tooltip" data-placement="bottom" title="@SelectedCompany.Rowid">Compañía @SelectedCompany.Rowid</p>
                     </div>
-                    <div class="pl-3">
+                    <div class="pl-2 pl-xl-3">
                         <i class="fa-solid fa-chevron-down"></i>
                     </div>
                 </button>
@@ -102,17 +100,21 @@
                 }
             </div>
         </div>
-        <div class="sdk_version px-3">
-            <p class="font-weight-bold m-0">
+        <div class="whcm_footer d-flex flex-row-reverse flex-md-row align-items-center justify-content-between">
+            <div class="sdk_version px-2 px-lg-3 d-flex flex-sm-row flex-md-column">
+            <p class="font-weight-bold m-0 mr-2 mr-md-0">
                 <ResourceViewer ResourceTag="Project.Copy" />
             </p>
             <p class="m-0">
                 <ResourceViewer ResourceTag="Project.Version" />
             </p>
+            </div>
+            <div class="sdk_logo pl-3">
+                <img class="whcm_logo_head d-none d-md-block" src="_content/Siesa.SDK.Frontend/assets/img/LogoSiesaWHCMBlanco.png">
+                <img class="whcm_logo_head d-block d-md-none" src="_content/Siesa.SDK.Frontend/assets/img/LogoSiesaWHCMGris.svg">
+            </div>
         </div>
-        <div class="sdk_logo pl-3">
-            <img src="_content/Siesa.SDK.Frontend/assets/img/LogoSiesaWHCMBlanco.png" height="30px" alt="Logo siesa">
-        </div>
+        
     </div>
 </header>
 

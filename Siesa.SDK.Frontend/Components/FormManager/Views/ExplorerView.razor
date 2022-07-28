@@ -30,7 +30,7 @@ else if (BusinessObj != null)
         @if (FormViewModel.Relationships.Count > 0)
         {
             <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
-                <DxFormLayoutTabPages>
+                <DxFormLayoutTabPages ScrollMode="TabsScrollMode.Auto">
                     @foreach (var rel in FormViewModel.Relationships)
                     {
                         <SDKFormLayoutTabPage ResourceTag="@rel.ResourceTag">

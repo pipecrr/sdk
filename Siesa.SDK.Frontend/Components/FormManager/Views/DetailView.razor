@@ -17,7 +17,7 @@ else if (ModelLoaded == true)
 
             @if (Panels.Count > 1)
             {
-                <DxFormLayoutTabPages>
+                <DxFormLayoutTabPages ScrollMode="TabsScrollMode.Auto">
                     @foreach (var panel in Panels)
                     {
                         <SDKFormLayoutTabPage ResourceTag="@panel.ResourceTag">
@@ -54,7 +54,7 @@ else if (ModelLoaded == true)
         <SetTopBar HasExtraButtons="@(FormViewModel.Buttons != null && FormViewModel.Buttons.Count > 0 ? true: false)">
             <TopBarTitle>@BusinessObj</TopBarTitle>
             <TopBarButtons>
-                <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-file"  />
+                <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus"  />
                 <TopBarButton Click="GoToDuplicate" ResourceTag="Action.Duplicate" IconCssClass="fa-solid fa-copy"  />
                 <TopBarButton Click="GoToEdit" ResourceTag="Action.Modify"  IconCssClass="fa-solid fa-pen"  />
                 <TopBarButton Click="GoToList" ResourceTag="Action.List"  IconCssClass="fa-solid fa-list"  />
