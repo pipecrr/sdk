@@ -73,7 +73,7 @@
 }
 
 @media (max-width: 575.98px) { 
-    ::deep input#menu:checked ~ .whcm_home_content{
+    ::deep input#menu:checked ~ .sdk_home_content{
         padding-left: 15px;
         transition: .25s;
     }
