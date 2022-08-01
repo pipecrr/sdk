@@ -400,6 +400,20 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
 .untruncate-grid-column-action > div > span.rz-column-title{
     overflow: unset;
 }
+.sdk_home_content{
+    padding-top: calc(48px + 1.5rem);
+    padding-bottom: calc(32px + 2rem);
+}
+
+.area2{
+    background: var(--color_light);
+    border-radius: 4px;
+    box-shadow: var(--shadow_standar);
+    position: relative;
+    margin-top: 2.063rem;
+    padding-top: 2.5rem;
+}
+
 @media (max-width: 767.98px) { 
     html{
         font-size: 14px;

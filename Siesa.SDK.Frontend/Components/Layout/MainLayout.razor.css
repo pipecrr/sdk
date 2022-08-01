@@ -29,20 +29,6 @@
     }
 }
 
-.sdk_home_content{
-    padding-top: calc(48px + 1.5rem);
-    padding-bottom: calc(32px + 2rem);
-}
-
-.area2{
-    background: var(--color_light);
-    border-radius: 4px;
-    box-shadow: var(--shadow_standar);
-    position: relative;
-    margin-top: 2.063rem;
-    padding-top: 2.5rem;
-}
-
 .whcm_panel{
     background: var(--color_light);
     box-shadow: var(--shadow_standar);
