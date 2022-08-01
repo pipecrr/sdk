@@ -4,6 +4,7 @@
     border-radius: 4px;
     box-shadow: var(--shadow_standar);
     display: flex;
+    flex-wrap: nowrap;
     justify-content: space-between;
     position: absolute !important;
     top: -2.063rem;
@@ -18,7 +19,7 @@
     border-left: .5rem solid var(--color_estado_creación);
 }
 .whcm_toolbar_text{
-    max-width: 66%;
+    max-width: calc(100% - 210px);
 }
 .whcm_toolbar_text > h3{
     max-width: 100%;
@@ -26,3 +27,23 @@
     overflow: hidden;
     white-space: nowrap;    
 }
+
+@media (max-width: 767.98px) { 
+    .whcm_toolbar_text > h3 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .whcm_toolbar{
+        flex-wrap: wrap;
+    }
+    .whcm_toolbar_text{
+        width: 100%;
+        max-width: 100%;
+    }
+    .whcm_toolbar_button{
+        width: 100%;
+        justify-content: center;  
+    }
+ }

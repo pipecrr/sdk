@@ -20,7 +20,7 @@ else if (BusinessObj != null)
             <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
                 @if (Panels.Count > 1)
             {
-                <DxFormLayoutTabPages>
+                <DxFormLayoutTabPages ScrollMode="TabsScrollMode.Auto">
                     @foreach (var panel in Panels)
                     {
                         <SDKFormLayoutTabPage ResourceTag="@panel.ResourceTag">
