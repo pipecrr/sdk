@@ -1,0 +1,18 @@
+<div class="sdk_go_top">
+    <div class="sdk_go_top_button">
+        <i class="fas fa-chevron-up"></i>
+    </div>
+</div>
+
+@code{
+    [Inject]
+    public IJSRuntime JSRuntime { get; set; }
+    private IJSObjectReference _jsModule;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender){
+            _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/Components/Layout/SDKGoTop.razor.js");
+        }
+    }
+}
