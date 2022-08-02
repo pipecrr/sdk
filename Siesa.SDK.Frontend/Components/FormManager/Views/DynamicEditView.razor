@@ -14,3 +14,11 @@ else if (BusinessObj.BaseObj.Rowid != 0)
 {
     <DynamicComponent Type="@(typeof(Views.EditView))" Parameters="@parameters" />
 }
+
+@code{
+    protected override void OnInitialized()
+    {
+        ViewType = ViewModels.DynamicViewType.Edit;
+        base.OnInitialized();
+    }
+}

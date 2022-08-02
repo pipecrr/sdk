@@ -34,6 +34,7 @@ else if (BusinessObj != null)
 
     protected override void OnInitialized()
     {
+        ViewType = ViewModels.DynamicViewType.Create;
         base.OnInitialized();
         if (DefaultFields != null)
         {
@@ -43,7 +44,7 @@ else if (BusinessObj != null)
             }
         }
 
-        BusinessObj.OnReady();
+        //BusinessObj.OnReady();
     }
 
     protected override void SetParameters(dynamic businessObj, string businessName){
