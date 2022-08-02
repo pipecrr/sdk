@@ -8,12 +8,15 @@ using Microsoft.JSInterop;
 using Siesa.SDK.Business;
 using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
 using Siesa.SDK.Frontend.Utils;
+using Radzen;
+using Siesa.SDK.Shared.Services;
+
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
     public partial class DetailView : ComponentBase
     {
-        [Inject] public  Radzen.DialogService dialogService { get; set; }
+        [Inject] public Radzen.DialogService dialogService { get; set; }
         [Parameter]
         public string BusinessName { get; set; }
         [Parameter]
@@ -22,7 +25,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter]
         public bool SetTopBar { get; set; } = true;
 
-        [Parameter] 
+        [Parameter]
         public bool IsSubpanel { get; set; }
 
         [Inject] public IJSRuntime JSRuntime { get; set; }
@@ -40,13 +43,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         {
             for (int i = 0; i < panels.Count; i++)
             {
-                if(String.IsNullOrEmpty(panels[i].ResourceTag))
+                if (String.IsNullOrEmpty(panels[i].ResourceTag))
                 {
-                    if(String.IsNullOrEmpty(panels[i].ResourceTag)){
+                    if (String.IsNullOrEmpty(panels[i].ResourceTag))
+                    {
                         panels[i].ResourceTag = $"{BusinessName}.Viewdef.detail.Panel.{panels[i].Name}";
                     }
                 }
-                
+
                 for (int j = 0; j < panels[i].Fields.Count; j++)
                 {
                     panels[i].Fields[j].ViewContext = "DetailView";
@@ -84,11 +88,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     FormViewModel.Panels = panels;
                 }
                 setViewContext(Panels);
-                if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
+                if (FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
                 {
                     foreach (var relationship in FormViewModel.Relationships)
                     {
-                        if(String.IsNullOrEmpty(relationship.ResourceTag))
+                        if (String.IsNullOrEmpty(relationship.ResourceTag))
                         {
                             relationship.ResourceTag = $"{BusinessName}.Relationship.{relationship.Name}";
                         }
@@ -141,25 +145,30 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private async Task DeleteBusiness()
         {
             var result = await BusinessObj.DeleteAsync();
+
             if (result.Errors.Count > 0)
             {
                 ErrorMsg = "<ul>";
                 foreach (var error in result.Errors)
                 {
                     ErrorMsg += $"<li>";
-                    ErrorMsg += !string.IsNullOrWhiteSpace(error.Attribute) ?  $"{error.Attribute} - " : string.Empty;
+                    ErrorMsg += !string.IsNullOrWhiteSpace(error.Attribute) ? $"{error.Attribute} - " : string.Empty;
                     ErrorMsg += error.Message.Replace("\n", "<br />");
                     ErrorMsg += $"</li>";
                 }
                 ErrorMsg += "</ul>";
                 return;
             }
-            if(IsSubpanel){
+            if (IsSubpanel)
+            {
                 dialogService.Close(false);
-            }else{
+            }
+            else
+            {
                 NavManager.NavigateTo($"{BusinessName}/");
             }
         }
+        
 
         private void OnClickCustomButton(Button button)
         {
@@ -183,3 +192,4 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         }
     }
 }
+
