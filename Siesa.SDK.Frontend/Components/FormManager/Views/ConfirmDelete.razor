@@ -1,0 +1,23 @@
+@using Radzen
+@using Siesa.SDK.Frontend.Components.Visualization
+
+<h1>hola mundo</h1>
+
+<SDKButton ResourceTag="Action.ConfirmDelete" Click="@ClickDelete" />
+<SDKButton ResourceTag="Action.ConfirmCancel" Click="@ClickCancel" />
+
+@code {
+    
+    [Parameter]
+    public DialogService DialogService { get; set; }
+
+    private void ClickDelete()
+    {
+        DialogService.Close(true);
+    }
+
+    private void ClickCancel()
+    {
+        DialogService.Close(false);
+    }
+}
