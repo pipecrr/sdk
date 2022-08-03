@@ -1,0 +1,18 @@
+<div class="sdk_collapsible">
+    <DxAccordion 
+        ExpandMode="ExpandMode" 
+        ExpandCollapseAction="ExpandCollapseAction" 
+        Items="@Items" 
+        RootItemExpandButtonDisplayMode="AccordionExpandButtonDisplayMode.End"
+        >
+    </DxAccordion>
+</div>
+
+@code{
+    [Parameter] public RenderFragment Items{get; set;}
+    AccordionExpandMode ExpandMode { get; set; } = AccordionExpandMode.SingleOrNone;
+    AccordionExpandCollapseAction ExpandCollapseAction { get; set; } = AccordionExpandCollapseAction.HeaderClick;
+    protected override async Task OnInitializedAsync() {
+        
+    }
+}

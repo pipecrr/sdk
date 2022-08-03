@@ -1,0 +1,12 @@
+<DxAccordionItem Text="@Text" Expanded="@Expanded" class="mt-3">
+        <ContentTemplate>
+            
+            @ChildContent
+        </ContentTemplate>
+</DxAccordionItem>
+
+@code {
+    [Parameter] public string Text { get; set; }
+    [Parameter] public bool Expanded { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}
