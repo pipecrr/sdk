@@ -16,7 +16,7 @@
     </div>
 </label>
 
-<input type="checkbox" name="" id="collapse_open">
+<input class="" type="checkbox" name="" id="collapse_open">
 <label class="collapse_open_btn" for="collapse_open">
     <div class="nav_btn_standar_icon">
         <i class="fa-solid fa-angles-right font_size_112"></i>
@@ -28,8 +28,16 @@
 <nav class="menu_content">
     <div class="nav_section_1 w-100">
         <a class="nav_logo" href="/">
-            <img src="_content/Siesa.SDK.Frontend/assets/img/logo_empresa.png" height="30px" alt="Logo compania">
+            <img class="" src="_content/Siesa.SDK.Frontend/assets/img/logo_empresa.png" height="30px" alt="Logo compania">
         </a>
+         <div class="p-2 input-group input-group-sm d-flex align-items-center d-block d-sm-none">
+            <input type="search" class="form-control" placeholder="Búsqueda">
+            <div class="input-group-append">
+                <span class="input-group-text">
+                    &nbsp; <i class="fa-solid fa-magnifying-glass"></i>
+                </span>
+            </div>
+        </div>
         @foreach (var menuItem in Menus)
         {
             <NavMenuItem MenuItem="@menuItem" OnClick="@OnMenuItemClick" Focus="@(SelectedMainMenu == menuItem)" />
@@ -47,14 +55,6 @@
                     @AuthenticationService.User
                 </div>
             </div>
-            <label class="collapse_open_btn" for="collapse_open">
-                <div class="nav_btn_standar_icon">
-                    <i class="fa-solid fa-angles-right font_size_112"></i>
-                </div>
-                <div class="nav_btn_standar_text">
-                    <ResourceViewer ResourceTag="Menu.Collapse" />
-                </div>
-            </label>
         </div>
     }
 </nav>

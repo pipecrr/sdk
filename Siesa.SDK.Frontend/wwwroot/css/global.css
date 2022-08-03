@@ -1,28 +1,34 @@
 ﻿:root {
     --color_back_body: #F0F3F4;
-    --color_primary: #1031A3;
+
+    --color_primary: #1031a3;
     --color_secondary: #2D71E6;
-    --color_text: #19283F;
+    --color_text: #172642; 
     --color_border: #CCCCCC;
     --color_back: #FCFCFC;
     --color_back_2: #F0F0F0;
+
     --color_primary_dark: #011865;
     --color_primary_light: #585AD5;
     --color_text_2: #808791;
     --color_light: #FFFFFF;
 
-    --color_siesa_1: #1031A3;
-    --color_siesa_2: #2D71E6;
+    --color_siesa_1: #001AAE;
+    --color_siesa_2: #1864F3;
     --color_siesa_3: #20CAE1;
 
     --color_estado_edición: #FFC500;
-    --color_estado_creación: #00B100;
-    --color_estado_persistencia: #FF6C00;
+    --color_estado_creación: #FF6C00;
+    --color_estado_persistencia: #00B100;
 
+    /* Base: color primario light */
     --color_button_back: linear-gradient(135deg, rgba(88,90,213,.3) 0%, rgba(88,90,213,1) 100%);
+    /* Base: color primario con 20% de transparencia */
     --color_primary_shadow: #1031A333;
     --shadow_standar: 0px 3px 12px var(--color_primary_shadow);
-
+    /* Base: color primario con 5% de transparencia */
+    --color_primary_shadow_min: #1030a30d;
+    --shadow_standar_min: 0px 3px 12px var(--color_primary_shadow_min);
     /* Base: color primario light (Para even de tablas) */
     --color_table_even: rgba(88,90,213,0.04);
     /* Base: color primario light (Para hover de tablas) */
@@ -374,4 +380,86 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
 
 .whcm_table > ::-webkit-scrollbar-thumb{
     background-color: var(--color_border) !important; 
+}
+
+.mt_button{
+    margin-top: calc(1.77rem + 2px) !important;
+}
+
+
+
+/*NO IMPLEMENTADO */
+.whcm_panel_button {
+    background: var(--color_light);
+    box-shadow: var(--shadow_standar_min);
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+}
+/*NO IMPLEMENTADO */
+.whcm_panel_button:hover, .whcm_panel_button:focus {
+    box-shadow: var(--shadow_standar);
+}
+
+.input-group-text{
+    background-color: var(--color_light) !important;
+    border-left: 1px solid transparent !important;
+}
+.input-group>.custom-select:not(:last-child), .input-group>.form-control:not(:last-child) {
+    border-right: 1px solid transparent !important;
+}
+
+.nav-link{
+    color: var(--color_text_2) !important;
+    font-size: 1rem;
+    padding: 0.7rem 1.2rem !important;
+}
+.nav-tabs .nav-link.active, .nav-tabs .nav-link.active:hover, .nav-tabs .nav-link.active:focus {
+    border-color: var(--color_primary) !important;
+}
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link{
+    color: var(--color_text) !important;
+    background-color: #fff;
+    border: none;
+    border-bottom: 3px solid var(--color_primary) !important;
+    font-weight: 500 !important;
+}
+.nav-tabs .nav-link:hover, .nav-tabs .nav-link:focus{
+    background: var(--color_back_2);
+}
+
+.col-form-label{
+    color: var(--color_text) !important;
+}
+
+.untruncate-grid-column-action > div > span.rz-column-title{
+    overflow: unset;
+}
+.sdk_home_content{
+    padding-top: calc(48px + 1.5rem);
+    padding-bottom: calc(32px + 2rem);
+}
+
+.area2{
+    background: var(--color_light);
+    border-radius: 4px;
+    box-shadow: var(--shadow_standar);
+    position: relative;
+    margin-top: 2.063rem;
+    padding-top: 2.5rem;
+}
+
+@media (max-width: 767.98px) { 
+    html{
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 575.98px) { 
+    .mt_button{
+        margin-top: calc(0.885rem + 2px) !important;
+    }
+    .area2 {
+        padding-top: 4rem;
+    }
 }

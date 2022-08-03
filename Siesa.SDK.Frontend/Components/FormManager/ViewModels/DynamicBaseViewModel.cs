@@ -39,6 +39,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Parameter] 
         public bool IsSubpanel { get; set; }
 
+        public DynamicViewType ViewType { get; set; }
+
         protected void InitGenericView(string bName=null)
         {
             BusinessFrontendModel businessModel;
@@ -73,6 +75,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         {
             base.OnInitialized();
             SetParameters(BusinessObj, BusinessName);
+            if(BusinessObj != null){
+                BusinessObj.OnReady(ViewType);
+            }
         }
 
         protected override void OnParametersSet()

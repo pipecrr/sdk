@@ -33,16 +33,15 @@ else
         class="whcm_table"
         @key="needUpdate">
         <Columns>
-            <RadzenDataGridColumn TItem="object" Title="Acciones" Width="100px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
-                
-                    <HeaderTemplate>
-                        @if(IsSubpanel && AllowCreate){
-                        <span
-                            class="oi oi-plus cursor-pointer" @onclick="() => GoToCreate()"></span>
-                        }else{
-                            <span><ResourceViewer ResourceTag="Generic.Actions" /></span>
-                        }
-                    </HeaderTemplate>
+            <RadzenDataGridColumn TItem="object" Title="Acciones" Width="100px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" HeaderCssClass="untruncate-grid-column-action">
+                <HeaderTemplate>
+                    @if(IsSubpanel && AllowCreate){
+                    <span
+                        class="oi oi-plus cursor-pointer" @onclick="() => GoToCreate()"></span>
+                    }else{
+                        <span><ResourceViewer ResourceTag="Generic.Actions" /></span>
+                    }                        
+                </HeaderTemplate>
                
                 <Template Context="data">
                     <div class="action-buttons d-flex justify-content-center">
@@ -157,7 +156,7 @@ else
         <SetTopBar HasExtraButtons="@(ListViewModel.Buttons != null && ListViewModel.Buttons.Count > 0 ? true: false)">
             <TopBarTitle><ResourceViewer ResourceTag="@($"{BusinessName}.Plural")" /></TopBarTitle>
             <TopBarButtons>
-                <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-file" />
+                <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus" />
             </TopBarButtons>
             <TopBarExtraButtons>
                 @foreach (var btn in ListViewModel.Buttons)
