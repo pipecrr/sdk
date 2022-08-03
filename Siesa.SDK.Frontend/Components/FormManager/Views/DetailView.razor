@@ -73,14 +73,13 @@ else if (ModelLoaded == true)
 
 @code {
     public async Task OnClickDelete()
-        {
-             var dialog = await dialogService.OpenAsync("",
-                ds => @<ConfirmDelete DialogService=@ds />,
-                new DialogOptions() { Width = "700px", ShowTitle=false,   Resizable = true});
-            
-            if(dialog){
-                await this.DeleteBusiness();
-            }
-                
+    {
+        var dialog = await dialogService.OpenAsync("",
+            ds => @<ConfirmDelete DialogService=@ds />,
+            new DialogOptions(){ShowTitle=false, Width="400"});
+        if(dialog != null && dialog == true){
+            await this.DeleteBusiness();
         }
+        //StateHasChanged();
+    }
 }

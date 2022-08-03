@@ -1,23 +1,42 @@
 @using Radzen
+@using SDK.Components.Visualization
 @using Siesa.SDK.Frontend.Components.Visualization
+@inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
+@inject UtilsManager UtilManager
 
-<h1>hola mundo</h1>
-
-<SDKButton ResourceTag="Action.ConfirmDelete" Click="@ClickDelete" />
-<SDKButton ResourceTag="Action.ConfirmCancel" Click="@ClickCancel" />
+<div class="confirm-delete-container">
+    <i class="fa-solid fa-circle-exclamation"></i>
+    <h5>@Title</h5>
+    <p>@Text</p>
+    <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Action.ConfirmCancel" Click="@ClickCancel" />
+    <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Action.ConfirmDelete" Click="@ClickDelete" />
+</div>
 
 @code {
-    
+
     [Parameter]
     public DialogService DialogService { get; set; }
 
+    private string Text { get; set; }
+    private string TextTag = "Modal.ConfirmDelete.Body";
+
+    private string Title { get; set; }
+    private string TitleTag = "Modal.ConfirmDelete";
     private void ClickDelete()
     {
         DialogService.Close(true);
     }
-
     private void ClickCancel()
     {
         DialogService.Close(false);
     }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Text = await UtilManager.GetResource(TextTag);
+        Title = await UtilManager.GetResource(TitleTag);
+        base.OnInitializedAsync();
+    }
 }
+
+

@@ -83,12 +83,67 @@ body {
 .btn_primary_def_1{
     background-color: var(--color_primary) !important;
     border-color: var(--color_primary) !important;
-    border-radius: 1rem !important;
+    border-radius: 1.5rem !important;
     font-weight: 700 !important;
 }
 .btn_primary_def_1:hover{
     background-color: var(--color_primary_dark) !important;
     border-color: var(--color_primary_dark) !important;
+}
+.btn_secondary_def_1{
+    background-color: transparent !important;
+    border-color: transparent !important;
+    border-radius: 1.5rem !important;
+    font-weight: 700 !important;
+    color: var(--color_primary) !important;
+    min-width: 31px;
+    box-shadow: inset 0px 0px 0px 2px var(--color_primary);
+}
+.btn_secondary_def_1:hover{
+    background-color: var(--color_back_2) !important;
+    border-color: transparent !important;
+    border-radius: 1.5rem !important;
+    font-weight: 700 !important;
+    color: var(--color_primary);
+    min-width: 31px;
+    box-shadow: inset 0px 0px 0px 2px var(--color_primary);
+}
+.btn_secondary_def_1:focus{
+    box-shadow: inset 0px 0px 0px 2px var(--color_primary) !important;
+}
+.btn_ghost_def_1{
+    background-color: transparent !important;
+    border-color: transparent !important;
+    border-radius: 1.5rem !important;
+    font-weight: 700 !important;
+    color: var(--color_light);
+    min-width: 31px;
+    box-shadow: inset 0px 0px 0px 2px var(--color_light);
+}
+.btn_ghost_def_1:hover{
+    background-color: var(--color_primary_light) !important;
+    border-color: transparent !important;
+    border-radius: 1.5rem !important;
+    font-weight: 700 !important;
+    color: var(--color_light);
+    min-width: 31px;
+    box-shadow: inset 0px 0px 0px 2px var(--color_light);
+}
+.btn_ghost_def_1:focus{
+    box-shadow: inset 0px 0px 0px 2px var(--color_light) !important;
+}
+.btn_ghost_def_2{
+    background-color: transparent !important;
+    border-color: transparent !important;
+    border-radius: 1.5rem !important;
+    font-weight: 400 !important;
+    color: var(--color_text) !important;
+    min-width: 31px;
+    text-align: right;
+}
+.btn_ghost_def_2:hover, .btn_ghost_def_2:active, .btn_ghost_def_2:focus {
+    background-color: var(--color_back_2) !important;
+    border-color: var(--color_back_2) !important;
 }
 
 .nav_btn_standar{

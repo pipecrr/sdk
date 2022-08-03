@@ -1,0 +1,28 @@
+.confirm-delete-container {
+    text-align: center;
+    
+}
+
+/* .confirm-delete-container > ::deep .rz-dialog{
+    top: 238px;
+    left: 518px;
+    width: 330px !important;
+    height: 292px;
+    background-color: blue;
+} */
+
+i{
+   font-size: 60px;
+   color: var(--color_siesa_3) ;
+   padding-top:12px;
+   padding-bottom: 25px;
+}
+
+h5{
+   color: var(--color_siesa_1);
+   font-weight: 500;
+}
+
+p{
+   padding-bottom: 15px;
+}
