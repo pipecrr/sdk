@@ -9,7 +9,7 @@
 }
 else if (ModelLoaded == true)
 {
-        @if(IsSubpanel){
+        @if(IsSubpanel && ShowTitle){
             <h5>@BusinessObj</h5>
             <hr />
         }
@@ -38,14 +38,18 @@ else if (ModelLoaded == true)
             {
                <RelationshipPanel Relationship="@rel" Parent="@BusinessObj.BaseObj" />
             }
-    @if(IsSubpanel){
+    @if(IsSubpanel && ShowButtons){
         <div class="buttons-container">
             @foreach (var btn in FormViewModel.Buttons)
             {
                 <SDKButton RenderStyle="@btn.RenderStyle" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" />
             }
-            <SDKButton RenderStyle="SDKButtonRenderStyle.Danger" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="DeleteBusiness" ResourceTag="Action.Delete" />
-            <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@((args) => dialogService.Close(false))" ResourceTag="Generic.Close"/>
+            @if (ShowDeleteButton){
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Danger" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="DeleteBusiness" ResourceTag="Action.Delete" />                
+            }
+            @if (ShowCancelButton){
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@((args) => dialogService.Close(false))" ResourceTag="Generic.Close"/>
+            }
         </div>
     }
     @if(SetTopBar)

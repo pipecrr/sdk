@@ -47,6 +47,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Parameter]
         public string DefaultViewdefName { get; set; }
 
+        [Parameter]
+        public bool ShowTitle { get; set; } = true;
+        [Parameter]
+        public bool ShowButtons { get; set; } = true;
+        [Parameter] 
+        public bool ShowCancelButton {get; set;} = true;
+        [Parameter] 
+        public bool ShowSaveButton {get; set;} = true;
+
         private string _viewdefName = "";
 
         private string GetViewdef(string businessName)

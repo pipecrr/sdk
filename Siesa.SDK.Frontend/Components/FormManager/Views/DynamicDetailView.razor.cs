@@ -21,6 +21,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
         }
 
+        protected override void SetParameters(dynamic businessObj, string businessName){
+            parameters.Clear();
+            parameters.Add("BusinessObj", businessObj);
+            parameters.Add("BusinessName", businessName);
+            parameters.Add("IsSubpanel", IsSubpanel);            
+            parameters.Add("ShowTitle", ShowTitle);
+            parameters.Add("ShowDeleteButton", ShowDeleteButton);
+            if (IsSubpanel)
+            {
+                parameters.Add("SetTopBar", false);                
+            }            
+        }
+
         public override async Task SetParametersAsync(ParameterView parameters)
         {
             var originalBusinessObjId = BusinessObjId;

@@ -18,7 +18,7 @@ else if (BusinessObj != null)
 
 @code {
     [Parameter] public Dictionary<string, object> DefaultFields { get; set; }
-    [Parameter] public string DuplicateRowid { get; set; }
+    [Parameter] public string DuplicateRowid { get; set; }    
 
     private async Task GetDuplicateInfo(Int64 duplicateRowid){
         try
@@ -52,11 +52,15 @@ else if (BusinessObj != null)
         parameters.Add("BusinessObj", businessObj);
         parameters.Add("BusinessName", businessName);
         parameters.Add("IsSubpanel", IsSubpanel);
+        parameters.Add("ShowTitle", ShowTitle);
+        parameters.Add("ShowButtons", ShowButtons);
+        parameters.Add("ShowCancelButton", ShowCancelButton);
+        parameters.Add("ShowSaveButton", ShowSaveButton);
         if (IsSubpanel)
         {
             parameters.Add("SetTopBar", false);
             parameters.Add("ViewdefName", "related_create");
-        }
+        }        
     }
 
     public override async Task SetParametersAsync(ParameterView parameters)
