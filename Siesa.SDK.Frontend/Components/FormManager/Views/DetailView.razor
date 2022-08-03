@@ -3,6 +3,7 @@
 @using Siesa.SDK.Frontend.Components.FormManager.Fields
 @using Siesa.SDK.Frontend.Components.Layout.Detail.Relationship
 @using Siesa.SDK.Frontend.Components.Visualization
+
 @if (Panels == null || Panels.Count <= 0)
 {
     <ResourceViewer ResourceTag="SDK.ViewdefNotFound" />
@@ -58,7 +59,7 @@ else if (ModelLoaded == true)
                 <TopBarButton Click="GoToDuplicate" ResourceTag="Action.Duplicate" IconCssClass="fa-solid fa-copy"  />
                 <TopBarButton Click="GoToEdit" ResourceTag="Action.Modify"  IconCssClass="fa-solid fa-pen"  />
                 <TopBarButton Click="GoToList" ResourceTag="Action.List"  IconCssClass="fa-solid fa-list"  />
-                <TopBarButton Click="DeleteBusiness" ResourceTag="Action.Delete" IconCssClass="fa-solid fa-trash-can" />
+                <TopBarButton Click="OnClickDelete" ResourceTag="Action.Delete" IconCssClass="fa-solid fa-trash-can" />
             </TopBarButtons>
             <TopBarExtraButtons>
                 @foreach (var btn in FormViewModel.Buttons)
@@ -67,5 +68,18 @@ else if (ModelLoaded == true)
                 }
             </TopBarExtraButtons>
         </SetTopBar>
+    }
+}
+
+@code {
+    public async Task OnClickDelete()
+    {
+        var dialog = await dialogService.OpenAsync("",
+            ds => @<ConfirmDelete DialogService=@ds />,
+            new DialogOptions(){ShowTitle=false, Width="400"});
+        if(dialog != null && dialog == true){
+            await this.DeleteBusiness();
+        }
+        //StateHasChanged();
     }
 }
