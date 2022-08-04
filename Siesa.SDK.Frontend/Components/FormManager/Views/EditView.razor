@@ -14,7 +14,7 @@ else if (Loading == true)
 }
 else if (BusinessObj.BaseObj.Rowid != 0)
 {
-    @if(IsSubpanel){
+    @if(IsSubpanel && ShowTitle){
         <h5><ResourceViewer ResourceTag="Action.Modify" /> @BusinessObj</h5>
         <hr />
     }
@@ -53,15 +53,19 @@ else if (BusinessObj.BaseObj.Rowid != 0)
         <label>@ErrorMsg</label>
     </EditForm>
     </CascadingValue>
-    @if(IsSubpanel){
+    @if(IsSubpanel && ShowButtons){
         <div class="buttons-container">
             @foreach (var btn in FormViewModel.Buttons)
             {
                 <SDKButton RenderStyle="@btn.RenderStyle" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag"  />
             }
-            <SDKButton form="@FormID" RenderStyle="SDKButtonRenderStyle.Primary" RenderStyleMode="SDKButtonRenderStyleMode.Text" SubmitFormOnClick="true" ResourceTag="Generic.ActionSave" />
-            <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@((args) => dialogService.Close(false))" ResourceTag="Generic.ActionCancel" />
-        </div>
+            @if(ShowSaveButton){
+                <SDKButton form="@FormID" RenderStyle="SDKButtonRenderStyle.Primary" RenderStyleMode="SDKButtonRenderStyleMode.Text" SubmitFormOnClick="true" ResourceTag="Generic.ActionSave" />
+            }
+            @if(ShowCancelButton){
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@((args) => {CancelButton();})" ResourceTag="Generic.ActionCancel" />
+            }
+        </div>        
     }
     @if(SetTopBar && !IsSubpanel)
     {
