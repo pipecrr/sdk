@@ -47,6 +47,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Parameter]
         public string DefaultViewdefName { get; set; }
 
+        [Parameter] 
+        public DynamicViewType ViewContext { get; set; } = DynamicViewType.Create;
         [Parameter]
         public bool ShowTitle { get; set; } = true;
         [Parameter]
@@ -81,6 +83,33 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             return data;
         }
 
+        private void setViewContext(List<Panel> panels, DynamicViewType viewType)
+        {
+            for (int i = 0; i < panels.Count; i++)
+            {
+                if(String.IsNullOrEmpty(panels[i].ResourceTag))
+                {
+                    if(String.IsNullOrEmpty(panels[i].ResourceTag)){
+                        panels[i].ResourceTag = $"{BusinessName}.Viewdef.{_viewdefName}.Panel.{panels[i].Name}";
+                    }
+                }
+                
+                for (int j = 0; j < panels[i].Fields.Count; j++)
+                {
+                    if(viewType == DynamicViewType.Detail && !String.IsNullOrEmpty(panels[i].Fields[j].ViewContext))
+                    {
+                        panels[i].Fields[j].ViewContext = "DetailView";
+                    }
+                    
+                    panels[i].Fields[j].GetFieldObj(BusinessObj);
+                }
+                if (panels[i].SubViewdef != null && panels[i].SubViewdef.Panels.Count > 0)
+                {
+                    setViewContext(panels[i].SubViewdef.Panels, viewType);
+                }
+            }
+        }
+
         public void Refresh(){
             StateHasChanged();
         }
@@ -111,18 +140,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             }
             try
             {
-                foreach (var panel in FormViewModel.Panels)
-                {
-                    if(String.IsNullOrEmpty(panel.ResourceTag))
-                    {
-                        panel.ResourceTag = $"{BusinessName}.Viewdef.{_viewdefName}.Panel.{panel.Name}";
-                    }
-
-                    foreach (var field in panel.Fields)
-                    {
-                        field.GetFieldObj(BusinessObj);
-                    }
-                }
+                setViewContext(FormViewModel.Panels, ViewContext);
             }
             catch (System.Exception)
             {

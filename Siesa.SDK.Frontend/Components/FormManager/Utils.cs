@@ -1,12 +1,13 @@
 using System;
 using Microsoft.AspNetCore.Components;
+using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
 using Siesa.SDK.Frontend.Components.FormManager.Views;
 
 namespace Siesa.SDK.Frontend.Components.FormManager
 {
     public static class FormUtils
     {
-        public static RenderFragment RenderFreeForm(string viewdef, dynamic BusinessObj, string Title)
+        public static RenderFragment RenderFreeForm(string viewdef, dynamic BusinessObj, string Title, DynamicViewType ViewContext = DynamicViewType.Create, bool SetTopBar = true)
         {
             return (builder) =>
             {
@@ -15,6 +16,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager
                 builder.AddAttribute(2, "BusinessObj", BusinessObj);
                 builder.AddAttribute(3, "BusinessName", BusinessObj.BusinessName);
                 builder.AddAttribute(4, "Title", Title);
+                builder.AddAttribute(5, "ViewContext", ViewContext);
+                builder.AddAttribute(6, "SetTopBar", SetTopBar);
                 builder.CloseComponent();
             };
         }

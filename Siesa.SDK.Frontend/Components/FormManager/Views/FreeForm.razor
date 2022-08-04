@@ -48,6 +48,9 @@ else if (BusinessObj != null)
         <label>@((MarkupString)ErrorMsg)</label>
     </EditForm>
 </CascadingValue>
+@if(this.SetTopBar)
+{
+
     <SetTopBar>
         <TopBarTitle>@Title</TopBarTitle>
         <TopBarButtons>
@@ -58,5 +61,6 @@ else if (BusinessObj != null)
             }
         </TopBarButtons>
     </SetTopBar>
+}
 
 }
