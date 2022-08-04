@@ -28,7 +28,7 @@ namespace Siesa.SDK.Frontend {
             services.AddSingleton<IResourceManager, ResourceManager>();
             services.AddSingleton<IFeaturePermissionService, FeaturePermissionService>();
             services.AddScoped<UtilsManager>(sp => ActivatorUtilities.CreateInstance<UtilsManager>(sp));
-            services.AddScoped<NotificationService, SDKNotificationService>();
+            services.AddScoped<NotificationService, SDKNotificationService>(sp => ActivatorUtilities.CreateInstance<SDKNotificationService>(sp));
             services.AddScoped<SDKNotificationService>(sp => (SDKNotificationService)sp.GetRequiredService<NotificationService>());
         }
 
