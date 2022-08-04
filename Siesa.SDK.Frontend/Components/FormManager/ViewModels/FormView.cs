@@ -56,6 +56,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Parameter] 
         public bool ShowSaveButton {get; set;} = true;
 
+        [Parameter]
+        public Action<object> OnSave {get; set;} = null;
+
+        [Parameter]
+        public Action OnCancel {get; set;} = null;
+
         private string _viewdefName = "";
 
         private string GetViewdef(string businessName)
@@ -314,8 +320,18 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
             var id = result.Rowid;
             if(IsSubpanel){
                 dialogService.Close(id);
+                if(OnSave != null){
+                    OnSave(id);
+                }
             }else{
                 NavManager.NavigateTo($"{BusinessName}/detail/{id}/");
+            }
+        }
+
+        public async Task CancelButton(){
+            dialogService.Close(false);
+            if(OnCancel != null){
+                OnCancel();
             }
         }
 

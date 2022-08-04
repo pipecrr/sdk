@@ -68,10 +68,10 @@ else if (BusinessObj.BaseObj != null)
                 <SDKButton RenderStyle="@btn.RenderStyle" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag"  />
             }
             @if(ShowSaveButton){
-                <SDKButton form="@FormID" RenderStyle="SDKButtonRenderStyle.Primary" RenderStyleMode="SDKButtonRenderStyleMode.Text" SubmitFormOnClick="true" ResourceTag="Generic.ActionSave" />
+                <SDKButton form="@FormID" RenderStyle="SDKButtonRenderStyle.Primary" RenderStyleMode="SDKButtonRenderStyleMode.Text" SubmitFormOnClick="true" ResourceTag="Generic.ActionSave"/>
             }
             @if(ShowCancelButton){
-                <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@((args) => dialogService.Close(false))" ResourceTag="Generic.ActionCancel" />
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@((args) => {CancelButton();})" ResourceTag="Generic.ActionCancel" />
             }
         </div>
     }

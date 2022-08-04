@@ -28,6 +28,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Parameter] 
         public bool ShowDeleteButton {get; set;} = true;
 
+        [Parameter]
+        public Action<object> OnSave {get; set;} = null;
+
+        [Parameter]
+        public Action OnCancel {get; set;} = null;
+
         [Inject]
         public IServiceProvider ServiceProvider { get; set; }
 

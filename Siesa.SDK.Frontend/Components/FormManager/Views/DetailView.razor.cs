@@ -30,8 +30,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public bool ShowButtons { get; set; } = true;
         [Parameter] 
         public bool ShowCancelButton {get; set;} = true;
-        [Parameter] 
-        public bool ShowSaveButton {get; set;} = true;
+                
         [Parameter] 
         public bool ShowDeleteButton {get; set;} = true;
 
