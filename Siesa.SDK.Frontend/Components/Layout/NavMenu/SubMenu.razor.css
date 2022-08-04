@@ -41,3 +41,19 @@
     background: var(--color_button_back);
     transition-duration: .2s; 
 } */
+
+@media (max-width: 575.98px) {
+    .submenu-content {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .nav_dx_menu{
+        left: 5px !important;
+        transition-duration: .25s;
+        z-index: 10 !important;
+        top: 91px !important;
+        box-shadow: none !important;
+    }
+
+}

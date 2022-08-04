@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Siesa.SDK.Entities;
 using Siesa.SDK.Frontend;
 using Siesa.SDK.Frontend.Components.FormManager.Model;
+using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
 using Siesa.SDK.Protos;
 using Siesa.SDK.Shared.Business;
 using Siesa.SDK.Shared.Services;
@@ -233,8 +234,9 @@ namespace Siesa.SDK.Business
             // Do nothing
         }
 
-        public virtual void OnReady(){
-
+        public virtual void OnReady(DynamicViewType viewType)
+        {
+            // Do nothing
         }
 
         public void SetPropertyValue(string propertyName, object value)

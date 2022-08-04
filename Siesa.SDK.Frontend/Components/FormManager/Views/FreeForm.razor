@@ -20,7 +20,7 @@ else if (BusinessObj != null)
             <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
                 @if (Panels.Count > 1)
             {
-                <DxFormLayoutTabPages>
+                <DxFormLayoutTabPages ScrollMode="TabsScrollMode.Auto">
                     @foreach (var panel in Panels)
                     {
                         <SDKFormLayoutTabPage ResourceTag="@panel.ResourceTag">
@@ -48,6 +48,9 @@ else if (BusinessObj != null)
         <label>@((MarkupString)ErrorMsg)</label>
     </EditForm>
 </CascadingValue>
+@if(this.SetTopBar)
+{
+
     <SetTopBar>
         <TopBarTitle>@Title</TopBarTitle>
         <TopBarButtons>
@@ -58,5 +61,6 @@ else if (BusinessObj != null)
             }
         </TopBarButtons>
     </SetTopBar>
+}
 
 }

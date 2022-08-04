@@ -78,6 +78,7 @@ namespace Siesa.SDK.Frontend.Services
         public void SetToken(string token)
         {
             UserToken = token;
+            _localStorageService.SetItemAsync("usertoken", UserToken);
         }
     }
 }

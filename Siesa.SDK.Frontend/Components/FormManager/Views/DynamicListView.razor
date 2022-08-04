@@ -25,6 +25,12 @@ else if (BusinessObj != null)
     [Parameter] public bool AllowDetail { get; set; } = true;
     [Parameter] public Action<object> OnSelectedRow { get; set; } = null;
 
+    protected override void OnInitialized()
+    {
+        ViewType = ViewModels.DynamicViewType.List;
+        base.OnInitialized();
+    }
+
         
     protected override void SetParameters(dynamic businessObj, string businessName){
         var new_params = new Dictionary<string, object>();

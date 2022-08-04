@@ -4,7 +4,7 @@
     ModelObj.AddRelFieldToSave(SubViewdef.ParentField.Replace("BaseObj.",""));
      @if (SubViewdef.Panels.Count > 1)
     {
-        <DxFormLayoutTabPages>
+        <DxFormLayoutTabPages ScrollMode="TabsScrollMode.Auto">
             @foreach (var panel in SubViewdef.Panels)
             {
                 <SDKFormLayoutTabPage ResourceTag="@panel.ResourceTag">

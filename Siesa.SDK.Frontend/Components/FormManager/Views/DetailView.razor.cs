@@ -28,6 +28,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter]
         public bool IsSubpanel { get; set; }
 
+        [Parameter]
+        public bool ShowTitle { get; set; } = true;
+        [Parameter]
+        public bool ShowButtons { get; set; } = true;
+        [Parameter] 
+        public bool ShowCancelButton {get; set;} = true;
+                
+        [Parameter] 
+        public bool ShowDeleteButton {get; set;} = true;
+
         [Inject] public IJSRuntime JSRuntime { get; set; }
         [Inject] public NavigationManager NavManager { get; set; }
 

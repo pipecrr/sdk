@@ -47,6 +47,23 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Parameter]
         public string DefaultViewdefName { get; set; }
 
+        [Parameter] 
+        public DynamicViewType ViewContext { get; set; } = DynamicViewType.Create;
+        [Parameter]
+        public bool ShowTitle { get; set; } = true;
+        [Parameter]
+        public bool ShowButtons { get; set; } = true;
+        [Parameter] 
+        public bool ShowCancelButton {get; set;} = true;
+        [Parameter] 
+        public bool ShowSaveButton {get; set;} = true;
+
+        [Parameter]
+        public Action<object> OnSave {get; set;} = null;
+
+        [Parameter]
+        public Action OnCancel {get; set;} = null;
+
         private string _viewdefName = "";
 
         private string GetViewdef(string businessName)
@@ -64,6 +81,33 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 data = BusinessManagerFrontend.Instance.GetViewdef(businessName, DefaultViewdefName);
             }
             return data;
+        }
+
+        private void setViewContext(List<Panel> panels, DynamicViewType viewType)
+        {
+            for (int i = 0; i < panels.Count; i++)
+            {
+                if(String.IsNullOrEmpty(panels[i].ResourceTag))
+                {
+                    if(String.IsNullOrEmpty(panels[i].ResourceTag)){
+                        panels[i].ResourceTag = $"{BusinessName}.Viewdef.{_viewdefName}.Panel.{panels[i].Name}";
+                    }
+                }
+                
+                for (int j = 0; j < panels[i].Fields.Count; j++)
+                {
+                    if(viewType == DynamicViewType.Detail && !String.IsNullOrEmpty(panels[i].Fields[j].ViewContext))
+                    {
+                        panels[i].Fields[j].ViewContext = "DetailView";
+                    }
+                    
+                    panels[i].Fields[j].GetFieldObj(BusinessObj);
+                }
+                if (panels[i].SubViewdef != null && panels[i].SubViewdef.Panels.Count > 0)
+                {
+                    setViewContext(panels[i].SubViewdef.Panels, viewType);
+                }
+            }
         }
 
         public void Refresh(){
@@ -96,18 +140,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             }
             try
             {
-                foreach (var panel in FormViewModel.Panels)
-                {
-                    if(String.IsNullOrEmpty(panel.ResourceTag))
-                    {
-                        panel.ResourceTag = $"{BusinessName}.Viewdef.{_viewdefName}.Panel.{panel.Name}";
-                    }
-
-                    foreach (var field in panel.Fields)
-                    {
-                        field.GetFieldObj(BusinessObj);
-                    }
-                }
+                setViewContext(FormViewModel.Panels, ViewContext);
             }
             catch (System.Exception)
             {
@@ -305,8 +338,18 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
             var id = result.Rowid;
             if(IsSubpanel){
                 dialogService.Close(id);
+                if(OnSave != null){
+                    OnSave(id);
+                }
             }else{
                 NavManager.NavigateTo($"{BusinessName}/detail/{id}/");
+            }
+        }
+
+        public async Task CancelButton(){
+            dialogService.Close(false);
+            if(OnCancel != null){
+                OnCancel();
             }
         }
 

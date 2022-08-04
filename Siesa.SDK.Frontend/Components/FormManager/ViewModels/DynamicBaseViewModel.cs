@@ -17,6 +17,23 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Parameter]
         public string BusinessObjId { get; set; }
 
+        [Parameter] 
+        public bool ShowTitle {get; set;} = true;
+        [Parameter] 
+        public bool ShowButtons {get; set;} = true;
+        [Parameter] 
+        public bool ShowCancelButton {get; set;} = true;
+        [Parameter] 
+        public bool ShowSaveButton {get; set;} = true;
+        [Parameter] 
+        public bool ShowDeleteButton {get; set;} = true;
+
+        [Parameter]
+        public Action<object> OnSave {get; set;} = null;
+
+        [Parameter]
+        public Action OnCancel {get; set;} = null;
+
         [Inject]
         public IServiceProvider ServiceProvider { get; set; }
 
@@ -38,6 +55,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         [Parameter] 
         public bool IsSubpanel { get; set; }
+
+        public DynamicViewType ViewType { get; set; }
 
         protected void InitGenericView(string bName=null)
         {
@@ -73,6 +92,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         {
             base.OnInitialized();
             SetParameters(BusinessObj, BusinessName);
+            if(BusinessObj != null){
+                BusinessObj.OnReady(ViewType);
+            }
         }
 
         protected override void OnParametersSet()
@@ -85,11 +107,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             parameters.Clear();
             parameters.Add("BusinessObj", businessObj);
             parameters.Add("BusinessName", businessName);
-            parameters.Add("IsSubpanel", IsSubpanel);
+            parameters.Add("IsSubpanel", IsSubpanel);            
             if (IsSubpanel)
             {
-                parameters.Add("SetTopBar", false);
-                
+                parameters.Add("SetTopBar", false);                
             }
         }
         public override async Task SetParametersAsync(ParameterView parameters)

@@ -1,0 +1,66 @@
+.sdk_go_top{
+    position: fixed;
+    bottom: 0rem;
+    right: 0.4rem;
+    width: 3rem;
+    height: 3rem;
+    z-index: -1;
+}
+.sdk_go_top_button{
+    width: 0rem;
+    height: 0rem;
+    background: var(--color_primary);
+    border-radius: 50%;
+    cursor: pointer;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    transition: 0.2s;
+    box-shadow: var(--shadow_standar);
+}
+.sdk_go_top_button:hover{
+    background: var(--color_primary_dark);
+}
+.sdk_go_top_button i{
+    position: absolute;
+    font-size: 1.2rem;
+    top: 49%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    color: var(--color_light);
+    transition: 0.2s;
+}
+.sdk_show{
+    z-index: 4;
+}
+.sdk_show .sdk_go_top_button{
+    animation: popup_go_top 0.2s ease-in-out;
+    width: 3rem;
+    height: 3rem;
+    z-index: 5;
+}
+.sdk_show i{
+    transform: translate(-50%, -50%) scale(1);
+}
+
+@media (max-width: 767.98px) {
+    .sdk_go_top{     
+        bottom: 1rem;
+    }
+}
+
+@keyframes popup_go_top{
+    0%{
+        width: 0rem;
+        height: 0rem;
+    }
+    50%{
+        width: 4rem;
+        height: 4rem;
+    }
+    100%{
+        width: 3rem;
+        height: 3rem;
+    }
+}

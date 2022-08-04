@@ -25,7 +25,6 @@
     [Parameter] public IEnumerable<SDKEnumWrapper<TItem>> Options {get; set;}
 
     private Type enumType { get; set; }
-    
     private IEnumerable<SDKEnumWrapper<TItem>> _options {
         get{
             if(Options == null){
@@ -35,10 +34,6 @@
                     enumType = typeof(TItem).GetGenericArguments()[0];
                 }
                 GetEnumValues();
-                Options = Enum.GetValues(enumType).OfType<TItem>().Select(x => new SDKEnumWrapper<TItem>{
-                    Type = x,
-                    DisplayText = $"Enum.{enumType.Name}.{x.ToString()}"
-                });
             }
             return Options;
         }

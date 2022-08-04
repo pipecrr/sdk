@@ -25,6 +25,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             parameters.Add("BusinessObj", businessObj);
             parameters.Add("BusinessName", businessName);
             parameters.Add("IsSubpanel", IsSubpanel);
+            parameters.Add("ShowTitle", ShowTitle);
+            parameters.Add("ShowButtons", ShowButtons);
+            parameters.Add("ShowCancelButton", ShowCancelButton);
+            parameters.Add("ShowSaveButton", ShowSaveButton);
+            parameters.Add("OnSave", OnSave);
+            parameters.Add("OnCancel", OnCancel);
             if (IsSubpanel)
             {
                 parameters.Add("SetTopBar", false);
