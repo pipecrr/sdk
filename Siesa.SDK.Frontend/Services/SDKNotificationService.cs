@@ -12,7 +12,7 @@ namespace Siesa.SDK.Frontend.Services
         {
             UtilsManager = utilsManager;
         }
-        public async Task ShowError(string message, string titleResourceTag = "Notification.Error", int duration = 60000)
+        public async Task ShowError(string message, string titleResourceTag = "Notification.Error", int duration = 2000)
         {
             string text = await UtilsManager.GetResource(titleResourceTag);
 
