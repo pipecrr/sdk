@@ -1,6 +1,7 @@
 @using Siesa.SDK.Entities
+@inject UtilsManager UtilManager
 <div class="sdk_search" @onclick="()=>ShowSearch()">
-    <input type="search" class="form-control form-control-sm pr-4" id="busqueda" placeholder="Buscar..."
+    <input autocomplete="off" type="search" class="form-control form-control-sm pr-4" id="busqueda" placeholder="@placeholder"
         @bind-value:event="onchange" @oninput="@((ChangeEventArgs __e) => OnChangeSearch(__e?.Value?.ToString()))"
         @bind-value="searchString">
     <i class="fa-solid fa-magnifying-glass"></i>
@@ -30,8 +31,14 @@
 @code{
     [Parameter]
     public List<E00061_Menu> Menus { get; set; }
-    private string searchString = "";    
+    private string searchString = "";
     private bool SearchEnabled = false;
+
+    private string placeholder = "";
+
+    protected override async Task OnInitializedAsync(){
+        placeholder = await UtilManager.GetResource("Action.Search");
+    }
 
     public class HeaderSearchResult
     {

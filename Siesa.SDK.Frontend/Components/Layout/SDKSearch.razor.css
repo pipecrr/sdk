@@ -64,14 +64,7 @@
 }
 
 .search_tooltip a:hover {
-    color: red;
+    color: var(--color_text);
     background: var(--color_back_2);
     text-decoration: none;
-}
-
-input[type="search"]::-webkit-search-decoration,
-input[type="search"]::-webkit-search-cancel-button,
-input[type="search"]::-webkit-search-results-button,
-input[type="search"]::-webkit-search-results-decoration { 
-    display: none; 
 }
