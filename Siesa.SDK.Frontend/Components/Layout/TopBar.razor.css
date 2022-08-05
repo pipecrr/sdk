@@ -1,7 +1,7 @@
 ﻿.whcm_toolbar{
     width: calc(100% - 2rem) !important;
     background: var(--color_light);
-    border-radius: 4px;
+    border-radius: var(--border_radius_standar);
     box-shadow: var(--shadow_standar);
     display: flex;
     flex-wrap: nowrap;

@@ -98,7 +98,7 @@ input#menu:checked~ ::deep .nav_dx_menu {
 }
 
 .collapse_open_btn {
-    border-radius: 4px;
+    border-radius: var(--border_radius_standar);
     position: fixed;
     left: 0;
     bottom: 52px;

@@ -1,8 +1,8 @@
 ﻿:root {
     --color_back_body: #F0F3F4;
 
-    --color_primary: #1031a3;
-    --color_secondary: #2D71E6;
+    --color_primary: #001AAE;
+    --color_secondary: #1864F3;
     --color_text: #172642; 
     --color_border: #CCCCCC;
     --color_back: #FCFCFC;
@@ -16,6 +16,9 @@
     --color_siesa_1: #001AAE;
     --color_siesa_2: #1864F3;
     --color_siesa_3: #20CAE1;
+
+    --color_validacion_error: #DC3545;
+    --color_validacion_success: #6C9927;
 
     --color_estado_edición: #FFC500;
     --color_estado_creación: #FF6C00;
@@ -33,6 +36,11 @@
     --color_table_even: rgba(88,90,213,0.04);
     /* Base: color primario light (Para hover de tablas) */
     --color_table_hover: rgba(88,90,213,0.1);
+
+    --border_radius_card_login: 1.25rem;
+    --border_radius_standar: .2rem;
+    --border_radius_btn_min: .2rem;
+    --border_radius_btn: 1.5rem;
 }
 ::-webkit-scrollbar{
     width: 7px;
@@ -47,6 +55,27 @@
 *{
     font-family: Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
+html{
+    scroll-behavior: smooth;
+}
+.valid{
+    border-color: var(--color_validacion_success) !important;
+    outline: none !important;
+}
+.valid ~ .validation-message{
+    /* position: absolute; */
+    font-size: 0.75rem;
+    color: var(--color_validacion_success);
+}
+.invalid {
+    border-color: var(--color_validacion_error) !important;
+    outline: none !important;
+}
+.invalid ~ .validation-message{
+    /* position: absolute; */
+    font-size: 0.75rem;
+    color: var(--color_validacion_error);
+}
 .font_color_1{
     color: var(--color_siesa_1);
 }
@@ -55,6 +84,21 @@
 }
 .font_color_3{
     color: var(--color_siesa_3);
+}
+.font_color_primary{
+    color: var(--color_primary);
+}
+.font_color_primary_light{
+    color: var(--color_primary_light);
+}
+.font_color_validacion{
+    color: var(--color_validacion_error);
+}
+select{
+    background: url(data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgZGF0YS1uYW1lPSJMYXllciAxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0Ljk1IDEwIj48ZGVmcz48c3R5bGU+LmNscy0xe2ZpbGw6I2ZmZjt9LmNscy0ye2ZpbGw6IzQ0NDt9PC9zdHlsZT48L2RlZnM+PHRpdGxlPmFycm93czwvdGl0bGU+PHJlY3QgY2xhc3M9ImNscy0xIiB3aWR0aD0iNC45NSIgaGVpZ2h0PSIxMCIvPjxwb2x5Z29uIGNsYXNzPSJjbHMtMiIgcG9pbnRzPSIxLjQxIDQuNjcgMi40OCAzLjE4IDMuNTQgNC42NyAxLjQxIDQuNjciLz48cG9seWdvbiBjbGFzcz0iY2xzLTIiIHBvaW50cz0iMy41NCA1LjMzIDIuNDggNi44MiAxLjQxIDUuMzMgMy41NCA1LjMzIi8+PC9zdmc+) no-repeat 98% 50% !important;
+	-moz-appearance: none; 
+	-webkit-appearance: none; 
+	appearance: none;
 }
 
 .font_size_112{
@@ -89,7 +133,7 @@ body {
 .btn_primary_def_1{
     background-color: var(--color_primary) !important;
     border-color: var(--color_primary) !important;
-    border-radius: 1.5rem !important;
+    border-radius: var(--border_radius_btn) !important;
     font-weight: 700 !important;
 }
 .btn_primary_def_1:hover{
@@ -99,7 +143,7 @@ body {
 .btn_secondary_def_1{
     background-color: transparent !important;
     border-color: transparent !important;
-    border-radius: 1.5rem !important;
+    border-radius: var(--border_radius_btn) !important;
     font-weight: 700 !important;
     color: var(--color_primary) !important;
     min-width: 31px;
@@ -108,7 +152,7 @@ body {
 .btn_secondary_def_1:hover{
     background-color: var(--color_back_2) !important;
     border-color: transparent !important;
-    border-radius: 1.5rem !important;
+    border-radius: var(--border_radius_btn) !important;
     font-weight: 700 !important;
     color: var(--color_primary);
     min-width: 31px;
@@ -120,7 +164,7 @@ body {
 .btn_ghost_def_1{
     background-color: transparent !important;
     border-color: transparent !important;
-    border-radius: 1.5rem !important;
+    border-radius: var(--border_radius_btn) !important;
     font-weight: 700 !important;
     color: var(--color_light);
     min-width: 31px;
@@ -129,7 +173,7 @@ body {
 .btn_ghost_def_1:hover{
     background-color: var(--color_primary_light) !important;
     border-color: transparent !important;
-    border-radius: 1.5rem !important;
+    border-radius: var(--border_radius_btn) !important;
     font-weight: 700 !important;
     color: var(--color_light);
     min-width: 31px;
@@ -141,7 +185,7 @@ body {
 .btn_ghost_def_2{
     background-color: transparent !important;
     border-color: transparent !important;
-    border-radius: 1.5rem !important;
+    border-radius: var(--border_radius_btn) !important;
     font-weight: 400 !important;
     color: var(--color_text) !important;
     min-width: 31px;
@@ -168,7 +212,7 @@ body {
 }
 .nav_btn_standar::before{
     content: "";
-    border-radius: 4px;
+    border-radius: var(--border_radius_btn_min);
     width: 10%;
     height: 36px;
     position: absolute;
@@ -311,7 +355,7 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
     min-width: 31px;
     max-height: 31px;
     min-height: 31px;
-    color: var(--color_primary);
+    color: var(--color_primary) !important;
     padding: 0.25rem !important;
     font-size: 1.2rem !important;
     display: flex !important;
@@ -322,7 +366,7 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
 }
 .layout_btn_standar-sm::before{
     content: "";
-    border-radius: 0.2rem;
+    border-radius: var(--border_radius_standar);
     width: 20%;
     height: 100%;
     position: absolute;
@@ -351,7 +395,7 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
 
 .whcm_toolbar_tooltip{
     max-width: 64px;
-    border-radius: 4px;
+    border-radius: var(--border_radius_standar);
     color: var(--color_text);
     background-color: var(--color_light);
     position: absolute;
@@ -392,7 +436,7 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
 .whcm_panel_button {
     background: var(--color_light);
     box-shadow: var(--shadow_standar_min);
-    border-radius: 4px;
+    border-radius: var(--border_radius_standar);
     border: none;
     cursor: pointer;
 }
@@ -423,6 +467,8 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
     border: none;
     border-bottom: 3px solid var(--color_primary) !important;
     font-weight: 500 !important;
+    border: none;
+    border-bottom: 3px solid var(--color_primary);
 }
 .nav-tabs .nav-link:hover, .nav-tabs .nav-link:focus{
     background: var(--color_back_2);
@@ -442,11 +488,83 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
 
 .area2{
     background: var(--color_light);
-    border-radius: 4px;
+    border-radius: var(--border_radius_standar);
     box-shadow: var(--shadow_standar);
     position: relative;
     margin-top: 2.063rem;
     padding-top: 2.5rem;
+}
+
+.btn-secondary, .btn-secondary.disabled, .btn-secondary:disabled {
+    color: var(--color_primary_light) !important;
+    background-color: transparent !important;
+    border-left: none !important;
+}
+.btn-secondary:hover {
+    background-color: var(--color_back_2) !important;
+}
+
+.custom-control-input:checked~.custom-control-label::before{
+    border-color: var(--color_primary) !important;
+    background-color:  var(--color_primary) !important;
+}
+.custom-control-label::before, .custom-control-label::after{
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+@media (min-width: 1400px) { 
+    .col-xxl-12 {
+        flex: 0 0 auto;
+        width: 100%;
+    }
+    .col-xxl-11 {
+        flex: 0 0 auto;
+        width: 91.66666667%;
+    }
+    .col-xxl-10 {
+        flex: 0 0 auto;
+        width: 83.33333333% !important;
+    }
+    .col-xxl-9 {
+        flex: 0 0 auto;
+        width: 75%;
+    }
+    .col-xxl-8 {
+        flex: 0 0 auto;
+        width: 66.66666667%;
+    }
+    .col-xxl-7 {
+        flex: 0 0 auto;
+        width: 58.33333333%;
+    }
+    .col-xxl-6 {
+        flex: 0 0 auto;
+        width: 50%;
+    }
+    .col-xxl-5 {
+        flex: 0 0 auto;
+        width: 41.66666667%;
+    }
+    .col-xxl-4 {
+        flex: 0 0 auto;
+        width: 33.33333333%;
+    }
+    .col-xxl-3 {
+        flex: 0 0 auto;
+        width: 25%;
+    }
+    .col-xxl-2 {
+        flex: 0 0 auto;
+        width: 16.66666667%;
+    }
+    .col-xxl-1 {
+        flex: 0 0 auto;
+        width: 8.33333333%;
+    }
+    .offset-xxl-1 {
+        margin-left: 8.33333333% !important;
+    }
 }
 
 @media (max-width: 767.98px) { 

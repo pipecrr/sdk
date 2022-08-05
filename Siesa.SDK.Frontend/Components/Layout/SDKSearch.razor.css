@@ -28,7 +28,7 @@
 .search_tooltip {
     min-width: 300px;
     max-width: 300px;
-    border-radius: 4px;
+    border-radius: var(--border_radius_standar);
     color: var(--color_text);
     background-color: var(--color_light);
     position: absolute;

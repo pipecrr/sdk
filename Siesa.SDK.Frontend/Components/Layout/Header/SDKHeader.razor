@@ -38,7 +38,7 @@
                                     <label class="col-form-label col-form-label-sm font-weight-bold"
                                     for="inputGrupo">Grupo</label>
                                     <div class="d-flex form-control form-control-sm p-0">
-                                        <select id="inputGrupo" class="" @bind="SelectedGroup.Rowid">
+                                        <select id="inputGrupo" class="p-1" @bind="SelectedGroup.Rowid">
                                             @foreach (var group in CompanyGroups)
                                             {
                                                 <option value="@group.Rowid">Grupo @group.Rowid</option>
@@ -53,7 +53,7 @@
                                     <label class="col-form-label col-form-label-sm font-weight-bold"
                                     for="inputCompania">Compañía</label>
                                     <div class="d-flex form-control form-control-sm p-0">
-                                        <select id="inputGrupo" class="" @bind="SelectedCompany.Rowid">
+                                        <select id="inputGrupo" class="p-1" @bind="SelectedCompany.Rowid">
                                             @foreach (var company in Companies.Where(c => c.RowidCompanyGroup == SelectedGroup.Rowid))
                                             {
                                                 <option value="@company.Rowid">Compañía @company.Rowid</option>
@@ -67,7 +67,7 @@
                                 <button type="submit" class="btn btn-primary btn_primary_def_1 btn-sm w-100 mt-2">Cambiar
                                     configuración</button>
                             </form>
-                            <div class="alert alert-info alert alert-info text-center mt-3 mb-0 font_size_087" role="alert">
+                            <div class="alert alert-info text-center mt-3 mb-0 font_size_087" role="alert">
                                 Al cambiar la configuración se refrescará la ventana
                             </div>
                         </div>

@@ -31,7 +31,7 @@
     place-items: center;
 }
 .card_login{
-    border-radius: 20px;
+    border-radius: var(--border_radius_card_login);
     box-shadow: 6px 6px 24px #00000017;
 }
 .image_back::before {
@@ -44,7 +44,7 @@
     height: 100%;
     width: calc(100% - (8.333333%*4));
     position: absolute;
-    border-radius: 20px;
+    border-radius: var(--border_radius_card_login);
 }
 .image_back::after {
     content: "";
@@ -53,15 +53,16 @@
     height: 100%;
     width: calc(100% - (8.333333%*4));
     position: absolute;
-    border-radius: 20px;
+    border-radius: var(--border_radius_card_login);
 }
 .info_area{
     z-index: 1;
     perspective: 60rem;
+    min-height: 565px !important;
 }
 .info_card{
     background: rgba(255, 255, 255, 0.2);
-    border-radius: 20px;
+    border-radius: var(--border_radius_card_login);
     box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.29);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
@@ -79,7 +80,7 @@
 }
 .info_card_modal{
     background-color: rgba(255, 255, 255, 0.2) !important;
-    border-radius: 20px !important;
+    border-radius: var(--border_radius_card_login) !important;
     box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.29);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
@@ -103,7 +104,8 @@
 .login_area {
     overflow: hidden;
     z-index: 1;
-    border-radius: 20px;
+    border-radius: var(--border_radius_card_login);
+    min-height: 565px !important;
 }
 .login_area::before{
     content: "";
@@ -123,19 +125,20 @@
             animation-delay: 1.6s;
 }
 .select_connect{
-    padding: 0 !important;
+    padding: 0 1rem 0 0 !important;
     margin: 0;
     border: none;
-    background: none;
+    /* background: none; */
     font-size: .875rem;
-    max-width: calc(100% - 60px);
+    max-width: calc(80% - 60px);
     text-overflow: ellipsis;
-    text-align: right;
+    overflow: hidden;
+    white-space: nowrap;
 }
 .btn_region{
     min-width: 16px;
     min-height: 16px;
-    border-radius: 50% !important;
+    border-radius: var(--border_radius_btn) !important;
     padding: 0 !important;
     overflow: hidden;
     border: none !important;
@@ -144,7 +147,7 @@
     min-width: 230px;
     max-width: 230px;
     max-height: 280px;
-    border-radius: 4px;
+    border-radius: var(--border_radius_standar);
     background-color: var(--color_light);
     position: absolute;
     top: 28px;
@@ -175,7 +178,7 @@
     overflow: hidden;
 }
 .title_1{
-    font-size: 2rem;
+    font-size: 1.75rem;
     color: var(--color_primary);
     font-weight: 400;
 }
@@ -195,8 +198,11 @@
     text-align: center;
 }
 .copy_right_text{
-    font-size: 0.75rem;
+    font-size: 0.625rem;
     color: var(--color_text);
+    position: absolute !important;
+    bottom: 1rem;
+    width: calc(100% - 2rem);
 }
 
 
@@ -236,6 +242,9 @@
         top: 0px;
         z-index: -1;
     }
+    .select_connect{
+        max-width: calc(50% - 60px);
+    }
     .image_back::before {
         height: 54%;
         width: 100%;
@@ -246,6 +255,14 @@
     }
     .border_left_md{
         border-left: 1px solid var(--color_border);
+    }
+    .info_area{
+        z-index: 1;
+        perspective: 60rem;
+        min-height: auto !important;
+    }
+    .login_area{
+        min-height: auto !important;
     }
     .info_card{
         position: relative !important;
@@ -263,12 +280,12 @@
         box-shadow: none;
     }
     .image_back::before {
-        height: 29%;
+        height: 40%;
         width: 100%;
         border-radius: 0px;
     }
     .image_back::after {
-        height: 29%;
+        height: 40%;
         width: 100%;
         border-radius: 0px;
     }
@@ -278,12 +295,12 @@
 }
 @media (max-width: 575.98px) { 
     .image_back::before {
-        height: 26%;
+        height: 40%;
         width: 100%;
         border-radius: 0px;
     }
     .image_back::after {
-        height: 26%;
+        height: 40%;
         width: 100%;
         border-radius: 0px;
     }
