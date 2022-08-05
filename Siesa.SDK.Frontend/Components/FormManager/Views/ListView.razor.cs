@@ -304,20 +304,21 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private void hideCustomColumn()
         {
-            for (int i = 0; i < ListViewModel.Fields.Count; i++)            
+            string code = "";
+            for (int i = 0; i < ListViewModel.Fields.Count; i++)
             {
                 var field = ListViewModel.Fields[i];
                 if (field.CustomAttributes != null)
                 {
                     var fieldCustomAttr = field.CustomAttributes;
-                    string code = "";
                     foreach (var CustomAttr in fieldCustomAttr)
                     {
                         if (CustomAttr.Key == "sdk-hide")
                         {
                             try
                             {
-                                code += @$"try {{ ListViewFields[{i}].Hidden = ({(string)CustomAttr.Value}); }} catch (Exception ex) {{ throw;}}";
+                                code += @$"
+                                try {{ ListViewFields[{i}].Hidden = ({(string)CustomAttr.Value}); }} catch (Exception ex) {{ throw;}}";
                             }
                             catch (Exception e)
                             {
@@ -328,7 +329,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         {
                             try
                             {
-                                code += @$"try {{ ListViewFields[{i}].Hidden = !({(string)CustomAttr.Value}); }} catch (Exception ex) {{ throw;}}";
+                                code += @$"
+                                try {{ ListViewFields[{i}].Hidden = !({(string)CustomAttr.Value}); }} catch (Exception ex) {{ throw;}}";
                             }
                             catch (Exception e)
                             {
@@ -336,18 +338,17 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                             }
                         }
                     }
-                    if (code != null & code != "")
-                    {
-                        _ = Task.Run(async () =>
-                        {
-                            BusinessObj.ListViewFields = ListViewModel.Fields;
-                            await Evaluator.EvaluateCode(code, BusinessObj);
-                            _ = InvokeAsync(() => StateHasChanged());
-                        });
-                    }
                 }
             }
-
+            if (code != null & code != "")
+            {
+                _ = Task.Run(async () =>
+                {
+                    BusinessObj.ListViewFields = ListViewModel.Fields;
+                    await Evaluator.EvaluateCode(code, BusinessObj);
+                    _ = InvokeAsync(() => StateHasChanged());
+                });
+            }
         }
     }
 }
