@@ -4,10 +4,13 @@
 {
     <div class=@("col-12 p-2 p-sm-3 whcm_toolbar " + LayoutService.StyleName)>
         <div class="whcm_toolbar_text d-flex align-items-center">
-            <button class="btn btn-sm layout_btn_standar-sm mr-1 mr-sm-3" data-toggle="tooltip"
+            @if (ShowBackButton==true)
+            {
+            <button Value="@ShowBackButton" class="btn btn-sm layout_btn_standar-sm mr-1 mr-sm-3" data-toggle="tooltip"
                 data-placement="top" title="Atras" @onclick="@OnClick" >
                 <i class="fa-solid fa-chevron-left"></i>
             </button>
+            }
             <h3 class="mb-0">@LayoutService.TopBarTitle</h3>
         </div>
         <div class="whcm_toolbar_button d-flex align-items-center position-relative pt-2 pt-sm-0">
@@ -34,8 +37,10 @@
         </div>
     </div>
 }
-
 @code {
+
+    [Parameter] public bool ShowBackButton { get; set; } = true;
+
     private bool ShowMoreOptions = false;
     [Inject]
     public ILayoutService LayoutService { get; set; }
