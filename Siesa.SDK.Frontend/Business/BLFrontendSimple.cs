@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Siesa.SDK.Entities;
 using Siesa.SDK.Frontend;
 using Siesa.SDK.Frontend.Components.FormManager.Model;
+using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
 using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
 using Siesa.SDK.Protos;
 using Siesa.SDK.Shared.Business;
@@ -24,6 +25,8 @@ namespace Siesa.SDK.Business
         public string BusinessName { get; set; }
         [JsonIgnore]
         public List<Panel> Panels = new List<Panel>();
+        [JsonIgnore]
+        public List<FieldOptions> ListViewFields = new List<FieldOptions>();
         public BaseSDK<int> BaseObj { get; set; }
 
         [JsonIgnore]
@@ -76,6 +79,8 @@ namespace Siesa.SDK.Business
         }
         [JsonIgnore]
         public List<Panel> Panels = new List<Panel>();
+        [JsonIgnore]
+        public List<FieldOptions> ListViewFields = new List<FieldOptions>();
         [ValidateComplexType]
         public T BaseObj { get; set; }
 
