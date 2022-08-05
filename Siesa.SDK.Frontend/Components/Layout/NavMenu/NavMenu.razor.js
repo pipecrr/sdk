@@ -1,11 +1,15 @@
 ﻿function HideSDKMenu() {
     var menu = document.getElementById("menu");
-    menu.checked = false;
+    if (menu) {
+        menu.checked = false;
+    }
 }
 
 function ShowSDKMenu() {
     var menu = document.getElementById("menu");
-    menu.checked = true;
+    if(menu) {
+        menu.checked = true;
+    }
 }
 
 
