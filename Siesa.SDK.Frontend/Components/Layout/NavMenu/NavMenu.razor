@@ -132,4 +132,15 @@
         SelectedMainMenu = null;
         StateHasChanged();
     }
+
+    [Inject]
+    public IJSRuntime JSRuntime { get; set; }
+    private IJSObjectReference _jsModule;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender){
+            _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/Components/Layout/NavMenu/NavMenu.razor.js");
+        }
+    }
 }
