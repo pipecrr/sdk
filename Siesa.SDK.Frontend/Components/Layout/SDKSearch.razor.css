@@ -1,0 +1,70 @@
+.sdk_search {
+    position: relative;
+}
+
+.sdk_search>input {
+    border: transparent;
+    background: #ffffff4d;
+    color: white;
+}
+
+.sdk_search>input:focus {
+    color: white;
+    background-color: #ffffff4d;
+}
+
+.sdk_search>input::placeholder {
+    color: #ffffff80;
+}
+
+.sdk_search>i {
+    position: absolute;
+    right: .5rem;
+    top: .5rem;
+    color: #ffffff80;
+    opacity: .5;
+}
+
+.search_tooltip {
+    min-width: 300px;
+    max-width: 300px;
+    border-radius: 4px;
+    color: var(--color_text);
+    background-color: var(--color_light);
+    position: absolute;
+    top: 42px;
+    left: calc(50% - 150px);
+    z-index: 2;
+    box-shadow: var(--shadow_standar);
+    display: none;
+    font-size: 0.875rem;
+}
+
+.search_tooltip::before {
+    content: "";
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    top: -8px;
+    left: 146px;
+    border-top: 0px solid transparent;
+    border-right: 9px solid transparent;
+    border-bottom: 9px solid white;
+    border-left: 9px solid transparent;
+}
+
+.search_tooltip>a {
+    color: var(--color_text);
+    display: block;
+    text-decoration: none;
+}
+
+.search_tooltip>a>span {
+    color: var(--color_primary);
+}
+
+.search_tooltip a:hover {
+    color: var(--color_text);
+    background: var(--color_back_2);
+    text-decoration: none;
+}

@@ -1,0 +1,101 @@
+@using Siesa.SDK.Entities
+@inject UtilsManager UtilManager
+<div class="sdk_search" @onclick="()=>ShowSearch()">
+    <input autocomplete="off" type="search" class="form-control form-control-sm pr-4" id="busqueda" placeholder="@placeholder"
+        @bind-value:event="onchange" @oninput="@((ChangeEventArgs __e) => OnChangeSearch(__e?.Value?.ToString()))"
+        @bind-value="searchString">
+    <i class="fa-solid fa-magnifying-glass"></i>
+</div>
+@if (SearchEnabled && LastSearch.Count > 0)
+{
+    <div id="boxSearch" class="search_tooltip py-2" style="display:block;" tabindex="0" @onfocusout="@(() => HideSearch())">
+        @foreach (var menuItem in LastSearch)
+        {
+            var bread = "";
+            @for (int i = 0; i < menuItem.Breadcrumb.Count; i++)
+            {
+                if (i == menuItem.Breadcrumb.Count - 1)
+                {
+                    bread += "<span class=\"search_tooltip_result\">" + @menuItem.Breadcrumb[i] + "</span>";
+                }
+                else
+                {
+                    bread += @menuItem.Breadcrumb[i] + " / ";
+                }
+            }
+            <a href="@menuItem.CurrentUrl" class="px-3 py-2 m-0" @onclick="()=>HideSearch()">@((MarkupString)bread)</a>
+        }
+    </div>
+}
+
+@code{
+    [Parameter]
+    public List<E00061_Menu> Menus { get; set; }
+    private string searchString = "";
+    private bool SearchEnabled = false;
+
+    private string placeholder = "";
+
+    protected override async Task OnInitializedAsync(){
+        placeholder = await UtilManager.GetResource("Action.Search");
+    }
+
+    public class HeaderSearchResult
+    {
+        public string CurrentUrl { get; set; }
+        public List<string> Breadcrumb { get; set; }
+    }
+
+    private List<HeaderSearchResult> LastSearch = new List<HeaderSearchResult>();
+
+    private void ShowSearch()
+    {
+        SearchEnabled = true;
+    }
+    private void HideSearch()
+    {
+        SearchEnabled = false;
+    }
+    private void ToogleSearch()
+    {
+        SearchEnabled = !SearchEnabled;
+    }
+    private void SearchInMenu(string searchString, List<E00061_Menu> menus, ref List<HeaderSearchResult> result,
+    List<string> bread = null)
+    {
+        bread = bread ?? new List<string>();
+        foreach (var item in menus)
+        {
+            var tmpText = item.CurrentText ?? "";
+            bread.Add(tmpText);
+            if (tmpText.ToLower().Contains(searchString.ToLower()))
+            {
+                result.Add(new HeaderSearchResult
+                {
+                    CurrentUrl = item.CurrentURL,
+                    Breadcrumb = new List<string>(bread)
+                });
+            }
+            if (item.SubMenus != null && item.SubMenus.Count > 0)
+            {
+                SearchInMenu(searchString, item.SubMenus.ToList(), ref result, bread);
+            }
+            bread.RemoveAt(bread.Count - 1);
+           
+        }
+
+    }
+
+    private void OnChangeSearch(string value)
+    {
+        searchString = value;
+        List<HeaderSearchResult> result = new List<HeaderSearchResult>();
+
+        if (!String.IsNullOrEmpty(searchString))
+        {
+            SearchInMenu(searchString, Menus, ref result);
+        }
+
+        LastSearch = result;
+    }
+}
