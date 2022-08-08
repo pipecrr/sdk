@@ -27,7 +27,7 @@ namespace Siesa.SDK.Business
         public BaseSDK<int> BaseObj { get; set; }
 
         [JsonIgnore]
-        private IAuthenticationService AuthenticationService {get; set;}
+        protected IAuthenticationService AuthenticationService {get; set;}
 
         public BLFrontendSimple(IAuthenticationService authenticationService)
         {
@@ -91,7 +91,7 @@ namespace Siesa.SDK.Business
 
  
         [JsonIgnore]
-        private IAuthenticationService AuthenticationService {get; set;}
+        protected IAuthenticationService AuthenticationService {get; set;}
 
         public BLFrontendSimple(IAuthenticationService authenticationService)
         {
@@ -234,7 +234,7 @@ namespace Siesa.SDK.Business
             // Do nothing
         }
 
-        public virtual void OnReady(DynamicViewType viewType)
+        public virtual void OnReady(DynamicViewType viewType, long rowid = 0)
         {
             // Do nothing
         }

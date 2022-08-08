@@ -30,7 +30,7 @@ namespace Siesa.SDK.Business
     public class BLBackendSimple : IBLBase<BaseSDK<int>>
     {
         [JsonIgnore]
-        private IAuthenticationService AuthenticationService { get; set; }
+        protected IAuthenticationService AuthenticationService { get; set; }
 
         public BLBackendSimple(IAuthenticationService authenticationService)
         {
@@ -72,7 +72,7 @@ namespace Siesa.SDK.Business
     public class BLBackendSimple<T, K> : IBLBase<T> where T : class, IBaseSDK where K : BLBaseValidator<T>
     {
         [JsonIgnore]
-        private IAuthenticationService AuthenticationService { get; set; }
+        protected IAuthenticationService AuthenticationService { get; set; }
         private IServiceProvider _provider;
         private ILogger _logger;
         protected ILogger Logger { get { return _logger; } }

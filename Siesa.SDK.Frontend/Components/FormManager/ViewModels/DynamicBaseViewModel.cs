@@ -93,7 +93,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             base.OnInitialized();
             SetParameters(BusinessObj, BusinessName);
             if(BusinessObj != null){
-                BusinessObj.OnReady(ViewType);
+                BusinessObj.OnReady(ViewType, BusinessObjId);
             }
         }
 
