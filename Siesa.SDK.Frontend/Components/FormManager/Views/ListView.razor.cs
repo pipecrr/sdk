@@ -35,13 +35,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter]
         public List<string> ConstantFilters { get; set; } = new List<string>();
 
-        [Parameter] 
+        [Parameter]
         public bool AllowCreate { get; set; } = true;
-        [Parameter] 
+        [Parameter]
         public bool AllowEdit { get; set; } = true;
-        [Parameter] 
+        [Parameter]
         public bool AllowDelete { get; set; } = true;
-        [Parameter] 
+        [Parameter]
         public bool AllowDetail { get; set; } = true;
 
         [Inject] public IJSRuntime JSRuntime { get; set; }
@@ -70,7 +70,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public Action<string> OnClickDetail { get; set; } = null;
 
         [Parameter]
-        public Action<string,string> OnClickDelete { get; set; } = null;
+        public Action<string, string> OnClickDelete { get; set; } = null;
 
         [Parameter]
         public Action OnClickNew { get; set; } = null;
@@ -89,15 +89,20 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         Guid needUpdate;
 
-        private void OnSelectionChanged(IList<object> objects){
-            if(OnSelectedRow != null){
+        private void OnSelectionChanged(IList<object> objects)
+        {
+            if (OnSelectedRow != null)
+            {
                 SelectedObjects = objects;
-                if (SelectedObjects?.Any() == true){
+                if (SelectedObjects?.Any() == true)
+                {
                     OnSelectedRow(objects.First());
-                }else{
+                }
+                else
+                {
                     OnSelectedRow(null);
                 }
-                
+
             }
         }
 
@@ -107,7 +112,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if (String.IsNullOrEmpty(ViewdefName))
             {
                 viewdef = DefaultViewdefName;
-            }else{
+            }
+            else
+            {
                 viewdef = ViewdefName;
             }
 
@@ -142,9 +149,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
             data = null;
             Loading = false;
-            if(BusinessObj != null && BusinessObj.BaseObj != null){
+            if (BusinessObj != null && BusinessObj.BaseObj != null)
+            {
                 BLEntityName = BusinessObj.BaseObj.GetType().Name;
             }
+            hideCustomColumn();
             StateHasChanged();
 
         }
@@ -160,13 +169,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             //         return;
             //     }
             // }
-            
+
         }
 
         protected override async Task OnInitializedAsync()
         {
             await CheckPermission();
-            await base.OnInitializedAsync();
+            await base.OnInitializedAsync();            
             //InitView();
         }
 
@@ -186,15 +195,17 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         async Task LoadData(LoadDataArgs args)
         {
-            if(!ListViewModel.InfiniteScroll)
+            if (!ListViewModel.InfiniteScroll)
             {
                 data = null;
             }
-            if(data == null){
+            if (data == null)
+            {
                 Loading = true;
             }
             var filters = $"{args.Filter}";
-            if(LastFilter != filters){
+            if (LastFilter != filters)
+            {
                 LastFilter = filters;
                 Loading = true;
                 data = null;
@@ -226,7 +237,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 NavManager.NavigateTo($"{BusinessName}/edit/{id}/");
             }
-            
+
         }
         private void GoToCreate()
         {
@@ -278,6 +289,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             else if (!string.IsNullOrEmpty(button.Action))
             {
                 Evaluator.EvaluateCode(button.Action, BusinessObj);
+                hideCustomColumn();
             }
         }
 
@@ -288,6 +300,55 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             parameters.Add("FieldName", fieldName);
             parameters.Add("FieldOpt", field);
             return parameters;
+        }
+
+        private void hideCustomColumn()
+        {
+            string code = "";
+            for (int i = 0; i < ListViewModel.Fields.Count; i++)
+            {
+                var field = ListViewModel.Fields[i];
+                if (field.CustomAttributes != null)
+                {
+                    var fieldCustomAttr = field.CustomAttributes;
+                    foreach (var CustomAttr in fieldCustomAttr)
+                    {
+                        if (CustomAttr.Key == "sdk-hide")
+                        {
+                            try
+                            {
+                                code += @$"
+                                try {{ ListViewFields[{i}].Hidden = ({(string)CustomAttr.Value}); }} catch (Exception ex) {{ throw;}}";
+                            }
+                            catch (Exception e)
+                            {
+                                throw;
+                            }
+                        }
+                        if (CustomAttr.Key == "sdk-show")
+                        {
+                            try
+                            {
+                                code += @$"
+                                try {{ ListViewFields[{i}].Hidden = !({(string)CustomAttr.Value}); }} catch (Exception ex) {{ throw;}}";
+                            }
+                            catch (Exception e)
+                            {
+                                throw;
+                            }
+                        }
+                    }
+                }
+            }
+            if (code != null & code != "")
+            {
+                _ = Task.Run(async () =>
+                {
+                    BusinessObj.ListViewFields = ListViewModel.Fields;
+                    await Evaluator.EvaluateCode(code, BusinessObj);
+                    _ = InvokeAsync(() => StateHasChanged());
+                });
+            }
         }
     }
 }
