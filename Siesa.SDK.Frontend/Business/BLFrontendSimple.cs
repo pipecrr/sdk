@@ -70,6 +70,8 @@ namespace Siesa.SDK.Business
     
     public class BLFrontendSimple<T, K> : IBLBase<T> where T : class,IBaseSDK where K : BLBaseValidator<T>
     {
+        [JsonIgnore]
+        public dynamic ParentComponent {get;set;}
         public string BusinessName { get; set; }
         [JsonIgnore]
         public BusinessFrontendModel Backend {get { return Frontend.BusinessManagerFrontend.Instance.GetBusiness(BusinessName, AuthenticationService); } }
@@ -85,6 +87,18 @@ namespace Siesa.SDK.Business
         public T BaseObj { get; set; }
 
         public List<string> RelFieldsToSave {get;set;} = new List<string>();
+
+        public async Task Refresh() {
+            if(ParentComponent != null){
+                try
+                {
+                    ParentComponent.Refresh();
+                }
+                catch (System.Exception)
+                {
+                }
+            }
+        }
 
         public void AddRelFieldToSave(string fieldName)
         {
