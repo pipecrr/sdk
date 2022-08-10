@@ -66,6 +66,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         private string _viewdefName = "";
 
+        [Inject]
+        public IBackendRouterService BackendRouterService { get; set; }
+
         private string GetViewdef(string businessName)
         {
             if (String.IsNullOrEmpty(ViewdefName))
@@ -75,10 +78,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 _viewdefName = ViewdefName;
             }
 
-            var data = BusinessManagerFrontend.Instance.GetViewdef(businessName, _viewdefName);
+            var data = BackendRouterService.GetViewdef(businessName, _viewdefName);
             if (String.IsNullOrEmpty(data) && _viewdefName != DefaultViewdefName)
             {
-                data = BusinessManagerFrontend.Instance.GetViewdef(businessName, DefaultViewdefName);
+                data = BackendRouterService.GetViewdef(businessName, DefaultViewdefName);
             }
             return data;
         }

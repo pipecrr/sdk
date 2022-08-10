@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Siesa.SDK.Shared.Json;
 
-namespace Siesa.SDK.Frontend.Application
+namespace Siesa.SDK.Shared.Application
 {
     public static class SDKApp
     {

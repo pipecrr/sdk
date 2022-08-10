@@ -27,12 +27,14 @@ namespace Siesa.SDK.GRPCServices
         private readonly IServiceProvider _provider;
 
         private IAuthenticationService _authenticationService;
+        private IBackendRouterService _backendRouterService;
         
-        public SDKService(ILogger<SDKService> logger, IServiceProvider provider, IAuthenticationService AuthenticationService)
+        public SDKService(ILogger<SDKService> logger, IServiceProvider provider, IAuthenticationService AuthenticationService, IBackendRouterService backendRouterService)
         {
             _logger = logger;
             _provider = provider;
             _authenticationService = AuthenticationService;
+            _backendRouterService = backendRouterService;
 
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
@@ -46,18 +48,10 @@ namespace Siesa.SDK.GRPCServices
             _authenticationService.SetToken(token);
         }
 
-        public override Task<Protos.BusinessesResponse> GetBusinesses(Protos.GetBusinessesRequest request, ServerCallContext context)
-        {
-            var response = new Protos.BusinessesResponse();
-            SetCurrentUser(request.CurrentUserToken);
-            response.Businesses.AddRange(BusinessManager.Instance.Businesses.Values);
-            return Task.FromResult(response);
-        }
-
         public override Task<Protos.BusinessObjResponse> GetBusinessObj(Protos.GetBusinessObjRequest request, ServerCallContext context)
         {
             SetCurrentUser(request.CurrentUserToken);
-            BusinessModel businessRegistry = BusinessManager.Instance.GetBusiness(request.BusinessName);
+            BusinessModel businessRegistry = _backendRouterService.GetBackend(request.BusinessName);
             var businessType = FindType(businessRegistry.Namespace + "." + businessRegistry.Name);
             dynamic businessObj = ActivatorUtilities.CreateInstance(_provider,businessType);
             businessObj.SetProvider(_provider);
@@ -90,7 +84,7 @@ namespace Siesa.SDK.GRPCServices
         {
             SetCurrentUser(request.CurrentUserToken);
             var response = new Protos.SaveBusinessObjResponse();
-            BusinessModel businessRegistry = BusinessManager.Instance.GetBusiness(request.BusinessName);
+            BusinessModel businessRegistry = _backendRouterService.GetBackend(request.BusinessName);
             var businessType = FindType(businessRegistry.Namespace + "." + businessRegistry.Name);
             //dynamic x = ActivatorUtilities.CreateInstance(_provider,businessType);
             //json deserialize using Newtonsoft.Json
@@ -103,7 +97,7 @@ namespace Siesa.SDK.GRPCServices
         public override Task<Protos.DeleteBusinessObjResponse> DeleteBusinessObj(Protos.DeleteBusinessObjRequest request, ServerCallContext context)
         {
             SetCurrentUser(request.CurrentUserToken);
-            BusinessModel businessRegistry = BusinessManager.Instance.GetBusiness(request.BusinessName);
+            BusinessModel businessRegistry = _backendRouterService.GetBackend(request.BusinessName);
             var businessType = FindType(businessRegistry.Namespace + "." + businessRegistry.Name);
             dynamic businessObj = ActivatorUtilities.CreateInstance(_provider,businessType);
             businessObj.SetProvider(_provider);
@@ -118,7 +112,7 @@ namespace Siesa.SDK.GRPCServices
         public override Task<Protos.LoadResult> GetDataBusinessObj(Protos.GetDataBusinessObjRequest request, ServerCallContext context)
         {
             SetCurrentUser(request.CurrentUserToken);
-            BusinessModel businessRegistry = BusinessManager.Instance.GetBusiness(request.BusinessName);
+            BusinessModel businessRegistry = _backendRouterService.GetBackend(request.BusinessName);
             var businessType = FindType(businessRegistry.Namespace + "." + businessRegistry.Name);
             dynamic businessObj = ActivatorUtilities.CreateInstance(_provider,businessType);
             businessObj.SetProvider(_provider);
@@ -134,7 +128,7 @@ namespace Siesa.SDK.GRPCServices
         public override Task<Protos.LoadResult> EntityFieldSearch(Protos.EntityFieldSearchRequest request, ServerCallContext context)
         {
             SetCurrentUser(request.CurrentUserToken);
-            BusinessModel businessRegistry = BusinessManager.Instance.GetBusiness(request.BusinessName);
+            BusinessModel businessRegistry = _backendRouterService.GetBackend(request.BusinessName);
             var businessType = FindType(businessRegistry.Namespace + "." + businessRegistry.Name);
             dynamic businessObj = ActivatorUtilities.CreateInstance(_provider,businessType);
             businessObj.SetProvider(_provider);
@@ -150,7 +144,7 @@ namespace Siesa.SDK.GRPCServices
         public override Task<ValidateAndSaveBusinessObjResponse> ValidateAndSaveBusinessObj(ValidateAndSaveBusinessObjRequest request, ServerCallContext context)
         {
             SetCurrentUser(request.CurrentUserToken);
-            BusinessModel businessRegistry = BusinessManager.Instance.GetBusiness(request.BusinessName);
+            BusinessModel businessRegistry = _backendRouterService.GetBackend(request.BusinessName);
             var businessType = FindType(businessRegistry.Namespace + "." + businessRegistry.Name);
             //dynamic x = ActivatorUtilities.CreateInstance(_provider,businessType);
             //json deserialize using Newtonsoft.Json
@@ -208,7 +202,7 @@ namespace Siesa.SDK.GRPCServices
             var response = new Protos.ExposedMethodResponse();
             try
             {
-                BusinessModel businessRegistry = BusinessManager.Instance.GetBusiness(request.BusinessName);
+                BusinessModel businessRegistry = _backendRouterService.GetBackend(request.BusinessName);
                 var businessType = FindType(businessRegistry.Namespace + "." + businessRegistry.Name);
                 dynamic businessObj = ActivatorUtilities.CreateInstance(_provider,businessType);
                 businessObj.SetProvider(_provider);
@@ -290,7 +284,22 @@ namespace Siesa.SDK.GRPCServices
                 return Task.FromResult(response);
             }
             
-        } 
+        }
+
+        public override Task<Protos.SetBackendServicesResponse> SetBackendServices(Protos.SetBackendServicesRequest request, ServerCallContext context)
+        {
+            SetCurrentUser(request.CurrentUserToken);
+            var response = new Protos.SetBackendServicesResponse();
+
+            Dictionary<string, BusinessModel> backendBusinesses = new Dictionary<string, BusinessModel>();
+
+            foreach (var business in request.Businesses)
+            {
+               backendBusinesses.Add(business.Name, business);
+            }
+            _backendRouterService.SetBackendBusinesses(backendBusinesses);
+            return Task.FromResult(response);
+        }
 
     }
 }

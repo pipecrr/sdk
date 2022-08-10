@@ -50,6 +50,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Inject] public IFeaturePermissionService FeaturePermissionService { get; set; }
         [Inject] public IAuthenticationService AuthenticationService { get; set; }
 
+        [Inject]
+        public IBackendRouterService BackendRouterService { get; set; }
+
         public bool Loading;
 
         public String ErrorMsg = "";
@@ -118,10 +121,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 viewdef = ViewdefName;
             }
 
-            var data = BusinessManagerFrontend.Instance.GetViewdef(businessName, viewdef);
+            var data = BackendRouterService.GetViewdef(businessName, viewdef);
             if (String.IsNullOrEmpty(data) && viewdef != DefaultViewdefName)
             {
-                data = BusinessManagerFrontend.Instance.GetViewdef(businessName, DefaultViewdefName);
+                data = BackendRouterService.GetViewdef(businessName, DefaultViewdefName);
             }
             return data;
         }

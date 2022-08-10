@@ -1,4 +1,5 @@
-﻿@if (!FieldOpt.Hidden)
+﻿@using Siesa.SDK.Shared.Utilities
+@if (!FieldOpt.Hidden)
 {
     @if(Definition.Generics.Count > 0){
         @RenderGemericComponent()
@@ -10,7 +11,7 @@
 @code {
     private void SetParameters(){
         if(componentType == null){
-            componentType = Utils.Utils.SearchType($"{Definition.Namespace}.{Definition.Name}");
+            componentType = Utilities.SearchType($"{Definition.Namespace}.{Definition.Name}");
         }
         parameters.Clear();
         Dictionary<string, object> Attributes = Definition.Attributes;

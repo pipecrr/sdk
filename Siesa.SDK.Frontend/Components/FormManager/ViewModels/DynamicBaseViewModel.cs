@@ -6,7 +6,7 @@ using Siesa.SDK.Frontend.Utils;
 using Microsoft.Extensions.DependencyInjection;
 using Siesa.SDK.Shared.Services;
 using System.Collections.Generic;
-
+using Siesa.SDK.Shared.Utilities;
 namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 {
     public abstract class DynamicBaseViewModel: ComponentBase
@@ -40,6 +40,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Inject]
         private IAuthenticationService AuthenticationService {get; set;}
 
+        [Inject]
+        private IBackendRouterService BackendRouterService {get; set;}
+
         //[Inject]
         //public SGFState SGFState { get; set; }
 
@@ -49,7 +52,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         public dynamic BusinessObj { get; set; }
 
-        public BusinessFrontendModel BusinessModel { get; set; }
+        public SDKBusinessModel BusinessModel { get; set; }
 
         protected IDictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -60,17 +63,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         protected void InitGenericView(string bName=null)
         {
-            BusinessFrontendModel businessModel;
+            SDKBusinessModel businessModel;
             if (bName == null) {
                 bName = this.BusinessName;
             }
-
-            BusinessManagerFrontend.Instance.Businesses.TryGetValue(bName, out businessModel);
+            businessModel = BackendRouterService.GetSDKBusinessModel(bName, AuthenticationService);
             if (businessModel != null)
             {
                 try
                 {
-                    businessType = Utils.Utils.SearchType(businessModel.Namespace + "." + businessModel.Name); 
+                    businessType = Utilities.SearchType(businessModel.Namespace + "." + businessModel.Name); 
                     BusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider, businessType);
                     BusinessModel = businessModel;
                     BusinessObj.BusinessName = bName;

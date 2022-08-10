@@ -17,9 +17,9 @@
 @inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavigationManager
 @inject IResourceManager ResourceManager
-
+@inject IBackendRouterService BackendRouterService
 <RadzenDialog />
-<RadzenNotification Style="top:unset !important; bottom:10px;"/>
+<RadzenNotification Style="top:unset !important; bottom:10px;" />
 <DxGridLayout>
     <Rows>
         <DxGridLayoutRow Height="auto" />
@@ -50,10 +50,10 @@
                                     @Body
                                 </div>
                             </div>
-@* 
-                            <div class="col-12 area2 p-3 my-4">
+                            @*
+                                <div class="col-12 area2 p-3 my-4">
                                 @Body
-                            </div> *@
+                                </div> *@
 
                         </div>
                     </aside>
@@ -63,11 +63,9 @@
         </DxGridLayoutItem>
     </Items>
 </DxGridLayout>
-<SDKGoTop/>
+<SDKGoTop />
 @code {
     private bool showNavMenu = false;
-    [Inject]
-    public IBackendManager backendManager { get; set; }
     public E00060_Suite SelectedSuite { get; set; }
     public List<E00061_Menu> Menus { get; set; }
     [Parameter]
@@ -80,7 +78,7 @@
         base.OnInitialized();
         Menus = new List<E00061_Menu>();
         environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-        if(environment == Environments.Development)
+        if (environment == Environments.Development)
         {
             Menus.Add(new E00061_Menu()
             {
@@ -90,7 +88,7 @@
                 CurrentText = "DevMenu",
             });
         }
-        
+
         _ = LoadMenu();
     }
 
@@ -109,59 +107,55 @@
 
     private async Task LoadMenu()
     {
-        //TODO: Check Performance, Call only once
-        backendManager.SyncWithMasterBackend();
         var DevMenu = Menus.FirstOrDefault(x => x.ResourceTag == "DevMenu")?.SubMenus;
-        foreach (var backend in backendManager.GetBackendDict())
+
+        foreach (var business in BackendRouterService.GetBusinessModelList())
         {
-            foreach (var business in backend.Value.businessRegisters.Businesses)
+            if (DevMenu == null)
             {
-                BusinessManagerFrontend.Instance.AddBusiness(business, backend.Value.Name);
-                if(DevMenu == null)
+                continue;
+            }
+            var businessType = Utilities.SearchType(business.Namespace + "." + business.Name);
+            if (businessType == null)
+            {
+                continue;
+            }
+            var isBLExplorer = Utilities.IsAssignableToGenericType(businessType, typeof(BLFrontendExplorer<>));
+            if (isBLExplorer)
+            {
+                var customActionMenu = new E00061_Menu
                 {
-                    continue;
-                }
-                var businessType = Utils.Utils.SearchType(business.Namespace + "." + business.Name);
-                if (businessType == null)
+                    ResourceTag = $"{business.Name}.Plural",
+                    Url = $"/{business.Name}/explorer/",
+                };
+                DevMenu.Add(customActionMenu);
+            }
+            else
+            {
+                var submenuItem = new E00061_Menu
                 {
-                    continue;
-                }
-                var isBLExplorer = Utilities.IsAssignableToGenericType(businessType, typeof(BLFrontendExplorer<>));
-                if (isBLExplorer)
+                    ResourceTag = $"{business.Name}.Plural",
+                    Url = $"/{business.Name}/",
+                    SubMenus = new List<E00061_Menu>()
+                };
+                //search methods that return a RenderFragment
+                var customActions = businessType.GetMethods().Where(m => m.ReturnType == typeof(RenderFragment));
+                foreach (var customAction in customActions)
                 {
                     var customActionMenu = new E00061_Menu
                     {
-                        ResourceTag = $"{business.Name}.Plural",
-                        Url = $"/{business.Name}/explorer/",
+                        ResourceTag = $"{business.Name}.CustomAction.{customAction.Name}",
+                        Url = $"/{business.Name}/{customAction.Name}/"
                     };
-                    DevMenu.Add(customActionMenu);
+                    submenuItem.SubMenus.Add(customActionMenu);
                 }
-                else
-                {
-                    var submenuItem = new E00061_Menu
-                    {
-                        ResourceTag = $"{business.Name}.Plural",
-                        Url = $"/{business.Name}/",
-                        SubMenus = new List<E00061_Menu>()
-                    };
-                    //search methods that return a RenderFragment
-                    var customActions = businessType.GetMethods().Where(m => m.ReturnType == typeof(RenderFragment));
-                    foreach (var customAction in customActions)
-                    {
-                        var customActionMenu = new E00061_Menu
-                        {
-                            ResourceTag = $"{business.Name}.CustomAction.{customAction.Name}",
-                            Url = $"/{business.Name}/{customAction.Name}/"
-                        };
-                        submenuItem.SubMenus.Add(customActionMenu);
-                    }
 
-                    DevMenu.Add(submenuItem);
-                }
+                DevMenu.Add(submenuItem);
             }
         }
-        
-        var menuBL = Frontend.BusinessManagerFrontend.Instance.GetBusiness("BLAdminMenu", AuthenticationService);
+
+
+        var menuBL = BackendRouterService.GetSDKBusinessModel("BLAdminMenu", AuthenticationService);
         var request = await menuBL.Call("GetSuites");
         if (request.Success)
         {
@@ -187,11 +181,14 @@
             if ((menuItem.RowidResource == null || menuItem.RowidResource == 0) && menuItem.ResourceTag != null)
             {
                 menuItem.CurrentText = await ResourceManager.GetResource(menuItem.ResourceTag, AuthenticationService);
-            }else{
-                menuItem.CurrentText = await ResourceManager.GetResource(Convert.ToInt64(menuItem.RowidResource), AuthenticationService);
             }
-            
-            if(menuItem.SubMenus != null && menuItem.SubMenus.Count > 0)
+            else
+            {
+                menuItem.CurrentText = await ResourceManager.GetResource(Convert.ToInt64(menuItem.RowidResource),
+                AuthenticationService);
+            }
+
+            if (menuItem.SubMenus != null && menuItem.SubMenus.Count > 0)
             {
                 await GetMenuResources(menuItem.SubMenus);
             }

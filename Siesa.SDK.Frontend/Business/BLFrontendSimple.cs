@@ -12,6 +12,7 @@ using Siesa.SDK.Frontend;
 using Siesa.SDK.Frontend.Components.FormManager.Model;
 using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
 using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
+using Siesa.SDK.Frontend.Services;
 using Siesa.SDK.Protos;
 using Siesa.SDK.Shared.Business;
 using Siesa.SDK.Shared.Services;
@@ -23,6 +24,11 @@ namespace Siesa.SDK.Business
     public class BLFrontendSimple : IBLBase<BaseSDK<int>>
     {
         public string BusinessName { get; set; }
+        [JsonIgnore]
+        public SDKBusinessModel Backend {get { return BackendRouterService.Instance.GetSDKBusinessModel(BusinessName, AuthenticationService); } }
+        public SDKBusinessModel GetBackend(string business_name){
+            return BackendRouterService.Instance.GetSDKBusinessModel(business_name, AuthenticationService);
+        }
         [JsonIgnore]
         public List<Panel> Panels = new List<Panel>();
         [JsonIgnore]
@@ -72,10 +78,10 @@ namespace Siesa.SDK.Business
     {
         public string BusinessName { get; set; }
         [JsonIgnore]
-        public BusinessFrontendModel Backend {get { return Frontend.BusinessManagerFrontend.Instance.GetBusiness(BusinessName, AuthenticationService); } }
+        public SDKBusinessModel Backend {get { return BackendRouterService.Instance.GetSDKBusinessModel(BusinessName, AuthenticationService); } }
 
-        public BusinessFrontendModel GetBackend(string business_name){
-            return Frontend.BusinessManagerFrontend.Instance.GetBusiness(business_name, AuthenticationService);
+        public SDKBusinessModel GetBackend(string business_name){
+            return BackendRouterService.Instance.GetSDKBusinessModel(business_name, AuthenticationService);
         }
         [JsonIgnore]
         public List<Panel> Panels = new List<Panel>();

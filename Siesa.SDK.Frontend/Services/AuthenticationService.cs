@@ -13,6 +13,7 @@ namespace Siesa.SDK.Frontend.Services
     {
         private NavigationManager _navigationManager;
         private ILocalStorageService _localStorageService;
+        private IBackendRouterService _backendRouterService;
         private string _secretKey;
         private int _minutesExp;
 
@@ -31,10 +32,12 @@ namespace Siesa.SDK.Frontend.Services
 
         public AuthenticationService(
             NavigationManager navigationManager,
-            ILocalStorageService localStorageService
+            ILocalStorageService localStorageService,
+            IBackendRouterService BackendRouterService
         ) {
             _navigationManager = navigationManager;
             _localStorageService = localStorageService;
+            _backendRouterService = BackendRouterService;
 
             _minutesExp = 120; //TODO: get from config
             _secretKey = "testsecretKeyabc$"; //TODO: get from config
@@ -48,7 +51,7 @@ namespace Siesa.SDK.Frontend.Services
 
         public async Task Login(string username, string password)
         {
-            var BLuser =  Frontend.BusinessManagerFrontend.Instance.GetBusiness("BLUser", this);
+            var BLuser =  _backendRouterService.GetSDKBusinessModel("BLUser", this);
             if(BLuser == null)
             {
                 throw new Exception("Login Service not found");

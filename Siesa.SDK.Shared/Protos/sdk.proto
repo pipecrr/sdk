@@ -19,6 +19,8 @@ service SDK {
   rpc GetMenuItems (GetMenuItemsRequest) returns (MenuItemsResponse);
 
   rpc ExecuteExposedMethod (ExposedMethodRequest) returns (ExposedMethodResponse);
+
+  rpc SetBackendServices (SetBackendServicesRequest) returns (SetBackendServicesResponse);
 }
 
 message GetMenuGroupsRequest {
