@@ -346,6 +346,9 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
 .whcm_table > div > table > tbody > tr > td > span {
     color: var(--color_text) !important;
 }
+.whcm_table th.rz-unselectable-text.rz-sortable-column.align-header-left{
+    text-align: left !important;
+}
 .w-100-max{
     max-width: 100% !important;
 }
