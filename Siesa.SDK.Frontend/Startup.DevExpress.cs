@@ -13,6 +13,7 @@ using Radzen;
 using Plk.Blazor.DragDrop;
 using Siesa.SDK.Frontend.Application;
 using Siesa.SDK.Shared.Criptography;
+using Siesa.SDK.Shared.Application;
 
 namespace Siesa.SDK.Frontend {
     public static class SiesaSecurityExtensions
@@ -35,6 +36,8 @@ namespace Siesa.SDK.Frontend {
             
 
             services.AddScoped<ISDKJWT, Siesa.SDK.Frontend.Criptography.SDKJWT>();
+
+            SDKApp.AddAssembly(typeof(LayoutService).Assembly);
         }
 
     }

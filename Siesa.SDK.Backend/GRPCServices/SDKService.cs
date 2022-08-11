@@ -18,6 +18,7 @@ using Siesa.SDK.Shared.Json;
 using Google.Protobuf;
 using Siesa.SDK.Shared.Services;
 using Microsoft.Extensions.DependencyInjection;
+using System.Runtime.CompilerServices;
 
 namespace Siesa.SDK.GRPCServices
 {
@@ -259,6 +260,15 @@ namespace Siesa.SDK.GRPCServices
                     }
                 }
                 var resultMethod = method.Invoke(businessObj, parameters);
+
+                //check if methods returns a async task
+                if (method.GetCustomAttributes(typeof(AsyncStateMachineAttribute), false).Length > 0)
+                {
+                    //wait for task to complete
+                    var task = (Task)resultMethod;
+                    task.Wait();
+                    resultMethod = task.GetType().GetProperty("Result").GetValue(task);
+                }
 
                 response.Success = resultMethod.GetType().GetProperty("Success").GetValue(resultMethod);
                 if(response.Success){
