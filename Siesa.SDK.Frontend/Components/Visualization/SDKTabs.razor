@@ -1,0 +1,17 @@
+<CascadingValue Value="this">
+    <DxTabs ChildContent="@ChildContent" ActiveTabIndex="@ActiveTabIndex"
+        ActiveTabIndexChanged=@OnActiveTabIndexChanged ScrollMode="TabsScrollMode.Auto" />
+</CascadingValue>
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    public List<SDKTab> Tabs { get; set; } = new List<SDKTab>();
+
+    public int ActiveTabIndex;
+    void OnActiveTabIndexChanged(int index)
+    {
+        ActiveTabIndex = index;
+    }
+
+}
