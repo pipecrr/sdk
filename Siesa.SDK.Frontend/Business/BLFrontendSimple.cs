@@ -40,6 +40,11 @@ namespace Siesa.SDK.Business
             AuthenticationService = authenticationService;
         }
 
+        public virtual void OnReady(DynamicViewType viewType, long rowid = 0)
+        {
+            // Do nothing
+        }
+
         public DeleteBusinessObjResponse Delete()
         {
             return new DeleteBusinessObjResponse();
