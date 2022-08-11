@@ -4,7 +4,7 @@
 @inject IAuthenticationService AuthenticationService
 
 <DxFormLayoutTabPage Caption="@Label">
-    @ChildContent @Badge
+    @ChildContent
 </DxFormLayoutTabPage>
 
 @code {
@@ -12,7 +12,6 @@
     [Parameter] public string ResourceTag { get; set; }
     [Parameter] public Int64 RowidResource { get; set; }
     [Parameter] public RenderFragment ChildContent { get; set; }
-    [Parameter] public RenderFragment<SDKBadge> Badge { get; set; }
 
     private async Task<string> GetText()
     {
