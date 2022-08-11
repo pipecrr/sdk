@@ -93,7 +93,7 @@ namespace Siesa.SDK.Shared.Services
                 try
                 {
                     using var channel = GrpcChannel.ForAddress(observer.BackendUrl);
-                    var client = new Protos.SDK.SDKClient(channel);
+                    var client = new Protos.Shared.SharedClient(channel);
                     var request = new Protos.SetBackendServicesRequest
                     {
                         Businesses = { _backendBusinesses.Values }

@@ -19,7 +19,9 @@ service SDK {
   rpc GetMenuItems (GetMenuItemsRequest) returns (MenuItemsResponse);
 
   rpc ExecuteExposedMethod (ExposedMethodRequest) returns (ExposedMethodResponse);
+}
 
+service Shared {
   rpc SetBackendServices (SetBackendServicesRequest) returns (SetBackendServicesResponse);
 }
 

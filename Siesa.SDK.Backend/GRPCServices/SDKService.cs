@@ -285,21 +285,5 @@ namespace Siesa.SDK.GRPCServices
             }
             
         }
-
-        public override Task<Protos.SetBackendServicesResponse> SetBackendServices(Protos.SetBackendServicesRequest request, ServerCallContext context)
-        {
-            SetCurrentUser(request.CurrentUserToken);
-            var response = new Protos.SetBackendServicesResponse();
-
-            Dictionary<string, BusinessModel> backendBusinesses = new Dictionary<string, BusinessModel>();
-
-            foreach (var business in request.Businesses)
-            {
-               backendBusinesses.Add(business.Name, business);
-            }
-            _backendRouterService.SetBackendBusinesses(backendBusinesses);
-            return Task.FromResult(response);
-        }
-
     }
 }
