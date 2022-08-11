@@ -19,7 +19,7 @@
 @inject IResourceManager ResourceManager
 
 <RadzenDialog />
-<RadzenNotification Style="top:unset !important; bottom:10px;"/>
+<RadzenNotification Style="top:unset !important; bottom:10px;" />
 <DxGridLayout>
     <Rows>
         <DxGridLayoutRow Height="auto" />
@@ -38,32 +38,30 @@
             <Template>
                 <div class="sdk_nav">
                     <NavMenu ShowMenu="@showNavMenu" Menus="@Menus" />
+                            <aside class="col-12 sdk_home_content">
+                                <div
+                                    class="offset-lg-0 col-lg-12 offset-xl-0 col-xl-12 offset-xxl-1 col-xxl-10 px-0 px-md-3">
 
-
-                    <aside class="col-12 sdk_home_content">
-                        <div class="offset-lg-0 col-lg-12 offset-xl-0 col-xl-12 offset-xxl-1 col-xxl-10 px-0 px-md-3">
-
-                            <BreadCrumb />
-                            <div class="col-12 area2 px-3">
-                                <TopBar />
-                                <div class="col-12 px-0 py-3">
-                                    @Body
+                                    <BreadCrumb />
+                                    <div class="col-12 area2 px-3">
+                                        <TopBar />
+                                        <div class="col-12 px-0 py-3">
+                                            @Body
+                                        </div>
+                                    </div>
+                                    @*
+                                        <div class="col-12 area2 p-3 my-4">
+                                        @Body
+                                        </div> *@
                                 </div>
-                            </div>
-@* 
-                            <div class="col-12 area2 p-3 my-4">
-                                @Body
-                            </div> *@
-
-                        </div>
-                    </aside>
+                            </aside>
                 </div>
 
             </Template>
         </DxGridLayoutItem>
     </Items>
 </DxGridLayout>
-<SDKGoTop/>
+<SDKGoTop />
 @code {
     private bool showNavMenu = false;
     [Inject]
@@ -80,7 +78,7 @@
         base.OnInitialized();
         Menus = new List<E00061_Menu>();
         environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-        if(environment == Environments.Development)
+        if (environment == Environments.Development)
         {
             Menus.Add(new E00061_Menu()
             {
@@ -90,7 +88,7 @@
                 CurrentText = "DevMenu",
             });
         }
-        
+
         _ = LoadMenu();
     }
 
@@ -117,7 +115,7 @@
             foreach (var business in backend.Value.businessRegisters.Businesses)
             {
                 BusinessManagerFrontend.Instance.AddBusiness(business, backend.Value.Name);
-                if(DevMenu == null)
+                if (DevMenu == null)
                 {
                     continue;
                 }
@@ -160,7 +158,7 @@
                 }
             }
         }
-        
+
         var menuBL = Frontend.BusinessManagerFrontend.Instance.GetBusiness("BLAdminMenu", AuthenticationService);
         var request = await menuBL.Call("GetSuites");
         if (request.Success)
@@ -187,11 +185,14 @@
             if ((menuItem.RowidResource == null || menuItem.RowidResource == 0) && menuItem.ResourceTag != null)
             {
                 menuItem.CurrentText = await ResourceManager.GetResource(menuItem.ResourceTag, AuthenticationService);
-            }else{
-                menuItem.CurrentText = await ResourceManager.GetResource(Convert.ToInt64(menuItem.RowidResource), AuthenticationService);
             }
-            
-            if(menuItem.SubMenus != null && menuItem.SubMenus.Count > 0)
+            else
+            {
+                menuItem.CurrentText = await ResourceManager.GetResource(Convert.ToInt64(menuItem.RowidResource),
+                AuthenticationService);
+            }
+
+            if (menuItem.SubMenus != null && menuItem.SubMenus.Count > 0)
             {
                 await GetMenuResources(menuItem.SubMenus);
             }

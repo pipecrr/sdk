@@ -1,0 +1,11 @@
+@inject SDKNotificationService SDKNotificationService
+
+
+@code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        SDKNotificationService.ShowError("Ups Algo salio Mal");
+    }
+}
