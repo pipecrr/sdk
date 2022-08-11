@@ -156,9 +156,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 BLEntityName = BusinessObj.BaseObj.GetType().Name;
             }
+            BusinessObj.ParentComponent = this;
             hideCustomColumn();
             StateHasChanged();
 
+        }
+
+        public async Task Refresh(){
+            hideCustomColumn();
         }
 
         private async Task CheckPermission()

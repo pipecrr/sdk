@@ -13,11 +13,14 @@
     [Parameter] public Int64 RowidResource { get; set; }
     [Parameter] public RenderFragment ChildContent { get; set; }
 
-    private async Task<string> GetText(){
-        if(!String.IsNullOrEmpty(ResourceTag)){
-             return await ResourceManager.GetResource(ResourceTag, AuthenticationService);
+    private async Task<string> GetText()
+    {
+        if (!String.IsNullOrEmpty(ResourceTag))
+        {
+            return await ResourceManager.GetResource(ResourceTag, AuthenticationService);
         }
-        if(RowidResource != 0 && RowidResource != null){
+        if (RowidResource != 0 && RowidResource != null)
+        {
             return await ResourceManager.GetResource(Convert.ToInt64(RowidResource), AuthenticationService);
         }
         return Label;
@@ -36,6 +39,6 @@
         await base.OnParametersSetAsync();
         Label = await GetText();
     }
-    
-    
+
+
 }

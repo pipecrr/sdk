@@ -114,6 +114,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         }
 
         public void Refresh(){
+            EvaluateDynamicAttributes(null);
             StateHasChanged();
         }
         protected virtual void InitView(string bName = null)
@@ -165,6 +166,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             _messageStore = new ValidationMessageStore(EditFormContext);
             EditFormContext.OnValidationRequested += (s, e) => _messageStore.Clear();
             EvaluateDynamicAttributes(null);
+            BusinessObj.ParentComponent = this;
             StateHasChanged();
         }
 
@@ -391,5 +393,6 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
                 StateHasChanged();
             }
         }
+
     }
 }

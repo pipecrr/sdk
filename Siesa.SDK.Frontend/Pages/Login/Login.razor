@@ -12,8 +12,11 @@
 @inject NavigationManager NavigationManager
 @inject IBackendRouterService BackendRouterService
 @inject IJSRuntime JSRuntime
-@inject Blazored.LocalStorage.ILocalStorageService localStorageService;
+@inject SDKNotificationService SDKNotificationService
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService
+@inject UtilsManager UtilsManager
 @layout EmptyLayout
+
 <PageTitle>Login</PageTitle>
 <div class="back_login">
 
@@ -109,10 +112,6 @@
                                         }
                                         <ResourceViewer ResourceTag="BLUser.Login" RowidCulture=@RowidCulture />
                                     </button>
-                                    @if (!string.IsNullOrEmpty(error))
-                                    {
-                                        <div class="alert alert-danger mt-3 mb-0">@error</div>
-                                    }
                                 </EditForm>
                             </div>
                             <div class="col-12 p-0 text-center pt-4">
@@ -229,6 +228,8 @@
 
     private async void HandleValidSubmit()
     {
+        string message = "LoginMessage.Succes";
+        string text = await UtilsManager.GetResource(message);
         loading = true;
         try
         {
@@ -238,11 +239,13 @@
             {
                 returnUrl = "/";
             }
+            SDKNotificationService.ShowSuccess(text);
             NavigationManager.NavigateTo(returnUrl);
         }
         catch (Exception ex)
         {
             error = ex.Message;
+            SDKNotificationService.ShowError(error);
             loading = false;
             StateHasChanged();
         }
@@ -338,4 +341,5 @@
         [Required]
         public string Password { get; set; }
     }
+
 }
