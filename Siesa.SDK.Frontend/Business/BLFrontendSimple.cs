@@ -22,6 +22,9 @@ namespace Siesa.SDK.Business
 {
     public class BLFrontendSimple : IBLBase<BaseSDK<int>>
     {
+        [JsonIgnore]
+        public dynamic ParentComponent {get;set;}
+
         public string BusinessName { get; set; }
         [JsonIgnore]
         public List<Panel> Panels = new List<Panel>();
