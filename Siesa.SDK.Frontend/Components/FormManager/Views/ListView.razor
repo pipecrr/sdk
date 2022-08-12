@@ -29,6 +29,7 @@ else
         Value=@SelectedObjects
         ValueChanged="((objects) => OnSelectionChanged(objects))"
         class="whcm_table"
+        AllowColumnResize="true"
         @key="needUpdate">
         <Columns>
             <RadzenDataGridColumn TItem="object" Title="Acciones" Width="100px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" HeaderCssClass="untruncate-grid-column-action">
@@ -78,6 +79,8 @@ else
                         columnType = typeof(DateTime);
                         break;
                     case FieldTypes.DecimalField:
+                        columnType = typeof(decimal);
+                        break;
                     case FieldTypes.IntegerField:
                         columnType = typeof(int);
                         break;
@@ -108,7 +111,7 @@ else
                         </RadzenDataGridColumn>
                     }else{
                         if(field.FieldType == FieldTypes.Custom){
-                            <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" TextAlign="TextAlign.Center" >
+                            <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType">
                                 <HeaderTemplate>
                                     <span><ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" /></span>
                                 </HeaderTemplate>
@@ -117,7 +120,7 @@ else
                                 </Template>
                             </RadzenDataGridColumn>
                         }else if(columnType == typeof(bool)){
-                            <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" TextAlign="TextAlign.Center" >
+                            <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" TextAlign="TextAlign.Center" HeaderCssClass="align-header-left" >
                                 <HeaderTemplate>
                                     <span><ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" /></span>
                                 </HeaderTemplate>
@@ -136,12 +139,18 @@ else
                                 </Template>
                             </RadzenDataGridColumn>
 
-                        }else{
-                            <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType">
+                        }else if(columnType == typeof(decimal)){
+                            <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" TextAlign="TextAlign.Right" HeaderCssClass="align-header-left">
                                 <HeaderTemplate>
                                     <span><ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" /></span>
                                 </HeaderTemplate>
                             </RadzenDataGridColumn>
+                        }else{
+                        <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType">
+                            <HeaderTemplate>
+                                <span><ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" /></span>
+                            </HeaderTemplate>
+                        </RadzenDataGridColumn>
                         }
                         
                     }
