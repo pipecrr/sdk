@@ -43,7 +43,7 @@ namespace Siesa.SDK.Frontend.Services
         public async Task Initialize()
         {
             UserToken = await _localStorageService.GetItemAsync<string>("usertoken");
-            Console.WriteLine($"UserToken: {UserToken}");
+            //Console.WriteLine($"UserToken: {UserToken}");
         }
 
         public async Task Login(string username, string password)

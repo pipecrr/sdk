@@ -10,7 +10,7 @@ using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
 using Siesa.SDK.Frontend.Utils;
 using Radzen;
 using Siesa.SDK.Shared.Services;
-
+using Siesa.SDK.Frontend.Services;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -41,6 +41,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Inject] public IJSRuntime JSRuntime { get; set; }
         [Inject] public NavigationManager NavManager { get; set; }
 
+        [Inject] public NavigationService NavigationService{get; set;}
 
         protected FormViewModel FormViewModel { get; set; } = new FormViewModel();
         protected List<Panel> Panels { get { return FormViewModel.Panels; } }
@@ -174,7 +175,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 dialogService.Close(false);
             }
             else
-            {
+            {                
+                string uri = NavManager.Uri;
+                NavigationService.RemoveItem(uri);
                 NavManager.NavigateTo($"{BusinessName}/");
             }
         }
