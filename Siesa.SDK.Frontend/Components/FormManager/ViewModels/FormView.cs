@@ -96,7 +96,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 
                 for (int j = 0; j < panels[i].Fields.Count; j++)
                 {
-                    if(viewType == DynamicViewType.Detail && !String.IsNullOrEmpty(panels[i].Fields[j].ViewContext))
+                    if(viewType == DynamicViewType.Detail && String.IsNullOrEmpty(panels[i].Fields[j].ViewContext))
                     {
                         panels[i].Fields[j].ViewContext = "DetailView";
                     }
