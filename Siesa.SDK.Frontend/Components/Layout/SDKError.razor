@@ -80,13 +80,11 @@
 
     protected override async Task OnInitializedAsync()
     {
-
-        await SDKNotificationService.ShowError("Ups salio algo mal");
+        base.OnInitializedAsync();
+        SDKNotificationService.ShowError("Ups salio algo mal");
 
         Title = await UtilManager.GetResource(TitleTag);
-
-        base.OnInitialized();
-
+        StateHasChanged();
     }
 
     void ClickMoreInfo()
