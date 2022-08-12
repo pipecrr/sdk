@@ -13,12 +13,14 @@ using Radzen;
 using Plk.Blazor.DragDrop;
 using Siesa.SDK.Frontend.Application;
 using Siesa.SDK.Shared.Criptography;
-
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.AspNetCore.Builder;
 namespace Siesa.SDK.Frontend {
     public static class SiesaSecurityExtensions
     {
         public static void AddSiesaSDKFrontend(this IServiceCollection services, IConfiguration serviceConfiguration)
         {
+            services.AddControllers().PartManager.ApplicationParts.Add(new AssemblyPart(typeof(SiesaSecurityExtensions).Assembly));
             services.AddBlazoredLocalStorage();
             services.AddBlazoredLocalStorage(config => config.JsonSerializerOptions.WriteIndented = true);  // local storage
             services.AddDevExpressBlazor();
@@ -33,6 +35,24 @@ namespace Siesa.SDK.Frontend {
             services.AddScoped<SDKNotificationService>(sp => (SDKNotificationService)sp.GetRequiredService<NotificationService>());
 
             services.AddScoped<ISDKJWT, Siesa.SDK.Frontend.Criptography.SDKJWT>();
+        }
+
+        public static IApplicationBuilder UseSDK(this IApplicationBuilder app)
+        {
+            app.UseHttpsRedirection();
+
+            app.UseStaticFiles();
+
+            app.UseRouting();
+            
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "api/{blname}/{blaction}/",
+                    defaults: new { controller = "Api", action = "Index" });
+            });
+            return app;
         }
 
     }
