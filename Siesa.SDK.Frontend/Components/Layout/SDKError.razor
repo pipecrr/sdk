@@ -78,13 +78,15 @@
     private string Title { get; set; }
     private string TitleTag = "Error.Text.Title";
 
+    private string NotificationMessage { get; set; }
+    private string NotificationMessageTag = "Error.Text.NotificationMessage";
+
     protected override async Task OnInitializedAsync()
     {
         base.OnInitializedAsync();
-        SDKNotificationService.ShowError("Ups salio algo mal");
-
         Title = await UtilManager.GetResource(TitleTag);
-        StateHasChanged();
+        NotificationMessage = await UtilManager.GetResource(NotificationMessageTag);
+        SDKNotificationService.ShowError(NotificationMessage);
     }
 
     void ClickMoreInfo()
