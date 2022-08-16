@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
+using Siesa.SDK.Shared.DataAnnotations;
 using Siesa.SDK.Shared.Json;
 using Siesa.SDK.Shared.Services;
 using System;
@@ -86,50 +87,72 @@ namespace Siesa.SDK.Frontend.Controllers
                         return null;
                     }
 
-                    //get parameters
-                    ParameterInfo[] parameters = method.GetParameters();
-                    object[] args = new object[parameters.Length];
-                    var requestMethod = Request.Method;
-                    if (requestMethod == "GET")
+                    var customAttributes = method.GetCustomAttributes(typeof(SDKApiMethod), false);
+                    if (customAttributes.Length == 0)
                     {
-                        args = GetArgs(parameters, Request.Query);
+                        jsonResponse["status"] = false;
+                        jsonResponse["message"] = "Method not found";
+                        HTTPCodeResponse = 404;
                     }
-                    else if (requestMethod == "POST")
+                    else
                     {
-                        if (Request.HasFormContentType)
+                        var customAttribute = customAttributes[0] as SDKApiMethod;
+
+                        //get parameters
+                        ParameterInfo[] parameters = method.GetParameters();
+                        object[] args = new object[parameters.Length];
+                        var requestMethod = Request.Method;
+
+                        if (requestMethod != customAttribute.HTTPMethod)
                         {
-                            args = GetArgs(parameters, Request.Form);
+                            jsonResponse["status"] = false;
+                            jsonResponse["message"] = "Method not found";
+                            HTTPCodeResponse = 404;
                         }
                         else
                         {
-                            if(Request.ContentType == "application/json" && Request.Body.CanRead)
+                            if (requestMethod == "GET")
                             {
-                                var jsonBody = await new StreamReader(Request.Body).ReadToEndAsync();
-                                var jsonObj = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonBody);
-                                IEnumerable<KeyValuePair<string, StringValues>> form = jsonObj.Select(x => new KeyValuePair<string, StringValues>(x.Key, x.Value.ToString()));
-                                args = GetArgs(parameters, form);
+                                args = GetArgs(parameters, Request.Query);
+                            }
+                            else if (requestMethod == "POST")
+                            {
+                                if (Request.HasFormContentType)
+                                {
+                                    args = GetArgs(parameters, Request.Form);
+                                }
+                                else
+                                {
+                                    if (Request.ContentType == "application/json" && Request.Body.CanRead)
+                                    {
+                                        var jsonBody = await new StreamReader(Request.Body).ReadToEndAsync();
+                                        var jsonObj = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonBody);
+                                        IEnumerable<KeyValuePair<string, StringValues>> form = jsonObj.Select(x => new KeyValuePair<string, StringValues>(x.Key, x.Value.ToString()));
+                                        args = GetArgs(parameters, form);
+                                    }
+                                }
+                            }
+
+                            object response;
+                            try
+                            {
+                                response = method.Invoke(BusinessObj, args);
+                                if (method.GetCustomAttributes(typeof(AsyncStateMachineAttribute), false).Length > 0)
+                                {
+                                    //wait for task to complete
+                                    var task = (Task)response;
+                                    task.Wait();
+                                    response = task.GetType().GetProperty("Result").GetValue(task);
+                                }
+                                jsonResponse.Add("data", response);
+                            }
+                            catch (System.ArgumentException)
+                            {
+                                jsonResponse["status"] = "error";
+                                jsonResponse.Add("message", "Invalid parameters");
+                                HTTPCodeResponse = 400;
                             }
                         }
-                    }
-
-                    object response;
-                    try
-                    {
-                        response = method.Invoke(BusinessObj, args);
-                        if (method.GetCustomAttributes(typeof(AsyncStateMachineAttribute), false).Length > 0)
-                        {
-                            //wait for task to complete
-                            var task = (Task)response;
-                            task.Wait();
-                            response = task.GetType().GetProperty("Result").GetValue(task);
-                        }
-                        jsonResponse.Add("data", response);
-                    }
-                    catch (System.ArgumentException)
-                    {
-                        jsonResponse["status"] = "error";
-                        jsonResponse.Add("message", "Invalid parameters");
-                        HTTPCodeResponse = 400;
                     }
                 }
                 catch (System.Exception e)
