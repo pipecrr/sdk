@@ -55,6 +55,27 @@ namespace Siesa.SDK.Frontend.Controllers
             return args;
         }
 
+        private ContentResult ReturnError(HttpResponse response, string message, int statusCode = 400)
+        {
+            var jsonResponse = new Dictionary<string, object>();
+            jsonResponse.Add("status", false);
+            jsonResponse.Add("message", message);
+            string json;
+            try
+            {
+                json = Newtonsoft.Json.JsonConvert.SerializeObject(jsonResponse, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+            }
+            catch (System.Exception e)
+            {
+                var errorResponse = new Dictionary<string, object>();
+                errorResponse.Add("status", false);
+                errorResponse.Add("message", e.ToString());
+                json = Newtonsoft.Json.JsonConvert.SerializeObject(errorResponse);
+            }
+            Response.StatusCode = statusCode;
+            return Content(json, "application/json");
+        }
+
         public async Task<ActionResult> Index(string blname, string blaction)
         {
             //TODO: AUTH
@@ -83,16 +104,13 @@ namespace Siesa.SDK.Frontend.Controllers
                     MethodInfo method = BusinessObj.GetType().GetMethod(blaction);
                     if (method == null)
                     {
-                        Console.WriteLine("method not found");
-                        return null;
+                        return ReturnError(Response, "Method not found", 404);
                     }
 
                     var customAttributes = method.GetCustomAttributes(typeof(SDKApiMethod), false);
                     if (customAttributes.Length == 0)
                     {
-                        jsonResponse["status"] = false;
-                        jsonResponse["message"] = "Method not found";
-                        HTTPCodeResponse = 404;
+                        return ReturnError(Response, "Method not found", 404);
                     }
                     else
                     {
