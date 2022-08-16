@@ -98,7 +98,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 
                 for (int j = 0; j < panels[i].Fields.Count; j++)
                 {
-                    if(viewType == DynamicViewType.Detail && !String.IsNullOrEmpty(panels[i].Fields[j].ViewContext))
+                    if(viewType == DynamicViewType.Detail && String.IsNullOrEmpty(panels[i].Fields[j].ViewContext))
                     {
                         panels[i].Fields[j].ViewContext = "DetailView";
                     }
@@ -113,6 +113,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         }
 
         public void Refresh(){
+            EvaluateDynamicAttributes(null);
             StateHasChanged();
         }
         protected virtual void InitView(string bName = null)
@@ -164,6 +165,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             _messageStore = new ValidationMessageStore(EditFormContext);
             EditFormContext.OnValidationRequested += (s, e) => _messageStore.Clear();
             EvaluateDynamicAttributes(null);
+            BusinessObj.ParentComponent = this;
             StateHasChanged();
         }
 
@@ -391,5 +393,6 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
                 StateHasChanged();
             }
         }
+
     }
 }

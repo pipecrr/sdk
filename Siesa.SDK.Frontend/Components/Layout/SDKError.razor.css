@@ -1,0 +1,28 @@
+.error-container {
+    text-align: center;
+}
+
+i{
+    font-size: 60px;
+    color: var(--color_siesa_1) ;
+    padding-top:12px;
+    padding-bottom: 25px;
+ }
+
+ h4{
+    color: var(--color_siesa_1);
+    font-weight: 500;
+ }
+
+
+
+.Text-Area-Container{
+    text-align: center;
+    padding-top:12px;
+}
+ textarea{
+    width:700px;
+    height:300px;
+    border: 2px solid var(--color_siesa_1);
+ }
+ 

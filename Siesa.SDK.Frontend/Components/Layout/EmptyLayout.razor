@@ -1,10 +1,40 @@
 @using Siesa.SDK.Frontend.Components.Layout
+@using Microsoft.Extensions.Hosting
+@using Siesa.SDK.Frontend.Components.Layout.Header
+@using Siesa.SDK.Entities
+@using System
+@using System.Collections.Generic
+@using System.Threading.Tasks
+@using Microsoft.AspNetCore.Components
+@using Siesa.SDK.Shared.Backend
+@using System.Linq
+@using Siesa.SDK.Shared.Utilities
+@using Siesa.SDK.Business
+@using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Frontend.Application
 @inherits LayoutComponentBase
-<RadzenDialog />
-<RadzenNotification Style="top:unset !important; bottom:10px;"/>
-<div class="main">    
-    <div>
-        @Body
-    </div>
-</div>
-<SDKGoTop/>
+
+<ErrorBoundary @ref="errorBoundary">
+    <ChildContent> 
+        <RadzenDialog />
+        <RadzenNotification Style="top:unset !important; bottom:10px;"/>
+        <div class="main">    
+            <div>
+                @Body
+            </div>
+        </div>
+        <SDKGoTop/>
+    </ChildContent> 
+    <ErrorContent Context="Exception" >
+        <SDKError CurrentException="@Exception" Error="@errorBoundary" IsEmptyLayout="true" />
+    </ErrorContent>
+</ErrorBoundary>
+
+@code {
+    private ErrorBoundary? errorBoundary;
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        errorBoundary = new ErrorBoundary();
+    }
+}

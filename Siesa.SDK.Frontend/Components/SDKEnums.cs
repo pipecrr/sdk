@@ -13,7 +13,7 @@ namespace Siesa.SDK.Frontend.Components
             };
         }
 
-        public static NotificationSeverity GetNotification(this SDKNotificationSeverity notificationSeverity )
+        public static NotificationSeverity GetNotification(this SDKNotificationSeverity notificationSeverity)
         {
             return notificationSeverity switch
             {
@@ -23,6 +23,22 @@ namespace Siesa.SDK.Frontend.Components
                 SDKNotificationSeverity.Warning => NotificationSeverity.Warning
 
             };
+        }
+
+        public static BadgeStyle GetStyleBadge(this SDKBadgeStyle badgeStyle)
+        {
+
+            return badgeStyle switch
+            {
+                SDKBadgeStyle.Primary => BadgeStyle.Primary,
+                SDKBadgeStyle.Secondary => BadgeStyle.Secondary,
+                SDKBadgeStyle.Success => BadgeStyle.Success,
+                SDKBadgeStyle.Danger => BadgeStyle.Danger,
+                SDKBadgeStyle.Warning => BadgeStyle.Warning,
+                SDKBadgeStyle.Info => BadgeStyle.Info,
+                SDKBadgeStyle.Light => BadgeStyle.Light
+            };
+
         }
 
     }
@@ -40,5 +56,15 @@ namespace Siesa.SDK.Frontend.Components
         Success = NotificationSeverity.Success,
         Warning = NotificationSeverity.Warning
 
+    }
+
+    public enum SDKBadgeStyle{
+        Primary = BadgeStyle.Primary,
+        Secondary = BadgeStyle.Secondary,
+        Success = BadgeStyle.Success,
+        Danger = BadgeStyle.Danger,
+        Warning = BadgeStyle.Warning,
+        Info = BadgeStyle.Info,
+        Light = BadgeStyle.Light,
     }
 }

@@ -71,6 +71,7 @@ namespace Siesa.SDK.Frontend.Services
         public async Task Logout()
         {
             UserToken = "";
+            _user = null;
             await _localStorageService.RemoveItemAsync("usertoken");
             _navigationManager.NavigateTo("login");
         }
