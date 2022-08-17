@@ -50,6 +50,7 @@ sonar:
       - "apt-get install --yes openjdk-11-jre"
       - "dotnet tool install --global dotnet-sonarscanner"
       - "export PATH=\"$PATH:$HOME/.dotnet/tools\""
+      - dotnet nuget add source https://nuget.devexpress.com/api -n DXFeed -u DevExpress -p $DX_NUGET_TOKEN --store-password-in-clear-text
       - "dotnet sonarscanner begin /k:\"$SONAR_KEY\" /d:sonar.login=\"$SONAR_TOKEN\" /d:\"sonar.host.url=$SONAR_URL\" "
       - "dotnet build"
       - "dotnet sonarscanner end /d:sonar.login=\"$SONAR_TOKEN\""
