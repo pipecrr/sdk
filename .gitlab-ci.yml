@@ -31,6 +31,16 @@ test:
     script:
       - echo "Tests are not implemented yet"
 
+sonar:
+    image: sonarsource/sonar-scanner-cli
+    stage: test
+    only:
+      - merge_requests
+    tags:
+      - docker
+    script:
+      - sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.projectKey="$SONAR_KEY" -Dsonar.host_url="$SONAR_URL" -Dsonar.login="$SONAR_TOKEN" -Dsonar.projectName="$SONAR_PROJECT"
+
 deploy:
     stage: deploy
     only: 
