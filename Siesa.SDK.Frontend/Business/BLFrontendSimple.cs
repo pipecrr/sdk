@@ -28,6 +28,11 @@ namespace Siesa.SDK.Business
 
         public string BusinessName { get; set; }
         [JsonIgnore]
+        public SDKBusinessModel Backend {get { return BackendRouterService.Instance.GetSDKBusinessModel(BusinessName, AuthenticationService); } }
+        public SDKBusinessModel GetBackend(string business_name){
+            return BackendRouterService.Instance.GetSDKBusinessModel(business_name, AuthenticationService);
+        }
+        [JsonIgnore]
         public List<Panel> Panels = new List<Panel>();
         [JsonIgnore]
         public List<FieldOptions> ListViewFields = new List<FieldOptions>();
@@ -100,11 +105,10 @@ namespace Siesa.SDK.Business
         public dynamic ParentComponent {get;set;}
         public string BusinessName { get; set; }
         [JsonIgnore]
-        public BusinessFrontendModel Backend { get { return Frontend.BusinessManagerFrontend.Instance.GetBusiness(BusinessName, AuthenticationService); } }
+        public SDKBusinessModel Backend {get { return BackendRouterService.Instance.GetSDKBusinessModel(BusinessName, AuthenticationService); } }
 
-        public BusinessFrontendModel GetBackend(string business_name)
-        {
-            return Frontend.BusinessManagerFrontend.Instance.GetBusiness(business_name, AuthenticationService);
+        public SDKBusinessModel GetBackend(string business_name){
+            return BackendRouterService.Instance.GetSDKBusinessModel(business_name, AuthenticationService);
         }
         [JsonIgnore]
         public List<Panel> Panels = new List<Panel>();

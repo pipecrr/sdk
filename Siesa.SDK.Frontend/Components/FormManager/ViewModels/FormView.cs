@@ -12,6 +12,7 @@ using Microsoft.CodeAnalysis.Scripting;
 using System.Linq;
 using Siesa.SDK.Frontend.Utils;
 using Siesa.SDK.Shared.Services;
+using Siesa.SDK.Frontend.Services;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 {
@@ -28,6 +29,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         [Inject] public IJSRuntime JSRuntime { get; set; }
         [Inject] public NavigationManager NavManager { get; set; }
+        [Inject] public NavigationService NavigationService { get; set; }
 
         [Inject] protected IAuthenticationService AuthenticationService { get; set; }
 
@@ -66,6 +68,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         private string _viewdefName = "";
 
+        [Inject]
+        public IBackendRouterService BackendRouterService { get; set; }
+
         private string GetViewdef(string businessName)
         {
             if (String.IsNullOrEmpty(ViewdefName))
@@ -75,10 +80,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 _viewdefName = ViewdefName;
             }
 
-            var data = BusinessManagerFrontend.Instance.GetViewdef(businessName, _viewdefName);
+            var data = BackendRouterService.GetViewdef(businessName, _viewdefName);
             if (String.IsNullOrEmpty(data) && _viewdefName != DefaultViewdefName)
             {
-                data = BusinessManagerFrontend.Instance.GetViewdef(businessName, DefaultViewdefName);
+                data = BackendRouterService.GetViewdef(businessName, DefaultViewdefName);
             }
             return data;
         }
@@ -344,6 +349,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
                     OnSave(id);
                 }
             }else{
+                NavigationService.RemoveCurrentItem();
                 NavManager.NavigateTo($"{BusinessName}/detail/{id}/");
             }
         }

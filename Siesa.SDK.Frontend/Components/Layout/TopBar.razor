@@ -1,10 +1,11 @@
 ﻿@implements IDisposable
 @inject IJSRuntime JSRuntime
+@inject NavigationService navigationService
 @if (LayoutService.TopBarTitle != null || LayoutService.TopBarButtons != null || LayoutService.TopBarExtraButtons != null)
 {
     <div class=@("col-12 p-2 p-sm-3 whcm_toolbar " + LayoutService.StyleName)>
         <div class="whcm_toolbar_text d-flex align-items-center">
-            @if (ShowBackButton==true)
+            @if (ShowBackButton==true && navigationService.CanNavigateBack)
             {
             <button Value="@ShowBackButton" class="btn btn-sm layout_btn_standar-sm mr-1 mr-sm-3" data-toggle="tooltip"
                 data-placement="top" title="Atras" @onclick="@OnClick" >
@@ -85,8 +86,9 @@
     private async Task OnClick(MouseEventArgs e)
     {
         try
-        {
-            JSRuntime.InvokeAsync<object>("window.history.go", -1);
+        {   
+            navigationService.NavigateBack();
+            //JSRuntime.InvokeAsync<object>("window.history.go", -1);
         }
         catch (Exception ex)
         {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
@@ -10,7 +10,7 @@ using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
 using Siesa.SDK.Frontend.Utils;
 using Radzen;
 using Siesa.SDK.Shared.Services;
-
+using Siesa.SDK.Frontend.Services;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -40,6 +40,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         [Inject] public IJSRuntime JSRuntime { get; set; }
         [Inject] public NavigationManager NavManager { get; set; }
+
+        [Inject] public NavigationService NavigationService{get; set;}
+        [Inject]
+        public IBackendRouterService BackendRouterService { get; set; }
 
 
         protected FormViewModel FormViewModel { get; set; } = new FormViewModel();
@@ -80,7 +84,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 bName = BusinessName;
             }
-            var metadata = BusinessManagerFrontend.Instance.GetViewdef(bName, "detail");
+            var metadata = BackendRouterService.GetViewdef(bName, "detail");
             if (metadata == null || metadata == "")
             {
                 ErrorMsg = "No hay definición para la vista de detalle";
@@ -177,6 +181,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 }
                 else
                 {
+                    string uri = NavManager.Uri;
+                    NavigationService.RemoveItem(uri);
                     NavManager.NavigateTo($"{BusinessName}/");
                 }
             }
