@@ -1,6 +1,7 @@
 @using Siesa.SDK.Shared.Services
 @inject DialogService DialogService
 @inject IAuthenticationService AuthenticationService
+@inject IBackendRouterService BackendRouterService
 
 
 <DynamicListView
@@ -68,7 +69,7 @@
                 ds => @<ConfirmDelete DialogService=@ds/>,
                 new DialogOptions(){ShowTitle=false, Width="400"});
         if(modal_result == true) {
-            var backend = BusinessManagerFrontend.Instance.GetBusiness(BusinessName, AuthenticationService);
+            var backend = BackendRouterService.GetSDKBusinessModel(BusinessName, AuthenticationService);
             await backend.DeleteAsync(Convert.ToInt64(item_rowid));
         }
         listview_key = Guid.NewGuid();

@@ -16,7 +16,8 @@ namespace Siesa.SDK.Backend.Extensions
         public static void AddSiesaSDKBackend(this IServiceCollection services)
         {
             services.AddScoped<IAuthenticationService, AuthenticationService>();
-            services.AddSingleton<IFeaturePermissionService, FeaturePermissionService>();
+            services.AddScoped<IFeaturePermissionService, FeaturePermissionService>();
+            services.AddSingleton<IBackendRouterService, BackendRouterService>();
 
             services.AddScoped<ISDKJWT, Siesa.SDK.Backend.Criptography.SDKJWT>();
         }

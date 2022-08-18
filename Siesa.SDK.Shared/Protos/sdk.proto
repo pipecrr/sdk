@@ -21,6 +21,10 @@ service SDK {
   rpc ExecuteExposedMethod (ExposedMethodRequest) returns (ExposedMethodResponse);
 }
 
+service Shared {
+  rpc SetBackendServices (SetBackendServicesRequest) returns (SetBackendServicesResponse);
+}
+
 message GetMenuGroupsRequest {
   string currentUserToken = 1;
   google.protobuf.Int32Value currentUserRowid = 2;

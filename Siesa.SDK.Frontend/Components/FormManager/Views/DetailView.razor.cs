@@ -42,6 +42,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Inject] public NavigationManager NavManager { get; set; }
 
         [Inject] public NavigationService NavigationService{get; set;}
+        [Inject]
+        public IBackendRouterService BackendRouterService { get; set; }
+
 
         protected FormViewModel FormViewModel { get; set; } = new FormViewModel();
         protected List<Panel> Panels { get { return FormViewModel.Panels; } }
@@ -81,7 +84,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 bName = BusinessName;
             }
-            var metadata = BusinessManagerFrontend.Instance.GetViewdef(bName, "detail");
+            var metadata = BackendRouterService.GetViewdef(bName, "detail");
             if (metadata == null || metadata == "")
             {
                 ErrorMsg = "No hay definición para la vista de detalle";

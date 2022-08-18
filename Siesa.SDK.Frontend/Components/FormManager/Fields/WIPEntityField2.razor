@@ -42,7 +42,7 @@
         return response;
     }
     protected override async Task OnInitializedAsync() {
-        BusinessFrontendModel relBusinessModel;
+        @* BusinessFrontendModel relBusinessModel;
         BusinessManagerFrontend.Instance.Businesses.TryGetValue(FieldOpt.RelatedBusiness, out relBusinessModel);
         if (relBusinessModel == null)
         {
@@ -53,6 +53,6 @@
         RelBusinessObj = Activator.CreateInstance(relBusinessType);
         RelBusinessObj.BusinessName = FieldOpt.RelatedBusiness;
         var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
-        ValueExpression = (Expression<Func<RelEntityType>>)Expression.Lambda(typeof(Func<>).MakeGenericType(BindModel.GetType()), access);
+        ValueExpression = (Expression<Func<RelEntityType>>)Expression.Lambda(typeof(Func<>).MakeGenericType(BindModel.GetType()), access); *@
     }
 }

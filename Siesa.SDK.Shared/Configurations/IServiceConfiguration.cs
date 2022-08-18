@@ -10,5 +10,6 @@ namespace Siesa.SDK.Shared.Configurations
     {
         string MasterBackendUrl { get; set; }
         string AuditServerUrl { get; set; }
+        string CurrentUrl { get; set; }
     }
 }

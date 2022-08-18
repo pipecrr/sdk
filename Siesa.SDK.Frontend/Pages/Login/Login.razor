@@ -10,7 +10,7 @@
 @using Newtonsoft.Json;
 @inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavigationManager
-@inject IBackendManager backendManager
+@inject IBackendRouterService BackendRouterService
 @inject IJSRuntime JSRuntime
 @inject SDKNotificationService SDKNotificationService
 @inject Blazored.LocalStorage.ILocalStorageService localStorageService
@@ -211,16 +211,6 @@
             NavigationManager.NavigateTo("");
         }
 
-        backendManager.SyncWithMasterBackend();
-
-        foreach (var backend in backendManager.GetBackendDict())
-        {
-            foreach (var business in backend.Value.businessRegisters.Businesses)
-            {
-                BusinessManagerFrontend.Instance.AddBusiness(business, backend.Value.Name);
-            }
-        }
-
         getCultures();
         getSelectedCulture();
         getUserlang();
@@ -269,7 +259,7 @@
 
     private async Task<List<E00021_Culture>> getCulturesAsync(){
         List<E00021_Culture> _cultures = new List<E00021_Culture>();
-                        var cultureBL = Frontend.BusinessManagerFrontend.Instance.GetBusiness("BLCulture", AuthenticationService);
+                        var cultureBL = BackendRouterService.GetSDKBusinessModel("BLCulture", AuthenticationService);
         if (cultureBL == null)
         {
             throw new Exception("Culture Service not found");

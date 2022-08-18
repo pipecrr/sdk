@@ -13,6 +13,7 @@ using Radzen;
 using Plk.Blazor.DragDrop;
 using Siesa.SDK.Frontend.Application;
 using Siesa.SDK.Shared.Criptography;
+using Siesa.SDK.Shared.Application;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Builder;
 namespace Siesa.SDK.Frontend {
@@ -25,17 +26,21 @@ namespace Siesa.SDK.Frontend {
             services.AddBlazoredLocalStorage(config => config.JsonSerializerOptions.WriteIndented = true);  // local storage
             services.AddDevExpressBlazor();
             services.AddScoped<ILayoutService, LayoutService>();
+            services.AddSingleton<IBackendRouterService, BackendRouterService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<DialogService>();
             services.AddScoped<NavigationService>();
             services.AddBlazorDragDrop();
             services.AddSingleton<IResourceManager, ResourceManager>();
-            services.AddSingleton<IFeaturePermissionService, FeaturePermissionService>();
+            services.AddScoped<IFeaturePermissionService, FeaturePermissionService>();
             services.AddScoped<UtilsManager>(sp => ActivatorUtilities.CreateInstance<UtilsManager>(sp));
             services.AddScoped<NotificationService, SDKNotificationService>(sp => ActivatorUtilities.CreateInstance<SDKNotificationService>(sp));
             services.AddScoped<SDKNotificationService>(sp => (SDKNotificationService)sp.GetRequiredService<NotificationService>());
+            
 
             services.AddScoped<ISDKJWT, Siesa.SDK.Frontend.Criptography.SDKJWT>();
+
+            SDKApp.AddAssembly(typeof(LayoutService).Assembly);
         }
 
         public static IApplicationBuilder UseSDK(this IApplicationBuilder app)
