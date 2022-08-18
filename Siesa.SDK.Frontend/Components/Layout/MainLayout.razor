@@ -38,25 +38,26 @@
             <Template>
                 <div class="sdk_nav">
                     <NavMenu ShowMenu="@showNavMenu" Menus="@Menus" />
+                        <ErrorBoundary @ref="errorBoundary">
+                            <ChildContent> 
+                            <aside class="col-12 sdk_home_content">
+                                <div
+                                    class="offset-lg-0 col-lg-12 offset-xl-0 col-xl-12 offset-xxl-1 col-xxl-10 px-0 px-md-3">
 
-
-                    <aside class="col-12 sdk_home_content">
-                        <div class="offset-lg-0 col-lg-12 offset-xl-0 col-xl-12 offset-xxl-1 col-xxl-10 px-0 px-md-3">
-
-                            <BreadCrumb />
-                            <div class="col-12 area2 px-3">
-                                <TopBar />
-                                <div class="col-12 px-0 py-3">
-                                    @Body
+                                    <BreadCrumb />
+                                    <div class="col-12 area2 px-3">
+                                        <TopBar />
+                                        <div class="col-12 px-0 py-3">
+                                            @Body
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            @*
-                                <div class="col-12 area2 p-3 my-4">
-                                @Body
-                                </div> *@
-
-                        </div>
-                    </aside>
+                            </aside>
+                            </ChildContent> 
+                            <ErrorContent Context="Exception" >
+                                <SDKError CurrentException="@Exception" Error="@errorBoundary" />
+                            </ErrorContent>
+                    </ErrorBoundary>
                 </div>
 
             </Template>
@@ -73,9 +74,14 @@
 
     public string environment;
 
+    private ErrorBoundary? errorBoundary;
+
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
+        errorBoundary = new ErrorBoundary();
+
         Menus = new List<E00061_Menu>();
         environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
         if (environment == Environments.Development)
@@ -91,7 +97,6 @@
 
         _ = LoadMenu();
     }
-
 
     private void ToggleNavMenu()
     {

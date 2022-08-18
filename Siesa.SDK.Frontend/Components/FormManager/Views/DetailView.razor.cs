@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
@@ -10,7 +10,7 @@ using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
 using Siesa.SDK.Frontend.Utils;
 using Radzen;
 using Siesa.SDK.Shared.Services;
-
+using Siesa.SDK.Frontend.Services;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -32,15 +32,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public bool ShowTitle { get; set; } = true;
         [Parameter]
         public bool ShowButtons { get; set; } = true;
-        [Parameter] 
-        public bool ShowCancelButton {get; set;} = true;
-                
-        [Parameter] 
-        public bool ShowDeleteButton {get; set;} = true;
+        [Parameter]
+        public bool ShowCancelButton { get; set; } = true;
+
+        [Parameter]
+        public bool ShowDeleteButton { get; set; } = true;
 
         [Inject] public IJSRuntime JSRuntime { get; set; }
         [Inject] public NavigationManager NavManager { get; set; }
 
+        [Inject] public NavigationService NavigationService{get; set;}
         [Inject]
         public IBackendRouterService BackendRouterService { get; set; }
 
@@ -159,7 +160,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         {
             var result = await BusinessObj.DeleteAsync();
 
-            if (result.Errors.Count > 0)
+            if (result != null && result.Errors.Count > 0)
             {
                 ErrorMsg = "<ul>";
                 foreach (var error in result.Errors)
@@ -172,16 +173,21 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 ErrorMsg += "</ul>";
                 return;
             }
-            if (IsSubpanel)
+            if (result != null)
             {
-                dialogService.Close(false);
-            }
-            else
-            {
-                NavManager.NavigateTo($"{BusinessName}/");
+                if (IsSubpanel)
+                {
+                    dialogService.Close(false);
+                }
+                else
+                {
+                    string uri = NavManager.Uri;
+                    NavigationService.RemoveItem(uri);
+                    NavManager.NavigateTo($"{BusinessName}/");
+                }
             }
         }
-        
+
 
         private void OnClickCustomButton(Button button)
         {

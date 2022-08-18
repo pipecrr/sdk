@@ -342,6 +342,8 @@ namespace Siesa.SDK.Business
 
         public virtual DeleteBusinessObjResponse Delete()
         {
+            var response = new DeleteBusinessObjResponse();
+
             ValidateAndSaveBusinessObjResponse result = new();
             try
             {
@@ -349,11 +351,9 @@ namespace Siesa.SDK.Business
 
                 if (result.Errors.Count > 0)
                 {
-                    var response = new DeleteBusinessObjResponse();
                     response.Errors.AddRange(result.Errors);
                     return response;
                 }
-
                 using (SDKContext context = _dbFactory.CreateDbContext())
                 {
                     context.SetProvider(_provider);
@@ -361,10 +361,11 @@ namespace Siesa.SDK.Business
                     context.SaveChanges();
                 }
             }
-            catch (System.Exception)
+            catch (Exception e)
             {
-                
-                throw;
+                 //response.Errors.AddRange(result.Errors);
+
+                 return null;
             }
             
             return new DeleteBusinessObjResponse();
