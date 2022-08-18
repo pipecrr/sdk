@@ -26,9 +26,9 @@
                             {
                                 @if(string.IsNullOrEmpty(breadcrumb[i].CurrentText))
                                 {
-                                    <a href="@(breadcrumb[i].CurrentText)"><ResourceViewer RowidResource="@(breadcrumb[i].RowidResource)" /></a>
+                                    <a href="@(breadcrumb[i].CurrentURL)"><ResourceViewer RowidResource="@(breadcrumb[i].RowidResource)" /></a>
                                 }else{
-                                    <a href="@(breadcrumb[i].CurrentText)">@(breadcrumb[i].CurrentText)</a>
+                                    <a href="@(breadcrumb[i].CurrentURL)">@(breadcrumb[i].CurrentText)</a>
                                 }
                             }
                         </li>
