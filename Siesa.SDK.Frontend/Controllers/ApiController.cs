@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Siesa.SDK.Shared.DataAnnotations;
 using Siesa.SDK.Shared.Json;
 using Siesa.SDK.Shared.Services;
+using Siesa.SDK.Shared.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,11 +21,13 @@ namespace Siesa.SDK.Frontend.Controllers
     {
         private IServiceProvider ServiceProvider { get; set; }
         private IAuthenticationService AuthenticationService { get; set; }
+        private IBackendRouterService BackendRouterService {get; set;}
 
-        public ApiController(IServiceProvider ServiceProvider, IAuthenticationService AuthenticationService)
+        public ApiController(IServiceProvider ServiceProvider, IAuthenticationService AuthenticationService, IBackendRouterService backendRouterService)
         {
             this.ServiceProvider = ServiceProvider;
             this.AuthenticationService = AuthenticationService;
+            this.BackendRouterService = backendRouterService;
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
                 Formatting = Formatting.None,
@@ -88,16 +91,16 @@ namespace Siesa.SDK.Frontend.Controllers
             jsonResponse.Add("status", true);
             int HTTPCodeResponse = 200;
 
-            BusinessFrontendModel businessModel;
+            SDKBusinessModel businessModel;
             Type businessType;
             dynamic BusinessObj;
 
-            BusinessManagerFrontend.Instance.Businesses.TryGetValue(blname, out businessModel);
+            businessModel = BackendRouterService.GetSDKBusinessModel(blname, AuthenticationService);
             if (businessModel != null)
             {
                 try
                 {
-                    businessType = Utils.Utils.SearchType(businessModel.Namespace + "." + businessModel.Name);
+                    businessType = Utilities.SearchType(businessModel.Namespace + "." + businessModel.Name);
                     BusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider, businessType);
                     BusinessObj.BusinessName = blname;
 
