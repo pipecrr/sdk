@@ -44,7 +44,7 @@
                                 <div
                                     class="offset-lg-0 col-lg-12 offset-xl-0 col-xl-12 offset-xxl-1 col-xxl-10 px-0 px-md-3">
 
-                                    <BreadCrumb />
+                                    <BreadCrumb Menus="@Menus" />
                                     <div class="col-12 area2 px-3">
                                         <TopBar />
                                         <div class="col-12 px-0 py-3">
@@ -164,7 +164,7 @@
         var request = await menuBL.Call("GetSuites");
         if (request.Success)
         {
-            SelectedSuite = ((List<E00060_Suite>)request.Data).First(); //TODO: UX difines how to select the menu group
+            SelectedSuite = ((List<E00060_Suite>)request.Data).First();
             var menuRequest = await menuBL.Call("GetMenuItems", Convert.ToInt64(SelectedSuite.Rowid));
             if (menuRequest.Success)
             {
@@ -175,7 +175,6 @@
                 GetMenuResources(Menus);
             }
         }
-        Console.WriteLine(Menus.Count);
         StateHasChanged();
     }
 
