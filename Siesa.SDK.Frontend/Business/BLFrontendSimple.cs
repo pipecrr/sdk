@@ -235,9 +235,11 @@ namespace Siesa.SDK.Business
 
         public async virtual Task<DeleteBusinessObjResponse> DeleteAsync()
         {
-            var result = await Backend.Delete(BaseObj.GetRowid());
-            return result;
-        }
+            try
+            {
+                var result = await Backend.Delete(BaseObj.GetRowid());
+                return result;
+            }
             catch (Exception e)
             {
             await GetNotificacionService("Error al Eliminar el registro");
