@@ -1,0 +1,34 @@
+@using Radzen
+@using SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Visualization
+@inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
+@inject UtilsManager UtilManager
+
+<div class="modal-dialog-container">
+
+    <div class="modal-dialog-content">
+        @ChildContent
+    </div>
+
+    <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Modal.Button.Cancel" Click="@ClickCancel" />
+    <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Modal.Button.Confirm" Click="@ClickConfirm" />
+
+</div>
+
+@code {
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter] public DialogService DialogService { get; set; }
+
+    private void ClickConfirm()
+    {
+        DialogService.Close(true);
+    }
+
+    private void ClickCancel()
+    {
+        DialogService.Close(false);
+    } 
+
+}
