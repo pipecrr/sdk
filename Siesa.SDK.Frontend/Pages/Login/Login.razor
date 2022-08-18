@@ -20,7 +20,7 @@
 <PageTitle>Login</PageTitle>
 <div class="back_login">
 
-    <div class="col-12 offset-md-1 col-md-10 px-0 px-md-3">
+    <div class="col-12 offset-md-1 col-md-10 px-0 px-md-3" hidden="@init_loading">
         <div class="card_login col-12">
             <div class="row image_back">
                 <div class="info_area col-md-12 col-lg-7 p-3 p-lg-4">
@@ -169,7 +169,7 @@
         </div>
     </div>
 
-    <div class="login_loading">
+    <div class="login_loading @GetCssLoding()">
         <div>
             <div class="text-center fa-4x font_color_3 mb-4">
                 <i class="fas fa-spinner fa-pulse"></i>
@@ -194,26 +194,39 @@
 
 @code {
     private Model model = new Model();
-
+    private bool init_loading = true;
     private bool loading;
     private string error;
     bool IsOpen { get; set; } = false;
 
     private short RowidCulture { get; set; } = 1;
     private E00021_Culture selectedCulture { get; set; }
-    List<E00021_Culture> cultures;
+    List<E00021_Culture> cultures = new List<E00021_Culture>();
 
-    protected override void OnInitialized()
+    private string GetCssLoding()
     {
+        if (!init_loading)
+        {
+            return "login_loading_close";
+        }
+        return "";
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        init_loading = true;
         // redirect to home if already logged in
         if (AuthenticationService.User != null)
         {
             NavigationManager.NavigateTo("");
+            return;
         }
-
-        getCultures();
+        cultureDefault();
+        await getCultures();
         getSelectedCulture();
-        getUserlang();
+        await getUserlang();
+        init_loading = false;
+        await base.OnInitializedAsync();
 
     }
 
@@ -221,8 +234,8 @@
     {
         RowidCulture = rowidCulture;
         IsOpen = false;
-        StateHasChanged();
         getSelectedCulture();
+        StateHasChanged();
         await localStorageService.SetItemAsync("userlang", RowidCulture.ToString());
     }
 
@@ -252,7 +265,7 @@
     }
    
 
-    private async void getCultures()
+    private async Task getCultures()
     {
         cultures = await getCulturesAsync();
     }
@@ -285,7 +298,7 @@
         }
     }
 
-    private async void getUserlang()
+    private async Task getUserlang()
     {
         string userlang;
         try
