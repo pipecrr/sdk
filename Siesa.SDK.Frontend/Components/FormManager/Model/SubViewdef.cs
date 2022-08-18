@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
+using Siesa.SDK.Frontend.Services;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Model
 {
@@ -17,7 +18,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
             this.ParentField = ParentField;
             this.Viewdef = Viewdef;
 
-            var metadata = BusinessManagerFrontend.Instance.GetViewdef(Business, Viewdef);
+            var metadata = BackendRouterService.Instance.GetViewdef(Business, Viewdef);
             if (metadata != "" && metadata != null)
             {
                 //replace all the ocurrences of "BaseObj" with the parent field

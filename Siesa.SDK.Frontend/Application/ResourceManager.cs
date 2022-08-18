@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Siesa.SDK.Frontend.Services;
 using Siesa.SDK.Shared.Json;
 using Siesa.SDK.Shared.Services;
 
@@ -26,7 +27,7 @@ namespace Siesa.SDK.Frontend.Application
 
         Dictionary<Int64, string> resourceDict = new Dictionary<Int64, string>();
 
-        public BusinessFrontendModel Backend {get { return Frontend.BusinessManagerFrontend.Instance.GetBusiness("BLResource", null); } }
+        public SDKBusinessModel Backend {get { return BackendRouterService.Instance.GetSDKBusinessModel("BLResource", null); } }
 
         public ResourceManager()
         {

@@ -24,6 +24,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.Extensions.DependencyInjection;
 using Siesa.SDK.Shared.DataAnnotations;
+using Siesa.SDK.Backend.Services;
 
 namespace Siesa.SDK.Business
 {
@@ -31,6 +32,10 @@ namespace Siesa.SDK.Business
     {
         [JsonIgnore]
         protected IAuthenticationService AuthenticationService { get; set; }
+
+        public SDKBusinessModel GetBackend(string business_name){
+            return BackendRouterService.Instance.GetSDKBusinessModel(business_name, AuthenticationService);
+        }
 
         public BLBackendSimple(IAuthenticationService authenticationService)
         {
@@ -73,6 +78,11 @@ namespace Siesa.SDK.Business
     {
         [JsonIgnore]
         protected IAuthenticationService AuthenticationService { get; set; }
+
+        public SDKBusinessModel GetBackend(string business_name){
+            return BackendRouterService.Instance.GetSDKBusinessModel(business_name, AuthenticationService);
+        }
+        
         private IServiceProvider _provider;
         private ILogger _logger;
         protected ILogger Logger { get { return _logger; } }

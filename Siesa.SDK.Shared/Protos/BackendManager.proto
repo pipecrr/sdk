@@ -5,10 +5,6 @@ import "google/protobuf/wrappers.proto";
 
 service GRPCBackendManagerService {
   rpc RegisterBackend (RegisterBackendRequest) returns (RegisterBackendResponse);
-  rpc GetBackend (GetBackendRequest) returns (GetBackendResponse);
-  rpc GetBackends (GetBackendsRequest) returns (GetBackendsResponse);
-  rpc IsBackendRegistered (IsBackendRegisteredRequest) returns (IsBackendRegisteredResponse);
-  rpc GetBackendByBusinessName (GetBackendByBusinessNameRequest) returns (GetBackendResponse);
 }
 
 message BackendInfo {
@@ -22,38 +18,5 @@ message RegisterBackendRequest {
 }
 
 message RegisterBackendResponse {
+   repeated BusinessModel businesses = 1;
 }
-
-message GetBackendRequest {
-  string backend_name = 1;
-  string currentUserToken = 2;
-  google.protobuf.Int32Value currentUserRowid = 3;
-}
-
-message GetBackendResponse {
-  BackendInfo backend_info = 1;
-}
-
-message GetBackendsRequest {
-}
-
-message GetBackendsResponse {
-  repeated BackendInfo backends = 1;
-}
-
-message IsBackendRegisteredRequest {
-  string backend_name = 1;
-  string currentUserToken = 2;
-  google.protobuf.Int32Value currentUserRowid = 3;
-}
-
-message IsBackendRegisteredResponse {
-  bool is_registered = 1;
-}
-
-message GetBackendByBusinessNameRequest {
-  string business_name = 1;
-  string currentUserToken = 2;
-  google.protobuf.Int32Value currentUserRowid = 3;
-}
-

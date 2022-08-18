@@ -1,39 +1,42 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Siesa.SDK.Protos;
-using Grpc.Net.Client;
-using Grpc.Core;
-using Siesa.SDK.Shared.Backend;
-using Newtonsoft.Json;
-using Siesa.SDK.Shared.Business;
-using Google.Protobuf;
-using System.Net.Http;
-using System.Runtime.InteropServices;
-using Siesa.SDK.Shared.Json;
-using System.Reflection;
 using System.IO;
-using Siesa.SDK.Shared.Services;
+using System.Net.Http;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+using Grpc.Core;
+using Newtonsoft.Json;
+using Siesa.SDK.Protos;
+using Siesa.SDK.Shared.Backend;
+using Siesa.SDK.Shared.Business;
+using Siesa.SDK.Shared.Json;
 
-namespace Siesa.SDK.Frontend
+namespace Siesa.SDK.Shared.Services
 {
-
-    public class BusinessFrontendModel
+    public class SDKBusinessModel
     {
         private IAuthenticationService AuthenticationService { get; set; }
+        private IBackendRouterService BackendRouterService {get;set;}
         public string Name { get; set; }
         public string Namespace { get; set; }
-        public string Entity { get; set; }
-        public string BackendName { get; set; }
 
-        public void SetAuthenticationService(IAuthenticationService authenticationService)
+        public SDKBusinessModel(string name, string namespaceName, IAuthenticationService authenticationService = null, IBackendRouterService backendRouterService=null)
         {
+            Name = name;
+            Namespace = namespaceName;
             AuthenticationService = authenticationService;
+            BackendRouterService = backendRouterService;
         }
 
-        public BackendRegistry Backend {get { return BackendManager.Instance.GetBackend(BackendName, AuthenticationService); } }
+        public void SetAuthenticationService(IAuthenticationService authenticationService, IBackendRouterService backendRouterService)
+        {
+            //TODO: ver si se puede eliminar
+            AuthenticationService = authenticationService;
+            BackendRouterService = backendRouterService;
+        }
+
+        public BackendRegistry Backend {get { return BackendRouterService.GetBackendRegistry(Name, AuthenticationService); } }
 
         public dynamic Save(dynamic obj)
         {
@@ -73,9 +76,8 @@ namespace Siesa.SDK.Frontend
             if(response.Success){
                 Type t = null;
                 if(!string.IsNullOrEmpty(grpcResult.DataType)){
-                    t = Utils.Utils.SearchType(grpcResult.DataType, true);
+                     t = Utilities.Utilities.SearchType(grpcResult.DataType, true);
                 }
-                //response.Data = JsonConvert.DeserializeObject(grpcResult.Data, t);
    
                 var byteString = grpcResult.Data;
                 ByteArrayContent content;
@@ -149,63 +151,6 @@ namespace Siesa.SDK.Frontend
                 Console.WriteLine(ex.Message);
             }
             return result;
-        }
-    }
-
-    public class BusinessManagerFrontend
-    {
-        private static BusinessManagerFrontend _instance;
-        public Dictionary<string, BusinessFrontendModel> Businesses { get; set; }
-        private BusinessManagerFrontend()
-        {
-        }
-        public static BusinessManagerFrontend Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new BusinessManagerFrontend();
-                    _instance.Businesses = new Dictionary<string, BusinessFrontendModel>();
-                }
-                return _instance;
-            }
-        }
-
-        public void AddBusiness(BusinessModel business, string backendName)
-        {
-            if (!Businesses.ContainsKey(business.Name)) { 
-                var businessFrontendModel = new BusinessFrontendModel();
-                businessFrontendModel.Name = business.Name;
-                businessFrontendModel.Namespace = business.Namespace;
-                businessFrontendModel.BackendName = backendName;
-                Businesses.Add(business.Name, businessFrontendModel);
-            }
-        }
-
-        public string GetViewdef(string businessName, string viewName) {
-            var business = Businesses[businessName];
-            if (business == null) {
-                return null;
-            }
-            var asm = Utils.Utils.SearchAssemblyByType(business.Namespace + "." + business.Name);
-            if (asm == null)
-            {
-                return null;
-            }
-            return Utils.Utils.ReadAssemblyResource(asm, business.Name + ".Viewdefs."+ viewName + ".json");
-        }
-
-        //get business
-        public BusinessFrontendModel GetBusiness(string businessName, IAuthenticationService authenticationService)
-        {
-            var business = Businesses[businessName];
-            if (business == null)
-            {
-                return null;
-            }
-            business.SetAuthenticationService(authenticationService);
-            return business;
         }
     }
 }

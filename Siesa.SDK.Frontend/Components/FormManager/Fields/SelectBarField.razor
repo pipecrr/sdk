@@ -4,6 +4,8 @@
 @inherits FieldClass<TItem>
 @using Siesa.SDK.Shared.Services
 @inject IAuthenticationService AuthenticationService
+@inject IBackendRouterService BackendRouterService
+
 
 @if (!FieldOpt.Hidden)
 {
@@ -58,7 +60,7 @@
     }
     private async Task GetEnumValues()
     {
-        var resourceBL = Frontend.BusinessManagerFrontend.Instance.GetBusiness("BLResource", AuthenticationService);
+        var resourceBL = BackendRouterService.GetSDKBusinessModel("BLResource", AuthenticationService);
         var request = await resourceBL.Call("GetEnumValues", enumType.Name,
         Convert.ToInt64(AuthenticationService.User.RowidCulture));
         if (request.Success)

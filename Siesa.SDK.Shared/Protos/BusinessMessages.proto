@@ -11,6 +11,7 @@ message GetBusinessesRequest {
 message BusinessModel {
   string namespace = 1;
   string name = 2;
+  string url = 3;
 }
 
 message BusinessesResponse {
@@ -113,3 +114,12 @@ message ExposedMethodRequest {
   google.protobuf.Int32Value currentUserRowid = 5;
 }
 
+message SetBackendServicesRequest {
+  repeated BusinessModel businesses = 1;
+  string currentUserToken = 2;
+   google.protobuf.Int32Value currentUserRowid = 3;
+}
+
+message SetBackendServicesResponse {
+  repeated OperationError errors = 1;
+}

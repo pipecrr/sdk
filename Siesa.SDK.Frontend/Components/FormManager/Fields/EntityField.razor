@@ -8,6 +8,10 @@
 @using DevExtreme.AspNet.Data.ResponseModel
 @using System.Linq;
 @using Microsoft.Extensions.DependencyInjection
+@using Shared.Services
+@using Siesa.SDK.Shared.Utilities
+@inject IBackendRouterService BackendRouterService
+
 @if (!FieldOpt.Hidden)
 {
     @FieldTemplate
@@ -103,14 +107,13 @@
 
             return _fieldValidationTemplate != null ? _fieldValidationTemplate : builder =>
             {
-                BusinessFrontendModel relBusinessModel;
-                BusinessManagerFrontend.Instance.Businesses.TryGetValue(FieldOpt.RelatedBusiness, out relBusinessModel);
+                SDKBusinessModel relBusinessModel = BackendRouterService.GetSDKBusinessModel(FieldOpt.RelatedBusiness, null);
                 if (relBusinessModel == null)
                 {
                     throw new Exception("Business not found");
                 }
 
-                var relBusinessType = Utils.Utils.SearchType(relBusinessModel.Namespace + "." + relBusinessModel.Name); 
+                var relBusinessType = Utilities.SearchType(relBusinessModel.Namespace + "." + relBusinessModel.Name); 
                 RelBusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider, relBusinessType);
                 RelBusinessObj.BusinessName = FieldOpt.RelatedBusiness;
                 var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
