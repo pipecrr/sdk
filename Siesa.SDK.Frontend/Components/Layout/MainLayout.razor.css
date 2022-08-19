@@ -29,14 +29,14 @@
     }
 }
 
-.whcm_panel{
+::deep .whcm_panel{
     background: var(--color_light);
     box-shadow: var(--shadow_standar);
     border-radius: var(--border_radius_standar);
     border: none;
 }
 
-.whcm_panel_glass{
+::deep .whcm_panel_glass{
     background: rgba(255, 255, 255, 0.7);
     border-radius: var(--border_radius_standar);
     box-shadow: var(--shadow_standar_min);
@@ -61,7 +61,7 @@
         padding-left: 64px;
         transition: .25s;
     }
-    .whcm_panel > h3, .area2 h3{
+    ::deep .whcm_panel > h3, .area2 h3{
         font-size: 1.5rem;
     }
 }

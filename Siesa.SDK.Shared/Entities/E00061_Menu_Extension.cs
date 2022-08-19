@@ -22,15 +22,22 @@ namespace Siesa.SDK.Entities
         [NotMapped]
         public virtual string CurrentURL { get{
             var url = "";
-            if (!string.IsNullOrEmpty(this.Url)) {
-                url = this.Url;
+
+            if(SubMenus != null && SubMenus.Count > 0)
+            {
+                url = $"/Menu/{Rowid}/";
             }else{
-                if(this.Feature != null){
-                    url = $"/{this.Feature.BusinessName}/";
+                if (!string.IsNullOrEmpty(this.Url)) {
+                    url = this.Url;
                 }else{
-                    url = "/";
+                    if(this.Feature != null){
+                        url = $"/{this.Feature.BusinessName}/";
+                    }else{
+                        url = "/";
+                    }
                 }
             }
+
             return url;
         } }
 

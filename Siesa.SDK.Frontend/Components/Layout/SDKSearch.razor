@@ -1,5 +1,8 @@
+@implements IDisposable
 @using Siesa.SDK.Entities
 @inject UtilsManager UtilManager
+@using Siesa.SDK.Frontend.Services
+@inject MenuService MenuService
 <div class="sdk_search" @onclick="()=>ShowSearch()">
     <input autocomplete="off" type="search" class="form-control form-control-sm pr-4" id="busqueda" placeholder="@placeholder"
         @bind-value:event="onchange" @oninput="@((ChangeEventArgs __e) => OnChangeSearch(__e?.Value?.ToString()))"
@@ -29,14 +32,13 @@
 }
 
 @code{
-    [Parameter]
-    public List<E00061_Menu> Menus { get; set; }
     private string searchString = "";
     private bool SearchEnabled = false;
 
     private string placeholder = "";
 
     protected override async Task OnInitializedAsync(){
+        MenuService.MenuLoaded += OnMenuLoaded;
         placeholder = await UtilManager.GetResource("Action.Search");
     }
 
@@ -93,9 +95,23 @@
 
         if (!String.IsNullOrEmpty(searchString))
         {
-            SearchInMenu(searchString, Menus, ref result);
+            SearchInMenu(searchString, MenuService.Menus, ref result);
         }
 
         LastSearch = result;
+    }
+
+    private void OnMenuLoaded(object sender, EventArgs e)
+    {
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+
+        if (MenuService != null)
+        {
+            MenuService.MenuLoaded -= OnMenuLoaded;
+        }
     }
 }

@@ -48,6 +48,7 @@ namespace Siesa.SDK.Frontend.Services
                 if(backPageUrl != currentPageUrl){
                     _history.RemoveRange(_history.Count - i, i);
                     _navigationManager.NavigateTo(backPageUrl);
+                    break;
                 }                
             }
         }

@@ -14,7 +14,7 @@
         <img class="whcm_logo_compania" src="_content/Siesa.SDK.Frontend/assets/img/logo_empresa.png" height="30px" alt="Logo compania">
     </div>
     <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-0 p-0 d-none d-sm-block">
-        <SDKSearch Menus="@Menus"></SDKSearch>       
+        <SDKSearch />      
     </div>
     <div class="col-xl-5 col-lg-6 col-md-6 col-sm-4 col-7 p-0 d-flex justify-content-end align-items-center info_head">
         <div class="sdk_conection">
@@ -94,9 +94,6 @@
 </header>
 
 @code {
-
-    [Parameter]
-    public List<E00061_Menu> Menus { get; set; }
 
     private bool ConnectEnabled = false;
 
