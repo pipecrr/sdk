@@ -1,0 +1,184 @@
+@implements IDisposable
+@page "/Menu/{RowidMenu}/"
+@attribute [Authorize]
+@using Microsoft.AspNetCore.Authorization
+@using Siesa.SDK.Frontend.Application
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Services
+@using Siesa.SDK.Entities
+@using System.Linq
+@inject MenuService MenuService
+@inject NavigationService navigationService
+@inject NavigationManager NavigationManager
+
+@if(Menu != null)
+{
+    <PageTitle>
+        @if(string.IsNullOrEmpty(Menu.CurrentText))
+        {
+        <ResourceViewer RowidResource="@Menu.RowidResource" />
+        }else{
+            @Menu.CurrentText
+        }
+    </PageTitle>
+    <div class="col-12 whcm_panel py-2 mb-3">
+        <div class="row justify-content-between">
+            <div class="col-md-8 py-2 whcm_toolbar_text d-flex align-items-center">
+                @if (navigationService.CanNavigateBack)
+                {
+                    <button class="btn btn-sm layout_btn_standar-sm mr-3" data-toggle="tooltip"
+                        data-placement="top" title="Atras" @onclick="@OnClick" >
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                }
+                <h3 class="mb-0">
+                    @if(string.IsNullOrEmpty(Menu.CurrentText))
+                    {
+                        <ResourceViewer RowidResource="@Menu.RowidResource" />
+                    }else{
+                        @Menu.CurrentText
+                    }
+                </h3>
+            </div> 
+            <div class="col-md-4 py-2 input-group input-group-sm d-flex align-items-center">
+                <input type="search" class="form-control" placeholder="Búsqueda" @bind="SearchString" @bind:event="oninput" />
+                <div class="input-group-append">
+                    <span class="input-group-text">&nbsp;
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </span>
+                    </div>
+            </div>    
+        </div>
+    </div>
+    <div class="col-12 p-0">
+        <div class="row">
+            @if(Menu.SubMenus != null && Menu.SubMenus.Count > 0){
+                @foreach(var submenu in GetSubMenuItems())
+                {
+                    <div class="col-12 col-sm-6 col-md-4 py-3">
+                        <button @onclick="@(()=>OnClickItem(submenu))" class="whcm_panel_button w-100 p-3 font-weight-bold text-truncate">
+                            @if(string.IsNullOrEmpty(submenu.CurrentText))
+                            {
+                                <ResourceViewer RowidResource="@submenu.RowidResource" />
+                            }else{
+                                @submenu.CurrentText
+                            }
+                        </button>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
+}
+
+
+@code {
+    [Parameter]
+    public string RowidMenu { get; set; }
+
+    [CascadingParameter]
+    public MainLayout? MainLayout { get; set; }
+
+    private string SearchString { get; set; }
+
+    protected override void OnInitialized()
+    {
+        MenuService.MenuLoaded += OnMenuLoaded;
+        Init();
+        base.OnInitialized();
+    }
+
+    private void OnMenuLoaded(object sender, EventArgs e)
+    {
+        Init();
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        MainLayout?.SetDefaultArea(true);
+        if (MenuService != null)
+        {
+            MenuService.MenuLoaded -= OnMenuLoaded;
+        }
+    }
+
+    private E00061_Menu Menu { get; set; }
+
+    private void Init()
+    {
+        MainLayout?.SetDefaultArea(false);
+        //search menu by rowid, recursively
+        Menu = SearchMenu(Convert.ToInt32(RowidMenu), MenuService.Menus);
+    }
+
+    private E00061_Menu SearchMenu(int rowid, ICollection<E00061_Menu> menus)
+    {
+        if(menus == null)
+        {
+            return null;
+        }
+        foreach (var menu in menus)
+        {
+            if (menu.Rowid == rowid)
+            {
+                return menu;
+            }
+            else
+            {
+                var found = SearchMenu(rowid, menu.SubMenus);
+                if (found != null)
+                {
+                    return found;
+                }
+            }
+        }
+        return null;
+    }
+
+    private async Task OnClick(MouseEventArgs e)
+    {
+        try
+        {   
+            navigationService.NavigateBack();
+            //JSRuntime.InvokeAsync<object>("window.history.go", -1);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+       
+    }
+
+    private async Task OnClickItem(E00061_Menu item)
+    {
+        NavigationManager.NavigateTo(item.CurrentURL);
+    }
+
+    protected override void OnParametersSet()
+    {
+        Init();
+        base.OnParametersSet();
+    }
+
+    private IEnumerable<E00061_Menu> GetSubMenuItems()
+    {
+        if (Menu == null || Menu.SubMenus == null)
+        {
+            return new List<E00061_Menu>();
+        }
+        return Menu.SubMenus.Where(x => {
+            if (string.IsNullOrEmpty(SearchString))
+            {
+                return true;
+            }else if(string.IsNullOrEmpty(x.CurrentText))
+            {
+                return false;
+            } else
+            {
+                return x.CurrentText.ToLower().Contains(SearchString.ToLower());
+            }
+        });
+    }
+}

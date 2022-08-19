@@ -148,6 +148,7 @@ namespace Siesa.SDK.Frontend.Services
                     await GetMenuResources(menuItem.SubMenus);
                 }
             }
+            NotifyMenuLoaded();
         }
 
         protected void NotifyMenuLoaded()

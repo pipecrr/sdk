@@ -5,46 +5,46 @@
 @using Siesa.SDK.Frontend.Services
 @inject MenuService MenuService
 
-@if(LayoutService != null && LayoutService.TopBarSetter != null)
-{
-    <div class="col-12 area1 pb-3 px-0">
-        <nav class="" aria-label="breadcrumb">
-            @if(breadcrumb != null && breadcrumb.Count > 0)
-            {
-                <ol class="breadcrumb p-0">
-                    @for(var i = 0; i < breadcrumb.Count; i++)
-                    {
-                        <li class="breadcrumb-item @GetCssBreadCrumItem(i)">
-                            @if(i == breadcrumb.Count - 1)
-                            {
-                                @if(string.IsNullOrEmpty(breadcrumb[i].CurrentText))
-                                {
-                                    <span><ResourceViewer RowidResource="@(breadcrumb[i].RowidResource)" /></span>
-                                }else{
-                                    <span>@(breadcrumb[i].CurrentText)</span>
-                                }
-                            }
-                            else
-                            {
-                                @if(string.IsNullOrEmpty(breadcrumb[i].CurrentText))
-                                {
-                                    <a href="@(breadcrumb[i].CurrentURL)"><ResourceViewer RowidResource="@(breadcrumb[i].RowidResource)" /></a>
-                                }else{
-                                    <a href="@(breadcrumb[i].CurrentURL)">@(breadcrumb[i].CurrentText)</a>
-                                }
-                            }
-                        </li>
-                    }
-                </ol>
-            }
-        </nav>
-        <nav class="pt-3 pt-sm-0" aria-label="breadcrumb">
+
+<div class="col-12 area1 pb-3 px-0">
+    <nav class="" aria-label="breadcrumb">
+        @if(breadcrumb != null && breadcrumb.Count > 0)
+        {
             <ol class="breadcrumb p-0">
-                <li class="@("bullet-breadcrumb " + LayoutService.StyleName)"></li>
-                @if(LayoutService.StyleName == "toolbar_edition")
+                @for(var i = 0; i < breadcrumb.Count; i++)
+                {
+                    <li class="breadcrumb-item @GetCssBreadCrumItem(i)">
+                        @if(i == breadcrumb.Count - 1)
+                        {
+                            @if(string.IsNullOrEmpty(breadcrumb[i].CurrentText))
+                            {
+                                <span><ResourceViewer RowidResource="@(breadcrumb[i].RowidResource)" /></span>
+                            }else{
+                                <span>@(breadcrumb[i].CurrentText)</span>
+                            }
+                        }
+                        else
+                        {
+                            @if(string.IsNullOrEmpty(breadcrumb[i].CurrentText))
+                            {
+                                <a href="@(breadcrumb[i].CurrentURL)"><ResourceViewer RowidResource="@(breadcrumb[i].RowidResource)" /></a>
+                            }else{
+                                <a href="@(breadcrumb[i].CurrentURL)">@(breadcrumb[i].CurrentText)</a>
+                            }
+                        }
+                    </li>
+                }
+            </ol>
+        }
+    </nav>
+    <nav class="pt-3 pt-sm-0" aria-label="breadcrumb">
+        @if(LayoutService != null && LayoutService?.StyleName != null){
+            <ol class="breadcrumb p-0">
+                <li class="@("bullet-breadcrumb " + LayoutService?.StyleName)"></li>
+                @if(LayoutService?.StyleName == "toolbar_edition")
                 {
                     <li class="estado">En edición</li>
-                }else if(LayoutService.StyleName == "toolbar_creation")
+                }else if(LayoutService?.StyleName == "toolbar_creation")
                 {
                     <li class="estado">En creación</li>
                 }else {
@@ -52,9 +52,10 @@
                 }
 
             </ol>
-        </nav>
-    </div>
-}
+        }
+    </nav>
+</div>
+
 
 
 @code {

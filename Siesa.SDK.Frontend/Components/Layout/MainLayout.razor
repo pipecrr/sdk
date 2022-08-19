@@ -31,12 +31,19 @@
                                     class="offset-lg-0 col-lg-12 offset-xl-0 col-xl-12 offset-xxl-1 col-xxl-10 px-0 px-md-3">
 
                                     <BreadCrumb />
-                                    <div class="col-12 area2 px-3">
-                                        <TopBar />
-                                        <div class="col-12 px-0 py-3">
+                                    <CascadingValue Value="@this">
+                                        @if(IsDefaultArea)
+                                        {
+                                            <div class="col-12 area2 px-3">
+                                                <TopBar />
+                                                <div class="col-12 px-0 py-3">
+                                                    @Body
+                                                </div>
+                                            </div>
+                                        }else{
                                             @Body
-                                        </div>
-                                    </div>
+                                        }
+                                     </CascadingValue>
                                 </div>
                             </aside>
                             </ChildContent> 
@@ -58,9 +65,22 @@
 
     private ErrorBoundary? errorBoundary;
 
+    [Parameter]
+    public bool IsDefaultArea { get; set; }
+
+    public void SetDefaultArea(bool isDefaultArea)
+    {
+        bool refresh = IsDefaultArea != isDefaultArea;
+        IsDefaultArea = isDefaultArea;
+        if(refresh)
+        {
+            StateHasChanged();
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
+        IsDefaultArea = true;
         base.OnInitializedAsync();
         errorBoundary = new ErrorBoundary();
     }
