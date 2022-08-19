@@ -21,7 +21,7 @@ namespace Siesa.SDK.Frontend.Controllers
     {
         private IServiceProvider ServiceProvider { get; set; }
         private IAuthenticationService AuthenticationService { get; set; }
-        private IBackendRouterService BackendRouterService {get; set;}
+        private IBackendRouterService BackendRouterService { get; set; }
 
         public ApiController(IServiceProvider ServiceProvider, IAuthenticationService AuthenticationService, IBackendRouterService backendRouterService)
         {
@@ -144,12 +144,20 @@ namespace Siesa.SDK.Frontend.Controllers
                                 }
                                 else
                                 {
-                                    if (Request.ContentType == "application/json" && Request.Body.CanRead)
+                                    if (Request.Body.CanRead)
                                     {
-                                        var jsonBody = await new StreamReader(Request.Body).ReadToEndAsync();
-                                        var jsonObj = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonBody);
-                                        IEnumerable<KeyValuePair<string, StringValues>> form = jsonObj.Select(x => new KeyValuePair<string, StringValues>(x.Key, x.Value.ToString()));
-                                        args = GetArgs(parameters, form);
+                                        try
+                                        {
+
+                                            var jsonBody = await new StreamReader(Request.Body).ReadToEndAsync();
+                                            var jsonObj = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonBody);
+                                            IEnumerable<KeyValuePair<string, StringValues>> form = jsonObj.Select(x => new KeyValuePair<string, StringValues>(x.Key, x.Value.ToString()));
+                                            args = GetArgs(parameters, form);
+                                        }
+                                        catch (System.Exception)
+                                        {
+
+                                        }
                                     }
                                 }
                             }

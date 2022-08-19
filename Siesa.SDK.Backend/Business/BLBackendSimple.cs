@@ -33,6 +33,18 @@ namespace Siesa.SDK.Business
         [JsonIgnore]
         protected IAuthenticationService AuthenticationService { get; set; }
 
+        private IServiceProvider _provider;
+        private ILogger _logger;
+        protected ILogger Logger { get { return _logger; } }
+        protected dynamic _dbFactory;
+
+        private SDKContext myContext;
+        protected SDKContext Context { get { return myContext; } }
+
+
+        private IEnumerable<INavigation> _navigationProperties = null;
+
+
         public SDKBusinessModel GetBackend(string business_name){
             return BackendRouterService.Instance.GetSDKBusinessModel(business_name, AuthenticationService);
         }
@@ -72,6 +84,25 @@ namespace Siesa.SDK.Business
         public ValidateAndSaveBusinessObjResponse ValidateAndSave()
         {
             return null;
+        }
+        public void ShareProvider(dynamic bl)
+        {
+            bl.SetProvider(_provider);
+        }
+
+        public void SetProvider(IServiceProvider provider)
+        {
+            _provider = provider;
+
+            _dbFactory = _provider.GetService(typeof(IDbContextFactory<SDKContext>));
+
+            ILoggerFactory loggerFactory = (ILoggerFactory)_provider.GetService(typeof(ILoggerFactory));
+            _logger = loggerFactory.CreateLogger(this.GetType().FullName);
+
+            myContext = _dbFactory.CreateDbContext();
+            myContext.SetProvider(_provider);
+
+            AuthenticationService = (IAuthenticationService)_provider.GetService(typeof(IAuthenticationService));
         }
     }
     public class BLBackendSimple<T, K> : IBLBase<T> where T : class, IBaseSDK where K : BLBaseValidator<T>
