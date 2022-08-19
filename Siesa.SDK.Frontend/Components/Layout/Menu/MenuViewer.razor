@@ -153,6 +153,7 @@
 
     private async Task OnClickItem(E00061_Menu item)
     {
+        SearchString = string.Empty;
         NavigationManager.NavigateTo(item.CurrentURL);
     }
 
