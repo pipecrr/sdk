@@ -114,6 +114,8 @@
                 _parent = _parent.MenuParent;
             }
             breadcrumb.Reverse();
+        }else{
+            breadcrumb.Clear();
         }
         StateHasChanged();
     }
