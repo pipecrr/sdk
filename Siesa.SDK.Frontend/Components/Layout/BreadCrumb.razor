@@ -2,6 +2,8 @@
 @using Siesa.SDK.Entities
 @inject ILayoutService LayoutService
 @inject NavigationManager NavigationManager
+@using Siesa.SDK.Frontend.Services
+@inject MenuService MenuService
 
 @if(LayoutService != null && LayoutService.TopBarSetter != null)
 {
@@ -56,8 +58,6 @@
 
 
 @code {
-    [Parameter]
-    public List<E00061_Menu> Menus { get; set; }
 
     private E00061_Menu _selectedMenu;
     private List<E00061_Menu> breadcrumb = new List<E00061_Menu>();
@@ -66,8 +66,14 @@
     {
         LayoutService.PropertyChanged += LayoutService_PropertyChanged;
         NavigationManager.LocationChanged += OnLocationChanged;
+        MenuService.MenuLoaded += OnMenuLoaded;
         //SetBreadCrum(NavigationManager.Uri);
         base.OnInitialized();
+    }
+
+    private void OnMenuLoaded(object sender, EventArgs e)
+    {
+        StateHasChanged();
     }
 
     private string GetCssBreadCrumItem(int i)
@@ -92,7 +98,7 @@
         //remove the base url from the current url
         currentUrl = currentUrl.Substring(currentUrl.IndexOf("/", currentUrl.IndexOf("//") + 2));
         var result = new List<E00061_Menu>();
-        SearchMenuItem(currentUrl, Menus, ref result);
+        SearchMenuItem(currentUrl, MenuService.Menus, ref result);
 
         //get the result most close to the current url
         _selectedMenu = result.OrderByDescending(x => x.CurrentURL.Length).FirstOrDefault();
@@ -152,6 +158,11 @@
         if (NavigationManager != null)
         {
             NavigationManager.LocationChanged -= OnLocationChanged;
+        }
+
+        if (MenuService != null)
+        {
+            MenuService.MenuLoaded -= OnMenuLoaded;
         }
     }
 
