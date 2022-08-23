@@ -113,15 +113,7 @@ namespace Siesa.SDK.Shared.Services
             {
                 if(this.serviceConfiguration.CurrentUrl == _masterBackendURL)
                 {
-                    if(businessNames != null && businessNames.Count > 0)
-                    {
-                        foreach (var item in businessNames)
-                        {
-                            item.Url = this.serviceConfiguration.CurrentUrl;
-                            this.AddBackend(item.Name, item);
-                        }
-                    }
-                    return this.GetBusinessModelList();
+                    await Task.Delay(5000); //wait for the master backend to be ready
                 }
 
                 using var channel = GrpcChannel.ForAddress(_masterBackendURL);
