@@ -111,6 +111,19 @@ namespace Siesa.SDK.Shared.Services
         {
             try
             {
+                if(this.serviceConfiguration.CurrentUrl == _masterBackendURL)
+                {
+                    if(businessNames != null && businessNames.Count > 0)
+                    {
+                        foreach (var item in businessNames)
+                        {
+                            item.Url = this.serviceConfiguration.CurrentUrl;
+                            this.AddBackend(item.Name, item);
+                        }
+                    }
+                    return this.GetBusinessModelList();
+                }
+
                 using var channel = GrpcChannel.ForAddress(_masterBackendURL);
                 var client = new Protos.GRPCBackendManagerService.GRPCBackendManagerServiceClient(channel);
                 var request = new Protos.RegisterBackendRequest
