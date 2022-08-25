@@ -15,7 +15,7 @@ namespace Siesa.SDK.Shared.DTOS
         public string path { get; set; }
         public string key_name { get; set; }
         public string selected_operator { get; set; }
-        public string equal_from { get; set; }
-        public string equal_to { get; set; }
+        public object equal_from { get; set; }
+        public string to { get; set; }
     }
 }
