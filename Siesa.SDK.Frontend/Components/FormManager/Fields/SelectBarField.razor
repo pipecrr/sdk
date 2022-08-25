@@ -62,7 +62,7 @@
     {
         var resourceBL = BackendRouterService.GetSDKBusinessModel("BLResource", AuthenticationService);
         var request = await resourceBL.Call("GetEnumValues", enumType.Name,
-        Convert.ToInt64(AuthenticationService.User.RowidCulture));
+        Convert.ToInt64(AuthenticationService.GetRoiwdCulture()));
         if (request.Success)
         {
             var enumValues = (Dictionary<byte, string>)request.Data;

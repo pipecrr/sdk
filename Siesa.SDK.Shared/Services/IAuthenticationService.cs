@@ -37,6 +37,8 @@ namespace Siesa.SDK.Shared.Services
         Task Login(string username, string password);
         Task Logout();
         public void SetToken(string token);
+        Task SetCustomRowidCulture(short rowid);
+        short GetRoiwdCulture();
     }
 
     

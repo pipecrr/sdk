@@ -17,6 +17,8 @@ namespace Siesa.SDK.Frontend.Services
         private string _secretKey;
         private int _minutesExp;
 
+        private short CustomRowidCulture = 0;
+
         public string UserToken { get; private set; } = "";
 
         private JwtUserData? _user;
@@ -46,6 +48,7 @@ namespace Siesa.SDK.Frontend.Services
         public async Task Initialize()
         {
             UserToken = await _localStorageService.GetItemAsync<string>("usertoken");
+            CustomRowidCulture = await _localStorageService.GetItemAsync<short>("customrowidculture");
             //Console.WriteLine($"UserToken: {UserToken}");
         }
 
@@ -83,6 +86,25 @@ namespace Siesa.SDK.Frontend.Services
         {
             UserToken = token;
             _localStorageService.SetItemAsync("usertoken", UserToken);
+        }
+
+        public async Task SetCustomRowidCulture(short rowid)
+        {
+            CustomRowidCulture = rowid;
+            await _localStorageService.SetItemAsync("customrowidculture", CustomRowidCulture);
+        }
+
+        public short GetRoiwdCulture()
+        {
+            if(CustomRowidCulture > 0){
+                return CustomRowidCulture;
+            }else{
+                if(User != null){
+                    return User.RowidCulture;
+                }else{
+                    return 0;
+                }
+            }
         }
     }
 }
