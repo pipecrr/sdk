@@ -584,3 +584,6 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
         padding-top: 4rem;
     }
 }
+.dxbs-fl .form-group {
+    margin-bottom: 1rem !important;
+}
