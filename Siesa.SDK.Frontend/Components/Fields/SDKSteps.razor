@@ -1,7 +1,9 @@
 @inject UtilsManager UtilManager
 
-<RadzenSteps SelectedIndex="@SelectedIndex" ShowStepsButtons="@ShowStepsButtons" Change=@SelectedIndexChanged PreviousText="@Previous" NextText="@Next" Steps="@Steps">
-</RadzenSteps>
+<div class="sdk-steps">
+    <RadzenSteps class="@GetCss()" SelectedIndex="@SelectedIndex" ShowStepsButtons="@ShowStepsButtons" Change=@SelectedIndexChanged PreviousText="@Previous" NextText="@Next" Steps="@Steps">
+    </RadzenSteps>
+</div>
 
 @code{
     [Parameter] public string PreviousResourceTag {get; set;} = "SDKSteps.Previous";
@@ -10,6 +12,8 @@
     [Parameter] public bool ShowStepsButtons{get;set;} = true;
     [Parameter] public int SelectedIndex{get; set;}
     [Parameter] public EventCallback<int> SelectedIndexChanged {get;set;}
+
+    [Parameter] public bool ShowStepsNumbers {get; set;} = true;
 
     private string Previous {get; set;} 
     private string Next {get; set;}
@@ -21,6 +25,14 @@
         Next = await UtilManager.GetResource(NextResourceTag);
     }
 
+    private string GetCss(){
+        if(ShowStepsNumbers){
+            return "";
+        }
+        else{
+            return "sdk-steps-no-numbers";
+        }
+    }
 
     
 }
