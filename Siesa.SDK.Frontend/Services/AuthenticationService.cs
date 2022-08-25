@@ -19,24 +19,33 @@ namespace Siesa.SDK.Frontend.Services
 
         private short CustomRowidCulture = 0;
 
+        private short RowIdCompanyGroup = 0;
+
         public string UserToken { get; private set; } = "";
 
         private JwtUserData? _user;
-        public JwtUserData User { get {
-            if(UserToken == ""){
-                return null;
+        public JwtUserData User
+        {
+            get
+            {
+                if (UserToken == "")
+                {
+                    return null;
+                }
+                if (_user == null)
+                {
+                    _user = new SDKJWT(_secretKey, _minutesExp).Validate(UserToken);
+                }
+                return _user;
             }
-            if(_user == null){
-                _user = new SDKJWT(_secretKey, _minutesExp).Validate(UserToken);
-            }
-            return _user;
-        }}
+        }
 
         public AuthenticationService(
             NavigationManager navigationManager,
             ILocalStorageService localStorageService,
             IBackendRouterService BackendRouterService
-        ) {
+        )
+        {
             _navigationManager = navigationManager;
             _localStorageService = localStorageService;
             _backendRouterService = BackendRouterService;
@@ -49,13 +58,14 @@ namespace Siesa.SDK.Frontend.Services
         {
             UserToken = await _localStorageService.GetItemAsync<string>("usertoken");
             CustomRowidCulture = await _localStorageService.GetItemAsync<short>("customrowidculture");
+            RowIdCompanyGroup = await _localStorageService.GetItemAsync<short>("rowidcompanygroup");
             //Console.WriteLine($"UserToken: {UserToken}");
         }
 
         public async Task Login(string username, string password)
         {
-            var BLuser =  _backendRouterService.GetSDKBusinessModel("BLUser", this);
-            if(BLuser == null)
+            var BLuser = _backendRouterService.GetSDKBusinessModel("BLUser", this);
+            if (BLuser == null)
             {
                 throw new Exception("Login Service not found");
             }
@@ -64,11 +74,15 @@ namespace Siesa.SDK.Frontend.Services
             {
                 UserToken = loginRequest.Data;
                 await _localStorageService.SetItemAsync("usertoken", UserToken);
-            }else{
-                if(loginRequest.Errors != null && loginRequest.Errors.Count > 0)
+            }
+            else
+            {
+                if (loginRequest.Errors != null && loginRequest.Errors.Count > 0)
                 {
                     throw new Exception(loginRequest.Errors.FirstOrDefault());
-                }else{
+                }
+                else
+                {
                     throw new Exception("Login failed");
                 }
             }
@@ -94,14 +108,31 @@ namespace Siesa.SDK.Frontend.Services
             await _localStorageService.SetItemAsync("customrowidculture", CustomRowidCulture);
         }
 
+        public async Task SetRowidGroupCompany(short rowid)
+        {
+            RowIdCompanyGroup = rowid;
+            await _localStorageService.SetItemAsync("rowidcompanygroup", RowIdCompanyGroup);
+        }
+
+        public short GetRowidGroupCompany()
+        {
+            return RowIdCompanyGroup;
+        }
+
         public short GetRoiwdCulture()
         {
-            if(CustomRowidCulture > 0){
+            if (CustomRowidCulture > 0)
+            {
                 return CustomRowidCulture;
-            }else{
-                if(User != null){
+            }
+            else
+            {
+                if (User != null)
+                {
                     return User.RowidCulture;
-                }else{
+                }
+                else
+                {
                     return 0;
                 }
             }

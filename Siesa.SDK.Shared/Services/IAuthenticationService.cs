@@ -39,6 +39,10 @@ namespace Siesa.SDK.Shared.Services
         public void SetToken(string token);
         Task SetCustomRowidCulture(short rowid);
         short GetRoiwdCulture();
+        Task SetRowidGroupCompany(short rowid);
+
+        short GetRowidGroupCompany();
+
     }
 
     
