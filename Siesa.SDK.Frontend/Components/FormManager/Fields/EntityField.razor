@@ -1,5 +1,5 @@
 ﻿@inherits FieldClass<dynamic>
-
+@using System
 @using System.Linq.Expressions;
 @using System.Reflection;
 @using System.Threading;
@@ -25,8 +25,16 @@
     [Inject] private IServiceProvider ServiceProvider {get; set;}     
 
     private LoadResult CacheLoadResult;
+    private string LastSearchString;
+    private int MinMillisecondsBetweenSearch = 100;
+    private CancellationTokenSource cancellationTokenSource;
+
 
     public dynamic RelBusinessObj { get; set; }
+
+    protected override async Task OnInitializedAsync() {
+        await base.OnInitializedAsync();
+    }
 
 
 
@@ -35,12 +43,20 @@
         field.SetValue(value);
     }
 
-    protected async Task<LoadResult> LoadCustomData(DataSourceLoadOptionsBase options, CancellationToken cancellationToken) {
-        string tableOptions = options.ConvertToGetRequestUri("/");
-        var searchText = "";
-        if (options.Filter != null) {
-            searchText = Convert.ToString(((List<object>)options.Filter[0])[2]);
+    private async Task<LoadResult> LoadData(string searchText, CancellationToken cancellationToken)
+    {
+        if(cancellationToken.IsCancellationRequested)
+        {
+            return CacheLoadResult;
         }
+
+        if(LastSearchString != searchText) {
+            LastSearchString = searchText;
+            CacheLoadResult = null;
+        }else{
+            return CacheLoadResult;
+        }
+        await Task.Delay(MinMillisecondsBetweenSearch, cancellationToken);
         
         //check length of search text
         if(searchText.Length > 2 || CacheLoadResult == null) {
@@ -97,7 +113,44 @@
         }else{
             return CacheLoadResult;
         }
+    }
+    protected async Task<LoadResult> LoadCustomData(DataSourceLoadOptionsBase options, CancellationToken cancellationToken) {
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return null;    
+        }
         
+        try
+        {
+            string tableOptions = options.ConvertToGetRequestUri("/");
+            if(cancellationTokenSource != null && 
+            !cancellationTokenSource.IsCancellationRequested)
+            {
+                cancellationTokenSource.Cancel();
+                cancellationTokenSource?.Dispose();
+            }
+            cancellationTokenSource = new CancellationTokenSource();
+            var searchText = "";
+            if (options.Filter != null) {
+                searchText = Convert.ToString(((List<object>)options.Filter[0])[2]);
+                //trim whitespace
+                searchText = searchText.Trim();
+            }
+
+            return await LoadData(searchText, cancellationTokenSource.Token);
+        }catch(Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+       finally
+        {
+            if (cancellationTokenSource != null)
+            {
+                cancellationTokenSource.Dispose();
+                cancellationTokenSource = null;
+            }
+        }
+        return CacheLoadResult;
     }
 
     public RenderFragment? FieldTemplate
@@ -119,7 +172,7 @@
                 var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
                 var lambda = Expression.Lambda(typeof(Func<>).MakeGenericType(BindProperty.PropertyType), access);
 
-                Type dxType = typeof(DxComboBox<,>).MakeGenericType(BindProperty.PropertyType, BindProperty.PropertyType);
+                
 
                 var dxEventCallbackMethod = typeof(EventCallbackFactory).GetMethods()[8]; //TODO: traer por medio de la firma {Microsoft.AspNetCore.Components.EventCallback`1[TValue] Create[TValue](System.Object, System.Action`1[TValue])}
                 var dxEventCallback = dxEventCallbackMethod.MakeGenericMethod(BindProperty.PropertyType);
@@ -148,9 +201,8 @@
                 {
                     ((dynamic)dataList).Add(dxValue);
                 }*/
-               
-
-
+                Type dxType = typeof(DxComboBox<,>).MakeGenericType(BindProperty.PropertyType, BindProperty.PropertyType);
+                
                 builder.OpenComponent(0, dxType);
                 builder.AddAttribute(1, "ValueExpression", lambda);
                 builder.AddAttribute(2, "Value", (object)dxValue);
