@@ -12,9 +12,9 @@ namespace Siesa.SDK.Frontend.Services
         {
             UtilsManager = utilsManager;
         }
-        public async Task ShowError(string message, string titleResourceTag = "Notification.Error", int duration = 2000)
+        public async Task ShowError(string message, string titleResourceTag = "Notification.Error", int duration = 5000)
         {
-            string text = await UtilsManager.GetResource(titleResourceTag);
+            string text = "";
 
             base.Notify(new SDKNotificationMessage
             {
@@ -24,9 +24,9 @@ namespace Siesa.SDK.Frontend.Services
                 Duration = duration
             });
         }
-        public async Task ShowSuccess(string message, string titleResourceTag = "Notification.Success", int duration = 2000)
+        public async Task ShowSuccess(string message, string titleResourceTag = "Notification.Success", int duration = 5000)
         {
-            string text = await UtilsManager.GetResource(titleResourceTag);
+            string text = "";
             base.Notify(new SDKNotificationMessage
             {
                 Severity = SDKEnums.GetNotification(SDKNotificationSeverity.Success),
@@ -36,9 +36,9 @@ namespace Siesa.SDK.Frontend.Services
             });
         }
 
-        public async Task ShowInfo(string message, string titleResourceTag = "Notification.Info", int duration = 2000)
+        public async Task ShowInfo(string message, string titleResourceTag = "Notification.Info", int duration = 5000)
         {
-            string text = await UtilsManager.GetResource(titleResourceTag);
+            string text = "";
             base.Notify(new SDKNotificationMessage
             {
                 Severity = SDKEnums.GetNotification(SDKNotificationSeverity.Info),
@@ -48,9 +48,9 @@ namespace Siesa.SDK.Frontend.Services
             });
         }
 
-        public async Task ShowWarning(string message, string titleResourceTag = "Notification.Warning", int duration = 2000)
+        public async Task ShowWarning(string message, string titleResourceTag = "Notification.Warning", int duration = 5000)
         {
-            string text = await UtilsManager.GetResource(titleResourceTag);
+            string text = "";
             base.Notify(new SDKNotificationMessage
             {
                 Severity = SDKEnums.GetNotification(SDKNotificationSeverity.Warning),
@@ -60,9 +60,9 @@ namespace Siesa.SDK.Frontend.Services
             });
         }
 
-        public async Task Notify(SDKNotificationSeverity type, string message, string titleResourceTag, int duration = 2000)
+        public async Task Notify(SDKNotificationSeverity type, string message, string titleResourceTag, int duration = 5000)
         {
-            string text = await UtilsManager.GetResource(titleResourceTag);
+            string text = "";
             base.Notify(new SDKNotificationMessage
             {
                 Severity = SDKEnums.GetNotification(type),
