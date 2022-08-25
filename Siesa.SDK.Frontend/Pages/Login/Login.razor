@@ -188,7 +188,7 @@
     PreventCloseOnPositionTargetClick="true" Id="boxRegion" CssClass="region_tooltip" MinWidth="230px" MaxWidth="250px" HeaderVisible="false"
     FooterVisible="false">
     <BodyTemplate>
-        <Lang _Cultures="@cultures" _idRow="@RowidCulture" OnChangeCulture=@OnChangeCulture />
+        <Lang _Cultures="@cultures" _idRow="@RowidCulture" OnChangeCulture="@((rowid)=> OnChangeCulture(rowid))" />
     </BodyTemplate>
 </DxDropDown>
 
@@ -230,13 +230,14 @@
 
     }
 
-    private async void OnChangeCulture(short rowidCulture)
+    private async Task OnChangeCulture(short rowidCulture)
     {
         RowidCulture = rowidCulture;
         IsOpen = false;
         getSelectedCulture();
+        await AuthenticationService.SetCustomRowidCulture(rowidCulture);
         StateHasChanged();
-        await localStorageService.SetItemAsync("userlang", RowidCulture.ToString());
+        //await localStorageService.SetItemAsync("userlang", RowidCulture.ToString());
     }
 
     private async void HandleValidSubmit()
@@ -300,10 +301,10 @@
 
     private async Task getUserlang()
     {
-        string userlang;
+        short userlang;
         try
         {
-            userlang = await localStorageService.GetItemAsync<string>("userlang");
+            userlang = AuthenticationService.GetRoiwdCulture();
         }
         catch (Exception ex)
         {
@@ -316,7 +317,7 @@
 
         }
 
-        if (userlang == null)
+        if (userlang == 0)
             {
                 var BrowserLang = await JSRuntime.InvokeAsync<string>("getBrowserLang");
                 string[] language = BrowserLang.Split('-');
@@ -324,7 +325,7 @@
             }
             else
             {
-                selectedCulture = cultures.FirstOrDefault(x => x.Rowid == short.Parse(userlang));
+                selectedCulture = cultures.FirstOrDefault(x => x.Rowid == userlang);
             }
 
             if (selectedCulture == null){

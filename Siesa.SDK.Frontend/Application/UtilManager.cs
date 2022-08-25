@@ -19,7 +19,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
 
         public async Task<string> GetResource(Int64 resourceRowid){
             if(AuthenticationService.User != null){
-                Int64 cultureRowid = AuthenticationService.User.RowidCulture;
+                Int64 cultureRowid = AuthenticationService.GetRoiwdCulture();
                 return await ResourceManager.GetResource(resourceRowid, cultureRowid);
             }
             return "";
@@ -27,7 +27,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
 
         public async Task<string> GetResource(string resourceTag){
             if(AuthenticationService.User != null){
-                Int64 cultureRowid = AuthenticationService.User.RowidCulture;
+                Int64 cultureRowid = AuthenticationService.GetRoiwdCulture();
                 return await ResourceManager.GetResource(resourceTag, cultureRowid);
             }
             return resourceTag;
