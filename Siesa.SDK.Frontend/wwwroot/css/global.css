@@ -1,4 +1,4 @@
-﻿:root {
+:root {
     --color_back_body: #F0F3F4;
 
     --color_primary: #001AAE;
@@ -584,6 +584,10 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
         padding-top: 4rem;
     }
 }
+.dxbs-fl .form-group {
+    margin-bottom: 1rem !important;
+}
+
 @keyframes alert_show{
     0%{
         opacity: 0;
