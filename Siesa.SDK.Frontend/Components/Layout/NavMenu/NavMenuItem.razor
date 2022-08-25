@@ -16,7 +16,7 @@
         }
         </Items>
     </DxMenuItem>        *@
-    <a href="#" @ref="btnRef" @onclick:stopPropagation="true" @onclick="()=> OnClick(MenuItem)"  @onclick:preventDefault class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
+    <a href="#" @ref="btnRef" @attributes="@menuItemAttributes" @onclick:stopPropagation="true" @onclick="()=> OnClick(MenuItem)"  @onclick:preventDefault class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
         title="@Title">
         @if(MenuItem.IconClass != null){
             <div class="nav_btn_standar_icon">
@@ -40,7 +40,7 @@
         {
             @if(Utilities.CheckUserActionPermission(MenuItem.Feature.Rowid, 4, AuthenticationService))
             {
-                <a href="@MenuItem.CurrentURL" @onmouseover="MouseOver" @onmouseout="MouseOut" @onclick:stopPropagation="true" @onclick="()=> OnClickItem(MenuItem)"  @onclick:preventDefault  class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
+                <a href="@MenuItem.CurrentURL" @attributes="@menuItemAttributes" @onmouseover="MouseOver" @onmouseout="MouseOut" @onclick:stopPropagation="true" @onclick="()=> OnClickItem(MenuItem)"  @onclick:preventDefault  class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
                     title="@Title">
                     @if(MenuItem.IconClass != null){
                         <div class="nav_btn_standar_icon">
@@ -56,7 +56,7 @@
             }
 
         }else{
-            <a href="@MenuItem.CurrentURL" @onmouseover="MouseOver" @onmouseout="MouseOut" @onclick:stopPropagation="true" @onclick="()=> OnClickItem(MenuItem)"  @onclick:preventDefault class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
+            <a href="@MenuItem.CurrentURL" @attributes="@menuItemAttributes" @onmouseover="MouseOver" @onmouseout="MouseOut" @onclick:stopPropagation="true" @onclick="()=> OnClickItem(MenuItem)"  @onclick:preventDefault class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
                 title="@Title">
                 @if(MenuItem.IconClass != null){
                     <div class="nav_btn_standar_icon">
@@ -86,6 +86,8 @@
 
     private bool ShowIconExternal { get; set; }
 
+    private Dictionary<string, object> menuItemAttributes { get; set; } = new Dictionary<string, object>();
+
     private async Task<string> GetTitle(){
         if((MenuItem.RowidResource == null || MenuItem.RowidResource == 0) && MenuItem.ResourceTag != null){
             return await ResourceManager.GetResource(MenuItem.ResourceTag, AuthenticationService);
@@ -94,6 +96,14 @@
     }
 
     protected override async Task OnInitializedAsync(){
+        if(MenuItem.ResourceTag != null){
+            menuItemAttributes.Add("sdk-resource-id", MenuItem.ResourceTag);
+        }
+
+        if(MenuItem.RowidResource != null && MenuItem.RowidResource != 0){
+            menuItemAttributes.Add("sdk-resource-rowid", MenuItem.RowidResource);
+        }
+
         if(String.IsNullOrEmpty(MenuItem.CurrentText))
         {
             Title = MenuItem.ResourceTag;
