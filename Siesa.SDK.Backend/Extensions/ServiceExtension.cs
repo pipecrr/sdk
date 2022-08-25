@@ -18,6 +18,7 @@ namespace Siesa.SDK.Backend.Extensions
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IFeaturePermissionService, FeaturePermissionService>();
             services.AddSingleton<IBackendRouterService, BackendRouterService>();
+            services.AddScoped<EmailService>();
 
             services.AddScoped<ISDKJWT, Siesa.SDK.Backend.Criptography.SDKJWT>();
         }
