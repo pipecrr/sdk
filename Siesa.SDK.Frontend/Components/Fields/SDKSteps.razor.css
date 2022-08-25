@@ -1,0 +1,7 @@
+.sdk-steps ::deep .rz-steps.sdk-steps-no-numbers .rz-steps-number {
+    display: none;
+}
+
+.sdk-steps ::deep .rz-steps.sdk-steps-no-numbers .rz-steps-number.sdk-steps-icon {
+    display: unset;
+}
