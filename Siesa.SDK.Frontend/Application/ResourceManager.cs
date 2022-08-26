@@ -44,6 +44,7 @@ namespace Siesa.SDK.Frontend.Application
             catch (System.Exception)
             {
                 Console.WriteLine("no se pudo obtener la cultura por defecto");
+                IsInitialized = true;
             }
         }
 
