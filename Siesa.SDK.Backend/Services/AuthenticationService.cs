@@ -30,7 +30,7 @@ namespace Siesa.SDK.Backend.Services
             return _user;
         }}
 
-        public void SetToken(string token)
+        public async Task SetToken(string token)
         {
             UserToken = token;
         }

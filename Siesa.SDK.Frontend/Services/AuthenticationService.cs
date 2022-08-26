@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Siesa.SDK.Shared.Services;
 
+
 namespace Siesa.SDK.Frontend.Services
 {
     public class AuthenticationService : IAuthenticationService
@@ -19,7 +20,7 @@ namespace Siesa.SDK.Frontend.Services
 
         private short CustomRowidCulture = 0;
 
-        private short RowIdCompanyGroup = 0;
+
 
         public string UserToken { get; private set; } = "";
 
@@ -58,7 +59,6 @@ namespace Siesa.SDK.Frontend.Services
         {
             UserToken = await _localStorageService.GetItemAsync<string>("usertoken");
             CustomRowidCulture = await _localStorageService.GetItemAsync<short>("customrowidculture");
-            RowIdCompanyGroup = await _localStorageService.GetItemAsync<short>("rowidcompanygroup");
             //Console.WriteLine($"UserToken: {UserToken}");
         }
 
@@ -92,17 +92,14 @@ namespace Siesa.SDK.Frontend.Services
         {
             UserToken = "";
             _user = null;
-            RowIdCompanyGroup = 0;
-
             await _localStorageService.RemoveItemAsync("usertoken");
-            await _localStorageService.RemoveItemAsync("rowidcompanygroup");
             _navigationManager.NavigateTo("login");
         }
 
-        public void SetToken(string token)
+        public async Task SetToken(string token)
         {
             UserToken = token;
-            _localStorageService.SetItemAsync("usertoken", UserToken);
+            await _localStorageService.SetItemAsync("usertoken", UserToken);
         }
 
         public async Task SetCustomRowidCulture(short rowid)
@@ -113,13 +110,28 @@ namespace Siesa.SDK.Frontend.Services
 
         public async Task SetRowidGroupCompany(short rowid)
         {
-            RowIdCompanyGroup = rowid;
-            await _localStorageService.SetItemAsync("rowidcompanygroup", RowIdCompanyGroup);
+
+            var BLUser = _backendRouterService.GetSDKBusinessModel("BLUser", this);
+            if (BLUser == null)
+            {
+                throw new Exception("Occurio un error");
+            }
+            var CompanyGroup = await BLUser.Call("ChangeCompanyGroup", rowid);
+
+            if (CompanyGroup.Success)
+            {
+                await this.SetToken(CompanyGroup.Data);
+            }
+
         }
 
         public short GetRowidGroupCompany()
         {
-            return RowIdCompanyGroup;
+            if (this.User == null)
+            {
+             return 0;   
+            }
+            return this.User.RowIdCompanyGroup;
         }
 
         public short GetRoiwdCulture()

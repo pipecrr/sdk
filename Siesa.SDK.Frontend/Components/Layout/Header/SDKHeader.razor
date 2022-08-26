@@ -99,6 +99,9 @@
 
     private E00200_CompanyGroup SelectedGroup { get; set; } = new E00200_CompanyGroup();
 
+     private bool init_loading = true;
+    private bool loading;
+
 
 
     protected override async Task OnInitializedAsync()
@@ -124,16 +127,22 @@
 
     public async  Task SetCompanyGroup()
     {
-
         await AuthenticationService.SetRowidGroupCompany(SelectedGroup.Rowid);
         NavigationService.NavigateTo("/", forceLoad: true,replace: true);
         return;
     }
-
-
     private void ToogleConnect()
     {
         ConnectEnabled = !ConnectEnabled;
+    }
+
+        private string GetCssLoding()
+    {
+        if (!init_loading)
+        {
+            return "login_loading_close";
+        }
+        return "";
     }
 
 }
