@@ -32,7 +32,9 @@
             <div class="position-relative">
                 <button @onclick="()=> ToogleConnect()" class="btn btn_connect py-0 px-2 px-lg-3 d-flex align-items-center">
                     <div>
-                        <p class="font-weight-bold m-0 text-truncate" data-toggle="tooltip" data-placement="bottom" title="">Grupo</p>
+                        <p class="font-weight-bold m-0 text-truncate" data-toggle="tooltip" data-placement="bottom" title="">Grupo
+                            @AuthenticationService.GetRowidGroupCompany()
+                        </p>
                     </div>
                     <div class="pl-2 pl-xl-3">
                         <i class="fa-solid fa-chevron-down"></i>
@@ -95,11 +97,8 @@
 
     private List<E00200_CompanyGroup> CompanyGroups { get; set; }
 
-   private E00200_CompanyGroup SelectedGroup { get; set; } = new E00200_CompanyGroup();
+    private E00200_CompanyGroup SelectedGroup { get; set; } = new E00200_CompanyGroup();
 
-
-
-    //object CompanyGroup = BackendRouterService.GetSDKBusinessModel("BLSDKCompanyGroup",AuthenticationService);
 
 
     protected override async Task OnInitializedAsync()
@@ -116,8 +115,8 @@
         if(SelectedGroup == null)
         {
             SelectedGroup = CompanyGroups.First();
+            AuthenticationService.SetRowidGroupCompany(SelectedGroup.Rowid);
         }
-
 
         base.OnInitializedAsync(); 
 

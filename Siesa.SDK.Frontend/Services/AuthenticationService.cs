@@ -92,7 +92,10 @@ namespace Siesa.SDK.Frontend.Services
         {
             UserToken = "";
             _user = null;
+            RowIdCompanyGroup = 0;
+
             await _localStorageService.RemoveItemAsync("usertoken");
+            await _localStorageService.RemoveItemAsync("rowidcompanygroup");
             _navigationManager.NavigateTo("login");
         }
 
