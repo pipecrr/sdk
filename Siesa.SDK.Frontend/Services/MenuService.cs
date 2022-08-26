@@ -26,12 +26,25 @@ namespace Siesa.SDK.Frontend.Services
         private IAuthenticationService AuthenticationService;
         private UtilsManager UtilsManager { get; set; }
 
+        private bool loading = false;
+
         public MenuService(IBackendRouterService backendRouterService, IAuthenticationService authenticationService, UtilsManager utilsManager)
         {
             BackendRouterService = backendRouterService;
             AuthenticationService = authenticationService;
             UtilsManager = utilsManager;
 
+            _ = Init();
+        }
+
+        private async Task Init()
+        {
+            if(loading)
+            {
+                return;
+            }
+
+            loading = true;
             Menus = new List<E00061_Menu>();
             environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             if (environment == Environments.Development)
@@ -44,9 +57,10 @@ namespace Siesa.SDK.Frontend.Services
                     CurrentText = "DevMenu",
                 });
             }
-
-            _ = LoadMenu();
+            await LoadMenu();
+            loading = false;
         }
+
         public event EventHandler MenuLoaded
         {
             add
@@ -60,6 +74,16 @@ namespace Siesa.SDK.Frontend.Services
         }
 
         private EventHandler? _menuLoaded;
+
+        public async Task ReloadMenu()
+        {
+            await Init();
+        }
+
+        public void ClearMenu()
+        {
+            Menus.Clear();
+        }
 
         public async Task LoadMenu()
         {
