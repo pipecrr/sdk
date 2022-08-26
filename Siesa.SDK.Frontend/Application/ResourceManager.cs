@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Siesa.SDK.Frontend.Services;
 using Siesa.SDK.Shared.Json;
@@ -29,12 +30,64 @@ namespace Siesa.SDK.Frontend.Application
 
         public SDKBusinessModel Backend {get { return BackendRouterService.Instance.GetSDKBusinessModel("BLResource", null); } }
 
-        public ResourceManager()
+        private IConfiguration Configuration;
+
+        private bool IsInitialized = false;
+        public ResourceManager(IConfiguration configuration)
         {
+            Configuration = configuration;
+            try
+            {
+                var cultureRowid = Convert.ToInt64(Configuration["DefaultRowidCulture"]);
+                this.GetAllResources(cultureRowid);
+            }
+            catch (System.Exception)
+            {
+                Console.WriteLine("no se pudo obtener la cultura por defecto");
+            }
+        }
+
+        public async Task GetAllResources(Int64 cultureRowid)
+        {
+            try
+            {
+                var request = await Backend.Call("GetAllResources", cultureRowid);
+                if(request.Success)
+                {
+                    var resources = request.Data as List<Tuple<Int64, string, string>>;
+                    if(resources != null)
+                    {
+                        if (!resourceValuesDict.ContainsKey(cultureRowid))
+                        {
+                            resourceValuesDict[cultureRowid] = new Dictionary<string, string>();
+                        }
+                        foreach (var resource in resources)
+                        {
+                            resourceValuesDict[cultureRowid][resource.Item2] = resource.Item3;
+                            resourceDict[resource.Item1] = resource.Item2;
+                        }
+                    }
+                }
+            }
+            catch (System.Exception)
+            {
+                Console.WriteLine("failed to get all resources");
+            }finally
+            {
+                IsInitialized = true;
+            }
         }
 
         public async Task<string> GetResource(Int64 resourceRowid, Int64 cultureRowid)
         {
+            if(!IsInitialized)
+            {
+                //wait until initialized is true
+                while(!IsInitialized)
+                {
+                    await Task.Delay(100);
+                }
+            }
             //check if cultureRowid is in resourceValuesDict
             if (!resourceValuesDict.ContainsKey(cultureRowid))
             {
@@ -58,6 +111,14 @@ namespace Siesa.SDK.Frontend.Application
         }
         public async Task<string> GetResource(string resourceTag, Int64 cultureRowid)
         {
+            if(!IsInitialized)
+            {
+                //wait until initialized is true
+                while(!IsInitialized)
+                {
+                    await Task.Delay(100);
+                }
+            }
             //check if cultureRowid is in resourceValuesDict
             if (!resourceValuesDict.ContainsKey(cultureRowid))
             {
