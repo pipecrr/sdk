@@ -25,12 +25,15 @@ else if (BusinessObj != null)
                 </CascadingValue>
             </DxFormLayout>
             <ValidationSummary />
-            <label>@((MarkupString)ErrorMsg)</label>
+            @if(!string.IsNullOrEmpty(ErrorMsg))
+            {
+                <label>@((MarkupString)ErrorMsg)</label>
+            }
         </EditForm>
         @if (FormViewModel.Relationships.Count > 0)
         {
             <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
-                <DxFormLayoutTabPages>
+                <DxFormLayoutTabPages ScrollMode="TabsScrollMode.Auto">
                     @foreach (var rel in FormViewModel.Relationships)
                     {
                         <SDKFormLayoutTabPage ResourceTag="@rel.ResourceTag">
@@ -48,18 +51,16 @@ else if (BusinessObj != null)
         <TopBarButtons>
             @foreach (var btn in FormViewModel.Buttons)
             {
-                <SDKButton RenderStyle="@btn.RenderStyle" RenderStyleMode="SDKButtonRenderStyleMode.Text"
-            Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" />
+                <TopBarButton Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" />
             }
-            <SDKButton RenderStyle="SDKButtonRenderStyle.Info" RenderStyleMode="SDKButtonRenderStyleMode.Text"
-                Click="GetFirstRowid" ResourceTag="<<" />
-            <SDKButton RenderStyle="SDKButtonRenderStyle.Info" RenderStyleMode="SDKButtonRenderStyleMode.Text"
-                Click="GetPreviousRowid" ResourceTag="<" />
-            <SDKButton RenderStyle="SDKButtonRenderStyle.Info" RenderStyleMode="SDKButtonRenderStyleMode.Text"
-                Click="GetNextRowid" ResourceTag=">" />
-            <SDKButton RenderStyle="SDKButtonRenderStyle.Info" RenderStyleMode="SDKButtonRenderStyleMode.Text"
-                Click="GetLastRowid" ResourceTag=">>" />
-            
+            <TopBarButton 
+                Click="GetFirstRowid" ResourceTag="Action.First" IconCssClass="fa-solid fa-backward-fast" />
+            <TopBarButton 
+                Click="GetPreviousRowid" ResourceTag="Action.Back" IconCssClass="fa-solid fa-backward"  />
+            <TopBarButton 
+                Click="GetNextRowid" ResourceTag="Action.Next" IconCssClass="fa-solid fa-forward" />
+            <TopBarButton 
+                Click="GetLastRowid" ResourceTag="Action.Last" IconCssClass="fa-solid fa-forward-fast"  />
 
         </TopBarButtons>
     </SetTopBar>

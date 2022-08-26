@@ -1,0 +1,38 @@
+@using Siesa.SDK.Entities;
+
+
+<div class="d-flex flex-fill pt-1 pb-2 popup-demo-item">
+    <DxFormLayout Data="@_Cultures" CssClass="w-100">           
+            
+        <div class="col-12">
+            <label class="pt-3 px-3 pb-0 col-form-label col-form-label-sm font-weight-bold"><ResourceViewer ResourceTag="BLLogin.SelectCulture" RowidCulture=@_idRow /></label>
+            <div class="p-3">
+                @if(_Cultures != null){
+                    @foreach (var culture in _Cultures)
+                    {
+                        <Button class="btn btn_ghost_def_2 btn-sm px-2 mb-1 w-100 d-flex align-items-center" @onclick="((e) => OnChangeCulture(culture.Rowid))" >
+                            <div class="d-flex mr-2 btn_region">
+                                <span class="fi fi-@culture.CountryCode fis"></span>
+                            </div>
+                            <div class="region_tooltip_text">
+                                <span>@culture.Description - @culture.LanguageCode.ToUpper()</span>
+                            </div>                                
+                        </Button>                          
+                    }                
+                }
+            </div>                    
+        </div>                    
+    </DxFormLayout>
+    
+    </div>
+
+@code{
+    [Parameter]
+    public short _idRow {get;set;} 
+    [Parameter]
+    public List<E00021_Culture> _Cultures {get;set;}
+
+    [Parameter]
+    public Action<short> OnChangeCulture {get;set;}
+    
+}

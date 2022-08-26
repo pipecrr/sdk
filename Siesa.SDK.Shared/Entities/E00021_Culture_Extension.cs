@@ -13,6 +13,10 @@ namespace Siesa.SDK.Entities
 {
 	public partial class E00021_Culture
 	{
+		public override string ToString()
+		{
+			return $"({LanguageCode}{(CountryCode != null ? '_'+CountryCode : CountryCode)}) - {Description}";
+		}
 
 
 

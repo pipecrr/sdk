@@ -12,6 +12,7 @@ using Siesa.SDK.Entities.Enums;
 
 namespace Siesa.SDK.Entities
 {
+
 	/// <summary>
 	/// Menú
 	/// </summary>

@@ -24,13 +24,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.Extensions.DependencyInjection;
 using Siesa.SDK.Shared.DataAnnotations;
+using Siesa.SDK.Backend.Services;
 
 namespace Siesa.SDK.Business
 {
     public class BLBackendSimple : IBLBase<BaseSDK<int>>
     {
         [JsonIgnore]
-        private IAuthenticationService AuthenticationService { get; set; }
+        protected IAuthenticationService AuthenticationService { get; set; }
+
+        public SDKBusinessModel GetBackend(string business_name){
+            return BackendRouterService.Instance.GetSDKBusinessModel(business_name, AuthenticationService);
+        }
 
         public BLBackendSimple(IAuthenticationService authenticationService)
         {
@@ -72,7 +77,12 @@ namespace Siesa.SDK.Business
     public class BLBackendSimple<T, K> : IBLBase<T> where T : class, IBaseSDK where K : BLBaseValidator<T>
     {
         [JsonIgnore]
-        private IAuthenticationService AuthenticationService { get; set; }
+        protected IAuthenticationService AuthenticationService { get; set; }
+
+        public SDKBusinessModel GetBackend(string business_name){
+            return BackendRouterService.Instance.GetSDKBusinessModel(business_name, AuthenticationService);
+        }
+        
         private IServiceProvider _provider;
         private ILogger _logger;
         protected ILogger Logger { get { return _logger; } }
@@ -332,6 +342,8 @@ namespace Siesa.SDK.Business
 
         public virtual DeleteBusinessObjResponse Delete()
         {
+            var response = new DeleteBusinessObjResponse();
+
             ValidateAndSaveBusinessObjResponse result = new();
             try
             {
@@ -339,11 +351,9 @@ namespace Siesa.SDK.Business
 
                 if (result.Errors.Count > 0)
                 {
-                    var response = new DeleteBusinessObjResponse();
                     response.Errors.AddRange(result.Errors);
                     return response;
                 }
-
                 using (SDKContext context = _dbFactory.CreateDbContext())
                 {
                     context.SetProvider(_provider);
@@ -351,10 +361,11 @@ namespace Siesa.SDK.Business
                     context.SaveChanges();
                 }
             }
-            catch (System.Exception)
+            catch (Exception e)
             {
-                
-                throw;
+                 //response.Errors.AddRange(result.Errors);
+
+                 return null;
             }
             
             return new DeleteBusinessObjResponse();

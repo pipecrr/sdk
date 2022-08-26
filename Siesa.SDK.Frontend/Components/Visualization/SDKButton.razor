@@ -4,6 +4,7 @@
 @inject IResourceManager ResourceManager
 @inject IAuthenticationService AuthenticationService
 
+
 <DxButton 
     RenderStyle="@RenderStyle.Get()" 
     RenderStyleMode="@RenderStyleMode.Get()" 
@@ -12,6 +13,7 @@
     Text="@Text" 
     form="@form"
     NavigateUrl="@NavigateUrl"
+    CssClass="@GetCss()"
     />
 
 @code {
@@ -41,5 +43,19 @@
         Text = ResourceTag;
         await base.OnInitializedAsync();
         Text = await GetText();
+    }
+
+    private string GetCss(){
+        switch (RenderStyle)
+        {
+            case SDKButtonRenderStyle.Primary:
+                return "btn_primary_def_1";
+                break;
+            case SDKButtonRenderStyle.Secondary:
+                return "btn_secondary_def_1";
+                break;
+            default:
+                return "";
+        }
     }
 }

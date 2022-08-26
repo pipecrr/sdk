@@ -1,0 +1,85 @@
+@typeparam ItemType
+@using Plk.Blazor.DragDrop
+@using System.Linq
+
+<div class="sdk-kanban-columns-container">
+    @foreach (var column in ColumnList)
+    {
+        <div class="sdk-kanban-column">
+            <h4 class="sdk-kanban-column-title">@column.Item2</h4>
+            <div class="sdk-kanban-column-items">
+                <Dropzone Items="@GetItemsColumn(column.Item1)" TItem="ItemType"
+                OnItemDrop="@((i) => _onChange(i, column.Item1))">
+                    @ItemTemplate(context)
+                </Dropzone>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public List<Tuple<int, string>> ColumnList { get; set; }
+
+    [Parameter]
+    public List<ItemType> Items { get; set; }
+
+    [Parameter]
+    public Action<ItemType, int> OnChange { get; set; }
+
+    [Parameter]
+    public Func<ItemType, int> OnGetItemColumn { get; set; }
+
+    [Parameter]
+    public RenderFragment<ItemType> ItemTemplate { get; set; }
+
+    [Parameter]
+    public string PropertyColumn { get; set; }
+    private Type EnumType;
+    private Array EnumValues;
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrEmpty(PropertyColumn))
+        {
+            var propertyType = typeof(ItemType).GetProperty(PropertyColumn).PropertyType;
+            if (propertyType.IsEnum)
+            {
+                EnumType = propertyType;
+                EnumValues = Enum.GetValues(propertyType);
+                ColumnList = new List<Tuple<int, string>>();
+                foreach (var item in EnumValues)
+                {
+                    ColumnList.Add(new Tuple<int, string>(Convert.ToInt32(item), item.ToString()));
+                }
+            }
+        }
+
+
+        await base.OnInitializedAsync();
+    }
+
+    private List<ItemType> GetItemsColumn(int column_int)
+    {
+        if (!string.IsNullOrEmpty(PropertyColumn) && EnumValues != null)
+        {
+            var columnValue = Enum.ToObject(EnumType, column_int);
+            columnValue = Convert.ChangeType(columnValue, EnumType);
+            return Items.Where(x => x.GetType().GetProperty(PropertyColumn).GetValue(x).Equals(columnValue)).ToList();
+        }
+        return Items.Where(x => OnGetItemColumn(x) == column_int).ToList();
+    }
+
+    private void _onChange(ItemType item, int column_int)
+    {
+        if (!string.IsNullOrEmpty(PropertyColumn))
+        {
+            var columnValue = Enum.ToObject(EnumType, column_int);
+            columnValue = Convert.ChangeType(columnValue, EnumType);
+            item.GetType().GetProperty(PropertyColumn).SetValue(item, columnValue);
+        }
+        if(OnChange != null)
+        {
+            OnChange(item, column_int);
+        }
+    }
+}

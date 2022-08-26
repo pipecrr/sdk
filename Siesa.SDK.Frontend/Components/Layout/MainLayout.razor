@@ -1,30 +1,130 @@
 ﻿@inherits LayoutComponentBase
+@using Microsoft.Extensions.Hosting
+@using Siesa.SDK.Frontend.Components.Layout.Header
+@using System
+@using Microsoft.AspNetCore.Components
+@using Siesa.SDK.Frontend.Components.Layout.NavMenu
 <RadzenDialog />
-<DxGridLayout>
-    <Rows>
-        <DxGridLayoutRow Height="auto" />
-        <DxGridLayoutRow />
-    </Rows>
-    <Columns>
-        <DxGridLayoutColumn />
-    </Columns>
-    <Items>
-        <DxGridLayoutItem Row="0" Column="0">
-            <Template>
-                <div class="gridlayout-header gridlayout-item">
-                    <NavMenu />
-                </div>
-            </Template>
-        </DxGridLayoutItem>
-        <DxGridLayoutItem Row="1" Column="0">
-            <Template>
-                <TopBar />
-                <div class="gridlayout-content-parent gridlayout-item">
-                    <div class="gridlayout-content">
+<RadzenNotification />
+@if(IsEmptyLayout)
+{
+    <ErrorBoundary @ref="errorBoundary">
+        <ChildContent>
+            <CascadingValue Value="@this">
+                <div class="main">    
+                    <div>
                         @Body
                     </div>
                 </div>
-            </Template>
-        </DxGridLayoutItem>
-    </Items>
-</DxGridLayout>
+            </CascadingValue>
+        </ChildContent> 
+        <ErrorContent Context="Exception" >
+            <SDKError CurrentException="@Exception" Error="@errorBoundary" IsEmptyLayout="true" />
+        </ErrorContent>
+    </ErrorBoundary>
+}else{
+    <DxGridLayout>
+        <Rows>
+            <DxGridLayoutRow Height="auto" />
+            <DxGridLayoutRow />
+        </Rows>
+        <Columns>
+            <DxGridLayoutColumn />
+        </Columns>
+        <Items>
+            <DxGridLayoutItem Row="0" Column="0">
+                <Template>
+                    <SDKHeader />
+                </Template>
+            </DxGridLayoutItem>
+            <DxGridLayoutItem Row="1" Column="0">
+                <Template>
+                    <div class="sdk_nav">
+                        <NavMenu ShowMenu="@showNavMenu" />
+                            <ErrorBoundary @ref="errorBoundary">
+                                <ChildContent> 
+                                <aside class="col-12 sdk_home_content">
+                                    <div
+                                        class="offset-lg-0 col-lg-12 offset-xl-0 col-xl-12 offset-xxl-1 col-xxl-10 px-0 px-md-3">
+
+                                        <BreadCrumb />
+                                        <CascadingValue Value="@this">
+                                            @if(IsDefaultArea)
+                                            {
+                                                <div class="col-12 area2 px-3">
+                                                    <TopBar />
+                                                    <div class="col-12 px-0 py-3">
+                                                        @Body
+                                                    </div>
+                                                </div>
+                                            }else{
+                                                @Body
+                                            }
+                                        </CascadingValue>
+                                    </div>
+                                </aside>
+                                </ChildContent> 
+                                <ErrorContent Context="Exception" >
+                                    <SDKError CurrentException="@Exception" Error="@errorBoundary" />
+                                </ErrorContent>
+                        </ErrorBoundary>
+                    </div>
+
+                </Template>
+            </DxGridLayoutItem>
+        </Items>
+    </DxGridLayout>
+}
+
+<SDKGoTop />
+@code {
+    private bool showNavMenu = false;
+    [Parameter]
+    public bool ShowMenu { get; set; }
+
+    private ErrorBoundary? errorBoundary;
+
+    [Parameter]
+    public bool IsDefaultArea { get; set; }
+
+    public bool IsEmptyLayout { get; set; } = false;
+
+    public void SetDefaultArea(bool isDefaultArea)
+    {
+        bool refresh = IsDefaultArea != isDefaultArea;
+        IsDefaultArea = isDefaultArea;
+        if(refresh)
+        {
+            StateHasChanged();
+        }
+    }
+
+    public void SetEmptyLayout(bool isEmptyLayout)
+    {
+        bool refresh = IsEmptyLayout != isEmptyLayout;
+        IsEmptyLayout = isEmptyLayout;
+        if(refresh)
+        {
+            StateHasChanged();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsDefaultArea = true;
+        base.OnInitializedAsync();
+        errorBoundary = new ErrorBoundary();
+    }
+
+    private void ToggleNavMenu()
+    {
+        showNavMenu = !showNavMenu;
+        StateHasChanged();
+    }
+
+    private void HideNavMenu()
+    {
+        showNavMenu = false;
+        StateHasChanged();
+    }
+}

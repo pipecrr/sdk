@@ -1,0 +1,193 @@
+
+.sdk_header{
+    height: 48px;
+    width: 100%;
+    background: var(--color_primary_dark);
+    box-shadow: var(--shadow_standar);
+    position: fixed !important;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    padding: .5rem 0.875rem;
+    border-bottom-left-radius: 1.5rem;
+    border-bottom-right-radius: 1.5rem;
+}
+.header_circles_box{
+    height: 48px;
+    width: 550px;
+    overflow: hidden;
+    position: absolute;
+    left: -152px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom-left-radius: 1.5rem;
+}
+.header_circles_box_1, .header_circles_box_2, .header_circles_box_3, .header_circles_box_4{
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+}
+.header_circles_box_1{
+    width: 550px;
+    height: 550px;
+    opacity: .1;
+}
+.header_circles_box_2{
+    width: 400px;
+    height: 400px;
+    opacity: .2;
+}
+.header_circles_box_3{
+    width: 300px;
+    height: 300px;
+    opacity: .5;
+}
+.header_circles_box_4{
+    width: 250px;
+    height: 250px;
+    opacity: 1;
+}
+.sdk_version{
+    font-size: .75rem;
+    color: white;
+    text-align: right;
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+    line-height: 1.2;
+}
+.sdk_conection>div>.btn_connect{
+    background: none;
+    color: white;
+    font-size: .75rem;
+    text-align: right;
+    margin: 0;
+    border: none;
+    line-height: 1.2;  
+}
+.sdk_conection>div>.btn_connect>div>p{
+    max-width: 160px;
+}
+.connect_tooltip{
+    min-width: 268px;
+    max-width: 268px;
+    border-radius: var(--border_radius_standar);
+    background-color: var(--color_light);
+    position: absolute;
+    top: 42px;
+    right: -2px;
+    z-index: 1;
+    box-shadow: var(--shadow_standar);
+    display: none;
+}
+.connect_tooltip::before {
+    content: "";
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    top: -8px;
+    right: 15px;
+    border-top: 0px solid transparent;
+    border-right: 9px solid transparent;
+    border-bottom: 9px solid white;
+    border-left: 9px solid transparent;
+}
+.connect_select_search {
+    position: relative;
+}
+.connect_select_search>div>select {
+    width: calc(100% - 2rem);
+    border: none;
+    border-radius: var(--border_radius_standar);
+    /* background: none; */
+}
+.connect_select_search>div>button {
+    width: 2rem;
+    padding: 0.25rem 0.25rem;
+    font-size: 1.125rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color_primary_light);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.whcm_logo_compania{
+    max-height: 30px;
+    max-width: 100%;
+}
+.whcm_logo_head{
+    max-height: 30px;
+    max-width: 100%;
+}
+
+@media (max-width: 1199.98px) {
+    .header_circles_box_1{
+        opacity: 0;
+    }
+    .sdk_conection>div>.btn_connect>div>p{
+        max-width: 140px;
+    }
+}
+
+@media (max-width: 991.98px) { 
+    .header_circles_box_2{
+        opacity: .05;
+    }
+    .header_circles_box_3{
+        opacity: .2;
+    }
+    .whcm_logo_head{
+        max-height: 20px;
+        max-width: 100%;
+    }
+    .sdk_conection>div>.btn_connect{
+        font-size: 0.625rem; 
+    }
+    .sdk_version{
+        font-size: 0.625rem;   
+    }
+    .sdk_conection>div>.btn_connect>div>p{
+        max-width: 120px;
+    }
+}
+
+@media (max-width: 767.98px) { 
+    .header_circles_box_3{
+        opacity: .1;
+    }
+    .whcm_logo_head{
+        max-height: 18px;
+        max-width: 100%;
+    }
+    .sdk_version{
+        border: none;
+        color: var(--color_text_2);
+    }
+    .sdk_conection>div>.btn_connect{
+        font-size: 0.75rem; 
+    }
+    .sdk_version{
+        font-size: 0.75rem;   
+    }
+    .whcm_footer{
+        width: 100vw;
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        padding: 0.5rem;
+        background-color: var(--color_light);
+        box-shadow: var(--shadow_standar);
+    }
+}
+
+@media (max-width: 575.98px) {
+    .whcm_logo_compania{
+        max-height: 25px;
+        max-width: 100%;
+    }
+    .header_circles_box{
+        left: -198px;
+    }
+ }

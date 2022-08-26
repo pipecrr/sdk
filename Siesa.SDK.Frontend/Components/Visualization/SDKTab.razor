@@ -1,0 +1,76 @@
+@using Siesa.SDK.Frontend.Components.Fields
+@inject UtilsManager UtilManager
+
+
+@if (TabTemplate != null)
+{
+    <DxTabPage Text="@TitleText" TabTemplate="@TabTemplate" ChildContent="@ChildContent" />
+}
+else
+{
+    @if (ShowBadge)
+    {
+        <DxTabPage Text="@TitleText" ChildContent="@ChildContent">
+            <TabTemplate>
+                <a role="tab" class="nav-link @GetCss()">
+                    @TitleText
+                    <SDKBadge Value="@BadgeValue" Style="@BadgeStyle" IsPill="@BadgeAsPill" />
+                </a>
+            </TabTemplate>
+        </DxTabPage>
+    }else{
+        <DxTabPage Text="@TitleText" ChildContent="@ChildContent" />
+    }
+}
+
+
+
+@code {
+
+    [Parameter]
+    public string TitleResourceTag { get; set; }
+    private string TitleText;
+    [Parameter]
+    public string BadgeValue { get; set; }
+
+    [Parameter]
+    public bool ShowBadge { get; set; }
+
+    [Parameter]
+    public bool BadgeAsPill { get; set; }
+
+    [Parameter]
+    public SDKBadgeStyle BadgeStyle { get; set; } = SDKBadgeStyle.Info;
+
+    [Parameter]
+    public RenderFragment TabTemplate { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [CascadingParameter]
+    public SDKTabs TabsContainer {get;set;}
+
+    public int TabIndex {get;set;}
+
+    string GetCss(){
+        if(TabsContainer.ActiveTabIndex == TabIndex)
+        {
+            return "active";
+        }
+        return "";
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        TabIndex = TabsContainer.Tabs.Count;
+        TabsContainer.Tabs.Add(this);
+        if (!string.IsNullOrEmpty(TitleResourceTag) && TabTemplate == null)
+        {
+            TitleText = TitleResourceTag;
+            TitleText = await UtilManager.GetResource(TitleResourceTag);
+        }
+        base.OnInitializedAsync();
+    }
+
+}

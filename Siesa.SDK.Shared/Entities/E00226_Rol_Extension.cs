@@ -13,8 +13,7 @@ namespace Siesa.SDK.Entities
 {
 	public partial class E00226_Rol
 	{
-
-
-
+		[InverseProperty("Rol")]
+        public virtual ICollection<E00227_UserRol> UsersRol { get; set; }
 	}
 }

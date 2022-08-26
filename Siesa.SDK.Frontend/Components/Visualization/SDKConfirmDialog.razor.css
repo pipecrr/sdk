@@ -1,0 +1,8 @@
+.modal-dialog-container{
+    text-align: center;
+}
+
+.modal-dialog-content{
+    min-height: 100px; 
+    padding-bottom: 20px; 
+}

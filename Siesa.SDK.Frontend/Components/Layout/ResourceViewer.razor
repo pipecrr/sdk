@@ -15,14 +15,14 @@
 
     private async Task<string> GetText(){
         if(!String.IsNullOrEmpty(ResourceTag)){
-            if(RowidCulture != 0 && (AuthenticationService == null || AuthenticationService.User == null || AuthenticationService.User.RowidCulture == 0)){
+            if(RowidCulture != 0 && (AuthenticationService == null || AuthenticationService.User == null || AuthenticationService.GetRoiwdCulture() == 0)){
                 return await ResourceManager.GetResource(ResourceTag, RowidCulture);
             }else{
                 return await ResourceManager.GetResource(ResourceTag, AuthenticationService);
             }
         }
         if(RowidResource != 0 && RowidResource != null){
-            if(RowidCulture != 0 && (AuthenticationService == null || AuthenticationService.User == null || AuthenticationService.User.RowidCulture == 0)){
+            if(RowidCulture != 0 && (AuthenticationService == null || AuthenticationService.User == null || AuthenticationService.GetRoiwdCulture() == 0)){
                 return await ResourceManager.GetResource(Convert.ToInt64(RowidResource), RowidCulture);
             }else{
                 return await ResourceManager.GetResource(Convert.ToInt64(RowidResource), AuthenticationService);

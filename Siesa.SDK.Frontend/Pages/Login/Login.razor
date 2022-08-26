@@ -1,0 +1,359 @@
+@page "/login"
+@using System.ComponentModel.DataAnnotations
+@using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Shared.Backend
+@using Siesa.SDK.Frontend.Navigation
+@using Siesa.SDK.Frontend.Components.Layout
+@using Siesa.SDK.Entities;
+@using Siesa.SDK.Shared.Business;
+@using Siesa.SDK.Protos;
+@using Newtonsoft.Json;
+@inject IAuthenticationService AuthenticationService
+@inject NavigationManager NavigationManager
+@inject IBackendRouterService BackendRouterService
+@inject IJSRuntime JSRuntime
+@inject SDKNotificationService SDKNotificationService
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService
+@inject UtilsManager UtilsManager
+@layout EmptyLayout
+
+<PageTitle>Login</PageTitle>
+<div class="back_login">
+
+    <div class="col-12 offset-md-1 col-md-10 px-0 px-md-3" hidden="@init_loading">
+        <div class="card_login col-12">
+            <div class="row image_back">
+                <div class="info_area col-md-12 col-lg-7 p-3 p-lg-4">
+                    <div class="col-12 p-0 pb-5 mb-5 mb-md-4 d-flex justify-content-between">
+                        <div>
+                            <img src="_content/Siesa.SDK.Frontend/assets/img/LogoSiesaBlanco.svg" height="38px"
+                                alt="logo_siesa_blanco">
+                        </div>
+                        <div class="d-sm-block d-md-none">
+                            <button class="btn btn-primary btn_ghost_def_1 btn-sm ml-2" data-toggle="modal"
+                                data-target="#infoModal"><i class="fa-solid fa-info"></i></button>
+                        </div>
+                    </div>
+                    <div class="info_card d-none d-sm-none d-md-block col-12 p-3 p-md-3 p-lg-4 mt-4">
+                        <h2 class="mb-md-2 mb-lg-3"><ResourceViewer ResourceTag="Demo.NewsTitle" RowidCulture=@RowidCulture /></h2>
+                        <p class="mb-md-2 mb-lg-3"><ResourceViewer ResourceTag="Demo.NewsBody" RowidCulture=@RowidCulture /></p>
+                        <div class="d-flex justify-content-between">
+                            <button class="btn btn-primary btn_ghost_def_1 btn-sm px-4"><ResourceViewer ResourceTag="BLLogin.MoreInfo" RowidCulture=@RowidCulture /></button>
+                            <div>
+                                <button class="btn btn-primary btn_ghost_def_1 btn-sm"><i
+                                        class="fa-solid fa-chevron-left"></i></button>
+                                <button class="btn btn-primary btn_ghost_def_1 btn-sm ml-2"><i
+                                        class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="login_area col-12 col-lg-5 p-3 p-lg-4">
+                    <div class="col-12 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
+                        <select class="select_connect" id="SelectConnect">
+                            <option>DB Producción</option>
+                            <option>DB Pruebas HCM</option>
+                            <option>DB Pruebas Nómina</option>
+                        </select>
+
+                        <i class="ml-2 fa-solid fa-globe"></i>
+                        <div id="lang">
+                            <div class="position-relative">
+                                <button class="btn ml-2 d-flex btn_region" style="padding:0"
+                                    @onclick="() => IsOpen = !IsOpen">
+                                    <span class="fi fi-@selectedCulture.CountryCode fis rounded-circle"
+                                        style="height:16px"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row align-items-center py-5">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-12">
+                            <div class="row">
+                                <div class="col-12 p-0 d-flex justify-content-center pb-4">
+                                    <img src="_content/Siesa.SDK.Frontend/assets/img/login_logo_empresa.png" height="48px"
+                                        alt="logo_siesa_color">
+                                </div>
+                                <div class="col-12 p-0 pb-4 pb-md-0 pb-lg-5">
+                                    <div class="col-12 text-center title_1">
+                                        <ResourceViewer ResourceTag="Project.Welcome" RowidCulture=@RowidCulture />
+                                    </div>
+                                    <div class="col-12 text-center title_2">
+                                        <ResourceViewer ResourceTag="BLLogin.InputYourData" RowidCulture=@RowidCulture />
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border_left_md col-12 col-sm-12 col-md-6 col-lg-12">
+                            <div
+                                class="col-12 offset-sm-2 col-sm-8 offset-md-1 col-md-10 offset-lg-2 col-lg-8 px-md-3 px-lg-0">
+                                <EditForm Model="@model" OnValidSubmit="HandleValidSubmit">
+                                    <DataAnnotationsValidator />
+                                    <div class="form-group">
+                                        <label class="col_form_label col_form_label-sm font-weight-bold" for="Username">
+                                            <ResourceViewer ResourceTag="BLUser.Username" RowidCulture=@RowidCulture />
+                                        </label>
+                                        <InputText @bind-Value="model.Username" class="form-control form-control-sm" />
+                                        <ValidationMessage For="@(() => model.Username)" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col_form_label col_form_label-sm font-weight-bold" for="Password">
+                                            <ResourceViewer ResourceTag="BLUser.Password" RowidCulture=@RowidCulture />
+                                        </label>
+                                        <InputText @bind-Value="model.Password" type="password"
+                                            class="form-control form-control-sm" />
+                                        <ValidationMessage For="@(() => model.Password)" />
+                                    </div>
+                                    <button class="btn btn-primary btn_primary_def_1 btn-sm w-100 mt-2">
+                                        @if (loading)
+                                        {
+                                            <span class="spinner-border spinner-border-sm mr-1"></span>
+                                        }
+                                        <ResourceViewer ResourceTag="BLUser.Login" RowidCulture=@RowidCulture />
+                                    </button>
+                                </EditForm>
+                            </div>
+                            <div class="col-12 p-0 text-center pt-4">
+                                <a class="link_login" href="">
+                                    <ResourceViewer ResourceTag="Project.ForgotPassword" RowidCulture=@RowidCulture />
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 p-0 text-center copy_right_text">
+                        <ResourceViewer ResourceTag="Project.Version" RowidCulture=@RowidCulture /> -
+                        <ResourceViewer ResourceTag="Project.Copy" RowidCulture=@RowidCulture />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content info_card_modal">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span class="text-white" aria-hidden="true">&times;</span>
+                    </button>
+                    <h2 class="mb-2 pr-3"><ResourceViewer ResourceTag="Demo.NewsTitle" RowidCulture=@RowidCulture /></h2>
+                    <p class="mb-2"><ResourceViewer ResourceTag="Demo.NewsBody" RowidCulture=@RowidCulture /></p>
+                    <div class="d-flex justify-content-between">
+                        <button class="btn btn-primary btn_ghost_def_1 btn-sm px-4"><ResourceViewer ResourceTag="BLLogin.MoreInfo" RowidCulture=@RowidCulture /></button>
+                        <div>
+                            <button class="btn btn-primary btn_ghost_def_1 btn-sm"><i
+                                    class="fa-solid fa-chevron-left"></i></button>
+                            <button class="btn btn-primary btn_ghost_def_1 btn-sm ml-2"><i
+                                    class="fa-solid fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="LangModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span class="text-white" aria-hidden="true">&times;</span>
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="login_loading @GetCssLoding()">
+        <div>
+            <div class="text-center fa-4x font_color_3 mb-4">
+                <i class="fas fa-spinner fa-pulse"></i>
+            </div>
+            <div class="text-center">
+                <img src="_content/Siesa.SDK.Frontend/assets/img/logo_empresa.png" height="82px" alt="logo_siesa">
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<DxDropDown @bind-IsOpen="@IsOpen" PositionMode="DropDownPositionMode.Bottom" PositionTarget="#lang"
+    RestrictionTarget="#Navigation-DropDown-Customization" CloseMode="DropDownCloseMode.Close"
+    PreventCloseOnPositionTargetClick="true" Id="boxRegion" CssClass="region_tooltip" MinWidth="230px" MaxWidth="250px" HeaderVisible="false"
+    FooterVisible="false">
+    <BodyTemplate>
+        <Lang _Cultures="@cultures" _idRow="@RowidCulture" OnChangeCulture="@((rowid)=> OnChangeCulture(rowid))" />
+    </BodyTemplate>
+</DxDropDown>
+
+@code {
+    private Model model = new Model();
+    private bool init_loading = true;
+    private bool loading;
+    private string error;
+    bool IsOpen { get; set; } = false;
+
+    private short RowidCulture { get; set; } = 1;
+    private E00021_Culture selectedCulture { get; set; }
+    List<E00021_Culture> cultures = new List<E00021_Culture>();
+
+    private string GetCssLoding()
+    {
+        if (!init_loading)
+        {
+            return "login_loading_close";
+        }
+        return "";
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        init_loading = true;
+        // redirect to home if already logged in
+        if (AuthenticationService.User != null)
+        {
+            NavigationManager.NavigateTo("");
+            return;
+        }
+        cultureDefault();
+        await getCultures();
+        getSelectedCulture();
+        await getUserlang();
+        init_loading = false;
+        await base.OnInitializedAsync();
+
+    }
+
+    private async Task OnChangeCulture(short rowidCulture)
+    {
+        RowidCulture = rowidCulture;
+        IsOpen = false;
+        getSelectedCulture();
+        await AuthenticationService.SetCustomRowidCulture(rowidCulture);
+        StateHasChanged();
+        //await localStorageService.SetItemAsync("userlang", RowidCulture.ToString());
+    }
+
+    private async void HandleValidSubmit()
+    {
+        string message = "LoginMessage.Succes";
+        string text = await UtilsManager.GetResource(message);
+        loading = true;
+        try
+        {
+            await AuthenticationService.Login(model.Username, model.Password);
+            NavigationManager.TryGetQueryString("returnUrl", out string returnUrl);
+            if (returnUrl == null || returnUrl == "null")
+            {
+                returnUrl = "/";
+            }
+            SDKNotificationService.ShowSuccess(text);
+            NavigationManager.NavigateTo(returnUrl);
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            SDKNotificationService.ShowError(error);
+            loading = false;
+            StateHasChanged();
+        }
+    }
+   
+
+    private async Task getCultures()
+    {
+        cultures = await getCulturesAsync();
+    }
+
+    private async Task<List<E00021_Culture>> getCulturesAsync(){
+        List<E00021_Culture> _cultures = new List<E00021_Culture>();
+                        var cultureBL = BackendRouterService.GetSDKBusinessModel("BLCulture", AuthenticationService);
+        if (cultureBL == null)
+        {
+            throw new Exception("Culture Service not found");
+        }
+        var _Allcultures = await cultureBL.GetData(null, null);
+        if (_Allcultures != null)
+        {
+            _cultures = _Allcultures.Data.Select(x => JsonConvert.DeserializeObject<E00021_Culture>(x)).Where(x => x.CountryCode !=
+            null).ToList();
+        }    
+        return _cultures;
+    }
+    private void getSelectedCulture()
+    {
+
+        if (cultures != null)
+        {
+            selectedCulture = cultures.FirstOrDefault(x => x.Rowid == RowidCulture);
+        }
+        else
+        {
+            cultureDefault();
+        }
+    }
+
+    private async Task getUserlang()
+    {
+        short userlang;
+        try
+        {
+            userlang = AuthenticationService.GetRoiwdCulture();
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.ToString());
+        }
+
+        if (cultures == null)
+        {
+           cultures = await getCulturesAsync();
+
+        }
+
+        if (userlang == 0)
+            {
+                var BrowserLang = await JSRuntime.InvokeAsync<string>("getBrowserLang");
+                string[] language = BrowserLang.Split('-');
+                selectedCulture = cultures.FirstOrDefault(x => x.LanguageCode.ToLower() == language[0].ToLower() && x.CountryCode.ToLower() == language[1].ToLower());
+            }
+            else
+            {
+                selectedCulture = cultures.FirstOrDefault(x => x.Rowid == userlang);
+            }
+
+            if (selectedCulture == null){
+                cultureDefault();
+            }else{
+                OnChangeCulture(selectedCulture.Rowid);
+            }
+    }
+
+    private void cultureDefault(){
+        selectedCulture = new E00021_Culture()
+            {
+                Rowid = 1,
+                CountryCode = "co",
+                Description = "Colombia",
+                LanguageCode = "Es-co"
+            };
+    }
+
+
+
+    private class Model
+    {
+        [Required]
+        public string Username { get; set; }
+
+        [Required]
+        public string Password { get; set; }
+    }
+
+}

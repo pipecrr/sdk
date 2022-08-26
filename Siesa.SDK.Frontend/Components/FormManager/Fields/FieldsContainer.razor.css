@@ -1,0 +1,13 @@
+﻿.field-detail-container{
+    padding: 0.25rem 0.5rem;
+    background: rgb(250, 250, 250);
+    border-radius: 7px;
+}
+
+.field-detail-container ::deep p {
+    margin: 0;
+}
+
+.field-detail-container > ::deep .sdk-switch-container {
+    height: 1.5rem !important;
+}

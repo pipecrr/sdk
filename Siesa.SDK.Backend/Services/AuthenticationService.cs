@@ -49,5 +49,15 @@ namespace Siesa.SDK.Backend.Services
         {
             throw new NotImplementedException();
         }
+
+        public Task SetCustomRowidCulture(short rowid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public short GetRoiwdCulture()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

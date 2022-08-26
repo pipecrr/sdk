@@ -1,0 +1,162 @@
+﻿@using Siesa.SDK.Entities
+@implements IDisposable
+@using SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Shared.Backend
+@using Siesa.SDK.Frontend.Components.Layout.Menu
+@using Siesa.SDK.Shared.Services
+@inject IAuthenticationService AuthenticationService
+@inject NavigationManager NavigationManager
+@using Siesa.SDK.Frontend.Services
+@inject MenuService MenuService
+
+<input type="checkbox" name="" checked id="menu">
+<label class="sdk_nav_head" for="menu">
+    <div class="nav_btn_standar" data-toggle="tooltip" data-placement="right" title="Mostrar/Ocultar">
+        <div class="nav_btn_standar_icon">
+            <i class="fa-solid fa-bars font_size_112"></i>
+        </div>
+    </div>
+</label>
+
+<input class="" type="checkbox" name="" id="collapse_open">
+<label class="collapse_open_btn" for="collapse_open">
+    <div class="nav_btn_standar_icon">
+        <i class="fa-solid fa-angles-right font_size_112"></i>
+    </div>
+    <div class="nav_btn_standar_text">
+        <ResourceViewer ResourceTag="Menu.Collapse" />
+    </div>
+</label>
+<nav class="menu_content">
+    <div class="nav_section_1 w-100">
+        <a class="nav_logo" href="/">
+            <img class="" src="_content/Siesa.SDK.Frontend/assets/img/logo_empresa.png" height="30px" alt="Logo compania">
+        </a>
+         <div class="p-2 input-group input-group-sm d-flex align-items-center d-block d-sm-none">
+            <SDKSearch />
+        </div>
+        @foreach (var menuItem in MenuService.Menus)
+        {
+            <NavMenuItem MenuItem="@menuItem" OnClick="@OnMenuItemClick" Focus="@(SelectedMainMenu == menuItem)" />
+        }
+    </div>
+    @if (AuthenticationService.User != null)
+    {
+        <div class="nav_section_2 w-100">
+            <hr class="mb-2">
+            <div class="nav_profile_btn" @onclick="@(()=> ShowProfileMenu())">
+                <div class="nav_btn_standar_icon nav_profile_photo">
+                    <img src="_content/Siesa.SDK.Frontend/assets/img/profile_img.jpg" height="36px" alt="imagen perfil">
+                </div>
+                <div class="nav_btn_standar_text">
+                    @AuthenticationService.User
+                </div>
+            </div>
+        </div>
+    }
+</nav>
+@if (SelectedMenu != null && ShowSubMenu && SelectedMenu.SubMenus?.Count > 0)
+{
+    
+    <CascadingValue Value="HideSubmenu">
+        <SubMenu MainItem="@SelectedMenu" OnClick="@OnMenuItemClick" />
+    </CascadingValue>
+}
+@code {
+    [Parameter]
+    public bool ShowMenu { get; set; }
+
+    private E00061_Menu SelectedMenu { get; set; }
+
+    private E00061_Menu SelectedMainMenu { get; set; }
+
+    private bool ShowSubMenu { get; set; }
+
+    private E00061_Menu ProfileMenu { get; set; }
+
+    public void OnMenuItemClick(E00061_Menu menuItem)
+    {
+        
+        SelectedMenu = menuItem;
+        if(menuItem?.SubMenus?.Count > 0)
+        {
+            ShowSubMenu = true;
+        }else{
+            ShowSubMenu = false;
+        }
+        if(menuItem?.RowidMenuParent == null)
+        {
+            SelectedMainMenu = menuItem;
+        }else{
+            if(!ShowSubMenu){
+                SelectedMainMenu = null;
+            }
+        }
+        StateHasChanged();
+    }
+
+    protected async override Task OnInitializedAsync()
+    {
+        MenuService.MenuLoaded += OnMenuLoaded;
+        if(AuthenticationService.User != null)
+        {
+            ProfileMenu = new E00061_Menu()
+            {
+                ResourceTag = "BLUser.Profile",
+                SubMenus = new List<E00061_Menu>(),
+                CurrentText = "",
+            };
+            ProfileMenu.SubMenus.Add(new E00061_Menu()
+            {
+                ResourceTag = "BLUser.EditProfile",
+                Url = $"/BLUser/edit/{AuthenticationService.User.Rowid}/",
+            });
+            ProfileMenu.SubMenus.Add(new E00061_Menu()
+            {
+                ResourceTag = "BLUser.Logout",
+                Url = "/logout"
+            });
+        }
+        await base.OnInitializedAsync();
+    }
+
+    private void ShowProfileMenu()
+    {
+        ShowSubMenu = true;
+        SelectedMenu = ProfileMenu;
+        StateHasChanged();
+    }
+
+    private void HideSubmenu()
+    {
+        ShowSubMenu = false;
+        SelectedMainMenu = null;
+        StateHasChanged();
+    }
+
+    [Inject]
+    public IJSRuntime JSRuntime { get; set; }
+    private IJSObjectReference _jsModule;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender){
+            _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/Components/Layout/NavMenu/NavMenu.razor.js");
+        }
+    }
+
+    private void OnMenuLoaded(object sender, EventArgs e)
+    {
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+
+        if (MenuService != null)
+        {
+            MenuService.MenuLoaded -= OnMenuLoaded;
+        }
+    }
+}

@@ -29,6 +29,14 @@
                 builder.AddAttribute(7, "ClearButtonDisplayMode", DataEditorClearButtonDisplayMode.Auto);
                 builder.AddAttribute(8, "maxlength", MaxLength > 0 ? MaxLength : null);
                 builder.AddAttribute(9, "field-name", FieldOpt.Name);
+                var lastIndex = 9;
+                if(FieldOpt.CustomAttributes != null && FieldOpt.CustomAttributes.Count > 0)
+                {
+                    foreach (var attr in FieldOpt.CustomAttributes.Where(a => !a.Key.StartsWith("sdk-")))
+                    {
+                        builder.AddAttribute(++lastIndex, attr.Key, attr.Value);
+                    }
+                }
 
                 builder.CloseComponent();
             };

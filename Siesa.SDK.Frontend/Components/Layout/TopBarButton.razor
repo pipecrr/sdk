@@ -1,0 +1,65 @@
+@using SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Application
+@using Siesa.SDK.Shared.Services
+@inject IResourceManager ResourceManager
+@inject IAuthenticationService AuthenticationService
+@inject NavigationManager NavigationManager
+
+@if(!String.IsNullOrEmpty(form) && SubmitFormOnClick)
+{
+    <button class="btn btn-sm layout_btn_standar-sm ml-1" data-toggle="tooltip"
+        data-placement="top" title="@Text" form="@form" type="submit">
+        <i class="@IconCssClass"></i>
+    </button>
+}else{
+    <button class="btn btn-sm layout_btn_standar-sm ml-1" data-toggle="tooltip"
+        data-placement="top" title="@Text" form="@form" @onclick="@OnClick"  @onclick:preventDefault>
+        <i class="@IconCssClass"></i>
+    </button>
+}
+
+
+
+@code {
+    [Parameter] public string ResourceTag { get; set; }
+    [Parameter] public Int64? RowidResource { get; set; }
+    [Parameter] public EventCallback<MouseEventArgs> Click { get; set; }
+
+    [Parameter] public string form { get; set; }
+
+    [Parameter] public bool SubmitFormOnClick { get; set; } =  false;
+
+    [Parameter] public string IconCssClass { get; set; }
+
+    private string Text { get; set; }
+
+    [Parameter] public string NavigateUrl { get; set; }
+    [CascadingParameter]
+    public TopBar? topBar { get; set; }
+
+    private async Task<string> GetText(){
+        if((RowidResource == null || RowidResource == 0) && ResourceTag != null){
+            return await ResourceManager.GetResource(ResourceTag, AuthenticationService);
+        }
+        return await ResourceManager.GetResource(Convert.ToInt64(RowidResource), AuthenticationService);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Text = ResourceTag;
+        await base.OnInitializedAsync();
+        Text = await GetText();
+    }
+
+    private async Task OnClick(MouseEventArgs e)
+    {
+        if(NavigateUrl != null){
+            NavigationManager.NavigateTo(NavigateUrl);
+            topBar?.CloseExtraButtons();
+        }else{
+            await Click.InvokeAsync(e);
+        }
+        topBar?.CloseExtraButtons();
+        
+    }
+}

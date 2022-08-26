@@ -1,4 +1,5 @@
 ﻿@page "/{BusinessName}/create/"
+@page "/{BusinessName}/create/{DuplicateRowid}/"
 @attribute [Authorize]
 @using Microsoft.AspNetCore.Authorization
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
@@ -17,8 +18,23 @@ else if (BusinessObj != null)
 
 @code {
     [Parameter] public Dictionary<string, object> DefaultFields { get; set; }
+    [Parameter] public string DuplicateRowid { get; set; }    
+
+    private async Task GetDuplicateInfo(Int64 duplicateRowid){
+        try
+        {
+            await BusinessObj.GetDuplicateInfo(duplicateRowid);
+        }
+        catch (System.Exception e)
+        {
+            Console.WriteLine("Error EditViewModel", e.ToString());
+            //ErrorMsg = e.ToString();
+        }
+    }
+
     protected override void OnInitialized()
     {
+        ViewType = ViewModels.DynamicViewType.Create;
         base.OnInitialized();
         if (DefaultFields != null)
         {
@@ -28,7 +44,7 @@ else if (BusinessObj != null)
             }
         }
 
-        BusinessObj.OnReady();
+        //BusinessObj.OnReady();
     }
 
     protected override void SetParameters(dynamic businessObj, string businessName){
@@ -36,12 +52,44 @@ else if (BusinessObj != null)
         parameters.Add("BusinessObj", businessObj);
         parameters.Add("BusinessName", businessName);
         parameters.Add("IsSubpanel", IsSubpanel);
+        parameters.Add("ShowTitle", ShowTitle);
+        parameters.Add("ShowButtons", ShowButtons);
+        parameters.Add("ShowCancelButton", ShowCancelButton);
+        parameters.Add("ShowSaveButton", ShowSaveButton);
+        parameters.Add("OnSave", OnSave);
+        parameters.Add("OnCancel", OnCancel);
         if (IsSubpanel)
         {
             parameters.Add("SetTopBar", false);
             parameters.Add("ViewdefName", "related_create");
-        }
+        }        
     }
+
+    public override async Task SetParametersAsync(ParameterView parameters)
+        {
+            var originalDuplicateRowid = DuplicateRowid;
+            var originalBusinessName = BusinessName;
+            await base.SetParametersAsync(parameters);
+            try
+            {
+                if (parameters.TryGetValue<string>(nameof(DuplicateRowid), out var value))
+                {
+                    if (value != null && (value != originalDuplicateRowid || originalBusinessName != BusinessName))
+                    {
+                        //BusinessObj = null;
+                        ErrorMsg = "";
+
+                        await GetDuplicateInfo(Convert.ToInt64(value));
+                        StateHasChanged();
+                    }
+
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
 
 
 }

@@ -13,8 +13,11 @@ namespace Siesa.SDK.Frontend.Services
     {
         private NavigationManager _navigationManager;
         private ILocalStorageService _localStorageService;
+        private IBackendRouterService _backendRouterService;
         private string _secretKey;
         private int _minutesExp;
+
+        private short CustomRowidCulture = 0;
 
         public string UserToken { get; private set; } = "";
 
@@ -31,10 +34,12 @@ namespace Siesa.SDK.Frontend.Services
 
         public AuthenticationService(
             NavigationManager navigationManager,
-            ILocalStorageService localStorageService
+            ILocalStorageService localStorageService,
+            IBackendRouterService BackendRouterService
         ) {
             _navigationManager = navigationManager;
             _localStorageService = localStorageService;
+            _backendRouterService = BackendRouterService;
 
             _minutesExp = 120; //TODO: get from config
             _secretKey = "testsecretKeyabc$"; //TODO: get from config
@@ -43,12 +48,13 @@ namespace Siesa.SDK.Frontend.Services
         public async Task Initialize()
         {
             UserToken = await _localStorageService.GetItemAsync<string>("usertoken");
-            Console.WriteLine($"UserToken: {UserToken}");
+            CustomRowidCulture = await _localStorageService.GetItemAsync<short>("customrowidculture");
+            //Console.WriteLine($"UserToken: {UserToken}");
         }
 
         public async Task Login(string username, string password)
         {
-            var BLuser =  Frontend.BusinessManagerFrontend.Instance.GetBusiness("BLUser", this);
+            var BLuser =  _backendRouterService.GetSDKBusinessModel("BLUser", this);
             if(BLuser == null)
             {
                 throw new Exception("Login Service not found");
@@ -71,6 +77,7 @@ namespace Siesa.SDK.Frontend.Services
         public async Task Logout()
         {
             UserToken = "";
+            _user = null;
             await _localStorageService.RemoveItemAsync("usertoken");
             _navigationManager.NavigateTo("login");
         }
@@ -78,6 +85,26 @@ namespace Siesa.SDK.Frontend.Services
         public void SetToken(string token)
         {
             UserToken = token;
+            _localStorageService.SetItemAsync("usertoken", UserToken);
+        }
+
+        public async Task SetCustomRowidCulture(short rowid)
+        {
+            CustomRowidCulture = rowid;
+            await _localStorageService.SetItemAsync("customrowidculture", CustomRowidCulture);
+        }
+
+        public short GetRoiwdCulture()
+        {
+            if(CustomRowidCulture > 0){
+                return CustomRowidCulture;
+            }else{
+                if(User != null){
+                    return User.RowidCulture;
+                }else{
+                    return 0;
+                }
+            }
         }
     }
 }

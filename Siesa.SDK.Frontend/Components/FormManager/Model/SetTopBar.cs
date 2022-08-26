@@ -19,6 +19,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         [Parameter]
         public RenderFragment TopBarButtons { get; set; }
 
+        [Parameter]
+        public RenderFragment TopBarExtraButtons { get; set; }
+
+        [Parameter] 
+        public string StyleName { get; set; } = "toolbar_default";
+
+        [Parameter] 
+        public bool HasExtraButtons { get; set; }
+
+
         protected override void OnInitialized()
         {
             if (Layout != null)
@@ -42,6 +52,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         {
             if (Layout != null && Layout.TopBarSetter == this)
             {
+                Layout.TopBarSetter.TopBarExtraButtons = null;
+                Layout.TopBarSetter.TopBarButtons = null;
                 Layout.TopBarSetter = null;
             }
         }

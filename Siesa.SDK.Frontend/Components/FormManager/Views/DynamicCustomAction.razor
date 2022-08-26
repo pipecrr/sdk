@@ -1,27 +1,78 @@
-﻿@page "/{BusinessName}/{ActionName}/"
-@attribute [Authorize]
-@using Microsoft.AspNetCore.Authorization
+﻿@implements IDisposable
+@page "/{BusinessName}/{ActionName}/"
+@using Siesa.SDK.Shared.DataAnnotations
+@using System.Net;
+@using Siesa.SDK.Shared.Services
+@using System.Reflection
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
+@inject NavigationManager NavigationManager
+@inject IAuthenticationService AuthenticationService
+
 @if (ErrorMsg != null && ErrorMsg != "")
 {
     <text>@ErrorMsg</text>
 }
 else if (BusinessObj != null)
 {
-    @GetRenderFragment()
+    <CascadingValue Value="this">
+        @GetRenderFragment()
+    </CascadingValue>
 }
+
 
 @code {
     [Parameter] public string ActionName { get; set; }
+    private Type CustomLayout { get; set; } = typeof(MainLayout);
+    [CascadingParameter]
+    public MainLayout MainLayout { get; set; }
+    private void RedirectToLogin()
+    {
+        var returnUrl = WebUtility.UrlEncode(new Uri(NavigationManager.Uri).PathAndQuery);
+        NavigationManager.NavigateTo($"login?returnUrl={returnUrl}");
+    }
+
     private RenderFragment GetRenderFragment(){
-        var method = BusinessObj.GetType().GetMethod(ActionName);
+        MethodInfo method = BusinessObj.GetType().GetMethod(ActionName);
         if (method == null)
         {
+            if(AuthenticationService.User == null)
+            {
+                RedirectToLogin();
+                return null;
+            }
+
             ErrorMsg = "Method not found";
             StateHasChanged();
             return null;
         }
 
+        var externalView = method.GetCustomAttributes(typeof(SDKExternalView), false).FirstOrDefault() as SDKExternalView;
+        if (externalView == null && AuthenticationService.User == null)
+        {
+            RedirectToLogin();
+            return null;
+        }
+
         return (RenderFragment)method.Invoke(BusinessObj, null);
     }
+
+    public void SetLayout(Type layout)
+    {
+        if (layout != CustomLayout)
+        {
+            var isEmptyLayout = layout == typeof(EmptyLayout);
+            MainLayout?.SetEmptyLayout(isEmptyLayout);
+            this.CustomLayout = layout;
+            //StateHasChanged();
+        }
+    }
+
+    public void Dispose()
+    {
+        if(CustomLayout != typeof(EmptyLayout))
+        {
+            MainLayout?.SetEmptyLayout(false);
+        }
+    }
+
 }

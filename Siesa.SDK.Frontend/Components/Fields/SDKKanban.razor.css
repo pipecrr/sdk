@@ -1,0 +1,51 @@
+.sdk-kanban-columns-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    max-height: 100%;
+    overflow-y: hidden;
+    overflow-x: auto;
+    justify-content: space-between;
+    
+}
+
+.sdk-kanban-column {
+    height: 100%;
+    background-color: var(--color_back_body);
+    min-width: 300px;
+    margin-right: 20px;
+    width: 100%;
+}
+
+.sdk-kanban-column-title{
+    color:var(--color_text);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-top: 15px;
+}
+
+.sdk-kanban-column-items {
+    overflow: auto;
+    color: var(--color_primary);
+    min-width: 290px;
+    margin: auto;
+    height: calc(100% - 50px);
+    overflow: auto;
+}
+
+.sdk-kanban-column-items ::deep .plk-dd-dropzone{
+    height: calc(100% - 50px);
+    min-height: 200px;
+}
+
+
+.sdk-kanban-column-items ::deep .plk-dd-spacing{
+    margin-bottom: 30px;
+}
+
+.sdk-kanban-column-items ::deep .plk-dd-draggable {
+    margin-left: 5px;
+    margin-right: 5px;
+}

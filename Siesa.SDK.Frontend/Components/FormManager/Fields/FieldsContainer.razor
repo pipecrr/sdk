@@ -4,7 +4,7 @@
     ModelObj.AddRelFieldToSave(SubViewdef.ParentField.Replace("BaseObj.",""));
      @if (SubViewdef.Panels.Count > 1)
     {
-        <DxFormLayoutTabPages>
+        <DxFormLayoutTabPages ScrollMode="TabsScrollMode.Auto">
             @foreach (var panel in SubViewdef.Panels)
             {
                 <SDKFormLayoutTabPage ResourceTag="@panel.ResourceTag">
@@ -29,7 +29,14 @@
                             ColSizeXl="@GetColSize(fld,"XL")"
                             ColSizeSm="@GetColSize(fld,"SM")"
                             ColSizeXs="@GetColSize(fld,"XS")">
-                <DynamicField FieldOpt="@fld" ModelObj="@ModelObj" />
+                @if(fld.ViewContext == "DetailView"){
+                    <div class="field-detail-container">
+                        <DynamicField FieldOpt="@fld" ModelObj="@ModelObj" />
+                    </div>
+                }else{
+                    <DynamicField FieldOpt="@fld" ModelObj="@ModelObj" />
+                }
+                
             </SDKFormLayoutItem>
         }
         

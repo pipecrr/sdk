@@ -13,8 +13,9 @@ namespace Siesa.SDK.Entities
 {
 	public partial class E00200_CompanyGroup
 	{
-
-
-
+		public override string ToString()
+		{
+			return $"{Rowid}";
+		}
 	}
 }

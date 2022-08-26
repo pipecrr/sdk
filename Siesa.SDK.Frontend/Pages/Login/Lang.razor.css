@@ -1,0 +1,14 @@
+
+.btn_ghost_def_2{
+    background-color: transparent !important;
+    border-color: transparent !important;
+    border-radius: 1rem !important;
+    font-weight: 400 !important;
+    color: var(--color_text) !important;
+    min-width: 31px;
+    text-align: right;
+}
+.btn_ghost_def_2:hover, .btn_ghost_def_2:active, .btn_ghost_def_2:focus {
+    background-color: var(--coolor_back_2) !important;
+    border-color: var(--coolor_back_2) !important;
+}

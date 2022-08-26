@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Siesa.SDK.Frontend.Services;
 using Siesa.SDK.Shared.Json;
 using Siesa.SDK.Shared.Services;
 
@@ -26,7 +27,7 @@ namespace Siesa.SDK.Frontend.Application
 
         Dictionary<Int64, string> resourceDict = new Dictionary<Int64, string>();
 
-        public BusinessFrontendModel Backend {get { return Frontend.BusinessManagerFrontend.Instance.GetBusiness("BLResource", null); } }
+        public SDKBusinessModel Backend {get { return BackendRouterService.Instance.GetSDKBusinessModel("BLResource", null); } }
 
         public ResourceManager()
         {
@@ -80,16 +81,16 @@ namespace Siesa.SDK.Frontend.Application
 
         public async Task<string> GetResource(Int64 resourceRowid, IAuthenticationService authenticationService)
         {
-            if(authenticationService != null & authenticationService.User != null && authenticationService.User.RowidCulture != 0){
-                return await GetResource(resourceRowid, authenticationService.User.RowidCulture);
+            if(authenticationService != null & authenticationService.User != null && authenticationService.GetRoiwdCulture() != 0){
+                return await GetResource(resourceRowid, authenticationService.GetRoiwdCulture());
             }
             return  "Invalid User";
         }
 
         public async Task<string> GetResource(string resourceTag, IAuthenticationService authenticationService)
         {
-            if(authenticationService != null & authenticationService.User != null && authenticationService.User.RowidCulture != 0){
-                return await GetResource(resourceTag, authenticationService.User.RowidCulture);
+            if(authenticationService != null & authenticationService.User != null && authenticationService.GetRoiwdCulture() != 0){
+                return await GetResource(resourceTag, authenticationService.GetRoiwdCulture());
             }
             return "Invalid User";
         }

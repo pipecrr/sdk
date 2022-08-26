@@ -1,0 +1,104 @@
+@using Siesa.SDK.Frontend.Components.Visualization
+@using SDK.Components.Visualization
+@inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
+@inject UtilsManager UtilManager
+@inject SDKNotificationService SDKNotificationService
+
+@if(IsEmptyLayout){
+    @if (CurrentException != null)
+    {
+        <div class="error-container">
+            <i class="fa-solid fa-triangle-exclamation" />
+            <h4>@Title</h4>
+
+            <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Error.MoreInfo"
+            Click="@ClickMoreInfo" />
+
+            <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Error.Recover"
+            Click="@ClickRecover" />
+
+            @if (ShowStackError)
+            {
+                <div class="Text-Area-Container">
+
+                    <textarea>@CurrentException.ToString()</textarea>
+
+                </div>
+
+            }
+        </div>
+    }
+}else{
+    <aside class="col-12 sdk_home_content">
+        <div class="offset-lg-0 col-lg-12 offset-xl-0 col-xl-12 offset-xxl-1 col-xxl-10 px-0 px-md-3">
+            <div class="col-12 area2 px-3">
+                <div class="col-12 px-0 py-3">
+                    @if (CurrentException != null)
+                    {
+                        <div class="error-container">
+                            <i class="fa-solid fa-triangle-exclamation" />
+                            <h4>@Title</h4>
+
+                            <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Error.MoreInfo"
+                            Click="@ClickMoreInfo" />
+
+                            <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Error.Recover"
+                            Click="@ClickRecover" />
+
+                            @if (ShowStackError)
+                            {
+                                <div class="Text-Area-Container">
+
+                                    <textarea>@CurrentException.ToString()</textarea>
+
+                                </div>
+
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </aside>
+}
+
+
+@code {
+    [Parameter]
+    public Exception? CurrentException { get; set; }
+
+    [Parameter]
+    public bool IsEmptyLayout { get; set; }
+
+    [Parameter]
+    public ErrorBoundary? Error { get; set; }
+
+    private bool ShowStackError { get; set; }
+
+    private string Title { get; set; }
+    private string TitleTag = "Error.Text.Title";
+
+    private string NotificationMessage { get; set; }
+    private string NotificationMessageTag = "Error.Text.NotificationMessage";
+
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitializedAsync();
+        Title = await UtilManager.GetResource(TitleTag);
+        NotificationMessage = await UtilManager.GetResource(NotificationMessageTag);
+        SDKNotificationService.ShowError(NotificationMessage);
+    }
+
+    void ClickMoreInfo()
+    {
+        ShowStackError = !ShowStackError;
+    }
+
+    void ClickRecover()
+    {
+        if (Error != null)
+        {
+            Error.Recover();
+        }
+    }
+}

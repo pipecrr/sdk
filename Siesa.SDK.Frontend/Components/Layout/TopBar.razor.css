@@ -1,42 +1,49 @@
-﻿.gridlayout-content-parent {
+﻿.whcm_toolbar{
+    width: calc(100% - 2rem) !important;
+    background: var(--color_light);
+    border-radius: var(--border_radius_standar);
+    box-shadow: var(--shadow_standar);
     display: flex;
-    justify-content: center;
-}
-
-.gridlayout-bar-parent {
-    background-color: #fff;
-    height: 50px;
-    -webkit-box-shadow: 0px 10px 13px -7px #0000001c, 0px 0px 0px 0px rgba(0,0,0,0);
-    box-shadow: 0px 10px 13px -7px #0000001c, 0px 0px 0px 0px rgba(0,0,0,0);
-    align-items: center;
-}
-
-.gridlayout-bar {
-    min-width: 90%;
-    width: 90%;
-    max-width: 90%;
-    display: flex;
-    align-items: center;
+    flex-wrap: nowrap;
     justify-content: space-between;
+    position: absolute !important;
+    top: -2.063rem;
 }
-
-.topbar-title {
-    font-size: 14pt;
-    white-space: nowrap;
-    overflow: hidden;
+.toolbar_edition{
+    border-left: .5rem solid var(--color_estado_edición);
+}
+.toolbar_default{
+    border-left: .5rem solid var(--color_primary_light);
+}
+.toolbar_creation{
+    border-left: .5rem solid var(--color_estado_creación);
+}
+.whcm_toolbar_text{
+    max-width: calc(100% - 210px);
+}
+.whcm_toolbar_text > h3{
+    max-width: 100%;
     text-overflow: ellipsis;
-    font-weight: 500;
+    overflow: hidden;
+    white-space: nowrap;    
 }
 
-.topbar-buttons{
-
+@media (max-width: 767.98px) { 
+    .whcm_toolbar_text > h3 {
+        font-size: 1.5rem;
+    }
 }
 
-/* Mobile */
-@media only screen and (max-width: 600px) {
-    .gridlayout-bar {
-        min-width: 100%;
+@media (max-width: 575.98px) {
+    .whcm_toolbar{
+        flex-wrap: wrap;
+    }
+    .whcm_toolbar_text{
         width: 100%;
         max-width: 100%;
     }
-}
+    .whcm_toolbar_button{
+        width: 100%;
+        justify-content: center;  
+    }
+ }
