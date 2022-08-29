@@ -61,7 +61,14 @@
                                         </button>
                                     </div>
                                 </div>
-                                <button @onclick:stopPropagation="true" @onclick:preventDefault @onclick="@SetCompanyGroup" class="btn btn-primary btn_primary_def_1 btn-sm w-100 mt-2">Cambiar configuración </button>
+                                <button @onclick:stopPropagation="true" @onclick:preventDefault @onclick="@SetCompanyGroup" class="btn btn-primary btn_primary_def_1 btn-sm w-100 mt-2"> 
+                                     @if (loading)
+                                        {
+                                            <p style="margin-bottom: 0 !important">Cargando<span class="spinner-border spinner-border-sm mr-1"></span></p>
+                                        }else{
+                                            <p style="margin-bottom: 0 !important">Cambiar Configuracion</p>
+                                        }   
+                                </button>
                             </form>
                             <div class="alert alert-info text-center mt-3 mb-0 font_size_087" role="alert">
                                 Al cambiar la configuración se refrescará la ventana
@@ -95,19 +102,16 @@
 
     private bool ConnectEnabled = false;
 
-    private List<E00200_CompanyGroup> CompanyGroups { get; set; }
+    private List<E00200_CompanyGroup> CompanyGroups { get; set; } = new List<E00200_CompanyGroup>();
 
     private E00200_CompanyGroup SelectedGroup { get; set; } = new E00200_CompanyGroup();
 
-     private bool init_loading = true;
-    private bool loading;
+    private bool loading = false;
 
 
 
     protected override async Task OnInitializedAsync()
     {
-        CompanyGroups = new List<E00200_CompanyGroup>();
-
         var BL = BackendRouterService.GetSDKBusinessModel("BLSDKCompanyGroup",AuthenticationService);
         
         var DataCompanyGroup = await BL.GetData(null, null);
@@ -127,6 +131,7 @@
 
     public async  Task SetCompanyGroup()
     {
+        loading = true;
         await AuthenticationService.SetRowidGroupCompany(SelectedGroup.Rowid);
         NavigationService.NavigateTo("/", forceLoad: true,replace: true);
         return;
@@ -136,13 +141,5 @@
         ConnectEnabled = !ConnectEnabled;
     }
 
-        private string GetCssLoding()
-    {
-        if (!init_loading)
-        {
-            return "login_loading_close";
-        }
-        return "";
-    }
 
 }
