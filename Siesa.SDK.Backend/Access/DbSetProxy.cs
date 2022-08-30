@@ -153,6 +153,8 @@ namespace Siesa.SDK.Backend.Access
                         this.query = this.FilterCompany<int>(query);
                         break;
                 }
+            }else if(typeof(TEntity) == typeof(E00201_Company)){
+                this.query = this.FilterCompanyEntity(query);
             }
         }
 
@@ -177,6 +179,18 @@ namespace Siesa.SDK.Backend.Access
             var group_company_session = AuthenticationService.User.RowIdCompanyGroup;
             var sdk_query = (IQueryable<BaseCompany<T>>)query;
             sdk_query = sdk_query.Include("Company").Where(x => x.Company.RowidCompanyGroup == group_company_session);
+            return sdk_query.Cast<TEntity>();
+        }
+
+        private IQueryable<TEntity> FilterCompanyEntity(IQueryable<TEntity> query)
+        {
+            if(AuthenticationService?.User == null)
+            {
+                 return query; //TODO: Validar si devolver todo o nada
+            }
+            var group_company_session = AuthenticationService.User.RowIdCompanyGroup;
+            var sdk_query = (IQueryable<E00201_Company>)query;
+            sdk_query = sdk_query.Where(x => x.RowidCompanyGroup == group_company_session);
             return sdk_query.Cast<TEntity>();
         }
 
