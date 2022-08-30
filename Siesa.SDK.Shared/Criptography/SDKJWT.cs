@@ -72,7 +72,7 @@ namespace Siesa.SDK.Shared.Criptography
                 RowidCulture = user.RowidCulture,
                 Roles = roles,
                 FeaturePermissions = featurePermissions,
-                RowIdCompanyGroup = rowidcompanygroup
+                RowidCompanyGroup = rowidcompanygroup
 
                 // Teams = user.Teams.Select(x => x.TeamName).ToArray(),
                 //IsSuperAdmin = user.IsSuperAdmin

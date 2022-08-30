@@ -60,12 +60,12 @@ namespace Siesa.SDK.Backend.Services
             throw new NotImplementedException();
         }
 
-        public Task SetRowidGroupCompany(short rowid)
+        public Task SetRowidCompanyGroup(short rowid)
         {
             throw new NotImplementedException();
         }
 
-        public short GetRowidGroupCompany()
+        public short GetRowidCompanyGroup()
         {
             throw new NotImplementedException();
         }

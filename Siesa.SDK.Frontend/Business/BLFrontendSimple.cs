@@ -155,8 +155,8 @@ namespace Siesa.SDK.Business
             if (AuthenticationService?.User != null && Utilities.IsAssignableToGenericType(BaseObj.GetType(), typeof(BaseCompanyGroup<>)))
             {
                 var companyGroup = new E00200_CompanyGroup();
-                companyGroup.Rowid = AuthenticationService.User.RowIdCompanyGroup;
-                BaseObj.GetType().GetProperty("RowidCompanyGroup").SetValue(BaseObj, AuthenticationService.User.RowIdCompanyGroup);
+                companyGroup.Rowid = AuthenticationService.User.RowidCompanyGroup;
+                BaseObj.GetType().GetProperty("RowidCompanyGroup").SetValue(BaseObj, AuthenticationService.User.RowidCompanyGroup);
                 BaseObj.GetType().GetProperty("CompanyGroup").SetValue(BaseObj, companyGroup);
             }
         }

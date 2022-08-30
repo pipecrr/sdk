@@ -33,7 +33,7 @@
                 <button @onclick="()=> ToogleConnect()" class="btn btn_connect py-0 px-2 px-lg-3 d-flex align-items-center">
                     <div>
                         <p class="font-weight-bold m-0 text-truncate" data-toggle="tooltip" data-placement="bottom" title="">Grupo
-                            @AuthenticationService.GetRowidGroupCompany()
+                            @AuthenticationService.GetRowidCompanyGroup()
                         </p>
                     </div>
                     <div class="pl-2 pl-xl-3">
@@ -118,11 +118,11 @@
         
         CompanyGroups = DataCompanyGroup.Data.Select(x => JsonConvert.DeserializeObject<E00200_CompanyGroup>(x)).ToList();
 
-        SelectedGroup = CompanyGroups.FirstOrDefault(x => x.Rowid == AuthenticationService.GetRowidGroupCompany());
+        SelectedGroup = CompanyGroups.FirstOrDefault(x => x.Rowid == AuthenticationService.GetRowidCompanyGroup());
         if(SelectedGroup == null)
         {
             SelectedGroup = CompanyGroups.First();
-            AuthenticationService.SetRowidGroupCompany(SelectedGroup.Rowid);
+            AuthenticationService.SetRowidCompanyGroup(SelectedGroup.Rowid);
         }
 
         base.OnInitializedAsync(); 
@@ -132,7 +132,7 @@
     public async  Task SetCompanyGroup()
     {
         loading = true;
-        await AuthenticationService.SetRowidGroupCompany(SelectedGroup.Rowid);
+        await AuthenticationService.SetRowidCompanyGroup(SelectedGroup.Rowid);
         NavigationService.NavigateTo("/", forceLoad: true,replace: true);
         return;
     }

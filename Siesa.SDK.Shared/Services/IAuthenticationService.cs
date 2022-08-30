@@ -18,7 +18,7 @@ namespace Siesa.SDK.Shared.Services
 
         public List<SessionRol> Roles { get; set; } = new List<SessionRol>();
         
-        public short RowIdCompanyGroup { get; set; } 
+        public short RowidCompanyGroup { get; set; } 
         public Dictionary<int, Dictionary<int, bool>> FeaturePermissions { get; set; } = new Dictionary<int, Dictionary<int, bool>>();
         // public string[] Teams { get; set; }
 
@@ -40,9 +40,9 @@ namespace Siesa.SDK.Shared.Services
         public Task SetToken(string token);
         Task SetCustomRowidCulture(short rowid);
         short GetRoiwdCulture();
-        Task SetRowidGroupCompany(short rowid);
+        Task SetRowidCompanyGroup(short rowid);
 
-        short GetRowidGroupCompany();
+        short GetRowidCompanyGroup();
 
     }
 

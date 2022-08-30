@@ -108,7 +108,7 @@ namespace Siesa.SDK.Frontend.Services
             await _localStorageService.SetItemAsync("customrowidculture", CustomRowidCulture);
         }
 
-        public async Task SetRowidGroupCompany(short rowid)
+        public async Task SetRowidCompanyGroup(short rowid)
         {
 
             var BLUser = _backendRouterService.GetSDKBusinessModel("BLUser", this);
@@ -125,13 +125,13 @@ namespace Siesa.SDK.Frontend.Services
 
         }
 
-        public short GetRowidGroupCompany()
+        public short GetRowidCompanyGroup()
         {
             if (this.User == null)
             {
              return 0;   
             }
-            return this.User.RowIdCompanyGroup;
+            return this.User.RowidCompanyGroup;
         }
 
         public short GetRoiwdCulture()
