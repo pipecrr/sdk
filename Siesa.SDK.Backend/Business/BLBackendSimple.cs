@@ -524,14 +524,14 @@ namespace Siesa.SDK.Business
 
                 string strColumns = "";
                 //string strRelatedColumns = "";            
-                Dictionary<string, List<SDKFlexColumn>> columnsRelated = new Dictionary<string, List<SDKFlexColumn>>();
+                //Dictionary<string, List<SDKFlexColumn>> columnsRelated = new Dictionary<string, List<SDKFlexColumn>>();
 
                 foreach (SDKFlexColumn column in columns)
                 {
                     var i = columns.IndexOf(column);
                     if (column.path.Contains("::"))
                     {
-                        List<SDKFlexColumn> value = new List<SDKFlexColumn>();
+                        /*List<SDKFlexColumn> value = new List<SDKFlexColumn>();
                         if (columnsRelated.TryGetValue(column.path, out value))
                         {
                             value.Add(column);
@@ -540,7 +540,7 @@ namespace Siesa.SDK.Business
                         else
                         {
                             columnsRelated.Add(column.path, new List<SDKFlexColumn>() { column });
-                        }
+                        }*/
                         /*strRelatedColumns += column.name + " as " + column.name.ToLower();
                         if (i != columns.Count - 1)
                         {
@@ -573,14 +573,14 @@ namespace Siesa.SDK.Business
                     .Select($"new ({strColumns})");
 
                     IQueryable query;
-                    if (columnsRelated.Count > 0)
+                    /*if (columnsRelated.Count > 0)
                     {                        
                         query = select;
                     }
                     else
                     {
+                    }*/
                         query = select;
-                    }
 
                     List<dynamic> resource = query.Take(50).ToDynamicList();
                     if (resource != null)
