@@ -1,7 +1,7 @@
 ﻿@typeparam TItem
 @inherits FieldClass<TItem>
 
-<p style="word-wrap: break-word">@if(BindValue != null){<ResourceViewer ResourceTag="@_value" />}</p>
+<p class="sdk-select-field-detail-value" style="word-wrap: break-word">@if(BindValue != null){<ResourceViewer ResourceTag="@_value" />}</p>
 
 @code {
     [Parameter] public IEnumerable<TItem> Options {get; set;}

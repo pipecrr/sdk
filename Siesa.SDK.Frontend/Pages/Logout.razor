@@ -1,10 +1,12 @@
 @page "/logout"
 @using Siesa.SDK.Shared.Services
 @inject IAuthenticationService AuthenticationService
+@inject MenuService MenuService
 
 @code {
     protected override async void OnInitialized()
     {
+        MenuService.ClearMenu();
         await AuthenticationService.Logout();
     }
 }

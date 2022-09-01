@@ -117,6 +117,10 @@
                 ResourceTag = "BLUser.Logout",
                 Url = "/logout"
             });
+            if(MenuService.Menus.Count == 0)
+            {
+                MenuService.ReloadMenu();
+            }
         }
         await base.OnInitializedAsync();
     }
