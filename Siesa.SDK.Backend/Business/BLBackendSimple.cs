@@ -14,6 +14,7 @@ using Siesa.SDK.Shared.Exceptions;
 using Siesa.SDK.Backend.Exceptions;
 using Microsoft.Extensions.Logging;
 using Siesa.SDK.GRPCServices;
+using System.Linq;
 using System.Linq.Dynamic.Core;
 using Siesa.SDK.Shared.Services;
 using Newtonsoft.Json;
@@ -27,6 +28,7 @@ using Siesa.SDK.Shared.DataAnnotations;
 using Siesa.SDK.Backend.Services;
 using Siesa.SDK.Shared.DTOS;
 using System.Linq.Expressions;
+using System.Collections;
 
 namespace Siesa.SDK.Business
 {
@@ -510,25 +512,32 @@ namespace Siesa.SDK.Business
             }
         }
 
-        [SDKExposedMethod]
-        public ActionResult<dynamic> SDKFlexPreviewData(SDKFlexRequestData requestData)
+        private static dynamic Holamundo(SDKFlexRequestData requestData, SDKContext Context)
         {
-
-            using (var Context = _dbFactory.CreateDbContext())
-            {
+           
                 List<SDKFlexColumn> columns = requestData.columns;
                 if (columns.Count == 0)
                 {
                     return new BadRequestResult<dynamic>();
                 }
 
-                string strColumns = "";
+                List<string> strColumns = new List<string>();
                 //string strRelatedColumns = "";            
                 //Dictionary<string, List<SDKFlexColumn>> columnsRelated = new Dictionary<string, List<SDKFlexColumn>>();
 
-                foreach (SDKFlexColumn column in columns)
+
+                /*foreach (SDKFlexColumn column in columns)
                 {
                     var i = columns.IndexOf(column);
+                    var columnPath = column.path.Split("::");
+
+                    for (int j = 1; j < columnPath.Count(); j++)
+                    {
+                        var x = columnPath[j];
+                        if(!relatedToInclude.Contains(x)){
+
+                        }
+                    }
                     if (column.path.Contains("::"))
                     {
                         /*List<SDKFlexColumn> value = new List<SDKFlexColumn>();
@@ -541,21 +550,21 @@ namespace Siesa.SDK.Business
                         {
                             columnsRelated.Add(column.path, new List<SDKFlexColumn>() { column });
                         }*/
-                        /*strRelatedColumns += column.name + " as " + column.name.ToLower();
-                        if (i != columns.Count - 1)
-                        {
-                            strRelatedColumns += ", ";
-                        }*/
-                    }
-                    else
-                    {
-                        strColumns += column.name + " as " + column.name.ToLower();
-                        if (i != columns.Count - 1)
-                        {
-                            strColumns += ", ";
-                        }
-                    }
+                /*strRelatedColumns += column.name + " as " + column.name.ToLower();
+                if (i != columns.Count - 1)
+                {
+                    strRelatedColumns += ", ";
+                }*//*
+            }
+            else
+            {
+                strColumns += column.name + " as " + column.key_name;
+                if (i != columns.Count - 1)
+                {
+                    strColumns += ", ";
                 }
+            }
+        }*/
 
                 List<SDKFlexFilters> filters = requestData.filters;
 
@@ -565,24 +574,49 @@ namespace Siesa.SDK.Business
                 try
                 {
                     var entityType = Utilities.SearchType(nameSpaceEntity + "." + nameEntity, true);
-                    IQueryable<dynamic> contextSet = Context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(entityType).Invoke(Context, null) as IQueryable<dynamic>;
+                    var contextSet = Context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(entityType).Invoke(Context, null);
+                    List<string> relatedColumns = new List<string>();
 
-                    createWhere(ref contextSet, filters, entityType);
-
-                    IQueryable select = contextSet
-                    .Select($"new ({strColumns})");
-
-                    IQueryable query;
-                    /*if (columnsRelated.Count > 0)
-                    {                        
-                        query = select;
-                    }
-                    else
+                    var assembly = typeof(Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions).Assembly;
+                    var includeMethod = typeof(IQueryable<object>).GetExtensionMethod(assembly,"Include",new[] { typeof(IQueryable<object>), typeof(string)});                    
+                    foreach (SDKFlexColumn column in columns)
                     {
-                    }*/
-                        query = select;
+                        var i = columns.IndexOf(column);
+                        var columnPath = column.path.Split("::");
+                        if (columnPath.Count() == 1)
+                        {
+                            strColumns.Add(column.name + " as " + column.key_name);                            
+                        }
+                        else
+                        {
+                            var relatedColumnInclude = string.Join(".", columnPath.Skip(1));
+                            if (!relatedColumns.Contains(relatedColumnInclude))
+                                {
+                                    var includeMethodGeneric = includeMethod.MakeGenericMethod(entityType);
+                                        contextSet = includeMethodGeneric.Invoke(contextSet, new object[] { contextSet, relatedColumnInclude});
+                                    relatedColumns.Add(relatedColumnInclude);
+                                }
+                            strColumns.Add($"{relatedColumnInclude}.{column.name} as {column.key_name}");
+                            
+                        }
+                    }
 
-                    List<dynamic> resource = query.Take(50).ToDynamicList();
+                    var assemblySelect = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
+                    string strSelect = string.Join(", ", strColumns);
+                    
+                    createWhere(ref contextSet, filters, entityType, assemblySelect);
+
+                    var selectMethod = typeof(IQueryable).GetExtensionMethod(assemblySelect, "Select", new[] { typeof(IQueryable), typeof(string), typeof(object[]) });
+                    contextSet = selectMethod.Invoke(contextSet, new object[] { contextSet, $"new ({strSelect})", null });
+                    
+                    var takeMethod = typeof(IQueryable).GetExtensionMethod(assemblySelect, "Take", new[] { typeof(IQueryable), typeof(int) });
+                    contextSet = takeMethod.Invoke(contextSet, new object[] { contextSet, 50});
+
+                    var assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
+                    var dynamicListMethod = typeof(IEnumerable).GetExtensionMethod(assemblyDynamic, "ToDynamicList", new[]{ typeof(IEnumerable) });
+			        var dynamicList = dynamicListMethod.Invoke(contextSet, new object[] { contextSet });
+                    
+                    var resource = dynamicList;
                     if (resource != null)
                     {
                         return new ActionResult<dynamic>() { Data = resource };
@@ -592,12 +626,35 @@ namespace Siesa.SDK.Business
                 {
                     return new ActionResult<dynamic>() { Success = false, Errors = new List<string>() { "Error al crear la consulta" } };
                 }
-            }
+            
 
             return null;
         }
 
-        private Expression GetPropertyExpression(Expression pe, string chain)
+         static Expression<Func<TSource, dynamic>> DynamicFields<TSource>(IEnumerable<string> fields)
+        {
+            var source = Expression.Parameter(typeof(TSource), "o");
+            var properties = fields
+                .Select(f => typeof(TSource).GetProperty(f))
+                .Select(p => new DynamicProperty(p.Name, p.PropertyType))
+                .ToList();
+            var resultType = DynamicClassFactory.CreateType(properties, false);
+            var bindings = properties.Select(p => Expression.Bind(resultType.GetProperty(p.Name), Expression.Property(source, p.Name)));
+            var result = Expression.MemberInit(Expression.New(resultType), bindings);
+            return Expression.Lambda<Func<TSource, dynamic>>(result, source);
+        }   
+
+        [SDKExposedMethod]
+        public ActionResult<dynamic> SDKFlexPreviewData(SDKFlexRequestData requestData)
+        {
+            using (var Context = _dbFactory.CreateDbContext())
+            {   
+                return Holamundo(requestData, Context);
+            }
+            return null;
+        }
+
+        private static Expression GetPropertyExpression(Expression pe, string chain)
         {
             var properties = chain.Split('.');
             foreach (var property in properties)
@@ -606,7 +663,7 @@ namespace Siesa.SDK.Business
             return pe;
         }
 
-        private void createWhere(ref IQueryable<object> select, List<SDKFlexFilters> filters, Type entityType)
+        private static void createWhere(ref object select, List<SDKFlexFilters> filters, Type entityType, Assembly assembly)
         {
             Expression combined = null;
             ParameterExpression pe = Expression.Parameter(entityType, entityType.Name);
@@ -615,8 +672,23 @@ namespace Siesa.SDK.Business
             {
                 //Expression for accessing Fields name property
 
-                Expression columnNameProperty = GetPropertyExpression(pe, filter.name);
-                var columnType = entityType.GetProperty(filter.name).PropertyType;
+                Expression columnNameProperty;
+                Type columnType;
+                if (filter.path.Contains("::"))
+                {
+                    var filterColumnPath = filter.path.Split("::").Append(filter.name);
+                    columnNameProperty = GetPropertyExpression(pe, string.Join(".",filterColumnPath.Skip(1)));
+                    columnType = entityType;
+                    foreach (var filterColumn in filterColumnPath.Skip(1))
+                    {
+                        columnType = columnType.GetProperty(filterColumn).PropertyType;
+                    }   
+                }
+                else
+                {
+                    columnNameProperty = GetPropertyExpression(pe, filter.name);
+                    columnType = entityType.GetProperty(filter.name).PropertyType;
+                }
 
                 Expression columnValue;
                 //the name constant to match 
@@ -945,18 +1017,20 @@ namespace Siesa.SDK.Business
             {
                 var funcExpression = typeof(Func<,>).MakeGenericType(new Type[] { entityType, typeof(bool) });
                 var returnExp = Expression.Lambda(funcExpression, combined, new ParameterExpression[] { pe });
-                select = select.Where(returnExp);
+                var whereMethod = typeof(IQueryable<object>).GetExtensionMethod(assembly,"Where",new[] { typeof(IQueryable<object>), typeof(LambdaExpression)}); 
+                var whereMethodGeneric = whereMethod.MakeGenericMethod(entityType);
+                select = whereMethodGeneric.Invoke(select, new object[] { select, returnExp });
             }
 
         }
 
-        private MethodInfo getMethodInfo(string nameMethod, Type type)
+        private static MethodInfo getMethodInfo(string nameMethod, Type type)
         {
             var r = type.GetMethod(nameMethod, new Type[] { type });
             return r;
         }
 
-        private void addExpression(ref Expression combined, Expression expression)
+        private static void addExpression(ref Expression combined, Expression expression)
         {
             if (combined == null)
             {
@@ -968,5 +1042,65 @@ namespace Siesa.SDK.Business
             }
         }
     }
+
+    public static class ReflectionExtensions
+	{   
+		public static IEnumerable<MethodInfo> GetExtensionMethods(this Type type, Assembly extensionsAssembly)
+		{
+			var query = from t in extensionsAssembly.GetTypes()
+						where !t.IsGenericType && !t.IsNested
+						from m in t.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+						where m.IsDefined(typeof(System.Runtime.CompilerServices.ExtensionAttribute), false)
+						where m.GetParameters()[0].ParameterType.Name == type.Name
+						select m;
+
+			return query;
+		}
+
+		public static MethodInfo GetExtensionMethod(this Type type, Assembly extensionsAssembly, string name)
+		{
+			return type.GetExtensionMethods(extensionsAssembly).FirstOrDefault(m => m.Name == name);
+		}
+
+		public static MethodInfo GetExtensionMethod(this Type type, Assembly extensionsAssembly, string name, Type[] types)
+		{
+			var methods = (from m in type.GetExtensionMethods(extensionsAssembly)
+						where m.Name == name
+						&& m.GetParameters().Count() == types.Length
+						select m).ToList();
+
+			if (!methods.Any())
+			{
+				return default(MethodInfo);
+			}
+
+			if (methods.Count() == 1)
+			{
+				return methods.First();
+			}
+
+			foreach (var methodInfo in methods)
+			{
+				var parameters = methodInfo.GetParameters();
+
+				bool found = true;
+				for (byte b = 0; b < types.Length; b++)
+				{
+					found = true;
+					if (parameters[b].ParameterType != types[b] || (types[b].IsGenericType && types[b].Name != parameters[b].ParameterType.Name))
+					{
+						found = false;
+					}
+				}
+
+				if (found)
+				{
+					return methodInfo;
+				}
+			}
+
+			return default(MethodInfo);
+		}
+	}    
 
 }
