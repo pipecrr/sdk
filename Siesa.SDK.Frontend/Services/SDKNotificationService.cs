@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Radzen;
 using Siesa.SDK.Frontend.Components;
@@ -12,15 +13,23 @@ namespace Siesa.SDK.Frontend.Services
         {
             UtilsManager = utilsManager;
         }
-        public async Task ShowError(string message, string titleResourceTag = "Notification.Error", int duration = 5000)
+        public async Task ShowError(string message, string format="" ,int duration =  999999, Int64 culture = 0)
         {
-            string text = "";
+            string resourceMessage ="";
+            if (culture != 0)
+            {
+                 resourceMessage = await UtilsManager.GetResource(message,culture);
+            }
+             else {
+                resourceMessage = await UtilsManager.GetResource(message);
+             }
+
+             string nombre = String.Format(resourceMessage,format);
 
             base.Notify(new SDKNotificationMessage
             {
                 Severity = SDKEnums.GetNotification(SDKNotificationSeverity.Error),
-                Summary = text,
-                Detail = message,
+                Detail = nombre,
                 Duration = duration
             });
         }
