@@ -111,6 +111,11 @@ namespace Siesa.SDK.Shared.Services
         {
             try
             {
+                if(this.serviceConfiguration.CurrentUrl == _masterBackendURL)
+                {
+                    await Task.Delay(5000); //wait for the master backend to be ready
+                }
+
                 using var channel = GrpcChannel.ForAddress(_masterBackendURL);
                 var client = new Protos.GRPCBackendManagerService.GRPCBackendManagerServiceClient(channel);
                 var request = new Protos.RegisterBackendRequest

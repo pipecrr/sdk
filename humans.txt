@@ -2,7 +2,7 @@ Este software es hecho por humanos comprometidos con la calidad.
 
 Aquí aparecen las personas que han contribuido con hacer esto una realidad:
 
-- Daniel Meza
+- Daniel Mesa
 - Jonathan Toledo
 - Abel Gonzalez Rengifo
 - Carlos Humberto Rengifo (Julio 2021 - Febrero 2022)

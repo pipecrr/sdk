@@ -1,4 +1,4 @@
-﻿:root {
+:root {
     --color_back_body: #F0F3F4;
 
     --color_primary: #001AAE;
@@ -583,4 +583,135 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
     .area2 {
         padding-top: 4rem;
     }
+}
+.dxbs-fl .form-group {
+    margin-bottom: 1rem !important;
+}
+
+@keyframes alert_show{
+    0%{
+        opacity: 0;
+        top: -10rem;
+    }
+    100%{
+        opacity: 1;
+        top: 0rem;
+    }
+}
+
+
+.rz-notification {
+    top: 10rem !important;
+    float: right !important;
+    right: 1rem !important;
+    max-width: 320px !important;
+    min-width: 320px !important;
+    font-size: 0.875rem !important;
+}
+
+.rz-notification-message.rz-growl .rz-growl-item .rz-growl-message{
+    display: flex;
+    padding-left: 1rem;
+}
+
+.rz-notification-message.rz-growl .rz-growl-item .rz-growl-message .rz-growl-title {
+    display: none;
+}
+
+.rz-growl-item {
+    padding: 0.75rem 1.25rem !important;
+    border: 1px solid transparent !important;
+    border-radius: 0.25rem !important;
+    animation-name: alert_show;
+    animation-duration: 0.6s;
+    animation-fill-mode: forwards;
+    margin-bottom: 1rem !important;
+    position: relative !important;
+}
+.rz-growl-message {
+    color: unset !important;
+}
+
+.rz-growl-icon-close {
+    font-family: Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif !important;
+    text-shadow: 0 1px 0 #fff !important;
+    line-height: 1 !important;
+    opacity: 0.5 !important;
+}
+
+.rz-growl-icon-close:before {
+    content: "×" !important;
+    font-weight: 700 !important;
+    margin:50% !important;
+}
+
+.rz-growl-icon-close:hover {
+    color: #000 !important;
+    text-decoration: none !important;
+    opacity: 1 !important;
+}
+
+.rz-growl-image {
+    font-weight: 900 !important;
+    font-style: normal !important;
+    font-variant: normal !important;
+    line-height: 1 !important;
+    text-rendering: auto !important;
+    margin: 0 !important;
+    margin-right: 0.5rem!important;
+    font-size: 0.875rem !important;
+
+    position: absolute !important;
+    top: 50% !important;
+    left: 1rem !important;
+    transform: translateY(-50%) !important;
+    display: flex !important;
+}
+
+.rz-growl-message-success .rz-growl-item {
+    color: #155724 !important;
+    background-color: #d4edda !important;
+    border-color: #c3e6cb !important;
+}
+
+.rz-growl-message-warn .rz-growl-item {
+    color: #856404 !important;
+    background-color: #fff3cd !important;
+    border-color: #ffeeba !important;
+}
+
+.rz-growl-message-error .rz-growl-item {
+    color: #721c24 !important;
+    background-color: #f8d7da !important;
+    border-color: #f5c6cb !important;
+}
+
+.rz-growl-message-info .rz-growl-item {
+    color: #0c5460 !important;
+    background-color: #d1ecf1 !important;
+    border-color: #bee5eb !important;
+}
+
+.rz-growl-image.rzi-check:before {
+    content: "\f058" !important;
+    font-family: "Font Awesome 6 Free" !important;
+}
+
+.rz-growl-image.rzi-info-circle:before {
+    content: "\f05a" !important;
+    font-family: "Font Awesome 6 Free" !important;
+}
+
+.rz-growl-image.rzi-times:before {
+    content: "\f06a" !important;
+    font-family: "Font Awesome 6 Free" !important;
+}
+
+.rz-growl-image.rzi-exclamation-triangle:before {
+    content: "\f071" !important;
+    font-family: "Font Awesome 6 Free" !important;
+}
+
+.rz-notification-message.rz-growl {
+    width: 100% !important;
 }

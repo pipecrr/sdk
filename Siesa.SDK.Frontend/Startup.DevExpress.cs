@@ -40,6 +40,7 @@ namespace Siesa.SDK.Frontend {
 
             services.AddScoped<ISDKJWT, Siesa.SDK.Frontend.Criptography.SDKJWT>();
             services.AddScoped<SDKDialogService>();
+            services.AddScoped<MenuService>();
 
             SDKApp.AddAssembly(typeof(LayoutService).Assembly);
         }

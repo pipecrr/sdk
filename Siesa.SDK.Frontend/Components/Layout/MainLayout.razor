@@ -1,101 +1,119 @@
 ﻿@inherits LayoutComponentBase
 @using Microsoft.Extensions.Hosting
 @using Siesa.SDK.Frontend.Components.Layout.Header
-@using Siesa.SDK.Entities
 @using System
-@using System.Collections.Generic
-@using System.Threading.Tasks
 @using Microsoft.AspNetCore.Components
-@using Siesa.SDK.Shared.Backend
-@using System.Linq
-@using Siesa.SDK.Shared.Utilities
-@using Siesa.SDK.Business
-@using Siesa.SDK.Shared.Services
 @using Siesa.SDK.Frontend.Components.Layout.NavMenu
-@using Siesa.SDK.Frontend.Application
-@using Siesa.SDK.Frontend.Components.Layout
-@inject IAuthenticationService AuthenticationService
-@inject NavigationManager NavigationManager
-@inject IResourceManager ResourceManager
-@inject IBackendRouterService BackendRouterService
 <RadzenDialog />
-<RadzenNotification Style="top:unset !important; bottom:10px;" />
-<DxGridLayout>
-    <Rows>
-        <DxGridLayoutRow Height="auto" />
-        <DxGridLayoutRow />
-    </Rows>
-    <Columns>
-        <DxGridLayoutColumn />
-    </Columns>
-    <Items>
-        <DxGridLayoutItem Row="0" Column="0">
-            <Template>
-                <SDKHeader Menus="@Menus" />
-            </Template>
-        </DxGridLayoutItem>
-        <DxGridLayoutItem Row="1" Column="0">
-            <Template>
-                <div class="sdk_nav">
-                    <NavMenu ShowMenu="@showNavMenu" Menus="@Menus" />
-                        <ErrorBoundary @ref="errorBoundary">
-                            <ChildContent> 
-                            <aside class="col-12 sdk_home_content">
-                                <div
-                                    class="offset-lg-0 col-lg-12 offset-xl-0 col-xl-12 offset-xxl-1 col-xxl-10 px-0 px-md-3">
-
-                                    <BreadCrumb />
-                                    <div class="col-12 area2 px-3">
-                                        <TopBar />
-                                        <div class="col-12 px-0 py-3">
-                                            @Body
-                                        </div>
-                                    </div>
-                                </div>
-                            </aside>
-                            </ChildContent> 
-                            <ErrorContent Context="Exception" >
-                                <SDKError CurrentException="@Exception" Error="@errorBoundary" />
-                            </ErrorContent>
-                    </ErrorBoundary>
+<RadzenNotification />
+@if(IsEmptyLayout)
+{
+    <ErrorBoundary @ref="errorBoundary">
+        <ChildContent>
+            <CascadingValue Value="@this">
+                <div class="main">    
+                    <div>
+                        @Body
+                    </div>
                 </div>
+            </CascadingValue>
+        </ChildContent> 
+        <ErrorContent Context="Exception" >
+            <SDKError CurrentException="@Exception" Error="@errorBoundary" IsEmptyLayout="true" />
+        </ErrorContent>
+    </ErrorBoundary>
+}else{
+    <DxGridLayout>
+        <Rows>
+            <DxGridLayoutRow Height="auto" />
+            <DxGridLayoutRow />
+        </Rows>
+        <Columns>
+            <DxGridLayoutColumn />
+        </Columns>
+        <Items>
+            <DxGridLayoutItem Row="0" Column="0">
+                <Template>
+                    <SDKHeader />
+                </Template>
+            </DxGridLayoutItem>
+            <DxGridLayoutItem Row="1" Column="0">
+                <Template>
+                    <div class="sdk_nav">
+                        <NavMenu ShowMenu="@showNavMenu" />
+                            <ErrorBoundary @ref="errorBoundary">
+                                <ChildContent> 
+                                <aside class="col-12 sdk_home_content">
+                                    <div
+                                        class="offset-lg-0 col-lg-12 offset-xl-0 col-xl-12 offset-xxl-1 col-xxl-10 px-0 px-md-3">
 
-            </Template>
-        </DxGridLayoutItem>
-    </Items>
-</DxGridLayout>
+                                        <BreadCrumb />
+                                        <CascadingValue Value="@this">
+                                            @if(IsDefaultArea)
+                                            {
+                                                <div class="col-12 area2 px-3">
+                                                    <TopBar />
+                                                    <div class="col-12 px-0 py-3">
+                                                        @Body
+                                                    </div>
+                                                </div>
+                                            }else{
+                                                @Body
+                                            }
+                                        </CascadingValue>
+                                    </div>
+                                </aside>
+                                </ChildContent> 
+                                <ErrorContent Context="Exception" >
+                                    <SDKError CurrentException="@Exception" Error="@errorBoundary" />
+                                </ErrorContent>
+                        </ErrorBoundary>
+                    </div>
+
+                </Template>
+            </DxGridLayoutItem>
+        </Items>
+    </DxGridLayout>
+}
+
 <SDKGoTop />
 @code {
     private bool showNavMenu = false;
-    public E00060_Suite SelectedSuite { get; set; }
-    public List<E00061_Menu> Menus { get; set; }
     [Parameter]
     public bool ShowMenu { get; set; }
 
-    public string environment;
-
     private ErrorBoundary? errorBoundary;
 
+    [Parameter]
+    public bool IsDefaultArea { get; set; }
 
-    protected override void OnInitialized()
+    public bool IsEmptyLayout { get; set; } = false;
+
+    public void SetDefaultArea(bool isDefaultArea)
     {
-        base.OnInitialized();
-        errorBoundary = new ErrorBoundary();
-
-        Menus = new List<E00061_Menu>();
-        environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-        if (environment == Environments.Development)
+        bool refresh = IsDefaultArea != isDefaultArea;
+        IsDefaultArea = isDefaultArea;
+        if(refresh)
         {
-            Menus.Add(new E00061_Menu()
-            {
-                ResourceTag = "DevMenu",
-                IconClass = "fa-solid fa-code",
-                SubMenus = new List<E00061_Menu>(),
-                CurrentText = "DevMenu",
-            });
+            StateHasChanged();
         }
+    }
 
-        _ = LoadMenu();
+    public void SetEmptyLayout(bool isEmptyLayout)
+    {
+        bool refresh = IsEmptyLayout != isEmptyLayout;
+        IsEmptyLayout = isEmptyLayout;
+        if(refresh)
+        {
+            StateHasChanged();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsDefaultArea = true;
+        base.OnInitializedAsync();
+        errorBoundary = new ErrorBoundary();
     }
 
     private void ToggleNavMenu()
@@ -108,95 +126,5 @@
     {
         showNavMenu = false;
         StateHasChanged();
-    }
-
-    private async Task LoadMenu()
-    {
-        var DevMenu = Menus.FirstOrDefault(x => x.ResourceTag == "DevMenu")?.SubMenus;
-
-        foreach (var business in BackendRouterService.GetBusinessModelList())
-        {
-            if (DevMenu == null)
-            {
-                continue;
-            }
-            var businessType = Utilities.SearchType(business.Namespace + "." + business.Name);
-            if (businessType == null)
-            {
-                continue;
-            }
-            var isBLExplorer = Utilities.IsAssignableToGenericType(businessType, typeof(BLFrontendExplorer<>));
-            if (isBLExplorer)
-            {
-                var customActionMenu = new E00061_Menu
-                {
-                    ResourceTag = $"{business.Name}.Plural",
-                    Url = $"/{business.Name}/explorer/",
-                };
-                DevMenu.Add(customActionMenu);
-            }
-            else
-            {
-                var submenuItem = new E00061_Menu
-                {
-                    ResourceTag = $"{business.Name}.Plural",
-                    Url = $"/{business.Name}/",
-                    SubMenus = new List<E00061_Menu>()
-                };
-                //search methods that return a RenderFragment
-                var customActions = businessType.GetMethods().Where(m => m.ReturnType == typeof(RenderFragment));
-                foreach (var customAction in customActions)
-                {
-                    var customActionMenu = new E00061_Menu
-                    {
-                        ResourceTag = $"{business.Name}.CustomAction.{customAction.Name}",
-                        Url = $"/{business.Name}/{customAction.Name}/"
-                    };
-                    submenuItem.SubMenus.Add(customActionMenu);
-                }
-
-                DevMenu.Add(submenuItem);
-            }
-        }
-
-
-        var menuBL = BackendRouterService.GetSDKBusinessModel("BLAdminMenu", AuthenticationService);
-        var request = await menuBL.Call("GetSuites");
-        if (request.Success)
-        {
-            SelectedSuite = ((List<E00060_Suite>)request.Data).First(); //TODO: UX difines how to select the menu group
-            var menuRequest = await menuBL.Call("GetMenuItems", Convert.ToInt64(SelectedSuite.Rowid));
-            if (menuRequest.Success)
-            {
-                List<E00061_Menu> menuResponse = menuRequest.Data;
-                menuResponse = menuResponse.OrderBy(x => x.Order).ToList();
-                //add menuResponse to Menus
-                Menus.AddRange(menuResponse);
-                GetMenuResources(Menus);
-            }
-        }
-        Console.WriteLine(Menus.Count);
-        StateHasChanged();
-    }
-
-    private async Task GetMenuResources(ICollection<E00061_Menu> _menus)
-    {
-        foreach (var menuItem in _menus)
-        {
-            if ((menuItem.RowidResource == null || menuItem.RowidResource == 0) && menuItem.ResourceTag != null)
-            {
-                menuItem.CurrentText = await ResourceManager.GetResource(menuItem.ResourceTag, AuthenticationService);
-            }
-            else
-            {
-                menuItem.CurrentText = await ResourceManager.GetResource(Convert.ToInt64(menuItem.RowidResource),
-                AuthenticationService);
-            }
-
-            if (menuItem.SubMenus != null && menuItem.SubMenus.Count > 0)
-            {
-                await GetMenuResources(menuItem.SubMenus);
-            }
-        }
     }
 }

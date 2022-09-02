@@ -2,12 +2,6 @@
 namespace Siesa.SDK.Entities.Enums
 {
 
-	public enum enumGender
-	{
-		Male = 0,
-		Female = 1
-	}
-
 	public enum MenuType
 	{
 		Separator = 1,
@@ -39,5 +33,12 @@ namespace Siesa.SDK.Entities.Enums
 	{
 		Yes = 1,
 		No = 0
+	}
+
+	public enum enumGender
+	{
+		Unselected = 0,
+		Male = 1,
+		Female = 2
 	}
 }

@@ -1,40 +1,89 @@
 @implements IDisposable
+@using Siesa.SDK.Entities
 @inject ILayoutService LayoutService
+@inject NavigationManager NavigationManager
+@using Siesa.SDK.Frontend.Services
+@inject MenuService MenuService
 
-@if(LayoutService != null && LayoutService.TopBarSetter != null)
-{
-    <div class="col-12 area1 pb-3 px-0">
-        <nav class="" aria-label="breadcrumb">
+
+<div class="col-12 area1 pb-3 px-0">
+    <nav class="" aria-label="breadcrumb">
+        @if(breadcrumb != null && breadcrumb.Count > 0)
+        {
             <ol class="breadcrumb p-0">
-                <li class="breadcrumb-item"><a href="#">Gestión de personal</a></li>
-                <li class="breadcrumb-item"><a href="#">Hojas de vida</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Prospectos</li>
+                @for(var i = 0; i < breadcrumb.Count; i++)
+                {
+                    <li class="breadcrumb-item @GetCssBreadCrumItem(i)">
+                        @if(i == breadcrumb.Count - 1)
+                        {
+                            @if(string.IsNullOrEmpty(breadcrumb[i].CurrentText))
+                            {
+                                <span><ResourceViewer RowidResource="@(breadcrumb[i].RowidResource)" /></span>
+                            }else{
+                                <span>@(breadcrumb[i].CurrentText)</span>
+                            }
+                        }
+                        else
+                        {
+                            @if(string.IsNullOrEmpty(breadcrumb[i].CurrentText))
+                            {
+                                <a href="@(breadcrumb[i].CurrentURL)"><ResourceViewer RowidResource="@(breadcrumb[i].RowidResource)" /></a>
+                            }else{
+                                <a href="@(breadcrumb[i].CurrentURL)">@(breadcrumb[i].CurrentText)</a>
+                            }
+                        }
+                    </li>
+                }
             </ol>
-        </nav>
-        <nav class="pt-3 pt-sm-0" aria-label="breadcrumb">
+        }
+    </nav>
+    <nav class="pt-3 pt-sm-0" aria-label="breadcrumb">
+        @if(LayoutService != null && LayoutService?.StyleName != null){
             <ol class="breadcrumb p-0">
-                <li class="@("bullet-breadcrumb " + LayoutService.StyleName)"></li>
-                @if(LayoutService.StyleName == "toolbar_edition")
+                <li class="@("bullet-breadcrumb " + LayoutService?.StyleName)"></li>
+                @if(LayoutService?.StyleName == "toolbar_edition")
                 {
                     <li class="estado">En edición</li>
-                }else if(LayoutService.StyleName == "toolbar_creation")
+                }else if(LayoutService?.StyleName == "toolbar_creation")
                 {
                     <li class="estado">En creación</li>
                 }else {
                     <li class="estado">En consulta</li>
                 }
-                
+
             </ol>
-        </nav>
-    </div>
-}
+        }
+    </nav>
+</div>
+
 
 
 @code {
+
+    private E00061_Menu _selectedMenu;
+    private List<E00061_Menu> breadcrumb = new List<E00061_Menu>();
+
     protected override void OnInitialized()
     {
         LayoutService.PropertyChanged += LayoutService_PropertyChanged;
+        NavigationManager.LocationChanged += OnLocationChanged;
+        MenuService.MenuLoaded += OnMenuLoaded;
+        //SetBreadCrum(NavigationManager.Uri);
         base.OnInitialized();
+    }
+
+    private void OnMenuLoaded(object sender, EventArgs e)
+    {
+        StateHasChanged();
+    }
+
+    private string GetCssBreadCrumItem(int i)
+    {
+        if(i == breadcrumb.Count - 1)
+        {
+            return "active";
+        }
+        return "";
     }
 
     private void LayoutService_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -45,12 +94,86 @@
         }
     }
 
+    private void SetBreadCrum(string currentUrl)
+    {
+        //remove the base url from the current url
+        currentUrl = currentUrl.Substring(currentUrl.IndexOf("/", currentUrl.IndexOf("//") + 2));
+        var result = new List<E00061_Menu>();
+        SearchMenuItem(currentUrl, MenuService.Menus, ref result);
+
+        //get the result most close to the current url
+        _selectedMenu = result.OrderByDescending(x => x.CurrentURL.Length).FirstOrDefault();
+        if (_selectedMenu != null)
+        {
+            breadcrumb.Clear();
+            breadcrumb.Add(_selectedMenu);
+            var _parent = _selectedMenu.MenuParent;
+            while (_parent != null)
+            {
+                breadcrumb.Add(_parent);
+                _parent = _parent.MenuParent;
+            }
+            breadcrumb.Reverse();
+        }else{
+            breadcrumb.Clear();
+        }
+        StateHasChanged();
+    }
+
+    private void OnLocationChanged(object sender, LocationChangedEventArgs e)
+    {
+        SetBreadCrum(e.Location);
+        //StateHasChanged();
+    }
+
+    private void SearchMenuItem(string currentUrl, ICollection<E00061_Menu> menus, ref List<E00061_Menu> result, E00061_Menu parent = null)
+    {
+        string blName = currentUrl.Substring(0, currentUrl.IndexOf("/", 1) + 1);
+        foreach (var menu in menus)
+        {
+            if(menu.ResourceTag == "DevMenu")
+            {
+                continue;
+            }
+            if(menu.MenuParent == null && parent != null)
+            {
+                menu.MenuParent = parent;
+            }
+
+            if (menu.CurrentURL == currentUrl  || menu.CurrentURL == blName)
+            {
+                result.Add(menu);
+            }
+            if (menu.SubMenus != null && menu.SubMenus.Count > 0)
+            {
+                SearchMenuItem(currentUrl, menu.SubMenus, ref result, menu);
+            }
+        }
+    }
+
     public void Dispose()
     {
         if (LayoutService != null)
         {
             LayoutService.PropertyChanged -= LayoutService_PropertyChanged;
         }
+
+        if (NavigationManager != null)
+        {
+            NavigationManager.LocationChanged -= OnLocationChanged;
+        }
+
+        if (MenuService != null)
+        {
+            MenuService.MenuLoaded -= OnMenuLoaded;
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        //Console.WriteLine("OnParameterSet");
+        SetBreadCrum(NavigationManager.Uri);
+        base.OnParametersSet();
     }
 
 }

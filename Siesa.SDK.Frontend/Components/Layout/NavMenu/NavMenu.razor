@@ -1,4 +1,5 @@
 ﻿@using Siesa.SDK.Entities
+@implements IDisposable
 @using SDK.Components.Visualization
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Shared.Backend
@@ -6,6 +7,8 @@
 @using Siesa.SDK.Shared.Services
 @inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavigationManager
+@using Siesa.SDK.Frontend.Services
+@inject MenuService MenuService
 
 <input type="checkbox" name="" checked id="menu">
 <label class="sdk_nav_head" for="menu">
@@ -31,9 +34,9 @@
             <img class="" src="_content/Siesa.SDK.Frontend/assets/img/logo_empresa.png" height="30px" alt="Logo compania">
         </a>
          <div class="p-2 input-group input-group-sm d-flex align-items-center d-block d-sm-none">
-            <SDKSearch Menus="@Menus"></SDKSearch>            
+            <SDKSearch />
         </div>
-        @foreach (var menuItem in Menus)
+        @foreach (var menuItem in MenuService.Menus)
         {
             <NavMenuItem MenuItem="@menuItem" OnClick="@OnMenuItemClick" Focus="@(SelectedMainMenu == menuItem)" />
         }
@@ -63,8 +66,6 @@
 @code {
     [Parameter]
     public bool ShowMenu { get; set; }
-    [Parameter]
-    public List<E00061_Menu> Menus { get; set; }
 
     private E00061_Menu SelectedMenu { get; set; }
 
@@ -97,6 +98,7 @@
 
     protected async override Task OnInitializedAsync()
     {
+        MenuService.MenuLoaded += OnMenuLoaded;
         if(AuthenticationService.User != null)
         {
             ProfileMenu = new E00061_Menu()
@@ -115,6 +117,10 @@
                 ResourceTag = "BLUser.Logout",
                 Url = "/logout"
             });
+            if(MenuService.Menus.Count == 0)
+            {
+                MenuService.ReloadMenu();
+            }
         }
         await base.OnInitializedAsync();
     }
@@ -141,6 +147,20 @@
     {
         if(firstRender){
             _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/Components/Layout/NavMenu/NavMenu.razor.js");
+        }
+    }
+
+    private void OnMenuLoaded(object sender, EventArgs e)
+    {
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+
+        if (MenuService != null)
+        {
+            MenuService.MenuLoaded -= OnMenuLoaded;
         }
     }
 }

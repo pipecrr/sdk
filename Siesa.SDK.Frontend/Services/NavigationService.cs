@@ -13,6 +13,8 @@ namespace Siesa.SDK.Frontend.Services
         private readonly NavigationManager _navigationManager;
         private readonly List<string> _history;
 
+        private List<string> ReplaceQueque { get; set; } = new List<string>();
+
         public NavigationService(NavigationManager navigationManager)
         {
             _navigationManager = navigationManager;
@@ -43,12 +45,15 @@ namespace Siesa.SDK.Frontend.Services
             if (!CanNavigateBack) return;
             var currentPageUrl = _navigationManager.Uri;
             var backPageUrl = "";
-            for(int i = 2; i<=_history.Count; i++){
+            for (int i = 2; i <= _history.Count; i++)
+            {
                 backPageUrl = _history[^i];
-                if(backPageUrl != currentPageUrl){
+                if (backPageUrl != currentPageUrl)
+                {
                     _history.RemoveRange(_history.Count - i, i);
                     _navigationManager.NavigateTo(backPageUrl);
-                }                
+                    break;
+                }
             }
         }
 
@@ -58,6 +63,18 @@ namespace Siesa.SDK.Frontend.Services
         {
             EnsureSize();
             string location = e.Location;
+            if(ReplaceQueque.Contains(location))
+            {
+                try
+                {
+                    ReplaceQueque.Remove(location);
+                    this.RemoveCurrentItem();
+                }
+                catch (System.Exception ex)
+                {
+                    Console.WriteLine("Error", ex.Message);
+                }
+            }
             _history.Add(location);
         }
 
@@ -72,12 +89,30 @@ namespace Siesa.SDK.Frontend.Services
             _navigationManager.LocationChanged -= OnLocationChanged;
         }
 
-        public void RemoveCurrentItem(){
-            _history.RemoveAt(_history.Count-1);
+        public void RemoveCurrentItem()
+        {
+            _history.RemoveAt(_history.Count - 1);
         }
 
-        public void RemoveItem(string url){
+        public void RemoveItem(string url)
+        {
             _history.Remove(url);
         }
+
+        public void NavigateTo(string uri, bool forceLoad = false, bool replace = false)
+        {
+            if (replace)
+            {
+                var queueUrl = uri;
+                //add base url if not exist
+                if(!uri.StartsWith(_navigationManager.BaseUri))
+                {
+                    queueUrl = _navigationManager.BaseUri.Substring(0, _navigationManager.BaseUri.Length - 1) + uri;
+                }
+                ReplaceQueque.Add(queueUrl);
+            }
+            _navigationManager.NavigateTo(uri, forceLoad, replace);
+        }
+
     }
 }

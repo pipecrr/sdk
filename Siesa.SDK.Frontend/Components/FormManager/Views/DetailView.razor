@@ -34,7 +34,10 @@ else if (ModelLoaded == true)
 
             }
         </DxFormLayout>
-        <label>@((MarkupString)ErrorMsg)</label>
+        @if(!string.IsNullOrEmpty(ErrorMsg))
+        {
+            <label>@((MarkupString)ErrorMsg)</label>
+        }
          @foreach (var rel in FormViewModel.Relationships)
             {
                <RelationshipPanel Relationship="@rel" Parent="@BusinessObj.BaseObj" />

@@ -1,10 +1,10 @@
-﻿@page "/{BusinessName}/{ActionName}/"
+﻿@implements IDisposable
+@page "/{BusinessName}/{ActionName}/"
 @using Siesa.SDK.Shared.DataAnnotations
 @using System.Net;
 @using Siesa.SDK.Shared.Services
 @using System.Reflection
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
-@layout EmptyLayout
 @inject NavigationManager NavigationManager
 @inject IAuthenticationService AuthenticationService
 
@@ -15,9 +15,7 @@
 else if (BusinessObj != null)
 {
     <CascadingValue Value="this">
-        <LayoutView Layout="@CustomLayout">
-            @GetRenderFragment()
-        </LayoutView>
+        @GetRenderFragment()
     </CascadingValue>
 }
 
@@ -25,6 +23,8 @@ else if (BusinessObj != null)
 @code {
     [Parameter] public string ActionName { get; set; }
     private Type CustomLayout { get; set; } = typeof(MainLayout);
+    [CascadingParameter]
+    public MainLayout MainLayout { get; set; }
     private void RedirectToLogin()
     {
         var returnUrl = WebUtility.UrlEncode(new Uri(NavigationManager.Uri).PathAndQuery);
@@ -60,8 +60,19 @@ else if (BusinessObj != null)
     {
         if (layout != CustomLayout)
         {
+            var isEmptyLayout = layout == typeof(EmptyLayout);
+            MainLayout?.SetEmptyLayout(isEmptyLayout);
             this.CustomLayout = layout;
-            StateHasChanged();
+            //StateHasChanged();
         }
     }
+
+    public void Dispose()
+    {
+        if(CustomLayout != typeof(EmptyLayout))
+        {
+            MainLayout?.SetEmptyLayout(false);
+        }
+    }
+
 }
