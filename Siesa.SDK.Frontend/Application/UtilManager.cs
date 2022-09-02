@@ -17,17 +17,26 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
             this.ResourceManager = resourceManager;
         }
 
-        public async Task<string> GetResource(Int64 resourceRowid){
+        public async Task<string> GetResource(Int64 resourceRowid, Int64 cultureRowid = 0){
+
+            if(cultureRowid == 0){
+                return await ResourceManager.GetResource(resourceRowid, cultureRowid);
+            }
             if(AuthenticationService.User != null){
-                Int64 cultureRowid = AuthenticationService.User.RowidCulture;
+                //cultureRowid = await ResourceManager.GetCurrentCulture();
+                cultureRowid = AuthenticationService.User.RowidCulture;
                 return await ResourceManager.GetResource(resourceRowid, cultureRowid);
             }
             return "";
         }
 
-        public async Task<string> GetResource(string resourceTag){
+        public async Task<string> GetResource(string resourceTag, Int64 cultureRowid = 0){
+            if(cultureRowid != 0){
+                return await ResourceManager.GetResource(resourceTag, cultureRowid);
+            }
             if(AuthenticationService.User != null){
-                Int64 cultureRowid = AuthenticationService.User.RowidCulture;
+                //TODO: en el merge cambiar por GetRowidCulture
+                cultureRowid = AuthenticationService.User.RowidCulture;
                 return await ResourceManager.GetResource(resourceTag, cultureRowid);
             }
             return resourceTag;
