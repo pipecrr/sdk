@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Siesa.SDK.Shared.Services;
 
+
 namespace Siesa.SDK.Frontend.Services
 {
     public class AuthenticationService : IAuthenticationService
@@ -19,24 +20,33 @@ namespace Siesa.SDK.Frontend.Services
 
         private short CustomRowidCulture = 0;
 
+
+
         public string UserToken { get; private set; } = "";
 
         private JwtUserData? _user;
-        public JwtUserData User { get {
-            if(UserToken == ""){
-                return null;
+        public JwtUserData User
+        {
+            get
+            {
+                if (UserToken == "")
+                {
+                    return null;
+                }
+                if (_user == null)
+                {
+                    _user = new SDKJWT(_secretKey, _minutesExp).Validate(UserToken);
+                }
+                return _user;
             }
-            if(_user == null){
-                _user = new SDKJWT(_secretKey, _minutesExp).Validate(UserToken);
-            }
-            return _user;
-        }}
+        }
 
         public AuthenticationService(
             NavigationManager navigationManager,
             ILocalStorageService localStorageService,
             IBackendRouterService BackendRouterService
-        ) {
+        )
+        {
             _navigationManager = navigationManager;
             _localStorageService = localStorageService;
             _backendRouterService = BackendRouterService;
@@ -54,8 +64,8 @@ namespace Siesa.SDK.Frontend.Services
 
         public async Task Login(string username, string password)
         {
-            var BLuser =  _backendRouterService.GetSDKBusinessModel("BLUser", this);
-            if(BLuser == null)
+            var BLuser = _backendRouterService.GetSDKBusinessModel("BLUser", this);
+            if (BLuser == null)
             {
                 throw new Exception("Login Service not found");
             }
@@ -64,11 +74,15 @@ namespace Siesa.SDK.Frontend.Services
             {
                 UserToken = loginRequest.Data;
                 await _localStorageService.SetItemAsync("usertoken", UserToken);
-            }else{
-                if(loginRequest.Errors != null && loginRequest.Errors.Count > 0)
+            }
+            else
+            {
+                if (loginRequest.Errors != null && loginRequest.Errors.Count > 0)
                 {
                     throw new Exception(loginRequest.Errors.FirstOrDefault());
-                }else{
+                }
+                else
+                {
                     throw new Exception("Login failed");
                 }
             }
@@ -82,10 +96,10 @@ namespace Siesa.SDK.Frontend.Services
             _navigationManager.NavigateTo("login");
         }
 
-        public void SetToken(string token)
+        public async Task SetToken(string token)
         {
             UserToken = token;
-            _localStorageService.SetItemAsync("usertoken", UserToken);
+            await _localStorageService.SetItemAsync("usertoken", UserToken);
         }
 
         public async Task SetCustomRowidCulture(short rowid)
@@ -94,14 +108,46 @@ namespace Siesa.SDK.Frontend.Services
             await _localStorageService.SetItemAsync("customrowidculture", CustomRowidCulture);
         }
 
+        public async Task SetRowidCompanyGroup(short rowid)
+        {
+
+            var BLUser = _backendRouterService.GetSDKBusinessModel("BLUser", this);
+            if (BLUser == null)
+            {
+                throw new Exception("Occurio un error");
+            }
+            var CompanyGroup = await BLUser.Call("ChangeCompanyGroup", rowid);
+
+            if (CompanyGroup.Success)
+            {
+                await this.SetToken(CompanyGroup.Data);
+            }
+
+        }
+
+        public short GetRowidCompanyGroup()
+        {
+            if (this.User == null)
+            {
+             return 0;   
+            }
+            return this.User.RowidCompanyGroup;
+        }
+
         public short GetRoiwdCulture()
         {
-            if(CustomRowidCulture > 0){
+            if (CustomRowidCulture > 0)
+            {
                 return CustomRowidCulture;
-            }else{
-                if(User != null){
+            }
+            else
+            {
+                if (User != null)
+                {
                     return User.RowidCulture;
-                }else{
+                }
+                else
+                {
                     return 0;
                 }
             }
