@@ -243,7 +243,6 @@
     private async void HandleValidSubmit()
     {
         string message = "BLUser.Login.Message.SuccesLogin";
-        string text = await UtilsManager.GetResource(message);
         loading = true;
         try
         {
@@ -253,13 +252,13 @@
             {
                 returnUrl = "/";
             }
-            SDKNotificationService.ShowSuccess(text);
+            SDKNotificationService.ShowSuccess(message, culture: AuthenticationService.GetRoiwdCulture());
             NavigationManager.NavigateTo(returnUrl);
         }
         catch (Exception ex)
         {
             error = ex.Message;
-            SDKNotificationService.ShowError("BLUser.Login.Message.InvalidCredentials", AuthenticationService.GetRoiwdCulture());
+            SDKNotificationService.ShowError("BLUser.Login.Message.InvalidCredentials", culture: RowidCulture);
             loading = false;
             StateHasChanged();
         }

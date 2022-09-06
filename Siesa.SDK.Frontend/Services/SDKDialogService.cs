@@ -31,7 +31,7 @@ namespace Siesa.SDK.Frontend.Services
             };
         }
 
-         public async Task<dynamic> ShowConfirmDialog (RenderFragment childContent,string ConfirmationButtonTag="", string CancelationButtonTag="",string title="")
+         public async Task<dynamic> ShowConfirmDialog (RenderFragment childContent,string ConfirmationButtonTag="Action.Confirm", string CancelationButtonTag="Action.Cancel",string title="")
          {
              
             return await ds.OpenAsync(title,GetConfirmComponent(childContent,ConfirmationButtonTag,CancelationButtonTag),
