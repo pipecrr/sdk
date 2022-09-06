@@ -57,7 +57,7 @@ namespace Siesa.SDK.Shared.Criptography
             }
         }
 
-        public string Generate(E00220_User? user, Dictionary<int, Dictionary<int, bool>>? featurePermissions, List<SessionRol> roles)
+        public string Generate(E00220_User? user, Dictionary<int, Dictionary<int, bool>>? featurePermissions, List<SessionRol> roles, short rowidcompanygroup =0)
         {
             // generate token that is valid for 7 days
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -71,7 +71,9 @@ namespace Siesa.SDK.Shared.Criptography
                 Description = user.Description,
                 RowidCulture = user.RowidCulture,
                 Roles = roles,
-                FeaturePermissions = featurePermissions
+                FeaturePermissions = featurePermissions,
+                RowidCompanyGroup = rowidcompanygroup
+
                 // Teams = user.Teams.Select(x => x.TeamName).ToArray(),
                 //IsSuperAdmin = user.IsSuperAdmin
             };
