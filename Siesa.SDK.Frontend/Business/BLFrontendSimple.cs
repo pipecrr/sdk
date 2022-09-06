@@ -368,7 +368,7 @@ namespace Siesa.SDK.Business
 
             if (NotificationService != null)
             {
-                await NotificationService.ShowError(message,AuthenticationService.GetRoiwdCulture());
+                await NotificationService.ShowError(message);
             }
             else
             {
