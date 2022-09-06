@@ -242,7 +242,7 @@
 
     private async void HandleValidSubmit()
     {
-        string message = "LoginMessage.Succes";
+        string message = "BLUser.Login.Message.SuccesLogin";
         string text = await UtilsManager.GetResource(message);
         loading = true;
         try
@@ -259,7 +259,7 @@
         catch (Exception ex)
         {
             error = ex.Message;
-            SDKNotificationService.ShowError(error);
+            SDKNotificationService.ShowError("BLUser.Login.Message.InvalidCredentials");
             loading = false;
             StateHasChanged();
         }
