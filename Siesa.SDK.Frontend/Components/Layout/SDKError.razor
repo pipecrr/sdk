@@ -1,8 +1,10 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @using SDK.Components.Visualization
+@using Siesa.SDK.Shared.Services
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
 @inject UtilsManager UtilManager
 @inject SDKNotificationService SDKNotificationService
+@inject IAuthenticationService AuthenticationService
 
 @if(IsEmptyLayout){
     @if (CurrentException != null)
@@ -86,7 +88,7 @@
         base.OnInitializedAsync();
         Title = await UtilManager.GetResource(TitleTag);
         NotificationMessage = await UtilManager.GetResource(NotificationMessageTag);
-        SDKNotificationService.ShowError(NotificationMessage);
+        SDKNotificationService.ShowError(NotificationMessage, AuthenticationService.GetRoiwdCulture());
     }
 
     void ClickMoreInfo()

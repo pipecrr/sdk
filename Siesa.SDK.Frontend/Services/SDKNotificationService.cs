@@ -37,7 +37,7 @@ namespace Siesa.SDK.Frontend.Services
             }
             return message;
         }
-        public async Task ShowError(string resourceMessage, object?[] variables = null, int duration = 999999, Int64 culture = 1)
+        public async Task ShowError(string resourceMessage, Int64 culture = 1, object?[] variables = null, int duration = 999999)
         {
             var message = await GetResourceMessage(resourceMessage, culture, variables);
 
@@ -48,7 +48,7 @@ namespace Siesa.SDK.Frontend.Services
                 Duration = duration
             });
         }
-        public async Task ShowSuccess(string resourceMessage, object?[] variables = null, int duration = 999999, Int64 culture = 1)
+        public async Task ShowSuccess(string resourceMessage, Int64 culture = 1, object?[] variables = null, int duration = 999999)
         {
             var message = await GetResourceMessage(resourceMessage, culture, variables);
 
@@ -60,7 +60,7 @@ namespace Siesa.SDK.Frontend.Services
             });
         }
 
-        public async Task ShowInfo(string resourceMessage, object?[] variables = null, int duration = 999999, Int64 culture = 1)
+        public async Task ShowInfo(string resourceMessage, Int64 culture = 1, object?[] variables = null, int duration = 999999)
         {
             var message = await GetResourceMessage(resourceMessage, culture, variables);
             base.Notify(new SDKNotificationMessage
@@ -71,7 +71,7 @@ namespace Siesa.SDK.Frontend.Services
             });
         }
 
-        public async Task ShowWarning(string resourceMessage, object?[] variables = null, int duration = 999999, Int64 culture = 1)
+        public async Task ShowWarning(string resourceMessage, Int64 culture = 1, object?[] variables = null, int duration = 999999)
         {
             var message = await GetResourceMessage(resourceMessage, culture, variables);
             base.Notify(new SDKNotificationMessage
@@ -82,7 +82,7 @@ namespace Siesa.SDK.Frontend.Services
             });
         }
 
-        public async Task Notify(SDKNotificationSeverity type, string resourceMessage, object?[] variables = null, int duration = 999999, Int64 culture = 1)
+        public async Task Notify(SDKNotificationSeverity type, string resourceMessage, Int64 culture = 1, object?[] variables = null, int duration = 999999)
         {
             var message = await GetResourceMessage(resourceMessage, culture, variables);
             base.Notify(new SDKNotificationMessage

@@ -259,7 +259,7 @@
         catch (Exception ex)
         {
             error = ex.Message;
-            SDKNotificationService.ShowError("BLUser.Login.Message.InvalidCredentials");
+            SDKNotificationService.ShowError("BLUser.Login.Message.InvalidCredentials", AuthenticationService.GetRoiwdCulture());
             loading = false;
             StateHasChanged();
         }

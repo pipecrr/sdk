@@ -10,16 +10,17 @@
         @ChildContent
     </div>
 
-    <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Modal.Button.Cancel" Click="@ClickCancel" />
-    <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Modal.Button.Confirm" Click="@ClickConfirm" />
+    <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="@CancelationButtonTag" Click="@ClickCancel" />
+    <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="@ConfirmationButtonTag" Click="@ClickConfirm" />
 
 </div>
 
 @code {
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
-
     [Parameter] public DialogService DialogService { get; set; }
+    [Parameter] public string ConfirmationButtonTag {get; set;}
+    [Parameter] public string CancelationButtonTag {get; set;}
 
     private void ClickConfirm()
     {

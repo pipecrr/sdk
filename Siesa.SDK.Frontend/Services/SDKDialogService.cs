@@ -18,21 +18,23 @@ namespace Siesa.SDK.Frontend.Services
              ds = dialogService;
         }
 
-        private RenderFragment<DialogService> GetConfirmComponent(RenderFragment childContent)
+        private RenderFragment<DialogService> GetConfirmComponent(RenderFragment childContent, string ConfirmationButtonTag, string CancelationButtonTag)
         {
             return (ds) => builder =>
             {
                 builder.OpenComponent<SDKConfirmDialog>(0);
                 builder.AddAttribute(1, "ChildContent", childContent);
                 builder.AddAttribute(2, "DialogService", ds);
+                builder.AddAttribute(3, "ConfirmationButtonTag", ConfirmationButtonTag);
+                builder.AddAttribute(4, "CancelationButtonTag", CancelationButtonTag);
                 builder.CloseComponent();
             };
         }
 
-         public async Task<dynamic> ShowConfirmDialog (RenderFragment childContent,string title="")
+         public async Task<dynamic> ShowConfirmDialog (RenderFragment childContent,string ConfirmationButtonTag="", string CancelationButtonTag="",string title="")
          {
              
-            return await ds.OpenAsync(title,GetConfirmComponent(childContent),
+            return await ds.OpenAsync(title,GetConfirmComponent(childContent,ConfirmationButtonTag,CancelationButtonTag),
             new SDKDialogOption(){ShowTitle=false, Style="max-width:400px;"});
          }
 
