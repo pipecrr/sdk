@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,8 +25,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
             return "";
         }
 
-        public async Task<string> GetResource(string resourceTag){
-            if(AuthenticationService.User != null){
+        public async Task<string> GetResource(string resourceTag, Int64 rowidculture = 0){
+            if (rowidculture != 0)
+            {
+                return await ResourceManager.GetResource(resourceTag, rowidculture);
+            }else if(AuthenticationService.User != null){
                 Int64 cultureRowid = AuthenticationService.GetRoiwdCulture();
                 return await ResourceManager.GetResource(resourceTag, cultureRowid);
             }
