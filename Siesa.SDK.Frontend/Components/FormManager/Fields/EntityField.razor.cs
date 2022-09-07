@@ -71,7 +71,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
             }
 
             //check length of search text
-            if (searchText.Length > 2 || CacheLoadResult == null)
+            if (searchText.Length > FieldOpt.MinCharsEntityField || CacheLoadResult == null)
             {
                 var filters = "";
                 if (BaseModelObj != null && BaseModelObj.BaseObj != null && BaseModelObj.BaseObj.Rowid != 0 && RelBusinessObj != null && RelBusinessObj.BaseObj != null && RelBusinessObj.BaseObj.GetType() == BaseModelObj.BaseObj.GetType())

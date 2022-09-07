@@ -68,11 +68,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         };
         public CustomComponent CustomComponent { get; set; }
 
+        //for entity fields
         public string RelatedBusiness { get; set; } = "";
-
         public Dictionary<string, string> RelatedFilters { get; set; } = new Dictionary<string, string>()
         {
         };
+
+        public int MinCharsEntityField { get; set; } = 2;
 
         private FieldObj fieldObj = null;
 
