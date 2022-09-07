@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Radzen;
 using Siesa.SDK.Frontend.Components;
@@ -12,61 +13,81 @@ namespace Siesa.SDK.Frontend.Services
         {
             UtilsManager = utilsManager;
         }
-        public async Task ShowError(string message, string titleResourceTag = "Notification.Error", int duration = 5000)
+
+        private async Task<string> GetResourceMessage(string resourceTag, Int64 rowidCulture, object[] formatString)
         {
-            string text = "";
+            string resourceMessage = "";
+            string message = "";
+            if (rowidCulture != 0)
+            {
+                resourceMessage = await UtilsManager.GetResource(resourceTag, rowidCulture);
+            }
+            else
+            {
+                resourceMessage = await UtilsManager.GetResource(resourceTag);
+            }
+
+            if (formatString != null)
+            {
+                message = String.Format(resourceMessage, formatString);
+            }
+            else
+            {
+                message = resourceMessage;
+            }
+            return message;
+        }
+        public async Task ShowError(string resourceMessage, object?[] variables = null, int duration = 999999, Int64 culture = 0)
+        {
+            var message = await GetResourceMessage(resourceMessage, culture, variables);
 
             base.Notify(new SDKNotificationMessage
             {
                 Severity = SDKEnums.GetNotification(SDKNotificationSeverity.Error),
-                Summary = text,
                 Detail = message,
                 Duration = duration
             });
         }
-        public async Task ShowSuccess(string message, string titleResourceTag = "Notification.Success", int duration = 5000)
+        public async Task ShowSuccess(string resourceMessage, object?[] variables = null, int duration = 5000, Int64 culture = 0)
         {
-            string text = "";
+            var message = await GetResourceMessage(resourceMessage, culture, variables);
+
             base.Notify(new SDKNotificationMessage
             {
                 Severity = SDKEnums.GetNotification(SDKNotificationSeverity.Success),
-                Summary = text,
                 Detail = message,
                 Duration = duration
             });
         }
 
-        public async Task ShowInfo(string message, string titleResourceTag = "Notification.Info", int duration = 5000)
+        public async Task ShowInfo(string resourceMessage, object?[] variables = null, int duration = 5000, Int64 culture = 0)
         {
-            string text = "";
+            var message = await GetResourceMessage(resourceMessage, culture, variables);
             base.Notify(new SDKNotificationMessage
             {
                 Severity = SDKEnums.GetNotification(SDKNotificationSeverity.Info),
-                Summary = text,
                 Detail = message,
                 Duration = duration
             });
         }
 
-        public async Task ShowWarning(string message, string titleResourceTag = "Notification.Warning", int duration = 5000)
+        public async Task ShowWarning(string resourceMessage, object?[] variables = null, int duration = 5000, Int64 culture = 0)
         {
-            string text = "";
+            var message = await GetResourceMessage(resourceMessage, culture, variables);
             base.Notify(new SDKNotificationMessage
             {
                 Severity = SDKEnums.GetNotification(SDKNotificationSeverity.Warning),
-                Summary = text,
                 Detail = message,
                 Duration = duration
             });
         }
 
-        public async Task Notify(SDKNotificationSeverity type, string message, string titleResourceTag, int duration = 5000)
+        public async Task Notify(SDKNotificationSeverity type, string resourceMessage, object?[] variables = null, int duration = 5000, Int64 culture = 0)
         {
-            string text = "";
+            var message = await GetResourceMessage(resourceMessage, culture, variables);
             base.Notify(new SDKNotificationMessage
             {
                 Severity = SDKEnums.GetNotification(type),
-                Summary = text,
                 Detail = message,
                 Duration = duration,
             });
