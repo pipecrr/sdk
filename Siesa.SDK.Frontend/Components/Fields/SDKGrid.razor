@@ -1,5 +1,7 @@
 @using Radzen;
+@using Siesa.SDK.Frontend.Components.Visualization
 @typeparam TItem
+
 <RadzenDataGrid 
     AllowFiltering="@AllowFiltering" 
     FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
@@ -19,9 +21,39 @@
     PageSizeOptions="@AllowedPageSizes"
     SelectionMode="@SelectionMode.Get()"
     Value="@Value"
+    Visible="@(!CardView)"
     ValueChanged="@ValueChanged"
-    >
+    @ref="_grid">
 </RadzenDataGrid>
+
+@if (CardView)
+{
+     <div class="row">
+        @foreach (var item in Data)
+        {
+            <div class="col-12 col-sm-12 col-md-6 mt-3">
+                <SDKCard StyleCss="sdk_card d-flex flex-row">
+                    <div class="sdk_button_box p-1">
+                        <p>Hola</p>
+                    </div>
+                    <div class="col pt-2">
+                        <div class="row">
+                        @foreach (var column in _grid.ColumnsCollection)
+                        {
+                            <div class="col-12 col-sm-6">
+                                <label class="col-form-label col-form-label-sm font-weight-bold">
+                                    @column.Title 
+                                </label> 
+                                <p class="font_size_087">@GetValue(item, column.Property)</p> 
+                            </div> 
+                        }
+                        </div>
+                    </div>
+                </SDKCard>
+            </div>
+        }
+    </div>
+}
 
 @code {
     [Parameter] public RenderFragment? Columns { get; set; }
@@ -30,7 +62,6 @@
     [Parameter] public int PageSize { get; set; } = 10;
     [Parameter] public bool AllowSorting { get; set; }
     [Parameter] public bool AllowPaging { get; set; }
-
     [Parameter] public IEnumerable<TItem> Data { get; set; }
     [Parameter] public int Count { get; set; }
     [Parameter] public EventCallback LoadData { get; set; }
@@ -41,6 +72,11 @@
     [Parameter] public IList<TItem> Value {get; set;} 
     [Parameter] public EventCallback<IList<TItem>> ValueChanged {get; set;}
 
+    [Parameter] public bool CardView {get; set;} = false;
+
+    private RadzenDataGrid<TItem> _grid;
+
+
 
     protected override void OnParametersSet()
     {
@@ -49,5 +85,10 @@
         {
             Count = Data.Count();
         }
-    }    
+    }
+
+    private object GetValue(TItem item, string fieldName)
+    {
+       return item.GetType().GetProperty(fieldName).GetValue(item);
+    }
 }
