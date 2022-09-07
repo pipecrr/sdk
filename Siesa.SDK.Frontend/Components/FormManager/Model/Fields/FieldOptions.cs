@@ -75,6 +75,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         };
 
         public int MinCharsEntityField { get; set; } = 2;
+        public string EntityRowidField;
 
         private FieldObj fieldObj = null;
 
@@ -195,6 +196,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 if (propertyType.IsClass && !propertyType.IsPrimitive && !propertyType.IsEnum && !_bannedTypes.Contains(propertyType))
                 {
                     FieldType = FieldTypes.EntityField;
+                    if(String.IsNullOrEmpty(EntityRowidField))
+                    {
+                        var exists = field.ModelObj.GetType().GetProperty($"Rowid{field.Name}");
+                        if(exists != null)
+                        {
+                            EntityRowidField = $"Rowid{field.Name}";
+                        }
+                    }
                 }
 
                 if (propertyType.IsEnum)

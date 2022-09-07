@@ -48,6 +48,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
         public static void EntitySetValue(EntityField field, dynamic value)
         {
             field.SetValue(value);
+            try
+            {
+                if(!string.IsNullOrEmpty(field.FieldOpt.EntityRowidField) && value == null)
+                {
+                    field.SetValue(field.FieldOpt.EntityRowidField, value);
+                }
+            }
+            catch (System.Exception)
+            {
+            }
         }
 
         private async Task<LoadResult> LoadData(string searchText, CancellationToken? cancellationToken)
