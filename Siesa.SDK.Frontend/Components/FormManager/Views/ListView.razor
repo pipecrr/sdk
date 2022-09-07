@@ -32,34 +32,37 @@ else
         AllowColumnResize="true"
         @key="needUpdate">
         <Columns>
-            <RadzenDataGridColumn TItem="object" Title="Acciones" Width="100px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" HeaderCssClass="untruncate-grid-column-action">
-                <HeaderTemplate>
-                    @if(IsSubpanel && AllowCreate){
-                    <span
-                        class="oi oi-plus cursor-pointer" @onclick="() => GoToCreate()"></span>
-                    }else{
-                        <span><ResourceViewer ResourceTag="Generic.Actions" /></span>
-                    }                        
-                </HeaderTemplate>
-               
-                <Template Context="data">
-                    <div class="action-buttons d-flex justify-content-center">
-                        @if(AllowEdit){
-                            <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToEdit(((IBaseSDK)data).GetRowid())"><i
-                            class="fa-solid fa-pen"></i></button>
-                        }
-                        
-                        
-                        @if(IsSubpanel && AllowDelete){
-                            <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToDelete(((IBaseSDK)data).GetRowid(), data.ToString())"><span
-                            class="fa-solid fa-trash-can"></span></button>
+            @if(ListViewModel.ShowActions)
+            {
+                <RadzenDataGridColumn TItem="object" Title="Acciones" Width="100px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" HeaderCssClass="untruncate-grid-column-action">
+                    <HeaderTemplate>
+                        @if(IsSubpanel && AllowCreate){
+                        <span
+                            class="oi oi-plus cursor-pointer" @onclick="() => GoToCreate()"></span>
+                        }else{
+                            <span><ResourceViewer ResourceTag="Generic.Actions" /></span>
+                        }                        
+                    </HeaderTemplate>
+                
+                    <Template Context="data">
+                        <div class="action-buttons d-flex justify-content-center">
+                            @if(AllowEdit){
+                                <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToEdit(((IBaseSDK)data).GetRowid())"><i
+                                class="fa-solid fa-pen"></i></button>
+                            }
                             
-                        }
-                        @* <button class="btn btn-link grid-btn-link"
-                        @onclick="() => GoToDetail(((BaseSDK<>)data).Rowid)"><span class="oi oi-eye"></span></button> *@
-                    </div>
-                </Template>
-            </RadzenDataGridColumn>
+                            
+                            @if(IsSubpanel && AllowDelete){
+                                <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToDelete(((IBaseSDK)data).GetRowid(), data.ToString())"><span
+                                class="fa-solid fa-trash-can"></span></button>
+                                
+                            }
+                            @* <button class="btn btn-link grid-btn-link"
+                            @onclick="() => GoToDetail(((BaseSDK<>)data).Rowid)"><span class="oi oi-eye"></span></button> *@
+                        </div>
+                    </Template>
+                </RadzenDataGridColumn>
+            }
             @foreach (var field in ListViewModel.Fields)
             {
                 var fieldName = field.Name;
