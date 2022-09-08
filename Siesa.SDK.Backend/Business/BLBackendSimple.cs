@@ -486,6 +486,13 @@ namespace Siesa.SDK.Business
             // Do nothing
         }
 
+        public SDKContext CreateDbContext()
+        {
+            var retContext = _dbFactory.CreateDbContext();
+            retContext.SetProvider(_provider);
+            return retContext;
+        }
+
         [SDKExposedMethod]
         public virtual ActionResult<string> GetObjectString(Int64 rowid)
         {
