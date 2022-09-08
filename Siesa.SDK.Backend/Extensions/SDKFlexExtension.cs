@@ -68,6 +68,9 @@ namespace Siesa.SDK.Backend.Extensions
                             strColumns.Add($"np({relatedColumnInclude}.{column.name}) as {column.key_name}");
                             
                         }
+                        if(column.type.Equals("SelectField")){
+                            
+                        }
                     }
 
                     _assemblySelect = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
