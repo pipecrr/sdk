@@ -30,7 +30,8 @@ else
         ValueChanged="((objects) => OnSelectionChanged(objects))"
         class="whcm_table"
         AllowColumnResize="true"
-        @key="needUpdate">
+        @key="needUpdate"
+        Visible="@(!CardView)">
         <Columns>
             @if(ListViewModel.ShowActions)
             {
@@ -177,4 +178,9 @@ else
             </TopBarExtraButtons>
         </SetTopBar>
     }
+}
+
+@code{
+
+    public bool CardView = false;
 }

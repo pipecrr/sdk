@@ -1,5 +1,5 @@
 @typeparam TItem
-<RadzenDataGridColumn TItem="@TItem" Title="@Title" Width="@Width" Filterable="@Filterable" Sortable="@Sortable" Property="@Property" Type="@ColumnType" Template="@Template" TextAlign="@TextAlignInternal" FormatString="@FormatString">
+<RadzenDataGridColumn TItem="@TItem" Title="@Title" Width="@Width" Filterable="@Filterable" Sortable="@Sortable" Property="@Property" Type="@ColumnType" Template="@Template" TextAlign="@TextAlignInternal" FormatString="@FormatString" CssClass="@GetCssClass()">
 </RadzenDataGridColumn>
 
 @code {
@@ -13,6 +13,7 @@
     [Parameter] public ColumnAlign TextAlign { get; set; } = ColumnAlign.Left;
     [Parameter] public string FormatString { get; set; } 
     
+    [Parameter] public bool IsActionColumn {get; set;}
 
     private Radzen.TextAlign TextAlignInternal
     {
@@ -32,6 +33,15 @@
         Left,
         Right,
         Center
+    }
+
+    private string GetCssClass()
+    {
+        if (IsActionColumn)
+        {
+            return "internal-sdk-gridcolumn-action";
+        }
+        return "";
     }
     
 }

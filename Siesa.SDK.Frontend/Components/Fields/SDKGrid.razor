@@ -31,20 +31,25 @@
      <div class="row">
         @foreach (var item in Data)
         {
-            <div class="col-12 col-sm-12 col-md-6 mt-3">
+            <div class="col-12 col-sm-12 col-md-6 mt-3 col-xl-4">
                 <SDKCard StyleCss="sdk_card d-flex flex-row">
                     <div class="sdk_button_box p-1">
-                        <p>Hola</p>
+                        @(GetActionColumn()(item))
                     </div>
                     <div class="col pt-2">
                         <div class="row">
-                        @foreach (var column in _grid.ColumnsCollection)
+                        @foreach (var column in _grid.ColumnsCollection.Where(x=> x.CssClass != "internal-sdk-gridcolumn-action"))
                         {
                             <div class="col-12 col-sm-6">
                                 <label class="col-form-label col-form-label-sm font-weight-bold">
                                     @column.Title 
                                 </label> 
-                                <p class="font_size_087">@GetValue(item, column.Property)</p> 
+                                @if(column.Template != null)
+                                {
+                                    <p class="font_size_087">@(column.Template(item))</p>
+                                }else{
+                                    <p class="font_size_087">@GetValue(item, column.Property)</p>
+                                }
                             </div> 
                         }
                         </div>
@@ -78,6 +83,8 @@
 
 
 
+
+
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
@@ -91,4 +98,17 @@
     {
        return item.GetType().GetProperty(fieldName).GetValue(item);
     }
+
+    private RenderFragment<TItem> GetActionColumn()
+    {
+       var query = _grid.ColumnsCollection.Where(x=> x.CssClass == "internal-sdk-gridcolumn-action").SingleOrDefault();
+
+       if (query != null)
+       {
+        var childContent = query.Template;
+        return childContent;
+       }
+       return null;
+    }
+
 }
