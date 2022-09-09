@@ -16,6 +16,7 @@
     Count="@Count"
     Columns="@Columns"
     LoadData="@LoadData"
+    AllowVirtualization="@AllowVirtualization"
     ShowPagingSummary="@ShowPagingSummary"
     class="whcm_table"
     PageSizeOptions="@AllowedPageSizes"
@@ -23,39 +24,43 @@
     Value="@Value"
     Visible="@(!CardView)"
     ValueChanged="@ValueChanged"
+    AllowColumnResize="@AllowColumnResize"
     @ref="_grid">
 </RadzenDataGrid>
 
 @if (CardView)
 {
      <div class="row">
-        @foreach (var item in Data)
+        @if(Data != null)
         {
-            <div class="col-12 col-sm-12 col-md-6 mt-3 col-xl-4">
-                <SDKCard StyleCss="sdk_card d-flex flex-row">
-                    <div class="sdk_button_box p-1">
-                        @(GetActionColumn()(item))
-                    </div>
-                    <div class="col pt-2">
-                        <div class="row">
-                        @foreach (var column in _grid.ColumnsCollection.Where(x=> x.CssClass != "internal-sdk-gridcolumn-action"))
-                        {
-                            <div class="col-12 col-sm-6">
-                                <label class="col-form-label col-form-label-sm font-weight-bold">
-                                    @column.Title 
-                                </label> 
-                                @if(column.Template != null)
-                                {
-                                    <p class="font_size_087">@(column.Template(item))</p>
-                                }else{
-                                    <p class="font_size_087">@GetValue(item, column.Property)</p>
-                                }
-                            </div> 
-                        }
+            @foreach (var item in Data)
+            {
+                <div class="col-12 col-sm-12 col-md-6 mt-3 col-xl-4">
+                    <SDKCard StyleCss="sdk_card d-flex flex-row">
+                        <div class="sdk_button_box p-1">
+                            @(GetActionColumn()(item))
                         </div>
-                    </div>
-                </SDKCard>
-            </div>
+                        <div class="col pt-2">
+                            <div class="row">
+                            @foreach (var column in _grid.ColumnsCollection.Where(x=> x.CssClass != "internal-sdk-gridcolumn-action"))
+                            {
+                                <div class="col-12 col-sm-6">
+                                    <label class="col-form-label col-form-label-sm font-weight-bold">
+                                        @column.Title 
+                                    </label> 
+                                    @if(column.Template != null)
+                                    {
+                                        <p class="font_size_087">@(column.Template(item))</p>
+                                    }else{
+                                        <p class="font_size_087">@GetValue(item, column.Property)</p>
+                                    }
+                                </div> 
+                            }
+                            </div>
+                        </div>
+                    </SDKCard>
+                </div>
+            }
         }
     </div>
 }
@@ -69,7 +74,7 @@
     [Parameter] public bool AllowPaging { get; set; }
     [Parameter] public IEnumerable<TItem> Data { get; set; }
     [Parameter] public int Count { get; set; }
-    [Parameter] public EventCallback LoadData { get; set; }
+    [Parameter] public EventCallback<Radzen.LoadDataArgs> LoadData { get; set; }
     [Parameter] public bool ShowPagingSummary { get; set; }
     [Parameter] public IEnumerable<int> AllowedPageSizes { get; set; } = new int[] { 10, 20, 50, 100 };
 
@@ -79,11 +84,10 @@
 
     [Parameter] public bool CardView {get; set;} = false;
 
+    [Parameter] public bool AllowVirtualization {get; set;}
+    [Parameter] public bool AllowColumnResize  {get; set;}
+
     private RadzenDataGrid<TItem> _grid;
-
-
-
-
 
     protected override void OnParametersSet()
     {
@@ -109,6 +113,11 @@
         return childContent;
        }
        return null;
+    }
+
+    public void Reload()
+    {
+        _grid.Reload();
     }
 
 }

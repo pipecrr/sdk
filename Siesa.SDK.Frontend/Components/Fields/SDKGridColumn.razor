@@ -1,38 +1,33 @@
 @typeparam TItem
-<RadzenDataGridColumn TItem="@TItem" Title="@Title" Width="@Width" Filterable="@Filterable" Sortable="@Sortable" Property="@Property" Type="@ColumnType" Template="@Template" TextAlign="@TextAlignInternal" FormatString="@FormatString" CssClass="@GetCssClass()">
+@using Siesa.SDK.Frontend.Components
+<RadzenDataGridColumn TItem="@TItem" Title="@Title" Width="@Width" Filterable="@Filterable" Sortable="@Sortable" Property="@Property" Type="@ColumnType" Template="@Template" TextAlign="@TextAlignInternal" FormatString="@FormatString" CssClass="@GetCssClass()" HeaderTemplate="@HeaderTemplate">
 </RadzenDataGridColumn>
 
 @code {
-    [Parameter] public RenderFragment<TItem>? Template { get; set; }
+    [Parameter] public RenderFragment<TItem> Template { get; set; }
     [Parameter] public string Title { get; set; }
     [Parameter] public bool Filterable { get; set; } = true;
     [Parameter] public bool Sortable { get; set; }
     [Parameter] public string Width { get; set; } = "auto";
-    [Parameter] public string? Property { get; set; }
+    [Parameter] public string Property { get; set; }
     [Parameter] public Type? ColumnType { get; set; }
-    [Parameter] public ColumnAlign TextAlign { get; set; } = ColumnAlign.Left;
+    [Parameter] public SDKColumnAlign TextAlign { get; set; } = SDKColumnAlign.Left;
     [Parameter] public string FormatString { get; set; } 
-    
     [Parameter] public bool IsActionColumn {get; set;}
+    [Parameter] public RenderFragment HeaderTemplate { get; set; }
 
     private Radzen.TextAlign TextAlignInternal
     {
         get{
             return TextAlign switch 
             {
-                ColumnAlign.Left => Radzen.TextAlign.Left,
-                ColumnAlign.Center => Radzen.TextAlign.Center,
-                ColumnAlign.Right => Radzen.TextAlign.Right,
+                SDKColumnAlign.Left => Radzen.TextAlign.Left,
+                SDKColumnAlign.Center => Radzen.TextAlign.Center,
+                SDKColumnAlign.Right => Radzen.TextAlign.Right,
                 _ =>Radzen.TextAlign.Left
             };
         }
         
-    }
-
-    public enum ColumnAlign {
-        Left,
-        Right,
-        Center
     }
 
     private string GetCssClass()
