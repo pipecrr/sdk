@@ -7,6 +7,7 @@
 @using Siesa.SDK.Entities.Enums
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
+@inject IFeaturePermissionService FeaturePermissionService
 
 @if(MenuItem.SubMenus?.Count > 0){
     @* <DxMenuItem Text="@Title" IconCssClass="@MenuItem.IconClass"> 
@@ -38,7 +39,7 @@
     }else{
         @if(MenuItem.Feature != null)
         {
-            @if(Utilities.CheckUserActionPermission(MenuItem.Feature.Rowid, 4, AuthenticationService))
+            @if(FeaturePermissionService.CheckUserActionPermission(MenuItem.Feature.Rowid, 4, AuthenticationService))
             {
                 <a href="@MenuItem.CurrentURL" @attributes="@menuItemAttributes" @onmouseover="MouseOver" @onmouseout="MouseOut" @onclick:stopPropagation="true" @onclick="()=> OnClickItem(MenuItem)"  @onclick:preventDefault  class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
                     title="@Title">

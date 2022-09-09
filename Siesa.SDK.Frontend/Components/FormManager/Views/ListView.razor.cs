@@ -89,6 +89,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         public string LastFilter { get; set; }
 
+        private bool CanCreate;
+        private bool CanEdit;
+        private bool CanDelete;
+        private bool CanDetail;
+        private bool CanList;
+
 
         Guid needUpdate;
 
@@ -136,7 +142,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 bName = BusinessName;
             }
-            CheckPermission();
+            CheckPermissions();
             var metadata = GetViewdef(bName);
             if (metadata == null || metadata == "")
             {
@@ -162,28 +168,40 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         }
 
-        public async Task Refresh(){
+        public async Task Refresh()
+        {
             hideCustomColumn();
         }
 
-        private async Task CheckPermission()
+        private async Task CheckPermissions()
         {
-            // if(FeaturePermissionService != null){
-            //     var canList = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 4, AuthenticationService);
-            //     if(!canList){
-            //         ErrorMsg = "Permission Denied";
-            //         Loading = false;
-            //         StateHasChanged();
-            //         return;
-            //     }
-            // }
+            if (FeaturePermissionService != null)
+            {
+                try
+                {
+                    CanList = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 4, AuthenticationService);
+                    CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 1, AuthenticationService);
+                    CanEdit = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 2, AuthenticationService);
+                    CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 3, AuthenticationService);
+                    CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 5, AuthenticationService);
+                }
+                catch (System.Exception)
+                {
+                }
+
+                if(!CanList){
+                    ErrorMsg = "Unauthorized";
+                }
+
+            }
 
         }
 
         protected override async Task OnInitializedAsync()
         {
-            await CheckPermission();
-            await base.OnInitializedAsync();            
+
+            await base.OnInitializedAsync();
+            //await CheckPermissions();
             //InitView();
         }
 

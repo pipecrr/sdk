@@ -15,16 +15,15 @@ namespace Siesa.SDK.Frontend.Services
     {
         // private readonly IAuthenticationService _authenticationService;
         // private readonly ILocalStorageService _localStorageService;
-        protected IBackendRouterService BackendRouterService {get; set;}
+        protected IBackendRouterService _BackendRouter {get; set;}
 
         public FeaturePermissionService(IBackendRouterService backendRouterService)
         {
-            BackendRouterService = backendRouterService;
+            _BackendRouter = backendRouterService;
             // _authenticationService = authenticationService;
             // _localStorageService = localStorageService;
         }
         private Dictionary<string, int> BLNameToRowid { get; set; } = new Dictionary<string, int>();
-        public SDKBusinessModel Backend {get { return BackendRouterService.GetSDKBusinessModel("BLFeature", null); } }
 
         public bool CheckUserActionPermission(int rowidFeature, int actionRowid, IAuthenticationService authenticationService)
         {
@@ -35,7 +34,8 @@ namespace Siesa.SDK.Frontend.Services
         {
             if (!BLNameToRowid.ContainsKey(featureBLName))
             {
-               var request = await Backend.Call("GetFeatureRowid", featureBLName);
+                var backend = _BackendRouter.GetSDKBusinessModel("BLFeature", authenticationService);
+                var request = await backend.Call("GetFeatureRowid", featureBLName);
                 if(request.Success)
                 {
                     BLNameToRowid[featureBLName] = request.Data;
