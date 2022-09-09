@@ -41,6 +41,7 @@ namespace Siesa.SDK.Shared.Services
         Task SetCustomRowidCulture(short rowid);
         short GetRoiwdCulture();
         Task SetRowidCompanyGroup(short rowid);
+        Task RemoveCustomRowidCulture();
 
         short GetRowidCompanyGroup();
 

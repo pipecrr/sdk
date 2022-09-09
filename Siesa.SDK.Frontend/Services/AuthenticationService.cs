@@ -108,6 +108,12 @@ namespace Siesa.SDK.Frontend.Services
             await _localStorageService.SetItemAsync("customrowidculture", CustomRowidCulture);
         }
 
+        public async Task RemoveCustomRowidCulture()
+        {
+            CustomRowidCulture = 0;
+            await _localStorageService.RemoveItemAsync("customrowidculture");
+        }
+
         public async Task SetRowidCompanyGroup(short rowid)
         {
 

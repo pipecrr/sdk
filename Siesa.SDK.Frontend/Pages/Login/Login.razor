@@ -329,6 +329,12 @@
 
             if (selectedCulture == null){
                 cultureDefault();
+                try {
+
+                    await AuthenticationService.RemoveCustomRowidCulture();
+                }catch(Exception ex){
+                   
+                }
             }else{
                 OnChangeCulture(selectedCulture.Rowid);
             }
