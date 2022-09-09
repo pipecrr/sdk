@@ -1,0 +1,40 @@
+
+@switch (@type)
+{
+    case SDKTypeFile.Video:
+        <video src="@url" autoplay></video>
+        break;
+    case SDKTypeFile.Image: 
+        <img src="@url" />
+        break;
+    case SDKTypeFile.Audio:
+        <audio src="@url" autoplay controls></audio>
+        break;
+    case SDKTypeFile.Pdf:
+        <embed src="@url" type="application/pdf"/>
+        break;
+    case SDKTypeFile.Text:
+        <embed src="@url" type="text/plain"/>
+        break;
+    case SDKTypeFile.Other:
+        <div class="text-center">
+            <p>@GetName()</p>
+            <a href="@url" target="_blank"><i class="fa-solid fa-file-arrow-down"></i></a>
+        </div>
+        break;
+    default:
+        <p>Unknown type</p>
+        break;
+}
+
+@code{
+    [Parameter]
+    public SDKTypeFile type {get; set;}
+
+    [Parameter]
+    public string url {get; set;}
+
+    private string GetName(){
+        return url.Split("/").Last();
+    }
+} 
