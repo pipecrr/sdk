@@ -67,4 +67,13 @@ namespace Siesa.SDK.Frontend.Components
         Info = BadgeStyle.Info,
         Light = BadgeStyle.Light,
     }
+
+    public enum SDKTypeFile{
+        Image = 1,
+        Video = 2,
+        Audio = 3,
+        Pdf = 4,
+        Text = 5,
+        Other = 6
+    }
 }
