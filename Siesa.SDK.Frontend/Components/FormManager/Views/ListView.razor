@@ -1,4 +1,4 @@
-﻿@using SDK.Components.Visualization
+@using SDK.Components.Visualization
 @using Siesa.SDK.Frontend.Components.FormManager.Fields
 @using Siesa.SDK.Entities;
 @if (ErrorMsg != "")
@@ -31,7 +31,7 @@ else
         class="whcm_table"
         AllowColumnResize="true"
         @key="needUpdate"
-        Visible="@(!CardView)">
+        >
         <Columns>
             @if(ListViewModel.ShowActions)
             {
@@ -178,9 +178,4 @@ else
             </TopBarExtraButtons>
         </SetTopBar>
     }
-}
-
-@code{
-
-    public bool CardView = false;
 }
