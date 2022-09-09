@@ -48,6 +48,12 @@ namespace Siesa.SDK.Frontend.Components
         Multiple = DataGridSelectionMode.Multiple
     }
 
+    public enum SDKColumnAlign {
+        Left,
+        Right,
+        Center
+    }
+
     public enum SDKNotificationSeverity
     {
         Error = NotificationSeverity.Error,

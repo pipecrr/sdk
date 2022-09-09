@@ -1,4 +1,4 @@
-﻿@using SDK.Components.Visualization
+@using SDK.Components.Visualization
 @using Siesa.SDK.Frontend.Components.FormManager.Fields
 @using Siesa.SDK.Entities;
 @if (ErrorMsg != "")
@@ -30,7 +30,8 @@ else
         ValueChanged="((objects) => OnSelectionChanged(objects))"
         class="whcm_table"
         AllowColumnResize="true"
-        @key="needUpdate">
+        @key="needUpdate"
+        >
         <Columns>
             @if(ListViewModel.ShowActions)
             {
