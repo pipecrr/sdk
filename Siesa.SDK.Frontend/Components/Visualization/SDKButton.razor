@@ -14,6 +14,7 @@
     form="@form"
     NavigateUrl="@NavigateUrl"
     CssClass="@GetCss()"
+    Enabled="@Enabled"
     >
     @if(!string.IsNullOrEmpty(IconCssClass)){
         <i class="@IconCssClass"></i>
@@ -38,6 +39,7 @@
     private string Text { get; set; }
 
     [Parameter] public string NavigateUrl { get; set; }
+    [Parameter] public bool Enabled { get; set; } = true;
 
     private async Task<string> GetText(){
         if((RowidResource == null || RowidResource == 0) && ResourceTag != null){

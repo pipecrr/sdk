@@ -52,4 +52,11 @@
         {
             return _relatedEntityURL != "" && _relatedEntityURL != null ? _relatedEntityURL : ObtainEntityURL();
         } }
+
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        Label = null;
+        _relatedEntityURL = null;
+        await base.SetParametersAsync(parameters);
+    }
 }
