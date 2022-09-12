@@ -294,7 +294,7 @@
     
     private async Task getDbConnections()
     {
-        var userBL = Frontend.BusinessManagerFrontend.Instance.GetBusiness("BLUser", AuthenticationService);
+        var userBL = BackendRouterService.GetSDKBusinessModel("BLUser", AuthenticationService);
         if(userBL == null)
         {
             return;
