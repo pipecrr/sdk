@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore.Utilities;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Siesa.SDK.Entities.Enums;
+using Siesa.SDK.Shared.Utilities;
 //using System.Linq.Dynamic.Core;
 
 namespace Siesa.SDK.Backend.Access
@@ -30,10 +31,10 @@ namespace Siesa.SDK.Backend.Access
         private readonly IQueryable<TEntity> query;
         private SDKContext _context;
 
-        private IAuthenticationService AuthenticationService {get; set;}     
+        private IAuthenticationService AuthenticationService { get; set; }
 
         private EntityEntry<TEntity> EntryWithoutDetectChanges(TEntity entity)
-        => new(_context.GetDependencies().StateManager.GetOrCreateEntry(entity, EntityType)); 
+        => new(_context.GetDependencies().StateManager.GetOrCreateEntry(entity, EntityType));
 
         private void SetEntityState(InternalEntityEntry entry, EntityState entityState)
         {
@@ -73,7 +74,7 @@ namespace Siesa.SDK.Backend.Access
                 if (dataAnnotation.Length > 0)
                 {
                     int current_user = 0;
-                    if(AuthenticationService != null && AuthenticationService.User != null)
+                    if (AuthenticationService != null && AuthenticationService.User != null)
                     {
                         current_user = AuthenticationService.User.Rowid;
                     }
@@ -95,29 +96,106 @@ namespace Siesa.SDK.Backend.Access
                         authorizationTableName = $"{typeof(TEntity).Namespace}.{authorizationTableName}";
                     }
 
-                        Type authEntityType = typeof(TEntity).Assembly.GetType(authorizationTableName);
-                        var authSet = (IQueryable<BaseUserPermission<TEntity, Int64>>)_context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(authEntityType).Invoke(_context, null);
+                    Type authEntityType = typeof(TEntity).Assembly.GetType(authorizationTableName);
+                    var authSet = (IQueryable<BaseUserPermission<TEntity, Int64>>)_context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(authEntityType).Invoke(_context, null);
 
-                        var sdk_query = ((IQueryable<BaseSDK<int>>)query); //TODO: Cambiar tipo de dato en el generic, según la clase
-                        var join_sql = sdk_query.Join(authSet,
-                            e => e.Rowid,
-                            u => u.RowidRecord,
-                            (e, u) => new { e, u })
-                            .Where(
-                                x => ((
-                                    x.u.UserType == PermissionUserTypes.User && x.u.RowidUser == current_user
-                                    &&  x.u.AuthorizationType == PermissionAuthTypes.Query_Tx
-                                )
-                                || false //TODO: Add other authorization types
-                                )
-                            );
-                        sdk_query = join_sql.Select(x => x.e);
-                        this.query = sdk_query.Cast<TEntity>();
+                    var sdk_query = ((IQueryable<BaseSDK<int>>)query); //TODO: Cambiar tipo de dato en el generic, según la clase
+                    var join_sql = sdk_query.Join(authSet,
+                        e => e.Rowid,
+                        u => u.RowidRecord,
+                        (e, u) => new { e, u })
+                        .Where(
+                            x => ((
+                                x.u.UserType == PermissionUserTypes.User && x.u.RowidUser == current_user
+                                && x.u.AuthorizationType == PermissionAuthTypes.Query_Tx
+                            )
+                            || false //TODO: Add other authorization types
+                            )
+                        );
+                    sdk_query = join_sql.Select(x => x.e);
+                    this.query = sdk_query.Cast<TEntity>();
                 }
+            }
+
+            if (Utilities.IsAssignableToGenericType
+            (typeof(TEntity), typeof(BaseCompanyGroup<>)))
+            {
+                Type rowidType = typeof(TEntity).GetProperty("Rowid").GetType();
+
+                switch (rowidType.Name)
+                {
+                    case "Int64":
+                        this.query = this.FilterGroupCompany<long>(query);
+                        break;
+                    case "Int16":
+                        this.query = this.FilterGroupCompany<short>(query);
+                        break;
+                    case "Int32":
+                    default:
+                        this.query = this.FilterGroupCompany<int>(query);
+                        break;
+                }
+            }  else if (Utilities.IsAssignableToGenericType
+            (typeof(TEntity), typeof(BaseCompany<>)))
+            {
+                Type rowidType = typeof(TEntity).GetProperty("Rowid").GetType();
+
+                switch (rowidType.Name)
+                {
+                    case "Int64":
+                        this.query = this.FilterCompany<long>(query);
+                        break;
+                    case "Int16":
+                        this.query = this.FilterCompany<short>(query);
+                        break;
+                    case "Int32":
+                    default:
+                        this.query = this.FilterCompany<int>(query);
+                        break;
+                }
+            }else if(typeof(TEntity) == typeof(E00201_Company)){
+                this.query = this.FilterCompanyEntity(query);
             }
         }
 
-        IEnumerator<TEntity>  IEnumerable<TEntity>.GetEnumerator()
+        private IQueryable<TEntity> FilterGroupCompany<T>(IQueryable<TEntity> query)
+        {
+            if(AuthenticationService?.User == null)
+            {
+                 return query; //TODO: Validar si devolver todo o nada
+            }
+            var group_company_session = AuthenticationService.User.RowidCompanyGroup;
+            var sdk_query = (IQueryable<BaseCompanyGroup<T>>)query;
+            sdk_query = sdk_query.Where(x => x.RowidCompanyGroup == group_company_session);
+            return sdk_query.Cast<TEntity>();
+        }
+
+        private IQueryable<TEntity> FilterCompany<T>(IQueryable<TEntity> query)
+        {
+            if(AuthenticationService?.User == null)
+            {
+                 return query; //TODO: Validar si devolver todo o nada
+            }
+            var group_company_session = AuthenticationService.User.RowidCompanyGroup;
+            var sdk_query = (IQueryable<BaseCompany<T>>)query;
+            sdk_query = sdk_query.Include("Company").Where(x => x.Company.RowidCompanyGroup == group_company_session);
+            return sdk_query.Cast<TEntity>();
+        }
+
+        private IQueryable<TEntity> FilterCompanyEntity(IQueryable<TEntity> query)
+        {
+            if(AuthenticationService?.User == null)
+            {
+                 return query; //TODO: Validar si devolver todo o nada
+            }
+            var group_company_session = AuthenticationService.User.RowidCompanyGroup;
+            var sdk_query = (IQueryable<E00201_Company>)query;
+            sdk_query = sdk_query.Where(x => x.RowidCompanyGroup == group_company_session);
+            return sdk_query.Cast<TEntity>();
+        }
+
+
+        IEnumerator<TEntity> IEnumerable<TEntity>.GetEnumerator()
         {
             return query.GetEnumerator();
         }
@@ -154,7 +232,7 @@ namespace Siesa.SDK.Backend.Access
             return set.FindAsync(keyValues);
         }
 
-  
+
         public override ValueTask<TEntity?> FindAsync(object?[]? keyValues, CancellationToken cancellationToken)
         {
             return set.FindAsync(keyValues, cancellationToken);
@@ -169,7 +247,8 @@ namespace Siesa.SDK.Backend.Access
 
         public override EntityEntry<TEntity> Remove(TEntity entity)
         {
-            if(entity == null){
+            if (entity == null)
+            {
                 throw new ArgumentNullException(nameof(entity));
             }
 

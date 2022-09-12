@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -33,13 +33,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
             return "";
         }
 
-        public async Task<string> GetResource(string resourceTag, Int64 cultureRowid = 0){
-
-            if(cultureRowid != 0){
-                return await this.ResourceManager.GetResource(resourceTag, cultureRowid);
-            }
-            if(AuthenticationService.User != null){
-                cultureRowid = AuthenticationService.GetRoiwdCulture();
+        public async Task<string> GetResource(string resourceTag, Int64 rowidculture = 0){
+            if (rowidculture != 0)
+            {
+                return await ResourceManager.GetResource(resourceTag, rowidculture);
+            }else if(AuthenticationService.User != null){
+                Int64 cultureRowid = AuthenticationService.GetRoiwdCulture();
                 return await ResourceManager.GetResource(resourceTag, cultureRowid);
             }
             return resourceTag;
@@ -64,4 +63,4 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
 
         
     }
-}
+}   

@@ -151,6 +151,14 @@ namespace Siesa.SDK.Business
             AuthenticationService = authenticationService;
             NotificationService = notificationService;
             BaseObj = Activator.CreateInstance<T>();
+
+            if (AuthenticationService?.User != null && Utilities.IsAssignableToGenericType(BaseObj.GetType(), typeof(BaseCompanyGroup<>)))
+            {
+                var companyGroup = new E00200_CompanyGroup();
+                companyGroup.Rowid = AuthenticationService.User.RowidCompanyGroup;
+                BaseObj.GetType().GetProperty("RowidCompanyGroup").SetValue(BaseObj, AuthenticationService.User.RowidCompanyGroup);
+                BaseObj.GetType().GetProperty("CompanyGroup").SetValue(BaseObj, companyGroup);
+            }
         }
 
         public BLFrontendSimple(IAuthenticationService authenticationService, SDKNotificationService notificationService = null)
@@ -242,7 +250,7 @@ namespace Siesa.SDK.Business
             }
             catch (Exception e)
             {
-            await GetNotificacionService("Error al Eliminar el registro");
+            await GetNotificacionService("Generic.Message.DeleteError");
 
             return null;
             }
@@ -292,7 +300,7 @@ namespace Siesa.SDK.Business
             }
             catch (Exception e)
             {
-                await GetNotificacionService(e.Message);
+                await GetNotificacionService("Generic.Message.Error");
 
                 return response;
             }

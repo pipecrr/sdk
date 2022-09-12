@@ -1,8 +1,10 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @using SDK.Components.Visualization
+@using Siesa.SDK.Shared.Services
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
 @inject UtilsManager UtilManager
 @inject SDKNotificationService SDKNotificationService
+@inject IAuthenticationService AuthenticationService
 
 @if(IsEmptyLayout){
     @if (CurrentException != null)
@@ -79,7 +81,7 @@
     private string TitleTag = "Error.Text.Title";
 
     private string NotificationMessage { get; set; }
-    private string NotificationMessageTag = "Error.Text.NotificationMessage";
+    private string NotificationMessageTag = "Generic.Message.Error";
 
     protected override async Task OnInitializedAsync()
     {

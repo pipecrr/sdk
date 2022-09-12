@@ -88,6 +88,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         private List<Type> SupportedTypes = new List<Type>(){
             typeof(SwitchField),
             typeof(SelectBarField<>),
+            typeof(TextField),
 
         };
 
