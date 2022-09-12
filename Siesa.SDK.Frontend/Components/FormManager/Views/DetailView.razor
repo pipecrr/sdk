@@ -3,8 +3,10 @@
 @using Siesa.SDK.Frontend.Components.FormManager.Fields
 @using Siesa.SDK.Frontend.Components.Layout.Detail.Relationship
 @using Siesa.SDK.Frontend.Components.Visualization
-
-@if (Panels == null || Panels.Count <= 0)
+@if (Loading == true)
+{
+    <ResourceViewer ResourceTag="Generic.Loading" />
+} else if (Panels == null || Panels.Count <= 0)
 {
     <ResourceViewer ResourceTag="SDK.ViewdefNotFound" />
 }

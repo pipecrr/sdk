@@ -30,6 +30,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Inject] public IJSRuntime JSRuntime { get; set; }
         [Inject] public NavigationManager NavManager { get; set; }
         [Inject] public NavigationService NavigationService { get; set; }
+        [Inject] public SDKNotificationService NotificationService { get; set; }
 
         [Inject] protected IAuthenticationService AuthenticationService { get; set; }
 
@@ -147,13 +148,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             EvaluateDynamicAttributes(null);
             StateHasChanged();
         }
-        protected virtual void InitView(string bName = null)
+        protected virtual async Task InitView(string bName = null)
         {
             Loading = true;
             if (bName == null)
             {
                 bName = BusinessName;
             }
+            await CheckPermissions();
             var metadata = GetViewdef(bName);
             if (metadata == null || metadata == "")
             {
@@ -307,11 +309,10 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
                 {
                     Loading = false;
                     ErrorMsg = "";
-                    InitView(value);
+                    await InitView(value);
                 }
             }
         }
-
         private async Task SaveBusiness()
         {
             Loading = true;

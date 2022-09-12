@@ -20,7 +20,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             await base.CheckPermissions();
             if(!CanEdit)
             {
-                ErrorMsg = "Unautorized";
+                NotificationService.ShowError("Generic.Unauthorized");
+                NavigationService.NavigateTo("/", replace:true);
             }
         }
 

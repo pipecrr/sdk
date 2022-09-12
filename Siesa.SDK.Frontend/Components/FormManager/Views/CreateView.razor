@@ -11,15 +11,13 @@
 
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
 
-@if (Panels == null || Panels.Count <= 0)
-{
-    <ResourceViewer ResourceTag="SDK.ViewdefNotFound" />
-}
-else if (Loading == true)
+@if (Loading == true)
 {
     <ResourceViewer ResourceTag="Generic.Loading" />
-}
-else if (BusinessObj.BaseObj != null)
+} else if (Panels == null || Panels.Count <= 0)
+{
+    <ResourceViewer ResourceTag="SDK.ViewdefNotFound" />
+} else if (BusinessObj.BaseObj != null)
 {
     @if(IsSubpanel && ShowTitle){        
             <h5><ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer 
@@ -99,8 +97,8 @@ else if (BusinessObj.BaseObj != null)
 }
 
 @code {
-    protected override void InitView(string bName = null){
-        base.InitView(bName);
+    protected override async Task InitView(string bName = null){
+        await base.InitView(bName);
 
         if(Panels.Count > 1){
              foreach (var panel in Panels){
