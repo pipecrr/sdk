@@ -14,7 +14,14 @@
     form="@form"
     NavigateUrl="@NavigateUrl"
     CssClass="@GetCss()"
-    />
+    Enabled="@Enabled"
+    >
+    @if(!string.IsNullOrEmpty(IconCssClass)){
+        <i class="@IconCssClass"></i>
+    }else{
+        @Text
+    }
+    </DxButton>
 
 @code {
     [Parameter] public SDKButtonRenderStyle RenderStyle { get; set; }
@@ -22,6 +29,8 @@
     [Parameter] public string ResourceTag { get; set; }
     [Parameter] public Int64? RowidResource { get; set; }
     [Parameter] public EventCallback<MouseEventArgs> Click { get; set; }
+    [Parameter] public bool IsActionButton { get; set; }
+    [Parameter] public string IconCssClass {get;set;}
 
     [Parameter] public string form { get; set; }
 
@@ -30,6 +39,7 @@
     private string Text { get; set; }
 
     [Parameter] public string NavigateUrl { get; set; }
+    [Parameter] public bool Enabled { get; set; } = true;
 
     private async Task<string> GetText(){
         if((RowidResource == null || RowidResource == 0) && ResourceTag != null){
@@ -40,12 +50,21 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Text = ResourceTag;
-        await base.OnInitializedAsync();
-        Text = await GetText();
+        if(!IsActionButton)
+        {
+            Text = ResourceTag;
+            await base.OnInitializedAsync();
+            Text = await GetText();
+        }else{
+            await base.OnInitializedAsync();
+        }
     }
 
     private string GetCss(){
+        if(IsActionButton)
+        {
+            return "layout_btn_standar-sm";
+        }
         switch (RenderStyle)
         {
             case SDKButtonRenderStyle.Primary:
