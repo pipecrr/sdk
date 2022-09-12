@@ -236,15 +236,16 @@
             NavigationManager.NavigateTo("");
             return;
         }
-        cultureDefault();        InitLogin();
+        cultureDefault();
+        await InitLogin();
     }
 
     private async Task InitLogin()
     {
-        await await getDbConnections();
+        await getDbConnections();
         await getCultures();
         getSelectedCulture();
-        await await getUserlang();
+        await getUserlang();
         init_loading = false;
         await base.OnInitializedAsync();
         StateHasChanged();
