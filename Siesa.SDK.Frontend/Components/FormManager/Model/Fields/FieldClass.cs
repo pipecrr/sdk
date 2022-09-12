@@ -108,6 +108,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             //await Init();
         }
 
+        public void SetValue(string fieldName, object value)
+        {
+            var fieldProperty = BindModel.GetType().GetProperty(fieldName);
+            fieldProperty.SetValue(BindModel, value);
+        }
+
         public void SetValue(TProperty value)
         {
             var setValue = true;
