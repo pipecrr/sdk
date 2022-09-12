@@ -70,6 +70,34 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         [Inject]
         public IBackendRouterService BackendRouterService { get; set; }
+        [Inject] 
+        public IFeaturePermissionService FeaturePermissionService { get; set; }
+
+        protected bool CanCreate;
+        protected bool CanEdit;
+        protected bool CanDelete;
+        protected bool CanDetail;
+        protected bool CanList;
+
+        protected virtual async Task CheckPermissions()
+        {
+            if (FeaturePermissionService != null)
+            {
+                try
+                {
+                    CanList = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 4, AuthenticationService);
+                    CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 1, AuthenticationService);
+                    CanEdit = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 2, AuthenticationService);
+                    CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 3, AuthenticationService);
+                    CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 5, AuthenticationService);
+                }
+                catch (System.Exception)
+                {
+                }
+            }
+
+        }
+
 
         private string GetViewdef(string businessName)
         {
