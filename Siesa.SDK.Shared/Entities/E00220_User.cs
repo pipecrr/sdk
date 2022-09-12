@@ -17,8 +17,12 @@ namespace Siesa.SDK.Entities
 	/// </summary>
 	[SDKLogEntity]
 	[Index(nameof(Id), Name = "IX_e00220_1", IsUnique = true)]
-	public partial class E00220_User : BaseMaster<string>
+	public partial class E00220_User : BaseMaster<int, string>
 	{
+		[Key]
+		[Required]
+		public override int Rowid { get; set; }
+
 		[Required]
 		[StringLength(20)]
 		public override string Id { get; set; }
@@ -106,13 +110,16 @@ namespace Siesa.SDK.Entities
 		[ForeignKey("UserReportTo")]
 		public int? RowidUserReportTo { get; set; }
 
-
 		[Required]
-		public virtual E00021_Culture Culture { get; set; }
+		public bool IsAdministrator { get; set; }
+
 
 		public virtual E00220_User UserSubstitute { get; set; }
 
 		public virtual E00220_User UserReportTo { get; set; }
+
+		[Required]
+		public virtual E00021_Culture Culture { get; set; }
 
 		// public virtual E00223_UserAccountPolicy UserAccountPolicy { get; set; }
 

@@ -34,6 +34,8 @@
     private string Text { get; set; }
 
     [Parameter] public string NavigateUrl { get; set; }
+    [CascadingParameter]
+    public TopBar? topBar { get; set; }
 
     private async Task<string> GetText(){
         if((RowidResource == null || RowidResource == 0) && ResourceTag != null){
@@ -53,9 +55,11 @@
     {
         if(NavigateUrl != null){
             NavigationManager.NavigateTo(NavigateUrl);
+            topBar?.CloseExtraButtons();
         }else{
             await Click.InvokeAsync(e);
         }
+        topBar?.CloseExtraButtons();
         
     }
 }

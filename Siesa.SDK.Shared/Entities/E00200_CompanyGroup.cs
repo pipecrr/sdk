@@ -23,6 +23,14 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public override short Rowid { get; set; }
 
+		[Required]
+		[StringLength(20)]
+		public string Id { get; set; }
+
+		[Required]
+		[StringLength(250)]
+		public string Name { get; set; }
+
 
 	}
 }

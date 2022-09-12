@@ -5,6 +5,7 @@ using Siesa.SDK.Backend.Interceptors;
 using Siesa.SDK.Backend.Services;
 using Siesa.SDK.Shared.Backend;
 using Siesa.SDK.Shared.Business;
+using Siesa.SDK.Shared.Criptography;
 using Siesa.SDK.Shared.Logs.DataEventLog;
 using Siesa.SDK.Shared.Services;
 using Microsoft.EntityFrameworkCore;
@@ -23,7 +24,11 @@ namespace Siesa.SDK.Backend.Extensions
             var dbConnections = configurationManager.GetSection("DbConnections").Get<List<SDKDbConnection>>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<ITenantProvider>( sp => ActivatorUtilities.CreateInstance<TenantProvider>(sp, dbConnections));
-            services.AddSingleton<IFeaturePermissionService, FeaturePermissionService>();
+            services.AddScoped<IFeaturePermissionService, FeaturePermissionService>();
+            services.AddSingleton<IBackendRouterService, BackendRouterService>();
+            services.AddScoped<EmailService>();
+
+            services.AddScoped<ISDKJWT, Siesa.SDK.Backend.Criptography.SDKJWT>();
 
             Action<IServiceProvider, DbContextOptionsBuilder> dbContextOptionsAction = (sp, opts) =>
             {

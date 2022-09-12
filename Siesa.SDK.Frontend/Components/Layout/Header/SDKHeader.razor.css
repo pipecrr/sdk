@@ -48,28 +48,6 @@
     height: 250px;
     opacity: 1;
 }
-.sdk_search{
-  position: relative;  
-}
-.sdk_search>input{
-    border: transparent;
-    background: #ffffff4d;
-    color: white;
-}
-.sdk_search>input:focus{
-    color: white;
-    background-color: #ffffff4d;
-}
-.sdk_search>input::placeholder{
-    color: #ffffff80;
-}
-.sdk_search>i{
-    position: absolute;
-    right: .5rem;
-    top: .5rem;
-    color: #ffffff80;
-    opacity: .5;
-}
 .sdk_version{
     font-size: .75rem;
     color: white;
@@ -83,15 +61,17 @@
     color: white;
     font-size: .75rem;
     text-align: right;
-    padding: 0 1rem;
     margin: 0;
     border: none;
     line-height: 1.2;  
 }
+.sdk_conection>div>.btn_connect>div>p{
+    max-width: 160px;
+}
 .connect_tooltip{
     min-width: 268px;
     max-width: 268px;
-    border-radius: 4px;
+    border-radius: var(--border_radius_standar);
     background-color: var(--color_light);
     position: absolute;
     top: 42px;
@@ -118,8 +98,8 @@
 .connect_select_search>div>select {
     width: calc(100% - 2rem);
     border: none;
-    border-radius: 0.2rem;
-    background: none;
+    border-radius: var(--border_radius_standar);
+    /* background: none; */
 }
 .connect_select_search>div>button {
     width: 2rem;
@@ -133,43 +113,81 @@
     justify-content: center;
     align-items: center;
 }
+.whcm_logo_compania{
+    max-height: 30px;
+    max-width: 100%;
+}
+.whcm_logo_head{
+    max-height: 30px;
+    max-width: 100%;
+}
 
-.search_tooltip{
-    min-width: 300px;
-    max-width: 300px;
-    border-radius: 4px;
-    color: var(--color_text);
-    background-color: var(--color_light);
-    position: absolute;
-    top: 42px;
-    left: calc(50% - 150px);
-    z-index: 2;
-    box-shadow: var(--shadow_standar);
-    display: none;
-    font-size: 0.875rem;
+@media (max-width: 1199.98px) {
+    .header_circles_box_1{
+        opacity: 0;
+    }
+    .sdk_conection>div>.btn_connect>div>p{
+        max-width: 140px;
+    }
 }
-.search_tooltip::before {
-    content: "";
-    width: 0px;
-    height: 0px;
-    position: absolute;
-    top: -8px;
-    left: 146px;
-    border-top: 0px solid transparent;
-    border-right: 9px solid transparent;
-    border-bottom: 9px solid white;
-    border-left: 9px solid transparent;
+
+@media (max-width: 991.98px) { 
+    .header_circles_box_2{
+        opacity: .05;
+    }
+    .header_circles_box_3{
+        opacity: .2;
+    }
+    .whcm_logo_head{
+        max-height: 20px;
+        max-width: 100%;
+    }
+    .sdk_conection>div>.btn_connect{
+        font-size: 0.625rem; 
+    }
+    .sdk_version{
+        font-size: 0.625rem;   
+    }
+    .sdk_conection>div>.btn_connect>div>p{
+        max-width: 120px;
+    }
 }
-.search_tooltip>a{
-    color: var(--color_text);
-    display: block;
-    text-decoration: none;
+
+@media (max-width: 767.98px) { 
+    .header_circles_box_3{
+        opacity: .1;
+    }
+    .whcm_logo_head{
+        max-height: 18px;
+        max-width: 100%;
+    }
+    .sdk_version{
+        border: none;
+        color: var(--color_text_2);
+    }
+    .sdk_conection>div>.btn_connect{
+        font-size: 0.75rem; 
+    }
+    .sdk_version{
+        font-size: 0.75rem;   
+    }
+    .whcm_footer{
+        width: 100vw;
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        padding: 0.5rem;
+        background-color: var(--color_light);
+        box-shadow: var(--shadow_standar);
+    }
 }
-.search_tooltip>a>span{
-    color: var(--color_primary);
-}
-.search_tooltip a:hover{
-    color: var(--color_text);
-    background: var(--color_back_2);
-    text-decoration: none;
-}
+
+@media (max-width: 575.98px) {
+    .whcm_logo_compania{
+        max-height: 25px;
+        max-width: 100%;
+    }
+    .header_circles_box{
+        left: -198px;
+    }
+ }

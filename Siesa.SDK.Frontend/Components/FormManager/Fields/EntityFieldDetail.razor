@@ -1,6 +1,7 @@
 ﻿@inherits FieldClass<object>
 @using Siesa.SDK.Shared.Services
 @inject IAuthenticationService AuthenticationService
+@inject IBackendRouterService BackendRouterService
 
 <a href="@RelatedEntityURL"><p style="word-wrap: break-word">@Label</p></a>
 
@@ -14,7 +15,7 @@
         {
             return;
         }
-        var backend =  BusinessManagerFrontend.Instance.GetBusiness(relBusiness, AuthenticationService);
+        var backend = BackendRouterService.GetSDKBusinessModel(relBusiness, AuthenticationService);
         var request = await backend.Call("GetObjectString", relRowid);
         if(request.Success)
         {
@@ -51,4 +52,11 @@
         {
             return _relatedEntityURL != "" && _relatedEntityURL != null ? _relatedEntityURL : ObtainEntityURL();
         } }
+
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        Label = null;
+        _relatedEntityURL = null;
+        await base.SetParametersAsync(parameters);
+    }
 }

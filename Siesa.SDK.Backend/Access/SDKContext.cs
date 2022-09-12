@@ -18,6 +18,8 @@ namespace Siesa.SDK.Backend.Access
 {
     public class SDKContext: DbContext
     {
+	public DbSet<E00230_Flex>? E00230_Flex { get; set; }
+
 	public DbSet<E00025_EnumValue>? E00025_EnumValue { get; set; }
 
 	public DbSet<U00225_UserDataVisibilityGroup>? U00225_UserDataVisibilityGroup { get; set; }
@@ -136,12 +138,25 @@ namespace Siesa.SDK.Backend.Access
 
         public override int SaveChanges()
         {
+            JwtUserData CurrentUser = null;
+            if(ServiceProvider != null)
+            {
+                IAuthenticationService authService = (IAuthenticationService)ServiceProvider.GetService(typeof(IAuthenticationService));
+                if(authService?.User != null){
+                    CurrentUser = authService.User;
+                }
+            }
+
+            if(CurrentUser == null){
+                throw new Exception("Invalid User");
+            }
+
             foreach (var entry in ChangeTracker.Entries())
             {
                 //Check if the entry inherits from the BaseAudit<> class
                 if(Utilities.IsAssignableToGenericType(entry.Entity.GetType(), typeof(BaseAudit<>)))
                 {
-                    var loggedUser = 1; //TODO: Get logged user
+                    var loggedUser = CurrentUser.Rowid; //TODO: Get logged user
 
                     entry.Context.Entry(entry.Entity).Property("LastUpdateDate").CurrentValue = DateTime.Now;
                     entry.Context.Entry(entry.Entity).Property("RowidUserLastUpdate").CurrentValue = loggedUser;
@@ -155,7 +170,11 @@ namespace Siesa.SDK.Backend.Access
                             entry.Context.Entry(entry.Entity).Property("CreationDate").CurrentValue = DateTime.Now;
                         }
                     }
+                }else if(Utilities.IsAssignableToGenericType(entry.Entity.GetType(), typeof(BaseCompanyGroup<>)))
+                {
+                    entry.Context.Entry(entry.Entity).Property("RowidCompanyGroup").CurrentValue = CurrentUser.RowidCompanyGroup; 
                 }
+
             }
             LogCreator logCreator = new(ChangeTracker.Entries());
             logCreator.ProccessBeforeSaveChanges();

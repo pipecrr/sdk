@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Siesa.SDK.Shared.Backend;
 using Siesa.SDK.Shared.Business;
 using Siesa.SDK.Shared.Logs.DataEventLog;
+using Siesa.SDK.Shared.Services;
 using System;
 
 namespace Siesa.SDK.Shared.Configurations
@@ -11,6 +12,8 @@ namespace Siesa.SDK.Shared.Configurations
     {
         public string MasterBackendUrl { get; set; } = String.Empty;
         public string AuditServerUrl { get; set; } = String.Empty;
+
+        public string CurrentUrl { get; set; } = String.Empty;
 
     }
 
@@ -24,7 +27,6 @@ namespace Siesa.SDK.Shared.Configurations
             services.AddScoped<IServiceConfiguration, ServiceConfiguration>();
             services.AddOptions();
             services.AddLogging(builder => SDKLogger.Configure(builder, sc));
-            services.AddSingleton<IBackendManager, BackendManager>();
         }
     }
 }

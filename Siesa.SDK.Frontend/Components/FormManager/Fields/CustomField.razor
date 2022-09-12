@@ -1,25 +1,20 @@
-﻿@if (!FieldOpt.Hidden)
+﻿@using Siesa.SDK.Shared.Utilities
+@if (!FieldOpt.Hidden)
 {
-    <DynamicComponent Type="@componentType" Parameters="@parameters" />
-}
+    @if(Definition.Generics.Count > 0){
+        @RenderGemericComponent()
+    }else{
+        <DynamicComponent Type="@componentType" Parameters="@parameters" />
+    }
+} 
 
 @code {
-    [Parameter] public CustomComponent Definition { get; set; }
-    [Parameter] public FieldOptions FieldOpt { get; set; }
-    [Parameter] public object BindModel { get; set; }
-    [Parameter] public string FieldName { get; set; }
-    [Parameter] public object BaseModelObj { get; set; }
-
-    private Type componentType;
-    private IDictionary<string, object> parameters = new Dictionary<string, object>();
-
-
     private void SetParameters(){
         if(componentType == null){
-            componentType = Utils.Utils.SearchType($"{Definition.Namespace}.{Definition.Name}");
+            componentType = Utilities.SearchType($"{Definition.Namespace}.{Definition.Name}");
         }
         parameters.Clear();
-        Dictionary<string, string> Attributes = Definition.Attributes;
+        Dictionary<string, object> Attributes = Definition.Attributes;
 
         if(Attributes != null)
         {
@@ -28,17 +23,26 @@
             {
                 parameters.Add("Business", BaseModelObj);
             }
+            if(componentType.GetProperties().Any(x => x.Name == "BaseObj"))
+            {
+                parameters.Add("BaseObj", BaseObj);
+            }
 
             for(int i = 0; i < Attributes.Count; i++)
             {
                 var key = Attributes.ElementAt(i).Key;
                 var value = Attributes.ElementAt(i).Value;
-                dynamic dynamicValue = Utils.Evaluator.EvaluateCode(value, BaseModelObj).GetAwaiter().GetResult();
-                //wait for the value to be evaluated
-                if(dynamicValue == null){
-                    dynamicValue = "";
+                if(value.GetType().Name == "String" && Definition.EvaluateAttributes)
+                {
+                    dynamic dynamicValue = Utils.Evaluator.EvaluateCode(value.ToString(), BaseModelObj).GetAwaiter().GetResult();
+                    //wait for the value to be evaluated
+                    if(dynamicValue == null){
+                        dynamicValue = "";
+                    }
+                    parameters.Add(key, dynamicValue);
+                }else{
+                    parameters.Add(key, value);
                 }
-                parameters.Add(key, dynamicValue);
             }
         }
 

@@ -4,6 +4,7 @@
 @inherits FieldClass<TItem>
 @using Siesa.SDK.Shared.Services
 @inject IAuthenticationService AuthenticationService
+@inject IBackendRouterService BackendRouterService
 
 <SDKSelectField 
     ItemType="TItem"
@@ -34,10 +35,6 @@
                     enumType = typeof(TItem).GetGenericArguments()[0];
                 }
                 GetEnumValues();
-                Options = Enum.GetValues(enumType).OfType<TItem>().Select(x => new SDKEnumWrapper<TItem>{
-                    Type = x,
-                    DisplayText = $"Enum.{enumType.Name}.{x.ToString()}"
-                });
             }
             return Options;
         }
@@ -45,8 +42,8 @@
 
     private async Task GetEnumValues()
     {
-        var resourceBL = Frontend.BusinessManagerFrontend.Instance.GetBusiness("BLResource", AuthenticationService);
-        var request = await resourceBL.Call("GetEnumValues", enumType.Name, Convert.ToInt64(AuthenticationService.User.RowidCulture));
+        var resourceBL = BackendRouterService.GetSDKBusinessModel("BLResource", AuthenticationService);
+        var request = await resourceBL.Call("GetEnumValues", enumType.Name, Convert.ToInt64(AuthenticationService.GetRoiwdCulture()));
         if(request.Success){
             var enumValues = (Dictionary<byte, string>)request.Data;
             if(enumValues == null || enumValues.Count == 0){

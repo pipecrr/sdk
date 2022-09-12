@@ -17,7 +17,8 @@ namespace Siesa.SDK.Shared.Services
         public short RowidCulture { get; set; }
 
         public List<SessionRol> Roles { get; set; } = new List<SessionRol>();
-
+        
+        public short RowidCompanyGroup { get; set; } 
         public short RowIdDBConnection { get; set; }
 
         public Dictionary<int, Dictionary<int, bool>> FeaturePermissions { get; set; } = new Dictionary<int, Dictionary<int, bool>>();
@@ -38,7 +39,14 @@ namespace Siesa.SDK.Shared.Services
         Task Initialize();
         Task Login(string username, string password, short rowIdDBConnection);
         Task Logout();
-        public void SetToken(string token);
+        public Task SetToken(string token);
+        Task SetCustomRowidCulture(short rowid);
+        short GetRoiwdCulture();
+        Task SetRowidCompanyGroup(short rowid);
+        Task RemoveCustomRowidCulture();
+
+        short GetRowidCompanyGroup();
+
     }
 
     

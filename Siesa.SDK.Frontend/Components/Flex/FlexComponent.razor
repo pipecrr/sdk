@@ -1,0 +1,164 @@
+@inject IJSRuntime JSRuntime
+@inject NavigationManager Navigation
+@inject Radzen.DialogService dialogService
+@using Siesa.SDK.Frontend.Components.Layout
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Components.FormManager.Views
+
+<div @attributes="@FlexAttributes">
+</div>
+
+<PageTitle>Flex</PageTitle>
+<SetTopBar>
+    <TopBarTitle>Flex</TopBarTitle>
+    <TopBarButtons>
+        @if(_isDetail)
+        {
+            <TopBarButton ResourceTag="Flex.ActionRefreshData" IconCssClass="fa-solid fa-refresh" Click="RefreshData" />
+            <TopBarButton ResourceTag="Flex.ExportToExcel" IconCssClass="fa-solid fa-file-excel" Click="ExportToExcel" />
+            <TopBarButton ResourceTag="Flex.ActionConfigure" IconCssClass="fa-solid fa-cog" Click="Configure" />
+            <TopBarButton ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus" Click="GoToCreate"  />
+            <TopBarButton ResourceTag="Action.Modify" IconCssClass="fa-solid fa-pen" Click="GoToEdit"  />
+            <TopBarButton ResourceTag="Action.List"  IconCssClass="fa-solid fa-list" Click="GoToList" />
+            <TopBarButton ResourceTag="Action.Delete" IconCssClass="fa-solid fa-trash-can" Click="OnClickDelete" />
+        }else{
+            <TopBarButton ResourceTag="Flex.ActionAddGraphic" IconCssClass="fa-solid fa-pie-chart" Click="AddGraphic" />
+            <TopBarButton ResourceTag="Flex.ActionConfigure" IconCssClass="fa-solid fa-cog" Click="Configure" />
+            <TopBarButton ResourceTag="Flex.ActionSaveAndContinue" IconCssClass="fa-solid fa-bookmark" Click="SaveAndContinue" />
+            <TopBarButton ResourceTag="Flex.ActionSaveAndClose" IconCssClass="fa-solid fa-floppy-disk" Click="SaveAndClose" />
+        }
+        
+    </TopBarButtons>
+</SetTopBar>
+
+@code {
+    [Parameter]
+    public dynamic Business {get;set;}
+
+    private bool _isDebug = false;
+
+    private bool _isDetail = false;
+
+    private int _flexRowId = 0;
+
+    private string _blName = "BLFlex";
+
+    private string _currentView = "create";
+
+    private Dictionary<string, object> FlexAttributes { get; set; } = new Dictionary<string, object>();
+
+    private void Init()
+    {
+        Navigation.TryGetQueryString("sdk_debug",out string SDKDebugVar);
+        if(!string.IsNullOrEmpty(SDKDebugVar))
+        {
+            _isDebug = true;
+        }
+
+        Navigation.TryGetQueryString("currentView",out _currentView);
+        if(string.IsNullOrEmpty(_currentView))
+        {
+            _currentView = "create";
+        }else if(_currentView == "detail")
+        {
+            _isDetail = true;
+        }
+
+        Navigation.TryGetQueryString("flexRowid",out string SDKFlexRowIdVar);
+        if(!string.IsNullOrEmpty(SDKFlexRowIdVar))
+        {
+            _flexRowId = int.Parse(SDKFlexRowIdVar);
+        }  
+        FlexAttributes.Clear();
+        FlexAttributes.Add("id", "flexdebug");
+        FlexAttributes.Add("class", "root_oreports");
+        FlexAttributes.Add("current_view", _currentView);
+        if(_flexRowId != 0)
+        {
+            FlexAttributes.Add("base_obj_id", _flexRowId);
+        }
+
+        StateHasChanged();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        //Init();
+        await base.OnInitializedAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender){
+            if(_isDebug)
+            {
+                await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/flex/FlexComponent.debug.js");
+            }else{
+                await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/flex/FlexComponent.js");
+            }
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        Init();
+        base.OnParametersSet();
+    }
+
+    void AddGraphic()
+    {
+        JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.toggleChartsModal");
+    }
+
+    void Configure()
+    {
+        JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.toggleConfigModal");
+    }
+
+    void SaveAndContinue()
+    {
+        JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.save");
+    }
+
+    void SaveAndClose()
+    {
+        JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.save", true);
+    }
+
+    void RefreshData()
+    {
+        JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.fetchPreviewData");
+    }
+
+    void ExportToExcel()
+    {
+        JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.dataGridRef.instance.exportToExcel(false)");
+    }
+
+    void GoToCreate()
+    {
+        Navigation.NavigateTo($"/{_blName}/create/");
+    }
+
+    void GoToEdit()
+    {
+        Navigation.NavigateTo($"/{_blName}/edit/{_flexRowId}/");
+    }
+
+    void GoToList()
+    {
+        Navigation.NavigateTo($"/{_blName}/");
+    }
+
+    async Task OnClickDelete()
+    {
+        var dialog = await dialogService.OpenAsync("",
+            ds => @<ConfirmDelete DialogService=@ds />,
+            new DialogOptions(){ShowTitle=false, Width="400"});
+        if(dialog != null && dialog == true){
+            //await Business.DeleteAsync();
+            Navigation.NavigateTo($"/{_blName}/");
+        }
+        //StateHasChanged();
+    }
+}

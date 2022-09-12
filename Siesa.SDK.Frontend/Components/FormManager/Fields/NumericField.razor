@@ -26,7 +26,7 @@
                 builder.AddAttribute(2, "Value", BindValue);
                 builder.AddAttribute(3, "ValueChanged", EventCallback.Factory.Create<TNum> (this, str => { SetValue(str); }));
                 builder.AddAttribute(4, "NullText", FieldOpt.Placeholder);
-                builder.AddAttribute(5, "CssClass", (IsRequired && (BindValue == null || Convert.ToInt32(BindValue) == 0) ? "invalid" : "") + FieldOpt.CssClass);
+                builder.AddAttribute(5, "CssClass", (IsRequired && (BindValue == null || Convert.ToInt64(BindValue) == 0) ? "invalid" : "") + FieldOpt.CssClass);
                 builder.AddAttribute(6, "ReadOnly", FieldOpt.Disabled);
                 builder.AddAttribute(7, "ClearButtonDisplayMode", DataEditorClearButtonDisplayMode.Auto);
                 builder.AddAttribute(8, "maxlength", MaxLength > 0 ? MaxLength : null);

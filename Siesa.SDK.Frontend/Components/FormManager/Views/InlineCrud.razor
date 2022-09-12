@@ -1,6 +1,7 @@
 @using Siesa.SDK.Shared.Services
 @inject DialogService DialogService
 @inject IAuthenticationService AuthenticationService
+@inject IBackendRouterService BackendRouterService
 
 
 <DynamicListView
@@ -64,9 +65,11 @@
 
     public async Task OpenModalDelete(string item_rowid, string object_string)
     {
-        var modal_result = await DialogService.Confirm($"¿Desea eliminar el registro \"{object_string}\"?", "Elminar registro", new ConfirmOptions() { OkButtonText = "Eliminar", CancelButtonText = "Cancelar" });
+        var modal_result = await DialogService.OpenAsync("",
+                ds => @<ConfirmDelete DialogService=@ds/>,
+                new DialogOptions(){ShowTitle=false, Width="400"});
         if(modal_result == true) {
-            var backend = BusinessManagerFrontend.Instance.GetBusiness(BusinessName, AuthenticationService);
+            var backend = BackendRouterService.GetSDKBusinessModel(BusinessName, AuthenticationService);
             await backend.DeleteAsync(Convert.ToInt64(item_rowid));
         }
         listview_key = Guid.NewGuid();

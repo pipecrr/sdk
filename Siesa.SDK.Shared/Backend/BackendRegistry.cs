@@ -24,7 +24,6 @@ namespace Siesa.SDK.Shared.Backend
         {
             this.Name = name;
             this.Url = url;
-            this.GetBusinesses();
         }
 
         public BackendRegistry(string name, string url, Google.Protobuf.Collections.RepeatedField<Protos.BusinessModel> businesses)
@@ -34,32 +33,11 @@ namespace Siesa.SDK.Shared.Backend
             var businessResponse = new BusinessesResponse();
             businessResponse.Businesses.AddRange(businesses);
             businessRegisters = businessResponse;
-            addBusiness();
         }
 
         public void SetAuthenticationService(IAuthenticationService authenticationService)
         {
             AuthenticationService = authenticationService;
-        }
-
-        private void addBusiness()
-        {
-            foreach (var business in this.businessRegisters.Businesses)
-            {
-                BusinessManager.Instance.AddBusiness(business);
-            }
-        }
-
-        public void GetBusinesses()
-        {
-            using var channel = GrpcChannel.ForAddress(this.Url);
-            var client = new Protos.SDK.SDKClient(channel);
-            var response = client.GetBusinesses(new Protos.GetBusinessesRequest{
-                CurrentUserToken = (AuthenticationService != null && AuthenticationService.UserToken != null ? AuthenticationService.UserToken : ""),
-                CurrentUserRowid = (AuthenticationService != null && AuthenticationService.User != null ? AuthenticationService.User.Rowid: 0)
-            });
-            this.businessRegisters = response;
-            addBusiness();
         }
 
         public async Task<ValidateAndSaveBusinessObjResponse> ValidateAndSaveBusiness(string business_name, dynamic obj)

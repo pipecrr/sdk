@@ -17,8 +17,12 @@ namespace Siesa.SDK.Entities
 	/// </summary>
 	[SDKLogEntity]
 	[Index(nameof(Id), Name = "IX_e00223_1", IsUnique = true)]
-	public partial class E00223_UserAccountPolicy : BaseMaster<string>
+	public partial class E00223_UserAccountPolicy : BaseMaster<int, string>
 	{
+		[Key]
+		[Required]
+		public override int Rowid { get; set; }
+
 		[Required]
 		[StringLength(20)]
 		public override string Id { get; set; }

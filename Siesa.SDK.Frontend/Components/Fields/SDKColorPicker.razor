@@ -1,0 +1,25 @@
+<RadzenColorPicker 
+    Value="@Value" 
+    Change="@ValueChanged"
+    ShowColors="@ShowColors"
+    ShowHSV="@ShowHSV"
+    ShowRGBA="@ShowRGBA"
+    />
+
+@code {
+    [Parameter] 
+    public string Value { get; set; }
+
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+
+    [Parameter]
+    public bool ShowColors { get; set; } = true;
+
+    [Parameter]
+    public bool ShowHSV { get; set; } = true;
+
+    [Parameter]
+    public bool ShowRGBA { get; set; }
+    
+}

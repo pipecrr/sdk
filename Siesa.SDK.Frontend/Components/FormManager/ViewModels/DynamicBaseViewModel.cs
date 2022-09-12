@@ -6,7 +6,7 @@ using Siesa.SDK.Frontend.Utils;
 using Microsoft.Extensions.DependencyInjection;
 using Siesa.SDK.Shared.Services;
 using System.Collections.Generic;
-
+using Siesa.SDK.Shared.Utilities;
 namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 {
     public abstract class DynamicBaseViewModel: ComponentBase
@@ -17,11 +17,31 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Parameter]
         public string BusinessObjId { get; set; }
 
+        [Parameter] 
+        public bool ShowTitle {get; set;} = true;
+        [Parameter] 
+        public bool ShowButtons {get; set;} = true;
+        [Parameter] 
+        public bool ShowCancelButton {get; set;} = true;
+        [Parameter] 
+        public bool ShowSaveButton {get; set;} = true;
+        [Parameter] 
+        public bool ShowDeleteButton {get; set;} = true;
+
+        [Parameter]
+        public Action<object> OnSave {get; set;} = null;
+
+        [Parameter]
+        public Action OnCancel {get; set;} = null;
+
         [Inject]
         public IServiceProvider ServiceProvider { get; set; }
 
         [Inject]
         private IAuthenticationService AuthenticationService {get; set;}
+
+        [Inject]
+        private IBackendRouterService BackendRouterService {get; set;}
 
         //[Inject]
         //public SGFState SGFState { get; set; }
@@ -32,26 +52,27 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         public dynamic BusinessObj { get; set; }
 
-        public BusinessFrontendModel BusinessModel { get; set; }
+        public SDKBusinessModel BusinessModel { get; set; }
 
         protected IDictionary<string, object> parameters = new Dictionary<string, object>();
 
         [Parameter] 
         public bool IsSubpanel { get; set; }
 
+        public DynamicViewType ViewType { get; set; }
+
         protected void InitGenericView(string bName=null)
         {
-            BusinessFrontendModel businessModel;
+            SDKBusinessModel businessModel;
             if (bName == null) {
                 bName = this.BusinessName;
             }
-
-            BusinessManagerFrontend.Instance.Businesses.TryGetValue(bName, out businessModel);
+            businessModel = BackendRouterService.GetSDKBusinessModel(bName, AuthenticationService);
             if (businessModel != null)
             {
                 try
                 {
-                    businessType = Utils.Utils.SearchType(businessModel.Namespace + "." + businessModel.Name); 
+                    businessType = Utilities.SearchType(businessModel.Namespace + "." + businessModel.Name); 
                     BusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider, businessType);
                     BusinessModel = businessModel;
                     BusinessObj.BusinessName = bName;
@@ -73,6 +94,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         {
             base.OnInitialized();
             SetParameters(BusinessObj, BusinessName);
+            if(BusinessObj != null){
+                long rowid;
+                try
+                {
+                    rowid = Convert.ToInt64(BusinessObjId);
+                }
+                catch (System.Exception)
+                {
+                    rowid = 0;
+                }
+                BusinessObj.OnReady(ViewType, rowid);
+            }
         }
 
         protected override void OnParametersSet()
@@ -85,11 +118,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             parameters.Clear();
             parameters.Add("BusinessObj", businessObj);
             parameters.Add("BusinessName", businessName);
-            parameters.Add("IsSubpanel", IsSubpanel);
+            parameters.Add("IsSubpanel", IsSubpanel);            
             if (IsSubpanel)
             {
-                parameters.Add("SetTopBar", false);
-                
+                parameters.Add("SetTopBar", false);                
             }
         }
         public override async Task SetParametersAsync(ParameterView parameters)

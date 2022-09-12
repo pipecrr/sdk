@@ -1,0 +1,107 @@
+@using Siesa.SDK.Frontend.Components.Fields
+@using System.Linq.Expressions
+@typeparam TItem
+@inherits FieldClass<TItem>
+@using Siesa.SDK.Shared.Services
+@inject IAuthenticationService AuthenticationService
+@inject IBackendRouterService BackendRouterService
+
+
+@if (!FieldOpt.Hidden)
+{
+    @if (FieldOpt.ViewContext == "DetailView")
+    {
+        <p style="word-wrap: break-word">@if (BindValue != null)
+            {
+                <ResourceViewer ResourceTag="@_value" />
+            }
+        </p>
+    }
+    else
+    {
+        <SDKSelectBar ItemType="TItem"
+        Value="@BindValue"
+        ValueChanged="@((newVal) => SetValue(newVal))"
+        Data="@_options"
+        Disabled="@_disabled" />
+
+        @FieldValidationTemplate
+    }
+}
+
+@code {
+
+    private bool _disabled;
+    [Parameter] public IEnumerable<SelectBarItemWrap<TItem>> Options { get; set; }
+
+    private Type enumType { get; set; }
+
+    private IEnumerable<SelectBarItemWrap<TItem>> _options
+    {
+        get
+        {
+            if (Options == null)
+            {
+                enumType = typeof(TItem);
+                if (typeof(TItem).IsGenericType && typeof(TItem).GetGenericTypeDefinition() == typeof(Nullable<>))
+                {
+                    enumType = typeof(TItem).GetGenericArguments()[0];
+                }
+                GetEnumValues();
+                /*Options = Enum.GetValues(enumType).OfType<TItem>().Select(x => new SelectBarItemWrap<TItem>
+                {
+                Key = x,
+                Name = $"Enum.{enumType.Name}.{x.ToString()}"
+                });*/
+
+            }
+            return Options;
+        }
+    }
+    private async Task GetEnumValues()
+    {
+        var resourceBL = BackendRouterService.GetSDKBusinessModel("BLResource", AuthenticationService);
+        var request = await resourceBL.Call("GetEnumValues", enumType.Name,
+        Convert.ToInt64(AuthenticationService.GetRoiwdCulture()));
+        if (request.Success)
+        {
+            var enumValues = (Dictionary<byte, string>)request.Data;
+            if (enumValues == null || enumValues.Count == 0)
+            {
+                return;
+            }
+            Options = enumValues.Select(x => new SelectBarItemWrap<TItem>
+            {
+                Key = (TItem)Enum.Parse(enumType, x.Key.ToString()),
+                Name = x.Value
+            });
+            StateHasChanged();
+        }
+    }
+
+    string? _value
+    {
+        get
+        {
+            if (BindValue == null) return null;
+            Type enumType = typeof(TItem);
+            if (typeof(TItem).IsGenericType && typeof(TItem).GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                enumType = typeof(TItem).GetGenericArguments()[0];
+            }
+            return $"Enum.{enumType.Name}.{BindValue}";
+        }
+    }
+
+    private void isDisabled()
+    {
+        _disabled = (FieldOpt.Disabled || FieldOpt.ViewContext == "DetailView");
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        isDisabled();
+    }
+
+}

@@ -1,32 +1,47 @@
 ﻿@implements IDisposable
 @inject IJSRuntime JSRuntime
+@inject NavigationService navigationService
 @if (LayoutService.TopBarTitle != null || LayoutService.TopBarButtons != null || LayoutService.TopBarExtraButtons != null)
 {
-    <div class=@("col-12 p-3 whcm_toolbar " + LayoutService.StyleName)>
+    <div class=@("col-12 p-2 p-sm-3 whcm_toolbar " + LayoutService.StyleName)>
         <div class="whcm_toolbar_text d-flex align-items-center">
-            <button class="btn btn-sm layout_btn_standar-sm mr-3" data-toggle="tooltip"
+            @if (ShowBackButton==true && navigationService.CanNavigateBack)
+            {
+            <button Value="@ShowBackButton" class="btn btn-sm layout_btn_standar-sm mr-1 mr-sm-3" data-toggle="tooltip"
                 data-placement="top" title="Atras" @onclick="@OnClick" >
                 <i class="fa-solid fa-chevron-left"></i>
             </button>
+            }
             <h3 class="mb-0">@LayoutService.TopBarTitle</h3>
         </div>
-        <div class="d-flex align-items-center position-relative">
+        <div class="whcm_toolbar_button d-flex align-items-center position-relative pt-2 pt-sm-0">
             @LayoutService.TopBarButtons
             @if(LayoutService.HasExtraButtons)
             {
-                <button @onclick="@(()=>ShowMoreOptions = !ShowMoreOptions)" class="btn btn-sm layout_btn_standar-sm ml-1"
+                <button id="TopBarExtraButtons" @onclick="@(()=>ShowMoreOptions = !ShowMoreOptions)" class="btn btn-sm layout_btn_standar-sm ml-1"
                     data-toggle="tooltip" data-placement="top" title="Más opciones">
                     <i class="fa-solid fa-ellipsis-vertical"></i>
                 </button>
-                <div id="boxToolbar" class="whcm_toolbar_tooltip px-2 pt-3 pb-2" hidden="@(!ShowMoreOptions)">
-                    @LayoutService.TopBarExtraButtons
-                </div>
+
+                <DxDropDown @bind-IsOpen="@ShowMoreOptions" PositionMode="DropDownPositionMode.Bottom" PositionTarget="#TopBarExtraButtons"
+                    CloseMode="DropDownCloseMode.Close"
+                    PreventCloseOnPositionTargetClick="true" CssClass="whcm_toolbar_tooltip px-2 pt-3 pb-2" HeaderVisible="false"
+                    FooterVisible="false">
+                    <BodyTemplate>
+                        <CascadingValue Value="this">
+                            @LayoutService.TopBarExtraButtons
+                        </CascadingValue>
+                    </BodyTemplate>
+                </DxDropDown>
+                
             }
         </div>
     </div>
 }
-
 @code {
+
+    [Parameter] public bool ShowBackButton { get; set; } = true;
+
     private bool ShowMoreOptions = false;
     [Inject]
     public ILayoutService LayoutService { get; set; }
@@ -59,11 +74,21 @@
         }
     }
 
+    public async Task CloseExtraButtons()
+    {
+        if (ShowMoreOptions)
+        {
+            ShowMoreOptions = false;
+            StateHasChanged();
+        }
+    }
+
     private async Task OnClick(MouseEventArgs e)
     {
         try
-        {
-            JSRuntime.InvokeAsync<object>("window.history.go", -1);
+        {   
+            navigationService.NavigateBack();
+            //JSRuntime.InvokeAsync<object>("window.history.go", -1);
         }
         catch (Exception ex)
         {

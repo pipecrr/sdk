@@ -1,0 +1,32 @@
+.sdk_collapsible ::deep dxbl-group-control.card.dxbl-group.dxbl-accordion-group.expanded.dxbl-accordion-item.mt-3 .card-header.dxbl-group-header.dxbl-accordion-group-header{
+    color: var(--color_text);
+    border-bottom: 0.25rem !important;
+}
+
+.sdk_collapsible ::deep dxbl-group-control.card.dxbl-group.dxbl-accordion-group.dxbl-accordion-item.mt-3 .card-header.dxbl-group-header.dxbl-accordion-group-header{
+    color: var(--color_text_2);
+    font-size: 1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--color_light);
+    padding: 1rem;
+    width: 100%;
+    border-radius: 0.25rem !important;
+}
+
+.sdk_collapsible ::deep dxbl-group-control.card.dxbl-group.dxbl-accordion-group.dxbl-accordion-item.mt-3 .card-header.dxbl-group-header.dxbl-accordion-group-header:hover{
+    background: var(--color_back_2);
+}
+
+.sdk_collapsible ::deep dxbl-group-control.card.dxbl-group.dxbl-accordion-group.dxbl-accordion-item.mt-3{
+    border: 1px solid rgba(0,0,0,.125);
+}
+
+.sdk_collapsible ::deep dxbl-group-control.card.dxbl-group.dxbl-accordion-group.expanded.dxbl-accordion-item.mt-3 .card-body.dxbl-group-body.dxbl-accordion-group-body{
+    border-top: 1px solid rgba(0,0,0,.125);
+    margin-right: 1rem;
+    margin-left: 1rem;
+    padding-top: 1rem;
+}

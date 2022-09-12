@@ -1,4 +1,5 @@
 ﻿using Siesa.SDK.Entities;
+using Siesa.SDK.Frontend.Components.Fields;
 using Siesa.SDK.Frontend.Components.FormManager.Fields;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,8 @@ using System.Collections.Generic;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 {
-    public class FieldObj {
+    public class FieldObj
+    {
         public object ModelObj { get; set; }
         public string Name { get; set; }
         public FieldTypes FieldType { get; set; }
@@ -21,10 +23,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
     {
         public string Name { get; set; }
         public string Namespace { get; set; }
-        public Dictionary<string, string> Attributes { get; set; } = new Dictionary<string, string>()
+        public Dictionary<string, object> Attributes { get; set; } = new Dictionary<string, object>()
         {
         };
 
+        public bool EvaluateAttributes {get;set;} = true;
+
+        public ICollection<Type> Generics {get; set;} = new List<Type>();
     }
 
     public class FieldOptions
@@ -42,6 +47,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         public bool Disabled { get; set; } = false;
         public string CssClass { get; set; }
         public FieldTypes FieldType { get; set; }
+        public string CustomType { get; set; }
 
         public bool IsNullable { get; set; } = false;
 
@@ -64,7 +70,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 
         public string RelatedBusiness { get; set; } = "";
 
-        public Dictionary<string,string> RelatedFilters { get; set; } = new Dictionary<string, string>()
+        public Dictionary<string, string> RelatedFilters { get; set; } = new Dictionary<string, string>()
         {
         };
 
@@ -79,25 +85,35 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             return fieldObj;
         }
 
+        private List<Type> SupportedTypes = new List<Type>(){
+            typeof(SwitchField),
+            typeof(SelectBarField<>),
+            typeof(TextField),
+
+        };
+
         private FieldObj InitField(object modelObj)
         {
             FieldObj field = new FieldObj();
-
+            Type originalPropertyType = null; //Used for enums
 
             if (CustomComponent != null)
             {
-                if(String.IsNullOrEmpty(ResourceTag))
+                if (String.IsNullOrEmpty(ResourceTag))
                 {
                     ResourceTag = $"{modelObj.GetType().Name}.{Name}";
                 }
                 //Name guid
-                Name = Guid.NewGuid().ToString();
+                if(String.IsNullOrEmpty(Name))
+                {
+                    Name = Guid.NewGuid().ToString();
+                }
                 FieldType = FieldTypes.Custom;
                 field.Name = Name;
                 field.ModelObj = modelObj;
             }
             else
-            {
+            {             
                 //Split Name
                 string[] fieldPath = Name.Split('.');
                 //loop through the path
@@ -118,14 +134,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 field.ModelObj = currentObject;
                 field.Name = fieldPath[fieldPath.Length - 1];
                 PropertyName = fieldPath[fieldPath.Length - 1];
-                if(String.IsNullOrEmpty(ResourceTag))
+                if (String.IsNullOrEmpty(ResourceTag))
                 {
                     ResourceTag = $"{field.ModelObj.GetType().Name}.{field.Name}";
                 }
                 var propertyType = field.ModelObj.GetType().GetProperty(field.Name).PropertyType;
-                var originalPropertyType = propertyType;
+                originalPropertyType = propertyType;
                 //Console.WriteLine(fieldName + " , " + propertyType);
-                if(propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
                 {
                     propertyType = propertyType.GetGenericArguments()[0];
                     IsNullable = true;
@@ -174,7 +190,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 
                 var _bannedTypes = new List<Type>() { typeof(string), typeof(byte[]) };
 
-                if(propertyType.IsClass && !propertyType.IsPrimitive && !propertyType.IsEnum && !_bannedTypes.Contains(propertyType)){
+                if (propertyType.IsClass && !propertyType.IsPrimitive && !propertyType.IsEnum && !_bannedTypes.Contains(propertyType))
+                {
                     FieldType = FieldTypes.EntityField;
                 }
 
@@ -184,11 +201,30 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                     field.SelectFieldType = originalPropertyType;
                 }
             }
+            if (!String.IsNullOrEmpty(CustomType))
+            {
+                Type fieldType = SupportedTypes.Find(x => x.Name.Split("`")[0] == CustomType);
+                if (fieldType != null)
+                {
+                    CustomComponent = new CustomComponent();
+                    CustomComponent.Name = fieldType.Name;
+                    CustomComponent.Namespace = fieldType.Namespace;
+                    CustomComponent.EvaluateAttributes = false;
+                    CustomComponent.Attributes.Add("BindModel",field.ModelObj);
+                    CustomComponent.Attributes.Add("FieldOpt", this);
+                    CustomComponent.Attributes.Add("FieldName",field.Name);
+
+                    if(fieldType.IsGenericType && originalPropertyType != null){
+                        CustomComponent.Generics.Add(originalPropertyType);
+                    }
+                    FieldType = FieldTypes.Custom;
+                }
+            }
             field.FieldType = FieldType;
             field.IsNullable = IsNullable;
             return field;
         }
     }
 
-   
+
 }

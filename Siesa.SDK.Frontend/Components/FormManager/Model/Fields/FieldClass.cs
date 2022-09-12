@@ -129,7 +129,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                             _ = InvokeAsync(() => formView.Refresh());
                         }
                     });
-                }
+                }                
             }
             else
             {
@@ -158,6 +158,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         {
             await base.SetParametersAsync(parameters);
             await Init();
+            StateHasChanged();
         }
 
     }

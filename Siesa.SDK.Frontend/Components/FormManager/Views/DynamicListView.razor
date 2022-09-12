@@ -25,6 +25,14 @@ else if (BusinessObj != null)
     [Parameter] public bool AllowDetail { get; set; } = true;
     [Parameter] public Action<object> OnSelectedRow { get; set; } = null;
 
+    [Parameter] public string ViewdefName { get; set; } = "related_list";
+
+    protected override void OnInitialized()
+    {
+        ViewType = ViewModels.DynamicViewType.List;
+        base.OnInitialized();
+    }
+
         
     protected override void SetParameters(dynamic businessObj, string businessName){
         var new_params = new Dictionary<string, object>();
@@ -44,7 +52,7 @@ else if (BusinessObj != null)
                 new_params.Add("ConstantFilters", new List<string>() { SubpanelFilter });
             }
             
-            new_params.Add("ViewdefName", "related_list");
+            new_params.Add("ViewdefName", ViewdefName);
             if (OnClickEdit != null)
             {
                 new_params.Add("OnClickEdit", OnClickEdit);

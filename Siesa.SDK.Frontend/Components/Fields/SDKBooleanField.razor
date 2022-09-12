@@ -2,7 +2,7 @@
     Checked="@Value" 
     CheckedChanged="@ValueChanged" 
     NullText="@Placeholder"
-    ReadOnly="@ReadOnly"
+    Enabled="@Enabled"
     CssClass="@CssClass"
 >
 @ChildContent
@@ -10,11 +10,11 @@
 
 @code {
     [Parameter] public bool Value { get; set; }
+    [Parameter] public bool Enabled { get; set; }
     [Parameter] public Action<bool> ValueChanged { get; set; } = (value) => { };
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
     [Parameter] public string Placeholder { get; set; }
-    [Parameter] public bool ReadOnly { get; set; }
     [Parameter] public bool Required { get; set; }
     [Parameter] public string CssClass { get; set; }
 

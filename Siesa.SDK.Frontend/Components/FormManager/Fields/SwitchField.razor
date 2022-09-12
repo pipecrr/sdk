@@ -1,0 +1,32 @@
+@inherits FieldClass<bool>
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.FormManager.Fields
+
+@if (!FieldOpt.Hidden){
+
+    <SDKSwitch Value="@(BindValue)" 
+    ValueChanged="@((value) => {SetValue(value);})" 
+    Disabled="@_disabled" />
+
+    @if (FieldOpt.ViewContext != "DetailView"){
+
+        @FieldValidationTemplate
+    }
+
+}
+
+@code{
+    private bool _disabled;
+    private void isDisabled(){
+        _disabled = (FieldOpt.Disabled || FieldOpt.ViewContext == "DetailView");
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        isDisabled();
+    }
+}
+
+
+

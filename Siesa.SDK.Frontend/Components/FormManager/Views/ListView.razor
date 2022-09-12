@@ -1,8 +1,6 @@
-﻿@using SDK.Components.Visualization
+@using SDK.Components.Visualization
 @using Siesa.SDK.Frontend.Components.FormManager.Fields
 @using Siesa.SDK.Entities;
-@using Siesa.SDK.Frontend.Components.Visualization
-
 @if (ErrorMsg != "")
 {
     <label>@ErrorMsg</label>
@@ -31,37 +29,41 @@ else
         Value=@SelectedObjects
         ValueChanged="((objects) => OnSelectionChanged(objects))"
         class="whcm_table"
-        @key="needUpdate">
+        AllowColumnResize="true"
+        @key="needUpdate"
+        >
         <Columns>
-            <RadzenDataGridColumn TItem="object" Title="Acciones" Width="100px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
-                
+            @if(ListViewModel.ShowActions)
+            {
+                <RadzenDataGridColumn TItem="object" Title="Acciones" Width="100px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" HeaderCssClass="untruncate-grid-column-action">
                     <HeaderTemplate>
                         @if(IsSubpanel && AllowCreate){
                         <span
                             class="oi oi-plus cursor-pointer" @onclick="() => GoToCreate()"></span>
                         }else{
                             <span><ResourceViewer ResourceTag="Generic.Actions" /></span>
-                        }
+                        }                        
                     </HeaderTemplate>
-               
-                <Template Context="data">
-                    <div class="action-buttons d-flex justify-content-center">
-                        @if(AllowEdit){
-                            <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToEdit(((IBaseSDK)data).GetRowid())"><i
-                            class="fa-solid fa-pen"></i></button>
-                        }
-                        
-                        
-                        @if(IsSubpanel && AllowDelete){
-                            <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToDelete(((IBaseSDK)data).GetRowid(), data.ToString())"><span
-                            class="fa-solid fa-trash-can"></span></button>
+                
+                    <Template Context="data">
+                        <div class="action-buttons d-flex justify-content-center">
+                            @if(AllowEdit){
+                                <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToEdit(((IBaseSDK)data).GetRowid())"><i
+                                class="fa-solid fa-pen"></i></button>
+                            }
                             
-                        }
-                        @* <button class="btn btn-link grid-btn-link"
-                        @onclick="() => GoToDetail(((BaseSDK<>)data).Rowid)"><span class="oi oi-eye"></span></button> *@
-                    </div>
-                </Template>
-            </RadzenDataGridColumn>
+                            
+                            @if(IsSubpanel && AllowDelete){
+                                <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToDelete(((IBaseSDK)data).GetRowid(), data.ToString())"><span
+                                class="fa-solid fa-trash-can"></span></button>
+                                
+                            }
+                            @* <button class="btn btn-link grid-btn-link"
+                            @onclick="() => GoToDetail(((BaseSDK<>)data).Rowid)"><span class="oi oi-eye"></span></button> *@
+                        </div>
+                    </Template>
+                </RadzenDataGridColumn>
+            }
             @foreach (var field in ListViewModel.Fields)
             {
                 var fieldName = field.Name;
@@ -81,6 +83,8 @@ else
                         columnType = typeof(DateTime);
                         break;
                     case FieldTypes.DecimalField:
+                        columnType = typeof(decimal);
+                        break;
                     case FieldTypes.IntegerField:
                         columnType = typeof(int);
                         break;
@@ -92,52 +96,68 @@ else
                         break;
 
                         //default
-                }
+                }                
                 
-
-                if(field.Name == ListViewModel.LinkTo)
-                {
-                    <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType">
-                        <HeaderTemplate>
-                            <span><ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" /></span>
-                        </HeaderTemplate>
-                        <Template Context="data">
-                            @if(OnClickDetail != null){
-                                <a href="#" @onclick="() => GoToDetail(((IBaseSDK)data).GetRowid())" @onclick:preventDefault>@data</a>
-                            }else{
-                                <a href="/@BusinessName/detail/@(((IBaseSDK)data).GetRowid())/">@data</a>
-                            }
-                        </Template>
-                    </RadzenDataGridColumn>
-                }else{
-                    if(columnType == typeof(bool)){
-                        <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" TextAlign="TextAlign.Center" >
+                if(!field.Hidden){
+                    if(field.Name == ListViewModel.LinkTo)
+                    {
+                        <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" >
                             <HeaderTemplate>
-                                 <span><ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" /></span>
-                             </HeaderTemplate>
+                                <span><ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" /></span>
+                            </HeaderTemplate>
                             <Template Context="data">
-                                <input type="checkbox" checked="@(data.GetType().GetProperty(fieldName).GetValue(data))" disabled />
+                                @if(OnClickDetail != null){
+                                    <a href="#" @onclick="() => GoToDetail(((IBaseSDK)data).GetRowid())" @onclick:preventDefault>@data</a>
+                                }else{
+                                    <a href="/@BusinessName/detail/@(((IBaseSDK)data).GetRowid())/">@data</a>
+                                }
                             </Template>
                         </RadzenDataGridColumn>
-
-                    }else if(field.FieldType == FieldTypes.SelectField){
-                        <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType">
-                            <HeaderTemplate>
-                                 <span><ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" /></span>
-                             </HeaderTemplate>
-                            <Template Context="data">
-                                <DynamicComponent Type="@typeof(SelectFieldDetail<>).MakeGenericType(field.GetFieldObj(data).SelectFieldType)" Parameters="@GetSelectFieldParameters(data, field, fieldName)" />
-                            </Template>
-                        </RadzenDataGridColumn>
-
                     }else{
+                        if(field.FieldType == FieldTypes.Custom){
+                            <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType">
+                                <HeaderTemplate>
+                                    <span><ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" /></span>
+                                </HeaderTemplate>
+                                <Template Context="data">
+                                    <CustomField BaseModelObj="@BusinessObj" FieldOpt="field"  Definition="field.CustomComponent" BaseObj="@data"/>
+                                </Template>
+                            </RadzenDataGridColumn>
+                        }else if(columnType == typeof(bool)){
+                            <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" TextAlign="TextAlign.Center" HeaderCssClass="align-header-left" >
+                                <HeaderTemplate>
+                                    <span><ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" /></span>
+                                </HeaderTemplate>
+                                <Template Context="data">
+                                    <input type="checkbox" checked="@(data.GetType().GetProperty(fieldName).GetValue(data))" disabled />
+                                </Template>
+                            </RadzenDataGridColumn>
+
+                        }else if(field.FieldType == FieldTypes.SelectField){
+                            <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType">
+                                <HeaderTemplate>
+                                    <span><ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" /></span>
+                                </HeaderTemplate>
+                                <Template Context="data">
+                                    <DynamicComponent Type="@typeof(SelectFieldDetail<>).MakeGenericType(field.GetFieldObj(data).SelectFieldType)" Parameters="@GetSelectFieldParameters(data, field, fieldName)" />
+                                </Template>
+                            </RadzenDataGridColumn>
+
+                        }else if(columnType == typeof(decimal)){
+                            <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" TextAlign="TextAlign.Right" HeaderCssClass="align-header-left">
+                                <HeaderTemplate>
+                                    <span><ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" /></span>
+                                </HeaderTemplate>
+                            </RadzenDataGridColumn>
+                        }else{
                         <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType">
-                             <HeaderTemplate>
-                                 <span><ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" /></span>
-                             </HeaderTemplate>
+                            <HeaderTemplate>
+                                <span><ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" /></span>
+                            </HeaderTemplate>
                         </RadzenDataGridColumn>
+                        }
+                        
                     }
-                    
                 }
             }
         </Columns>
@@ -148,12 +168,12 @@ else
         <SetTopBar HasExtraButtons="@(ListViewModel.Buttons != null && ListViewModel.Buttons.Count > 0 ? true: false)">
             <TopBarTitle><ResourceViewer ResourceTag="@($"{BusinessName}.Plural")" /></TopBarTitle>
             <TopBarButtons>
-                <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-file" />
+                <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus" />
             </TopBarButtons>
             <TopBarExtraButtons>
                 @foreach (var btn in ListViewModel.Buttons)
                 {
-                    <SDKButton RenderStyle="@btn.RenderStyle" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" />
+                    <TopBarButton Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" IconCssClass="@btn.IconClass" />
                 }
             </TopBarExtraButtons>
         </SetTopBar>

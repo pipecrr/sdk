@@ -10,14 +10,17 @@
 @using Newtonsoft.Json;
 @inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavigationManager
-@inject IBackendManager backendManager
+@inject IBackendRouterService BackendRouterService
 @inject IJSRuntime JSRuntime
-@inject Blazored.LocalStorage.ILocalStorageService localStorageService;
+@inject SDKNotificationService SDKNotificationService
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService
+@inject UtilsManager UtilsManager
 @layout EmptyLayout
+
 <PageTitle>Login</PageTitle>
 <div class="back_login">
 
-    <div class="col-12 offset-md-1 col-md-10 px-0 px-md-3">
+    <div class="col-12 offset-md-1 col-md-10 px-0 px-md-3" hidden="@init_loading">
         <div class="card_login col-12">
             <div class="row image_back">
                 <div class="info_area col-md-12 col-lg-7 p-3 p-lg-4">
@@ -121,10 +124,6 @@
                                         }
                                         <ResourceViewer ResourceTag="BLUser.Login" RowidCulture=@RowidCulture />
                                     </button>
-                                    @if (!string.IsNullOrEmpty(error))
-                                    {
-                                        <div class="alert alert-danger mt-3 mb-0">@error</div>
-                                    }
                                 </EditForm>
                             </div>
                             <div class="col-12 p-0 text-center pt-4">
@@ -182,7 +181,7 @@
         </div>
     </div>
 
-    <div class="login_loading">
+    <div class="login_loading @GetCssLoding()">
         <div>
             <div class="text-center fa-4x font_color_3 mb-4">
                 <i class="fas fa-spinner fa-pulse"></i>
@@ -201,64 +200,69 @@
     PreventCloseOnPositionTargetClick="true" Id="boxRegion" CssClass="region_tooltip" MinWidth="230px" MaxWidth="250px" HeaderVisible="false"
     FooterVisible="false">
     <BodyTemplate>
-        <Lang _Cultures="@cultures" _idRow="@RowidCulture" OnChangeCulture=@OnChangeCulture />
+        <Lang _Cultures="@cultures" _idRow="@RowidCulture" OnChangeCulture="@((rowid)=> OnChangeCulture(rowid))" />
     </BodyTemplate>
 </DxDropDown>
 
 @code {
     private Model model = new Model();
-
+    private bool init_loading = true;
     private bool loading;
     private string error;
     bool IsOpen { get; set; } = false;
 
     private short RowidCulture { get; set; } = 1;
     private E00021_Culture selectedCulture { get; set; }
-    List<E00021_Culture> cultures;
+    List<E00021_Culture> cultures = new List<E00021_Culture>();
 
     List<(short,string)> DbConnections { get; set; } = new List<(short,string)>();
     private string SelectedDbConnection { get; set; } = "";
 
-    protected override void OnInitialized()
+    private string GetCssLoding()
     {
+        if (!init_loading)
+        {
+            return "login_loading_close";
+        }
+        return "";
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        init_loading = true;
         // redirect to home if already logged in
         if (AuthenticationService.User != null)
         {
             NavigationManager.NavigateTo("");
+            return;
         }
-
-        backendManager.SyncWithMasterBackend();
-
-        foreach (var backend in backendManager.GetBackendDict())
-        {
-            foreach (var business in backend.Value.businessRegisters.Businesses)
-            {
-                BusinessManagerFrontend.Instance.AddBusiness(business, backend.Value.Name);
-            }
-        }
-        InitLogin();
+        cultureDefault();        InitLogin();
     }
 
     private async Task InitLogin()
     {
-        await getDbConnections();
+        await await getDbConnections();
         await getCultures();
         getSelectedCulture();
-        await getUserlang();
+        await await getUserlang();
+        init_loading = false;
+        await base.OnInitializedAsync();
         StateHasChanged();
     }
 
-    private async void OnChangeCulture(short rowidCulture)
+    private async Task OnChangeCulture(short rowidCulture)
     {
         RowidCulture = rowidCulture;
         IsOpen = false;
-        StateHasChanged();
         getSelectedCulture();
-        await localStorageService.SetItemAsync("userlang", RowidCulture.ToString());
+        await AuthenticationService.SetCustomRowidCulture(rowidCulture);
+        StateHasChanged();
+        //await localStorageService.SetItemAsync("userlang", RowidCulture.ToString());
     }
 
     private async void HandleValidSubmit()
     {
+        string message = "BLUser.Login.Message.SuccesLogin";
         loading = true;
         if(String.IsNullOrEmpty(SelectedDbConnection))
         {
@@ -275,11 +279,13 @@
             {
                 returnUrl = "/";
             }
+            SDKNotificationService.ShowSuccess(message, culture: AuthenticationService.GetRoiwdCulture());
             NavigationManager.NavigateTo(returnUrl);
         }
         catch (Exception ex)
         {
             error = ex.Message;
+            SDKNotificationService.ShowError("BLUser.Login.Message.InvalidCredentials", culture: RowidCulture);
             loading = false;
             StateHasChanged();
         }
@@ -307,7 +313,7 @@
 
     private async Task<List<E00021_Culture>> getCulturesAsync(){
         List<E00021_Culture> _cultures = new List<E00021_Culture>();
-                        var cultureBL = Frontend.BusinessManagerFrontend.Instance.GetBusiness("BLCulture", AuthenticationService);
+                        var cultureBL = BackendRouterService.GetSDKBusinessModel("BLCulture", AuthenticationService);
         if (cultureBL == null)
         {
             throw new Exception("Culture Service not found");
@@ -335,10 +341,10 @@
 
     private async Task getUserlang()
     {
-        string userlang;
+        short userlang;
         try
         {
-            userlang = await localStorageService.GetItemAsync<string>("userlang");
+            userlang = AuthenticationService.GetRoiwdCulture();
         }
         catch (Exception ex)
         {
@@ -351,7 +357,7 @@
 
         }
 
-        if (userlang == null)
+        if (userlang == 0)
             {
                 var BrowserLang = await JSRuntime.InvokeAsync<string>("getBrowserLang");
                 string[] language = BrowserLang.Split('-');
@@ -359,11 +365,17 @@
             }
             else
             {
-                selectedCulture = cultures.FirstOrDefault(x => x.Rowid == short.Parse(userlang));
+                selectedCulture = cultures.FirstOrDefault(x => x.Rowid == userlang);
             }
 
             if (selectedCulture == null){
                 cultureDefault();
+                try {
+
+                    await AuthenticationService.RemoveCustomRowidCulture();
+                }catch(Exception ex){
+                   
+                }
             }else{
                 OnChangeCulture(selectedCulture.Rowid);
             }
@@ -389,4 +401,5 @@
         [Required]
         public string Password { get; set; }
     }
+
 }

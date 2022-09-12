@@ -10,6 +10,9 @@ using Newtonsoft.Json;
 using Siesa.SDK.Entities;
 using Siesa.SDK.Frontend;
 using Siesa.SDK.Frontend.Components.FormManager.Model;
+using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
+using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
+using Siesa.SDK.Frontend.Services;
 using Siesa.SDK.Protos;
 using Siesa.SDK.Shared.Business;
 using Siesa.SDK.Shared.Services;
@@ -20,17 +23,49 @@ namespace Siesa.SDK.Business
 {
     public class BLFrontendSimple : IBLBase<BaseSDK<int>>
     {
+        [JsonIgnore]
+        public dynamic ParentComponent {get;set;}
+
         public string BusinessName { get; set; }
         [JsonIgnore]
+        public SDKBusinessModel Backend {get { return BackendRouterService.Instance.GetSDKBusinessModel(BusinessName, AuthenticationService); } }
+        public SDKBusinessModel GetBackend(string business_name){
+            return BackendRouterService.Instance.GetSDKBusinessModel(business_name, AuthenticationService);
+        }
+        [JsonIgnore]
         public List<Panel> Panels = new List<Panel>();
+        [JsonIgnore]
+        public List<FieldOptions> ListViewFields = new List<FieldOptions>();
         public BaseSDK<int> BaseObj { get; set; }
 
         [JsonIgnore]
-        private IAuthenticationService AuthenticationService {get; set;}
+        protected IAuthenticationService AuthenticationService { get; set; }
 
-        public BLFrontendSimple(IAuthenticationService authenticationService)
+        [JsonIgnore]
+        protected SDKNotificationService NotificationService { get; set; }
+
+        private void InternalConstructor(IAuthenticationService authenticationService, SDKNotificationService notificationService)
         {
             AuthenticationService = authenticationService;
+            NotificationService = notificationService;
+        }
+
+        public BLFrontendSimple(IAuthenticationService authenticationService, SDKNotificationService notificationService = null)
+        {
+            InternalConstructor(authenticationService, notificationService);
+        }
+
+        public BLFrontendSimple(IServiceProvider provider)
+        {
+            IAuthenticationService authService = (IAuthenticationService)provider.GetService(typeof(IAuthenticationService));
+            SDKNotificationService notiService = (SDKNotificationService)provider.GetService(typeof(SDKNotificationService));
+
+            InternalConstructor(authService, notiService);
+        }
+
+        public virtual void OnReady(DynamicViewType viewType, long rowid = 0)
+        {
+            // Do nothing
         }
 
         public DeleteBusinessObjResponse Delete()
@@ -63,22 +98,38 @@ namespace Siesa.SDK.Business
         }
     }
 
-    
-    public class BLFrontendSimple<T, K> : IBLBase<T> where T : class,IBaseSDK where K : BLBaseValidator<T>
+
+    public class BLFrontendSimple<T, K> : IBLBase<T> where T : class, IBaseSDK where K : BLBaseValidator<T>
     {
+        [JsonIgnore]
+        public dynamic ParentComponent {get;set;}
         public string BusinessName { get; set; }
         [JsonIgnore]
-        public BusinessFrontendModel Backend {get { return Frontend.BusinessManagerFrontend.Instance.GetBusiness(BusinessName, AuthenticationService); } }
+        public SDKBusinessModel Backend {get { return BackendRouterService.Instance.GetSDKBusinessModel(BusinessName, AuthenticationService); } }
 
-        public BusinessFrontendModel GetBackend(string business_name){
-            return Frontend.BusinessManagerFrontend.Instance.GetBusiness(business_name, AuthenticationService);
+        public SDKBusinessModel GetBackend(string business_name){
+            return BackendRouterService.Instance.GetSDKBusinessModel(business_name, AuthenticationService);
         }
         [JsonIgnore]
         public List<Panel> Panels = new List<Panel>();
+        [JsonIgnore]
+        public List<FieldOptions> ListViewFields = new List<FieldOptions>();
         [ValidateComplexType]
         public T BaseObj { get; set; }
 
-        public List<string> RelFieldsToSave {get;set;} = new List<string>();
+        public List<string> RelFieldsToSave { get; set; } = new List<string>();
+
+        public async Task Refresh() {
+            if(ParentComponent != null){
+                try
+                {
+                    ParentComponent.Refresh();
+                }
+                catch (System.Exception)
+                {
+                }
+            }
+        }
 
         public void AddRelFieldToSave(string fieldName)
         {
@@ -88,14 +139,39 @@ namespace Siesa.SDK.Business
             }
         }
 
- 
-        [JsonIgnore]
-        private IAuthenticationService AuthenticationService {get; set;}
 
-        public BLFrontendSimple(IAuthenticationService authenticationService)
+        [JsonIgnore]
+        protected IAuthenticationService AuthenticationService { get; set; }
+
+        [JsonIgnore]
+        protected SDKNotificationService NotificationService { get; set; }
+
+        private void InternalConstructor(IAuthenticationService authenticationService, SDKNotificationService notificationService)
         {
             AuthenticationService = authenticationService;
+            NotificationService = notificationService;
             BaseObj = Activator.CreateInstance<T>();
+
+            if (AuthenticationService?.User != null && Utilities.IsAssignableToGenericType(BaseObj.GetType(), typeof(BaseCompanyGroup<>)))
+            {
+                var companyGroup = new E00200_CompanyGroup();
+                companyGroup.Rowid = AuthenticationService.User.RowidCompanyGroup;
+                BaseObj.GetType().GetProperty("RowidCompanyGroup").SetValue(BaseObj, AuthenticationService.User.RowidCompanyGroup);
+                BaseObj.GetType().GetProperty("CompanyGroup").SetValue(BaseObj, companyGroup);
+            }
+        }
+
+        public BLFrontendSimple(IAuthenticationService authenticationService, SDKNotificationService notificationService = null)
+        {
+            InternalConstructor(authenticationService, notificationService);
+        }
+
+        public BLFrontendSimple(IServiceProvider provider)
+        {
+            IAuthenticationService authService = (IAuthenticationService)provider.GetService(typeof(IAuthenticationService));
+            SDKNotificationService notiService = (SDKNotificationService)provider.GetService(typeof(SDKNotificationService));
+
+            InternalConstructor(authService, notiService);
         }
 
         public virtual T Get(Int64 rowid)
@@ -127,15 +203,17 @@ namespace Siesa.SDK.Business
             //clear rowid
             BaseObj.SetRowid(0);
             var blankBaseObj = Activator.CreateInstance<T>();
-            if(Utilities.IsAssignableToGenericType(BaseObj.GetType(), typeof(BaseAudit<>)))
+            if (Utilities.IsAssignableToGenericType(BaseObj.GetType(), typeof(BaseAudit<>)))
             {
-                foreach(var field in typeof(BaseAudit<>).GetProperties())
+                foreach (var field in typeof(BaseAudit<>).GetProperties())
                 {
                     //if field is nullable, set it to null
-                    if(field.PropertyType.IsGenericType && field.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                    if (field.PropertyType.IsGenericType && field.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
                     {
                         BaseObj.GetType().GetProperty(field.Name).SetValue(BaseObj, null);
-                    }else{
+                    }
+                    else
+                    {
                         BaseObj.GetType().GetProperty(field.Name).SetValue(BaseObj, blankBaseObj.GetType().GetProperty(field.Name).GetValue(blankBaseObj));
                     }
                 }
@@ -165,8 +243,17 @@ namespace Siesa.SDK.Business
 
         public async virtual Task<DeleteBusinessObjResponse> DeleteAsync()
         {
-            var result = await Backend.Delete(BaseObj.GetRowid());
-            return result;
+            try
+            {
+                var result = await Backend.Delete(BaseObj.GetRowid());
+                return result;
+            }
+            catch (Exception e)
+            {
+            await GetNotificacionService("Generic.Message.DeleteError");
+
+            return null;
+            }
         }
 
         public override string ToString()
@@ -200,12 +287,24 @@ namespace Siesa.SDK.Business
 
         public async virtual Task<Siesa.SDK.Shared.Business.LoadResult> GetDataAsync(int? skip, int? take, string filter = "", string orderBy = "")
         {
-            var result = await Backend.GetData(skip, take, filter, orderBy);
             Siesa.SDK.Shared.Business.LoadResult response = new Siesa.SDK.Shared.Business.LoadResult();
-            response.Data = result.Data.Select(x => JsonConvert.DeserializeObject<T>(x)).ToList();
-            response.TotalCount = result.TotalCount;
-            response.GroupCount = result.GroupCount;
-            return response;
+            try
+            {
+                var result = await Backend.GetData(skip, take, filter, orderBy);
+
+                response.Data = result.Data.Select(x => JsonConvert.DeserializeObject<T>(x)).ToList();
+                response.TotalCount = result.TotalCount;
+                response.GroupCount = result.GroupCount;
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                await GetNotificacionService("Generic.Message.Error");
+
+                return response;
+            }
+
         }
 
         public async virtual Task<ValidateAndSaveBusinessObjResponse> ValidateAndSaveAsync()
@@ -233,8 +332,9 @@ namespace Siesa.SDK.Business
             // Do nothing
         }
 
-        public virtual void OnReady(){
-
+        public virtual void OnReady(DynamicViewType viewType, long rowid = 0)
+        {
+            // Do nothing
         }
 
         public void SetPropertyValue(string propertyName, object value)
@@ -254,13 +354,25 @@ namespace Siesa.SDK.Business
                 }
                 currentObject = tmpValue;
             }
-            if(currentObject != null)
+            if (currentObject != null)
             {
                 var property = currentObject.GetType().GetProperty(fieldPath.Last());
                 if (property != null)
                 {
                     property.SetValue(currentObject, value);
                 }
+            }
+        }
+        public async Task GetNotificacionService(string message)
+        {
+
+            if (NotificationService != null)
+            {
+                await NotificationService.ShowError(message);
+            }
+            else
+            {
+                Console.WriteLine(message);
             }
         }
 

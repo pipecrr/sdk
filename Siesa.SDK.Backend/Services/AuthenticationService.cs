@@ -30,7 +30,7 @@ namespace Siesa.SDK.Backend.Services
             return _user;
         }}
 
-        public void SetToken(string token)
+        public async Task SetToken(string token)
         {
             UserToken = token;
         }
@@ -46,6 +46,31 @@ namespace Siesa.SDK.Backend.Services
         }
 
         public Task Logout()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SetCustomRowidCulture(short rowid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task RemoveCustomRowidCulture()
+        {
+            throw new NotImplementedException();
+        }
+
+        public short GetRoiwdCulture()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SetRowidCompanyGroup(short rowid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public short GetRowidCompanyGroup()
         {
             throw new NotImplementedException();
         }
