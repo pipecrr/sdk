@@ -2,9 +2,9 @@
 @using Siesa.SDK.Frontend.Components.FormManager.Fields
 @using Siesa.SDK.Entities
 
-@if (ErrorMsg != "")
+@if (Loading == true)
 {
-    <label>@ErrorMsg</label>
+    <ResourceViewer ResourceTag="Generic.Loading" />
 }
 else
 {

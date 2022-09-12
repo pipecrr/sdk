@@ -16,6 +16,7 @@ using Siesa.SDK.Frontend.Utils;
 using System.Linq;
 using Siesa.SDK.Frontend.Application;
 using Siesa.SDK.Shared.Services;
+using Siesa.SDK.Frontend.Services;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -46,7 +47,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         [Inject] public IJSRuntime JSRuntime { get; set; }
         [Inject] public NavigationManager NavManager { get; set; }
+        
+        [Inject] public SDKNotificationService NotificationService { get; set; }
 
+        [Inject] public NavigationService NavigationService { get; set; }
         [Inject] public IFeaturePermissionService FeaturePermissionService { get; set; }
         [Inject] public IAuthenticationService AuthenticationService { get; set; }
 
@@ -135,14 +139,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             return data;
         }
 
-        protected void InitView(string bName = null)
+        protected async void InitView(string bName = null)
         {
             Loading = true;
             if (bName == null)
             {
                 bName = BusinessName;
             }
-            CheckPermissions();
+            await CheckPermissions();
             var metadata = GetViewdef(bName);
             if (metadata == null || metadata == "")
             {
@@ -191,6 +195,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
                 if(!CanList){
                     ErrorMsg = "Unauthorized";
+                    NotificationService.ShowError("Generic.Unauthorized");
+                    NavigationService.NavigateTo("/", replace:true);
                 }
 
             }
