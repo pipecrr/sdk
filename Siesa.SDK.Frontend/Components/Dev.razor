@@ -1,0 +1,45 @@
+@using Siesa.SDK.Frontend.Components.Visualization
+@inject Siesa.SDK.Frontend.Services.SDKDialogService DialogService
+
+@page "/Develop"
+<!--
+<SDKButton ResourceTag="video"  Click="@(() => prb(@SDKTypeFile.Video))"/>
+<SDKButton ResourceTag="image"  Click="@(() => prb(@SDKTypeFile.Image))"/>
+<SDKButton ResourceTag="audio"  Click="@(() => prb(@SDKTypeFile.Audio))"/>
+<SDKButton ResourceTag="pdf"  Click="@(() => prb(@SDKTypeFile.Pdf))"/>
+<SDKButton ResourceTag="text"  Click="@(() => prb(@SDKTypeFile.Text))"/>
+<SDKButton ResourceTag="other"  Click="@(() => prb(@SDKTypeFile.Other))"/>
+-->
+@code{
+    /*async Task prb(SDKTypeFile type){
+        if(type == SDKTypeFile.Image){
+            await DialogService.ShowCustomDialog(ds => 
+                @<SDKFileViewer type=type url="https://www.tooltyp.com/wp-content/uploads/2014/10/1900x920-8-beneficios-de-usar-imagenes-en-nuestros-sitios-web.jpg"></SDKFileViewer>, width: "800px");
+        }
+
+        if(type == SDKTypeFile.Video){
+            await DialogService.ShowCustomDialog(ds => 
+                @<SDKFileViewer type=type url="_content/Siesa.Project.Business.Frontend/barrioAdentro.mp4"></SDKFileViewer>, width: "800px");
+        }
+
+        if(type == SDKTypeFile.Audio){
+            await DialogService.ShowCustomDialog(ds => 
+                @<SDKFileViewer type=type url="_content/Siesa.Project.Business.Frontend/ApuestaPorElRockNRoll.mp3"></SDKFileViewer>, width: "800px");
+        }
+
+        if(type == SDKTypeFile.Pdf){
+            await DialogService.ShowCustomDialog(ds => 
+                @<SDKFileViewer type=type url="_content/Siesa.Project.Business.Frontend/ficha-tecnica-himalayan-new.pdf"></SDKFileViewer>, width: "800px");
+        }
+
+        if(type == SDKTypeFile.Text){
+            await DialogService.ShowCustomDialog(ds => 
+                @<SDKFileViewer type=type url="_content/Siesa.Project.Business.Frontend/BancolombiaPAB.txt"></SDKFileViewer>, width: "800px");
+        }
+
+        if(type == SDKTypeFile.Other){
+            await DialogService.ShowCustomDialog(ds => 
+                @<SDKFileViewer type=type url="_content/Siesa.Project.Business.Frontend/archivoX.zip"></SDKFileViewer>);
+        }
+    }    */
+}

@@ -21,7 +21,7 @@ namespace Siesa.SDK.Backend.Extensions
 
         private static Assembly _assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
 
-        internal static dynamic SDKFlexPreviewData(SDKContext Context, SDKFlexRequestData requestData)
+        internal static dynamic SDKFlexPreviewData(SDKContext Context, SDKFlexRequestData requestData, bool setTop = true)
         {
             List<SDKFlexColumn> columns = requestData.columns;
             if (columns.Count == 0)
@@ -135,9 +135,11 @@ namespace Siesa.SDK.Backend.Extensions
                     var orderMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "OrderBy", new[] { typeof(IQueryable), typeof(string), typeof(object[]) });
                     contextSet = orderMethod.Invoke(contextSet, new object[] { contextSet, orderBy, null });
                 }
-
-                var takeMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "Take", new[] { typeof(IQueryable), typeof(int) });
-                contextSet = takeMethod.Invoke(contextSet, new object[] { contextSet, 50 });
+                
+                if(setTop){
+                    var takeMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "Take", new[] { typeof(IQueryable), typeof(int) });
+                    contextSet = takeMethod.Invoke(contextSet, new object[] { contextSet, 50 });
+                }
 
                 _assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
                 var dynamicListMethod = typeof(IEnumerable).GetExtensionMethod(_assemblyDynamic, "ToDynamicList", new[] { typeof(IEnumerable) });
