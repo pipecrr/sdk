@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Siesa.SDK.Shared.Services;
+using Siesa.SDK.Shared.DTOS;
 
 namespace Siesa.SDK.Backend.Access
 {
