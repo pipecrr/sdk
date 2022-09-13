@@ -81,12 +81,14 @@ namespace Siesa.SDK.Frontend.Controllers
 
         public async Task<ActionResult> Index(string blname, string blaction)
         {
-            //TODO: AUTH
-            // if(AuthenticationService?.User == null)
-            // {
-            //     Console.WriteLine("user not found");
-            //     return null;
-            // }
+            //get auth token from headers
+            string authToken = Request.Headers["X-Auth-Token"];
+            if (string.IsNullOrEmpty(authToken))
+            {
+                return ReturnError(Response, "No auth token provided", 401);
+            }
+
+            AuthenticationService.SetToken(authToken);
             var jsonResponse = new Dictionary<string, object>();
             jsonResponse.Add("status", true);
             int HTTPCodeResponse = 200;
