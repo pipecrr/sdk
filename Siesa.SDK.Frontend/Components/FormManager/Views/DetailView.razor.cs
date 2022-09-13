@@ -43,7 +43,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Inject] public IJSRuntime JSRuntime { get; set; }
         [Inject] public NavigationManager NavManager { get; set; }
 
-        [Inject] public NavigationService NavigationService{get; set;}
+        [Inject] public NavigationService NavigationService { get; set; }
         [Inject]
         public IBackendRouterService BackendRouterService { get; set; }
 
@@ -91,7 +91,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         }
 
-        protected async void InitView(string bName = null)
+        protected async Task InitView(string bName = null)
         {
             Loading = true;
             if (bName == null)
@@ -125,6 +125,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         {
                             relationship.ResourceTag = $"{BusinessName}.Relationship.{relationship.Name}";
                         }
+                        var canListRel = await FeaturePermissionService.CheckUserActionPermission(relationship.RelatedBusiness, 4, AuthenticationService);
+                        relationship.Enabled = canListRel;
                     }
                 }
                 ModelLoaded = true;
@@ -144,7 +146,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     Loading = false;
                     this.ModelLoaded = false;
                     ErrorMsg = "";
-                    InitView(value);
+                    await InitView(value);
                 }
             }
         }
@@ -244,11 +246,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 {
                 }
 
-                if(!CanDetail)
-            {
-                NotificationService.ShowError("Generic.Unauthorized");
-                NavigationService.NavigateTo("/", replace:true);
-            }
+                if (!CanDetail)
+                {
+                    NotificationService.ShowError("Generic.Unauthorized");
+                    NavigationService.NavigateTo("/", replace: true);
+                }
             }
         }
     }

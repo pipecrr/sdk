@@ -3,6 +3,7 @@
 @using Siesa.SDK.Frontend.Components.FormManager.Fields
 @using Siesa.SDK.Frontend.Components.Layout.Detail.Relationship
 @using Siesa.SDK.Frontend.Components.Visualization
+@using System.Linq
 @if (Loading == true)
 {
     <ResourceViewer ResourceTag="Generic.Loading" />
@@ -40,7 +41,7 @@ else if (ModelLoaded == true)
         {
             <label>@((MarkupString)ErrorMsg)</label>
         }
-         @foreach (var rel in FormViewModel.Relationships)
+         @foreach (var rel in FormViewModel.Relationships.Where(x=>x.Enabled))
             {
                <RelationshipPanel Relationship="@rel" Parent="@BusinessObj.BaseObj" />
             }
@@ -64,11 +65,23 @@ else if (ModelLoaded == true)
         <SetTopBar HasExtraButtons="@(FormViewModel.Buttons != null && FormViewModel.Buttons.Count > 0 ? true: false)">
             <TopBarTitle>@BusinessObj</TopBarTitle>
             <TopBarButtons>
+
+                @if(CanCreate){
                 <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus"  />
+                }
+                @if(CanCreate){
                 <TopBarButton Click="GoToDuplicate" ResourceTag="Action.Duplicate" IconCssClass="fa-solid fa-copy"  />
+                }
+                @if(CanEdit){
                 <TopBarButton Click="GoToEdit" ResourceTag="Action.Modify"  IconCssClass="fa-solid fa-pen"  />
+                }
+                @if(CanList){
                 <TopBarButton Click="GoToList" ResourceTag="Action.List"  IconCssClass="fa-solid fa-list"  />
+                }
+                @if(CanDelete){
                 <TopBarButton Click="OnClickDelete" ResourceTag="Action.Delete" IconCssClass="fa-solid fa-trash-can" />
+                }
+
             </TopBarButtons>
             <TopBarExtraButtons>
                 @foreach (var btn in FormViewModel.Buttons)
@@ -88,7 +101,6 @@ else if (ModelLoaded == true)
             new DialogOptions(){ShowTitle=false, Width="400"});
         if(dialog != null && dialog == true){
             await this.DeleteBusiness();
-        }
-        //StateHasChanged();
+        } 
     }
 }
