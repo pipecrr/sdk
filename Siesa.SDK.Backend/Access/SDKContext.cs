@@ -148,16 +148,16 @@ namespace Siesa.SDK.Backend.Access
                 }
             }
 
-            if(CurrentUser == null){
-                throw new Exception("Invalid User");
-            }
+            // if(CurrentUser == null){
+            //     throw new Exception("Invalid User");
+            // }
 
             foreach (var entry in ChangeTracker.Entries())
             {
                 //Check if the entry inherits from the BaseAudit<> class
                 if(Utilities.IsAssignableToGenericType(entry.Entity.GetType(), typeof(BaseAudit<>)))
                 {
-                    var loggedUser = CurrentUser.Rowid; //TODO: Get logged user
+                    var loggedUser = 1; //TODO: Get logged user
 
                     entry.Context.Entry(entry.Entity).Property("LastUpdateDate").CurrentValue = DateTime.Now;
                     entry.Context.Entry(entry.Entity).Property("RowidUserLastUpdate").CurrentValue = loggedUser;
@@ -168,7 +168,7 @@ namespace Siesa.SDK.Backend.Access
                     }
                 }else if(Utilities.IsAssignableToGenericType(entry.Entity.GetType(), typeof(BaseCompanyGroup<>)))
                 {
-                    entry.Context.Entry(entry.Entity).Property("RowidCompanyGroup").CurrentValue = CurrentUser.RowidCompanyGroup; 
+                    entry.Context.Entry(entry.Entity).Property("RowidCompanyGroup").CurrentValue = 1; 
                 }
 
             }
