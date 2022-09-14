@@ -1,12 +1,10 @@
 @page "/login"
 @using System.ComponentModel.DataAnnotations
 @using Siesa.SDK.Shared.Services
-@using Siesa.SDK.Shared.Backend
+@using Siesa.SDK.Shared.DTOS
 @using Siesa.SDK.Frontend.Navigation
 @using Siesa.SDK.Frontend.Components.Layout
 @using Siesa.SDK.Entities;
-@using Siesa.SDK.Shared.Business;
-@using Siesa.SDK.Protos;
 @using Newtonsoft.Json;
 @inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavigationManager
@@ -18,8 +16,13 @@
 @layout EmptyLayout
 
 <PageTitle>Login</PageTitle>
-<div class="back_login">
 
+@if(SelectedConnection != null && SelectedConnection.Rowid != 0 && !string.IsNullOrEmpty(SelectedConnection.StyleUrl)){
+     <head>
+        <link rel="stylesheet" href="@AuthenticationService.GetConnectionStyle()">
+    </head> 
+}
+<div class="back_login">
     <div class="col-12 offset-md-1 col-md-10 px-0 px-md-3" hidden="@init_loading">
         <div class="card_login col-12">
             <div class="row image_back">
@@ -50,13 +53,13 @@
                 </div>
                 <div class="login_area col-12 col-lg-5 p-3 p-lg-4">
                     <div class="col-12 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
-                        <select class="select_connect" id="SelectConnect" @bind="SelectedDbConnection">
+                        <select class="select_connect" id="SelectConnect" @onchange="OnChangeConnection">
                             <option value=""><ResourceViewer ResourceTag="BLLogin.SelectDbConnection" RowidCulture=@RowidCulture /></option>
-                            @if(DbConnections != null && DbConnections.Count > 0)
+                            @if(ConnectionList != null && ConnectionList.Count > 0)
                             {
-                                @foreach(var db in DbConnections)
+                                @foreach(var db in ConnectionList)
                                 {
-                                    <option value="@db.Item1">@db.Item2</option>
+                                    <option value="@db.Rowid" selected="@(db.Rowid == SelectedConnection.Rowid)" >@db.Name</option>
                                 }
                             }
                         </select>
@@ -83,7 +86,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-12">
                             <div class="row">
                                 <div class="col-12 p-0 d-flex justify-content-center pb-4">
-                                    <img src="_content/Siesa.SDK.Frontend/assets/img/login_logo_empresa.png" height="48px"
+                                    <img src="@AuthenticationService.GetConnectionLogo()" height="48px"
                                         alt="logo_siesa_color">
                                 </div>
                                 <div class="col-12 p-0 pb-4 pb-md-0 pb-lg-5">
@@ -187,7 +190,7 @@
                 <i class="fas fa-spinner fa-pulse"></i>
             </div>
             <div class="text-center">
-                <img src="_content/Siesa.SDK.Frontend/assets/img/logo_empresa.png" height="82px" alt="logo_siesa">
+                <img src="@AuthenticationService.GetConnectionLogo()" height="82px" alt="logo_siesa">
             </div>
         </div>
     </div>
@@ -215,8 +218,13 @@
     private E00021_Culture selectedCulture { get; set; }
     List<E00021_Culture> cultures = new List<E00021_Culture>();
 
-    List<(short,string)> DbConnections { get; set; } = new List<(short,string)>();
-    private string SelectedDbConnection { get; set; } = "";
+    //List<(short,string)> DbConnections { get; set; } = new List<(short,string)>();
+    //private string SelectedDbConnection { get; set; } = "";
+
+    private SDKDbConnection SelectedConnection  { get; set; } = new SDKDbConnection();
+
+    List<SDKDbConnection> ConnectionList { get; set; } = new List<SDKDbConnection>();
+
 
     private string GetCssLoding()
     {
@@ -265,7 +273,7 @@
     {
         string message = "BLUser.Login.Message.SuccesLogin";
         loading = true;
-        if(String.IsNullOrEmpty(SelectedDbConnection))
+        if(SelectedConnection == null)
         {
             error = "BLLogin.SelectDbConnection";
             loading = false;
@@ -274,7 +282,7 @@
         }
         try
         {
-            await AuthenticationService.Login(model.Username, model.Password, Convert.ToInt16(SelectedDbConnection));
+            await AuthenticationService.Login(model.Username, model.Password,SelectedConnection.Rowid);
             NavigationManager.TryGetQueryString("returnUrl", out string returnUrl);
             if (returnUrl == null || returnUrl == "null")
             {
@@ -302,8 +310,18 @@
         var result = await userBL.Call("GetDBConnections");
         if(result.Success)
         {
-            DbConnections = result.Data as List<(short,string)>;
-            SelectedDbConnection = DbConnections.First().Item1.ToString();
+
+            ConnectionList = result.Data as List<SDKDbConnection>;
+            if(AuthenticationService.GetSelectedConnection() == null || AuthenticationService.GetSelectedConnection().Rowid == 0){
+
+                SelectedConnection = ConnectionList.First();
+                AuthenticationService.SetSelectedConnection(SelectedConnection);
+            }else{
+                SelectedConnection = AuthenticationService.GetSelectedConnection();
+            }
+
+            //DbConnections = result.Data as List<(short,string)>;
+            //SelectedDbConnection = DbConnections.First().Item1.ToString(); 
         }
     }
 
@@ -391,6 +409,25 @@
                 LanguageCode = "Es-co"
             };
     }
+
+    void OnChangeConnection(ChangeEventArgs e)
+    {
+        try
+        {
+           var rowidConnection = Convert.ToInt16(e.Value.ToString());
+            SelectedConnection = ConnectionList.FirstOrDefault(x => x.Rowid == rowidConnection); 
+        }
+        catch (System.Exception)
+        {
+            
+            SelectedConnection = new SDKDbConnection();
+        }
+        AuthenticationService.SetSelectedConnection(SelectedConnection);
+        
+        StateHasChanged();
+    }
+
+    
 
 
 

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Siesa.SDK.Shared.DTOS;
 
 namespace Siesa.SDK.Shared.Services
 {
@@ -46,6 +47,10 @@ namespace Siesa.SDK.Shared.Services
         Task RemoveCustomRowidCulture();
 
         short GetRowidCompanyGroup();
+        Task SetSelectedConnection(SDKDbConnection selectedConnection);
+        SDKDbConnection GetSelectedConnection();
+        string GetConnectionLogo();
+        string GetConnectionStyle();
 
     }
 

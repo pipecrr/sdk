@@ -8,6 +8,7 @@ using Siesa.SDK.Shared.Business;
 using Siesa.SDK.Shared.Criptography;
 using Siesa.SDK.Shared.Logs.DataEventLog;
 using Siesa.SDK.Shared.Services;
+using Siesa.SDK.Shared.DTOS;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
