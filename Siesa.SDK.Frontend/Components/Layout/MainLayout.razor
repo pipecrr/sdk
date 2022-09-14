@@ -4,8 +4,28 @@
 @using System
 @using Microsoft.AspNetCore.Components
 @using Siesa.SDK.Frontend.Components.Layout.NavMenu
+@using Siesa.SDK.Shared.Services
+@inject IAuthenticationService AuthenticationService
+
+@if(AuthenticationService.GetSelectedConnection() != null && AuthenticationService.GetSelectedConnection().Rowid != 0)
+{
+    @if(AuthenticationService.GetSelectedConnection().IsTest)
+    {
+      
+    }
+
+    @if(!string.IsNullOrEmpty(AuthenticationService.GetSelectedConnection().StyleUrl))
+    {
+        <head>
+            <link rel="stylesheet" href="@AuthenticationService.GetConnectionStyle()">
+        </head>
+    }
+}
+
 <RadzenDialog />
 <RadzenNotification />
+
+
 @if(IsEmptyLayout)
 {
     <ErrorBoundary @ref="errorBoundary">
