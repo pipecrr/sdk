@@ -24,7 +24,7 @@ else if (BusinessObj != null)
                     DefaultColSize="@Panels[0].ColSize" ModelObj="@BusinessObj" />
                 </CascadingValue>
             </DxFormLayout>
-            <ValidationSummary />
+            @* <ValidationSummary /> *@
             @if(!string.IsNullOrEmpty(ErrorMsg))
             {
                 <label>@((MarkupString)ErrorMsg)</label>

@@ -48,7 +48,7 @@ else if (BusinessObj.BaseObj.Rowid != 0)
 
             }
         </DxFormLayout>
-        <ValidationSummary />
+        @* <ValidationSummary /> *@
         @if(!string.IsNullOrEmpty(ErrorMsg))
         {
             <label>@((MarkupString)ErrorMsg)</label>
@@ -75,7 +75,7 @@ else if (BusinessObj.BaseObj.Rowid != 0)
         <SetTopBar StyleName="toolbar_edition" HasExtraButtons="@(FormViewModel.Buttons != null && FormViewModel.Buttons.Count > 0 ? true: false)">
             <TopBarTitle><ResourceViewer ResourceTag="Action.Modify" /> @BusinessObj</TopBarTitle>
             <TopBarButtons>
-                <TopBarButton form="@FormID" SubmitFormOnClick="true" ResourceTag="Generic.ActionSave" IconCssClass="fa-solid fa-floppy-disk" />
+                <TopBarButton form="@FormID" SubmitFormOnClick="true" ResourceTag="Generic.ActionSave" IconCssClass="@GetSaveBtnIcon()" Enabled="@(!Saving)" />
                 @* <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="GoToList" ResourceTag="Generic.ActionCancel" /> *@
             </TopBarButtons>
             <TopBarExtraButtons>

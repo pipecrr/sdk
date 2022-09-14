@@ -19,7 +19,7 @@ else
         AllowSorting="true" 
         Data="@data" 
         TItem="object" 
-        IsLoading="@Loading"
+        IsLoading="@LoadingData"
         @ref="@_gridRef" 
         Count="@count" 
         LoadData="@LoadData" 
@@ -33,6 +33,12 @@ else
         AllowColumnResize="true"
         @key="needUpdate"
         >
+        <EmptyTemplate>
+            <div class="sdk-empty-list">
+                <i class="fa-solid fa-file"></i>
+                <p><ResourceViewer ResourceTag="Generic.NoData" /></p>
+            </div>
+        </EmptyTemplate>
         <Columns>
         @if(ListViewModel.ShowActions)
         {

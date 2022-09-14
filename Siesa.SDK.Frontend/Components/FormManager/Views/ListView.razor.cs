@@ -58,6 +58,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public IBackendRouterService BackendRouterService { get; set; }
 
         public bool Loading;
+        public bool LoadingData;
 
         public String ErrorMsg = "";
         private IList<object> SelectedObjects { get; set; }
@@ -233,13 +234,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
             if (data == null)
             {
-                Loading = true;
+                LoadingData = true;
             }
             var filters = $"{args.Filter}";
             if (LastFilter != filters)
             {
                 LastFilter = filters;
-                Loading = true;
+                LoadingData = true;
                 data = null;
             }
             if (ConstantFilters != null)
@@ -256,7 +257,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             var dbData = await BusinessObj.GetDataAsync(args.Skip, args.Top, filters, args.OrderBy);
             data = dbData.Data;
             count = dbData.TotalCount;
-            Loading = false;
+            LoadingData = false;
         }
 
         private void GoToEdit(Int64 id)

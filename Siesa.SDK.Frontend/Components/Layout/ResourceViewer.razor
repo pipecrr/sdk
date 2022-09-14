@@ -11,9 +11,15 @@
 
     [Parameter] public Int64 RowidCulture { get; set; }
 
+    [Parameter] public Int64 DefaultRowidCulture { get; set; }
+
     private string Text { get; set; }
 
     private async Task<string> GetText(){
+        if(DefaultRowidCulture != 0  && RowidCulture == 0 && (AuthenticationService.User == null || AuthenticationService.GetRoiwdCulture() == 0)){
+            RowidCulture = DefaultRowidCulture;
+        }
+
         if(!String.IsNullOrEmpty(ResourceTag)){
             if(RowidCulture != 0 && (AuthenticationService == null || AuthenticationService.User == null || AuthenticationService.GetRoiwdCulture() == 0)){
                 return await ResourceManager.GetResource(ResourceTag, RowidCulture);

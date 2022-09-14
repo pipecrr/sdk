@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Siesa.SDK.Frontend.Utils;
 using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
+using Siesa.SDK.Frontend.Components.Visualization;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 {
@@ -153,7 +154,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 {
                     var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
                     var lambda = Expression.Lambda(typeof(Func<>).MakeGenericType(access.Type), access);
-                    builder.OpenComponent(0, typeof(ValidationMessage<>).MakeGenericType(access.Type));
+                    builder.OpenComponent(0, typeof(SDKValidationMessage<>).MakeGenericType(access.Type));
                     builder.AddAttribute(1, "For", lambda);
                     builder.CloseComponent();
                 };

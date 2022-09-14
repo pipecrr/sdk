@@ -411,7 +411,7 @@ namespace Siesa.SDK.Business
                 filter = $"({prefilters}) && ({filter})";
             }
             QueryFilterDelegate<T> filterDelegate = EntityFieldFilters;
-            return this.GetData(0, 100, filter, "", filterDelegate);
+            return this.GetData(0, 10, filter, "", filterDelegate);
         }
 
         public virtual Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null)
@@ -515,7 +515,7 @@ namespace Siesa.SDK.Business
         [SDKExposedMethod]
         public ActionResult<dynamic> SDKFlexPreviewData(SDKFlexRequestData requestData, bool setTop = true)
         {
-            using (var Context = _dbFactory.CreateDbContext())
+            using (var Context = CreateDbContext())
             {   
                 return SDKFlexExtension.SDKFlexPreviewData(Context, requestData, setTop);
             }

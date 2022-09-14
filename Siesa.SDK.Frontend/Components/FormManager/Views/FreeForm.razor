@@ -3,13 +3,12 @@
 @using Siesa.SDK.Frontend.Components.FormManager.Fields
 @using Siesa.SDK.Frontend.Components.Visualization
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
-@if (Panels == null || Panels.Count <= 0)
-{
-    <ResourceViewer ResourceTag="SDK.ViewdefNotFound" />
-}
-else if (Loading == true)
+@if (Loading == true)
 {
     <ResourceViewer ResourceTag="Generic.Loading" />
+}else if (Panels == null || Panels.Count <= 0)
+{
+    <ResourceViewer ResourceTag="SDK.ViewdefNotFound" />
 }
 else if (BusinessObj != null)
 {
@@ -44,7 +43,7 @@ else if (BusinessObj != null)
 
             }
         </DxFormLayout>
-        <ValidationSummary />
+        @* <ValidationSummary /> *@
         @if(!string.IsNullOrEmpty(ErrorMsg))
         {
             <label>@((MarkupString)ErrorMsg)</label>
@@ -59,8 +58,7 @@ else if (BusinessObj != null)
         <TopBarButtons>
             @foreach (var btn in FormViewModel.Buttons)
             {
-                <SDKButton RenderStyle="@btn.RenderStyle" RenderStyleMode="SDKButtonRenderStyleMode.Text"
-            Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" />
+                <TopBarButton Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" IconCssClass="@btn.IconClass" />
             }
         </TopBarButtons>
     </SetTopBar>

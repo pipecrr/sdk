@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Siesa.SDK.Entities.Enums;
+using Siesa.SDK.Shared.DataAnnotations;
 
 namespace Siesa.SDK.Entities
 {
@@ -14,11 +15,11 @@ namespace Siesa.SDK.Entities
 
 		public virtual T Id { get; set; }
 
-		[Required]
+		[SDKRequired]
 		[StringLength(250)]
 		public virtual string Name { get; set; }
 
-		[Required]
+		[SDKRequired]
 		[StringLength(2000)]
 		public virtual string Description { get; set; }
 
