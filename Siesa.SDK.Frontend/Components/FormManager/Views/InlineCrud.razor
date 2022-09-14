@@ -18,6 +18,7 @@
     AllowDelete="@AllowDelete"
     AllowDetail="@AllowDetail"
     OnSelectedRow=@OnSelectedRow
+    Data="@Data"
     />
 
 
@@ -32,7 +33,7 @@
     [Parameter] public bool AllowDelete { get; set; } = true;
     [Parameter] public bool AllowDetail { get; set; } = true;
     [Parameter] public Action<object> OnSelectedRow { get; set; } = null;
-
+    [Parameter] public IEnumerable<object> Data { get; set; } = null;
     
     Guid listview_key = Guid.NewGuid();
 

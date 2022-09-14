@@ -27,6 +27,8 @@ else if (BusinessObj != null)
 
     [Parameter] public string ViewdefName { get; set; } = "related_list";
 
+    [Parameter] public IEnumerable<object> Data { get; set; } = null;
+
     protected override void OnInitialized()
     {
         ViewType = ViewModels.DynamicViewType.List;
@@ -43,6 +45,7 @@ else if (BusinessObj != null)
         new_params.Add("AllowDelete", AllowDelete);
         new_params.Add("AllowDetail", AllowDetail);
         new_params.Add("OnSelectedRow", OnSelectedRow);
+        new_params.Add("Data", Data);
         if (IsSubpanel)
         {
             new_params.Add("IsSubpanel", true);

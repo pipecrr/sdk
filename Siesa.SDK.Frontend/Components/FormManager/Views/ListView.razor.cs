@@ -86,6 +86,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter]
         public Action<object> OnSelectedRow { get; set; } = null;
 
+        [Parameter]
+        public IEnumerable<object> Data { get; set; } = null;
+
         private IEnumerable<object> data;
         int count;
         public RadzenDataGrid<object> _gridRef;
@@ -218,6 +221,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             ErrorMsg = "";
             InitView();
             data = null;
+            if(Data != null){
+                data = Data;
+                count = data.Count();
+            }
             if (_gridRef != null)
             {
                 needUpdate = Guid.NewGuid();
@@ -228,6 +235,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         async Task LoadData(LoadDataArgs args)
         {
+            if(Data != null){
+                data = Data;
+                count = data.Count();
+                LoadingData = false;
+                StateHasChanged();
+                return;
+            }
             if (!ListViewModel.InfiniteScroll)
             {
                 data = null;
