@@ -16,9 +16,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
 
         public Dictionary<string, int> ColSize { get; set; } = new Dictionary<string, int>()
         {
-            {"MD", 4},
-            {"SM", 6},
             {"XS", 12},
+            {"SM", 6},
+            {"MD", 6},
+            {"LG", 4},
+            {"XL", 3}
         };
     }
 }
