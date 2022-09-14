@@ -23,6 +23,7 @@ namespace Siesa.SDK.Frontend.Application
         public Task<string> GetEnumValues(string enumName, Int64 cultureRowid, Int64 moduleRowid);
 
         public Task GetResourceByContainId(Int64 cultureRowid);
+        Dictionary<long, Dictionary<string, string>> GetResourceValuesDict();
     }
     public class ResourceManager: IResourceManager
     {
@@ -193,6 +194,11 @@ namespace Siesa.SDK.Frontend.Application
         {            
             var resource = resourceValuesDict[rowidCulture];
            return resource;
-        } 
+        }
+
+        public Dictionary<long, Dictionary<string, string>> GetResourceValuesDict()
+        {
+            return resourceValuesDict;
+        }
     }
 }

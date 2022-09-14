@@ -19,6 +19,7 @@ namespace Siesa.SDK.Shared.DTOS
         public List<object> group_list { get; set; }
         public int version { get; set; }
         public string metadata { get; set; }
+        public string module { get; set; }
     }
 
     public class Owner
