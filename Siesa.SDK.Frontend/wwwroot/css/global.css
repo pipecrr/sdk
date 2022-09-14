@@ -739,3 +739,28 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
     margin-bottom: 1rem !important;
 }
 
+.login_area .valid ~ .validation-message{
+    position: absolute;
+}
+
+.login_area .invalid ~ .validation-message{
+    position: absolute;
+}
+
+.sdk-empty-list{
+    text-align: center;
+    height: 100%;
+}
+
+.sdk-empty-list i{
+    font-size: 60px;
+    color: var(--color_siesa_1) ;
+    padding-top:12px;
+    padding-bottom: 25px;
+}
+
+.sdk-empty-list p{
+    color: var(--color_siesa_1);
+    font-weight: 500;
+    font-size: 1.25rem;
+}

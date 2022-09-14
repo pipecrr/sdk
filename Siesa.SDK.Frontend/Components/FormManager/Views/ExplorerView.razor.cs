@@ -16,9 +16,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             await base.OnInitializedAsync();
         }
 
-        protected override void InitView(string bName = null)
+        protected override async Task InitView(string bName = null)
         {
-            base.InitView(bName);
+            await base.InitView(bName);
             if(Panels != null && Panels.Count > 0){
                 for (int j = 0; j < Panels[0].Fields.Count; j++)
                 {

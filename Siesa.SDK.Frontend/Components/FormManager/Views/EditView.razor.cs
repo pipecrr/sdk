@@ -15,5 +15,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             await base.OnInitializedAsync();
         }
 
+        protected override async Task CheckPermissions()
+        {
+            await base.CheckPermissions();
+            if(!CanEdit)
+            {
+                NotificationService.ShowError("Generic.Unauthorized");
+                NavigationService.NavigateTo("/", replace:true);
+            }
+        }
+
     }
 }

@@ -4,8 +4,31 @@
 @using System
 @using Microsoft.AspNetCore.Components
 @using Siesa.SDK.Frontend.Components.Layout.NavMenu
+@using Siesa.SDK.Shared.Services
+@inject IAuthenticationService AuthenticationService
+@using Siesa.SDK.Frontend.Components.FormManager.Model
+@inject UtilsManager UtilsManager 
+@inject IJSRuntime JSRuntime
+
+@if(AuthenticationService.GetSelectedConnection() != null && AuthenticationService.GetSelectedConnection().Rowid != 0)
+{
+    @if(AuthenticationService.GetSelectedConnection().IsTest && !string.IsNullOrEmpty(WatermarkText))
+    {
+        <div class="sdk-test-watermark" data-watermark="@WatermarkText"></div>
+    }
+
+    @if(!string.IsNullOrEmpty(AuthenticationService.GetSelectedConnection().StyleUrl))
+    {
+        <head>
+            <link rel="stylesheet" href="@AuthenticationService.GetConnectionStyle()">
+        </head>
+    }
+}
+
 <RadzenDialog />
 <RadzenNotification />
+
+
 @if(IsEmptyLayout)
 {
     <ErrorBoundary @ref="errorBoundary">
@@ -89,6 +112,9 @@
 
     public bool IsEmptyLayout { get; set; } = false;
 
+    private string WatermarkText { get; set; }
+    private IJSObjectReference _jsModule;
+
     public void SetDefaultArea(bool isDefaultArea)
     {
         bool refresh = IsDefaultArea != isDefaultArea;
@@ -114,6 +140,35 @@
         IsDefaultArea = true;
         base.OnInitializedAsync();
         errorBoundary = new ErrorBoundary();
+        PoblateWatermark();
+    }
+
+    private async Task PoblateWatermark()
+    {
+        WatermarkText = await UtilsManager.GetResource("Custom.TestConnection");
+        try
+        {
+            if(_jsModule == null)
+            {
+                await ImportJs();
+            }
+            await _jsModule.InvokeVoidAsync("PoblateWatermark");
+        }
+        catch (Exception)
+        {
+        }
+        StateHasChanged();
+    }
+
+    private async Task ImportJs()
+    {
+        try
+        {
+            _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/Components/Layout/MainLayout.razor.js");
+        }
+        catch (Exception)
+        {
+        }
     }
 
     private void ToggleNavMenu()
@@ -126,5 +181,12 @@
     {
         showNavMenu = false;
         StateHasChanged();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender || _jsModule == null){
+            await ImportJs();
+        }
     }
 }

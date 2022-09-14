@@ -16,6 +16,7 @@ using Siesa.SDK.Frontend.Utils;
 using System.Linq;
 using Siesa.SDK.Frontend.Application;
 using Siesa.SDK.Shared.Services;
+using Siesa.SDK.Frontend.Services;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -46,7 +47,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         [Inject] public IJSRuntime JSRuntime { get; set; }
         [Inject] public NavigationManager NavManager { get; set; }
+        
+        [Inject] public SDKNotificationService NotificationService { get; set; }
 
+        [Inject] public NavigationService NavigationService { get; set; }
         [Inject] public IFeaturePermissionService FeaturePermissionService { get; set; }
         [Inject] public IAuthenticationService AuthenticationService { get; set; }
 
@@ -54,6 +58,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public IBackendRouterService BackendRouterService { get; set; }
 
         public bool Loading;
+        public bool LoadingData;
 
         public String ErrorMsg = "";
         private IList<object> SelectedObjects { get; set; }
@@ -81,6 +86,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter]
         public Action<object> OnSelectedRow { get; set; } = null;
 
+        [Parameter]
+        public IEnumerable<object> Data { get; set; } = null;
+
         private IEnumerable<object> data;
         int count;
         public RadzenDataGrid<object> _gridRef;
@@ -88,6 +96,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public string BLEntityName { get; set; }
 
         public string LastFilter { get; set; }
+
+        private bool CanCreate;
+        private bool CanEdit;
+        private bool CanDelete;
+        private bool CanDetail;
+        private bool CanList;
 
 
         Guid needUpdate;
@@ -129,14 +143,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             return data;
         }
 
-        protected void InitView(string bName = null)
+        protected async void InitView(string bName = null)
         {
             Loading = true;
             if (bName == null)
             {
                 bName = BusinessName;
             }
-            CheckPermission();
+            await CheckPermissions();
             var metadata = GetViewdef(bName);
             if (metadata == null || metadata == "")
             {
@@ -162,28 +176,42 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         }
 
-        public async Task Refresh(){
+        public async Task Refresh()
+        {
             hideCustomColumn();
         }
 
-        private async Task CheckPermission()
+        private async Task CheckPermissions()
         {
-            // if(FeaturePermissionService != null){
-            //     var canList = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 4, AuthenticationService);
-            //     if(!canList){
-            //         ErrorMsg = "Permission Denied";
-            //         Loading = false;
-            //         StateHasChanged();
-            //         return;
-            //     }
-            // }
+            if (FeaturePermissionService != null)
+            {
+                try
+                {
+                    CanList = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 4, AuthenticationService);
+                    CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 1, AuthenticationService);
+                    CanEdit = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 2, AuthenticationService);
+                    CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 3, AuthenticationService);
+                    CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 5, AuthenticationService);
+                }
+                catch (System.Exception)
+                {
+                }
+
+                if(!CanList){
+                    ErrorMsg = "Unauthorized";
+                    NotificationService.ShowError("Generic.Unauthorized");
+                    NavigationService.NavigateTo("/", replace:true);
+                }
+
+            }
 
         }
 
         protected override async Task OnInitializedAsync()
         {
-            await CheckPermission();
-            await base.OnInitializedAsync();            
+
+            await base.OnInitializedAsync();
+            //await CheckPermissions();
             //InitView();
         }
 
@@ -193,6 +221,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             ErrorMsg = "";
             InitView();
             data = null;
+            if(Data != null){
+                data = Data;
+                count = data.Count();
+            }
             if (_gridRef != null)
             {
                 needUpdate = Guid.NewGuid();
@@ -203,19 +235,26 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         async Task LoadData(LoadDataArgs args)
         {
+            if(Data != null){
+                data = Data;
+                count = data.Count();
+                LoadingData = false;
+                StateHasChanged();
+                return;
+            }
             if (!ListViewModel.InfiniteScroll)
             {
                 data = null;
             }
             if (data == null)
             {
-                Loading = true;
+                LoadingData = true;
             }
             var filters = $"{args.Filter}";
             if (LastFilter != filters)
             {
                 LastFilter = filters;
-                Loading = true;
+                LoadingData = true;
                 data = null;
             }
             if (ConstantFilters != null)
@@ -232,7 +271,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             var dbData = await BusinessObj.GetDataAsync(args.Skip, args.Top, filters, args.OrderBy);
             data = dbData.Data;
             count = dbData.TotalCount;
-            Loading = false;
+            LoadingData = false;
         }
 
         private void GoToEdit(Int64 id)

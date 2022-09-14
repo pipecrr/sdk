@@ -21,7 +21,7 @@
         </div>
     </div>
     <div class="col-xl-5 col-lg-4 col-md-4 col-sm-5 col-5 sdk_company_logo">
-        <img class="whcm_logo_compania" src="_content/Siesa.SDK.Frontend/assets/img/logo_empresa.png" height="30px"
+        <img class="whcm_logo_compania" src="@AuthenticationService.GetConnectionLogo()" height="30px"
             alt="Logo compania">
     </div>
     <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-0 p-0 d-none d-sm-block">
@@ -33,7 +33,7 @@
                 <button @onclick="()=> ToogleConnect()" class="btn btn_connect py-0 px-2 px-lg-3 d-flex align-items-center">
                     <div>
                         <p class="font-weight-bold m-0 text-truncate" data-toggle="tooltip" data-placement="bottom" title="">Grupo
-                            @AuthenticationService.GetRowidCompanyGroup()
+                            @GetCurrentCompanyGroupName()
                         </p>
                     </div>
                     <div class="pl-2 pl-xl-3">
@@ -53,7 +53,7 @@
                                         <select id="inputGrupo" class="p-1" @bind="SelectedGroup.Rowid">
                                             @foreach (var group in CompanyGroups)
                                             {
-                                                <option value="@group.Rowid">Grupo @group.Rowid</option>
+                                                <option value="@group.Rowid">@group.Name</option>
                                             }
                                         </select>
                                         <button>
@@ -88,10 +88,8 @@
                 </p>
             </div>
             <div class="sdk_logo pl-3">
-                <img class="whcm_logo_head d-none d-md-block"
-                    src="_content/Siesa.SDK.Frontend/assets/img/LogoSiesaWHCMBlanco.png">
-                <img class="whcm_logo_head d-block d-md-none"
-                    src="_content/Siesa.SDK.Frontend/assets/img/LogoSiesaWHCMGris.svg">
+                <img class="whcm_logo_head d-none d-md-block" src="_content/Siesa.SDK.Frontend/assets/img/LogoSiesaEnterpriseBlanco.svg" alt="Logo siesa Enterprise 2.0">
+                    <img class="whcm_logo_head d-block d-md-none" src="_content/Siesa.SDK.Frontend/assets/img/LogoSiesaEnterpriseGris.svg" alt="Logo siesa Enterprise 2.0">
             </div>
         </div>
 
@@ -139,6 +137,18 @@
     private void ToogleConnect()
     {
         ConnectEnabled = !ConnectEnabled;
+    }
+
+    private string GetCurrentCompanyGroupName()
+    {
+        try
+        {
+            return SelectedGroup.Name;
+        }
+        catch (Exception)
+        {
+            return AuthenticationService.GetRowidCompanyGroup().ToString();
+        }
     }
 
 

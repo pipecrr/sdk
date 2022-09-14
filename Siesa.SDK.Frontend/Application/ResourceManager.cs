@@ -19,8 +19,11 @@ namespace Siesa.SDK.Frontend.Application
         public Task<string> GetResource(string resourceTag, IAuthenticationService authenticationService);
 
         public Task<string> GetResourcesByModule(Int64 moduleRowid, Int64 cultureRowid);
+        public Task<Dictionary<string, string>> GetResourceByCulture(int rowidCulture);
         public Task<string> GetEnumValues(string enumName, Int64 cultureRowid, Int64 moduleRowid);
 
+        public Task GetResourceByContainId(Int64 cultureRowid);
+        Dictionary<long, Dictionary<string, string>> GetResourceValuesDict();
     }
     public class ResourceManager: IResourceManager
     {
@@ -164,6 +167,38 @@ namespace Siesa.SDK.Frontend.Application
         public async Task<string> GetEnumValues(string enumName, Int64 cultureRowid, Int64 moduleRowid)
         {
             return "";
+        }
+
+        public async Task GetResourceByContainId(long cultureRowid)
+        {
+            var request = await Backend.Call("GetResourcesByContainId", cultureRowid);
+            if(request.Success)
+            {
+                var resources = request.Data as List<Tuple<Int64, string, string>>;
+                if(resources != null)
+                {
+                    if (!resourceValuesDict.ContainsKey(cultureRowid))
+                    {
+                        resourceValuesDict[cultureRowid] = new Dictionary<string, string>();
+                    }
+                    foreach (var resource in resources)
+                    {
+                        resourceValuesDict[cultureRowid][resource.Item2] = resource.Item3;
+                        resourceDict[resource.Item1] = resource.Item2;
+                    }
+                }
+            }
+        }
+
+        public async Task<Dictionary<string, string>> GetResourceByCulture(int rowidCulture)
+        {            
+            var resource = resourceValuesDict[rowidCulture];
+           return resource;
+        }
+
+        public Dictionary<long, Dictionary<string, string>> GetResourceValuesDict()
+        {
+            return resourceValuesDict;
         }
     }
 }

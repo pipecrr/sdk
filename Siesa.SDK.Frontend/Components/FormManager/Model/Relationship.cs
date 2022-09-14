@@ -17,5 +17,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         public RelationshipType Type { get; set; }
         public string RelatedBusiness { get; set; }
         public string RelatedField { get; set; }
+        public bool Enabled {get;set;} = true;
     }
 }

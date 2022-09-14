@@ -6,7 +6,8 @@ using System;
 using System.Threading.Tasks;
 using System.Linq;
 using Siesa.SDK.Shared.Services;
-
+using Siesa.SDK.Shared.DTOS;
+using Newtonsoft.Json;
 
 namespace Siesa.SDK.Frontend.Services
 {
@@ -20,7 +21,7 @@ namespace Siesa.SDK.Frontend.Services
 
         private short CustomRowidCulture = 0;
 
-
+        private SDKDbConnection SelectedConnection = new SDKDbConnection();
 
         public string UserToken { get; private set; } = "";
 
@@ -59,17 +60,25 @@ namespace Siesa.SDK.Frontend.Services
         {
             UserToken = await _localStorageService.GetItemAsync<string>("usertoken");
             CustomRowidCulture = await _localStorageService.GetItemAsync<short>("customrowidculture");
+            var selectedConnection = await _localStorageService.GetItemAsync<string>("selectedConnection");
+            try
+            {
+                SelectedConnection = JsonConvert.DeserializeObject<SDKDbConnection>(selectedConnection);
+            }
+            catch (System.Exception)
+            {
+            }
             //Console.WriteLine($"UserToken: {UserToken}");
         }
 
-        public async Task Login(string username, string password)
+        public async Task Login(string username, string password, short rowIdDBConnection)
         {
             var BLuser = _backendRouterService.GetSDKBusinessModel("BLUser", this);
             if (BLuser == null)
             {
                 throw new Exception("Login Service not found");
             }
-            var loginRequest = await BLuser.Call("SignIn", username, password);
+            var loginRequest = await BLuser.Call("SignIn", username, password, rowIdDBConnection);
             if (loginRequest.Success)
             {
                 UserToken = loginRequest.Data;
@@ -100,6 +109,35 @@ namespace Siesa.SDK.Frontend.Services
         {
             UserToken = token;
             await _localStorageService.SetItemAsync("usertoken", UserToken);
+        }
+
+        public async Task SetSelectedConnection(SDKDbConnection selectedConnection)
+        {
+            SelectedConnection = selectedConnection;
+            try
+            {
+                await _localStorageService.SetItemAsync("selectedConnection", JsonConvert.SerializeObject(selectedConnection));
+            }
+            catch (System.Exception)
+            {
+            }
+        }
+
+        public SDKDbConnection GetSelectedConnection()
+        {
+            return SelectedConnection;
+        }
+
+        public string GetConnectionLogo()
+        {
+            if(SelectedConnection != null && SelectedConnection.Rowid != 0 && !string.IsNullOrEmpty(SelectedConnection.LogoUrl)){
+                return SelectedConnection.LogoUrl;
+            }
+            return "_content/Siesa.SDK.Frontend/assets/img/login_logo_empresa.png";
+        }
+        public string GetConnectionStyle()
+        {
+                return SelectedConnection.StyleUrl;
         }
 
         public async Task SetCustomRowidCulture(short rowid)

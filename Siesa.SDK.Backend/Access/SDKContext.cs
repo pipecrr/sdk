@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.DependencyInjection;
-//using Siesa.SDK.Backend.Interceptors;
 using Siesa.SDK.Entities;
 using Siesa.SDK.Entities.Converters;
 using Siesa.SDK.Shared.Logs.DataChangeLog;
@@ -13,11 +12,13 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Siesa.SDK.Shared.Utilities;
+using Siesa.SDK.Shared.DTOS;
 using Siesa.SDK.Backend.Extensions;
+
 
 namespace Siesa.SDK.Backend.Access
 {
-    public abstract class SDKContext: DbContext
+    public class SDKContext: DbContext
     {
 	public DbSet<E00230_Flex>? E00230_Flex { get; set; }
 
@@ -102,7 +103,7 @@ namespace Siesa.SDK.Backend.Access
 
         private IServiceProvider ServiceProvider {get; set;}
 
-        public SDKContext(DbContextOptions options) : base(options)
+       public SDKContext(DbContextOptions options) : base(options)
         {
             ChangeTracker.LazyLoadingEnabled = false;
         }
@@ -148,16 +149,16 @@ namespace Siesa.SDK.Backend.Access
                 }
             }
 
-            if(CurrentUser == null){
-                throw new Exception("Invalid User");
-            }
+            // if(CurrentUser == null){
+            //     throw new Exception("Invalid User");
+            // }
 
             foreach (var entry in ChangeTracker.Entries())
             {
                 //Check if the entry inherits from the BaseAudit<> class
                 if(Utilities.IsAssignableToGenericType(entry.Entity.GetType(), typeof(BaseAudit<>)))
                 {
-                    var loggedUser = CurrentUser.Rowid; //TODO: Get logged user
+                    var loggedUser = 1; //TODO: Get logged user
 
                     entry.Context.Entry(entry.Entity).Property("LastUpdateDate").CurrentValue = DateTime.Now;
                     entry.Context.Entry(entry.Entity).Property("RowidUserLastUpdate").CurrentValue = loggedUser;
@@ -165,10 +166,15 @@ namespace Siesa.SDK.Backend.Access
                     if (entry.State == EntityState.Added)
                     {
                         entry.Context.Entry(entry.Entity).Property("RowidUserCreates").CurrentValue = loggedUser;
+                        //if created date is not set, set it to now
+                        if (entry.Context.Entry(entry.Entity).Property("CreationDate").CurrentValue == null)
+                        {
+                            entry.Context.Entry(entry.Entity).Property("CreationDate").CurrentValue = DateTime.Now;
+                        }
                     }
                 }else if(Utilities.IsAssignableToGenericType(entry.Entity.GetType(), typeof(BaseCompanyGroup<>)))
                 {
-                    entry.Context.Entry(entry.Entity).Property("RowidCompanyGroup").CurrentValue = CurrentUser.RowidCompanyGroup; 
+                    entry.Context.Entry(entry.Entity).Property("RowidCompanyGroup").CurrentValue = 1; 
                 }
 
             }

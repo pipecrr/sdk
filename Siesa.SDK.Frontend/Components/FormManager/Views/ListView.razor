@@ -1,9 +1,10 @@
 @using SDK.Components.Visualization
 @using Siesa.SDK.Frontend.Components.FormManager.Fields
-@using Siesa.SDK.Entities;
-@if (ErrorMsg != "")
+@using Siesa.SDK.Entities
+
+@if (Loading == true)
 {
-    <label>@ErrorMsg</label>
+    <ResourceViewer ResourceTag="Generic.Loading" />
 }
 else
 {
@@ -18,7 +19,7 @@ else
         AllowSorting="true" 
         Data="@data" 
         TItem="object" 
-        IsLoading="@Loading"
+        IsLoading="@LoadingData"
         @ref="@_gridRef" 
         Count="@count" 
         LoadData="@LoadData" 
@@ -32,37 +33,43 @@ else
         AllowColumnResize="true"
         @key="needUpdate"
         >
+        <EmptyTemplate>
+            <div class="sdk-empty-list">
+                <i class="fa-solid fa-file"></i>
+                <p><ResourceViewer ResourceTag="Generic.NoData" /></p>
+            </div>
+        </EmptyTemplate>
         <Columns>
-            @if(ListViewModel.ShowActions)
-            {
-                <RadzenDataGridColumn TItem="object" Title="Acciones" Width="100px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" HeaderCssClass="untruncate-grid-column-action">
-                    <HeaderTemplate>
-                        @if(IsSubpanel && AllowCreate){
-                        <span
-                            class="oi oi-plus cursor-pointer" @onclick="() => GoToCreate()"></span>
-                        }else{
-                            <span><ResourceViewer ResourceTag="Generic.Actions" /></span>
-                        }                        
-                    </HeaderTemplate>
-                
-                    <Template Context="data">
-                        <div class="action-buttons d-flex justify-content-center">
-                            @if(AllowEdit){
-                                <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToEdit(((IBaseSDK)data).GetRowid())"><i
-                                class="fa-solid fa-pen"></i></button>
-                            }
-                            
-                            
-                            @if(IsSubpanel && AllowDelete){
-                                <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToDelete(((IBaseSDK)data).GetRowid(), data.ToString())"><span
-                                class="fa-solid fa-trash-can"></span></button>
-                                
-                            }
-                            @* <button class="btn btn-link grid-btn-link"
-                            @onclick="() => GoToDetail(((BaseSDK<>)data).Rowid)"><span class="oi oi-eye"></span></button> *@
-                        </div>
-                    </Template>
-                </RadzenDataGridColumn>
+        @if(ListViewModel.ShowActions)
+        {
+            <RadzenDataGridColumn TItem="object" Title="Acciones" Width="100px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" HeaderCssClass="untruncate-grid-column-action">
+                <HeaderTemplate>
+                    @if(IsSubpanel && AllowCreate && CanCreate){
+                    <span
+                        class="oi oi-plus cursor-pointer" @onclick="() => GoToCreate()"></span>
+                    }else{
+                        <span><ResourceViewer ResourceTag="Generic.Actions" /></span>
+                    }                        
+                </HeaderTemplate>
+               
+                <Template Context="data">
+                    <div class="action-buttons d-flex justify-content-center">
+                        @if(CanEdit && AllowEdit){
+                            <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToEdit(((IBaseSDK)data).GetRowid())"><i
+                            class="fa-solid fa-pen"></i></button>
+                        }
+                        
+                        
+                        @if(CanDelete && IsSubpanel && AllowDelete){
+                            <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToDelete(((IBaseSDK)data).GetRowid(), data.ToString())"><span
+                            class="fa-solid fa-trash-can"></span></button>
+
+                        }
+                        @* <button class="btn btn-link grid-btn-link"
+                        @onclick="() => GoToDetail(((BaseSDK<>)data).Rowid)"><span class="oi oi-eye"></span></button> *@
+                    </div>
+                </Template>
+            </RadzenDataGridColumn>
             }
             @foreach (var field in ListViewModel.Fields)
             {
@@ -106,10 +113,15 @@ else
                                 <span><ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" /></span>
                             </HeaderTemplate>
                             <Template Context="data">
-                                @if(OnClickDetail != null){
-                                    <a href="#" @onclick="() => GoToDetail(((IBaseSDK)data).GetRowid())" @onclick:preventDefault>@data</a>
+                                @if(CanDetail)
+                                {
+                                    @if(OnClickDetail != null){
+                                        <a href="#" @onclick="() => GoToDetail(((IBaseSDK)data).GetRowid())" @onclick:preventDefault>@data</a>
+                                    }else{
+                                        <a href="/@BusinessName/detail/@(((IBaseSDK)data).GetRowid())/">@data</a>
+                                    }
                                 }else{
-                                    <a href="/@BusinessName/detail/@(((IBaseSDK)data).GetRowid())/">@data</a>
+                                    @data
                                 }
                             </Template>
                         </RadzenDataGridColumn>
@@ -168,7 +180,10 @@ else
         <SetTopBar HasExtraButtons="@(ListViewModel.Buttons != null && ListViewModel.Buttons.Count > 0 ? true: false)">
             <TopBarTitle><ResourceViewer ResourceTag="@($"{BusinessName}.Plural")" /></TopBarTitle>
             <TopBarButtons>
-                <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus" />
+                @if(CanCreate)
+                {
+                    <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus" />
+                }
             </TopBarButtons>
             <TopBarExtraButtons>
                 @foreach (var btn in ListViewModel.Buttons)

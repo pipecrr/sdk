@@ -7,12 +7,12 @@
 
 @if(!String.IsNullOrEmpty(form) && SubmitFormOnClick)
 {
-    <button class="btn btn-sm layout_btn_standar-sm ml-1" data-toggle="tooltip"
+    <button class="btn btn-sm layout_btn_standar-sm ml-1" data-toggle="tooltip" disabled="@(!Enabled)"
         data-placement="top" title="@Text" form="@form" type="submit">
         <i class="@IconCssClass"></i>
     </button>
 }else{
-    <button class="btn btn-sm layout_btn_standar-sm ml-1" data-toggle="tooltip"
+    <button class="btn btn-sm layout_btn_standar-sm ml-1" data-toggle="tooltip" disabled="@(!Enabled)"
         data-placement="top" title="@Text" form="@form" @onclick="@OnClick"  @onclick:preventDefault>
         <i class="@IconCssClass"></i>
     </button>
@@ -30,6 +30,8 @@
     [Parameter] public bool SubmitFormOnClick { get; set; } =  false;
 
     [Parameter] public string IconCssClass { get; set; }
+
+    [Parameter] public bool Enabled { get; set; } = true;
 
     private string Text { get; set; }
 

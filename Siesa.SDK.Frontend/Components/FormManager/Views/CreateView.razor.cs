@@ -16,6 +16,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             DefaultViewdefName = String.IsNullOrEmpty(DefaultViewdefName) ? "create" : DefaultViewdefName;
             await base.OnInitializedAsync();
         }
+
+        protected override async Task CheckPermissions()
+        {
+            await base.CheckPermissions();
+            if(!CanCreate)
+            {
+                NotificationService.ShowError("Generic.Unauthorized");
+                NavigationService.NavigateTo("/", replace:true);
+            }
+        }
         
     }
 }

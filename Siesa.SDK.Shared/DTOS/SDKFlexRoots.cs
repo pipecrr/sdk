@@ -19,6 +19,7 @@ namespace Siesa.SDK.Shared.DTOS
     public class SDKFlexRootMock
     {
         public List<SDKFlexModulesList> modules_list { get; set; }
+        public SDKFlexRequestSaveData report_header_data { get; set; }
     }
 
 

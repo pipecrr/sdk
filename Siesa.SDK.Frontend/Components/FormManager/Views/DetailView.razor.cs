@@ -38,13 +38,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter]
         public bool ShowDeleteButton { get; set; } = true;
 
+        public Boolean Loading = true;
+
         [Inject] public IJSRuntime JSRuntime { get; set; }
         [Inject] public NavigationManager NavManager { get; set; }
 
-        [Inject] public NavigationService NavigationService{get; set;}
+        [Inject] public NavigationService NavigationService { get; set; }
         [Inject]
         public IBackendRouterService BackendRouterService { get; set; }
 
+        [Inject] public IFeaturePermissionService FeaturePermissionService { get; set; }
+        [Inject] public IAuthenticationService AuthenticationService { get; set; }
+
+        [Inject] public SDKNotificationService NotificationService { get; set; }
 
         protected FormViewModel FormViewModel { get; set; } = new FormViewModel();
         protected List<Panel> Panels { get { return FormViewModel.Panels; } }
@@ -52,6 +58,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public Boolean ModelLoaded = false;
 
         public String ErrorMsg = "";
+
+        protected bool CanCreate;
+        protected bool CanEdit;
+        protected bool CanDelete;
+        protected bool CanDetail;
+        protected bool CanList;
+
 
         private void setViewContext(List<Panel> panels)
         {
@@ -78,12 +91,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         }
 
-        protected void InitView(string bName = null)
+        protected async Task InitView(string bName = null)
         {
+            Loading = true;
             if (bName == null)
             {
                 bName = BusinessName;
             }
+            await CheckPermissions();
             var metadata = BackendRouterService.GetViewdef(bName, "detail");
             if (metadata == null || metadata == "")
             {
@@ -110,10 +125,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         {
                             relationship.ResourceTag = $"{BusinessName}.Relationship.{relationship.Name}";
                         }
+                        var canListRel = await FeaturePermissionService.CheckUserActionPermission(relationship.RelatedBusiness, 4, AuthenticationService);
+                        relationship.Enabled = canListRel;
                     }
                 }
                 ModelLoaded = true;
             }
+
+            Loading = false;
             StateHasChanged();
         }
 
@@ -124,9 +143,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 if (value != null)
                 {
+                    Loading = false;
                     this.ModelLoaded = false;
                     ErrorMsg = "";
-                    InitView(value);
+                    await InitView(value);
                 }
             }
         }
@@ -207,6 +227,30 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             else if (!string.IsNullOrEmpty(button.Action))
             {
                 Evaluator.EvaluateCode(button.Action, BusinessObj);
+            }
+        }
+
+        protected virtual async Task CheckPermissions()
+        {
+            if (FeaturePermissionService != null)
+            {
+                try
+                {
+                    CanList = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 4, AuthenticationService);
+                    CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 1, AuthenticationService);
+                    CanEdit = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 2, AuthenticationService);
+                    CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 3, AuthenticationService);
+                    CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 5, AuthenticationService);
+                }
+                catch (System.Exception)
+                {
+                }
+
+                if (!CanDetail)
+                {
+                    NotificationService.ShowError("Generic.Unauthorized");
+                    NavigationService.NavigateTo("/", replace: true);
+                }
             }
         }
     }
