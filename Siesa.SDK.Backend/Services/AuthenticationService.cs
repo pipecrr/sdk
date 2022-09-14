@@ -4,6 +4,7 @@ using System;
 using System.Threading.Tasks;
 using System.Linq;
 using Siesa.SDK.Shared.Services;
+using Siesa.SDK.Shared.DTOS;
 
 namespace Siesa.SDK.Backend.Services
 {
@@ -71,6 +72,26 @@ namespace Siesa.SDK.Backend.Services
         }
 
         public short GetRowidCompanyGroup()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SetSelectedConnection(SDKDbConnection selectedConnection)
+        {
+            throw new NotImplementedException();
+        }
+
+        public SDKDbConnection GetSelectedConnection()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetConnectionLogo()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetConnectionStyle()
         {
             throw new NotImplementedException();
         }
