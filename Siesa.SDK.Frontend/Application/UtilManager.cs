@@ -14,6 +14,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         private IAuthenticationService AuthenticationService;
         private IResourceManager ResourceManager;
         private ILocalStorageService _localStorageService;
+        private Dictionary<Int64, Dictionary<string, string>> resourceValuesDictUtil = new Dictionary<Int64, Dictionary<string, string>>();
         public UtilsManager(IAuthenticationService authenticationService, IResourceManager resourceManager, ILocalStorageService localStorageService)
         {
             AuthenticationService = authenticationService;
@@ -51,7 +52,20 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
                 if(AuthenticationService.User != null){
                     cultureRowid = AuthenticationService.GetRoiwdCulture();
                     await ResourceManager.GetResourceByContainId(cultureRowid);
-                }                
+                }
+                resourceValuesDictUtil = ResourceManager.GetResourceValuesDict();
+        }
+
+        public async Task<string> GetResourceFlex(string resourceTag, Int64 cultureRowid){
+            if(resourceValuesDictUtil.Count == 0){
+                return resourceTag;
+            }
+            if(resourceValuesDictUtil.ContainsKey(cultureRowid)){
+                if(resourceValuesDictUtil[cultureRowid].ContainsKey(resourceTag)){
+                    return resourceValuesDictUtil[cultureRowid][resourceTag];
+                }
+            }
+            return resourceTag;
         }
 
         public async Task AddResourceLocalStorage(int rowidCulture){

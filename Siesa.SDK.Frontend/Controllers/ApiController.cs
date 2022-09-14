@@ -52,7 +52,9 @@ namespace Siesa.SDK.Frontend.Controllers
                 {
                     int index = Array.IndexOf(paramNames, x.Key);
                     var paramType = parameters[index].ParameterType;
-                    args[index] = Convert.ChangeType(x.Value.ToString(), paramType);
+                    if(!StringValues.IsNullOrEmpty(x.Value) || paramType == typeof(string)){
+                        args[index] = Convert.ChangeType(x.Value.ToString(), paramType);
+                    }
                 });
 
             return args;
@@ -153,7 +155,7 @@ namespace Siesa.SDK.Frontend.Controllers
 
                                             var jsonBody = await new StreamReader(Request.Body).ReadToEndAsync();
                                             var jsonObj = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonBody);
-                                            IEnumerable<KeyValuePair<string, StringValues>> form = jsonObj.Select(x => new KeyValuePair<string, StringValues>(x.Key, x.Value.ToString()));
+                                            IEnumerable<KeyValuePair<string, StringValues>> form = jsonObj.Select(x => new KeyValuePair<string, StringValues>(x.Key, x.Value==null?null:x.Value.ToString()));
                                             args = GetArgs(parameters, form);
                                         }
                                         catch (System.Exception)

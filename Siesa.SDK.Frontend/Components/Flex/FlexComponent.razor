@@ -132,7 +132,7 @@
 
     void ExportToExcel()
     {
-        JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.dataGridRef.instance.exportToExcel(false)");
+        JSRuntime.InvokeAsync<object>("oreports_app_table_flexdebug.dataGridRef.instance.exportToExcel", false);
     }
 
     void GoToCreate()
