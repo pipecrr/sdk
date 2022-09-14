@@ -137,7 +137,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        WatermarkText = await UtilsManager.GetResource("Custom.TestConnection");
         IsDefaultArea = true;
         base.OnInitializedAsync();
         errorBoundary = new ErrorBoundary();
@@ -146,6 +145,7 @@
 
     private async Task PoblateWatermark()
     {
+        WatermarkText = await UtilsManager.GetResource("Custom.TestConnection");
         try
         {
             if(_jsModule == null)
@@ -157,6 +157,7 @@
         catch (Exception)
         {
         }
+        StateHasChanged();
     }
 
     private async Task ImportJs()
