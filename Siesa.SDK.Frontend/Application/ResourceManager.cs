@@ -21,7 +21,7 @@ namespace Siesa.SDK.Frontend.Application
         public Task<string> GetResourcesByModule(Int64 moduleRowid, Int64 cultureRowid);
         public Task<Dictionary<string, string>> GetResourceByCulture(int rowidCulture);
         public Task<string> GetEnumValues(string enumName, Int64 cultureRowid, Int64 moduleRowid);
-
+        public Task<Dictionary<byte,string>> GetEnumValues(string enumName, Int64 cultureRowid);
         public Task GetResourceByContainId(Int64 cultureRowid);
         Dictionary<long, Dictionary<string, string>> GetResourceValuesDict();
     }
@@ -167,6 +167,17 @@ namespace Siesa.SDK.Frontend.Application
         public async Task<string> GetEnumValues(string enumName, Int64 cultureRowid, Int64 moduleRowid)
         {
             return "";
+        }
+
+        public async Task<Dictionary<byte, string>> GetEnumValues(string enumName, Int64 cultureRowid)
+        {
+            var request = await Backend.Call("GetEnumValues", enumName, cultureRowid);
+
+            if(request.Success)
+            {
+                return request.Data as Dictionary<byte, string>;
+            }
+            return null;
         }
 
         public async Task GetResourceByContainId(long cultureRowid)

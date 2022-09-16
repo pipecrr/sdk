@@ -56,17 +56,27 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
                 resourceValuesDictUtil = ResourceManager.GetResourceValuesDict();
         }
 
-        public async Task<string> GetResourceFlex(string resourceTag, Int64 cultureRowid){
+        public async Task<string> GetResourceFlex(string resourceTag, Int64 cultureRowid = 0){
             if(resourceValuesDictUtil.Count == 0){
                 return resourceTag;
             }
-            if(resourceValuesDictUtil.ContainsKey(cultureRowid)){
-                if(resourceValuesDictUtil[cultureRowid].ContainsKey(resourceTag)){
-                    return resourceValuesDictUtil[cultureRowid][resourceTag];
+            if(cultureRowid != 0){
+                if(resourceValuesDictUtil.ContainsKey(cultureRowid)){
+                    if(resourceValuesDictUtil[cultureRowid].ContainsKey(resourceTag)){
+                        return resourceValuesDictUtil[cultureRowid][resourceTag];
+                    }
+                }
+            }
+            if(AuthenticationService.User != null){
+                cultureRowid = AuthenticationService.GetRoiwdCulture();
+                if(resourceValuesDictUtil.ContainsKey(cultureRowid)){
+                    if(resourceValuesDictUtil[cultureRowid].ContainsKey(resourceTag)){
+                        return resourceValuesDictUtil[cultureRowid][resourceTag];
+                    }
                 }
             }
             return resourceTag;
-        }
+        }       
 
         public async Task AddResourceLocalStorage(int rowidCulture){
             var resource = ResourceManager.GetResourceByCulture(rowidCulture).Result;
@@ -75,6 +85,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
             await _localStorageService.SetItemAsync("resources", encriptResource);
         }
 
-        
+        public async Task<Dictionary<byte,string>> GetEnumValues(string enumName, Int64 rowidCulture){
+
+            return await ResourceManager.GetEnumValues(enumName, rowidCulture);
+        }
     }
 }   

@@ -156,7 +156,8 @@
             ds => @<ConfirmDelete DialogService=@ds />,
             new DialogOptions(){ShowTitle=false, Width="400"});
         if(dialog != null && dialog == true){
-            //await Business.DeleteAsync();
+            Business.BaseObj.Rowid = _flexRowId;
+            await Business.DeleteAsync();
             Navigation.NavigateTo($"/{_blName}/");
         }
         //StateHasChanged();

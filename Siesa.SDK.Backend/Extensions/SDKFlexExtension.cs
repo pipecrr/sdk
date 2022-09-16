@@ -4,25 +4,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Siesa.SDK.Backend.Access;
 using Siesa.SDK.Entities;
 using Siesa.SDK.Shared.Business;
 using Siesa.SDK.Shared.DTOS;
+using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Shared.Utilities;
-
 namespace Siesa.SDK.Backend.Extensions
 {
     public static class SDKFlexExtension
     {
         private static Assembly _assemblyInclude = typeof(Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions).Assembly;
 
+
         private static Assembly _assemblySelect = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
 
         private static Assembly _assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
-
-        internal static dynamic SDKFlexPreviewData(SDKContext Context, SDKFlexRequestData requestData, bool setTop = true)
+        
+        internal static dynamic SDKFlexPreviewData(SDKContext Context, SDKFlexRequestData requestData, IAuthenticationService authenticationService, bool setTop = true)
         {
+            var rowidCulture = authenticationService.User.RowidCulture;
             List<SDKFlexColumn> columns = requestData.columns;
             if (columns.Count == 0)
             {
@@ -45,6 +49,9 @@ namespace Siesa.SDK.Backend.Extensions
                 List<string> relatedColumns = new List<string>();
 
                 var includeMethod = typeof(IQueryable<object>).GetExtensionMethod(_assemblyInclude, "Include", new[] { typeof(IQueryable<object>), typeof(string) });
+                
+                Dictionary<string,Dictionary<byte,string>> enumsDict = new Dictionary<string, Dictionary<byte, string>>();
+
                 foreach (SDKFlexColumn column in columns)
                 {
                     if (column.sortType != null)
@@ -55,9 +62,7 @@ namespace Siesa.SDK.Backend.Extensions
                     var columnPath = column.path.Split("::");
                     if (columnPath.Count() == 1)
                     {
-                        
-                            strColumns.Add("np(" + column.name + ")" + " as " + column.key_name);
-                        
+                            strColumns.Add("np(" + column.name + ")" + " as " + column.key_name);                        
                     }
                     else
                     {
@@ -67,59 +72,16 @@ namespace Siesa.SDK.Backend.Extensions
                             var includeMethodGeneric = includeMethod.MakeGenericMethod(entityType);
                             contextSet = includeMethodGeneric.Invoke(contextSet, new object[] { contextSet, relatedColumnInclude });
                             relatedColumns.Add(relatedColumnInclude);
-                        }
-                        
-                            strColumns.Add($"np({relatedColumnInclude}.{column.name}) as {column.key_name}");
-                        
+                        }                        
+                        strColumns.Add($"np({relatedColumnInclude}.{column.name}) as {column.key_name}");                        
 
                     }
                     if (column.type.Equals("SelectField"))
-                    {
-                        var enumT = Context.Set<E00025_EnumValue>()
-                        .Include(x => x.Enum)
-                        .Where(
-                            x =>
-                            x.Enum.Id == "enum" + column.name)
-                        .Select(x => new E00025_EnumValue { Id = x.Enum.Id + "." + x.Id, Value = x.Value });
-
-                        var ejumJoin = enumT.Join(
-                            Context.Set<E00022_ResourceDescription>(),
-                            x => "Enum." + x.Id,
-                            x => x.Resource.Id,
-                            (x, y) => new { x , y })
-                            .Where(x => x.y.RowidCulture == 1);
-                        
-  /*                      var d = contextSet as IQueryable<object>;
-                        d.Join(
-                            ejumJoin, 
-                            x => x.GetType().GetProperty(column.name).GetValue(x), x => x.Value, (x, y) => new { x, y.Description })
-                            .Select(x => new { x.x, x.Description })
-                            .Select($"new (np({column.name}) as {column.key_name}, Description as {column.key_name}_Description)");
-*/
-                       /* var _assemblyJoin = typeof(System.Linq.Queryable).Assembly;
-
-                        var joinMethod = typeof(IQueryable<object>).GetExtensionMethod(_assemblyJoin, "Join", new[] { typeof(IQueryable<object>), typeof(IEnumerable<object>), typeof(Expression<Func<object, object>>), typeof(Expression<Func<object, object>>), typeof(Expression<Func<object, object, object>>), typeof(Expression<Func<object, bool>>) });
-
-                        ParameterExpression pe1 = Expression.Parameter(typeof(E00025_EnumValue), "x");
-                        var funcExpression1 = typeof(Func<,>).MakeGenericType(new Type[] { typeof(E00025_EnumValue), typeof(object) });
-
-                        var returnExp1 = Expression.Lambda(funcExpression1, Expression.PropertyOrField(pe1, "Id"), pe1);
-
-                        ParameterExpression pe2 = Expression.Parameter(typeof(E00022_ResourceDescription), "x");
-                        var funcExpression2 = typeof(Func<,>).MakeGenericType(new Type[] { typeof(E00022_ResourceDescription), typeof(object) });
-                        
-                        var ce = Expression.Constant("Resource");
-                        var returnExp2 = Expression.Lambda(funcExpression2, Expression.PropertyOrField(pe2, ce+".Id"), pe2);
-
-
-                        var joinMethodGeneric = joinMethod.MakeGenericMethod(typeof(object), typeof(IEnumerable<object>), typeof(object), typeof(object), typeof(object));*/
-                        
-                        /*var prb = contextSet.Join(
-                            ejumJoin,
-                            x => x.GetType().GetProperty(column.name).GetValue(x),
-                            x => x.Value,
-                            (x, y) => new { x, y.Description })
-                            .Select(x => new { x.x, x.Description });*/
+                    {   
+                        if(!enumsDict.ContainsKey(column.key_name)){
+                            Dictionary<byte,string> enumValue = GetEnumValues(column.name, rowidCulture, Context);
+                            enumsDict.Add(column.key_name, enumValue);
+                        }
                     }
                 }
 
@@ -145,10 +107,25 @@ namespace Siesa.SDK.Backend.Extensions
                 var dynamicListMethod = typeof(IEnumerable).GetExtensionMethod(_assemblyDynamic, "ToDynamicList", new[] { typeof(IEnumerable) });
                 var dynamicList = dynamicListMethod.Invoke(contextSet, new object[] { contextSet });
 
-                var resource = dynamicList;
-                if (resource != null)
+                var jsonResource = JsonConvert.SerializeObject(dynamicList);
+                var resourceDict = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(jsonResource);
+            
+                if(enumsDict.Count>0){
+                    foreach (var item in resourceDict){
+                        foreach (var enumkey in enumsDict.Keys)
+                        {
+                            var enumValue = enumsDict[enumkey];
+                            var itemValue = item[enumkey];
+                            var description = enumValue[byte.Parse(itemValue.ToString())];
+                            item[enumkey] = description;
+                        }                       
+                    }
+                    return new ActionResult<dynamic>() { Data = resourceDict};
+                }
+
+                if (resourceDict != null)
                 {
-                    return new ActionResult<dynamic>() { Data = resource };
+                    return new ActionResult<dynamic>() { Data = resourceDict };
                 }
             }
             catch (Exception e)
@@ -545,6 +522,55 @@ namespace Siesa.SDK.Backend.Extensions
         {
             var r = type.GetMethod(nameMethod, new Type[] { type });
             return r;
+        }
+
+        public static Dictionary<byte, string> GetEnumValues(string enumName, Int64 cultureRowid, SDKContext context){
+            var enumValues = context.Set<E00025_EnumValue>().Where(x => x.Enum.Id == "enum"+enumName).Join(
+                context.Set<E00022_ResourceDescription>(),
+                x =>  "Enum." + x.Enum.Id + "." + x.Id,
+                x => x.Resource.Id,
+                (x, y) => new { x.Value, y.Description, y.RowidCulture }).Where(x => x.RowidCulture == cultureRowid)
+                .ToDictionary(x => x.Value, x => x.Description);
+
+            if (enumValues.Keys.Count > 0)
+            {
+                return enumValues;
+            }
+            else
+            {
+                var cultureLanguageEnum = context.Set<E00021_Culture>()
+                .Where(x => x.Rowid == cultureRowid)
+                .Select(x => x.LanguageCode).FirstOrDefault();
+
+                if (cultureLanguageEnum == null)
+                {
+                    return null;
+                }
+
+                var mainCultureRowid = context.Set<E00021_Culture>()
+                .Where(x => x.LanguageCode == cultureLanguageEnum && x.CountryCode == null)
+                .Select(x => x.Rowid).FirstOrDefault();
+
+                if (mainCultureRowid == 0)
+                {
+                    return null;
+                }
+
+                enumValues = context.Set<E00025_EnumValue>()
+                .Where(x => x.Enum.Id == enumName)
+                .Join(context.Set<E00022_ResourceDescription>(), x => "Enum." + x.Enum.Id + "." + x.Id, x => x.Resource.Id,
+                (x, y) => new { x.Value, y.Description, y.RowidCulture })
+                .Where(x => x.RowidCulture == mainCultureRowid)
+                .ToDictionary(x => x.Value, x => x.Description);
+
+                if (enumValues != null)
+                {
+                    return enumValues;
+                }
+
+                return null;
+            }
+            
         }
     }
 }
