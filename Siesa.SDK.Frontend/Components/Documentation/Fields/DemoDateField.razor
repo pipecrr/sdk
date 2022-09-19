@@ -1,0 +1,49 @@
+@page "/DateField"
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.Visualization
+@using System
+@layout EmptyLayout
+
+<div class="container-fluid">
+    <div class="container-fluid">
+            <h2>SDKDateField</h2> 
+            <p>Demonstration and configuration of the SDKDateField component</p> 
+    </div>
+    <div class="row px-3"> 
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>Default</h3>
+                <SDKDateField @bind-Value="@DateTimeValue"/>
+                <p>
+                    <b>@DateTimeValue.ToString("dddd, dd MMMM yyyy")</b>
+                </p>
+            </SDKCard>
+        </div>
+
+        <div class="col-md-6 p-3">
+            <SDKCard>
+            <h3>Placeholder</h3>
+            <SDKDateField @bind-Value="@DateTimeValue2" Placeholder="Select a date..."/>
+            </SDKCard>
+        </div>
+
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>ReadOnly</h3>
+                <SDKDateField @bind-Value="@DateTimeValue3" ReadOnly="true"/>
+                <p>
+                    Date: <b>@DateTimeValue3.ToString("dddd, dd MMMM yyyy")</b>
+                </p>
+            </SDKCard>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    DateTime DateTimeValue { get; set; } = DateTime.Now;
+    DateTime DateTimeValue2 { get; set; } = DateTime.Now;
+    DateTime DateTimeValue3 { get; set; } = DateTime.Now;
+
+    //TODO: Agregar mas Parametros para personalizar mas el componente. PlaceHolder*
+}

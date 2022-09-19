@@ -1,0 +1,43 @@
+@page "/BooleanField"
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Fields
+@layout EmptyLayout
+
+<div class="container-fluid">
+    <div class="container-fluid">
+            <h2>SDKBooleanField</h2> 
+            <p>Demonstration and configuration of the SDKBooleanField component</p> 
+    </div>
+    <div class="row px-3"> 
+        <div class="col-md-6 p-3">
+            <SDKCard >
+                <SDKBooleanField @bind-Value="@SelectPrueba">
+                    @SelectPrueba
+                </SDKBooleanField>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard >
+                <SDKBooleanField @bind-Value="@SelectPrueba2" Enabled="@Habilitado">
+                    @SelectPrueba2
+                </SDKBooleanField>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard >
+            <SDKBooleanField @bind-Value="@SelectPrueba3" Enabled="true">
+                @SelectPrueba3
+            </SDKBooleanField>
+            </SDKCard>
+        </div>
+    </div>
+</div>
+
+@code{
+
+public bool SelectPrueba;
+public bool SelectPrueba2;
+public bool SelectPrueba3;
+public bool Habilitado = true; //Valor por Defecto False
+
+}

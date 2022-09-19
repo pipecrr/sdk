@@ -1,0 +1,116 @@
+@page "/sdk-docs/"
+@page "/sdk-docs/{pComponentName}/"
+@using Siesa.SDK.Frontend.Components.Documentation.Visualization
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Services
+@using Siesa.SDK.Frontend.Components.Documentation.Fields
+@inject SDKNotificationService Notification
+@layout EmptyLayout
+
+<SDKCard StyleCss="cardmenu-content">
+    <DxMenu Title="SDK Components" DropDownActionMode="MenuDropDownActionMode.Click" CollapseItemsToHamburgerMenu="true"
+        CollapseItemToIconMode="MenuCollapseItemToIconMode.Sequentially" Data="@Category">
+        <DataMappings>
+            <DxMenuDataMapping Text="Name" Children="Components" IconCssClass="Icon" />
+            <DxMenuDataMapping Text="ComponentName" Level="1"/>
+        </DataMappings>
+    </DxMenu>
+</SDKCard>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            @*ClickedMenuItem*@
+            @if(SelectedComponent != null && SelectedComponent.ComponentFragment != null)
+            {
+                @SelectedComponent.ComponentFragment;
+            }
+        </div>
+    </div>
+</div>
+
+
+@code {
+     //public string ClickedMenuItem { get; set; } = "";
+
+    /*void OnItemClick(MenuItemClickEventArgs e)
+    {
+        ClickedMenuItem = $"The '{e.ItemInfo.Text}' item has been clicked";
+
+        if(e.ItemInfo!=null)
+        {
+            //ItemInfo trae toda la informacion, pero solo puedo acceder a ella ent tiempo de ejecucion. 
+
+        }
+
+    }*/
+    
+
+    [Parameter] public string pComponentName {get;set;}
+
+    private ComponentDemo SelectedComponent {get;set;}
+
+private IEnumerable<ComponentCategory> Category = new List<ComponentCategory>()
+    {
+        new ComponentCategory() {
+            Name = "Fields", Components = {
+                new ComponentDemo{ComponentName="SDKBadge", ComponentFragment = @<DemoBadge />},
+                new ComponentDemo{ComponentName="SDKBooleanField",ComponentFragment = @<DemoBooleanField /> },
+                new ComponentDemo{ComponentName="SDKCharField",ComponentFragment = @<DemoCharField />},
+                new ComponentDemo{ComponentName="SDKColorPicker",ComponentFragment = @<DemoColorPicker />},
+                new ComponentDemo{ComponentName="SDKDateField",ComponentFragment = @<DemoDateField />},
+                new ComponentDemo{ComponentName="SDKDecimalField",ComponentFragment = @<DemoDecimalField />}
+            }, Icon ="fa-solid fa-cubes"
+        },
+        new ComponentCategory() {
+            Name = "FormManager", Components = {
+                new ComponentDemo{ComponentName="ConfirmDelete"},
+                new ComponentDemo{ComponentName="InlineCrud"}
+            },Icon ="fa-solid fa-list"
+        },
+        new ComponentCategory() {
+            Name = "Visualization", Components = {
+                new ComponentDemo{ComponentName="SDKCard", ComponentFragment = @<DemoCard />},
+                new ComponentDemo{ComponentName="SDKConfirmDialog", ComponentFragment = @<DemoConfirmDialog />},
+                new ComponentDemo{ComponentName="SDKProgessBar", ComponentFragment = @<DemoProgressBar />}
+            },Icon ="fa-solid fa-cube"
+        },
+
+    };
+    private void SetSelectedComponent(ComponentDemo item)
+    {
+        SelectedComponent = item;
+        StateHasChanged();
+    }
+
+    private void Init()
+    {
+        if(!string.IsNullOrEmpty(pComponentName))
+        {
+            var x = Category.Where(x=>x.Components.Any(y=> y.ComponentName == pComponentName)).FirstOrDefault();
+            if(x != null)
+            {
+                SelectedComponent = x.Components.Where(x=>x.ComponentName == pComponentName).FirstOrDefault();
+            }
+        }
+    }
+
+    @* protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        Init();
+    } *@
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        Init();
+    }
+}
+
+
+
+
+
+
+
+

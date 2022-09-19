@@ -1,0 +1,54 @@
+@page "/CharField"
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.Visualization
+@layout EmptyLayout
+
+<div class="container-fluid">
+    <div class="container-fluid">
+            <h2>SDKCharField</h2> 
+            <p>Demonstration and configuration of the SDKCharField component</p> 
+    </div>
+    <div class="row px-3"> 
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <SDKCharField @bind-Value="@TextValue"/>
+                    <p>
+                        Text: <b>@TextValue</b>
+                    </p>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <SDKCharField @bind-Value="@TextValue2"
+                        Placeholder="Hello ..."/>
+                    <p>
+                        Text: <b>@TextValue2</b>
+                    </p>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <SDKCharField @bind-Value="@TextValue3"
+                        Placeholder="Hello ..."
+                        ReadOnly ="true" />
+                    <p>
+                        Text: <b>@TextValue3</b>
+                    </p>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <SDKCharField @bind-Value="@TextValue4"
+                        Placeholder="Password"
+                        Password="true" />
+            </SDKCard>
+        </div>
+    </div>
+</div>
+
+@code {
+   public string TextValue { get; set; }
+   public string TextValue2 { get; set; }
+   public string TextValue3 { get; set; }
+   public string TextValue4 { get; set; }
+}

@@ -1,0 +1,85 @@
+@page "/DecimalField"
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
+@using System.Globalization
+@layout EmptyLayout
+
+<div class="container-flui">
+    <div class="container-fluid">
+            <h2>SDKDecimalField</h2> 
+            <p>Demonstration and configuration of the SDKDecimalField component</p> 
+    </div>
+    <div class="row px-3"> 
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>Default</h3>
+                <SDKDecimalField @bind-Value="@DecimalValue"/>
+                <p class="demo-text cw-320 mt-2">
+                    Value: <b>@DecimalValue</b>
+                </p>
+            </SDKCard>
+        </div>
+
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>Demacial Field MaxLength(3)</h3>
+                <SDKDecimalField @bind-Value="@DecimalValue2" Placeholder="Hola..." MaxLength="3"/>
+                <p class="demo-text cw-320 mt-2">
+                    Value: <b>@DecimalValue2</b>
+                </p>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>ReadOnly</h3>
+                <SDKDecimalField @bind-Value="@DecimalValue3" ReadOnly="true"/>
+                <p class="demo-text cw-320 mt-2">
+                    Value: <b>@DecimalValue3</b>
+                </p>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>Apply a Mask</h3>
+                <SDKDecimalField @bind-Value="@Price"
+                            Mask="@NumericMaskValue" Culture="MaskCultureInfo.Value"/>
+
+                <p class="demo-text cw-320 mt-2">
+                    Price: <b>@Price</b>
+                </p>
+            </SDKCard>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    public double DecimalValue { get; set; } = 15;
+
+    public double DecimalValue2 { get; set; }
+    public double DecimalValue3 { get; set; }
+    double Price { get; set; }
+    CultureInfoItem MaskCultureInfo { get; set; } = CultureInfoItems.FirstOrDefault();
+    string NumericMaskValue { get; set; } = NumericMask.Currency;
+
+    /*
+    NumericMask.Currency
+    NumericMask.WholeNumber
+    NumericMask.RealNumber
+    NumericMask.RealNumberWithThousandSeparator
+    NumericMask.Percentage
+    NumericMask.PercentageMultipliedBy100
+    */
+
+    
+    class CultureInfoItem {
+        public CultureInfo Value { get; set; }
+        public string Text { get; set; }
+        public override string ToString() { return Text; }
+    }
+    static CultureInfoItem[] CultureInfoItems { get; set; } = new CultureInfoItem[] {
+        new CultureInfoItem() { Value = CultureInfo.GetCultureInfo("en-US"), Text = "American English" },
+        new CultureInfoItem() { Value = CultureInfo.GetCultureInfo("de-DE"), Text = "German" },
+    };
+}
