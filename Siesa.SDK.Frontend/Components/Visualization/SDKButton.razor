@@ -31,6 +31,7 @@
     [Parameter] public EventCallback<MouseEventArgs> Click { get; set; }
     [Parameter] public bool IsActionButton { get; set; }
     [Parameter] public string IconCssClass {get;set;}
+    [Parameter] public string CssClass { get; set; }
 
     [Parameter] public string form { get; set; }
 
@@ -63,18 +64,18 @@
     private string GetCss(){
         if(IsActionButton)
         {
-            return "layout_btn_standar-sm";
+            return $"layout_btn_standar-sm {CssClass}";
         }
         switch (RenderStyle)
         {
             case SDKButtonRenderStyle.Primary:
-                return "btn_primary_def_1";
+                return "btn_primary_def_1 {CssClass}";
                 break;
             case SDKButtonRenderStyle.Secondary:
-                return "btn_secondary_def_1";
+                return "btn_secondary_def_1 {CssClass}";
                 break;
             default:
-                return "";
+                return CssClass;
         }
     }
 }
