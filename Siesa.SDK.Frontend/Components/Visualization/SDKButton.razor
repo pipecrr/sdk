@@ -69,10 +69,10 @@
         switch (RenderStyle)
         {
             case SDKButtonRenderStyle.Primary:
-                return "btn_primary_def_1 {CssClass}";
+                return $"btn_primary_def_1 {CssClass}";
                 break;
             case SDKButtonRenderStyle.Secondary:
-                return "btn_secondary_def_1 {CssClass}";
+                return $"btn_secondary_def_1 {CssClass}";
                 break;
             default:
                 return CssClass;
