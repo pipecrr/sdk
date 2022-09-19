@@ -6,20 +6,27 @@
 @using Siesa.SDK.Frontend.Components.Documentation.Fields
 @inject SDKNotificationService Notification
 @layout EmptyLayout
-
 <SDKCard StyleCss="cardmenu-content">
     <DxMenu Title="SDK Components" DropDownActionMode="MenuDropDownActionMode.Click" CollapseItemsToHamburgerMenu="true"
-        CollapseItemToIconMode="MenuCollapseItemToIconMode.Sequentially" Data="@Category">
-        <DataMappings>
-            <DxMenuDataMapping Text="Name" Children="Components" IconCssClass="Icon" />
-            <DxMenuDataMapping Text="ComponentName" Level="1"/>
-        </DataMappings>
+        CollapseItemToIconMode="MenuCollapseItemToIconMode.Sequentially">
+        <Items>
+            @foreach (var cat in Category)
+            {
+                <DxMenuItem Text="@cat.Name" IconCssClass="@cat.Icon">
+                    <Items>
+                    @foreach (var subitem in cat.Components)
+                    {
+                        <DxMenuItem Text="@subitem.ComponentName" NavigateUrl="@GetNavigateUrl(subitem)" /> 
+                    }
+                    </Items>
+                </DxMenuItem>
+            }
+        </Items>
     </DxMenu>
 </SDKCard>
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
-            @*ClickedMenuItem*@
             @if(SelectedComponent != null && SelectedComponent.ComponentFragment != null)
             {
                 @SelectedComponent.ComponentFragment;
@@ -30,21 +37,10 @@
 
 
 @code {
-     //public string ClickedMenuItem { get; set; } = "";
-
-    /*void OnItemClick(MenuItemClickEventArgs e)
+    private string GetNavigateUrl(ComponentDemo item)
     {
-        ClickedMenuItem = $"The '{e.ItemInfo.Text}' item has been clicked";
-
-        if(e.ItemInfo!=null)
-        {
-            //ItemInfo trae toda la informacion, pero solo puedo acceder a ella ent tiempo de ejecucion. 
-
-        }
-
-    }*/
-    
-
+        return $"/sdk-docs/{item.ComponentName}";
+    }
     [Parameter] public string pComponentName {get;set;}
 
     private ComponentDemo SelectedComponent {get;set;}
@@ -53,10 +49,8 @@ private IEnumerable<ComponentCategory> Category = new List<ComponentCategory>()
     {
         new ComponentCategory() {
             Name = "Fields", Components = {
-                new ComponentDemo{ComponentName="SDKBadge", ComponentFragment = @<DemoBadge />},
                 new ComponentDemo{ComponentName="SDKBooleanField",ComponentFragment = @<DemoBooleanField /> },
                 new ComponentDemo{ComponentName="SDKCharField",ComponentFragment = @<DemoCharField />},
-                new ComponentDemo{ComponentName="SDKColorPicker",ComponentFragment = @<DemoColorPicker />},
                 new ComponentDemo{ComponentName="SDKDateField",ComponentFragment = @<DemoDateField />},
                 new ComponentDemo{ComponentName="SDKDecimalField",ComponentFragment = @<DemoDecimalField />}
             }, Icon ="fa-solid fa-cubes"
@@ -71,7 +65,9 @@ private IEnumerable<ComponentCategory> Category = new List<ComponentCategory>()
             Name = "Visualization", Components = {
                 new ComponentDemo{ComponentName="SDKCard", ComponentFragment = @<DemoCard />},
                 new ComponentDemo{ComponentName="SDKConfirmDialog", ComponentFragment = @<DemoConfirmDialog />},
-                new ComponentDemo{ComponentName="SDKProgessBar", ComponentFragment = @<DemoProgressBar />}
+                new ComponentDemo{ComponentName="SDKProgessBar", ComponentFragment = @<DemoProgressBar />},
+                new ComponentDemo{ComponentName="SDKBadge", ComponentFragment = @<DemoBadge />},
+                new ComponentDemo{ComponentName="SDKColorPicker",ComponentFragment = @<DemoColorPicker />}
             },Icon ="fa-solid fa-cube"
         },
 
