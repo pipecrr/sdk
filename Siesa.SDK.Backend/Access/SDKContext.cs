@@ -178,7 +178,8 @@ namespace Siesa.SDK.Backend.Access
                 }
 
             }
-            LogCreator logCreator = new(ChangeTracker.Entries());
+            LogCreator logCreator = ActivatorUtilities.CreateInstance<LogCreator>(ServiceProvider,ChangeTracker.Entries());
+            //LogCreator logCreator = new(ChangeTracker.Entries());
             logCreator.ProccessBeforeSaveChanges();
             var result = base.SaveChanges();
             logCreator.ProccessAfterSaveChanges();

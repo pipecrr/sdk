@@ -374,6 +374,7 @@ namespace Siesa.SDK.Business
                 }
                 using (SDKContext context = _dbFactory.CreateDbContext())
                 {
+                    DisableRelatedProperties(BaseObj, _navigationProperties);
                     context.SetProvider(_provider);
                     context.Set<T>().Remove(BaseObj);
                     context.SaveChanges();
