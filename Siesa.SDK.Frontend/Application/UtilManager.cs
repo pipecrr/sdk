@@ -85,9 +85,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
             await _localStorageService.SetItemAsync("resources", encriptResource);
         }
 
-        public async Task<Dictionary<byte,string>> GetEnumValues(string enumName, Int64 rowidCulture){
-
-            return await ResourceManager.GetEnumValues(enumName, rowidCulture);
+        public async Task<Dictionary<byte,string>> GetEnumValues(string enumName, Int64 rowidCulture = 0){
+            
+            if(rowidCulture != 0){
+                return await ResourceManager.GetEnumValues(enumName, rowidCulture);                
+            }
+            if(AuthenticationService.User != null){
+                rowidCulture = AuthenticationService.GetRoiwdCulture();
+                return await ResourceManager.GetEnumValues(enumName, rowidCulture);
+            }
+            return null;
         }
     }
 }   

@@ -117,6 +117,7 @@ namespace Siesa.SDK.Backend.Extensions
                             var enumValue = enumsDict[enumkey];
                             var itemValue = item[enumkey];
                             var description = enumValue[byte.Parse(itemValue.ToString())];
+                            item[$"{enumkey}_oreports_key"] = item[enumkey];
                             item[enumkey] = description;
                         }                       
                     }
@@ -202,19 +203,38 @@ namespace Siesa.SDK.Backend.Extensions
                 {
 
                     case "equal":
-                        filterValue = Convert.ChangeType(value, columnType);
-                        columnValue = Expression.Constant(filterValue);
                         Expression equalExpression;
                         if (columnType == typeof(DateTime))
                         {
+                            filterValue = Convert.ChangeType(value, columnType);
+                            columnValue = Expression.Constant(filterValue);
                             var x = filterValue as DateTime?;
                             Expression greatEqualE = Expression.GreaterThanOrEqual(columnNameProperty, columnValue);
                             Expression lessEqualE = Expression.LessThan(columnNameProperty, Expression.Constant(x?.AddMinutes(1)));
                             equalExpression = Expression.And(lessEqualE, greatEqualE);
+
                             addExpression(ref combined, equalExpression);
-                        }
-                        else
-                        {
+                        }else if(columnType == typeof(Boolean)){
+                            var listValue = JsonConvert.DeserializeObject<List<bool>>(value.ToString());
+                            Expression boolExpression = Expression.Equal(columnNameProperty, Expression.Constant(listValue[0]));
+                            for (int i = 1; i < listValue.Count; i++){
+                                Expression boolExpression2 = Expression.Equal(columnNameProperty, Expression.Constant(listValue[i]));
+                                boolExpression = Expression.Or(boolExpression, boolExpression2);
+                            }
+                            equalExpression = boolExpression;
+                        }else if(columnType.BaseType == typeof(Enum)){
+                            var listValueEnum = JsonConvert.DeserializeObject<List<byte>>(value.ToString());
+                            Expression enumExpression = Expression.Equal(columnNameProperty, Expression.Constant(Convert.ChangeType(Enum.Parse(columnType,listValueEnum[0].ToString()), columnType)));
+                            for (int i = 1; i < listValueEnum.Count; i++){
+                                var enumValue = Convert.ChangeType(Enum.Parse(columnType,listValueEnum[i].ToString()), columnType);
+                                Expression enumExpression2 = Expression.Equal(columnNameProperty, Expression.Constant(enumValue));
+                                enumExpression = Expression.Or(enumExpression, enumExpression2);
+                            }
+                            equalExpression = enumExpression;
+                        }else
+                        {   
+                            filterValue = Convert.ChangeType(value, columnType);
+                            columnValue = Expression.Constant(filterValue);
                             equalExpression = Expression.Equal(columnNameProperty, columnValue);
                         }
                         addExpression(ref combined, equalExpression);
@@ -229,12 +249,21 @@ namespace Siesa.SDK.Backend.Extensions
                             Expression lessNotEqualE = Expression.LessThan(columnNameProperty, columnValue);
                             Expression greatNotEqualE = Expression.GreaterThan(columnNameProperty, Expression.Constant(xx?.AddMinutes(1)));
                             notEqualExpression = Expression.Or(lessNotEqualE, greatNotEqualE);
-                        }
-                        else
+                        }else
                         {
                             notEqualExpression = Expression.NotEqual(columnNameProperty, columnValue);
                         }
                         addExpression(ref combined, notEqualExpression);
+                        break;
+                    case "exclude":
+                        Expression excludeExpression;
+                        var listValueExclude = JsonConvert.DeserializeObject<List<bool>>(value.ToString());
+                        excludeExpression = Expression.NotEqual(columnNameProperty, Expression.Constant(listValueExclude[0]));
+                        for (int i = 1; i < listValueExclude.Count; i++){
+                            Expression boolExpression2 = Expression.NotEqual(columnNameProperty, Expression.Constant(listValueExclude[i]));
+                            excludeExpression = Expression.And(excludeExpression, boolExpression2);
+                        }
+                        addExpression(ref combined, excludeExpression);
                         break;
                     case "starts_with":
                         filterValue = Convert.ChangeType(value, columnType);
