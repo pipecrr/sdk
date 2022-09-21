@@ -20,6 +20,10 @@ namespace Siesa.SDK.Backend.Access
 {
     public class SDKContext: DbContext
     {
+	public DbSet<E00271_AttachmentDetail>? E00271_AttachmentDetail { get; set; }
+
+	public DbSet<E00270_Attachment>? E00270_Attachment { get; set; }
+
 	public DbSet<E00230_Flex>? E00230_Flex { get; set; }
 
 	public DbSet<E00025_EnumValue>? E00025_EnumValue { get; set; }
