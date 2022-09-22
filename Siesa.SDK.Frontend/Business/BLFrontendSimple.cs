@@ -18,6 +18,7 @@ using Siesa.SDK.Shared.Business;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Shared.Utilities;
 using Siesa.SDK.Shared.Validators;
+using Microsoft.Extensions.Logging;
 
 namespace Siesa.SDK.Business
 {
@@ -146,10 +147,14 @@ namespace Siesa.SDK.Business
         [JsonIgnore]
         protected SDKNotificationService NotificationService { get; set; }
 
-        private void InternalConstructor(IAuthenticationService authenticationService, SDKNotificationService notificationService)
+        [JsonIgnore]
+        public ILogger Logger { get; set; }
+
+        private void InternalConstructor(IAuthenticationService authenticationService, SDKNotificationService notificationService, ILoggerFactory loggerFactory )
         {
             AuthenticationService = authenticationService;
             NotificationService = notificationService;
+            Logger = loggerFactory.CreateLogger(this.GetType().FullName);
             BaseObj = Activator.CreateInstance<T>();
 
             if (AuthenticationService?.User != null && Utilities.IsAssignableToGenericType(BaseObj.GetType(), typeof(BaseCompanyGroup<>)))
@@ -161,17 +166,18 @@ namespace Siesa.SDK.Business
             }
         }
 
-        public BLFrontendSimple(IAuthenticationService authenticationService, SDKNotificationService notificationService = null)
+        public BLFrontendSimple(IAuthenticationService authenticationService, SDKNotificationService notificationService = null, ILoggerFactory loggerFactory = null)
         {
-            InternalConstructor(authenticationService, notificationService);
+            InternalConstructor(authenticationService, notificationService,loggerFactory);
         }
 
         public BLFrontendSimple(IServiceProvider provider)
         {
             IAuthenticationService authService = (IAuthenticationService)provider.GetService(typeof(IAuthenticationService));
-            SDKNotificationService notiService = (SDKNotificationService)provider.GetService(typeof(SDKNotificationService));
 
-            InternalConstructor(authService, notiService);
+            SDKNotificationService notiService = (SDKNotificationService)provider.GetService(typeof(SDKNotificationService));
+            ILoggerFactory loggerFactory = (ILoggerFactory)provider.GetService(typeof(ILoggerFactory));
+            InternalConstructor(authService, notiService,loggerFactory);
         }
 
         public virtual T Get(Int64 rowid)
