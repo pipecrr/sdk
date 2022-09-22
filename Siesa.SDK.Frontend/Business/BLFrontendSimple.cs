@@ -154,7 +154,9 @@ namespace Siesa.SDK.Business
         {
             AuthenticationService = authenticationService;
             NotificationService = notificationService;
+            if(loggerFactory !=null){
             Logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            }
             BaseObj = Activator.CreateInstance<T>();
 
             if (AuthenticationService?.User != null && Utilities.IsAssignableToGenericType(BaseObj.GetType(), typeof(BaseCompanyGroup<>)))
