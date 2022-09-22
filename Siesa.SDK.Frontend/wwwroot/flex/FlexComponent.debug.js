@@ -15,16 +15,31 @@ function loadScript(url, in_head = false, callback = null) {
     parent.appendChild(script);
 }
 
+function MountFlex(id)
+{
+    console.log("porobando",id);
+    if(document.getElementById(id) == null)
+    {
+        return;
+    }
+    let interval_flexdebug = setInterval(function () {
+        if ("mountOReportsReact" in window) {
+            clearInterval(interval_flexdebug);
+            mountOReportsReact(id);
+        }
+    }, 100);
+}
+
 (() => {
     loadScript("http://127.0.0.1:3000/static/js/bundle.js");
     loadScript("http://127.0.0.1:3000/static/js/0.chunk.js");
     loadScript("http://127.0.0.1:3000/static/js/1.chunk.js");
     loadScript("http://127.0.0.1:3000/static/js/main.chunk.js");
+    window.MountFlex = MountFlex;
 
-    let interval_flexdebug = setInterval(function () {
-        if ("mountOReportsReact" in window) {
-            clearInterval(interval_flexdebug);
-            mountOReportsReact("flexdebug");
-        }
-    }, 100);
+    // window.addEventListener('locationchange', function () {
+    //         setTimeout(function  () { MountFlex() }, 200);
+    // });
+    //MountFlex();
+        
 })();
