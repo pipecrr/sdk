@@ -91,6 +91,11 @@ namespace Siesa.SDK.Frontend.Controllers
             }
 
             AuthenticationService.SetToken(authToken);
+            if (AuthenticationService.User == null)
+            {
+                return ReturnError(Response, "No auth token provided", 401);
+            }
+
             var jsonResponse = new Dictionary<string, object>();
             jsonResponse.Add("status", true);
             int HTTPCodeResponse = 200;

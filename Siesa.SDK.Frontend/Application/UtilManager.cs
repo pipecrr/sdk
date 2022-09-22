@@ -53,10 +53,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
                     cultureRowid = AuthenticationService.GetRoiwdCulture();
                     await ResourceManager.GetResourceByContainId(cultureRowid);
                 }
-                resourceValuesDictUtil = ResourceManager.GetResourceValuesDict();
         }
 
         public async Task<string> GetResourceFlex(string resourceTag, Int64 cultureRowid = 0){
+            resourceValuesDictUtil = ResourceManager.GetResourceValuesDict();
             if(resourceValuesDictUtil.Count == 0){
                 return resourceTag;
             }

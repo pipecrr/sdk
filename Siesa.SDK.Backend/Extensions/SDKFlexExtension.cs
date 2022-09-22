@@ -168,8 +168,13 @@ namespace Siesa.SDK.Backend.Extensions
                 Expression columnValue;
                 //the name constant to match 
                 var value = filter.equal_from;
+                var isNullable = false;
 
-                if (value == null && (!columnType.IsGenericType || columnType.GetGenericTypeDefinition() != typeof(Nullable<>)))
+                if(columnType.IsGenericType && columnType.GetGenericTypeDefinition() == typeof(Nullable<>)){
+                    isNullable = true;
+                }
+
+                if (value == null && !isNullable)
                 {
                     value = Activator.CreateInstance(columnType);
                 }
@@ -214,25 +219,7 @@ namespace Siesa.SDK.Backend.Extensions
                             equalExpression = Expression.And(lessEqualE, greatEqualE);
 
                             addExpression(ref combined, equalExpression);
-                        }else if(columnType == typeof(Boolean)){
-                            var listValue = JsonConvert.DeserializeObject<List<bool>>(value.ToString());
-                            Expression boolExpression = Expression.Equal(columnNameProperty, Expression.Constant(listValue[0]));
-                            for (int i = 1; i < listValue.Count; i++){
-                                Expression boolExpression2 = Expression.Equal(columnNameProperty, Expression.Constant(listValue[i]));
-                                boolExpression = Expression.Or(boolExpression, boolExpression2);
-                            }
-                            equalExpression = boolExpression;
-                        }else if(columnType.BaseType == typeof(Enum)){
-                            var listValueEnum = JsonConvert.DeserializeObject<List<byte>>(value.ToString());
-                            Expression enumExpression = Expression.Equal(columnNameProperty, Expression.Constant(Convert.ChangeType(Enum.Parse(columnType,listValueEnum[0].ToString()), columnType)));
-                            for (int i = 1; i < listValueEnum.Count; i++){
-                                var enumValue = Convert.ChangeType(Enum.Parse(columnType,listValueEnum[i].ToString()), columnType);
-                                Expression enumExpression2 = Expression.Equal(columnNameProperty, Expression.Constant(enumValue));
-                                enumExpression = Expression.Or(enumExpression, enumExpression2);
-                            }
-                            equalExpression = enumExpression;
-                        }else
-                        {   
+                        }else{   
                             filterValue = Convert.ChangeType(value, columnType);
                             columnValue = Expression.Constant(filterValue);
                             equalExpression = Expression.Equal(columnNameProperty, columnValue);
@@ -255,13 +242,45 @@ namespace Siesa.SDK.Backend.Extensions
                         }
                         addExpression(ref combined, notEqualExpression);
                         break;
+                    case "in":
+                        Expression inExpression;
+                        Expression inExpression2;
+                        if(columnType.BaseType == typeof(Enum)){
+                            var listValueEnum = JsonConvert.DeserializeObject<List<byte>>(value.ToString());
+                            inExpression = Expression.Equal(columnNameProperty, Expression.Constant(Convert.ChangeType(Enum.Parse(columnType,listValueEnum[0].ToString()), columnType)));
+                            for (int i = 1; i < listValueEnum.Count; i++){
+                                var enumValue = Convert.ChangeType(Enum.Parse(columnType,listValueEnum[i].ToString()), columnType);
+                                inExpression2 = Expression.Equal(columnNameProperty, Expression.Constant(enumValue));
+                                inExpression = Expression.Or(inExpression, inExpression2);
+                            }
+                        }else {
+                            var listValue = JsonConvert.DeserializeObject<List<bool>>(value.ToString());
+                            inExpression = Expression.Equal(columnNameProperty, Expression.Constant(listValue[0]));
+                            for (int i = 1; i < listValue.Count; i++){
+                                inExpression2 = Expression.Equal(columnNameProperty, Expression.Constant(listValue[i]));
+                                inExpression = Expression.Or(inExpression, inExpression2);
+                            }                            
+                        }
+                        addExpression(ref combined, inExpression);
+                        break;
                     case "exclude":
                         Expression excludeExpression;
-                        var listValueExclude = JsonConvert.DeserializeObject<List<bool>>(value.ToString());
-                        excludeExpression = Expression.NotEqual(columnNameProperty, Expression.Constant(listValueExclude[0]));
-                        for (int i = 1; i < listValueExclude.Count; i++){
-                            Expression boolExpression2 = Expression.NotEqual(columnNameProperty, Expression.Constant(listValueExclude[i]));
-                            excludeExpression = Expression.And(excludeExpression, boolExpression2);
+                        Expression excludeExpression2;
+                        if(columnType.BaseType == typeof(Enum)){
+                            var listValueExclude = JsonConvert.DeserializeObject<List<byte>>(value.ToString());
+                            excludeExpression = Expression.NotEqual(columnNameProperty, Expression.Constant(Convert.ChangeType(Enum.Parse(columnType,listValueExclude[0].ToString()), columnType)));
+                            for (int i = 1; i < listValueExclude.Count; i++){
+                                var enumValue = Convert.ChangeType(Enum.Parse(columnType,listValueExclude[i].ToString()), columnType);
+                                excludeExpression2 = Expression.NotEqual(columnNameProperty, Expression.Constant(enumValue));
+                                excludeExpression = Expression.And(excludeExpression, excludeExpression2);
+                            }
+                        }else{
+                            var listValueExclude = JsonConvert.DeserializeObject<List<bool>>(value.ToString());
+                            excludeExpression = Expression.NotEqual(columnNameProperty, Expression.Constant(listValueExclude[0]));
+                            for (int i = 1; i < listValueExclude.Count; i++){
+                                excludeExpression2 = Expression.NotEqual(columnNameProperty, Expression.Constant(listValueExclude[i]));
+                                excludeExpression = Expression.And(excludeExpression, excludeExpression2);
+                            }
                         }
                         addExpression(ref combined, excludeExpression);
                         break;
@@ -285,33 +304,47 @@ namespace Siesa.SDK.Backend.Extensions
                         break;
                     case "null_or_empty":
                     case "empty":
-                        Expression nullOrEmptyExpression;
-                        if (columnType == typeof(DateTime))
-                        {
+                        Expression nullOrEmptyExpression = null;
+                        if (columnType == typeof(DateTime)){
                             filterValue = Convert.ChangeType(Activator.CreateInstance(columnType), columnType);
                             columnValue = Expression.Constant(filterValue);
                             nullOrEmptyExpression = Expression.Equal(columnNameProperty, columnValue);
-                        }
-                        else
-                        {
+                        }else if(columnType == typeof(string)){
                             nullOrEmptyExpression = Expression.Call(getMethodInfo("IsNullOrEmpty", typeof(string)), columnNameProperty);
+                        }
+
+                        if(isNullable && columnType != typeof(string))
+                        {
+                            var nullExpression = Expression.Equal(columnNameProperty, Expression.Constant(null));
+                            if(nullOrEmptyExpression != null)
+                            {
+                                nullOrEmptyExpression = Expression.Or(nullOrEmptyExpression, nullExpression);
+                            }else{
+                                nullOrEmptyExpression = nullExpression;
+                            }
                         }
                         addExpression(ref combined, nullOrEmptyExpression);
                         break;
                     case "not_empty":
-                        Expression notEmptyExpression;
-                        if (columnType == typeof(DateTime))
-                        {
+                        Expression notEmptyExpression = null;
+                        if (columnType == typeof(DateTime)){
                             filterValue = Convert.ChangeType(Activator.CreateInstance(columnType), columnType);
                             columnValue = Expression.Constant(filterValue);
-                            notEmptyExpression = Expression.Equal(columnNameProperty, columnValue);
-                        }
-                        else
-                        {
+                            notEmptyExpression = Expression.NotEqual(columnNameProperty, columnValue);
+                        }else if(columnType == typeof(string)){
                             notEmptyExpression = Expression.Call(getMethodInfo("IsNullOrEmpty", typeof(string)), columnNameProperty);
                         }
-                        notEmptyExpression = Expression.Not(notEmptyExpression);
-                        addExpression(ref combined, notEmptyExpression);
+                        if(isNullable && columnType != typeof(string))
+                        {
+                            var notEmptyExpression2 = Expression.NotEqual(columnNameProperty, Expression.Constant(null));
+                            if(notEmptyExpression != null)
+                            {
+                                notEmptyExpression = Expression.Or(notEmptyExpression, notEmptyExpression2);
+                            }else{
+                                notEmptyExpression = notEmptyExpression2;
+                            }
+                        }
+                        addExpression(ref combined, notEmptyExpression);                        
                         break;
                     case "gt":
                         filterValue = Convert.ChangeType(value, columnType);

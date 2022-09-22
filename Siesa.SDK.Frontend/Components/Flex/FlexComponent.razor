@@ -4,6 +4,8 @@
 @using Siesa.SDK.Frontend.Components.Layout
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Frontend.Components.FormManager.Views
+@using Siesa.SDK.Frontend.Components.FormManager.Model
+@inject UtilsManager UtilsManager
 @implements IDisposable
 
 <div @attributes="@FlexAttributes">
@@ -35,7 +37,7 @@
 @code {
     [Parameter]
     public dynamic Business {get;set;}
-
+    
     private bool _isDebug = false;
 
     private bool _isDetail = false;
@@ -93,6 +95,7 @@
     protected override async Task OnInitializedAsync()
     {
         //Init();
+        UtilsManager.GetResourceByContainId();
         await base.OnInitializedAsync();
     }
 
