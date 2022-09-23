@@ -52,7 +52,8 @@ private IEnumerable<ComponentCategory> Category = new List<ComponentCategory>()
                 new ComponentDemo{ComponentName="SDKBooleanField",ComponentFragment = @<DemoBooleanField /> },
                 new ComponentDemo{ComponentName="SDKCharField",ComponentFragment = @<DemoCharField />},
                 new ComponentDemo{ComponentName="SDKDateField",ComponentFragment = @<DemoDateField />},
-                new ComponentDemo{ComponentName="SDKDecimalField",ComponentFragment = @<DemoDecimalField />}
+                new ComponentDemo{ComponentName="SDKDecimalField",ComponentFragment = @<DemoDecimalField />},
+                new ComponentDemo{ComponentName="SDKColorPicker",ComponentFragment = @<DemoColorPicker />},
             }, Icon ="fa-solid fa-cubes"
         },
         new ComponentCategory() {
@@ -65,9 +66,13 @@ private IEnumerable<ComponentCategory> Category = new List<ComponentCategory>()
             Name = "Visualization", Components = {
                 new ComponentDemo{ComponentName="SDKCard", ComponentFragment = @<DemoCard />},
                 new ComponentDemo{ComponentName="SDKConfirmDialog", ComponentFragment = @<DemoConfirmDialog />},
-                new ComponentDemo{ComponentName="SDKProgessBar", ComponentFragment = @<DemoProgressBar />},
                 new ComponentDemo{ComponentName="SDKBadge", ComponentFragment = @<DemoBadge />},
-                new ComponentDemo{ComponentName="SDKColorPicker",ComponentFragment = @<DemoColorPicker />}
+                new ComponentDemo{ComponentName="SDKProgessBar", ComponentFragment = @<DemoProgressBar />},
+                new ComponentDemo{ComponentName="SDKButton", ComponentFragment = @<SDKButton />},
+                new ComponentDemo{ComponentName="SDKCollapse", ComponentFragment = @<SDKCollapse />},
+                new ComponentDemo{ComponentName="SDKFileViewer", ComponentFragment = @<SDKFileViewer />},
+                new ComponentDemo{ComponentName="SDKRadialGauge", ComponentFragment = @<SDKRadialGauge />},
+
             },Icon ="fa-solid fa-cube" 
         },
 
@@ -89,12 +94,6 @@ private IEnumerable<ComponentCategory> Category = new List<ComponentCategory>()
             }
         }
     }
-
-    @* protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        Init();
-    } *@
 
     protected override void OnParametersSet()
     {

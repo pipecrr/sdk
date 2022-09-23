@@ -19,10 +19,6 @@ public class ComponentDemo {
     public string ComponentName {get; set;}
 
     public RenderFragment ComponentFragment {get;set;}
-
-    public string URL {get; set;}
-
-    public object ID { get; set; }
 }
     
 }

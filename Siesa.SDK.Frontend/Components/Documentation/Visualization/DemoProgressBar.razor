@@ -12,24 +12,20 @@
         <div class="col-md-4 p-3">
             <SDKCard>
                 <h3>ProgressBar in determinate mode</h3>
-                <SDKProgressBar @bind-Value="@value" />
+                <SDKProgressBar @bind-Value="@valor" />
             </SDKCard>z
         </div>
         <div class="col-md-4 p-3">
             <SDKCard>
-                <h3>ProgressBar in indeterminate mode</h3>
-                <SDKProgressBar Value="100" />
-            </SDKCard>
-        </div>
-        <div class="col-md-4 p-3">
-            <SDKCard>
                 <h3>ProgressBar in max value > 100</h3>
-                <SDKProgressBar Value="156" Max="200" />
+                <SDKProgressBar @bind-Value="@valor" Max="200" />
             </SDKCard>
         </div>
     </div>
 </div>
 
 @code {
-    double value = 55;
+    double valor = 55;
+
+
 }
