@@ -137,14 +137,20 @@ namespace Siesa.SDK.Business
             //BaseObj = (T)myContext.Entry(BaseObj).CurrentValues.ToObject();
         }
 
-        public BLBackendSimple(IAuthenticationService authenticationService)
-        {
-            AuthenticationService = authenticationService;
+        public BLBackendSimple(IServiceProvider provider){
+
+            SetProvider(provider);
             BaseObj = Activator.CreateInstance<T>();
             var _bannedTypes = new List<Type>() { typeof(string), typeof(byte[]) };
             _relatedProperties = BaseObj.GetType().GetProperties().Where(p => p.PropertyType.IsClass && !p.PropertyType.IsPrimitive && !p.PropertyType.IsEnum && !_bannedTypes.Contains(p.PropertyType) && p.Name != "RowVersion").Select(p => p.Name).ToArray();
+        }
 
-
+        public BLBackendSimple(IAuthenticationService authenticationService)
+        {
+            AuthenticationService = authenticationService;  
+            BaseObj = Activator.CreateInstance<T>();
+            var _bannedTypes = new List<Type>() { typeof(string), typeof(byte[]) };
+            _relatedProperties = BaseObj.GetType().GetProperties().Where(p => p.PropertyType.IsClass && !p.PropertyType.IsPrimitive && !p.PropertyType.IsEnum && !_bannedTypes.Contains(p.PropertyType) && p.Name != "RowVersion").Select(p => p.Name).ToArray();
         }
 
         public void ShareProvider(dynamic bl)
@@ -319,6 +325,7 @@ namespace Siesa.SDK.Business
 
         private Int64 Save()
         {
+            this._logger.LogInformation($"Save {this.GetType().Name}");
             using (SDKContext context = _dbFactory.CreateDbContext())
             {
                 context.SetProvider(_provider);
@@ -360,6 +367,7 @@ namespace Siesa.SDK.Business
 
         public virtual DeleteBusinessObjResponse Delete()
         {
+            this._logger.LogInformation($"Detele {this.GetType().Name}");
             var response = new DeleteBusinessObjResponse();
 
             ValidateAndSaveBusinessObjResponse result = new();
@@ -397,6 +405,7 @@ namespace Siesa.SDK.Business
 
         public virtual Siesa.SDK.Shared.Business.LoadResult EntityFieldSearch(string searchText, string prefilters = "")
         {
+            this._logger.LogInformation($"Field Search {this.GetType().Name}");
             var string_fields = BaseObj.GetType().GetProperties().Where(p => p.PropertyType == typeof(string) && p.GetCustomAttributes().Where(x => x.GetType() == typeof(NotMappedAttribute)).Count() == 0).Select(p => p.Name).ToArray();
             string filter = "";
             foreach (var field in string_fields)
@@ -417,6 +426,7 @@ namespace Siesa.SDK.Business
 
         public virtual Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null)
         {
+            this._logger.LogWarning($"Get Data {this.GetType().Name}");
             var result = new Siesa.SDK.Shared.Business.LoadResult();
             using (SDKContext context = _dbFactory.CreateDbContext())
             {
@@ -433,6 +443,14 @@ namespace Siesa.SDK.Business
                 }
                 var total = query.Count();
 
+                if (!string.IsNullOrEmpty(orderBy))
+                {
+                    query = query.OrderBy(orderBy);
+                }else
+                {
+                    query= query.OrderBy("Rowid");
+                }
+
                 if (skip.HasValue)
                 {
                     query = query.Skip(skip.Value);
@@ -442,11 +460,6 @@ namespace Siesa.SDK.Business
                     query = query.Take(take.Value);
                 }
 
-
-                if (!string.IsNullOrEmpty(orderBy))
-                {
-                    query = query.OrderBy(orderBy);
-                }
                 if (queryFilter != null)
                 {
                     query = queryFilter(query);
@@ -516,6 +529,7 @@ namespace Siesa.SDK.Business
         [SDKExposedMethod]
         public ActionResult<dynamic> SDKFlexPreviewData(SDKFlexRequestData requestData, bool setTop = true)
         {
+            this._logger.LogInformation("SDKFlexPreviewData");
             using (var Context = CreateDbContext())
             {   
                 return SDKFlexExtension.SDKFlexPreviewData(Context, requestData, setTop);
