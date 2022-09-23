@@ -8,7 +8,7 @@ using Siesa.SDK.Shared.Services;
 
 namespace Siesa.SDK.Shared.Logs.DataEventLog
 {
-    public class SDKLogEvent: LogEvent
+    /*public class SDKLogEvent: LogEvent
     {
         [JsonIgnore]
         IAuthenticationService _authenticationService;
@@ -32,5 +32,5 @@ namespace Siesa.SDK.Shared.Logs.DataEventLog
         {
             _authenticationService = authService;
         }
-    }
+    }*/
 }
