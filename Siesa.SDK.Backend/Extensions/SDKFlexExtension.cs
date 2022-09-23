@@ -180,7 +180,7 @@ namespace Siesa.SDK.Backend.Extensions
                 }
 
                 //TimeOnly y TimeSpan se estan tratando como charField por eso se cambia el tipo del columnType
-                if (columnType == typeof(TimeOnly) || columnType == typeof(TimeSpan))
+                if (value != null && (columnType == typeof(TimeOnly) || columnType == typeof(TimeSpan)))
                 {
                     var valueSplit = value.ToString().Split(":").ToList();
                     int hours = 0;
@@ -201,25 +201,50 @@ namespace Siesa.SDK.Backend.Extensions
 
                     value = Activator.CreateInstance(columnType, hours, minutes, seconds);
                 }
+                
+                
+                if(isNullable){
+                    columnType = Nullable.GetUnderlyingType(columnType) ?? columnType;
+                }
+
+                if (value != null && columnType == typeof(DateOnly) && value.GetType() == typeof(DateTime)){
+                    var valueSplit = value.ToString().Substring(0,10).Split("/").ToList();
+                    int year = int.Parse(valueSplit[2]);
+                    int month = int.Parse(valueSplit[1]);
+                    int day = int.Parse(valueSplit[0]);
+                    
+                    value = Activator.CreateInstance(columnType, year, month, day);
+                }
 
                 object filterValue;
-
+                var columnNamePropertyNull = columnNameProperty;
+                if(isNullable){
+                    columnNameProperty = Expression.Convert(columnNameProperty, columnType);
+                }
                 switch (filter.selected_operator)
                 {
-
                     case "equal":
-                        Expression equalExpression;
-                        if (columnType == typeof(DateTime))
-                        {
+                        Expression equalExpression;                        
+                        if (columnType == typeof(DateTime)){
                             filterValue = Convert.ChangeType(value, columnType);
                             columnValue = Expression.Constant(filterValue);
-                            var x = filterValue as DateTime?;
+                            var valueDateEqual = filterValue as DateTime?;
                             Expression greatEqualE = Expression.GreaterThanOrEqual(columnNameProperty, columnValue);
-                            Expression lessEqualE = Expression.LessThan(columnNameProperty, Expression.Constant(x?.AddMinutes(1)));
+                            Expression lessEqualE = Expression.LessThan(columnNameProperty, Expression.Constant(valueDateEqual?.AddMinutes(1)));
                             equalExpression = Expression.And(lessEqualE, greatEqualE);
 
                             addExpression(ref combined, equalExpression);
-                        }else{   
+                        }else if(columnType == typeof(DateOnly)){
+                            filterValue = Convert.ChangeType(value, columnType);
+                            columnValue = Expression.Constant(filterValue);
+                            var valueDateEqual = filterValue as DateOnly?;
+                            Expression greatEqualE = Expression.GreaterThanOrEqual(columnNameProperty, columnValue);
+                            Expression lessEqualE = Expression.LessThanOrEqual(columnNameProperty, Expression.Constant(valueDateEqual));
+                            equalExpression = Expression.And(lessEqualE, greatEqualE);
+
+                            addExpression(ref combined, equalExpression);
+                        }
+                        else{
                             filterValue = Convert.ChangeType(value, columnType);
                             columnValue = Expression.Constant(filterValue);
                             equalExpression = Expression.Equal(columnNameProperty, columnValue);
@@ -227,17 +252,24 @@ namespace Siesa.SDK.Backend.Extensions
                         addExpression(ref combined, equalExpression);
                         break;
                     case "not_equal":
+                        if(isNullable){
+                            columnNameProperty = Expression.Convert(columnNameProperty, columnType);
+                        }
                         filterValue = Convert.ChangeType(value, columnType);
                         columnValue = Expression.Constant(filterValue);
                         Expression notEqualExpression;
                         if (columnType == typeof(DateTime))
                         {
-                            var xx = filterValue as DateTime?;
+                            var valueDate = filterValue as DateTime?;
                             Expression lessNotEqualE = Expression.LessThan(columnNameProperty, columnValue);
-                            Expression greatNotEqualE = Expression.GreaterThan(columnNameProperty, Expression.Constant(xx?.AddMinutes(1)));
+                            Expression greatNotEqualE = Expression.GreaterThan(columnNameProperty, Expression.Constant(valueDate?.AddMinutes(1)));
                             notEqualExpression = Expression.Or(lessNotEqualE, greatNotEqualE);
-                        }else
-                        {
+                        }else if(columnType == typeof(DateOnly)){
+                            var valueDate = filterValue as DateOnly?;
+                            Expression lessNotEqualE = Expression.LessThan(columnNameProperty, columnValue);
+                            Expression greatNotEqualE = Expression.GreaterThan(columnNameProperty, Expression.Constant(valueDate));
+                            notEqualExpression = Expression.Or(lessNotEqualE, greatNotEqualE);
+                        }else{
                             notEqualExpression = Expression.NotEqual(columnNameProperty, columnValue);
                         }
                         addExpression(ref combined, notEqualExpression);
@@ -305,7 +337,7 @@ namespace Siesa.SDK.Backend.Extensions
                     case "null_or_empty":
                     case "empty":
                         Expression nullOrEmptyExpression = null;
-                        if (columnType == typeof(DateTime)){
+                        if (columnType == typeof(DateTime) || columnType == typeof(DateOnly)){
                             filterValue = Convert.ChangeType(Activator.CreateInstance(columnType), columnType);
                             columnValue = Expression.Constant(filterValue);
                             nullOrEmptyExpression = Expression.Equal(columnNameProperty, columnValue);
@@ -315,7 +347,7 @@ namespace Siesa.SDK.Backend.Extensions
 
                         if(isNullable && columnType != typeof(string))
                         {
-                            var nullExpression = Expression.Equal(columnNameProperty, Expression.Constant(null));
+                            var nullExpression = Expression.Equal(columnNamePropertyNull, Expression.Constant(null));
                             if(nullOrEmptyExpression != null)
                             {
                                 nullOrEmptyExpression = Expression.Or(nullOrEmptyExpression, nullExpression);
@@ -327,7 +359,7 @@ namespace Siesa.SDK.Backend.Extensions
                         break;
                     case "not_empty":
                         Expression notEmptyExpression = null;
-                        if (columnType == typeof(DateTime)){
+                        if (columnType == typeof(DateTime) || columnType == typeof(DateOnly)){
                             filterValue = Convert.ChangeType(Activator.CreateInstance(columnType), columnType);
                             columnValue = Expression.Constant(filterValue);
                             notEmptyExpression = Expression.NotEqual(columnNameProperty, columnValue);
@@ -336,10 +368,10 @@ namespace Siesa.SDK.Backend.Extensions
                         }
                         if(isNullable && columnType != typeof(string))
                         {
-                            var notEmptyExpression2 = Expression.NotEqual(columnNameProperty, Expression.Constant(null));
+                            var notEmptyExpression2 = Expression.NotEqual(columnNamePropertyNull, Expression.Constant(null));
                             if(notEmptyExpression != null)
                             {
-                                notEmptyExpression = Expression.Or(notEmptyExpression, notEmptyExpression2);
+                                notEmptyExpression = Expression.And(notEmptyExpression, notEmptyExpression2);
                             }else{
                                 notEmptyExpression = notEmptyExpression2;
                             }
@@ -367,7 +399,19 @@ namespace Siesa.SDK.Backend.Extensions
                     case "between":
                         filterValue = Convert.ChangeType(value, columnType);
                         columnValue = Expression.Constant(filterValue);
-                        Expression columnTo = Expression.Constant(Convert.ChangeType(filter.to, columnType));
+                        var filterTo = filter.to;
+                        Expression columnTo = null;
+                        if(columnType == typeof(DateOnly)){
+                            var valueSplit = filterTo.ToString().Substring(0,10).Split("-").ToList();
+                            int yearB = int.Parse(valueSplit[0]);
+                            int monthB = int.Parse(valueSplit[1]);
+                            int dayB = int.Parse(valueSplit[2]);
+                            
+                            var filterToDateOnly = Activator.CreateInstance(columnType, yearB, monthB, dayB);
+                            columnTo = Expression.Constant(Convert.ChangeType(filterToDateOnly, columnType));
+                        }else{
+                            columnTo = Expression.Constant(Convert.ChangeType(filter.to, columnType));
+                        }
                         Expression greaterExpression = Expression.GreaterThan(columnNameProperty, columnValue);
                         Expression lessExpression = Expression.LessThan(columnNameProperty, columnTo);
                         Expression betweenExpression = Expression.And(lessExpression, greaterExpression);
@@ -386,27 +430,37 @@ namespace Siesa.SDK.Backend.Extensions
                         addExpression(ref combined, afterExpression);
                         break;
                     case "in_past":
-                        columnValue = Expression.Constant(Convert.ChangeType(DateTime.Now, columnType));
+                        if(columnType == typeof(DateOnly)){
+                            columnValue = Expression.Constant(Convert.ChangeType(DateOnly.FromDateTime(DateTime.Now), columnType));
+                        }else{
+                            columnValue = Expression.Constant(Convert.ChangeType(DateTime.Now, columnType));
+                        }
                         Expression inPastExpression = Expression.LessThan(columnNameProperty, columnValue);
                         addExpression(ref combined, inPastExpression);
                         break;
                     case "in_future":
-                        columnValue = Expression.Constant(Convert.ChangeType(DateTime.Now, columnType));
+                    if(columnType == typeof(DateOnly)){
+                            columnValue = Expression.Constant(Convert.ChangeType(DateOnly.FromDateTime(DateTime.Now), columnType));
+                        }else{
+                            columnValue = Expression.Constant(Convert.ChangeType(DateTime.Now, columnType));
+                        }                        
                         Expression inFuctureExpression = Expression.GreaterThan(columnNameProperty, columnValue);
                         addExpression(ref combined, inFuctureExpression);
                         break;
                     case "current_month":
+
                         DateTime todayCurrentMonth = DateTime.Now;
                         var month = todayCurrentMonth.Month;
                         var year = todayCurrentMonth.Year;
                         var numDays = DateTime.DaysInMonth(year, month);
-                        var startDateMonth = new DateTime(year, month, 1);
-                        var endDateMonth = new DateTime(year, month, numDays);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(startDateMonth, typeof(DateTime)));
+                        var startDateMonth = Activator.CreateInstance(columnType, year, month, 1);
+                        var endDateMonth = Activator.CreateInstance(columnType, year, month, numDays);
+
+                        columnValue = Expression.Constant(Convert.ChangeType(startDateMonth, columnType));
                         Expression greaterCurrentMonthE = Expression.GreaterThanOrEqual(columnNameProperty, columnValue);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(endDateMonth, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(endDateMonth, columnType));
                         Expression lessCurrentMonthE = Expression.LessThanOrEqual(columnNameProperty, columnValue);
 
                         var currentMonthExpression = Expression.And(lessCurrentMonthE, greaterCurrentMonthE);
@@ -415,13 +469,16 @@ namespace Siesa.SDK.Backend.Extensions
                     case "current_week":
                         DateTime todayCurrentWeek = DateTime.Now;
                         var dayWeek = ((double)todayCurrentWeek.DayOfWeek);
-                        var startDayWeek = todayCurrentWeek.AddDays(-dayWeek);
+                        var startDateWeek = todayCurrentWeek.AddDays(-dayWeek);
                         var endDateWeek = todayCurrentWeek.AddDays(6 - dayWeek);
+                        
+                        var startDateW = Activator.CreateInstance(columnType, startDateWeek.Year, startDateWeek.Month, startDateWeek.Day);
+                        var endDateW = Activator.CreateInstance(columnType, endDateWeek.Year, endDateWeek.Month, endDateWeek.Day);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(startDayWeek, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(startDateW, columnType));
                         Expression greaterCurrentWeekE = Expression.GreaterThanOrEqual(columnNameProperty, columnValue);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(endDateWeek, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(endDateW, columnType));
                         Expression lessCurrentWeekE = Expression.LessThanOrEqual(columnNameProperty, columnValue);
 
                         var currentWeekExpression = Expression.And(lessCurrentWeekE, greaterCurrentWeekE);
@@ -432,24 +489,19 @@ namespace Siesa.SDK.Backend.Extensions
                         var lastMonth = todayLastMonth.Month - 1;
                         var lastYear = todayLastMonth.Year;
 
-                        var startDateLastMonth = new DateTime();
-                        var endDateLastMonth = new DateTime();
                         if (lastMonth <= 0)
                         {
-                            startDateLastMonth = new DateTime(lastYear - 1, 12, 1);
-                            endDateLastMonth = new DateTime(lastYear - 1, 12, 31);
+                            lastMonth = 12;
+                            lastYear = lastYear - 1;
                         }
-                        else
-                        {
-                            var numDaysLastMonth = DateTime.DaysInMonth(lastYear, lastMonth);
-                            startDateLastMonth = new DateTime(lastYear, lastMonth, 1);
-                            endDateLastMonth = new DateTime(lastYear, lastMonth, numDaysLastMonth);
-                        }
+                        var numDaysLastMonth = DateTime.DaysInMonth(lastYear, lastMonth);
+                        var startDateLastMonth = Activator.CreateInstance(columnType, lastYear, lastMonth, 1);
+                        var endDateLastMonth = Activator.CreateInstance(columnType, lastYear, lastMonth, numDaysLastMonth);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(startDateLastMonth, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(startDateLastMonth, columnType));
                         Expression greaterLastMonthE = Expression.GreaterThanOrEqual(columnNameProperty, columnValue);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(endDateLastMonth, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(endDateLastMonth, columnType));
                         Expression lessLastMonthE = Expression.LessThanOrEqual(columnNameProperty, columnValue);
 
                         var lastMonthExpression = Expression.And(lessLastMonthE, greaterLastMonthE);
@@ -458,13 +510,14 @@ namespace Siesa.SDK.Backend.Extensions
                     case "today":
                         DateTime today = DateTime.Now;
 
-                        var startDate = today.Date;
-                        var endDate = startDate.AddDays(1);
+                        var startDate = Activator.CreateInstance(columnType, today.Year, today.Month, today.Day);
+                        today = today.AddDays(1);
+                        var endDate = Activator.CreateInstance(columnType, today.Year, today.Month, today.Day);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(startDate, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(startDate, columnType));
                         Expression greaterTodayE = Expression.GreaterThan(columnNameProperty, columnValue);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(endDate, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(endDate, columnType));
                         Expression lessTodayE = Expression.LessThan(columnNameProperty, columnValue);
 
                         var todayExpression = Expression.And(lessTodayE, greaterTodayE);
@@ -473,13 +526,14 @@ namespace Siesa.SDK.Backend.Extensions
                     case "last_n_days":
                         DateTime todayLastNDate = DateTime.Now;
                         int daysLast = int.Parse(value.ToString());
-                        var startDateLastnDays = todayLastNDate.Date.AddDays(-daysLast);
-                        var endDateLastnDays = todayLastNDate;
+                        var endDateLastnDays = Activator.CreateInstance(columnType, todayLastNDate.Year, todayLastNDate.Month, todayLastNDate.Day);
+                        todayLastNDate = todayLastNDate.Date.AddDays(-daysLast);
+                        var startDateLastnDays = Activator.CreateInstance(columnType, todayLastNDate.Year, todayLastNDate.Month, todayLastNDate.Day);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(startDateLastnDays, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(startDateLastnDays, columnType));
                         Expression greaterLastnDayE = Expression.GreaterThan(columnNameProperty, columnValue);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(endDateLastnDays, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(endDateLastnDays, columnType));
                         Expression lessLastnDayE = Expression.LessThan(columnNameProperty, columnValue);
 
                         var lastnDaysExpression = Expression.And(lessLastnDayE, greaterLastnDayE);
@@ -488,13 +542,14 @@ namespace Siesa.SDK.Backend.Extensions
                     case "next_n_days":
                         DateTime todayNextNDate = DateTime.Now;
                         int daysNext = int.Parse(value.ToString());
-                        var startDateNextnDays = todayNextNDate.Date.AddDays(daysNext);
-                        var endDateNextnDays = todayNextNDate;
+                        var endDateNextnDays = Activator.CreateInstance(columnType, todayNextNDate.Year, todayNextNDate.Month, todayNextNDate.Day);
+                        todayNextNDate = todayNextNDate.Date.AddDays(daysNext);
+                        var startDateNextnDays = Activator.CreateInstance(columnType, todayNextNDate.Year, todayNextNDate.Month, todayNextNDate.Day);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(startDateNextnDays, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(startDateNextnDays, columnType));
                         Expression greaterNextnDayE = Expression.GreaterThan(columnNameProperty, columnValue);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(endDateNextnDays, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(endDateNextnDays, columnType));
                         Expression lessNextnDayE = Expression.LessThan(columnNameProperty, columnValue);
 
                         var nextnDaysExpression = Expression.And(lessNextnDayE, greaterNextnDayE);
@@ -503,13 +558,13 @@ namespace Siesa.SDK.Backend.Extensions
                     case "this_year":
                         var thisYear = DateTime.Now.Year;
 
-                        var startDateThisYear = new DateTime(thisYear, 1, 1);
-                        var endDateThisYear = new DateTime(thisYear, 12, 31);
+                        var startDateThisYear = Activator.CreateInstance(columnType,thisYear,1,1); 
+                        var endDateThisYear = Activator.CreateInstance(columnType, thisYear, 12, 31); 
 
-                        columnValue = Expression.Constant(Convert.ChangeType(startDateThisYear, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(startDateThisYear, columnType));
                         Expression greaterThisYearE = Expression.GreaterThan(columnNameProperty, columnValue);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(endDateThisYear, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(endDateThisYear, columnType));
                         Expression lessThisYearE = Expression.LessThan(columnNameProperty, columnValue);
 
                         var thisYearExpression = Expression.And(lessThisYearE, greaterThisYearE);
@@ -518,13 +573,13 @@ namespace Siesa.SDK.Backend.Extensions
                     case "last_year":
                         var yearLastYear = DateTime.Now.Year - 1;
 
-                        var startDateLastYear = new DateTime(yearLastYear, 1, 1);
-                        var endDateLastYear = new DateTime(yearLastYear, 12, 31);
+                        var startDateLastYear = Activator.CreateInstance(columnType, yearLastYear, 1, 1);
+                        var endDateLastYear = Activator.CreateInstance(columnType, yearLastYear, 12, 31);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(startDateLastYear, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(startDateLastYear, columnType));
                         Expression greaterLastYearE = Expression.GreaterThan(columnNameProperty, columnValue);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(endDateLastYear, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(endDateLastYear, columnType));
                         Expression lessLastYearE = Expression.LessThan(columnNameProperty, columnValue);
 
                         var lastYearExpression = Expression.And(lessLastYearE, greaterLastYearE);
@@ -533,13 +588,13 @@ namespace Siesa.SDK.Backend.Extensions
                     case "next_year":
                         var yearNextYear = DateTime.Now.Year + 1;
 
-                        var startDateNextYear = new DateTime(yearNextYear, 1, 1);
-                        var endDateNextYear = new DateTime(yearNextYear, 12, 31);
+                        var startDateNextYear = Activator.CreateInstance(columnType, yearNextYear, 1, 1);
+                        var endDateNextYear = Activator.CreateInstance(columnType, yearNextYear, 12, 31);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(startDateNextYear, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(startDateNextYear, columnType));
                         Expression greaterNextYearE = Expression.GreaterThan(columnNameProperty, columnValue);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(endDateNextYear, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(endDateNextYear, columnType));
                         Expression lessNextYearE = Expression.LessThan(columnNameProperty, columnValue);
 
                         var nextYearExpression = Expression.And(lessNextYearE, greaterNextYearE);
