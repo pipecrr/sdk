@@ -6,26 +6,29 @@
 @inject DialogService DialogService
 @layout EmptyLayout
 
-
 <div class="container-fluid">
-    <div class="row px-3">
-        <div class="col-md-4 p-3">
+    <div class="container-fluid">
+            <h2>SDKProgessBar</h2> 
+            <p>Demonstration and configuration of the SDKProgessBar component</p> 
+    </div>
+    <div class="row px-3"> 
+        <div class="col-md-6 p-3">
             <SDKCard>
                 <h3>ProgressBar in determinate mode</h3>
-                <SDKProgressBar @bind-Value="@valor" />
-            </SDKCard>z
+                <SDKProgressBar Value="@valor" />
+            </SDKCard>
         </div>
-        <div class="col-md-4 p-3">
+        <div class="col-md-6 p-3">
             <SDKCard>
                 <h3>ProgressBar in max value > 100</h3>
-                <SDKProgressBar @bind-Value="@valor" Max="200" />
+                <SDKProgressBar Value="@valor2" Max="100" />
             </SDKCard>
         </div>
     </div>
 </div>
 
 @code {
-    double valor = 55;
-
+    double valor = 75;
+    double valor2 = 50;
 
 }
