@@ -8,59 +8,58 @@
 
 <div class="container-flui">
     <div class="container-fluid">
-            <h2>SDKDecimalField</h2> 
-            <p>Demonstration and configuration of the SDKDecimalField component</p> 
+            <h2>SDKIntegerField</h2> 
+            <p>Demonstration and configuration of the SDKIntegerField component</p> 
     </div>
     <div class="row px-3"> 
         <div class="col-md-6 p-3">
             <SDKCard>
                 <h3>Default</h3>
-                <SDKDecimalField @bind-Value="@DecimalValue"/>
+                <SDKIntegerField @bind-Value="@intValue"/>
                 <p class="demo-text cw-320 mt-2">
-                    Value: <b>@DecimalValue</b>
+                    Value: <b>@intValue</b>
                 </p>
             </SDKCard>
         </div>
 
         <div class="col-md-6 p-3">
             <SDKCard>
-                <h3>Demacial Field MaxLength(3)</h3>
-                <SDKDecimalField @bind-Value="@DecimalValue2" MaxLength="3"/>
+                <h3>Integer Field MaxLength(3)</h3>
+                <SDKIntegerField @bind-Value="@intValue2" MaxLength="5"/>
                 <p class="demo-text cw-320 mt-2">
-                    Value: <b>@DecimalValue2</b>
+                    Value: <b>@intValue2</b>
                 </p>
             </SDKCard>
         </div>
         <div class="col-md-6 p-3">
             <SDKCard>
                 <h3>ReadOnly</h3>
-                <SDKDecimalField @bind-Value="@DecimalValue3" ReadOnly="true"/>
+                <SDKIntegerField @bind-Value="@intValue3" ReadOnly="true"/>
                 <p class="demo-text cw-320 mt-2">
-                    Value: <b>@DecimalValue3</b>
+                    Value: <b>@intValue3</b>
                 </p>
             </SDKCard>
         </div>
         <div class="col-md-6 p-3">
             <SDKCard>
                 <h3>Apply a Mask</h3>
-                <SDKDecimalField @bind-Value="@Percentage"
-                            Mask="@NumericMaskValue" Culture="MaskCultureInfo.Value"
-                            MaxLength="4"/>
+                <SDKIntegerField @bind-Value="@Price"
+                            Mask="@NumericMaskValue" Culture="MaskCultureInfo.Value"/>
 
                 <p class="demo-text cw-320 mt-2">
-                    Percentage: <b>@Percentage %</b>
+                    Price: <b>$ @Price</b>
                 </p>
             </SDKCard>
         </div>
         <div class="col-md-6 p-3">
             <SDKCard>
-                <h3>Decimal Value Change</h3>
-                <SDKDecimalField Value="@valueChange"
+                <h3>Integer Value Change</h3>
+                <SDKIntegerField Value="@valueChange"
                             Mask="@NumericMaskValue" Culture="MaskCultureInfo.Value" 
                             ValueChanged="((value) => Onchange(value))"/>
 
                 <p class="demo-text cw-320 mt-2">
-                    Percentage: <b>@valueChange %</b>
+                    Price: <b>$ @valueChange</b>
                 </p>
             </SDKCard>
         </div>
@@ -69,30 +68,43 @@
 
 
 @code {
-    public double DecimalValue { get; set; } = 3.1415;
+    public int intValue { get; set; } = 15;
 
-    public double DecimalValue2 { get; set; } = 0.0;
-    public double DecimalValue3 { get; set; } = 1.1;
-    public double Percentage { get; set; }
+    public int intValue2 { get; set; }
+    public int intValue3 { get; set; }
+    int Price { get; set; }
 
-    double valueChange;
+    int valueChange;
     CultureInfoItem MaskCultureInfo { get; set; } = CultureInfoItems.FirstOrDefault();
-    string NumericMaskValue { get; set; } = NumericMask.Percentage;
+    string NumericMaskValue { get; set; } = NumericMask.Currency;
 
+    
     class CultureInfoItem {
         public CultureInfo Value { get; set; }
         public string Text { get; set; }
+
         public override string ToString() { return Text; }
     }
     static CultureInfoItem[] CultureInfoItems { get; set; } = new CultureInfoItem[] {
         new CultureInfoItem() { Value = CultureInfo.GetCultureInfo("en-US"), Text = "American English" },
         new CultureInfoItem() { Value = CultureInfo.GetCultureInfo("de-DE"), Text = "German" },
     };
-    public double Onchange(double value){
+
+    public int Onchange(int value){
 
         valueChange = value;
-        Notification.ShowWarning("This Percentage changed " + $"{valueChange} %");
+        Notification.ShowWarning("This price changed "+$"$ {valueChange}");
 
         return valueChange;  
     }
+    
+    /*
+    NumericMask.Currency
+    NumericMask.WholeNumber
+    NumericMask.RealNumber
+    NumericMask.RealNumberWithThousandSeparator
+    NumericMask.Percentage
+    NumericMask.PercentageMultipliedBy100
+    */
+    
 }
