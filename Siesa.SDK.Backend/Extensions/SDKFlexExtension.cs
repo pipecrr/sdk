@@ -30,7 +30,7 @@ namespace Siesa.SDK.Backend.Extensions
             List<SDKFlexColumn> columns = requestData.columns;
             if (columns.Count == 0)
             {
-                return new BadRequestResult<dynamic>();
+                return new ActionResult<dynamic>() { Data = new List<dynamic>() };
             }
 
             List<string> strColumns = new List<string>();
@@ -182,7 +182,8 @@ namespace Siesa.SDK.Backend.Extensions
                 //TimeOnly y TimeSpan se estan tratando como charField por eso se cambia el tipo del columnType
                 if (value != null && (columnType == typeof(TimeOnly) || columnType == typeof(TimeSpan)))
                 {
-                    var valueSplit = value.ToString().Split(":").ToList();
+                    var valueDate = DateTime.Parse(value.ToString());
+                    var valueSplit = valueDate.ToString("HH:mm:ss").Split(":").ToList();
                     int hours = 0;
                     int minutes = 0;
                     int seconds = 0;
