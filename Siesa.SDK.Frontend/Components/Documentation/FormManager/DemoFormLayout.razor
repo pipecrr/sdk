@@ -1,0 +1,54 @@
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Entities
+@using Siesa.SDK.Frontend.Services
+
+@inject SDKNotificationService NotificationService
+
+@layout EmptyLayout
+
+<div class="container-fluid">
+    <div class="container-fluid">
+            <h2>SDKProgessBar</h2> 
+            <p>Demonstration and configuration of the SDKProgessBar component</p> 
+    </div>
+    <div class="row px-3"> 
+        <div class="col-md-6 p-3">
+            <SDKFormLayout CssClass="w-100">
+                <SDKFormLayoutItem  ColSizeMd="6">
+                        <SDKLabel @bind-Value="@Name" />
+                </SDKFormLayoutItem>
+                <SDKFormLayoutItem  ColSizeMd="6">
+                        <SDKLabel @bind-Value="@Email" />
+                </SDKFormLayoutItem>
+                <SDKFormLayoutItem ColSizeMd="6">
+                        <SDKDateField @bind-Value="@DateTimeValue"/>
+                </SDKFormLayoutItem>
+                <SDKFormLayoutItem  ColSizeMd="6">
+                        <SDKIntegerField @bind-Value="@Price"
+                            Mask="@NumericMaskValue"/>
+                </SDKFormLayoutItem>
+                <SDKFormLayoutItem >
+                        <DxCheckBox @bind-Checked="@OnVacation" />
+                </SDKFormLayoutItem>
+            </SDKFormLayout>
+        </div>
+    </div>
+</div>
+
+@code
+{
+
+    string Name {get; set;} = "Name";
+
+    string Email {get; set;} = "HolaMundo@gamil.com";
+
+    int Price {get; set;} = 26;
+
+
+    DateTime DateTimeValue { get; set; } = DateTime.Now;
+
+    string NumericMaskValue { get; set; } = NumericMask.RealNumber;
+
+}

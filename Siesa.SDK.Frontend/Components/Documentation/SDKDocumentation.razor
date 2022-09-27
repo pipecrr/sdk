@@ -38,6 +38,8 @@
         </div>
     </div>
 </div>
+            
+
 
 
 @code {
@@ -59,6 +61,7 @@ private IEnumerable<ComponentCategory> Category = new List<ComponentCategory>()
                 new ComponentDemo{ComponentName="SDKDateField",ComponentFragment = @<DemoDateField />},
                 new ComponentDemo{ComponentName="SDKDecimalField",ComponentFragment = @<DemoDecimalField />},
                 new ComponentDemo{ComponentName="SDKIntegerField",ComponentFragment = @<DemoIntegerField />},
+                new ComponentDemo{ComponentName="SDKTextField",ComponentFragment = @<DemoTextField />},
                 new ComponentDemo{ComponentName="SDKColorPicker",ComponentFragment = @<DemoColorPicker />},
                 new ComponentDemo{ComponentName="SDKKanban",ComponentFragment = @<DemoKanban />},
                 new ComponentDemo{ComponentName="SDKSwitch",ComponentFragment = @<DemoSwitch />},
@@ -69,8 +72,8 @@ private IEnumerable<ComponentCategory> Category = new List<ComponentCategory>()
         },
         new ComponentCategory() {
             Name = "FormManager", Components = {
-                new ComponentDemo{ComponentName="ConfirmDelete"},
-                new ComponentDemo{ComponentName="InlineCrud"}
+                new ComponentDemo{ComponentName="InlineCrud", ComponentFragment = @<DemoInlineCrud />},
+                new ComponentDemo{ComponentName="SDKFormLayout", ComponentFragment = @<DemoFormLayout />}
             },Icon ="fa-solid fa-list"
         },
         new ComponentCategory() {
@@ -83,7 +86,7 @@ private IEnumerable<ComponentCategory> Category = new List<ComponentCategory>()
                 new ComponentDemo{ComponentName="SDKCollapse", ComponentFragment = @<DemoCollapse />},
                 new ComponentDemo{ComponentName="SDKFileViewer", ComponentFragment = @<DemoFileViewer />},
                 new ComponentDemo{ComponentName="SDKRadialGauge", ComponentFragment = @<DemoRadialGauge />},
-
+                new ComponentDemo{ComponentName="SDKTabs", ComponentFragment = @<DemoTabs />}
             },Icon ="fa-solid fa-cube" 
         },
 
@@ -111,6 +114,8 @@ private IEnumerable<ComponentCategory> Category = new List<ComponentCategory>()
         base.OnParametersSet();
         Init();
     }
+
+    
 }
 
 
