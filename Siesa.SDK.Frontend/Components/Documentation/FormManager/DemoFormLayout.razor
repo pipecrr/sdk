@@ -1,7 +1,8 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Components.Visualization
 @using Siesa.SDK.Frontend.Components.Fields
-@using Siesa.SDK.Entities
+@using Siesa.SDK.Frontend.Application
+@using Siesa.SDK.Shared.Services
 @using Siesa.SDK.Frontend.Services
 
 @inject SDKNotificationService NotificationService
@@ -10,29 +11,23 @@
 
 <div class="container-fluid">
     <div class="container-fluid">
-            <h2>SDKProgessBar</h2> 
-            <p>Demonstration and configuration of the SDKProgessBar component</p> 
+            <h2>SDKFormLayout</h2> 
+            <p>Demonstration and configuration of the SDKFormLayout component</p> 
     </div>
     <div class="row px-3"> 
         <div class="col-md-6 p-3">
-            <SDKFormLayout CssClass="w-100">
-                <SDKFormLayoutItem  ColSizeMd="6">
-                        <SDKLabel @bind-Value="@Name" />
-                </SDKFormLayoutItem>
-                <SDKFormLayoutItem  ColSizeMd="6">
-                        <SDKLabel @bind-Value="@Email" />
-                </SDKFormLayoutItem>
-                <SDKFormLayoutItem ColSizeMd="6">
+                <SDKFormLayoutTabPage ResourceTag="Nombre">
+                        <SDKCharField @bind-Value="@Name"/>
+                </SDKFormLayoutTabPage>
+                <SDKFormLayoutTabPage ResourceTag="Email">
+                        <SDKCharField @bind-Value="@Email"/>
+                </SDKFormLayoutTabPage>
+                <SDKFormLayoutTabPage ResourceTag="Date">
                         <SDKDateField @bind-Value="@DateTimeValue"/>
-                </SDKFormLayoutItem>
-                <SDKFormLayoutItem  ColSizeMd="6">
-                        <SDKIntegerField @bind-Value="@Price"
-                            Mask="@NumericMaskValue"/>
-                </SDKFormLayoutItem>
-                <SDKFormLayoutItem >
-                        <DxCheckBox @bind-Checked="@OnVacation" />
-                </SDKFormLayoutItem>
-            </SDKFormLayout>
+                </SDKFormLayoutTabPage>
+                <SDKFormLayoutTabPage ResourceTag="Seletc">
+                        <SDKBooleanField @bind-Value="@Selectd"/>
+                </SDKFormLayoutTabPage>
         </div>
     </div>
 </div>
@@ -40,15 +35,17 @@
 @code
 {
 
-    string Name {get; set;} = "Name";
+    public string Name {get; set;} = "Name";
 
-    string Email {get; set;} = "HolaMundo@gamil.com";
+    public string Email {get; set;} = "HolaMundo@gamil.com";
 
-    int Price {get; set;} = 26;
+    public int Age {get; set;} = 26;
+
+    public bool Selectd {get; set;} = true;
 
 
-    DateTime DateTimeValue { get; set; } = DateTime.Now;
+    public DateTime DateTimeValue { get; set; } = DateTime.Now;
 
-    string NumericMaskValue { get; set; } = NumericMask.RealNumber;
+    public string NumericMaskValue { get; set; } = NumericMask.RealNumber;
 
 }
