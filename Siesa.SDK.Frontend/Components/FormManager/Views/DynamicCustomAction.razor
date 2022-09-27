@@ -75,4 +75,10 @@ else if (BusinessObj != null)
         }
     }
 
+    protected override void OnInitialized()
+    {
+        ViewType = ViewModels.DynamicViewType.Custom;
+        base.OnInitialized();
+    }
+
 }
