@@ -137,20 +137,26 @@ namespace Siesa.SDK.Business
             //BaseObj = (T)myContext.Entry(BaseObj).CurrentValues.ToObject();
         }
 
-        public BLBackendSimple(IServiceProvider provider){
-
-            SetProvider(provider);
+        private void InternalConstructor()
+        {
             BaseObj = Activator.CreateInstance<T>();
             var _bannedTypes = new List<Type>() { typeof(string), typeof(byte[]) };
             _relatedProperties = BaseObj.GetType().GetProperties().Where(p => p.PropertyType.IsClass && !p.PropertyType.IsPrimitive && !p.PropertyType.IsEnum && !_bannedTypes.Contains(p.PropertyType) && p.Name != "RowVersion").Select(p => p.Name).ToArray();
+
+        }
+
+        public BLBackendSimple(IServiceProvider provider){
+
+            SetProvider(provider);
+            InternalConstructor();
+
         }
 
         public BLBackendSimple(IAuthenticationService authenticationService)
         {
-            AuthenticationService = authenticationService;  
-            BaseObj = Activator.CreateInstance<T>();
-            var _bannedTypes = new List<Type>() { typeof(string), typeof(byte[]) };
-            _relatedProperties = BaseObj.GetType().GetProperties().Where(p => p.PropertyType.IsClass && !p.PropertyType.IsPrimitive && !p.PropertyType.IsEnum && !_bannedTypes.Contains(p.PropertyType) && p.Name != "RowVersion").Select(p => p.Name).ToArray();
+            AuthenticationService = authenticationService;
+            InternalConstructor();  
+
         }
 
         public void ShareProvider(dynamic bl)
@@ -426,7 +432,7 @@ namespace Siesa.SDK.Business
 
         public virtual Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null)
         {
-            this._logger.LogWarning($"Get Data {this.GetType().Name}");
+            this._logger.LogInformation($"Get Data {this.GetType().Name}");
             var result = new Siesa.SDK.Shared.Business.LoadResult();
             using (SDKContext context = _dbFactory.CreateDbContext())
             {
