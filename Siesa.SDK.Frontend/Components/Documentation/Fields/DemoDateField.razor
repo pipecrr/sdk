@@ -1,6 +1,10 @@
 @using Siesa.SDK.Frontend.Components.Fields
 @using Siesa.SDK.Frontend.Components.Visualization
 @using System
+@using Siesa.SDK.Frontend.Services
+
+@inject SDKNotificationService Notification
+
 @layout EmptyLayout
 
 <div class="container-fluid">
@@ -11,21 +15,13 @@
     <div class="row px-3"> 
         <div class="col-md-6 p-3">
             <SDKCard>
-                <h3>Default</h3>
+                <h3>bind-Value</h3>
                 <SDKDateField @bind-Value="@DateTimeValue"/>
                 <p>
-                    <b>@DateTimeValue.ToString("dddd, dd MMMM yyyy")</b>
+                  Date: <b>@DateTimeValue.ToString("dddd, dd MMMM yyyy")</b>
                 </p>
             </SDKCard>
         </div>
-
-        <div class="col-md-6 p-3">
-            <SDKCard>
-            <h3>Placeholder</h3>
-            <SDKDateField @bind-Value="@DateTimeValue2" Placeholder="Select a date..."/>
-            </SDKCard>
-        </div>
-
         <div class="col-md-6 p-3">
             <SDKCard>
                 <h3>ReadOnly</h3>
@@ -33,6 +29,12 @@
                 <p>
                     Date: <b>@DateTimeValue3.ToString("dddd, dd MMMM yyyy")</b>
                 </p>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>Value Change</h3>
+                <SDKDateField Value="@valueChange" ValueChanged="((value) => Onchange(value))"/>
             </SDKCard>
         </div>
     </div>
@@ -44,5 +46,13 @@
     DateTime DateTimeValue2 { get; set; } = DateTime.Now;
     DateTime DateTimeValue3 { get; set; } = DateTime.Now;
 
-    //TODO: Agregar mas Parametros para personalizar mas el componente. PlaceHolder*
+    DateTime valueChange;
+
+    public DateTime Onchange(DateTime value){
+
+        valueChange = value;
+        Notification.ShowWarning("This value changed "+$"{valueChange}");
+
+        return valueChange;  
+    }
 }

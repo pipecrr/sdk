@@ -1,5 +1,8 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Services
+
+@inject SDKNotificationService Notification
 
 @layout EmptyLayout
 
@@ -11,22 +14,26 @@
     <div class="row px-3"> 
         <div class="col-md-6 p-3">
             <SDKCard >
-                <SDKBooleanField @bind-Value="@SelectPrueba">
+                <h3>bind-Value</h3>
+                <SDKBooleanField @bind-Value="@SelectPrueba" Enabled="true">
                     @SelectPrueba
                 </SDKBooleanField>
             </SDKCard>
         </div>
         <div class="col-md-6 p-3">
-            <SDKCard >
-                <SDKBooleanField @bind-Value="@SelectPrueba2" Enabled="@Habilitado">
-                    @SelectPrueba2
-                </SDKBooleanField>
+            <SDKCard>
+            <h3>Disabled</h3>
+            <SDKBooleanField @bind-Value="@SelectPrueba3" Enabled="false">
+                @SelectPrueba3
+            </SDKBooleanField>
             </SDKCard>
         </div>
         <div class="col-md-6 p-3">
-            <SDKCard >
-            <SDKBooleanField @bind-Value="@SelectPrueba3" Enabled="true">
-                @SelectPrueba3
+            <SDKCard>
+                <h3>Value Changed</h3>
+            <SDKBooleanField Value="@valueChange" Enabled="true"
+                ValueChanged="((value) => Onchange(value))">
+                @valueChange
             </SDKBooleanField>
             </SDKCard>
         </div>
@@ -38,6 +45,15 @@
 public bool SelectPrueba;
 public bool SelectPrueba2;
 public bool SelectPrueba3;
-public bool Habilitado = true;
+
+bool valueChange;
+
+public bool Onchange(bool value){
+
+        valueChange = value;
+        Notification.ShowWarning("This value changed "+$"{valueChange}");
+
+        return valueChange;  
+    }
 
 }
