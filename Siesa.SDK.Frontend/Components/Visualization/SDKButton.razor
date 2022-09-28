@@ -3,6 +3,7 @@
 @using Siesa.SDK.Shared.Services
 @inject IResourceManager ResourceManager
 @inject IAuthenticationService AuthenticationService
+@inherits SDKComponent
 
 
 <DxButton 
@@ -15,6 +16,7 @@
     NavigateUrl="@NavigateUrl"
     CssClass="@GetCss()"
     Enabled="@Enabled"
+    data-automation-id="@GetAutomationId()"
     >
     @if(!string.IsNullOrEmpty(IconCssClass)){
         <i class="@IconCssClass"></i>
@@ -83,5 +85,20 @@
             default:
                 return CssClass;
         }
+    }
+
+    protected override string GetAutomationId()
+    {
+        if(string.IsNullOrEmpty(AutomationId))
+        {
+            if(SubmitFormOnClick && !string.IsNullOrEmpty(form))
+            {
+                AutomationId = "submit";
+            }else if(!string.IsNullOrEmpty(ResourceTag))
+            {
+                AutomationId = ResourceTag;
+            }
+        }
+        return base.GetAutomationId();
     }
 }

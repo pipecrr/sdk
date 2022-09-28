@@ -1,15 +1,16 @@
+using DevExpress.Blazor;
 using Radzen;
 
 namespace Siesa.SDK.Frontend.Components
 {
     public static class SDKEnums
     {
-        public static DataGridSelectionMode Get(this SDKSelectionMode selectionMode)
+        public static Radzen.DataGridSelectionMode Get(this SDKSelectionMode selectionMode)
         {
             return selectionMode switch
             {
-                SDKSelectionMode.Single => DataGridSelectionMode.Single,
-                SDKSelectionMode.Multiple => DataGridSelectionMode.Multiple
+                SDKSelectionMode.Single => Radzen.DataGridSelectionMode.Single,
+                SDKSelectionMode.Multiple => Radzen.DataGridSelectionMode.Multiple
             };
         }
 
@@ -41,11 +42,26 @@ namespace Siesa.SDK.Frontend.Components
 
         }
 
+        public static DataEditorClearButtonDisplayMode Get(this SDKClearButtonDisplayMode clearButtonDisplayMode)
+        {
+            return clearButtonDisplayMode switch
+            {
+                SDKClearButtonDisplayMode.Auto => DataEditorClearButtonDisplayMode.Auto,
+                SDKClearButtonDisplayMode.Never => DataEditorClearButtonDisplayMode.Never,
+            };
+        }
+
+    }
+
+    public enum SDKClearButtonDisplayMode
+    {
+        Auto = DataEditorClearButtonDisplayMode.Auto,
+        Never = DataEditorClearButtonDisplayMode.Never,
     }
     public enum SDKSelectionMode
     {
-        Single = DataGridSelectionMode.Single,
-        Multiple = DataGridSelectionMode.Multiple
+        Single = Radzen.DataGridSelectionMode.Single,
+        Multiple = Radzen.DataGridSelectionMode.Multiple
     }
 
     public enum SDKColumnAlign {
