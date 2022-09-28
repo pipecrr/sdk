@@ -1,6 +1,7 @@
 ﻿using Siesa.SDK.Entities;
 using Siesa.SDK.Frontend.Components.Fields;
 using Siesa.SDK.Frontend.Components.FormManager.Fields;
+using Siesa.SDK.Shared.Utilities;
 using System;
 using System.Collections.Generic;
 
@@ -126,7 +127,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                     var tmpType = currentObject.GetType();
                     var tmpProperty = tmpType.GetProperty(fieldPath[i]);
                     var tmpValue = tmpProperty.GetValue(currentObject, null);
-                    var isEntity = tmpProperty.PropertyType.IsSubclassOf(typeof(BaseSDK<>));
+                    var isEntity = Utilities.IsAssignableToGenericType(tmpProperty.PropertyType, typeof(BaseSDK<>));
                     if (tmpValue == null && isEntity)
                     {
                         tmpValue = Activator.CreateInstance(tmpProperty.PropertyType);
