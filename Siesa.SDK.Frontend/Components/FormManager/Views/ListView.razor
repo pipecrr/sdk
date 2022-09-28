@@ -110,7 +110,14 @@ else
                     {
                         <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" >
                             <HeaderTemplate>
-                                <span><ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" /></span>
+                                <span>
+                                    @if(!string.IsNullOrEmpty(field.ResourceTag))
+                                    {
+                                        <ResourceViewer ResourceTag="@field.ResourceTag" />
+                                    }else {
+                                        <ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" />
+                                    }
+                                </span>
                             </HeaderTemplate>
                             <Template Context="data">
                                 @if(CanDetail)
@@ -129,7 +136,14 @@ else
                         if(field.FieldType == FieldTypes.Custom){
                             <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType">
                                 <HeaderTemplate>
-                                    <span><ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" /></span>
+                                    <span>
+                                        @if(!string.IsNullOrEmpty(field.ResourceTag))
+                                        {
+                                            <ResourceViewer ResourceTag="@field.ResourceTag" />
+                                        }else {
+                                            <ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" />
+                                        }
+                                    </span>
                                 </HeaderTemplate>
                                 <Template Context="data">
                                     <CustomField BaseModelObj="@BusinessObj" FieldOpt="field"  Definition="field.CustomComponent" BaseObj="@data"/>
@@ -138,7 +152,14 @@ else
                         }else if(columnType == typeof(bool)){
                             <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" TextAlign="TextAlign.Center" HeaderCssClass="align-header-left" >
                                 <HeaderTemplate>
-                                    <span><ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" /></span>
+                                    <span>
+                                        @if(!string.IsNullOrEmpty(field.ResourceTag))
+                                        {
+                                            <ResourceViewer ResourceTag="@field.ResourceTag" />
+                                        }else {
+                                            <ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" />
+                                        }
+                                    </span>
                                 </HeaderTemplate>
                                 <Template Context="data">
                                     <input type="checkbox" checked="@(data.GetType().GetProperty(fieldName).GetValue(data))" disabled />
@@ -148,7 +169,14 @@ else
                         }else if(field.FieldType == FieldTypes.SelectField){
                             <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType">
                                 <HeaderTemplate>
-                                    <span><ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" /></span>
+                                    <span>
+                                        @if(!string.IsNullOrEmpty(field.ResourceTag))
+                                        {
+                                            <ResourceViewer ResourceTag="@field.ResourceTag" />
+                                        }else {
+                                            <ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" />
+                                        }
+                                    </span>
                                 </HeaderTemplate>
                                 <Template Context="data">
                                     <DynamicComponent Type="@typeof(SelectFieldDetail<>).MakeGenericType(field.GetFieldObj(data).SelectFieldType)" Parameters="@GetSelectFieldParameters(data, field, fieldName)" />
@@ -158,13 +186,27 @@ else
                         }else if(columnType == typeof(decimal)){
                             <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" TextAlign="TextAlign.Right" HeaderCssClass="align-header-left">
                                 <HeaderTemplate>
-                                    <span><ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" /></span>
+                                    <span>
+                                        @if(!string.IsNullOrEmpty(field.ResourceTag))
+                                        {
+                                            <ResourceViewer ResourceTag="@field.ResourceTag" />
+                                        }else {
+                                            <ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" />
+                                        }
+                                    </span>
                                 </HeaderTemplate>
                             </RadzenDataGridColumn>
                         }else{
                         <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType">
                             <HeaderTemplate>
-                                <span><ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" /></span>
+                                <span>
+                                    @if(!string.IsNullOrEmpty(field.ResourceTag))
+                                    {
+                                        <ResourceViewer ResourceTag="@field.ResourceTag" />
+                                    }else {
+                                        <ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" />
+                                    }
+                                </span>
                             </HeaderTemplate>
                         </RadzenDataGridColumn>
                         }
