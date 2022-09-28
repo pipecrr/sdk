@@ -5,6 +5,7 @@
 @using Siesa.SDK.Frontend.Components.Documentation.Visualization
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Frontend.Services
+@using Siesa.SDK.Frontend.Components.Fields
 @using Siesa.SDK.Frontend.Components.Documentation.Fields
 
 @layout EmptyLayout
@@ -28,19 +29,24 @@
     </DxMenu>
 </SDKCard>
 <div class="container-fluid">
-    <div class="row">
+    <div class="row justify-content-space-evenly">
         <div class="col-12">
+                @if(SelectedComponent != null && SelectedComponent.ComponentFragment != null)
+                {
+                    <SDKTabs>
+                        <SDKTab IconCssClass="fa-solid fa-eye">
 
-            @if(SelectedComponent != null && SelectedComponent.ComponentFragment != null)
-            {
-                <SDKButton  ResourceTag="Button with Icon" RenderStyle="SDKButtonRenderStyle.Secondary" IconCssClass="fa-solid fa-code" Click="@ViewSourceCode"/>
+                                @SelectedComponent.ComponentFragment;
+                    
+                    </SDKTab>
+                        <SDKTab IconCssClass="fa-solid fa-code">  
 
-                @SelectedComponent.ComponentFragment;
-            }
-            @if (showSource)
-            {
-                <pre style="min-height: 500px; overflow: auto; font-size: 12px">@SelectedComponent.SourceCode</pre>
-            }
+                            <SDKTextField Value="@ViewSourceCode()"
+                            CssClass="tab-text-area"/>
+
+                        </SDKTab>
+                    </SDKTabs>
+                    }
         </div>
     </div>
 </div>

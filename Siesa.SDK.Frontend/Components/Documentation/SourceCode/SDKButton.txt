@@ -1,1 +1,74 @@
-https://carbon.now.sh/embed?bg=rgba%28239%2C40%2C44%2C0%29&t=one-light&wt=none&l=text%2Fx-csharp&width=680&ds=true&dsyoff=20px&dsblur=68px&wc=true&wa=true&pv=56px&ph=56px&ln=false&fl=1&fm=Hack&fs=14px&lh=143%25&si=false&es=2x&wm=false&code=%2540using%2520Siesa.SDK.Frontend.Components.Visualization%250A%2540using%2520Siesa.SDK.Components.Visualization%250A%2540inject%2520SDKNotificationService%2520SDKNotificationService%250A%250A%2540layout%2520EmptyLayout%250A%250A%250A%253Cdiv%2520class%253D%2522container-fluid%2520m-3%2522%253E%250A%2520%2520%2520%2520%253Cdiv%2520class%253D%2522container-fluid%2522%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253Ch2%253ESDKButton%253C%252Fh2%253E%2520%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253Cp%253EDemonstration%2520and%2520configuration%2520of%2520the%2520SDKButton%2520component%253C%252Fp%253E%2520%250A%2520%2520%2520%2520%253C%252Fdiv%253E%250A%2520%2520%2520%2520%253Cdiv%2520class%253D%2522row%2520px-3%2522%253E%2520%250A%2520%2520%2520%2520%2520%2520%2520%2520%253Cdiv%2520class%253D%2522col-md-6%2520p-1%2522%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253CSDKCard%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253Ch3%253EButton%2520Style%253C%252Fh3%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253CSDKButton%2520RenderStyle%253D%2522SDKButtonRenderStyle.None%2522%2520ResourceTag%253D%2522Style%2520None%2522%252F%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253CSDKButton%2520RenderStyle%253D%2522SDKButtonRenderStyle.Primary%2522%2520ResourceTag%253D%2522Style%2520Primary%2522%252F%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253CSDKButton%2520RenderStyle%253D%2522SDKButtonRenderStyle.Secondary%2522%2520ResourceTag%253D%2522Style%2520Secondary%2522%252F%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253CSDKButton%2520RenderStyle%253D%2522SDKButtonRenderStyle.Info%2522%2520ResourceTag%253D%2522Style%2520Info%2522%252F%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253CSDKButton%2520RenderStyle%253D%2522SDKButtonRenderStyle.Link%2522%2520ResourceTag%253D%2522Style%2520Link%2522%252F%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253CSDKButton%2520RenderStyle%253D%2522SDKButtonRenderStyle.Success%2522%2520ResourceTag%253D%2522Style%2520Succes%2522%252F%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253CSDKButton%2520RenderStyle%253D%2522SDKButtonRenderStyle.Warning%2522%2520ResourceTag%253D%2522Style%2520Warning%2522%252F%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253CSDKButton%2520RenderStyle%253D%2522SDKButtonRenderStyle.Danger%2522%2520ResourceTag%253D%2522Style%2520Danger%2522%252F%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253CSDKButton%2520RenderStyle%253D%2522SDKButtonRenderStyle.Dark%2522%2520ResourceTag%253D%2522Style%2520Dark%2522%252F%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253CSDKButton%2520RenderStyle%253D%2522SDKButtonRenderStyle.Light%2522%2520ResourceTag%253D%2522Style%2520Ligth%2522%252F%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253C%252FSDKCard%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%253C%252Fdiv%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%253Cdiv%2520class%253D%2522col-md-6%2520p-1%2522%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253CSDKCard%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253Ch3%253EAction%2520Button%253C%252Fh3%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253CSDKButton%2520RenderStyle%253D%2522SDKButtonRenderStyle.Primary%2522%2520%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520ResourceTag%253D%2522Action%2520Button%2520%28Get%2520Notification%2520Cancel%2520and%2520Confirm%29%2522%2520Click%253D%2522%2540TestClickButton%2522%252F%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253C%252FSDKCard%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%253C%252Fdiv%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%253Cdiv%2520class%253D%2522col-md-6%2520p-1%2522%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253CSDKCard%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253Ch3%253EButton%2520Mode%253C%252Fh3%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253CSDKButton%2520%2520ResourceTag%253D%2522Style%2520Contained%2520The%2520button%2520is%2520filled%2520with%2520the%2520style%2520colo
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
+@inject SDKNotificationService SDKNotificationService
+
+@layout EmptyLayout
+
+
+<div class="container-fluid m-3">
+    <div class="container-fluid">
+            <h2>SDKButton</h2> 
+            <p>Demonstration and configuration of the SDKButton component</p> 
+    </div>
+    <div class="row px-3"> 
+        <div class="col-md-6 p-1">
+            <SDKCard>
+                <h3>Button Style</h3>
+                <SDKButton RenderStyle="SDKButtonRenderStyle.None" ResourceTag="Style None"/>
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Style Primary"/>
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Style Secondary"/>
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Info" ResourceTag="Style Info"/>
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Link" ResourceTag="Style Link"/>
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Success" ResourceTag="Style Succes"/>
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Warning" ResourceTag="Style Warning"/>
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Danger" ResourceTag="Style Danger"/>
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Dark" ResourceTag="Style Dark"/>
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Light" ResourceTag="Style Ligth"/>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-1">
+            <SDKCard>
+                <h3>Action Button</h3>
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" 
+                 ResourceTag="Action Button (Get Notification Cancel and Confirm)" Click="@TestClickButton"/>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-1">
+            <SDKCard>
+                <h3>Button Mode</h3>
+                <SDKButton  ResourceTag="Style Contained The button is filled with the style color" RenderStyleMode="SDKButtonRenderStyleMode.Contained" RenderStyle="SDKButtonRenderStyle.Warning" />
+                
+                <SDKButton  ResourceTag="Style Outline The button’s text and borders are colored" RenderStyleMode="SDKButtonRenderStyleMode.Outline" RenderStyle="SDKButtonRenderStyle.Danger" />
+
+                <SDKButton  ResourceTag="Style Text The button’s text is colored" RenderStyleMode="SDKButtonRenderStyleMode.Text"
+                 RenderStyle="SDKButtonRenderStyle.Success"/>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-1">
+            <SDKCard>
+                <h3>Button Disabled</h3>
+                <SDKButton  ResourceTag="Button Disabled" RenderStyle="SDKButtonRenderStyle.Primary" Enabled="false" />
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-1">
+            <SDKCard>
+                <h3>Button Content</h3>
+                <SDKButton  ResourceTag="Button with Icon" RenderStyle="SDKButtonRenderStyle.Secondary" IconCssClass="fa-solid fa-square-check"/>
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary">
+                    <div class="container-fluid">
+                        <h3>This is Child Content in Botton</h3>
+                        <p>Child content can be another component or custom html content</p>
+                    </div>
+                </SDKButton>
+            </SDKCard>
+        </div>
+    </div>
+</div>
+
+@code{
+    public async Task TestClickButton(){
+
+    await SDKNotificationService.ShowSuccess("Confirmado");
+    await SDKNotificationService.ShowError("Cancelado");
+    }
+}

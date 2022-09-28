@@ -1,4 +1,3 @@
-
 @using Siesa.SDK.Frontend.Components.Visualization
 @layout EmptyLayout
 

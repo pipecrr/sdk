@@ -1,1 +1,62 @@
-https://carbon.now.sh/embed?bg=rgba%28239%2C40%2C44%2C0%29&t=one-light&wt=none&l=text%2Fx-csharp&width=680&ds=true&dsyoff=20px&dsblur=68px&wc=true&wa=true&pv=56px&ph=56px&ln=true&fl=1&fm=Hack&fs=12px&lh=143%25&si=false&es=2x&wm=false&code=%2540using%2520Siesa.SDK.Frontend.Components.Fields%250A%2540using%2520Siesa.SDK.Frontend.Components.Visualization%250A%2540using%2520Siesa.SDK.Components.Visualization%250A%250A%2540inject%2520SDKNotificationService%2520Notification%250A%250A%250A%2540layout%2520EmptyLayout%250A%250A%253Cdiv%2520class%253D%2522container-fluid%2522%253E%250A%2520%2520%2520%2520%253Cdiv%2520class%253D%2522container-fluid%2522%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253Ch2%253ESDKSelectBar%253C%252Fh2%253E%2520%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253Cp%253EDemonstration%2520and%2520configuration%2520of%2520the%2520SDKSelectBar%2520component%253C%252Fp%253E%2520%250A%2520%2520%2520%2520%253C%252Fdiv%253E%250A%2520%2520%2520%2520%253Cdiv%2520class%253D%2522row%2520px-3%2522%253E%2520%250A%2520%2520%2520%2520%2520%2520%2520%2520%253Cdiv%2520class%253D%2522col-md-6%2520p-3%2522%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253CSDKCard%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253Ch3%253ESelect%2520Bar%253C%252Fh3%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253CSDKSelectBar%2520ItemType%253D%2522int%2522%2520%2540bind-Value%253D%2522%2540myValue%2522%2520Data%253D%2522%2540TestList%2522%253E%253C%252FSDKSelectBar%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253Cp%253EItem%2520Selected%253A%2520%2540myValue%253C%252Fp%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253C%252FSDKCard%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%253C%252Fdiv%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%253Cdiv%2520class%253D%2522col-md-6%2520p-3%2522%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253CSDKCard%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253Ch3%253ESelect%2520Bar%2520Value%2520Changed%253C%252Fh3%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253CSDKSelectBar%2520ItemType%253D%2522int%2522%2520Value%253D%2522%2540myValue2%2522%2520Data%253D%2522%2540TestList%2522%2520ValueChanged%253D%2522%28myValue2%29%253D%253EOnchange%28myValue2%29%2522%253E%253C%252FSDKSelectBar%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253Cp%253EItem%2520Selected%253A%2520%2540myValue2%253C%252Fp%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253C%252FSDKCard%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%253C%252Fdiv%253E%250A%2520%2520%2520%2520%253C%252Fdiv%253E%250A%253C%252Fdiv%253E%250A%2540code%250A%257B%250A%2520%2520%2520%2520int%2520myValue%253B%250A%2520%2520%2520%2520int%2520myValue2%253B%250A%2520%2520%2520%2520List%253CSelectBarItemWrap%253Cint%253E%253E%2520TestList%2520%253D%2520new%2520List%253CSelectBarItemWrap%253Cint%253E%253E%28%29%250A%2520%2520%2520%2520%257B%250A%2520%2520%2520%2520%2520%2520%2520%2520new%2520SelectBarItemWrap%253Cint%253E%28%29%2520%257BKey%253D1%252C%2520Name%253D%2522Item%25201%2522%257D%252C%250A%2520%2520%2520%2520%2520%2520%2520%2520new%2520SelectBarItemWrap%253Cint%253E%28%29%2520%257BKey%253D2%252C%2520Name%253D%2522Item%25202%2522%257D%252C%250A%2520%2520%2520%2520%2520%2520%2520%2520new%2520SelectBarItemWrap%253Cint%253E%28%29%2520%257BKey%253D3%252C%2520Name%253D%2522Item%25203%2522%257D%250A%2520%2520%2520%2520%257D%253B%250A%2520%2520%2520%2520public%2520int%2520Onchange%28int%2520item%29%257B%250A%2520%2520%2520%2520myValue2%2520%253D%2520item%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520switch%2520%28item%29%250A%2520%2520%2520%2520%2520%2520%2520%2520%257B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520case%25201%253A%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520Notification.ShowSuccess%28%2522Item%2520Selected%25201%2522%29%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520return%2520myValue2%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520case%25202%253A%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520Notification.ShowWarning%28%2522Item%2520Selected%25202%2522%29%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520return%2520myValue2%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520case%25203%253A%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520Notification.ShowError%28%2522Item%2520Selected%25203%2522%29%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520return%2520myValue2%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520default%253A%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520return%25200%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%257D%250A%2520%2520%2520%2520%257D%250A%257D
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
+
+@inject SDKNotificationService Notification
+
+
+@layout EmptyLayout
+
+<div class="container-fluid">
+    <div class="container-fluid">
+            <h2>SDKSelectBar</h2> 
+            <p>Demonstration and configuration of the SDKSelectBar component</p> 
+    </div>
+    <div class="row px-3"> 
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>Select Bar</h3>
+            <SDKSelectBar ItemType="int" @bind-Value="@myValue" Data="@TestList"></SDKSelectBar>
+            <p>Item Selected: @myValue</p>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>Select Bar Value Changed</h3>
+            <SDKSelectBar ItemType="int" Value="@myValue2" Data="@TestList" ValueChanged="(myValue2)=>Onchange(myValue2)"></SDKSelectBar>
+            <p>Item Selected: @myValue2</p>
+            </SDKCard>
+        </div>
+    </div>
+</div>
+@code
+{
+    int myValue;
+    int myValue2;
+    
+    List<SelectBarItemWrap<int>> TestList = new List<SelectBarItemWrap<int>>()
+    {
+        new SelectBarItemWrap<int>() {Key=1, Name="Item 1"},
+        new SelectBarItemWrap<int>() {Key=2, Name="Item 2"},
+        new SelectBarItemWrap<int>() {Key=3, Name="Item 3"}
+    };
+    public int Onchange(int item){
+
+        myValue2 = item;
+
+        switch (item)
+        {
+            case 1:
+                Notification.ShowSuccess("Item Selected 1");
+                return myValue2;
+            case 2:
+                Notification.ShowWarning("Item Selected 2");
+                return myValue2;
+            case 3:
+                Notification.ShowError("Item Selected 3");
+                return myValue2;
+            default:
+                return 0;
+        }
+    }
+}

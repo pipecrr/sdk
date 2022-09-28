@@ -69,24 +69,19 @@ namespace Siesa.SDK.Frontend.Components.Documentation
             Init();
         }
 
-        public void ViewSourceCode()
+        public string ViewSourceCode()
         {
-
-            showSource = !showSource;
-            if (showSource)
+            try
             {
-                try
-                {
-                    string prubaURL = Utilities.ReadAssemblyResource(this.GetType().Assembly, $"Components.Documentation.SourceCode.{SelectedComponent.ComponentName}.txt");
-                    SelectedComponent.SourceCode = prubaURL;
-                }
-                catch (Exception e)
-                {
-
-                    Notification.ShowError("Custom.SDKDocumentation.SourceCodeNotFound");
-                    StateHasChanged();
-                }
-
+                string Source = Utilities.ReadAssemblyResource(this.GetType().Assembly, $"Components.Documentation.SourceCode.{SelectedComponent.ComponentName}.txt");
+                return SelectedComponent.SourceCode = Source;
+                
+            }
+            catch (System.Exception)
+            {
+                Notification.ShowError("Custom.SDKDocumentation.SourceCodeNotFound");
+                StateHasChanged();
+                return "";
             }
 
         }

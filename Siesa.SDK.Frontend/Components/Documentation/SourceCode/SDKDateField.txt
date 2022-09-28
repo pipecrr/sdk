@@ -1,1 +1,58 @@
-https://carbon.now.sh/embed?bg=rgba%28239%2C40%2C44%2C0%29&t=one-light&wt=none&l=text%2Fx-csharp&width=680&ds=true&dsyoff=20px&dsblur=68px&wc=true&wa=true&pv=56px&ph=56px&ln=true&fl=1&fm=Hack&fs=12px&lh=143%25&si=false&es=2x&wm=false&code=%2540using%2520Siesa.SDK.Frontend.Components.Fields%250A%2540using%2520Siesa.SDK.Frontend.Components.Visualization%250A%2540using%2520System%250A%2540using%2520Siesa.SDK.Frontend.Services%250A%250A%2540inject%2520SDKNotificationService%2520Notification%250A%250A%2540layout%2520EmptyLayout%250A%250A%253Cdiv%2520class%253D%2522container-fluid%2522%253E%250A%2520%2520%2520%2520%253Cdiv%2520class%253D%2522container-fluid%2522%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253Ch2%253ESDKDateField%253C%252Fh2%253E%2520%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253Cp%253EDemonstration%2520and%2520configuration%2520of%2520the%2520SDKDateField%2520component%253C%252Fp%253E%2520%250A%2520%2520%2520%2520%253C%252Fdiv%253E%250A%2520%2520%2520%2520%253Cdiv%2520class%253D%2522row%2520px-3%2522%253E%2520%250A%2520%2520%2520%2520%2520%2520%2520%2520%253Cdiv%2520class%253D%2522col-md-6%2520p-3%2522%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253CSDKCard%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253Ch3%253Ebind-Value%253C%252Fh3%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253CSDKDateField%2520%2540bind-Value%253D%2522%2540DateTimeValue%2522%252F%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253Cp%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520Date%253A%2520%253Cb%253E%2540DateTimeValue.ToString%28%2522dddd%252C%2520dd%2520MMMM%2520yyyy%2522%29%253C%252Fb%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253C%252Fp%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253C%252FSDKCard%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%253C%252Fdiv%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%253Cdiv%2520class%253D%2522col-md-6%2520p-3%2522%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253CSDKCard%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253Ch3%253EReadOnly%253C%252Fh3%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253CSDKDateField%2520%2540bind-Value%253D%2522%2540DateTimeValue3%2522%2520ReadOnly%253D%2522true%2522%252F%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253Cp%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520Date%253A%2520%253Cb%253E%2540DateTimeValue3.ToString%28%2522dddd%252C%2520dd%2520MMMM%2520yyyy%2522%29%253C%252Fb%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253C%252Fp%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253C%252FSDKCard%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%253C%252Fdiv%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%253Cdiv%2520class%253D%2522col-md-6%2520p-3%2522%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253CSDKCard%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253Ch3%253EValue%2520Change%253C%252Fh3%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253CSDKDateField%2520Value%253D%2522%2540valueChange%2522%2520ValueChanged%253D%2522%28%28value%29%2520%253D%253E%2520Onchange%28value%29%29%2522%252F%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%253C%252FSDKCard%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%253C%252Fdiv%253E%250A%2520%2520%2520%2520%253C%252Fdiv%253E%250A%253C%252Fdiv%253E%250A%250A%250A%2540code%2520%257B%250A%2520%2520%2520%2520DateTime%2520DateTimeValue%2520%257B%2520get%253B%2520set%253B%2520%257D%2520%253D%2520DateTime.Now%253B%250A%2520%2520%2520%2520DateTime%2520DateTimeValue2%2520%257B%2520get%253B%2520set%253B%2520%257D%2520%253D%2520DateTime.Now%253B%250A%2520%2520%2520%2520DateTime%2520DateTimeValue3%2520%257B%2520get%253B%2520set%253B%2520%257D%2520%253D%2520DateTime.Now%253B%250A%250A%2520%2520%2520%2520DateTime%2520valueChange%253B%250A%250A%2520%2520%2520%2520public%2520DateTime%2520Onchange%28DateTime%2520value%29%257B%250A%250A%2520%2520%2520%2520%2520%2520%2520%2520valueChange%2520%253D%2520value%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520Notification.ShowWarning%28%2522This%2520value%2520changed%2520%2522%252B%2524%2522%257BvalueChange%257D%2522%29%253B%250A%250A%2520%2520%2520%2520%2520%2520%2520%2520return%2520valueChange%253B%2520%2520%250A%2520%2520%2520%2520%257D%250A%257D
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.Visualization
+@using System
+@using Siesa.SDK.Frontend.Services
+
+@inject SDKNotificationService Notification
+
+@layout EmptyLayout
+
+<div class="container-fluid">
+    <div class="container-fluid">
+            <h2>SDKDateField</h2> 
+            <p>Demonstration and configuration of the SDKDateField component</p> 
+    </div>
+    <div class="row px-3"> 
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>bind-Value</h3>
+                <SDKDateField @bind-Value="@DateTimeValue"/>
+                <p>
+                  Date: <b>@DateTimeValue.ToString("dddd, dd MMMM yyyy")</b>
+                </p>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>ReadOnly</h3>
+                <SDKDateField @bind-Value="@DateTimeValue3" ReadOnly="true"/>
+                <p>
+                    Date: <b>@DateTimeValue3.ToString("dddd, dd MMMM yyyy")</b>
+                </p>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>Value Change</h3>
+                <SDKDateField Value="@valueChange" ValueChanged="((value) => Onchange(value))"/>
+            </SDKCard>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    DateTime DateTimeValue { get; set; } = DateTime.Now;
+    DateTime DateTimeValue2 { get; set; } = DateTime.Now;
+    DateTime DateTimeValue3 { get; set; } = DateTime.Now;
+
+    DateTime valueChange;
+
+    public DateTime Onchange(DateTime value){
+
+        valueChange = value;
+        Notification.ShowWarning("This value changed "+$"{valueChange}");
+
+        return valueChange;  
+    }
+}

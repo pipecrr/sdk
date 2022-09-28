@@ -19,7 +19,7 @@ else
             </TabTemplate>
         </DxTabPage>
     }else{
-        <DxTabPage Text="@TitleText" ChildContent="@ChildContent" />
+        <DxTabPage Text="@TitleText" ChildContent="@ChildContent" TabIconCssClass=@IconCssClass/>
     }
 }
 
@@ -47,6 +47,8 @@ else
 
     [Parameter]
     public RenderFragment ChildContent { get; set; }
+    [Parameter]
+    public string IconCssClass {get; set;}
 
     [CascadingParameter]
     public SDKTabs TabsContainer {get;set;}
