@@ -29,14 +29,15 @@
     </DxMenu>
 </SDKCard>
 <div class="container-fluid">
-    <div class="row justify-content-space-evenly">
+    <div class="row justify-content-center">
         <div class="col-12">
                 @if(SelectedComponent != null && SelectedComponent.ComponentFragment != null)
                 {
                     <SDKTabs>
                         <SDKTab IconCssClass="fa-solid fa-eye">
-
+                            <SDKCard>
                                 @SelectedComponent.ComponentFragment;
+                            </SDKCard>
                     
                     </SDKTab>
                         <SDKTab IconCssClass="fa-solid fa-code">  
