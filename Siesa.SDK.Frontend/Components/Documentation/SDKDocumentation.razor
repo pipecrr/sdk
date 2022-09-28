@@ -1,12 +1,11 @@
 @page "/sdk-docs/"
 @page "/sdk-docs/{pComponentName}/"
+@using SDK.Components.Visualization
 @using Siesa.SDK.Frontend.Components
 @using Siesa.SDK.Frontend.Components.Documentation.Visualization
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Frontend.Services
 @using Siesa.SDK.Frontend.Components.Documentation.Fields
-
-@inject SDKNotificationService Notification
 
 @layout EmptyLayout
 
@@ -31,9 +30,16 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
+
             @if(SelectedComponent != null && SelectedComponent.ComponentFragment != null)
             {
+                <SDKButton  ResourceTag="Button with Icon" RenderStyle="SDKButtonRenderStyle.Secondary" IconCssClass="fa-solid fa-code" Click="@ViewSourceCode"/>
+
                 @SelectedComponent.ComponentFragment;
+            }
+            @if (showSource)
+            {
+                <pre style="min-height: 500px; overflow: auto; font-size: 12px">@SelectedComponent.SourceCode</pre>
             }
         </div>
     </div>
@@ -43,76 +49,49 @@
 
 
 @code {
-
-    private string GetNavigateUrl(ComponentDemo item)
+    protected override void OnInitialized()
     {
-        return $"/sdk-docs/{item.ComponentName}";
-    }
-    [Parameter] public string pComponentName {get;set;}
+        base.OnInitialized();
 
-    private ComponentDemo SelectedComponent {get;set;}
-
-private IEnumerable<ComponentCategory> Category = new List<ComponentCategory>()
-    {
-        new ComponentCategory() {
-            Name = "Fields", Components = {
-                new ComponentDemo{ComponentName="SDKBooleanField",ComponentFragment = @<DemoBooleanField /> },
-                new ComponentDemo{ComponentName="SDKCharField",ComponentFragment = @<DemoCharField />},
-                new ComponentDemo{ComponentName="SDKDateField",ComponentFragment = @<DemoDateField />},
-                new ComponentDemo{ComponentName="SDKDecimalField",ComponentFragment = @<DemoDecimalField />},
-                new ComponentDemo{ComponentName="SDKIntegerField",ComponentFragment = @<DemoIntegerField />},
-                new ComponentDemo{ComponentName="SDKTextField",ComponentFragment = @<DemoTextField />},
-                new ComponentDemo{ComponentName="SDKColorPicker",ComponentFragment = @<DemoColorPicker />},
-                new ComponentDemo{ComponentName="SDKKanban",ComponentFragment = @<DemoKanban />},
-                new ComponentDemo{ComponentName="SDKSwitch",ComponentFragment = @<DemoSwitch />},
-                new ComponentDemo{ComponentName="SDKSelectBar",ComponentFragment = @<DemoSelectBar />},
-                new ComponentDemo{ComponentName="SDKSteps",ComponentFragment = @<DemoSteps />},
-                new ComponentDemo{ComponentName="SDKGrid",ComponentFragment = @<DemoGrid />}
-            }, Icon ="fa-solid fa-cubes"
-        },
-        new ComponentCategory() {
-            Name = "FormManager", Components = {
-                new ComponentDemo{ComponentName="InlineCrud", ComponentFragment = @<DemoInlineCrud />},
-                new ComponentDemo{ComponentName="SDKFormLayout", ComponentFragment = @<DemoFormLayout />}
-            },Icon ="fa-solid fa-list"
-        },
-        new ComponentCategory() {
-            Name = "Visualization", Components = {
-                new ComponentDemo{ComponentName="SDKCard", ComponentFragment = @<DemoCard />},
-                new ComponentDemo{ComponentName="SDKConfirmDialog", ComponentFragment = @<DemoConfirmDialog />},
-                new ComponentDemo{ComponentName="SDKBadge", ComponentFragment = @<DemoBadge />},
-                new ComponentDemo{ComponentName="SDKProgessBar", ComponentFragment = @<DemoProgressBar />},
-                new ComponentDemo{ComponentName="SDKButton", ComponentFragment = @<DemoButton />},
-                new ComponentDemo{ComponentName="SDKCollapse", ComponentFragment = @<DemoCollapse />},
-                new ComponentDemo{ComponentName="SDKFileViewer", ComponentFragment = @<DemoFileViewer />},
-                new ComponentDemo{ComponentName="SDKRadialGauge", ComponentFragment = @<DemoRadialGauge />},
-                new ComponentDemo{ComponentName="SDKTabs", ComponentFragment = @<DemoTabs />}
-            },Icon ="fa-solid fa-cube" 
-        },
-
-    };
-    private void SetSelectedComponent(ComponentDemo item)
-    {
-        SelectedComponent = item;
-        StateHasChanged();
-    }
-
-    private void Init()
-    {
-        if(!string.IsNullOrEmpty(pComponentName))
+        Category = new List<ComponentCategory>()
         {
-            var x = Category.Where(x=>x.Components.Any(y=> y.ComponentName == pComponentName)).FirstOrDefault();
-            if(x != null)
-            {
-                SelectedComponent = x.Components.Where(x=>x.ComponentName == pComponentName).FirstOrDefault();
-            }
-        }
-    }
+            new ComponentCategory() {
+                Name = "Fields", Components = {
+                    new ComponentDemo{ComponentName="SDKBooleanField",ComponentFragment = @<DemoBooleanField /> },
+                    new ComponentDemo{ComponentName="SDKCharField",ComponentFragment = @<DemoCharField />},
+                    new ComponentDemo{ComponentName="SDKDateField",ComponentFragment = @<DemoDateField />},
+                    new ComponentDemo{ComponentName="SDKDecimalField",ComponentFragment = @<DemoDecimalField />},
+                    new ComponentDemo{ComponentName="SDKIntegerField",ComponentFragment = @<DemoIntegerField />},
+                    new ComponentDemo{ComponentName="SDKTextField",ComponentFragment = @<DemoTextField />},
+                    new ComponentDemo{ComponentName="SDKColorPicker",ComponentFragment = @<DemoColorPicker />},
+                    new ComponentDemo{ComponentName="SDKKanban",ComponentFragment = @<DemoKanban />},
+                    new ComponentDemo{ComponentName="SDKSwitch",ComponentFragment = @<DemoSwitch />},
+                    new ComponentDemo{ComponentName="SDKSelectBar",ComponentFragment = @<DemoSelectBar />},
+                    new ComponentDemo{ComponentName="SDKSteps",ComponentFragment = @<DemoSteps />},
+                    new ComponentDemo{ComponentName="SDKGrid",ComponentFragment = @<DemoGrid />}
+                }, Icon ="fa-solid fa-cubes"
+            },
+            @* new ComponentCategory() {
+                Name = "FormManager", Components = {
+                    new ComponentDemo{ComponentName="InlineCrud", ComponentFragment = @<DemoInlineCrud />},
+                    new ComponentDemo{ComponentName="SDKFormLayout", ComponentFragment = @<DemoFormLayout />}
+                },Icon ="fa-solid fa-list"
+            }, *@
+            new ComponentCategory() {
+                Name = "Visualization", Components = {
+                    new ComponentDemo{ComponentName="SDKCard", ComponentFragment = @<DemoCard />},
+                    new ComponentDemo{ComponentName="SDKConfirmDialog", ComponentFragment = @<DemoConfirmDialog />},
+                    new ComponentDemo{ComponentName="SDKBadge", ComponentFragment = @<DemoBadge />},
+                    new ComponentDemo{ComponentName="SDKProgessBar", ComponentFragment = @<DemoProgressBar />},
+                    new ComponentDemo{ComponentName="SDKButton", ComponentFragment = @<DemoButton />},
+                    new ComponentDemo{ComponentName="SDKCollapse", ComponentFragment = @<DemoCollapse />},
+                    new ComponentDemo{ComponentName="SDKFileViewer", ComponentFragment = @<DemoFileViewer />},
+                    new ComponentDemo{ComponentName="SDKRadialGauge", ComponentFragment = @<DemoRadialGauge />},
+                    new ComponentDemo{ComponentName="SDKTabs", ComponentFragment = @<DemoTabs />}
+                },Icon ="fa-solid fa-cube" 
+            },
 
-    protected override void OnParametersSet()
-    {
-        base.OnParametersSet();
-        Init();
+        };
     }
 
     

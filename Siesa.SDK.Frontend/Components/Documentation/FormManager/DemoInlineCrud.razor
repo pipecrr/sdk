@@ -1,6 +1,9 @@
 @using Siesa.SDK.Frontend.Components.Fields
 @using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Components.FormManager.Model
 @using Entities
+
+
 @inject SDKNotificationService SDKNotificationService
 
 
@@ -11,7 +14,7 @@
     </div>
     <div class="row px-3"> 
         <div class="col-md-12 p-3">
-            <InlineCrud BusinessName="BLCity"/>
+            <InlineCrud BusinessName=""/>
         </div>
     </div>
 </div>
@@ -19,6 +22,8 @@
 
 
 @code {
+    
+
 
     /*private List<E05003_City>Data =new List<E05003_City>()
     {

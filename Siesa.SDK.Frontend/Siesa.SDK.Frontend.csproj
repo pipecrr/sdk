@@ -19,6 +19,11 @@
 		<Content Include="Components\Layout\MainLayout.razor.css" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<None Remove="Components\Documentation\SourceCode\SDKBooleanField.txt" />
+		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKBooleanField.txt" />
+	</ItemGroup>
+
 
 	<ItemGroup>
 		<SupportedPlatform Include="browser" />
