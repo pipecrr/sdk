@@ -20,6 +20,10 @@ namespace Siesa.SDK.Backend.Access
 {
     public class SDKContext: DbContext
     {
+	public DbSet<E00271_AttachmentDetail>? E00271_AttachmentDetail { get; set; }
+
+	public DbSet<E00270_Attachment>? E00270_Attachment { get; set; }
+
 	public DbSet<E00230_Flex>? E00230_Flex { get; set; }
 
 	public DbSet<E00025_EnumValue>? E00025_EnumValue { get; set; }
@@ -157,7 +161,7 @@ namespace Siesa.SDK.Backend.Access
                 //Check if the entry inherits from the BaseAudit<> class
                 if(Utilities.IsAssignableToGenericType(entry.Entity.GetType(), typeof(BaseAudit<>)))
                 {
-                    var loggedUser = 1; //TODO: Get logged user
+                    var loggedUser = CurrentUser.Rowid; //TODO: Get logged user
 
                     entry.Context.Entry(entry.Entity).Property("LastUpdateDate").CurrentValue = DateTime.Now;
                     entry.Context.Entry(entry.Entity).Property("RowidUserLastUpdate").CurrentValue = loggedUser;
@@ -173,11 +177,12 @@ namespace Siesa.SDK.Backend.Access
                     }
                 }else if(Utilities.IsAssignableToGenericType(entry.Entity.GetType(), typeof(BaseCompanyGroup<>)))
                 {
-                    entry.Context.Entry(entry.Entity).Property("RowidCompanyGroup").CurrentValue = 1; 
+                    entry.Context.Entry(entry.Entity).Property("RowidCompanyGroup").CurrentValue = CurrentUser.RowidCompanyGroup; 
                 }
 
             }
-            LogCreator logCreator = new(ChangeTracker.Entries());
+            LogCreator logCreator = ActivatorUtilities.CreateInstance<LogCreator>(ServiceProvider,ChangeTracker.Entries());
+            //LogCreator logCreator = new(ChangeTracker.Entries());
             logCreator.ProccessBeforeSaveChanges();
             var result = base.SaveChanges();
             logCreator.ProccessAfterSaveChanges();
@@ -185,11 +190,13 @@ namespace Siesa.SDK.Backend.Access
             return result;
         }
 
-        private static void CollectChanges(LogCreator logCreator)
+        private void CollectChanges(LogCreator logCreator)
         {
             try
             {
-                LogService.SaveDataEntityLog(logCreator.DataEntityLogs);
+                if(ServiceProvider != null){
+                    LogService.SaveDataEntityLog(logCreator.DataEntityLogs, ServiceProvider);
+                }
             }
             catch (Exception) { }
         }

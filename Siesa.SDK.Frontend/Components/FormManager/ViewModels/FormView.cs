@@ -430,7 +430,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
         
         protected string GetSaveBtnIcon()
         {
-            return Saving ? "fa-solid fa-spinner" : "fa-solid fa-floppy-disk";
+            return Saving ? "fas fa-spinner fa-pulse" : "fa-solid fa-floppy-disk";
         }
 
     }

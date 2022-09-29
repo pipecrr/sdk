@@ -1,0 +1,113 @@
+@page "/sdk-docs/"
+@page "/sdk-docs/{pComponentName}/"
+@using SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Components
+@using Siesa.SDK.Frontend.Components.Documentation.Visualization
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Services
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.Documentation.Fields
+
+@layout EmptyLayout
+
+<SDKCard StyleCss="cardmenu-content">
+    <DxMenu Title="SDK Components" DropDownActionMode="MenuDropDownActionMode.Click" CollapseItemsToHamburgerMenu="true" Orientation="@SDKEnums.GetOrientationMenu(SDKOrientationMenu.Horizontal)" 
+        CollapseItemToIconMode="MenuCollapseItemToIconMode.Sequentially">
+        <Items>
+            @foreach (var cat in Category)
+            {
+                <DxMenuItem Text="@cat.Name" IconCssClass="@cat.Icon">
+                    <Items>
+                    @foreach (var subitem in cat.Components)
+                    {
+                        <DxMenuItem Text="@subitem.ComponentName" NavigateUrl="@GetNavigateUrl(subitem)" /> 
+                    }
+                    </Items>
+                </DxMenuItem>
+            }
+        </Items>
+    </DxMenu>
+</SDKCard>
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-12">
+                @if(SelectedComponent != null && SelectedComponent.ComponentFragment != null)
+                {
+                    <SDKTabs>
+                        <SDKTab IconCssClass="fa-solid fa-eye">
+                            <SDKCard>
+                                @SelectedComponent.ComponentFragment;
+                            </SDKCard>
+                    
+                    </SDKTab>
+                        <SDKTab IconCssClass="fa-solid fa-code">  
+
+                            <SDKTextField Value="@ViewSourceCode()"
+                            CssClass="tab-text-area"/>
+
+                        </SDKTab>
+                    </SDKTabs>
+                    }
+        </div>
+    </div>
+</div>
+            
+
+
+
+@code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        Category = new List<ComponentCategory>()
+        {
+            new ComponentCategory() {
+                Name = "Fields", Components = {
+                    new ComponentDemo{ComponentName="SDKBooleanField",ComponentFragment = @<DemoBooleanField /> },
+                    new ComponentDemo{ComponentName="SDKCharField",ComponentFragment = @<DemoCharField />},
+                    new ComponentDemo{ComponentName="SDKDateField",ComponentFragment = @<DemoDateField />},
+                    new ComponentDemo{ComponentName="SDKDecimalField",ComponentFragment = @<DemoDecimalField />},
+                    new ComponentDemo{ComponentName="SDKIntegerField",ComponentFragment = @<DemoIntegerField />},
+                    new ComponentDemo{ComponentName="SDKTextField",ComponentFragment = @<DemoTextField />},
+                    new ComponentDemo{ComponentName="SDKColorPicker",ComponentFragment = @<DemoColorPicker />},
+                    new ComponentDemo{ComponentName="SDKKanban",ComponentFragment = @<DemoKanban />},
+                    new ComponentDemo{ComponentName="SDKSwitch",ComponentFragment = @<DemoSwitch />},
+                    new ComponentDemo{ComponentName="SDKSelectBar",ComponentFragment = @<DemoSelectBar />},
+                    new ComponentDemo{ComponentName="SDKSteps",ComponentFragment = @<DemoSteps />},
+                    new ComponentDemo{ComponentName="SDKGrid",ComponentFragment = @<DemoGrid />}
+                }, Icon ="fa-solid fa-cubes"
+            },
+            @* new ComponentCategory() {
+                Name = "FormManager", Components = {
+                    new ComponentDemo{ComponentName="InlineCrud", ComponentFragment = @<DemoInlineCrud />},
+                    new ComponentDemo{ComponentName="SDKFormLayout", ComponentFragment = @<DemoFormLayout />}
+                },Icon ="fa-solid fa-list"
+            }, *@
+            new ComponentCategory() {
+                Name = "Visualization", Components = {
+                    new ComponentDemo{ComponentName="SDKCard", ComponentFragment = @<DemoCard />},
+                    new ComponentDemo{ComponentName="SDKConfirmDialog", ComponentFragment = @<DemoConfirmDialog />},
+                    new ComponentDemo{ComponentName="SDKBadge", ComponentFragment = @<DemoBadge />},
+                    new ComponentDemo{ComponentName="SDKProgessBar", ComponentFragment = @<DemoProgressBar />},
+                    new ComponentDemo{ComponentName="SDKButton", ComponentFragment = @<DemoButton />},
+                    new ComponentDemo{ComponentName="SDKCollapse", ComponentFragment = @<DemoCollapse />},
+                    new ComponentDemo{ComponentName="SDKFileViewer", ComponentFragment = @<DemoFileViewer />},
+                    new ComponentDemo{ComponentName="SDKRadialGauge", ComponentFragment = @<DemoRadialGauge />},
+                    new ComponentDemo{ComponentName="SDKTabs", ComponentFragment = @<DemoTabs />}
+                },Icon ="fa-solid fa-cube" 
+            },
+
+        };
+    }
+
+    
+}
+
+
+
+
+
+
+
+

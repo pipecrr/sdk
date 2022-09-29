@@ -18,6 +18,28 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             ViewdefName = Viewdef;
             await base.OnInitializedAsync();
         }
+
+        public override async Task SetParametersAsync(ParameterView parameters)
+        {
+            try
+            {
+                
+                if (parameters.TryGetValue<string>(nameof(Viewdef), out var value))
+                {
+                    if (value != null && value != Viewdef)
+                    {
+                        ViewdefName = value;
+                        StateHasChanged();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            await base.SetParametersAsync(parameters);
+        }
         
     }
 }

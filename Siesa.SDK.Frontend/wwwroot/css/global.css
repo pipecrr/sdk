@@ -393,7 +393,7 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
 }
 
 .whcm_table{
-    height: calc(100vh - 300px);
+    max-height: calc(100vh - 300px);
 }
 
 .whcm_toolbar_tooltip{

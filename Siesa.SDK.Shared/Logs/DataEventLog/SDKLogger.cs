@@ -18,6 +18,9 @@ namespace Siesa.SDK.Shared.Logs.DataEventLog
                 .MinimumLevel.Warning()
                 .MinimumLevel.Override("Siesa.SDK.Business", LogEventLevel.Information)
                 .Enrich.FromLogContext()
+                .Filter
+                .ByExcluding(logEvent => 
+                    logEvent.MessageTemplate.Text.Contains("No store type was specified for the decimal property"))
                 .WriteTo.StealthConsoleSink(logStorageService: new SDKGrpcLogStorageService(serviceConfiguration.AuditServerUrl))
                 .CreateLogger());
         }
