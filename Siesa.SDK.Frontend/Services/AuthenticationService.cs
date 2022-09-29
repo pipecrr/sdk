@@ -8,6 +8,7 @@ using System.Linq;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Shared.DTOS;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Siesa.SDK.Frontend.Services
 {
@@ -78,7 +79,11 @@ namespace Siesa.SDK.Frontend.Services
             {
                 throw new Exception("Login Service not found");
             }
-            var loginRequest = await BLuser.Call("SignIn", username, password, rowIdDBConnection);
+            var loginRequest = await BLuser.Call("SignIn", new Dictionary<string, dynamic> {
+                {"username", username},
+                {"password", password},
+                {"rowIdDBConnection", rowIdDBConnection}
+            });
             if (loginRequest.Success)
             {
                 UserToken = loginRequest.Data;
