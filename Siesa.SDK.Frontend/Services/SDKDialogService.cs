@@ -11,7 +11,7 @@ namespace Siesa.SDK.Frontend.Services
     public class SDKDialogService
     {
         private UtilsManager UtilsManager;
-        private DialogService ds;
+        public DialogService ds;
         public SDKDialogService(DialogService dialogService,UtilsManager utilsManager)
         {
              UtilsManager = utilsManager;

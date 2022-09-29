@@ -5,10 +5,14 @@
 @using Microsoft.AspNetCore.Components
 @using Siesa.SDK.Frontend.Components.Layout.NavMenu
 @using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Frontend.Services
 @inject IAuthenticationService AuthenticationService
 @using Siesa.SDK.Frontend.Components.FormManager.Model
+@using Siesa.SDK.Frontend.Pages.Login
 @inject UtilsManager UtilsManager 
 @inject IJSRuntime JSRuntime
+@inject NavigationService NavigationService
+@inject SDKDialogService SDKDialogService
 
 @if(AuthenticationService.GetSelectedConnection() != null && AuthenticationService.GetSelectedConnection().Rowid != 0)
 {
@@ -115,6 +119,8 @@
     private string WatermarkText { get; set; }
     private IJSObjectReference _jsModule;
 
+    private bool _showingLogin = false;
+
     public void SetDefaultArea(bool isDefaultArea)
     {
         bool refresh = IsDefaultArea != isDefaultArea;
@@ -139,11 +145,11 @@
     {
         IsDefaultArea = true;
         base.OnInitializedAsync();
-        errorBoundary = new ErrorBoundary();
-        PoblateWatermark();
+        errorBoundary = new ErrorBoundary();        
+        InitSDKJS();
     }
 
-    private async Task PoblateWatermark()
+    private async Task InitSDKJS()
     {
         WatermarkText = await UtilsManager.GetResource("Custom.TestConnection");
         try
@@ -153,6 +159,7 @@
                 await ImportJs();
             }
             await _jsModule.InvokeVoidAsync("PoblateWatermark");
+            await _jsModule.InvokeVoidAsync("InitSDK", DotNetObjectReference.Create(this));
         }
         catch (Exception)
         {
@@ -189,4 +196,35 @@
             await ImportJs();
         }
     }
+
+    [JSInvokable]
+    public async Task ShowLogin()
+    {
+        if(!_showingLogin)
+        {
+            _showingLogin = true;
+            var confirmDialogPolitic = await SDKDialogService.ShowCustomDialog(ds => @<ModalLogin DialogService=@ds />, "600px", "",false, false);
+            _showingLogin = false;
+        }else{
+            if(AuthenticationService != null && AuthenticationService.User != null && await AuthenticationService.IsValidToken()){
+                SDKDialogService.ds.Close(true);
+                _showingLogin = false;
+            }
+        }
+        
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public async Task HideLogin()
+    {
+        if(_showingLogin && AuthenticationService != null && AuthenticationService.User != null && await AuthenticationService.IsValidToken()){
+            SDKDialogService.ds.Close(true);
+            _showingLogin = false;
+        }
+        StateHasChanged();
+    }
+     
+
+
 }

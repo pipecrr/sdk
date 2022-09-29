@@ -102,6 +102,9 @@ namespace Siesa.SDK.Frontend.Services
             UserToken = "";
             _user = null;
             await _localStorageService.RemoveItemAsync("usertoken");
+            await _localStorageService.RemoveItemAsync("lastInteraction");
+            await _localStorageService.RemoveItemAsync("n_tabs");
+
             _navigationManager.NavigateTo("login");
         }
 
@@ -195,6 +198,13 @@ namespace Siesa.SDK.Frontend.Services
                     return 0;
                 }
             }
+        }
+
+        public async Task<bool> IsValidToken()
+        {
+            var token = await _localStorageService.GetItemAsync<string>("usertoken");
+            var user = new SDKJWT(_secretKey, _minutesExp).Validate(token);
+            return user != null;
         }
     }
 }

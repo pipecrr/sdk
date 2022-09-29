@@ -95,5 +95,11 @@ namespace Siesa.SDK.Backend.Services
         {
             throw new NotImplementedException();
         }
+
+        public async Task<bool> IsValidToken()
+        {
+            var user = new SDKJWT(_secretKey, _minutesExp).Validate(UserToken);
+            return user != null;
+        }
     }
 }

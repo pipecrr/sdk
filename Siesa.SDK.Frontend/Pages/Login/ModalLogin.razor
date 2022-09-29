@@ -1,0 +1,114 @@
+@using System.ComponentModel.DataAnnotations
+@using SDK.Components.Visualization
+@using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Shared.DTOS
+@using Siesa.SDK.Frontend.Navigation
+@using Siesa.SDK.Frontend.Components.Layout
+@using Siesa.SDK.Entities;
+@using Newtonsoft.Json;
+@inject IAuthenticationService AuthenticationService
+@inject NavigationManager NavigationManager
+@inject IBackendRouterService BackendRouterService
+@inject IJSRuntime JSRuntime
+@inject SDKNotificationService SDKNotificationService
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService
+@inject UtilsManager UtilsManager
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Shared.DataAnnotations
+@using Siesa.SDK.Frontend.Components.Fields
+<div class="sdk-modal-login">
+    <EditForm id="@FormID" Model="@model" OnValidSubmit="HandleValidSubmit" OnInvalidSubmit="HandleInvalidSubmit">
+        <DataAnnotationsValidator />
+        <div class="form-group">
+            <label class="col-form-label col-form-label-sm font-weight-bold" for="Username">
+                <ResourceViewer ResourceTag="BLUser.Username" />
+            </label>
+            <SDKCharField 
+                @bind-Value="model.Username" 
+                AllowAutoComplete="true" 
+                AutomationId="BLLogin.Username"
+            />
+            <SDKValidationMessage For="@(() => model.Username)" />
+        </div>
+        <div class="form-group">
+            <label class="col-form-label col-form-label-sm font-weight-bold" for="Password">
+                <ResourceViewer ResourceTag="BLUser.Password" />
+            </label>
+            <SDKCharField 
+                @bind-Value="model.Password" 
+                Password="true" 
+                AllowAutoComplete="true"
+                AutomationId="BLLogin.Username"
+            />
+            <SDKValidationMessage For="@(() => model.Password)" />
+        </div>
+        <SDKButton form="@FormID" SubmitFormOnClick="true" RenderStyle="SDKButtonRenderStyle.Primary" CssClass="btn-sm w-100 mt-2">
+            @if (loading)
+            {
+                <span class="spinner-border spinner-border-sm mr-1"></span>
+            }
+            <ResourceViewer ResourceTag="BLUser.Login" />
+        </SDKButton>
+    </EditForm>
+</div>
+@code {
+    public string FormID { get; set; } = Guid.NewGuid().ToString();
+    public bool loading { get; set; } = false;
+    private Model model = new Model();
+    private SDKDbConnection SelectedConnection  { get; set; } = new SDKDbConnection();
+    private string error;
+    [Parameter]
+    public DialogService DialogService { get; set; }
+
+
+
+    private async void HandleValidSubmit()
+    {
+        string message = "BLUser.Login.Message.SuccesLogin";
+        loading = true;
+        SelectedConnection = AuthenticationService.GetSelectedConnection();
+        
+        if(SelectedConnection == null)
+        {
+            error = "BLLogin.SelectDbConnection";
+            SDKNotificationService.ShowError("BLUser.Login.Message.SelectDbConnection");
+            loading = false;
+            StateHasChanged();
+            return;
+        }
+
+        if(string.IsNullOrEmpty(model.Username) || string.IsNullOrEmpty(model.Password))
+        {
+            error = "BLLogin.EnterUserName";
+            SDKNotificationService.ShowError("BLUser.Login.Message.EnterData");
+            loading = false;
+            StateHasChanged();
+            return;
+        }
+
+        try
+        {
+            await AuthenticationService.Login(model.Username, model.Password,SelectedConnection.Rowid);
+            NavigationManager.TryGetQueryString("returnUrl", out string returnUrl);
+            if (returnUrl == null || returnUrl == "null")
+            {
+                returnUrl = "/";
+            }
+            SDKNotificationService.ShowSuccess(message, culture: AuthenticationService.GetRoiwdCulture()); 
+            DialogService.Close(true);
+            //NavigationManager.NavigateTo(returnUrl);
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            SDKNotificationService.ShowError("BLUser.Login.Message.InvalidCredentials");
+            loading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async void HandleInvalidSubmit()
+    {
+        SDKNotificationService.ShowError("BLUser.Login.Message.EnterData");
+    }
+}
