@@ -1,4 +1,5 @@
 ﻿using AuditAppGrpcClient;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -7,9 +8,9 @@ namespace Siesa.SDK.Shared.Logs.DataChangeLog
 {
     public static class LogService
     {
-        public static void SaveDataEntityLog(List<DataEntityLog> logs)
+        public static void SaveDataEntityLog(List<DataEntityLog> logs, System.IServiceProvider serviceProvider)
         {
-            var dataChangeLog = new SDKGrpcChangeLogStorageService("http://localhost:5168");
+            var dataChangeLog =  ActivatorUtilities.CreateInstance<SDKGrpcChangeLogStorageService>(serviceProvider);
             Parallel.ForEach(logs, log => ConvertAndSave(log, dataChangeLog));
         }
 

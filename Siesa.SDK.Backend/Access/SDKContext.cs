@@ -191,11 +191,13 @@ namespace Siesa.SDK.Backend.Access
             return result;
         }
 
-        private static void CollectChanges(LogCreator logCreator)
+        private void CollectChanges(LogCreator logCreator)
         {
             try
             {
-                LogService.SaveDataEntityLog(logCreator.DataEntityLogs);
+                if(ServiceProvider != null){
+                    LogService.SaveDataEntityLog(logCreator.DataEntityLogs, ServiceProvider);
+                }
             }
             catch (Exception) { }
         }

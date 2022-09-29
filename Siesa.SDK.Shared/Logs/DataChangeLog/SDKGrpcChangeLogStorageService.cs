@@ -2,6 +2,7 @@
 using AuditAppGrpcClient;
 using Grpc.Net.Client;
 using Siesa.SDK.Protos;
+using Siesa.SDK.Shared.Configurations;
 using System;
 using System.Threading.Tasks;
 using static Siesa.SDK.Protos.DataLogChange;
@@ -11,13 +12,15 @@ namespace Siesa.SDK.Shared.Logs.DataChangeLog
     public class SDKGrpcChangeLogStorageService : ISDKLogStorageService
     {
         private readonly DataLogChangeClient _client;
+        private readonly IServiceConfiguration _serviceConfiguration;
         private readonly GrpcChannel _channel;
         private bool _writeInConsole;
 
-        public SDKGrpcChangeLogStorageService(string url)
+        public SDKGrpcChangeLogStorageService(IServiceConfiguration serviceConfiguration)
         {
-            var _channel = GrpcChannel.ForAddress(url);
-            _client = new DataLogChangeClient(_channel);                          
+            _serviceConfiguration = serviceConfiguration;                     
+            var _channel = GrpcChannel.ForAddress(_serviceConfiguration.AuditServerUrl);
+            _client = new DataLogChangeClient(_channel);     
         }
 
         public async Task Save(string json)
