@@ -47,6 +47,7 @@ namespace Siesa.SDK.Backend.Extensions
                 var entityType = Utilities.SearchType(nameSpaceEntity + "." + nameEntity, true);
                 var contextSet = Context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(entityType).Invoke(Context, null);
                 List<string> relatedColumns = new List<string>();
+                List<string> relatedVirtualColumns = new List<string>();
 
                 var includeMethod = typeof(IQueryable<object>).GetExtensionMethod(_assemblyInclude, "Include", new[] { typeof(IQueryable<object>), typeof(string) });
                 
@@ -67,13 +68,25 @@ namespace Siesa.SDK.Backend.Extensions
                     else
                     {
                         var relatedColumnInclude = string.Join(".", columnPath.Skip(1));
-                        if (!relatedColumns.Contains(relatedColumnInclude))
-                        {
-                            var includeMethodGeneric = includeMethod.MakeGenericMethod(entityType);
-                            contextSet = includeMethodGeneric.Invoke(contextSet, new object[] { contextSet, relatedColumnInclude });
-                            relatedColumns.Add(relatedColumnInclude);
-                        }                        
-                        strColumns.Add($"np({relatedColumnInclude}.{column.name}) as {column.key_name}");                        
+                        var property = entityType.GetProperty(relatedColumnInclude.Split(".")[0]);
+                        var propertyType = property.PropertyType;
+                        if(propertyType.IsGenericType && property.GetGetMethod().IsVirtual){
+                            if(propertyType.GetGenericTypeDefinition() == typeof (ICollection<>)){
+                                if (!relatedVirtualColumns.Contains(relatedColumnInclude)){
+                                    var includeMethodGeneric = includeMethod.MakeGenericMethod(entityType);
+                                    contextSet = includeMethodGeneric.Invoke(contextSet, new object[] { contextSet, relatedColumnInclude });
+                                    relatedColumns.Add(relatedColumnInclude);
+                                }
+                            }
+                        }else {
+                            if (!relatedColumns.Contains(relatedColumnInclude))
+                            {
+                                var includeMethodGeneric = includeMethod.MakeGenericMethod(entityType);
+                                contextSet = includeMethodGeneric.Invoke(contextSet, new object[] { contextSet, relatedColumnInclude });
+                                relatedColumns.Add(relatedColumnInclude);
+                            }                        
+                            strColumns.Add($"np({relatedColumnInclude}.{column.name}) as {column.key_name}");
+                        }
 
                     }
                     if (column.type.Equals("SelectField"))
@@ -225,6 +238,9 @@ namespace Siesa.SDK.Backend.Extensions
                 switch (filter.selected_operator)
                 {
                     case "equal":
+                        if(value == null){
+                            return;
+                        }
                         Expression equalExpression;                        
                         if (columnType == typeof(DateTime)){
                             filterValue = Convert.ChangeType(value, columnType);
@@ -253,6 +269,9 @@ namespace Siesa.SDK.Backend.Extensions
                         addExpression(ref combined, equalExpression);
                         break;
                     case "not_equal":
+                        if(value == null){
+                            return;
+                        }
                         if(isNullable){
                             columnNameProperty = Expression.Convert(columnNameProperty, columnType);
                         }
@@ -276,6 +295,9 @@ namespace Siesa.SDK.Backend.Extensions
                         addExpression(ref combined, notEqualExpression);
                         break;
                     case "in":
+                        if(value == null){
+                            return;
+                        }
                         Expression inExpression;
                         Expression inExpression2;
                         if(columnType.BaseType == typeof(Enum)){
@@ -296,7 +318,10 @@ namespace Siesa.SDK.Backend.Extensions
                         }
                         addExpression(ref combined, inExpression);
                         break;
-                    case "exclude":
+                    case "exclude":                    
+                        if(value == null){
+                            return;
+                        }
                         Expression excludeExpression;
                         Expression excludeExpression2;
                         if(columnType.BaseType == typeof(Enum)){
@@ -318,18 +343,27 @@ namespace Siesa.SDK.Backend.Extensions
                         addExpression(ref combined, excludeExpression);
                         break;
                     case "starts_with":
+                        if(value == null){
+                            return;
+                        }
                         filterValue = Convert.ChangeType(value, columnType);
                         columnValue = Expression.Constant(filterValue);
                         Expression startsWithExpression = Expression.Call(columnNameProperty, getMethodInfo("StartsWith", typeof(string)), columnValue);
                         addExpression(ref combined, startsWithExpression);
                         break;
                     case "end_with":
+                        if(value == null){
+                            return;
+                        }
                         filterValue = Convert.ChangeType(value, columnType);
                         columnValue = Expression.Constant(filterValue);
                         Expression endWithExpression = Expression.Call(columnNameProperty, getMethodInfo("EndsWith", typeof(string)), columnValue);
                         addExpression(ref combined, endWithExpression);
                         break;
                     case "contains":
+                        if(value == null){
+                            return;
+                        }
                         filterValue = Convert.ChangeType(value, columnType);
                         columnValue = Expression.Constant(filterValue);
                         Expression containsExpression = Expression.Call(columnNameProperty, getMethodInfo("Contains", typeof(string)), columnValue);
@@ -380,27 +414,39 @@ namespace Siesa.SDK.Backend.Extensions
                         addExpression(ref combined, notEmptyExpression);                        
                         break;
                     case "gt":
+                        if(value == null){
+                            return;
+                        }
                         filterValue = Convert.ChangeType(value, columnType);
                         columnValue = Expression.Constant(filterValue);
                         Expression greatThanExpression = Expression.GreaterThan(columnNameProperty, columnValue);
                         addExpression(ref combined, greatThanExpression);
                         break;
                     case "lt":
+                        if(value == null){
+                            return;
+                        }
                         filterValue = Convert.ChangeType(value, columnType);
                         columnValue = Expression.Constant(filterValue);
                         Expression lessThanExpression = Expression.LessThan(columnNameProperty, columnValue);
                         addExpression(ref combined, lessThanExpression);
                         break;
                     case "gte":
+                        if(value == null){
+                            return;
+                        }
                         filterValue = Convert.ChangeType(value, columnType);
                         columnValue = Expression.Constant(filterValue);
                         Expression greatThanOrEqualsExpression = Expression.GreaterThanOrEqual(columnNameProperty, columnValue);
                         addExpression(ref combined, greatThanOrEqualsExpression);
                         break;
                     case "between":
+                        var filterTo = filter.to;
+                        if(value == null || filterTo == null){
+                            return;
+                        }
                         filterValue = Convert.ChangeType(value, columnType);
                         columnValue = Expression.Constant(filterValue);
-                        var filterTo = filter.to;
                         Expression columnTo = null;
                         if(columnType == typeof(DateOnly)){
                             var valueSplit = filterTo.ToString().Substring(0,10).Split("-").ToList();
@@ -419,18 +465,24 @@ namespace Siesa.SDK.Backend.Extensions
                         addExpression(ref combined, betweenExpression);
                         break;
                     case "before":
+                        if(value == null){
+                            return;
+                        }
                         filterValue = Convert.ChangeType(value, columnType);
                         columnValue = Expression.Constant(filterValue);
                         Expression beforeExpression = Expression.LessThan(columnNameProperty, columnValue);
                         addExpression(ref combined, beforeExpression);
                         break;
                     case "after":
+                        if(value == null){
+                            return;
+                        }
                         filterValue = Convert.ChangeType(value, columnType);
                         columnValue = Expression.Constant(filterValue);
                         Expression afterExpression = Expression.GreaterThan(columnNameProperty, columnValue);
                         addExpression(ref combined, afterExpression);
                         break;
-                    case "in_past":
+                    case "in_past":                        
                         if(columnType == typeof(DateOnly)){
                             columnValue = Expression.Constant(Convert.ChangeType(DateOnly.FromDateTime(DateTime.Now), columnType));
                         }else{
@@ -449,7 +501,6 @@ namespace Siesa.SDK.Backend.Extensions
                         addExpression(ref combined, inFuctureExpression);
                         break;
                     case "current_month":
-
                         DateTime todayCurrentMonth = DateTime.Now;
                         var month = todayCurrentMonth.Month;
                         var year = todayCurrentMonth.Year;
@@ -525,6 +576,9 @@ namespace Siesa.SDK.Backend.Extensions
                         addExpression(ref combined, todayExpression);
                         break;
                     case "last_n_days":
+                        if(value == null || value == ""){
+                            return;
+                        }
                         DateTime todayLastNDate = DateTime.Now;
                         int daysLast = int.Parse(value.ToString());
                         var endDateLastnDays = Activator.CreateInstance(columnType, todayLastNDate.Year, todayLastNDate.Month, todayLastNDate.Day);
@@ -541,6 +595,9 @@ namespace Siesa.SDK.Backend.Extensions
                         addExpression(ref combined, lastnDaysExpression);
                         break;
                     case "next_n_days":
+                        if(value == null || value == ""){
+                            return;
+                        }
                         DateTime todayNextNDate = DateTime.Now;
                         int daysNext = int.Parse(value.ToString());
                         var endDateNextnDays = Activator.CreateInstance(columnType, todayNextNDate.Year, todayNextNDate.Month, todayNextNDate.Day);
