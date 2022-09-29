@@ -146,8 +146,9 @@ namespace Siesa.SDK.Business
         }
 
         public BLBackendSimple(IServiceProvider provider){
-
-            SetProvider(provider);
+            if(provider != null){
+                SetProvider(provider);
+            }
             InternalConstructor();
 
         }

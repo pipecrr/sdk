@@ -15,8 +15,8 @@ namespace Siesa.SDK.Shared.Logs.DataEventLog
             loggingBuilder.AddConsole();
             loggingBuilder.AddSerilog(new LoggerConfiguration()
 
-                .MinimumLevel.Warning()
-                .MinimumLevel.Override("Siesa.SDK.Business", LogEventLevel.Information)
+                //.MinimumLevel.Warning()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .Enrich.FromLogContext()
                 .Filter
                 .ByExcluding(logEvent => 
