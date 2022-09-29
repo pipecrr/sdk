@@ -6,7 +6,8 @@ namespace Siesa.SDK.Shared.Logs.DataChangeLog
     public class DataEntityLog
     {
         public string GUID { get; set; } = string.Empty;
-        public string UserID { get; set; } 
+        public string UserRowId { get; set; } 
+        public string UserName { get; set; }
         public string SessionID { get; set; }
         public string Operation { get; set; }
         public DateTime OperationDate { get; set; }

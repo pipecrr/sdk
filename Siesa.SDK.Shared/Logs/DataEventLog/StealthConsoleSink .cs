@@ -10,6 +10,7 @@ namespace Siesa.SDK.Shared.Logs.DataEventLog
     {
         IFormatProvider _formatProvider;
         ISDKLogStorageService _logStorageService;
+        
 
         public StealthConsoleSink(IFormatProvider formatProvider, ISDKLogStorageService logStorageService)
         {
@@ -25,9 +26,8 @@ namespace Siesa.SDK.Shared.Logs.DataEventLog
                 Console.WriteLine(logString);
                 return;
             }
-
-            _logStorageService.Save(logString);            
-            
+            _logStorageService.Save(logString);  
+         
         }
 
 

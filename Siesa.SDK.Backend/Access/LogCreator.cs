@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Siesa.SDK.Shared.DataAnnotations;
 using Siesa.SDK.Shared.Logs.DataChangeLog;
+using Siesa.SDK.Shared.Services;
 
 namespace Siesa.SDK.Backend.Access
 {
@@ -16,6 +17,7 @@ namespace Siesa.SDK.Backend.Access
         private readonly List<EntityEntry> _entityEntriesModified;
         private readonly List<EntityEntry> _entityEntriesDeleted;
         private readonly List<DataEntityLog> _dataEntityLogs;
+        private readonly IAuthenticationService _authenticationService;
 
 
         public List<DataEntityLog> DataEntityLogs
@@ -35,12 +37,14 @@ namespace Siesa.SDK.Backend.Access
 
         private LogCreator() { }
 
-        public LogCreator(IEnumerable<EntityEntry> entityEntries)
+
+        public LogCreator(IEnumerable<EntityEntry> entityEntries,IAuthenticationService authenticationService)
         {
             _entityEntriesAdded = entityEntries.Where(e => e.State == EntityState.Added && e.Entity.GetType().GetCustomAttributes(typeof(SDKLogEntity), false).Any()).ToList();
             _entityEntriesModified = entityEntries.Where(e => e.State == EntityState.Modified && e.Entity.GetType().GetCustomAttributes(typeof(SDKLogEntity), false).Any()).ToList();
             _entityEntriesDeleted = entityEntries.Where(e => e.State == EntityState.Deleted && e.Entity.GetType().GetCustomAttributes(typeof(SDKLogEntity), false).Any()).ToList();
             _dataEntityLogs = new List<DataEntityLog>();
+            _authenticationService = authenticationService;
         }
 
         internal void ProccessAfterSaveChanges()
@@ -73,18 +77,26 @@ namespace Siesa.SDK.Backend.Access
                 {
                     continue;
                 }
-                result.Add(CreateDataEntityLogFromChange(change, type, properties));
+                if (_authenticationService.User != null)
+                {
+                    result.Add(CreateDataEntityLogFromChange(change, type, properties,_authenticationService.User.Rowid, _authenticationService.User.Name));
+                }else
+                {
+                    result.Add(CreateDataEntityLogFromChange(change, type, properties, 0,"undefined"));
+                }
+                
             }
             return result;
         }
 
-        private static DataEntityLog CreateDataEntityLogFromChange(EntityEntry change, LogType type, List<LogProperty> logProperties)
+        private static DataEntityLog CreateDataEntityLogFromChange(EntityEntry change, LogType type, List<LogProperty> logProperties, int RowidUserLogged,  string UserNameLogged)
         {
             return new DataEntityLog()
             {
                 GUID = Guid.NewGuid().ToString(),
                 EntityName = change.Metadata.Name,
-                UserID = "undefined",
+                UserRowId = RowidUserLogged.ToString(),
+                UserName = UserNameLogged,
                 SessionID = "undefined",
                 Operation = type.ToString(),
                 OperationDate = DateTime.Now,
