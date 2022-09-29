@@ -15,12 +15,22 @@ namespace Siesa.SDK.Frontend.Services
 
         private List<string> ReplaceQueque { get; set; } = new List<string>();
 
+        private bool navigationManagerEnabled = false;
+
         public NavigationService(NavigationManager navigationManager)
         {
             _navigationManager = navigationManager;
-            _history = new List<string>(MinHistorySize + AdditionalHistorySize);
-            _history.Add(_navigationManager.Uri);
-            _navigationManager.LocationChanged += OnLocationChanged;
+            try
+            {
+                _history = new List<string>(MinHistorySize + AdditionalHistorySize);
+                _history.Add(_navigationManager.Uri);
+                _navigationManager.LocationChanged += OnLocationChanged;
+                navigationManagerEnabled = true;
+            }
+            catch (System.Exception)
+            {
+                navigationManagerEnabled = false;
+            }
         }
 
         /// <summary>
@@ -29,7 +39,10 @@ namespace Siesa.SDK.Frontend.Services
         /// <param name="url">The destination url (relative or absolute).</param>
         public void NavigateTo(string url)
         {
-            _navigationManager.NavigateTo(url);
+            if(navigationManagerEnabled)
+            {
+                _navigationManager.NavigateTo(url);
+            }
         }
 
         /// <summary>
@@ -42,6 +55,10 @@ namespace Siesa.SDK.Frontend.Services
         /// </summary>
         public void NavigateBack()
         {
+            if(!navigationManagerEnabled)
+            {
+                return;
+            }
             if (!CanNavigateBack) return;
             var currentPageUrl = _navigationManager.Uri;
             var backPageUrl = "";
@@ -86,6 +103,10 @@ namespace Siesa.SDK.Frontend.Services
 
         public void Dispose()
         {
+            if(!navigationManagerEnabled)
+            {
+                return;
+            }
             _navigationManager.LocationChanged -= OnLocationChanged;
         }
 
@@ -101,6 +122,10 @@ namespace Siesa.SDK.Frontend.Services
 
         public void NavigateTo(string uri, bool forceLoad = false, bool replace = false)
         {
+            if(!navigationManagerEnabled)
+            {
+                return;
+            }
             if (replace)
             {
                 var queueUrl = uri;

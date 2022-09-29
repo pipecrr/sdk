@@ -23,16 +23,14 @@ function loadCss(url){
     document.getElementsByTagName("head")[0].appendChild(link);
 }
 
-(() => {
-
-    loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/2.css?v=20220830');
-    loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/main.css?v=20220830');
-
-    loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/2.chunk.js?v=20220830");
-    loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/main.chunk.js?v=20220830");
-    loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/runtime-main.js?v=20220830");
-
-
+function MountFlex()
+{
+    if(document.getElementById("flexdebug") == null)
+    {
+        return;
+    }
+    //
+    document.getElementById("flexdebug").innerHTML = "";
 
     let interval_flexdebug = setInterval(function () {
         if ("mountOReportsReact" in window) {
@@ -40,4 +38,22 @@ function loadCss(url){
             mountOReportsReact("flexdebug");
         }
     }, 100);
+}
+(() => {
+
+    loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/2.css?v=20220929');
+    loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/main.css?v=20220929');
+
+    loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/2.chunk.js?v=20220929");
+    loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/main.chunk.js?v=20220929");
+    loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/runtime-main.js?v=20220929");
+
+    window.MountFlex = MountFlex;
+/*
+    window.addEventListener('locationchange', function () {
+        console.log("locationchange probando");
+         setTimeout(function  () { MountFlex() }, 200);
+    });
+    MountFlex();*/
+    
 })();

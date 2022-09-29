@@ -84,13 +84,18 @@ namespace Siesa.SDK.Frontend.Controllers
         public async Task<ActionResult> Index(string blname, string blaction)
         {
             //get auth token from headers
-            /*string authToken = Request.Headers["X-Auth-Token"];
+            string authToken = JsonConvert.DeserializeObject<string>(Request.Headers["X-Auth-Token"]);
             if (string.IsNullOrEmpty(authToken))
             {
                 return ReturnError(Response, "No auth token provided", 401);
             }
 
-            AuthenticationService.SetToken(authToken);*/
+            AuthenticationService.SetToken(authToken);
+            if (AuthenticationService.User == null)
+            {
+                return ReturnError(Response, "No auth token valid", 401);
+            }
+
             var jsonResponse = new Dictionary<string, object>();
             jsonResponse.Add("status", true);
             int HTTPCodeResponse = 200;
@@ -152,7 +157,6 @@ namespace Siesa.SDK.Frontend.Controllers
                                     {
                                         try
                                         {
-
                                             var jsonBody = await new StreamReader(Request.Body).ReadToEndAsync();
                                             var jsonObj = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonBody);
                                             IEnumerable<KeyValuePair<string, StringValues>> form = jsonObj.Select(x => new KeyValuePair<string, StringValues>(x.Key, x.Value==null?null:x.Value.ToString()));
@@ -160,7 +164,7 @@ namespace Siesa.SDK.Frontend.Controllers
                                         }
                                         catch (System.Exception)
                                         {
-
+                                                
                                         }
                                     }
                                 }
@@ -181,7 +185,7 @@ namespace Siesa.SDK.Frontend.Controllers
                             }
                             catch (System.ArgumentException)
                             {
-                                jsonResponse["status"] = "error";
+                                jsonResponse["status"] = false;
                                 jsonResponse.Add("message", "Invalid parameters");
                                 HTTPCodeResponse = 400;
                             }
@@ -190,14 +194,14 @@ namespace Siesa.SDK.Frontend.Controllers
                 }
                 catch (System.Exception e)
                 {
-                    jsonResponse["status"] = "error";
-                    jsonResponse.Add("message", e.ToString());
+                    jsonResponse["status"] = false;
+                    jsonResponse.Add("message", e.Message);
                     HTTPCodeResponse = 500;
                 }
             }
             else
             {
-                jsonResponse["status"] = "error";
+                jsonResponse["status"] = false;
                 jsonResponse.Add("message", "404 Not Found.");
                 HTTPCodeResponse = 404;
             }

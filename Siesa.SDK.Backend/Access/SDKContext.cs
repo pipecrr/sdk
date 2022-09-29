@@ -139,7 +139,6 @@ namespace Siesa.SDK.Backend.Access
             {
                 return EnumDBType.Unknown;
             }
-
         }
 
         public override int SaveChanges()
@@ -154,7 +153,7 @@ namespace Siesa.SDK.Backend.Access
             }
 
             if(CurrentUser == null){
-                throw new Exception("Invalid User");
+                 throw new Exception("Invalid User");
             }
 
             foreach (var entry in ChangeTracker.Entries())

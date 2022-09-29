@@ -4,29 +4,33 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Siesa.SDK.Backend.Access;
 using Siesa.SDK.Entities;
 using Siesa.SDK.Shared.Business;
 using Siesa.SDK.Shared.DTOS;
+using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Shared.Utilities;
-
 namespace Siesa.SDK.Backend.Extensions
 {
     public static class SDKFlexExtension
     {
         private static Assembly _assemblyInclude = typeof(Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions).Assembly;
 
+
         private static Assembly _assemblySelect = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
 
         private static Assembly _assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
-
-        internal static dynamic SDKFlexPreviewData(SDKContext Context, SDKFlexRequestData requestData, bool setTop = true)
+        
+        internal static dynamic SDKFlexPreviewData(SDKContext Context, SDKFlexRequestData requestData, IAuthenticationService authenticationService, bool setTop = true)
         {
+            var rowidCulture = authenticationService.User.RowidCulture;
             List<SDKFlexColumn> columns = requestData.columns;
             if (columns.Count == 0)
             {
-                return new BadRequestResult<dynamic>();
+                return new ActionResult<dynamic>() { Data = new List<dynamic>() };
             }
 
             List<string> strColumns = new List<string>();
@@ -43,8 +47,12 @@ namespace Siesa.SDK.Backend.Extensions
                 var entityType = Utilities.SearchType(nameSpaceEntity + "." + nameEntity, true);
                 var contextSet = Context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(entityType).Invoke(Context, null);
                 List<string> relatedColumns = new List<string>();
+                List<string> relatedVirtualColumns = new List<string>();
 
                 var includeMethod = typeof(IQueryable<object>).GetExtensionMethod(_assemblyInclude, "Include", new[] { typeof(IQueryable<object>), typeof(string) });
+                
+                Dictionary<string,Dictionary<byte,string>> enumsDict = new Dictionary<string, Dictionary<byte, string>>();
+
                 foreach (SDKFlexColumn column in columns)
                 {
                     if (column.sortType != null)
@@ -55,71 +63,38 @@ namespace Siesa.SDK.Backend.Extensions
                     var columnPath = column.path.Split("::");
                     if (columnPath.Count() == 1)
                     {
-                        
-                            strColumns.Add("np(" + column.name + ")" + " as " + column.key_name);
-                        
+                            strColumns.Add("np(" + column.name + ")" + " as " + column.key_name);                        
                     }
                     else
                     {
                         var relatedColumnInclude = string.Join(".", columnPath.Skip(1));
-                        if (!relatedColumns.Contains(relatedColumnInclude))
-                        {
-                            var includeMethodGeneric = includeMethod.MakeGenericMethod(entityType);
-                            contextSet = includeMethodGeneric.Invoke(contextSet, new object[] { contextSet, relatedColumnInclude });
-                            relatedColumns.Add(relatedColumnInclude);
-                        }
-                        
+                        var property = entityType.GetProperty(relatedColumnInclude.Split(".")[0]);
+                        var propertyType = property.PropertyType;
+                        if(propertyType.IsGenericType && property.GetGetMethod().IsVirtual){
+                            if(propertyType.GetGenericTypeDefinition() == typeof (ICollection<>)){
+                                if (!relatedVirtualColumns.Contains(relatedColumnInclude)){
+                                    var includeMethodGeneric = includeMethod.MakeGenericMethod(entityType);
+                                    contextSet = includeMethodGeneric.Invoke(contextSet, new object[] { contextSet, relatedColumnInclude });
+                                    relatedColumns.Add(relatedColumnInclude);
+                                }
+                            }
+                        }else {
+                            if (!relatedColumns.Contains(relatedColumnInclude))
+                            {
+                                var includeMethodGeneric = includeMethod.MakeGenericMethod(entityType);
+                                contextSet = includeMethodGeneric.Invoke(contextSet, new object[] { contextSet, relatedColumnInclude });
+                                relatedColumns.Add(relatedColumnInclude);
+                            }                        
                             strColumns.Add($"np({relatedColumnInclude}.{column.name}) as {column.key_name}");
-                        
+                        }
 
                     }
                     if (column.type.Equals("SelectField"))
-                    {
-                        var enumT = Context.Set<E00025_EnumValue>()
-                        .Include(x => x.Enum)
-                        .Where(
-                            x =>
-                            x.Enum.Id == "enum" + column.name)
-                        .Select(x => new E00025_EnumValue { Id = x.Enum.Id + "." + x.Id, Value = x.Value });
-
-                        var ejumJoin = enumT.Join(
-                            Context.Set<E00022_ResourceDescription>(),
-                            x => "Enum." + x.Id,
-                            x => x.Resource.Id,
-                            (x, y) => new { x , y })
-                            .Where(x => x.y.RowidCulture == 1);
-                        
-  /*                      var d = contextSet as IQueryable<object>;
-                        d.Join(
-                            ejumJoin, 
-                            x => x.GetType().GetProperty(column.name).GetValue(x), x => x.Value, (x, y) => new { x, y.Description })
-                            .Select(x => new { x.x, x.Description })
-                            .Select($"new (np({column.name}) as {column.key_name}, Description as {column.key_name}_Description)");
-*/
-                       /* var _assemblyJoin = typeof(System.Linq.Queryable).Assembly;
-
-                        var joinMethod = typeof(IQueryable<object>).GetExtensionMethod(_assemblyJoin, "Join", new[] { typeof(IQueryable<object>), typeof(IEnumerable<object>), typeof(Expression<Func<object, object>>), typeof(Expression<Func<object, object>>), typeof(Expression<Func<object, object, object>>), typeof(Expression<Func<object, bool>>) });
-
-                        ParameterExpression pe1 = Expression.Parameter(typeof(E00025_EnumValue), "x");
-                        var funcExpression1 = typeof(Func<,>).MakeGenericType(new Type[] { typeof(E00025_EnumValue), typeof(object) });
-
-                        var returnExp1 = Expression.Lambda(funcExpression1, Expression.PropertyOrField(pe1, "Id"), pe1);
-
-                        ParameterExpression pe2 = Expression.Parameter(typeof(E00022_ResourceDescription), "x");
-                        var funcExpression2 = typeof(Func<,>).MakeGenericType(new Type[] { typeof(E00022_ResourceDescription), typeof(object) });
-                        
-                        var ce = Expression.Constant("Resource");
-                        var returnExp2 = Expression.Lambda(funcExpression2, Expression.PropertyOrField(pe2, ce+".Id"), pe2);
-
-
-                        var joinMethodGeneric = joinMethod.MakeGenericMethod(typeof(object), typeof(IEnumerable<object>), typeof(object), typeof(object), typeof(object));*/
-                        
-                        /*var prb = contextSet.Join(
-                            ejumJoin,
-                            x => x.GetType().GetProperty(column.name).GetValue(x),
-                            x => x.Value,
-                            (x, y) => new { x, y.Description })
-                            .Select(x => new { x.x, x.Description });*/
+                    {   
+                        if(!enumsDict.ContainsKey(column.key_name)){
+                            Dictionary<byte,string> enumValue = GetEnumValues(column.name, rowidCulture, Context);
+                            enumsDict.Add(column.key_name, enumValue);
+                        }
                     }
                 }
 
@@ -145,10 +120,26 @@ namespace Siesa.SDK.Backend.Extensions
                 var dynamicListMethod = typeof(IEnumerable).GetExtensionMethod(_assemblyDynamic, "ToDynamicList", new[] { typeof(IEnumerable) });
                 var dynamicList = dynamicListMethod.Invoke(contextSet, new object[] { contextSet });
 
-                var resource = dynamicList;
-                if (resource != null)
+                var jsonResource = JsonConvert.SerializeObject(dynamicList);
+                var resourceDict = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(jsonResource);
+            
+                if(enumsDict.Count>0){
+                    foreach (var item in resourceDict){
+                        foreach (var enumkey in enumsDict.Keys)
+                        {
+                            var enumValue = enumsDict[enumkey];
+                            var itemValue = item[enumkey];
+                            var description = enumValue[byte.Parse(itemValue.ToString())];
+                            item[$"{enumkey}_oreports_key"] = item[enumkey];
+                            item[enumkey] = description;
+                        }                       
+                    }
+                    return new ActionResult<dynamic>() { Data = resourceDict};
+                }
+
+                if (resourceDict != null)
                 {
-                    return new ActionResult<dynamic>() { Data = resource };
+                    return new ActionResult<dynamic>() { Data = resourceDict };
                 }
             }
             catch (Exception e)
@@ -190,16 +181,22 @@ namespace Siesa.SDK.Backend.Extensions
                 Expression columnValue;
                 //the name constant to match 
                 var value = filter.equal_from;
+                var isNullable = false;
 
-                if (value == null && (!columnType.IsGenericType || columnType.GetGenericTypeDefinition() != typeof(Nullable<>)))
+                if(columnType.IsGenericType && columnType.GetGenericTypeDefinition() == typeof(Nullable<>)){
+                    isNullable = true;
+                }
+
+                if (value == null && !isNullable)
                 {
                     value = Activator.CreateInstance(columnType);
                 }
 
                 //TimeOnly y TimeSpan se estan tratando como charField por eso se cambia el tipo del columnType
-                if (columnType == typeof(TimeOnly) || columnType == typeof(TimeSpan))
+                if (value != null && (columnType == typeof(TimeOnly) || columnType == typeof(TimeSpan)))
                 {
-                    var valueSplit = value.ToString().Split(":").ToList();
+                    var valueDate = DateTime.Parse(value.ToString());
+                    var valueSplit = valueDate.ToString("HH:mm:ss").Split(":").ToList();
                     int hours = 0;
                     int minutes = 0;
                     int seconds = 0;
@@ -218,60 +215,155 @@ namespace Siesa.SDK.Backend.Extensions
 
                     value = Activator.CreateInstance(columnType, hours, minutes, seconds);
                 }
+                
+                
+                if(isNullable){
+                    columnType = Nullable.GetUnderlyingType(columnType) ?? columnType;
+                }
+
+                if (value != null && columnType == typeof(DateOnly) && value.GetType() == typeof(DateTime)){
+                    var valueSplit = value.ToString().Substring(0,10).Split("/").ToList();
+                    int year = int.Parse(valueSplit[2]);
+                    int month = int.Parse(valueSplit[1]);
+                    int day = int.Parse(valueSplit[0]);
+                    
+                    value = Activator.CreateInstance(columnType, year, month, day);
+                }
 
                 object filterValue;
-
+                var columnNamePropertyNull = columnNameProperty;
+                if(isNullable){
+                    columnNameProperty = Expression.Convert(columnNameProperty, columnType);
+                }
                 switch (filter.selected_operator)
                 {
-
                     case "equal":
-                        filterValue = Convert.ChangeType(value, columnType);
-                        columnValue = Expression.Constant(filterValue);
-                        Expression equalExpression;
-                        if (columnType == typeof(DateTime))
-                        {
-                            var x = filterValue as DateTime?;
+                        if(value == null){
+                            return;
+                        }
+                        Expression equalExpression;                        
+                        if (columnType == typeof(DateTime)){
+                            filterValue = Convert.ChangeType(value, columnType);
+                            columnValue = Expression.Constant(filterValue);
+                            var valueDateEqual = filterValue as DateTime?;
                             Expression greatEqualE = Expression.GreaterThanOrEqual(columnNameProperty, columnValue);
-                            Expression lessEqualE = Expression.LessThan(columnNameProperty, Expression.Constant(x?.AddMinutes(1)));
+                            Expression lessEqualE = Expression.LessThan(columnNameProperty, Expression.Constant(valueDateEqual?.AddMinutes(1)));
                             equalExpression = Expression.And(lessEqualE, greatEqualE);
+
+                            addExpression(ref combined, equalExpression);
+                        }else if(columnType == typeof(DateOnly)){
+                            filterValue = Convert.ChangeType(value, columnType);
+                            columnValue = Expression.Constant(filterValue);
+                            var valueDateEqual = filterValue as DateOnly?;
+                            Expression greatEqualE = Expression.GreaterThanOrEqual(columnNameProperty, columnValue);
+                            Expression lessEqualE = Expression.LessThanOrEqual(columnNameProperty, Expression.Constant(valueDateEqual));
+                            equalExpression = Expression.And(lessEqualE, greatEqualE);
+
                             addExpression(ref combined, equalExpression);
                         }
-                        else
-                        {
+                        else{
+                            filterValue = Convert.ChangeType(value, columnType);
+                            columnValue = Expression.Constant(filterValue);
                             equalExpression = Expression.Equal(columnNameProperty, columnValue);
                         }
                         addExpression(ref combined, equalExpression);
                         break;
                     case "not_equal":
+                        if(value == null){
+                            return;
+                        }
+                        if(isNullable){
+                            columnNameProperty = Expression.Convert(columnNameProperty, columnType);
+                        }
                         filterValue = Convert.ChangeType(value, columnType);
                         columnValue = Expression.Constant(filterValue);
                         Expression notEqualExpression;
                         if (columnType == typeof(DateTime))
                         {
-                            var xx = filterValue as DateTime?;
+                            var valueDate = filterValue as DateTime?;
                             Expression lessNotEqualE = Expression.LessThan(columnNameProperty, columnValue);
-                            Expression greatNotEqualE = Expression.GreaterThan(columnNameProperty, Expression.Constant(xx?.AddMinutes(1)));
+                            Expression greatNotEqualE = Expression.GreaterThan(columnNameProperty, Expression.Constant(valueDate?.AddMinutes(1)));
                             notEqualExpression = Expression.Or(lessNotEqualE, greatNotEqualE);
-                        }
-                        else
-                        {
+                        }else if(columnType == typeof(DateOnly)){
+                            var valueDate = filterValue as DateOnly?;
+                            Expression lessNotEqualE = Expression.LessThan(columnNameProperty, columnValue);
+                            Expression greatNotEqualE = Expression.GreaterThan(columnNameProperty, Expression.Constant(valueDate));
+                            notEqualExpression = Expression.Or(lessNotEqualE, greatNotEqualE);
+                        }else{
                             notEqualExpression = Expression.NotEqual(columnNameProperty, columnValue);
                         }
                         addExpression(ref combined, notEqualExpression);
                         break;
+                    case "in":
+                        if(value == null){
+                            return;
+                        }
+                        Expression inExpression;
+                        Expression inExpression2;
+                        if(columnType.BaseType == typeof(Enum)){
+                            var listValueEnum = JsonConvert.DeserializeObject<List<byte>>(value.ToString());
+                            inExpression = Expression.Equal(columnNameProperty, Expression.Constant(Convert.ChangeType(Enum.Parse(columnType,listValueEnum[0].ToString()), columnType)));
+                            for (int i = 1; i < listValueEnum.Count; i++){
+                                var enumValue = Convert.ChangeType(Enum.Parse(columnType,listValueEnum[i].ToString()), columnType);
+                                inExpression2 = Expression.Equal(columnNameProperty, Expression.Constant(enumValue));
+                                inExpression = Expression.Or(inExpression, inExpression2);
+                            }
+                        }else {
+                            var listValue = JsonConvert.DeserializeObject<List<bool>>(value.ToString());
+                            inExpression = Expression.Equal(columnNameProperty, Expression.Constant(listValue[0]));
+                            for (int i = 1; i < listValue.Count; i++){
+                                inExpression2 = Expression.Equal(columnNameProperty, Expression.Constant(listValue[i]));
+                                inExpression = Expression.Or(inExpression, inExpression2);
+                            }                            
+                        }
+                        addExpression(ref combined, inExpression);
+                        break;
+                    case "exclude":                    
+                        if(value == null){
+                            return;
+                        }
+                        Expression excludeExpression;
+                        Expression excludeExpression2;
+                        if(columnType.BaseType == typeof(Enum)){
+                            var listValueExclude = JsonConvert.DeserializeObject<List<byte>>(value.ToString());
+                            excludeExpression = Expression.NotEqual(columnNameProperty, Expression.Constant(Convert.ChangeType(Enum.Parse(columnType,listValueExclude[0].ToString()), columnType)));
+                            for (int i = 1; i < listValueExclude.Count; i++){
+                                var enumValue = Convert.ChangeType(Enum.Parse(columnType,listValueExclude[i].ToString()), columnType);
+                                excludeExpression2 = Expression.NotEqual(columnNameProperty, Expression.Constant(enumValue));
+                                excludeExpression = Expression.And(excludeExpression, excludeExpression2);
+                            }
+                        }else{
+                            var listValueExclude = JsonConvert.DeserializeObject<List<bool>>(value.ToString());
+                            excludeExpression = Expression.NotEqual(columnNameProperty, Expression.Constant(listValueExclude[0]));
+                            for (int i = 1; i < listValueExclude.Count; i++){
+                                excludeExpression2 = Expression.NotEqual(columnNameProperty, Expression.Constant(listValueExclude[i]));
+                                excludeExpression = Expression.And(excludeExpression, excludeExpression2);
+                            }
+                        }
+                        addExpression(ref combined, excludeExpression);
+                        break;
                     case "starts_with":
+                        if(value == null){
+                            return;
+                        }
                         filterValue = Convert.ChangeType(value, columnType);
                         columnValue = Expression.Constant(filterValue);
                         Expression startsWithExpression = Expression.Call(columnNameProperty, getMethodInfo("StartsWith", typeof(string)), columnValue);
                         addExpression(ref combined, startsWithExpression);
                         break;
                     case "end_with":
+                        if(value == null){
+                            return;
+                        }
                         filterValue = Convert.ChangeType(value, columnType);
                         columnValue = Expression.Constant(filterValue);
                         Expression endWithExpression = Expression.Call(columnNameProperty, getMethodInfo("EndsWith", typeof(string)), columnValue);
                         addExpression(ref combined, endWithExpression);
                         break;
                     case "contains":
+                        if(value == null){
+                            return;
+                        }
                         filterValue = Convert.ChangeType(value, columnType);
                         columnValue = Expression.Constant(filterValue);
                         Expression containsExpression = Expression.Call(columnNameProperty, getMethodInfo("Contains", typeof(string)), columnValue);
@@ -279,80 +371,132 @@ namespace Siesa.SDK.Backend.Extensions
                         break;
                     case "null_or_empty":
                     case "empty":
-                        Expression nullOrEmptyExpression;
-                        if (columnType == typeof(DateTime))
-                        {
+                        Expression nullOrEmptyExpression = null;
+                        if (columnType == typeof(DateTime) || columnType == typeof(DateOnly)){
                             filterValue = Convert.ChangeType(Activator.CreateInstance(columnType), columnType);
                             columnValue = Expression.Constant(filterValue);
                             nullOrEmptyExpression = Expression.Equal(columnNameProperty, columnValue);
-                        }
-                        else
-                        {
+                        }else if(columnType == typeof(string)){
                             nullOrEmptyExpression = Expression.Call(getMethodInfo("IsNullOrEmpty", typeof(string)), columnNameProperty);
+                        }
+
+                        if(isNullable && columnType != typeof(string))
+                        {
+                            var nullExpression = Expression.Equal(columnNamePropertyNull, Expression.Constant(null));
+                            if(nullOrEmptyExpression != null)
+                            {
+                                nullOrEmptyExpression = Expression.Or(nullOrEmptyExpression, nullExpression);
+                            }else{
+                                nullOrEmptyExpression = nullExpression;
+                            }
                         }
                         addExpression(ref combined, nullOrEmptyExpression);
                         break;
                     case "not_empty":
-                        Expression notEmptyExpression;
-                        if (columnType == typeof(DateTime))
-                        {
+                        Expression notEmptyExpression = null;
+                        if (columnType == typeof(DateTime) || columnType == typeof(DateOnly)){
                             filterValue = Convert.ChangeType(Activator.CreateInstance(columnType), columnType);
                             columnValue = Expression.Constant(filterValue);
-                            notEmptyExpression = Expression.Equal(columnNameProperty, columnValue);
-                        }
-                        else
-                        {
+                            notEmptyExpression = Expression.NotEqual(columnNameProperty, columnValue);
+                        }else if(columnType == typeof(string)){
                             notEmptyExpression = Expression.Call(getMethodInfo("IsNullOrEmpty", typeof(string)), columnNameProperty);
                         }
-                        notEmptyExpression = Expression.Not(notEmptyExpression);
-                        addExpression(ref combined, notEmptyExpression);
+                        if(isNullable && columnType != typeof(string))
+                        {
+                            var notEmptyExpression2 = Expression.NotEqual(columnNamePropertyNull, Expression.Constant(null));
+                            if(notEmptyExpression != null)
+                            {
+                                notEmptyExpression = Expression.And(notEmptyExpression, notEmptyExpression2);
+                            }else{
+                                notEmptyExpression = notEmptyExpression2;
+                            }
+                        }
+                        addExpression(ref combined, notEmptyExpression);                        
                         break;
                     case "gt":
+                        if(value == null){
+                            return;
+                        }
                         filterValue = Convert.ChangeType(value, columnType);
                         columnValue = Expression.Constant(filterValue);
                         Expression greatThanExpression = Expression.GreaterThan(columnNameProperty, columnValue);
                         addExpression(ref combined, greatThanExpression);
                         break;
                     case "lt":
+                        if(value == null){
+                            return;
+                        }
                         filterValue = Convert.ChangeType(value, columnType);
                         columnValue = Expression.Constant(filterValue);
                         Expression lessThanExpression = Expression.LessThan(columnNameProperty, columnValue);
                         addExpression(ref combined, lessThanExpression);
                         break;
                     case "gte":
+                        if(value == null){
+                            return;
+                        }
                         filterValue = Convert.ChangeType(value, columnType);
                         columnValue = Expression.Constant(filterValue);
                         Expression greatThanOrEqualsExpression = Expression.GreaterThanOrEqual(columnNameProperty, columnValue);
                         addExpression(ref combined, greatThanOrEqualsExpression);
                         break;
                     case "between":
+                        var filterTo = filter.to;
+                        if(value == null || filterTo == null){
+                            return;
+                        }
                         filterValue = Convert.ChangeType(value, columnType);
                         columnValue = Expression.Constant(filterValue);
-                        Expression columnTo = Expression.Constant(Convert.ChangeType(filter.to, columnType));
+                        Expression columnTo = null;
+                        if(columnType == typeof(DateOnly)){
+                            var valueSplit = filterTo.ToString().Substring(0,10).Split("-").ToList();
+                            int yearB = int.Parse(valueSplit[0]);
+                            int monthB = int.Parse(valueSplit[1]);
+                            int dayB = int.Parse(valueSplit[2]);
+                            
+                            var filterToDateOnly = Activator.CreateInstance(columnType, yearB, monthB, dayB);
+                            columnTo = Expression.Constant(Convert.ChangeType(filterToDateOnly, columnType));
+                        }else{
+                            columnTo = Expression.Constant(Convert.ChangeType(filter.to, columnType));
+                        }
                         Expression greaterExpression = Expression.GreaterThan(columnNameProperty, columnValue);
                         Expression lessExpression = Expression.LessThan(columnNameProperty, columnTo);
                         Expression betweenExpression = Expression.And(lessExpression, greaterExpression);
                         addExpression(ref combined, betweenExpression);
                         break;
                     case "before":
+                        if(value == null){
+                            return;
+                        }
                         filterValue = Convert.ChangeType(value, columnType);
                         columnValue = Expression.Constant(filterValue);
                         Expression beforeExpression = Expression.LessThan(columnNameProperty, columnValue);
                         addExpression(ref combined, beforeExpression);
                         break;
                     case "after":
+                        if(value == null){
+                            return;
+                        }
                         filterValue = Convert.ChangeType(value, columnType);
                         columnValue = Expression.Constant(filterValue);
                         Expression afterExpression = Expression.GreaterThan(columnNameProperty, columnValue);
                         addExpression(ref combined, afterExpression);
                         break;
-                    case "in_past":
-                        columnValue = Expression.Constant(Convert.ChangeType(DateTime.Now, columnType));
+                    case "in_past":                        
+                        if(columnType == typeof(DateOnly)){
+                            columnValue = Expression.Constant(Convert.ChangeType(DateOnly.FromDateTime(DateTime.Now), columnType));
+                        }else{
+                            columnValue = Expression.Constant(Convert.ChangeType(DateTime.Now, columnType));
+                        }
                         Expression inPastExpression = Expression.LessThan(columnNameProperty, columnValue);
                         addExpression(ref combined, inPastExpression);
                         break;
                     case "in_future":
-                        columnValue = Expression.Constant(Convert.ChangeType(DateTime.Now, columnType));
+                    if(columnType == typeof(DateOnly)){
+                            columnValue = Expression.Constant(Convert.ChangeType(DateOnly.FromDateTime(DateTime.Now), columnType));
+                        }else{
+                            columnValue = Expression.Constant(Convert.ChangeType(DateTime.Now, columnType));
+                        }                        
                         Expression inFuctureExpression = Expression.GreaterThan(columnNameProperty, columnValue);
                         addExpression(ref combined, inFuctureExpression);
                         break;
@@ -361,13 +505,14 @@ namespace Siesa.SDK.Backend.Extensions
                         var month = todayCurrentMonth.Month;
                         var year = todayCurrentMonth.Year;
                         var numDays = DateTime.DaysInMonth(year, month);
-                        var startDateMonth = new DateTime(year, month, 1);
-                        var endDateMonth = new DateTime(year, month, numDays);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(startDateMonth, typeof(DateTime)));
+                        var startDateMonth = Activator.CreateInstance(columnType, year, month, 1);
+                        var endDateMonth = Activator.CreateInstance(columnType, year, month, numDays);
+
+                        columnValue = Expression.Constant(Convert.ChangeType(startDateMonth, columnType));
                         Expression greaterCurrentMonthE = Expression.GreaterThanOrEqual(columnNameProperty, columnValue);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(endDateMonth, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(endDateMonth, columnType));
                         Expression lessCurrentMonthE = Expression.LessThanOrEqual(columnNameProperty, columnValue);
 
                         var currentMonthExpression = Expression.And(lessCurrentMonthE, greaterCurrentMonthE);
@@ -376,13 +521,16 @@ namespace Siesa.SDK.Backend.Extensions
                     case "current_week":
                         DateTime todayCurrentWeek = DateTime.Now;
                         var dayWeek = ((double)todayCurrentWeek.DayOfWeek);
-                        var startDayWeek = todayCurrentWeek.AddDays(-dayWeek);
+                        var startDateWeek = todayCurrentWeek.AddDays(-dayWeek);
                         var endDateWeek = todayCurrentWeek.AddDays(6 - dayWeek);
+                        
+                        var startDateW = Activator.CreateInstance(columnType, startDateWeek.Year, startDateWeek.Month, startDateWeek.Day);
+                        var endDateW = Activator.CreateInstance(columnType, endDateWeek.Year, endDateWeek.Month, endDateWeek.Day);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(startDayWeek, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(startDateW, columnType));
                         Expression greaterCurrentWeekE = Expression.GreaterThanOrEqual(columnNameProperty, columnValue);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(endDateWeek, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(endDateW, columnType));
                         Expression lessCurrentWeekE = Expression.LessThanOrEqual(columnNameProperty, columnValue);
 
                         var currentWeekExpression = Expression.And(lessCurrentWeekE, greaterCurrentWeekE);
@@ -393,24 +541,19 @@ namespace Siesa.SDK.Backend.Extensions
                         var lastMonth = todayLastMonth.Month - 1;
                         var lastYear = todayLastMonth.Year;
 
-                        var startDateLastMonth = new DateTime();
-                        var endDateLastMonth = new DateTime();
                         if (lastMonth <= 0)
                         {
-                            startDateLastMonth = new DateTime(lastYear - 1, 12, 1);
-                            endDateLastMonth = new DateTime(lastYear - 1, 12, 31);
+                            lastMonth = 12;
+                            lastYear = lastYear - 1;
                         }
-                        else
-                        {
-                            var numDaysLastMonth = DateTime.DaysInMonth(lastYear, lastMonth);
-                            startDateLastMonth = new DateTime(lastYear, lastMonth, 1);
-                            endDateLastMonth = new DateTime(lastYear, lastMonth, numDaysLastMonth);
-                        }
+                        var numDaysLastMonth = DateTime.DaysInMonth(lastYear, lastMonth);
+                        var startDateLastMonth = Activator.CreateInstance(columnType, lastYear, lastMonth, 1);
+                        var endDateLastMonth = Activator.CreateInstance(columnType, lastYear, lastMonth, numDaysLastMonth);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(startDateLastMonth, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(startDateLastMonth, columnType));
                         Expression greaterLastMonthE = Expression.GreaterThanOrEqual(columnNameProperty, columnValue);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(endDateLastMonth, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(endDateLastMonth, columnType));
                         Expression lessLastMonthE = Expression.LessThanOrEqual(columnNameProperty, columnValue);
 
                         var lastMonthExpression = Expression.And(lessLastMonthE, greaterLastMonthE);
@@ -419,43 +562,52 @@ namespace Siesa.SDK.Backend.Extensions
                     case "today":
                         DateTime today = DateTime.Now;
 
-                        var startDate = today.Date;
-                        var endDate = startDate.AddDays(1);
+                        var startDate = Activator.CreateInstance(columnType, today.Year, today.Month, today.Day);
+                        today = today.AddDays(1);
+                        var endDate = Activator.CreateInstance(columnType, today.Year, today.Month, today.Day);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(startDate, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(startDate, columnType));
                         Expression greaterTodayE = Expression.GreaterThan(columnNameProperty, columnValue);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(endDate, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(endDate, columnType));
                         Expression lessTodayE = Expression.LessThan(columnNameProperty, columnValue);
 
                         var todayExpression = Expression.And(lessTodayE, greaterTodayE);
                         addExpression(ref combined, todayExpression);
                         break;
                     case "last_n_days":
+                        if(value == null || value == ""){
+                            return;
+                        }
                         DateTime todayLastNDate = DateTime.Now;
                         int daysLast = int.Parse(value.ToString());
-                        var startDateLastnDays = todayLastNDate.Date.AddDays(-daysLast);
-                        var endDateLastnDays = todayLastNDate;
+                        var endDateLastnDays = Activator.CreateInstance(columnType, todayLastNDate.Year, todayLastNDate.Month, todayLastNDate.Day);
+                        todayLastNDate = todayLastNDate.Date.AddDays(-daysLast);
+                        var startDateLastnDays = Activator.CreateInstance(columnType, todayLastNDate.Year, todayLastNDate.Month, todayLastNDate.Day);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(startDateLastnDays, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(startDateLastnDays, columnType));
                         Expression greaterLastnDayE = Expression.GreaterThan(columnNameProperty, columnValue);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(endDateLastnDays, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(endDateLastnDays, columnType));
                         Expression lessLastnDayE = Expression.LessThan(columnNameProperty, columnValue);
 
                         var lastnDaysExpression = Expression.And(lessLastnDayE, greaterLastnDayE);
                         addExpression(ref combined, lastnDaysExpression);
                         break;
                     case "next_n_days":
+                        if(value == null || value == ""){
+                            return;
+                        }
                         DateTime todayNextNDate = DateTime.Now;
                         int daysNext = int.Parse(value.ToString());
-                        var startDateNextnDays = todayNextNDate.Date.AddDays(daysNext);
-                        var endDateNextnDays = todayNextNDate;
+                        var endDateNextnDays = Activator.CreateInstance(columnType, todayNextNDate.Year, todayNextNDate.Month, todayNextNDate.Day);
+                        todayNextNDate = todayNextNDate.Date.AddDays(daysNext);
+                        var startDateNextnDays = Activator.CreateInstance(columnType, todayNextNDate.Year, todayNextNDate.Month, todayNextNDate.Day);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(startDateNextnDays, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(startDateNextnDays, columnType));
                         Expression greaterNextnDayE = Expression.GreaterThan(columnNameProperty, columnValue);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(endDateNextnDays, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(endDateNextnDays, columnType));
                         Expression lessNextnDayE = Expression.LessThan(columnNameProperty, columnValue);
 
                         var nextnDaysExpression = Expression.And(lessNextnDayE, greaterNextnDayE);
@@ -464,13 +616,13 @@ namespace Siesa.SDK.Backend.Extensions
                     case "this_year":
                         var thisYear = DateTime.Now.Year;
 
-                        var startDateThisYear = new DateTime(thisYear, 1, 1);
-                        var endDateThisYear = new DateTime(thisYear, 12, 31);
+                        var startDateThisYear = Activator.CreateInstance(columnType,thisYear,1,1); 
+                        var endDateThisYear = Activator.CreateInstance(columnType, thisYear, 12, 31); 
 
-                        columnValue = Expression.Constant(Convert.ChangeType(startDateThisYear, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(startDateThisYear, columnType));
                         Expression greaterThisYearE = Expression.GreaterThan(columnNameProperty, columnValue);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(endDateThisYear, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(endDateThisYear, columnType));
                         Expression lessThisYearE = Expression.LessThan(columnNameProperty, columnValue);
 
                         var thisYearExpression = Expression.And(lessThisYearE, greaterThisYearE);
@@ -479,13 +631,13 @@ namespace Siesa.SDK.Backend.Extensions
                     case "last_year":
                         var yearLastYear = DateTime.Now.Year - 1;
 
-                        var startDateLastYear = new DateTime(yearLastYear, 1, 1);
-                        var endDateLastYear = new DateTime(yearLastYear, 12, 31);
+                        var startDateLastYear = Activator.CreateInstance(columnType, yearLastYear, 1, 1);
+                        var endDateLastYear = Activator.CreateInstance(columnType, yearLastYear, 12, 31);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(startDateLastYear, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(startDateLastYear, columnType));
                         Expression greaterLastYearE = Expression.GreaterThan(columnNameProperty, columnValue);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(endDateLastYear, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(endDateLastYear, columnType));
                         Expression lessLastYearE = Expression.LessThan(columnNameProperty, columnValue);
 
                         var lastYearExpression = Expression.And(lessLastYearE, greaterLastYearE);
@@ -494,13 +646,13 @@ namespace Siesa.SDK.Backend.Extensions
                     case "next_year":
                         var yearNextYear = DateTime.Now.Year + 1;
 
-                        var startDateNextYear = new DateTime(yearNextYear, 1, 1);
-                        var endDateNextYear = new DateTime(yearNextYear, 12, 31);
+                        var startDateNextYear = Activator.CreateInstance(columnType, yearNextYear, 1, 1);
+                        var endDateNextYear = Activator.CreateInstance(columnType, yearNextYear, 12, 31);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(startDateNextYear, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(startDateNextYear, columnType));
                         Expression greaterNextYearE = Expression.GreaterThan(columnNameProperty, columnValue);
 
-                        columnValue = Expression.Constant(Convert.ChangeType(endDateNextYear, typeof(DateTime)));
+                        columnValue = Expression.Constant(Convert.ChangeType(endDateNextYear, columnType));
                         Expression lessNextYearE = Expression.LessThan(columnNameProperty, columnValue);
 
                         var nextYearExpression = Expression.And(lessNextYearE, greaterNextYearE);
@@ -545,6 +697,55 @@ namespace Siesa.SDK.Backend.Extensions
         {
             var r = type.GetMethod(nameMethod, new Type[] { type });
             return r;
+        }
+
+        public static Dictionary<byte, string> GetEnumValues(string enumName, Int64 cultureRowid, SDKContext context){
+            var enumValues = context.Set<E00025_EnumValue>().Where(x => x.Enum.Id == "enum"+enumName).Join(
+                context.Set<E00022_ResourceDescription>(),
+                x =>  "Enum." + x.Enum.Id + "." + x.Id,
+                x => x.Resource.Id,
+                (x, y) => new { x.Value, y.Description, y.RowidCulture }).Where(x => x.RowidCulture == cultureRowid)
+                .ToDictionary(x => x.Value, x => x.Description);
+
+            if (enumValues.Keys.Count > 0)
+            {
+                return enumValues;
+            }
+            else
+            {
+                var cultureLanguageEnum = context.Set<E00021_Culture>()
+                .Where(x => x.Rowid == cultureRowid)
+                .Select(x => x.LanguageCode).FirstOrDefault();
+
+                if (cultureLanguageEnum == null)
+                {
+                    return null;
+                }
+
+                var mainCultureRowid = context.Set<E00021_Culture>()
+                .Where(x => x.LanguageCode == cultureLanguageEnum && x.CountryCode == null)
+                .Select(x => x.Rowid).FirstOrDefault();
+
+                if (mainCultureRowid == 0)
+                {
+                    return null;
+                }
+
+                enumValues = context.Set<E00025_EnumValue>()
+                .Where(x => x.Enum.Id == enumName)
+                .Join(context.Set<E00022_ResourceDescription>(), x => "Enum." + x.Enum.Id + "." + x.Id, x => x.Resource.Id,
+                (x, y) => new { x.Value, y.Description, y.RowidCulture })
+                .Where(x => x.RowidCulture == mainCultureRowid)
+                .ToDictionary(x => x.Value, x => x.Description);
+
+                if (enumValues != null)
+                {
+                    return enumValues;
+                }
+
+                return null;
+            }
+            
         }
     }
 }

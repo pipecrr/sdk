@@ -4,6 +4,9 @@
 @using Siesa.SDK.Frontend.Components.Layout
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Frontend.Components.FormManager.Views
+@using Siesa.SDK.Frontend.Components.FormManager.Model
+@inject UtilsManager UtilsManager
+@implements IDisposable
 
 <div @attributes="@FlexAttributes">
 </div>
@@ -34,7 +37,7 @@
 @code {
     [Parameter]
     public dynamic Business {get;set;}
-
+    
     private bool _isDebug = false;
 
     private bool _isDetail = false;
@@ -44,8 +47,11 @@
     private string _blName = "BLFlex";
 
     private string _currentView = "create";
+    private string flexElementId;
 
     private Dictionary<string, object> FlexAttributes { get; set; } = new Dictionary<string, object>();
+
+    private IJSObjectReference _jsModule;
 
     private void Init()
     {
@@ -54,6 +60,7 @@
         {
             _isDebug = true;
         }
+        //_isDebug = true;
 
         Navigation.TryGetQueryString("currentView",out _currentView);
         if(string.IsNullOrEmpty(_currentView))
@@ -70,7 +77,8 @@
             _flexRowId = int.Parse(SDKFlexRowIdVar);
         }  
         FlexAttributes.Clear();
-        FlexAttributes.Add("id", "flexdebug");
+        flexElementId = "flexdebug";//$"flex_{Guid.NewGuid().ToString()}";
+        FlexAttributes.Add("id", flexElementId);
         FlexAttributes.Add("class", "root_oreports");
         FlexAttributes.Add("current_view", _currentView);
         if(_flexRowId != 0)
@@ -79,22 +87,26 @@
         }        
 
         StateHasChanged();
+
+        JSRuntime.InvokeAsync<object>("window.MountFlex", flexElementId);
+
     }
 
     protected override async Task OnInitializedAsync()
     {
         //Init();
+        UtilsManager.GetResourceByContainId();
         await base.OnInitializedAsync();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if(firstRender){
+        if(firstRender || _jsModule == null){
             if(_isDebug)
             {
-                await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/flex/FlexComponent.debug.js");
+                _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/flex/FlexComponent.debug.js");
             }else{
-                await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/flex/FlexComponent.js");
+                _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/flex/FlexComponent.js");
             }
         }
     }
@@ -156,9 +168,13 @@
             ds => @<ConfirmDelete DialogService=@ds />,
             new DialogOptions(){ShowTitle=false, Width="400"});
         if(dialog != null && dialog == true){
-            //await Business.DeleteAsync();
+            Business.BaseObj.Rowid = _flexRowId;
+            await Business.DeleteAsync();
             Navigation.NavigateTo($"/{_blName}/");
         }
         //StateHasChanged();
+    }
+    public void Dispose(){
+        JSRuntime.InvokeAsync<object>("window.unmountOReportsReact", flexElementId);
     }
 }
