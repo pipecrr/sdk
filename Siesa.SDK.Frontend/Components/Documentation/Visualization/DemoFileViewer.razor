@@ -1,0 +1,65 @@
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
+@inject SDKNotificationService SDKNotificationService
+@inject SDKDialogService DialogService 
+
+
+@layout EmptyLayout
+
+
+<div class="container-fluid">
+    <div class="container-fluid">
+            <h2>SDKFileViewer</h2> 
+            <p>Demonstration and configuration of the SDKFileViewer component</p> 
+    </div>
+    <div class="row px-3"> 
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <SDKButton ResourceTag="Image"  Click="@(() => prb(@SDKTypeFile.Image))"/>
+                <SDKButton ResourceTag="Video"  Click="@(() => prb(@SDKTypeFile.Video))"/>
+                <SDKButton ResourceTag="Audio"  Click="@(() => prb(@SDKTypeFile.Audio))"/>
+                <SDKButton ResourceTag="PDF"  Click="@(() => prb(@SDKTypeFile.Pdf))"/>
+                <SDKButton ResourceTag="Text"  Click="@(() => prb(@SDKTypeFile.Text))"/>
+                <SDKButton ResourceTag="Other"  Click="@(() => prb(@SDKTypeFile.Other))"/>
+            </SDKCard>
+        </div>
+    </div>
+</div>
+
+
+@code{
+
+    async Task prb(SDKTypeFile type){
+
+        if(type == SDKTypeFile.Image)
+        {
+            await DialogService.ShowCustomDialog(ds => 
+                @<SDKFileViewer type=type url="https://www.campusmvp.es/recursos/image.axd?picture=/2020/2T/blazor/blazor-esquema.png"></SDKFileViewer>, width: "800px");
+
+        }else if (type == SDKTypeFile.Video)
+        {
+            await DialogService.ShowCustomDialog(ds => 
+                @<SDKFileViewer type=type url="https://upload.wikimedia.org/wikipedia/commons/e/ee/Google_Assistant.ogg"></SDKFileViewer>, width: "800px");
+            
+        }else if (type == SDKTypeFile.Audio)
+        {
+            await DialogService.ShowCustomDialog(ds => 
+                @<SDKFileViewer type=type url="https://upload.wikimedia.org/wikipedia/commons/e/ef/John_bishop_bbc_radio4_desert_island_discs_24_06_2012.flac"></SDKFileViewer>, width: "800px");
+            
+        }else if (type == SDKTypeFile.Pdf)
+        {
+            await DialogService.ShowCustomDialog(ds => 
+                @<SDKFileViewer type=type url="https://learn-blazor.com/slides/Blazor-Intro.pdf"></SDKFileViewer>, width: "800px");
+            
+        }else if (type == SDKTypeFile.Text)
+        {
+            await DialogService.ShowCustomDialog(ds => 
+                @<SDKFileViewer type=type url="https://www.google.com/.well-known/security.txt"></SDKFileViewer>, width: "800px");
+            
+        }else
+        {
+            await DialogService.ShowCustomDialog(ds => 
+                @<SDKFileViewer type=type url="Demo"></SDKFileViewer>, width: "800px");
+        }
+    }
+}

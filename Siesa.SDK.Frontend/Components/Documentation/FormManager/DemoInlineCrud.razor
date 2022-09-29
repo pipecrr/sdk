@@ -1,0 +1,37 @@
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Components.FormManager.Model
+@using Entities
+
+
+@inject SDKNotificationService SDKNotificationService
+
+
+<div class="container-fluid">
+    <div class="container-fluid">
+            <h2>InlineCrud</h2> 
+            <p>Demonstration and configuration of the InlineCrud component</p> 
+    </div>
+    <div class="row px-3"> 
+        <div class="col-md-12 p-3">
+            <InlineCrud BusinessName=""/>
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+    
+
+
+    /*private List<E05003_City>Data =new List<E05003_City>()
+    {
+        new E05003_City(){Rowid=1, Id = "XYZXYZ", Path = "Path", Password = "Password", IsLocked = true, StartDateValidity = DateTime.Now, RowidCulture = 1},
+        new E05003_City(){Rowid=2, Id = "XYZXYZ", Path = "Path2", Password = "Password2", IsLocked = true, StartDateValidity = DateTime.Now, RowidCulture = 2},
+        new E05003_City(){Rowid=3, Id = "XYZXYZ", Path = "Path3", Password = "Password3", IsLocked = false, StartDateValidity = DateTime.Now, RowidCulture = 3},
+        new E05003_City(){Rowid=4, Id = "XYZXYZ", Path = "Path4", Password = "Password4", IsLocked = true, StartDateValidity = DateTime.UtcNow, RowidCulture = 4},
+        new E05003_City(){Rowid=5, Id = "XYZXYZ", Path = "Path5", Password = "Password5", IsLocked = false, StartDateValidity = DateTime.Today, RowidCulture = 5}
+    };*/
+       
+}

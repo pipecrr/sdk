@@ -1,0 +1,80 @@
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Services
+
+@inject SDKNotificationService Notification
+
+@layout EmptyLayout
+
+<div class="container-fluid">
+    <div class="container-fluid">
+            <h2>SDKCharField</h2> 
+            <p>Demonstration and configuration of the SDKCharField component</p> 
+    </div>
+    <div class="row px-3"> 
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>bind-Value</h3>
+                <SDKCharField @bind-Value="@TextValue"/>
+                    <p>
+                        Text: <b>@TextValue</b>
+                    </p>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>Place Holder</h3>
+                <SDKCharField @bind-Value="@TextValue2"
+                        Placeholder="Hello ..."/>
+                    <p>
+                        Text: <b>@TextValue2</b>
+                    </p>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>ReadOnly</h3>
+                <SDKCharField @bind-Value="@TextValue3"
+                        Placeholder="Hello ..."
+                        ReadOnly ="true" />
+                    <p>
+                        Text: <b>@TextValue3</b>
+                    </p>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>Type Password</h3>
+                <SDKCharField @bind-Value="@TextValue4"
+                        Placeholder="Password"
+                        Password="true" />
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>Value Changed</h3>
+                <SDKCharField Value="@valueChange" 
+                        Placeholder="Value Change"
+                        ValueChanged="((value) => Onchange(value))" />
+            </SDKCard>
+        </div>
+    </div>
+</div>
+
+@code {
+   public string TextValue { get; set; }
+   public string TextValue2 { get; set; }
+   public string TextValue3 { get; set; }
+   public string TextValue4 { get; set; }
+
+   string valueChange;
+
+
+   public string Onchange(string value){
+
+        valueChange = value;
+        Notification.ShowWarning("This value changed "+$"{valueChange}");
+
+        return valueChange;  
+    }
+}

@@ -42,6 +42,16 @@ namespace Siesa.SDK.Frontend.Components
 
         }
 
+        public static DevExpress.Blazor.Orientation GetOrientationMenu(this SDKOrientationMenu orientationMenu)
+        {
+            return orientationMenu switch
+            {
+                SDKOrientationMenu.Horizontal => DevExpress.Blazor.Orientation.Horizontal,
+                SDKOrientationMenu.Vertical => DevExpress.Blazor.Orientation.Vertical
+
+            };
+        }
+
         public static DataEditorClearButtonDisplayMode Get(this SDKClearButtonDisplayMode clearButtonDisplayMode)
         {
             return clearButtonDisplayMode switch
@@ -97,5 +107,11 @@ namespace Siesa.SDK.Frontend.Components
         Pdf = 4,
         Text = 5,
         Other = 6
+    }
+
+    public enum SDKOrientationMenu{
+        Horizontal = 1,
+        Vertical = 2
+
     }
 }
