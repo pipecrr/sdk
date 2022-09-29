@@ -4,16 +4,17 @@
 @inject IResourceManager ResourceManager
 @inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavigationManager
+@inherits Siesa.SDK.Frontend.Components.SDKComponent
 
 @if(!String.IsNullOrEmpty(form) && SubmitFormOnClick)
 {
     <button class="btn btn-sm layout_btn_standar-sm ml-1" data-toggle="tooltip" disabled="@(!Enabled)"
-        data-placement="top" title="@Text" form="@form" type="submit">
+        data-placement="top" title="@Text" form="@form" type="submit" data-automation-id="@GetAutomationId()">
         <i class="@IconCssClass"></i>
     </button>
 }else{
     <button class="btn btn-sm layout_btn_standar-sm ml-1" data-toggle="tooltip" disabled="@(!Enabled)"
-        data-placement="top" title="@Text" form="@form" @onclick="@OnClick"  @onclick:preventDefault>
+        data-placement="top" title="@Text" form="@form" @onclick="@OnClick" data-automation-id="@GetAutomationId()" @onclick:preventDefault>
         <i class="@IconCssClass"></i>
     </button>
 }
@@ -63,5 +64,20 @@
         }
         topBar?.CloseExtraButtons();
         
+    }
+
+    protected override string GetAutomationId()
+    {
+        if(string.IsNullOrEmpty(AutomationId))
+        {
+            if(SubmitFormOnClick && !string.IsNullOrEmpty(form))
+            {
+                AutomationId = "submit";
+            }else if(!string.IsNullOrEmpty(ResourceTag))
+            {
+                AutomationId = ResourceTag;
+            }
+        }
+        return base.GetAutomationId();
     }
 }

@@ -1,5 +1,6 @@
 @page "/login"
 @using System.ComponentModel.DataAnnotations
+@using SDK.Components.Visualization
 @using Siesa.SDK.Shared.Services
 @using Siesa.SDK.Shared.DTOS
 @using Siesa.SDK.Frontend.Navigation
@@ -16,6 +17,7 @@
 @layout EmptyLayout
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Shared.DataAnnotations
+@using Siesa.SDK.Frontend.Components.Fields
 
 <PageTitle>Login</PageTitle>
 
@@ -105,30 +107,38 @@
                         <div class="border_left_md col-12 col-sm-12 col-md-6 col-lg-12">
                             <div
                                 class="col-12 offset-sm-2 col-sm-8 offset-md-1 col-md-10 offset-lg-2 col-lg-8 px-md-3 px-lg-0">
-                                <EditForm Model="@model" OnValidSubmit="HandleValidSubmit" OnInvalidSubmit="HandleInvalidSubmit">
+                                <EditForm id="@FormID" Model="@model" OnValidSubmit="HandleValidSubmit" OnInvalidSubmit="HandleInvalidSubmit">
                                     <DataAnnotationsValidator />
                                     <div class="form-group">
                                         <label class="col-form-label col-form-label-sm font-weight-bold" for="Username">
                                             <ResourceViewer ResourceTag="BLUser.Username" RowidCulture=@RowidCulture />
                                         </label>
-                                        <InputText @bind-Value="model.Username" class="form-control form-control-sm" />
+                                        <SDKCharField 
+                                            @bind-Value="model.Username" 
+                                            AllowAutoComplete="true" 
+                                            AutomationId="BLLogin.Username"
+                                        />
                                         <SDKValidationMessage For="@(() => model.Username)" />
                                     </div>
                                     <div class="form-group">
                                         <label class="col-form-label col-form-label-sm font-weight-bold" for="Password">
                                             <ResourceViewer ResourceTag="BLUser.Password" RowidCulture=@RowidCulture />
                                         </label>
-                                        <InputText @bind-Value="model.Password" type="password"
-                                            class="form-control form-control-sm" />
+                                        <SDKCharField 
+                                            @bind-Value="model.Password" 
+                                            Password="true" 
+                                            AllowAutoComplete="true"
+                                            AutomationId="BLLogin.Username"
+                                        />
                                         <SDKValidationMessage For="@(() => model.Password)" />
                                     </div>
-                                    <button class="btn btn-primary btn_primary_def_1 btn-sm w-100 mt-2">
+                                    <SDKButton form="@FormID" SubmitFormOnClick="true" RenderStyle="SDKButtonRenderStyle.Primary" CssClass="btn-sm w-100 mt-2">
                                         @if (loading)
                                         {
                                             <span class="spinner-border spinner-border-sm mr-1"></span>
                                         }
                                         <ResourceViewer ResourceTag="BLUser.Login" RowidCulture=@RowidCulture />
-                                    </button>
+                                    </SDKButton>
                                 </EditForm>
                             </div>
                             <div class="col-12 p-0 text-center pt-4">
@@ -210,6 +220,7 @@
 </DxDropDown>
 
 @code {
+    public string FormID { get; set; } = Guid.NewGuid().ToString();
     private Model model = new Model();
     private bool init_loading = true;
     private bool loading;
@@ -444,18 +455,4 @@
         
         StateHasChanged();
     }
-
-    
-
-
-
-    private class Model
-    {
-        [SDKRequired]
-        public string Username { get; set; }
-
-        [SDKRequired]
-        public string Password { get; set; }
-    }
-
 }

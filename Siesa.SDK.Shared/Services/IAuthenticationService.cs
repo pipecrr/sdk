@@ -51,7 +51,7 @@ namespace Siesa.SDK.Shared.Services
         SDKDbConnection GetSelectedConnection();
         string GetConnectionLogo();
         string GetConnectionStyle();
-
+        Task<bool> IsValidToken();
     }
 
     
