@@ -27,6 +27,7 @@ using Siesa.SDK.Backend.Services;
 using Siesa.SDK.Shared.DTOS;
 using System.Linq.Expressions;
 using Siesa.SDK.Backend.Extensions;
+using System.Data;
 
 namespace Siesa.SDK.Business
 {
@@ -130,6 +131,8 @@ namespace Siesa.SDK.Business
 
         private IEnumerable<INavigation> _navigationProperties = null;
 
+        private List<object> unique_indexes = new List<object>();
+
         public void DetachedBaseObj()
         {
             //TODO: Complete
@@ -142,6 +145,13 @@ namespace Siesa.SDK.Business
             BaseObj = Activator.CreateInstance<T>();
             var _bannedTypes = new List<Type>() { typeof(string), typeof(byte[]) };
             _relatedProperties = BaseObj.GetType().GetProperties().Where(p => p.PropertyType.IsClass && !p.PropertyType.IsPrimitive && !p.PropertyType.IsEnum && !_bannedTypes.Contains(p.PropertyType) && p.Name != "RowVersion").Select(p => p.Name).ToArray();
+            unique_indexes = BaseObj.GetType()
+                .GetCustomAttributes(typeof(Microsoft.EntityFrameworkCore.IndexAttribute), false)
+                .Where(x => 
+                    x.GetType().GetProperty("IsUnique").GetValue(x,null).Equals(true)
+                ).Select(x => 
+					x.GetType().GetProperty("PropertyNames").GetValue(x,null)
+				).ToList();            
 
         }
 
@@ -185,6 +195,55 @@ namespace Siesa.SDK.Business
             _navigationProperties = ContextMetadata.Model.FindEntityType(typeof(T)).GetNavigations().Where(p => p.IsOnDependent);
             AuthenticationService = (IAuthenticationService)_provider.GetService(typeof(IAuthenticationService));
         }
+
+    [SDKExposedMethod]
+    public ActionResult<bool> CheckUnique(T requestObj)
+    {
+        try
+        {
+            if(unique_indexes.Count <= 0)
+            {
+                return new ActionResult<bool>() { Success = true, Data = false };
+            }
+            using(SDKContext context = CreateDbContext())
+            {
+                var entityType = BaseObj.GetType();
+                foreach (var u_index in unique_indexes)
+                {
+                    List<string> index_fields = (List<string>) u_index;
+                    bool exist_row = false;
+                    Expression existExpression = null;
+                    ParameterExpression pe = Expression.Parameter(entityType, entityType.Name);
+                    //(pe => campo1 == 2 && campo2 == 3)
+                    foreach(var index_field in index_fields)
+                    {
+                        var columnNameProperty = SDKFlexExtension.GetPropertyExpression(pe, index_field);
+                        var columnValue = Expression.Constant(requestObj.GetType().GetProperty(index_field).GetValue(requestObj, null));
+                        Expression tmpExp =  Expression.Equal(columnNameProperty, columnValue);
+                        if(existExpression == null)
+                        {
+                            existExpression = tmpExp;
+                        }else{
+                            existExpression = Expression.And(existExpression, tmpExp);
+                        }
+                    }
+                    var funcExpression = typeof(Func<,>).MakeGenericType(new Type[] { entityType, typeof(bool) });
+                    var returnExp = Expression.Lambda(funcExpression, existExpression, new ParameterExpression[] { pe });
+                    var query = context.AllSet<T>().Where(returnExp);
+                    exist_row = query.Count() > 0;
+                    if(exist_row)
+                    { 
+                        return new ActionResult<bool>() { Success = true, Data = true };
+                    }
+                }
+            }
+            return new ActionResult<bool>() { Success = true, Data = false };
+        }
+        catch (Exception e)
+        {
+            return new BadRequestResult<bool> { Success = false, Errors = new List<string> { e.Message } };
+        }
+    }
 
         public virtual T Get(Int64 rowid)
         {
@@ -543,8 +602,6 @@ namespace Siesa.SDK.Business
             }
             return null;
         }        
-    }
-
-       
+    }  
 
 }
