@@ -764,3 +764,7 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
     font-weight: 500;
     font-size: 1.25rem;
 }
+
+.sdk-unique-invalid .dxbs-input-group input.form-control, .sdk-unique-invalid .dxbs-input-group textarea.form-control, .sdk-unique-invalid.dxbs-tagbox .form-control {
+    border-color: var(--red,var(--bs-red)) !important;
+}

@@ -99,9 +99,9 @@ window.addEventListener('beforeunload', function (e) {
     //if there are no more openned tabs, remove the last interaction time
     if (n_tabs == 0) {
         localStorage.removeItem('lastInteraction');
+        localStorage.removeItem('n_tabs');
         //remove user token
         localStorage.removeItem('usertoken');
-
         
     }
 });

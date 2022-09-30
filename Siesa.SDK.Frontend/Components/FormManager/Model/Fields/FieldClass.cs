@@ -99,7 +99,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                             var propNames = ((IndexAttribute)attr).PropertyNames;
                             foreach (var propName in propNames)
                             {
-                                if (propName == FieldName)
+                                if (propName == FieldName || propName == $"Rowid{FieldName}")
                                 {
                                     IsUnique = true;
                                     break;
@@ -138,12 +138,37 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                     if (request.Data == true)
                     {
                         _NotificationService.ShowError("Custom.UniqueIndexValidation");
+
+                        if(this.FieldOpt.CssClass == null)
+                        {
+                            this.FieldOpt.CssClass = "";
+                        }
+
+                        if(!this.FieldOpt.CssClass.Contains("sdk-unique-invalid"))
+                        {
+                            this.FieldOpt.CssClass += " sdk-unique-invalid";
+                        }
+                    }else{
+                        if(this.FieldOpt.CssClass != null && this.FieldOpt.CssClass.Contains("sdk-unique-invalid"))
+                        {
+                            this.FieldOpt.CssClass = this.FieldOpt.CssClass.Replace(" sdk-unique-invalid", "");
+                        }
+                    }
+                }else{
+                    if(this.FieldOpt.CssClass != null && this.FieldOpt.CssClass.Contains("sdk-unique-invalid"))
+                    {
+                        this.FieldOpt.CssClass = this.FieldOpt.CssClass.Replace(" sdk-unique-invalid", "");
                     }
                 }
+                StateHasChanged();
             }
             catch (Exception e)
             {
                 _NotificationService.ShowError(e.Message);
+                if(this.FieldOpt.CssClass != null && this.FieldOpt.CssClass.Contains("sdk-unique-invalid"))
+                {
+                    this.FieldOpt.CssClass = this.FieldOpt.CssClass.Replace(" sdk-unique-invalid", "");
+                }
             }
         }
 

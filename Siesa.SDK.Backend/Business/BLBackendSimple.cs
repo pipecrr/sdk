@@ -218,7 +218,22 @@ namespace Siesa.SDK.Business
                     foreach(var index_field in index_fields)
                     {
                         var columnNameProperty = SDKFlexExtension.GetPropertyExpression(pe, index_field);
-                        var columnValue = Expression.Constant(requestObj.GetType().GetProperty(index_field).GetValue(requestObj, null));
+                        var field_value = requestObj.GetType().GetProperty(index_field).GetValue(requestObj, null);
+                        if(index_field.StartsWith("Rowid") && field_value == null || field_value.Equals(0))
+                        {
+                            try
+                            {
+                                var related_field_value = requestObj.GetType().GetProperty(index_field.Replace("Rowid", "")).GetValue(requestObj, null);
+                                if(related_field_value != null)
+                                {
+                                    field_value = related_field_value.GetType().GetProperty("Rowid").GetValue(related_field_value, null);
+                                }
+                            }
+                            catch (System.Exception)
+                            {
+                            }
+                        }
+                        var columnValue = Expression.Constant(field_value);
                         Expression tmpExp =  Expression.Equal(columnNameProperty, columnValue);
                         if(existExpression == null)
                         {

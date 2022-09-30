@@ -44,7 +44,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public String ErrorMsg = "";
         public string FormID { get; set; } = Guid.NewGuid().ToString();
         protected ValidationMessageStore _messageStore;
-        protected EditContext EditFormContext;
+        public EditContext EditFormContext;
         [Parameter]
         public string ViewdefName { get; set; }
 
@@ -80,6 +80,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         protected bool CanDelete;
         protected bool CanDetail;
         protected bool CanList;
+
+        public bool FormHasErrors = false;
 
         protected virtual async Task CheckPermissions()
         {
@@ -393,12 +395,14 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
 
         protected async Task HandleValidSubmit()
         {
+            FormHasErrors = false;
             ErrorMsg = "";
             await SaveBusiness();
         }
         protected void HandleInvalidSubmit()
         {
             //ErrorMsg = @"Form data is invalid";
+            FormHasErrors = true;
             NotificationService.ShowError("Generic.FormError");
         }
         protected void GoToList()

@@ -291,7 +291,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
                         //builder.AddAttribute(3, "ValueChanged", EventCallback.Factory.Create<dynamic>(this, str => { SetValue(str); }));
                         builder.AddAttribute(3, "ValueChanged", dxEventCallbackCall);
                         builder.AddAttribute(4, "NullText", FieldOpt.Placeholder);
-                        builder.AddAttribute(5, "CssClass", "cw-480");
+                        builder.AddAttribute(5, "CssClass", $"cw-480 {FieldOpt.CssClass}");
                         builder.AddAttribute(5, "Enabled", !FieldOpt.Disabled);
                         builder.AddAttribute(6, "ClearButtonDisplayMode", DataEditorClearButtonDisplayMode.Auto);
                         builder.AddAttribute(7, "field-name", FieldOpt.Name);
