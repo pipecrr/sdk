@@ -12,21 +12,28 @@ using System.Linq;
 using Siesa.SDK.Frontend.Utils;
 using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
 using Siesa.SDK.Frontend.Components.Visualization;
+using Siesa.SDK.Shared.Services;
+using Siesa.SDK.Frontend.Services;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 {
-    public class FieldClass<TProperty> : ComponentBase 
-    {         
-        public TProperty BindValue { get {
+    public class FieldClass<TProperty> : ComponentBase
+    {
+
+        public TProperty BindValue
+        {
+            get
+            {
                 var modelValue = BindProperty?.GetValue(BindModel, null);
-                if(modelValue == null)
+                if (modelValue == null)
                 {
                     return default(TProperty);
                 }
-                    
+
                 return (TProperty)modelValue;
             }
-            set {
+            set
+            {
                 BindProperty.SetValue(BindModel, value);
             }
         }
@@ -39,6 +46,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         [Parameter] public TProperty Text { get; set; }
 
         [Inject] protected IJSRuntime jsRuntime { get; set; }
+        [Inject] private IBackendRouterService _backendRouterService { get; set; }
+
+        [Inject] private IAuthenticationService _authenticationService { get; set; }
+
+        [Inject] private SDKNotificationService _NotificationService { get; set; }
 
         [Parameter] public string FieldName { get; set; }
 
@@ -104,7 +116,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 
         protected override async Task OnInitializedAsync()
         {
-            
+
             await base.OnInitializedAsync();
             //await Init();
         }
@@ -115,34 +127,55 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             fieldProperty.SetValue(BindModel, value);
         }
 
+        private async Task CheckUniqueValue()
+        {
+            try
+            {
+                var request = await _backendRouterService.GetSDKBusinessModel(this.formView.BusinessName, _authenticationService).Call("CheckUnique", this.BindModel);
+
+                if (request.Success)
+                {
+                    if (request.Data == true)
+                    {
+                        _NotificationService.ShowError("Custom.UniqueIndexValidation");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                _NotificationService.ShowError(e.Message);
+            }
+        }
+
         public void SetValue(TProperty value)
         {
             var setValue = true;
-            
-            if (IsUnique)
-            {
-                Console.WriteLine($"El campo {FieldName} es único y debe revisar el valor {value}");
-                //setValue = CheckUnique(value);
-            }
 
             if (setValue)
             {
                 BindValue = value;
-                if (OnChange != null && OnChange != "") {
+                if (OnChange != null && OnChange != "")
+                {
                     _ = Task.Run(async () =>
                     {
                         await Evaluator.EvaluateCode(OnChange, EditFormContext.Model);
-                        if (formView != null){
+                        if (formView != null)
+                        {
                             _ = InvokeAsync(() => formView.Refresh());
                         }
                     });
-                }                
+                }
             }
             else
             {
                 //MuestreError();
             }
-            
+            if (IsUnique)
+            {
+                CheckUniqueValue();
+                 //Console.WriteLine($"El campo {FieldName} es único y debe revisar el valor {value}");
+            }
+
         }
 
         public RenderFragment? FieldValidationTemplate

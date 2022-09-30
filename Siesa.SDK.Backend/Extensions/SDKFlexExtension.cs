@@ -672,7 +672,7 @@ namespace Siesa.SDK.Backend.Extensions
             }
         }
 
-        private static Expression GetPropertyExpression(Expression pe, string chain)
+        public static Expression GetPropertyExpression(Expression pe, string chain)
         {
             var properties = chain.Split('.');
             foreach (var property in properties)
