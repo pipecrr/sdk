@@ -61,21 +61,34 @@
             </div>
           </div>, title: "Titulo como Parametro");
 
-        if (ShowConfirmDialog)
-        {
-            SDKNotificationService.ShowSuccess("Confirmado");
-        }else
-        {
-            SDKNotificationService.ShowError("Cancelado");
-        };
+          if (ShowConfirmDialog != null)
+          {
+            if (!ShowConfirmDialog)
+            {
+                SDKNotificationService.ShowError("Cancelado");
+            }else
+            {
+                SDKNotificationService.ShowSuccess("Confirmado");
+            };
+          }else
+          {
+             DialogService.Close(false);
+          }
+
+        
     
     }
     private void ClickDelete()
     {
-        DialogService.Close(true);
+       DialogService.Close(true);
     }
     private void ClickCancel()
     {
-        DialogService.Close(false);
+      DialogService.Close(false);
+    }
+
+    protected override void OnInitialized()
+    {
+
     }
 }
