@@ -86,6 +86,9 @@
 		<None Remove="Components\Documentation\SourceCode\SDKSelectField.txt" />
 		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKSelectField.txt" />
 
+		<None Remove="Components\Documentation\SourceCode\InlineCrud.txt" />
+		<EmbeddedResource Include="Components\Documentation\SourceCode\InlineCrud.txt" />
+
 	</ItemGroup>
 
 
