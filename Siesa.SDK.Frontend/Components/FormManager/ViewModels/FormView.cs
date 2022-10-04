@@ -149,7 +149,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         public void Refresh(){
             EvaluateDynamicAttributes(null);
-            StateHasChanged();
+            try
+            {
+                StateHasChanged();
+            }
+            catch (System.Exception)
+            {
+                _ = InvokeAsync(() => StateHasChanged());
+            }
         }
         protected virtual async Task InitView(string bName = null)
         {
