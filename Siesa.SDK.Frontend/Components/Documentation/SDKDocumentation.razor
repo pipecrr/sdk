@@ -7,6 +7,7 @@
 @using Siesa.SDK.Frontend.Services
 @using Siesa.SDK.Frontend.Components.Fields
 @using Siesa.SDK.Frontend.Components.Documentation.Fields
+@using Siesa.SDK.Frontend.Components.Documentation.FormManager
 
 @layout EmptyLayout
 
@@ -79,12 +80,12 @@
                     new ComponentDemo{ComponentName="SDKSelectField",ComponentFragment = @<DemoSelectField />}
                 }, Icon ="fa-solid fa-cubes"
             },
-            @* new ComponentCategory() {
+             new ComponentCategory() {
                 Name = "FormManager", Components = {
                     new ComponentDemo{ComponentName="InlineCrud", ComponentFragment = @<DemoInlineCrud />},
                     new ComponentDemo{ComponentName="SDKFormLayout", ComponentFragment = @<DemoFormLayout />}
                 },Icon ="fa-solid fa-list"
-            }, *@
+            }, 
             new ComponentCategory() {
                 Name = "Visualization", Components = {
                     new ComponentDemo{ComponentName="SDKCard", ComponentFragment = @<DemoCard />},
