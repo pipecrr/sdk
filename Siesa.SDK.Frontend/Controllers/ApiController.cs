@@ -87,13 +87,13 @@ namespace Siesa.SDK.Frontend.Controllers
             string authToken = JsonConvert.DeserializeObject<string>(Request.Headers["X-Auth-Token"]);
             if (string.IsNullOrEmpty(authToken))
             {
-                return ReturnError(Response, "No auth token provided", 401);
+                return ReturnError(Response, "BLFlex.Error.NoTokenProvided", 401);
             }
 
             AuthenticationService.SetToken(authToken);
             if (AuthenticationService.User == null)
             {
-                return ReturnError(Response, "No auth token valid", 401);
+                return ReturnError(Response, "BLFlex.Error.NoTokenValid", 401);
             }
 
             var jsonResponse = new Dictionary<string, object>();

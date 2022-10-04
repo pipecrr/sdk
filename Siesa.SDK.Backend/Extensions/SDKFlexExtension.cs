@@ -68,26 +68,49 @@ namespace Siesa.SDK.Backend.Extensions
                     else
                     {
                         var relatedColumnInclude = string.Join(".", columnPath.Skip(1));
-                        var property = entityType.GetProperty(relatedColumnInclude.Split(".")[0]);
-                        var propertyType = property.PropertyType;
-                        if(propertyType.IsGenericType && property.GetGetMethod().IsVirtual){
-                            if(propertyType.GetGenericTypeDefinition() == typeof (ICollection<>)){
-                                if (!relatedVirtualColumns.Contains(relatedColumnInclude)){
-                                    var includeMethodGeneric = includeMethod.MakeGenericMethod(entityType);
-                                    contextSet = includeMethodGeneric.Invoke(contextSet, new object[] { contextSet, relatedColumnInclude });
-                                    relatedColumns.Add(relatedColumnInclude);
-                                }
-                            }
-                        }else {
-                            if (!relatedColumns.Contains(relatedColumnInclude))
+                        if (!relatedColumns.Contains(relatedColumnInclude))
                             {
                                 var includeMethodGeneric = includeMethod.MakeGenericMethod(entityType);
                                 contextSet = includeMethodGeneric.Invoke(contextSet, new object[] { contextSet, relatedColumnInclude });
                                 relatedColumns.Add(relatedColumnInclude);
-                            }                        
-                            strColumns.Add($"np({relatedColumnInclude}.{column.name}) as {column.key_name}");
-                        }
+                            }
+                        var entityTypeTmp = entityType;
+                        var columnSelect = "";
+                        for (int j = 1; j < columnPath.Count(); j++){
+                            var isVirtual = false;
+                            var property = entityTypeTmp.GetProperty(columnPath[j]);
+                            var propertyType = property.PropertyType;
+                            var nameEntityTmp = propertyType.FullName;
+                            if(propertyType.IsGenericType && property.GetGetMethod().IsVirtual){
+                                if(propertyType.GetGenericTypeDefinition() == typeof (ICollection<>)){
+                                    nameEntityTmp = propertyType.GetGenericArguments().Single().FullName;
+                                    isVirtual = true;
+                                }
+                            }
+                            if(isVirtual){                                
+                                if(columnSelect == ""){
+                                    columnSelect = columnPath[j]+".Select(NextRelationReplace)";
+                                }else{
+                                    columnSelect = columnSelect.Replace("NextRelationReplace",columnPath[j]+".Select(NextRelationReplace)");
+                                }
+                                if(columnPath[j] == columnPath.Last()){
+                                    columnSelect = columnSelect.Replace("NextRelationReplace","ColumnNameReplace");
+                                }
 
+                            }else{
+                                if(columnSelect == ""){
+                                    columnSelect = columnPath[j]+".NextRelationReplace";
+                                }else{
+                                    columnSelect = columnSelect.Replace("NextRelationReplace",columnPath[j]+".NextRelationReplace");
+                                }
+                                if(columnPath[j] == columnPath.Last()){
+                                    columnSelect = columnSelect.Replace("NextRelationReplace","ColumnNameReplace");
+                                }
+                            }
+                            entityTypeTmp = Utilities.SearchType(nameEntityTmp, true);
+                        }
+                        columnSelect = columnSelect.Replace("ColumnNameReplace",column.name);
+                        strColumns.Add($"np({columnSelect}) as {column.key_name}");
                     }
                     if (column.type.Equals("SelectField"))
                     {   
@@ -295,7 +318,7 @@ namespace Siesa.SDK.Backend.Extensions
                         addExpression(ref combined, notEqualExpression);
                         break;
                     case "in":
-                        if(value == null){
+                        if(value == null || value.ToString() == "Unselected"){
                             return;
                         }
                         Expression inExpression;
