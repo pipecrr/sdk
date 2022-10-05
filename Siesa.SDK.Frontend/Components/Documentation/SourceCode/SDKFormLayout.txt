@@ -83,6 +83,7 @@
     string Notes { get; set; } = "Education includes a BA in psychology.";
     DateTime DateTimeValue { get; set; } = DateTime.Now;
     public int WidthValue { get; set; } = 12;
+    
     void Onchange(int value)
     {
         WidthValue = value;

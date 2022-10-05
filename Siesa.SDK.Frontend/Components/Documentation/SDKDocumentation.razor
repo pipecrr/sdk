@@ -8,6 +8,7 @@
 @using Siesa.SDK.Frontend.Components.Fields
 @using Siesa.SDK.Frontend.Components.Documentation.Fields
 @using Siesa.SDK.Frontend.Components.Documentation.FormManager
+@using Siesa.SDK.Frontend.Components.Documentation.Layout
 
 @layout EmptyLayout
 
@@ -85,6 +86,11 @@
                     new ComponentDemo{ComponentName="InlineCrud", ComponentFragment = @<DemoInlineCrud />},
                     new ComponentDemo{ComponentName="SDKFormLayout", ComponentFragment = @<DemoFormLayout />}
                 },Icon ="fa-solid fa-list"
+            },
+             new ComponentCategory() {
+                Name = "Layout", Components = {
+                    new ComponentDemo{ComponentName="RelationshipPanel", ComponentFragment = @<DemoRelationshipPanel />}
+                },Icon ="fa-solid fa-layer-group"
             }, 
             new ComponentCategory() {
                 Name = "Visualization", Components = {

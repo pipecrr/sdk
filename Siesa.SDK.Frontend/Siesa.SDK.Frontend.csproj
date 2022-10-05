@@ -89,6 +89,9 @@
 		<None Remove="Components\Documentation\SourceCode\InlineCrud.txt" />
 		<EmbeddedResource Include="Components\Documentation\SourceCode\InlineCrud.txt" />
 
+		<None Remove="Components\Documentation\SourceCode\SDKFormLayout.txt" />
+		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKFormLayout.txt" />
+
 	</ItemGroup>
 
 
