@@ -17,7 +17,9 @@
         <div class="col-md-12 p-3">
             <div class="d-flex justify-content-around">
             <SDKButton Click="@ChangeView" ResourceTag="Change View" RenderStyle="SDKButtonRenderStyle.Primary"/>
-            <RadzenSlider Min="0" Max="200" Value=@WidthValue TValue="int" Style="width: 200px" Change="@Onchange"/>
+            @if(!cardView){
+                <RadzenSlider Min="0" Max="200" Value=@WidthValue TValue="int" Style="width: 200px" Change="@Onchange"/>
+            }
             </div>
             <SDKGrid Data="@Data" TItem="E00220_User" AllowFiltering="true" 
                  CardView="@cardView">
