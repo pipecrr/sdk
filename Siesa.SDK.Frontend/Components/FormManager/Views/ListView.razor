@@ -79,6 +79,11 @@ else
                     fieldName = fieldName.Substring(8);
                 }
                 var columnType = typeof(string);
+                var columnWidth = "auto";
+                if(field.ColumnWidth > 0)
+                {
+                    columnWidth = $"{field.ColumnWidth}px";
+                }
                 switch (field.FieldType)
                 {
                     case FieldTypes.CharField:
@@ -108,7 +113,7 @@ else
                 if(!field.Hidden){
                     if(field.Name == ListViewModel.LinkTo)
                     {
-                        <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" >
+                        <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" Width="@columnWidth">
                             <HeaderTemplate>
                                 <span>
                                     @if(!string.IsNullOrEmpty(field.ResourceTag))
@@ -134,7 +139,7 @@ else
                         </RadzenDataGridColumn>
                     }else{
                         if(field.FieldType == FieldTypes.Custom){
-                            <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType">
+                            <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" Width="@columnWidth">
                                 <HeaderTemplate>
                                     <span>
                                         @if(!string.IsNullOrEmpty(field.ResourceTag))
@@ -150,7 +155,7 @@ else
                                 </Template>
                             </RadzenDataGridColumn>
                         }else if(columnType == typeof(bool)){
-                            <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" TextAlign="TextAlign.Center" HeaderCssClass="align-header-left" >
+                            <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" TextAlign="TextAlign.Center" HeaderCssClass="align-header-left" Width="@columnWidth" >
                                 <HeaderTemplate>
                                     <span>
                                         @if(!string.IsNullOrEmpty(field.ResourceTag))
@@ -167,7 +172,7 @@ else
                             </RadzenDataGridColumn>
 
                         }else if(field.FieldType == FieldTypes.SelectField){
-                            <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType">
+                            <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" Width="@columnWidth">
                                 <HeaderTemplate>
                                     <span>
                                         @if(!string.IsNullOrEmpty(field.ResourceTag))
@@ -184,7 +189,7 @@ else
                             </RadzenDataGridColumn>
 
                         }else if(columnType == typeof(decimal)){
-                            <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" TextAlign="TextAlign.Right" HeaderCssClass="align-header-left">
+                            <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" TextAlign="TextAlign.Right" HeaderCssClass="align-header-left" Width="@columnWidth">
                                 <HeaderTemplate>
                                     <span>
                                         @if(!string.IsNullOrEmpty(field.ResourceTag))
@@ -197,7 +202,7 @@ else
                                 </HeaderTemplate>
                             </RadzenDataGridColumn>
                         }else{
-                        <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType">
+                        <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" Width="@columnWidth">
                             <HeaderTemplate>
                                 <span>
                                     @if(!string.IsNullOrEmpty(field.ResourceTag))
