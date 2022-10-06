@@ -41,12 +41,12 @@ function MountFlex()
 }
 (() => {
 
-    loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/2.css?v=20220929');
-    loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/main.css?v=20220929');
+    loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/2.css?v=20221006');
+    loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/main.css?v=20221006');
 
-    loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/2.chunk.js?v=20220929");
-    loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/main.chunk.js?v=20220929");
-    loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/runtime-main.js?v=20220929");
+    loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/2.chunk.js?v=20221006");
+    loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/main.chunk.js?v=20221006");
+    loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/runtime-main.js?v=20221006");
 
     window.MountFlex = MountFlex;
 /*
