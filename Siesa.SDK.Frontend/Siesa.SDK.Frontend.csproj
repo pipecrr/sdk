@@ -92,6 +92,9 @@
 		<None Remove="Components\Documentation\SourceCode\SDKFormLayout.txt" />
 		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKFormLayout.txt" />
 
+		<None Remove="Components\Documentation\SourceCode\DynamicListView.txt" />
+		<EmbeddedResource Include="Components\Documentation\SourceCode\DynamicListView.txt" />
+
 	</ItemGroup>
 
 
