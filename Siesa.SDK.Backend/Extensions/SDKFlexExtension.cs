@@ -261,10 +261,10 @@ namespace Siesa.SDK.Backend.Extensions
                 switch (filter.selected_operator)
                 {
                     case "equal":
-                        if(value == null){
+                        if(value == null || value.ToString() == ""){
                             return;
                         }
-                        Expression equalExpression;                        
+                        Expression equalExpression;
                         if (columnType == typeof(DateTime)){
                             filterValue = Convert.ChangeType(value, columnType);
                             columnValue = Expression.Constant(filterValue);
@@ -292,7 +292,7 @@ namespace Siesa.SDK.Backend.Extensions
                         addExpression(ref combined, equalExpression);
                         break;
                     case "not_equal":
-                        if(value == null){
+                        if(value == null || value.ToString() == ""){
                             return;
                         }
                         if(isNullable){
@@ -325,6 +325,9 @@ namespace Siesa.SDK.Backend.Extensions
                         Expression inExpression2;
                         if(columnType.BaseType == typeof(Enum)){
                             var listValueEnum = JsonConvert.DeserializeObject<List<byte>>(value.ToString());
+                            if(listValueEnum.Count == 0){
+                                return;
+                            }
                             inExpression = Expression.Equal(columnNameProperty, Expression.Constant(Convert.ChangeType(Enum.Parse(columnType,listValueEnum[0].ToString()), columnType)));
                             for (int i = 1; i < listValueEnum.Count; i++){
                                 var enumValue = Convert.ChangeType(Enum.Parse(columnType,listValueEnum[i].ToString()), columnType);
@@ -333,6 +336,9 @@ namespace Siesa.SDK.Backend.Extensions
                             }
                         }else {
                             var listValue = JsonConvert.DeserializeObject<List<bool>>(value.ToString());
+                            if(listValue.Count == 0){
+                                return;
+                            }
                             inExpression = Expression.Equal(columnNameProperty, Expression.Constant(listValue[0]));
                             for (int i = 1; i < listValue.Count; i++){
                                 inExpression2 = Expression.Equal(columnNameProperty, Expression.Constant(listValue[i]));
@@ -340,7 +346,7 @@ namespace Siesa.SDK.Backend.Extensions
                             }                            
                         }
                         addExpression(ref combined, inExpression);
-                        break;
+                        break;                    
                     case "exclude":                    
                         if(value == null){
                             return;
@@ -349,6 +355,9 @@ namespace Siesa.SDK.Backend.Extensions
                         Expression excludeExpression2;
                         if(columnType.BaseType == typeof(Enum)){
                             var listValueExclude = JsonConvert.DeserializeObject<List<byte>>(value.ToString());
+                            if(listValueExclude.Count == 0){
+                                return;
+                            }
                             excludeExpression = Expression.NotEqual(columnNameProperty, Expression.Constant(Convert.ChangeType(Enum.Parse(columnType,listValueExclude[0].ToString()), columnType)));
                             for (int i = 1; i < listValueExclude.Count; i++){
                                 var enumValue = Convert.ChangeType(Enum.Parse(columnType,listValueExclude[i].ToString()), columnType);
@@ -357,6 +366,9 @@ namespace Siesa.SDK.Backend.Extensions
                             }
                         }else{
                             var listValueExclude = JsonConvert.DeserializeObject<List<bool>>(value.ToString());
+                            if(listValueExclude.Count == 0){
+                                return;
+                            }
                             excludeExpression = Expression.NotEqual(columnNameProperty, Expression.Constant(listValueExclude[0]));
                             for (int i = 1; i < listValueExclude.Count; i++){
                                 excludeExpression2 = Expression.NotEqual(columnNameProperty, Expression.Constant(listValueExclude[i]));
@@ -364,6 +376,46 @@ namespace Siesa.SDK.Backend.Extensions
                             }
                         }
                         addExpression(ref combined, excludeExpression);
+                        break;
+                    case "fk_in":
+                        if(value == null || value.ToString() == "Unselected"){
+                            return;
+                        }
+                        Expression fkInExpression;
+                        Expression fkInExpression2;
+                        
+                        var listValueFk = JsonConvert.DeserializeObject<List<dynamic>>(value.ToString());
+                        if(listValueFk.Count == 0){
+                            return;
+                        }
+                        fkInExpression = Expression.Equal(columnNameProperty, Expression.Constant(Convert.ChangeType(Int32.Parse(listValueFk[0].id.ToString()), columnType)));
+                        for (int i = 1; i < listValueFk.Count; i++){
+                            var fkValue = Convert.ChangeType(Int32.Parse(listValueFk[i].id.ToString()), columnType);
+                            fkInExpression2 = Expression.Equal(columnNameProperty, Expression.Constant(fkValue));
+                            fkInExpression = Expression.Or(fkInExpression, fkInExpression2);
+                        }
+                        
+                        addExpression(ref combined, fkInExpression);
+                        break;
+                    case "fk_not_in":                    
+                        if(value == null){
+                            return;
+                        }
+                        Expression fkNotInExpression;
+                        Expression fkNotInExpression2;
+                        
+                        var listValueFkNotIn = JsonConvert.DeserializeObject<List<dynamic>>(value.ToString());
+                        if(listValueFkNotIn.Count == 0){
+                            return;
+                        }
+                        fkNotInExpression = Expression.NotEqual(columnNameProperty, Expression.Constant(Convert.ChangeType(Int32.Parse(listValueFkNotIn[0].id.ToString()), columnType)));
+                        for (int i = 1; i < listValueFkNotIn.Count; i++){
+                            var fkValue = Convert.ChangeType(Int32.Parse(listValueFkNotIn[i].id.ToString()), columnType);
+                            fkNotInExpression2 = Expression.NotEqual(columnNameProperty, Expression.Constant(fkValue));
+                            fkNotInExpression = Expression.And(fkNotInExpression, fkNotInExpression2);
+                        }
+
+                        addExpression(ref combined, fkNotInExpression);
                         break;
                     case "starts_with":
                         if(value == null){
@@ -437,7 +489,7 @@ namespace Siesa.SDK.Backend.Extensions
                         addExpression(ref combined, notEmptyExpression);                        
                         break;
                     case "gt":
-                        if(value == null){
+                        if(value == null || value.ToString() == ""){
                             return;
                         }
                         filterValue = Convert.ChangeType(value, columnType);
@@ -446,7 +498,7 @@ namespace Siesa.SDK.Backend.Extensions
                         addExpression(ref combined, greatThanExpression);
                         break;
                     case "lt":
-                        if(value == null){
+                        if(value == null || value.ToString() == ""){
                             return;
                         }
                         filterValue = Convert.ChangeType(value, columnType);
@@ -455,7 +507,7 @@ namespace Siesa.SDK.Backend.Extensions
                         addExpression(ref combined, lessThanExpression);
                         break;
                     case "gte":
-                        if(value == null){
+                        if(value == null || value.ToString() == ""){
                             return;
                         }
                         filterValue = Convert.ChangeType(value, columnType);
@@ -465,7 +517,7 @@ namespace Siesa.SDK.Backend.Extensions
                         break;
                     case "between":
                         var filterTo = filter.to;
-                        if(value == null || filterTo == null){
+                        if(value == null || filterTo == null || value.ToString() == "" || filterTo.ToString() == ""){
                             return;
                         }
                         filterValue = Convert.ChangeType(value, columnType);
