@@ -101,9 +101,9 @@ namespace Siesa.SDK.Shared.Utilities
             return null;
         }
 
-        public static object GetInstance(string strFullyQualifiedName)
+        public static object GetInstance(string strFullyQualifiedName, bool fullSearch = false)
         {
-            Type type = Utilities.SearchType(strFullyQualifiedName);
+            Type type = Utilities.SearchType(strFullyQualifiedName, fullSearch);
             if (type != null) {
                 return Activator.CreateInstance(type);
             }

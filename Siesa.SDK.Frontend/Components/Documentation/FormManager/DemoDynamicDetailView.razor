@@ -1,0 +1,47 @@
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Components.FormManager.Model
+@using Siesa.SDK.Frontend.Components.FormManager.Views
+
+<div class="container-fluid">
+    <div class="row p-3">
+        <div class="col-12"><h2>DynamicDetailView</h2></div>
+        <div class="col-12"><p>Demonstration and configuration of the DynamicDetailView component</p></div> 
+    </div>
+    <div class="row px-3 mt-3"> 
+        <div class="col-md-6 p-3 ">
+            <SDKCard>
+                <div class="pt-5">
+                    <TopBar />
+                </div>
+                <DynamicDetailView BusinessName="BLCulture" BusinessObjId="1"/>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3 ">
+            <SDKCard>
+                <div class="d-flex justify-content-around">
+                    <SDKBooleanField @bind-Value="@Title"> ShowTitle</SDKBooleanField>
+                    <SDKBooleanField @bind-Value="@Buttons"> ShowTButtons</SDKBooleanField>
+                    <SDKBooleanField @bind-Value="@DeleteButton"> DeleteButton</SDKBooleanField>
+                </div>
+                @if (!Title)
+                {
+                <h3>BLCulture - Subpanel</h3>
+                }
+                <DynamicDetailView BusinessName="BLCulture" BusinessObjId="1"  IsSubpanel="true"  ShowTitle="@Title" ShowButtons="@Buttons" 
+                        ShowDeleteButton="@DeleteButton" />
+            </SDKCard>
+        </div>
+    </div>
+</div>
+ 
+ 
+@code{
+
+    bool Title = true;
+    bool Buttons = true;
+    bool DeleteButton = true;
+
+    bool CancelButton = true;
+
+}

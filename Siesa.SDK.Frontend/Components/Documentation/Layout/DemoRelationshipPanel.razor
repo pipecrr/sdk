@@ -1,12 +1,8 @@
-@using Siesa.SDK.Frontend.Components.Fields
-@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Entities
 @using Siesa.SDK.Frontend.Components.FormManager.Model
-@using Siesa.SDK.Frontend.Components.FormManager.Views
 @using Siesa.SDK.Frontend.Components.Layout.Detail.Relationship
-@using Siesa.SDK.Shared.Services
-@using Siesa.SDK.Frontend.Components.FormManager.Model
+@inject SDKNotificationService NotificationService
 
-@inject SDKNotificationService SDKNotificationService
 
 
 <div class="container-fluid">
@@ -16,14 +12,33 @@
     </div>
     <div class="row px-3"> 
         <div class="col-md-6 p-3">
-            @* @foreach (var rel in FormViewModel.Relationships)
-            {
-                <RelationshipPanel Relationship="@rel"  Parent="BLCulture.BaseObj"/>
-            } *@
+            <RelationshipPanel Relationship="@pbrRelationShip" Parent="@pbrUser">
+
+            </RelationshipPanel>
         </div>
     </div>
 </div>
 
 @code{
+
+    
+    E00220_User pbrUser = new E00220_User();
+    Relationship pbrRelationShip = new Relationship();
+
+    protected override void OnInitialized()
+    {
+        pbrUser.Rowid= 1;
+        pbrUser.Name = "Usuario demo";
+        pbrUser.Id = "demo";
+        
+        pbrRelationShip = new Relationship(){
+
+            Name  = "PruebaRelationship",
+            Type = RelationshipType.OneToMany,
+            RelatedBusiness = "BLUser",
+            RelatedField = "BaseObj.UserReportTo"
+        };
+        base.OnInitialized();
+    }
 
 }
