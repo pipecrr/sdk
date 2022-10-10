@@ -9,6 +9,8 @@
 @using Siesa.SDK.Frontend.Components.Documentation.Fields
 @using Siesa.SDK.Frontend.Components.Documentation.FormManager
 @using Siesa.SDK.Frontend.Components.Documentation.Layout
+@using Siesa.SDK.Frontend.Components.Documentation.ViewsBuilder
+
 
 @layout EmptyLayout
 
@@ -77,7 +79,6 @@
                     new ComponentDemo{ComponentName="SDKSwitch",ComponentFragment = @<DemoSwitch />},
                     new ComponentDemo{ComponentName="SDKSelectBar",ComponentFragment = @<DemoSelectBar />},
                     new ComponentDemo{ComponentName="SDKSteps",ComponentFragment = @<DemoSteps />},
-                    new ComponentDemo{ComponentName="SDKGrid",ComponentFragment = @<DemoGrid />},
                     new ComponentDemo{ComponentName="SDKSelectField",ComponentFragment = @<DemoSelectField />}
                 }, Icon ="fa-solid fa-cubes"
             },
@@ -107,9 +108,15 @@
                     new ComponentDemo{ComponentName="SDKCollapse", ComponentFragment = @<DemoCollapse />},
                     new ComponentDemo{ComponentName="SDKFileViewer", ComponentFragment = @<DemoFileViewer />},
                     new ComponentDemo{ComponentName="SDKRadialGauge", ComponentFragment = @<DemoRadialGauge />},
-                    new ComponentDemo{ComponentName="SDKTabs", ComponentFragment = @<DemoTabs />}
+                    new ComponentDemo{ComponentName="SDKTabs", ComponentFragment = @<DemoTabs />},
+                                        new ComponentDemo{ComponentName="SDKGrid",ComponentFragment = @<DemoGrid />},
                 },Icon ="fa-solid fa-cube" 
             },
+            new ComponentCategory() {
+                Name = "ViewsBuilder", Components = {
+                    new ComponentDemo{ComponentName="Viewdef", ComponentFragment = @<DemoViewdef />}
+                },Icon ="fa-solid fa-layer-group"
+            }, 
 
         };
     }

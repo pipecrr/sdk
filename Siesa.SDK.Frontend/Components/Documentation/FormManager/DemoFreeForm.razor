@@ -11,14 +11,24 @@
 
 
 <div class="container-fluid">
-    <div class="container-fluid">
-            <h2>SDKProgessBar</h2> 
-            <p>Demonstration and configuration of the SDKProgessBar component</p> 
+    <div class="row p-3">
+        <div class="col-12"><h2>FreeForm</h2></div>
+        <div class="col-12"><p>Demonstration and configuration of the FreeForm component</p></div> 
     </div>
-    <div class="row px-3"> 
+    <div class="row px-3 mt-3"> 
         <div class="col-md-6 p-3">
-            <FreeForm Viewdef="create" BusinessName="BLCulture" BusinessObj="@BL"/>
+            <SDKCard>
+                <div class="pt-5">
+                    <TopBar />
+                </div>
+                <FreeForm Viewdef="create" BusinessName="BLCulture" BusinessObj="@BL" Title="Demo FreeForm"/>
+            </SDKCard>
         </div>
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                @GetForm()
+            </SDKCard>
+        </div> 
     </div>
 </div>
 
@@ -30,14 +40,19 @@
     {
         var blType = Utilities.SearchType("Siesa.MasterBackend.Business.BLCulture"); //en el proyecto basta con hacer el using y crear la variable BL = new BLCulture
         BL = ActivatorUtilities.CreateInstance(ServiceProvider, blType);
+        BL.BusinessName = "BLCulture";
         base.OnInitialized();
     }
 
-    
-    /*public RenderFragment GetForm()
+        /*public bool ShowTitle { get; set; } = true;
+
+        [Parameter]
+        public Action<object> OnSave {get; set;} = null;
+
+        [Parameter]
+        public Action OnCancel {get; set;} = null;*/
+    public RenderFragment GetForm()
     {
-        //var x = new BLCulture(AuthenticationService);
-        //x.BusinessName = "BLCulture";
-        return FormUtils.RenderFreeForm("create", "BLCulture", "a");
-    }*/
+        return FormUtils.RenderFreeForm("edit", BL, "Method FreeForm");
+    }
 }

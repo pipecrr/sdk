@@ -1,5 +1,8 @@
 @using Siesa.SDK.Entities
 @using Siesa.SDK.Frontend.Components.FormManager.Model
+@using Siesa.SDK.Frontend.Components.Visualization 
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.Layout
 @using Siesa.SDK.Frontend.Components.Layout.Detail.Relationship
 @inject SDKNotificationService NotificationService
 
@@ -12,14 +15,43 @@
     </div>
     <div class="row px-3"> 
         <div class="col-md-6 p-3">
-            <RelationshipPanel Relationship="@pbrRelationShip" Parent="@pbrUser">
-
-            </RelationshipPanel>
+            <SDKCard>
+                <h3>Demo RelationshipPanel</h3>
+                <div class="d-flex justify-content-around">
+                    <SDKBooleanField @bind-Value="@AllowCreate"> AllowCreate</SDKBooleanField>
+                    <SDKBooleanField @bind-Value="@AllowDelete"> AllowDelete</SDKBooleanField>
+                    <SDKBooleanField @bind-Value="@AllowEdit"> AllowEdit</SDKBooleanField>
+                    <SDKBooleanField @bind-Value="@AllowDetail"> AllowDetail</SDKBooleanField>
+                </div>
+            <RelationshipPanel Relationship="@pbrRelationShip" Parent="@pbrUser" ShowHeader="false" AllowCreate="@AllowCreate"   AllowDelete="@AllowDelete"   AllowEdit="@AllowEdit" AllowDetail="@AllowDetail" />
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>Demo RelationshipPanel Actions</h3>
+            <RelationshipPanel Relationship="@pbrRelationShip" Parent="@pbrUser" ShowHeader="false" 
+                        AllowEdit="true" AllowDetail="true"
+                        AllowCreate="true" AllowDelete="true"
+                        OnClickEdit="@(async (string item_rowid)=> { await ActionEdit(item_rowid); })"
+                        OnClickDetail="@(async (string item_rowid)=> { await ActionDetail(item_rowid); })"
+                        OnClickDelete="@(async (string item_rowid, string object_string)=> { await ActionDelete(item_rowid, object_string); })" 
+                        OnClickNew="@(async ()=> { await ActionCreate(); })"/>
+            </SDKCard>
+        </div>
+         <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>Demo RelationshipPanel Collapse</h3>
+            <RelationshipPanel Relationship="@pbrRelationShip" Parent="@pbrUser" />
+            </SDKCard>
         </div>
     </div>
 </div>
 
 @code{
+    bool AllowCreate = false;
+    bool AllowDelete = false;
+    bool AllowEdit = false;
+    bool AllowDetail = false;
 
     
     E00220_User pbrUser = new E00220_User();
@@ -39,6 +71,22 @@
             RelatedField = "BaseObj.UserReportTo"
         };
         base.OnInitialized();
+    }
+    public async Task ActionEdit(string item_rowid)
+    {
+        NotificationService.ShowInfo($"Open Action Edit the item {item_rowid}");
+    }
+    public async Task ActionDetail(string item_rowid)
+    {
+        NotificationService.ShowInfo($"Open Action Detail the item {item_rowid}");
+    }
+    public async Task ActionCreate()
+    {
+        NotificationService.ShowInfo("Open Action Create");
+    }
+    public async Task ActionDelete(string item_rowid, string object_string)
+    {
+        NotificationService.ShowInfo($"Open Action Delete the item {item_rowid}");
     }
 
 }
