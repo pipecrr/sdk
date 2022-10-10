@@ -1,3 +1,4 @@
+@typeparam TInt
 @using System.Globalization
 <DxSpinEdit 
     Value="@Value" 
@@ -15,8 +16,8 @@
 </DxSpinEdit>
 
 @code {
-    [Parameter] public int Value { get; set; }
-    [Parameter] public Action<int> ValueChanged { get; set; } = (value) => {};
+    [Parameter] public TInt Value { get; set; }
+    [Parameter] public Action<TInt> ValueChanged { get; set; } = (value) => {};
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public string Placeholder { get; set; }
     [Parameter] public bool Disabled { get; set; }
