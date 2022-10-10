@@ -8,7 +8,7 @@
         <SDKButton RenderStyle="@style" ResourceTag="@resourceAction" Click="@ActionRecord"/>
         <canvas class="visualizer" height="60" hidden="@notRecording" width="100%"></canvas>
     </div>
-    <audio src="@url" autoplay controls hidden="@recording" width="100%"></audio>
+    <audio src="@url" autoplay controls hidden="@recording" width="100%"></audio>    
 </div>
 
 
@@ -51,6 +51,7 @@
         recording = true;
         notRecording = false;
         style = SDKButtonRenderStyle.Danger;
+        url = "";
         await _jsModule.InvokeVoidAsync("startRecording");
     }
 
@@ -69,9 +70,4 @@
         OnGetAudio?.Invoke(base64);
         StateHasChanged();
     }
-
-    public override async Task SetParametersAsync(ParameterView parameters){        
-        await base.SetParametersAsync(parameters);
-    }
-
 }
