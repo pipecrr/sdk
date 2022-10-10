@@ -31,7 +31,7 @@
     {
         if(firstRender || _jsModule == null){
             await jsRuntime.InvokeAsync<IJSObjectReference>("import", "https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js");
-            _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/Components/Layout/SDKRecorder.razor.js");
+            _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/Components/Fields/SDKRecorder.razor.js");
         }
     }
     private async Task ActionRecord()
