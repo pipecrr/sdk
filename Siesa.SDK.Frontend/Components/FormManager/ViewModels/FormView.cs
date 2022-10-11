@@ -312,16 +312,27 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
 
         public override async Task SetParametersAsync(ParameterView parameters)
         {
+            bool changeViewContext = false;
+            if (parameters.TryGetValue<DynamicViewType>(nameof(ViewContext), out var value2))
+            {
+                if (value2 != null && value2 != ViewContext)
+                {
+                    changeViewContext = true;
+                }
+            }
             await base.SetParametersAsync(parameters);
             if (parameters.TryGetValue<string>(nameof(BusinessName), out var value))
             {
-                if (value != null && value != BusinessName)
+                if (value != null && value != BusinessName || changeViewContext)
                 {
                     Loading = false;
                     ErrorMsg = "";
                     await InitView(value);
                 }
             }
+
+            
+            
         }
         private async Task SaveBusiness()
         {
