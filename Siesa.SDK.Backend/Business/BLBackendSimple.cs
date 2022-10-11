@@ -144,7 +144,14 @@ namespace Siesa.SDK.Business
         {
             BaseObj = Activator.CreateInstance<T>();
             var _bannedTypes = new List<Type>() { typeof(string), typeof(byte[]) };
-            _relatedProperties = BaseObj.GetType().GetProperties().Where(p => p.PropertyType.IsClass && !p.PropertyType.IsPrimitive && !p.PropertyType.IsEnum && !_bannedTypes.Contains(p.PropertyType) && p.Name != "RowVersion").Select(p => p.Name).ToArray();
+            _relatedProperties = BaseObj.GetType().GetProperties().Where(
+                p => p.PropertyType.IsClass 
+                    && !p.PropertyType.IsPrimitive 
+                    && !p.PropertyType.IsEnum 
+                    && !_bannedTypes.Contains(p.PropertyType) 
+                    && p.Name != "RowVersion"
+                    && p.GetCustomAttribute(typeof(NotMappedAttribute)) == null
+            ).Select(p => p.Name).ToArray();
             unique_indexes = BaseObj.GetType()
                 .GetCustomAttributes(typeof(Microsoft.EntityFrameworkCore.IndexAttribute), false)
                 .Where(x => 
@@ -566,6 +573,7 @@ namespace Siesa.SDK.Business
         public SDKContext CreateDbContext()
         {
             var retContext = _dbFactory.CreateDbContext();
+            retContext.ChangeTracker.LazyLoadingEnabled = false;
             retContext.SetProvider(_provider);
             return retContext;
         }

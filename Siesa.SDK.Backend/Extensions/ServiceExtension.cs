@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Siesa.SDK.Backend.Extensions
 {
@@ -44,7 +45,7 @@ namespace Siesa.SDK.Backend.Extensions
                         throw new Exception("No tenant configured");
                     }
                 }
-                //opts.UseLazyLoadingProxies(); //TODO: Habilitar cuando corrijan el bug en efcore (no se desactiva con IDbContextFactory)
+                opts.UseLazyLoadingProxies(); //TODO: Habilitar cuando corrijan el bug en efcore (no se desactiva con IDbContextFactory)
                 if(tenant.ProviderName == EnumDBType.PostgreSQL)
                 {
                     opts.UseNpgsql(tenant.ConnectionString);
@@ -53,6 +54,7 @@ namespace Siesa.SDK.Backend.Extensions
 
                 }
                 opts.AddInterceptors(new SDKDBInterceptor());
+                opts.ConfigureWarnings(warnings => warnings.Ignore(CoreEventId.LazyLoadOnDisposedContextWarning));
             };
             var typeExt = typeof (Microsoft.Extensions.DependencyInjection.EntityFrameworkServiceCollectionExtensions);
             var method = typeExt.GetMethods().Single( x => {

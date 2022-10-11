@@ -61,6 +61,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         public bool Hidden { get; set; } = false;
         public bool Required { get; set; } = false;
 
+        public int ColumnWidth { get; set; } = 0;
+
         //Para Listas
         public IEnumerable<object> Options { get; set; }
 
@@ -79,6 +81,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         public string EntityRowidField;
 
         private FieldObj fieldObj = null;
+
+        public bool ShowLabel { get; set; } = true;
 
         public FieldObj GetFieldObj(object modelObj)
         {

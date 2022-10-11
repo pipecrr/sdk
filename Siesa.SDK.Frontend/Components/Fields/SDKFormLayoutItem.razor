@@ -16,6 +16,7 @@
 
 @code {
     private string Label { get; set; }
+    [Parameter] public bool ShowLabel { get; set; } = true;
     [Parameter] public string ResourceTag { get; set; }
     [Parameter] public Int64 RowidResource { get; set; }
     [Parameter] public int ColSizeMd { get; set; }
@@ -37,16 +38,26 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Label = ResourceTag;
-        await base.OnInitializedAsync();
-        Label = await GetText();
+        if(ShowLabel)
+        {
+            Label = ResourceTag;
+            await base.OnInitializedAsync();
+            Label = await GetText();
+        }else{
+            Label = "";
+        }
     }
 
     protected override async Task OnParametersSetAsync()
     {
-        Label = ResourceTag;
-        await base.OnParametersSetAsync();
-        Label = await GetText();
+        if(ShowLabel)
+        {
+            Label = ResourceTag;
+            await base.OnParametersSetAsync();
+            Label = await GetText();
+        }else{
+            Label = "";
+        }
     }
     
     

@@ -149,7 +149,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         public void Refresh(){
             EvaluateDynamicAttributes(null);
-            StateHasChanged();
+            try
+            {
+                StateHasChanged();
+            }
+            catch (System.Exception)
+            {
+                _ = InvokeAsync(() => StateHasChanged());
+            }
         }
         protected virtual async Task InitView(string bName = null)
         {
@@ -300,7 +307,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            //InitView();
+            await InitView();
         }
 
         public override async Task SetParametersAsync(ParameterView parameters)
@@ -308,7 +315,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
             await base.SetParametersAsync(parameters);
             if (parameters.TryGetValue<string>(nameof(BusinessName), out var value))
             {
-                if (value != null)
+                if (value != null && value != BusinessName)
                 {
                     Loading = false;
                     ErrorMsg = "";
