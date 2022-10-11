@@ -45,7 +45,7 @@ namespace Siesa.SDK.Backend.Extensions
                         throw new Exception("No tenant configured");
                     }
                 }
-                opts.UseLazyLoadingProxies(); //TODO: Habilitar cuando corrijan el bug en efcore (no se desactiva con IDbContextFactory)
+                //opts.UseLazyLoadingProxies(); //TODO: Habilitar cuando corrijan el bug en efcore (no se desactiva con IDbContextFactory)
                 if(tenant.ProviderName == EnumDBType.PostgreSQL)
                 {
                     opts.UseNpgsql(tenant.ConnectionString);
