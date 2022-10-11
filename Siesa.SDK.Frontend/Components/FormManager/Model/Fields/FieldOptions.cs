@@ -97,7 +97,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             typeof(SwitchField),
             typeof(SelectBarField<>),
             typeof(TextField),
-
+            typeof(EmailField)
         };
 
         private FieldObj InitField(object modelObj)
