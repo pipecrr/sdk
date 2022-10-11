@@ -323,12 +323,19 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
             await base.SetParametersAsync(parameters);
             if (parameters.TryGetValue<string>(nameof(BusinessName), out var value))
             {
-                if (value != null && value != BusinessName || changeViewContext)
+                if (value != null && value != BusinessName)
                 {
                     Loading = false;
                     ErrorMsg = "";
                     await InitView(value);
                 }
+            }
+
+            if(changeViewContext)
+            {
+                Loading = false;
+                ErrorMsg = "";
+                await InitView();
             }
 
             

@@ -16,6 +16,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         protected override async Task OnInitializedAsync()
         {
             ViewdefName = Viewdef;
+            if(string.IsNullOrEmpty(BusinessName) && BusinessObj != null)
+            {
+                BusinessName = BusinessObj.GetType().Name;
+            }
             await base.OnInitializedAsync();
         }
 
