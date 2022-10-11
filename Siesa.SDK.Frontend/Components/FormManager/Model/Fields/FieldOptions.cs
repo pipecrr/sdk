@@ -84,9 +84,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 
         public bool ShowLabel { get; set; } = true;
 
-        public FieldObj GetFieldObj(object modelObj)
+        public FieldObj GetFieldObj(object modelObj, bool force = false)
         {
-            if (fieldObj == null)
+            if (fieldObj == null || force)
             {
                 fieldObj = InitField(modelObj);
             }
@@ -105,7 +105,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             FieldObj field = new FieldObj();
             Type originalPropertyType = null; //Used for enums
 
-            if (CustomComponent != null)
+            if (CustomComponent != null && String.IsNullOrEmpty(CustomType))
             {
                 if (String.IsNullOrEmpty(ResourceTag))
                 {
