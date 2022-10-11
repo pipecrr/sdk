@@ -23,7 +23,7 @@
     @foreach(FieldOptions fld in Fields)
     {
         @if(!fld.Hidden){
-            <SDKFormLayoutItem ResourceTag="@fld.ResourceTag"
+            <SDKFormLayoutItem ResourceTag="@fld.ResourceTag" ShowLabel="@fld.ShowLabel"
                             ColSizeMd="@GetColSize(fld,"MD")"
                             ColSizeLg="@GetColSize(fld,"LG")"
                             ColSizeXl="@GetColSize(fld,"XL")"

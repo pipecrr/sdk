@@ -82,6 +82,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 
         private FieldObj fieldObj = null;
 
+        public bool ShowLabel { get; set; } = true;
+
         public FieldObj GetFieldObj(object modelObj)
         {
             if (fieldObj == null)
