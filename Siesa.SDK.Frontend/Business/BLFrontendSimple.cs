@@ -166,6 +166,10 @@ namespace Siesa.SDK.Business
                 BaseObj.GetType().GetProperty("RowidCompanyGroup").SetValue(BaseObj, AuthenticationService.User.RowidCompanyGroup);
                 BaseObj.GetType().GetProperty("CompanyGroup").SetValue(BaseObj, companyGroup);
             }
+
+            if(string.IsNullOrEmpty(BusinessName)){
+                BusinessName = this.GetType().Name;
+            }
         }
 
         public BLFrontendSimple(IAuthenticationService authenticationService, SDKNotificationService notificationService = null, ILoggerFactory loggerFactory = null)

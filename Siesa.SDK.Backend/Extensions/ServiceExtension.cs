@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Siesa.SDK.Backend.Extensions
 {
@@ -53,6 +54,7 @@ namespace Siesa.SDK.Backend.Extensions
 
                 }
                 opts.AddInterceptors(new SDKDBInterceptor());
+                opts.ConfigureWarnings(warnings => warnings.Ignore(CoreEventId.LazyLoadOnDisposedContextWarning));
             };
             var typeExt = typeof (Microsoft.Extensions.DependencyInjection.EntityFrameworkServiceCollectionExtensions);
             var method = typeExt.GetMethods().Single( x => {

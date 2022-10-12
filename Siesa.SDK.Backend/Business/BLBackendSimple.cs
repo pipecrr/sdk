@@ -573,6 +573,7 @@ namespace Siesa.SDK.Business
         public SDKContext CreateDbContext()
         {
             var retContext = _dbFactory.CreateDbContext();
+            retContext.ChangeTracker.LazyLoadingEnabled = false;
             retContext.SetProvider(_provider);
             return retContext;
         }

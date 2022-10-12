@@ -22,7 +22,7 @@ else if (BusinessObj != null)
                 <DxFormLayoutTabPages ScrollMode="TabsScrollMode.Auto">
                     @foreach (var panel in Panels)
                     {
-                        <SDKFormLayoutTabPage ResourceTag="@panel.ResourceTag">
+                        <SDKFormLayoutTabPage ResourceTag="@panel.ResourceTag" @key="@panel.PanelId">
                             <CascadingValue Value="@EditFormContext">
                                 <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef"
                             DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
