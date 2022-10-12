@@ -15,7 +15,7 @@ namespace Siesa.SDK.Components.Visualization
                 SDKButtonRenderStyle.Success => ButtonRenderStyle.Success,
                 SDKButtonRenderStyle.Warning => ButtonRenderStyle.Warning,
                 SDKButtonRenderStyle.Danger => ButtonRenderStyle.Danger,
-                SDKButtonRenderStyle.Dark => ButtonRenderStyle.Dark,
+                SDKButtonRenderStyle.Cancel => ButtonRenderStyle.Dark,
                 SDKButtonRenderStyle.Light => ButtonRenderStyle.Light
             };
         }
@@ -42,7 +42,7 @@ namespace Siesa.SDK.Components.Visualization
         Success = ButtonRenderStyle.Success,
         Warning = ButtonRenderStyle.Warning,
         Danger = ButtonRenderStyle.Danger,
-        Dark = ButtonRenderStyle.Dark,
+        Cancel = ButtonRenderStyle.Dark,
         Light = ButtonRenderStyle.Light
     } 
     

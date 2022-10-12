@@ -1,6 +1,7 @@
 @using Siesa.SDK.Shared.Services
 @using Siesa.SDK.Frontend.Components.Layout
-@using Siesa.SDK.Entities;   
+@using Siesa.SDK.Entities;
+@using Siesa.SDK.Shared.DTOS   
 @inject IAuthenticationService AuthenticationService
 @inject NavigationService NavigationService
 @inject IJSRuntime JSRuntime
@@ -34,7 +35,10 @@
             <div class="position-relative">
                 <button @onclick="()=> ToogleConnect()" class="btn btn_connect py-0 px-2 px-lg-3 d-flex align-items-center">
                     <div>
-                        <p class="font-weight-bold m-0 text-truncate" data-toggle="tooltip" data-placement="bottom" title="">Grupo
+                        <p class="font-weight-bold m-0 text-truncate" data-toggle="tooltip" data-placement="bottom" title="">
+                            @GetCurrentConnectionName()
+                            </p>
+                        <p class="font-weight-bold m-0 text-truncate" data-toggle="tooltip" data-placement="bottom" title="">
                             @GetCurrentCompanyGroupName()
                         </p>
                     </div>
@@ -47,6 +51,11 @@
                     <div id="boxConnect" class="connect_tooltip" style="display:block;">
                         <label class="pt-3 px-3 pb-0 col-form-label font-weight-bold">Configurar</label>
                         <div class="p-3">
+                            <div class="alert alert-info mb-3 font_size_087 p-3" role="alert">
+                               <p>Al cambiar la configuración se refrescará la ventana</p>
+                                <p style="margin:0px"><strong>Conexión:</strong></p>
+                                <p style="margin:0px">@GetCurrentConnectionName()</p>
+                            </div>
                             <form>
                                 <div class="form-group connect_select_search">
                                     <label class="col-form-label col-form-label-sm font-weight-bold"
@@ -72,9 +81,6 @@
                                         }   
                                 </button>
                             </form>
-                            <div class="alert alert-info text-center mt-3 mb-0 font_size_087" role="alert">
-                                Al cambiar la configuración se refrescará la ventana
-                            </div>
                         </div>
                     </div>
                 }
@@ -107,6 +113,8 @@
     private E00200_CompanyGroup SelectedGroup { get; set; } = new E00200_CompanyGroup();
 
     private bool loading = false;
+
+    private SDKDbConnection _connection { get; set; } = new SDKDbConnection();
 
 
 
@@ -153,5 +161,16 @@
         }
     }
 
-
+    private string GetCurrentConnectionName()
+    {
+        try
+        {
+            _connection = AuthenticationService.GetSelectedConnection();
+            return _connection.Name;
+        }
+        catch (Exception)
+        {
+            return "No hay conexión";
+        }
+    }
 }

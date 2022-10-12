@@ -88,13 +88,14 @@ input#menu:checked~ ::deep .nav_dx_menu {
     min-height: 100vh;
     max-height: 100vh;
     /* background: var(--color_light); */
-    box-shadow: var(--shadow_standar);
-    border-bottom-right-radius: 1.5rem;
+    /* box-shadow: var(--shadow_standar); */
+    /* border-bottom-right-radius: 1.5rem; */
     transition-duration: .25s;
     width: 100%;
     /* max-width: 243px; */
     z-index: 3;
     display: block;
+
 }
 
 .collapse_open_btn {
@@ -211,7 +212,7 @@ input#collapse_open:checked~.menu_content {
 }
 
 input#collapse_open:checked~ ::deep .nav_dx_menu {
-    left: 243px;
+    left: calc(243px - 48px);
     transition-duration: .25s;
 }
 

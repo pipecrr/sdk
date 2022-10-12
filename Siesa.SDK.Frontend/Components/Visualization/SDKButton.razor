@@ -78,10 +78,13 @@
         {
             case SDKButtonRenderStyle.Primary:
                 return $"btn_primary_def_1 {CssClass}";
-                break;
+
             case SDKButtonRenderStyle.Secondary:
                 return $"btn_secondary_def_1 {CssClass}";
-                break;
+
+            case SDKButtonRenderStyle.Cancel:
+                return $"btn_secondary_cancel {CssClass}";
+
             default:
                 return CssClass;
         }
