@@ -1,0 +1,60 @@
+@using System.Linq.Expressions
+@inherits SDKComponent
+<DxMaskedInput 
+    Value="@Value" 
+    ValueChanged="@ValueChanged"
+    Mask="@EmailMask"
+    MaskMode="MaskMode.RegEx" 
+    ValueExpression="@ValueExpression"
+    CssClass="@GetCssClass()"
+    ReadOnly="@ReadOnly"
+    NullText="@Placeholder"
+    ClearButtonDisplayMode="@ClearButtonDisplayMode.Get()"
+    data-automation-id="@GetAutomationId()"
+    autocomplete="@GetAutoComplete()"
+    field-name="@FieldName"
+    Enabled="@(!Disabled)"
+/>
+
+@code {
+    string EmailMask { get; set; } = @"(\w|[.-])+@(\w|-)+\.(\w|-){2,4}";
+    [Parameter] public string Value { get; set; }
+    [Parameter] public Action<string> ValueChanged { get; set; } = (value) => {};
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string Placeholder { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public bool ReadOnly { get; set; }
+    [Parameter] public bool Required { get; set; }
+    [Parameter] public string CssClass { get; set; }
+    [Parameter] public Expression<Func<string>> ValueExpression { get; set; }
+    [Parameter] public SDKClearButtonDisplayMode ClearButtonDisplayMode { get; set; }
+    [Parameter] public string FieldName { get; set; }
+
+    [Parameter] public bool AllowAutoComplete { get; set; } = false;
+    private string GetAutoComplete() {
+        if (AllowAutoComplete) {
+            return "on";
+        }
+        return "off";
+    }
+
+    protected override string GetAutomationId()
+    {
+        if(string.IsNullOrEmpty(AutomationId))
+        {
+            AutomationId = FieldName;
+        }
+        return base.GetAutomationId();
+    }
+
+    private string GetCssClass()
+    {
+        var cssClass = CssClass;
+        if(Required && string.IsNullOrEmpty(Value))
+        {
+            cssClass += " invalid";
+        }
+        return cssClass;
+    }
+
+}

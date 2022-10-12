@@ -1,4 +1,4 @@
-<div class="sdk_go_top">
+<div class="sdk_go_top"  @onclick="(()=>OnClick())">
     <div class="sdk_go_top_button">
         <i class="fas fa-chevron-up"></i>
     </div>
@@ -13,6 +13,17 @@
     {
         if(firstRender){
             _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/Components/Layout/SDKGoTop.razor.js");
+        }
+    }
+
+    private async Task OnClick()
+    {
+        try
+        {
+            await _jsModule.InvokeAsync<string>("goToTop");
+        }
+        catch (System.Exception)
+        {
         }
     }
 }

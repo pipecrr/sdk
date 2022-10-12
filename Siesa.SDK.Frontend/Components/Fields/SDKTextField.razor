@@ -3,7 +3,7 @@
     TextChanged="@ValueChanged" 
     NullText="@Placeholder"
     ReadOnly="@ReadOnly"
-    CssClass="@CssClass"
+    CssClass="@GetCssClass()"
     maxlength = "@MaxLength"
 >
 @ChildContent
@@ -20,6 +20,16 @@
     [Parameter] public string IsPassword { get; set; }
     [Parameter] public string MaxLength { get; set; }
     [Parameter] public string CssClass { get; set; }
+
+    private string GetCssClass()
+    {
+        var cssClass = CssClass;
+        if(Required && string.IsNullOrEmpty(Value))
+        {
+            cssClass += " invalid";
+        }
+        return cssClass;
+    }
 
     
 }

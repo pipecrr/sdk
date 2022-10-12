@@ -1,0 +1,47 @@
+﻿@inherits FieldClass<string>
+@using System.Linq.Expressions
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components
+@if (!FieldOpt.Hidden)
+{
+    @FieldTemplate
+    @FieldValidationTemplate
+}
+
+
+@code {
+    private RenderFragment? _fieldValidationTemplate;
+    public RenderFragment? FieldTemplate
+    {
+        get
+        {
+
+            return _fieldValidationTemplate != null ? _fieldValidationTemplate : builder =>
+            {
+                var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
+                var lambda = Expression.Lambda(typeof(Func<>).MakeGenericType(typeof(string)), access);
+
+                builder.OpenComponent(0, typeof(SDKEmailField));
+                builder.AddAttribute(1, "ValueExpression", lambda);
+                builder.AddAttribute(2, "Value", (string)BindValue);
+                builder.AddAttribute(3, "ValueChanged", new Action<string>(value => SetValue(value)));
+                builder.AddAttribute(4, "Placeholder", FieldOpt.Placeholder);
+                builder.AddAttribute(5, "CssClass", (IsRequired && (BindValue == null || BindValue.Length == 0) ? "invalid" : "") + FieldOpt.CssClass);
+                builder.AddAttribute(6, "ReadOnly", FieldOpt.Disabled);
+                builder.AddAttribute(7, "ClearButtonDisplayMode", SDKClearButtonDisplayMode.Auto);
+                builder.AddAttribute(8, "FieldName", FieldOpt.Name);
+                var lastIndex = 8;
+                if(FieldOpt.CustomAttributes != null && FieldOpt.CustomAttributes.Count > 0)
+                {
+                    foreach (var attr in FieldOpt.CustomAttributes.Where(a => !a.Key.StartsWith("sdk-")))
+                    {
+                        builder.AddAttribute(++lastIndex, attr.Key, attr.Value);
+                    }
+                }
+
+                builder.CloseComponent();
+            };
+
+        }
+    }
+}

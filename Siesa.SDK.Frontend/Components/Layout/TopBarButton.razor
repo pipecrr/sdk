@@ -80,4 +80,9 @@
         }
         return base.GetAutomationId();
     }
+    public async Task SetEnabled(bool value)
+    {
+        this.Enabled = true;
+        StateHasChanged();
+    }
 }
