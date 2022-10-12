@@ -8,6 +8,7 @@
                 ColSpanLg="@ColSizeLg"
                 ColSpanXl="@ColSizeXl"
                 ColSpanSm="@ColSizeSm"
+                CaptionCssClass="@CaptionCssClass"
                 ColSpanXs="@ColSizeXs">
     <Template>
         @ChildContent
@@ -25,6 +26,10 @@
     [Parameter] public int ColSizeSm { get; set; }
     [Parameter] public int ColSizeXs { get; set; }
     [Parameter] public RenderFragment ChildContent { get; set; }
+
+    [Parameter] public bool ShowRequiredSymbol { get; set; }
+
+    private string CaptionCssClass { get; set; }
 
     private async Task<string> GetText(){
         if(!String.IsNullOrEmpty(ResourceTag)){
@@ -45,6 +50,10 @@
             Label = await GetText();
         }else{
             Label = "";
+        }
+
+        if(ShowRequiredSymbol){
+            CaptionCssClass = "required-caption";
         }
     }
 

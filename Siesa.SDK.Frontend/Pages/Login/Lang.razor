@@ -12,7 +12,7 @@
                     {
                         <Button class="btn btn_ghost_def_2 btn-sm px-2 mb-1 w-100 d-flex align-items-center" @onclick="((e) => OnChangeCulture(culture.Rowid))" >
                             <div class="d-flex mr-2 btn_region">
-                                <span class="fi fi-@culture.CountryCode fis"></span>
+                                <span class="fi fi-@GetCountryFlagCode(culture) fis rounded-circle"></span>
                             </div>
                             <div class="region_tooltip_text">
                                 <span>@culture.Description - @culture.LanguageCode.ToUpper()</span>
@@ -34,5 +34,39 @@
 
     [Parameter]
     public Action<short> OnChangeCulture {get;set;}
+
+    private string GetCountryFlagCode (E00021_Culture culture)
+    {
+        if(!string.IsNullOrEmpty(culture.CountryCode))
+        {
+            return culture.CountryCode;
+        }
+
+        switch (culture.LanguageCode)
+        {
+            case "en":
+                return "us";
+            case "es":
+                return "co";
+            case "fr":
+                return "fr";
+            case "de":
+                return "de";
+            case "it":
+                return "it";
+            case "pt":
+                return "pt";
+            case "ru":
+                return "ru";
+            case "zh":
+                return "cn";
+            case "ja":
+                return "jp";
+            case "ko":
+                return "kr";
+            default:
+                return "co";
+        }
+    }
     
 }

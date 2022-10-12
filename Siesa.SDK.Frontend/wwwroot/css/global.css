@@ -8,12 +8,14 @@
     --color_border: #CCCCCC;
     --color_back: #FCFCFC;
     --color_back_2: #F0F0F0;
+    --color_delete: #c82333;
 
     --color_primary_dark: #011865;
     --color_primary_light: #585AD5;
     --color_cancel_dark: #747d8d;
     --color_text_2: #808791;
     --color_light: #FFFFFF;
+    --color_delete_dark:#bd2130;
 
     --color_siesa_1: #001AAE;
     --color_siesa_2: #1864F3;
@@ -178,6 +180,16 @@ body {
 .btn_secondary_cancel:hover{
     background-color: var(--color_cancel_dark) !important;
     border-color: var(--color_cancel_dark) !important;
+}
+.btn_secondary_danger{
+    background-color: var(--color_delete) !important;
+    border-color: var(--color_delete) !important;
+    border-radius: var(--border_radius_btn) !important;
+    font-weight: 700 !important;
+}
+.btn_secondary_danger:hover{
+    background-color: var(--color_delete_dark) !important;
+    border-color: var(--color_delete_dark) !important;
 }
 .btn_ghost_def_1{
     background-color: transparent !important;
@@ -828,5 +840,9 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
 
 .rz-dialog-content {
     padding: 0 !important;
-}	
+}
 
+.required-caption:after {
+    content: '*';
+    color: red;
+}

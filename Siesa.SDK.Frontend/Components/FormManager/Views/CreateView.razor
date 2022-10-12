@@ -20,7 +20,7 @@
 } else if (BusinessObj.BaseObj != null)
 {
     @if(IsSubpanel && ShowTitle){        
-            <h5><ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer 
+            <h5 class="d-flex justify-content-center"><ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer 
             ResourceTag="@($"{BusinessName}.Singular")" /></h5>
         <hr />
     }
@@ -66,13 +66,13 @@
         <div class="buttons-container">
             @foreach (var btn in FormViewModel.Buttons)
             {
-                <SDKButton RenderStyle="@btn.RenderStyle" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag"  />
+                <SDKButton RenderStyle="@btn.RenderStyle"  Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag"  />
             }
             @if(ShowSaveButton){
-                <SDKButton form="@FormID" RenderStyle="SDKButtonRenderStyle.Primary" RenderStyleMode="SDKButtonRenderStyleMode.Text" SubmitFormOnClick="true" ResourceTag="Generic.ActionSave"/>
+                <SDKButton form="@FormID" RenderStyle="SDKButtonRenderStyle.Primary" SubmitFormOnClick="true" ResourceTag="Generic.ActionSave"/>
             }
             @if(ShowCancelButton){
-                <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@((args) => {CancelButton();})" ResourceTag="Generic.ActionCancel" />
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" Click="@((args) => {CancelButton();})" ResourceTag="Generic.ActionCancel" />
             }
         </div>
     }
