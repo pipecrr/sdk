@@ -95,6 +95,21 @@
 		<None Remove="Components\Documentation\SourceCode\DynamicListView.txt" />
 		<EmbeddedResource Include="Components\Documentation\SourceCode\DynamicListView.txt" />
 
+		<None Remove="Components\Documentation\SourceCode\DynamicCreateView.txt" />
+		<EmbeddedResource Include="Components\Documentation\SourceCode\DynamicCreateView.txt" />
+
+		<None Remove="Components\Documentation\SourceCode\DynamicEditView.txt" />
+		<EmbeddedResource Include="Components\Documentation\SourceCode\DynamicEditView.txt" />
+
+		<None Remove="Components\Documentation\SourceCode\DynamicDetailView.txt" />
+		<EmbeddedResource Include="Components\Documentation\SourceCode\DynamicDetailView.txt" />
+
+		<None Remove="Components\Documentation\SourceCode\FreeForm.txt" />
+		<EmbeddedResource Include="Components\Documentation\SourceCode\FreeForm.txt" />
+
+		<None Remove="Components\Documentation\SourceCode\RelationshipPanel.txt" />
+		<EmbeddedResource Include="Components\Documentation\SourceCode\RelationshipPanel.txt" />
+
 	</ItemGroup>
 
 
