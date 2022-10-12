@@ -1,6 +1,15 @@
-﻿@implements IDisposable
+﻿@using Siesa.SDK.Entities;
+@using Siesa.SDK.Shared.Services 
+@using Newtonsoft.Json;
+@using System.Linq;
+
+@implements IDisposable
+
+@inject IAuthenticationService AuthenticationService
+@inject IBackendRouterService BackendRouterService
 @inject IJSRuntime JSRuntime
 @inject NavigationService navigationService
+
 @if (LayoutService.TopBarTitle != null || LayoutService.TopBarButtons != null || LayoutService.TopBarExtraButtons != null)
 {
     <div class=@("col-12 p-2 p-sm-3 whcm_toolbar " + LayoutService.StyleName)>
@@ -37,6 +46,19 @@
             }
         </div>
     </div>
+    @if (showCompaies)
+    {
+        <div class="col-12 px-0 py-3">
+            <div class="whcm_company_select">
+                        <select class="form-select form-control form-control-sm font-weight-bold" id="inputCompany">
+                            @foreach (var company in CompaniesList)
+                                {
+                                    <option value="@company.Rowid">@company.Name</option>
+                                }
+                        </select>
+            </div>
+        </div>
+    }
 }
 @code {
 
@@ -46,9 +68,18 @@
     [Inject]
     public ILayoutService LayoutService { get; set; }
 
+    [Parameter]
+    public bool showCompaies { get; set; } = true; //true, solo si el BL tiene relacion con company
+
+    public List<E00201_Company> CompaniesList { get; set; } = new List<E00201_Company>();
+
+    public E00201_Company SelectedCompany { get; set; } = new E00201_Company();
+
     protected override void OnInitialized()
     {
+        
         LayoutService.PropertyChanged += LayoutService_PropertyChanged;
+        GetCompany();
         base.OnInitialized();
     }
 
@@ -95,6 +126,27 @@
             Console.WriteLine(ex.Message);
         }
        
+    }
+
+    public async Task GetCompany()
+    {
+        try
+        {
+            var BL = BackendRouterService.GetSDKBusinessModel("BLSDKCompany",AuthenticationService);
+
+            var CompanyGroup = AuthenticationService.GetRowidCompanyGroup();
+        
+            var DataCompany = await BL.GetData(null, null);
+            if (DataCompany.Data != null)
+            {
+                CompaniesList = DataCompany.Data.Select(x => JsonConvert.DeserializeObject<E00201_Company>(x)).Where(x => x.RowidCompanyGroup == CompanyGroup).ToList();
+            }
+        
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
     }
 
 }

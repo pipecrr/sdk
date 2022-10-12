@@ -768,3 +768,33 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
 .sdk-unique-invalid .dxbs-input-group input.form-control, .sdk-unique-invalid .dxbs-input-group textarea.form-control, .sdk-unique-invalid.dxbs-tagbox .form-control {
     border-color: var(--red,var(--bs-red)) !important;
 }
+
+.whcm_company_select::after{
+    content: "";
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    right: 0.7rem;
+    position: absolute;
+    bottom: 0.7rem;
+}
+.whcm_company_select{
+    position: absolute;
+    right: 0;
+    top: -2.5rem;
+} 
+.whcm_company_select > select{
+    color: var(--color_light);
+    background: var(--color_primary_dark) !important;
+    border: none;
+    border-radius:  0 0 var(--border_radius_standar) var(--border_radius_standar) ;
+    line-height: 1;
+    height: auto;
+    padding: 2.35rem 2rem 0.35rem 0.5rem
+}
+.whcm_company_select > select:focus{
+    color: var(--color_light);
+}
