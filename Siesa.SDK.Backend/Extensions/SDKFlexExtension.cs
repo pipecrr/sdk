@@ -39,7 +39,7 @@ namespace Siesa.SDK.Backend.Extensions
             List<SDKFlexFilters> filters = requestData.filters;
 
             List<SDKFlexColumn> groups = requestData.groups;
-            if(groups.Count>0){
+            if(groups?.Count>0){
                 columns.AddRange(groups);
             }
 
