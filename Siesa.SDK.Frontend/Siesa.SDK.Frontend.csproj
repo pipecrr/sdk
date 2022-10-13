@@ -110,6 +110,9 @@
 		<None Remove="Components\Documentation\SourceCode\RelationshipPanel.txt" />
 		<EmbeddedResource Include="Components\Documentation\SourceCode\RelationshipPanel.txt" />
 
+		<None Remove="Components\Documentation\SourceCode\SDKEmailField.txt" />
+		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKEmailField.txt" />
+
 	</ItemGroup>
 
 
