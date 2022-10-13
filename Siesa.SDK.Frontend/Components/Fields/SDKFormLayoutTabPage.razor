@@ -34,8 +34,15 @@
 
     protected override async Task OnInitializedAsync()
     {
-        TabIndex = TabsPagesContainer.TabsPages.Count;
-        TabsPagesContainer.TabsPages.Add(this);
+        try
+        {
+            TabIndex = TabsPagesContainer.TabsPages.Count;
+            TabsPagesContainer.TabsPages.Add(this);
+        }
+        catch(Exception e)
+        {
+        }
+        
         Label = ResourceTag;
         await base.OnInitializedAsync();
         Label = await GetText();
