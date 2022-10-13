@@ -8,7 +8,7 @@
     justify-content: space-between;
     position: absolute !important;
     top: -2.063rem;
-    z-index: 1;
+    z-index: 2;
 }
 .toolbar_edition{
     border-left: .5rem solid var(--color_estado_edición);

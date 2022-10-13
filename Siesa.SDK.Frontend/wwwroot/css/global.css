@@ -583,6 +583,12 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
     .area2 {
         padding-top: 4rem;
     }
+    .whcm_company_select {
+        right: 50% !important;
+        transform: translateX(50%);
+        max-width: 300px;
+        top: 1.3rem !important;
+    }
 }
 .dxbs-fl .form-group {
     margin-bottom: 1rem !important;
@@ -779,12 +785,13 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
     -webkit-transform: rotate(45deg);
     right: 0.7rem;
     position: absolute;
-    bottom: 0.7rem;
+    bottom: 0.4rem;
 }
 .whcm_company_select{
     position: absolute;
-    right: 0;
-    top: -2.5rem;
+    right: 1rem;
+    top: -0.1rem;
+    z-index: 1;
 } 
 .whcm_company_select > select{
     color: var(--color_light);
@@ -793,7 +800,7 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
     border-radius:  0 0 var(--border_radius_standar) var(--border_radius_standar) ;
     line-height: 1;
     height: auto;
-    padding: 2.35rem 2rem 0.35rem 0.5rem
+    padding: 2.35rem 2rem 0.1rem 0.5rem
 }
 .whcm_company_select > select:focus{
     color: var(--color_light);
