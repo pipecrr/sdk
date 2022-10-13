@@ -211,5 +211,23 @@ namespace Siesa.SDK.Frontend.Services
             var user = new SDKJWT(_secretKey, _minutesExp).Validate(token);
             return user != null;
         }
+
+        public async Task<bool> ForgotPasswordAsync(string email){
+
+            var BLUser = _backendRouterService.GetSDKBusinessModel("BLUser", this);
+
+            if (BLUser == null)
+            {
+                throw new Exception("Occurio un error");
+            }
+            var result = await BLUser.Call("RecoveryPassword", email);
+
+            if (result.Success)
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }
