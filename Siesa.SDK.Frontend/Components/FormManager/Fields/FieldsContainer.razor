@@ -29,6 +29,7 @@
                             ColSizeXl="@GetColSize(fld,"XL")"
                             ColSizeSm="@GetColSize(fld,"SM")"
                             ColSizeXs="@GetColSize(fld,"XS")"
+                            ShowRequiredSymbol="@ShowRequiredSymbol(fld)"
                             @key="@GetItemUniqueId(fld)"
                             >
                 @if(fld.ViewContext == "DetailView"){
@@ -91,5 +92,14 @@
             }
         }
         return base.SetParametersAsync(parameters);
+    }
+
+    private bool ShowRequiredSymbol(FieldOptions fld)
+    {
+        if(fld.ViewContext == "DetailView"){
+            return false;
+        }
+
+        return fld.Required;
     }
 }

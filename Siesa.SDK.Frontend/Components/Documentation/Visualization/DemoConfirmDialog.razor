@@ -25,15 +25,11 @@
 @code{
     public async Task TestConfirmDialog(){
         var ShowConfirmDialog = await SDKDialogService.ShowConfirmDialog
-        (@<div class="container-fluid">
-            <div class="row px-3">
-                <div class="col-12 p-2">
-                    <h4>Hola Mundo</h4>
-                    <i class="fa-solid fa-circle-exclamation"></i>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et tempora unde tempore commodi odio explicabo sequi consectetur dolor voluptatibus, suscipit voluptatum dolorem ratione? Nulla quo neque quae, asperiores odio expedita?</p>
-                </div>
-            </div>
-          </div>);
+        (@<div>
+                <h4>Hola Mundo</h4>
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et tempora unde tempore commodi odio explicabo sequi consectetur dolor voluptatibus, suscipit voluptatum dolorem ratione? Nulla quo neque quae, asperiores odio expedita?</p>
+            </div> ,"300px");
         
         if (ShowConfirmDialog)
         {
@@ -54,7 +50,7 @@
                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et tempora unde tempore commodi odio explicabo sequi consectetur dolor voluptatibus, suscipit voluptatum dolorem ratione? Nulla quo neque quae, asperiores odio expedita?</p>
                 </div>
                 <div class="col-12 p-2">
-                    <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Cancelar" Click="@ClickCancel" />
+                    <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" ResourceTag="Cancelar" Click="@ClickCancel" />
                     <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Confirmar" Click="@ClickDelete" />
                 </div>
             </div>

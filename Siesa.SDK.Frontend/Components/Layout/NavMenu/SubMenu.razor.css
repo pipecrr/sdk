@@ -10,27 +10,36 @@
 }
 
 
-.nav_dx_menu {
+.nav_dx_menu{
     position: fixed;
-    left: 51px;
+    /* cambio */
+    left: 0px;
     top: 0;
-    /* background: #fff; */
     height: 100%;
     transition-duration: .25s;
     min-height: 0vh;
     max-height: 0vh;
     width: 0px;
     display: none;
-    overflow: scroll;
+    /* cambio */
+    overflow: hidden !important;
 }
 
+
 .submenu-content {
-    width: 243px;
-    max-width: 243px;
+    /* cambio */
+    width: calc(243px + 48px);
+    /* cambio */
+    max-width: calc(243px + 48px);
     background: var(--color_light);
-    border-radius: 7px;
+     /* cambio */
+    border-radius: 0 0 1.5rem 0;
     height: 100vh;
     overflow-y: scroll;
+
+    box-shadow: var(--shadow_standar);
+    padding: 0 0.375rem 0 calc(48px + 0.375rem);
+
 }
 
 .submenu-content::-webkit-scrollbar {

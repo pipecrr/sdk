@@ -3,12 +3,19 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @inject UtilsManager UtilManager
 
-<div class="confirm-delete-container">
-    <i class="fa-solid fa-circle-exclamation"></i>
-    <h5>@Title</h5>
-    <p>@Text</p>
-    <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Action.ConfirmCancel" Click="@ClickCancel" />
-    <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Action.ConfirmDelete" Click="@ClickDelete" />
+
+<div class="modal-dialog-container p-0">
+    
+    <div class="modal-body d-flex flex-column  align-items-center">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <h5>@Title</h5>
+        <p>@Text</p>
+    </div>
+    <div class="modal-footer justify-content-center">
+        <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" CssClass="px-3" ResourceTag="Action.ConfirmCancel" Click="@ClickCancel" />
+        <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" CssClass="px-3"  ResourceTag="Action.ConfirmDelete" Click="@ClickDelete" />
+    </div>
+
 </div>
 
 @code {

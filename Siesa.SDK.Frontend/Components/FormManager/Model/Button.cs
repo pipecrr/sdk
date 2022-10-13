@@ -20,7 +20,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
                     "warning" => SDKButtonRenderStyle.Warning,
                     "info" => SDKButtonRenderStyle.Info,
                     "light" => SDKButtonRenderStyle.Light,
-                    "dark" => SDKButtonRenderStyle.Dark,
+                    "cancel" => SDKButtonRenderStyle.Cancel,
                     _ => SDKButtonRenderStyle.Secondary,
                 };
             }

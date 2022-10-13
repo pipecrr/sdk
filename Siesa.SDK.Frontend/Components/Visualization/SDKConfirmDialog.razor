@@ -4,13 +4,16 @@
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
 @inject UtilsManager UtilManager
 
-<div class="modal-dialog-container">
-
-    <div class="modal-dialog-content">
+<div class="modal-dialog-container p-0">
+    
+    <div class="modal-body">
         @ChildContent
     </div>
-    <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="@CancelationButtonTag" Click="@ClickCancel" />
-    <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="@ConfirmationButtonTag" Click="@ClickConfirm" />
+    <div class="modal-footer justify-content-center">
+        <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" CssClass="px-3" ResourceTag="@CancelationButtonTag" Click="@ClickCancel" />
+        <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" CssClass="px-3"  ResourceTag="@ConfirmationButtonTag" Click="@ClickConfirm" />
+    </div>
+
 </div>
 
 @code {
