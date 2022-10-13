@@ -34,6 +34,7 @@ namespace Siesa.SDK.Backend.Extensions
             }
 
             List<string> strColumns = new List<string>();
+            List<string> strColumnsVirtual = new List<string>();
 
             List<SDKFlexFilters> filters = requestData.filters;
 
@@ -47,7 +48,7 @@ namespace Siesa.SDK.Backend.Extensions
                 var entityType = Utilities.SearchType(nameSpaceEntity + "." + nameEntity, true);
                 var contextSet = Context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(entityType).Invoke(Context, null);
                 List<string> relatedColumns = new List<string>();
-                List<string> relatedVirtualColumns = new List<string>();
+                List<SDKFlexColumn> relatedVirtualColumns = new List<SDKFlexColumn>();
 
                 var includeMethod = typeof(IQueryable<object>).GetExtensionMethod(_assemblyInclude, "Include", new[] { typeof(IQueryable<object>), typeof(string) });
                 
@@ -61,12 +62,38 @@ namespace Siesa.SDK.Backend.Extensions
                     }
                     var i = columns.IndexOf(column);
                     var columnPath = column.path.Split("::");
-                    if (columnPath.Count() == 1)
-                    {
-                            strColumns.Add("np(" + column.name + ")" + " as " + column.key_name);                        
+                    if (columnPath.Count() == 1){
+                        strColumns.Add("np(" + column.name + ")" + " as " + column.key_name);
+                    }else{
+                        var relatedColumnInclude = string.Join(".", columnPath.Skip(1));
+                        var entityTypeTmp = entityType;
+                        for (int j = 1; j < columnPath.Count(); j++){
+                            var isVirtual = false;
+                            var property = entityTypeTmp.GetProperty(columnPath[j]);
+                            var propertyType = property.PropertyType;
+                            var nameEntityTmp = propertyType.FullName;
+                            if(propertyType.IsGenericType && property.GetGetMethod().IsVirtual){
+                                if(propertyType.GetGenericTypeDefinition() == typeof (ICollection<>)){
+                                    nameEntityTmp = propertyType.GetGenericArguments().Single().FullName;
+                                    isVirtual = true;
+                                }
+                            }
+                            if(isVirtual){
+                                relatedVirtualColumns.Add(column);
+                                strColumnsVirtual.Add(columnPath[j]);
+                                strColumns.Add($"{columnPath[j]} as {columnPath[j]}");
+                            }else{
+                                if (!relatedColumns.Contains(relatedColumnInclude)){
+                                    var includeMethodGeneric = includeMethod.MakeGenericMethod(entityType);
+                                    contextSet = includeMethodGeneric.Invoke(contextSet, new object[] { contextSet,relatedColumnInclude });
+                                    relatedColumns.Add(relatedColumnInclude);
+                                }
+                                strColumns.Add($"np({relatedColumnInclude}.{column.name}) as {column.key_name}");
+                            }
+                            entityTypeTmp = Utilities.SearchType(nameEntityTmp, true);
+                        }
                     }
-                    else
-                    {
+                    /*else{
                         var relatedColumnInclude = string.Join(".", columnPath.Skip(1));
                         if (!relatedColumns.Contains(relatedColumnInclude))
                             {
@@ -111,7 +138,7 @@ namespace Siesa.SDK.Backend.Extensions
                         }
                         columnSelect = columnSelect.Replace("ColumnNameReplace",column.name);
                         strColumns.Add($"np({columnSelect}) as {column.key_name}");
-                    }
+                    }*/
                     if (column.type.Equals("SelectField"))
                     {   
                         if(!enumsDict.ContainsKey(column.key_name)){
@@ -134,6 +161,26 @@ namespace Siesa.SDK.Backend.Extensions
                     contextSet = orderMethod.Invoke(contextSet, new object[] { contextSet, orderBy, null });
                 }
                 
+                if(relatedVirtualColumns.Count>0){
+                    var strColumnsMany = strColumns.Select(x => {
+                        var names = x.Split(" as ");
+                        if(strColumnsVirtual.Contains(names[1])){
+                            return null;
+                        }
+                        return "_A."+names[1]+" as "+names[1];
+                    }).Where(x => x!=null).ToList();
+                    foreach (SDKFlexColumn column in relatedVirtualColumns)
+                    {
+                        var columnPath = column.path.Split("::");
+                        var relatedColumn = string.Join(".", columnPath.Skip(1));
+                        var selectManyMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "SelectMany", new[] { typeof(IQueryable), typeof(string), typeof(string), typeof(object[]), typeof(object[])});
+                        contextSet = selectManyMethod.Invoke(contextSet, new object[] { contextSet, relatedColumn, "new(x as _A, y as _B)", null, null});
+                        strColumnsMany.Add($"_B.{column.name} as {column.key_name}");
+                    }
+                    var strSelectMany = string.Join(", ", strColumnsMany);
+                    contextSet = selectMethod.Invoke(contextSet, new object[] { contextSet, $"new ({strSelectMany})", null });
+                }
+
                 if(setTop){
                     var takeMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "Take", new[] { typeof(IQueryable), typeof(int) });
                     contextSet = takeMethod.Invoke(contextSet, new object[] { contextSet, 50 });

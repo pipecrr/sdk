@@ -24,11 +24,12 @@ namespace Siesa.SDK.Backend.Extensions
 			return type.GetExtensionMethods(extensionsAssembly).FirstOrDefault(m => m.Name == name);
 		}
 
-		public static MethodInfo GetExtensionMethod(this Type type, Assembly extensionsAssembly, string name, Type[] types)
+		public static MethodInfo GetExtensionMethod(this Type type, Assembly extensionsAssembly, string name, Type[] types, bool IsGeneric = false)
 		{
 			var methods = (from m in type.GetExtensionMethods(extensionsAssembly)
 						where m.Name == name
 						&& m.GetParameters().Count() == types.Length
+						&& (!IsGeneric || m.ContainsGenericParameters)
 						select m).ToList();
 
 			if (!methods.Any())
@@ -45,13 +46,15 @@ namespace Siesa.SDK.Backend.Extensions
 			{
 				var parameters = methodInfo.GetParameters();
 
-				bool found = true;
+				bool found = false;
 				for (byte b = 0; b < types.Length; b++)
 				{
-					found = true;
-					if (parameters[b].ParameterType != types[b] || (types[b].IsGenericType && types[b].Name != parameters[b].ParameterType.Name))
+					if (parameters[b].ParameterType == types[b] || (types[b].IsGenericType && types[b].Name == parameters[b].ParameterType.Name))
 					{
+						found = true;
+					}else{
 						found = false;
+						break;
 					}
 				}
 
