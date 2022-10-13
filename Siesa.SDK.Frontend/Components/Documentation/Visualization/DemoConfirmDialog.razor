@@ -42,14 +42,14 @@
     public async Task TestCustomDialog(){
 
         var ShowConfirmDialog = await SDKDialogService.ShowCustomDialog
-        (ds=>@<div class="container-fluid">
-            <div class="row px-3">
-                <div class="col-12 p-2">
+        (ds=>@<div class="col-12 p-0">
+            <div>
+                <div>
                     <h4>Hola Mundo</h4>
                     <i class="fa-solid fa-circle-exclamation"></i>
                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et tempora unde tempore commodi odio explicabo sequi consectetur dolor voluptatibus, suscipit voluptatum dolorem ratione? Nulla quo neque quae, asperiores odio expedita?</p>
                 </div>
-                <div class="col-12 p-2">
+                <div>
                     <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" ResourceTag="Cancelar" Click="@ClickCancel" />
                     <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Confirmar" Click="@ClickDelete" />
                 </div>

@@ -838,9 +838,9 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
     color: var(--color_estado_card_pendiente);
 }
 
-.rz-dialog-content {
+/* .rz-dialog-content {
     padding: 0 !important;
-}
+} */
 
 .required-caption:after {
     content: '*';
