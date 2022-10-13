@@ -617,9 +617,8 @@ namespace Siesa.SDK.Business
         [SDKExposedMethod]
         public ActionResult<dynamic> SDKFlexPreviewData(SDKFlexRequestData requestData, bool setTop = true)
         {
-            this._logger.LogInformation("SDKFlexPreviewData");
             using (var Context = CreateDbContext())
-            {   
+            {                   
                 return SDKFlexExtension.SDKFlexPreviewData(Context, requestData, AuthenticationService,setTop);
             }
             return null;

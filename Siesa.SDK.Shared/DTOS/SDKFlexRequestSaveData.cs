@@ -16,7 +16,7 @@ namespace Siesa.SDK.Shared.DTOS
         public List<object> chart_list { get; set; }
         public Owner owner { get; set; }
         public OwnerTeam owner_team { get; set; }
-        public List<object> group_list { get; set; }
+        public List<SDKFlexColumn> group_list { get; set; }
         public int version { get; set; }
         public string metadata { get; set; }
         public string module { get; set; }

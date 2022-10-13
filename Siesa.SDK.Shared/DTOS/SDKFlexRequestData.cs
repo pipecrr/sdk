@@ -8,6 +8,6 @@ namespace Siesa.SDK.Shared.DTOS
         public string selected_class { get; set; }
         public List<SDKFlexFilters> filters { get; set; }
         public List<SDKFlexColumn> columns { get; set; }
-        public List<object> groups { get; set; }
+        public List<SDKFlexColumn> groups { get; set; }
     }
 }
