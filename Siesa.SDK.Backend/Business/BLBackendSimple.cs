@@ -269,9 +269,8 @@ namespace Siesa.SDK.Business
 
         public virtual T Get(Int64 rowid)
         {
-            using (SDKContext context = _dbFactory.CreateDbContext())
+            using (SDKContext context = CreateDbContext())
             {
-                context.SetProvider(_provider);
                 var query = context.Set<T>().AsQueryable();
                 foreach (var relatedProperty in _relatedProperties)
                 {

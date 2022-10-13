@@ -144,7 +144,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 PropertyName = fieldPath[fieldPath.Length - 1];
                 if (String.IsNullOrEmpty(ResourceTag))
                 {
-                    ResourceTag = $"{field.ModelObj.GetType().Name}.{field.Name}";
+                    var modelTypeName = field.ModelObj.GetType().Name;
+                    if(modelTypeName.EndsWith("DTO"))
+                    {
+                        modelTypeName = $"DTO.{modelTypeName.Substring(0, modelTypeName.Length - 3)}";
+                    }
+                    ResourceTag = $"{modelTypeName}.{field.Name}";
                 }
                 var propertyType = field.ModelObj.GetType().GetProperty(field.Name).PropertyType;
                 originalPropertyType = propertyType;
