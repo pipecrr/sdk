@@ -38,6 +38,11 @@ namespace Siesa.SDK.Backend.Extensions
 
             List<SDKFlexFilters> filters = requestData.filters;
 
+            List<SDKFlexColumn> groups = requestData.groups;
+            if(groups.Count>0){
+                columns.AddRange(groups);
+            }
+
             var nameEntity = requestData.selected_class;
             var nameSpaceEntity = requestData.module_path;
 
@@ -80,8 +85,11 @@ namespace Siesa.SDK.Backend.Extensions
                             }
                             if(isVirtual){
                                 relatedVirtualColumns.Add(column);
-                                strColumnsVirtual.Add(columnPath[j]);
-                                strColumns.Add($"{columnPath[j]} as {columnPath[j]}");
+                                if(!strColumnsVirtual.Contains(columnPath[j])){
+                                    strColumnsVirtual.Add(columnPath[j]);
+                                    strColumns.Add($"{columnPath[j]} as {columnPath[j]}");
+                                }
+                                break;
                             }else{
                                 if (!relatedColumns.Contains(relatedColumnInclude)){
                                     var includeMethodGeneric = includeMethod.MakeGenericMethod(entityType);
@@ -92,53 +100,7 @@ namespace Siesa.SDK.Backend.Extensions
                             }
                             entityTypeTmp = Utilities.SearchType(nameEntityTmp, true);
                         }
-                    }
-                    /*else{
-                        var relatedColumnInclude = string.Join(".", columnPath.Skip(1));
-                        if (!relatedColumns.Contains(relatedColumnInclude))
-                            {
-                                var includeMethodGeneric = includeMethod.MakeGenericMethod(entityType);
-                                contextSet = includeMethodGeneric.Invoke(contextSet, new object[] { contextSet, relatedColumnInclude });
-                                relatedColumns.Add(relatedColumnInclude);
-                            }
-                        var entityTypeTmp = entityType;
-                        var columnSelect = "";
-                        for (int j = 1; j < columnPath.Count(); j++){
-                            var isVirtual = false;
-                            var property = entityTypeTmp.GetProperty(columnPath[j]);
-                            var propertyType = property.PropertyType;
-                            var nameEntityTmp = propertyType.FullName;
-                            if(propertyType.IsGenericType && property.GetGetMethod().IsVirtual){
-                                if(propertyType.GetGenericTypeDefinition() == typeof (ICollection<>)){
-                                    nameEntityTmp = propertyType.GetGenericArguments().Single().FullName;
-                                    isVirtual = true;
-                                }
-                            }
-                            if(isVirtual){                                
-                                if(columnSelect == ""){
-                                    columnSelect = columnPath[j]+".Select(NextRelationReplace)";
-                                }else{
-                                    columnSelect = columnSelect.Replace("NextRelationReplace",columnPath[j]+".Select(NextRelationReplace)");
-                                }
-                                if(columnPath[j] == columnPath.Last()){
-                                    columnSelect = columnSelect.Replace("NextRelationReplace","ColumnNameReplace");
-                                }
-
-                            }else{
-                                if(columnSelect == ""){
-                                    columnSelect = columnPath[j]+".NextRelationReplace";
-                                }else{
-                                    columnSelect = columnSelect.Replace("NextRelationReplace",columnPath[j]+".NextRelationReplace");
-                                }
-                                if(columnPath[j] == columnPath.Last()){
-                                    columnSelect = columnSelect.Replace("NextRelationReplace","ColumnNameReplace");
-                                }
-                            }
-                            entityTypeTmp = Utilities.SearchType(nameEntityTmp, true);
-                        }
-                        columnSelect = columnSelect.Replace("ColumnNameReplace",column.name);
-                        strColumns.Add($"np({columnSelect}) as {column.key_name}");
-                    }*/
+                    }                    
                     if (column.type.Equals("SelectField"))
                     {   
                         if(!enumsDict.ContainsKey(column.key_name)){
@@ -169,13 +131,40 @@ namespace Siesa.SDK.Backend.Extensions
                         }
                         return "_A."+names[1]+" as "+names[1];
                     }).Where(x => x!=null).ToList();
+                    List<string> relatedColumnsMany = new List<string>();
                     foreach (SDKFlexColumn column in relatedVirtualColumns)
                     {
                         var columnPath = column.path.Split("::");
                         var relatedColumn = string.Join(".", columnPath.Skip(1));
+                        var entityTypeTmp = entityType;
                         var selectManyMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "SelectMany", new[] { typeof(IQueryable), typeof(string), typeof(string), typeof(object[]), typeof(object[])});
-                        contextSet = selectManyMethod.Invoke(contextSet, new object[] { contextSet, relatedColumn, "new(x as _A, y as _B)", null, null});
-                        strColumnsMany.Add($"_B.{column.name} as {column.key_name}");
+                        List<string> listCampoConsulta = new List<string>();
+                        string campoConsulta = "";
+                        for (int j = 1; j < columnPath.Count(); j++){
+                            var isVirtual = false;
+                            var property = entityTypeTmp.GetProperty(columnPath[j]);
+                            var propertyType = property.PropertyType;
+                            var nameEntityTmp = propertyType.FullName;
+                            if(propertyType.IsGenericType && property.GetGetMethod().IsVirtual){
+                                if(propertyType.GetGenericTypeDefinition() == typeof (ICollection<>)){
+                                    nameEntityTmp = propertyType.GetGenericArguments().Single().FullName;
+                                    isVirtual = true;
+                                }
+                            }
+                            if(isVirtual){
+                                if(!relatedColumnsMany.Contains(columnPath[j])){
+                                    contextSet = selectManyMethod.Invoke(contextSet, new object[] { contextSet, columnPath[j], "new(x as _A, y as _B)", null, null});
+                                    relatedColumnsMany.Add(relatedColumn);
+                                }
+                                listCampoConsulta.Add($"_B");
+                            }else{
+                                listCampoConsulta.Add($"{columnPath[j]}");
+                            }
+                            entityTypeTmp = Utilities.SearchType(nameEntityTmp, true);
+                        }
+                        listCampoConsulta.Add($"{column.name}");
+                        campoConsulta = string.Join(".", listCampoConsulta);
+                        strColumnsMany.Add($"{campoConsulta} as {column.key_name}");
                     }
                     var strSelectMany = string.Join(", ", strColumnsMany);
                     contextSet = selectMethod.Invoke(contextSet, new object[] { contextSet, $"new ({strSelectMany})", null });
@@ -425,7 +414,7 @@ namespace Siesa.SDK.Backend.Extensions
                         addExpression(ref combined, excludeExpression);
                         break;
                     case "fk_in":
-                        if(value == null || value.ToString() == "Unselected"){
+                        if(value == null || value.ToString() == "0"){
                             return;
                         }
                         Expression fkInExpression;
@@ -445,7 +434,7 @@ namespace Siesa.SDK.Backend.Extensions
                         addExpression(ref combined, fkInExpression);
                         break;
                     case "fk_not_in":                    
-                        if(value == null){
+                        if(value == null || value.ToString() == "0"){
                             return;
                         }
                         Expression fkNotInExpression;
