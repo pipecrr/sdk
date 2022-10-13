@@ -1,0 +1,24 @@
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.Visualization
+
+<div class="container-fluid">
+    <div class="row p-3">
+        <div class="col-12"><h2>SDKRecorder</h2></div>
+        <div class="col-12"><p>Demonstration and configuration of the SDKRecorder component</p></div>
+    </div>
+    <div class="row px-3 mt-3">
+        <div class="col-md-6 p-3 ">
+            <SDKCard>
+                <SDKRecorder OnGetAudio="@miOnGetAudio"></SDKRecorder>
+            </SDKCard>
+       </div>
+    </div>
+</div>
+
+@code{
+    string base64 = "";
+    public void miOnGetAudio(string base64)
+    {
+        this.base64 = base64;
+    }
+}

@@ -83,6 +83,9 @@
 		<None Remove="Components\Documentation\SourceCode\SDKTextField.txt" />
 		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKTextField.txt" />
 
+		<None Remove="Components\Documentation\SourceCode\SDKRecorder.txt" />
+		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKRecorder.txt" />
+
 	</ItemGroup>
 
 
