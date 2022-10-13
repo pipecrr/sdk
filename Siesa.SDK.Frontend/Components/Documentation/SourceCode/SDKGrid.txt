@@ -15,11 +15,16 @@
     </div>
     <div class="row px-3"> 
         <div class="col-md-12 p-3">
+            <div class="d-flex justify-content-around">
             <SDKButton Click="@ChangeView" ResourceTag="Change View" RenderStyle="SDKButtonRenderStyle.Primary"/>
+            @if(!cardView){
+                <RadzenSlider Min="0" Max="200" Value=@WidthValue TValue="int" Style="width: 200px" Change="@Onchange"/>
+            }
+            </div>
             <SDKGrid Data="@Data" TItem="E00220_User" AllowFiltering="true" 
                  CardView="@cardView">
                 <Columns>
-                    <SDKGridColumn Title="Action" TItem="E00220_User" IsActionColumn="true">
+                    <SDKGridColumn Width="@px" Title="Action" TItem="E00220_User" IsActionColumn="true">
                         <Template Context="Data">
                             <div class="@GetCss()">
                                 <SDKButton IconCssClass="fa-solid fa-pen" IsActionButton="true"/>
@@ -46,7 +51,15 @@
 
 @code
 {
+    public string px="200px";
+    public int WidthValue;
     public bool cardView;
+    void Onchange(int value)
+    {
+        WidthValue = value;
+
+        px = $"{WidthValue}px";
+    }
     private string GetCss(){
         if (!cardView)
         {

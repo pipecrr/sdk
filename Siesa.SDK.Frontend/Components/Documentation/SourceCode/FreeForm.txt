@@ -1,0 +1,56 @@
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.Layout
+@using Siesa.SDK.Frontend.Components.FormManager.Views
+@using Siesa.SDK.Frontend.Components.Visualization 
+@using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Frontend.Components.FormManager
+@using Siesa.SDK.Shared.Utilities
+@using Microsoft.Extensions.DependencyInjection
+@inject IServiceProvider ServiceProvider
+
+<div class="container-fluid">
+    <div class="row p-3">
+        <div class="col-12"><h2>FreeForm</h2></div>
+        <div class="col-12"><p>Demonstration and configuration of the FreeForm component</p></div> 
+    </div>
+    <div class="row px-3 mt-3"> 
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <div class="pt-5">
+                    <TopBar />
+                </div>
+                <FreeForm Viewdef="create" BusinessName="BLCulture" BusinessObj="@BL" Title="Demo FreeForm"/>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                @GetForm()
+            </SDKCard>
+        </div> 
+    </div>
+</div>
+
+
+@code{
+    public dynamic BL { get; set; } // Se crea dinámico porque en el SDK no tenemos ninguna clase que represente a la entidad BLCulture
+
+    protected override void OnInitialized()
+    {
+        var blType = Utilities.SearchType("Siesa.MasterBackend.Business.BLCulture"); //en el proyecto basta con hacer el using y crear la variable BL = new BLCulture
+        BL = ActivatorUtilities.CreateInstance(ServiceProvider, blType);
+        BL.BusinessName = "BLCulture";
+        base.OnInitialized();
+    }
+
+        /*public bool ShowTitle { get; set; } = true;
+
+        [Parameter]
+        public Action<object> OnSave {get; set;} = null;
+
+        [Parameter]
+        public Action OnCancel {get; set;} = null;*/
+    public RenderFragment GetForm()
+    {
+        return FormUtils.RenderFreeForm("edit", BL, "Method FreeForm");
+    }
+}

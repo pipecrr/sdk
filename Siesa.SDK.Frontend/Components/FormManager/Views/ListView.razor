@@ -125,7 +125,7 @@ else
                                 </span>
                             </HeaderTemplate>
                             <Template Context="data">
-                                @if(CanDetail)
+                                @if(CanDetail && AllowDetail)
                                 {
                                     @if(OnClickDetail != null){
                                         <a href="#" @onclick="() => GoToDetail(((IBaseSDK)data).GetRowid())" @onclick:preventDefault>@data</a>

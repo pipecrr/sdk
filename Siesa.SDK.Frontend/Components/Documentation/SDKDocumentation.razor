@@ -7,6 +7,10 @@
 @using Siesa.SDK.Frontend.Services
 @using Siesa.SDK.Frontend.Components.Fields
 @using Siesa.SDK.Frontend.Components.Documentation.Fields
+@using Siesa.SDK.Frontend.Components.Documentation.FormManager
+@using Siesa.SDK.Frontend.Components.Documentation.Layout
+@using Siesa.SDK.Frontend.Components.Documentation.ViewsBuilder
+
 
 @layout EmptyLayout
 
@@ -36,7 +40,7 @@
                     <SDKTabs>
                         <SDKTab IconCssClass="fa-solid fa-eye">
                             <SDKCard>
-                                @SelectedComponent.ComponentFragment;
+                                @SelectedComponent.ComponentFragment
                             </SDKCard>
                     
                     </SDKTab>
@@ -75,16 +79,28 @@
                     new ComponentDemo{ComponentName="SDKSwitch",ComponentFragment = @<DemoSwitch />},
                     new ComponentDemo{ComponentName="SDKSelectBar",ComponentFragment = @<DemoSelectBar />},
                     new ComponentDemo{ComponentName="SDKSteps",ComponentFragment = @<DemoSteps />},
+                    new ComponentDemo{ComponentName="SDKSelectField",ComponentFragment = @<DemoSelectField />},
+                    new ComponentDemo{ComponentName="SDKEmailField",ComponentFragment = @<DemoEmailField />},
                     new ComponentDemo{ComponentName="SDKGrid",ComponentFragment = @<DemoGrid />},
                     new ComponentDemo{ComponentName="SDKRecorder",ComponentFragment = @<DemoRecorder />}
                 }, Icon ="fa-solid fa-cubes"
             },
-            @* new ComponentCategory() {
+             new ComponentCategory() {
                 Name = "FormManager", Components = {
                     new ComponentDemo{ComponentName="InlineCrud", ComponentFragment = @<DemoInlineCrud />},
-                    new ComponentDemo{ComponentName="SDKFormLayout", ComponentFragment = @<DemoFormLayout />}
+                    new ComponentDemo{ComponentName="SDKFormLayout", ComponentFragment = @<DemoFormLayout />},
+                    new ComponentDemo{ComponentName="FreeForm", ComponentFragment = @<DemoFreeForm />},
+                    new ComponentDemo{ComponentName="DynamicListView", ComponentFragment = @<DemoDynamicListView />},
+                    new ComponentDemo{ComponentName="DynamicCreateView", ComponentFragment = @<DemoDynamicCreateView />},
+                    new ComponentDemo{ComponentName="DynamicDetailView", ComponentFragment = @<DemoDynamicDetailView />},
+                    new ComponentDemo{ComponentName="DynamicEditView", ComponentFragment = @<DemoDynamicEditView />}
                 },Icon ="fa-solid fa-list"
-            }, *@
+            },
+             new ComponentCategory() {
+                Name = "Layout", Components = {
+                    new ComponentDemo{ComponentName="RelationshipPanel", ComponentFragment = @<DemoRelationshipPanel />}
+                },Icon ="fa-solid fa-layer-group"
+            }, 
             new ComponentCategory() {
                 Name = "Visualization", Components = {
                     new ComponentDemo{ComponentName="SDKCard", ComponentFragment = @<DemoCard />},
@@ -95,9 +111,15 @@
                     new ComponentDemo{ComponentName="SDKCollapse", ComponentFragment = @<DemoCollapse />},
                     new ComponentDemo{ComponentName="SDKFileViewer", ComponentFragment = @<DemoFileViewer />},
                     new ComponentDemo{ComponentName="SDKRadialGauge", ComponentFragment = @<DemoRadialGauge />},
-                    new ComponentDemo{ComponentName="SDKTabs", ComponentFragment = @<DemoTabs />}
+                    new ComponentDemo{ComponentName="SDKTabs", ComponentFragment = @<DemoTabs />},
+                                        new ComponentDemo{ComponentName="SDKGrid",ComponentFragment = @<DemoGrid />},
                 },Icon ="fa-solid fa-cube" 
             },
+            new ComponentCategory() {
+                Name = "ViewsBuilder", Components = {
+                    new ComponentDemo{ComponentName="Viewdef", ComponentFragment = @<DemoViewdef />}
+                },Icon ="fa-solid fa-layer-group"
+            }, 
 
         };
     }

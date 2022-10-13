@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
@@ -82,6 +82,36 @@
 
 		<None Remove="Components\Documentation\SourceCode\SDKTextField.txt" />
 		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKTextField.txt" />
+
+		<None Remove="Components\Documentation\SourceCode\SDKSelectField.txt" />
+		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKSelectField.txt" />
+
+		<None Remove="Components\Documentation\SourceCode\InlineCrud.txt" />
+		<EmbeddedResource Include="Components\Documentation\SourceCode\InlineCrud.txt" />
+
+		<None Remove="Components\Documentation\SourceCode\SDKFormLayout.txt" />
+		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKFormLayout.txt" />
+
+		<None Remove="Components\Documentation\SourceCode\DynamicListView.txt" />
+		<EmbeddedResource Include="Components\Documentation\SourceCode\DynamicListView.txt" />
+
+		<None Remove="Components\Documentation\SourceCode\DynamicCreateView.txt" />
+		<EmbeddedResource Include="Components\Documentation\SourceCode\DynamicCreateView.txt" />
+
+		<None Remove="Components\Documentation\SourceCode\DynamicEditView.txt" />
+		<EmbeddedResource Include="Components\Documentation\SourceCode\DynamicEditView.txt" />
+
+		<None Remove="Components\Documentation\SourceCode\DynamicDetailView.txt" />
+		<EmbeddedResource Include="Components\Documentation\SourceCode\DynamicDetailView.txt" />
+
+		<None Remove="Components\Documentation\SourceCode\FreeForm.txt" />
+		<EmbeddedResource Include="Components\Documentation\SourceCode\FreeForm.txt" />
+
+		<None Remove="Components\Documentation\SourceCode\RelationshipPanel.txt" />
+		<EmbeddedResource Include="Components\Documentation\SourceCode\RelationshipPanel.txt" />
+
+		<None Remove="Components\Documentation\SourceCode\SDKEmailField.txt" />
+		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKEmailField.txt" />
 
 		<None Remove="Components\Documentation\SourceCode\SDKRecorder.txt" />
 		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKRecorder.txt" />
