@@ -116,6 +116,10 @@
 		<None Remove="Components\Documentation\SourceCode\SDKRecorder.txt" />
 		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKRecorder.txt" />
 
+		<None Remove="Components\Documentation\SourceCode\Diagrams.txt" />
+		<EmbeddedResource Include="Components\Documentation\SourceCode\Diagrams.txt" />
+
+
 	</ItemGroup>
 
 
@@ -138,6 +142,8 @@
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.0.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="6.0.0" />
 		<PackageReference Include="Radzen.Blazor" Version="3.20.6" />
+		<PackageReference Include="Z.Blazor.Diagrams" Version="2.1.6" />
+		<PackageReference Include="Z.Blazor.Diagrams.Algorithms" Version="0.1.0" />
 	</ItemGroup>
 
 	<ItemGroup>

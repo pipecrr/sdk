@@ -176,6 +176,12 @@
         catch (Exception)
         {
         }
+        try
+        {
+            await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/js/utils.js");
+        }catch (Exception)
+        {
+        }
     }
 
     private void ToggleNavMenu()
