@@ -1,7 +1,17 @@
 @using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
 @inject DialogService DialogService
 @inject IAuthenticationService AuthenticationService
 @inject IBackendRouterService BackendRouterService
+
+@if(AllowCreate)
+{
+    <SDKButton CssClass="mb-1" RenderStyle="SDKButtonRenderStyle.Primary" Click="@(async ()=> { await OpenModalCreate(); })">
+        <ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer 
+            ResourceTag="@($"{BusinessName}.Singular")" />
+    </SDKButton>
+}
 
 <DynamicListView
     BusinessName="@BusinessName"
@@ -12,7 +22,7 @@
     OnClickDetail="@(async (string item_rowid)=> { await OpenModalDetail(item_rowid); })"
     OnClickDelete="@(async (string item_rowid, string object_string)=> { await OpenModalDelete(item_rowid, object_string); })" 
     OnClickNew="@(async ()=> { await OpenModalCreate(); })"
-    AllowCreate="@AllowCreate"
+    AllowCreate="false"
     AllowEdit="@AllowEdit"
     AllowDelete="@AllowDelete"
     AllowDetail="@AllowDetail"
