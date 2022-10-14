@@ -152,23 +152,23 @@ namespace Siesa.SDK.Backend.Access
                 }
             }
 
-            if(CurrentUser == null){
+            /*if(CurrentUser == null){
                  throw new Exception("Invalid User");
-            }
+            }*/
 
             foreach (var entry in ChangeTracker.Entries())
             {
                 //Check if the entry inherits from the BaseAudit<> class
                 if(Utilities.IsAssignableToGenericType(entry.Entity.GetType(), typeof(BaseAudit<>)))
                 {
-                    var loggedUser = CurrentUser.Rowid; //TODO: Get logged user
+                    //var loggedUser = CurrentUser.Rowid; //TODO: Get logged user
 
                     entry.Context.Entry(entry.Entity).Property("LastUpdateDate").CurrentValue = DateTime.Now;
-                    entry.Context.Entry(entry.Entity).Property("RowidUserLastUpdate").CurrentValue = loggedUser;
+                    //entry.Context.Entry(entry.Entity).Property("RowidUserLastUpdate").CurrentValue = loggedUser;
 
                     if (entry.State == EntityState.Added)
                     {
-                        entry.Context.Entry(entry.Entity).Property("RowidUserCreates").CurrentValue = loggedUser;
+                        //entry.Context.Entry(entry.Entity).Property("RowidUserCreates").CurrentValue = loggedUser;
                         //if created date is not set, set it to now
                         if (entry.Context.Entry(entry.Entity).Property("CreationDate").CurrentValue == null)
                         {
@@ -177,7 +177,7 @@ namespace Siesa.SDK.Backend.Access
                     }
                 }else if(Utilities.IsAssignableToGenericType(entry.Entity.GetType(), typeof(BaseCompanyGroup<>)))
                 {
-                    entry.Context.Entry(entry.Entity).Property("RowidCompanyGroup").CurrentValue = CurrentUser.RowidCompanyGroup; 
+                    //entry.Context.Entry(entry.Entity).Property("RowidCompanyGroup").CurrentValue = CurrentUser.RowidCompanyGroup; 
                 }
 
             }

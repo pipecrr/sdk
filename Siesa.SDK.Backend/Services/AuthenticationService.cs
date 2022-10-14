@@ -104,5 +104,10 @@ namespace Siesa.SDK.Backend.Services
         public async Task<bool> ForgotPasswordAsync(string email){
              throw new NotImplementedException();
         }
+        public async Task<bool> ValidateUserForChangedPassword(int rowidUser, string NewPassword="", string ConfirmPassword=""){
+             throw new NotImplementedException();
+        }
+
+        
     }
 }

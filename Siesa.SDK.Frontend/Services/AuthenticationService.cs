@@ -229,5 +229,37 @@ namespace Siesa.SDK.Frontend.Services
 
             return false;
         }
+
+        public async Task<bool> ValidateUserForChangedPassword(int rowidUser, string NewPassword="", string ConfirmPassword=""){
+                
+            var BLUser = _backendRouterService.GetSDKBusinessModel("BLUser", this);
+            if (BLUser == null)
+            {
+                throw new Exception("Occurio un error");
+            }
+
+            if (!string.IsNullOrEmpty(NewPassword) && !string.IsNullOrEmpty(ConfirmPassword))
+                {
+                    if (NewPassword != ConfirmPassword)
+                    {
+                        throw new Exception("Las contraseñas no coinciden");
+                    }else
+                    {
+                        var resultChangePassword = await BLUser.Call("ValidateUserForChangedPassword",rowidUser,NewPassword,ConfirmPassword);
+                        if (resultChangePassword.Success)
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+            var result = await BLUser.Call("ValidateUserForChangedPassword", rowidUser,"","");
+
+            if (result.Success)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

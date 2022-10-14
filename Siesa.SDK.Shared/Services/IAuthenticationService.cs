@@ -53,6 +53,7 @@ namespace Siesa.SDK.Shared.Services
         string GetConnectionStyle();
         Task<bool> IsValidToken();
         Task<bool> ForgotPasswordAsync(string email);
+        Task<bool> ValidateUserForChangedPassword(int rowidUser, string NewPassword="", string ConfirmPassword="");
 
     }
 
