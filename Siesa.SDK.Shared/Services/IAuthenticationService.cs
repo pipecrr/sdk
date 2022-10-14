@@ -52,6 +52,8 @@ namespace Siesa.SDK.Shared.Services
         string GetConnectionLogo();
         string GetConnectionStyle();
         Task<bool> IsValidToken();
+        Task<bool> ForgotPasswordAsync(string email);
+
     }
 
     

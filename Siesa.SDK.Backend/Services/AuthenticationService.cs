@@ -101,5 +101,8 @@ namespace Siesa.SDK.Backend.Services
             var user = new SDKJWT(_secretKey, _minutesExp).Validate(UserToken);
             return user != null;
         }
+        public async Task<bool> ForgotPasswordAsync(string email){
+             throw new NotImplementedException();
+        }
     }
 }

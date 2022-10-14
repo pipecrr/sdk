@@ -105,48 +105,52 @@
                             </div>
                         </div>
                         <div class="border_left_md col-12 col-sm-12 col-md-6 col-lg-12">
-                            <div
-                                class="col-12 offset-sm-2 col-sm-8 offset-md-1 col-md-10 offset-lg-2 col-lg-8 px-md-3 px-lg-0">
-                                <EditForm id="@FormID" Model="@model" OnValidSubmit="HandleValidSubmit" OnInvalidSubmit="HandleInvalidSubmit">
-                                    <DataAnnotationsValidator />
-                                    <div class="form-group">
-                                        <label class="col-form-label col-form-label-sm font-weight-bold" for="Username">
-                                            <ResourceViewer ResourceTag="BLUser.Username" RowidCulture=@RowidCulture />
-                                        </label>
-                                        <SDKCharField 
-                                            @bind-Value="model.Username" 
-                                            AllowAutoComplete="true" 
-                                            AutomationId="BLLogin.Username"
-                                        />
-                                        <SDKValidationMessage For="@(() => model.Username)" />
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-form-label col-form-label-sm font-weight-bold" for="Password">
-                                            <ResourceViewer ResourceTag="BLUser.Password" RowidCulture=@RowidCulture />
-                                        </label>
-                                        <SDKCharField 
-                                            @bind-Value="model.Password" 
-                                            Password="true" 
-                                            AllowAutoComplete="true"
-                                            AutomationId="BLLogin.Username"
-                                        />
-                                        <SDKValidationMessage For="@(() => model.Password)" />
-                                    </div>
-                                    <SDKButton form="@FormID" SubmitFormOnClick="true" RenderStyle="SDKButtonRenderStyle.Primary" CssClass="btn-sm w-100 mt-2">
-                                        @if (loading)
-                                        {
-                                            <span class="spinner-border spinner-border-sm mr-1"></span>
-                                        }
-                                        <ResourceViewer ResourceTag="BLUser.Login" RowidCulture=@RowidCulture />
-                                    </SDKButton>
-                                </EditForm>
-                            </div>
-                            <div class="col-12 p-0 text-center pt-4">
-                                <a class="link_login" href="">
-                                    <ResourceViewer ResourceTag="Project.ForgotPassword" RowidCulture=@RowidCulture />
-                                </a>
+                            @if(RecoveringPassword){
+                                <ForgotPassword  />
+                            }else{
+                                <div
+                                    class="col-12 offset-sm-2 col-sm-8 offset-md-1 col-md-10 offset-lg-2 col-lg-8 px-md-3 px-lg-0">
+                                    <EditForm id="@FormID" Model="@model" OnValidSubmit="HandleValidSubmit" OnInvalidSubmit="HandleInvalidSubmit">
+                                        <DataAnnotationsValidator />
+                                        <div class="form-group">
+                                            <label class="col-form-label col-form-label-sm font-weight-bold" for="Username">
+                                                <ResourceViewer ResourceTag="BLUser.Username" RowidCulture=@RowidCulture />
+                                            </label>
+                                            <SDKCharField 
+                                                @bind-Value="model.Username" 
+                                                AllowAutoComplete="true" 
+                                                AutomationId="BLLogin.Username"
+                                            />
+                                            <SDKValidationMessage For="@(() => model.Username)" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label col-form-label-sm font-weight-bold" for="Password">
+                                                <ResourceViewer ResourceTag="BLUser.Password" RowidCulture=@RowidCulture />
+                                            </label>
+                                            <SDKCharField 
+                                                @bind-Value="model.Password" 
+                                                Password="true" 
+                                                AllowAutoComplete="true"
+                                                AutomationId="BLLogin.Username"
+                                            />
+                                            <SDKValidationMessage For="@(() => model.Password)" />
+                                        </div>
+                                        <SDKButton form="@FormID" SubmitFormOnClick="true" RenderStyle="SDKButtonRenderStyle.Primary" CssClass="btn-sm w-100 mt-2">
+                                            @if (loading)
+                                            {
+                                                <span class="spinner-border spinner-border-sm mr-1"></span>
+                                            }
+                                            <ResourceViewer ResourceTag="BLUser.Login" RowidCulture=@RowidCulture />
+                                        </SDKButton>
+                                    </EditForm>
+                                </div>
+                                <div class="col-12 p-0 text-center pt-4">
+                                    <a class="link_login" @onclick="()=> ForgotPassword()">
+                                        <ResourceViewer ResourceTag="Project.ForgotPassword" RowidCulture=@RowidCulture />
+                                    </a>
 
-                            </div>
+                                </div>
+                            }
                         </div>
                     </div>
                     <div class="text-center copy_right_text">
@@ -237,6 +241,14 @@
     private SDKDbConnection SelectedConnection  { get; set; } = new SDKDbConnection();
 
     List<SDKDbConnection> ConnectionList { get; set; } = new List<SDKDbConnection>();
+
+    private bool RecoveringPassword { get; set; } = false;
+
+    private void ForgotPassword()
+    {
+        RecoveringPassword = true;
+    }
+
 
 
     private string GetCssLoding()
