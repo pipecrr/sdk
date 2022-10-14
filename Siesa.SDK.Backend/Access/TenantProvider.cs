@@ -14,7 +14,8 @@ namespace Siesa.SDK.Backend.Access
         void Unregister(Guid id);
         SDKDbConnection GetTenant();
         string GetTenantShortName();
-
+        bool GetUseLazyLoadingProxies();
+        void SetUseLazyLoadingProxies(bool value);
         List<SDKDbConnection> GetTenants();
     }
     public class TenantProvider: ITenantProvider
@@ -26,6 +27,8 @@ namespace Siesa.SDK.Backend.Access
         private SDKDbConnection tenant = null;
 
         private readonly IAuthenticationService _authenticationService;
+
+        private bool UseLazyLoadingProxies = false;
 
         public void SetTenant(SDKDbConnection tenant)
         {
@@ -77,5 +80,9 @@ namespace Siesa.SDK.Backend.Access
         public string GetTenantShortName() => tenant.Name;
 
         public List<SDKDbConnection> GetTenants() => tenants;
+
+        public bool GetUseLazyLoadingProxies() => UseLazyLoadingProxies;
+
+        public void SetUseLazyLoadingProxies(bool value) => UseLazyLoadingProxies = value;
     }
 }

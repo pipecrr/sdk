@@ -44,7 +44,7 @@ namespace Siesa.SDK.Business
         private SDKContext myContext;
         protected SDKContext Context { get { return myContext; } }
 
-        private IEnumerable<INavigation> _navigationProperties = null;        
+        private IEnumerable<INavigation> _navigationProperties = null;
 
         public SDKBusinessModel GetBackend(string business_name)
         {
@@ -145,25 +145,27 @@ namespace Siesa.SDK.Business
             BaseObj = Activator.CreateInstance<T>();
             var _bannedTypes = new List<Type>() { typeof(string), typeof(byte[]) };
             _relatedProperties = BaseObj.GetType().GetProperties().Where(
-                p => p.PropertyType.IsClass 
-                    && !p.PropertyType.IsPrimitive 
-                    && !p.PropertyType.IsEnum 
-                    && !_bannedTypes.Contains(p.PropertyType) 
+                p => p.PropertyType.IsClass
+                    && !p.PropertyType.IsPrimitive
+                    && !p.PropertyType.IsEnum
+                    && !_bannedTypes.Contains(p.PropertyType)
                     && p.Name != "RowVersion"
                     && p.GetCustomAttribute(typeof(NotMappedAttribute)) == null
             ).Select(p => p.Name).ToArray();
             unique_indexes = BaseObj.GetType()
                 .GetCustomAttributes(typeof(Microsoft.EntityFrameworkCore.IndexAttribute), false)
-                .Where(x => 
-                    x.GetType().GetProperty("IsUnique").GetValue(x,null).Equals(true)
-                ).Select(x => 
-					x.GetType().GetProperty("PropertyNames").GetValue(x,null)
-				).ToList();            
+                .Where(x =>
+                    x.GetType().GetProperty("IsUnique").GetValue(x, null).Equals(true)
+                ).Select(x =>
+                    x.GetType().GetProperty("PropertyNames").GetValue(x, null)
+                ).ToList();
 
         }
 
-        public BLBackendSimple(IServiceProvider provider){
-            if(provider != null){
+        public BLBackendSimple(IServiceProvider provider)
+        {
+            if (provider != null)
+            {
                 SetProvider(provider);
             }
             InternalConstructor();
@@ -173,7 +175,7 @@ namespace Siesa.SDK.Business
         public BLBackendSimple(IAuthenticationService authenticationService)
         {
             AuthenticationService = authenticationService;
-            InternalConstructor();  
+            InternalConstructor();
 
         }
 
@@ -203,69 +205,71 @@ namespace Siesa.SDK.Business
             AuthenticationService = (IAuthenticationService)_provider.GetService(typeof(IAuthenticationService));
         }
 
-    [SDKExposedMethod]
-    public ActionResult<bool> CheckUnique(T requestObj)
-    {
-        try
+        [SDKExposedMethod]
+        public ActionResult<bool> CheckUnique(T requestObj)
         {
-            if(unique_indexes.Count <= 0)
+            try
             {
-                return new ActionResult<bool>() { Success = true, Data = false };
-            }
-            using(SDKContext context = CreateDbContext())
-            {
-                var entityType = BaseObj.GetType();
-                foreach (var u_index in unique_indexes)
+                if (unique_indexes.Count <= 0)
                 {
-                    List<string> index_fields = (List<string>) u_index;
-                    bool exist_row = false;
-                    Expression existExpression = null;
-                    ParameterExpression pe = Expression.Parameter(entityType, entityType.Name);
-                    //(pe => campo1 == 2 && campo2 == 3)
-                    foreach(var index_field in index_fields)
+                    return new ActionResult<bool>() { Success = true, Data = false };
+                }
+                using (SDKContext context = CreateDbContext())
+                {
+                    var entityType = BaseObj.GetType();
+                    foreach (var u_index in unique_indexes)
                     {
-                        var columnNameProperty = SDKFlexExtension.GetPropertyExpression(pe, index_field);
-                        var field_value = requestObj.GetType().GetProperty(index_field).GetValue(requestObj, null);
-                        if(index_field.StartsWith("Rowid") && field_value == null || field_value.Equals(0))
+                        List<string> index_fields = (List<string>)u_index;
+                        bool exist_row = false;
+                        Expression existExpression = null;
+                        ParameterExpression pe = Expression.Parameter(entityType, entityType.Name);
+                        //(pe => campo1 == 2 && campo2 == 3)
+                        foreach (var index_field in index_fields)
                         {
-                            try
+                            var columnNameProperty = SDKFlexExtension.GetPropertyExpression(pe, index_field);
+                            var field_value = requestObj.GetType().GetProperty(index_field).GetValue(requestObj, null);
+                            if (index_field.StartsWith("Rowid") && field_value == null || field_value.Equals(0))
                             {
-                                var related_field_value = requestObj.GetType().GetProperty(index_field.Replace("Rowid", "")).GetValue(requestObj, null);
-                                if(related_field_value != null)
+                                try
                                 {
-                                    field_value = related_field_value.GetType().GetProperty("Rowid").GetValue(related_field_value, null);
+                                    var related_field_value = requestObj.GetType().GetProperty(index_field.Replace("Rowid", "")).GetValue(requestObj, null);
+                                    if (related_field_value != null)
+                                    {
+                                        field_value = related_field_value.GetType().GetProperty("Rowid").GetValue(related_field_value, null);
+                                    }
+                                }
+                                catch (System.Exception)
+                                {
                                 }
                             }
-                            catch (System.Exception)
+                            var columnValue = Expression.Constant(field_value);
+                            Expression tmpExp = Expression.Equal(columnNameProperty, columnValue);
+                            if (existExpression == null)
                             {
+                                existExpression = tmpExp;
+                            }
+                            else
+                            {
+                                existExpression = Expression.And(existExpression, tmpExp);
                             }
                         }
-                        var columnValue = Expression.Constant(field_value);
-                        Expression tmpExp =  Expression.Equal(columnNameProperty, columnValue);
-                        if(existExpression == null)
+                        var funcExpression = typeof(Func<,>).MakeGenericType(new Type[] { entityType, typeof(bool) });
+                        var returnExp = Expression.Lambda(funcExpression, existExpression, new ParameterExpression[] { pe });
+                        var query = context.AllSet<T>().Where(returnExp);
+                        exist_row = query.Count() > 0;
+                        if (exist_row)
                         {
-                            existExpression = tmpExp;
-                        }else{
-                            existExpression = Expression.And(existExpression, tmpExp);
+                            return new ActionResult<bool>() { Success = true, Data = true };
                         }
                     }
-                    var funcExpression = typeof(Func<,>).MakeGenericType(new Type[] { entityType, typeof(bool) });
-                    var returnExp = Expression.Lambda(funcExpression, existExpression, new ParameterExpression[] { pe });
-                    var query = context.AllSet<T>().Where(returnExp);
-                    exist_row = query.Count() > 0;
-                    if(exist_row)
-                    { 
-                        return new ActionResult<bool>() { Success = true, Data = true };
-                    }
                 }
+                return new ActionResult<bool>() { Success = true, Data = false };
             }
-            return new ActionResult<bool>() { Success = true, Data = false };
+            catch (Exception e)
+            {
+                return new BadRequestResult<bool> { Success = false, Errors = new List<string> { e.Message } };
+            }
         }
-        catch (Exception e)
-        {
-            return new BadRequestResult<bool> { Success = false, Errors = new List<string> { e.Message } };
-        }
-    }
 
         public virtual T Get(Int64 rowid)
         {
@@ -413,7 +417,7 @@ namespace Siesa.SDK.Business
         private Int64 Save()
         {
             this._logger.LogInformation($"Save {this.GetType().Name}");
-            using (SDKContext context = _dbFactory.CreateDbContext())
+            using (SDKContext context = CreateDbContext())
             {
                 context.SetProvider(_provider);
                 if (BaseObj.GetRowid() == 0)
@@ -467,7 +471,7 @@ namespace Siesa.SDK.Business
                     response.Errors.AddRange(result.Errors);
                     return response;
                 }
-                using (SDKContext context = _dbFactory.CreateDbContext())
+                using (SDKContext context = CreateDbContext())
                 {
                     DisableRelatedProperties(BaseObj, _navigationProperties);
                     context.SetProvider(_provider);
@@ -515,7 +519,7 @@ namespace Siesa.SDK.Business
         {
             this._logger.LogInformation($"Get Data {this.GetType().Name}");
             var result = new Siesa.SDK.Shared.Business.LoadResult();
-            using (SDKContext context = _dbFactory.CreateDbContext())
+            using (SDKContext context = CreateDbContext())
             {
                 context.SetProvider(_provider);
                 var query = context.Set<T>().AsQueryable();
@@ -533,9 +537,10 @@ namespace Siesa.SDK.Business
                 if (!string.IsNullOrEmpty(orderBy))
                 {
                     query = query.OrderBy(orderBy);
-                }else
+                }
+                else
                 {
-                    query= query.OrderBy("Rowid");
+                    query = query.OrderBy("Rowid");
                 }
 
                 if (skip.HasValue)
@@ -569,10 +574,39 @@ namespace Siesa.SDK.Business
             // Do nothing
         }
 
-        public SDKContext CreateDbContext()
+        public SDKContext CreateDbContext(bool UseLazyLoadingProxies = false)
         {
-            var retContext = _dbFactory.CreateDbContext();
-            retContext.ChangeTracker.LazyLoadingEnabled = false;
+            dynamic retContext = null;
+            try
+            {
+                var tenantProvider = _provider.GetRequiredService<ITenantProvider>();
+                if (UseLazyLoadingProxies)
+                {
+                    tenantProvider.SetUseLazyLoadingProxies(true);
+                    retContext = _provider.GetService(typeof(SDKContext));
+                }
+                else
+                {
+                    tenantProvider.SetUseLazyLoadingProxies(false);
+                }
+            }
+            catch (System.Exception)
+            {
+            }
+
+            if(retContext == null)
+            {
+                retContext = _dbFactory.CreateDbContext();
+            }
+
+            if (UseLazyLoadingProxies)
+            {
+                retContext.ChangeTracker.LazyLoadingEnabled = true;
+            }
+            else
+            {
+                retContext.ChangeTracker.LazyLoadingEnabled = false;
+            }
             retContext.SetProvider(_provider);
             return retContext;
         }
@@ -580,11 +614,10 @@ namespace Siesa.SDK.Business
         [SDKExposedMethod]
         public virtual ActionResult<string> GetObjectString(Int64 rowid)
         {
-            using (SDKContext context = _dbFactory.CreateDbContext())
+            using (SDKContext context = CreateDbContext(true))
             {
                 context.SetProvider(_provider);
                 var query = context.Set<T>().AsQueryable();
-                context.ChangeTracker.LazyLoadingEnabled = true;
                 query = query.Where("Rowid == @0", rowid);
                 var entity = query.FirstOrDefault();
                 if (entity != null)
@@ -612,17 +645,17 @@ namespace Siesa.SDK.Business
             var bindings = properties.Select(p => Expression.Bind(resultType.GetProperty(p.Name), Expression.Property(source, p.Name)));
             var result = Expression.MemberInit(Expression.New(resultType), bindings);
             return Expression.Lambda<Func<TSource, dynamic>>(result, source);
-        }   
+        }
 
         [SDKExposedMethod]
         public ActionResult<dynamic> SDKFlexPreviewData(SDKFlexRequestData requestData, bool setTop = true)
         {
             using (var Context = CreateDbContext())
-            {                   
-                return SDKFlexExtension.SDKFlexPreviewData(Context, requestData, AuthenticationService,setTop);
+            {
+                return SDKFlexExtension.SDKFlexPreviewData(Context, requestData, AuthenticationService, setTop);
             }
             return null;
-        }        
-    }  
+        }
+    }
 
 }

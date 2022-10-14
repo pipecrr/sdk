@@ -45,7 +45,9 @@ namespace Siesa.SDK.Backend.Extensions
                         throw new Exception("No tenant configured");
                     }
                 }
-                //opts.UseLazyLoadingProxies(); //TODO: Habilitar cuando corrijan el bug en efcore (no se desactiva con IDbContextFactory)
+                if(tenantProvider.GetUseLazyLoadingProxies()){
+                    opts.UseLazyLoadingProxies();
+                }
                 if(tenant.ProviderName == EnumDBType.PostgreSQL)
                 {
                     opts.UseNpgsql(tenant.ConnectionString);
@@ -69,6 +71,12 @@ namespace Siesa.SDK.Backend.Extensions
                 var typeIDbContextFactory = typeof(IDbContextFactory<>).MakeGenericType(ContextType);
                 var factory = p.GetRequiredService(typeIDbContextFactory);
                 return factory;
+            });
+
+            services.AddTransient(typeof(SDKContext), p => {
+                var typeIDbContextFactory = typeof(IDbContextFactory<>).MakeGenericType(ContextType);
+                dynamic factory = p.GetRequiredService(typeIDbContextFactory);
+                return factory.CreateDbContext();
             });
 
         }
