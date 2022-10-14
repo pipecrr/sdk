@@ -272,14 +272,15 @@ namespace Siesa.SDK.Backend.Extensions
                     isNullable = true;
                 }
 
+                if ((value == null||value=="") && !isNullable){
+                    value = Activator.CreateInstance(columnType);
+                }
+
                 if(value == null && columnType == typeof(string)){
                     value = "";
                 }
-
-                if (value == null && !isNullable){
-                    value = Activator.CreateInstance(columnType);
-                }
-                whereList.Add(value);   
+                
+                whereList.Add(value);
                 switch (filter.selected_operator){
                     case "equal":
                         whereListString.Add($"_B.{filterName} == @{whereList.Count-1}");
