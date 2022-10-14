@@ -32,37 +32,65 @@ namespace Siesa.SDK.Backend.Extensions
             {
                 return new ActionResult<dynamic>() { Data = new List<dynamic>() };
             }
+            var nameEntity = requestData.selected_class;
+            var nameSpaceEntity = requestData.module_path;
+            var entityType = Utilities.SearchType(nameSpaceEntity + "." + nameEntity, true);
 
             List<string> strColumns = new List<string>();
             List<string> strColumnsVirtual = new List<string>();
 
             List<SDKFlexFilters> filters = requestData.filters;
+            List<SDKFlexFilters> generalFilters = new List<SDKFlexFilters>();
+            List<SDKFlexFilters> relatedToManyFilters = new List<SDKFlexFilters>();
+
+            if(filters.Count > 0){
+                foreach (SDKFlexFilters filter in filters){
+                    var filterPath = filter.path.Split("::");
+                    if(filterPath.Length == 1){
+                        generalFilters.Add(filter);
+                    }else{
+                        var entityTypeTmp = entityType;
+                        var isFilterToMany = false;
+                        for (int j = 1; j < filterPath.Length; j++){
+                            var property = entityTypeTmp.GetProperty(filterPath[j]);
+                            var propertyType = property.PropertyType;
+                            var nameEntityTmp = propertyType.FullName;
+                            if(propertyType.IsGenericType && property.GetGetMethod().IsVirtual){
+                                if(propertyType.GetGenericTypeDefinition() == typeof (ICollection<>)){
+                                    nameEntityTmp = propertyType.GetGenericArguments().Single().FullName;
+                                    isFilterToMany = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if(isFilterToMany){
+                            relatedToManyFilters.Add(filter);
+                        }else{
+                            generalFilters.Add(filter);
+                        }
+                    }
+                }
+            }
 
             List<SDKFlexColumn> groups = requestData.groups;
             if(groups?.Count>0){
                 columns.AddRange(groups);
             }
-
-            var nameEntity = requestData.selected_class;
-            var nameSpaceEntity = requestData.module_path;
-
             var orderBy = "";
 
             try
             {
-                var entityType = Utilities.SearchType(nameSpaceEntity + "." + nameEntity, true);
                 var contextSet = Context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(entityType).Invoke(Context, null);
                 List<string> relatedColumns = new List<string>();
                 List<SDKFlexColumn> relatedVirtualColumns = new List<SDKFlexColumn>();
 
                 var includeMethod = typeof(IQueryable<object>).GetExtensionMethod(_assemblyInclude, "Include", new[] { typeof(IQueryable<object>), typeof(string) });
-                
+
                 Dictionary<string,Dictionary<byte,string>> enumsDict = new Dictionary<string, Dictionary<byte, string>>();
 
                 foreach (SDKFlexColumn column in columns)
                 {
-                    if (column.sortType != null)
-                    {
+                    if (column.sortType != null){
                         orderBy = column.key_name + " " + column.sortType.ToUpper();
                     }
                     var i = columns.IndexOf(column);
@@ -112,7 +140,7 @@ namespace Siesa.SDK.Backend.Extensions
 
                 string strSelect = string.Join(", ", strColumns);
 
-                createWhere(ref contextSet, filters, entityType, _assemblySelect);
+                CreateWhere(ref contextSet, generalFilters, entityType, _assemblySelect);
 
                 var selectMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "Select", new[] { typeof(IQueryable), typeof(string), typeof(object[]) });
                 contextSet = selectMethod.Invoke(contextSet, new object[] { contextSet, $"new ({strSelect})", null });
@@ -122,7 +150,7 @@ namespace Siesa.SDK.Backend.Extensions
                     var orderMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "OrderBy", new[] { typeof(IQueryable), typeof(string), typeof(object[]) });
                     contextSet = orderMethod.Invoke(contextSet, new object[] { contextSet, orderBy, null });
                 }
-                
+
                 if(relatedVirtualColumns.Count>0){
                     var strColumnsMany = strColumns.Select(x => {
                         var names = x.Split(" as ");
@@ -154,7 +182,7 @@ namespace Siesa.SDK.Backend.Extensions
                             if(isVirtual){
                                 if(!relatedColumnsMany.Contains(columnPath[j])){
                                     contextSet = selectManyMethod.Invoke(contextSet, new object[] { contextSet, columnPath[j], "new(x as _A, y as _B)", null, null});
-                                    relatedColumnsMany.Add(relatedColumn);
+                                    relatedColumnsMany.Add(columnPath[j]);
                                 }
                                 listCampoConsulta.Add($"_B");
                             }else{
@@ -165,6 +193,9 @@ namespace Siesa.SDK.Backend.Extensions
                         listCampoConsulta.Add($"{column.name}");
                         campoConsulta = string.Join(".", listCampoConsulta);
                         strColumnsMany.Add($"{campoConsulta} as {column.key_name}");
+                    }
+                    if(relatedToManyFilters.Count>0){
+                        CreateWhereString(ref contextSet,relatedToManyFilters, entityType);                        
                     }
                     var strSelectMany = string.Join(", ", strColumnsMany);
                     contextSet = selectMethod.Invoke(contextSet, new object[] { contextSet, $"new ({strSelectMany})", null });
@@ -181,7 +212,7 @@ namespace Siesa.SDK.Backend.Extensions
 
                 var jsonResource = JsonConvert.SerializeObject(dynamicList);
                 var resourceDict = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(jsonResource);
-            
+
                 if(enumsDict.Count>0){
                     foreach (var item in resourceDict){
                         foreach (var enumkey in enumsDict.Keys)
@@ -191,7 +222,7 @@ namespace Siesa.SDK.Backend.Extensions
                             var description = enumValue[byte.Parse(itemValue.ToString())];
                             item[$"{enumkey}_oreports_key"] = item[enumkey];
                             item[enumkey] = description;
-                        }                       
+                        }
                     }
                     return new ActionResult<dynamic>() { Data = resourceDict};
                 }
@@ -206,11 +237,105 @@ namespace Siesa.SDK.Backend.Extensions
                 return new ActionResult<dynamic>() { Success = false, Errors = new List<string>() { "Error al crear la consulta" } };
             }
 
-
             return null;
         }
 
-        private static void createWhere(ref object select, List<SDKFlexFilters> filters, Type entityType, Assembly assembly)
+        private static void CreateWhereString(ref object select, List<SDKFlexFilters> filters, Type entityType)
+        {
+            //string where  = "_B.Score > @0";
+            string where  = "";
+            List<string> whereListString = new List<string>();
+            List<object> whereList = new List<object>();
+            foreach (var filter in filters){
+                Type columnType = entityType;
+                var filterColumnPath = filter.path.Split("::").Append(filter.name).ToList();
+                var filterName = string.Join(".", filterColumnPath.Skip(2));
+                for (int i = 1; i < filterColumnPath.Count(); i++){
+                    var propertyType = columnType.GetProperty(filterColumnPath[i]).PropertyType;
+                    var isICollection = false;
+                    if(propertyType.IsGenericType){
+                        if(propertyType.GetGenericTypeDefinition() == typeof (ICollection<>)){
+                            isICollection = true;
+                        }
+                    }
+                    if(isICollection){
+                        columnType = columnType.GetProperty(filterColumnPath[i]).PropertyType.GenericTypeArguments[0];
+                    }else{
+                        columnType = columnType.GetProperty(filterColumnPath[i]).PropertyType;
+                    }
+                }
+
+                var value = filter.equal_from;
+                var isNullable = false;
+
+                if(columnType.IsGenericType && columnType.GetGenericTypeDefinition() == typeof(Nullable<>)){
+                    isNullable = true;
+                }
+
+                if(value == null && columnType == typeof(string)){
+                    value = "";
+                }
+
+                if (value == null && !isNullable){
+                    value = Activator.CreateInstance(columnType);
+                }
+                whereList.Add(value);   
+                switch (filter.selected_operator){
+                    case "equal":
+                        whereListString.Add($"_B.{filterName} == @{whereList.Count-1}");
+                        break;
+                    case "not_equal":
+                        whereListString.Add($"_B.{filterName} != @{whereList.Count-1}");
+                        break;
+                    case "starts_with":
+                        whereListString.Add($"_B.{filterName}.StartsWith(@{whereList.Count-1})");
+                        break;
+                    case "end_with":
+                        whereListString.Add($"_B.{filterName}.EndsWith(@{whereList.Count-1})");
+                        break;
+                    case "null_or_empty":
+                    case "empty":
+                        whereListString.Add($"(_B.{filterName} == null || _B.{filterName} == \"\")");
+                        break;
+                    case "not_null_or_empty":
+                        whereListString.Add($"(_B.{filterName} != null && _B.{filterName} != \"\")");
+                        break;
+                    case "contains":
+                        whereListString.Add($"_B.{filterName}.Contains(@{whereList.Count-1})");
+                        break;
+                    case "gt":
+                        whereListString.Add($"_B.{filterName} > @{whereList.Count-1}");
+                        break;
+                    case "gte":
+                        whereListString.Add($"_B.{filterName} >= @{whereList.Count-1}");
+                        break;
+                    case "lt":
+                        whereListString.Add($"_B.{filterName} < @{whereList.Count-1}");
+                        break;
+                    case "lte":
+                        whereListString.Add($"_B.{filterName} <= @{whereList.Count-1}");
+                        break;
+                    case "between":
+                        var filterTo = filter.to;
+                        if(filterTo == null ){
+                            break;
+                        }
+                        var indexValue = whereList.Count-1;
+                        whereList.Add(filterTo);
+                        var indexValueTo = whereList.Count-1;
+                        whereListString.Add($"_B.{filterName} >= @{indexValue} && _B.{filterName} <= @{indexValueTo}");
+                        break;
+                }
+            }
+            if(whereListString.Count == 0){
+                return;
+            }
+            where = string.Join(" and ", whereListString);
+            var whereMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "Where", new[] { typeof(IQueryable), typeof(string), typeof(object[]) });
+            select = whereMethod.Invoke(select, new object[] { select, where, whereList.ToArray() });
+        }
+
+        private static void CreateWhere(ref object select, List<SDKFlexFilters> filters, Type entityType, Assembly assembly)
         {
             Expression combined = null;
             ParameterExpression pe = Expression.Parameter(entityType, entityType.Name);
@@ -226,8 +351,7 @@ namespace Siesa.SDK.Backend.Extensions
                     var filterColumnPath = filter.path.Split("::").Append(filter.name);
                     columnNameProperty = GetPropertyExpression(pe, string.Join(".", filterColumnPath.Skip(1)));
                     columnType = entityType;
-                    foreach (var filterColumn in filterColumnPath.Skip(1))
-                    {
+                    foreach (var filterColumn in filterColumnPath.Skip(1)){
                         columnType = columnType.GetProperty(filterColumn).PropertyType;
                     }
                 }
@@ -246,14 +370,16 @@ namespace Siesa.SDK.Backend.Extensions
                     isNullable = true;
                 }
 
-                if (value == null && !isNullable)
-                {
+                if(value == null && columnType == typeof(string)){
+                    value = "";
+                }
+
+                if (value == null && !isNullable){
                     value = Activator.CreateInstance(columnType);
                 }
 
                 //TimeOnly y TimeSpan se estan tratando como charField por eso se cambia el tipo del columnType
-                if (value != null && (columnType == typeof(TimeOnly) || columnType == typeof(TimeSpan)))
-                {
+                if (value != null && (columnType == typeof(TimeOnly) || columnType == typeof(TimeSpan))){
                     var valueDate = DateTime.Parse(value.ToString());
                     var valueSplit = valueDate.ToString("HH:mm:ss").Split(":").ToList();
                     int hours = 0;
@@ -274,8 +400,7 @@ namespace Siesa.SDK.Backend.Extensions
 
                     value = Activator.CreateInstance(columnType, hours, minutes, seconds);
                 }
-                
-                
+
                 if(isNullable){
                     columnType = Nullable.GetUnderlyingType(columnType) ?? columnType;
                 }
@@ -285,7 +410,6 @@ namespace Siesa.SDK.Backend.Extensions
                     int year = int.Parse(valueSplit[2]);
                     int month = int.Parse(valueSplit[1]);
                     int day = int.Parse(valueSplit[0]);
-                    
                     value = Activator.CreateInstance(columnType, year, month, day);
                 }
 
@@ -522,7 +646,7 @@ namespace Siesa.SDK.Backend.Extensions
                                 notEmptyExpression = notEmptyExpression2;
                             }
                         }
-                        addExpression(ref combined, notEmptyExpression);                        
+                        addExpression(ref combined, notEmptyExpression);
                         break;
                     case "gt":
                         if(value == null || value.ToString() == ""){
@@ -564,7 +688,6 @@ namespace Siesa.SDK.Backend.Extensions
                             int yearB = int.Parse(valueSplit[0]);
                             int monthB = int.Parse(valueSplit[1]);
                             int dayB = int.Parse(valueSplit[2]);
-                            
                             var filterToDateOnly = Activator.CreateInstance(columnType, yearB, monthB, dayB);
                             columnTo = Expression.Constant(Convert.ChangeType(filterToDateOnly, columnType));
                         }else{
@@ -593,7 +716,7 @@ namespace Siesa.SDK.Backend.Extensions
                         Expression afterExpression = Expression.GreaterThan(columnNameProperty, columnValue);
                         addExpression(ref combined, afterExpression);
                         break;
-                    case "in_past":                        
+                    case "in_past":
                         if(columnType == typeof(DateOnly)){
                             columnValue = Expression.Constant(Convert.ChangeType(DateOnly.FromDateTime(DateTime.Now), columnType));
                         }else{
@@ -607,7 +730,7 @@ namespace Siesa.SDK.Backend.Extensions
                             columnValue = Expression.Constant(Convert.ChangeType(DateOnly.FromDateTime(DateTime.Now), columnType));
                         }else{
                             columnValue = Expression.Constant(Convert.ChangeType(DateTime.Now, columnType));
-                        }                        
+                        }
                         Expression inFuctureExpression = Expression.GreaterThan(columnNameProperty, columnValue);
                         addExpression(ref combined, inFuctureExpression);
                         break;
@@ -634,7 +757,7 @@ namespace Siesa.SDK.Backend.Extensions
                         var dayWeek = ((double)todayCurrentWeek.DayOfWeek);
                         var startDateWeek = todayCurrentWeek.AddDays(-dayWeek);
                         var endDateWeek = todayCurrentWeek.AddDays(6 - dayWeek);
-                        
+
                         var startDateW = Activator.CreateInstance(columnType, startDateWeek.Year, startDateWeek.Month, startDateWeek.Day);
                         var endDateW = Activator.CreateInstance(columnType, endDateWeek.Year, endDateWeek.Month, endDateWeek.Day);
 
