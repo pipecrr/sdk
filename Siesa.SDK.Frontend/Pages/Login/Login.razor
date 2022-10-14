@@ -106,7 +106,7 @@
                         </div>
                         <div class="border_left_md col-12 col-sm-12 col-md-6 col-lg-12">
                             @if(RecoveringPassword){
-                                <ForgotPassword  />
+                                <ForgotPassword _login="@this" />
                             }else{
                                 <div
                                     class="col-12 offset-sm-2 col-sm-8 offset-md-1 col-md-10 offset-lg-2 col-lg-8 px-md-3 px-lg-0">
@@ -248,8 +248,11 @@
     {
         RecoveringPassword = true;
     }
-
-
+    public void NavigateFormLogin()
+    {
+        RecoveringPassword = false;
+        StateHasChanged();
+    } 
 
     private string GetCssLoding()
     {
