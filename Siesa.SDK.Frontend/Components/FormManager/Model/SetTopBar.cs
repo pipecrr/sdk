@@ -28,6 +28,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         [Parameter] 
         public bool HasExtraButtons { get; set; }
 
+        [Parameter]	
+        public dynamic BusinessObj { get; set; }
+
 
         protected override void OnInitialized()
         {
