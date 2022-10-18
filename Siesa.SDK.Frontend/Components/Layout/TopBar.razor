@@ -2,6 +2,7 @@
 @using Siesa.SDK.Shared.Services 
 @using Newtonsoft.Json;
 @using System.Linq;
+@using Siesa.SDK.Shared.Utilities;
 
 @implements IDisposable
 
@@ -46,18 +47,21 @@
             }
         </div>
     </div>
-    @if (ShowCompaies)
+    @if (!HiddenCompaies)
     {
-        <div>
-            <div class="whcm_company_select ">
-                        <select class="form-select form-control form-control-sm font-weight-bold" id="inputCompany">
-                            @foreach (var company in CompaniesList)
-                                {
-                                    <option value="@company.Rowid">@company.Name</option>
-                                }
-                        </select>
+        @if (ShowCompanies)
+        {
+            <div>
+                <div class="whcm_company_select ">
+                            <select class="form-select form-control form-control-sm font-weight-bold" id="inputCompany">
+                                @foreach (var company in CompaniesList)
+                                    {
+                                        <option value="@company.Rowid">@company.Name</option>
+                                    }
+                            </select>
+                </div>
             </div>
-        </div>
+        }
     }
 }
 @code {
@@ -65,11 +69,12 @@
     [Parameter] public bool ShowBackButton { get; set; } = true;
 
     private bool ShowMoreOptions = false;
-    [Inject]
-    public ILayoutService LayoutService { get; set; }
 
-    [Parameter]
-    public bool ShowCompaies { get; set; } = true;//true, solo si el BL tiene relacion con company
+    [Inject] public ILayoutService LayoutService { get; set; }
+
+    [Parameter] public bool HiddenCompaies { get; set; } = false;
+
+    private bool ShowCompanies { get; set; } = false;
 
     public List<E00201_Company> CompaniesList { get; set; } = new List<E00201_Company>();
 
@@ -92,12 +97,20 @@
     {
         if(e.PropertyName == nameof(ILayoutService.BusinessObj))
         {
-            if (LayoutService.BusinessObj?.BusinessName == "BLThirdParty")
+            if (LayoutService.BusinessObj != null)
             {
-                ShowCompaies = true;
-            }else
-            {
-                ShowCompaies = false;
+                Type type = LayoutService.BusinessObj.BaseObj.GetType();
+                if (Utilities.IsAssignableToGenericType(type, typeof(BaseCompany<>)))
+                {
+                    ShowCompanies = true;
+                    StateHasChanged();
+                }else{
+                    ShowCompanies = false;
+                    StateHasChanged();
+                }
+            }else{
+                ShowCompanies = false;
+                StateHasChanged();
             }
         }
         
@@ -106,8 +119,7 @@
             e.PropertyName == nameof(ILayoutService.TopBarButtons) || 
             e.PropertyName == nameof(ILayoutService.TopBarExtraButtons) || 
             e.PropertyName == nameof(ILayoutService.StyleName) ||
-            e.PropertyName == nameof(ILayoutService.HasExtraButtons) ||
-            e.PropertyName == nameof(ILayoutService.BusinessObj) 
+            e.PropertyName == nameof(ILayoutService.HasExtraButtons)
             )
         {
             StateHasChanged();
