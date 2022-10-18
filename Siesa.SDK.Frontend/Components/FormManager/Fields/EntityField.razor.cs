@@ -299,6 +299,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
                         //builder.AddAttribute(9, "Data", dataList);
                         builder.AddAttribute(9, "CustomData", LoadCustomData);
                         builder.AddAttribute(10, "onkeydown", onKeyDown);
+                        builder.AddAttribute(11, "data-automation-id", $"EntityField_{FieldOpt.Name}");
                         builder.CloseComponent();
                     }
                     else
