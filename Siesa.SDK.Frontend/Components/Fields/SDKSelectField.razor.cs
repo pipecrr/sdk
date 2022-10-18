@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace Siesa.SDK.Frontend.Components.Fields
 {
-    public partial class SDKSelectField<ItemType> : ComponentBase
+    public partial class SDKSelectField<ItemType> : SDKComponent
     {
         private DxComboBox<SDKEnumWrapper<ItemType>, ItemType> _refField;
         [Parameter] public Expression<Func<ItemType>> ValueExpression { get; set; }
@@ -28,6 +28,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         [Parameter] public string CssClass { get; set; }
         [Parameter] public string TextProperty { get; set; }
         [Parameter] public string ValueProperty { get; set; }
+        [Parameter] public string FieldName { get; set; }
 
         public void RefreshCurrentText()
         {
@@ -50,6 +51,15 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 data = Options,
                 totalCount = Options.Count()
             };
+        }
+
+        protected override string GetAutomationId()
+        {
+            if(string.IsNullOrEmpty(AutomationId))
+            {
+                AutomationId = FieldName;
+            }
+            return base.GetAutomationId();
         }
     }
 

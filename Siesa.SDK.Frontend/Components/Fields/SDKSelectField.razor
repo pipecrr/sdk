@@ -1,4 +1,5 @@
 @typeparam ItemType
+@inherits SDKComponent
 <DxComboBox  
     Value="@Value" 
     ValueChanged="@ValueChanged" 
@@ -12,6 +13,8 @@
     ValueFieldName="@ValueProperty"
     FilteringMode="DataGridFilteringMode.Contains"
     onkeydown="@onKeyDown"
+    data-automation-id="@GetAutomationId()"
+    field-name="@FieldName"
     @ref="_refField"
 >
 @ChildContent
