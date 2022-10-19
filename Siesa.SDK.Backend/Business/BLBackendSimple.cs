@@ -214,9 +214,15 @@ namespace Siesa.SDK.Business
                 {
                     return new ActionResult<bool>() { Success = true, Data = false };
                 }
+                
                 using (SDKContext context = CreateDbContext())
                 {
                     var entityType = BaseObj.GetType();
+                    T currentObject =null;   
+                    if (requestObj.GetRowid() != 0)// Si editando, entonces asignar el objeto a una variable para comparar con el mismo
+                    {
+                        currentObject = Get(requestObj.GetRowid()); //Usar esete objeto para comparar con el que se esta editando
+                    }
                     foreach (var u_index in unique_indexes)
                     {
                         List<string> index_fields = (List<string>)u_index;
@@ -228,6 +234,10 @@ namespace Siesa.SDK.Business
                         {
                             var columnNameProperty = SDKFlexExtension.GetPropertyExpression(pe, index_field);
                             var field_value = requestObj.GetType().GetProperty(index_field).GetValue(requestObj, null);
+                            if (currentObject != null && currentObject.GetType().GetProperty("Id").GetValue(currentObject, null).Equals(field_value))
+                            {
+                               return new ActionResult<bool>() { Success = true, Data = false };
+                            }                        
                             if (index_field.StartsWith("Rowid") && field_value == null || field_value.Equals(0))
                             {
                                 try
