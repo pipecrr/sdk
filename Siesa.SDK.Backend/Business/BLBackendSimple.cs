@@ -221,7 +221,7 @@ namespace Siesa.SDK.Business
                     T currentObject =null;   
                     if (requestObj.GetRowid() != 0)// Si editando, entonces asignar el objeto a una variable para comparar con el mismo
                     {
-                        currentObject = Get(requestObj.GetRowid()); //Usar esete objeto para comparar con el que se esta editando
+                        currentObject = Get(requestObj.GetRowid()); 
                     }
                     foreach (var u_index in unique_indexes)
                     {
@@ -233,12 +233,8 @@ namespace Siesa.SDK.Business
                         foreach (var index_field in index_fields)
                         {
                             var columnNameProperty = SDKFlexExtension.GetPropertyExpression(pe, index_field);
-                            var field_value = requestObj.GetType().GetProperty(index_field).GetValue(requestObj, null);
-                            if (currentObject != null && currentObject.GetType().GetProperty("Id").GetValue(currentObject, null).Equals(field_value))
-                            {
-                               return new ActionResult<bool>() { Success = true, Data = false };
-                            }                        
-                            if (index_field.StartsWith("Rowid") && field_value == null || field_value.Equals(0))
+                            var field_value = requestObj.GetType().GetProperty(index_field).GetValue(requestObj, null);                                              
+                            if (index_field.StartsWith("Rowid"))
                             {
                                 try
                                 {
@@ -261,6 +257,17 @@ namespace Siesa.SDK.Business
                             else
                             {
                                 existExpression = Expression.And(existExpression, tmpExp);
+                            }
+                        }
+
+                        if(currentObject != null){
+                            try
+                            {
+                                
+                                existExpression = Expression.And(existExpression, Expression.NotEqual(Expression.Property(pe, "Rowid"), Expression.Constant(currentObject.GetType().GetProperty("Rowid").GetValue(currentObject, null))));
+                            }
+                            catch (System.Exception)
+                            {   
                             }
                         }
                         var funcExpression = typeof(Func<,>).MakeGenericType(new Type[] { entityType, typeof(bool) });
