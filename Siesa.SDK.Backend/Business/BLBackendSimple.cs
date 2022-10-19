@@ -200,8 +200,13 @@ namespace Siesa.SDK.Business
 
             ContextMetadata = _dbFactory.CreateDbContext();
             ContextMetadata.SetProvider(_provider);
+            var typeContext = ContextMetadata.Model.FindEntityType(typeof(T));
+            if(typeContext != null){
+                _navigationProperties = ContextMetadata.Model.FindEntityType(typeof(T)).GetNavigations().Where(p => p.IsOnDependent);
+            }else{
+                _navigationProperties = new List<INavigation>();
+            };
 
-            _navigationProperties = ContextMetadata.Model.FindEntityType(typeof(T)).GetNavigations().Where(p => p.IsOnDependent);
             AuthenticationService = (IAuthenticationService)_provider.GetService(typeof(IAuthenticationService));
         }
 
@@ -648,7 +653,7 @@ namespace Siesa.SDK.Business
         }
 
         [SDKExposedMethod]
-        public ActionResult<dynamic> SDKFlexPreviewData(SDKFlexRequestData requestData, bool setTop = true)
+        public virtual ActionResult<List<Dictionary<string,object>>> SDKFlexPreviewData(SDKFlexRequestData requestData, bool setTop = true)
         {
             using (var Context = CreateDbContext())
             {

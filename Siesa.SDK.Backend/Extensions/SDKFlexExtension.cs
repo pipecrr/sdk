@@ -24,13 +24,13 @@ namespace Siesa.SDK.Backend.Extensions
 
         private static Assembly _assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
         
-        internal static dynamic SDKFlexPreviewData(SDKContext Context, SDKFlexRequestData requestData, IAuthenticationService authenticationService, bool setTop = true)
+        internal static ActionResult<List<Dictionary<string, object>>> SDKFlexPreviewData(SDKContext Context, SDKFlexRequestData requestData, IAuthenticationService authenticationService, bool setTop = true)
         {
             var rowidCulture = authenticationService.User.RowidCulture;
             List<SDKFlexColumn> columns = requestData.columns;
             if (columns.Count == 0)
             {
-                return new ActionResult<dynamic>() { Data = new List<dynamic>() };
+                return new ActionResult<List<Dictionary<string,object>>>() { Data = new List<Dictionary<string, object>>()};
             }
             var nameEntity = requestData.selected_class;
             var nameSpaceEntity = requestData.module_path;
@@ -227,17 +227,17 @@ namespace Siesa.SDK.Backend.Extensions
                             item[enumkey] = description;
                         }
                     }
-                    return new ActionResult<dynamic>() { Data = resourceDict};
+                    return new ActionResult<List<Dictionary<string,object>>>() { Data = resourceDict};
                 }
 
                 if (resourceDict != null)
                 {
-                    return new ActionResult<dynamic>() { Data = resourceDict };
+                    return new ActionResult<List<Dictionary<string,object>>>() { Data = resourceDict };
                 }
             }
             catch (Exception e)
             {
-                return new ActionResult<dynamic>() { Success = false, Errors = new List<string>() { "Error al crear la consulta" } };
+                return new ActionResult<List<Dictionary<string,object>>>() { Success = false, Errors = new List<string>() { "Error al crear la consulta" } };
             }
 
             return null;
