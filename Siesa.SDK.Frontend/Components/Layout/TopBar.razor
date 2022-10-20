@@ -10,6 +10,7 @@
 @inject IBackendRouterService BackendRouterService
 @inject IJSRuntime JSRuntime
 @inject NavigationService navigationService
+@inject SDKNotificationService  NotificationService
 
 @if (LayoutService.TopBarTitle != null || LayoutService.TopBarButtons != null || LayoutService.TopBarExtraButtons != null)
 {
@@ -53,7 +54,8 @@
         {
             <div>
                 <div class="whcm_company_select ">
-                            <select class="form-select form-control form-control-sm font-weight-bold" id="inputCompany">
+                            <select class="form-select form-control form-control-sm font-weight-bold" 
+                            id="inputCompany" @onchange="@ChangeCompany">
                                 @foreach (var company in CompaniesList)
                                     {
                                         <option value="@company.Rowid">@company.Name</option>
@@ -79,18 +81,47 @@
     public List<E00201_Company> CompaniesList { get; set; } = new List<E00201_Company>();
 
     public E00201_Company SelectedCompany { get; set; } = new E00201_Company();
+
+    //public ListView _ListView = { get; set; }
+
+    
     protected override async Task OnInitializedAsync()
-    {
-        
+    {  
         LayoutService.PropertyChanged += LayoutService_PropertyChanged;
 
-        /*if (LayoutService.BusinessObj)
-        {
-            await GetCompanies();
-        }*/
-       await GetCompanies();
-
+        await GetCompanies();
         base.OnInitialized();
+    }
+
+
+    void ChangeCompany(ChangeEventArgs e)
+    {
+        if (e.Value != null)
+        {
+            var valuestr= e.Value.ToString();
+            SelectedCompany.Rowid = short.Parse(valuestr);
+
+            SetCompany(short.Parse(valuestr));
+            //StateHasChanged();
+        }
+    }
+
+    private void SetCompany(short rowidCompany)
+    {
+        if (LayoutService?.BusinessObj?.BaseObj != null && InheritCompany())
+        {
+             LayoutService.BusinessObj.BaseObj.RowidCompany = rowidCompany;
+             LayoutService.BusinessObj.Refresh(true);
+        } 
+    }
+
+    public bool InheritCompany(){
+        Type type = LayoutService.BusinessObj.BaseObj.GetType();
+        if (Utilities.IsAssignableToGenericType(type, typeof(BaseCompany<>)))
+        {
+            return true;
+        }
+        return false;
     }
 
     private void LayoutService_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -99,8 +130,7 @@
         {
             if (LayoutService.BusinessObj != null)
             {
-                Type type = LayoutService.BusinessObj.BaseObj.GetType();
-                if (Utilities.IsAssignableToGenericType(type, typeof(BaseCompany<>)))
+                if (InheritCompany())
                 {
                     ShowCompanies = true;
                     StateHasChanged();
@@ -169,6 +199,11 @@
             if (DataCompany.Data != null)
             {
                 CompaniesList = DataCompany.Data.Select(x => JsonConvert.DeserializeObject<E00201_Company>(x)).Where(x => x.RowidCompanyGroup == CompanyGroup).ToList();
+                if (CompaniesList.Count > 0)
+                {
+                    SetCompany(CompaniesList.First().Rowid);
+                }
+                
             }
         
         }

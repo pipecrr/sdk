@@ -147,7 +147,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             }
         }
 
-        public void Refresh(){
+        public void Refresh(bool Reload = false){
             EvaluateDynamicAttributes(null);
             try
             {
