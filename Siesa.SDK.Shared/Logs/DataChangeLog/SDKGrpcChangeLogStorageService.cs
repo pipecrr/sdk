@@ -23,6 +23,19 @@ namespace Siesa.SDK.Shared.Logs.DataChangeLog
             _client = new DataLogChangeClient(_channel);     
         }
 
+        public QueryLogReply QueryEntityLog(QueryLogRequest request)
+        {
+            try
+            {
+                return  _client.QueryLog(request);
+            }
+            catch (Grpc.Core.RpcException e)
+            {
+                
+            }
+            return null;
+        }
+
         public async Task Save(string json)
         {
             // TODO - Async

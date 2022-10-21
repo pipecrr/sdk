@@ -28,6 +28,7 @@ message Filter
 	string PropertyName = 1;
 	string Operator = 2;
 	repeated string Value = 3;
+  string Type = 4;
 }
 
 message QueryLogReply {
