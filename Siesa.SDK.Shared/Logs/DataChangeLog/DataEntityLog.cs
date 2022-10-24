@@ -12,7 +12,7 @@ namespace Siesa.SDK.Shared.Logs.DataChangeLog
         public string Operation { get; set; }
         public DateTime OperationDate { get; set; }
         public string EntityName { get; set; }
-        public List<KeyValue> KeyValues { get; set; } 
+        public List<KeyValue> KeyValues { get; set; }
         public List<LogProperty> Properties { get; set; }
 
     }
