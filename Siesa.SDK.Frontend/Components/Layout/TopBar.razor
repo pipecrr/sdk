@@ -58,7 +58,7 @@
                             id="inputCompany" @onchange="@ChangeCompany">
                                 @foreach (var company in CompaniesList)
                                     {
-                                        <option value="@company.Rowid">@company.Name</option>
+                                        <option value="@company.Rowid">@company.ToString()</option>
                                     }
                             </select>
                 </div>
@@ -82,13 +82,11 @@
 
     public E00201_Company SelectedCompany { get; set; } = new E00201_Company();
 
-    //public ListView _ListView = { get; set; }
-
     
     protected override async Task OnInitializedAsync()
     {  
         LayoutService.PropertyChanged += LayoutService_PropertyChanged;
-
+        
         await GetCompanies();
         base.OnInitialized();
     }
@@ -99,10 +97,10 @@
         if (e.Value != null)
         {
             var valuestr= e.Value.ToString();
-            SelectedCompany.Rowid = short.Parse(valuestr);
+            short rowidCompany = short.Parse(valuestr);
 
-            SetCompany(short.Parse(valuestr));
-            //StateHasChanged();
+            SetCompany(rowidCompany);
+            SelectedCompany.Rowid = rowidCompany;
         }
     }
 
@@ -128,16 +126,12 @@
     {
         if(e.PropertyName == nameof(ILayoutService.BusinessObj))
         {
-            if (LayoutService.BusinessObj != null)
+            if (LayoutService?.BusinessObj?.BaseObj != null && InheritCompany())
             {
-                if (InheritCompany())
-                {
-                    ShowCompanies = true;
-                    StateHasChanged();
-                }else{
-                    ShowCompanies = false;
-                    StateHasChanged();
-                }
+                ShowCompanies = true;
+                LayoutService.BusinessObj.BaseObj.RowidCompany = SelectedCompany.Rowid ;
+                //LayoutService.BusinessObj.Refresh(true);
+                StateHasChanged();
             }else{
                 ShowCompanies = false;
                 StateHasChanged();
@@ -198,14 +192,16 @@
             var DataCompany = await BL.GetData(null, null);
             if (DataCompany.Data != null)
             {
-                CompaniesList = DataCompany.Data.Select(x => JsonConvert.DeserializeObject<E00201_Company>(x)).Where(x => x.RowidCompanyGroup == CompanyGroup).ToList();
+                CompaniesList = DataCompany.Data.Select(x => JsonConvert.DeserializeObject<E00201_Company>(x))
+                                                .Where(x => x.RowidCompanyGroup == CompanyGroup)
+                                                .ToList();
+
                 if (CompaniesList.Count > 0)
                 {
                     SetCompany(CompaniesList.First().Rowid);
+                    SelectedCompany.Rowid = CompaniesList.First().Rowid;
                 }
-                
             }
-        
         }
         catch (Exception ex)
         {
