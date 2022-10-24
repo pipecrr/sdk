@@ -13,6 +13,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter] public string Title { get; set; }
         [Parameter] public bool SetTopBar { get; set; } = true;
 
+        [Parameter] public bool ValidateForm { get; set; } = true;
+
         protected override async Task OnInitializedAsync()
         {
             ViewdefName = Viewdef;

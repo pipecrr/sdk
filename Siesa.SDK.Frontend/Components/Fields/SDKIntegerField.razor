@@ -1,5 +1,6 @@
 @typeparam TInt
 @using System.Globalization
+@using System.Linq.Expressions
 <DxSpinEdit 
     Value="@Value" 
     ValueChanged="@ValueChanged" 
@@ -8,6 +9,7 @@
     CssClass="@CssClass"
     maxlength = "@MaxLength"
     Mask="@Mask"
+    ValueExpression="@ValueExpression"
 >
 @if(Culture != null){
     <DxNumericMaskProperties Culture="@Culture" />
@@ -29,6 +31,7 @@
     [Parameter] public string Mask { get; set; }
 
     [Parameter] public CultureInfo Culture { get; set; }
+    [Parameter] public Expression<Func<TInt>> ValueExpression { get; set; }
 
     
 }

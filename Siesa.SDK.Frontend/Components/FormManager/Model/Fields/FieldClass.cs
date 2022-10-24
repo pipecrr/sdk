@@ -53,6 +53,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         [Inject] private SDKNotificationService _NotificationService { get; set; }
 
         [Parameter] public string FieldName { get; set; }
+        [Parameter] public bool ValidateField { get; set; } = true;
 
         public bool IsRequired { get; set; }
         public int MaxLength { get; set; }
@@ -86,6 +87,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             if (FieldOpt.Required)
             {
                 IsRequired = true;
+            }
+
+            if(IsRequired && !ValidateField)
+            {
+                IsRequired = false;
             }
             //TODO: Optimizar, el parametro deberia entrar por parametro y no consultar la entidad por cada campo
             var entityAttributes = BindModel.GetType().GetCustomAttributes();

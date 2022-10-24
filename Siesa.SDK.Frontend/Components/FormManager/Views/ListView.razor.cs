@@ -44,6 +44,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public bool AllowDelete { get; set; } = true;
         [Parameter]
         public bool AllowDetail { get; set; } = true;
+        [Parameter]
+        public bool ShowSearchForm { get; set; } = true;
+        [Parameter]
+        public bool ShowList { get; set; } = true;
 
         [Inject] public IJSRuntime JSRuntime { get; set; }
         [Inject] public NavigationManager NavManager { get; set; }
@@ -96,6 +100,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public string BLEntityName { get; set; }
 
         public string LastFilter { get; set; }
+        public bool HasSearchViewdef { get; set; }
 
         private bool CanCreate;
         private bool CanEdit;
@@ -158,6 +163,20 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
             else
             {
+                if(ShowSearchForm)
+                {
+                    try
+                    {
+                        var searchMetadata = BackendRouterService.GetViewdef(bName, "search");
+                        HasSearchViewdef = !String.IsNullOrEmpty(searchMetadata);
+                        ShowList = !HasSearchViewdef;
+                    }
+                    catch (System.Exception)
+                    {
+                        ShowList = true;
+                    }
+
+                }
                 ListViewModel = JsonConvert.DeserializeObject<ListViewModel>(metadata);
                 foreach (var field in ListViewModel.Fields)
                 {

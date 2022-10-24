@@ -11,6 +11,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
     {
         [Parameter] public FieldOptions FieldOpt { get; set; }
         [Parameter] public object ModelObj { get; set; }
+        [Parameter] public bool ValidateField { get; set; } = true;
 
         private object fieldModelObj { get; set; }
 
