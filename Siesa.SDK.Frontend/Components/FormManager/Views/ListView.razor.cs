@@ -257,6 +257,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             StateHasChanged();
         }
 
+        private string GetFormKey()
+        {
+            return $"{needUpdate.ToString()}-search";
+        }
+
         private string GetFilters(string base_filter = "")
         {
             var filters = $"{base_filter}";

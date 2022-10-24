@@ -14,13 +14,14 @@
     font-size: 0.875rem;
     padding: 0 1rem;
     height: 1.938rem !important;
+    min-height: 1.938rem !important;
     box-shadow: none !important;
     color: var(--color_text);
 
 }
 
 .sdk-selectbar-container > ::deep .rz-selectbutton > .rz-button > span {
-    line-height: 2.3 !important;
+    line-height: 2 !important;
 }
 
 

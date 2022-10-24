@@ -12,7 +12,7 @@ else
 {
     @if(ShowSearchForm && HasSearchViewdef)
     {
-        <FreeForm @ref="@SearchFormRef" FormID="@SearchFormID" Viewdef="search" BusinessName="@BusinessName" BusinessObj="@BusinessObj" SetTopBar="false" ValidateForm="false" OnSubmit="@OnClickSearch" />
+        <FreeForm @ref="@SearchFormRef" @key="@GetFormKey()"  FormID="@SearchFormID" Viewdef="search" BusinessName="@BusinessName" BusinessObj="@BusinessObj" SetTopBar="false" ValidateForm="false" OnSubmit="@OnClickSearch" />
         <div class="col-md-4 col-sm-6 col-12">
             <SDKButton form="@SearchFormID" CssClass="mb-1" RenderStyle="SDKButtonRenderStyle.Primary" SubmitFormOnClick="true" Click="@OnClickSearch">
                 @if(LoadingSearch)
@@ -87,14 +87,16 @@ else
             <Columns>
             @if(ListViewModel.ShowActions)
             {
-                <RadzenDataGridColumn TItem="object" Title="Acciones" Width="100px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" HeaderCssClass="untruncate-grid-column-action">
+                <RadzenDataGridColumn TItem="object" Title="Acciones" Width="100px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" HeaderCssClass="grid-column-action">
                     <HeaderTemplate>
-                        @if(IsSubpanel && AllowCreate && CanCreate){
-                        <span
-                            class="oi oi-plus cursor-pointer" @onclick="() => GoToCreate()"></span>
-                        }else{
-                            <span><ResourceViewer ResourceTag="Generic.Actions" /></span>
-                        }                        
+                        <div class="untruncate-grid-column-action">
+                            @if(IsSubpanel && AllowCreate && CanCreate){
+                            <span
+                                class="oi oi-plus cursor-pointer" @onclick="() => GoToCreate()"></span>
+                            }else{
+                                <span><ResourceViewer ResourceTag="Generic.Actions" /></span>
+                            }    
+                        </div>                    
                     </HeaderTemplate>
                 
                     <Template Context="data">
@@ -200,7 +202,7 @@ else
                                     </Template>
                                 </RadzenDataGridColumn>
                             }else if(columnType == typeof(bool)){
-                                <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" TextAlign="TextAlign.Center" HeaderCssClass="align-header-left" Width="@columnWidth" >
+                                <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" Width="@columnWidth" >
                                     <HeaderTemplate>
                                         <span>
                                             @if(!string.IsNullOrEmpty(field.ResourceTag))
@@ -212,7 +214,9 @@ else
                                         </span>
                                     </HeaderTemplate>
                                     <Template Context="data">
-                                        <input type="checkbox" checked="@(data.GetType().GetProperty(fieldName).GetValue(data))" disabled />
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <input type="checkbox" checked="@(data.GetType().GetProperty(fieldName).GetValue(data))" disabled />
+                                        </div>
                                     </Template>
                                 </RadzenDataGridColumn>
 

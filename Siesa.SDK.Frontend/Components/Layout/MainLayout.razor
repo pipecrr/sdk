@@ -72,7 +72,7 @@
                                 <ChildContent> 
                                 <aside class="col-12 sdk_home_content">
                                     <div
-                                        class="offset-lg-0 col-lg-12 offset-xl-0 col-xl-12 offset-xxl-1 col-xxl-10 px-0 px-md-3">
+                                        class="@GetCssBody()">
 
                                         <BreadCrumb />
                                         <CascadingValue Value="@this">
@@ -120,6 +120,19 @@
     private IJSObjectReference _jsModule;
 
     private bool _showingLogin = false;
+
+    private bool isMaximized = false;
+
+    public async Task ToogleMaximize()
+    {
+        isMaximized = !isMaximized;
+        StateHasChanged();
+    }
+
+    public bool IsMaximized()
+    {
+        return isMaximized;
+    }
 
     public void SetDefaultArea(bool isDefaultArea)
     {
@@ -229,6 +242,20 @@
             _showingLogin = false;
         }
         StateHasChanged();
+    }
+
+    private string GetCssBody()
+    {
+        var xxl_offset = "offset-xxl-1";
+        var xxl = "col-xxl-10";
+
+        if(isMaximized)
+        {
+            xxl_offset = "offset-xxl-0";
+            xxl = "col-xxl-12";
+        }
+
+        return $"offset-lg-0 col-lg-12 offset-xl-0 col-xl-12 {xxl_offset} {xxl} px-0 px-md";
     }
      
 
