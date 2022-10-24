@@ -49,6 +49,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter]
         public bool ShowList { get; set; } = true;
 
+        private FreeForm SearchFormRef;
+
         [Inject] public IJSRuntime JSRuntime { get; set; }
         [Inject] public NavigationManager NavManager { get; set; }
         
@@ -63,6 +65,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         public bool Loading;
         public bool LoadingData;
+        public bool LoadingSearch;
 
         public String ErrorMsg = "";
         private IList<object> SelectedObjects { get; set; }
@@ -252,6 +255,117 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             StateHasChanged();
         }
 
+        private string GetFilters(string base_filter = "")
+        {
+            var filters = $"{base_filter}";
+            if (ConstantFilters != null)
+            {
+                foreach (var filter in ConstantFilters)
+                {
+                    if (!string.IsNullOrEmpty(filters))
+                    {
+                        filters += " && ";
+                    }
+                    filters += $"{filter}";
+                }
+            }
+
+            try
+            {
+                if(SearchFormRef != null){
+                    var searchFields = SearchFormRef.GetFields();
+                    foreach (var field in searchFields)
+                    {
+                        var tmpFilter = "";
+                        
+                        var fieldObj = field.GetFieldObj(BusinessObj);
+                        if (fieldObj != null)
+                        {
+                            dynamic searchValue = fieldObj.ModelObj.GetType().GetProperty(fieldObj.Name).GetValue(fieldObj.ModelObj, null);
+                            if(searchValue == null){
+                                continue;
+                            }
+                            //check if searchValue is an empty string
+                            if(searchValue is string && string.IsNullOrEmpty(searchValue)){
+                                continue;
+                            }
+                            switch (fieldObj.FieldType)
+                            {
+                                case FieldTypes.CharField:
+                                case FieldTypes.TextField:
+                                    tmpFilter = $"({fieldObj.Name} == null ? \"\" : {fieldObj.Name}).ToLower().Contains(\"{searchValue}\".ToLower())";
+                                    break;
+                                case FieldTypes.IntegerField:
+                                case FieldTypes.DecimalField:
+                                case FieldTypes.SmallIntegerField:
+                                case FieldTypes.BigIntegerField:
+                                case FieldTypes.ByteField:
+                                    if(!fieldObj.IsNullable)
+                                    {
+                                        tmpFilter = $"{fieldObj.Name} == {searchValue}";
+                                    }
+                                    else
+                                    {
+                                        tmpFilter = $"({fieldObj.Name} == null ? 0 : {fieldObj.Name}) == {searchValue}";
+                                    }
+                                    break;
+                                case FieldTypes.BooleanField:
+                                    if(!searchValue)
+                                    {
+                                        break;
+                                    }
+
+                                    if(!fieldObj.IsNullable)
+                                    {
+                                        tmpFilter = $"{fieldObj.Name} == {searchValue}";
+                                    }
+                                    else
+                                    {
+                                        tmpFilter = $"({fieldObj.Name} == null ? false : {fieldObj.Name}) == {searchValue}";
+                                    }
+                                    break;
+                                case FieldTypes.DateField:
+                                case FieldTypes.DateTimeField:
+                                    if(!fieldObj.IsNullable)
+                                    {
+                                        tmpFilter = $"{fieldObj.Name} == DateTime.Parse(\"{searchValue}\")";
+                                    }
+                                    else
+                                    {
+                                        tmpFilter = $"({fieldObj.Name} == null ? DateTime.MinValue : {fieldObj.Name}) == DateTime.Parse(\"{searchValue}\")";
+                                    }
+                                    break;
+
+                                case FieldTypes.EntityField:
+                                    if(!fieldObj.IsNullable)
+                                    {
+                                        tmpFilter = $"Rowid{fieldObj.Name} == {searchValue.Rowid}";
+                                    }else{
+                                        tmpFilter = $"({fieldObj.Name} == null ? 0 : {fieldObj.Name}.Rowid) == {searchValue.Rowid}";
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        if (!string.IsNullOrEmpty(tmpFilter))
+                        {
+                            if (!string.IsNullOrEmpty(filters))
+                            {
+                                filters += " && ";
+                            }
+                            filters += $"({tmpFilter})";
+                        }
+                    }
+                }
+            }
+            catch (System.Exception)
+            {
+            }
+
+            return filters;
+        }
+
         async Task LoadData(LoadDataArgs args)
         {
             if(Data != null){
@@ -269,24 +383,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 LoadingData = true;
             }
-            var filters = $"{args.Filter}";
+            var filters = GetFilters(args.Filter);
             if (LastFilter != filters)
             {
                 LastFilter = filters;
                 LoadingData = true;
                 data = null;
             }
-            if (ConstantFilters != null)
-            {
-                foreach (var filter in ConstantFilters)
-                {
-                    if (!string.IsNullOrEmpty(filters))
-                    {
-                        filters += " && ";
-                    }
-                    filters += $"{filter}";
-                }
-            }
+            
             var dbData = await BusinessObj.GetDataAsync(args.Skip, args.Top, filters, args.OrderBy);
             data = dbData.Data;
             count = dbData.TotalCount;
@@ -335,6 +439,31 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 OnClickDelete(id.ToString(), object_string);
             }
+        }
+
+        private async Task OnClickSearch()
+        {
+            LoadingSearch = true;
+            LoadingData = true;
+            data = null;
+            var filters = GetFilters();
+            if(Data == null)
+            {
+                Data = new List<object> { };
+            }
+            var dbData = await BusinessObj.GetDataAsync(null, null, filters, "");
+            Data = dbData.Data;
+            if(Data.Count() == 1)
+            {
+                GoToDetail(((dynamic)Data.First()).Rowid);
+                return;
+            }
+            data = Data;
+            count = dbData.TotalCount;
+            LoadingData = false;
+            LoadingSearch = false;
+            ShowList = true;
+            StateHasChanged();
         }
 
         private void OnClickCustomButton(Button button)

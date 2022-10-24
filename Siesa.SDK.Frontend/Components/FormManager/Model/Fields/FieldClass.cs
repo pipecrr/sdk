@@ -201,7 +201,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             {
                 //MuestreError();
             }
-            if (IsUnique)
+            if (IsUnique && ValidateField)
             {
                 CheckUniqueValue();
                  //Console.WriteLine($"El campo {FieldName} es único y debe revisar el valor {value}");

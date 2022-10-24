@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Siesa.SDK.Frontend.Components.FormManager.Model;
+using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
 using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
@@ -45,6 +46,21 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
 
             await base.SetParametersAsync(parameters);
+        }
+
+        public List<FieldOptions> GetFields()
+        {
+            List<FieldOptions> fields = new List<FieldOptions>();
+            
+            for (int i = 0; i < Panels.Count; i++)
+            {
+                for (int j = 0; j < Panels[i].Fields.Count; j++)
+                {
+                    fields.Add(Panels[i].Fields[j]);
+                }
+            }
+
+            return fields;
         }
         
     }
