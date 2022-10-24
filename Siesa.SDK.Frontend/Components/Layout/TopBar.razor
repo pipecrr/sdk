@@ -58,7 +58,7 @@
                             id="inputCompany" @onchange="@ChangeCompany">
                                 @foreach (var company in CompaniesList)
                                     {
-                                        <option value="@company.Rowid">@company.ToString()</option>
+                                        <option value="@company.Rowid" selected="@(company.Rowid == SelectedCompany.Rowid)">@company.ToString()</option>
                                     }
                             </select>
                 </div>
