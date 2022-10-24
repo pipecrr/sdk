@@ -12,9 +12,9 @@ else
 {
     @if(ShowSearchForm && HasSearchViewdef)
     {
-        <FreeForm @ref="@SearchFormRef" Viewdef="search" BusinessName="@BusinessName" BusinessObj="@BusinessObj" SetTopBar="false" ValidateForm="false" />
+        <FreeForm @ref="@SearchFormRef" FormID="@SearchFormID" Viewdef="search" BusinessName="@BusinessName" BusinessObj="@BusinessObj" SetTopBar="false" ValidateForm="false" OnSubmit="@OnClickSearch" />
         <div class="col-md-4 col-sm-6 col-12">
-            <SDKButton CssClass="mb-1" RenderStyle="SDKButtonRenderStyle.Primary" Click="@OnClickSearch">
+            <SDKButton form="@SearchFormID" CssClass="mb-1" RenderStyle="SDKButtonRenderStyle.Primary" SubmitFormOnClick="true" Click="@OnClickSearch">
                 @if(LoadingSearch)
                 {
                     <i class="mr-1 fas fa-spinner fa-pulse"></i>

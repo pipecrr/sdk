@@ -16,6 +16,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         [Parameter] public bool ValidateForm { get; set; } = true;
 
+        [Parameter] public EventCallback OnSubmit { get; set; }
+        
         protected override async Task OnInitializedAsync()
         {
             ViewdefName = Viewdef;
@@ -61,6 +63,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
 
             return fields;
+        }
+
+        private async Task HandleFreeFormValidSubmit()
+        {
+            if(OnSubmit.HasDelegate)
+            {
+                await OnSubmit.InvokeAsync();
+            }
+            else
+            {
+                await base.HandleValidSubmit();
+            }
         }
         
     }

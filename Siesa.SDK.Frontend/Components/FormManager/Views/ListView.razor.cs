@@ -51,6 +51,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private FreeForm SearchFormRef;
 
+        public string SearchFormID = Guid.NewGuid().ToString();
+
         [Inject] public IJSRuntime JSRuntime { get; set; }
         [Inject] public NavigationManager NavManager { get; set; }
         

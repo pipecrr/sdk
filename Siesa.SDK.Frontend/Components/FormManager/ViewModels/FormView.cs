@@ -42,6 +42,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public bool Saving = false;
 
         public String ErrorMsg = "";
+        [Parameter]
         public string FormID { get; set; } = Guid.NewGuid().ToString();
         protected ValidationMessageStore _messageStore;
         public EditContext EditFormContext;
