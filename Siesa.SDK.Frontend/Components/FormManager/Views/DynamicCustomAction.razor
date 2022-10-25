@@ -53,6 +53,8 @@ else if (BusinessObj != null)
             return null;
         }
 
+        MainLayout?.SetEmptyLayout(externalView?.isEmptyLayout);
+
         return (RenderFragment)method.Invoke(BusinessObj, null);
     }
 

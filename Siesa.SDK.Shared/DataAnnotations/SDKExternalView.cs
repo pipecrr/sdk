@@ -5,8 +5,10 @@ namespace Siesa.SDK.Shared.DataAnnotations
     [AttributeUsage(AttributeTargets.Method)]
     public class SDKExternalView : Attribute
     {
-        public SDKExternalView()
+        public bool isEmptyLayout { get; set; }
+        public SDKExternalView(bool isEmptyLayout = false)
         {
+            this.isEmptyLayout = isEmptyLayout;
         }
     }
 }
