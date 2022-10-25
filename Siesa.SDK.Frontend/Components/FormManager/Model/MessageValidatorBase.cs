@@ -19,18 +19,28 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         [Parameter]
         public string Class { get; set; } = "validation-message";
 
-        protected IEnumerable<string> ValidationMessages =>
-            EditContext.GetValidationMessages(_fieldIdentifier);
-
+        protected IEnumerable<string> ValidationMessages { get {
+                if(EditContext == null)
+                {
+                    return new List<string>();
+                }
+                return EditContext.GetValidationMessages(_fieldIdentifier);
+            } }
         protected override void OnInitialized()
         {
             _fieldIdentifier = FieldIdentifier.Create(For);
-            EditContext.OnValidationStateChanged += _stateChangedHandler;
+            if(EditContext != null)
+            {
+                EditContext.OnValidationStateChanged += _stateChangedHandler;
+            }
         }
 
         public void Dispose()
         {
-            EditContext.OnValidationStateChanged -= _stateChangedHandler;
+            if(EditContext != null)
+            {
+                EditContext.OnValidationStateChanged -= _stateChangedHandler;
+            }
         }
 
     }

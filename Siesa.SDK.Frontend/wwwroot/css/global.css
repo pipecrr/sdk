@@ -51,6 +51,15 @@
     --border_radius_standar: .2rem;
     --border_radius_btn_min: .2rem;
     --border_radius_btn: 1.5rem;
+
+    --rz-notification-error-icon-color: #721c24 !important;
+    --rz-notification-warning-icon-color: #856404 !important;
+    --rz-notification-success-icon-color: #155724 !important;
+    --rz-notification-info-icon-color: #0c5460 !important;
+    --rz-grid-column-resizer-helper-background-color: var(--color_primary) !important;
+    --rz-grid-column-resizer-helper-width: 2px !important;
+
+    --rz-grid-hover-background-color: var(--color_table_hover) !important;
 }
 ::-webkit-scrollbar{
     width: 7px;
@@ -328,7 +337,7 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
     border-top: none !important;
 }
 .whcm_table > div > table > thead > tr > th > div{
-    padding: 0.25rem 0.5rem;
+    padding: 0.25rem 0.5rem !important;
 }
 .whcm_table > div > table > thead > tr > th:not(:last-child) > div{
     border-right: 1px solid var(--color_primary);
@@ -452,7 +461,7 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
 }
 
 .whcm_table > ::-webkit-scrollbar{
-    width: 13px;
+    width: 7px;
 }
 
 .whcm_table > ::-webkit-scrollbar-thumb{
@@ -845,4 +854,37 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
 .required-caption:after {
     content: '*';
     color: red;
+}
+
+.element-highlight {
+    border: solid 2px #008aff;
+    z-index: 9;
+    position: relative;
+    background-color: white;
+}  
+
+.rz-sortable-column > div:hover .rzi-sort:not(.rzi-sort-asc):not(.rzi-sort-desc) {
+    color: var(--color_primary) !important;
+}
+
+.whcm_table > div > table > thead > tr > th.grid-column-action > div > span {
+    max-width: 100%;
+}
+
+div.dxbs-btn-group.dxbs-input-group-append>.btn.dx-btn:not(.dxbs-editor-clear-btn).btn-sm, div.dxbs-btn-group.dxbs-input-group-prepend>.btn.dx-btn.btn-sm {
+    padding: 0.25rem;
+    border: none;
+}
+
+.sdk-selectbar-container .rz-selectbutton .rz-button.rz-button-md{
+    font-weight: 400 !important;
+}
+
+.rz-paginator-element {
+    font-weight: 400 !important;
+    max-width: 2rem;
+    max-height: 2rem;
+    min-width: 2rem !important;
+    min-height: 2rem !important;
+    line-height: 1rem !important;
 }

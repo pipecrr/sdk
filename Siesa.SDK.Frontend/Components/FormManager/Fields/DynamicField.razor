@@ -14,7 +14,7 @@
         }
         else
         {
-            <CharField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  />
+            <CharField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" ValidateField="@ValidateField" />
         }
         break;
     case FieldTypes.DecimalField:
@@ -32,9 +32,9 @@
         else
         {
             if(IsNullable){
-                <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="decimal?"  />
+                <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="decimal?" ValidateField="@ValidateField" />
             }else{
-                <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="decimal" />
+                <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="decimal" ValidateField="@ValidateField" />
             }
         }
         break;
@@ -51,9 +51,9 @@
         else
         {
             if(IsNullable){
-                <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="Int64?"  />
+                <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="Int64?" ValidateField="@ValidateField"  />
             }else{
-                <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="Int64" />
+                <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="Int64" ValidateField="@ValidateField" />
             }
             
         }
@@ -71,9 +71,9 @@
         else
         {
             if(IsNullable){
-                <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="int?"  />
+                <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="int?" ValidateField="@ValidateField" />
             }else{
-                <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="int" />
+                <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="int" ValidateField="@ValidateField" />
             }
             
         }
@@ -92,9 +92,9 @@
         else
         {
             if(IsNullable){
-                <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="Int16?"  />
+                <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="Int16?" ValidateField="@ValidateField"  />
             }else{
-                <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="Int16" />
+                <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="Int16" ValidateField="@ValidateField" />
             }
         }
         break;        
@@ -113,9 +113,9 @@
         {
             if(IsNullable)
             {
-                <ByteField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TByte="byte?" />
+                <ByteField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TByte="byte?" ValidateField="@ValidateField" />
             }else{
-                <ByteField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TByte="byte"  />
+                <ByteField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TByte="byte" ValidateField="@ValidateField" />
             }
         }
         break;
@@ -145,9 +145,9 @@
         else
         {
             if(IsNullable){
-                <DateField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" ShowTime="false" TDate="DateOnly?" />
+                <DateField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" ShowTime="false" TDate="DateOnly?" ValidateField="@ValidateField" />
             }else{
-                <DateField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" ShowTime="false" TDate="DateOnly" />
+                <DateField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" ShowTime="false" TDate="DateOnly" ValidateField="@ValidateField" />
             }
             
         }
@@ -165,9 +165,9 @@
         else
         {
             if(IsNullable){
-                <TimeField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TTime="TimeSpan?" />
+                <TimeField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TTime="TimeSpan?" ValidateField="@ValidateField" />
             }else{
-                <TimeField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TTime="TimeSpan"/>
+                <TimeField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TTime="TimeSpan" ValidateField="@ValidateField"/>
             }
         }
         break;
@@ -184,9 +184,9 @@
         else
         {
             if(IsNullable){
-                <DateTimeField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TDate="DateTime?" ShowTime="true"  />
+                <DateTimeField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TDate="DateTime?" ShowTime="true" ValidateField="@ValidateField" />
             }else{
-                <DateTimeField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TDate="DateTime" ShowTime="true"  />
+                <DateTimeField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TDate="DateTime" ShowTime="true" ValidateField="@ValidateField" />
             }
             
         }
@@ -202,9 +202,9 @@
         else
         {
             if(IsNullable){
-                <BooleanField BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" TBool="bool?"  />
+                <BooleanField BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" TBool="bool?" ValidateField="@ValidateField" />
             }else{
-                <BooleanField BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" TBool="bool"  />
+                <BooleanField BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" TBool="bool" ValidateField="@ValidateField"  />
             }
             
 
@@ -220,7 +220,7 @@
         }
         else
         {
-            <EntityField BaseModelObj="@ModelObj" BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  />
+            <EntityField BaseModelObj="@ModelObj" BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" ValidateField="@ValidateField"  />
         }
         break;
     case FieldTypes.Custom:

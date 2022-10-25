@@ -8,7 +8,7 @@
             @foreach (var panel in SubViewdef.Panels)
             {
                 <SDKFormLayoutTabPage ResourceTag="@panel.ResourceTag" @key="@panel.PanelId">
-                    <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" ModelObj="@ModelObj" DefaultColSize="@panel.ColSize" />
+                    <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" ModelObj="@ModelObj" DefaultColSize="@panel.ColSize" ValidateForm="@ValidateForm" />
                 </SDKFormLayoutTabPage>
             }
         </DxFormLayoutTabPages>
@@ -16,7 +16,7 @@
     }
     else
     {
-        <FieldsContainer Fields="@SubViewdef.Panels[0].Fields" SubViewdef="@SubViewdef.Panels[0].SubViewdef" ModelObj="@ModelObj" DefaultColSize="@SubViewdef.Panels[0].ColSize" />
+        <FieldsContainer Fields="@SubViewdef.Panels[0].Fields" SubViewdef="@SubViewdef.Panels[0].SubViewdef" ModelObj="@ModelObj" DefaultColSize="@SubViewdef.Panels[0].ColSize" ValidateForm="@ValidateForm" />
     }
 }else{
 
@@ -34,10 +34,10 @@
                             >
                 @if(fld.ViewContext == "DetailView"){
                     <div class="field-detail-container">
-                        <DynamicField FieldOpt="@fld" ModelObj="@ModelObj" @key="@GetItemUniqueId(fld, true)" />
+                        <DynamicField FieldOpt="@fld" ModelObj="@ModelObj" @key="@GetItemUniqueId(fld, true)" ValidateField="@ValidateForm" />
                     </div>
                 }else{
-                    <DynamicField FieldOpt="@fld" ModelObj="@ModelObj" @key="@GetItemUniqueId(fld, true)" />
+                    <DynamicField FieldOpt="@fld" ModelObj="@ModelObj" @key="@GetItemUniqueId(fld, true)" ValidateField="@ValidateForm" />
                 }
                 
             </SDKFormLayoutItem>
@@ -54,6 +54,8 @@
 
     [Parameter] public dynamic ModelObj { get; set; }
     [Parameter] public Dictionary<string, int> DefaultColSize { get; set; }
+    
+    [Parameter] public bool ValidateForm { get; set; } = true;
 
     private string UniqueId;
 

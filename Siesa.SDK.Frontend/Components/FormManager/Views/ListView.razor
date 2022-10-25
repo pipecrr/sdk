@@ -1,6 +1,8 @@
 @using SDK.Components.Visualization
 @using Siesa.SDK.Frontend.Components.FormManager.Fields
 @using Siesa.SDK.Entities
+@using Siesa.SDK.Frontend.Components.FormManager.Views
+@using Siesa.SDK.Frontend.Components.Visualization
 
 @if (Loading == true)
 {
@@ -8,219 +10,268 @@
 }
 else
 {
+    @if(ShowSearchForm && HasSearchViewdef)
+    {
+        <FreeForm @ref="@SearchFormRef" @key="@GetFormKey()"  FormID="@SearchFormID" Viewdef="search" BusinessName="@BusinessName" BusinessObj="@BusinessObj" SetTopBar="false" ValidateForm="false" OnSubmit="@OnClickSearch" />
+        <div class="col-md-4 col-sm-6 col-12">
+            <SDKButton form="@SearchFormID" CssClass="mb-1" RenderStyle="SDKButtonRenderStyle.Primary" SubmitFormOnClick="true" Click="@OnClickSearch">
+                @if(LoadingSearch)
+                {
+                    <i class="mr-1 fas fa-spinner fa-pulse"></i>
+                }
+                <ResourceViewer ResourceTag="Action.Search" />
+            </SDKButton>
+        </div>
+    }
 
-    <RadzenDataGrid 
-        AllowFiltering="true" 
-        FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-        FilterMode="FilterMode.Advanced" 
-        AllowPaging="@(!ListViewModel.InfiniteScroll)" 
-        PageSize="ListViewModel.Paging.PageSize"
-        PagerHorizontalAlign="HorizontalAlign.Center" 
-        AllowSorting="true" 
-        Data="@data" 
-        TItem="object" 
-        IsLoading="@LoadingData"
-        @ref="@_gridRef" 
-        Count="@count" 
-        LoadData="@LoadData" 
-        AllowVirtualization="@(ListViewModel.InfiniteScroll)"
-        ShowPagingSummary="true"
-        PageSizeOptions="ListViewModel.Paging.AllowedPageSizes" 
-        SelectionMode="Radzen.DataGridSelectionMode.Single"
-        Value=@SelectedObjects
-        ValueChanged="((objects) => OnSelectionChanged(objects))"
-        class="whcm_table"
-        AllowColumnResize="true"
-        @key="needUpdate"
-        >
-        <EmptyTemplate>
-            <div class="sdk-empty-list">
-                <i class="fa-solid fa-eye-slash"></i>
-                <p><ResourceViewer ResourceTag="Custom.Generic.NoData" /></p>
-            </div>
-        </EmptyTemplate>
-        <Columns>
-        @if(ListViewModel.ShowActions)
-        {
-            <RadzenDataGridColumn TItem="object" Title="Acciones" Width="100px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" HeaderCssClass="untruncate-grid-column-action">
-                <HeaderTemplate>
-                    @if(IsSubpanel && AllowCreate && CanCreate){
-                    <span
-                        class="oi oi-plus cursor-pointer" @onclick="() => GoToCreate()"></span>
-                    }else{
-                        <span><ResourceViewer ResourceTag="Action.Generic.Actions" /></span>
-                    }                        
-                </HeaderTemplate>
-               
-                <Template Context="data">
-                    <div class="action-buttons d-flex justify-content-center">
-                        @if(CanEdit && AllowEdit){
-                            <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToEdit(((IBaseSDK)data).GetRowid())"><i
-                            class="fa-solid fa-pen"></i></button>
-                        }
-                        
-                        
-                        @if(CanDelete && IsSubpanel && AllowDelete){
-                            <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToDelete(((IBaseSDK)data).GetRowid(), data.ToString())"><span
-                            class="fa-solid fa-trash-can"></span></button>
+    @if(ShowList)
+    {
+        <RadzenDataGrid 
+            AllowFiltering="true" 
+            FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+            FilterMode="FilterMode.Advanced" 
+            AllowPaging="@(!ListViewModel.InfiniteScroll)" 
+            PageSize="ListViewModel.Paging.PageSize"
+            PagerHorizontalAlign="HorizontalAlign.Center" 
+            AllowSorting="true" 
+            Data="@data" 
+            TItem="object" 
+            IsLoading="@LoadingData"
+            @ref="@_gridRef" 
+            Count="@count" 
+            LoadData="@LoadData" 
+            AllowVirtualization="@(ListViewModel.InfiniteScroll)"
+            ShowPagingSummary="true"
+            PageSizeOptions="ListViewModel.Paging.AllowedPageSizes" 
+            SelectionMode="Radzen.DataGridSelectionMode.Single"
+            Value=@SelectedObjects
+            ValueChanged="((objects) => OnSelectionChanged(objects))"
+            class="whcm_table"
+            AllowColumnResize="true"
+            FilterText="Filtrar"
+            ContainsText="Contiene"
+            EqualsText="Igual"
+            NotEqualsText="Diferente"
+            GreaterThanText="Mayor que"
+            GreaterThanOrEqualsText="Mayor o igual que"
+            LessThanText="Menor que"
+            EmptyText="No hay datos"
+            IsNullText="Es nulo"
+            IsNotNullText="No es nulo"
+            ColumnsText="Columnas"
+            IsEmptyText="Está vacío"
+            EndsWithText="Termina con"
+            PageSizeText="Tamaño de página"
+            AllColumnsText="Todas las columnas"
+            GroupPanelText="Arrastre una columna aquí para agrupar por esa columna"
+            IsNotEmptyText="No está vacío"
+            OrOperatorText="O"
+            StartsWithText="Empieza con"
+            AndOperatorText="Y"
+            ApplyFilterText="Aplicar"
+            ClearFilterText="Limpiar"
+            ColumnsShowingText="Columnas mostradas"
+            DoesNotContainText="No contiene"
+            LessThanOrEqualsText="Menor o igual que"
+            EnumFilterSelectText="Seleccione"
+            PagingSummaryFormat="Página {0} de {1} ({2} registros)"
 
-                        }
-                        @* <button class="btn btn-link grid-btn-link"
-                        @onclick="() => GoToDetail(((BaseSDK<>)data).Rowid)"><span class="oi oi-eye"></span></button> *@
-                    </div>
-                </Template>
-            </RadzenDataGridColumn>
-            }
-            @foreach (var field in ListViewModel.Fields)
+            @key="needUpdate"
+            >
+            <EmptyTemplate>
+                <div class="sdk-empty-list">
+                    <i class="fa-solid fa-eye-slash"></i>
+                    <p><ResourceViewer ResourceTag="Custom.Generic.NoData" /></p>
+                </div>
+            </EmptyTemplate>
+            <Columns>
+            @if(ListViewModel.ShowActions)
             {
-                var fieldName = field.Name;
-                if (fieldName.StartsWith("BaseObj."))
-                {
-                    fieldName = fieldName.Substring(8);
-                }
-                var columnType = typeof(string);
-                var columnWidth = "auto";
-                if(field.ColumnWidth > 0)
-                {
-                    columnWidth = $"{field.ColumnWidth}px";
-                }
-                switch (field.FieldType)
-                {
-                    case FieldTypes.CharField:
-                    case FieldTypes.TextField:
-                    case FieldTypes.EntityField:
-                        break;
-                    case FieldTypes.DateField:
-                    case FieldTypes.DateTimeField:
-                        columnType = typeof(DateTime);
-                        break;
-                    case FieldTypes.DecimalField:
-                        columnType = typeof(decimal);
-                        break;
-                    case FieldTypes.IntegerField:
-                        columnType = typeof(int);
-                        break;
-                    case FieldTypes.BooleanField:
-                        columnType = typeof(bool);
-                        break;
-
-                    default:
-                        break;
-
-                        //default
-                }                
+                <RadzenDataGridColumn TItem="object" Title="Acciones" Width="100px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" HeaderCssClass="grid-column-action">
+                    <HeaderTemplate>
+                        <div class="untruncate-grid-column-action">
+                            @if(IsSubpanel && AllowCreate && CanCreate){
+                            <span
+                                class="oi oi-plus cursor-pointer" @onclick="() => GoToCreate()"></span>
+                            }else{
+                                <span><ResourceViewer ResourceTag="Action.Generic.Actions" /></span>
+                            }    
+                        </div>                    
+                    </HeaderTemplate>
                 
-                if(!field.Hidden){
-                    if(field.Name == ListViewModel.LinkTo)
+                    <Template Context="data">
+                        <div class="action-buttons d-flex justify-content-center">
+                            @if(CanEdit && AllowEdit){
+                                <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToEdit(((IBaseSDK)data).GetRowid())"><i
+                                class="fa-solid fa-pen"></i></button>
+                            }
+                            
+                            
+                            @if(CanDelete && IsSubpanel && AllowDelete){
+                                <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToDelete(((IBaseSDK)data).GetRowid(), data.ToString())"><span
+                                class="fa-solid fa-trash-can"></span></button>
+
+                            }
+                            @* <button class="btn btn-link grid-btn-link"
+                            @onclick="() => GoToDetail(((BaseSDK<>)data).Rowid)"><span class="oi oi-eye"></span></button> *@
+                        </div>
+                    </Template>
+                </RadzenDataGridColumn>
+                }
+                @foreach (var field in ListViewModel.Fields)
+                {
+                    var fieldName = field.Name;
+                    if (fieldName.StartsWith("BaseObj."))
                     {
-                        <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" Width="@columnWidth">
-                            <HeaderTemplate>
-                                <span>
-                                    @if(!string.IsNullOrEmpty(field.ResourceTag))
+                        fieldName = fieldName.Substring(8);
+                    }
+                    var columnType = typeof(string);
+                    var columnWidth = "auto";
+                    if(field.ColumnWidth > 0)
+                    {
+                        columnWidth = $"{field.ColumnWidth}px";
+                    }
+                    switch (field.FieldType)
+                    {
+                        case FieldTypes.CharField:
+                        case FieldTypes.TextField:
+                        case FieldTypes.EntityField:
+                            break;
+                        case FieldTypes.DateField:
+                        case FieldTypes.DateTimeField:
+                            columnType = typeof(DateTime);
+                            break;
+                        case FieldTypes.DecimalField:
+                            columnType = typeof(decimal);
+                            break;
+                        case FieldTypes.IntegerField:
+                            columnType = typeof(int);
+                            break;
+                        case FieldTypes.BooleanField:
+                            columnType = typeof(bool);
+                            break;
+
+                        default:
+                            break;
+
+                            //default
+                    }                
+                    
+                    if(!field.Hidden){
+                        if(field.Name == ListViewModel.LinkTo)
+                        {
+                            <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" Width="@columnWidth">
+                                <HeaderTemplate>
+                                    <span>
+                                        @if(!string.IsNullOrEmpty(field.ResourceTag))
+                                        {
+                                            <ResourceViewer ResourceTag="@field.ResourceTag" />
+                                        }else {
+                                            <ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" />
+                                        }
+                                    </span>
+                                </HeaderTemplate>
+                                <Template Context="data">
+                                    @if(CanDetail && AllowDetail)
                                     {
-                                        <ResourceViewer ResourceTag="@field.ResourceTag" />
-                                    }else {
-                                        <ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" />
-                                    }
-                                </span>
-                            </HeaderTemplate>
-                            <Template Context="data">
-                                @if(CanDetail && AllowDetail)
-                                {
-                                    @if(OnClickDetail != null){
-                                        <a href="#" @onclick="() => GoToDetail(((IBaseSDK)data).GetRowid())" @onclick:preventDefault>@data</a>
+                                        @if(OnClickDetail != null){
+                                            <a href="#" @onclick="() => GoToDetail(((IBaseSDK)data).GetRowid())" @onclick:preventDefault>@data</a>
+                                        }else{
+                                            <a href="/@BusinessName/detail/@(((IBaseSDK)data).GetRowid())/">@data</a>
+                                        }
                                     }else{
-                                        <a href="/@BusinessName/detail/@(((IBaseSDK)data).GetRowid())/">@data</a>
+                                        @data
                                     }
-                                }else{
-                                    @data
-                                }
-                            </Template>
-                        </RadzenDataGridColumn>
-                    }else{
-                        if(field.FieldType == FieldTypes.Custom){
-                            <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" Width="@columnWidth">
-                                <HeaderTemplate>
-                                    <span>
-                                        @if(!string.IsNullOrEmpty(field.ResourceTag))
-                                        {
-                                            <ResourceViewer ResourceTag="@field.ResourceTag" />
-                                        }else {
-                                            <ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" />
-                                        }
-                                    </span>
-                                </HeaderTemplate>
-                                <Template Context="data">
-                                    <CustomField BaseModelObj="@BusinessObj" FieldOpt="field"  Definition="field.CustomComponent" BaseObj="@data"/>
                                 </Template>
-                            </RadzenDataGridColumn>
-                        }else if(columnType == typeof(bool)){
-                            <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" TextAlign="TextAlign.Center" HeaderCssClass="align-header-left" Width="@columnWidth" >
-                                <HeaderTemplate>
-                                    <span>
-                                        @if(!string.IsNullOrEmpty(field.ResourceTag))
-                                        {
-                                            <ResourceViewer ResourceTag="@field.ResourceTag" />
-                                        }else {
-                                            <ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" />
-                                        }
-                                    </span>
-                                </HeaderTemplate>
-                                <Template Context="data">
-                                    <input type="checkbox" checked="@(data.GetType().GetProperty(fieldName).GetValue(data))" disabled />
-                                </Template>
-                            </RadzenDataGridColumn>
-
-                        }else if(field.FieldType == FieldTypes.SelectField){
-                            <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" Width="@columnWidth">
-                                <HeaderTemplate>
-                                    <span>
-                                        @if(!string.IsNullOrEmpty(field.ResourceTag))
-                                        {
-                                            <ResourceViewer ResourceTag="@field.ResourceTag" />
-                                        }else {
-                                            <ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" />
-                                        }
-                                    </span>
-                                </HeaderTemplate>
-                                <Template Context="data">
-                                    <DynamicComponent Type="@typeof(SelectFieldDetail<>).MakeGenericType(field.GetFieldObj(data).SelectFieldType)" Parameters="@GetSelectFieldParameters(data, field, fieldName)" />
-                                </Template>
-                            </RadzenDataGridColumn>
-
-                        }else if(columnType == typeof(decimal)){
-                            <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" TextAlign="TextAlign.Right" HeaderCssClass="align-header-left" Width="@columnWidth">
-                                <HeaderTemplate>
-                                    <span>
-                                        @if(!string.IsNullOrEmpty(field.ResourceTag))
-                                        {
-                                            <ResourceViewer ResourceTag="@field.ResourceTag" />
-                                        }else {
-                                            <ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" />
-                                        }
-                                    </span>
-                                </HeaderTemplate>
                             </RadzenDataGridColumn>
                         }else{
-                        <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" Width="@columnWidth">
-                            <HeaderTemplate>
-                                <span>
-                                    @if(!string.IsNullOrEmpty(field.ResourceTag))
-                                    {
-                                        <ResourceViewer ResourceTag="@field.ResourceTag" />
-                                    }else {
-                                        <ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" />
-                                    }
-                                </span>
-                            </HeaderTemplate>
-                        </RadzenDataGridColumn>
+                            if(field.FieldType == FieldTypes.Custom){
+                                <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" Width="@columnWidth">
+                                    <HeaderTemplate>
+                                        <span>
+                                            @if(!string.IsNullOrEmpty(field.ResourceTag))
+                                            {
+                                                <ResourceViewer ResourceTag="@field.ResourceTag" />
+                                            }else {
+                                                <ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" />
+                                            }
+                                        </span>
+                                    </HeaderTemplate>
+                                    <Template Context="data">
+                                        <CustomField BaseModelObj="@BusinessObj" FieldOpt="field"  Definition="field.CustomComponent" BaseObj="@data"/>
+                                    </Template>
+                                </RadzenDataGridColumn>
+                            }else if(columnType == typeof(bool)){
+                                <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" Width="@columnWidth" >
+                                    <HeaderTemplate>
+                                        <span>
+                                            @if(!string.IsNullOrEmpty(field.ResourceTag))
+                                            {
+                                                <ResourceViewer ResourceTag="@field.ResourceTag" />
+                                            }else {
+                                                <ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" />
+                                            }
+                                        </span>
+                                    </HeaderTemplate>
+                                    <Template Context="data">
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <input type="checkbox" checked="@(data.GetType().GetProperty(fieldName).GetValue(data))" disabled />
+                                        </div>
+                                    </Template>
+                                </RadzenDataGridColumn>
+
+                            }else if(field.FieldType == FieldTypes.SelectField){
+                                <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" Width="@columnWidth">
+                                    <HeaderTemplate>
+                                        <span>
+                                            @if(!string.IsNullOrEmpty(field.ResourceTag))
+                                            {
+                                                <ResourceViewer ResourceTag="@field.ResourceTag" />
+                                            }else {
+                                                <ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" />
+                                            }
+                                        </span>
+                                    </HeaderTemplate>
+                                    <Template Context="data">
+                                        <DynamicComponent Type="@typeof(SelectFieldDetail<>).MakeGenericType(field.GetFieldObj(data).SelectFieldType)" Parameters="@GetSelectFieldParameters(data, field, fieldName)" />
+                                    </Template>
+                                </RadzenDataGridColumn>
+
+                            }else if(columnType == typeof(decimal)){
+                                <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" TextAlign="TextAlign.Right" HeaderCssClass="align-header-left" Width="@columnWidth">
+                                    <HeaderTemplate>
+                                        <span>
+                                            @if(!string.IsNullOrEmpty(field.ResourceTag))
+                                            {
+                                                <ResourceViewer ResourceTag="@field.ResourceTag" />
+                                            }else {
+                                                <ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" />
+                                            }
+                                        </span>
+                                    </HeaderTemplate>
+                                </RadzenDataGridColumn>
+                            }else{
+                            <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" Width="@columnWidth">
+                                <HeaderTemplate>
+                                    <span>
+                                        @if(!string.IsNullOrEmpty(field.ResourceTag))
+                                        {
+                                            <ResourceViewer ResourceTag="@field.ResourceTag" />
+                                        }else {
+                                            <ResourceViewer ResourceTag="@($"{BLEntityName}.{fieldName}")" />
+                                        }
+                                    </span>
+                                </HeaderTemplate>
+                            </RadzenDataGridColumn>
+                            }
+                            
                         }
-                        
                     }
                 }
-            }
-        </Columns>
-    </RadzenDataGrid>
+            </Columns>
+        </RadzenDataGrid>
+    }
+
     @if(SetTopBar)
     {
         <PageTitle><ResourceViewer ResourceTag="@($"{BusinessName}.Plural")" /></PageTitle>

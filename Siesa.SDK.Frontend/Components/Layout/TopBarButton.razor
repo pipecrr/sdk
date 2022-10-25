@@ -70,10 +70,7 @@
     {
         if(string.IsNullOrEmpty(AutomationId))
         {
-            if(SubmitFormOnClick && !string.IsNullOrEmpty(form))
-            {
-                AutomationId = "submit";
-            }else if(!string.IsNullOrEmpty(ResourceTag))
+            if(!string.IsNullOrEmpty(ResourceTag))
             {
                 AutomationId = ResourceTag;
             }

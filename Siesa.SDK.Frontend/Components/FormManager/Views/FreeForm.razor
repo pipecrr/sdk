@@ -13,42 +13,71 @@
 else if (BusinessObj != null)
 {
     <CascadingValue Value="@this">
-        <EditForm id="@FormID" OnValidSubmit="@HandleValidSubmit" OnInvalidSubmit="@HandleInvalidSubmit"
-        EditContext="@EditFormContext">
-            <ObjectGraphDataAnnotationsValidator />
-            <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
-                @if (Panels.Count > 1)
-            {
-                <DxFormLayoutTabPages ScrollMode="TabsScrollMode.Auto">
-                    @foreach (var panel in Panels)
-                    {
-                        <SDKFormLayoutTabPage ResourceTag="@panel.ResourceTag" @key="@panel.PanelId">
-                            <CascadingValue Value="@EditFormContext">
-                                <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef"
-                            DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
-                            </CascadingValue>
-                        </SDKFormLayoutTabPage>
-                    }
-
-
-                </DxFormLayoutTabPages>
-
-            }
-            else
-            {
-                <CascadingValue Value="@EditFormContext">
-                    <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef"
-                    DefaultColSize="@Panels[0].ColSize" ModelObj="@BusinessObj" />
-                </CascadingValue>
-
-            }
-        </DxFormLayout>
-        @* <ValidationSummary /> *@
-        @if(!string.IsNullOrEmpty(ErrorMsg))
+        @if(ValidateForm)
         {
-            <label>@((MarkupString)ErrorMsg)</label>
+            <EditForm id="@FormID" OnValidSubmit="@HandleFreeFormValidSubmit" OnInvalidSubmit="@HandleInvalidSubmit"
+            EditContext="@EditFormContext">
+                <ObjectGraphDataAnnotationsValidator />
+                <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
+                    @if (Panels.Count > 1)
+                {
+                    <DxFormLayoutTabPages ScrollMode="TabsScrollMode.Auto">
+                        @foreach (var panel in Panels)
+                        {
+                            <SDKFormLayoutTabPage ResourceTag="@panel.ResourceTag" @key="@panel.PanelId">
+                                <CascadingValue Value="@EditFormContext">
+                                    <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef"
+                                DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                                </CascadingValue>
+                            </SDKFormLayoutTabPage>
+                        }
+
+
+                    </DxFormLayoutTabPages>
+
+                }
+                else
+                {
+                    <CascadingValue Value="@EditFormContext">
+                        <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef"
+                        DefaultColSize="@Panels[0].ColSize" ModelObj="@BusinessObj" />
+                    </CascadingValue>
+
+                }
+                </DxFormLayout>
+                @* <ValidationSummary /> *@
+                @if(!string.IsNullOrEmpty(ErrorMsg))
+                {
+                    <label>@((MarkupString)ErrorMsg)</label>
+                }
+            </EditForm>
+        }else{
+            <form id="@FormID" @onsubmit="@HandleFreeFormValidSubmit">
+                <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
+                    @if (Panels.Count > 1)
+                    {
+                        <DxFormLayoutTabPages ScrollMode="TabsScrollMode.Auto">
+                            @foreach (var panel in Panels)
+                            {
+                                <SDKFormLayoutTabPage ResourceTag="@panel.ResourceTag" @key="@panel.PanelId">
+                                |   <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef"
+                                    DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" ValidateForm="false" />
+                                </SDKFormLayoutTabPage>
+                            }
+
+
+                        </DxFormLayoutTabPages>
+
+                    }
+                    else
+                    {
+                        <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef"
+                            DefaultColSize="@Panels[0].ColSize" ModelObj="@BusinessObj" ValidateForm="false" />
+
+                    }
+                </DxFormLayout>
+            </form>
         }
-    </EditForm>
 </CascadingValue>
 @if(this.SetTopBar)
 {

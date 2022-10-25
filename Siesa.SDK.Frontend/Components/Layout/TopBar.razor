@@ -15,6 +15,10 @@
             <h3 class="mb-0">@LayoutService.TopBarTitle</h3>
         </div>
         <div class="whcm_toolbar_button d-flex align-items-center position-relative pt-2 pt-sm-0">
+            @if(MainLayout != null && MainLayout.IsDefaultArea)
+            {
+                <TopBarButton  ResourceTag="Action.Expand" IconCssClass="@GetExpandIcon()" Click="@OnClickExpand"/>
+            }
             @LayoutService.TopBarButtons
             @if(LayoutService.HasExtraButtons)
             {
@@ -39,6 +43,8 @@
     </div>
 }
 @code {
+    [CascadingParameter]
+    public MainLayout MainLayout { get; set; }
 
     [Parameter] public bool ShowBackButton { get; set; } = true;
 
@@ -95,6 +101,31 @@
             Console.WriteLine(ex.Message);
         }
        
+    }
+
+    private async Task OnClickExpand(MouseEventArgs e)
+    {
+        if(MainLayout != null)
+        {
+            MainLayout.ToogleMaximize();
+        }
+    }
+
+    private string GetExpandIcon()
+    {
+        if(MainLayout != null)
+        {
+            if(MainLayout.IsMaximized())
+            {
+                return "fa-solid fa-compress";
+            }
+            else
+            {
+                return "fa-solid fa-expand";
+            }
+        }
+
+        return "fa-solid fa-expand";
     }
 
 }
