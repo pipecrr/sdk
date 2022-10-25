@@ -22,7 +22,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             await base.CheckPermissions();
             if(!CanCreate)
             {
-                NotificationService.ShowError("Generic.Unauthorized");
+                NotificationService.ShowError("Custom.Generic.Unauthorized");
                 NavigationService.NavigateTo("/", replace:true);
             }
         }

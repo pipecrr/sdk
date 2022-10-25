@@ -6,7 +6,7 @@
 
 @if (Loading == true)
 {
-    <ResourceViewer ResourceTag="Generic.Loading" />
+    <ResourceViewer ResourceTag="Custom.Generic.Loading" />
 }
 else
 {
@@ -81,7 +81,7 @@ else
             <EmptyTemplate>
                 <div class="sdk-empty-list">
                     <i class="fa-solid fa-eye-slash"></i>
-                    <p><ResourceViewer ResourceTag="Generic.NoData" /></p>
+                    <p><ResourceViewer ResourceTag="Custom.Generic.NoData" /></p>
                 </div>
             </EmptyTemplate>
             <Columns>
@@ -94,7 +94,7 @@ else
                             <span
                                 class="oi oi-plus cursor-pointer" @onclick="() => GoToCreate()"></span>
                             }else{
-                                <span><ResourceViewer ResourceTag="Generic.Actions" /></span>
+                                <span><ResourceViewer ResourceTag="Action.Generic.Actions" /></span>
                             }    
                         </div>                    
                     </HeaderTemplate>

@@ -6,10 +6,10 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @if (Loading == true)
 {
-    <ResourceViewer ResourceTag="Generic.Loading" />
+    <ResourceViewer ResourceTag="Custom.Generic.Loading" />
 } else if (Panels == null || Panels.Count <= 0)
 {
-    <ResourceViewer ResourceTag="SDK.ViewdefNotFound" />
+    <ResourceViewer ResourceTag="Module.SDK.ViewdefNotFound" />
 }
 else if (BusinessObj.BaseObj.Rowid != 0)
 {
@@ -62,10 +62,10 @@ else if (BusinessObj.BaseObj.Rowid != 0)
                 <SDKButton RenderStyle="@btn.RenderStyle"  Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag"  />
             }
             @if(ShowSaveButton){
-                <SDKButton form="@FormID" RenderStyle="SDKButtonRenderStyle.Primary"  SubmitFormOnClick="true" ResourceTag="Generic.ActionSave" />
+                <SDKButton form="@FormID" RenderStyle="SDKButtonRenderStyle.Primary"  SubmitFormOnClick="true" ResourceTag="Action.Save" />
             }
             @if(ShowCancelButton){
-                <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" Click="@((args) => {CancelButton();})" ResourceTag="Generic.ActionCancel" />
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" Click="@((args) => {CancelButton();})" ResourceTag="Action.Cancel" />
             }
         </div>        
     }
@@ -75,8 +75,8 @@ else if (BusinessObj.BaseObj.Rowid != 0)
         <SetTopBar StyleName="toolbar_edition" HasExtraButtons="@(FormViewModel.Buttons != null && FormViewModel.Buttons.Count > 0 ? true: false)">
             <TopBarTitle><ResourceViewer ResourceTag="Action.Modify" /> @BusinessObj</TopBarTitle>
             <TopBarButtons>
-                <TopBarButton form="@FormID" SubmitFormOnClick="true" ResourceTag="Generic.ActionSave" IconCssClass="@GetSaveBtnIcon()" Enabled="@(!Saving)" />
-                @* <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="GoToList" ResourceTag="Generic.ActionCancel" /> *@
+                <TopBarButton form="@FormID" SubmitFormOnClick="true" ResourceTag="Action.Save" IconCssClass="@GetSaveBtnIcon()" Enabled="@(!Saving)" />
+                @* <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="GoToList" ResourceTag="Action.Cancel" /> *@
             </TopBarButtons>
             <TopBarExtraButtons>
                 @foreach (var btn in FormViewModel.Buttons)

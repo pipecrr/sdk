@@ -143,7 +143,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 {
                     if (request.Data == true)
                     {
-                        _NotificationService.ShowError("Custom.UniqueIndexValidation");
+                        _NotificationService.ShowError("Custom.Generic.UniqueIndexValidation");
 
                         if(this.FieldOpt.CssClass == null)
                         {

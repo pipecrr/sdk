@@ -17,18 +17,18 @@
     <TopBarButtons>
         @if(_isDetail)
         {
-            <TopBarButton ResourceTag="Flex.ActionRefreshData" IconCssClass="fa-solid fa-refresh" Click="RefreshData" />
-            <TopBarButton ResourceTag="Flex.ExportToExcel" IconCssClass="fa-solid fa-file-excel" Click="ExportToExcel" />
-            <TopBarButton ResourceTag="Flex.ActionConfigure" IconCssClass="fa-solid fa-cog" Click="Configure" />
+            <TopBarButton ResourceTag="Action.Flex.RefreshData" IconCssClass="fa-solid fa-refresh" Click="RefreshData" />
+            <TopBarButton ResourceTag="Action.Flex.ExportToExcel" IconCssClass="fa-solid fa-file-excel" Click="ExportToExcel" />
+            <TopBarButton ResourceTag="Action.Flex.Configure" IconCssClass="fa-solid fa-cog" Click="Configure" />
             <TopBarButton ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus" Click="GoToCreate"  />
             <TopBarButton ResourceTag="Action.Modify" IconCssClass="fa-solid fa-pen" Click="GoToEdit"  />
             <TopBarButton ResourceTag="Action.List"  IconCssClass="fa-solid fa-list" Click="GoToList" />
             <TopBarButton ResourceTag="Action.Delete" IconCssClass="fa-solid fa-trash-can" Click="OnClickDelete" />
         }else{
-            <TopBarButton ResourceTag="Flex.ActionAddGraphic" IconCssClass="fa-solid fa-pie-chart" Click="AddGraphic" />
-            <TopBarButton ResourceTag="Flex.ActionConfigure" IconCssClass="fa-solid fa-cog" Click="Configure" />
-            <TopBarButton ResourceTag="Flex.ActionSaveAndContinue" IconCssClass="fa-solid fa-bookmark" Click="SaveAndContinue" />
-            <TopBarButton ResourceTag="Flex.ActionSaveAndClose" IconCssClass="fa-solid fa-floppy-disk" Click="SaveAndClose" />
+            <TopBarButton ResourceTag="Action.Flex.AddGraphic" IconCssClass="fa-solid fa-pie-chart" Click="AddGraphic" />
+            <TopBarButton ResourceTag="Action.Flex.Configure" IconCssClass="fa-solid fa-cog" Click="Configure" />
+            <TopBarButton ResourceTag="Action.Flex.SaveAndContinue" IconCssClass="fa-solid fa-bookmark" Click="SaveAndContinue" />
+            <TopBarButton ResourceTag="Action.Flex.SaveAndClose" IconCssClass="fa-solid fa-floppy-disk" Click="SaveAndClose" />
         }
         
     </TopBarButtons>
