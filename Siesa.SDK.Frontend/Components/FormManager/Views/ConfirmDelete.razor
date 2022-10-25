@@ -12,8 +12,8 @@
         <p>@Text</p>
     </div>
     <div class="modal-footer justify-content-center">
-        <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" CssClass="px-3" ResourceTag="Action.ConfirmCancel" Click="@ClickCancel" />
-        <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" CssClass="px-3"  ResourceTag="Action.ConfirmDelete" Click="@ClickDelete" />
+        <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" CssClass="px-3" ResourceTag="Action.ConfirmDetele.Cancel" Click="@ClickCancel" />
+        <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" CssClass="px-3"  ResourceTag="Action.ConfirmDelete.Delete" Click="@ClickDelete" />
     </div>
 
 </div>
@@ -24,10 +24,10 @@
     public DialogService DialogService { get; set; }
 
     private string Text { get; set; }
-    private string TextTag = "Modal.ConfirmDelete.Body";
+    private string TextTag = "Custom.Modal.ConfirmDelete.Body";
 
     private string Title { get; set; }
-    private string TitleTag = "Modal.ConfirmDelete";
+    private string TitleTag = "Custom.Modal.ConfirmDelete.Title";
     private void ClickDelete()
     {
         DialogService.Close(true);

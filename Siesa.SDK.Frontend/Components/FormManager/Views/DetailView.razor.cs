@@ -248,7 +248,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
                 if (!CanDetail)
                 {
-                    NotificationService.ShowError("Generic.Unauthorized");
+                    NotificationService.ShowError("Custom.Generic.Unauthorized");
                     NavigationService.NavigateTo("/", replace: true);
                 }
             }

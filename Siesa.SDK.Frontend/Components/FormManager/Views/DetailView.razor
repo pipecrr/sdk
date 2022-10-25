@@ -6,10 +6,10 @@
 @using System.Linq
 @if (Loading == true)
 {
-    <ResourceViewer ResourceTag="Generic.Loading" />
+    <ResourceViewer ResourceTag="Custom.Generic.Loading" />
 } else if (Panels == null || Panels.Count <= 0)
 {
-    <ResourceViewer ResourceTag="SDK.ViewdefNotFound" />
+    <ResourceViewer ResourceTag="Module.SDK.ViewdefNotFound" />
 }
 else if (ModelLoaded == true)
 {
@@ -55,7 +55,7 @@ else if (ModelLoaded == true)
                 <SDKButton RenderStyle="SDKButtonRenderStyle.Danger" Click="DeleteBusiness" ResourceTag="Action.Delete" />                
             }
             @if (ShowCancelButton){
-                <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" Click="@((args) => dialogService.Close(false))" ResourceTag="Generic.Close"/>
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" Click="@((args) => dialogService.Close(false))" ResourceTag="Action.Close"/>
             }
         </div>
     }

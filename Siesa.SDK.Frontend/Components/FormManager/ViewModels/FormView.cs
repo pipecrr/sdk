@@ -428,7 +428,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
         {
             //ErrorMsg = @"Form data is invalid";
             FormHasErrors = true;
-            NotificationService.ShowError("Generic.FormError");
+            NotificationService.ShowError("Custom.Generic.FormError");
         }
         protected void GoToList()
         {

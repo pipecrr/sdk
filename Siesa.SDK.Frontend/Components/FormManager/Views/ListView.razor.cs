@@ -199,7 +199,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
                 if(!CanList){
                     ErrorMsg = "Unauthorized";
-                    NotificationService.ShowError("Generic.Unauthorized");
+                    NotificationService.ShowError("Custom.Generic.Unauthorized");
                     NavigationService.NavigateTo("/", replace:true);
                 }
 

@@ -13,10 +13,10 @@
 
 @if (Loading == true)
 {
-    <ResourceViewer ResourceTag="Generic.Loading" />
+    <ResourceViewer ResourceTag="Custom.Generic.Loading" />
 } else if (Panels == null || Panels.Count <= 0)
 {
-    <ResourceViewer ResourceTag="SDK.ViewdefNotFound" />
+    <ResourceViewer ResourceTag="Module.SDK.ViewdefNotFound" />
 } else if (BusinessObj.BaseObj != null)
 {
     @if(IsSubpanel && ShowTitle){        
@@ -69,10 +69,10 @@
                 <SDKButton RenderStyle="@btn.RenderStyle"  Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag"  />
             }
             @if(ShowSaveButton){
-                <SDKButton form="@FormID" RenderStyle="SDKButtonRenderStyle.Primary" SubmitFormOnClick="true" ResourceTag="Generic.ActionSave"/>
+                <SDKButton form="@FormID" RenderStyle="SDKButtonRenderStyle.Primary" SubmitFormOnClick="true" ResourceTag="Action.Save"/>
             }
             @if(ShowCancelButton){
-                <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" Click="@((args) => {CancelButton();})" ResourceTag="Generic.ActionCancel" />
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" Click="@((args) => {CancelButton();})" ResourceTag="Action.Cancel" />
             }
         </div>
     }
@@ -82,8 +82,8 @@
         <SetTopBar StyleName="toolbar_creation" HasExtraButtons="@(FormViewModel.Buttons != null && FormViewModel.Buttons.Count > 0 ? true: false)">
             <TopBarTitle><ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer ResourceTag="@($"{BusinessName}.Singular")" /></TopBarTitle>
             <TopBarButtons>
-                <TopBarButton form="@FormID" SubmitFormOnClick="true" ResourceTag="Generic.ActionSave" IconCssClass="@GetSaveBtnIcon()" Enabled="@(!Saving)"  />
-                @* <TopBarButton Click="GoToList" ResourceTag="Generic.ActionCancel"  IconCssClass="fa-solid fa-floppy-disk"  /> *@
+                <TopBarButton form="@FormID" SubmitFormOnClick="true" ResourceTag="Action.Save" IconCssClass="@GetSaveBtnIcon()" Enabled="@(!Saving)"  />
+                @* <TopBarButton Click="GoToList" ResourceTag="Action.Cancel"  IconCssClass="fa-solid fa-floppy-disk"  /> *@
             </TopBarButtons>
             <TopBarExtraButtons>
                 @foreach (var btn in FormViewModel.Buttons)

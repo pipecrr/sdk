@@ -18,13 +18,13 @@
     string url {get; set;}
     bool recording {get; set;} = false;
     bool notRecording {get; set;} = true;
-    public string resourceAction {get; set;} = "SDKRecorder.Record";
+    public string resourceAction {get; set;} = "Action.SDKRecorder.Record";
     [Parameter] public Action<string> OnGetAudio {get; set;}
     private IJSObjectReference _jsModule;
 
     protected override async Task OnInitializedAsync()
     {
-        resourceAction = await UtilsManager.GetResource("SDKRecorder.Record");        
+        resourceAction = await UtilsManager.GetResource("Action.SDKRecorder.Record");        
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

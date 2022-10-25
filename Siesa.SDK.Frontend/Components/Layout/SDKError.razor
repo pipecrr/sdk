@@ -13,10 +13,10 @@
             <i class="fa-solid fa-triangle-exclamation" />
             <h4>@Title</h4>
 
-            <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Error.MoreInfo"
+            <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Action.SDKError.MoreInfo"
             Click="@ClickMoreInfo" />
 
-            <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Error.Recover"
+            <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Action.SDKError.Recover"
             Click="@ClickRecover" />
 
             @if (ShowStackError)
@@ -41,10 +41,10 @@
                             <i class="fa-solid fa-triangle-exclamation" />
                             <h4>@Title</h4>
 
-                            <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Error.MoreInfo"
+                            <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Action.SDKError.MoreInfo"
                             Click="@ClickMoreInfo" />
 
-                            <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Error.Recover"
+                            <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Action.SDKError.Recover"
                             Click="@ClickRecover" />
 
                             @if (ShowStackError)
@@ -78,10 +78,10 @@
     private bool ShowStackError { get; set; }
 
     private string Title { get; set; }
-    private string TitleTag = "Error.Text.Title";
+    private string TitleTag = "Custom.SDKError.Text.Title";
 
     private string NotificationMessage { get; set; }
-    private string NotificationMessageTag = "Generic.Message.Error";
+    private string NotificationMessageTag = "Custom.Generic.Message.Error";
 
     protected override async Task OnInitializedAsync()
     {

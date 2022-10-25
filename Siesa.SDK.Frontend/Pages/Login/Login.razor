@@ -58,7 +58,7 @@
                 <div class="login_area col-12 col-lg-5 p-3 p-lg-3">
                     <div class="col-12 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
                         <select class="select_connect" id="SelectConnect" @onchange="OnChangeConnection">
-                            <option value=""><ResourceViewer ResourceTag="BLLogin.SelectDbConnection" RowidCulture=@RowidCulture /></option>
+                            <option value=""><ResourceViewer ResourceTag="BLUser.Login.Message.SelectDbConnection" RowidCulture=@RowidCulture /></option>
                             @if(ConnectionList != null && ConnectionList.Count > 0)
                             {
                                 @foreach(var db in ConnectionList)
@@ -145,15 +145,15 @@
                             </div>
                             <div class="col-12 p-0 text-center pt-4">
                                 <a class="link_login" href="">
-                                    <ResourceViewer ResourceTag="Project.ForgotPassword" RowidCulture=@RowidCulture />
+                                    <ResourceViewer ResourceTag="BLLogin.Project.ForgotPassword" RowidCulture=@RowidCulture />
                                 </a>
 
                             </div>
                         </div>
                     </div>
                     <div class="text-center copy_right_text">
-                        <ResourceViewer ResourceTag="Project.Version" RowidCulture=@RowidCulture /> -
-                        <ResourceViewer ResourceTag="Project.Copy" RowidCulture=@RowidCulture />
+                        <ResourceViewer ResourceTag="Custom.Project.Version" RowidCulture=@RowidCulture /> -
+                        <ResourceViewer ResourceTag="Custom.Project.Copy" RowidCulture=@RowidCulture />
                     </div>
                 </div>
             </div>
@@ -295,7 +295,7 @@
         loading = true;
         if(SelectedConnection == null)
         {
-            error = "BLLogin.SelectDbConnection";
+            //error = "BLLogin.SelectDbConnection";
             SDKNotificationService.ShowError("BLUser.Login.Message.SelectDbConnection", culture: RowidCulture);
             loading = false;
             StateHasChanged();

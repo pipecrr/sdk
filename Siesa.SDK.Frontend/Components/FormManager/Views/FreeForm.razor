@@ -5,10 +5,10 @@
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
 @if (Loading == true)
 {
-    <ResourceViewer ResourceTag="Generic.Loading" />
+    <ResourceViewer ResourceTag="Custom.Generic.Loading" />
 }else if (Panels == null || Panels.Count <= 0)
 {
-    <ResourceViewer ResourceTag="SDK.ViewdefNotFound" />
+    <ResourceViewer ResourceTag="Module.SDK.ViewdefNotFound" />
 }
 else if (BusinessObj != null)
 {

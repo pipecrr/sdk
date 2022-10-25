@@ -262,7 +262,7 @@ namespace Siesa.SDK.Business
             }
             catch (Exception e)
             {
-            await GetNotificacionService("Generic.Message.DeleteError");
+            await GetNotificacionService("Custom.Generic.Message.DeleteError");
 
             return null;
             }
@@ -312,7 +312,7 @@ namespace Siesa.SDK.Business
             }
             catch (Exception e)
             {
-                await GetNotificacionService("Generic.Message.Error");
+                await GetNotificacionService("Custom.Generic.Message.Error");
 
                 return response;
             }
