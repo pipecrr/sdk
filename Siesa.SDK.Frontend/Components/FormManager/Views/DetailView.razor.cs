@@ -11,6 +11,7 @@ using Siesa.SDK.Frontend.Utils;
 using Radzen;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Frontend.Services;
+using Siesa.SDK.Entities;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -56,16 +57,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         protected List<Panel> Panels { get { return FormViewModel.Panels; } }
 
         public Boolean ModelLoaded = false;
-
         public String ErrorMsg = "";
-
         protected bool CanCreate;
         protected bool CanEdit;
         protected bool CanDelete;
         protected bool CanDetail;
         protected bool CanList;
-
-
+        public Boolean ContainAttachments = false;
+        Relationship RelationshipAttachment = new Relationship();
+        E00270_Attachment ParentAttachment = new E00270_Attachment();
         private void setViewContext(List<Panel> panels)
         {
             for (int i = 0; i < panels.Count; i++)
@@ -97,8 +97,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if (bName == null)
             {
                 bName = BusinessName;
-            }
+            }            
             await CheckPermissions();
+            await CreateRelationshipAttachment();
             var metadata = BackendRouterService.GetViewdef(bName, "detail");
             if (metadata == null || metadata == "")
             {
@@ -155,6 +156,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         {
             await base.OnInitializedAsync();
             //InitView();
+        }
+
+        private async Task CreateRelationshipAttachment()
+        {
+            var attachment = BusinessObj.BaseObj.GetType().GetProperty("RowidAttachment");
+            if(attachment == null){
+                return;
+            }
+            ContainAttachments = true;
         }
         private void GoToCreate()
         {
