@@ -97,7 +97,7 @@
     }
 
 
-    void ChangeCompany(ChangeEventArgs e)
+    private async Task ChangeCompany(ChangeEventArgs e)
     {
         if (e.Value != null)
         {
@@ -107,9 +107,9 @@
             SetCompany(rowidCompany, true);
             SelectedCompany.Rowid = rowidCompany;
 
-            if (!OnChangeCompany.HasDelegate)
+            if (OnChangeCompany.HasDelegate)
             {
-                OnChangeCompany.InvokeAsync();
+              await OnChangeCompany.InvokeAsync(SelectedCompany);
             }
         }
     }
