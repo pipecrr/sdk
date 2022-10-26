@@ -80,7 +80,7 @@
     @if(SetTopBar && !IsSubpanel)
     {
         <PageTitle><ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer ResourceTag="@($"{BusinessName}.Singular")" /></PageTitle>
-        <SetTopBar StyleName="toolbar_creation" HasExtraButtons="@(FormViewModel.Buttons != null && FormViewModel.Buttons.Count > 0 ? true: false)" BusinessObj="@BusinessObj" OnChangeCompany="@funcionpbr">
+        <SetTopBar StyleName="toolbar_creation" HasExtraButtons="@(FormViewModel.Buttons != null && FormViewModel.Buttons.Count > 0 ? true: false)" BusinessObj="@BusinessObj">
             <TopBarTitle><ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer ResourceTag="@($"{BusinessName}.Singular")" /></TopBarTitle>
             <TopBarButtons>
                 <TopBarButton form="@FormID" SubmitFormOnClick="true" ResourceTag="Generic.ActionSave" IconCssClass="@GetSaveBtnIcon()" Enabled="@(!Saving)"  />
@@ -99,10 +99,6 @@
 
 @code {
 
-    public void funcionpbr(E00201_Company company)
-    {
-        Notification.ShowError($"Hola Mundo {company.Name}{company.Rowid}");
-    }
     protected override async Task InitView(string bName = null){
         await base.InitView(bName);
 
