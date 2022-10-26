@@ -1,0 +1,19 @@
+@using Microsoft.AspNetCore.Components;
+
+<RadzenUpload Url="upload/single" class="@StyleCss" ChooseText="SDKUpload.Choose"
+Accept="@Accept" Progress="@Progress" Complete="@Complete"> </RadzenUpload >
+
+@code {
+    [Parameter]public string StyleCss {get; set;}
+    [Parameter]public List<string> Extensions {get; set;}
+    [Parameter] public EventCallback<UploadProgressArgs> Progress {get;set;}
+    [Parameter] public EventCallback<UploadCompleteEventArgs> Complete {get;set;}
+
+    private string Accept = "";
+
+    protected override void OnParametersSet(){
+        if (Extensions != null){
+            Accept = string.Join(", ", Extensions);
+        }
+    }
+}
