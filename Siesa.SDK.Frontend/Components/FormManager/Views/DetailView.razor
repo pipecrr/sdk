@@ -37,6 +37,9 @@ else if (ModelLoaded == true)
 
             }
         </DxFormLayout>
+        @if(ContainAttachments){
+            <AttachmentPanel BusinessObj="@BusinessObj"/>
+        }
         @if(!string.IsNullOrEmpty(ErrorMsg))
         {
             <label>@((MarkupString)ErrorMsg)</label>
