@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Siesa.SDK.Entities;
 using Siesa.SDK.Frontend.Components.Layout;
 using System;
 using System.Collections.Generic;
@@ -31,6 +32,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         [Parameter]	
         public dynamic BusinessObj { get; set; }
 
+        [Parameter]
+        public bool HiddenCompaies { get; set; } = false;
+
+        [Parameter]
+        public bool DisableCompanies { get; set; }
+
+        [Parameter] 
+        public EventCallback<E00201_Company> OnChangeCompany { get; set; }
 
         protected override void OnInitialized()
         {

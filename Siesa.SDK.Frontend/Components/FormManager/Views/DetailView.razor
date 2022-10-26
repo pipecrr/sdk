@@ -62,7 +62,7 @@ else if (ModelLoaded == true)
     @if(SetTopBar)
     {
         <PageTitle>@BusinessObj</PageTitle>
-        <SetTopBar HasExtraButtons="@(FormViewModel.Buttons != null && FormViewModel.Buttons.Count > 0 ? true: false)">
+        <SetTopBar HasExtraButtons="@(FormViewModel.Buttons != null && FormViewModel.Buttons.Count > 0 ? true: false)" BusinessObj="@BusinessObj" DisableCompanies="true">
             <TopBarTitle>@BusinessObj</TopBarTitle>
             <TopBarButtons>
 

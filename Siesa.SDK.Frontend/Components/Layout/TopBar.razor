@@ -54,11 +54,12 @@
         {
             <div>
                 <div class="whcm_company_select ">
-                            <select class="form-select form-control form-control-sm font-weight-bold" 
+                            <select class="form-select form-control form-control-sm font-weight-bold" disabled="@DisableCompanies"
                             id="inputCompany" @onchange="@ChangeCompany">
                                 @foreach (var company in CompaniesList)
                                     {
-                                        <option value="@company.Rowid" selected="@(company.Rowid == SelectedCompany.Rowid)">@company.ToString()</option>
+                                        <option value="@company.Rowid"
+                                        selected="@(company.Rowid == SelectedCompany.Rowid)">@company.ToString()</option>
                                     }
                             </select>
                 </div>
@@ -70,11 +71,15 @@
 
     [Parameter] public bool ShowBackButton { get; set; } = true;
 
-    private bool ShowMoreOptions = false;
+    [Parameter] public bool HiddenCompaies { get; set; } = false;
+
+    [Parameter] public bool DisableCompanies { get; set; } = false;
+
+    [Parameter] public EventCallback<E00201_Company> OnChangeCompany { get; set; } 
 
     [Inject] public ILayoutService LayoutService { get; set; }
 
-    [Parameter] public bool HiddenCompaies { get; set; } = false;
+    private bool ShowMoreOptions = false;
 
     private bool ShowCompanies { get; set; } = false;
 
@@ -99,16 +104,25 @@
             var valuestr= e.Value.ToString();
             short rowidCompany = short.Parse(valuestr);
 
-            SetCompany(rowidCompany);
+            SetCompany(rowidCompany, true);
             SelectedCompany.Rowid = rowidCompany;
+
+            if (!OnChangeCompany.HasDelegate)
+            {
+                OnChangeCompany.InvokeAsync();
+            }
         }
     }
 
-    private void SetCompany(short rowidCompany)
+    private void SetCompany(short rowidCompany, bool setObj)
     {
         if (LayoutService?.BusinessObj?.BaseObj != null && InheritCompany())
         {
              LayoutService.BusinessObj.BaseObj.RowidCompany = rowidCompany;
+             if(setObj)
+             {
+                LayoutService.BusinessObj.BaseObj.Company = CompaniesList.FirstOrDefault(x => x.Rowid == rowidCompany);
+             }
              LayoutService.BusinessObj.Refresh(true);
         } 
     }
@@ -129,13 +143,50 @@
             if (LayoutService?.BusinessObj?.BaseObj != null && InheritCompany())
             {
                 ShowCompanies = true;
-                LayoutService.BusinessObj.BaseObj.RowidCompany = SelectedCompany.Rowid ;
-                //LayoutService.BusinessObj.Refresh(true);
+                if(LayoutService.BusinessObj.BaseObj.RowidCompany != SelectedCompany.Rowid)
+                {
+                    SetCompany(SelectedCompany.Rowid, true);
+                }
                 StateHasChanged();
             }else{
                 ShowCompanies = false;
                 StateHasChanged();
             }
+        }
+
+        if(e.PropertyName == nameof(ILayoutService.HiddenCompaies))
+        {
+            if(LayoutService?.HiddenCompaies == true){
+
+                HiddenCompaies = LayoutService.HiddenCompaies;
+            }else{
+
+                HiddenCompaies = false;
+            }
+
+            StateHasChanged();
+        }
+
+        if(e.PropertyName == nameof(ILayoutService.DisableCompanies))
+        {
+            if(LayoutService?.DisableCompanies == true){
+
+                DisableCompanies = LayoutService.DisableCompanies;
+            }else{
+
+                DisableCompanies = false;
+            }
+
+            StateHasChanged();
+        }
+
+        if(e.PropertyName == nameof(ILayoutService.OnChangeCompany))
+        {
+            if(LayoutService != null){
+
+                OnChangeCompany = LayoutService.OnChangeCompany;
+            }
+            StateHasChanged();
         }
         
         if (
@@ -143,8 +194,8 @@
             e.PropertyName == nameof(ILayoutService.TopBarButtons) || 
             e.PropertyName == nameof(ILayoutService.TopBarExtraButtons) || 
             e.PropertyName == nameof(ILayoutService.StyleName) ||
-            e.PropertyName == nameof(ILayoutService.HasExtraButtons)
-            )
+            e.PropertyName == nameof(ILayoutService.HasExtraButtons) 
+            ) 
         {
             StateHasChanged();
         }
@@ -198,7 +249,7 @@
 
                 if (CompaniesList.Count > 0)
                 {
-                    SetCompany(CompaniesList.First().Rowid);
+                    SetCompany(CompaniesList.First().Rowid, true);
                     SelectedCompany.Rowid = CompaniesList.First().Rowid;
                 }
             }

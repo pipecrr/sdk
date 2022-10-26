@@ -72,7 +72,7 @@ else if (BusinessObj.BaseObj.Rowid != 0)
     @if(SetTopBar && !IsSubpanel)
     {
         <PageTitle><ResourceViewer ResourceTag="Action.Modify" /> @BusinessObj</PageTitle>
-        <SetTopBar StyleName="toolbar_edition" HasExtraButtons="@(FormViewModel.Buttons != null && FormViewModel.Buttons.Count > 0 ? true: false)">
+        <SetTopBar StyleName="toolbar_edition" HasExtraButtons="@(FormViewModel.Buttons != null && FormViewModel.Buttons.Count > 0 ? true: false)" BusinessObj="@BusinessObj" DisableCompanies="true">
             <TopBarTitle><ResourceViewer ResourceTag="Action.Modify" /> @BusinessObj</TopBarTitle>
             <TopBarButtons>
                 <TopBarButton form="@FormID" SubmitFormOnClick="true" ResourceTag="Generic.ActionSave" IconCssClass="@GetSaveBtnIcon()" Enabled="@(!Saving)" />
@@ -89,6 +89,7 @@ else if (BusinessObj.BaseObj.Rowid != 0)
 
 }
 @code {
+
     protected override async Task InitView(string bName = null){
         await base.InitView(bName);
 
