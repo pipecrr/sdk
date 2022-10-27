@@ -214,13 +214,9 @@ namespace Siesa.SDK.Frontend.Services
 
         public async Task<bool> ForgotPasswordAsync(string email){
 
-            var BLUser = _backendRouterService.GetSDKBusinessModel("BLUser", this);
+            var request = await GetBLUser();
 
-            if (BLUser == null)
-            {
-                throw new Exception("Occurio un error");
-            }
-            var result = await BLUser.Call("RecoveryPassword", email);
+            var result = await request.Call("SendEmailRecoveryPassword", email, SelectedConnection.Rowid);
 
             if (result.Success)
             {
@@ -230,36 +226,48 @@ namespace Siesa.SDK.Frontend.Services
             return false;
         }
 
-        public async Task<bool> ValidateUserForChangedPassword(int rowidUser, string NewPassword="", string ConfirmPassword=""){
-                
-            var BLUser = _backendRouterService.GetSDKBusinessModel("BLUser", this);
-            if (BLUser == null)
-            {
-                throw new Exception("Occurio un error");
-            }
+        public async Task<bool> ValidateUserToken(int rowidUser){
 
-            if (!string.IsNullOrEmpty(NewPassword) && !string.IsNullOrEmpty(ConfirmPassword))
-                {
-                    if (NewPassword != ConfirmPassword)
-                    {
-                        throw new Exception("Las contraseñas no coinciden");
-                    }else
-                    {
-                        var resultChangePassword = await BLUser.Call("ValidateUserForChangedPassword",rowidUser,NewPassword,ConfirmPassword);
-                        if (resultChangePassword.Success)
-                        {
-                            return true;
-                        }
-                    }
-                }
+            var request = await GetBLUser();
 
-            var result = await BLUser.Call("ValidateUserForChangedPassword", rowidUser,"","");
+            var result = await request.Call("ValidateUserToken", rowidUser,SelectedConnection.Rowid);
 
             if (result.Success)
             {
                 return true;
             }
             return false;
+        }
+
+        public async Task<bool> ChangePassword(int rowidUser, string NewPassword, string ConfirmPassword)
+        {
+            var request = await GetBLUser();
+            if (!string.IsNullOrEmpty(NewPassword) && !string.IsNullOrEmpty(ConfirmPassword))
+            {
+                if (NewPassword != ConfirmPassword)
+                {
+                    throw new Exception("Las contraseñas no coinciden");
+                }else
+                {
+                    var resultChangePassword = await request.Call("RecoveryPassword",rowidUser,NewPassword,ConfirmPassword,SelectedConnection.Rowid);
+                    if (resultChangePassword.Success)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private async Task<dynamic> GetBLUser()
+        {
+            var BLUser = _backendRouterService.GetSDKBusinessModel("BLUser", this);
+
+            if (BLUser == null)
+            {
+                throw new Exception("Occurio un error");
+            }
+            return BLUser;
         }
     }
 }
