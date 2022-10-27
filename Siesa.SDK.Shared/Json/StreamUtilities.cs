@@ -16,7 +16,11 @@ namespace Siesa.SDK.Shared.Json
         }
         public static byte[] Compress<T>(T setting)
         {
-            JsonSerializer serializer = new JsonSerializer();
+            JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings
+            {
+                Formatting = Formatting.None,
+                ContractResolver = new SDKContractResolver()
+            });
             serializer.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             byte[] compressedBytes;
             using (MemoryStream memoryStream = new MemoryStream())
@@ -41,7 +45,11 @@ namespace Siesa.SDK.Shared.Json
 
         public static T Decompress<T>(Stream compressedStream)
         {
-            JsonSerializer serializer = new JsonSerializer();
+            JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings
+            {
+                Formatting = Formatting.None,
+                ContractResolver = new SDKContractResolver()
+            });
             serializer.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             T restoredData;
             using (GZipStream decompressedStream = new GZipStream(compressedStream, CompressionMode.Decompress, true))
