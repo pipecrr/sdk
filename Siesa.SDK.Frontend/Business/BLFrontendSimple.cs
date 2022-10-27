@@ -19,6 +19,9 @@ using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Shared.Utilities;
 using Siesa.SDK.Shared.Validators;
 using Microsoft.Extensions.Logging;
+using Siesa.SDK.Shared.DataAnnotations;
+using Siesa.SDK.Shared.DTOS;
+using Microsoft.AspNetCore.Http;
 
 namespace Siesa.SDK.Business
 {
@@ -386,6 +389,15 @@ namespace Siesa.SDK.Business
             {
                 Console.WriteLine(message);
             }
+        }
+
+        [SDKApiMethod("POST")]
+        public async Task<SDKFileUploadDTO> UploadSingle(IFormFile file){
+            var result = new SDKFileUploadDTO();
+            result.Url = "prueba/prb";
+            result.FileType = file.ContentType;
+            
+            return result;
         }
 
     }
