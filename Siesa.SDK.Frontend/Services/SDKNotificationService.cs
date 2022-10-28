@@ -43,6 +43,7 @@ namespace Siesa.SDK.Frontend.Services
 
             base.Notify(new SDKNotificationMessage
             {
+                Summary = resourceMessage,
                 Severity = SDKEnums.GetNotification(SDKNotificationSeverity.Error),
                 Detail = message,
                 Duration = duration
@@ -54,6 +55,7 @@ namespace Siesa.SDK.Frontend.Services
 
             base.Notify(new SDKNotificationMessage
             {
+                Summary = resourceMessage,
                 Severity = SDKEnums.GetNotification(SDKNotificationSeverity.Success),
                 Detail = message,
                 Duration = duration
@@ -65,6 +67,7 @@ namespace Siesa.SDK.Frontend.Services
             var message = await GetResourceMessage(resourceMessage, culture, variables);
             base.Notify(new SDKNotificationMessage
             {
+                Summary = resourceMessage,
                 Severity = SDKEnums.GetNotification(SDKNotificationSeverity.Info),
                 Detail = message,
                 Duration = duration
@@ -76,6 +79,7 @@ namespace Siesa.SDK.Frontend.Services
             var message = await GetResourceMessage(resourceMessage, culture, variables);
             base.Notify(new SDKNotificationMessage
             {
+                Summary = resourceMessage,
                 Severity = SDKEnums.GetNotification(SDKNotificationSeverity.Warning),
                 Detail = message,
                 Duration = duration
@@ -87,6 +91,7 @@ namespace Siesa.SDK.Frontend.Services
             var message = await GetResourceMessage(resourceMessage, culture, variables);
             base.Notify(new SDKNotificationMessage
             {
+                Summary = resourceMessage,
                 Severity = SDKEnums.GetNotification(type),
                 Detail = message,
                 Duration = duration,
