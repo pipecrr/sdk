@@ -33,6 +33,7 @@
 
 
 @code {
+    [Parameter] public string BLNameParentAttatchment { get; set; }
     [Parameter] public string BusinessName { get; set; }
     [Parameter] public Dictionary<string, object> DefaultFieldsCreate { get; set; }
 
@@ -49,7 +50,7 @@
      public async Task OpenModalCreate()
     {
         var modal_result = await DialogService.OpenAsync("", 
-        ds => @<DynamicCreateView BusinessName="@BusinessName" IsSubpanel=true  DefaultFields="@DefaultFieldsCreate" />, 
+        ds => @<DynamicCreateView BusinessName="@BusinessName" IsSubpanel=true  DefaultFields="@DefaultFieldsCreate" BLNameParentAttatchment="@BLNameParentAttatchment"/>, 
         new DialogOptions() { Width = "700px", ShowTitle=false,  Resizable =true, Style="padding: 1rem;" });
         listview_key = Guid.NewGuid();
         StateHasChanged();

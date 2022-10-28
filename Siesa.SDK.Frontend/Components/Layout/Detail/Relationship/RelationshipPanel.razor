@@ -19,6 +19,7 @@
         @if(isOpen){
             <div class="relationship-panel-body">
                 <InlineCrud
+                    BLNameParentAttatchment="@BLNameParentAttatchment"
                     BusinessName="@Relationship.RelatedBusiness"
                     Filter="@filter"
                     DefaultFieldsCreate="@DefaultFieldsCreate" AllowCreate="@AllowCreate" AllowEdit="@AllowEdit" AllowDelete="@AllowDelete"
@@ -38,6 +39,7 @@
 
 
 @code {
+    [Parameter] public string BLNameParentAttatchment { get; set; }
     [Parameter] public Relationship Relationship { get; set; }
     [Parameter] public dynamic Parent { get; set; }
 

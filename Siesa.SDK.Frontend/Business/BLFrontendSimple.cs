@@ -22,6 +22,7 @@ using Microsoft.Extensions.Logging;
 using Siesa.SDK.Shared.DataAnnotations;
 using Siesa.SDK.Shared.DTOS;
 using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace Siesa.SDK.Business
 {
@@ -29,6 +30,8 @@ namespace Siesa.SDK.Business
     {
         [JsonIgnore]
         public dynamic ParentComponent {get;set;}
+        
+        public string BLParentBusinessName {get;set;}
 
         public string BusinessName { get; set; }
         [JsonIgnore]
@@ -392,10 +395,25 @@ namespace Siesa.SDK.Business
         }
 
         [SDKApiMethod("POST")]
-        public async Task<SDKFileUploadDTO> UploadSingle(IFormFile file){
+        public virtual async Task<SDKFileUploadDTO> UploadSingle(IFormFile file){
             var result = new SDKFileUploadDTO();
-            result.Url = "prueba/prb";
-            result.FileType = file.ContentType;
+            if (file == null){
+                throw new Exception("File is null");
+            }
+            byte[] fileBytes = null;
+            using (var ms = new MemoryStream()){
+                file.CopyTo(ms);
+                fileBytes = ms.ToArray();
+            }
+            var response = await Backend.Call("SaveFile", fileBytes, file.FileName);
+            if(response.Success){
+                result.Url = response.Data.Url;
+                result.FileType = file.ContentType;
+                result.FileName = response.Data.FileName;
+            }else{
+                var errors = JsonConvert.DeserializeObject<List<string>> (response.Errors.ToString());
+                throw new ArgumentException(errors[0]);
+            }
             
             return result;
         }

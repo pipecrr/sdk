@@ -8,7 +8,7 @@
 
 <div class="sdk-upload">   
 <RadzenUpload Url="@Url" class="@StyleCss" ChooseText="@ResourceChooseText"
-Accept="@Accept" Progress="@Progress" Complete="@Complete" Change="@Change" Auto="false" @ref="sdkUpload" Disabled="@Disabled"> 
+Accept="@Accept" Progress="@SDKProgress" Complete="@SDKComplete" Change="@SDKChange" Auto="false" @ref="sdkUpload" Disabled="@Disabled" Error="@SDKError"> 
 <RadzenUploadHeader Name="X-Auth-Token" Value="@AuthenticationService.UserToken"></RadzenUploadHeader>
 </RadzenUpload >
 </div>
@@ -20,20 +20,20 @@ Accept="@Accept" Progress="@Progress" Complete="@Complete" Change="@Change" Auto
     [Parameter]public List<string> Extensions {get; set;}
     [Parameter]public bool Disabled {get; set;}
     [Parameter]public string FieldName {get; set;}
-    [Parameter] public EventCallback<UploadProgressArgs> Progress {get;set;}
-    [Parameter] public Action<UploadCompleteEventArgs> Complete {get;set;}
-    [Parameter] public EventCallback<UploadChangeEventArgs> Change {get;set;}
-    [Parameter] public string BLName {get;set;}
+    [Parameter] public Action<SDKUploadProgressArgsDTO> Progress {get;set;}
+    [Parameter] public Action<SDKUploadCompleteEventArgsDTO> Complete {get;set;}
+    [Parameter] public Action<SDKUploadChangeEventArgsDTO> Change {get;set;}
+    [Parameter] public Action<SDKUploadErrorEventArgsDTO> Error {get;set;}
     private string ResourceChooseText {get; set;}
     
     private string Url {get; set;}
     private string Accept = "";
     [JsonIgnore]
-    RadzenUpload sdkUpload;    
+    RadzenUpload sdkUpload;
     protected override async Task OnInitializedAsync(){
         ResourceChooseText = "Custom.SDKUpload.Choose";
         ResourceChooseText = await UtilManager.GetResource("Custom.SDKUpload.Choose");
-        Url = "api/"+BLName+"/UploadSingle";
+        Url = "api/"+Business.BLName+"/UploadSingle";
         if(Business != null && !string.IsNullOrEmpty(FieldName)){
             Business.GetType().GetProperty(FieldName).SetValue(Business, this);
         }
@@ -51,5 +51,59 @@ Accept="@Accept" Progress="@Progress" Complete="@Complete" Change="@Change" Auto
         await sdkUpload.Upload();        
     }
 
-    
+    private async Task SDKComplete(UploadCompleteEventArgs args){
+        if(Complete != null){            
+            SDKUploadCompleteEventArgsDTO sDKUploadCompleteEventArgsDTO = new SDKUploadCompleteEventArgsDTO();
+            sDKUploadCompleteEventArgsDTO.JsonResponse = args.JsonResponse;
+            sDKUploadCompleteEventArgsDTO.RawResponse = args.RawResponse;
+            sDKUploadCompleteEventArgsDTO.Cancelled = args.Cancelled;
+
+            Complete(sDKUploadCompleteEventArgsDTO);
+        }
+    }
+
+    private async Task SDKProgress(UploadProgressArgs args){
+        if(Progress != null){
+            SDKUploadProgressArgsDTO sDKUploadProgressArgsDTO = new SDKUploadProgressArgsDTO();
+            sDKUploadProgressArgsDTO.Loaded = args.Loaded;
+            sDKUploadProgressArgsDTO.Total = args.Total;
+            sDKUploadProgressArgsDTO.Progress = args.Progress;
+            List<SDKFileInfoDTO> files = new List<SDKFileInfoDTO>();
+            foreach (FileInfo item in args.Files){
+                SDKFileInfoDTO fileInfoDTO = new SDKFileInfoDTO();
+                fileInfoDTO.Name = item.Name;
+                fileInfoDTO.Size = item.Size;
+                files.Add(fileInfoDTO);
+            }
+            sDKUploadProgressArgsDTO.Files = files;
+            sDKUploadProgressArgsDTO.Cancel = args.Cancel;
+
+            Progress(sDKUploadProgressArgsDTO);
+        }
+    }
+
+    private async Task SDKChange(UploadChangeEventArgs args){
+        if(Change != null){
+            SDKUploadChangeEventArgsDTO sDKUploadChangeEventArgsDTO = new SDKUploadChangeEventArgsDTO();
+            List<SDKFileInfoDTO> files = new List<SDKFileInfoDTO>();
+            foreach (FileInfo item in args.Files){
+                SDKFileInfoDTO fileInfoDTO = new SDKFileInfoDTO();
+                fileInfoDTO.Name = item.Name;
+                fileInfoDTO.Size = item.Size;
+                files.Add(fileInfoDTO);
+            }
+            sDKUploadChangeEventArgsDTO.Files = files;
+            Change(sDKUploadChangeEventArgsDTO);
+
+        }
+    }
+
+    private async Task SDKError(UploadErrorEventArgs args){
+        if(Error != null){
+            SDKUploadErrorEventArgsDTO sDKUploadErrorEventArgsDTO = new SDKUploadErrorEventArgsDTO();
+            sDKUploadErrorEventArgsDTO.Message = args.Message;
+            Error(sDKUploadErrorEventArgsDTO);
+        }
+    }
+
 }

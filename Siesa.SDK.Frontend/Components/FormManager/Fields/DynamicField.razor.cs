@@ -9,6 +9,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
 {
     public partial class DynamicField : ComponentBase
     {
+        [Parameter] public string BLParentBusinessName { get; set; }
         [Parameter] public FieldOptions FieldOpt { get; set; }
         [Parameter] public object ModelObj { get; set; }
         [Parameter] public bool ValidateField { get; set; } = true;
