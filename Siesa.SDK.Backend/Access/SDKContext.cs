@@ -14,7 +14,9 @@ using System.Threading.Tasks;
 using Siesa.SDK.Shared.Utilities;
 using Siesa.SDK.Shared.DTOS;
 using Siesa.SDK.Backend.Extensions;
-
+using System.Reflection;
+using Siesa.SDK.Shared.Criptography;
+using Siesa.SDK.Shared.DataAnnotations;
 
 namespace Siesa.SDK.Backend.Access
 {
@@ -213,6 +215,41 @@ namespace Siesa.SDK.Backend.Access
                 }
             }
 
+            foreach (var Field in ChangeTracker.Entries())
+            {
+                //Metodo dentro del where para validar si es el mismo registro encrypto
+                var Properties = Field.Entity.GetType().GetProperties()
+                    .Where(x=> x.GetCustomAttributes(typeof(SDKDataEncrypt)).Any())
+                    .Select(x=> new { PropertyName = x.Name, 
+                    EncryptValue = SDKDataEncrypt.FieldEncrypt(x.GetValue(Field.Entity).ToString())});
+
+                if (Properties.Count() > 0)
+                {
+                    foreach (var Property in Properties)
+                    {
+                        Field.Context.Entry(Field.Entity).Property(Property.PropertyName).CurrentValue = Property.EncryptValue;
+                    }
+                    //SDKDataEncrypt.FieldEncrypt(x.GetValue(Field.Entity).ToString())
+                    /*Properties = Properties.Select(x=> {
+                        var Value = x.GetValue(Field.Entity).ToString();
+                        var EncryptValue = SDKDataEncrypt.FieldEncrypt(Value);
+                        x.SetValue(Field.Entity, EncryptValue);
+                        Field.Context.Entry(Field.Entity).Property(x.Name).CurrentValue = EncryptValue;
+                        return x;
+                    });*/
+                }
+            }
+
+                /*foreach (var Property in Field.Entity.GetType().GetProperties())
+                {
+                    var Value = Property.GetCustomAttributes();
+                      if (Value.Any(x => x.TypeId.ToString() == "Siesa.SDK.Shared.DataAnnotations.SDKDataEncrypt"))
+                      {
+                        string valueEncrypt = FieldEncrypt(Property.GetValue(Field.Entity).ToString());
+                        Field.Context.Entry(Field.Entity).Property(Property.Name).CurrentValue = valueEncrypt;
+                      }
+                }*/
+        
             LogCreator logCreator = ActivatorUtilities.CreateInstance<LogCreator>(ServiceProvider, ChangeTracker.Entries());
             //LogCreator logCreator = new(ChangeTracker.Entries());
             logCreator.ProccessBeforeSaveChanges();
@@ -221,6 +258,7 @@ namespace Siesa.SDK.Backend.Access
             CollectChanges(logCreator);
             return result;
         }
+
 
         private void CollectChanges(LogCreator logCreator)
         {
