@@ -27,6 +27,7 @@ namespace Siesa.SDK.Entities
 		[SDKRequired]
 		public virtual bool IsPrivate { get; set; }
 
+		[ForeignKey("Attachment")]
 		public virtual int? RowidAttachment { get; set; }
 
 		[SDKCheckRelationship]
