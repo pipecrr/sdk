@@ -678,6 +678,19 @@ namespace Siesa.SDK.Business
             }
             return null;
         }
+
+        [SDKExposedMethod]
+        public ActionResult<long> SaveAttachmentEntity(dynamic BaseObj){
+            this.BaseObj = BaseObj;
+            var result = this.ValidateAndSave();
+			if(result.Errors.Count == 0){
+				var response = result.Rowid;
+				return new ActionResult<long>{Success = true, Data = response};
+			}else {
+				return new BadRequestResult<long>{Success = false, Errors = new List<string> { result.Errors[0].Message }};
+			}
+            return null;
+        }
     }
 
 }

@@ -29,6 +29,8 @@ namespace Siesa.SDK.Entities
 
 		public virtual int? RowidAttachment { get; set; }
 
+		[SDKCheckRelationship]
+		public virtual E00270_Attachment Attachment { get; set; }
 
 	}
 }
