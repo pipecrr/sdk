@@ -211,5 +211,63 @@ namespace Siesa.SDK.Frontend.Services
             var user = new SDKJWT(_secretKey, _minutesExp).Validate(token);
             return user != null;
         }
+
+        public async Task<bool> ForgotPasswordAsync(string email){
+
+            var request = await GetBLUser();
+
+            var result = await request.Call("SendEmailRecoveryPassword", email, SelectedConnection.Rowid);
+
+            if (result.Success)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public async Task<bool> ValidateUserToken(int rowidUser){
+
+            var request = await GetBLUser();
+
+            var result = await request.Call("ValidateUserToken", rowidUser,SelectedConnection.Rowid);
+
+            if (result.Success)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> ChangePassword(int rowidUser, string NewPassword, string ConfirmPassword)
+        {
+            var request = await GetBLUser();
+            if (!string.IsNullOrEmpty(NewPassword) && !string.IsNullOrEmpty(ConfirmPassword))
+            {
+                if (NewPassword != ConfirmPassword)
+                {
+                    throw new Exception("Las contraseñas no coinciden");
+                }else
+                {
+                    var resultChangePassword = await request.Call("RecoveryPassword",rowidUser,NewPassword,ConfirmPassword,SelectedConnection.Rowid);
+                    if (resultChangePassword.Success)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private async Task<dynamic> GetBLUser()
+        {
+            var BLUser = _backendRouterService.GetSDKBusinessModel("BLUser", this);
+
+            if (BLUser == null)
+            {
+                throw new Exception("Occurio un error");
+            }
+            return BLUser;
+        }
     }
 }

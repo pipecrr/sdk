@@ -8,6 +8,7 @@
 @using Siesa.SDK.Shared.Services
 @inject IResourceManager ResourceManager
 @inject IAuthenticationService AuthenticationService
+@inject SDKNotificationService Notification
 
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
 
@@ -79,7 +80,7 @@
     @if(SetTopBar && !IsSubpanel)
     {
         <PageTitle><ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer ResourceTag="@($"{BusinessName}.Singular")" /></PageTitle>
-        <SetTopBar StyleName="toolbar_creation" HasExtraButtons="@(FormViewModel.Buttons != null && FormViewModel.Buttons.Count > 0 ? true: false)">
+        <SetTopBar StyleName="toolbar_creation" HasExtraButtons="@(FormViewModel.Buttons != null && FormViewModel.Buttons.Count > 0 ? true: false)" BusinessObj="@BusinessObj">
             <TopBarTitle><ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer ResourceTag="@($"{BusinessName}.Singular")" /></TopBarTitle>
             <TopBarButtons>
                 <TopBarButton form="@FormID" SubmitFormOnClick="true" ResourceTag="Action.Save" IconCssClass="@GetSaveBtnIcon()" Enabled="@(!Saving)"  />
@@ -97,13 +98,14 @@
 }
 
 @code {
+
     protected override async Task InitView(string bName = null){
         await base.InitView(bName);
 
         if(Panels.Count > 1){
              foreach (var panel in Panels){
                  if(panel.SubViewdef != null && panel.SubViewdef.ParentField != ""){
-                     string[] fieldPath = panel.SubViewdef.ParentField.Split('.');
+                    string[] fieldPath = panel.SubViewdef.ParentField.Split('.');
                     object currentObject = BusinessObj;
                     for (int i = 0; i < fieldPath.Length; i++)
                     {

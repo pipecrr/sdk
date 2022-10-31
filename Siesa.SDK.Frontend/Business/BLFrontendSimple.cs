@@ -120,11 +120,18 @@ namespace Siesa.SDK.Business
 
         public List<string> RelFieldsToSave { get; set; } = new List<string>();
 
-        public async Task Refresh() {
+        public async Task Refresh(bool Reload = false) {
+
             if(ParentComponent != null){
                 try
                 {
-                    ParentComponent.Refresh();
+                    if (Reload)
+                    {
+                        ParentComponent.Refresh(Reload);
+                    }else
+                    {
+                        ParentComponent.Refresh();
+                    }
                 }
                 catch (System.Exception)
                 {

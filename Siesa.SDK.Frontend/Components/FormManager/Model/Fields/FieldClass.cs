@@ -14,6 +14,7 @@ using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
 using Siesa.SDK.Frontend.Components.Visualization;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Frontend.Services;
+using Siesa.SDK.Shared.DataAnnotations;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 {
@@ -25,6 +26,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             get
             {
                 var modelValue = BindProperty?.GetValue(BindModel, null);
+                
                 if (modelValue == null)
                 {
                     return default(TProperty);
@@ -58,6 +60,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         public bool IsRequired { get; set; }
         public int MaxLength { get; set; }
 
+        public bool IsEncrypted { get; set; }
+
         public bool IsUnique { get; set; }
 
         public bool IsNullable { get; set; }
@@ -82,11 +86,21 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                     case MaxLengthAttribute _:
                         MaxLength = ((MaxLengthAttribute)attr).Length;
                         break;
+                    case SDKDataEncrypt _:
+                        IsEncrypted = true;
+                        break;
                 }
             }
             if (FieldOpt.Required)
             {
                 IsRequired = true;
+            }
+            if (IsEncrypted)
+            {
+                if (BindValue != null)
+                {
+                    BindProperty.SetValue(BindModel, null);
+                }
             }
 
             if(IsRequired && !ValidateField)

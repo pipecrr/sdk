@@ -17,6 +17,8 @@ using System.Linq;
 using Siesa.SDK.Frontend.Application;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Frontend.Services;
+using Siesa.SDK.Shared.Utilities;
+using Siesa.SDK.Entities;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -200,9 +202,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         }
 
-        public async Task Refresh()
+        public async Task Refresh(bool Reload = false)
         {
+            if (Reload)
+            {
+               Restart();
+            }
             hideCustomColumn();
+            StateHasChanged();
         }
 
         private async Task CheckPermissions()
@@ -241,6 +248,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         protected override void OnParametersSet()
         {
+            Restart();
+        }
+
+        private void Restart(){
+
             Loading = false;
             ErrorMsg = "";
             InitView();
@@ -265,6 +277,23 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private string GetFilters(string base_filter = "")
         {
             var filters = $"{base_filter}";
+            try{
+                Type type = BusinessObj.BaseObj.GetType();
+            if (Utilities.IsAssignableToGenericType(type, typeof(BaseCompany<>)))
+            { 
+                if (!string.IsNullOrEmpty(filters))
+                {
+                    filters += " && ";
+                }
+                if (BusinessObj?.BaseObj != null)
+                {
+                    filters += $"RowidCompany={BusinessObj.BaseObj.RowidCompany}";
+                }
+            }
+            }catch(System.Exception)
+            {
+
+            }
             if (ConstantFilters != null)
             {
                 foreach (var filter in ConstantFilters)
@@ -391,13 +420,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 LoadingData = true;
             }
             var filters = GetFilters(args.Filter);
+
             if (LastFilter != filters)
             {
                 LastFilter = filters;
                 LoadingData = true;
                 data = null;
             }
-            
+
             var dbData = await BusinessObj.GetDataAsync(args.Skip, args.Top, filters, args.OrderBy);
             data = dbData.Data;
             count = dbData.TotalCount;
