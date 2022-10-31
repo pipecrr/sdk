@@ -279,17 +279,20 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             var filters = $"{base_filter}";
             try{
                 Type type = BusinessObj.BaseObj.GetType();
-            if (Utilities.IsAssignableToGenericType(type, typeof(BaseCompany<>)))
-            { 
-                if (!string.IsNullOrEmpty(filters))
+                if(BusinessObj.BaseObj.RowidCompany != 0)
                 {
-                    filters += " && ";
+                    if (Utilities.IsAssignableToGenericType(type, typeof(BaseCompany<>)))
+                    { 
+                        if (!string.IsNullOrEmpty(filters))
+                        {
+                            filters += " && ";
+                        }
+                        if (BusinessObj?.BaseObj != null)
+                        {
+                            filters += $"RowidCompany={BusinessObj.BaseObj.RowidCompany}";
+                        }
+                    }
                 }
-                if (BusinessObj?.BaseObj != null)
-                {
-                    filters += $"RowidCompany={BusinessObj.BaseObj.RowidCompany}";
-                }
-            }
             }catch(System.Exception)
             {
 
