@@ -25,7 +25,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             parameters.Clear();
             parameters.Add("BusinessObj", businessObj);
             parameters.Add("BusinessName", businessName);
-            parameters.Add("IsSubpanel", IsSubpanel);            
+            parameters.Add("IsSubpanel", IsSubpanel);
             parameters.Add("ShowTitle", ShowTitle);
             parameters.Add("ShowButtons", ShowButtons);
             parameters.Add("ShowDeleteButton", ShowDeleteButton);

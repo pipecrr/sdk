@@ -1,0 +1,54 @@
+@using Siesa.SDK.Shared.Services
+@inject IAuthenticationService AuthenticationService
+@inject IBackendRouterService BackendRouterService
+
+<SDKCard>
+    <SDKFileViewer type="@SDKType" url="@Url" name="@Name"></SDKFileViewer>
+</SDKCard>
+
+@code{
+    [Parameter] public dynamic Business { get; set; }
+
+    private SDKTypeFile SDKType = SDKTypeFile.Other;
+    private string Name = "Download";   
+    
+    private string Url { get; set; }
+    private string FileName { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Url = await GetUrl();
+        var Type = Business.BaseObj.FileType;
+        if (Type != null){
+            if(Type.Contains("pdf")){
+                SDKType = SDKTypeFile.Pdf;
+            }
+            else if(Type.Contains("txt")){
+                SDKType = SDKTypeFile.Text;
+            }
+            else if(Type.Contains("image")){
+                SDKType = SDKTypeFile.Image;
+            }
+            else if(Type.Contains("video")){
+                SDKType = SDKTypeFile.Video;
+            }
+            else if(Type.Contains("audio")){
+                SDKType = SDKTypeFile.Audio;
+            }
+            else{
+                SDKType = SDKTypeFile.Other;
+            }
+        }        
+    }
+
+    public async Task<string> GetUrl(){
+        var BaseObj = Business.BaseObj;
+        var backend = BackendRouterService.GetSDKBusinessModel(Business.BLName, AuthenticationService);
+        var response = await backend.Call("DownloadFile",BaseObj.Url);
+        var url = "";
+        if(response.Success){
+            url = $"data:{BaseObj.FileType};base64,{response.Data}";
+        }
+        return url;
+    }
+}

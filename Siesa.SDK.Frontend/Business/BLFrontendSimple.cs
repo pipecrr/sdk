@@ -394,6 +394,12 @@ namespace Siesa.SDK.Business
             }
         }
 
+        public async Task<string> DowunloadFile(string url)
+        {
+            var result = await Backend.Call("DowunloadFile", url);
+            return result.Data;
+        }
+
         [SDKApiMethod("POST")]
         public virtual async Task<SDKFileUploadDTO> UploadSingle(IFormFile file){
             var result = new SDKFileUploadDTO();
@@ -414,9 +420,7 @@ namespace Siesa.SDK.Business
                 var errors = JsonConvert.DeserializeObject<List<string>> (response.Errors.ToString());
                 throw new ArgumentException(errors[0]);
             }
-            
             return result;
         }
-
     }
 }

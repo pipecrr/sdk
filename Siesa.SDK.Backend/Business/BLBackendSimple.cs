@@ -712,10 +712,21 @@ namespace Siesa.SDK.Business
             catch (IOException ex){
                 return new BadRequestResult<SDKFileUploadDTO>{Success = false, Errors = new List<string> { ex.Message }};
             }
-
             return new ActionResult<SDKFileUploadDTO>{Success = true, Data = result};
         }
-        
+
+        [SDKExposedMethod]
+        public async Task<ActionResult<string>> DownloadFile(string url){
+            IWebHostEnvironment env = _provider.GetRequiredService<IWebHostEnvironment>();
+            var filePath = Path.Combine(url);
+            var file = new FileInfo(filePath);
+            if (file.Exists){
+                var fileBytes = await File.ReadAllBytesAsync(filePath);
+                var base64 = Convert.ToBase64String(fileBytes);
+                return new ActionResult<string>{Success = true, Data = base64};
+            }
+            return new BadRequestResult<string>{Success = false, Errors = new List<string> { "File not found" }};
+        } 
     }
 
 }

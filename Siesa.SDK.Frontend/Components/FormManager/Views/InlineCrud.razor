@@ -59,7 +59,7 @@
     public async Task OpenModalEdit(string item_rowid)
     {
         var modal_result = await DialogService.OpenAsync("", 
-        ds => @<DynamicEditView BusinessName="@BusinessName" IsSubpanel=true  BusinessObjId="@item_rowid" />, 
+        ds => @<DynamicEditView BusinessName="@BusinessName" IsSubpanel=true  BusinessObjId="@item_rowid" BLNameParentAttatchment="@BLNameParentAttatchment"/>, 
         new DialogOptions() { Width = "700px", ShowTitle=false,  Resizable = true, Style="padding: 1rem;"});
         listview_key = Guid.NewGuid();
         StateHasChanged();
@@ -68,7 +68,7 @@
     public async Task OpenModalDetail(string item_rowid)
     {
         var modal_result = await DialogService.OpenAsync("", 
-        ds => @<DynamicDetailView BusinessName="@BusinessName" IsSubpanel=true  BusinessObjId="@item_rowid" />, 
+        ds => @<DynamicDetailView BusinessName="@BusinessName" IsSubpanel=true  BusinessObjId="@item_rowid" BLNameParentAttatchment="@BLNameParentAttatchment"/>, 
         new DialogOptions() { Width = "700px", ShowTitle=false,  Resizable = true, Style="padding: 1rem;"});
         listview_key = Guid.NewGuid();
         StateHasChanged();
