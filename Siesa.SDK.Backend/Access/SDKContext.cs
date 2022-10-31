@@ -201,7 +201,7 @@ namespace Siesa.SDK.Backend.Access
                 }
             }
             else
-            {//Solo entrara aqui en el caso de recuperar la contraseña
+            {
                 foreach (var entry in ChangeTracker.Entries())
                 {
                     if (Utilities.IsAssignableToGenericType(entry.Entity.GetType(), typeof(BaseAudit<>)))
@@ -217,38 +217,37 @@ namespace Siesa.SDK.Backend.Access
 
             foreach (var Field in ChangeTracker.Entries())
             {
-                //Metodo dentro del where para validar si es el mismo registro encrypto
                 var Properties = Field.Entity.GetType().GetProperties()
                     .Where(x=> x.GetCustomAttributes(typeof(SDKDataEncrypt)).Any())
-                    .Select(x=> new { PropertyName = x.Name, 
-                    EncryptValue = SDKDataEncrypt.FieldEncrypt(x.GetValue(Field.Entity).ToString())});
-
-                if (Properties.Count() > 0)
+                    .Select(x=> x);
+                try
                 {
-                    foreach (var Property in Properties)
+                    if (Properties.Count() > 0)
                     {
-                        Field.Context.Entry(Field.Entity).Property(Property.PropertyName).CurrentValue = Property.EncryptValue;
+                        var originalEntity = Field.OriginalValues.ToObject();
+                        foreach (var Property in Properties)
+                        {
+                            var propertyValue =  Property.GetValue(Field.Entity);
+                            if (propertyValue == null || (propertyValue is string && string.IsNullOrEmpty(propertyValue.ToString())))
+                            {
+                                var originalValue = originalEntity.GetType().GetProperty(Property.Name).GetValue(originalEntity);
+                                if (originalValue != null)
+                                {
+                                    Field.Context.Entry(Field.Entity).Property(Property.Name).CurrentValue = originalValue;
+                                }
+                                continue;
+                            }
+                            var EncryptValue = SDKDataEncrypt.FieldEncrypt(propertyValue);
+                            Field.Context.Entry(Field.Entity).Property(Property.Name).CurrentValue = EncryptValue;
+                        }
                     }
-                    //SDKDataEncrypt.FieldEncrypt(x.GetValue(Field.Entity).ToString())
-                    /*Properties = Properties.Select(x=> {
-                        var Value = x.GetValue(Field.Entity).ToString();
-                        var EncryptValue = SDKDataEncrypt.FieldEncrypt(Value);
-                        x.SetValue(Field.Entity, EncryptValue);
-                        Field.Context.Entry(Field.Entity).Property(x.Name).CurrentValue = EncryptValue;
-                        return x;
-                    });*/
                 }
+                catch (System.Exception)
+                {  
+                    
+                }
+                
             }
-
-                /*foreach (var Property in Field.Entity.GetType().GetProperties())
-                {
-                    var Value = Property.GetCustomAttributes();
-                      if (Value.Any(x => x.TypeId.ToString() == "Siesa.SDK.Shared.DataAnnotations.SDKDataEncrypt"))
-                      {
-                        string valueEncrypt = FieldEncrypt(Property.GetValue(Field.Entity).ToString());
-                        Field.Context.Entry(Field.Entity).Property(Property.Name).CurrentValue = valueEncrypt;
-                      }
-                }*/
         
             LogCreator logCreator = ActivatorUtilities.CreateInstance<LogCreator>(ServiceProvider, ChangeTracker.Entries());
             //LogCreator logCreator = new(ChangeTracker.Entries());

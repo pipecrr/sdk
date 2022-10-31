@@ -5,20 +5,25 @@ using Siesa.SDK.Shared.Criptography;
 namespace Siesa.SDK.Shared.DataAnnotations
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = false)]
-    public class SDKDataEncrypt: RequiredAttribute 
+    public class SDKDataEncrypt: Attribute 
     {
         public SDKDataEncrypt()
         {
             //parametrizar algoritmo de encriptacion (Enum)
-
         }
 
-        public static string FieldEncrypt(string valueEncrypt)
+        public static string FieldEncrypt(object valueEncrypt)
         {
-            var _salt = "HolaMundo"; //TODO: get from config -- AppSettings SDK?
+            var _salt = "hola"; //TODO: get from config
             var encryptorPassword = new SDKEncryptSHA256(_salt);
-            return encryptorPassword.Encrypt(valueEncrypt);
+            if (valueEncrypt != null)
+            {
+                return encryptorPassword.Encrypt(valueEncrypt.ToString());
+            }
+            else
+            {
+                return null;
+            }
         }
-        //traer el Metodo de encriptacion
     }
 }

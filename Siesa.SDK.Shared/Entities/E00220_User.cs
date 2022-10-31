@@ -35,6 +35,7 @@ namespace Siesa.SDK.Entities
 		public string Path { get; set; }
 
 		[StringLength(128)]
+		[SDKDataEncrypt]
 		public string? Password { get; set; }
 
 		[ForeignKey("Culture")]
