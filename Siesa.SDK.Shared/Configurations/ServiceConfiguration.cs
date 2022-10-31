@@ -26,7 +26,8 @@ namespace Siesa.SDK.Shared.Configurations
             services.Configure<ServiceConfiguration>(serviceConfiguration);
             services.AddScoped<IServiceConfiguration, ServiceConfiguration>();
             services.AddOptions();
-            services.AddLogging(builder => SDKLogger.Configure(builder, sc));
+            IServiceProvider serviceProvider = services.BuildServiceProvider();
+            services.AddLogging(builder => SDKLogger.Configure(builder, serviceProvider));
         }
     }
 }

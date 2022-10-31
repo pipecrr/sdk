@@ -24,13 +24,13 @@ namespace Siesa.SDK.Backend.Extensions
 
         private static Assembly _assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
         
-        internal static dynamic SDKFlexPreviewData(SDKContext Context, SDKFlexRequestData requestData, IAuthenticationService authenticationService, bool setTop = true)
+        internal static ActionResult<List<Dictionary<string, object>>> SDKFlexPreviewData(SDKContext Context, SDKFlexRequestData requestData, IAuthenticationService authenticationService, bool setTop = true)
         {
             var rowidCulture = authenticationService.User.RowidCulture;
             List<SDKFlexColumn> columns = requestData.columns;
             if (columns.Count == 0)
             {
-                return new ActionResult<dynamic>() { Data = new List<dynamic>() };
+                return new ActionResult<List<Dictionary<string,object>>>() { Data = new List<Dictionary<string, object>>()};
             }
             var nameEntity = requestData.selected_class;
             var nameSpaceEntity = requestData.module_path;
@@ -145,12 +145,6 @@ namespace Siesa.SDK.Backend.Extensions
                 var selectMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "Select", new[] { typeof(IQueryable), typeof(string), typeof(object[]) });
                 contextSet = selectMethod.Invoke(contextSet, new object[] { contextSet, $"new ({strSelect})", null });
 
-                if (!orderBy.Equals(""))
-                {
-                    var orderMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "OrderBy", new[] { typeof(IQueryable), typeof(string), typeof(object[]) });
-                    contextSet = orderMethod.Invoke(contextSet, new object[] { contextSet, orderBy, null });
-                }
-
                 if(relatedVirtualColumns.Count>0){
                     var strColumnsMany = strColumns.Select(x => {
                         var names = x.Split(" as ");
@@ -195,10 +189,15 @@ namespace Siesa.SDK.Backend.Extensions
                         strColumnsMany.Add($"{campoConsulta} as {column.key_name}");
                     }
                     if(relatedToManyFilters.Count>0){
-                        CreateWhereString(ref contextSet,relatedToManyFilters, entityType);                        
+                        CreateWhereString(ref contextSet,relatedToManyFilters, entityType);
                     }
                     var strSelectMany = string.Join(", ", strColumnsMany);
                     contextSet = selectMethod.Invoke(contextSet, new object[] { contextSet, $"new ({strSelectMany})", null });
+                }
+
+                if (!orderBy.Equals("")){
+                    var orderMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "OrderBy", new[] { typeof(IQueryable), typeof(string), typeof(object[]) });
+                    contextSet = orderMethod.Invoke(contextSet, new object[] { contextSet, orderBy, null });
                 }
 
                 if(setTop){
@@ -219,22 +218,26 @@ namespace Siesa.SDK.Backend.Extensions
                         {
                             var enumValue = enumsDict[enumkey];
                             var itemValue = item[enumkey];
-                            var description = enumValue[byte.Parse(itemValue.ToString())];
+                            var description = "--";
+                            if(enumValue.TryGetValue(byte.Parse(itemValue.ToString()), out string value)){
+                                //description = enumValue.[byte.Parse(itemValue.ToString())];
+                                description = value;
+                            }
                             item[$"{enumkey}_oreports_key"] = item[enumkey];
                             item[enumkey] = description;
                         }
                     }
-                    return new ActionResult<dynamic>() { Data = resourceDict};
+                    return new ActionResult<List<Dictionary<string,object>>>() { Data = resourceDict};
                 }
 
                 if (resourceDict != null)
                 {
-                    return new ActionResult<dynamic>() { Data = resourceDict };
+                    return new ActionResult<List<Dictionary<string,object>>>() { Data = resourceDict };
                 }
             }
             catch (Exception e)
             {
-                return new ActionResult<dynamic>() { Success = false, Errors = new List<string>() { "Error al crear la consulta" } };
+                return new ActionResult<List<Dictionary<string,object>>>() { Success = false, Errors = new List<string>() { "Error al crear la consulta" } };
             }
 
             return null;
@@ -272,14 +275,14 @@ namespace Siesa.SDK.Backend.Extensions
                     isNullable = true;
                 }
 
-                if ((value == null||value=="") && !isNullable){
-                    value = Activator.CreateInstance(columnType);
-                }
-
                 if(value == null && columnType == typeof(string)){
                     value = "";
                 }
-                
+
+                if ((value == null || value=="") && !isNullable && columnType != typeof(string)){
+                    value = Activator.CreateInstance(columnType);
+                }
+
                 whereList.Add(value);
                 switch (filter.selected_operator){
                     case "equal":
@@ -296,10 +299,24 @@ namespace Siesa.SDK.Backend.Extensions
                         break;
                     case "null_or_empty":
                     case "empty":
-                        whereListString.Add($"(_B.{filterName} == null || _B.{filterName} == \"\")");
+                        if(isNullable || columnType == typeof(string)){
+                            whereListString.Add($"(_B.{filterName} == null || _B.{filterName} == \"\")");
+                        }else{
+                            whereList.RemoveAt(whereList.Count-1);
+                            value = Activator.CreateInstance(columnType);
+                            whereList.Add(value);
+                            whereListString.Add($"(_B.{filterName} == @{whereList.Count-1})");
+                        }
                         break;
-                    case "not_null_or_empty":
-                        whereListString.Add($"(_B.{filterName} != null && _B.{filterName} != \"\")");
+                    case "not_empty":
+                        if(isNullable || columnType == typeof(string)){
+                            whereListString.Add($"(_B.{filterName} != null && _B.{filterName} != \"\")");
+                        }else{
+                            whereList.RemoveAt(whereList.Count-1);
+                            value = Activator.CreateInstance(columnType);
+                            whereList.Add(value);
+                            whereListString.Add($"(_B.{filterName} != @{whereList.Count-1})");
+                        }
                         break;
                     case "contains":
                         whereListString.Add($"_B.{filterName}.Contains(@{whereList.Count-1})");
@@ -325,6 +342,44 @@ namespace Siesa.SDK.Backend.Extensions
                         whereList.Add(filterTo);
                         var indexValueTo = whereList.Count-1;
                         whereListString.Add($"_B.{filterName} >= @{indexValue} && _B.{filterName} <= @{indexValueTo}");
+                        break;
+                    case "fk_in":
+                        if(value == null || value.ToString() == "0"){
+                            return;
+                        }
+
+                        var listValueFk = JsonConvert.DeserializeObject<List<dynamic>>(value.ToString());
+                        if(listValueFk.Count == 0){
+                            return;
+                        }
+                        List<string> whereListOr = new List<string>();
+                        string whereOr = "";
+                        for (int i = 0; i < listValueFk.Count; i++){
+                            var fkValue = Convert.ChangeType(Int32.Parse(listValueFk[i].id.ToString()), columnType);
+                            whereList.Add(fkValue);
+                            whereListOr.Add($"_B.{filterName} == @{whereList.Count-1}");
+                        }
+                        whereOr = string.Join(" or ", whereListOr);
+                        whereListString.Add($"({whereOr})");
+                        break;
+                    case "fk_not_in":
+                        if(value == null || value.ToString() == "0"){
+                            return;
+                        }
+
+                        var listValueFkNotIn = JsonConvert.DeserializeObject<List<dynamic>>(value.ToString());
+                        if(listValueFkNotIn.Count == 0){
+                            return;
+                        }
+                        List<string> whereListOrNotIn = new List<string>();
+                        string whereOrNotIn = "";
+                        for (int i = 0; i < listValueFkNotIn.Count; i++){
+                            var fkValue = Convert.ChangeType(Int32.Parse(listValueFkNotIn[i].id.ToString()), columnType);
+                            whereList.Add(fkValue);
+                            whereListOrNotIn.Add($"_B.{filterName} != @{whereList.Count-1}");
+                        }
+                        whereOrNotIn = string.Join(" and ", whereListOrNotIn);
+                        whereListString.Add($"({whereOrNotIn})");
                         break;
                 }
             }

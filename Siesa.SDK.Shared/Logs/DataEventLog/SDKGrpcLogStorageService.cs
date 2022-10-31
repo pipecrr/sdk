@@ -1,6 +1,7 @@
 ﻿
 using AuditAppGrpcClient;
 using Grpc.Net.Client;
+using Microsoft.Extensions.Configuration;
 using Siesa.SDK.Protos;
 using System;
 using System.Threading.Tasks;
@@ -14,9 +15,10 @@ namespace Siesa.SDK.Shared.Logs.DataEventLog
         private readonly GrpcChannel _channel;
         private bool _writeInConsole;
 
-        public SDKGrpcLogStorageService(string url)
+        public SDKGrpcLogStorageService(IConfiguration configuration)
         {
-            var _channel = GrpcChannel.ForAddress(url);
+            var auditUrl = configuration["ServiceConfiguration:AuditServerUrl"];
+            var _channel = GrpcChannel.ForAddress(auditUrl);
             _client = new DataLogEventClient(_channel);
         }
 
@@ -48,6 +50,19 @@ namespace Siesa.SDK.Shared.Logs.DataEventLog
 #endif
                 throw e;
             }
+        }
+
+        public QueryLogReply QueryEntityLog(QueryLogRequest request)
+        {
+            try
+            {
+                return  _client.QueryLog(request);
+            }
+            catch (Grpc.Core.RpcException e)
+            {
+                
+            }
+            return null;
         }
 
         ~SDKGrpcLogStorageService()

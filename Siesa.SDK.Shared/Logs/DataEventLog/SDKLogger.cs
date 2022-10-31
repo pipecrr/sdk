@@ -4,12 +4,14 @@ using Serilog;
 using Serilog.Events;
 using Siesa.SDK.Shared.Configurations;
 using Microsoft.Extensions.Logging;
+using System;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Siesa.SDK.Shared.Logs.DataEventLog
 {
     public static class SDKLogger
     {
-        public static void Configure(ILoggingBuilder loggingBuilder, ServiceConfiguration serviceConfiguration)
+        public static void Configure(ILoggingBuilder loggingBuilder, IServiceProvider serviceProvider)
         {
             loggingBuilder.ClearProviders();
             loggingBuilder.AddConsole();
@@ -21,7 +23,7 @@ namespace Siesa.SDK.Shared.Logs.DataEventLog
                 .Filter
                 .ByExcluding(logEvent => 
                     logEvent.MessageTemplate.Text.Contains("No store type was specified for the decimal property"))
-                .WriteTo.StealthConsoleSink(logStorageService: new SDKGrpcLogStorageService(serviceConfiguration.AuditServerUrl))
+                .WriteTo.StealthConsoleSink(logStorageService: ActivatorUtilities.CreateInstance<SDKGrpcLogStorageService>(serviceProvider))
                 .CreateLogger());
         }
     }
