@@ -19,6 +19,10 @@ using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Shared.Utilities;
 using Siesa.SDK.Shared.Validators;
 using Microsoft.Extensions.Logging;
+using Siesa.SDK.Shared.DataAnnotations;
+using Siesa.SDK.Shared.DTOS;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace Siesa.SDK.Business
 {
@@ -26,6 +30,8 @@ namespace Siesa.SDK.Business
     {
         [JsonIgnore]
         public dynamic ParentComponent {get;set;}
+        
+        public string BLParentBusinessName {get;set;}
 
         public string BusinessName { get; set; }
         [JsonIgnore]
@@ -395,5 +401,33 @@ namespace Siesa.SDK.Business
             }
         }
 
+        public async Task<string> DowunloadFile(string url)
+        {
+            var result = await Backend.Call("DowunloadFile", url);
+            return result.Data;
+        }
+
+        [SDKApiMethod("POST")]
+        public virtual async Task<SDKFileUploadDTO> UploadSingle(IFormFile file){
+            var result = new SDKFileUploadDTO();
+            if (file == null){
+                throw new Exception("File is null");
+            }
+            byte[] fileBytes = null;
+            using (var ms = new MemoryStream()){
+                file.CopyTo(ms);
+                fileBytes = ms.ToArray();
+            }
+            var response = await Backend.Call("SaveFile", fileBytes, file.FileName);
+            if(response.Success){
+                result.Url = response.Data.Url;
+                result.FileType = file.ContentType;
+                result.FileName = response.Data.FileName;
+            }else{
+                var errors = JsonConvert.DeserializeObject<List<string>> (response.Errors.ToString());
+                throw new ArgumentException(errors[0]);
+            }
+            return result;
+        }
     }
 }

@@ -28,6 +28,10 @@ using Siesa.SDK.Shared.DTOS;
 using System.Linq.Expressions;
 using Siesa.SDK.Backend.Extensions;
 using System.Data;
+using Microsoft.AspNetCore.Http;
+using System.Net;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Siesa.SDK.Business
 {
@@ -691,6 +695,43 @@ namespace Siesa.SDK.Business
 			}
             return null;
         }
+        
+        [SDKExposedMethod]
+        public async Task<ActionResult<SDKFileUploadDTO>> SaveFile(byte[] fileBytes, string name){
+            MemoryStream stream = new MemoryStream(fileBytes);
+            IFormFile file = new FormFile(stream, 0, fileBytes.Length, name, name);
+            var result = new SDKFileUploadDTO();
+            IWebHostEnvironment env = _provider.GetRequiredService<IWebHostEnvironment>();
+            var untrustedFileName = file.FileName;
+            try{
+                var guid = Guid.NewGuid().ToString();
+                untrustedFileName = string.Concat(guid.Substring(1,10), "_", untrustedFileName);
+                var path = Path.Combine(env.ContentRootPath,"Uploads");
+                Directory.CreateDirectory(path);
+                var filePath = Path.Combine(path, untrustedFileName);
+                await using FileStream fs = new(filePath, FileMode.Create);
+                await file.CopyToAsync(fs);
+                result.Url = filePath;
+                result.FileName = untrustedFileName;
+            }
+            catch (IOException ex){
+                return new BadRequestResult<SDKFileUploadDTO>{Success = false, Errors = new List<string> { ex.Message }};
+            }
+            return new ActionResult<SDKFileUploadDTO>{Success = true, Data = result};
+        }
+
+        [SDKExposedMethod]
+        public async Task<ActionResult<string>> DownloadFile(string url){
+            IWebHostEnvironment env = _provider.GetRequiredService<IWebHostEnvironment>();
+            var filePath = Path.Combine(url);
+            var file = new FileInfo(filePath);
+            if (file.Exists){
+                var fileBytes = await File.ReadAllBytesAsync(filePath);
+                var base64 = Convert.ToBase64String(fileBytes);
+                return new ActionResult<string>{Success = true, Data = base64};
+            }
+            return new BadRequestResult<string>{Success = false, Errors = new List<string> { "File not found" }};
+        } 
     }
 
 }

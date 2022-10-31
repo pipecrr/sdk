@@ -2,7 +2,7 @@
 @using Siesa.SDK.Entities;
 
 @if(draw){
-    <RelationshipPanel Relationship="@RelationshipAttachment" Parent="@ParentAttachment" />
+    <RelationshipPanel Relationship="@RelationshipAttachment" Parent="@ParentAttachment" BLNameParentAttatchment="@BLNameParentAttatchment"/>
 }
 
 
@@ -10,6 +10,7 @@
     [Inject] public IAuthenticationService AuthenticationService { get; set; }
     [Inject] public IBackendRouterService BackendRouterService { get; set; }
     [Parameter]public dynamic BusinessObj { get; set; }
+    [Parameter]public string BLNameParentAttatchment { get; set; }
     public Relationship RelationshipAttachment { get; set; }
     public dynamic ParentAttachment { get; set; }
     private bool draw = false;

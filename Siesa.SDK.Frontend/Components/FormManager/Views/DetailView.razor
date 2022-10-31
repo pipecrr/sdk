@@ -38,7 +38,7 @@ else if (ModelLoaded == true)
             }
         </DxFormLayout>
         @if(ContainAttachments){
-            <AttachmentPanel BusinessObj="@BusinessObj"/>
+            <AttachmentPanel BusinessObj="@BusinessObj" BLNameParentAttatchment="@BusinessName"/>
         }
         @if(!string.IsNullOrEmpty(ErrorMsg))
         {

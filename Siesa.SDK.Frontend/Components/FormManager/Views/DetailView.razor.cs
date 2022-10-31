@@ -161,7 +161,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private async Task CreateRelationshipAttachment()
         {
             var attachment = BusinessObj.BaseObj.GetType().GetProperty("RowidAttachment");
-            if(attachment == null){
+            if(attachment == null || BusinessName == "BLAttachmentDetail"){
                 return;
             }
             ContainAttachments = true;

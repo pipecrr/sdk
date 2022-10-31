@@ -13,7 +13,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
     {
         [Parameter]
         public string BusinessName { get; set; }
-
+        [Parameter]
+        public string BLNameParentAttatchment { get; set; }
         [Parameter]
         public string BusinessObjId { get; set; }
 

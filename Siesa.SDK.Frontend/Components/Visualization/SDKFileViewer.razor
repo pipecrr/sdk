@@ -34,7 +34,13 @@
     [Parameter]
     public string url {get; set;}
 
+    [Parameter]
+    public string name {get; set;}
+
     private string GetName(){
-        return url.Split("/").Last();
+        if(string.IsNullOrEmpty(name)){
+            return url.Split("/").Last();            
+        }
+        return name;
     }
 } 

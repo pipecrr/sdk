@@ -56,6 +56,15 @@ namespace Siesa.SDK.Frontend.Controllers
                         args[index] = Convert.ChangeType(x.Value.ToString(), paramType);
                     }
                 });
+            
+            if(collection.GetType() == typeof(FormCollection)){
+                parameters.Where(x => x.ParameterType == typeof(IFormFile)).ToList().ForEach(x =>
+                {
+                    int index = Array.IndexOf(paramNames, x.Name);
+                    args[index] = ((FormCollection)collection).Files.Where(y => y.Name == x.Name).FirstOrDefault();
+                    
+                });
+            }
 
             return args;
         }
@@ -84,7 +93,14 @@ namespace Siesa.SDK.Frontend.Controllers
         public async Task<ActionResult> Index(string blname, string blaction)
         {
             //get auth token from headers
-            string authToken = JsonConvert.DeserializeObject<string>(Request.Headers["X-Auth-Token"]);
+            string authToken = "";
+            string token = Request.Headers["X-Auth-Token"];
+            if(token.Trim().StartsWith("\"")){
+                authToken = JsonConvert.DeserializeObject<string>(Request.Headers["X-Auth-Token"]);
+            }else{
+                authToken = token;
+            }
+            
             if (string.IsNullOrEmpty(authToken))
             {
                 return ReturnError(Response, "BLFlex.Error.NoTokenProvided", 401);
