@@ -27,6 +27,11 @@ namespace Siesa.SDK.Frontend.Services
                 resourceMessage = await UtilsManager.GetResource(resourceTag);
             }
 
+            if(resourceMessage == resourceTag)
+            {
+                resourceMessage = $"Resource not found: {resourceTag}";
+            }
+
             if (formatString != null)
             {
                 message = String.Format(resourceMessage, formatString);
