@@ -189,11 +189,12 @@
 .link_login{
     font-size: .875rem;
     text-decoration: none;
-    color: var(--color_primary);
+    color: var(--color_primary) !important;
     font-weight: 400;
     text-align: center;
+    cursor: pointer;
 }
-.copy_right_text{
+.copy_right_text{ 
     font-size: 0.625rem;
     color: var(--color_text);
     position: absolute !important;
