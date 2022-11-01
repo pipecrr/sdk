@@ -3,19 +3,22 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @inject UtilsManager UtilManager
 
-
-<div class="modal-dialog-container p-0">
-    
-    <div class="modal-body d-flex flex-column  align-items-center">
-        <i class="fa-solid fa-circle-exclamation"></i>
-        <h5>@Title</h5>
-        <p>@Text</p>
+<div class="modal-content">
+    <div class="modal-body">                                        
+        <div class="d-flex justify-content-center mb-3">
+            <div class="modal_circle_back_warning d-flex justify-content-center align-items-center">
+                <div class="modal_circle_front_warning d-flex justify-content-center align-items-center">
+                    i
+                </div>
+            </div>
+        </div>
+        <div class="font-weight-bold text-center text-uppercase mb-4 font_size_087 font_color_primary">@Title</div>
+        <div class="text-center font_size_087">@Text</div>
     </div>
-    <div class="modal-footer justify-content-center">
-        <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" CssClass="px-3" ResourceTag="Action.ConfirmDetele.Cancel" Click="@ClickCancel" />
-        <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" CssClass="px-3"  ResourceTag="Action.ConfirmDelete.Delete" Click="@ClickDelete" />
+    <div class="modal-footer">
+        <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" CssClass="btn-sm px-4 w-50" ResourceTag="Action.ConfirmCancel" Click="@ClickCancel"/>
+        <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" CssClass="btn-sm px-4 w-50"  ResourceTag="Action.ConfirmDelete" Click="@ClickDelete" />
     </div>
-
 </div>
 
 @code {
