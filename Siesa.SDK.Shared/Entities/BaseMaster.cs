@@ -21,14 +21,17 @@ namespace Siesa.SDK.Entities
 		[StringLength(2000)]
 		public virtual string Description { get; set; }
 
-		[SDKRequired]
-		public virtual bool Status { get; set; }
+		[Required]
+		public virtual enumStatusBaseMaster Status { get; set; }
 
 		[SDKRequired]
 		public virtual bool IsPrivate { get; set; }
 
 		[ForeignKey("Attachment")]
 		public virtual int? RowidAttachment { get; set; }
+
+		[SDKCheckRelationship]
+		public virtual E00270_Attachment Attachment { get; set; }
 
 		[SDKCheckRelationship]
 		public virtual E00270_Attachment Attachment { get; set; }
