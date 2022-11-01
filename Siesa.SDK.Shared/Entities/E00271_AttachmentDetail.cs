@@ -33,6 +33,9 @@ namespace Siesa.SDK.Entities
 		[StringLength(100)]
 		public string FileType { get; set; }
 
+		[StringLength(250)]
+		public string? FileName { get; set; }
+
 
 		[SDKCheckRelationship]
 		[Required]
