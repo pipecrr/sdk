@@ -41,4 +41,10 @@ namespace Siesa.SDK.Entities.Enums
 		Male = 1,
 		Female = 2
 	}
+
+	public enum enumStatusBaseMaster
+	{
+		Inactive = 0,
+		Active = 1
+	}
 }
