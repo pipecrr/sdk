@@ -21,7 +21,7 @@ namespace Siesa.SDK.Entities
 		[StringLength(2000)]
 		public virtual string Description { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public virtual enumStatusBaseMaster Status { get; set; }
 
 		[SDKRequired]
@@ -30,8 +30,6 @@ namespace Siesa.SDK.Entities
 		[ForeignKey("Attachment")]
 		public virtual int? RowidAttachment { get; set; }
 
-		[SDKCheckRelationship]
-		public virtual E00270_Attachment Attachment { get; set; }
 
 	}
 }

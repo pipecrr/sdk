@@ -35,13 +35,6 @@ namespace Siesa.SDK.Entities.Enums
 		No = 0
 	}
 
-	public enum enumGender
-	{
-		Unselected = 0,
-		Male = 1,
-		Female = 2
-	}
-
 	public enum enumStatusBaseMaster
 	{
 		Inactive = 0,
