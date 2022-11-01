@@ -7,8 +7,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager
 {
     public static class FormUtils
     {
-        public static RenderFragment RenderFreeForm(string viewdef, dynamic BusinessObj, string Title, DynamicViewType ViewContext = DynamicViewType.Create, bool SetTopBar = true)
+        public static RenderFragment RenderFreeForm(string viewdef, dynamic BusinessObj, string Title, DynamicViewType ViewContext = DynamicViewType.Create, bool SetTopBar = true, string key = "")
         {
+            if(string.IsNullOrEmpty(key)) 
+            {
+                key = Guid.NewGuid().ToString();
+            }
             return (builder) =>
             {
                 builder.OpenComponent<FreeForm>(0);
@@ -18,6 +22,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager
                 builder.AddAttribute(4, "Title", Title);
                 builder.AddAttribute(5, "ViewContext", ViewContext);
                 builder.AddAttribute(6, "SetTopBar", SetTopBar);
+                builder.SetKey(key);
                 builder.CloseComponent();
             };
         }

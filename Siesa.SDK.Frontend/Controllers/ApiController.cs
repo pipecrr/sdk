@@ -21,7 +21,7 @@ namespace Siesa.SDK.Frontend.Controllers
     {
         private IServiceProvider ServiceProvider { get; set; }
         private IAuthenticationService AuthenticationService { get; set; }
-        private IBackendRouterService BackendRouterService {get; set;}
+        private IBackendRouterService BackendRouterService { get; set; }
 
         public ApiController(IServiceProvider ServiceProvider, IAuthenticationService AuthenticationService, IBackendRouterService backendRouterService)
         {
@@ -52,8 +52,19 @@ namespace Siesa.SDK.Frontend.Controllers
                 {
                     int index = Array.IndexOf(paramNames, x.Key);
                     var paramType = parameters[index].ParameterType;
-                    args[index] = Convert.ChangeType(x.Value.ToString(), paramType);
+                    if(!StringValues.IsNullOrEmpty(x.Value) || paramType == typeof(string)){
+                        args[index] = Convert.ChangeType(x.Value.ToString(), paramType);
+                    }
                 });
+            
+            if(collection.GetType() == typeof(FormCollection)){
+                parameters.Where(x => x.ParameterType == typeof(IFormFile)).ToList().ForEach(x =>
+                {
+                    int index = Array.IndexOf(paramNames, x.Name);
+                    args[index] = ((FormCollection)collection).Files.Where(y => y.Name == x.Name).FirstOrDefault();
+                    
+                });
+            }
 
             return args;
         }
@@ -81,12 +92,26 @@ namespace Siesa.SDK.Frontend.Controllers
 
         public async Task<ActionResult> Index(string blname, string blaction)
         {
-            //TODO: AUTH
-            // if(AuthenticationService?.User == null)
-            // {
-            //     Console.WriteLine("user not found");
-            //     return null;
-            // }
+            //get auth token from headers
+            string authToken = "";
+            string token = Request.Headers["X-Auth-Token"];
+            if(token.Trim().StartsWith("\"")){
+                authToken = JsonConvert.DeserializeObject<string>(Request.Headers["X-Auth-Token"]);
+            }else{
+                authToken = token;
+            }
+            
+            if (string.IsNullOrEmpty(authToken))
+            {
+                return ReturnError(Response, "BLFlex.Error.NoTokenProvided", 401);
+            }
+
+            AuthenticationService.SetToken(authToken);
+            if (AuthenticationService.User == null)
+            {
+                return ReturnError(Response, "BLFlex.Error.NoTokenValid", 401);
+            }
+
             var jsonResponse = new Dictionary<string, object>();
             jsonResponse.Add("status", true);
             int HTTPCodeResponse = 200;
@@ -144,12 +169,19 @@ namespace Siesa.SDK.Frontend.Controllers
                                 }
                                 else
                                 {
-                                    if (Request.ContentType == "application/json" && Request.Body.CanRead)
+                                    if (Request.Body.CanRead)
                                     {
-                                        var jsonBody = await new StreamReader(Request.Body).ReadToEndAsync();
-                                        var jsonObj = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonBody);
-                                        IEnumerable<KeyValuePair<string, StringValues>> form = jsonObj.Select(x => new KeyValuePair<string, StringValues>(x.Key, x.Value.ToString()));
-                                        args = GetArgs(parameters, form);
+                                        try
+                                        {
+                                            var jsonBody = await new StreamReader(Request.Body).ReadToEndAsync();
+                                            var jsonObj = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonBody);
+                                            IEnumerable<KeyValuePair<string, StringValues>> form = jsonObj.Select(x => new KeyValuePair<string, StringValues>(x.Key, x.Value==null?null:x.Value.ToString()));
+                                            args = GetArgs(parameters, form);
+                                        }
+                                        catch (System.Exception)
+                                        {
+                                                
+                                        }
                                     }
                                 }
                             }
@@ -169,7 +201,7 @@ namespace Siesa.SDK.Frontend.Controllers
                             }
                             catch (System.ArgumentException)
                             {
-                                jsonResponse["status"] = "error";
+                                jsonResponse["status"] = false;
                                 jsonResponse.Add("message", "Invalid parameters");
                                 HTTPCodeResponse = 400;
                             }
@@ -178,14 +210,14 @@ namespace Siesa.SDK.Frontend.Controllers
                 }
                 catch (System.Exception e)
                 {
-                    jsonResponse["status"] = "error";
-                    jsonResponse.Add("message", e.ToString());
+                    jsonResponse["status"] = false;
+                    jsonResponse.Add("message", e.Message);
                     HTTPCodeResponse = 500;
                 }
             }
             else
             {
-                jsonResponse["status"] = "error";
+                jsonResponse["status"] = false;
                 jsonResponse.Add("message", "404 Not Found.");
                 HTTPCodeResponse = 404;
             }

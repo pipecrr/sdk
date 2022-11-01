@@ -19,12 +19,19 @@ using Siesa.SDK.Shared.Services;
 using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System.Reflection;
-using Siesa.SDK.Shared.Utilities;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.Extensions.DependencyInjection;
 using Siesa.SDK.Shared.DataAnnotations;
 using Siesa.SDK.Backend.Services;
+using Siesa.SDK.Shared.DTOS;
+using System.Linq.Expressions;
+using Siesa.SDK.Backend.Extensions;
+using System.Data;
+using Microsoft.AspNetCore.Http;
+using System.Net;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Siesa.SDK.Business
 {
@@ -33,7 +40,18 @@ namespace Siesa.SDK.Business
         [JsonIgnore]
         protected IAuthenticationService AuthenticationService { get; set; }
 
-        public SDKBusinessModel GetBackend(string business_name){
+        private IServiceProvider _provider;
+        private ILogger _logger;
+        protected ILogger Logger { get { return _logger; } }
+        protected dynamic _dbFactory;
+
+        private SDKContext myContext;
+        protected SDKContext Context { get { return myContext; } }
+
+        private IEnumerable<INavigation> _navigationProperties = null;
+
+        public SDKBusinessModel GetBackend(string business_name)
+        {
             return BackendRouterService.Instance.GetSDKBusinessModel(business_name, AuthenticationService);
         }
 
@@ -73,50 +91,6 @@ namespace Siesa.SDK.Business
         {
             return null;
         }
-    }
-    public class BLBackendSimple<T, K> : IBLBase<T> where T : class, IBaseSDK where K : BLBaseValidator<T>
-    {
-        [JsonIgnore]
-        protected IAuthenticationService AuthenticationService { get; set; }
-
-        public SDKBusinessModel GetBackend(string business_name){
-            return BackendRouterService.Instance.GetSDKBusinessModel(business_name, AuthenticationService);
-        }
-        
-        private IServiceProvider _provider;
-        private ILogger _logger;
-        protected ILogger Logger { get { return _logger; } }
-        protected dynamic _dbFactory;
-
-        public string BusinessName { get; set; }
-        public T BaseObj { get; set; }
-
-        private string[] _relatedProperties = null;
-
-        private SDKContext myContext;
-        protected SDKContext Context { get { return myContext; } }
-
-        public List<string> RelFieldsToSave { get; set; } = new List<string>();
-
-        private IEnumerable<INavigation> _navigationProperties = null;
-
-        public void DetachedBaseObj()
-        {
-            //TODO: Complete
-            //myContext.Entry(BaseObj).State = EntityState.Detached;
-            //BaseObj = (T)myContext.Entry(BaseObj).CurrentValues.ToObject();
-        }
-
-        public BLBackendSimple(IAuthenticationService authenticationService)
-        {
-            AuthenticationService = authenticationService;
-            BaseObj = Activator.CreateInstance<T>();
-            var _bannedTypes = new List<Type>() { typeof(string), typeof(byte[]) };
-            _relatedProperties = BaseObj.GetType().GetProperties().Where(p => p.PropertyType.IsClass && !p.PropertyType.IsPrimitive && !p.PropertyType.IsEnum && !_bannedTypes.Contains(p.PropertyType) && p.Name != "RowVersion").Select(p => p.Name).ToArray();
-
-
-        }
-
         public void ShareProvider(dynamic bl)
         {
             bl.SetProvider(_provider);
@@ -134,15 +108,199 @@ namespace Siesa.SDK.Business
             myContext = _dbFactory.CreateDbContext();
             myContext.SetProvider(_provider);
 
-            _navigationProperties = myContext.Model.FindEntityType(typeof(T)).GetNavigations().Where(p => p.IsOnDependent);
             AuthenticationService = (IAuthenticationService)_provider.GetService(typeof(IAuthenticationService));
+        }
+    }
+    public class BLBackendSimple<T, K> : IBLBase<T> where T : class, IBaseSDK where K : BLBaseValidator<T>
+    {
+        [JsonIgnore]
+        protected IAuthenticationService AuthenticationService { get; set; }
+
+        public SDKBusinessModel GetBackend(string business_name)
+        {
+            return BackendRouterService.Instance.GetSDKBusinessModel(business_name, AuthenticationService);
+        }
+
+        private IServiceProvider _provider;
+        private ILogger _logger;
+        protected ILogger Logger { get { return _logger; } }
+        protected dynamic _dbFactory;
+
+        public string BusinessName { get; set; }
+        public T BaseObj { get; set; }
+
+        private string[] _relatedProperties = null;
+        protected SDKContext ContextMetadata;
+        public List<string> RelFieldsToSave { get; set; } = new List<string>();
+
+        private IEnumerable<INavigation> _navigationProperties = null;
+
+        private List<object> unique_indexes = new List<object>();
+
+        public void DetachedBaseObj()
+        {
+            //TODO: Complete
+            //myContext.Entry(BaseObj).State = EntityState.Detached;
+            //BaseObj = (T)myContext.Entry(BaseObj).CurrentValues.ToObject();
+        }
+
+        private void InternalConstructor()
+        {
+            BaseObj = Activator.CreateInstance<T>();
+            var _bannedTypes = new List<Type>() { typeof(string), typeof(byte[]) };
+            _relatedProperties = BaseObj.GetType().GetProperties().Where(
+                p => p.PropertyType.IsClass
+                    && !p.PropertyType.IsPrimitive
+                    && !p.PropertyType.IsEnum
+                    && !_bannedTypes.Contains(p.PropertyType)
+                    && p.Name != "RowVersion"
+                    && p.GetCustomAttribute(typeof(NotMappedAttribute)) == null
+            ).Select(p => p.Name).ToArray();
+            unique_indexes = BaseObj.GetType()
+                .GetCustomAttributes(typeof(Microsoft.EntityFrameworkCore.IndexAttribute), false)
+                .Where(x =>
+                    x.GetType().GetProperty("IsUnique").GetValue(x, null).Equals(true)
+                ).Select(x =>
+                    x.GetType().GetProperty("PropertyNames").GetValue(x, null)
+                ).ToList();
+
+        }
+
+        public BLBackendSimple(IServiceProvider provider)
+        {
+            if (provider != null)
+            {
+                SetProvider(provider);
+            }
+            InternalConstructor();
+
+        }
+
+        public BLBackendSimple(IAuthenticationService authenticationService)
+        {
+            AuthenticationService = authenticationService;
+            InternalConstructor();
+
+        }
+
+        public void ShareProvider(dynamic bl)
+        {
+            bl.SetProvider(_provider);
+        }
+
+        public IServiceProvider GetProvider()
+        {
+            return _provider;
+        }
+
+        public void SetProvider(IServiceProvider provider)
+        {
+            _provider = provider;
+
+            _dbFactory = _provider.GetService(typeof(IDbContextFactory<SDKContext>));
+
+            ILoggerFactory loggerFactory = (ILoggerFactory)_provider.GetService(typeof(ILoggerFactory));
+            _logger = loggerFactory.CreateLogger(this.GetType().FullName);
+
+            ContextMetadata = _dbFactory.CreateDbContext();
+            ContextMetadata.SetProvider(_provider);
+            var typeContext = ContextMetadata.Model.FindEntityType(typeof(T));
+            if(typeContext != null){
+                _navigationProperties = ContextMetadata.Model.FindEntityType(typeof(T)).GetNavigations().Where(p => p.IsOnDependent);
+            }else{
+                _navigationProperties = new List<INavigation>();
+            };
+
+            AuthenticationService = (IAuthenticationService)_provider.GetService(typeof(IAuthenticationService));
+        }
+
+        [SDKExposedMethod]
+        public ActionResult<bool> CheckUnique(T requestObj)
+        {
+            try
+            {
+                if (unique_indexes.Count <= 0)
+                {
+                    return new ActionResult<bool>() { Success = true, Data = false };
+                }
+                
+                using (SDKContext context = CreateDbContext())
+                {
+                    var entityType = BaseObj.GetType();
+                    T currentObject =null;   
+                    if (requestObj.GetRowid() != 0)// Si editando, entonces asignar el objeto a una variable para comparar con el mismo
+                    {
+                        currentObject = Get(requestObj.GetRowid()); 
+                    }
+                    foreach (var u_index in unique_indexes)
+                    {
+                        List<string> index_fields = (List<string>)u_index;
+                        bool exist_row = false;
+                        Expression existExpression = null;
+                        ParameterExpression pe = Expression.Parameter(entityType, entityType.Name);
+                        //(pe => campo1 == 2 && campo2 == 3)
+                        foreach (var index_field in index_fields)
+                        {
+                            var columnNameProperty = SDKFlexExtension.GetPropertyExpression(pe, index_field);
+                            var field_value = requestObj.GetType().GetProperty(index_field).GetValue(requestObj, null);                                              
+                            if (index_field.StartsWith("Rowid"))
+                            {
+                                try
+                                {
+                                    var related_field_value = requestObj.GetType().GetProperty(index_field.Replace("Rowid", "")).GetValue(requestObj, null);
+                                    if (related_field_value != null)
+                                    {
+                                        field_value = related_field_value.GetType().GetProperty("Rowid").GetValue(related_field_value, null);
+                                    }
+                                }
+                                catch (System.Exception)
+                                {
+                                }
+                            }
+                            var columnValue = Expression.Constant(field_value);
+                            Expression tmpExp = Expression.Equal(columnNameProperty, columnValue);
+                            if (existExpression == null)
+                            {
+                                existExpression = tmpExp;
+                            }
+                            else
+                            {
+                                existExpression = Expression.And(existExpression, tmpExp);
+                            }
+                        }
+
+                        if(currentObject != null){
+                            try
+                            {
+                                
+                                existExpression = Expression.And(existExpression, Expression.NotEqual(Expression.Property(pe, "Rowid"), Expression.Constant(currentObject.GetType().GetProperty("Rowid").GetValue(currentObject, null))));
+                            }
+                            catch (System.Exception)
+                            {   
+                            }
+                        }
+                        var funcExpression = typeof(Func<,>).MakeGenericType(new Type[] { entityType, typeof(bool) });
+                        var returnExp = Expression.Lambda(funcExpression, existExpression, new ParameterExpression[] { pe });
+                        var query = context.AllSet<T>().Where(returnExp);
+                        exist_row = query.Count() > 0;
+                        if (exist_row)
+                        {
+                            return new ActionResult<bool>() { Success = true, Data = true };
+                        }
+                    }
+                }
+                return new ActionResult<bool>() { Success = true, Data = false };
+            }
+            catch (Exception e)
+            {
+                return new BadRequestResult<bool> { Success = false, Errors = new List<string> { e.Message } };
+            }
         }
 
         public virtual T Get(Int64 rowid)
         {
-            using (SDKContext context = _dbFactory.CreateDbContext())
+            using (SDKContext context = CreateDbContext())
             {
-                context.SetProvider(_provider);
                 var query = context.Set<T>().AsQueryable();
                 foreach (var relatedProperty in _relatedProperties)
                 {
@@ -187,7 +345,7 @@ namespace Siesa.SDK.Business
 
         private void AddExceptionToResult(DbUpdateException exception, ValidateAndSaveBusinessObjResponse result)
         {
-            var message = BackendExceptionManager.ExceptionToString(exception, Context);
+            var message = BackendExceptionManager.ExceptionToString(exception, ContextMetadata);
             AddMessageToResult(message, result);
         }
 
@@ -231,32 +389,15 @@ namespace Siesa.SDK.Business
             {
 
                 var valueProp = BaseObj.GetType().GetProperty(property.Name).GetValue(BaseObj);
-                if(valueProp != null){
+                if (valueProp != null)
+                {
                     var valuePropBigInt = Convert.ToInt64(valueProp);
                     returnValue.Add(property.Name, (valuePropBigInt == 0) ? null : valuePropBigInt.ToString());
                 }
-                
+
             }
 
             return returnValue;
-        }
-
-        private bool ExistsRowByIndex(string filter)
-        {
-            using (SDKContext context = _dbFactory.CreateDbContext())
-            {
-                context.SetProvider(_provider);
-                var query = context.Set<T>().AsQueryable();
-
-                foreach (var relatedProperty in _relatedProperties)
-                {
-                    query = query.Include(relatedProperty);
-                }
-
-                query = query.Where(filter);
-
-                return query.Count() > 0;
-            }
         }
 
         private void DisableRelatedProperties(object obj, IEnumerable<INavigation> relatedProperties, List<string> propertiesToKeep = null)
@@ -277,7 +418,7 @@ namespace Siesa.SDK.Business
                         {
                             if (propertiesToKeep != null && propertiesToKeep.Contains(fkFieldName))
                             {
-                                var relNavigations = myContext.Model.FindEntityType(fkFieldValue.GetType()).GetNavigations().Where(p => p.IsOnDependent);
+                                var relNavigations = ContextMetadata.Model.FindEntityType(fkFieldValue.GetType()).GetNavigations().Where(p => p.IsOnDependent);
                                 DisableRelatedProperties(fkFieldValue, relNavigations);
                                 continue;
                             }
@@ -301,7 +442,8 @@ namespace Siesa.SDK.Business
 
         private Int64 Save()
         {
-            using (SDKContext context = _dbFactory.CreateDbContext())
+            this._logger.LogInformation($"Save {this.GetType().Name}");
+            using (SDKContext context = CreateDbContext())
             {
                 context.SetProvider(_provider);
                 if (BaseObj.GetRowid() == 0)
@@ -342,6 +484,7 @@ namespace Siesa.SDK.Business
 
         public virtual DeleteBusinessObjResponse Delete()
         {
+            this._logger.LogInformation($"Detele {this.GetType().Name}");
             var response = new DeleteBusinessObjResponse();
 
             ValidateAndSaveBusinessObjResponse result = new();
@@ -354,8 +497,9 @@ namespace Siesa.SDK.Business
                     response.Errors.AddRange(result.Errors);
                     return response;
                 }
-                using (SDKContext context = _dbFactory.CreateDbContext())
+                using (SDKContext context = CreateDbContext())
                 {
+                    DisableRelatedProperties(BaseObj, _navigationProperties);
                     context.SetProvider(_provider);
                     context.Set<T>().Remove(BaseObj);
                     context.SaveChanges();
@@ -363,11 +507,11 @@ namespace Siesa.SDK.Business
             }
             catch (Exception e)
             {
-                 //response.Errors.AddRange(result.Errors);
+                //response.Errors.AddRange(result.Errors);
 
-                 return null;
+                return null;
             }
-            
+
             return new DeleteBusinessObjResponse();
         }
 
@@ -378,6 +522,7 @@ namespace Siesa.SDK.Business
 
         public virtual Siesa.SDK.Shared.Business.LoadResult EntityFieldSearch(string searchText, string prefilters = "")
         {
+            this._logger.LogInformation($"Field Search {this.GetType().Name}");
             var string_fields = BaseObj.GetType().GetProperties().Where(p => p.PropertyType == typeof(string) && p.GetCustomAttributes().Where(x => x.GetType() == typeof(NotMappedAttribute)).Count() == 0).Select(p => p.Name).ToArray();
             string filter = "";
             foreach (var field in string_fields)
@@ -393,13 +538,14 @@ namespace Siesa.SDK.Business
                 filter = $"({prefilters}) && ({filter})";
             }
             QueryFilterDelegate<T> filterDelegate = EntityFieldFilters;
-            return this.GetData(0, 100, filter, "", filterDelegate);
+            return this.GetData(0, 10, filter, "", filterDelegate);
         }
 
         public virtual Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null)
         {
+            this._logger.LogInformation($"Get Data {this.GetType().Name}");
             var result = new Siesa.SDK.Shared.Business.LoadResult();
-            using (SDKContext context = _dbFactory.CreateDbContext())
+            using (SDKContext context = CreateDbContext())
             {
                 context.SetProvider(_provider);
                 var query = context.Set<T>().AsQueryable();
@@ -414,6 +560,15 @@ namespace Siesa.SDK.Business
                 }
                 var total = query.Count();
 
+                if (!string.IsNullOrEmpty(orderBy))
+                {
+                    query = query.OrderBy(orderBy);
+                }
+                else
+                {
+                    query = query.OrderBy("Rowid");
+                }
+
                 if (skip.HasValue)
                 {
                     query = query.Skip(skip.Value);
@@ -423,11 +578,6 @@ namespace Siesa.SDK.Business
                     query = query.Take(take.Value);
                 }
 
-
-                if (!string.IsNullOrEmpty(orderBy))
-                {
-                    query = query.OrderBy(orderBy);
-                }
                 if (queryFilter != null)
                 {
                     query = queryFilter(query);
@@ -450,27 +600,138 @@ namespace Siesa.SDK.Business
             // Do nothing
         }
 
+        public SDKContext CreateDbContext(bool UseLazyLoadingProxies = false)
+        {
+            dynamic retContext = null;
+            try
+            {
+                var tenantProvider = _provider.GetRequiredService<ITenantProvider>();
+                if (UseLazyLoadingProxies)
+                {
+                    tenantProvider.SetUseLazyLoadingProxies(true);
+                    retContext = _provider.GetService(typeof(SDKContext));
+                }
+                else
+                {
+                    tenantProvider.SetUseLazyLoadingProxies(false);
+                }
+            }
+            catch (System.Exception)
+            {
+            }
+
+            if(retContext == null)
+            {
+                retContext = _dbFactory.CreateDbContext();
+            }
+
+            if (UseLazyLoadingProxies)
+            {
+                retContext.ChangeTracker.LazyLoadingEnabled = true;
+            }
+            else
+            {
+                retContext.ChangeTracker.LazyLoadingEnabled = false;
+            }
+            retContext.SetProvider(_provider);
+            return retContext;
+        }
+
         [SDKExposedMethod]
         public virtual ActionResult<string> GetObjectString(Int64 rowid)
         {
-            using(SDKContext context = _dbFactory.CreateDbContext())
+            using (SDKContext context = CreateDbContext(true))
             {
                 context.SetProvider(_provider);
                 var query = context.Set<T>().AsQueryable();
-                context.ChangeTracker.LazyLoadingEnabled = true;
                 query = query.Where("Rowid == @0", rowid);
                 var entity = query.FirstOrDefault();
-                if(entity != null)
+                if (entity != null)
                 {
-                    return new ActionResult<string>{
+                    return new ActionResult<string>
+                    {
                         Data = entity.ToString()
                     };
                 }
-                return new ActionResult<string>{
+                return new ActionResult<string>
+                {
                     Data = ""
                 };
             }
         }
+
+        static Expression<Func<TSource, dynamic>> DynamicFields<TSource>(IEnumerable<string> fields)
+        {
+            var source = Expression.Parameter(typeof(TSource), "o");
+            var properties = fields
+                .Select(f => typeof(TSource).GetProperty(f))
+                .Select(p => new DynamicProperty(p.Name, p.PropertyType))
+                .ToList();
+            var resultType = DynamicClassFactory.CreateType(properties, false);
+            var bindings = properties.Select(p => Expression.Bind(resultType.GetProperty(p.Name), Expression.Property(source, p.Name)));
+            var result = Expression.MemberInit(Expression.New(resultType), bindings);
+            return Expression.Lambda<Func<TSource, dynamic>>(result, source);
+        }
+
+        [SDKExposedMethod]
+        public virtual ActionResult<List<Dictionary<string,object>>> SDKFlexPreviewData(SDKFlexRequestData requestData, bool setTop = true)
+        {
+            using (var Context = CreateDbContext())
+            {
+                return SDKFlexExtension.SDKFlexPreviewData(Context, requestData, AuthenticationService, setTop);
+            }
+            return null;
+        }
+
+        [SDKExposedMethod]
+        public ActionResult<long> SaveAttachmentEntity(dynamic BaseObj){
+            this.BaseObj = BaseObj;
+            var result = this.ValidateAndSave();
+			if(result.Errors.Count == 0){
+				var response = result.Rowid;
+				return new ActionResult<long>{Success = true, Data = response};
+			}else {
+				return new BadRequestResult<long>{Success = false, Errors = new List<string> { result.Errors[0].Message }};
+			}
+            return null;
+        }
+        
+        [SDKExposedMethod]
+        public async Task<ActionResult<SDKFileUploadDTO>> SaveFile(byte[] fileBytes, string name){
+            MemoryStream stream = new MemoryStream(fileBytes);
+            IFormFile file = new FormFile(stream, 0, fileBytes.Length, name, name);
+            var result = new SDKFileUploadDTO();
+            IWebHostEnvironment env = _provider.GetRequiredService<IWebHostEnvironment>();
+            var untrustedFileName = file.FileName;
+            try{
+                var guid = Guid.NewGuid().ToString();
+                untrustedFileName = string.Concat(guid.Substring(1,10), "_", untrustedFileName);
+                var path = Path.Combine(env.ContentRootPath,"Uploads");
+                Directory.CreateDirectory(path);
+                var filePath = Path.Combine(path, untrustedFileName);
+                await using FileStream fs = new(filePath, FileMode.Create);
+                await file.CopyToAsync(fs);
+                result.Url = filePath;
+                result.FileName = untrustedFileName;
+            }
+            catch (IOException ex){
+                return new BadRequestResult<SDKFileUploadDTO>{Success = false, Errors = new List<string> { ex.Message }};
+            }
+            return new ActionResult<SDKFileUploadDTO>{Success = true, Data = result};
+        }
+
+        [SDKExposedMethod]
+        public async Task<ActionResult<string>> DownloadFile(string url){
+            IWebHostEnvironment env = _provider.GetRequiredService<IWebHostEnvironment>();
+            var filePath = Path.Combine(url);
+            var file = new FileInfo(filePath);
+            if (file.Exists){
+                var fileBytes = await File.ReadAllBytesAsync(filePath);
+                var base64 = Convert.ToBase64String(fileBytes);
+                return new ActionResult<string>{Success = true, Data = base64};
+            }
+            return new BadRequestResult<string>{Success = false, Errors = new List<string> { "File not found" }};
+        } 
     }
 
 }

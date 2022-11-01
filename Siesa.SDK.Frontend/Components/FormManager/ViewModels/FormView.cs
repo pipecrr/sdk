@@ -30,6 +30,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Inject] public IJSRuntime JSRuntime { get; set; }
         [Inject] public NavigationManager NavManager { get; set; }
         [Inject] public NavigationService NavigationService { get; set; }
+        [Inject] public SDKNotificationService NotificationService { get; set; }
 
         [Inject] protected IAuthenticationService AuthenticationService { get; set; }
 
@@ -38,11 +39,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         protected List<Panel> Panels {get { return FormViewModel.Panels; } }
 
         public Boolean Loading = true;
+        public bool Saving = false;
 
         public String ErrorMsg = "";
+        [Parameter]
         public string FormID { get; set; } = Guid.NewGuid().ToString();
         protected ValidationMessageStore _messageStore;
-        protected EditContext EditFormContext;
+        public EditContext EditFormContext;
         [Parameter]
         public string ViewdefName { get; set; }
 
@@ -70,6 +73,36 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         [Inject]
         public IBackendRouterService BackendRouterService { get; set; }
+        [Inject] 
+        public IFeaturePermissionService FeaturePermissionService { get; set; }
+
+        protected bool CanCreate;
+        protected bool CanEdit;
+        protected bool CanDelete;
+        protected bool CanDetail;
+        protected bool CanList;
+
+        public bool FormHasErrors = false;
+
+        protected virtual async Task CheckPermissions()
+        {
+            if (FeaturePermissionService != null)
+            {
+                try
+                {
+                    CanList = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 4, AuthenticationService);
+                    CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 1, AuthenticationService);
+                    CanEdit = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 2, AuthenticationService);
+                    CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 3, AuthenticationService);
+                    CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 5, AuthenticationService);
+                }
+                catch (System.Exception)
+                {
+                }
+            }
+
+        }
+
 
         private string GetViewdef(string businessName)
         {
@@ -115,17 +148,25 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             }
         }
 
-        public void Refresh(){
+        public void Refresh(bool Reload = false){
             EvaluateDynamicAttributes(null);
-            StateHasChanged();
+            try
+            {
+                StateHasChanged();
+            }
+            catch (System.Exception)
+            {
+                _ = InvokeAsync(() => StateHasChanged());
+            }
         }
-        protected virtual void InitView(string bName = null)
+        protected virtual async Task InitView(string bName = null)
         {
             Loading = true;
             if (bName == null)
             {
                 bName = BusinessName;
             }
+            await CheckPermissions();
             var metadata = GetViewdef(bName);
             if (metadata == null || metadata == "")
             {
@@ -267,30 +308,47 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            //InitView();
+            await InitView();
         }
 
         public override async Task SetParametersAsync(ParameterView parameters)
         {
+            bool changeViewContext = false;
+            if (parameters.TryGetValue<DynamicViewType>(nameof(ViewContext), out var value2))
+            {
+                if (value2 != null && value2 != ViewContext)
+                {
+                    changeViewContext = true;
+                }
+            }
             await base.SetParametersAsync(parameters);
             if (parameters.TryGetValue<string>(nameof(BusinessName), out var value))
             {
-                if (value != null)
+                if (value != null && value != BusinessName)
                 {
                     Loading = false;
                     ErrorMsg = "";
-                    InitView(value);
+                    await InitView(value);
                 }
             }
-        }
 
+            if(changeViewContext)
+            {
+                Loading = false;
+                ErrorMsg = "";
+                await InitView();
+            }
+
+            
+            
+        }
         private async Task SaveBusiness()
         {
-            Loading = true;
+            Saving = true;
             StateHasChanged();
             //var id = await BusinessObj.SaveAsync();
             var result = await BusinessObj.ValidateAndSaveAsync();
-            Loading = false;
+            Saving = false;
             ErrorMsg = string.Empty;
             if (result.Errors.Count > 0)
             {
@@ -363,12 +421,15 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
 
         protected async Task HandleValidSubmit()
         {
-            ErrorMsg = @"Form data is valid";
+            FormHasErrors = false;
+            ErrorMsg = "";
             await SaveBusiness();
         }
         protected void HandleInvalidSubmit()
         {
-            ErrorMsg = @"Form data is invalid";
+            //ErrorMsg = @"Form data is invalid";
+            FormHasErrors = true;
+            NotificationService.ShowError("Custom.Generic.FormError");
         }
         protected void GoToList()
         {
@@ -395,6 +456,11 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
                 await Evaluator.EvaluateCode(button.Action, BusinessObj);
                 StateHasChanged();
             }
+        }
+        
+        protected string GetSaveBtnIcon()
+        {
+            return Saving ? "fas fa-spinner fa-pulse" : "fa-solid fa-floppy-disk";
         }
 
     }

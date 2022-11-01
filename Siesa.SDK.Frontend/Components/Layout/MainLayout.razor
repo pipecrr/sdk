@@ -4,8 +4,36 @@
 @using System
 @using Microsoft.AspNetCore.Components
 @using Siesa.SDK.Frontend.Components.Layout.NavMenu
+@using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Frontend.Services
+@inject IAuthenticationService AuthenticationService
+@using Siesa.SDK.Frontend.Components.FormManager.Model
+@using Siesa.SDK.Frontend.Pages.Login
+@using Siesa.SDK.Frontend.Components.Visualization
+@inject UtilsManager UtilsManager 
+@inject IJSRuntime JSRuntime
+@inject NavigationService NavigationService
+@inject SDKDialogService SDKDialogService
+
+@if(AuthenticationService.GetSelectedConnection() != null && AuthenticationService.GetSelectedConnection().Rowid != 0)
+{
+    @if(AuthenticationService.GetSelectedConnection().IsTest && !string.IsNullOrEmpty(WatermarkText))
+    {
+        <div class="sdk-test-watermark" data-watermark="@WatermarkText"></div>
+    }
+
+    @if(!string.IsNullOrEmpty(AuthenticationService.GetSelectedConnection().StyleUrl))
+    {
+        <head>
+            <link rel="stylesheet" href="@AuthenticationService.GetConnectionStyle()">
+        </head>
+    }
+}
+
 <RadzenDialog />
-<RadzenNotification />
+<NotificationServiceSDK />
+
+
 @if(IsEmptyLayout)
 {
     <ErrorBoundary @ref="errorBoundary">
@@ -45,7 +73,7 @@
                                 <ChildContent> 
                                 <aside class="col-12 sdk_home_content">
                                     <div
-                                        class="offset-lg-0 col-lg-12 offset-xl-0 col-xl-12 offset-xxl-1 col-xxl-10 px-0 px-md-3">
+                                        class="@GetCssBody()">
 
                                         <BreadCrumb />
                                         <CascadingValue Value="@this">
@@ -89,6 +117,24 @@
 
     public bool IsEmptyLayout { get; set; } = false;
 
+    private string WatermarkText { get; set; }
+    private IJSObjectReference _jsModule;
+
+    private bool _showingLogin = false;
+
+    private bool isMaximized = false;
+
+    public async Task ToogleMaximize()
+    {
+        isMaximized = !isMaximized;
+        StateHasChanged();
+    }
+
+    public bool IsMaximized()
+    {
+        return isMaximized;
+    }
+
     public void SetDefaultArea(bool isDefaultArea)
     {
         bool refresh = IsDefaultArea != isDefaultArea;
@@ -113,7 +159,43 @@
     {
         IsDefaultArea = true;
         base.OnInitializedAsync();
-        errorBoundary = new ErrorBoundary();
+        errorBoundary = new ErrorBoundary();        
+        InitSDKJS();
+    }
+
+    private async Task InitSDKJS()
+    {
+        WatermarkText = await UtilsManager.GetResource("Custom.TestConnection");
+        try
+        {
+            if(_jsModule == null)
+            {
+                await ImportJs();
+            }
+            await _jsModule.InvokeVoidAsync("PoblateWatermark");
+            await _jsModule.InvokeVoidAsync("InitSDK", DotNetObjectReference.Create(this));
+        }
+        catch (Exception)
+        {
+        }
+        StateHasChanged();
+    }
+
+    private async Task ImportJs()
+    {
+        try
+        {
+            _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/Components/Layout/MainLayout.razor.js");
+        }
+        catch (Exception)
+        {
+        }
+        try
+        {
+            await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/js/utils.js");
+        }catch (Exception)
+        {
+        }
     }
 
     private void ToggleNavMenu()
@@ -127,4 +209,56 @@
         showNavMenu = false;
         StateHasChanged();
     }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender || _jsModule == null){
+            await ImportJs();
+        }
+    }
+
+    [JSInvokable]
+    public async Task ShowLogin()
+    {
+        if(!_showingLogin)
+        {
+            _showingLogin = true;
+            var confirmDialogPolitic = await SDKDialogService.ShowCustomDialog(ds => @<ModalLogin DialogService=@ds />, "600px", "",false, false);
+            _showingLogin = false;
+        }else{
+            if(AuthenticationService != null && AuthenticationService.User != null && await AuthenticationService.IsValidToken()){
+                SDKDialogService.ds.Close(true);
+                _showingLogin = false;
+            }
+        }
+        
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public async Task HideLogin()
+    {
+        if(_showingLogin && AuthenticationService != null && AuthenticationService.User != null && await AuthenticationService.IsValidToken()){
+            SDKDialogService.ds.Close(true);
+            _showingLogin = false;
+        }
+        StateHasChanged();
+    }
+
+    private string GetCssBody()
+    {
+        var xxl_offset = "offset-xxl-1";
+        var xxl = "col-xxl-10";
+
+        if(isMaximized)
+        {
+            xxl_offset = "offset-xxl-0";
+            xxl = "col-xxl-12";
+        }
+
+        return $"offset-lg-0 col-lg-12 offset-xl-0 col-xl-12 {xxl_offset} {xxl} px-0 px-md";
+    }
+     
+
+
 }

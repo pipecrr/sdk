@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Siesa.SDK.Entities;
 
 namespace Siesa.SDK.Frontend.Components.Layout
 {
@@ -16,6 +17,10 @@ namespace Siesa.SDK.Frontend.Components.Layout
         RenderFragment TopBarExtraButtons { get; }
         string StyleName { get; }
         bool HasExtraButtons { get; }
+        bool HiddenCompaies { get; }
+        bool DisableCompanies { get; }
+        dynamic BusinessObj { get; }
+        EventCallback<E00201_Company> OnChangeCompany { get; }
         SetTopBar TopBarSetter { get; set; }
         event PropertyChangedEventHandler PropertyChanged;
         void UpdateTopBar();

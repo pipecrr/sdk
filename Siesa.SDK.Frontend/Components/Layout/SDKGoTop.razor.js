@@ -8,10 +8,9 @@ window.onscroll = function(){
     }
 }
 
-document.querySelector('.sdk_go_top')
-.addEventListener('click', () =>{
+export function goToTop(){
     window.scrollTo({
         top:0,
         behavior: 'smooth'
     });
-});
+}

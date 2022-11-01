@@ -1,0 +1,33 @@
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
+@inject SDKNotificationService SDKNotificationService
+@inject SDKDialogService SDKDialogService
+@inject DialogService DialogService
+@layout EmptyLayout
+
+<div class="container-fluid">
+    <div class="container-fluid">
+            <h2>SDKProgessBar</h2> 
+            <p>Demonstration and configuration of the SDKProgessBar component</p> 
+    </div>
+    <div class="row px-3"> 
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>ProgressBar in determinate mode</h3>
+                <SDKProgressBar Value="@valor" />
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>ProgressBar in max value > 100</h3>
+                <SDKProgressBar Value="@valor2" Max="100" />
+            </SDKCard>
+        </div>
+    </div>
+</div>
+
+@code {
+    double valor = 75;
+    double valor2 = 50;
+
+}

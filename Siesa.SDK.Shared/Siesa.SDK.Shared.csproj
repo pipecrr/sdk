@@ -45,4 +45,9 @@
 		<Protobuf Include="Protos\sdk.proto" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<None Remove="Templates\TemplatePassRecover.html" />
+		<EmbeddedResource Include="Templates\TemplatePassRecover.html" />
+	</ItemGroup>
+
 </Project>

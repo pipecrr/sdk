@@ -338,3 +338,6 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+
+# dev.razor
+Siesa.SDK.Frontend/Components/Dev.razor

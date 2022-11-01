@@ -1,6 +1,17 @@
-﻿@implements IDisposable
+﻿@using Siesa.SDK.Entities;
+@using Siesa.SDK.Shared.Services 
+@using Newtonsoft.Json;
+@using System.Linq;
+@using Siesa.SDK.Shared.Utilities;
+
+@implements IDisposable
+
+@inject IAuthenticationService AuthenticationService
+@inject IBackendRouterService BackendRouterService
 @inject IJSRuntime JSRuntime
 @inject NavigationService navigationService
+@inject SDKNotificationService  NotificationService
+
 @if (LayoutService.TopBarTitle != null || LayoutService.TopBarButtons != null || LayoutService.TopBarExtraButtons != null)
 {
     <div class=@("col-12 p-2 p-sm-3 whcm_toolbar " + LayoutService.StyleName)>
@@ -15,6 +26,10 @@
             <h3 class="mb-0">@LayoutService.TopBarTitle</h3>
         </div>
         <div class="whcm_toolbar_button d-flex align-items-center position-relative pt-2 pt-sm-0">
+            @if(MainLayout != null && MainLayout.IsDefaultArea)
+            {
+                <TopBarButton  ResourceTag="Action.Expand" IconCssClass="@GetExpandIcon()" Click="@OnClickExpand"/>
+            }
             @LayoutService.TopBarButtons
             @if(LayoutService.HasExtraButtons)
             {
@@ -37,30 +52,156 @@
             }
         </div>
     </div>
+    @if (!HiddenCompaies)
+    {
+        @if (ShowCompanies)
+        {
+            <div>
+                <div class="whcm_company_select ">
+                            <select class="form-select form-control form-control-sm font-weight-bold" disabled="@DisableCompanies"
+                            id="inputCompany" @onchange="@ChangeCompany">
+                                @foreach (var company in CompaniesList)
+                                    {
+                                        <option value="@company.Rowid"
+                                        selected="@(company.Rowid == SelectedCompany.Rowid)">@company.ToString()</option>
+                                    }
+                            </select>
+                </div>
+            </div>
+        }
+    }
 }
 @code {
+    [CascadingParameter]
+    public MainLayout MainLayout { get; set; }
 
     [Parameter] public bool ShowBackButton { get; set; } = true;
 
-    private bool ShowMoreOptions = false;
-    [Inject]
-    public ILayoutService LayoutService { get; set; }
+    [Parameter] public bool HiddenCompaies { get; set; } = false;
 
-    protected override void OnInitialized()
-    {
+    [Parameter] public bool DisableCompanies { get; set; } = false;
+
+    [Parameter] public EventCallback<E00201_Company> OnChangeCompany { get; set; } 
+
+    [Inject] public ILayoutService LayoutService { get; set; }
+
+    private bool ShowMoreOptions = false;
+
+    private bool ShowCompanies { get; set; } = false;
+
+    public List<E00201_Company> CompaniesList { get; set; } = new List<E00201_Company>();
+
+    public E00201_Company SelectedCompany { get; set; } = new E00201_Company();
+
+    
+    protected override async Task OnInitializedAsync()
+    {  
         LayoutService.PropertyChanged += LayoutService_PropertyChanged;
+        
+        await GetCompanies();
         base.OnInitialized();
+    }
+
+
+    private async Task ChangeCompany(ChangeEventArgs e)
+    {
+        if (e.Value != null)
+        {
+            var valuestr= e.Value.ToString();
+            short rowidCompany = short.Parse(valuestr);
+
+            SetCompany(rowidCompany, true);
+            SelectedCompany.Rowid = rowidCompany;
+
+            if (OnChangeCompany.HasDelegate)
+            {
+              await OnChangeCompany.InvokeAsync(SelectedCompany);
+            }
+        }
+    }
+
+    private void SetCompany(short rowidCompany, bool setObj)
+    {
+        if (LayoutService?.BusinessObj?.BaseObj != null && InheritCompany())
+        {
+             LayoutService.BusinessObj.BaseObj.RowidCompany = rowidCompany;
+             if(setObj)
+             {
+                LayoutService.BusinessObj.BaseObj.Company = CompaniesList.FirstOrDefault(x => x.Rowid == rowidCompany);
+             }
+             LayoutService.BusinessObj.Refresh(true);
+        } 
+    }
+
+    public bool InheritCompany(){
+        Type type = LayoutService.BusinessObj.BaseObj.GetType();
+        if (Utilities.IsAssignableToGenericType(type, typeof(BaseCompany<>)))
+        {
+            return true;
+        }
+        return false;
     }
 
     private void LayoutService_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
+        if(e.PropertyName == nameof(ILayoutService.BusinessObj))
+        {
+            if (LayoutService?.BusinessObj?.BaseObj != null && InheritCompany())
+            {
+                ShowCompanies = true;
+                if(LayoutService.BusinessObj.BaseObj.RowidCompany != SelectedCompany.Rowid)
+                {
+                    SetCompany(SelectedCompany.Rowid, true);
+                }
+                StateHasChanged();
+            }else{
+                ShowCompanies = false;
+                StateHasChanged();
+            }
+        }
+
+        if(e.PropertyName == nameof(ILayoutService.HiddenCompaies))
+        {
+            if(LayoutService?.HiddenCompaies == true){
+
+                HiddenCompaies = LayoutService.HiddenCompaies;
+            }else{
+
+                HiddenCompaies = false;
+            }
+
+            StateHasChanged();
+        }
+
+        if(e.PropertyName == nameof(ILayoutService.DisableCompanies))
+        {
+            if(LayoutService?.DisableCompanies == true){
+
+                DisableCompanies = LayoutService.DisableCompanies;
+            }else{
+
+                DisableCompanies = false;
+            }
+
+            StateHasChanged();
+        }
+
+        if(e.PropertyName == nameof(ILayoutService.OnChangeCompany))
+        {
+            if(LayoutService != null){
+
+                OnChangeCompany = LayoutService.OnChangeCompany;
+            }
+            StateHasChanged();
+        }
+        
         if (
             e.PropertyName == nameof(ILayoutService.TopBarTitle) || 
             e.PropertyName == nameof(ILayoutService.TopBarButtons) || 
             e.PropertyName == nameof(ILayoutService.TopBarExtraButtons) || 
             e.PropertyName == nameof(ILayoutService.StyleName) ||
-            e.PropertyName == nameof(ILayoutService.HasExtraButtons)
-        )
+            e.PropertyName == nameof(ILayoutService.HasExtraButtons) 
+            ) 
         {
             StateHasChanged();
         }
@@ -95,6 +236,59 @@
             Console.WriteLine(ex.Message);
         }
        
+    }
+
+    public async Task GetCompanies()
+    {
+        try
+        {
+            var BL = BackendRouterService.GetSDKBusinessModel("BLSDKCompany",AuthenticationService);
+
+            var CompanyGroup = AuthenticationService.GetRowidCompanyGroup();
+        
+            var DataCompany = await BL.GetData(null, null);
+            if (DataCompany.Data != null)
+            {
+                CompaniesList = DataCompany.Data.Select(x => JsonConvert.DeserializeObject<E00201_Company>(x))
+                                                .Where(x => x.RowidCompanyGroup == CompanyGroup)
+                                                .ToList();
+
+                if (CompaniesList.Count > 0)
+                {
+                    SetCompany(CompaniesList.First().Rowid, true);
+                    SelectedCompany.Rowid = CompaniesList.First().Rowid;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    private async Task OnClickExpand(MouseEventArgs e)
+    {
+        if(MainLayout != null)
+        {
+            MainLayout.ToogleMaximize();
+        }
+    }
+
+    private string GetExpandIcon()
+    {
+        if(MainLayout != null)
+        {
+            if(MainLayout.IsMaximized())
+            {
+                return "fa-solid fa-compress";
+            }
+            else
+            {
+                return "fa-solid fa-expand";
+            }
+        }
+
+        return "fa-solid fa-expand";
     }
 
 }

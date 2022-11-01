@@ -1,0 +1,89 @@
+
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
+@inject SDKNotificationService SDKNotificationService
+@inject SDKDialogService SDKDialogService
+@inject DialogService DialogService
+
+
+<div class="container-fluid m-3">
+    <div class="container-fluid">
+            <h2>SDKConfirmDialog</h2> 
+            <p>Demonstration and configuration of the SDKConfirmDialog component</p> 
+    </div>
+    <div class="row px-3"> 
+        <div class="col-md-6 p-1">
+            <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="ShowConfirmDialog" Click="@TestConfirmDialog" />
+        </div>
+        <div class="col-md-6 p-1">
+            <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="ShowCustomDialog" Click="@TestCustomDialog" />
+        </div>
+    </div>
+</div>
+
+
+@code{
+    public async Task TestConfirmDialog(){
+        var ShowConfirmDialog = await SDKDialogService.ShowConfirmDialog
+        (@<div>
+                <h4>Hola Mundo</h4>
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et tempora unde tempore commodi odio explicabo sequi consectetur dolor voluptatibus, suscipit voluptatum dolorem ratione? Nulla quo neque quae, asperiores odio expedita?</p>
+            </div> ,"300px");
+        
+        if (ShowConfirmDialog)
+        {
+            SDKNotificationService.ShowSuccess("Confirmado");
+        }else
+        {
+            SDKNotificationService.ShowError("Cancelado");
+        };
+    }
+    public async Task TestCustomDialog(){
+
+        var ShowConfirmDialog = await SDKDialogService.ShowCustomDialog
+        (ds=>@<div class="col-12 p-0">
+            <div>
+                <div>
+                    <h4>Hola Mundo</h4>
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et tempora unde tempore commodi odio explicabo sequi consectetur dolor voluptatibus, suscipit voluptatum dolorem ratione? Nulla quo neque quae, asperiores odio expedita?</p>
+                </div>
+                <div>
+                    <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" ResourceTag="Cancelar" Click="@ClickCancel" />
+                    <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Confirmar" Click="@ClickDelete" />
+                </div>
+            </div>
+          </div>, title: "Titulo como Parametro");
+
+          if (ShowConfirmDialog != null)
+          {
+            if (!ShowConfirmDialog)
+            {
+                SDKNotificationService.ShowError("Cancelado");
+            }else
+            {
+                SDKNotificationService.ShowSuccess("Confirmado");
+            };
+          }else
+          {
+             DialogService.Close(false);
+          }
+
+        
+    
+    }
+    private void ClickDelete()
+    {
+       DialogService.Close(true);
+    }
+    private void ClickCancel()
+    {
+      DialogService.Close(false);
+    }
+
+    protected override void OnInitialized()
+    {
+
+    }
+}

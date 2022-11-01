@@ -3,6 +3,8 @@
 @inject UtilsManager UtilManager
 @using Siesa.SDK.Frontend.Services
 @inject MenuService MenuService
+
+
 <div class="sdk_search" @onclick="()=>ShowSearch()">
     <input autocomplete="off" type="search" class="form-control form-control-sm pr-4" id="busqueda" placeholder="@placeholder"
         @bind-value:event="onchange" @oninput="@((ChangeEventArgs __e) => OnChangeSearch(__e?.Value?.ToString()))"
@@ -12,6 +14,7 @@
 @if (SearchEnabled && LastSearch.Count > 0)
 {
     <div id="boxSearch" class="search_tooltip py-2" style="display:block;" tabindex="0" @onfocusout="@(() => HideSearch())">
+        <div>
         @foreach (var menuItem in LastSearch)
         {
             var bread = "";
@@ -26,10 +29,12 @@
                     bread += @menuItem.Breadcrumb[i] + " / ";
                 }
             }
-            <a href="@menuItem.CurrentUrl" class="px-3 py-2 m-0" @onclick="()=>HideSearch()">@((MarkupString)bread)</a>
+            <a href="@menuItem.CurrentUrl" class="px-2 py-2 m-0" @onclick="()=>HideSearch()">@((MarkupString)bread)</a>
         }
+        </div>
     </div>
 }
+
 
 @code{
     private string searchString = "";

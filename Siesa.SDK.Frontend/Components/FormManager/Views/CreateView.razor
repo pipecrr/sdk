@@ -8,21 +8,20 @@
 @using Siesa.SDK.Shared.Services
 @inject IResourceManager ResourceManager
 @inject IAuthenticationService AuthenticationService
+@inject SDKNotificationService Notification
 
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
 
-@if (Panels == null || Panels.Count <= 0)
+@if (Loading == true)
 {
-    <ResourceViewer ResourceTag="SDK.ViewdefNotFound" />
-}
-else if (Loading == true)
+    <ResourceViewer ResourceTag="Custom.Generic.Loading" />
+} else if (Panels == null || Panels.Count <= 0)
 {
-    <ResourceViewer ResourceTag="Generic.Loading" />
-}
-else if (BusinessObj.BaseObj != null)
+    <ResourceViewer ResourceTag="Module.SDK.ViewdefNotFound" />
+} else if (BusinessObj.BaseObj != null)
 {
     @if(IsSubpanel && ShowTitle){        
-            <h5><ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer 
+            <h5 class="d-flex justify-content-center"><ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer 
             ResourceTag="@($"{BusinessName}.Singular")" /></h5>
         <hr />
     }
@@ -57,7 +56,7 @@ else if (BusinessObj.BaseObj != null)
 
             }
         </DxFormLayout>
-        <ValidationSummary />
+        @* <ValidationSummary /> *@
         @if(!string.IsNullOrEmpty(ErrorMsg))
         {
             <label>@((MarkupString)ErrorMsg)</label>
@@ -68,24 +67,24 @@ else if (BusinessObj.BaseObj != null)
         <div class="buttons-container">
             @foreach (var btn in FormViewModel.Buttons)
             {
-                <SDKButton RenderStyle="@btn.RenderStyle" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag"  />
+                <SDKButton RenderStyle="@btn.RenderStyle"  Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag"  />
             }
             @if(ShowSaveButton){
-                <SDKButton form="@FormID" RenderStyle="SDKButtonRenderStyle.Primary" RenderStyleMode="SDKButtonRenderStyleMode.Text" SubmitFormOnClick="true" ResourceTag="Generic.ActionSave"/>
+                <SDKButton form="@FormID" RenderStyle="SDKButtonRenderStyle.Primary" SubmitFormOnClick="true" ResourceTag="Action.Save"/>
             }
             @if(ShowCancelButton){
-                <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@((args) => {CancelButton();})" ResourceTag="Generic.ActionCancel" />
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" Click="@((args) => {CancelButton();})" ResourceTag="Action.Cancel" />
             }
         </div>
     }
     @if(SetTopBar && !IsSubpanel)
     {
         <PageTitle><ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer ResourceTag="@($"{BusinessName}.Singular")" /></PageTitle>
-        <SetTopBar StyleName="toolbar_creation" HasExtraButtons="@(FormViewModel.Buttons != null && FormViewModel.Buttons.Count > 0 ? true: false)">
+        <SetTopBar StyleName="toolbar_creation" HasExtraButtons="@(FormViewModel.Buttons != null && FormViewModel.Buttons.Count > 0 ? true: false)" BusinessObj="@BusinessObj">
             <TopBarTitle><ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer ResourceTag="@($"{BusinessName}.Singular")" /></TopBarTitle>
             <TopBarButtons>
-                <TopBarButton form="@FormID" SubmitFormOnClick="true" ResourceTag="Generic.ActionSave" IconCssClass="fa-solid fa-floppy-disk" />
-                @* <TopBarButton Click="GoToList" ResourceTag="Generic.ActionCancel"  IconCssClass="fa-solid fa-floppy-disk"  /> *@
+                <TopBarButton form="@FormID" SubmitFormOnClick="true" ResourceTag="Action.Save" IconCssClass="@GetSaveBtnIcon()" Enabled="@(!Saving)"  />
+                @* <TopBarButton Click="GoToList" ResourceTag="Action.Cancel"  IconCssClass="fa-solid fa-floppy-disk"  /> *@
             </TopBarButtons>
             <TopBarExtraButtons>
                 @foreach (var btn in FormViewModel.Buttons)
@@ -99,13 +98,14 @@ else if (BusinessObj.BaseObj != null)
 }
 
 @code {
-    protected override void InitView(string bName = null){
-        base.InitView(bName);
+
+    protected override async Task InitView(string bName = null){
+        await base.InitView(bName);
 
         if(Panels.Count > 1){
              foreach (var panel in Panels){
                  if(panel.SubViewdef != null && panel.SubViewdef.ParentField != ""){
-                     string[] fieldPath = panel.SubViewdef.ParentField.Split('.');
+                    string[] fieldPath = panel.SubViewdef.ParentField.Split('.');
                     object currentObject = BusinessObj;
                     for (int i = 0; i < fieldPath.Length; i++)
                     {

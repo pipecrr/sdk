@@ -12,12 +12,13 @@
 @using Siesa.SDK.Business
 @using Siesa.SDK.Shared.Services
 @using Siesa.SDK.Frontend.Application
+@using Siesa.SDK.Frontend.Components.Visualization
 @inherits LayoutComponentBase
 
 <ErrorBoundary @ref="errorBoundary">
     <ChildContent> 
         <RadzenDialog />
-        <RadzenNotification />
+        <NotificationServiceSDK />
         <div class="main">    
             <div>
                 @Body

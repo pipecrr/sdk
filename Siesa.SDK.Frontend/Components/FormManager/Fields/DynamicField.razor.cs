@@ -9,8 +9,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
 {
     public partial class DynamicField : ComponentBase
     {
+        [Parameter] public string BLParentBusinessName { get; set; }
         [Parameter] public FieldOptions FieldOpt { get; set; }
         [Parameter] public object ModelObj { get; set; }
+        [Parameter] public bool ValidateField { get; set; } = true;
 
         private object fieldModelObj { get; set; }
 
@@ -26,9 +28,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
 
         private bool IsNullable { get; set; }
 
-        private void initField()
+        private void initField(bool force = false)
         {
-            var field = FieldOpt.GetFieldObj(ModelObj);
+            var field = FieldOpt.GetFieldObj(ModelObj, force);
             fieldModelObj = field.ModelObj;
             fieldName = field.Name;
             FieldType = field.FieldType;
@@ -46,14 +48,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
                 //parameters.Add("TItem", field.SelectFieldType);
             }
 
-            
             StateHasChanged();
         }
 
         public override async Task SetParametersAsync(ParameterView parameters)
         {
             await base.SetParametersAsync(parameters);
-            initField();       
+            initField(true);   
         }
     }
 }

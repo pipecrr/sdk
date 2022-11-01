@@ -7,7 +7,8 @@
 @using Siesa.SDK.Entities.Enums
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
-
+@inject IFeaturePermissionService FeaturePermissionService
+@inherits Siesa.SDK.Frontend.Components.SDKComponent
 @if(MenuItem.SubMenus?.Count > 0){
     @* <DxMenuItem Text="@Title" IconCssClass="@MenuItem.IconClass"> 
         <Items>
@@ -17,7 +18,7 @@
         </Items>
     </DxMenuItem>        *@
     <a href="#" @ref="btnRef" @attributes="@menuItemAttributes" @onclick:stopPropagation="true" @onclick="()=> OnClick(MenuItem)"  @onclick:preventDefault class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
-        title="@Title">
+        title="@Title" data-automation-id="@GetAutomationId()">
         @if(MenuItem.IconClass != null){
             <div class="nav_btn_standar_icon">
                 <i class=@(MenuItem.IconClass + " font_size_112")></i>
@@ -38,10 +39,10 @@
     }else{
         @if(MenuItem.Feature != null)
         {
-            @if(Utilities.CheckUserActionPermission(MenuItem.Feature.Rowid, 4, AuthenticationService))
+            @if(FeaturePermissionService.CheckUserActionPermission(MenuItem.Feature.Rowid, 4, AuthenticationService))
             {
                 <a href="@MenuItem.CurrentURL" @attributes="@menuItemAttributes" @onmouseover="MouseOver" @onmouseout="MouseOut" @onclick:stopPropagation="true" @onclick="()=> OnClickItem(MenuItem)"  @onclick:preventDefault  class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
-                    title="@Title">
+                    title="@Title" data-automation-id="@GetAutomationId()">
                     @if(MenuItem.IconClass != null){
                         <div class="nav_btn_standar_icon">
                             <i class=@(MenuItem.IconClass + " font_size_112")></i>
@@ -57,7 +58,7 @@
 
         }else{
             <a href="@MenuItem.CurrentURL" @attributes="@menuItemAttributes" @onmouseover="MouseOver" @onmouseout="MouseOut" @onclick:stopPropagation="true" @onclick="()=> OnClickItem(MenuItem)"  @onclick:preventDefault class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
-                title="@Title">
+                title="@Title" data-automation-id="@GetAutomationId()">
                 @if(MenuItem.IconClass != null){
                     <div class="nav_btn_standar_icon">
                         <i class=@(MenuItem.IconClass + " font_size_112")></i>
@@ -128,6 +129,7 @@
         }else{
             Title = MenuItem.CurrentText;
         }
+        AutomationId = Title;
     }
 
     private void OnClickItem(E00061_Menu menuItem, bool newTab = false){
@@ -155,6 +157,15 @@
     private void MouseOut(MouseEventArgs e)
     { 
         ShowIconExternal=false; 
+    }
+
+    protected override string GetAutomationId()
+    {
+        if(string.IsNullOrEmpty(AutomationId))
+        {
+            AutomationId = Title;
+        }
+        return base.GetAutomationId();
     }
 
 }

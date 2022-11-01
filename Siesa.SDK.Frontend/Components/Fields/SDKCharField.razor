@@ -1,3 +1,5 @@
+@using System.Linq.Expressions
+@inherits SDKComponent
 <DxTextBox 
     Text="@Value" 
     TextChanged="@ValueChanged" 
@@ -6,6 +8,11 @@
     CssClass="@CssClass"
     maxlength = "@MaxLength"
     Password="@Password"
+    TextExpression="@ValueExpression"
+    autocomplete="@GetAutoComplete()"
+    data-automation-id="@GetAutomationId()"
+    ClearButtonDisplayMode="@ClearButtonDisplayMode.Get()"
+    field-name="@FieldName"
 >
 @ChildContent
 </DxTextBox>
@@ -21,6 +28,24 @@
     [Parameter] public bool Password { get; set; }
     [Parameter] public string MaxLength { get; set; }
     [Parameter] public string CssClass { get; set; }
+    [Parameter] public Expression<Func<string>> ValueExpression { get; set; }
+    [Parameter] public SDKClearButtonDisplayMode ClearButtonDisplayMode { get; set; }
+    [Parameter] public string FieldName { get; set; }
 
-    
+    [Parameter] public bool AllowAutoComplete { get; set; } = false;
+    private string GetAutoComplete() {
+        if (AllowAutoComplete) {
+            return "on";
+        }
+        return "off";
+    }
+
+    protected override string GetAutomationId()
+    {
+        if(string.IsNullOrEmpty(AutomationId))
+        {
+            AutomationId = FieldName;
+        }
+        return base.GetAutomationId();
+    }
 }

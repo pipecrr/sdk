@@ -1,6 +1,7 @@
 ﻿using Siesa.SDK.Entities;
 using Siesa.SDK.Frontend.Components.Fields;
 using Siesa.SDK.Frontend.Components.FormManager.Fields;
+using Siesa.SDK.Shared.Utilities;
 using System;
 using System.Collections.Generic;
 
@@ -60,6 +61,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         public bool Hidden { get; set; } = false;
         public bool Required { get; set; } = false;
 
+        public int ColumnWidth { get; set; } = 0;
+
         //Para Listas
         public IEnumerable<object> Options { get; set; }
 
@@ -68,17 +71,22 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         };
         public CustomComponent CustomComponent { get; set; }
 
+        //for entity fields
         public string RelatedBusiness { get; set; } = "";
-
         public Dictionary<string, string> RelatedFilters { get; set; } = new Dictionary<string, string>()
         {
         };
 
+        public int MinCharsEntityField { get; set; } = 2;
+        public string EntityRowidField;
+
         private FieldObj fieldObj = null;
 
-        public FieldObj GetFieldObj(object modelObj)
+        public bool ShowLabel { get; set; } = true;
+
+        public FieldObj GetFieldObj(object modelObj, bool force = false)
         {
-            if (fieldObj == null)
+            if (fieldObj == null || force)
             {
                 fieldObj = InitField(modelObj);
             }
@@ -88,7 +96,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         private List<Type> SupportedTypes = new List<Type>(){
             typeof(SwitchField),
             typeof(SelectBarField<>),
-
+            typeof(TextField),
+            typeof(EmailField)
         };
 
         private FieldObj InitField(object modelObj)
@@ -96,7 +105,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             FieldObj field = new FieldObj();
             Type originalPropertyType = null; //Used for enums
 
-            if (CustomComponent != null)
+            if (CustomComponent != null && String.IsNullOrEmpty(CustomType))
             {
                 if (String.IsNullOrEmpty(ResourceTag))
                 {
@@ -122,7 +131,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                     var tmpType = currentObject.GetType();
                     var tmpProperty = tmpType.GetProperty(fieldPath[i]);
                     var tmpValue = tmpProperty.GetValue(currentObject, null);
-                    var isEntity = tmpProperty.PropertyType.IsSubclassOf(typeof(BaseSDK<>));
+                    var isEntity = Utilities.IsAssignableToGenericType(tmpProperty.PropertyType, typeof(BaseSDK<>));
                     if (tmpValue == null && isEntity)
                     {
                         tmpValue = Activator.CreateInstance(tmpProperty.PropertyType);
@@ -135,7 +144,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 PropertyName = fieldPath[fieldPath.Length - 1];
                 if (String.IsNullOrEmpty(ResourceTag))
                 {
-                    ResourceTag = $"{field.ModelObj.GetType().Name}.{field.Name}";
+                    var modelTypeName = field.ModelObj.GetType().Name;
+                    if(modelTypeName.EndsWith("DTO"))
+                    {
+                        modelTypeName = $"DTO.{modelTypeName.Substring(0, modelTypeName.Length - 3)}";
+                    }
+                    ResourceTag = $"{modelTypeName}.{field.Name}";
                 }
                 var propertyType = field.ModelObj.GetType().GetProperty(field.Name).PropertyType;
                 originalPropertyType = propertyType;
@@ -192,6 +206,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 if (propertyType.IsClass && !propertyType.IsPrimitive && !propertyType.IsEnum && !_bannedTypes.Contains(propertyType))
                 {
                     FieldType = FieldTypes.EntityField;
+                    if(String.IsNullOrEmpty(EntityRowidField))
+                    {
+                        var exists = field.ModelObj.GetType().GetProperty($"Rowid{field.Name}");
+                        if(exists != null)
+                        {
+                            EntityRowidField = $"Rowid{field.Name}";
+                        }
+                    }
                 }
 
                 if (propertyType.IsEnum)

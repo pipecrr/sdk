@@ -16,6 +16,8 @@
         field-name="@FieldOpt.Name"
         DateExpression="@(()=> _value)"
         TimeSectionVisible="@ShowTime"
+        data-automation-id="@GetDataAutomationId()"
+        
     />
 }
 
@@ -53,6 +55,11 @@
         
         SetValue(valueToSet);
 
+    }
+
+    private string GetDataAutomationId()
+    {
+        return $"DateField_{FieldOpt.Name}";
     }
 
     protected override void OnInitialized()

@@ -1,5 +1,7 @@
 @using Radzen;
+@using Siesa.SDK.Frontend.Components.Visualization
 @typeparam TItem
+
 <RadzenDataGrid 
     AllowFiltering="@AllowFiltering" 
     FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
@@ -14,26 +16,103 @@
     Count="@Count"
     Columns="@Columns"
     LoadData="@LoadData"
+    AllowVirtualization="@AllowVirtualization"
     ShowPagingSummary="@ShowPagingSummary"
     class="whcm_table"
     PageSizeOptions="@AllowedPageSizes"
     SelectionMode="@SelectionMode.Get()"
     Value="@Value"
+    Visible="@(!CardView)"
     ValueChanged="@ValueChanged"
-    >
+    AllowColumnResize="@AllowColumnResize"
+    FilterText="Filtrar"
+    ContainsText="Contiene"
+    EqualsText="Igual"
+    NotEqualsText="Diferente"
+    GreaterThanText="Mayor que"
+    GreaterThanOrEqualsText="Mayor o igual que"
+    LessThanText="Menor que"
+    EmptyText="No hay datos"
+    IsNullText="Es nulo"
+    IsNotNullText="No es nulo"
+    ColumnsText="Columnas"
+    IsEmptyText="Está vacío"
+    EndsWithText="Termina con"
+    PageSizeText="Tamaño de página"
+    AllColumnsText="Todas las columnas"
+    GroupPanelText="Arrastre una columna aquí para agrupar por esa columna"
+    IsNotEmptyText="No está vacío"
+    OrOperatorText="O"
+    StartsWithText="Empieza con"
+    AndOperatorText="Y"
+    ApplyFilterText="Aplicar"
+    ClearFilterText="Limpiar"
+    ColumnsShowingText="Columnas mostradas"
+    DoesNotContainText="No contiene"
+    LessThanOrEqualsText="Menor o igual que"
+    EnumFilterSelectText="Seleccione"
+    PagingSummaryFormat="Página {0} de {1} ({2} registros)"
+    @ref="_grid">
+    <EmptyTemplate>
+        @if(EmptyTemplate != null){
+            @EmptyTemplate
+        }else{
+            <div class="sdk-empty-list">
+                <i class="fa-solid fa-eye-slash"></i>
+                <p><ResourceViewer ResourceTag="Custom.Generic.NoData" /></p>
+            </div>
+        }
+    </EmptyTemplate>
 </RadzenDataGrid>
 
+@if (CardView)
+{
+     <div class="row">
+        @if(Data != null)
+        {
+            @foreach (var item in Data)
+            {
+                <div class="col-12 col-sm-12 col-md-6 mt-3 col-xl-4">
+                    <SDKCard StyleCss="sdk_card d-flex flex-row">
+                        <div class="sdk_button_box p-1">
+                            @(GetActionColumn()(item))
+                        </div>
+                        <div class="col pt-2">
+                            <div class="row">
+                            @foreach (var column in _grid.ColumnsCollection.Where(x=> x.CssClass != "internal-sdk-gridcolumn-action"))
+                            {
+                                <div class="col-12 col-sm-6">
+                                    <label class="col-form-label col-form-label-sm font-weight-bold">
+                                        @column.Title 
+                                    </label> 
+                                    @if(column.Template != null)
+                                    {
+                                        <p class="font_size_087">@(column.Template(item))</p>
+                                    }else{
+                                        <p class="font_size_087">@GetValue(item, column.Property)</p>
+                                    }
+                                </div> 
+                            }
+                            </div>
+                        </div>
+                    </SDKCard>
+                </div>
+            }
+        }
+    </div>
+}
+
 @code {
+    [Parameter] public RenderFragment? EmptyTemplate { get; set; }
     [Parameter] public RenderFragment? Columns { get; set; }
     [Parameter] public bool AllowFiltering { get; set; }
     [Parameter] public bool Loading { get; set; }
     [Parameter] public int PageSize { get; set; } = 10;
     [Parameter] public bool AllowSorting { get; set; }
     [Parameter] public bool AllowPaging { get; set; }
-
     [Parameter] public IEnumerable<TItem> Data { get; set; }
     [Parameter] public int Count { get; set; }
-    [Parameter] public EventCallback LoadData { get; set; }
+    [Parameter] public EventCallback<Radzen.LoadDataArgs> LoadData { get; set; }
     [Parameter] public bool ShowPagingSummary { get; set; }
     [Parameter] public IEnumerable<int> AllowedPageSizes { get; set; } = new int[] { 10, 20, 50, 100 };
 
@@ -41,6 +120,12 @@
     [Parameter] public IList<TItem> Value {get; set;} 
     [Parameter] public EventCallback<IList<TItem>> ValueChanged {get; set;}
 
+    [Parameter] public bool CardView {get; set;} = false;
+
+    [Parameter] public bool AllowVirtualization {get; set;}
+    [Parameter] public bool AllowColumnResize  {get; set;}
+
+    private RadzenDataGrid<TItem> _grid;
 
     protected override void OnParametersSet()
     {
@@ -49,5 +134,28 @@
         {
             Count = Data.Count();
         }
-    }    
+    }
+
+    private object GetValue(TItem item, string fieldName)
+    {
+       return item.GetType().GetProperty(fieldName).GetValue(item);
+    }
+
+    private RenderFragment<TItem> GetActionColumn()
+    {
+       var query = _grid.ColumnsCollection.Where(x=> x.CssClass == "internal-sdk-gridcolumn-action").SingleOrDefault();
+
+       if (query != null)
+       {
+        var childContent = query.Template;
+        return childContent;
+       }
+       return null;
+    }
+
+    public void Reload()
+    {
+        _grid.Reload();
+    }
+
 }

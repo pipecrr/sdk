@@ -6,8 +6,8 @@
 </div>
 
 @code{
-    [Parameter] public string PreviousResourceTag {get; set;} = "SDKSteps.Previous";
-    [Parameter] public string NextResourceTag {get; set;} = "SDKSteps.Next";
+    [Parameter] public string PreviousResourceTag {get; set;} = "Action.SDKSteps.Previous";
+    [Parameter] public string NextResourceTag {get; set;} = "Action.SDKSteps.Next";
     [Parameter] public RenderFragment Steps{get; set;}
     [Parameter] public bool ShowStepsButtons{get;set;} = true;
     [Parameter] public int SelectedIndex{get; set;}

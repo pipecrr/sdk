@@ -16,6 +16,9 @@ using Siesa.SDK.Frontend.Utils;
 using System.Linq;
 using Siesa.SDK.Frontend.Application;
 using Siesa.SDK.Shared.Services;
+using Siesa.SDK.Frontend.Services;
+using Siesa.SDK.Shared.Utilities;
+using Siesa.SDK.Entities;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -43,10 +46,21 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public bool AllowDelete { get; set; } = true;
         [Parameter]
         public bool AllowDetail { get; set; } = true;
+        [Parameter]
+        public bool ShowSearchForm { get; set; } = true;
+        [Parameter]
+        public bool ShowList { get; set; } = true;
+
+        private FreeForm SearchFormRef;
+
+        public string SearchFormID = Guid.NewGuid().ToString();
 
         [Inject] public IJSRuntime JSRuntime { get; set; }
         [Inject] public NavigationManager NavManager { get; set; }
+        
+        [Inject] public SDKNotificationService NotificationService { get; set; }
 
+        [Inject] public NavigationService NavigationService { get; set; }
         [Inject] public IFeaturePermissionService FeaturePermissionService { get; set; }
         [Inject] public IAuthenticationService AuthenticationService { get; set; }
 
@@ -54,6 +68,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public IBackendRouterService BackendRouterService { get; set; }
 
         public bool Loading;
+        public bool LoadingData;
+        public bool LoadingSearch;
 
         public String ErrorMsg = "";
         private IList<object> SelectedObjects { get; set; }
@@ -81,6 +97,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter]
         public Action<object> OnSelectedRow { get; set; } = null;
 
+        [Parameter]
+        public IEnumerable<object> Data { get; set; } = null;
+
         private IEnumerable<object> data;
         int count;
         public RadzenDataGrid<object> _gridRef;
@@ -88,6 +107,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public string BLEntityName { get; set; }
 
         public string LastFilter { get; set; }
+        public bool HasSearchViewdef { get; set; }
+
+        private bool CanCreate;
+        private bool CanEdit;
+        private bool CanDelete;
+        private bool CanDetail;
+        private bool CanList;
 
 
         Guid needUpdate;
@@ -129,14 +155,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             return data;
         }
 
-        protected void InitView(string bName = null)
+        protected async void InitView(string bName = null)
         {
             Loading = true;
             if (bName == null)
             {
                 bName = BusinessName;
             }
-            CheckPermission();
+            await CheckPermissions();
             var metadata = GetViewdef(bName);
             if (metadata == null || metadata == "")
             {
@@ -144,6 +170,20 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
             else
             {
+                if(ShowSearchForm)
+                {
+                    try
+                    {
+                        var searchMetadata = BackendRouterService.GetViewdef(bName, "search");
+                        HasSearchViewdef = !String.IsNullOrEmpty(searchMetadata);
+                        ShowList = !HasSearchViewdef;
+                    }
+                    catch (System.Exception)
+                    {
+                        ShowList = true;
+                    }
+
+                }
                 ListViewModel = JsonConvert.DeserializeObject<ListViewModel>(metadata);
                 foreach (var field in ListViewModel.Fields)
                 {
@@ -162,37 +202,65 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         }
 
-        public async Task Refresh(){
+        public async Task Refresh(bool Reload = false)
+        {
+            if (Reload)
+            {
+               Restart();
+            }
             hideCustomColumn();
+            StateHasChanged();
         }
 
-        private async Task CheckPermission()
+        private async Task CheckPermissions()
         {
-            // if(FeaturePermissionService != null){
-            //     var canList = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 4, AuthenticationService);
-            //     if(!canList){
-            //         ErrorMsg = "Permission Denied";
-            //         Loading = false;
-            //         StateHasChanged();
-            //         return;
-            //     }
-            // }
+            if (FeaturePermissionService != null)
+            {
+                try
+                {
+                    CanList = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 4, AuthenticationService);
+                    CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 1, AuthenticationService);
+                    CanEdit = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 2, AuthenticationService);
+                    CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 3, AuthenticationService);
+                    CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 5, AuthenticationService);
+                }
+                catch (System.Exception)
+                {
+                }
+
+                if(!CanList){
+                    ErrorMsg = "Unauthorized";
+                    NotificationService.ShowError("Custom.Generic.Unauthorized");
+                    NavigationService.NavigateTo("/", replace:true);
+                }
+
+            }
 
         }
 
         protected override async Task OnInitializedAsync()
         {
-            await CheckPermission();
-            await base.OnInitializedAsync();            
+
+            await base.OnInitializedAsync();
+            //await CheckPermissions();
             //InitView();
         }
 
         protected override void OnParametersSet()
         {
+            Restart();
+        }
+
+        private void Restart(){
+
             Loading = false;
             ErrorMsg = "";
             InitView();
             data = null;
+            if(Data != null){
+                data = Data;
+                count = data.Count();
+            }
             if (_gridRef != null)
             {
                 needUpdate = Guid.NewGuid();
@@ -201,22 +269,33 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             StateHasChanged();
         }
 
-        async Task LoadData(LoadDataArgs args)
+        private string GetFormKey()
         {
-            if (!ListViewModel.InfiniteScroll)
+            return $"{needUpdate.ToString()}-search";
+        }
+
+        private string GetFilters(string base_filter = "")
+        {
+            var filters = $"{base_filter}";
+            try{
+                Type type = BusinessObj.BaseObj.GetType();
+                if(BusinessObj.BaseObj.RowidCompany != 0)
+                {
+                    if (Utilities.IsAssignableToGenericType(type, typeof(BaseCompany<>)))
+                    { 
+                        if (!string.IsNullOrEmpty(filters))
+                        {
+                            filters += " && ";
+                        }
+                        if (BusinessObj?.BaseObj != null)
+                        {
+                            filters += $"RowidCompany={BusinessObj.BaseObj.RowidCompany}";
+                        }
+                    }
+                }
+            }catch(System.Exception)
             {
-                data = null;
-            }
-            if (data == null)
-            {
-                Loading = true;
-            }
-            var filters = $"{args.Filter}";
-            if (LastFilter != filters)
-            {
-                LastFilter = filters;
-                Loading = true;
-                data = null;
+
             }
             if (ConstantFilters != null)
             {
@@ -229,10 +308,133 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     filters += $"{filter}";
                 }
             }
+
+            try
+            {
+                if(SearchFormRef != null){
+                    var searchFields = SearchFormRef.GetFields();
+                    foreach (var field in searchFields)
+                    {
+                        var tmpFilter = "";
+                        
+                        var fieldObj = field.GetFieldObj(BusinessObj);
+                        if (fieldObj != null)
+                        {
+                            dynamic searchValue = fieldObj.ModelObj.GetType().GetProperty(fieldObj.Name).GetValue(fieldObj.ModelObj, null);
+                            if(searchValue == null){
+                                continue;
+                            }
+                            //check if searchValue is an empty string
+                            if(searchValue is string && string.IsNullOrEmpty(searchValue)){
+                                continue;
+                            }
+                            switch (fieldObj.FieldType)
+                            {
+                                case FieldTypes.CharField:
+                                case FieldTypes.TextField:
+                                    tmpFilter = $"({fieldObj.Name} == null ? \"\" : {fieldObj.Name}).ToLower().Contains(\"{searchValue}\".ToLower())";
+                                    break;
+                                case FieldTypes.IntegerField:
+                                case FieldTypes.DecimalField:
+                                case FieldTypes.SmallIntegerField:
+                                case FieldTypes.BigIntegerField:
+                                case FieldTypes.ByteField:
+                                    if(!fieldObj.IsNullable)
+                                    {
+                                        tmpFilter = $"{fieldObj.Name} == {searchValue}";
+                                    }
+                                    else
+                                    {
+                                        tmpFilter = $"({fieldObj.Name} == null ? 0 : {fieldObj.Name}) == {searchValue}";
+                                    }
+                                    break;
+                                case FieldTypes.BooleanField:
+                                    if(!searchValue)
+                                    {
+                                        break;
+                                    }
+
+                                    if(!fieldObj.IsNullable)
+                                    {
+                                        tmpFilter = $"{fieldObj.Name} == {searchValue}";
+                                    }
+                                    else
+                                    {
+                                        tmpFilter = $"({fieldObj.Name} == null ? false : {fieldObj.Name}) == {searchValue}";
+                                    }
+                                    break;
+                                case FieldTypes.DateField:
+                                case FieldTypes.DateTimeField:
+                                    if(!fieldObj.IsNullable)
+                                    {
+                                        tmpFilter = $"{fieldObj.Name} == DateTime.Parse(\"{searchValue}\")";
+                                    }
+                                    else
+                                    {
+                                        tmpFilter = $"({fieldObj.Name} == null ? DateTime.MinValue : {fieldObj.Name}) == DateTime.Parse(\"{searchValue}\")";
+                                    }
+                                    break;
+
+                                case FieldTypes.EntityField:
+                                    if(!fieldObj.IsNullable)
+                                    {
+                                        tmpFilter = $"Rowid{fieldObj.Name} == {searchValue.Rowid}";
+                                    }else{
+                                        tmpFilter = $"({fieldObj.Name} == null ? 0 : {fieldObj.Name}.Rowid) == {searchValue.Rowid}";
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        if (!string.IsNullOrEmpty(tmpFilter))
+                        {
+                            if (!string.IsNullOrEmpty(filters))
+                            {
+                                filters += " && ";
+                            }
+                            filters += $"({tmpFilter})";
+                        }
+                    }
+                }
+            }
+            catch (System.Exception)
+            {
+            }
+
+            return filters;
+        }
+
+        async Task LoadData(LoadDataArgs args)
+        {
+            if(Data != null){
+                data = Data;
+                count = data.Count();
+                LoadingData = false;
+                StateHasChanged();
+                return;
+            }
+            if (!ListViewModel.InfiniteScroll)
+            {
+                data = null;
+            }
+            if (data == null)
+            {
+                LoadingData = true;
+            }
+            var filters = GetFilters(args.Filter);
+
+            if (LastFilter != filters)
+            {
+                LastFilter = filters;
+                LoadingData = true;
+                data = null;
+            }
+
             var dbData = await BusinessObj.GetDataAsync(args.Skip, args.Top, filters, args.OrderBy);
             data = dbData.Data;
             count = dbData.TotalCount;
-            Loading = false;
+            LoadingData = false;
         }
 
         private void GoToEdit(Int64 id)
@@ -277,6 +479,31 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 OnClickDelete(id.ToString(), object_string);
             }
+        }
+
+        private async Task OnClickSearch()
+        {
+            LoadingSearch = true;
+            LoadingData = true;
+            data = null;
+            var filters = GetFilters();
+            if(Data == null)
+            {
+                Data = new List<object> { };
+            }
+            var dbData = await BusinessObj.GetDataAsync(null, null, filters, "");
+            Data = dbData.Data;
+            if(Data.Count() == 1)
+            {
+                GoToDetail(((dynamic)Data.First()).Rowid);
+                return;
+            }
+            data = Data;
+            count = dbData.TotalCount;
+            LoadingData = false;
+            LoadingSearch = false;
+            ShowList = true;
+            StateHasChanged();
         }
 
         private void OnClickCustomButton(Button button)

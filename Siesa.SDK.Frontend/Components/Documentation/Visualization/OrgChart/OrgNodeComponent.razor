@@ -1,0 +1,23 @@
+@using Blazor.Diagrams.Components.Renderers;
+@using Siesa.SDK.Frontend.Components.Visualization;
+<SDKCard StyleCss="m-3">
+    <div class="d-flex flex-row p-3">
+        <RadzenImage Path="@Node.Photo" Class="rounded-circle float-start me-3" Style="width: 100px; height: 100px;" />
+        <div>
+            <RadzenText TextStyle="TextStyle.Overline" Class="d-flex mt-1 mb-0">Nombre</RadzenText>
+            <RadzenText TextStyle="TextStyle.Body1"><b>@Node.Name</b></RadzenText>
+            <RadzenText TextStyle="TextStyle.Overline" Class="d-flex mt-3 mb-0">Cargo</RadzenText>
+            <RadzenText TextStyle="TextStyle.Body1"><b>@Node.WorkPosition</b></RadzenText>
+        </div>
+    </div>
+    @foreach (var port in Node.Ports)
+    {
+        <!-- Default ports -->
+        <PortRenderer Port="port" />
+    }
+</SDKCard>
+
+@code {
+    [Parameter]
+    public OrgNodeModel Node { get; set; }
+}

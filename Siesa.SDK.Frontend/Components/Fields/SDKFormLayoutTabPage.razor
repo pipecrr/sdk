@@ -1,5 +1,6 @@
 @using Siesa.SDK.Frontend.Application
 @using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Frontend.Components.Fields
 @inject IResourceManager ResourceManager
 @inject IAuthenticationService AuthenticationService
 
@@ -12,6 +13,11 @@
     [Parameter] public string ResourceTag { get; set; }
     [Parameter] public Int64 RowidResource { get; set; }
     [Parameter] public RenderFragment ChildContent { get; set; }
+
+    [CascadingParameter]
+    public SDKFormLayoutTabPages TabsPagesContainer {get;set;}
+
+    public int TabIndex {get;set;}
 
     private async Task<string> GetText()
     {
@@ -28,6 +34,15 @@
 
     protected override async Task OnInitializedAsync()
     {
+        try
+        {
+            TabIndex = TabsPagesContainer.TabsPages.Count;
+            TabsPagesContainer.TabsPages.Add(this);
+        }
+        catch(Exception e)
+        {
+        }
+        
         Label = ResourceTag;
         await base.OnInitializedAsync();
         Label = await GetText();

@@ -1,8 +1,11 @@
-<RadzenCard>
+<RadzenCard class="@StyleCss">
     @ChildContent
 </RadzenCard>
 
 @code {
     [Parameter]
     public RenderFragment ChildContent {get;set;}
+
+    [Parameter]
+    public string StyleCss {get; set;}
 }

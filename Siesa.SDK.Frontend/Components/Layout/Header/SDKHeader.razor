@@ -1,4 +1,15 @@
-@using Siesa.SDK.Entities
+@using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Frontend.Components.Layout
+@using Siesa.SDK.Entities;
+@using Siesa.SDK.Shared.DTOS   
+@inject IAuthenticationService AuthenticationService
+@inject NavigationService NavigationService
+@inject IJSRuntime JSRuntime
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService;
+@layout EmptyLayout
+@inject IBackendRouterService BackendRouterService
+@using Newtonsoft.Json;
+
 <header class="col-12 pl-5 sdk_header">
     <div class="header_circles_box">
         <div class="header_circles_box_1">
@@ -11,18 +22,25 @@
         </div>
     </div>
     <div class="col-xl-5 col-lg-4 col-md-4 col-sm-5 col-5 sdk_company_logo">
-        <img class="whcm_logo_compania" src="_content/Siesa.SDK.Frontend/assets/img/logo_empresa.png" height="30px" alt="Logo compania">
+         <a class="nav_logo" href="/">
+            <img class="whcm_logo_compania" src="@AuthenticationService.GetConnectionLogo()" height="30px"
+                alt="Logo compania">
+        </a>
     </div>
     <div class="col-xl-2 col-lg-2 col-md-2 col-sm-3 col-0 p-0 d-none d-sm-block">
-        <SDKSearch />      
+        <SDKSearch />
     </div>
     <div class="col-xl-5 col-lg-6 col-md-6 col-sm-4 col-7 p-0 d-flex justify-content-end align-items-center info_head">
         <div class="sdk_conection">
             <div class="position-relative">
                 <button @onclick="()=> ToogleConnect()" class="btn btn_connect py-0 px-2 px-lg-3 d-flex align-items-center">
                     <div>
-                        <p class="font-weight-bold m-0 text-truncate" data-toggle="tooltip" data-placement="bottom" title="@SelectedGroup.Rowid">Grupo @SelectedGroup.Rowid</p>
-                        <p class="m-0 text-truncate" data-toggle="tooltip" data-placement="bottom" title="@SelectedCompany.Rowid">Compañía @SelectedCompany.Rowid</p>
+                        <p class="font-weight-bold m-0 text-truncate" data-toggle="tooltip" data-placement="bottom" title="">
+                            @GetCurrentConnectionName()
+                            </p>
+                        <p class="font-weight-bold m-0 text-truncate" data-toggle="tooltip" data-placement="bottom" title="">
+                            @GetCurrentCompanyGroupName()
+                        </p>
                     </div>
                     <div class="pl-2 pl-xl-3">
                         <i class="fa-solid fa-chevron-down"></i>
@@ -33,6 +51,11 @@
                     <div id="boxConnect" class="connect_tooltip" style="display:block;">
                         <label class="pt-3 px-3 pb-0 col-form-label font-weight-bold">Configurar</label>
                         <div class="p-3">
+                            <div class="alert alert-info mb-3 font_size_087 p-3" role="alert">
+                               <p>Al cambiar la configuración se refrescará la ventana</p>
+                                <p style="margin:0px"><strong>Conexión:</strong></p>
+                                <p style="margin:0px">@GetCurrentConnectionName()</p>
+                            </div>
                             <form>
                                 <div class="form-group connect_select_search">
                                     <label class="col-form-label col-form-label-sm font-weight-bold"
@@ -41,7 +64,7 @@
                                         <select id="inputGrupo" class="p-1" @bind="SelectedGroup.Rowid">
                                             @foreach (var group in CompanyGroups)
                                             {
-                                                <option value="@group.Rowid">Grupo @group.Rowid</option>
+                                                <option value="@group.Rowid">@group.Name</option>
                                             }
                                         </select>
                                         <button>
@@ -49,27 +72,15 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div class="form-group connect_select_search">
-                                    <label class="col-form-label col-form-label-sm font-weight-bold"
-                                    for="inputCompania">Compañía</label>
-                                    <div class="d-flex form-control form-control-sm p-0">
-                                        <select id="inputGrupo" class="p-1" @bind="SelectedCompany.Rowid">
-                                            @foreach (var company in Companies.Where(c => c.RowidCompanyGroup == SelectedGroup.Rowid))
-                                            {
-                                                <option value="@company.Rowid">Compañía @company.Rowid</option>
-                                            }
-                                        </select>
-                                        <button>
-                                            <i class="fa-solid fa-magnifying-glass"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-primary btn_primary_def_1 btn-sm w-100 mt-2">Cambiar
-                                    configuración</button>
+                                <button @onclick:stopPropagation="true" @onclick:preventDefault @onclick="@SetCompanyGroup" class="btn btn-primary btn_primary_def_1 btn-sm w-100 mt-2"> 
+                                     @if (loading)
+                                        {
+                                            <p style="margin-bottom: 0 !important">Cargando<span class="spinner-border spinner-border-sm mr-1"></span></p>
+                                        }else{
+                                            <p style="margin-bottom: 0 !important">Cambiar Configuracion</p>
+                                        }   
+                                </button>
                             </form>
-                            <div class="alert alert-info text-center mt-3 mb-0 font_size_087" role="alert">
-                                Al cambiar la configuración se refrescará la ventana
-                            </div>
                         </div>
                     </div>
                 }
@@ -77,19 +88,19 @@
         </div>
         <div class="whcm_footer d-flex flex-row-reverse flex-md-row align-items-center justify-content-between">
             <div class="sdk_version px-2 px-lg-3 d-flex flex-sm-row flex-md-column">
-            <p class="font-weight-bold m-0 mr-2 mr-md-0">
-                <ResourceViewer ResourceTag="Project.Copy" />
-            </p>
-            <p class="m-0">
-                <ResourceViewer ResourceTag="Project.Version" />
-            </p>
+                <p class="font-weight-bold m-0 mr-2 mr-md-0">
+                    <ResourceViewer ResourceTag="Custom.Project.Copy" />
+                </p>
+                <p class="m-0">
+                    <ResourceViewer ResourceTag="Custom.Project.Version" />
+                </p>
             </div>
             <div class="sdk_logo pl-3">
-                <img class="whcm_logo_head d-none d-md-block" src="_content/Siesa.SDK.Frontend/assets/img/LogoSiesaWHCMBlanco.png">
-                <img class="whcm_logo_head d-block d-md-none" src="_content/Siesa.SDK.Frontend/assets/img/LogoSiesaWHCMGris.svg">
+                <img class="whcm_logo_head d-none d-md-block" src="_content/Siesa.SDK.Frontend/assets/img/LogoSiesaEnterpriseBlanco.svg" alt="Logo siesa Enterprise 2.0">
+                    <img class="whcm_logo_head d-block d-md-none" src="_content/Siesa.SDK.Frontend/assets/img/LogoSiesaEnterpriseGris.svg" alt="Logo siesa Enterprise 2.0">
             </div>
         </div>
-        
+
     </div>
 </header>
 
@@ -98,49 +109,68 @@
     private bool ConnectEnabled = false;
 
     private List<E00200_CompanyGroup> CompanyGroups { get; set; } = new List<E00200_CompanyGroup>();
-    
-    private List<E00201_Company> Companies { get; set; } = new List<E00201_Company>();
-    
+
     private E00200_CompanyGroup SelectedGroup { get; set; } = new E00200_CompanyGroup();
 
-    private E00201_Company SelectedCompany { get; set; } = new E00201_Company();
+    private bool loading = false;
 
-    protected override void OnInitialized()
+    private SDKDbConnection _connection { get; set; } = new SDKDbConnection();
+
+
+
+    protected override async Task OnInitializedAsync()
     {
+        var BL = BackendRouterService.GetSDKBusinessModel("BLSDKCompanyGroup",AuthenticationService);
+        
+        var DataCompanyGroup = await BL.GetData(null, null);
+        
+        CompanyGroups = DataCompanyGroup.Data.Select(x => JsonConvert.DeserializeObject<E00200_CompanyGroup>(x)).ToList();
 
-        CompanyGroups = new List<E00200_CompanyGroup>();
-        Companies = new List<E00201_Company>();
-
-        short nTestGroups = 3;
-        short nMaxTestCompaniesByGroup = 5;
-        for (short i = 0; i < nTestGroups; i++)
+        SelectedGroup = CompanyGroups.FirstOrDefault(x => x.Rowid == AuthenticationService.GetRowidCompanyGroup());
+        if(SelectedGroup == null)
         {
-            var group = new E00200_CompanyGroup();
-            group.Rowid = Convert.ToInt16(i + 1);
-            var groupCompanies = new List<E00201_Company>();
-            //get random companies
-            var random = new Random();
-            var nCompanies = random.Next(1, nMaxTestCompaniesByGroup);
-            for (short j = 0; j < nCompanies; j++)
-            {
-                var company = new E00201_Company();
-                var rowid = Companies.Count + 1 + j;
-                company.Rowid = Convert.ToInt16(rowid);
-                company.CompanyGroup = group;
-                company.RowidCompanyGroup = group.Rowid;
-                groupCompanies.Add(company);
-            }
-            Companies.AddRange(groupCompanies);
-            CompanyGroups.Add(group);
+            SelectedGroup = CompanyGroups.First();
+            AuthenticationService.SetRowidCompanyGroup(SelectedGroup.Rowid);
         }
-        SelectedGroup = CompanyGroups.FirstOrDefault();
-        SelectedCompany = Companies.Where(c => c.RowidCompanyGroup == SelectedGroup.Rowid).FirstOrDefault();
-        base.OnInitialized();
+
+        base.OnInitializedAsync(); 
+
     }
 
+    public async  Task SetCompanyGroup()
+    {
+        loading = true;
+        await AuthenticationService.SetRowidCompanyGroup(SelectedGroup.Rowid);
+        NavigationService.NavigateTo("/", forceLoad: true,replace: true);
+        return;
+    }
     private void ToogleConnect()
     {
         ConnectEnabled = !ConnectEnabled;
     }
 
+    private string GetCurrentCompanyGroupName()
+    {
+        try
+        {
+            return SelectedGroup.Name;
+        }
+        catch (Exception)
+        {
+            return AuthenticationService.GetRowidCompanyGroup().ToString();
+        }
+    }
+
+    private string GetCurrentConnectionName()
+    {
+        try
+        {
+            _connection = AuthenticationService.GetSelectedConnection();
+            return _connection.Name;
+        }
+        catch (Exception)
+        {
+            return "No hay conexión";
+        }
+    }
 }

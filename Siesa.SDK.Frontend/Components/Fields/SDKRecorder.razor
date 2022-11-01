@@ -1,0 +1,73 @@
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
+@inject UtilsManager UtilsManager 
+@inject IJSRuntime jsRuntime
+
+<div class="m-5 sdk-render">
+    <div class="main-controls">
+        <SDKButton RenderStyle="@style" ResourceTag="@resourceAction" Click="@ActionRecord"/>
+        <canvas class="visualizer" height="60" hidden="@notRecording" width="100%"></canvas>
+    </div>
+    <audio src="@url" autoplay controls hidden="@recording" width="100%"></audio>    
+</div>
+
+
+@code{
+    SDKButtonRenderStyle style = SDKButtonRenderStyle.Primary;
+    string recordButton {get; set;} = "record";
+    string url {get; set;}
+    bool recording {get; set;} = false;
+    bool notRecording {get; set;} = true;
+    public string resourceAction {get; set;} = "Action.SDKRecorder.Record";
+    [Parameter] public Action<string> OnGetAudio {get; set;}
+    private IJSObjectReference _jsModule;
+
+    protected override async Task OnInitializedAsync()
+    {
+        resourceAction = await UtilsManager.GetResource("Action.SDKRecorder.Record");        
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender || _jsModule == null){
+            await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/vendor/recorderjs/recorder.js");
+            _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/Components/Fields/SDKRecorder.razor.js");
+        }
+    }
+    private async Task ActionRecord()
+    {
+        if (recording){
+            await Stop();
+        }else{
+            resourceAction = await UtilsManager.GetResource("SDKRecorder.Stop");
+            await Record();
+        }
+        StateHasChanged();
+    }
+
+    private async Task Record()
+    {
+        recordButton = "recording";
+        recording = true;
+        notRecording = false;
+        style = SDKButtonRenderStyle.Danger;
+        url = "";
+        await _jsModule.InvokeVoidAsync("startRecording");
+    }
+
+    private async Task Stop()
+    {
+        recordButton = "record";
+        recording = false;
+        notRecording = true;
+        style = SDKButtonRenderStyle.Primary;
+        await _jsModule.InvokeVoidAsync("stopRecording", DotNetObjectReference.Create(this));
+    }
+
+    [JSInvokable]
+    public async Task setAudio(string blob, string base64){
+        url = blob;
+        OnGetAudio?.Invoke(base64);
+        StateHasChanged();
+    }
+}

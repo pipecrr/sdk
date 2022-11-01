@@ -19,13 +19,15 @@ namespace Siesa.SDK.Shared.Configurations
 
     public static class ServiceConfigurationExtension
     {
-        public static void AddSDKServices(this IServiceCollection services, IConfiguration serviceConfiguration)
+        public static void AddSDKServices(this IServiceCollection services, ConfigurationManager configurationManager)
         {
+            var serviceConfiguration = configurationManager.GetSection("ServiceConfiguration");
             ServiceConfiguration sc = serviceConfiguration.Get<ServiceConfiguration>();
             services.Configure<ServiceConfiguration>(serviceConfiguration);
             services.AddScoped<IServiceConfiguration, ServiceConfiguration>();
             services.AddOptions();
-            services.AddLogging(builder => SDKLogger.Configure(builder, sc));
+            IServiceProvider serviceProvider = services.BuildServiceProvider();
+            services.AddLogging(builder => SDKLogger.Configure(builder, serviceProvider));
         }
     }
 }

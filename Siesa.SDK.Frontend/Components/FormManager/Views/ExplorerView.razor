@@ -6,11 +6,11 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @if (Panels == null || Panels.Count <= 0)
 {
-    <ResourceViewer ResourceTag="SDK.ViewdefNotFound" />
+    <ResourceViewer ResourceTag="Module.SDK.ViewdefNotFound" />
 }
 else if (Loading == true)
 {
-    <ResourceViewer ResourceTag="Generic.Loading" />
+    <ResourceViewer ResourceTag="Custom.Generic.Loading" />
 }
 else if (BusinessObj != null)
 {
@@ -24,7 +24,7 @@ else if (BusinessObj != null)
                     DefaultColSize="@Panels[0].ColSize" ModelObj="@BusinessObj" />
                 </CascadingValue>
             </DxFormLayout>
-            <ValidationSummary />
+            @* <ValidationSummary /> *@
             @if(!string.IsNullOrEmpty(ErrorMsg))
             {
                 <label>@((MarkupString)ErrorMsg)</label>
@@ -54,7 +54,7 @@ else if (BusinessObj != null)
                 <TopBarButton Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" />
             }
             <TopBarButton 
-                Click="GetFirstRowid" ResourceTag="Action.First" IconCssClass="fa-solid fa-backward-fast" />
+                Click="GetFirstRowid" ResourceTag="Action.Start" IconCssClass="fa-solid fa-backward-fast" />
             <TopBarButton 
                 Click="GetPreviousRowid" ResourceTag="Action.Back" IconCssClass="fa-solid fa-backward"  />
             <TopBarButton 

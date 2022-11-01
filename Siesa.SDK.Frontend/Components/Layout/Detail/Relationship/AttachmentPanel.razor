@@ -1,0 +1,47 @@
+@using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Entities;
+
+@if(draw){
+    <RelationshipPanel Relationship="@RelationshipAttachment" Parent="@ParentAttachment" BLNameParentAttatchment="@BLNameParentAttatchment"/>
+}
+
+
+@code {
+    [Inject] public IAuthenticationService AuthenticationService { get; set; }
+    [Inject] public IBackendRouterService BackendRouterService { get; set; }
+    [Parameter]public dynamic BusinessObj { get; set; }
+    [Parameter]public string BLNameParentAttatchment { get; set; }
+    public Relationship RelationshipAttachment { get; set; }
+    public dynamic ParentAttachment { get; set; }
+    private bool draw = false;
+    protected override async Task OnInitializedAsync(){
+        var rowidAttachment = BusinessObj.BaseObj.RowidAttachment;
+        ParentAttachment = new E00270_Attachment();
+        if(rowidAttachment == null){
+            try{
+                var BLAttachment = BackendRouterService.GetSDKBusinessModel("BLAttachment", AuthenticationService);
+                var responseAtt = await BLAttachment.Call("SaveAttachment");
+                if(responseAtt.Success){
+                    rowidAttachment = Convert.ToInt32(responseAtt.Data);
+                    BusinessObj.BaseObj.RowidAttachment = rowidAttachment;
+                    BusinessObj.Backend.Call("SaveAttachmentEntity",BusinessObj.BaseObj);
+                }else{
+                    throw new Exception("No se pudo crear el registro de attachment");
+                }
+            }catch(Exception ex){
+                throw new Exception(ex.Message);
+            }
+        }
+        ParentAttachment.Rowid = rowidAttachment;
+        RelationshipAttachment = new Relationship(){
+            Name  = "BLAttachmentDetail",
+            Type = RelationshipType.OneToMany,
+            RelatedBusiness = "BLAttachmentDetail",
+            RelatedField = "BaseObj.Attachment",
+        };
+
+        await base.OnInitializedAsync();
+
+        draw = true;
+    }
+}

@@ -29,12 +29,19 @@ namespace Siesa.SDK.GRPCServices
 
         private IAuthenticationService _authenticationService;
         private IBackendRouterService _backendRouterService;
+        private ITenantProvider _tenantProvider;
         
-        public SDKService(ILogger<SDKService> logger, IServiceProvider provider, IAuthenticationService AuthenticationService, IBackendRouterService backendRouterService)
+        public SDKService(
+            ILogger<SDKService> logger,
+            IServiceProvider provider,
+            IAuthenticationService AuthenticationService, IBackendRouterService backendRouterService,
+            ITenantProvider tenantProvider
+        )
         {
             _logger = logger;
             _provider = provider;
             _authenticationService = AuthenticationService;
+            _tenantProvider = tenantProvider;
             _backendRouterService = backendRouterService;
 
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
@@ -47,6 +54,10 @@ namespace Siesa.SDK.GRPCServices
         private void SetCurrentUser(string token)
         {
             _authenticationService.SetToken(token);
+            if(_tenantProvider != null && _authenticationService?.User != null)
+            {
+                _tenantProvider.SetTenantByRowId(_authenticationService.User.RowIdDBConnection);
+            }
         }
 
         public override Task<Protos.BusinessObjResponse> GetBusinessObj(Protos.GetBusinessObjRequest request, ServerCallContext context)

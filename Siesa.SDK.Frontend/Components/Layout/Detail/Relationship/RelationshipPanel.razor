@@ -19,9 +19,11 @@
         @if(isOpen){
             <div class="relationship-panel-body">
                 <InlineCrud
+                    BLNameParentAttatchment="@BLNameParentAttatchment"
                     BusinessName="@Relationship.RelatedBusiness"
                     Filter="@filter"
-                    DefaultFieldsCreate="@DefaultFieldsCreate"
+                    DefaultFieldsCreate="@DefaultFieldsCreate" AllowCreate="@AllowCreate" AllowEdit="@AllowEdit" AllowDelete="@AllowDelete"
+                    AllowDetail="@AllowDetail"
                 />
             </div>
         }
@@ -30,15 +32,28 @@
     <InlineCrud
         BusinessName="@Relationship.RelatedBusiness"
         Filter="@filter"
-        DefaultFieldsCreate="@DefaultFieldsCreate"
+        DefaultFieldsCreate="@DefaultFieldsCreate" AllowCreate="@AllowCreate" AllowEdit="@AllowEdit" AllowDelete="@AllowDelete"
+        AllowDetail="@AllowDetail" 
         />
 }
 
 
 @code {
+    [Parameter] public string BLNameParentAttatchment { get; set; }
     [Parameter] public Relationship Relationship { get; set; }
     [Parameter] public dynamic Parent { get; set; }
 
+    [Parameter] public bool AllowCreate { get; set; } = true;
+    [Parameter] public bool AllowEdit { get; set; } = true;
+    [Parameter] public bool AllowDelete { get; set; } = true;
+    [Parameter] public bool AllowDetail { get; set; } = true;
+
+    [Parameter] public Action<string> OnClickEdit { get; set; } = null;
+    [Parameter] public Action<string> OnClickDetail { get; set; } = null;
+    [Parameter] public Action<string,string> OnClickDelete { get; set; } = null;
+    [Parameter] public Action OnClickNew { get; set; } = null;
+
+    //TODO: Parametrizar Allow y Actions en los inlineCrud
     [Parameter] public bool ShowHeader { get; set; } = true;
     int? count = null;
     bool isOpen = false;
@@ -85,16 +100,38 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
+        SetParameters();
         OnInit();
     }
 
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
+        SetParameters();
         OnInit();
         listview_key = Guid.NewGuid();
         StateHasChanged();     
     } 
 
+    protected virtual void SetParameters()
+    {
+        var new_params = new Dictionary<string, object>();
+            if (OnClickEdit != null)
+            {
+                new_params.Add("OnClickEdit", OnClickEdit);
+            }
+            if (OnClickDetail != null)
+            {
+                new_params.Add("OnClickDetail", OnClickDetail);
+            }
+            if (OnClickDelete != null)
+            {
+                new_params.Add("OnClickDelete", OnClickDelete);
+            }
+            if (OnClickNew != null)
+            {
+                new_params.Add("OnClickNew", OnClickNew);
+            }
+    }
 
 }

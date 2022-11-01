@@ -1,0 +1,10 @@
+.sdk-upload ::deep .rz-fileupload .rz-fileupload-buttonbar{
+    background-color:var(--color_light) !important;
+    padding: 0;
+    display: flex !important;
+    justify-content: center !important;
+}
+.sdk-upload ::deep .rz-fileupload .rz-fileupload-buttonbar .rz-fileupload-choose{
+    background-color: var(--color_primary) !important;
+
+}

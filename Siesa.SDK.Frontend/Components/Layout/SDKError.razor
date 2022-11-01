@@ -1,8 +1,10 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @using SDK.Components.Visualization
+@using Siesa.SDK.Shared.Services
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
 @inject UtilsManager UtilManager
 @inject SDKNotificationService SDKNotificationService
+@inject IAuthenticationService AuthenticationService
 
 @if(IsEmptyLayout){
     @if (CurrentException != null)
@@ -11,10 +13,10 @@
             <i class="fa-solid fa-triangle-exclamation" />
             <h4>@Title</h4>
 
-            <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Error.MoreInfo"
+            <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Custom.SDKError.MoreInfo"
             Click="@ClickMoreInfo" />
 
-            <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Error.Recover"
+            <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Custom.SDKError.Recover"
             Click="@ClickRecover" />
 
             @if (ShowStackError)
@@ -39,10 +41,10 @@
                             <i class="fa-solid fa-triangle-exclamation" />
                             <h4>@Title</h4>
 
-                            <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Error.MoreInfo"
+                            <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Custom.SDKError.MoreInfo"
                             Click="@ClickMoreInfo" />
 
-                            <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Error.Recover"
+                            <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Custom.SDKError.Recover"
                             Click="@ClickRecover" />
 
                             @if (ShowStackError)
@@ -76,10 +78,10 @@
     private bool ShowStackError { get; set; }
 
     private string Title { get; set; }
-    private string TitleTag = "Error.Text.Title";
+    private string TitleTag = "Custom.SDKError.Text.Title";
 
     private string NotificationMessage { get; set; }
-    private string NotificationMessageTag = "Error.Text.NotificationMessage";
+    private string NotificationMessageTag = "Custom.Generic.Message.Error";
 
     protected override async Task OnInitializedAsync()
     {

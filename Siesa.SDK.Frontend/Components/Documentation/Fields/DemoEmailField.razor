@@ -1,0 +1,74 @@
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Services
+
+@inject SDKNotificationService Notification
+
+
+<div class="container-fluid">
+    <div class="row p-3">
+        <div class="col-12"><h2>SDKEmailField</h2></div>
+        <div class="col-12"><p>Demonstration and configuration of the SDKEmailField component</p></div> 
+    </div>
+    <div class="row px-3 mt-3"> 
+        <div class="col-md-6 p-3 ">
+            <SDKCard>
+                <h3>bind-Value</h3>
+                <SDKEmailField @bind-Value="@Email"
+                    CssClass="cw-320"/>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3 ">
+            <SDKCard>
+                <h3>Value Changed</h3>
+                <SDKEmailField Value="@valueChange"
+                     CssClass="cw-320" ValueChanged="((value) => Onchange(value))"
+                     />
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3 ">
+            <SDKCard>
+                <h3>ValueChanged-ValueExpression</h3>
+                <SDKEmailField Value="@Value"
+                    ValueExpression="@(() => Value)"
+                    ValueChanged="@((string newValue) => ValueChanged(newValue))"/>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3 ">
+            <SDKCard>
+                <h3>ReadOnly-Disabled-Required</h3>
+                <div class="d-flex justify-content-around">
+                    <SDKBooleanField @bind-Value="@readOnly"> ReadOnly</SDKBooleanField>
+                    <SDKBooleanField @bind-Value="@disabled"> Disabled</SDKBooleanField>
+                    <SDKBooleanField @bind-Value="@required"> Required</SDKBooleanField>
+                </div>
+                <SDKEmailField @bind-Value="@Email2"
+                    ReadOnly="@readOnly" Disabled="@disabled" Required="@required" CssClass="cw-320"/>
+            </SDKCard>
+        </div>
+    </div>
+</div>
+
+@code {
+    string Email { get; set; } = "Hola Mundo";
+
+    bool readOnly = false;
+    bool disabled = false;
+    bool required = false;
+    string valueChange;
+    string Email2 { get; set; } = "";
+    string Value = "AAA";
+    public string Onchange(string value){
+
+        valueChange = value;
+        Notification.ShowWarning("This value changed "+$"{valueChange}");
+
+        return valueChange;    
+    }
+
+    void ValueChanged(string newValue) {
+
+        Notification.ShowWarning("This value changed "+$"{newValue}");
+    }
+
+}

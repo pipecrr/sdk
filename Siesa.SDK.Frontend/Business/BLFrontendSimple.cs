@@ -18,6 +18,11 @@ using Siesa.SDK.Shared.Business;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Shared.Utilities;
 using Siesa.SDK.Shared.Validators;
+using Microsoft.Extensions.Logging;
+using Siesa.SDK.Shared.DataAnnotations;
+using Siesa.SDK.Shared.DTOS;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace Siesa.SDK.Business
 {
@@ -25,6 +30,8 @@ namespace Siesa.SDK.Business
     {
         [JsonIgnore]
         public dynamic ParentComponent {get;set;}
+        
+        public string BLParentBusinessName {get;set;}
 
         public string BusinessName { get; set; }
         [JsonIgnore]
@@ -119,11 +126,18 @@ namespace Siesa.SDK.Business
 
         public List<string> RelFieldsToSave { get; set; } = new List<string>();
 
-        public async Task Refresh() {
+        public async Task Refresh(bool Reload = false) {
+
             if(ParentComponent != null){
                 try
                 {
-                    ParentComponent.Refresh();
+                    if (Reload)
+                    {
+                        ParentComponent.Refresh(Reload);
+                    }else
+                    {
+                        ParentComponent.Refresh();
+                    }
                 }
                 catch (System.Exception)
                 {
@@ -146,24 +160,43 @@ namespace Siesa.SDK.Business
         [JsonIgnore]
         protected SDKNotificationService NotificationService { get; set; }
 
-        private void InternalConstructor(IAuthenticationService authenticationService, SDKNotificationService notificationService)
+        [JsonIgnore]
+        public ILogger Logger { get; set; }
+
+        private void InternalConstructor(IAuthenticationService authenticationService, SDKNotificationService notificationService, ILoggerFactory loggerFactory )
         {
             AuthenticationService = authenticationService;
             NotificationService = notificationService;
+            if(loggerFactory !=null){
+            Logger = loggerFactory.CreateLogger(this.GetType().FullName);
+            }
             BaseObj = Activator.CreateInstance<T>();
+
+            if (AuthenticationService?.User != null && Utilities.IsAssignableToGenericType(BaseObj.GetType(), typeof(BaseCompanyGroup<>)))
+            {
+                var companyGroup = new E00200_CompanyGroup();
+                companyGroup.Rowid = AuthenticationService.User.RowidCompanyGroup;
+                BaseObj.GetType().GetProperty("RowidCompanyGroup").SetValue(BaseObj, AuthenticationService.User.RowidCompanyGroup);
+                BaseObj.GetType().GetProperty("CompanyGroup").SetValue(BaseObj, companyGroup);
+            }
+
+            if(string.IsNullOrEmpty(BusinessName)){
+                BusinessName = this.GetType().Name;
+            }
         }
 
-        public BLFrontendSimple(IAuthenticationService authenticationService, SDKNotificationService notificationService = null)
+        public BLFrontendSimple(IAuthenticationService authenticationService, SDKNotificationService notificationService = null, ILoggerFactory loggerFactory = null)
         {
-            InternalConstructor(authenticationService, notificationService);
+            InternalConstructor(authenticationService, notificationService,loggerFactory);
         }
 
         public BLFrontendSimple(IServiceProvider provider)
         {
             IAuthenticationService authService = (IAuthenticationService)provider.GetService(typeof(IAuthenticationService));
-            SDKNotificationService notiService = (SDKNotificationService)provider.GetService(typeof(SDKNotificationService));
 
-            InternalConstructor(authService, notiService);
+            SDKNotificationService notiService = (SDKNotificationService)provider.GetService(typeof(SDKNotificationService));
+            ILoggerFactory loggerFactory = (ILoggerFactory)provider.GetService(typeof(ILoggerFactory));
+            InternalConstructor(authService, notiService,loggerFactory);
         }
 
         public virtual T Get(Int64 rowid)
@@ -242,7 +275,7 @@ namespace Siesa.SDK.Business
             }
             catch (Exception e)
             {
-            await GetNotificacionService("Error al Eliminar el registro");
+            await GetNotificacionService("Custom.Generic.Message.DeleteError");
 
             return null;
             }
@@ -292,7 +325,7 @@ namespace Siesa.SDK.Business
             }
             catch (Exception e)
             {
-                await GetNotificacionService(e.Message);
+                await GetNotificacionService("Custom.Generic.Message.Error");
 
                 return response;
             }
@@ -368,5 +401,33 @@ namespace Siesa.SDK.Business
             }
         }
 
+        public async Task<string> DowunloadFile(string url)
+        {
+            var result = await Backend.Call("DowunloadFile", url);
+            return result.Data;
+        }
+
+        [SDKApiMethod("POST")]
+        public virtual async Task<SDKFileUploadDTO> UploadSingle(IFormFile file){
+            var result = new SDKFileUploadDTO();
+            if (file == null){
+                throw new Exception("File is null");
+            }
+            byte[] fileBytes = null;
+            using (var ms = new MemoryStream()){
+                file.CopyTo(ms);
+                fileBytes = ms.ToArray();
+            }
+            var response = await Backend.Call("SaveFile", fileBytes, file.FileName);
+            if(response.Success){
+                result.Url = response.Data.Url;
+                result.FileType = file.ContentType;
+                result.FileName = response.Data.FileName;
+            }else{
+                var errors = JsonConvert.DeserializeObject<List<string>> (response.Errors.ToString());
+                throw new ArgumentException(errors[0]);
+            }
+            return result;
+        }
     }
 }

@@ -3,15 +3,18 @@
 @using Siesa.SDK.Frontend.Components.FormManager.Fields
 @using Siesa.SDK.Frontend.Components.Layout.Detail.Relationship
 @using Siesa.SDK.Frontend.Components.Visualization
-
-@if (Panels == null || Panels.Count <= 0)
+@using System.Linq
+@if (Loading == true)
 {
-    <ResourceViewer ResourceTag="SDK.ViewdefNotFound" />
+    <ResourceViewer ResourceTag="Custom.Generic.Loading" />
+} else if (Panels == null || Panels.Count <= 0)
+{
+    <ResourceViewer ResourceTag="Module.SDK.ViewdefNotFound" />
 }
 else if (ModelLoaded == true)
 {
         @if(IsSubpanel && ShowTitle){
-            <h5>@BusinessObj</h5>
+            <h5 class="d-flex justify-content-center">@BusinessObj</h5>
             <hr />
         }
         <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
@@ -34,11 +37,14 @@ else if (ModelLoaded == true)
 
             }
         </DxFormLayout>
+        @if(ContainAttachments){
+            <AttachmentPanel BusinessObj="@BusinessObj" BLNameParentAttatchment="@BusinessName"/>
+        }
         @if(!string.IsNullOrEmpty(ErrorMsg))
         {
             <label>@((MarkupString)ErrorMsg)</label>
         }
-         @foreach (var rel in FormViewModel.Relationships)
+         @foreach (var rel in FormViewModel.Relationships.Where(x=>x.Enabled))
             {
                <RelationshipPanel Relationship="@rel" Parent="@BusinessObj.BaseObj" />
             }
@@ -46,27 +52,39 @@ else if (ModelLoaded == true)
         <div class="buttons-container">
             @foreach (var btn in FormViewModel.Buttons)
             {
-                <SDKButton RenderStyle="@btn.RenderStyle" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" />
+                <SDKButton RenderStyle="@btn.RenderStyle" Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" />
             }
             @if (ShowDeleteButton){
-                <SDKButton RenderStyle="SDKButtonRenderStyle.Danger" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="DeleteBusiness" ResourceTag="Action.Delete" />                
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Danger" Click="DeleteBusiness" ResourceTag="Action.Delete" />                
             }
             @if (ShowCancelButton){
-                <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@((args) => dialogService.Close(false))" ResourceTag="Generic.Close"/>
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" Click="@((args) => dialogService.Close(false))" ResourceTag="Action.Close"/>
             }
         </div>
     }
     @if(SetTopBar)
     {
         <PageTitle>@BusinessObj</PageTitle>
-        <SetTopBar HasExtraButtons="@(FormViewModel.Buttons != null && FormViewModel.Buttons.Count > 0 ? true: false)">
+        <SetTopBar HasExtraButtons="@(FormViewModel.Buttons != null && FormViewModel.Buttons.Count > 0 ? true: false)" BusinessObj="@BusinessObj" DisableCompanies="true">
             <TopBarTitle>@BusinessObj</TopBarTitle>
             <TopBarButtons>
+
+                @if(CanCreate){
                 <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus"  />
+                }
+                @if(CanCreate){
                 <TopBarButton Click="GoToDuplicate" ResourceTag="Action.Duplicate" IconCssClass="fa-solid fa-copy"  />
+                }
+                @if(CanEdit){
                 <TopBarButton Click="GoToEdit" ResourceTag="Action.Modify"  IconCssClass="fa-solid fa-pen"  />
+                }
+                @if(CanList){
                 <TopBarButton Click="GoToList" ResourceTag="Action.List"  IconCssClass="fa-solid fa-list"  />
+                }
+                @if(CanDelete){
                 <TopBarButton Click="OnClickDelete" ResourceTag="Action.Delete" IconCssClass="fa-solid fa-trash-can" />
+                }
+
             </TopBarButtons>
             <TopBarExtraButtons>
                 @foreach (var btn in FormViewModel.Buttons)
@@ -86,7 +104,6 @@ else if (ModelLoaded == true)
             new DialogOptions(){ShowTitle=false, Width="400"});
         if(dialog != null && dialog == true){
             await this.DeleteBusiness();
-        }
-        //StateHasChanged();
+        } 
     }
 }

@@ -1,0 +1,10 @@
+@typeparam TValue
+@inherits MessageValidatorBase<TValue>
+@using Siesa.SDK.Frontend.Components.Layout
+
+@foreach (var message in ValidationMessages)
+{
+    <div class="@Class">
+        <ResourceViewer ResourceTag="@message" DefaultRowidCulture=1 />
+    </div>
+}

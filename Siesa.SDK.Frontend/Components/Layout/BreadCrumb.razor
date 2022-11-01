@@ -40,17 +40,15 @@
     <nav class="pt-3 pt-sm-0" aria-label="breadcrumb">
         @if(LayoutService != null && LayoutService?.StyleName != null){
             <ol class="breadcrumb p-0">
-                <li class="@("bullet-breadcrumb " + LayoutService?.StyleName)"></li>
                 @if(LayoutService?.StyleName == "toolbar_edition")
                 {
+                    <li class="@("bullet-breadcrumb " + LayoutService?.StyleName)"></li>
                     <li class="estado">En edición</li>
                 }else if(LayoutService?.StyleName == "toolbar_creation")
                 {
+                    <li class="@("bullet-breadcrumb " + LayoutService?.StyleName)"></li>
                     <li class="estado">En creación</li>
-                }else {
-                    <li class="estado">En consulta</li>
                 }
-
             </ol>
         }
     </nav>

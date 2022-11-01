@@ -4,18 +4,17 @@
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
 @using Siesa.SDK.Entities;
 @using Siesa.SDK.Frontend.Components.Visualization
-@if (Panels == null || Panels.Count <= 0)
+@if (Loading == true)
 {
-    <ResourceViewer ResourceTag="SDK.ViewdefNotFound" />
-}
-else if (Loading == true)
+    <ResourceViewer ResourceTag="Custom.Generic.Loading" />
+} else if (Panels == null || Panels.Count <= 0)
 {
-    <ResourceViewer ResourceTag="Generic.Loading" />
+    <ResourceViewer ResourceTag="Module.SDK.ViewdefNotFound" />
 }
 else if (BusinessObj.BaseObj.Rowid != 0)
 {
     @if(IsSubpanel && ShowTitle){
-        <h5><ResourceViewer ResourceTag="Action.Modify" /> @BusinessObj</h5>
+        <h5 class="d-flex justify-content-center"><ResourceViewer ResourceTag="Action.Modify" /> @BusinessObj</h5>
         <hr />
     }
     <CascadingValue Value="@this">
@@ -49,7 +48,7 @@ else if (BusinessObj.BaseObj.Rowid != 0)
 
             }
         </DxFormLayout>
-        <ValidationSummary />
+        @* <ValidationSummary /> *@
         @if(!string.IsNullOrEmpty(ErrorMsg))
         {
             <label>@((MarkupString)ErrorMsg)</label>
@@ -60,24 +59,24 @@ else if (BusinessObj.BaseObj.Rowid != 0)
         <div class="buttons-container">
             @foreach (var btn in FormViewModel.Buttons)
             {
-                <SDKButton RenderStyle="@btn.RenderStyle" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag"  />
+                <SDKButton RenderStyle="@btn.RenderStyle"  Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag"  />
             }
             @if(ShowSaveButton){
-                <SDKButton form="@FormID" RenderStyle="SDKButtonRenderStyle.Primary" RenderStyleMode="SDKButtonRenderStyleMode.Text" SubmitFormOnClick="true" ResourceTag="Generic.ActionSave" />
+                <SDKButton form="@FormID" RenderStyle="SDKButtonRenderStyle.Primary"  SubmitFormOnClick="true" ResourceTag="Action.Save" />
             }
             @if(ShowCancelButton){
-                <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="@((args) => {CancelButton();})" ResourceTag="Generic.ActionCancel" />
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" Click="@((args) => {CancelButton();})" ResourceTag="Action.Cancel" />
             }
         </div>        
     }
     @if(SetTopBar && !IsSubpanel)
     {
         <PageTitle><ResourceViewer ResourceTag="Action.Modify" /> @BusinessObj</PageTitle>
-        <SetTopBar StyleName="toolbar_edition" HasExtraButtons="@(FormViewModel.Buttons != null && FormViewModel.Buttons.Count > 0 ? true: false)">
+        <SetTopBar StyleName="toolbar_edition" HasExtraButtons="@(FormViewModel.Buttons != null && FormViewModel.Buttons.Count > 0 ? true: false)" BusinessObj="@BusinessObj" DisableCompanies="true">
             <TopBarTitle><ResourceViewer ResourceTag="Action.Modify" /> @BusinessObj</TopBarTitle>
             <TopBarButtons>
-                <TopBarButton form="@FormID" SubmitFormOnClick="true" ResourceTag="Generic.ActionSave" IconCssClass="fa-solid fa-floppy-disk" />
-                @* <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="GoToList" ResourceTag="Generic.ActionCancel" /> *@
+                <TopBarButton form="@FormID" SubmitFormOnClick="true" ResourceTag="Action.Save" IconCssClass="@GetSaveBtnIcon()" Enabled="@(!Saving)" />
+                @* <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="GoToList" ResourceTag="Action.Cancel" /> *@
             </TopBarButtons>
             <TopBarExtraButtons>
                 @foreach (var btn in FormViewModel.Buttons)
@@ -90,8 +89,9 @@ else if (BusinessObj.BaseObj.Rowid != 0)
 
 }
 @code {
-    protected override void InitView(string bName = null){
-        base.InitView(bName);
+
+    protected override async Task InitView(string bName = null){
+        await base.InitView(bName);
 
         if(Panels.Count > 1){
              foreach (var panel in Panels){

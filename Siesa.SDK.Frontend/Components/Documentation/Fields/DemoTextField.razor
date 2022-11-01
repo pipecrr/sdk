@@ -1,0 +1,62 @@
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
+@using System.Globalization
+@inject SDKNotificationService Notification
+
+@layout EmptyLayout
+
+<div class="container-fluid">
+    <div class="container-fluid">
+            <h2>SDKTextField</h2> 
+            <p>Demonstration and configuration of the SDKTextField component</p> 
+    </div>
+    <div class="row px-3"> 
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>TextField</h3>
+                <SDKTextField @bind-Value="TextValue" 
+                CssClass="480"/>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>TextField</h3>
+                <SDKTextField @bind-Value="TextValue" Required="true"
+                CssClass="480"/>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>TextField Value Change - MaxLength(25)</h3>
+                <SDKTextField Value="@valueChange" ValueChanged="((value) => Onchange(value))"
+                CssClass="480" MaxLength="25"/>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>TextField ReadOnly</h3>
+                <SDKTextField @bind-Value="TextValue2" ReadOnly="true"
+                CssClass="480"/>
+            </SDKCard>
+        </div>
+    </div>
+</div>
+
+@code {
+    string TextValue { get; set; } ="";
+
+    string valueChange;
+    string TextValue2 { get; set; } ="Hola Mundo";
+
+    string TextValue3 { get; set; } ="";
+
+
+    public string Onchange(string value){
+
+        valueChange = value;
+        Notification.ShowWarning("This Text changed");
+
+        return valueChange;  
+    }
+}

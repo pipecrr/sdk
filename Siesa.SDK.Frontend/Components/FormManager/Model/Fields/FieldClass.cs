@@ -11,21 +11,31 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Siesa.SDK.Frontend.Utils;
 using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
+using Siesa.SDK.Frontend.Components.Visualization;
+using Siesa.SDK.Shared.Services;
+using Siesa.SDK.Frontend.Services;
+using Siesa.SDK.Shared.DataAnnotations;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 {
-    public class FieldClass<TProperty> : ComponentBase 
-    {         
-        public TProperty BindValue { get {
+    public class FieldClass<TProperty> : ComponentBase
+    {
+
+        public TProperty BindValue
+        {
+            get
+            {
                 var modelValue = BindProperty?.GetValue(BindModel, null);
-                if(modelValue == null)
+                
+                if (modelValue == null)
                 {
                     return default(TProperty);
                 }
-                    
+
                 return (TProperty)modelValue;
             }
-            set {
+            set
+            {
                 BindProperty.SetValue(BindModel, value);
             }
         }
@@ -38,11 +48,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         [Parameter] public TProperty Text { get; set; }
 
         [Inject] protected IJSRuntime jsRuntime { get; set; }
+        [Inject] private IBackendRouterService _backendRouterService { get; set; }
+
+        [Inject] private IAuthenticationService _authenticationService { get; set; }
+
+        [Inject] private SDKNotificationService _NotificationService { get; set; }
 
         [Parameter] public string FieldName { get; set; }
+        [Parameter] public bool ValidateField { get; set; } = true;
 
         public bool IsRequired { get; set; }
         public int MaxLength { get; set; }
+
+        public bool IsEncrypted { get; set; }
 
         public bool IsUnique { get; set; }
 
@@ -68,11 +86,26 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                     case MaxLengthAttribute _:
                         MaxLength = ((MaxLengthAttribute)attr).Length;
                         break;
+                    case SDKDataEncrypt _:
+                        IsEncrypted = true;
+                        break;
                 }
             }
             if (FieldOpt.Required)
             {
                 IsRequired = true;
+            }
+            if (IsEncrypted)
+            {
+                if (BindValue != null)
+                {
+                    BindProperty.SetValue(BindModel, null);
+                }
+            }
+
+            if(IsRequired && !ValidateField)
+            {
+                IsRequired = false;
             }
             //TODO: Optimizar, el parametro deberia entrar por parametro y no consultar la entidad por cada campo
             var entityAttributes = BindModel.GetType().GetCustomAttributes();
@@ -86,7 +119,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                             var propNames = ((IndexAttribute)attr).PropertyNames;
                             foreach (var propName in propNames)
                             {
-                                if (propName == FieldName)
+                                if (propName == FieldName || propName == $"Rowid{FieldName}")
                                 {
                                     IsUnique = true;
                                     break;
@@ -103,39 +136,91 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 
         protected override async Task OnInitializedAsync()
         {
-            
+
             await base.OnInitializedAsync();
             //await Init();
+        }
+
+        public void SetValue(string fieldName, object value)
+        {
+            var fieldProperty = BindModel.GetType().GetProperty(fieldName);
+            fieldProperty.SetValue(BindModel, value);
+        }
+
+        private async Task CheckUniqueValue()
+        {
+            try
+            {
+                var request = await _backendRouterService.GetSDKBusinessModel(this.formView.BusinessName, _authenticationService).Call("CheckUnique", this.BindModel);
+
+                if (request.Success)
+                {
+                    if (request.Data == true)
+                    {
+                        _NotificationService.ShowError("Custom.Generic.UniqueIndexValidation");
+
+                        if(this.FieldOpt.CssClass == null)
+                        {
+                            this.FieldOpt.CssClass = "";
+                        }
+
+                        if(!this.FieldOpt.CssClass.Contains("sdk-unique-invalid"))
+                        {
+                            this.FieldOpt.CssClass += " sdk-unique-invalid";
+                        }
+                    }else{
+                        if(this.FieldOpt.CssClass != null && this.FieldOpt.CssClass.Contains("sdk-unique-invalid"))
+                        {
+                            this.FieldOpt.CssClass = this.FieldOpt.CssClass.Replace(" sdk-unique-invalid", "");
+                        }
+                    }
+                }else{
+                    if(this.FieldOpt.CssClass != null && this.FieldOpt.CssClass.Contains("sdk-unique-invalid"))
+                    {
+                        this.FieldOpt.CssClass = this.FieldOpt.CssClass.Replace(" sdk-unique-invalid", "");
+                    }
+                }
+                StateHasChanged();
+            }
+            catch (Exception e)
+            {
+                _NotificationService.ShowError(e.Message);
+                if(this.FieldOpt.CssClass != null && this.FieldOpt.CssClass.Contains("sdk-unique-invalid"))
+                {
+                    this.FieldOpt.CssClass = this.FieldOpt.CssClass.Replace(" sdk-unique-invalid", "");
+                }
+            }
         }
 
         public void SetValue(TProperty value)
         {
             var setValue = true;
-            
-            if (IsUnique)
-            {
-                Console.WriteLine($"El campo {FieldName} es único y debe revisar el valor {value}");
-                //setValue = CheckUnique(value);
-            }
 
             if (setValue)
             {
                 BindValue = value;
-                if (OnChange != null && OnChange != "") {
+                if (OnChange != null && OnChange != "")
+                {
                     _ = Task.Run(async () =>
                     {
                         await Evaluator.EvaluateCode(OnChange, EditFormContext.Model);
+                        if (formView != null)
+                        {
+                            _ = InvokeAsync(() => formView.Refresh());
+                        }
                     });
-                }
-                if (formView != null){
-                    _ = InvokeAsync(() => formView.Refresh());
                 }
             }
             else
             {
                 //MuestreError();
             }
-            
+            if (IsUnique && ValidateField)
+            {
+                CheckUniqueValue();
+                 //Console.WriteLine($"El campo {FieldName} es único y debe revisar el valor {value}");
+            }
+
         }
 
         public RenderFragment? FieldValidationTemplate
@@ -147,7 +232,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 {
                     var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
                     var lambda = Expression.Lambda(typeof(Func<>).MakeGenericType(access.Type), access);
-                    builder.OpenComponent(0, typeof(ValidationMessage<>).MakeGenericType(access.Type));
+                    builder.OpenComponent(0, typeof(SDKValidationMessage<>).MakeGenericType(access.Type));
                     builder.AddAttribute(1, "For", lambda);
                     builder.CloseComponent();
                 };

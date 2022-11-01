@@ -1,0 +1,83 @@
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Entities
+@using Siesa.SDK.Frontend.Services
+
+@inject SDKNotificationService NotificationService
+
+@layout EmptyLayout
+
+<div class="container-fluid">
+    <div class="container-fluid">
+            <h2>SDKGrid</h2> 
+            <p>Demonstration and configuration of the SDKGrid component</p> 
+    </div>
+    <div class="row px-3"> 
+        <div class="col-md-12 p-3">
+            <div class="d-flex justify-content-around">
+            <SDKButton Click="@ChangeView" ResourceTag="Change View" RenderStyle="SDKButtonRenderStyle.Primary"/>
+            @if(!cardView){
+                <RadzenSlider Min="0" Max="200" Value=@WidthValue TValue="int" Style="width: 200px" Change="@Onchange"/>
+            }
+            </div>
+            <SDKGrid Data="@Data" TItem="E00220_User" AllowFiltering="true" 
+                 CardView="@cardView">
+                <Columns>
+                    <SDKGridColumn Width="@px" Title="Action" TItem="E00220_User" IsActionColumn="true">
+                        <Template Context="Data">
+                            <div class="@GetCss()">
+                                <SDKButton IconCssClass="fa-solid fa-pen" IsActionButton="true"/>
+                                <SDKButton IconCssClass="fa-solid fa-trash-can" IsActionButton="true"/>
+                            </div>
+                        </Template>
+                    </SDKGridColumn>
+                    <SDKGridColumn TItem="E00220_User" Title="Id" Property="Id"/>
+                    <SDKGridColumn TItem="E00220_User" Title="Path" Property="Path"/>
+                    <SDKGridColumn TItem="E00220_User" Title="Password" Property="Password"/>
+                    <SDKGridColumn TItem="E00220_User" Title="IsLocked" Property="IsLocked">
+                        <Template Context="Data">
+                            <SDKBooleanField Value="@Data.IsLocked" Enabled="false"/>
+                        </Template>
+                    </SDKGridColumn>
+                    <SDKGridColumn TItem="E00220_User" Title="StartDateValidity" Property="StartDateValidity"/>
+                    <SDKGridColumn TItem="E00220_User" Title="RowidCulture" Property="RowidCulture"/>
+                </Columns>
+            </SDKGrid>
+        </div>
+    </div>
+</div>
+
+
+@code
+{
+    public string px="200px";
+    public int WidthValue;
+    public bool cardView;
+    void Onchange(int value)
+    {
+        WidthValue = value;
+
+        px = $"{WidthValue}px";
+    }
+    private string GetCss(){
+        if (!cardView)
+        {
+            return "d-flex justify-content-center";
+        }
+        return "";
+    }
+
+    private List<E00220_User>Data =new List<E00220_User>()
+    {
+        new E00220_User(){Id = "XYZXYZ", Path = "Path", Password = "Password", IsLocked = true, StartDateValidity = DateTime.Now, RowidCulture = 1},
+        new E00220_User(){Id = "XYZXYZ", Path = "Path2", Password = "Password2", IsLocked = true, StartDateValidity = DateTime.Now, RowidCulture = 2},
+        new E00220_User(){Id = "XYZXYZ", Path = "Path3", Password = "Password3", IsLocked = false, StartDateValidity = DateTime.Now, RowidCulture = 3},
+        new E00220_User(){Id = "XYZXYZ", Path = "Path4", Password = "Password4", IsLocked = true, StartDateValidity = DateTime.UtcNow, RowidCulture = 4},
+        new E00220_User(){Id = "XYZXYZ", Path = "Path5", Password = "Password5", IsLocked = false, StartDateValidity = DateTime.Today, RowidCulture = 5}
+    };
+
+    public void ChangeView(){
+        cardView = !cardView;
+    }
+}

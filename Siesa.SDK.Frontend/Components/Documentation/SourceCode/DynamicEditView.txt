@@ -1,0 +1,66 @@
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Components.FormManager.Model
+@using Siesa.SDK.Frontend.Components.FormManager.Views
+@using Siesa.SDK.Shared.Services
+
+@inject SDKNotificationService NotificationService
+
+<div class="container-fluid">
+    <div class="row p-3">
+        <div class="col-12"><h2>DynamicEditView</h2></div>
+        <div class="col-12"><p>Demonstration and configuration of the DynamicEditView component</p></div> 
+    </div>
+    <div class="row px-3 mt-3"> 
+        <div class="col-md-6 p-3 ">
+            <SDKCard>
+                <div class="pt-5">
+                    <TopBar />
+                </div>
+                <DynamicEditView BusinessName="BLCulture" BusinessObjId="1"/>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3 ">
+            <SDKCard>
+                <div class="d-flex justify-content-around">
+                    <SDKBooleanField @bind-Value="@Title"> ShowTitle</SDKBooleanField>
+                    <SDKBooleanField @bind-Value="@Buttons"> ShowTButtons</SDKBooleanField>
+                    <SDKBooleanField @bind-Value="@SaveButton"> SaveButton</SDKBooleanField>
+                    <SDKBooleanField @bind-Value="@CancelButton"> CancelButton</SDKBooleanField>
+                </div>
+                @if (!Title)
+                {
+                <h3>BLCulture - Subpanel</h3>
+                }
+                <DynamicEditView BusinessName="BLCulture" BusinessObjId="1"  IsSubpanel="true"  ShowTitle="@Title" ShowButtons="@Buttons" 
+                        ShowSaveButton="@SaveButton" ShowCancelButton="@CancelButton"/>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3 ">
+            <SDKCard>
+                <h3>BLCulture Action Save</h3>
+                <DynamicEditView BusinessName="BLCulture" BusinessObjId="1" IsSubpanel="true" ShowTitle="false" OnSave="@(async (object id) => {await ActionSave(id);})"
+                                        OnCancel="@(async ()=> { await ActionCancel(); })"/>
+            </SDKCard>
+        </div>
+    </div>
+</div>
+ 
+@code{
+
+    bool Title = true;
+    bool Buttons = true;
+    bool SaveButton = true;
+    bool CancelButton = true;
+
+    public async Task ActionCancel()
+    {
+        NotificationService.ShowInfo("Open Action Cancel");
+    }
+
+    public async Task ActionSave(object id)
+    {
+        NotificationService.ShowInfo("Open Action Save");
+    }
+
+}

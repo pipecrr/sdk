@@ -30,6 +30,8 @@
                 builder.AddAttribute(7, "ClearButtonDisplayMode", DataEditorClearButtonDisplayMode.Auto);
                 builder.AddAttribute(8, "maxlength", MaxLength > 0 ? MaxLength : null);
                 builder.AddAttribute(9, "field-name", FieldOpt.Name);
+                builder.AddAttribute(10, "data-automation-id", $"NumericField_{FieldOpt.Name}");
+
 
                 builder.CloseComponent();
             };

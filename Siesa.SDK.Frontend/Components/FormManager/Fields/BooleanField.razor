@@ -29,6 +29,8 @@
                 builder.AddAttribute(5, "CssClass", FieldOpt.CssClass);
                 builder.AddAttribute(6, "Enabled", !FieldOpt.Disabled);
                 builder.AddAttribute(7, "field-name", FieldOpt.Name);
+                builder.AddAttribute(8, "data-automation-id", $"BooleanField_{FieldOpt.Name}");
+
 
                 builder.CloseComponent();
             };

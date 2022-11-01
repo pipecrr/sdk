@@ -1,15 +1,21 @@
 @using Radzen
 @using SDK.Components.Visualization
 @using Siesa.SDK.Frontend.Components.Visualization
-@inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
 @inject UtilsManager UtilManager
 
-<div class="confirm-delete-container">
-    <i class="fa-solid fa-circle-exclamation"></i>
-    <h5>@Title</h5>
-    <p>@Text</p>
-    <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Action.ConfirmCancel" Click="@ClickCancel" />
-    <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Action.ConfirmDelete" Click="@ClickDelete" />
+
+<div class="modal-dialog-container p-0">
+    
+    <div class="modal-body d-flex flex-column  align-items-center">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <h5>@Title</h5>
+        <p>@Text</p>
+    </div>
+    <div class="modal-footer justify-content-center">
+        <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" CssClass="px-3" ResourceTag="Action.ConfirmDetele.Cancel" Click="@ClickCancel" />
+        <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" CssClass="px-3"  ResourceTag="Action.ConfirmDelete.Delete" Click="@ClickDelete" />
+    </div>
+
 </div>
 
 @code {
@@ -18,10 +24,10 @@
     public DialogService DialogService { get; set; }
 
     private string Text { get; set; }
-    private string TextTag = "Modal.ConfirmDelete.Body";
+    private string TextTag = "Custom.Modal.ConfirmDelete.Body";
 
     private string Title { get; set; }
-    private string TitleTag = "Modal.ConfirmDelete";
+    private string TitleTag = "Custom.Modal.ConfirmDelete.Title";
     private void ClickDelete()
     {
         DialogService.Close(true);

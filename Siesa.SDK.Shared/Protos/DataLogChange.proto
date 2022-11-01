@@ -8,6 +8,7 @@ service DataLogChange {
 
 service DataLogEvent {
   rpc StoreLog (StoreEventRequest) returns (StoreEventReply);
+  rpc QueryLog (QueryLogRequest) returns (QueryLogReply);
 }
 
 message StoreLogRequest {
@@ -21,6 +22,7 @@ message StoreLogReply {
 message QueryLogRequest {
 	string EntityName = 1;
 	repeated Filter Filters = 2;
+  bool setTop = 3;
 }
 
 message Filter 
@@ -28,6 +30,7 @@ message Filter
 	string PropertyName = 1;
 	string Operator = 2;
 	repeated string Value = 3;
+  string Type = 4;
 }
 
 message QueryLogReply {

@@ -1,0 +1,16 @@
+
+<CascadingValue Value="this">
+    <DxFormLayoutTabPages ActiveTabIndex="@ActiveTabIndex" ActiveTabIndexChanged="@OnActiveTabIndexChanged" ChildContent="@ChildContent">
+    </DxFormLayoutTabPages>
+</CascadingValue>
+
+@code{
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    public List<SDKFormLayoutTabPage> TabsPages { get; set; } = new List<SDKFormLayoutTabPage>();
+    public int ActiveTabIndex;
+    void OnActiveTabIndexChanged(int index)
+    {
+        ActiveTabIndex = index;
+    }
+
+}

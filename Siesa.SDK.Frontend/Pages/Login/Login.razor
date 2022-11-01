@@ -1,12 +1,11 @@
 @page "/login"
 @using System.ComponentModel.DataAnnotations
+@using SDK.Components.Visualization
 @using Siesa.SDK.Shared.Services
-@using Siesa.SDK.Shared.Backend
+@using Siesa.SDK.Shared.DTOS
 @using Siesa.SDK.Frontend.Navigation
 @using Siesa.SDK.Frontend.Components.Layout
 @using Siesa.SDK.Entities;
-@using Siesa.SDK.Shared.Business;
-@using Siesa.SDK.Protos;
 @using Newtonsoft.Json;
 @inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavigationManager
@@ -16,10 +15,18 @@
 @inject Blazored.LocalStorage.ILocalStorageService localStorageService
 @inject UtilsManager UtilsManager
 @layout EmptyLayout
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Shared.DataAnnotations
+@using Siesa.SDK.Frontend.Components.Fields
 
 <PageTitle>Login</PageTitle>
-<div class="back_login">
 
+@if(SelectedConnection != null && SelectedConnection.Rowid != 0 && !string.IsNullOrEmpty(SelectedConnection.StyleUrl)){
+     <head>
+        <link rel="stylesheet" href="@AuthenticationService.GetConnectionStyle()">
+    </head> 
+}
+<div class="back_login">
     <div class="col-12 offset-md-1 col-md-10 px-0 px-md-3" hidden="@init_loading">
         <div class="card_login col-12">
             <div class="row image_back">
@@ -35,8 +42,8 @@
                         </div>
                     </div>
                     <div class="info_card d-none d-sm-none d-md-block col-12 p-3 p-md-3 p-lg-4 mt-4">
-                        <h2 class="mb-md-2 mb-lg-3"><ResourceViewer ResourceTag="Demo.NewsTitle" RowidCulture=@RowidCulture /></h2>
-                        <p class="mb-md-2 mb-lg-3"><ResourceViewer ResourceTag="Demo.NewsBody" RowidCulture=@RowidCulture /></p>
+                        <h2 class="mb-md-2 mb-lg-3"><ResourceViewer ResourceTag="BLLogin.Demo.NewsTitle" RowidCulture=@RowidCulture /></h2>
+                        <p class="mb-md-2 mb-lg-3"><ResourceViewer ResourceTag="BLLogin.Demo.NewsBody" RowidCulture=@RowidCulture /></p>
                         <div class="d-flex justify-content-between">
                             <button class="btn btn-primary btn_ghost_def_1 btn-sm px-4"><ResourceViewer ResourceTag="BLLogin.MoreInfo" RowidCulture=@RowidCulture /></button>
                             <div>
@@ -48,21 +55,35 @@
                         </div>
                     </div>
                 </div>
-                <div class="login_area col-12 col-lg-5 p-3 p-lg-4">
+                <div class="login_area col-12 col-lg-5 p-3 p-lg-3">
                     <div class="col-12 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
-                        <select class="select_connect" id="SelectConnect">
-                            <option>DB Producción</option>
-                            <option>DB Pruebas HCM</option>
-                            <option>DB Pruebas Nómina</option>
+                        <select class="select_connect" id="SelectConnect" @onchange="OnChangeConnection">
+                            <option value=""><ResourceViewer ResourceTag="BLUser.Login.Message.SelectDbConnection" RowidCulture=@RowidCulture /></option>
+                            @if(ConnectionList != null && ConnectionList.Count > 0)
+                            {
+                                @foreach(var db in ConnectionList)
+                                {
+                                    <option value="@db.Rowid" selected="@(db.Rowid == SelectedConnection.Rowid)" >@db.Name</option>
+                                }
+                            }
                         </select>
+                    
 
                         <i class="ml-2 fa-solid fa-globe"></i>
                         <div id="lang">
                             <div class="position-relative">
                                 <button class="btn ml-2 d-flex btn_region" style="padding:0"
                                     @onclick="() => IsOpen = !IsOpen">
-                                    <span class="fi fi-@selectedCulture.CountryCode fis rounded-circle"
+                                    @if(selectedCulture != null)
+                                    {
+                                        @*fi fi-selectedCulture.CountryCode fis rounded-circle*@
+                                        <span class="fi fi-co fis rounded-circle"
                                         style="height:16px"></span>
+                                    }else{
+                                        <span class="fi fi-globe fis rounded-circle" style="height:16px"></span>
+                                    }
+                                    
+                                    
                                 </button>
                             </div>
                         </div>
@@ -71,12 +92,12 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-12">
                             <div class="row">
                                 <div class="col-12 p-0 d-flex justify-content-center pb-4">
-                                    <img src="_content/Siesa.SDK.Frontend/assets/img/login_logo_empresa.png" height="48px"
+                                    <img src="@AuthenticationService.GetConnectionLogo()" height="48px"
                                         alt="logo_siesa_color">
                                 </div>
-                                <div class="col-12 p-0 pb-4 pb-md-0 pb-lg-5">
+                                <div class="col-12 p-0 pb-4 pb-md-0 pb-lg-4">
                                     <div class="col-12 text-center title_1">
-                                        <ResourceViewer ResourceTag="Project.Welcome" RowidCulture=@RowidCulture />
+                                        <ResourceViewer ResourceTag="BLLogin.Project.Welcome" RowidCulture=@RowidCulture />
                                     </div>
                                     <div class="col-12 text-center title_2">
                                         <ResourceViewer ResourceTag="BLLogin.InputYourData" RowidCulture=@RowidCulture />
@@ -86,45 +107,57 @@
                             </div>
                         </div>
                         <div class="border_left_md col-12 col-sm-12 col-md-6 col-lg-12">
-                            <div
-                                class="col-12 offset-sm-2 col-sm-8 offset-md-1 col-md-10 offset-lg-2 col-lg-8 px-md-3 px-lg-0">
-                                <EditForm Model="@model" OnValidSubmit="HandleValidSubmit">
-                                    <DataAnnotationsValidator />
-                                    <div class="form-group">
-                                        <label class="col_form_label col_form_label-sm font-weight-bold" for="Username">
-                                            <ResourceViewer ResourceTag="BLUser.Username" RowidCulture=@RowidCulture />
-                                        </label>
-                                        <InputText @bind-Value="model.Username" class="form-control form-control-sm" />
-                                        <ValidationMessage For="@(() => model.Username)" />
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col_form_label col_form_label-sm font-weight-bold" for="Password">
-                                            <ResourceViewer ResourceTag="BLUser.Password" RowidCulture=@RowidCulture />
-                                        </label>
-                                        <InputText @bind-Value="model.Password" type="password"
-                                            class="form-control form-control-sm" />
-                                        <ValidationMessage For="@(() => model.Password)" />
-                                    </div>
-                                    <button class="btn btn-primary btn_primary_def_1 btn-sm w-100 mt-2">
-                                        @if (loading)
-                                        {
-                                            <span class="spinner-border spinner-border-sm mr-1"></span>
-                                        }
-                                        <ResourceViewer ResourceTag="BLUser.Login" RowidCulture=@RowidCulture />
-                                    </button>
-                                </EditForm>
-                            </div>
-                            <div class="col-12 p-0 text-center pt-4">
-                                <a class="link_login" href="">
-                                    <ResourceViewer ResourceTag="Project.ForgotPassword" RowidCulture=@RowidCulture />
-                                </a>
+                            @if(RecoveringPassword){
+                                <ForgotPassword _login="@this" />
+                            }else{
+                                <div
+                                    class="col-12 offset-sm-2 col-sm-8 offset-md-1 col-md-10 offset-lg-2 col-lg-8 px-md-3 px-lg-0">
+                                    <EditForm id="@FormID" Model="@model" OnValidSubmit="HandleValidSubmit" OnInvalidSubmit="HandleInvalidSubmit">
+                                        <DataAnnotationsValidator />
+                                        <div class="form-group">
+                                            <label class="col-form-label col-form-label-sm font-weight-bold" for="Username">
+                                                <ResourceViewer ResourceTag="BLUser.Username" RowidCulture=@RowidCulture />
+                                            </label>
+                                            <SDKCharField 
+                                                @bind-Value="model.Username" 
+                                                AllowAutoComplete="true" 
+                                                AutomationId="BLLogin.Username"
+                                            />
+                                            <SDKValidationMessage For="@(() => model.Username)" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-form-label col-form-label-sm font-weight-bold" for="Password">
+                                                <ResourceViewer ResourceTag="BLUser.Password" RowidCulture=@RowidCulture />
+                                            </label>
+                                            <SDKCharField 
+                                                @bind-Value="model.Password" 
+                                                Password="true" 
+                                                AllowAutoComplete="true"
+                                                AutomationId="BLLogin.Password"
+                                            />
+                                            <SDKValidationMessage For="@(() => model.Password)" />
+                                        </div>
+                                        <SDKButton form="@FormID" SubmitFormOnClick="true" RenderStyle="SDKButtonRenderStyle.Primary" CssClass="btn-sm w-100 mt-2">
+                                            @if (loading)
+                                            {
+                                                <span class="spinner-border spinner-border-sm mr-1"></span>
+                                            }
+                                            <ResourceViewer ResourceTag="BLUser.Login" RowidCulture=@RowidCulture />
+                                        </SDKButton>
+                                    </EditForm>
+                                </div>
+                                <div class="col-12 p-0 text-center pt-4">
+                                    <a class="link_login" @onclick="()=> ForgotPassword()">
+                                        <ResourceViewer ResourceTag="BLLogin.Project.ForgotPassword" RowidCulture=@RowidCulture />
+                                    </a>
 
-                            </div>
+                                </div>
+                            }
                         </div>
                     </div>
-                    <div class="col-12 p-0 text-center copy_right_text">
-                        <ResourceViewer ResourceTag="Project.Version" RowidCulture=@RowidCulture /> -
-                        <ResourceViewer ResourceTag="Project.Copy" RowidCulture=@RowidCulture />
+                    <div class="text-center copy_right_text">
+                        <ResourceViewer ResourceTag="Custom.Project.Version" RowidCulture=@RowidCulture /> -
+                        <ResourceViewer ResourceTag="Custom.Project.Copy" RowidCulture=@RowidCulture />
                     </div>
                 </div>
             </div>
@@ -138,8 +171,8 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span class="text-white" aria-hidden="true">&times;</span>
                     </button>
-                    <h2 class="mb-2 pr-3"><ResourceViewer ResourceTag="Demo.NewsTitle" RowidCulture=@RowidCulture /></h2>
-                    <p class="mb-2"><ResourceViewer ResourceTag="Demo.NewsBody" RowidCulture=@RowidCulture /></p>
+                    <h2 class="mb-2 pr-3"><ResourceViewer ResourceTag="BLLogin.Demo.NewsTitle" RowidCulture=@RowidCulture /></h2>
+                    <p class="mb-2"><ResourceViewer ResourceTag="BLLogin.Demo.NewsBody" RowidCulture=@RowidCulture /></p>
                     <div class="d-flex justify-content-between">
                         <button class="btn btn-primary btn_ghost_def_1 btn-sm px-4"><ResourceViewer ResourceTag="BLLogin.MoreInfo" RowidCulture=@RowidCulture /></button>
                         <div>
@@ -175,7 +208,7 @@
                 <i class="fas fa-spinner fa-pulse"></i>
             </div>
             <div class="text-center">
-                <img src="_content/Siesa.SDK.Frontend/assets/img/logo_empresa.png" height="82px" alt="logo_siesa">
+                <img src="@AuthenticationService.GetConnectionLogo()" height="82px" alt="logo_siesa">
             </div>
         </div>
     </div>
@@ -193,6 +226,7 @@
 </DxDropDown>
 
 @code {
+    public string FormID { get; set; } = Guid.NewGuid().ToString();
     private Model model = new Model();
     private bool init_loading = true;
     private bool loading;
@@ -202,6 +236,25 @@
     private short RowidCulture { get; set; } = 1;
     private E00021_Culture selectedCulture { get; set; }
     List<E00021_Culture> cultures = new List<E00021_Culture>();
+
+    //List<(short,string)> DbConnections { get; set; } = new List<(short,string)>();
+    //private string SelectedDbConnection { get; set; } = "";
+
+    private SDKDbConnection SelectedConnection  { get; set; } = new SDKDbConnection();
+
+    List<SDKDbConnection> ConnectionList { get; set; } = new List<SDKDbConnection>();
+
+    private bool RecoveringPassword { get; set; } = false;
+
+    private void ForgotPassword()
+    {
+        RecoveringPassword = true;
+    }
+    public void NavigateFormLogin()
+    {
+        RecoveringPassword = false;
+        StateHasChanged();
+    } 
 
     private string GetCssLoding()
     {
@@ -222,12 +275,18 @@
             return;
         }
         cultureDefault();
+        await InitLogin();
+    }
+
+    private async Task InitLogin()
+    {
+        await getDbConnections();
         await getCultures();
         getSelectedCulture();
-        await getUserlang();
+        //await getUserlang();
         init_loading = false;
         await base.OnInitializedAsync();
-
+        StateHasChanged();
     }
 
     private async Task OnChangeCulture(short rowidCulture)
@@ -240,31 +299,77 @@
         //await localStorageService.SetItemAsync("userlang", RowidCulture.ToString());
     }
 
+    private async void HandleInvalidSubmit()
+    {
+        SDKNotificationService.ShowError("BLUser.Login.Message.EnterData", culture: RowidCulture);
+    }
+
     private async void HandleValidSubmit()
     {
-        string message = "LoginMessage.Succes";
-        string text = await UtilsManager.GetResource(message);
+        string message = "BLUser.Login.Message.SuccesLogin";
         loading = true;
+        if(SelectedConnection == null)
+        {
+            //error = "BLLogin.SelectDbConnection";
+            SDKNotificationService.ShowError("BLUser.Login.Message.SelectDbConnection", culture: RowidCulture);
+            loading = false;
+            StateHasChanged();
+            return;
+        }
+
+        if(string.IsNullOrEmpty(model.Username) || string.IsNullOrEmpty(model.Password))
+        {
+            error = "BLLogin.EnterUserName";
+            SDKNotificationService.ShowError("BLUser.Login.Message.EnterData", culture: RowidCulture);
+            loading = false;
+            StateHasChanged();
+            return;
+        }
+
         try
         {
-            await AuthenticationService.Login(model.Username, model.Password);
+            await AuthenticationService.Login(model.Username, model.Password,SelectedConnection.Rowid);
             NavigationManager.TryGetQueryString("returnUrl", out string returnUrl);
             if (returnUrl == null || returnUrl == "null")
             {
                 returnUrl = "/";
             }
-            SDKNotificationService.ShowSuccess(text);
+            SDKNotificationService.ShowSuccess(message, culture: AuthenticationService.GetRoiwdCulture());
             NavigationManager.NavigateTo(returnUrl);
         }
         catch (Exception ex)
         {
             error = ex.Message;
-            SDKNotificationService.ShowError(error);
+            SDKNotificationService.ShowError("BLUser.Login.Message.InvalidCredentials", culture: RowidCulture);
             loading = false;
             StateHasChanged();
         }
     }
-   
+    
+    private async Task getDbConnections()
+    {
+        var userBL = BackendRouterService.GetSDKBusinessModel("BLUser", AuthenticationService);
+        if(userBL == null)
+        {
+            return;
+        }
+        var result = await userBL.Call("GetDBConnections");
+        if(result.Success)
+        {
+
+            ConnectionList = result.Data as List<SDKDbConnection>;
+            if(AuthenticationService.GetSelectedConnection() == null || AuthenticationService.GetSelectedConnection().Rowid == 0){
+
+                SelectedConnection = ConnectionList.First();
+                AuthenticationService.SetSelectedConnection(SelectedConnection);
+            }else{
+                SelectedConnection = AuthenticationService.GetSelectedConnection();
+            }
+
+            //DbConnections = result.Data as List<(short,string)>;
+            //SelectedDbConnection = DbConnections.First().Item1.ToString(); 
+        }
+    }
 
     private async Task getCultures()
     {
@@ -281,8 +386,10 @@
         var _Allcultures = await cultureBL.GetData(null, null);
         if (_Allcultures != null)
         {
-            _cultures = _Allcultures.Data.Select(x => JsonConvert.DeserializeObject<E00021_Culture>(x)).Where(x => x.CountryCode !=
-            null).ToList();
+            /*_cultures = _Allcultures.Data.Select(x => JsonConvert.DeserializeObject<E00021_Culture>(x)).Where(x => x.CountryCode !=
+            null).ToList();*/
+
+            _cultures = _Allcultures.Data.Select(x => JsonConvert.DeserializeObject<E00021_Culture>(x)).ToList();
         }    
         return _cultures;
     }
@@ -330,6 +437,12 @@
 
             if (selectedCulture == null){
                 cultureDefault();
+                try {
+
+                    await AuthenticationService.RemoveCustomRowidCulture();
+                }catch(Exception ex){
+                   
+                }
             }else{
                 OnChangeCulture(selectedCulture.Rowid);
             }
@@ -345,15 +458,20 @@
             };
     }
 
-
-
-    private class Model
+    void OnChangeConnection(ChangeEventArgs e)
     {
-        [Required]
-        public string Username { get; set; }
-
-        [Required]
-        public string Password { get; set; }
+        try
+        {
+           var rowidConnection = Convert.ToInt16(e.Value.ToString());
+            SelectedConnection = ConnectionList.FirstOrDefault(x => x.Rowid == rowidConnection); 
+        }
+        catch (System.Exception)
+        {
+            
+            SelectedConnection = new SDKDbConnection();
+        }
+        AuthenticationService.SetSelectedConnection(SelectedConnection);
+        
+        StateHasChanged();
     }
-
 }

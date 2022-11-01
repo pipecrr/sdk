@@ -53,6 +53,8 @@ else if (BusinessObj != null)
             return null;
         }
 
+        //MainLayout?.SetEmptyLayout(externalView.isEmptyLayout);
+
         return (RenderFragment)method.Invoke(BusinessObj, null);
     }
 
@@ -73,6 +75,12 @@ else if (BusinessObj != null)
         {
             MainLayout?.SetEmptyLayout(false);
         }
+    }
+
+    protected override void OnInitialized()
+    {
+        ViewType = ViewModels.DynamicViewType.Custom;
+        base.OnInitialized();
     }
 
 }
