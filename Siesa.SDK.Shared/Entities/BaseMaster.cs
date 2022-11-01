@@ -13,18 +13,18 @@ namespace Siesa.SDK.Entities
 
 		public virtual U Id { get; set; }
 
-		[Required]
+		[SDKRequired]
 		[StringLength(250)]
 		public virtual string Name { get; set; }
 
-		[Required]
+		[SDKRequired]
 		[StringLength(2000)]
 		public virtual string Description { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public virtual enumStatusBaseMaster Status { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public virtual bool IsPrivate { get; set; }
 
 		[ForeignKey("Attachment")]
