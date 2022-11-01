@@ -35,6 +35,7 @@ namespace Siesa.SDK.Entities
 		public string Path { get; set; }
 
 		[StringLength(128)]
+		[SDKDataEncrypt]
 		public string? Password { get; set; }
 
 		[ForeignKey("Culture")]
@@ -47,8 +48,8 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public DateTime PasswordLastUpdate { get; set; }
 
-		[ForeignKey("UserAccountPolicy")]
-		public int? RowidUserAccountPolicy { get; set; }
+		// [ForeignKey("UserAccountPolicy")]
+		// public int? RowidUserAccountPolicy { get; set; }
 
 		[Required]
 		public bool ChangePasswordFirstLogin { get; set; }
@@ -121,7 +122,7 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public virtual E00021_Culture Culture { get; set; }
 
-		public virtual E00223_UserAccountPolicy UserAccountPolicy { get; set; }
+		// public virtual E00223_UserAccountPolicy UserAccountPolicy { get; set; }
 
 	}
 }
