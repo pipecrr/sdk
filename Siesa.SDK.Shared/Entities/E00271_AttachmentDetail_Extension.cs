@@ -14,8 +14,5 @@ namespace Siesa.SDK.Entities
 {
 	public partial class E00271_AttachmentDetail
 	{
-
-
-
 	}
 }
