@@ -108,8 +108,8 @@ else
                             
                             
                             @if(CanDelete && IsSubpanel && AllowDelete){
-                                <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToDelete(((IBaseSDK)data).GetRowid(), data.ToString())"><span
-                                class="fa-solid fa-trash-can"></span></button>
+                                <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToDelete(((IBaseSDK)data).GetRowid(), data.ToString())"><i
+                                class="fa-solid fa-trash-can"></i></button>
 
                             }
                             @* <button class="btn btn-link grid-btn-link"

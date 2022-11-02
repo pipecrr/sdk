@@ -246,7 +246,7 @@ namespace Siesa.SDK.Frontend.Services
             {
                 if (NewPassword != ConfirmPassword)
                 {
-                    throw new Exception("Las contraseñas no coinciden");
+                    throw new Exception("Custom.ForgotPassword.ChangePasswordError");
                 }else
                 {
                     var resultChangePassword = await request.Call("RecoveryPassword",rowidUser,NewPassword,ConfirmPassword,SelectedConnection.Rowid);
@@ -265,7 +265,7 @@ namespace Siesa.SDK.Frontend.Services
 
             if (BLUser == null)
             {
-                throw new Exception("Occurio un error");
+                throw new Exception("Custom.Generic.Message.Error");
             }
             return BLUser;
         }
