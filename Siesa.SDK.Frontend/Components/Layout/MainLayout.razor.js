@@ -41,6 +41,7 @@ export function checkAndRenewToken(dotnethelper) {
 export function InitSDK(dotnethelper){
     document.onmousemove = resetTimeDelay;
     document.onkeypress = resetTimeDelay;
+    window.SDKDotNetHelper = dotnethelper;
 
     function resetTimeDelay() {
         //save the last time the user interacted with the page

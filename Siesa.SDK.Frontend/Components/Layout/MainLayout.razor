@@ -14,6 +14,7 @@
 @inject IJSRuntime JSRuntime
 @inject NavigationService NavigationService
 @inject SDKDialogService SDKDialogService
+@inject SDKNotificationService SDKNotificationService
 
 @if(AuthenticationService.GetSelectedConnection() != null && AuthenticationService.GetSelectedConnection().Rowid != 0)
 {
@@ -258,7 +259,14 @@
 
         return $"offset-lg-0 col-lg-12 offset-xl-0 col-xl-12 {xxl_offset} {xxl} px-0 px-md";
     }
-     
+    
+    [JSInvokable]
+    public async Task ShowError(string msg){
+        await SDKNotificationService.ShowError(msg);
+    }
 
-
+    [JSInvokable]
+    public async Task ShowSuccess(string msg){
+        await SDKNotificationService.ShowSuccess(msg);
+    }
 }
