@@ -1,4 +1,5 @@
 @inherits FieldClass<bool>
+@using System.Linq.Expressions
 @using Siesa.SDK.Frontend.Components.Fields
 @using Siesa.SDK.Frontend.Components.FormManager.Fields
 
@@ -6,7 +7,8 @@
 
     <SDKSwitch Value="@(BindValue)" 
     ValueChanged="@((value) => {SetValue(value);})" 
-    Disabled="@_disabled" />
+    Disabled="@_disabled" 
+    ValueExpression="@ValueExpression"/>
 
     @if (FieldOpt.ViewContext != "DetailView"){
 
@@ -16,6 +18,7 @@
 }
 
 @code{
+    public Expression<Func<bool>> ValueExpression { get; set; }
     private bool _disabled;
     private void isDisabled(){
         _disabled = (FieldOpt.Disabled || FieldOpt.ViewContext == "DetailView");
@@ -24,6 +27,14 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
+        isDisabled();
+        var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
+        ValueExpression = (Expression<Func<bool>>)Expression.Lambda(typeof(Func<>).MakeGenericType(typeof(bool)), access);
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
         isDisabled();
     }
 }

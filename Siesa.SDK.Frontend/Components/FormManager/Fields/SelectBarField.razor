@@ -23,7 +23,8 @@
         Value="@BindValue"
         ValueChanged="@((newVal) => SetValue(newVal))"
         Data="@_options"
-        Disabled="@_disabled" />
+        Disabled="@_disabled"
+        ValueExpression="@ValueExpression" />
 
         @FieldValidationTemplate
     }
@@ -32,8 +33,8 @@
 @code {
 
     private bool _disabled;
-    [Parameter] public IEnumerable<SelectBarItemWrap<TItem>> Options { get; set; }
-
+    [Parameter] public IEnumerable<SelectBarItemWrap<TItem>> Options { get; set; }        
+    Expression<Func<TItem>> ValueExpression { get; set; }
     private Type enumType { get; set; }
 
     private IEnumerable<SelectBarItemWrap<TItem>> _options
@@ -101,6 +102,14 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
+        var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
+        ValueExpression = (Expression<Func<TItem>>)Expression.Lambda(typeof(Func<>).MakeGenericType(typeof(TItem)), access);
+        isDisabled();
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
         isDisabled();
     }
 
