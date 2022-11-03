@@ -10,6 +10,7 @@
 @using Siesa.SDK.Frontend.Components.Documentation.FormManager
 @using Siesa.SDK.Frontend.Components.Documentation.Layout
 @using Siesa.SDK.Frontend.Components.Documentation.ViewsBuilder
+@using Siesa.SDK.Frontend.Components.Documentation.DataAnnotations
 
 
 @layout EmptyLayout
@@ -121,6 +122,11 @@
                     new ComponentDemo{ComponentName="Viewdef", ComponentFragment = @<DemoViewdef />}
                 },Icon ="fa-solid fa-layer-group"
             }, 
+            new ComponentCategory() {
+                Name = "DataAnnotations", Components = {
+                    new ComponentDemo{ComponentName="Viewdef", ComponentFragment = @<DemoDataAnnotations />}
+                },Icon ="fa-solid fa-notes"
+            },
 
         };
     }
