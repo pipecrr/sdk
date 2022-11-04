@@ -314,6 +314,7 @@ namespace Siesa.SDK.Backend.Access
             if (dbEnumType == EnumDBType.PostgreSQL)
             {
                 modelBuilder.AddConcurrencyTokenConvention();
+                modelBuilder.RemoveRowVersionConvention();
             }
             else if (dbEnumType == EnumDBType.SQLServer)
             {
