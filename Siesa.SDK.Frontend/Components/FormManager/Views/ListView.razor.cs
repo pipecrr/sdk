@@ -114,6 +114,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private bool CanDelete;
         private bool CanDetail;
         private bool CanList;
+        public string StyleForm { get; set; } = "search_back position-relative mb-3";
 
 
         Guid needUpdate;
@@ -503,6 +504,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             LoadingData = false;
             LoadingSearch = false;
             ShowList = true;
+            GetCssHideForm(true);
+            StateHasChanged();
+        }
+
+        public void GetCssHideForm(bool hideForm){
+            if(hideForm){
+                StyleForm = "search_back search_back_hide position-relative mb-3";
+            }
+            else
+            {
+                StyleForm = "search_back position-relative mb-3";
+            }
             StateHasChanged();
         }
 

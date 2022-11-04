@@ -12,22 +12,20 @@ else
 {
     @if(ShowSearchForm && HasSearchViewdef)
     {
-        
-        <div  class="search_back position-relative mb-3" >
-            <FreeForm @ref="@SearchFormRef" @key="@GetFormKey()"  FormID="@SearchFormID" Viewdef="search" BusinessName="@BusinessName" BusinessObj="@BusinessObj" SetTopBar="false" ValidateForm="false" OnSubmit="@OnClickSearch"/>
-            <div class="d-flex flex-wrap justify-content-center">
-                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
-                    <SDKButton form="@SearchFormID" CssClass="w-100" RenderStyle="SDKButtonRenderStyle.Primary" SubmitFormOnClick="true" Click="@OnClickSearch">
-                        @if(LoadingSearch)
-                        {
-                            <i class="mr-1 fas fa-spinner fa-pulse"></i>
-                        }
-                        <ResourceViewer ResourceTag="Action.Search" />
-                    </SDKButton>
+            <div  class="@StyleForm">
+                <FreeForm @ref="@SearchFormRef" @key="@GetFormKey()"  FormID="@SearchFormID" Viewdef="search" BusinessName="@BusinessName" BusinessObj="@BusinessObj" SetTopBar="false" ValidateForm="false" OnSubmit="@OnClickSearch"/>
+                <div class="d-flex flex-wrap justify-content-center">
+                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
+                        <SDKButton form="@SearchFormID" CssClass="w-100" RenderStyle="SDKButtonRenderStyle.Primary" SubmitFormOnClick="true" Click="@OnClickSearch">
+                            @if(LoadingSearch)
+                            {
+                                <i class="mr-1 fas fa-spinner fa-pulse"></i>
+                            }
+                            <ResourceViewer ResourceTag="Action.Search" />
+                        </SDKButton>
+                    </div>
                 </div>
             </div>
-        </div>
-
     }
 
     @if(ShowList)
@@ -282,7 +280,7 @@ else
     @if(SetTopBar)
     {
         <PageTitle><ResourceViewer ResourceTag="@($"{BusinessName}.Plural")" /></PageTitle>
-        <SetTopBar HasExtraButtons="@(ListViewModel.Buttons != null && ListViewModel.Buttons.Count > 0 ? true: false)" BusinessObj="@BusinessObj">
+        <SetTopBar HasExtraButtons="@(ListViewModel.Buttons != null && ListViewModel.Buttons.Count > 0 ? true: false)" BusinessObj="@BusinessObj" ListView="@this">
             <TopBarTitle><ResourceViewer ResourceTag="@($"{BusinessName}.Plural")" /></TopBarTitle>
             <TopBarButtons>
                 @if(CanCreate)

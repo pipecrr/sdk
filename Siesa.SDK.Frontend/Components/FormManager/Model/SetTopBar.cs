@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Siesa.SDK.Entities;
+using Siesa.SDK.Frontend.Components.FormManager.Views;
 using Siesa.SDK.Frontend.Components.Layout;
 using System;
 using System.Collections.Generic;
@@ -40,6 +41,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
 
         [Parameter] 
         public EventCallback<E00201_Company> OnChangeCompany { get; set; }
+
+        [Parameter]
+        public ListView ListView { get; set; }
+
+
 
         protected override void OnInitialized()
         {

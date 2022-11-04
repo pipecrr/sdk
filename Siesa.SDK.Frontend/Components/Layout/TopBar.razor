@@ -29,6 +29,7 @@
             @if(MainLayout != null && MainLayout.IsDefaultArea)
             {
                 <TopBarButton  ResourceTag="Action.Expand" IconCssClass="@GetExpandIcon()" Click="@OnClickExpand"/>
+                <TopBarButton  ResourceTag="Action.AdvanceSearch" IconCssClass="fa-solid fa-magnifying-glass-plus" Click="@SearchAdvance"/>
             }
             @LayoutService.TopBarButtons
             @if(LayoutService.HasExtraButtons)
@@ -84,6 +85,8 @@
     [Parameter] public EventCallback<E00201_Company> OnChangeCompany { get; set; } 
 
     [Inject] public ILayoutService LayoutService { get; set; }
+
+    [Parameter] public ListView ListView { get; set; }
 
     private bool ShowMoreOptions = false;
 
@@ -194,13 +197,22 @@
             }
             StateHasChanged();
         }
+
+        if(e.PropertyName == nameof(ILayoutService.ListView)){
+
+            if(LayoutService != null){
+
+                ListView = LayoutService.ListView;
+            }
+            StateHasChanged();
+        }
         
         if (
             e.PropertyName == nameof(ILayoutService.TopBarTitle) || 
             e.PropertyName == nameof(ILayoutService.TopBarButtons) || 
             e.PropertyName == nameof(ILayoutService.TopBarExtraButtons) || 
             e.PropertyName == nameof(ILayoutService.StyleName) ||
-            e.PropertyName == nameof(ILayoutService.HasExtraButtons) 
+            e.PropertyName == nameof(ILayoutService.HasExtraButtons)
             ) 
         {
             StateHasChanged();
@@ -291,4 +303,7 @@
         return "fa-solid fa-expand";
     }
 
+    private void SearchAdvance(){
+        ListView.GetCssHideForm(false);
+    }
 }
