@@ -36,6 +36,8 @@
 
     /* Base: color primario light */
     --color_button_back: linear-gradient(135deg, rgba(88,90,213,.3) 0%, rgba(88,90,213,1) 100%);
+    /* Base: color primario light */
+    --color_search_back: linear-gradient(180deg, rgba(88,90,213,.3) 0%, rgba(88,90,213,1) 100%);
     /* Base: color primario con 20% de transparencia */
     --color_primary_shadow: #1031A333;
     --shadow_standar: 0px 3px 12px var(--color_primary_shadow);
@@ -554,6 +556,33 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
     height: 1.25rem;
 }
 
+.search_back::before{
+    content: "";
+    background: var(--color_search_back);
+    width: 100%;
+    height: calc(100% + 3rem);
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-bottom-left-radius: var(--border_radius_standar);
+    border-bottom-right-radius: var(--border_radius_standar);
+    padding-top: 3rem;
+    transform: translateY(-3rem);
+    transition: all 0.5s ease;
+    opacity: 0.15;
+}
+.search_back{
+    transition: all 0.6s ease;
+    height: auto;
+    padding-bottom: 1rem;
+}
+.search_back_hide{
+    transition: all 0.6s ease;
+    overflow: hidden;
+    height: 0;
+    padding-bottom: 0;
+}
+
 @media (min-width: 1400px) { 
     .col-xxl-12 {
         flex: 0 0 auto;
@@ -827,18 +856,18 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
 }
 .whcm_company_select{
     position: absolute;
-    right: 1rem;
+    right: 2rem;
     top: -0.1rem;
     z-index: 1;
 } 
 .whcm_company_select > select{
     color: var(--color_light);
-    background: var(--color_primary_dark) !important;
+    background: var(--color_primary) !important;
     border: none;
     border-radius:  0 0 var(--border_radius_standar) var(--border_radius_standar) ;
     line-height: 1;
     height: auto;
-    padding: 2.35rem 2rem 0.1rem 0.5rem
+    padding: 2.35rem 2rem 0.2rem 0.5rem
 }
 .whcm_company_select > select:focus{
     color: var(--color_light);
