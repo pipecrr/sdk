@@ -91,6 +91,16 @@ namespace Siesa.SDK.Backend.Extensions
                 }
             });
         }
+        public static void RemoveRowVersionConvention(this ModelBuilder builder)
+        {
+            Conventions.Add(et => {
+                var rowversion_property = et.FindProperty("RowVersion");
+                if(rowversion_property != null)
+                {
+                    builder.Entity(et.Name).Ignore(rowversion_property.Name);
+                }
+            });
+        }
 
         public static void AddConcurrencyTokenConvention(this ModelBuilder builder)
         {
