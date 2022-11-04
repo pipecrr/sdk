@@ -16,6 +16,7 @@ using Siesa.SDK.Shared.Criptography;
 using Siesa.SDK.Shared.Application;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Builder;
+using Blazor.IndexedDB.Framework;
 namespace Siesa.SDK.Frontend {
     public static class SiesaSecurityExtensions
     {
@@ -44,6 +45,8 @@ namespace Siesa.SDK.Frontend {
             services.AddSignalR(e => {
                 e.MaximumReceiveMessageSize = 102400000;
             });
+            
+            services.AddScoped<IIndexedDbFactory,   IndexedDbFactory>();
 
             SDKApp.AddAssembly(typeof(LayoutService).Assembly);
         }

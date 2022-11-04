@@ -2,11 +2,18 @@
 @using Siesa.SDK.Shared.Services
 @inject IAuthenticationService AuthenticationService
 @inject MenuService MenuService
+@inject IIndexedDbFactory DbFactory
 
 @code {
     protected override async void OnInitialized()
     {
         MenuService.ClearMenu();
+        using (var db = await this.DbFactory.Create<IndexDb>()){
+            db.Cultures.Clear();
+            db.Resources.Clear();
+            db.ResourcesDetail.Clear();
+            db.SaveChanges();
+        }
         await AuthenticationService.Logout();
     }
 }

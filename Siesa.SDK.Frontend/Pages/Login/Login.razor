@@ -18,6 +18,7 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Shared.DataAnnotations
 @using Siesa.SDK.Frontend.Components.Fields
+@inject IIndexedDbFactory DbFactory
 
 <PageTitle>Login</PageTitle>
 
@@ -329,6 +330,7 @@
         try
         {
             await AuthenticationService.Login(model.Username, model.Password,SelectedConnection.Rowid);
+            await DbFactory.Create<IndexDb>();
             NavigationManager.TryGetQueryString("returnUrl", out string returnUrl);
             if (returnUrl == null || returnUrl == "null")
             {
@@ -336,6 +338,7 @@
             }
             SDKNotificationService.ShowSuccess(message, culture: AuthenticationService.GetRoiwdCulture());
             NavigationManager.NavigateTo(returnUrl);
+            await UtilsManager.SyncIndexedBD();
         }
         catch (Exception ex)
         {
