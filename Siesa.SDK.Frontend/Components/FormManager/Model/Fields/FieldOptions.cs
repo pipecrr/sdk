@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 
 
+
 namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 {
     public class FieldObj
@@ -97,7 +98,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             typeof(SwitchField),
             typeof(SelectBarField<>),
             typeof(TextField),
-            typeof(EmailField)
+            typeof(EmailField),
+            typeof(RadioButtonField<>)
         };
 
         private FieldObj InitField(object modelObj)
