@@ -72,6 +72,10 @@ export function InitSDK(dotnethelper){
     // //save the guid in session storage
     // sessionStorage.setItem('guid', tab_guid);
     checkAndRenewToken(dotnethelper);
+
+    // dispatch event
+    var event = new CustomEvent('sdkinit', { detail: { dotnethelper: dotnethelper } });
+    document.dispatchEvent(event);
 }
 
 window.addEventListener('storage', function(event){

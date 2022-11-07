@@ -1,0 +1,38 @@
+@inject IJSRuntime JSRuntime
+
+
+
+@code {
+    private IJSObjectReference _jsModule;
+
+    protected override void OnParametersSet()
+    {
+        //Init();
+        base.OnParametersSet();
+    }
+
+    private async Task ImportJs()
+    {
+        try
+        {
+            _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/Components/Visualization/SDKGuidedTour.razor.js");
+        }
+        catch (Exception)
+        {
+        }
+        /*
+        {
+            await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/js/utils.js");
+        }catch (Exception)
+        {
+        }*/
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender || _jsModule == null){
+            await ImportJs();
+        }
+    }
+
+}
