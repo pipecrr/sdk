@@ -18,6 +18,7 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Shared.DataAnnotations
 @using Siesa.SDK.Frontend.Components.Fields
+@using Blazor.IndexedDB.Framework;
 @inject IIndexedDbFactory DbFactory
 
 <PageTitle>Login</PageTitle>
@@ -331,6 +332,7 @@
         {
             await AuthenticationService.Login(model.Username, model.Password,SelectedConnection.Rowid);
             await DbFactory.Create<IndexDb>();
+            await UtilsManager.SyncIndexedBD();
             NavigationManager.TryGetQueryString("returnUrl", out string returnUrl);
             if (returnUrl == null || returnUrl == "null")
             {
@@ -338,7 +340,6 @@
             }
             SDKNotificationService.ShowSuccess(message, culture: AuthenticationService.GetRoiwdCulture());
             NavigationManager.NavigateTo(returnUrl);
-            await UtilsManager.SyncIndexedBD();
         }
         catch (Exception ex)
         {

@@ -16,6 +16,8 @@ namespace Siesa.SDK.Frontend.Data
                Cultures.Clear();
                Resources.Clear();
                ResourcesDetail.Clear();
+
+               await SaveChanges();
            }
         }
    }

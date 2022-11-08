@@ -7,13 +7,10 @@
 @code {
     protected override async void OnInitialized()
     {
-        MenuService.ClearMenu();
         using (var db = await this.DbFactory.Create<IndexDb>()){
-            db.Cultures.Clear();
-            db.Resources.Clear();
-            db.ResourcesDetail.Clear();
-            db.SaveChanges();
+            await db.ClearAll();
         }
+        MenuService.ClearMenu();
         await AuthenticationService.Logout();
     }
 }

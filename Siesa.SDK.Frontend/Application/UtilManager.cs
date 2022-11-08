@@ -104,11 +104,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         public async Task SyncIndexedBD(){
             Dictionary<Int64, Dictionary<string, string>> resourceValuesDict =  ResourceManager.GetResourceValuesDict();
             using (var db = await this._dbFactoryService.Create<IndexDb>()){
-                //db.ResourcesDetail.Clear();
-                
+                await db.ClearAll();
                 foreach (var item in resourceValuesDict)
                 {
                     var idCulture = item.Key.ToString();
+                    
                     db.Cultures.Add(new Culture { Id = idCulture});
                     foreach (var item2 in item.Value){
                         var idResource = item2.Key;

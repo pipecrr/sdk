@@ -17,6 +17,8 @@ using Siesa.SDK.Shared.Application;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Builder;
 using Blazor.IndexedDB.Framework;
+using System.Collections.Generic;
+
 namespace Siesa.SDK.Frontend {
     public static class SiesaSecurityExtensions
     {
@@ -45,7 +47,23 @@ namespace Siesa.SDK.Frontend {
             services.AddSignalR(e => {
                 e.MaximumReceiveMessageSize = 102400000;
             });
-            
+
+           /* services.AddBlazorDB(options =>
+            {
+                options.Name = "SiesaSDK";
+                options.Version = 1;
+                options.StoreSchemas = new List<StoreSchema>() {
+                     new StoreSchema()
+                    {
+                        Name = "Person",
+                        PrimaryKey = "id",
+                        PrimaryKeyAuto = true,
+                        UniqueIndexes = new List<string> { "guid" },
+                        Indexes = new List<string> { "name" }
+                    }
+                };
+            });*/
+
             services.AddScoped<IIndexedDbFactory,   IndexedDbFactory>();
 
             SDKApp.AddAssembly(typeof(LayoutService).Assembly);
