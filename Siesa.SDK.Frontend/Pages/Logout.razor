@@ -7,9 +7,9 @@
 @code {
     protected override async void OnInitialized()
     {
-        using (var db = await this.DbFactory.Create<IndexDb>()){
+        /*using (var db = await this.DbFactory.Create<IndexDb>()){
             await db.ClearAll();
-        }
+        }*/
         MenuService.ClearMenu();
         await AuthenticationService.Logout();
     }

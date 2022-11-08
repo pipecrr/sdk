@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Blazor.IndexedDB.Framework;
 using Microsoft.JSInterop;
+using Siesa.SDK.Entities;
     
 namespace Siesa.SDK.Frontend.Data
    {

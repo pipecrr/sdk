@@ -100,25 +100,5 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
             }
             return null;
         }
-
-        public async Task SyncIndexedBD(){
-            Dictionary<Int64, Dictionary<string, string>> resourceValuesDict =  ResourceManager.GetResourceValuesDict();
-            using (var db = await this._dbFactoryService.Create<IndexDb>()){
-                await db.ClearAll();
-                foreach (var item in resourceValuesDict)
-                {
-                    var idCulture = item.Key.ToString();
-                    
-                    db.Cultures.Add(new Culture { Id = idCulture});
-                    foreach (var item2 in item.Value){
-                        var idResource = item2.Key;
-                        var description = item2.Value;
-                        db.Resources.Add(new Resource { Id = idResource});
-                        db.ResourcesDetail.Add(new ResourceDetail { IdCulture = idCulture, IdResource = idResource, Description = description});
-                    }
-                }
-                await db.SaveChanges();
-            }
-        }
     }
-}   
+}
