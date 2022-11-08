@@ -515,7 +515,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 StyleSearchForm = "search_back position-relative mb-3";
             }
-            StateHasChanged();
+            try
+            {
+                StateHasChanged();
+            }
+            catch (System.Exception)
+            {
+                _ = InvokeAsync(() => StateHasChanged());
+            }
         }
 
         private void OnClickCustomButton(Button button)

@@ -14,5 +14,16 @@ namespace Siesa.SDK.Entities
 {
 	public partial class E00271_AttachmentDetail
 	{
+		public override string ToString()
+		{
+			if(!string.IsNullOrEmpty(FileName))
+			{
+				return FileName;
+			}
+			else
+			{
+				return $"{Rowid}";
+			}
+		}
 	}
 }
