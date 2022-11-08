@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Siesa.SDK.Entities;
 using Siesa.SDK.Frontend.Components.FormManager.Model;
-using Siesa.SDK.Frontend.Components.FormManager.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

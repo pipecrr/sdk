@@ -29,7 +29,6 @@
             @if(MainLayout != null && MainLayout.IsDefaultArea)
             {
                 <TopBarButton  ResourceTag="Action.Expand" IconCssClass="@GetExpandIcon()" Click="@OnClickExpand"/>
-                <TopBarButton  ResourceTag="Action.AdvanceSearch" IconCssClass="fa-solid fa-magnifying-glass-plus" Click="@SearchAdvance"/>
             }
             @LayoutService.TopBarButtons
             @if(LayoutService.HasExtraButtons)
