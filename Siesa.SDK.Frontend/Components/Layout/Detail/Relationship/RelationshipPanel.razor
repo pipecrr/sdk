@@ -1,33 +1,24 @@
 @using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Frontend.Components.Visualization
 @inject DialogService DialogService
 @inject IAuthenticationService AuthenticationService
 
 @if(ShowHeader){
-    <div class="relationship-panel">
-        <div class="relationship-panel-header">
-            <span class="relationship-panel-header-title"  @onclick="Toggle"><ResourceViewer ResourceTag=@Relationship.ResourceTag /></span>
-            
-            <span class="relationship-panel-header-close">
-                @if(isOpen){
-                    <span class="oi oi-chevron-bottom"  @onclick="Toggle"></span>
-                }else{
-                    <span class="oi oi-chevron-right"  @onclick="Toggle"></span>
-                }
-            </span>
-            @* <span class="relationship-panel-header-count">@count</span> *@
-        </div>
-        @if(isOpen){
-            <div class="relationship-panel-body">
-                <InlineCrud
-                    BLNameParentAttatchment="@BLNameParentAttatchment"
-                    BusinessName="@Relationship.RelatedBusiness"
-                    Filter="@filter"
-                    DefaultFieldsCreate="@DefaultFieldsCreate" AllowCreate="@AllowCreate" AllowEdit="@AllowEdit" AllowDelete="@AllowDelete"
-                    AllowDetail="@AllowDetail"
-                />
-            </div>
-        }
-    </div>
+     <SDKCollapse>
+        <Items>
+            <SDKCollapseItem ResourceTag="@Relationship.ResourceTag">
+                <div class="relationship-panel-body">
+                    <InlineCrud
+                        BLNameParentAttatchment="@BLNameParentAttatchment"
+                        BusinessName="@Relationship.RelatedBusiness"
+                        Filter="@filter"
+                        DefaultFieldsCreate="@DefaultFieldsCreate" AllowCreate="@AllowCreate" AllowEdit="@AllowEdit" AllowDelete="@AllowDelete"
+                        AllowDetail="@AllowDetail"
+                    />
+                </div>
+            </SDKCollapseItem>
+        </Items>
+    </SDKCollapse>
 } else {
     <InlineCrud
         BusinessName="@Relationship.RelatedBusiness"
