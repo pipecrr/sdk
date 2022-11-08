@@ -8,12 +8,16 @@
     </div>
     <div class="row px-3 mt-3"> 
         <div class="col-md-6 p-3 ">
-                <h5><strong>Este atributo actualmente no tiene una funcionalidad real, pero se penso
-                         inicialmente para indicar las tablas que desde el sdk se les debera calcular el rowid</strong></h5>
+                <h5><strong>Este atributo sirve para indicar las entidades que queremos que sean auditadas, es decir, 
+                    que el servicio de logs guarde un registro de todos los cambios de dicha entidad
+                </strong></h5>
                 <SDKCard>
-                    <p>Dentro del proyecto hay varias entidades que cumpliran con esta funcion:</p>
-                    
-                    <SDKFileViewer type="SDKTypeFile.Image" url="_content/Siesa.SDK.Frontend/images/SDKIdentity.png" />  
+                
+                    <SDKFileViewer type="SDKTypeFile.Image" url="_content/Siesa.SDK.Frontend/images/SDKLogEntity.png" /> 
+                    <br>
+                    <p>Tambien podemos especificar los campos que queremos que se auditen por medio de parametro, asi:</p> 
+                    <br>    
+                    <SDKFileViewer type="SDKTypeFile.Image" url="_content/Siesa.SDK.Frontend/images/SDKLogEntityParam.png" /> 
                 </SDKCard>
         </div>
     </div>
