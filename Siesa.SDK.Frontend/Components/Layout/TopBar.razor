@@ -86,8 +86,6 @@
 
     [Inject] public ILayoutService LayoutService { get; set; }
 
-    [Parameter] public ListView ListView { get; set; }
-
     private bool ShowMoreOptions = false;
 
     private bool ShowCompanies { get; set; } = false;
@@ -197,15 +195,6 @@
             }
             StateHasChanged();
         }
-
-        if(e.PropertyName == nameof(ILayoutService.ListView)){
-
-            if(LayoutService != null){
-
-                ListView = LayoutService.ListView;
-            }
-            StateHasChanged();
-        }
         
         if (
             e.PropertyName == nameof(ILayoutService.TopBarTitle) || 
@@ -303,7 +292,4 @@
         return "fa-solid fa-expand";
     }
 
-    private void SearchAdvance(){
-        ListView.GetCssHideForm(false);
-    }
 }

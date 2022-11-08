@@ -23,7 +23,6 @@ namespace Siesa.SDK.Frontend.Components.Layout
         public dynamic BusinessObj => TopBarSetter?.BusinessObj;
         public bool HiddenCompaies => TopBarSetter != null ? TopBarSetter.HiddenCompaies : false;
         public bool DisableCompanies => TopBarSetter != null ? TopBarSetter.DisableCompanies: false;
-        public ListView ListView => TopBarSetter != null ? TopBarSetter?.ListView : null;
         public EventCallback<E00201_Company> OnChangeCompany => TopBarSetter != null ? TopBarSetter.OnChangeCompany : new EventCallback<E00201_Company>(null, null);
 
         public SetTopBar TopBarSetter
@@ -47,7 +46,6 @@ namespace Siesa.SDK.Frontend.Components.Layout
             NotifyPropertyChanged(nameof(HiddenCompaies)); 
             NotifyPropertyChanged(nameof(DisableCompanies));
             NotifyPropertyChanged(nameof(OnChangeCompany));
-            NotifyPropertyChanged(nameof(ListView));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

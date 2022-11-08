@@ -42,11 +42,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         [Parameter] 
         public EventCallback<E00201_Company> OnChangeCompany { get; set; }
 
-        [Parameter]
-        public ListView ListView { get; set; }
-
-
-
         protected override void OnInitialized()
         {
             if (Layout != null)
