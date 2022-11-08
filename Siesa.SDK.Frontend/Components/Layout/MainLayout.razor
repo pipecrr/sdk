@@ -269,4 +269,10 @@
     public async Task ShowSuccess(string msg){
         await SDKNotificationService.ShowSuccess(msg);
     }
+
+    [JSInvokable]
+    public void NavigateTo(string url)
+    {
+        NavigationService.NavigateTo(url);
+    }
 }

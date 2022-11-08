@@ -1,5 +1,6 @@
 @inject IJSRuntime JSRuntime
 @inject NavigationManager Navigation
+@inject NavigationService NavigationService
 @inject Radzen.DialogService dialogService
 @using Siesa.SDK.Frontend.Components.Layout
 @using Siesa.SDK.Frontend.Components.Visualization
@@ -149,17 +150,17 @@
 
     void GoToCreate()
     {
-        Navigation.NavigateTo($"/{_blName}/create/");
+        NavigationService.NavigateTo($"/{_blName}/create/");
     }
 
     void GoToEdit()
     {
-        Navigation.NavigateTo($"/{_blName}/edit/{_flexRowId}/");
+        NavigationService.NavigateTo($"/{_blName}/edit/{_flexRowId}/");
     }
 
     void GoToList()
     {
-        Navigation.NavigateTo($"/{_blName}/");
+        NavigationService.NavigateTo($"/{_blName}/");
     }
 
     async Task OnClickDelete()
@@ -170,7 +171,7 @@
         if(dialog != null && dialog == true){
             Business.BaseObj.Rowid = _flexRowId;
             await Business.DeleteAsync();
-            Navigation.NavigateTo($"/{_blName}/");
+            NavigationService.NavigateTo($"/{_blName}/");
         }
         //StateHasChanged();
     }
