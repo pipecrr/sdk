@@ -12,20 +12,20 @@ else
 {
     @if(ShowSearchForm && HasSearchViewdef)
     {
-            <div  class="@StyleForm">
-                <FreeForm @ref="@SearchFormRef" @key="@GetFormKey()"  FormID="@SearchFormID" Viewdef="search" BusinessName="@BusinessName" BusinessObj="@BusinessObj" SetTopBar="false" ValidateForm="false" OnSubmit="@OnClickSearch"/>
-                <div class="d-flex flex-wrap justify-content-center">
-                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
-                        <SDKButton form="@SearchFormID" CssClass="w-100" RenderStyle="SDKButtonRenderStyle.Primary" SubmitFormOnClick="true" Click="@OnClickSearch">
-                            @if(LoadingSearch)
-                            {
-                                <i class="mr-1 fas fa-spinner fa-pulse"></i>
-                            }
-                            <ResourceViewer ResourceTag="Action.Search" />
-                        </SDKButton>
-                    </div>
+        <div class="@StyleSearchForm">
+            <FreeForm @ref="@SearchFormRef" @key="@GetFormKey()"  FormID="@SearchFormID" Viewdef="search" BusinessName="@BusinessName" BusinessObj="@BusinessObj" SetTopBar="false" ValidateForm="false" OnSubmit="@OnClickSearch"/>
+            <div class="d-flex flex-wrap justify-content-center">
+                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
+                    <SDKButton form="@SearchFormID" CssClass="w-100" RenderStyle="SDKButtonRenderStyle.Primary" SubmitFormOnClick="true" Click="@OnClickSearch">
+                        @if(LoadingSearch)
+                        {
+                            <i class="mr-1 fas fa-spinner fa-pulse"></i>
+                        }
+                        <ResourceViewer ResourceTag="Action.Search" />
+                    </SDKButton>
                 </div>
             </div>
+        </div>
     }
 
     @if(ShowList)
@@ -91,37 +91,37 @@ else
             <Columns>
             @if(ListViewModel.ShowActions)
             {
-                    <RadzenDataGridColumn TItem="object" Title="Acciones" Width="100px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" HeaderCssClass="grid-column-action">
-                        <HeaderTemplate>
-                            <div class="untruncate-grid-column-action">
-                                @if(IsSubpanel && AllowCreate && CanCreate){
-                                <span
-                                    class="oi oi-plus cursor-pointer" @onclick="() => GoToCreate()"></span>
-                                }else{
-                                    <span><ResourceViewer ResourceTag="Action.Generic.Actions" /></span>
-                                }    
-                            </div>                    
-                        </HeaderTemplate>
-                    
-                        <Template Context="data">
-                            <div class="action-buttons d-flex justify-content-center">
-                                @if(CanEdit && AllowEdit){
-                                    <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToEdit(((IBaseSDK)data).GetRowid())"><i
-                                    class="fa-solid fa-pen"></i></button>
-                                }
-                                
-                                
-                                @if(CanDelete && IsSubpanel && AllowDelete){
-                                    <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToDelete(((IBaseSDK)data).GetRowid(), data.ToString())"><i
-                                    class="fa-solid fa-trash-can"></i></button>
-
-                                }
-                                @* <button class="btn btn-link grid-btn-link"
-                                @onclick="() => GoToDetail(((BaseSDK<>)data).Rowid)"><span class="oi oi-eye"></span></button> *@
-                            </div>
+                <RadzenDataGridColumn TItem="object" Title="Acciones" Width="100px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" HeaderCssClass="grid-column-action">
+                    <HeaderTemplate>
+                        <div class="untruncate-grid-column-action">
+                            @if(IsSubpanel && AllowCreate && CanCreate){
+                            <span
+                                class="oi oi-plus cursor-pointer" @onclick="() => GoToCreate()"></span>
+                            }else{
+                                <span><ResourceViewer ResourceTag="Action.Generic.Actions" /></span>
+                            }    
+                        </div>                    
+                    </HeaderTemplate>
+                
+                    <Template Context="data">
+                        <div class="action-buttons d-flex justify-content-center">
+                            @if(CanEdit && AllowEdit){
+                                <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToEdit(((IBaseSDK)data).GetRowid())"><i
+                                class="fa-solid fa-pen"></i></button>
+                            }
                             
-                        </Template>
-                    </RadzenDataGridColumn>
+                            
+                            @if(CanDelete && IsSubpanel && AllowDelete){
+                                <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToDelete(((IBaseSDK)data).GetRowid(), data.ToString())"><i
+                                class="fa-solid fa-trash-can"></i></button>
+
+                            }
+                            @* <button class="btn btn-link grid-btn-link"
+                            @onclick="() => GoToDetail(((BaseSDK<>)data).Rowid)"><span class="oi oi-eye"></span></button> *@
+                        </div>
+                        
+                    </Template>
+                </RadzenDataGridColumn>
                 }
                 @foreach (var field in ListViewModel.Fields)
                 {
@@ -283,6 +283,10 @@ else
         <SetTopBar HasExtraButtons="@(ListViewModel.Buttons != null && ListViewModel.Buttons.Count > 0 ? true: false)" BusinessObj="@BusinessObj">
             <TopBarTitle><ResourceViewer ResourceTag="@($"{BusinessName}.Plural")" /></TopBarTitle>
             <TopBarButtons>
+                if(ShowSearchForm && HasSearchViewdef)
+                {
+                    <TopBarButton ResourceTag="Action.AdvanceSearch" IconCssClass="fa-solid fa-magnifying-glass-plus" Click="@(()=> SetSearchFromVisibility(false))"/>
+                }
                 @if(CanCreate)
                 {
                     <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus" />
