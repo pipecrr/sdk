@@ -286,6 +286,7 @@
         //await getUserlang();
         init_loading = false;
         await base.OnInitializedAsync();
+        await ImportJs();
         StateHasChanged();
     }
 
@@ -473,5 +474,16 @@
         AuthenticationService.SetSelectedConnection(SelectedConnection);
         
         StateHasChanged();
+    }
+
+    private async Task ImportJs()
+    {
+        try
+        {
+            await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/Pages/Login/Login.razor.js");
+        }
+        catch (Exception)
+        {
+        }
     }
 }

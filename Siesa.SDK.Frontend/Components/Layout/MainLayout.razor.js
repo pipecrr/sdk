@@ -84,10 +84,10 @@ window.addEventListener('storage', function(event){
             window.location.href = '/login';
         }
         
-        // if(event.oldValue != null && event.oldValue != event.newValue){
-        //     //reload page
-        //     window.location.reload();
-        // }
+        if(event.oldValue != event.newValue && window.location.pathname == '/login'){
+            // reload page
+            window.location.reload();
+        }
     }
 });
 

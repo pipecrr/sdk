@@ -144,7 +144,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.0.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="6.0.0" />
-		<PackageReference Include="Radzen.Blazor" Version="4.1.13" />
+		<PackageReference Include="Radzen.Blazor" Version="4.2.3" />
 		<PackageReference Include="Z.Blazor.Diagrams" Version="2.1.6" />
 		<PackageReference Include="Z.Blazor.Diagrams.Algorithms" Version="0.1.0" />
 	</ItemGroup>
