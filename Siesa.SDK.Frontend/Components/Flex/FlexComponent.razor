@@ -54,27 +54,51 @@
 
     private IJSObjectReference _jsModule;
 
+    private bool _isMounted = false;
+
     private void Init()
     {
+        bool MountFlex = false;
         Navigation.TryGetQueryString("sdk_debug",out string SDKDebugVar);
         if(!string.IsNullOrEmpty(SDKDebugVar))
         {
+            if(!_isDebug)
+            {
+                MountFlex = true;
+            }
             _isDebug = true;
         }
         //_isDebug = true;
 
-        Navigation.TryGetQueryString("currentView",out _currentView);
-        if(string.IsNullOrEmpty(_currentView))
+        Navigation.TryGetQueryString("currentView",out string SDKCurrentView);
+        
+        if(string.IsNullOrEmpty(SDKCurrentView))
         {
-            _currentView = "create";
-        }else if(_currentView == "detail")
+            SDKCurrentView = "create";
+        }
+
+        if(SDKCurrentView != _currentView)
         {
+            MountFlex = true;
+            _currentView = SDKCurrentView;
+        }
+
+        if(_currentView == "detail")
+        {
+            if(!_isDetail)
+            {
+                MountFlex = true;
+            }
             _isDetail = true;
         }
 
         Navigation.TryGetQueryString("flexRowid",out string SDKFlexRowIdVar);
         if(!string.IsNullOrEmpty(SDKFlexRowIdVar))
         {
+            if(int.Parse(SDKFlexRowIdVar) != _flexRowId)
+            {
+                MountFlex = true;
+            }
             _flexRowId = int.Parse(SDKFlexRowIdVar);
         }  
         FlexAttributes.Clear();
@@ -88,8 +112,19 @@
         }        
 
         StateHasChanged();
+        if(MountFlex || !_isMounted)
+        {
+            if(_jsModule == null){
+                _ = InvokeAsync(async () => {
+                    await Task.Delay(250);
+                    JSRuntime.InvokeAsync<object>("window.MountFlex", flexElementId);
+                });
+            }else{
+                JSRuntime.InvokeAsync<object>("window.MountFlex", flexElementId);
+            }
+            _isMounted = true;
+        }
 
-        JSRuntime.InvokeAsync<object>("window.MountFlex", flexElementId);
 
     }
 

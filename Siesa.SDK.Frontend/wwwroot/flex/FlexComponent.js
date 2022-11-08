@@ -23,11 +23,19 @@ function loadCss(url){
     document.getElementsByTagName("head")[0].appendChild(link);
 }
 
-function MountFlex()
+function MountFlex(div_id, retries = 0)
 {
     if(document.getElementById("flexdebug") == null)
     {
-        return;
+        console.log("Flex debug div not found, creating it", retries);
+        if(retries < 10)
+        {
+            setTimeout(function(){MountFlex(div_id, retries + 1)}, 500);
+            return;
+        }else{
+            console.log("FlexComponent.js: Flex not loaded");
+            return;
+        }
     }
     //
     document.getElementById("flexdebug").innerHTML = "";
