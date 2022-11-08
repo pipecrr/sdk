@@ -18,6 +18,8 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Shared.DataAnnotations
 @using Siesa.SDK.Frontend.Components.Fields
+@using Blazor.IndexedDB.Framework;
+@inject IIndexedDbFactory DbFactory
 
 <PageTitle>Login</PageTitle>
 
@@ -330,6 +332,13 @@
         try
         {
             await AuthenticationService.Login(model.Username, model.Password,SelectedConnection.Rowid);
+            try
+            {
+                setDataIndexedDB(RowidCulture);            
+            }catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
             NavigationManager.TryGetQueryString("returnUrl", out string returnUrl);
             if (returnUrl == null || returnUrl == "null")
             {
@@ -485,5 +494,45 @@
         catch (Exception)
         {
         }
+    }
+
+    public async Task setDataIndexedDB(short RowidCulture){
+        await DbFactory.Create<IndexDb>();
+        var BLResource = BackendRouterService.GetSDKBusinessModel("BLResource", AuthenticationService);
+        var result = await BLResource.Call("GetAllResourcesForIndexedDB", RowidCulture);
+
+        if(result.Success){
+            var resources = result.Data as List<SDKResourceIndexedDbDTO>;
+            var listResources = new List<string>();
+            var listCultures = new List<string>();
+            using (var db = await DbFactory.Create<IndexDb>()){
+                await db.ClearAll();
+                foreach (var resource in resources)
+                {   
+                    var rowid = resource.Rowid;
+                    var idResource = resource.IdResource.ToString();
+                    var description = resource.Description;
+                    var culture = resource.RowidCulture.ToString();
+
+                    if(!listCultures.Contains(culture)){
+                        listCultures.Add(culture);
+                        db.Cultures.Add(new Culture(){Id = culture});
+                    }
+                    
+                    if(!listResources.Contains(idResource)){
+                        listResources.Add(idResource);
+                        db.Resources.Add(new Resource(){
+                            Id = idResource
+                        });
+                    }
+                    db.ResourcesDetail.Add(new ResourceDetail(){
+                        IdResource = idResource,
+                        IdCulture = culture,
+                        Description = description
+                    });
+                }
+                await db.SaveChanges();
+            }
+        }       
     }
 }
