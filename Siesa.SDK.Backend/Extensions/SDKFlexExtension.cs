@@ -137,7 +137,8 @@ namespace Siesa.SDK.Backend.Extensions
                         }
                     }
                 }
-
+                //remove duplicate columns
+                strColumns = strColumns.Distinct().ToList();
                 string strSelect = string.Join(", ", strColumns);
 
                 CreateWhere(ref contextSet, generalFilters, entityType, _assemblySelect);
