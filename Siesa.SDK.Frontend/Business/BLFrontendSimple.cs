@@ -422,7 +422,7 @@ namespace Siesa.SDK.Business
             if(response.Success){
                 result.Url = response.Data.Url;
                 result.FileType = file.ContentType;
-                result.FileName = response.Data.FileName;
+                result.FileName = file.FileName;
             }else{
                 var errors = JsonConvert.DeserializeObject<List<string>> (response.Errors.ToString());
                 throw new ArgumentException(errors[0]);
