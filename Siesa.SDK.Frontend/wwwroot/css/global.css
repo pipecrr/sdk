@@ -551,6 +551,12 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
     border-color: var(--color_primary) !important;
     background-color:  var(--color_primary) !important;
 }
+
+.custom-checkbox .custom-control-input:disabled:checked~.custom-control-label::before {
+    opacity: 0.5;
+}
+
+
 .custom-control-label::before, .custom-control-label::after{
     width: 1.25rem;
     height: 1.25rem;
