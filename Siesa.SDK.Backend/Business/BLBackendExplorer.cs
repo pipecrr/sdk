@@ -25,68 +25,125 @@ namespace Siesa.SDK.Business
         [SDKExposedMethod]
         public ActionResult<long> GetNextRowId(long Rowid)
         {
-            //var pbr = context.Set<T>().Select(x => x.GetType().GetProperty("Rowid").GetValue(x,null)).AsQueryable();
-            //var nextRowid = query.OrderBy(x =>    x.GetRowid()).Select(x => x.GetRowid()).FirstOrDefault();
-            //.Where(x => (long)x > Rowid).ToList().FirstOrDefault();
-            var result = this.GetData(0,1,$"Rowid > {Rowid}",null,null); 
-            if (result is not null)
+            using (SDKContext context = CreateDbContext())
             {
-                long nextRowid = result.Data.First().Rowid;
-                return new ActionResult<long>() {Success=true, Data = nextRowid};
+                var nextRowid = context.Set<T>().AsEnumerable().Select(x => x.GetType().GetProperty("Rowid").GetValue(x,null))
+                                    .Where(x => Convert.ToInt64(x) > Rowid).FirstOrDefault();
+
+                if (nextRowid is not null)
+                {
+                    long nextRowidValue = Convert.ToInt64(nextRowid);
+                    return new ActionResult<long>() {Success=true, Data = nextRowidValue};
+                }
+                else
+                {
+                    return new BadRequestResult<long> { Success = false, Errors = new List<string>() { "Rowid Not Found" } };
+                }  
             }
-            else
-            {
-                return new BadRequestResult<long> { Success = false, Errors = new List<string>() { "Rowid Not Found" } };
-            }  
+            /*var result = this.GetData(0,1,$"Rowid > {Rowid}",null,null); 
+                if (nextRowid is not null)
+                {
+                    long nextRowid = result.Data.First().Rowid;
+                    return new ActionResult<long>() {Success=true, Data = nextRowid};
+                }
+                else
+                {
+                    return new BadRequestResult<long> { Success = false, Errors = new List<string>() { "Rowid Not Found" } };
+            }*/ 
         }
 
         [SDKExposedMethod]
         public ActionResult<long> GetPrevioustRowId(long Rowid)
         {
-           //var result = this.GetData(null,null,filter:$"Rowid < {Rowid}" ,orderBy:"Rowid desc",null); 
-           var result = this.GetData(0,1,$"Rowid < {Rowid}","Rowid desc",null);            
-            if (result is not null)
+             using (SDKContext context = CreateDbContext())
             {
-                //long nextRowid = result.Data.OrderByDescending(x=> x.Rowid).First().Rowid;
-                long nextRowid = result.Data.LastOrDefault().Rowid;
-                return new ActionResult<long>() {Success=true, Data = nextRowid};
-            }
-            else
-            {
-                return new BadRequestResult<long> { Success = false, Errors = new List<string>() { "Rowid Not Found" } };
+                var nextRowid = context.Set<T>().AsEnumerable().Select(x => x.GetType().GetProperty("Rowid").GetValue(x,null))
+                                        .Where(x => Convert.ToInt64(x) < Rowid).OrderByDescending(x => x).FirstOrDefault();
+
+                if (nextRowid is not null)
+                {
+                    long nextRowidValue = Convert.ToInt64(nextRowid);
+                    return new ActionResult<long>() {Success=true, Data = nextRowidValue};
+                }
+                else
+                {
+                    return new BadRequestResult<long> { Success = false, Errors = new List<string>() { "Rowid Not Found" } };
+                }
             }  
+
+        //    var result = this.GetData(0,1,$"Rowid < {Rowid}","Rowid desc",null);            
+        //     if (result is not null)
+        //     {
+        //         long nextRowid = result.Data.LastOrDefault().Rowid;
+        //         return new ActionResult<long>() {Success=true, Data = nextRowid};
+        //     }
+        //     else
+        //     {
+        //         return new BadRequestResult<long> { Success = false, Errors = new List<string>() { "Rowid Not Found" } };
+        //     }  
         }
 
         [SDKExposedMethod]
         public ActionResult<long> GetFirstRowid(long Rowid)
         {
-            var result = this.GetData(0,1,$"Rowid < {Rowid}",null,null); 
+            using (SDKContext context = CreateDbContext())
+            {
+                var nextRowid = context.Set<T>().AsEnumerable().Select(x => x.GetType().GetProperty("Rowid").GetValue(x,null))
+                                        .Where(x => Convert.ToInt64(x) < Rowid).FirstOrDefault();
 
-            if (result is not null)
-            {
-                long nextRowid = result.Data.First().Rowid;
-                return new ActionResult<long>() {Success=true, Data = nextRowid};
-            }
-            else
-            {
-                return new BadRequestResult<long> { Success = false, Errors = new List<string>() { "Rowid Not Found" } };
-            } 
+                if (nextRowid is not null)
+                {
+                    long nextRowidValue = Convert.ToInt64(nextRowid);
+                    return new ActionResult<long>() {Success=true, Data = nextRowidValue};
+                }
+                else
+                {
+                    return new BadRequestResult<long> { Success = false, Errors = new List<string>() { "Rowid Not Found" } };
+                }
+            }  
+
+            // var result = this.GetData(0,1,$"Rowid < {Rowid}",null,null); 
+
+            // if (result is not null)
+            // {
+            //     long nextRowid = result.Data.First().Rowid;
+            //     return new ActionResult<long>() {Success=true, Data = nextRowid};
+            // }
+            // else
+            // {
+            //     return new BadRequestResult<long> { Success = false, Errors = new List<string>() { "Rowid Not Found" } };
+            // } 
         }
 
         [SDKExposedMethod]
         public ActionResult<long> GetLastRowid(long Rowid)
         {
-            var result = this.GetData(0,1,$"Rowid > {Rowid}","Rowid desc",null); 
+            using (SDKContext context = CreateDbContext())
+            {
+                var nextRowid = context.Set<T>().AsEnumerable().Select(x => x.GetType().GetProperty("Rowid").GetValue(x,null))
+                                        .OrderByDescending(x => x).FirstOrDefault();
 
-            if (result is not null)
-            {
-                long nextRowid = result.Data.First().Rowid;
-                return new ActionResult<long>() {Success=true, Data = nextRowid};
-            }
-            else
-            {
-                return new BadRequestResult<long> { Success = false, Errors = new List<string>() { "Rowid Not Found" } };
+                if (nextRowid is not null)
+                {
+                    long nextRowidValue = Convert.ToInt64(nextRowid);
+                    return new ActionResult<long>() {Success=true, Data = nextRowidValue};
+                }
+                else
+                {
+                    return new BadRequestResult<long> { Success = false, Errors = new List<string>() { "Rowid Not Found" } };
+                }
             }  
+            // var result = this.GetData(0,1,$"Rowid > {Rowid}","Rowid desc",null); 
+
+            // if (result is not null)
+            // {
+            //     long nextRowid = result.Data.First().Rowid;
+            //     return new ActionResult<long>() {Success=true, Data = nextRowid};
+            // }
+            // else
+            // {
+            //     return new BadRequestResult<long> { Success = false, Errors = new List<string>() { "Rowid Not Found" } };
+            // }  
 
         }
     }
