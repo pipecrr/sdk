@@ -509,11 +509,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         public void SetSearchFromVisibility(bool hideForm){
             if(hideForm){
-                StyleSearchForm = "search_back search_back_hide position-relative mb-3";
+                StyleSearchForm = "search_back search_back_hide position-relative";
             }
             else
             {
-                StyleSearchForm = "search_back position-relative mb-3";
+                StyleSearchForm = "search_back position-relative";
             }
             StateHasChanged();
         }
