@@ -67,6 +67,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Inject]
         public IBackendRouterService BackendRouterService { get; set; }
 
+        [Inject] public SDKDialogService dialogService { get; set; }
+
         public bool Loading;
         public bool LoadingData;
         public bool LoadingSearch;
@@ -103,6 +105,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private IEnumerable<object> data;
         int count;
         public RadzenDataGrid<object> _gridRef;
+
+        public List<FieldOptions> FieldsHidden { get; set; } = new List<FieldOptions>();
 
         public string BLEntityName { get; set; }
 
@@ -178,10 +182,27 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         var searchMetadata = BackendRouterService.GetViewdef(bName, "search");
                         HasSearchViewdef = !String.IsNullOrEmpty(searchMetadata);
                         ShowList = !HasSearchViewdef;
+
+                        var searchForm = JsonConvert.DeserializeObject<FormViewModel>(searchMetadata);
+                        if (searchForm != null)
+                        {
+                            foreach (var panel in searchForm.Panels)
+                            {
+                                foreach (var field in panel.Fields)
+                                {
+                                    field.GetFieldObj(BusinessObj);
+                                }
+                            }
+                            
+                            FieldsHidden = searchForm.Panels.SelectMany(x => x.Fields).Where(x=> x.Hidden).ToList();
+                        }else{
+                            FieldsHidden = new List<FieldOptions>();
+                        }
                     }
                     catch (System.Exception)
                     {
                         ShowList = true;
+                        FieldsHidden = new List<FieldOptions>();
                     }
 
                 }
@@ -506,6 +527,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             ShowList = true;
             SetSearchFromVisibility(true);
         }
+
+        
+
+        
+
 
         public void SetSearchFromVisibility(bool hideForm){
             if(hideForm){

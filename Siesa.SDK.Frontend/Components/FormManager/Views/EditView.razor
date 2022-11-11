@@ -72,7 +72,7 @@ else if (BusinessObj.BaseObj.Rowid != 0)
     @if(SetTopBar && !IsSubpanel)
     {
         <PageTitle><ResourceViewer ResourceTag="Action.Modify" /> @BusinessObj</PageTitle>
-        <SetTopBar StyleName="toolbar_edition" HasExtraButtons="@(FormViewModel.Buttons != null && FormViewModel.Buttons.Count > 0 ? true: false)" BusinessObj="@BusinessObj" DisableCompanies="true">
+        <SetTopBar StyleName="toolbar_edition" HasExtraButtons="@(FormViewModel.Buttons != null && FormViewModel.Buttons.Count > 0 ? true: false)" BusinessObj="@BusinessObj">
             <TopBarTitle><ResourceViewer ResourceTag="Action.Modify" /> @BusinessObj</TopBarTitle>
             <TopBarButtons>
                 <TopBarButton form="@FormID" SubmitFormOnClick="true" ResourceTag="Action.Save" IconCssClass="@GetSaveBtnIcon()" Enabled="@(!Saving)" />
