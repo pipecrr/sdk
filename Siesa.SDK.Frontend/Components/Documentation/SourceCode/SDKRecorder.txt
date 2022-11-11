@@ -9,16 +9,16 @@
     <div class="row px-3 mt-3">
         <div class="col-md-6 p-3 ">
             <SDKCard>
-                <SDKRecorder OnGetAudio="@miOnGetAudio"></SDKRecorder>
+                <SDKRecorder GetAudio="@miGetAudio"></SDKRecorder>
             </SDKCard>
        </div>
     </div>
 </div>
 
 @code{
-    string base64 = "";
-    public void miOnGetAudio(string base64)
+    byte[] base64;
+    public void miGetAudio(byte[] filebytes)
     {
-        this.base64 = base64;
-    }
+        base64 = filebytes;
+    }    
 }

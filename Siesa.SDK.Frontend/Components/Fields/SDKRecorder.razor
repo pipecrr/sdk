@@ -1,5 +1,7 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Components.Visualization
+@using Microsoft.AspNetCore.Http
+@using System.IO
 @inject UtilsManager UtilsManager 
 @inject IJSRuntime jsRuntime
 
@@ -19,7 +21,7 @@
     bool recording {get; set;} = false;
     bool notRecording {get; set;} = true;
     public string resourceAction {get; set;} = "Action.SDKRecorder.Record";
-    [Parameter] public Action<string> OnGetAudio {get; set;}
+    [Parameter] public Action<byte[]> GetAudio {get; set;}
     private IJSObjectReference _jsModule;
 
     protected override async Task OnInitializedAsync()
@@ -67,7 +69,9 @@
     [JSInvokable]
     public async Task setAudio(string blob, string base64){
         url = blob;
-        OnGetAudio?.Invoke(base64);
+        var base64Data = base64.Split(';')[1].Split(',')[1];
+        byte[] bytes = Convert.FromBase64String(base64Data);
+        GetAudio?.Invoke(bytes);
         StateHasChanged();
     }
 }
