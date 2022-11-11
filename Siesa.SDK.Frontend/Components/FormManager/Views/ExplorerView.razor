@@ -34,12 +34,15 @@ else if (BusinessObj != null)
         {
             <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
                 <DxFormLayoutTabPages ScrollMode="TabsScrollMode.Auto">
-                    @foreach (var rel in FormViewModel.Relationships)
-                    {
-                        <SDKFormLayoutTabPage ResourceTag="@rel.ResourceTag">
-                            <RelationshipPanel Relationship="@rel" Parent="@BusinessObj.BaseObj" ShowHeader="false" />
-                        </SDKFormLayoutTabPage>
-                    }
+                        @foreach (var rel in FormViewModel.Relationships)
+                        {               
+                            <SDKFormLayoutTabPage ResourceTag="@rel.ResourceTag">
+                                @if (BusinessObj?.BaseObj != null)
+                                {  
+                                    <RelationshipPanel Relationship="@rel" Parent="@BusinessObj.BaseObj" ShowHeader="false" />
+                                }
+                            </SDKFormLayoutTabPage>
+                        }
                 </DxFormLayoutTabPages>
             </DxFormLayout>
 
@@ -56,7 +59,7 @@ else if (BusinessObj != null)
             <TopBarButton 
                 Click="GetFirstRowid" ResourceTag="Action.Start" IconCssClass="fa-solid fa-backward-fast" />
             <TopBarButton 
-                Click="GetPreviousRowid" ResourceTag="Action.Back" IconCssClass="fa-solid fa-backward"  />
+                Click="GetPreviousRowid" ResourceTag="Action.Back" IconCssClass="fa-solid fa-backward" />
             <TopBarButton 
                 Click="GetNextRowid" ResourceTag="Action.Next" IconCssClass="fa-solid fa-forward" />
             <TopBarButton 

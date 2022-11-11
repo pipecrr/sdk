@@ -16,6 +16,7 @@ using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Shared.Validators;
 using Siesa.SDK.Frontend.Components.FormManager;
 using Siesa.SDK.Frontend.Components.FormManager.Views;
+using Siesa.SDK.Frontend.Services;
 
 namespace Siesa.SDK.Business
 {
@@ -27,36 +28,101 @@ namespace Siesa.SDK.Business
 
         public async Task GetNextRowid()
         {
-            if(BaseObj != null){
-                var currentRowid = BaseObj.GetRowid();
-                var nextRowid = currentRowid + 1;
-                await InitializeBusiness(nextRowid);
+            if(BaseObj != null)
+            {
+                try
+                {
+                    var currentRowid = BaseObj.GetRowid();
+                    var response = await Backend.Call("GetNextRowId", currentRowid);
+                    
+                    if (response.Success)
+                    {
+                            long nextRowid = response.Data;
+                            await InitializeBusiness((int)nextRowid);
+                    }
+                    else
+                    {
+                        return ;
+                    }
+                }
+                catch (Exception e)
+                {
+                }
+                
             }
         }
 
         public async Task GetPreviousRowid()
         {
-            if(BaseObj != null && BaseObj.GetRowid() > 1){
-                var currentRowid = BaseObj.GetRowid();
-                var previousRowid = currentRowid - 1;
-                await InitializeBusiness(previousRowid);
+            if(BaseObj != null){
+                try
+                {
+                    var currentRowid = BaseObj.GetRowid();
+                    var response = await Backend.Call("GetPrevioustRowId", currentRowid);
+                    
+                    if (response.Success)
+                    {
+                            long nextRowid = response.Data;
+                            await InitializeBusiness((int)nextRowid);
+                    }
+                    else
+                    {
+                        return ;
+                    }
+                }
+                catch (Exception e)
+                {
+                }
+              
             }
         }
 
         public async Task GetFirstRowid()
         {
             if(BaseObj != null){
-                var firstRowid = 1;
-                await InitializeBusiness(firstRowid);
+                try
+                {
+                    var currentRowid = BaseObj.GetRowid();
+                    var response = await Backend.Call("GetFirstRowid", currentRowid);
+                    
+                    if (response.Success)
+                    {
+                            long nextRowid = response.Data;
+                            await InitializeBusiness((int)nextRowid);
+                    }
+                    else
+                    {
+                        return ;
+                    }
+                }
+                catch (Exception e)
+                {
+                }
             }
         }
 
         public async Task GetLastRowid()
         {
-            // if(BaseObj != null){
-            //     var lastRowid = await GetLastRowidAsync();
-            //     await InitializeBusiness(lastRowid);
-            // }
+            if(BaseObj != null){
+                try
+                {
+                    var currentRowid = BaseObj.GetRowid();
+                    var response = await Backend.Call("GetLastRowid", currentRowid);
+                    
+                    if (response.Success)
+                    {
+                            long nextRowid = response.Data;
+                            await InitializeBusiness((int)nextRowid);
+                    }
+                    else
+                    {
+                        return ;
+                    }
+                }
+                catch (Exception e)
+                {
+                }
+            }
         }
 
         public RenderFragment explorer()
