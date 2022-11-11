@@ -13,6 +13,7 @@ using Siesa.SDK.Shared.Business;
 using Siesa.SDK.Shared.DataAnnotations;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Shared.Validators;
+using System.Linq.Dynamic.Core;
 
 namespace Siesa.SDK.Business
 {
@@ -27,8 +28,8 @@ namespace Siesa.SDK.Business
         {
             using (SDKContext context = CreateDbContext())
             {
-                var nextRowid = context.Set<T>().AsEnumerable().Select(x => x.GetType().GetProperty("Rowid").GetValue(x,null))
-                                    .Where(x => Convert.ToInt64(x) > Rowid).FirstOrDefault();
+                var nextRowid = context.Set<T>()
+                                    .Where("Rowid > @0", Rowid).Select("Rowid").Take(1).FirstOrDefault();
 
                 if (nextRowid is not null)
                 {
@@ -40,16 +41,6 @@ namespace Siesa.SDK.Business
                     return new BadRequestResult<long> { Success = false, Errors = new List<string>() { "Rowid Not Found" } };
                 }  
             }
-            /*var result = this.GetData(0,1,$"Rowid > {Rowid}",null,null); 
-                if (nextRowid is not null)
-                {
-                    long nextRowid = result.Data.First().Rowid;
-                    return new ActionResult<long>() {Success=true, Data = nextRowid};
-                }
-                else
-                {
-                    return new BadRequestResult<long> { Success = false, Errors = new List<string>() { "Rowid Not Found" } };
-            }*/ 
         }
 
         [SDKExposedMethod]
@@ -57,8 +48,8 @@ namespace Siesa.SDK.Business
         {
              using (SDKContext context = CreateDbContext())
             {
-                var nextRowid = context.Set<T>().AsEnumerable().Select(x => x.GetType().GetProperty("Rowid").GetValue(x,null))
-                                        .Where(x => Convert.ToInt64(x) < Rowid).OrderByDescending(x => x).FirstOrDefault();
+                var nextRowid = context.Set<T>()
+                                        .Where("Rowid < @0", Rowid).OrderBy("-Rowid").Select("Rowid").Take(1).FirstOrDefault();
 
                 if (nextRowid is not null)
                 {
@@ -70,17 +61,6 @@ namespace Siesa.SDK.Business
                     return new BadRequestResult<long> { Success = false, Errors = new List<string>() { "Rowid Not Found" } };
                 }
             }  
-
-        //    var result = this.GetData(0,1,$"Rowid < {Rowid}","Rowid desc",null);            
-        //     if (result is not null)
-        //     {
-        //         long nextRowid = result.Data.LastOrDefault().Rowid;
-        //         return new ActionResult<long>() {Success=true, Data = nextRowid};
-        //     }
-        //     else
-        //     {
-        //         return new BadRequestResult<long> { Success = false, Errors = new List<string>() { "Rowid Not Found" } };
-        //     }  
         }
 
         [SDKExposedMethod]
@@ -88,8 +68,8 @@ namespace Siesa.SDK.Business
         {
             using (SDKContext context = CreateDbContext())
             {
-                var nextRowid = context.Set<T>().AsEnumerable().Select(x => x.GetType().GetProperty("Rowid").GetValue(x,null))
-                                        .Where(x => Convert.ToInt64(x) < Rowid).FirstOrDefault();
+                var nextRowid = context.Set<T>()
+                                        .Where("Rowid < @0", Rowid).Select("Rowid").Take(1).FirstOrDefault();
 
                 if (nextRowid is not null)
                 {
@@ -102,17 +82,6 @@ namespace Siesa.SDK.Business
                 }
             }  
 
-            // var result = this.GetData(0,1,$"Rowid < {Rowid}",null,null); 
-
-            // if (result is not null)
-            // {
-            //     long nextRowid = result.Data.First().Rowid;
-            //     return new ActionResult<long>() {Success=true, Data = nextRowid};
-            // }
-            // else
-            // {
-            //     return new BadRequestResult<long> { Success = false, Errors = new List<string>() { "Rowid Not Found" } };
-            // } 
         }
 
         [SDKExposedMethod]
@@ -120,8 +89,7 @@ namespace Siesa.SDK.Business
         {
             using (SDKContext context = CreateDbContext())
             {
-                var nextRowid = context.Set<T>().AsEnumerable().Select(x => x.GetType().GetProperty("Rowid").GetValue(x,null))
-                                        .OrderByDescending(x => x).FirstOrDefault();
+                var nextRowid = context.Set<T>().OrderBy("-Rowid").Select("Rowid").Take(1).FirstOrDefault();
 
                 if (nextRowid is not null)
                 {
@@ -133,18 +101,6 @@ namespace Siesa.SDK.Business
                     return new BadRequestResult<long> { Success = false, Errors = new List<string>() { "Rowid Not Found" } };
                 }
             }  
-            // var result = this.GetData(0,1,$"Rowid > {Rowid}","Rowid desc",null); 
-
-            // if (result is not null)
-            // {
-            //     long nextRowid = result.Data.First().Rowid;
-            //     return new ActionResult<long>() {Success=true, Data = nextRowid};
-            // }
-            // else
-            // {
-            //     return new BadRequestResult<long> { Success = false, Errors = new List<string>() { "Rowid Not Found" } };
-            // }  
-
         }
     }
 }
