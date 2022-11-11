@@ -1,0 +1,22 @@
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
+
+<div class="modal-body">
+  @foreach (var item in Fields)
+  {
+    
+   <p>@item.Name.Split('.').Last()</p> 
+   <SDKSwitch @bind-Value="@item.Hidden"/>
+
+  }
+
+</div>
+
+
+@code{
+
+    [Parameter]
+    public List<FieldOptions> Fields { get; set; }
+
+}

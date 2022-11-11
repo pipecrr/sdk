@@ -67,6 +67,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Inject]
         public IBackendRouterService BackendRouterService { get; set; }
 
+        [Inject] public SDKDialogService dialogService { get; set; }
+
         public bool Loading;
         public bool LoadingData;
         public bool LoadingSearch;
@@ -506,6 +508,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             ShowList = true;
             SetSearchFromVisibility(true);
         }
+
+        
+
+        
+
 
         public void SetSearchFromVisibility(bool hideForm){
             if(hideForm){

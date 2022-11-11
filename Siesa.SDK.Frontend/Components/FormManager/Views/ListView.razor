@@ -3,6 +3,7 @@
 @using Siesa.SDK.Entities
 @using Siesa.SDK.Frontend.Components.FormManager.Views
 @using Siesa.SDK.Frontend.Components.Visualization
+@using Newtonsoft.Json;
 
 @if (Loading == true)
 {
@@ -15,6 +16,11 @@ else
         <div class="@StyleSearchForm">
             <FreeForm @ref="@SearchFormRef" @key="@GetFormKey()"  FormID="@SearchFormID" Viewdef="search" BusinessName="@BusinessName" BusinessObj="@BusinessObj" SetTopBar="false" ValidateForm="false" OnSubmit="@OnClickSearch"/>
             <div class="d-flex flex-wrap justify-content-center">
+                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
+                    <SDKButton CssClass="w-100" RenderStyle="SDKButtonRenderStyle.Secondary" Click="@OpenModalFilter">
+                        <ResourceViewer ResourceTag="Action.AddFilter" />
+                    </SDKButton>
+                </div>
                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
                     <SDKButton form="@SearchFormID" CssClass="w-100" RenderStyle="SDKButtonRenderStyle.Primary" SubmitFormOnClick="true" Click="@OnClickSearch">
                         @if(LoadingSearch)
@@ -300,4 +306,32 @@ else
             </TopBarExtraButtons>
         </SetTopBar>
     }
+}
+
+@code{
+        private async Task OpenModalFilter()
+        {
+            
+           var metadata =  GetViewdef(BusinessName);
+           if (metadata == null || metadata == "")
+            {
+                ErrorMsg = $"Error";
+            }
+            else
+            {
+                var viewdef = JsonConvert.DeserializeObject<Panel>(metadata);
+                var fields = viewdef.Fields.Where(x => x.Hidden).ToList();
+
+                if (fields != null)
+                {
+                    await dialogService.ShowCustomDialog(ds =>
+                        @<div>
+                            <div class="modal-body">
+                                <AddFilter Fields="@fields" />
+                            </div>
+                        </div>
+                    );   
+                }
+            }
+        }
 }
