@@ -162,7 +162,7 @@ body {
     border-color: var(--color_primary_dark) !important;
 }
 .btn_secondary_def_1{
-    background-color: transparent !important;
+    background-color: var(--color_light) !important;
     border-color: transparent !important;
     border-radius: var(--border_radius_btn) !important;
     font-weight: 700 !important;
@@ -540,8 +540,8 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
 }
 
 .btn-secondary, .btn-secondary.disabled, .btn-secondary:disabled {
-    color: var(--color_primary_light) !important;
-    background-color: transparent !important;
+    color: var(--color_primary_light) ;
+    background-color: transparent ;
 }
 .btn-secondary:hover {
     background-color: var(--color_back_2) !important;
@@ -646,6 +646,10 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
 @media (max-width: 767.98px) { 
     html{
         font-size: 14px;
+    }
+    .rz-dialog{
+        min-width: 100% !important;
+        max-width: 100%;
     }
 }
 

@@ -34,7 +34,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         public ICollection<Type> Generics {get; set;} = new List<Type>();
     }
 
-    public class FieldOptions
+    public class FieldOptions: ICloneable
     {
         public string Name { get; set; }
         public string PropertyName { get; set; }
@@ -246,6 +246,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             field.FieldType = FieldType;
             field.IsNullable = IsNullable;
             return field;
+        }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
         }
     }
 

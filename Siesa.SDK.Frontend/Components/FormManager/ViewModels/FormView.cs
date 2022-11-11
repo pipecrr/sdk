@@ -36,7 +36,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         protected FormViewModel FormViewModel { get; set; } = new FormViewModel();
 
-        protected List<Panel> Panels {get { return FormViewModel.Panels; } }
+        public List<Panel> Panels {get { return FormViewModel.Panels; } }
 
         public Boolean Loading = true;
         public bool Saving = false;

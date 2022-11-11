@@ -1,6 +1,8 @@
-<DxFormLayout CaptionPosition="CaptionPosition.Vertical">
+<DxFormLayout CaptionPosition="@CaptionPosition.Get()">
     @ChildContent
 </DxFormLayout>
 @code {
     [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter] public SDKCaptionPosition CaptionPosition { get; set; } = SDKCaptionPosition.Vertical;
 }
