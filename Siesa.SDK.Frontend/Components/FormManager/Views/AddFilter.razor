@@ -3,29 +3,6 @@
 @using Siesa.SDK.Components.Visualization
 @inject SDKDialogService DialogService
 
-  @*<div>
-     <SDKFormLayout CaptionPosition="SDKCaptionPosition.Horizontal">
-      @foreach (var item in Fields)
-      {
-        <SDKFormLayoutItem ResourceTag="@item.ResourceTag" ColSizeMd="6">
-          <SDKSwitch @bind-Value="@item.Hidden"/>
-        </SDKFormLayoutItem>
-      }
-     </SDKFormLayout>
-
-      <div class="d-flex flex-wrap justify-content-end">
-        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
-          <SDKButton CssClass="w-100" RenderStyle="SDKButtonRenderStyle.Primary" Click="@SaveChange">
-            <ResourceViewer ResourceTag="Action.Save" />
-          </SDKButton>
-        </div>
-        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
-          <SDKButton CssClass="w-100" RenderStyle="SDKButtonRenderStyle.Cancel" Click="@CloseModal">
-            <ResourceViewer ResourceTag="Action.Cancel" />
-          </SDKButton>
-        </div>
-      </div>
-  </div> *@
     <div class="d-flex flex-wrap whcm_row">
           @foreach (var item in Fields)
             {
