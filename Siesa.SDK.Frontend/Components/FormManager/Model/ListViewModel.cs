@@ -28,5 +28,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         public List<Button> Buttons { get; set; } = new List<Button>();
 
         public bool ShowActions { get; set; } = true;
+        public bool UseFlex { get; set; } = false;
     }
 }
