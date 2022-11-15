@@ -17,6 +17,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter] public bool ValidateForm { get; set; } = true;
 
         [Parameter] public EventCallback OnSubmit { get; set; }
+
+        [Parameter] public EventCallback<FreeForm> OnReady { get; set; }
         
         protected override async Task OnInitializedAsync()
         {
@@ -26,6 +28,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 BusinessName = BusinessObj.GetType().Name;
             }
             await base.OnInitializedAsync();
+
+            if(OnReady.HasDelegate)
+            {
+                await OnReady.InvokeAsync(this);
+            }
         }
 
         public override async Task SetParametersAsync(ParameterView parameters)

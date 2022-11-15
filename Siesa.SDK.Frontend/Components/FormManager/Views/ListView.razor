@@ -17,7 +17,18 @@ else
     @if(ShowSearchForm && HasSearchViewdef)
     {
         <div class="@StyleSearchForm">
-            <FreeForm @ref="@SearchFormRef" @key="@GetFormKey()"  FormID="@SearchFormID" Viewdef="search" BusinessName="@BusinessName" BusinessObj="@BusinessObj" SetTopBar="false" ValidateForm="false" OnSubmit="@OnClickSearch"/>
+            <FreeForm 
+                @ref="@SearchFormRef" 
+                @key="@GetFormKey()"  
+                FormID="@SearchFormID" 
+                Viewdef="search" 
+                BusinessName="@BusinessName" 
+                BusinessObj="@BusinessObj" 
+                SetTopBar="false" 
+                ValidateForm="false" 
+                OnSubmit="@OnClickSearch"
+                OnReady="@OnReadySearchForm"
+                />
             <div class="d-flex flex-wrap justify-content-center">
                 @if(FieldsHidden.Any())
                 {
@@ -319,7 +330,6 @@ else
 }
 
 @code{
-
     
     private async Task OpenModalFilter()
     {
@@ -338,22 +348,16 @@ else
 
     public void OnchageFields(List<FieldOptions> returnFields)
     {
-        
-        if(SearchFormRef != null)
-        {
-            returnFields.ForEach(x => {
-                FieldsHidden.FirstOrDefault(y => y.Name == x.Name).Hidden = !x.Hidden;
-                SearchFormRef.Panels.ForEach(y => {
-                    y.Fields.ForEach(z => {
-                        if(z.Name == x.Name)
-                        {
-                            z.Hidden = !x.Hidden;
-                        }
-                    });
-                });
-            });
-            SearchFormRef.Refresh();
-        }
+        UpdateSearchForm(returnFields);
         StateHasChanged();
+    }
+
+    public async Task OnReadySearchForm(FreeForm formInstance)
+    {
+        if(SavedHiddenFields != null && SavedHiddenFields.Any())
+        {
+            await UpdateSearchForm(SavedHiddenFields, false, formInstance);
+            StateHasChanged();
+        }
     }
 }

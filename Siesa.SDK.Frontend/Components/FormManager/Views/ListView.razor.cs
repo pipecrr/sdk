@@ -19,6 +19,7 @@ using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Frontend.Services;
 using Siesa.SDK.Shared.Utilities;
 using Siesa.SDK.Entities;
+using Blazored.LocalStorage;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -52,6 +53,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public bool ShowList { get; set; } = true;
         [Parameter]
         public bool UseFlex { get; set; } = false;
+
+        [Inject]
+        public ILocalStorageService localStorageService { get; set; }
         private FreeForm SearchFormRef;
 
         public string SearchFormID = Guid.NewGuid().ToString();
@@ -108,6 +112,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public RadzenDataGrid<object> _gridRef;
 
         public List<FieldOptions> FieldsHidden { get; set; } = new List<FieldOptions>();
+
+        public List<FieldOptions> SavedHiddenFields { get; set; } = new List<FieldOptions>();
 
         public string BLEntityName { get; set; }
 
@@ -206,6 +212,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     {
                         ShowList = true;
                         FieldsHidden = new List<FieldOptions>();
+                    }
+
+                    try{
+                        SavedHiddenFields = await localStorageService.GetItemAsync<List<FieldOptions>>($"{BusinessName}.Search.HiddenFields");
+                    }catch(System.Exception){
                     }
 
                 }
@@ -632,6 +643,41 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     await Evaluator.EvaluateCode(code, BusinessObj);
                     _ = InvokeAsync(() => StateHasChanged());
                 });
+            }
+        }
+
+        protected async Task UpdateSearchForm(List<FieldOptions> returnFields, bool SaveFields = true, FreeForm formInstance = null)
+        {
+            if (formInstance == null)
+            {
+                formInstance = SearchFormRef;
+            }
+            bool changeFieldsHidden = true;
+            if(returnFields == FieldsHidden)
+            {
+                changeFieldsHidden = false;
+            }
+            if(formInstance != null)
+            {
+                returnFields.ForEach(x => {
+                    if(changeFieldsHidden)
+                    {
+                        FieldsHidden.FirstOrDefault(y => y.Name == x.Name).Hidden = !x.Hidden;
+                    }
+                    formInstance.Panels.ForEach(y => {
+                        y.Fields.ForEach(z => {
+                            if(z.Name == x.Name)
+                            {
+                                z.Hidden = !x.Hidden;
+                            }
+                        });
+                    });
+                });
+                formInstance.Refresh();
+                if(SaveFields)
+                {
+                    localStorageService.SetItemAsync($"{BusinessName}.Search.HiddenFields", returnFields);
+                }
             }
         }
     }
