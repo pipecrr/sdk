@@ -1,0 +1,17 @@
+
+.sdk-radiobutton-container > ::deep .rz-radio-button-list-horizontal > .rz-radio-btn > .rz-radiobutton > .rz-state-active{
+    border-color: var(--color_primary) !important;
+    background-color: var(--color_primary);
+}
+.sdk-radiobutton-container > ::deep .rz-radio-button-list-horizontal > .rz-radio-btn > .rz-radiobutton > .rz-radiobutton-box{
+    border-width: 2px;
+    border-color: var(--color_border);
+}
+.sdk-radiobutton-container > ::deep .rz-radio-button-list-vertical > .rz-radio-btn > .rz-radiobutton > .rz-state-active{
+    border-color: var(--color_primary) !important;
+    background-color: var(--color_primary);
+}
+.sdk-radiobutton-container > ::deep .rz-radio-button-list-vertical > .rz-radio-btn > .rz-radiobutton > .rz-radiobutton-box{
+    border-width: 2px;
+    border-color: var(--color_border);
+}

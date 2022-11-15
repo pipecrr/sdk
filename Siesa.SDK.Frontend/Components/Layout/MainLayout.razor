@@ -261,14 +261,15 @@
     }
     
     [JSInvokable]
-    public async Task ShowError(string msg){
-        await SDKNotificationService.ShowError(msg);
+    public async Task ShowError(string msg, object?[] variables = null){
+        await SDKNotificationService.ShowError(msg, variables);
     }
 
     [JSInvokable]
-    public async Task ShowSuccess(string msg){
-        await SDKNotificationService.ShowSuccess(msg);
+    public async Task ShowSuccess(string msg, object?[] variables = null){
+        await SDKNotificationService.ShowSuccess(msg, variables);
     }
+
 
     [JSInvokable]
     public void NavigateTo(string url)

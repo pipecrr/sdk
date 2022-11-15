@@ -61,6 +61,15 @@ namespace Siesa.SDK.Frontend.Components
             };
         }
 
+        public static CaptionPosition Get(this SDKCaptionPosition captionPosition)
+        {
+            return captionPosition switch
+            {
+                SDKCaptionPosition.Vertical => CaptionPosition.Vertical,
+                SDKCaptionPosition.Horizontal => CaptionPosition.Horizontal,
+            };
+        }
+
     }
 
     public enum SDKClearButtonDisplayMode
@@ -113,5 +122,11 @@ namespace Siesa.SDK.Frontend.Components
         Horizontal = 1,
         Vertical = 2
 
+    }
+
+    public enum SDKCaptionPosition {
+        Vertical = CaptionPosition.Vertical,
+
+        Horizontal = CaptionPosition.Horizontal
     }
 }

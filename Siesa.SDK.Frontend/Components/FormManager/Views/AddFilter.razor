@@ -1,0 +1,44 @@
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
+@inject SDKDialogService DialogService
+
+    <div class="d-flex flex-wrap whcm_row">
+          @foreach (var item in Fields)
+            {
+              <div class="col-12 col-sm-6">
+                <div class="d-flex justify-content-between align-items-center border-bottom py-2 h-100">
+                    <div class="font_size_087"> <ResourceViewer ResourceTag="@item.ResourceTag" /></div>
+                    <div><SDKSwitch @bind-Value="@item.Hidden"/> </div>
+                </div>
+              </div>   
+            }
+    </div>
+
+  <div class="modal-footer px-0 pb-0">
+    <SDKButton CssClass="px-3" RenderStyle="SDKButtonRenderStyle.Cancel" Click="@CloseModal">
+              <ResourceViewer ResourceTag="Action.Cancel" />
+            </SDKButton>
+      <SDKButton CssClass="px-3" RenderStyle="SDKButtonRenderStyle.Primary" Click="@SaveChange">
+              <ResourceViewer ResourceTag="Action.Save" />
+      </SDKButton>
+  </div>
+
+
+@code{
+
+    [Parameter]
+    public List<FieldOptions> Fields { get; set; }
+
+    [Parameter] public Action<List<FieldOptions>> OnchageFields {get; set;}
+
+      public void SaveChange(){
+        DialogService.ds.Close(true);
+        OnchageFields?.Invoke(Fields);
+      }
+
+      public void CloseModal(){
+        DialogService.ds.Close(false);
+      }
+
+}

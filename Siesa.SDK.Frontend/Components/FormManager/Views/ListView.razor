@@ -4,6 +4,9 @@
 @using Siesa.SDK.Frontend.Components.FormManager.Views
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Frontend.Components.Flex
+@using Newtonsoft.Json;
+@using Siesa.SDK.Shared.Extensions
+@inject UtilsManager UtilManager
 
 @if (Loading == true)
 {
@@ -16,6 +19,14 @@ else
         <div class="@StyleSearchForm">
             <FreeForm @ref="@SearchFormRef" @key="@GetFormKey()"  FormID="@SearchFormID" Viewdef="search" BusinessName="@BusinessName" BusinessObj="@BusinessObj" SetTopBar="false" ValidateForm="false" OnSubmit="@OnClickSearch"/>
             <div class="d-flex flex-wrap justify-content-center">
+                @if(FieldsHidden.Any())
+                {
+                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
+                        <SDKButton CssClass="w-100 mb-3 mb-sm-0" RenderStyle="SDKButtonRenderStyle.Secondary" Click="@OpenModalFilter">
+                            <ResourceViewer ResourceTag="Action.AddFilter" />
+                        </SDKButton>
+                    </div>
+                }
                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
                     <SDKButton form="@SearchFormID" CssClass="w-100" RenderStyle="SDKButtonRenderStyle.Primary" SubmitFormOnClick="true" Click="@OnClickSearch">
                         @if(LoadingSearch)
@@ -304,5 +315,45 @@ else
                 }
             </TopBarExtraButtons>
         </SetTopBar>
+    }
+}
+
+@code{
+
+    
+    private async Task OpenModalFilter()
+    {
+        if(FieldsHidden.Any()){
+            string resourceTitle = await UtilManager.GetResource("Action.AddFilter");
+            List<FieldOptions> modalFields = FieldsHidden.Clone();
+            modalFields.ForEach(x => x.Hidden = !x.Hidden);
+            await dialogService.ShowCustomDialog(ds =>
+                @<div>
+                    <AddFilter Fields="@modalFields" OnchageFields="@OnchageFields"/>
+                </div>,
+                title: resourceTitle
+            );   
+        }
+    }
+
+    public void OnchageFields(List<FieldOptions> returnFields)
+    {
+        
+        if(SearchFormRef != null)
+        {
+            returnFields.ForEach(x => {
+                FieldsHidden.FirstOrDefault(y => y.Name == x.Name).Hidden = !x.Hidden;
+                SearchFormRef.Panels.ForEach(y => {
+                    y.Fields.ForEach(z => {
+                        if(z.Name == x.Name)
+                        {
+                            z.Hidden = !x.Hidden;
+                        }
+                    });
+                });
+            });
+            SearchFormRef.Refresh();
+        }
+        StateHasChanged();
     }
 }

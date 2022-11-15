@@ -10,6 +10,7 @@
 @using Siesa.SDK.Frontend.Components.Documentation.FormManager
 @using Siesa.SDK.Frontend.Components.Documentation.Layout
 @using Siesa.SDK.Frontend.Components.Documentation.ViewsBuilder
+@using Siesa.SDK.Frontend.Components.Documentation.DataAnnotations
 
 
 @layout EmptyLayout
@@ -122,6 +123,18 @@
                     new ComponentDemo{ComponentName="Viewdef", ComponentFragment = @<DemoViewdef />}
                 },Icon ="fa-solid fa-layer-group"
             }, 
+            new ComponentCategory() {
+                Name = "DataAnnotations", Components = {
+                    new ComponentDemo{ComponentName="SDKApiMethod", ComponentFragment = @<DemoSDKApiMethod />},
+                    new ComponentDemo{ComponentName="SDKDataEncrypt", ComponentFragment = @<DemoSDKDataEncrypt />},
+                    new ComponentDemo{ComponentName="SDKExposedMethod", ComponentFragment = @<DemoSDKExposedMethod />},
+                    new ComponentDemo{ComponentName="SDKCheckRelationship", ComponentFragment = @<DemoSDKCheckRelationship />},
+                    new ComponentDemo{ComponentName="SDKExternalView", ComponentFragment = @<DemoSDKExternalView />},
+                    new ComponentDemo{ComponentName="SDKIdentity", ComponentFragment = @<DemoSDKIdentity />},
+                    new ComponentDemo{ComponentName="SDKLogEntity", ComponentFragment = @<DemoSDKLogEntity />},
+                    new ComponentDemo{ComponentName="SDKRequired", ComponentFragment = @<DemoSDKRequired />},
+                },Icon ="fa-solid fa-note-sticky"
+            },
 
         };
     }
