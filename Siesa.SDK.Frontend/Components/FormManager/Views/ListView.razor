@@ -3,9 +3,10 @@
 @using Siesa.SDK.Entities
 @using Siesa.SDK.Frontend.Components.FormManager.Views
 @using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Flex
 @using Newtonsoft.Json;
 @using Siesa.SDK.Shared.Extensions
- @inject UtilsManager UtilManager
+@inject UtilsManager UtilManager
 
 @if (Loading == true)
 {
@@ -39,7 +40,7 @@ else
         </div>
     }
 
-    @if(ShowList)
+    @if(ShowList && !UseFlex)
     {
         <RadzenDataGrid 
             AllowFiltering="true" 
@@ -286,6 +287,10 @@ else
                 }
             </Columns>
         </RadzenDataGrid>
+    }
+
+    @if(ShowList && UseFlex){
+        <FlexComponent IsListView="true" BlNameList="@BusinessName" ViewdefName="@FinalViewdefName"></FlexComponent>
     }
 
     @if(SetTopBar)

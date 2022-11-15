@@ -6,12 +6,15 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Frontend.Components.FormManager.Views
 @using Siesa.SDK.Frontend.Components.FormManager.Model
+@using Newtonsoft.Json;
 @inject UtilsManager UtilsManager
 @implements IDisposable
 
 <div @attributes="@FlexAttributes">
 </div>
 
+@if(!IsListView)
+{    
 <PageTitle>Flex</PageTitle>
 <SetTopBar>
     <TopBarTitle>Flex</TopBarTitle>
@@ -34,11 +37,16 @@
         
     </TopBarButtons>
 </SetTopBar>
-
+}
 @code {
     [Parameter]
     public dynamic Business {get;set;}
-    
+    [Parameter]
+    public bool IsListView {get;set;} = false;
+    [Parameter]
+    public string BlNameList {get;set;} = "";
+    [Parameter]
+    public string ViewdefName {get;set;} = "";
     private bool _isDebug = false;
 
     private bool _isDetail = false;
@@ -101,15 +109,23 @@
             }
             _flexRowId = int.Parse(SDKFlexRowIdVar);
         }  
+
+        if(IsListView){
+            _currentView = "detail";
+        }
+        
         FlexAttributes.Clear();
         flexElementId = "flexdebug";//$"flex_{Guid.NewGuid().ToString()}";
         FlexAttributes.Add("id", flexElementId);
         FlexAttributes.Add("class", "root_oreports");
         FlexAttributes.Add("current_view", _currentView);
+        FlexAttributes.Add("is_list_view", IsListView.ToString());
+        FlexAttributes.Add("bl_name_list", BlNameList);
+        FlexAttributes.Add("viewdef_name", ViewdefName);
         if(_flexRowId != 0)
         {
             FlexAttributes.Add("base_obj_id", _flexRowId);
-        }        
+        }
 
         StateHasChanged();
         if(MountFlex || !_isMounted)

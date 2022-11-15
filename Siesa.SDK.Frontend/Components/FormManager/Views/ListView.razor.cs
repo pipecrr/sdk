@@ -50,7 +50,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public bool ShowSearchForm { get; set; } = true;
         [Parameter]
         public bool ShowList { get; set; } = true;
-
+        [Parameter]
+        public bool UseFlex { get; set; } = false;
         private FreeForm SearchFormRef;
 
         public string SearchFormID = Guid.NewGuid().ToString();
@@ -103,7 +104,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public IEnumerable<object> Data { get; set; } = null;
 
         private IEnumerable<object> data;
-        int count;
+        int count;        
         public RadzenDataGrid<object> _gridRef;
 
         public List<FieldOptions> FieldsHidden { get; set; } = new List<FieldOptions>();
@@ -112,6 +113,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         public string LastFilter { get; set; }
         public bool HasSearchViewdef { get; set; }
+
+        public string FinalViewdefName { get; set; }
 
         private bool CanCreate;
         private bool CanEdit;
@@ -151,7 +154,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 viewdef = ViewdefName;
             }
-
+            FinalViewdefName = viewdef;
             var data = BackendRouterService.GetViewdef(businessName, viewdef);
             if (String.IsNullOrEmpty(data) && viewdef != DefaultViewdefName)
             {
@@ -207,6 +210,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
                 }
                 ListViewModel = JsonConvert.DeserializeObject<ListViewModel>(metadata);
+                UseFlex = ListViewModel.UseFlex;
                 foreach (var field in ListViewModel.Fields)
                 {
                     field.GetFieldObj(BusinessObj);
