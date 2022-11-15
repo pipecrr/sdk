@@ -22,6 +22,8 @@ namespace Siesa.SDK.Backend.Access
 {
     public class SDKContext : DbContext
     {
+	public DbSet<E00250_Entity>? E00250_Entity { get; set; }
+
         public DbSet<E00271_AttachmentDetail>? E00271_AttachmentDetail { get; set; }
 
         public DbSet<E00270_Attachment>? E00270_Attachment { get; set; }
