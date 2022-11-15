@@ -298,10 +298,17 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 data = Data;
                 count = data.Count();
             }
-            if (_gridRef != null)
+            if (_gridRef != null || SearchFormRef != null)
             {
                 needUpdate = Guid.NewGuid();
-                _gridRef.Reload();
+                if(_gridRef != null)
+                {
+                    _gridRef.Reload();
+                }
+                if(SearchFormRef != null)
+                {
+                    StyleSearchForm = "search_back position-relative mb-3";
+                }
             }
             StateHasChanged();
         }
@@ -348,7 +355,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
             try
             {
-                if(SearchFormRef != null){
+                if(SearchFormRef != null && SearchFormRef.BusinessName == BusinessName){
                     var searchFields = SearchFormRef.GetFields();
                     foreach (var field in searchFields)
                     {
