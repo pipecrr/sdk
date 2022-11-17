@@ -65,7 +65,7 @@
     </EmptyTemplate>
     <Columns>
         @if(ShowRadioButtons){
-            <SDKGridColumn TItem="TItem">
+            <SDKGridColumn TItem="TItem" Width="50px">
                 <Template Context="Data">
                     <div class="d-flex justify-content-center">
                         <input type="radio" Value="@(Value != null && Value.Contains(Data))" checked="@check(Data)">
