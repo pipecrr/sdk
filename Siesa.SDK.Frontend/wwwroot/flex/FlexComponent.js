@@ -23,6 +23,10 @@ function loadCss(url){
     document.getElementsByTagName("head")[0].appendChild(link);
 }
 
+function ListViewInstance(dotnethelper){
+    window.dotnethelperListView = dotnethelper;
+}
+
 function MountFlex(div_id, retries = 0)
 {
     if(document.getElementById("flexdebug") == null)
@@ -57,6 +61,7 @@ function MountFlex(div_id, retries = 0)
     loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/runtime-main.js?v=20221115");
 
     window.MountFlex = MountFlex;
+    window.ListViewInstance = ListViewInstance;
 /*
     window.addEventListener('locationchange', function () {
         console.log("locationchange probando");

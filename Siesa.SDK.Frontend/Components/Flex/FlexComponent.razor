@@ -47,6 +47,8 @@
     public string BlNameList {get;set;} = "";
     [Parameter]
     public string ViewdefName {get;set;} = "";
+    [Parameter]
+    public ListView ListView {get;set;}
     private bool _isDebug = false;
 
     private bool _isDetail = false;
@@ -76,7 +78,7 @@
             }
             _isDebug = true;
         }
-        //_isDebug = true;
+        _isDebug = true;
 
         Navigation.TryGetQueryString("currentView",out string SDKCurrentView);
         
@@ -133,6 +135,7 @@
             if(_jsModule == null){
                 _ = InvokeAsync(async () => {
                     await Task.Delay(250);
+                    JSRuntime.InvokeVoidAsync("window.ListViewInstance", DotNetObjectReference.Create(ListView));
                     JSRuntime.InvokeAsync<object>("window.MountFlex", flexElementId);
                 });
             }else{

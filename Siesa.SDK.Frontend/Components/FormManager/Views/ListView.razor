@@ -301,7 +301,7 @@ else
     }
 
     @if(ShowList && UseFlex){
-        <FlexComponent IsListView="true" BlNameList="@BusinessName" ViewdefName="@FinalViewdefName"></FlexComponent>
+        <FlexComponent IsListView="true" BlNameList="@BusinessName" ViewdefName="@FinalViewdefName" ListView="@this"></FlexComponent>
     }
 
     @if(SetTopBar)
@@ -318,6 +318,10 @@ else
                 {
                     <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus" />
                 }
+                @if(UseFlex && true)//TODO: Add permission
+                {
+                    <TopBarButton Click="GoToEditFlex" ResourceTag="Action.Edit" IconCssClass="fa-solid fa-pen" />
+                }                
             </TopBarButtons>
             <TopBarExtraButtons>
                 @foreach (var btn in ListViewModel.Buttons)

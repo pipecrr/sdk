@@ -15,6 +15,10 @@ function loadScript(url, in_head = false, callback = null) {
     parent.appendChild(script);
 }
 
+function ListViewInstance(dotnethelper){
+    window.dotnethelperListView = dotnethelper;
+}
+
 function MountFlex(id)
 {
     console.log("porobando",id);
@@ -35,7 +39,8 @@ function MountFlex(id)
     loadScript("http://127.0.0.1:3000/static/js/0.chunk.js");
     loadScript("http://127.0.0.1:3000/static/js/1.chunk.js");
     loadScript("http://127.0.0.1:3000/static/js/main.chunk.js");
-    window.MountFlex = MountFlex;
+    window.MountFlex = MountFlex;    
+    window.ListViewInstance = ListViewInstance;
 
     // window.addEventListener('locationchange', function () {
     //         setTimeout(function  () { MountFlex() }, 200);

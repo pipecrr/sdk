@@ -517,12 +517,22 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
         }
 
+        [JSInvokable]
+        public void DeleteFromReact(Int64 id, string object_string){
+            GoToDelete(id, object_string);
+        }
+
         private void GoToDelete(Int64 id, string object_string)
         {
             if (OnClickDelete != null)
             {
                 OnClickDelete(id.ToString(), object_string);
             }
+        }
+
+        private void GoToEditFlex()
+        {
+            var c = "";
         }
 
         private async Task OnClickSearch()
