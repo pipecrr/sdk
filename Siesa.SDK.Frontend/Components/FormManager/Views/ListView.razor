@@ -300,7 +300,7 @@ else
     }
 
     @if(ShowList && UseFlex){
-        <FlexComponent IsListView="true" BlNameList="@BusinessName" ViewdefName="@FinalViewdefName" ListView="@this" GuidListView="@guidListView" CanEdit="@CanEdit" CanDelete="@CanDelete"></FlexComponent>
+        <FlexComponent IsListView="true" BlNameList="@BusinessName" ViewdefName="@FinalViewdefName" ListView="@this" GuidListView="@guidListView" CanEdit="@CanEdit" CanDelete="@CanDelete" EditingFlex="@_isEditingFlex"></FlexComponent>
     }
 
     @if(SetTopBar)
@@ -313,11 +313,16 @@ else
                 {
                     <TopBarButton ResourceTag="Action.AdvanceSearch" IconCssClass="fa-solid fa-magnifying-glass-plus" Click="@(()=> SetSearchFromVisibility(false))"/>
                 }
+                @if(_isEditingFlex){
+                    <TopBarButton ResourceTag="Action.Flex.Configure" IconCssClass="fa-solid fa-cog" Click="ConfigureList" />
+                    <TopBarButton ResourceTag="Action.Flex.SaveAndContinue" IconCssClass="fa-solid fa-bookmark" Click="SaveAndContinueList" />
+                    <TopBarButton ResourceTag="Action.Flex.SaveAndClose" IconCssClass="fa-solid fa-floppy-disk" Click="SaveAndCloseList" />
+                }
                 @if(UseFlex && true)//TODO: Add permission
                 {
                     <TopBarButton Click="GoToEditFlex" ResourceTag="Action.Edit" IconCssClass="fa-solid fa-pen" />
                 }                
-                @if(CanCreate)
+                @if(CanCreate && !_isEditingFlex)
                 {
                     <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus" />
                 }

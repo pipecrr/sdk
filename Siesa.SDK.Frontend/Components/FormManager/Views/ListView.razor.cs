@@ -53,7 +53,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public bool ShowList { get; set; } = true;
         [Parameter]
         public bool UseFlex { get; set; } = false;
-
         [Inject]
         public ILocalStorageService localStorageService { get; set; }
         private FreeForm SearchFormRef;
@@ -81,6 +80,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public bool LoadingData;
         public bool LoadingSearch;
 
+        private bool _isEditingFlex = false;
         public String ErrorMsg = "";
         private IList<object> SelectedObjects { get; set; }
 
@@ -565,7 +565,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         }
 
         private void GoToEditFlex(){
-            
+            _isEditingFlex = true;
+        }
+
+        private void ConfigureList(){
+            JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.toggleConfigModal");
+        }
+
+        private void SaveAndContinueList(){
+
+        }
+
+        private void SaveAndCloseList(){
+
         }
 
         private async Task OnClickSearch()

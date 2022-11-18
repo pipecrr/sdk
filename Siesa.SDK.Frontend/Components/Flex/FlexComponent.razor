@@ -51,11 +51,12 @@
     public ListView ListView {get;set;}
     [Parameter]
     public string GuidListView {get;set;} = "";
-
     [Parameter]
     public bool CanEdit {get;set;}
     [Parameter]
     public bool CanDelete {get;set;}
+    [Parameter]
+    public bool EditingFlex {get;set;} = false;
 
     private bool _isDebug = false;
 
@@ -77,51 +78,55 @@
     private void Init()
     {
         bool MountFlex = false;
-        Navigation.TryGetQueryString("sdk_debug",out string SDKDebugVar);
-        if(!string.IsNullOrEmpty(SDKDebugVar))
-        {
-            if(!_isDebug)
+        if(!IsListView){            
+            Navigation.TryGetQueryString("sdk_debug",out string SDKDebugVar);
+            if(!string.IsNullOrEmpty(SDKDebugVar))
             {
-                MountFlex = true;
+                if(!_isDebug)
+                {
+                    MountFlex = true;
+                }
+                _isDebug = true;
             }
             _isDebug = true;
-        }
-        //_isDebug = true;
 
-        Navigation.TryGetQueryString("currentView",out string SDKCurrentView);
-        
-        if(string.IsNullOrEmpty(SDKCurrentView))
-        {
-            SDKCurrentView = "create";
-        }
+            Navigation.TryGetQueryString("currentView",out string SDKCurrentView);
+            
+            if(string.IsNullOrEmpty(SDKCurrentView))
+            {
+                SDKCurrentView = "create";
+            }
 
-        if(SDKCurrentView != _currentView)
-        {
-            MountFlex = true;
-            _currentView = SDKCurrentView;
-        }
-
-        if(_currentView == "detail")
-        {
-            if(!_isDetail)
+            if(SDKCurrentView != _currentView)
             {
                 MountFlex = true;
+                _currentView = SDKCurrentView;
             }
-            _isDetail = true;
-        }
 
-        Navigation.TryGetQueryString("flexRowid",out string SDKFlexRowIdVar);
-        if(!string.IsNullOrEmpty(SDKFlexRowIdVar))
-        {
-            if(int.Parse(SDKFlexRowIdVar) != _flexRowId)
+            if(_currentView == "detail")
             {
-                MountFlex = true;
+                if(!_isDetail)
+                {
+                    MountFlex = true;
+                }
+                _isDetail = true;
             }
-            _flexRowId = int.Parse(SDKFlexRowIdVar);
-        }  
 
-        if(IsListView){
+            Navigation.TryGetQueryString("flexRowid",out string SDKFlexRowIdVar);
+            if(!string.IsNullOrEmpty(SDKFlexRowIdVar))
+            {
+                if(int.Parse(SDKFlexRowIdVar) != _flexRowId)
+                {
+                    MountFlex = true;
+                }
+                _flexRowId = int.Parse(SDKFlexRowIdVar);
+            }  
+        }else{
             _currentView = "detail";
+        }
+
+        if(EditingFlex){
+            _currentView = "edit";
         }
         
         FlexAttributes.Clear();
@@ -135,6 +140,7 @@
         FlexAttributes.Add("guid_list_view", GuidListView);
         FlexAttributes.Add("can_edit_list_view", CanEdit.ToString());
         FlexAttributes.Add("can_delete_list_view", CanDelete.ToString());
+        FlexAttributes.Add("editing_flex", EditingFlex.ToString());
         if(_flexRowId != 0)
         {
             FlexAttributes.Add("base_obj_id", _flexRowId);
@@ -152,7 +158,11 @@
                     }
                 });
             }else{
+                
                 JSRuntime.InvokeAsync<object>("window.MountFlex", flexElementId);
+                if(IsListView){
+                    JSRuntime.InvokeVoidAsync("window.ListViewInstance", DotNetObjectReference.Create(ListView), GuidListView);
+                }
             }
             _isMounted = true;
         }
