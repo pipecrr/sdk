@@ -26,18 +26,20 @@ namespace Siesa.SDK.Entities
 		[StringLength(250)]
 		public string Name { get; set; }
 
-		[Required]
 		[StringLength(500)]
-		public string Description { get; set; }
+		public string? Description { get; set; }
 
-		[Required]
-		public string Metadata { get; set; }
+		public string? Metadata { get; set; }
 
-		[Required]
-		public string Delta { get; set; }
+		public string? Delta { get; set; }
 
+		[ForeignKey("FlexParent")]
 		public int? RowidFlexParent { get; set; }
 
+
+		[SDKCheckRelationship]
+		[Required]
+		public virtual E00230_Flex FlexParent { get; set; }
 
 	}
 }
