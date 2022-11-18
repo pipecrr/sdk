@@ -22,6 +22,8 @@ namespace Siesa.SDK.Backend.Access
 {
     public class SDKContext : DbContext
     {
+	public DbSet<E00230_Flex>? E00230_Flex { get; set; }
+
 	public DbSet<E00251_EntityGroup>? E00251_EntityGroup { get; set; }
 
 	public DbSet<E00250_Entity>? E00250_Entity { get; set; }
