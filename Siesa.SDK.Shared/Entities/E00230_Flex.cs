@@ -38,7 +38,6 @@ namespace Siesa.SDK.Entities
 
 
 		[SDKCheckRelationship]
-		[Required]
 		public virtual E00230_Flex FlexParent { get; set; }
 
 	}
