@@ -15,8 +15,11 @@ function loadScript(url, in_head = false, callback = null) {
     parent.appendChild(script);
 }
 
-function ListViewInstance(dotnethelper){
-    window.dotnethelperListView = dotnethelper;
+function ListViewInstance(dotnethelper, key){
+    var data = new Map();
+    data.set(key, dotnethelper);
+      
+    window.dotnethelpersListView = data;
 }
 
 function MountFlex(id)

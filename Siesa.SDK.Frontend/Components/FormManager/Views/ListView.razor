@@ -292,7 +292,6 @@ else
                                 </HeaderTemplate>
                             </RadzenDataGridColumn>
                             }
-                            
                         }
                     }
                 }
@@ -301,7 +300,7 @@ else
     }
 
     @if(ShowList && UseFlex){
-        <FlexComponent IsListView="true" BlNameList="@BusinessName" ViewdefName="@FinalViewdefName" ListView="@this"></FlexComponent>
+        <FlexComponent IsListView="true" BlNameList="@BusinessName" ViewdefName="@FinalViewdefName" ListView="@this" GuidListView="@guidListView" CanEdit="@CanEdit" CanDelete="@CanDelete"></FlexComponent>
     }
 
     @if(SetTopBar)
@@ -314,14 +313,14 @@ else
                 {
                     <TopBarButton ResourceTag="Action.AdvanceSearch" IconCssClass="fa-solid fa-magnifying-glass-plus" Click="@(()=> SetSearchFromVisibility(false))"/>
                 }
-                @if(CanCreate)
-                {
-                    <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus" />
-                }
                 @if(UseFlex && true)//TODO: Add permission
                 {
                     <TopBarButton Click="GoToEditFlex" ResourceTag="Action.Edit" IconCssClass="fa-solid fa-pen" />
                 }                
+                @if(CanCreate)
+                {
+                    <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus" />
+                }
             </TopBarButtons>
             <TopBarExtraButtons>
                 @foreach (var btn in ListViewModel.Buttons)
@@ -363,5 +362,22 @@ else
             await UpdateSearchForm(SavedHiddenFields, false, formInstance);
             StateHasChanged();
         }
+    }
+    
+    public async Task<bool> ConfirmDelete(){
+
+        var result = false;
+
+        var dialog = await dialogService.ShowCustomDialog(ds =>
+            @<ConfirmDelete DialogService=@ds />
+        );
+
+        if(dialog){
+            result = true;
+        }else{
+            result = false;
+        }
+
+        return result;
     }
 }

@@ -49,6 +49,14 @@
     public string ViewdefName {get;set;} = "";
     [Parameter]
     public ListView ListView {get;set;}
+    [Parameter]
+    public string GuidListView {get;set;} = "";
+
+    [Parameter]
+    public bool CanEdit {get;set;}
+    [Parameter]
+    public bool CanDelete {get;set;}
+
     private bool _isDebug = false;
 
     private bool _isDetail = false;
@@ -78,7 +86,7 @@
             }
             _isDebug = true;
         }
-        _isDebug = true;
+        //_isDebug = true;
 
         Navigation.TryGetQueryString("currentView",out string SDKCurrentView);
         
@@ -124,6 +132,9 @@
         FlexAttributes.Add("is_list_view", IsListView.ToString());
         FlexAttributes.Add("bl_name_list", BlNameList);
         FlexAttributes.Add("viewdef_name", ViewdefName);
+        FlexAttributes.Add("guid_list_view", GuidListView);
+        FlexAttributes.Add("can_edit_list_view", CanEdit.ToString());
+        FlexAttributes.Add("can_delete_list_view", CanDelete.ToString());
         if(_flexRowId != 0)
         {
             FlexAttributes.Add("base_obj_id", _flexRowId);
@@ -135,8 +146,10 @@
             if(_jsModule == null){
                 _ = InvokeAsync(async () => {
                     await Task.Delay(250);
-                    JSRuntime.InvokeVoidAsync("window.ListViewInstance", DotNetObjectReference.Create(ListView));
                     JSRuntime.InvokeAsync<object>("window.MountFlex", flexElementId);
+                    if(IsListView){
+                        JSRuntime.InvokeVoidAsync("window.ListViewInstance", DotNetObjectReference.Create(ListView), GuidListView);
+                    }
                 });
             }else{
                 JSRuntime.InvokeAsync<object>("window.MountFlex", flexElementId);
