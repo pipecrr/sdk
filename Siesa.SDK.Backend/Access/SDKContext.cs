@@ -30,8 +30,6 @@ namespace Siesa.SDK.Backend.Access
 
         public DbSet<E00270_Attachment>? E00270_Attachment { get; set; }
 
-        public DbSet<E00230_Flex>? E00230_Flex { get; set; }
-
         public DbSet<E00025_EnumValue>? E00025_EnumValue { get; set; }
 
         public DbSet<U00225_UserDataVisibilityGroup>? U00225_UserDataVisibilityGroup { get; set; }
