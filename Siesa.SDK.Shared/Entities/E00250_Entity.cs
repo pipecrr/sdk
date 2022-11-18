@@ -13,32 +13,32 @@ using Siesa.SDK.Entities.Enums;
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
-	/// consultas flex
+	/// Entidades dinámicas
 	/// </summary>
 
-	public partial class E00230_Flex : BaseCompanyGroup<int>
+	public partial class E00250_Entity : BaseSDK<int>
 	{
 		[Key]
 		[Required]
 		public override int Rowid { get; set; }
 
 		[Required]
-		[StringLength(250)]
-		public string Name { get; set; }
+		[StringLength(60)]
+		public string Entity { get; set; }
 
+		[Required]
+		public int RowidGenericEntity { get; set; }
+
+		[Required]
+		public int RowidDocument { get; set; }
+
+		[Required]
+		public byte FilterType { get; set; }
+
+		[Required]
 		[StringLength(500)]
-		public string? Description { get; set; }
+		public string Description { get; set; }
 
-		public string? Metadata { get; set; }
-
-		public string? Delta { get; set; }
-
-		[ForeignKey("FlexParent")]
-		public int? RowidFlexParent { get; set; }
-
-
-		[SDKCheckRelationship]
-		public virtual E00230_Flex FlexParent { get; set; }
 
 	}
 }
