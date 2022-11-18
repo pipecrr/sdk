@@ -12,7 +12,7 @@ using Siesa.SDK.Entities.Enums;
 
 namespace Siesa.SDK.Entities
 {
-	public partial class E00230_Flex
+	public partial class E00251_EntityGroup
 	{
 
 
