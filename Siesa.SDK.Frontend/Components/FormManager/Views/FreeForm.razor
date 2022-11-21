@@ -82,7 +82,7 @@ else if (BusinessObj != null)
 @if(this.SetTopBar)
 {
 
-    <SetTopBar>
+    <SetTopBar BusinessObj="@BusinessObj">
         <TopBarTitle>@Title</TopBarTitle>
         <TopBarButtons>
             @foreach (var btn in FormViewModel.Buttons)
