@@ -20,6 +20,9 @@ namespace Siesa.SDK.Shared.DTOS
         public int version { get; set; }
         public string metadata { get; set; }
         public string module { get; set; }
+        public string delta { get; set; }
+        public string bl_name { get; set; }
+        public bool is_list_view { get; set; }
     }
 
     public class Owner

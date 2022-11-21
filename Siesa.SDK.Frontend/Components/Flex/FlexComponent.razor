@@ -87,8 +87,7 @@
                     MountFlex = true;
                 }
                 _isDebug = true;
-            }
-            _isDebug = true;
+            }            
 
             Navigation.TryGetQueryString("currentView",out string SDKCurrentView);
             
@@ -124,7 +123,7 @@
         }else{
             _currentView = "detail";
         }
-
+        _isDebug = true;
         if(EditingFlex){
             _currentView = "edit";
         }

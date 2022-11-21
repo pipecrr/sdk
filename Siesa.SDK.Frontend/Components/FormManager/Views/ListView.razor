@@ -314,12 +314,10 @@ else
                     <TopBarButton ResourceTag="Action.AdvanceSearch" IconCssClass="fa-solid fa-magnifying-glass-plus" Click="@(()=> SetSearchFromVisibility(false))"/>
                 }
                 @if(_isEditingFlex){
-                    <TopBarButton ResourceTag="Action.Flex.Configure" IconCssClass="fa-solid fa-cog" Click="ConfigureList" />
-                    <TopBarButton ResourceTag="Action.Flex.SaveAndContinue" IconCssClass="fa-solid fa-bookmark" Click="SaveAndContinueList" />
+                    <TopBarButton ResourceTag="Action.Cancel" IconCssClass="fa-solid fa-times" Click="CancelEdit"/>
                     <TopBarButton ResourceTag="Action.Flex.SaveAndClose" IconCssClass="fa-solid fa-floppy-disk" Click="SaveAndCloseList" />
                 }
-                @if(UseFlex && true)//TODO: Add permission
-                {
+                @if(UseFlex && !_isEditingFlex){
                     <TopBarButton Click="GoToEditFlex" ResourceTag="Action.Edit" IconCssClass="fa-solid fa-pen" />
                 }                
                 @if(CanCreate && !_isEditingFlex)

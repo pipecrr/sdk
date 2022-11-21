@@ -24,7 +24,6 @@ function ListViewInstance(dotnethelper, key){
 
 function MountFlex(id)
 {
-    console.log("porobando",id);
     if(document.getElementById(id) == null)
     {
         return;
