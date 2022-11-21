@@ -24,7 +24,7 @@ namespace Siesa.SDK.Entities
 		public virtual string Description { get; set; }
 
 		[Required]
-		public virtual bool Status { get; set; }
+		public virtual enumStatusBaseMaster Status { get; set; }
 
 		[Required]
 		public virtual bool IsPrivate { get; set; }
