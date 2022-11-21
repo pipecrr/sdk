@@ -36,9 +36,14 @@ namespace Siesa.SDK.Entities
 		[ForeignKey("FlexParent")]
 		public int? RowidFlexParent { get; set; }
 
+		[ForeignKey("Feature")]
+		public int? RowidFeature { get; set; }
+
 
 		[SDKCheckRelationship]
 		public virtual E00230_Flex FlexParent { get; set; }
+
+		public virtual E00040_Feature Feature { get; set; }
 
 	}
 }
