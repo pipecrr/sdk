@@ -37,7 +37,7 @@ namespace Siesa.SDK.Entities.Enums
 
 	public enum enumStatusBaseMaster
 	{
-		Inactive = 0,
-		Active = 1
+		Active = 1,
+		Inactive = 0
 	}
 }
