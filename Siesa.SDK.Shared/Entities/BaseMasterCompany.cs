@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Siesa.SDK.Entities.Enums;
+using Siesa.SDK.Shared.DataAnnotations;
 
 namespace Siesa.SDK.Entities
 {
@@ -23,7 +24,7 @@ namespace Siesa.SDK.Entities
 		public virtual string Description { get; set; }
 
 		[Required]
-		public virtual bool Status { get; set; }
+		public virtual enumStatusBaseMaster Status { get; set; }
 
 		[Required]
 		public virtual bool IsPrivate { get; set; }
