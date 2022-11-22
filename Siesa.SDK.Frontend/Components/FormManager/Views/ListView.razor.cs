@@ -566,16 +566,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private void GoToEditFlex(){
             _isEditingFlex = true;
-            JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.getDataEditListFlex");
+            JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.setEditListFlex");
         }
 
         private void CancelEdit(){
             _isEditingFlex = false;
+            JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.setEditListFlex");
         }
 
         private void SaveAndCloseList(){
             _isEditingFlex = false;
             JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.save");
+            JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.setEditListFlex");
         }
 
         private async Task OnClickSearch()
