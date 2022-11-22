@@ -194,7 +194,10 @@ namespace Siesa.SDK.Shared.Backend
 
         public async Task<Protos.ExposedMethodResponse> CallBusinessMethod(string business_name, string method, ICollection<ExposedMethodParam> parameters)
         {
-            var channel = GrpcChannel.ForAddress(this.Url);
+            var channel = GrpcChannel.ForAddress(this.Url, new GrpcChannelOptions
+            {
+                MaxReceiveMessageSize = 1 * 1024 * 1024 * 1024, 
+            });
             var client = new Protos.SDK.SDKClient(channel);
             var request = new Protos.ExposedMethodRequest
             {
