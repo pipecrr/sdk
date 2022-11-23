@@ -24,9 +24,11 @@ namespace Siesa.SDK.Backend.Extensions
 
         private static Assembly _assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
         
-        internal static ActionResult<List<Dictionary<string, object>>> SDKFlexPreviewData(SDKContext Context, SDKFlexRequestData requestData, IAuthenticationService authenticationService, bool setTop = true)
+        internal static ActionResult<List<Dictionary<string, object>>> SDKFlexPreviewData(SDKContext Context, SDKFlexRequestData requestData, IAuthenticationService authenticationService, bool setTop)
         {
             var rowidCulture = authenticationService.User.RowidCulture;
+            int? skip = requestData.skip;
+            int? take = requestData.take;
             List<SDKFlexColumn> columns = requestData.columns;
             if (columns.Count == 0)
             {
@@ -201,6 +203,17 @@ namespace Siesa.SDK.Backend.Extensions
                     contextSet = orderMethod.Invoke(contextSet, new object[] { contextSet, orderBy, null });
                 }
 
+                if (skip.HasValue)
+                {
+                    var skipMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "Skip", new[] { typeof(IQueryable), typeof(int) });
+                    contextSet = skipMethod.Invoke(contextSet, new object[] { contextSet, skip.Value });
+                }
+                if (take.HasValue)
+                {
+                    var takeMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "Take", new[] { typeof(IQueryable), typeof(int) });
+                    contextSet = takeMethod.Invoke(contextSet, new object[] { contextSet, take.Value });
+                }
+
                 if(setTop){
                     var takeMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "Take", new[] { typeof(IQueryable), typeof(int) });
                     contextSet = takeMethod.Invoke(contextSet, new object[] { contextSet, 50 });
@@ -228,6 +241,17 @@ namespace Siesa.SDK.Backend.Extensions
                             item[enumkey] = description;
                         }
                     }
+                    // //start time
+                    // var watch = System.Diagnostics.Stopwatch.StartNew();
+                    // for (int i = 0; i < 11; i++)
+                    // {
+                    //     resourceDict.AddRange(resourceDict);
+                    // }
+                    // //stop time
+                    // watch.Stop();
+                    // var elapsedMs = watch.ElapsedMilliseconds;
+                    // Console.WriteLine($"Time: {elapsedMs}");
+
                     return new ActionResult<List<Dictionary<string,object>>>() { Data = resourceDict};
                 }
 
