@@ -25,6 +25,7 @@ Accept="@Accept" Progress="@SDKProgress" Complete="@SDKComplete" Change="@SDKCha
     [Parameter] public Action<SDKUploadCompleteEventArgsDTO> Complete {get;set;}
     [Parameter] public Action<SDKUploadChangeEventArgsDTO> Change {get;set;}
     [Parameter] public Action<SDKUploadErrorEventArgsDTO> Error {get;set;}
+    [Parameter] public string UploadMethodName {get;set;} = "UploadSingle";
     private string ResourceChooseText {get; set;}
     
     private string Url {get; set;}
@@ -34,7 +35,7 @@ Accept="@Accept" Progress="@SDKProgress" Complete="@SDKComplete" Change="@SDKCha
     protected override async Task OnInitializedAsync(){
         ResourceChooseText = "Custom.SDKUpload.Choose";
         ResourceChooseText = await UtilManager.GetResource("Custom.SDKUpload.Choose");
-        Url = "api/"+Business.BLName+"/UploadSingle";
+        Url = "api/"+Business.BLName+"/"+UploadMethodName;
         if(Business != null && !string.IsNullOrEmpty(FieldName)){
             Business.GetType().GetProperty(FieldName).SetValue(Business, this);
         }
