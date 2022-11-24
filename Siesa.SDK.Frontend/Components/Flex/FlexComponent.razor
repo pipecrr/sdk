@@ -61,6 +61,8 @@
     [Parameter]
     public int Take {get;set;} = 100;
 
+    [Parameter]  
+    public bool ServerPagination {get;set;} = false;
     private bool _isDebug = false;
 
     private bool _isDetail = false;
@@ -126,7 +128,9 @@
         }else{
             _currentView = "detail";
         }
-        _isDebug = true;
+        
+        //_isDebug = true;
+
         if(EditingFlex){
             _currentView = "edit";
         }
@@ -144,6 +148,7 @@
         FlexAttributes.Add("can_delete_list_view", CanDelete.ToString());
         FlexAttributes.Add("editing_flex", EditingFlex.ToString());
         FlexAttributes.Add("take", Take.ToString());
+        FlexAttributes.Add("server_pagination", ServerPagination.ToString());
         if(_flexRowId != 0)
         {
             FlexAttributes.Add("base_obj_id", _flexRowId);

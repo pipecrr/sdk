@@ -29,5 +29,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
 
         public bool ShowActions { get; set; } = true;
         public bool UseFlex { get; set; } = false;
+        public int FlexTake { get; set; } = 100;
+        public bool ServerPaginationFlex { get; set; } = false;
+
     }
 }

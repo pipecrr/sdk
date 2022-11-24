@@ -53,6 +53,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public bool ShowList { get; set; } = true;
         [Parameter]
         public bool UseFlex { get; set; } = false;
+        [Parameter]
+        public int FlexTake { get; set; } = 100;
+        [Parameter]
+        public bool ServerPaginationFlex { get; set; } = false;
+
         [Inject]
         public ILocalStorageService localStorageService { get; set; }
         private FreeForm SearchFormRef;
@@ -230,6 +235,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 }
                 ListViewModel = JsonConvert.DeserializeObject<ListViewModel>(metadata);
                 UseFlex = ListViewModel.UseFlex;
+                FlexTake = ListViewModel.FlexTake;
+                ServerPaginationFlex = ListViewModel.ServerPaginationFlex;
                 foreach (var field in ListViewModel.Fields)
                 {
                     field.GetFieldObj(BusinessObj);
