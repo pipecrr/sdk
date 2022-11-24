@@ -127,7 +127,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private bool CanDelete;
         private bool CanDetail;
         private bool CanList;
-        private string StyleSearchForm { get; set; } = "search_back position-relative mb-3";
+        private string StyleSearchForm { get; set; } = "search_back position-relative";
 
 
         Guid needUpdate;
@@ -307,7 +307,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 }
                 if(SearchFormRef != null)
                 {
-                    StyleSearchForm = "search_back position-relative mb-3";
+                    StyleSearchForm = "search_back position-relative";
                 }
             }
             StateHasChanged();
