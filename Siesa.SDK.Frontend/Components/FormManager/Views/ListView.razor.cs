@@ -53,16 +53,17 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public bool ShowList { get; set; } = true;
         [Parameter]
         public bool UseFlex { get; set; } = false;
-
         [Inject]
         public ILocalStorageService localStorageService { get; set; }
         private FreeForm SearchFormRef;
 
         public string SearchFormID = Guid.NewGuid().ToString();
 
+        public string guidListView = "";
+
         [Inject] public IJSRuntime JSRuntime { get; set; }
         [Inject] public NavigationManager NavManager { get; set; }
-        
+
         [Inject] public SDKNotificationService NotificationService { get; set; }
 
         [Inject] public NavigationService NavigationService { get; set; }
@@ -73,11 +74,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public IBackendRouterService BackendRouterService { get; set; }
 
         [Inject] public SDKDialogService dialogService { get; set; }
+        [Inject] public Radzen.DialogService dialogServiceRadzen { get; set; }
 
         public bool Loading;
         public bool LoadingData;
         public bool LoadingSearch;
 
+        private bool _isEditingFlex = false;
         public String ErrorMsg = "";
         private IList<object> SelectedObjects { get; set; }
 
@@ -108,7 +111,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public IEnumerable<object> Data { get; set; } = null;
 
         private IEnumerable<object> data;
-        int count;        
+        int count;
         public RadzenDataGrid<object> _gridRef;
 
         public List<FieldOptions> FieldsHidden { get; set; } = new List<FieldOptions>();
@@ -184,7 +187,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
             else
             {
-                if(ShowSearchForm)
+                if (ShowSearchForm)
                 {
                     try
                     {
@@ -202,9 +205,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                     field.GetFieldObj(BusinessObj);
                                 }
                             }
-                            
-                            FieldsHidden = searchForm.Panels.SelectMany(x => x.Fields).Where(x=> x.Hidden).ToList();
-                        }else{
+
+                            FieldsHidden = searchForm.Panels.SelectMany(x => x.Fields).Where(x => x.Hidden).ToList();
+                        }
+                        else
+                        {
                             FieldsHidden = new List<FieldOptions>();
                         }
                     }
@@ -214,9 +219,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         FieldsHidden = new List<FieldOptions>();
                     }
 
-                    try{
+                    try
+                    {
                         SavedHiddenFields = await localStorageService.GetItemAsync<List<FieldOptions>>($"{BusinessName}.Search.HiddenFields");
-                    }catch(System.Exception){
+                    }
+                    catch (System.Exception)
+                    {
                     }
 
                 }
@@ -243,7 +251,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         {
             if (Reload)
             {
-               Restart();
+                Restart();
             }
             hideCustomColumn();
             StateHasChanged();
@@ -265,10 +273,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 {
                 }
 
-                if(!CanList){
+                if (!CanList)
+                {
                     ErrorMsg = "Unauthorized";
                     NotificationService.ShowError("Custom.Generic.Unauthorized");
-                    NavigationService.NavigateTo("/", replace:true);
+                    NavigationService.NavigateTo("/", replace: true);
                 }
 
             }
@@ -279,6 +288,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         {
 
             await base.OnInitializedAsync();
+            guidListView = Guid.NewGuid().ToString();
             //await CheckPermissions();
             //InitView();
         }
@@ -288,24 +298,26 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             Restart();
         }
 
-        private void Restart(){
+        private void Restart()
+        {
 
             Loading = false;
             ErrorMsg = "";
             InitView();
             data = null;
-            if(Data != null){
+            if (Data != null)
+            {
                 data = Data;
                 count = data.Count();
             }
             if (_gridRef != null || SearchFormRef != null)
             {
                 needUpdate = Guid.NewGuid();
-                if(_gridRef != null)
+                if (_gridRef != null)
                 {
                     _gridRef.Reload();
                 }
-                if(SearchFormRef != null)
+                if (SearchFormRef != null)
                 {
                     StyleSearchForm = "search_back position-relative mb-3";
                 }
@@ -321,12 +333,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private string GetFilters(string base_filter = "")
         {
             var filters = $"{base_filter}";
-            try{
+            try
+            {
                 Type type = BusinessObj.BaseObj.GetType();
-                if(BusinessObj.BaseObj.RowidCompany != 0)
+                if (BusinessObj.BaseObj.RowidCompany != 0)
                 {
                     if (Utilities.IsAssignableToGenericType(type, typeof(BaseCompany<>)))
-                    { 
+                    {
                         if (!string.IsNullOrEmpty(filters))
                         {
                             filters += " && ";
@@ -337,7 +350,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         }
                     }
                 }
-            }catch(System.Exception)
+            }
+            catch (System.Exception)
             {
 
             }
@@ -355,21 +369,24 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
             try
             {
-                if(SearchFormRef != null && SearchFormRef.BusinessName == BusinessName){
+                if (SearchFormRef != null && SearchFormRef.BusinessName == BusinessName)
+                {
                     var searchFields = SearchFormRef.GetFields();
                     foreach (var field in searchFields)
                     {
                         var tmpFilter = "";
-                        
+
                         var fieldObj = field.GetFieldObj(BusinessObj);
                         if (fieldObj != null)
                         {
                             dynamic searchValue = fieldObj.ModelObj.GetType().GetProperty(fieldObj.Name).GetValue(fieldObj.ModelObj, null);
-                            if(searchValue == null){
+                            if (searchValue == null)
+                            {
                                 continue;
                             }
                             //check if searchValue is an empty string
-                            if(searchValue is string && string.IsNullOrEmpty(searchValue)){
+                            if (searchValue is string && string.IsNullOrEmpty(searchValue))
+                            {
                                 continue;
                             }
                             switch (fieldObj.FieldType)
@@ -383,7 +400,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                 case FieldTypes.SmallIntegerField:
                                 case FieldTypes.BigIntegerField:
                                 case FieldTypes.ByteField:
-                                    if(!fieldObj.IsNullable)
+                                    if (!fieldObj.IsNullable)
                                     {
                                         tmpFilter = $"{fieldObj.Name} == {searchValue}";
                                     }
@@ -393,12 +410,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                     }
                                     break;
                                 case FieldTypes.BooleanField:
-                                    if(!searchValue)
+                                    if (!searchValue)
                                     {
                                         break;
                                     }
 
-                                    if(!fieldObj.IsNullable)
+                                    if (!fieldObj.IsNullable)
                                     {
                                         tmpFilter = $"{fieldObj.Name} == {searchValue}";
                                     }
@@ -409,7 +426,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                     break;
                                 case FieldTypes.DateField:
                                 case FieldTypes.DateTimeField:
-                                    if(!fieldObj.IsNullable)
+                                    if (!fieldObj.IsNullable)
                                     {
                                         tmpFilter = $"{fieldObj.Name} == DateTime.Parse(\"{searchValue}\")";
                                     }
@@ -420,10 +437,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                     break;
 
                                 case FieldTypes.EntityField:
-                                    if(!fieldObj.IsNullable)
+                                    if (!fieldObj.IsNullable)
                                     {
                                         tmpFilter = $"Rowid{fieldObj.Name} == {searchValue.Rowid}";
-                                    }else{
+                                    }
+                                    else
+                                    {
                                         tmpFilter = $"({fieldObj.Name} == null ? 0 : {fieldObj.Name}.Rowid) == {searchValue.Rowid}";
                                     }
                                     break;
@@ -451,7 +470,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         async Task LoadData(LoadDataArgs args)
         {
-            if(Data != null){
+            if (Data != null)
+            {
                 data = Data;
                 count = data.Count();
                 LoadingData = false;
@@ -517,12 +537,47 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
         }
 
-        private void GoToDelete(Int64 id, string object_string)
+        [JSInvokable]
+        public async Task<bool> DeleteFromReact(Int64 id, string object_string)
         {
-            if (OnClickDelete != null)
-            {
+            if (OnClickDelete != null){
                 OnClickDelete(id.ToString(), object_string);
             }
+            if (UseFlex)
+            {
+                var confirm = await ConfirmDelete();
+                if (confirm){
+                    BusinessObj.BaseObj.Rowid = Convert.ToInt32(id);
+                    var result = await BusinessObj.DeleteAsync();
+                    if (result != null && result.Errors.Count == 0){
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private async Task GoToDelete(Int64 id, string object_string)
+        {
+            if (OnClickDelete != null){
+                OnClickDelete(id.ToString(), object_string);
+            }
+        }
+
+        private void GoToEditFlex(){
+            _isEditingFlex = true;
+            JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.setEditListFlex");
+        }
+
+        private void CancelEdit(){
+            _isEditingFlex = false;
+            JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.setEditListFlex");
+        }
+
+        private void SaveAndCloseList(){
+            _isEditingFlex = false;
+            JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.save");
+            JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.setEditListFlex");
         }
 
         private async Task OnClickSearch()
@@ -531,13 +586,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             LoadingData = true;
             data = null;
             var filters = GetFilters();
-            if(Data == null)
+            if (Data == null)
             {
                 Data = new List<object> { };
             }
             var dbData = await BusinessObj.GetDataAsync(null, null, filters, "");
             Data = dbData.Data;
-            if(Data.Count() == 1)
+            if (Data.Count() == 1)
             {
                 GoToDetail(((dynamic)Data.First()).Rowid);
                 return;
@@ -550,13 +605,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             SetSearchFromVisibility(true);
         }
 
-        
-
-        
 
 
-        public void SetSearchFromVisibility(bool hideForm){
-            if(hideForm){
+
+
+
+        public void SetSearchFromVisibility(bool hideForm)
+        {
+            if (hideForm)
+            {
                 StyleSearchForm = "search_back search_back_hide position-relative";
             }
             else
@@ -660,20 +717,23 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 formInstance = SearchFormRef;
             }
             bool changeFieldsHidden = true;
-            if(returnFields == FieldsHidden)
+            if (returnFields == FieldsHidden)
             {
                 changeFieldsHidden = false;
             }
-            if(formInstance != null)
+            if (formInstance != null)
             {
-                returnFields.ForEach(x => {
-                    if(changeFieldsHidden)
+                returnFields.ForEach(x =>
+                {
+                    if (changeFieldsHidden)
                     {
                         FieldsHidden.FirstOrDefault(y => y.Name == x.Name).Hidden = !x.Hidden;
                     }
-                    formInstance.Panels.ForEach(y => {
-                        y.Fields.ForEach(z => {
-                            if(z.Name == x.Name)
+                    formInstance.Panels.ForEach(y =>
+                    {
+                        y.Fields.ForEach(z =>
+                        {
+                            if (z.Name == x.Name)
                             {
                                 z.Hidden = !x.Hidden;
                             }
@@ -681,7 +741,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     });
                 });
                 formInstance.Refresh();
-                if(SaveFields)
+                if (SaveFields)
                 {
                     localStorageService.SetItemAsync($"{BusinessName}.Search.HiddenFields", returnFields);
                 }

@@ -23,6 +23,13 @@ function loadCss(url){
     document.getElementsByTagName("head")[0].appendChild(link);
 }
 
+function ListViewInstance(dotnethelper, key){
+    var data = new Map();
+    data.set(key, dotnethelper);
+      
+    window.dotnethelpersListView = data;
+}
+
 function MountFlex(div_id, retries = 0)
 {
     if(document.getElementById("flexdebug") == null)
@@ -49,14 +56,15 @@ function MountFlex(div_id, retries = 0)
 }
 (() => {
 
-    loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/2.css?v=20221115');
-    loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/main.css?v=20221115');
+    loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/2.css?v=20221122');
+    loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/main.css?v=20221122');
 
-    loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/2.chunk.js?v=20221115");
-    loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/main.chunk.js?v=20221115");
-    loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/runtime-main.js?v=20221115");
+    loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/2.chunk.js?v=20221122");
+    loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/main.chunk.js?v=20221122");
+    loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/runtime-main.js?v=20221122");
 
     window.MountFlex = MountFlex;
+    window.ListViewInstance = ListViewInstance;
 /*
     window.addEventListener('locationchange', function () {
         console.log("locationchange probando");

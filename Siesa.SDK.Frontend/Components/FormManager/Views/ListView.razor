@@ -292,7 +292,6 @@ else
                                 </HeaderTemplate>
                             </RadzenDataGridColumn>
                             }
-                            
                         }
                     }
                 }
@@ -301,7 +300,7 @@ else
     }
 
     @if(ShowList && UseFlex){
-        <FlexComponent IsListView="true" BlNameList="@BusinessName" ViewdefName="@FinalViewdefName"></FlexComponent>
+        <FlexComponent IsListView="true" BlNameList="@BusinessName" ViewdefName="@FinalViewdefName" ListView="@this" GuidListView="@guidListView" CanEdit="@CanEdit" CanDelete="@CanDelete" EditingFlex="@_isEditingFlex"></FlexComponent>
     }
 
     @if(SetTopBar)
@@ -314,7 +313,14 @@ else
                 {
                     <TopBarButton ResourceTag="Action.AdvanceSearch" IconCssClass="fa-solid fa-magnifying-glass-plus" Click="@(()=> SetSearchFromVisibility(false))"/>
                 }
-                @if(CanCreate)
+                @if(_isEditingFlex){
+                    <TopBarButton ResourceTag="Action.Cancel" IconCssClass="fa-solid fa-times" Click="CancelEdit"/>
+                    <TopBarButton ResourceTag="Action.Flex.SaveAndClose" IconCssClass="fa-solid fa-floppy-disk" Click="SaveAndCloseList" />
+                }
+                @if(UseFlex && !_isEditingFlex){
+                    <TopBarButton Click="GoToEditFlex" ResourceTag="Action.Edit" IconCssClass="fa-solid fa-pen" />
+                }                
+                @if(CanCreate && !_isEditingFlex)
                 {
                     <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus" />
                 }
@@ -359,5 +365,22 @@ else
             await UpdateSearchForm(SavedHiddenFields, false, formInstance);
             StateHasChanged();
         }
+    }
+    
+    public async Task<bool> ConfirmDelete(){
+
+        var result = false;
+
+        var dialog = await dialogService.ShowCustomDialog(ds =>
+            @<ConfirmDelete DialogService=@ds />
+        );
+
+        if(dialog){
+            result = true;
+        }else{
+            result = false;
+        }
+
+        return result;
     }
 }
