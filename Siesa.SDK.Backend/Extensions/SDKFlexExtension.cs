@@ -29,6 +29,7 @@ namespace Siesa.SDK.Backend.Extensions
             var rowidCulture = authenticationService.User.RowidCulture;
             int? skip = requestData.skip;
             int? take = requestData.take;
+            string filterSearch = requestData.filter_search;
             List<SDKFlexColumn> columns = requestData.columns;
             if (columns.Count == 0)
             {
@@ -145,6 +146,11 @@ namespace Siesa.SDK.Backend.Extensions
 
                 CreateWhere(ref contextSet, generalFilters, entityType, _assemblySelect);
 
+                if(!string.IsNullOrEmpty(filterSearch)){
+                    var whereMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "Where", new[] { typeof(IQueryable), typeof(string), typeof(object[])});
+                    contextSet = whereMethod.Invoke(contextSet, new object[] { contextSet, filterSearch, new object[]{}});
+                }
+
                 var selectMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "Select", new[] { typeof(IQueryable), typeof(string), typeof(object[]) });
                 contextSet = selectMethod.Invoke(contextSet, new object[] { contextSet, $"new ({strSelect})", null });
 
@@ -234,24 +240,12 @@ namespace Siesa.SDK.Backend.Extensions
                             var itemValue = item[enumkey];
                             var description = "--";
                             if(enumValue.TryGetValue(byte.Parse(itemValue.ToString()), out string value)){
-                                //description = enumValue.[byte.Parse(itemValue.ToString())];
                                 description = value;
                             }
                             item[$"{enumkey}_oreports_key"] = item[enumkey];
                             item[enumkey] = description;
                         }
                     }
-                    // //start time
-                    // var watch = System.Diagnostics.Stopwatch.StartNew();
-                    // for (int i = 0; i < 11; i++)
-                    // {
-                    //     resourceDict.AddRange(resourceDict);
-                    // }
-                    // //stop time
-                    // watch.Stop();
-                    // var elapsedMs = watch.ElapsedMilliseconds;
-                    // Console.WriteLine($"Time: {elapsedMs}");
-
                     return new ActionResult<List<Dictionary<string,object>>>() { Data = resourceDict};
                 }
 
@@ -584,11 +578,11 @@ namespace Siesa.SDK.Backend.Extensions
                             for (int i = 1; i < listValue.Count; i++){
                                 inExpression2 = Expression.Equal(columnNameProperty, Expression.Constant(listValue[i]));
                                 inExpression = Expression.Or(inExpression, inExpression2);
-                            }                            
+                            }
                         }
                         addExpression(ref combined, inExpression);
-                        break;                    
-                    case "exclude":                    
+                        break;
+                    case "exclude":
                         if(value == null){
                             return;
                         }

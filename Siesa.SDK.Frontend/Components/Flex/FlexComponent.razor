@@ -63,6 +63,9 @@
 
     [Parameter]  
     public bool ServerPagination {get;set;} = false;
+
+    [Parameter]
+    public string FilterSearch {get;set;} = "";
     private bool _isDebug = false;
 
     private bool _isDetail = false;
@@ -128,7 +131,7 @@
         }else{
             _currentView = "detail";
         }
-        
+
         //_isDebug = true;
 
         if(EditingFlex){
@@ -149,6 +152,7 @@
         FlexAttributes.Add("editing_flex", EditingFlex.ToString());
         FlexAttributes.Add("take", Take.ToString());
         FlexAttributes.Add("server_pagination", ServerPagination.ToString());
+        FlexAttributes.Add("filter_search", FilterSearch);
         if(_flexRowId != 0)
         {
             FlexAttributes.Add("base_obj_id", _flexRowId);
