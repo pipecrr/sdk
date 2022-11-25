@@ -9,5 +9,8 @@ namespace Siesa.SDK.Shared.DTOS
         public List<SDKFlexFilters> filters { get; set; }
         public List<SDKFlexColumn> columns { get; set; }
         public List<SDKFlexColumn> groups { get; set; }
+        public string filter_search { get; set; }
+        public int? skip { get; set; }
+        public int? take { get; set; }
     }
 }

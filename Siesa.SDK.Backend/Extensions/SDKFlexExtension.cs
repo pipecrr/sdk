@@ -24,9 +24,12 @@ namespace Siesa.SDK.Backend.Extensions
 
         private static Assembly _assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
         
-        internal static ActionResult<List<Dictionary<string, object>>> SDKFlexPreviewData(SDKContext Context, SDKFlexRequestData requestData, IAuthenticationService authenticationService, bool setTop = true)
+        internal static ActionResult<List<Dictionary<string, object>>> SDKFlexPreviewData(SDKContext Context, SDKFlexRequestData requestData, IAuthenticationService authenticationService, bool setTop)
         {
             var rowidCulture = authenticationService.User.RowidCulture;
+            int? skip = requestData.skip;
+            int? take = requestData.take;
+            string filterSearch = requestData.filter_search;
             List<SDKFlexColumn> columns = requestData.columns;
             if (columns.Count == 0)
             {
@@ -143,6 +146,11 @@ namespace Siesa.SDK.Backend.Extensions
 
                 CreateWhere(ref contextSet, generalFilters, entityType, _assemblySelect);
 
+                if(!string.IsNullOrEmpty(filterSearch)){
+                    var whereMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "Where", new[] { typeof(IQueryable), typeof(string), typeof(object[])});
+                    contextSet = whereMethod.Invoke(contextSet, new object[] { contextSet, filterSearch, new object[]{}});
+                }
+
                 var selectMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "Select", new[] { typeof(IQueryable), typeof(string), typeof(object[]) });
                 contextSet = selectMethod.Invoke(contextSet, new object[] { contextSet, $"new ({strSelect})", null });
 
@@ -201,6 +209,17 @@ namespace Siesa.SDK.Backend.Extensions
                     contextSet = orderMethod.Invoke(contextSet, new object[] { contextSet, orderBy, null });
                 }
 
+                if (skip.HasValue)
+                {
+                    var skipMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "Skip", new[] { typeof(IQueryable), typeof(int) });
+                    contextSet = skipMethod.Invoke(contextSet, new object[] { contextSet, skip.Value });
+                }
+                if (take.HasValue)
+                {
+                    var takeMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "Take", new[] { typeof(IQueryable), typeof(int) });
+                    contextSet = takeMethod.Invoke(contextSet, new object[] { contextSet, take.Value });
+                }
+
                 if(setTop){
                     var takeMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "Take", new[] { typeof(IQueryable), typeof(int) });
                     contextSet = takeMethod.Invoke(contextSet, new object[] { contextSet, 50 });
@@ -221,7 +240,6 @@ namespace Siesa.SDK.Backend.Extensions
                             var itemValue = item[enumkey];
                             var description = "--";
                             if(enumValue.TryGetValue(byte.Parse(itemValue.ToString()), out string value)){
-                                //description = enumValue.[byte.Parse(itemValue.ToString())];
                                 description = value;
                             }
                             item[$"{enumkey}_oreports_key"] = item[enumkey];
@@ -560,11 +578,11 @@ namespace Siesa.SDK.Backend.Extensions
                             for (int i = 1; i < listValue.Count; i++){
                                 inExpression2 = Expression.Equal(columnNameProperty, Expression.Constant(listValue[i]));
                                 inExpression = Expression.Or(inExpression, inExpression2);
-                            }                            
+                            }
                         }
                         addExpression(ref combined, inExpression);
-                        break;                    
-                    case "exclude":                    
+                        break;
+                    case "exclude":
                         if(value == null){
                             return;
                         }

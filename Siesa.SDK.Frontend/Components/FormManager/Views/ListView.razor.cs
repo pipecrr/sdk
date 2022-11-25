@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
@@ -53,9 +53,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public bool ShowList { get; set; } = true;
         [Parameter]
         public bool UseFlex { get; set; } = false;
+        [Parameter]
+        public int FlexTake { get; set; } = 100;
+        [Parameter]
+        public bool ServerPaginationFlex { get; set; } = false;
+
         [Inject]
         public ILocalStorageService localStorageService { get; set; }
         private FreeForm SearchFormRef;
+        private string FilterFlex { get; set; } = "";
 
         public string SearchFormID = Guid.NewGuid().ToString();
 
@@ -130,6 +136,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private bool CanDelete;
         private bool CanDetail;
         private bool CanList;
+        private string defaultStyleSearchForm = "search_back position-relative";
         private string StyleSearchForm { get; set; } = "search_back position-relative";
 
 
@@ -230,6 +237,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 }
                 ListViewModel = JsonConvert.DeserializeObject<ListViewModel>(metadata);
                 UseFlex = ListViewModel.UseFlex;
+                FlexTake = ListViewModel.FlexTake;
+                ServerPaginationFlex = ListViewModel.ServerPaginationFlex;
                 foreach (var field in ListViewModel.Fields)
                 {
                     field.GetFieldObj(BusinessObj);
@@ -319,7 +328,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 }
                 if (SearchFormRef != null)
                 {
-                    StyleSearchForm = "search_back position-relative";
+                    StyleSearchForm = defaultStyleSearchForm;
                 }
             }
             StateHasChanged();
@@ -590,22 +599,41 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 Data = new List<object> { };
             }
-            var dbData = await BusinessObj.GetDataAsync(null, null, filters, "");
-            Data = dbData.Data;
-            if (Data.Count() == 1)
-            {
-                GoToDetail(((dynamic)Data.First()).Rowid);
-                return;
+            if(ServerPaginationFlex ){
+                var dbData = await BusinessObj.GetDataAsync(0, 2, filters, "");
+                Data = dbData.Data;
+                if (Data.Count() == 1)
+                {
+                    GoToDetail(((dynamic)Data.First()).Rowid);
+                    return;
+                }
+                count = dbData.TotalCount;
+            }else{
+                var dbData = await BusinessObj.GetDataAsync(null, null, filters, "");
+                Data = dbData.Data;
+                if (Data.Count() == 1)
+                {
+                    GoToDetail(((dynamic)Data.First()).Rowid);
+                    return;
+                }
+                count = dbData.TotalCount;
+                data = Data;
             }
-            data = Data;
-            count = dbData.TotalCount;
             LoadingData = false;
             LoadingSearch = false;
             ShowList = true;
+            FilterFlex = filters;
+            SearchFlex(FilterFlex);
             SetSearchFromVisibility(true);
         }
 
-
+        private void SearchFlex(string filter)
+        {
+            if (UseFlex)
+            {
+                JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.setSearchListFlex", filter);
+            }
+        }
 
 
 
@@ -618,7 +646,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
             else
             {
-                StyleSearchForm = "search_back position-relative";
+                StyleSearchForm = defaultStyleSearchForm;
             }
             try
             {
