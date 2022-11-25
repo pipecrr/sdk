@@ -574,22 +574,27 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_icon{
     border-bottom-right-radius: var(--border_radius_standar);
     padding-top: 3rem;
     transform: translateY(-3rem);
-    transition: all 2s ease;
+    transition: all 1s ease;
     opacity: 0.15;
 }
 .search_back_hide::before{
-    transition: all 2s ease;
-    opacity: 0 !important;
+    transition: all 1s ease;
+    opacity: 0 !important; 
 }
 .search_back{
-    transition: all 2s ease;
-    height: auto;
+    transition: all 1s ease;
+    min-height: 1px;
+    max-height: auto;
     padding-bottom: 1rem;
     margin-bottom: 1rem;
+    overflow: hidden;
+    padding-top: 2rem;
+    margin-top: -2rem;
 }
 .search_back_hide{
-    transition: all 2s ease;
-    height: 0;
+    transition: all 1s ease;
+    min-height: 1px;
+    max-height: 0px;
     padding-bottom: 0;
     margin-bottom: 0;
 }
