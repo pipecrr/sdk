@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
@@ -136,8 +136,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private bool CanDelete;
         private bool CanDetail;
         private bool CanList;
-        private string defaultStyleSearchForm = "search_back position-relative mb-3";
-        private string StyleSearchForm { get; set; } = "search_back position-relative mb-3";
+        private string defaultStyleSearchForm = "search_back position-relative";
+        private string StyleSearchForm { get; set; } = "search_back position-relative";
 
 
         Guid needUpdate;
@@ -642,7 +642,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         {
             if (hideForm)
             {
-                StyleSearchForm = "d-none";
+                StyleSearchForm = "search_back search_back_hide position-relative";
             }
             else
             {

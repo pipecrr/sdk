@@ -17,7 +17,7 @@
     protected override async Task OnInitializedAsync(){
         var rowidAttachment = BusinessObj.BaseObj.RowidAttachment;
         ParentAttachment = new E00270_Attachment();
-        if(rowidAttachment == null){
+        if(rowidAttachment == null && BusinessObj != null && BusinessObj.BaseObj != null && BusinessObj.BaseObj.Rowid != 0){
             try{
                 var BLAttachment = BackendRouterService.GetSDKBusinessModel("BLAttachment", AuthenticationService);
                 var responseAtt = await BLAttachment.Call("SaveAttachment");
@@ -31,6 +31,8 @@
             }catch(Exception ex){
                 throw new Exception(ex.Message);
             }
+        }else{
+            rowidAttachment = 0;
         }
         ParentAttachment.Rowid = rowidAttachment;
         RelationshipAttachment = new Relationship(){
