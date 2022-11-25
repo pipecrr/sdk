@@ -309,7 +309,7 @@ else
         <SetTopBar HasExtraButtons="@(ListViewModel.Buttons != null && ListViewModel.Buttons.Count > 0 ? true: false)" BusinessObj="@BusinessObj">
             <TopBarTitle><ResourceViewer ResourceTag="@($"{BusinessName}.Plural")" /></TopBarTitle>
             <TopBarButtons>
-                @if(ShowSearchForm && HasSearchViewdef)
+                @if(ShowSearchForm && HasSearchViewdef && !_isEditingFlex)
                 {
                     <TopBarButton ResourceTag="Action.AdvanceSearch" IconCssClass="fa-solid fa-magnifying-glass-plus" Click="@(()=> SetSearchFromVisibility(false))"/>
                 }
@@ -317,7 +317,7 @@ else
                     <TopBarButton ResourceTag="Action.Cancel" IconCssClass="fa-solid fa-times" Click="CancelEdit"/>
                     <TopBarButton ResourceTag="Action.Flex.SaveAndClose" IconCssClass="fa-solid fa-floppy-disk" Click="SaveAndCloseList" />
                 }
-                @if(UseFlex && !_isEditingFlex){
+                @if(UseFlex && !_isEditingFlex && !_isSearchOpen){
                     <TopBarButton Click="GoToEditFlex" ResourceTag="Action.Edit" IconCssClass="fa-solid fa-pen" />
                 }                
                 @if(CanCreate && !_isEditingFlex)

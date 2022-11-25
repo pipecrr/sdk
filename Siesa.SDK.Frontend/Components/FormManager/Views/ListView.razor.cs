@@ -87,6 +87,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public bool LoadingSearch;
 
         private bool _isEditingFlex = false;
+        private bool _isSearchOpen = false;
         public String ErrorMsg = "";
         private IList<object> SelectedObjects { get; set; }
 
@@ -181,7 +182,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         protected async void InitView(string bName = null)
         {
-            Loading = true;
+            Loading = true;            
             if (bName == null)
             {
                 bName = BusinessName;
@@ -197,7 +198,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 if (ShowSearchForm)
                 {
                     try
-                    {
+                    {   
                         var searchMetadata = BackendRouterService.GetViewdef(bName, "search");
                         HasSearchViewdef = !String.IsNullOrEmpty(searchMetadata);
                         ShowList = !HasSearchViewdef;
@@ -219,6 +220,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         {
                             FieldsHidden = new List<FieldOptions>();
                         }
+                        _isSearchOpen = true;
                     }
                     catch (System.Exception)
                     {
@@ -574,6 +576,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         }
 
         private void GoToEditFlex(){
+            SetSearchFromVisibility(true);
             _isEditingFlex = true;
             JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.setEditListFlex");
         }
@@ -631,12 +634,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         {
             if (UseFlex)
             {
+                _isSearchOpen = false;
                 JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.setSearchListFlex", filter);
             }
         }
-
-
-
 
         public void SetSearchFromVisibility(bool hideForm)
         {
