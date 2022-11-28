@@ -40,4 +40,10 @@ namespace Siesa.SDK.Entities.Enums
 		Active = 1,
 		Inactive = 0
 	}
+
+	public enum enumDynamicEntityDataType
+	{
+		Text = 0,
+		Number = 1
+	}
 }
