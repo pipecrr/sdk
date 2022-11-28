@@ -68,20 +68,15 @@
                                         <BreadCrumb />
                                     }
                                     <CascadingValue Value="@this">
-                                        @if(IsDefaultArea)
-                                        {
-                                            <div class="@GetCssMainArea()">
-                                                @if(!IsEmptyLayout)
-                                                {
-                                                    <TopBar />
-                                                }
-                                                <div class="@GetCssInternalArea()">
-                                                    @Body
-                                                </div>
+                                        <div class="@GetCssMainArea()">
+                                            @if(!IsEmptyLayout)
+                                            {
+                                                <TopBar />
+                                            }
+                                            <div class="@GetCssInternalArea()">
+                                                @Body
                                             </div>
-                                        }else{
-                                            @Body
-                                        }
+                                        </div>
                                     </CascadingValue>
                                 </div>
                             </aside>
@@ -278,7 +273,7 @@
 
     private string GetCssMainArea()
     {
-        if(IsEmptyLayout)
+        if(IsEmptyLayout || !IsDefaultArea)
         {
             return "";
         }
@@ -288,7 +283,7 @@
 
     private string GetCssInternalArea()
     {
-        if(IsEmptyLayout)
+        if(IsEmptyLayout || !IsDefaultArea)
         {
             return "";
         }
