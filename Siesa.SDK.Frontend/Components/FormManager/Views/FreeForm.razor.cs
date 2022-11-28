@@ -80,7 +80,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
             else
             {
-                await base.HandleValidSubmit();
+                //await base.HandleValidSubmit();
             }
         }
         
