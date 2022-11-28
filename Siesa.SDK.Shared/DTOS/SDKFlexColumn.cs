@@ -15,5 +15,7 @@ namespace Siesa.SDK.Shared.DTOS
         public object results { get; set; }
         public string path { get; set; }
         public string key_name { get; set; }
+        public string formula { get; set; }
+        public bool customFn { get; set; }
     }
 }

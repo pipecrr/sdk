@@ -578,18 +578,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private void GoToEditFlex(){
             SetSearchFromVisibility(true);
             _isEditingFlex = true;
-            JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.setEditListFlex");
+            JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+guidListView+".props.setEditListFlex");
         }
 
         private void CancelEdit(){
             _isEditingFlex = false;
-            JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.setEditListFlex");
+            JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+guidListView+".props.setEditListFlex");
         }
 
         private void SaveAndCloseList(){
             _isEditingFlex = false;
-            JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.save");
-            JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.setEditListFlex");
+            JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+guidListView+".props.save");
+            JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+guidListView+".props.setEditListFlex");
         }
 
         private async Task OnClickSearch()
@@ -635,7 +635,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if (UseFlex)
             {
                 _isSearchOpen = false;
-                JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.setSearchListFlex", filter);
+                JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+guidListView+".props.setSearchListFlex", filter);
             }
         }
 
