@@ -14,7 +14,10 @@ namespace Siesa.SDK.Entities
 {
 	public partial class E00230_Flex
 	{
-
+		public override string ToString()
+		{
+			return Name;
+		}
 
 
 	}

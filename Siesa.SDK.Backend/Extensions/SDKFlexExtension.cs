@@ -93,6 +93,9 @@ namespace Siesa.SDK.Backend.Extensions
 
                 foreach (SDKFlexColumn column in columns)
                 {
+                    if(column.key_name.StartsWith("cstm_formula")){
+                        continue;
+                    }
                     if (column.sortType != null){
                         orderBy = column.key_name + " " + column.sortType.ToUpper();
                     }

@@ -66,6 +66,11 @@
 
     [Parameter]
     public string FilterSearch {get;set;} = "";
+
+    [Parameter]
+    public string GuidFlex {get;set;} = "";
+
+    private string _guid ="";
     private bool _isDebug = false;
 
     private bool _isDetail = false;
@@ -153,6 +158,7 @@
         FlexAttributes.Add("take", Take.ToString());
         FlexAttributes.Add("server_pagination", ServerPagination.ToString());
         FlexAttributes.Add("filter_search", FilterSearch);
+        FlexAttributes.Add("guid", _guid);
         if(_flexRowId != 0)
         {
             FlexAttributes.Add("base_obj_id", _flexRowId);
@@ -185,6 +191,13 @@
     protected override async Task OnInitializedAsync()
     {
         //Init();
+        if(String.IsNullOrEmpty(GuidListView))
+        {
+            _guid = Guid.NewGuid().ToString();
+        }else{
+            _guid = GuidListView;
+        }
+
         UtilsManager.GetResourceByContainId();
         await base.OnInitializedAsync();
     }
@@ -209,32 +222,33 @@
 
     void AddGraphic()
     {
-        JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.toggleChartsModal");
+        JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+_guid+".props.toggleChartsModal");
     }
 
     void Configure()
     {
-        JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.toggleConfigModal");
+        Guid guid = Guid.NewGuid();
+        JSRuntime.InvokeVoidAsync("oreports_app_flexdebug_"+_guid+".props.toggleConfigModal", guid.ToString());
     }
 
     void SaveAndContinue()
     {
-        JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.save");
+        JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+_guid+".props.save");
     }
 
     void SaveAndClose()
     {
-        JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.save", true);
+        JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+_guid+".props.save", true);
     }
 
     void RefreshData()
     {
-        JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.fetchPreviewData");
+        JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+_guid+".props.fetchPreviewData");
     }
 
     void ExportToExcel()
     {
-        JSRuntime.InvokeAsync<object>("oreports_app_table_flexdebug.dataGridRef.instance.exportToExcel", false);
+        JSRuntime.InvokeAsync<object>("oreports_app_table_flexdebug_"+_guid+".dataGridRef.instance.exportToExcel", false);
     }
 
     void GoToCreate()
