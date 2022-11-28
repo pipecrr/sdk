@@ -16,6 +16,7 @@ namespace Siesa.SDK.Entities
 		[ForeignKey("Record")]
 		public virtual U RowidRecord { get; set; }
 
+		[ForeignKey("EntityColumn")]
 		[Required]
 		public virtual int RowidEntityColumn { get; set; }
 
@@ -38,6 +39,9 @@ namespace Siesa.SDK.Entities
 		public virtual T Record { get; set; }
 
 
+
+		[Required]
+		public virtual E00251_DynamicEntityColumn EntityColumn { get; set; }
 
 	}
 }
