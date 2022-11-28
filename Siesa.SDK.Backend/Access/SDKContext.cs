@@ -22,11 +22,11 @@ namespace Siesa.SDK.Backend.Access
 {
     public class SDKContext : DbContext
     {
+	public DbSet<E00251_DynamicEntityColumn>? E00251_DynamicEntityColumn { get; set; }
+
+	public DbSet<E00250_DynamicEntity>? E00250_DynamicEntity { get; set; }
+
 	public DbSet<E00230_Flex>? E00230_Flex { get; set; }
-
-	public DbSet<E00251_EntityGroup>? E00251_EntityGroup { get; set; }
-
-	public DbSet<E00250_Entity>? E00250_Entity { get; set; }
 
         public DbSet<E00271_AttachmentDetail>? E00271_AttachmentDetail { get; set; }
 
