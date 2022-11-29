@@ -71,6 +71,9 @@ namespace Siesa.SDK.Entities
 		[ForeignKey("Feature")]
 		public int? RowidFeature { get; set; }
 
+		[Required]
+		public enumDynamicEntityDataType DataType { get; set; }
+
 
 		[SDKCheckRelationship]
 		[Required]
