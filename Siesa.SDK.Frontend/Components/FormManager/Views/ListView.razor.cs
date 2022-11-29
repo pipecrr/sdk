@@ -756,7 +756,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 {
                     if (changeFieldsHidden)
                     {
-                        FieldsHidden.FirstOrDefault(y => y.Name == x.Name).Hidden = !x.Hidden;
+                        var fieldH = FieldsHidden.FirstOrDefault(y => y.Name == x.Name);
+                        if(fieldH != null){
+                            fieldH.Hidden = !x.Hidden;
+                        }
                     }
                     formInstance.Panels.ForEach(y =>
                     {

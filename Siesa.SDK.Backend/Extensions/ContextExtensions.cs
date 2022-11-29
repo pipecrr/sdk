@@ -49,9 +49,12 @@ namespace Siesa.SDK.Backend.Extensions
                 //get text before first underscore
                 var prefix = table_name_parts[0];
                 //if first character is an "U" then replaceit with "CU"
-                if (prefix.StartsWith("U"))
+                if (prefix.StartsWith("u"))
                 {
                     prefix = "cu" + prefix.Substring(1);
+                }else if (prefix.StartsWith("d"))
+                {
+                    prefix = "cd" + prefix.Substring(1);
                 }else{
                     prefix = "c" + prefix.Substring(1);
                 }
