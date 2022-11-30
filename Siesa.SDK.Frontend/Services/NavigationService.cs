@@ -11,7 +11,7 @@ namespace Siesa.SDK.Frontend.Services
         private const int MinHistorySize = 256;
         private const int AdditionalHistorySize = 64;
         private readonly NavigationManager _navigationManager;
-        private readonly List<string> _history;
+        public readonly List<string> _history;
 
         private List<string> ReplaceQueque { get; set; } = new List<string>();
 
