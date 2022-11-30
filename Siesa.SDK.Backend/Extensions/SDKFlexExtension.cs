@@ -13,6 +13,7 @@ using Siesa.SDK.Shared.Business;
 using Siesa.SDK.Shared.DTOS;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Shared.Utilities;
+using Siesa.SDK.Entities.Enums;
 namespace Siesa.SDK.Backend.Extensions
 {
     public static class SDKFlexExtension
@@ -38,6 +39,9 @@ namespace Siesa.SDK.Backend.Extensions
             var nameEntity = requestData.selected_class;
             var nameSpaceEntity = requestData.module_path;
             var entityType = Utilities.SearchType(nameSpaceEntity + "." + nameEntity, true);
+            //replace firt caracter nameEntity
+            var nameDynamicEntity = nameEntity.Replace(nameEntity[0].ToString(), "D");
+            var dynamicEntityType = Utilities.SearchType(nameSpaceEntity + "." + nameDynamicEntity, true);
 
             List<string> strColumns = new List<string>();
             List<string> strColumnsVirtual = new List<string>();
@@ -90,12 +94,32 @@ namespace Siesa.SDK.Backend.Extensions
                 var includeMethod = typeof(IQueryable<object>).GetExtensionMethod(_assemblyInclude, "Include", new[] { typeof(IQueryable<object>), typeof(string) });
 
                 Dictionary<string,Dictionary<byte,string>> enumsDict = new Dictionary<string, Dictionary<byte, string>>();
-
+                // Dictionary<object,Dictionary<object, object>> virtualColumns = new Dictionary<object, Dictionary<object, object>>();
+                // Dictionary<string, object> virtualColumnsValueDefault = new Dictionary<string, object>();
+                List<SDKFlexVirtualColumnDTO> virtualColumns = new List<SDKFlexVirtualColumnDTO>();
+                List<string> virtualColumnsName = new List<string>();
+                var rowidType = entityType.GetProperty("Rowid").PropertyType;
                 foreach (SDKFlexColumn column in columns)
                 {
-                    if(column.key_name.StartsWith("cstm_formula")){
+                    if(column.customFn){
                         continue;
                     }
+                    if(column.is_dynamic_field){
+                        var actualVirtualColumns = GetVirtualColumns(column.name, Context, dynamicEntityType);
+                        virtualColumns.AddRange(actualVirtualColumns);
+                        // Dictionary<object, object> virtualColumnValue = GetVirtualColumns(column.name, Context, dynamicEntityType, out object valueDefault);
+                        // if(virtualColumnValue != null){
+                        //     virtualColumnsValueDefault.Add(column.name, valueDefault);
+                        //     virtualColumns.Add(column.name, virtualColumnValue);
+                        //     strColumns.Add("Rowid  as " + column.name);
+                        // }
+                        if(virtualColumns.Count > 0){
+                            virtualColumnsName.Add(column.name);
+                            strColumns.Add("Rowid  as " + column.name);                            
+                        }
+                        continue;
+                    }
+
                     if (column.sortType != null){
                         orderBy = column.key_name + " " + column.sortType.ToUpper();
                     }
@@ -250,6 +274,43 @@ namespace Siesa.SDK.Backend.Extensions
                         }
                     }
                     return new ActionResult<List<Dictionary<string,object>>>() { Data = resourceDict};
+                }
+
+                // if(virtualColumns.Count>0){
+                //     foreach (var item in resourceDict){
+                //         foreach (var virtualkey in virtualColumns.Keys)
+                //         {
+                //             var virtualValue = virtualColumns[virtualkey];
+                //             var itemValue = Convert.ChangeType(item[virtualkey.ToString()], rowidType);
+                //             var descriptionObj = virtualColumnsValueDefault[virtualkey.ToString()];
+                //             var description = "--";
+                //             object value;
+                //             if(virtualValue.TryGetValue(itemValue, out value)){
+                //                 description = value.ToString();
+                //             }
+                //             item[$"{virtualkey}_oreports_key"] = item[virtualkey.ToString()];
+                //             item[virtualkey.ToString()] = description;
+                //         }
+                //     }
+                //     return new ActionResult<List<Dictionary<string,object>>>() { Data = resourceDict};
+                // }
+
+                if(virtualColumns.Count>0){
+                    foreach (var item in resourceDict){
+                        foreach (var columnName in virtualColumnsName){
+                            var defaultvalue = virtualColumns.Where(x => x.ColumnName == columnName).Select(x => x).FirstOrDefault();
+                            SDKFlexVirtualColumnDTO virtualColumn = virtualColumns.Where(x => x.ColumnName == columnName && x.RowidRecord.ToString().Equals(item[columnName].ToString())).FirstOrDefault();
+                            var columnType = typeof(string);
+                            if(defaultvalue.ColumnType == enumDynamicEntityDataType.Number){
+                                columnType = typeof(int);
+                            }
+                            var valueColumn = Convert.ChangeType(defaultvalue.DefaultValue, columnType);
+                            if(virtualColumn != null){
+                                valueColumn = Convert.ChangeType(virtualColumn.ColumnValue, columnType);
+                            }
+                            item[columnName] = valueColumn;
+                        }                        
+                    }
                 }
 
                 if (resourceDict != null)
@@ -1009,6 +1070,72 @@ namespace Siesa.SDK.Backend.Extensions
         {
             var r = type.GetMethod(nameMethod, new Type[] { type });
             return r;
+        }
+
+        // public static Dictionary<object, object> GetVirtualColumns(string column, SDKContext context, Type entityType, out object valueDefault){
+        //     var contextSet = context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(entityType).Invoke(context, null);            
+        //     var includeMethod = typeof(IQueryable<object>).GetExtensionMethod(_assemblyInclude, "Include", new[] { typeof(IQueryable<object>), typeof(string) });
+        //     var includeMethodGeneric = includeMethod.MakeGenericMethod(entityType);
+        //     contextSet = includeMethodGeneric.Invoke(contextSet, new object[] { contextSet,"EntityColumn"});
+
+        //     var whereMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "Where", new[] { typeof(IQueryable), typeof(string), typeof(object[])});            
+        //     contextSet = whereMethod.Invoke(contextSet, new object[] { contextSet, "EntityColumn.Id == @0", new object[] { column } });
+
+        //     var selectMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "Select", new[] { typeof(IQueryable), typeof(string), typeof(object[]) });
+        //     contextSet = selectMethod.Invoke(contextSet, new object[] { contextSet, "new (RowidRecord, TextData, NumericData, EntityColumn.Id, EntityColumn.DefaultValueText, EntityColumn.DefaultValueNumber, EntityColumn.DataType)", new object[] { } });
+
+        //     var dynamicListMethod = typeof(IEnumerable).GetExtensionMethod(_assemblyDynamic, "ToDynamicList", new[] { typeof(IEnumerable) });
+        //     var dynamicList = dynamicListMethod.Invoke(contextSet, new object[] { contextSet });
+            
+        //     valueDefault = null;
+
+        //     var virtualColumns = new Dictionary<object, object>();
+        //     foreach (var item in (IEnumerable<dynamic>)dynamicList){
+        //         if(item.DataType == enumDynamicEntityDataType.Text){
+        //             virtualColumns.Add(item.RowidRecord, item.TextData);
+        //             valueDefault = item.DefaultValueText;
+        //         }else if(item.DataType == enumDynamicEntityDataType.Number){
+        //             virtualColumns.Add(item.RowidRecord, item.NumericData);
+        //             valueDefault = item.DefaultValueNumber;
+        //         }
+        //     }
+
+        //     return virtualColumns;
+        // }
+
+        public static List<SDKFlexVirtualColumnDTO> GetVirtualColumns(string column, SDKContext context, Type entityType){
+            var contextSet = context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(entityType).Invoke(context, null);            
+            var includeMethod = typeof(IQueryable<object>).GetExtensionMethod(_assemblyInclude, "Include", new[] { typeof(IQueryable<object>), typeof(string) });
+            var includeMethodGeneric = includeMethod.MakeGenericMethod(entityType);
+            contextSet = includeMethodGeneric.Invoke(contextSet, new object[] { contextSet,"EntityColumn"});
+
+            var whereMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "Where", new[] { typeof(IQueryable), typeof(string), typeof(object[])});            
+            contextSet = whereMethod.Invoke(contextSet, new object[] { contextSet, "EntityColumn.Id == @0", new object[] { column } });
+
+            var selectMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "Select", new[] { typeof(IQueryable), typeof(string), typeof(object[]) });
+            contextSet = selectMethod.Invoke(contextSet, new object[] { contextSet, "new (RowidRecord, TextData, NumericData, EntityColumn.Id, EntityColumn.DefaultValueText, EntityColumn.DefaultValueNumber, EntityColumn.DataType)", new object[] { } });
+
+            var dynamicListMethod = typeof(IEnumerable).GetExtensionMethod(_assemblyDynamic, "ToDynamicList", new[] { typeof(IEnumerable) });
+            var dynamicList = dynamicListMethod.Invoke(contextSet, new object[] { contextSet });
+
+            var virtualColumns = new List<SDKFlexVirtualColumnDTO>();
+
+            foreach (var item in (IEnumerable<dynamic>)dynamicList){
+                SDKFlexVirtualColumnDTO virtualColumn = new SDKFlexVirtualColumnDTO();
+                virtualColumn.RowidRecord = item.RowidRecord;
+                virtualColumn.ColumnName = item.Id;
+                virtualColumn.ColumnType = item.DataType;                
+                if(item.DataType == enumDynamicEntityDataType.Text){
+                    virtualColumn.ColumnValue = item.TextData;
+                    virtualColumn.DefaultValue = item.DefaultValueText;
+                }else if(item.DataType == enumDynamicEntityDataType.Number){
+                    virtualColumn.ColumnValue = item.NumericData;
+                    virtualColumn.DefaultValue = item.DefaultValueNumber;
+                }
+                virtualColumns.Add(virtualColumn);
+            }
+
+            return virtualColumns;
         }
 
         public static Dictionary<byte, string> GetEnumValues(string enumName, Int64 cultureRowid, SDKContext context){
