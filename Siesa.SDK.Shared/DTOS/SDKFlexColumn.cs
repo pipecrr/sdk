@@ -17,5 +17,6 @@ namespace Siesa.SDK.Shared.DTOS
         public string key_name { get; set; }
         public string formula { get; set; }
         public bool customFn { get; set; }
+        public bool is_dynamic_field { get; set; }
     }
 }

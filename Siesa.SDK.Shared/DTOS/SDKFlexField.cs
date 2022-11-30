@@ -13,5 +13,6 @@ namespace Siesa.SDK.Shared.DTOS
         public List<string> search_fields { get; set; }
         public List<object> results { get; set; }
         public SDKSelectFieldParams selectfield_params { get; set; }
+        public bool is_dynamic_field { get; set; }
     } 
 }
