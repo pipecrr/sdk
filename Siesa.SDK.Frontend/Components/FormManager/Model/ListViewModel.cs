@@ -31,6 +31,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         public bool UseFlex { get; set; } = false;
         public int FlexTake { get; set; } = 100;
         public bool ServerPaginationFlex { get; set; } = false;
-
+        public bool ShowLinkTo { get; set; } = false;
     }
 }

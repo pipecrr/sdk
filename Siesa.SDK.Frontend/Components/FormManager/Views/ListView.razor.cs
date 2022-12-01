@@ -57,6 +57,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public int FlexTake { get; set; } = 100;
         [Parameter]
         public bool ServerPaginationFlex { get; set; } = false;
+        [Parameter]
+        public bool ShowLinkTo {get; set;} = false;
 
         [Inject]
         public ILocalStorageService localStorageService { get; set; }
@@ -240,6 +242,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 ListViewModel = JsonConvert.DeserializeObject<ListViewModel>(metadata);
                 UseFlex = ListViewModel.UseFlex;
                 FlexTake = ListViewModel.FlexTake;
+                ShowLinkTo = ListViewModel.ShowLinkTo;
                 ServerPaginationFlex = ListViewModel.ServerPaginationFlex;
                 foreach (var field in ListViewModel.Fields)
                 {

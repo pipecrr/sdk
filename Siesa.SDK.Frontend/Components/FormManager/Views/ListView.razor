@@ -132,7 +132,10 @@ else
                                 <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToEdit(((IBaseSDK)data).GetRowid())"><i
                                 class="fa-solid fa-pen"></i></button>
                             }
-                            
+                            @if(!ShowLinkTo){
+                                <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToDetail(((IBaseSDK)data).GetRowid())"><i
+                                class="fa-solid fa-eye"></i></button>
+                            }
                             
                             @if(CanDelete && IsSubpanel && AllowDelete){
                                 <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToDelete(((IBaseSDK)data).GetRowid(), data.ToString())"><i
@@ -186,7 +189,7 @@ else
                     }                
                     
                     if(!field.Hidden){
-                        if(field.Name == ListViewModel.LinkTo)
+                        if(field.Name == ListViewModel.LinkTo && ShowLinkTo)
                         {
                             <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" Width="@columnWidth">
                                 <HeaderTemplate>
