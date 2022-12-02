@@ -113,8 +113,8 @@ else
             </EmptyTemplate>
             <Columns>
             @if(ListViewModel.ShowActions)
-            {
-                <RadzenDataGridColumn TItem="object" Title="Acciones" Width="100px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" HeaderCssClass="grid-column-action">
+            {                
+                <RadzenDataGridColumn TItem="object" Title="Acciones" Width="@WithActions" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" HeaderCssClass="grid-column-action">
                     <HeaderTemplate>
                         <div class="untruncate-grid-column-action">
                             @if(IsSubpanel && AllowCreate && CanCreate){
@@ -141,6 +141,13 @@ else
                                 <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToDelete(((IBaseSDK)data).GetRowid(), data.ToString())"><i
                                 class="fa-solid fa-trash-can"></i></button>
 
+                            }
+                            @if(HasCustomActions){
+                                @foreach (var action in ListViewModel.CustomActions)
+                                {
+                                    <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="async () => await OnClickCustomAction(action, ((IBaseSDK)data))"><i
+                                    class="@action.IconClass"></i></button>
+                                }
                             }
                             @* <button class="btn btn-link grid-btn-link"
                             @onclick="() => GoToDetail(((BaseSDK<>)data).Rowid)"><span class="oi oi-eye"></span></button> *@

@@ -32,5 +32,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         public int FlexTake { get; set; } = 100;
         public bool ServerPaginationFlex { get; set; } = false;
         public bool ShowLinkTo { get; set; } = false;
+        public List<Button> CustomActions { get; set; } = new List<Button>();
     }
 }
