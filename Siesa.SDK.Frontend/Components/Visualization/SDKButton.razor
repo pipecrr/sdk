@@ -68,6 +68,11 @@
             await base.OnInitializedAsync();
         }
     }
+    protected override async Task OnParametersSetAsync(){
+        Text = ResourceTag;
+        await base.OnParametersSetAsync();
+    }
+
 
     private string GetCss(){
         if(IsActionButton)

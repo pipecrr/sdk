@@ -1,11 +1,43 @@
 let recorder;
 let audioCtx;
+let isAccesOk = false;
 
-export function startRecording() {
-    navigator.getUserMedia({ audio: true }, onSuccess, onError);
+export async function startRecording() {    
+    let hasPermission = false;
+    await navigator.mediaDevices.getUserMedia({ audio: true }).then(onSuccess, onError);
+    if(isAccesOk){
+        await navigator.permissions.query({name: 'microphone'})
+        .then((permissionObj) => {
+            if (permissionObj.state === 'granted') {
+                hasPermission = true;
+            } else {
+                hasPermission = false;
+                console.log('Permission denied');
+            }
+        }).catch((error) => {
+        console.log(error);
+        })
+    }    
+    return hasPermission;
 }
 
-let onSuccess = function (stream) {
+export async function hasAudioDevice (){
+    let lista = [];
+    await navigator
+                .mediaDevices
+                .enumerateDevices()
+                .then(dispositivos => {
+                    dispositivos.forEach((dispositivo, indice) => {
+                        if (dispositivo.kind === 'audioinput') {
+                            lista.push(dispositivo);
+                        }
+                    });
+                });
+    return lista.length>0;
+};
+
+let onSuccess = async function (stream) {
+    isAccesOk = true;
     let context;
 
     let mainSection = document.querySelector('.main-controls');
@@ -20,7 +52,7 @@ let onSuccess = function (stream) {
     recorder = new Recorder(mediaStreamSource);
     recorder.record();
 
-    visualize(stream, canvas, canvasCtx);
+    visualize(stream, canvas, canvasCtx);    
 }
 
 export function stopRecording (dotnethelper) {
@@ -47,6 +79,7 @@ const blobToBase64 = blob => {
 
 let onError = function (err) {
     console.log('The following error occurred: ' + err);
+    isAccesOk = false;
 };
 
 function visualize(stream, canvas, canvasCtx) {
