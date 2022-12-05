@@ -29,4 +29,9 @@
     margin-right: 1rem;
     margin-left: 1rem;
     padding-top: 1rem;
+    border-color:red ;
+}
+
+.sdk_collapsible ::deep dxbl-group-control.card.dxbl-group.dxbl-accordion-group.dxbl-accordion-item.mt-3 {
+    border-color:red ;
 }

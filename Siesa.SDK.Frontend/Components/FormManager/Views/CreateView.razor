@@ -17,7 +17,8 @@
     <ResourceViewer ResourceTag="Custom.Generic.Loading" />
 } else if (Panels == null || Panels.Count <= 0)
 {
-    <ResourceViewer ResourceTag="Module.SDK.ViewdefNotFound" />
+    <ResourceViewer ResourceTag="Custom.Formview.NotDefinition" />
+        @* <label>@((MarkupString)ErrorMsg)</label> *@
 } else if (BusinessObj.BaseObj != null)
 {
     @if(IsSubpanel && ShowTitle){        
@@ -26,6 +27,16 @@
         <hr />
     }
     <CascadingValue Value="@this">
+        @if(!string.IsNullOrEmpty(ErrorMsg))
+        {
+            <SDKCollapse>
+                <Items>
+                    <SDKCollapseItem ResourceTag="Custom.Generic.Message.Error" >
+                        <label>@((MarkupString)ErrorMsg)</label>
+                    </SDKCollapseItem>
+                </Items>
+            </SDKCollapse>
+        }
     <EditForm id="@FormID"
               OnValidSubmit="@HandleValidSubmit"
               OnInvalidSubmit="@HandleInvalidSubmit"
@@ -56,11 +67,7 @@
 
             }
         </DxFormLayout>
-        @* <ValidationSummary /> *@
-        @if(!string.IsNullOrEmpty(ErrorMsg))
-        {
-            <label>@((MarkupString)ErrorMsg)</label>
-        }
+        <ValidationSummary /> 
     </EditForm>
     </CascadingValue>
     @if(IsSubpanel && ShowButtons){
