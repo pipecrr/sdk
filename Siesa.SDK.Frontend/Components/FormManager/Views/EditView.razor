@@ -61,11 +61,11 @@ else if (BusinessObj.BaseObj.Rowid != 0)
             {
                 <SDKButton RenderStyle="@btn.RenderStyle"  Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag"  />
             }
-            @if(ShowSaveButton){
-                <SDKButton form="@FormID" RenderStyle="SDKButtonRenderStyle.Primary"  SubmitFormOnClick="true" ResourceTag="Action.Save" />
-            }
             @if(ShowCancelButton){
                 <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" Click="@((args) => {CancelButton();})" ResourceTag="Action.Cancel" />
+            }
+            @if(ShowSaveButton){
+                <SDKButton form="@FormID" RenderStyle="SDKButtonRenderStyle.Primary"  SubmitFormOnClick="true" ResourceTag="Action.Save" />
             }
         </div>        
     }

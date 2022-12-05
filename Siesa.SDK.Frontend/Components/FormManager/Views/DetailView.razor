@@ -54,11 +54,11 @@ else if (ModelLoaded == true)
             {
                 <SDKButton RenderStyle="@btn.RenderStyle" Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" />
             }
-            @if (ShowDeleteButton){
-                <SDKButton RenderStyle="SDKButtonRenderStyle.Danger" Click="DeleteBusiness" ResourceTag="Action.Delete" />                
-            }
             @if (ShowCancelButton){
                 <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" Click="@((args) => dialogService.Close(false))" ResourceTag="Action.Close"/>
+            }
+            @if (ShowDeleteButton){
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Danger" Click="DeleteBusiness" ResourceTag="Action.Delete" />                
             }
         </div>
     }
