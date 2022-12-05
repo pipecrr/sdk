@@ -58,9 +58,6 @@
         bool DefaultTitle = false;
 
         var ShowCreateDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicCreateView BusinessName="@BusinessName" IsSubpanel=true  DefaultFields="@DefaultFieldsCreate" BLNameParentAttatchment="@BLNameParentAttatchment" ShowTitle="@DefaultTitle"/>, Width, $"{BusinessName}.Singular", true, true);
-        /*var modal_result = await DialogService.OpenAsync("", 
-        ds => @<DynamicCreateView BusinessName="@BusinessName" IsSubpanel=true  DefaultFields="@DefaultFieldsCreate" BLNameParentAttatchment="@BLNameParentAttatchment"/>, 
-        new DialogOptions() { Width = @Width, ShowTitle=false,  Resizable =true, Style="padding: 1rem;" });*/
         listview_key = Guid.NewGuid();
         StateHasChanged();
     }
@@ -68,10 +65,6 @@
     public async Task OpenModalEdit(string item_rowid)
     {
         var ShowEditDialog = await SDKDialogService.ShowCustomDialog(ds =>@<DynamicEditView BusinessName="@BusinessName" IsSubpanel=true  BusinessObjId="@item_rowid" BLNameParentAttatchment="@BLNameParentAttatchment" ShowTitle="@DefaultTitle"/>, Width, $"{BusinessName}.Singular", true, true);
-
-       /* var modal_result = await DialogService.OpenAsync("", 
-        ds => @<DynamicEditView BusinessName="@BusinessName" IsSubpanel=true  BusinessObjId="@item_rowid" BLNameParentAttatchment="@BLNameParentAttatchment"/>, 
-        new DialogOptions() { Width = @Width, ShowTitle=false,  Resizable = true, Style="padding: 1rem;"});*/
         listview_key = Guid.NewGuid();
         StateHasChanged();
     }
@@ -79,19 +72,13 @@
     public async Task OpenModalDetail(string item_rowid)
     {
         var ShowDetailDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicDetailView BusinessName="@BusinessName" IsSubpanel=true  BusinessObjId="@item_rowid" BLNameParentAttatchment="@BLNameParentAttatchment" ShowTitle="@DefaultTitle"/>, Width, $"{BusinessName}.Singular", true, true);
-        /*var modal_result = await DialogService.OpenAsync("", 
-        ds => @<DynamicDetailView BusinessName="@BusinessName" IsSubpanel=true  BusinessObjId="@item_rowid" BLNameParentAttatchment="@BLNameParentAttatchment"/>, 
-        new DialogOptions() { Width = @Width, ShowTitle=false,  Resizable = true, Style="padding: 1rem;"});*/
         listview_key = Guid.NewGuid();
         StateHasChanged();
     }
 
     public async Task OpenModalDelete(string item_rowid, string object_string)
     {
-        var modal_result = await SDKDialogService.ShowCustomDialog(ds => @<ConfirmDelete DialogService=@ds/>, Width);   
-        /*var modal_result = await DialogService.OpenAsync("",
-                ds => @<ConfirmDelete DialogService=@ds/>,
-                new DialogOptions(){ShowTitle=false, Width=@Width});*/
+        var modal_result = await SDKDialogService.ShowCustomDialog(ds => @<ConfirmDelete DialogService=@ds/>,"400px");   
         if(modal_result == true) {
             var backend = BackendRouterService.GetSDKBusinessModel(BusinessName, AuthenticationService);
             await backend.DeleteAsync(Convert.ToInt64(item_rowid));

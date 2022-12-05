@@ -38,13 +38,13 @@ namespace Siesa.SDK.Frontend.Services
             new SDKDialogOption(){ShowTitle=false, Style=$"min-width:300px; width:{width};"});
          }
 
-         public async Task<dynamic> ShowCustomDialog (RenderFragment<DialogService> childContent,string width="600px", string title="",bool ShowTitle=true , bool showClose=true)
+         public async Task<dynamic> ShowCustomDialog (RenderFragment<DialogService> childContent,string width="600px", string title="",bool ShowTitle=false , bool showClose=false)
          {
            string TitleTag = await UtilsManager.GetResource(title);
 
            SDKDialogOption customDialogOption = new SDKDialogOption {
             ShowTitle = ShowTitle,
-            Style=$"min-width:600px; width:{width}",
+            Style=$"min-width:400px; width:{width}",
             ShowClose = showClose,
             Resizable = true
            };
