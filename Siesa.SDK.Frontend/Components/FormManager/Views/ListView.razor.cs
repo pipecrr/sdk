@@ -22,6 +22,7 @@ using Siesa.SDK.Entities;
 using Blazored.LocalStorage;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -64,6 +65,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         [Inject]
         public ILocalStorageService localStorageService { get; set; }
+
+        [Inject]
+        public IServiceProvider ServiceProvider { get;set; }
         private FreeForm SearchFormRef;
         private string FilterFlex { get; set; } = "";
 
@@ -496,6 +500,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         {
             if (Data != null)
             {
+                foreach (var d in Data)
+                {
+                    var s = d;
+                }
                 data = Data;
                 count = data.Count();
                 LoadingData = false;
@@ -705,11 +713,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
         }
 
-        private IDictionary<string, object> GetSelectFieldParameters(object data, FieldOptions field, string fieldName)
+        private IDictionary<string, object> GetSelectFieldParameters(dynamic data, FieldOptions field, string fieldName)
         {
             IDictionary<string, object> parameters = new Dictionary<string, object>();
-            parameters.Add("BindModel", data);
-            parameters.Add("FieldName", fieldName);
+            if(fieldName.Split(".").Length > 1)
+            {
+                string[] fieldPath = fieldName.Split('.');
+                var typeBaseSDK = typeof(BaseSDK<>);
+                object currentData = Utilities.CreateCurrentData(data,fieldPath,typeBaseSDK);
+                parameters.Add("BindModel", currentData);
+            }else{
+                parameters.Add("BindModel", data);
+            }
+            parameters.Add("FieldName", field.GetFieldObj(data).Name);
             parameters.Add("FieldOpt", field);
             return parameters;
         }

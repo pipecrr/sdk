@@ -128,5 +128,23 @@ namespace Siesa.SDK.Shared.Utilities
 
         }
 
+        public static object CreateCurrentData(dynamic data, string[] fieldPath, Type typeBaseSDK)
+        {
+            object currentData = data;
+            for (int i = 0; i < (fieldPath.Length - 1); i++)
+            {
+                var tmpType = currentData.GetType();
+                var tmpProperty = tmpType.GetProperty(fieldPath[i]);
+                var tmpValue = tmpProperty.GetValue(currentData, null);
+                var isEntity = Utilities.IsAssignableToGenericType(tmpProperty.PropertyType, typeBaseSDK);
+                if (tmpValue == null && isEntity)
+                {
+                    tmpValue = Activator.CreateInstance(tmpProperty.PropertyType);
+                    tmpProperty.SetValue(currentData, tmpValue);
+                }
+                currentData = tmpValue;
+            }
+            return currentData;
+        }
     }
 }

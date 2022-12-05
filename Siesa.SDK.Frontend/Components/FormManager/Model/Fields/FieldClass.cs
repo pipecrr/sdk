@@ -107,7 +107,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             {
                 IsRequired = false;
             }
-            //TODO: Optimizar, el parametro deberia entrar por parametro y no consultar la entidad por cada campo
+            //TODO: Optimizar, el parametro deberia entrar por parametro y no consultar la entidad por cada campo            
             var entityAttributes = BindModel.GetType().GetCustomAttributes();
             foreach (var attr in entityAttributes)
             {
