@@ -2,17 +2,35 @@
 @attribute [Authorize]
 @using Microsoft.AspNetCore.Authorization
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
+
 @if (ErrorMsg != null && ErrorMsg != "")
 {
     <text>@ErrorMsg</text>
 }
 else if (BusinessObj != null)
 {
-    <DynamicComponent Type="@(typeof(Views.ListView))" Parameters="@parameters" />
+    @* <DynamicComponent Type="@(typeof(Views.ListView))" Parameters="@parameters" /> *@
+
+    <ListView 
+        BusinessObj="@BusinessObj"
+        BusinessName="@BusinessName"
+        AllowCreate="@AllowCreate"
+        AllowEdit="@AllowEdit"
+        AllowDelete="@AllowDelete"
+        OnSelectedRow="@OnSelectedRow"
+        Data="@Data"
+        IsSubpanel="@IsSubpanel"
+        SetTopBar="@SetTopBar"
+        ViewdefName="@ViewdefName"
+        OnClickEdit="@OnClickEdit"
+        OnClickDetail="@OnClickDetail"
+        OnClickDelete="@OnClickDelete"
+        OnClickNew="@OnClickNew"
+    />
 }
 
 @code {
-    [Parameter] public string SubpanelFilter { get; set; }
+    [Parameter] public string SubpanelFilter { get; set; }    
 
     [Parameter] public Action<string> OnClickEdit { get; set; } = null;
     [Parameter] public Action<string> OnClickDetail { get; set; } = null;
@@ -29,55 +47,17 @@ else if (BusinessObj != null)
 
     [Parameter] public IEnumerable<object> Data { get; set; } = null;
 
+    private bool SetTopBar = false;
+    private List<string> ConstantFilters = new List<string>();
     protected override void OnInitialized()
-    {
-        ViewType = ViewModels.DynamicViewType.List;
-        base.OnInitialized();
-    }
-
-        
-    protected override void SetParameters(dynamic businessObj, string businessName){
-        var new_params = new Dictionary<string, object>();
-        new_params.Add("BusinessObj", businessObj);
-        new_params.Add("BusinessName", businessName);
-        new_params.Add("AllowCreate", AllowCreate);
-        new_params.Add("AllowEdit", AllowEdit);
-        new_params.Add("AllowDelete", AllowDelete);
-        new_params.Add("AllowDetail", AllowDetail);
-        new_params.Add("OnSelectedRow", OnSelectedRow);
-        new_params.Add("Data", Data);
+    {        
         if (IsSubpanel)
         {
-            new_params.Add("IsSubpanel", true);
-            new_params.Add("SetTopBar", false);
-            if(!String.IsNullOrEmpty(SubpanelFilter))
-            {
-                new_params.Add("ConstantFilters", new List<string>() { SubpanelFilter });
-            }
-            
-            new_params.Add("ViewdefName", ViewdefName);
-            if (OnClickEdit != null)
-            {
-                new_params.Add("OnClickEdit", OnClickEdit);
-            }
-            if (OnClickDetail != null)
-            {
-                new_params.Add("OnClickDetail", OnClickDetail);
-            }
-            if (OnClickDelete != null)
-            {
-                new_params.Add("OnClickDelete", OnClickDelete);
-            }
-            if (OnClickNew != null)
-            {
-                new_params.Add("OnClickNew", OnClickNew);
+            IsSubpanel = false;       
+            if(!String.IsNullOrEmpty(SubpanelFilter)){                
+                ConstantFilters = new List<string>() { SubpanelFilter };
             }
         }
-
-        //check if new_params is equal to parametersm, if not, set parameters to new_params
-        if (!new_params.SequenceEqual(parameters))
-        {
-            parameters = new_params;
-        }
+        base.OnInitialized();
     }
 }
