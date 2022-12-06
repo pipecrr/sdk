@@ -1,4 +1,5 @@
 ﻿@using SDK.Components.Visualization
+@using Siesa.SDK.Components.Visualization
 @using Siesa.SDK.Frontend.Components.Fields
 @using Siesa.SDK.Frontend.Components.FormManager.Fields
 @using System;
@@ -6,6 +7,7 @@
 @using Siesa.SDK.Frontend.Application
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Frontend.Components.Visualization
 @inject IResourceManager ResourceManager
 @inject IAuthenticationService AuthenticationService
 @inject SDKNotificationService Notification
@@ -27,12 +29,32 @@
         <hr />
     }
     <CascadingValue Value="@this">
-        @if(!string.IsNullOrEmpty(ErrorMsg))
+        @if(!string.IsNullOrEmpty(ErrorMsg) || EditFormContext.GetValidationMessages().Count() > 0 )
         {
             <SDKCollapse>
-                <Items>
+                <Items>                    
                     <SDKCollapseItem ResourceTag="Custom.Generic.Message.Error" >
-                        <label>@((MarkupString)ErrorMsg)</label>
+                        @if(!string.IsNullOrEmpty(ErrorMsg)){
+                            <label>@((MarkupString)ErrorMsg)</label>
+                        }
+                        <ul>
+                            @foreach (var msgError in EditFormContext.GetValidationMessages())
+                            {
+                                var messageSplit = msgError.Split("//");
+                                if (messageSplit.Count() > 1)
+                                {
+                                    var ResourceTag = messageSplit[0];
+                                    var FieldEntity = messageSplit[1];
+                                    var FormatString = new object[]  { FieldEntity };
+
+                                    <li><ResourceViewer ResourceTag= "@ResourceTag" FormatString="@FormatString"/></li>
+                                }else
+                                {  
+                                    <ResourceViewer ResourceTag= "@msgError" />
+                                    @* <label>@msgError</label>  *@
+                                }
+                            }
+                        </ul>
                     </SDKCollapseItem>
                 </Items>
             </SDKCollapse>
@@ -67,7 +89,7 @@
 
             }
         </DxFormLayout>
-        <ValidationSummary /> 
+          <SDKValidationSummary/> 
     </EditForm>
     </CascadingValue>
     @if(IsSubpanel && ShowButtons){
@@ -131,4 +153,9 @@
              }
         }
     }
+
+    public void PruebaFormulario(){
+        string x = "hola";
+    }
+
 }
