@@ -42,8 +42,9 @@
         if(FormatString != null){
 
             var FormatTag = await ResourceManager.GetResource(FormatString[0].ToString(), AuthenticationService);
+            FormatString[0] = FormatTag;
      
-            return String.Format(text, FormatTag);
+            return String.Format(text, FormatString);
         }
         return "";
     }

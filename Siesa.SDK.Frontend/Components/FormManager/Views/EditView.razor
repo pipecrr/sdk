@@ -18,6 +18,7 @@ else if (BusinessObj.BaseObj.Rowid != 0)
         <hr />
     }
     <CascadingValue Value="@this">
+        <ErrorsContainer ErrorMsg="@ErrorMsg" EditFormContext="@EditFormContext"/>
     <EditForm id="@FormID"
               OnValidSubmit="@HandleValidSubmit"
               OnInvalidSubmit="@HandleInvalidSubmit"

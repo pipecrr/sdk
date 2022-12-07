@@ -29,36 +29,7 @@
         <hr />
     }
     <CascadingValue Value="@this">
-        @if(!string.IsNullOrEmpty(ErrorMsg) || EditFormContext.GetValidationMessages().Count() > 0 )
-        {
-            <SDKCollapse>
-                <Items>                    
-                    <SDKCollapseItem ResourceTag="Custom.Generic.Message.Error" >
-                        @if(!string.IsNullOrEmpty(ErrorMsg)){
-                            <label>@((MarkupString)ErrorMsg)</label>
-                        }
-                        <ul>
-                            @foreach (var msgError in EditFormContext.GetValidationMessages())
-                            {
-                                var messageSplit = msgError.Split("//");
-                                if (messageSplit.Count() > 1)
-                                {
-                                    var ResourceTag = messageSplit[0];
-                                    var FieldEntity = messageSplit[1];
-                                    var FormatString = new object[]  { FieldEntity };
-
-                                    <li><ResourceViewer ResourceTag= "@ResourceTag" FormatString="@FormatString"/></li>
-                                }else
-                                {  
-                                    <ResourceViewer ResourceTag= "@msgError" />
-                                    @* <label>@msgError</label>  *@
-                                }
-                            }
-                        </ul>
-                    </SDKCollapseItem>
-                </Items>
-            </SDKCollapse>
-        }
+       <ErrorsContainer ErrorMsg="@ErrorMsg" EditFormContext="@EditFormContext" />
     <EditForm id="@FormID"
               OnValidSubmit="@HandleValidSubmit"
               OnInvalidSubmit="@HandleInvalidSubmit"
