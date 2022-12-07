@@ -47,7 +47,7 @@ namespace Siesa.SDK.Frontend {
             services.AddSignalR(e => {
                 e.MaximumReceiveMessageSize = 102400000;
             });
-
+            services.AddHttpContextAccessor();
            /* services.AddBlazorDB(options =>
             {
                 options.Name = "SiesaSDK";
