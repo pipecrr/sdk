@@ -1,11 +1,27 @@
 @using System.Linq.Expressions
 @typeparam ItemType
 
+
 <div class="sdk-selectbar-container">
 <RadzenSelectBar Value=@Value Change="@ValueChanged" TValue="ItemType"
-        Data="@Data" TextProperty="Name" ValueProperty="Key" Disabled = "@Disabled" ValueExpression="@ValueExpression"/>
+        Data="@Data" TextProperty="Name" ValueProperty="Key" Disabled = "@Disabled" ValueExpression="@ValueExpression"  
+        data-automation-id="@GetAutomationId()"/>
 </div>
 
 @code{
         [Parameter] public Expression<Func<ItemType>> ValueExpression { get; set; }
+
+         protected override string GetAutomationId()
+        {
+                if(string.IsNullOrEmpty(AutomationId))
+                {
+                        var TagName = Data.Select(x => x.Name).FirstOrDefault();
+                        if(!string.IsNullOrEmpty(TagName))
+                        {
+                                AutomationId = TagName;
+                        }
+                }
+                return base.GetAutomationId();
+        } 
+        
 }

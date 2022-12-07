@@ -16,5 +16,13 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
         [Parameter] public bool Disabled { get; set; }
 
+        [Parameter]
+        public string AutomationId { get; set; }
+
+        private string GetAutomationId()
+        {
+            return $"{this.GetType().Name}_{AutomationId}";
+        }
+
     }
 }

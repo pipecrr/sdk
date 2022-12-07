@@ -40,9 +40,13 @@
     {
         if(string.IsNullOrEmpty(AutomationId))
         {
-            if(!string.IsNullOrEmpty(ResourceTag))
+            if(!string.IsNullOrEmpty(PreviousResourceTag))
             {
-                AutomationId = ResourceTag;
+                AutomationId = PreviousResourceTag;
+            }
+            if(!string.IsNullOrEmpty(NextResourceTag))
+            {
+                AutomationId = NextResourceTag;
             }
         }
         return base.GetAutomationId();
