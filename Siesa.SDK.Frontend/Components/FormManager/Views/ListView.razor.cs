@@ -314,16 +314,46 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         protected override async Task OnInitializedAsync()
         {
-
             await base.OnInitializedAsync();
-            guidListView = Guid.NewGuid().ToString();
-            //await CheckPermissions();
-            //InitView();
+            guidListView = Guid.NewGuid().ToString();            
+            Restart();
         }
 
-        protected override void OnParametersSet()
+        public override async Task SetParametersAsync(ParameterView parameters)
         {
-            Restart();
+            bool shouldRestart = validateChanged(parameters);
+            await base.SetParametersAsync(parameters);
+            if(shouldRestart){
+                Restart();
+            }
+        }
+
+        private bool validateChanged(ParameterView parameters)
+        {
+            var type = this.GetType();
+            var properties = type.GetProperties();
+            var result = false;
+
+            foreach (var property in properties){
+                var HasCustomAttributes = property.GetCustomAttributes().Count() > 0;
+                if(!HasCustomAttributes){
+                    continue;
+                }
+                var dataAnnotationProperty = property.GetCustomAttributes().First().GetType();
+                var parameterType = typeof(ParameterAttribute);
+                if(dataAnnotationProperty == parameterType){
+                    try{
+                        if (parameters.TryGetValue<string>(property.Name, out var value)){
+                            var valueProperty = property.GetValue(this, null);
+                            if (value != null && value != valueProperty){
+                                result = true;
+                                break;
+                            }
+                        }
+                    }catch (Exception e){}
+                }
+            }
+            return result;
         }
 
         private void Restart()
