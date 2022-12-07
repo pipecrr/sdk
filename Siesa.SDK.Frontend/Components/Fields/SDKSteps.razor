@@ -1,7 +1,9 @@
 @inject UtilsManager UtilManager
+@inherits Siesa.SDK.Frontend.Components.SDKComponent
+
 
 <div class="sdk-steps">
-    <RadzenSteps class="@GetCss()" SelectedIndex="@SelectedIndex" ShowStepsButtons="@ShowStepsButtons" Change=@SelectedIndexChanged PreviousText="@Previous" NextText="@Next" Steps="@Steps">
+    <RadzenSteps class="@GetCss()" SelectedIndex="@SelectedIndex" ShowStepsButtons="@ShowStepsButtons" Change=@SelectedIndexChanged PreviousText="@Previous" NextText="@Next" Steps="@Steps" data-automation-id="@GetAutomationId()">
     </RadzenSteps>
 </div>
 
@@ -32,6 +34,18 @@
         else{
             return "sdk-steps-no-numbers";
         }
+    }
+
+    protected override string GetAutomationId()
+    {
+        if(string.IsNullOrEmpty(AutomationId))
+        {
+            if(!string.IsNullOrEmpty(ResourceTag))
+            {
+                AutomationId = ResourceTag;
+            }
+        }
+        return base.GetAutomationId();
     }
 
     
