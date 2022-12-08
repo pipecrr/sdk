@@ -161,9 +161,14 @@
 
     protected override string GetAutomationId()
     {
-        if(string.IsNullOrEmpty(AutomationId))
+        if(!string.IsNullOrEmpty(AutomationId))
         {
-            AutomationId = Title;
+            if (MenuItem != null && MenuItem.Level > 1)
+            {
+                var ParentMenu =  OnClick.Target.GetType().GetProperty("MainItem").GetValue(OnClick.Target);
+                var ParentMenuName = ParentMenu.GetType().GetProperty("CurrentText").GetValue(ParentMenu);
+                AutomationId = $"{ParentMenuName}_SubMenu_{Title}";
+            }
         }
         return base.GetAutomationId();
     }

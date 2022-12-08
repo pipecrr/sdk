@@ -20,6 +20,7 @@
 @using Siesa.SDK.Frontend.Components.Fields
 @using Blazor.IndexedDB.Framework;
 @inject IIndexedDbFactory DbFactory
+@inherits SDKComponent
 
 <PageTitle>Login</PageTitle>
 
@@ -149,7 +150,7 @@
                                     </EditForm>
                                 </div>
                                 <div class="col-12 p-0 text-center pt-4">
-                                    <a class="link_login" @onclick="()=> ForgotPassword()">
+                                    <a class="link_login" @onclick="()=> ForgotPassword()" data-automation-id="@GetAutomationId()">
                                         <ResourceViewer ResourceTag="BLLogin.Project.ForgotPassword" RowidCulture=@RowidCulture />
                                     </a>
 
@@ -535,4 +536,17 @@
             }
         }       
     }
+    protected override string GetAutomationId()
+        {
+                if(string.IsNullOrEmpty(AutomationId))
+                {
+                     //var NameTag = UtilsManager.GetResource("BLLogin.Project.ForgotPassword", RowidCulture).ToString()
+                     string NameTag ="RecoveryPassword";
+                        if (!string.IsNullOrEmpty(NameTag))
+                        {
+                             AutomationId = NameTag;
+                        }
+                }
+                return base.GetAutomationId();
+        }
 }
