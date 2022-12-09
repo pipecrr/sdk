@@ -357,7 +357,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
             ErrorMsg = string.Empty;
             if (result.Errors.Count > 0)
             {
-                ErrorMsg = "<ul>";
+                //ErrorMsg = "<ul>";
                 Type editFormCurrentType = EditFormContext.Model.GetType();
                 foreach (var error in result.Errors)
                 {
@@ -394,13 +394,13 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
                     
 
 
-                    ErrorMsg += $"<li>";
-                    ErrorMsg += !string.IsNullOrWhiteSpace(error.Attribute) ?  $"{error.Attribute} - " : string.Empty;
-                    string ErrorTag = await ResourceManager.GetResource(error.Message, AuthenticationService.GetRoiwdCulture());
-                    ErrorMsg += ErrorTag;//error.Message.Replace("\n", "<br />");
-                    ErrorMsg += $"</li>";
+                    // ErrorMsg += $"<li>";
+                    // ErrorMsg += !string.IsNullOrWhiteSpace(error.Attribute) ?  $"{error.Attribute} - " : string.Empty;
+                    // string ErrorTag = await ResourceManager.GetResource(error.Message, AuthenticationService.GetRoiwdCulture());
+                    // ErrorMsg += ErrorTag;//error.Message.Replace("\n", "<br />");
+                    // ErrorMsg += $"</li>";
                 }
-                ErrorMsg += "</ul>";
+                //ErrorMsg += "</ul>";
                 EditFormContext.NotifyValidationStateChanged();
 
 
