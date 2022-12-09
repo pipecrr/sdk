@@ -20,7 +20,6 @@
 @using Siesa.SDK.Frontend.Components.Fields
 @using Blazor.IndexedDB.Framework;
 @inject IIndexedDbFactory DbFactory
-@inherits SDKComponent
 
 <PageTitle>Login</PageTitle>
 
@@ -150,10 +149,7 @@
                                     </EditForm>
                                 </div>
                                 <div class="col-12 p-0 text-center pt-4">
-                                    <a class="link_login" @onclick="()=> ForgotPassword()" data-automation-id="@GetAutomationId()">
-                                        <ResourceViewer ResourceTag="BLLogin.Project.ForgotPassword" RowidCulture=@RowidCulture />
-                                    </a>
-
+                                    <SDKButton RenderStyle="SDKButtonRenderStyle.Link" Click="@ForgotPassword" ResourceTag="BLLogin.Project.ForgotPassword"/>
                                 </div>
                             }
                         </div>
@@ -177,7 +173,7 @@
                     <h2 class="mb-2 pr-3"><ResourceViewer ResourceTag="BLLogin.Demo.NewsTitle" RowidCulture=@RowidCulture /></h2>
                     <p class="mb-2"><ResourceViewer ResourceTag="BLLogin.Demo.NewsBody" RowidCulture=@RowidCulture /></p>
                     <div class="d-flex justify-content-between">
-                        <button class="btn btn-primary btn_ghost_def_1 btn-sm px-4"><ResourceViewer ResourceTag="BLLogin.MoreInfo" RowidCulture=@RowidCulture /></button>
+                        <SDKButton CssClass="btn btn-primary btn_ghost_def_1 btn-sm px-4" ResourceTag="BLLogin.MoreInfo"/>
                         <div>
                             <button class="btn btn-primary btn_ghost_def_1 btn-sm"><i
                                     class="fa-solid fa-chevron-left"></i></button>
@@ -536,17 +532,4 @@
             }
         }       
     }
-    protected override string GetAutomationId()
-        {
-                if(string.IsNullOrEmpty(AutomationId))
-                {
-                     //var NameTag = UtilsManager.GetResource("BLLogin.Project.ForgotPassword", RowidCulture).ToString()
-                     string NameTag ="RecoveryPassword";
-                        if (!string.IsNullOrEmpty(NameTag))
-                        {
-                             AutomationId = NameTag;
-                        }
-                }
-                return base.GetAutomationId();
-        }
 }

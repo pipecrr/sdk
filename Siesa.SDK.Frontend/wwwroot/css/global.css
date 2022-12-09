@@ -202,6 +202,13 @@ body {
     background-color: var(--color_delete_dark) !important;
     border-color: var(--color_delete_dark) !important;
 }
+.btn_secondary_link{
+    color: var(--color_primary) !important;
+}
+.btn_secondary_link:link, .btn_secondary_link:visited, .btn_secondary_link:hover {
+    text-decoration: none !important;
+  }
+
 .btn_ghost_def_1{
     background-color: transparent !important;
     border-color: transparent !important;

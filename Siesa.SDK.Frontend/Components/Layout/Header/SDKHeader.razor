@@ -177,16 +177,16 @@
     }
 
     protected override string GetAutomationId()
-        {
-                if(string.IsNullOrEmpty(AutomationId))
-                {
-                     
-                     string NameTag = GetCurrentCompanyGroupName();
-                        if (!string.IsNullOrEmpty(NameTag))
-                        {
-                             AutomationId = NameTag;
-                        }
-                }
-                return base.GetAutomationId();
-        }
+    {
+            if(string.IsNullOrEmpty(AutomationId))
+            {
+                    
+                    string NameTag = GetCurrentCompanyGroupName();
+                    if (!string.IsNullOrEmpty(NameTag))
+                    {
+                            AutomationId = NameTag;
+                    }
+            }
+            return base.GetAutomationId();
+    }
 }
