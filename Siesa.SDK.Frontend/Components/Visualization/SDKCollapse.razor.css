@@ -30,3 +30,45 @@
     margin-left: 1rem;
     padding-top: 1rem;
 }
+
+/* ESTILOS COLAPSABLE ERROR FEEDBACK */
+.sdk_collapsible ::deep .sdk_error_feedback dxbl-group-control.card.dxbl-group.dxbl-accordion-group.dxbl-accordion-item.mt-3 {
+    border-color:#f5c6cb ;
+}
+.sdk_collapsible ::deep .sdk_error_feedback dxbl-group-control.card.dxbl-group.dxbl-accordion-group.expanded.dxbl-accordion-item.mt-3 .card-header.dxbl-group-header.dxbl-accordion-group-header{
+    color: #721c24;
+    border-bottom: 0.25rem !important;
+}
+
+.sdk_collapsible ::deep .sdk_error_feedback  dxbl-group-control.card.dxbl-group.dxbl-accordion-group.dxbl-accordion-item.mt-3 .card-header.dxbl-group-header.dxbl-accordion-group-header{
+    color: #721c24;
+    font-size: 1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8d7da;
+    padding: 1rem;
+    width: 100%;
+    border-radius: 0.25rem !important;
+}
+
+.sdk_collapsible ::deep .sdk_error_feedback dxbl-group-control.card.dxbl-group.dxbl-accordion-group.dxbl-accordion-item.mt-3 .card-header.dxbl-group-header.dxbl-accordion-group-header:hover{
+    background: #f7cdd0;
+}
+
+.sdk_collapsible ::deep .sdk_error_feedback dxbl-group-control.card.dxbl-group.dxbl-accordion-group.dxbl-accordion-item.mt-3{
+    border: 1px solid #f5c6cb;
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.sdk_collapsible ::deep .sdk_error_feedback dxbl-group-control.card.dxbl-group.dxbl-accordion-group.expanded.dxbl-accordion-item.mt-3 .card-body.dxbl-group-body.dxbl-accordion-group-body{
+    border-top: 1px solid #f5c6cb ;
+    margin-right: 1rem;
+    margin-left: 1rem;
+    padding-top: 1rem;
+}
+.sdk_collapsible ::deep .sdk_error_feedback dxbl-group-control.card.dxbl-group.dxbl-accordion-group.expanded.dxbl-accordion-item.mt-3 .card-body ul{
+    padding-left: 1rem;
+}

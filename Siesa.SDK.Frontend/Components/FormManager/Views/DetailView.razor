@@ -9,7 +9,7 @@
     <ResourceViewer ResourceTag="Custom.Generic.Loading" />
 } else if (Panels == null || Panels.Count <= 0)
 {
-    <ResourceViewer ResourceTag="Module.SDK.ViewdefNotFound" />
+    <ResourceViewer ResourceTag="Custom.Formview.NotDefinition" />
 }
 else if (ModelLoaded == true)
 {
@@ -54,11 +54,11 @@ else if (ModelLoaded == true)
             {
                 <SDKButton RenderStyle="@btn.RenderStyle" Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" />
             }
-            @if (ShowDeleteButton){
-                <SDKButton RenderStyle="SDKButtonRenderStyle.Danger" Click="DeleteBusiness" ResourceTag="Action.Delete" />                
-            }
             @if (ShowCancelButton){
                 <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" Click="@((args) => dialogService.Close(false))" ResourceTag="Action.Close"/>
+            }
+            @if (ShowDeleteButton){
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Danger" Click="DeleteBusiness" ResourceTag="Action.Delete" />                
             }
         </div>
     }

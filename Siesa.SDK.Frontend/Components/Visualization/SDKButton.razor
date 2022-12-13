@@ -59,13 +59,13 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if(!IsActionButton)
+        if(IsActionButton || (string.IsNullOrEmpty(ResourceTag) && (!RowidResource.HasValue || RowidResource == 0)))
         {
+            await base.OnInitializedAsync();
+        }else{
             Text = ResourceTag;
             await base.OnInitializedAsync();
             Text = await GetText();
-        }else{
-            await base.OnInitializedAsync();
         }
     }
     protected override async Task OnParametersSetAsync(){

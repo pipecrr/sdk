@@ -24,7 +24,7 @@
         BusinessName="@Relationship.RelatedBusiness"
         Filter="@filter"
         DefaultFieldsCreate="@DefaultFieldsCreate" AllowCreate="@AllowCreate" AllowEdit="@AllowEdit" AllowDelete="@AllowDelete"
-        AllowDetail="@AllowDetail" 
+        AllowDetail="@AllowDetail" Width="@Width"
         />
 }
 
@@ -33,7 +33,6 @@
     [Parameter] public string BLNameParentAttatchment { get; set; }
     [Parameter] public Relationship Relationship { get; set; }
     [Parameter] public dynamic Parent { get; set; }
-
     [Parameter] public bool AllowCreate { get; set; } = true;
     [Parameter] public bool AllowEdit { get; set; } = true;
     [Parameter] public bool AllowDelete { get; set; } = true;
@@ -43,9 +42,9 @@
     [Parameter] public Action<string> OnClickDetail { get; set; } = null;
     [Parameter] public Action<string,string> OnClickDelete { get; set; } = null;
     [Parameter] public Action OnClickNew { get; set; } = null;
-
-    //TODO: Parametrizar Allow y Actions en los inlineCrud
     [Parameter] public bool ShowHeader { get; set; } = true;
+
+     [Parameter] public string Width { get; set; }
     int? count = null;
     bool isOpen = false;
     string filter = "";
