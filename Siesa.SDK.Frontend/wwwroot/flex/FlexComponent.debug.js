@@ -16,10 +16,13 @@ function loadScript(url, in_head = false, callback = null) {
 }
 
 function ListViewInstance(dotnethelper, key){
-    var data = new Map();
-    data.set(key, dotnethelper);
-      
-    window.dotnethelpersListView = data;
+    if(!window.dotnethelpersListView){
+        var data = new Map();
+        data.set(key, dotnethelper);          
+        window.dotnethelpersListView = data;
+    }else{
+        window.dotnethelpersListView.set(key, dotnethelper);
+    }
 }
 
 function MountFlex(id)
@@ -27,6 +30,9 @@ function MountFlex(id)
     if(document.getElementById(id) == null)
     {
         return;
+    }
+    if(!window.ResourceFlex){
+        window.ResourceFlex = {}
     }
     let interval_flexdebug = setInterval(function () {
         if ("mountOReportsReact" in window) {

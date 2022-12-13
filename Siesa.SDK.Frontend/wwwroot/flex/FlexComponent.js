@@ -24,10 +24,13 @@ function loadCss(url){
 }
 
 function ListViewInstance(dotnethelper, key){
-    var data = new Map();
-    data.set(key, dotnethelper);
-      
-    window.dotnethelpersListView = data;
+    if(!window.dotnethelpersListView){
+        var data = new Map();
+        data.set(key, dotnethelper);          
+        window.dotnethelpersListView = data;
+    }else{
+        window.dotnethelpersListView.set(key, dotnethelper);
+    }
 }
 
 function MountFlex(div_id, retries = 0)

@@ -22,7 +22,7 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public override int Rowid { get; set; }
 
-		[Required]
+		[SDKRequired]
 		[StringLength(250)]
 		public string Name { get; set; }
 
