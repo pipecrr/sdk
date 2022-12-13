@@ -35,6 +35,9 @@ function ListViewInstance(dotnethelper, key){
 
 function MountFlex(div_id, retries = 0)
 {
+    if(!window.ResourceFlex){
+        window.ResourceFlex = {}
+    }
     if(document.getElementById("flexdebug") == null)
     {
         console.log("Flex debug div not found, creating it", retries);
@@ -59,12 +62,12 @@ function MountFlex(div_id, retries = 0)
 }
 (() => {
 
-    loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/2.css?v=20221130');
-    loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/main.css?v=20221130');
+    loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/2.css?v=20221213');
+    loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/main.css?v=20221213');
 
-    loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/2.chunk.js?v=20221130");
-    loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/main.chunk.js?v=20221130");
-    loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/runtime-main.js?v=20221130");
+    loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/2.chunk.js?v=20221213");
+    loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/main.chunk.js?v=20221213");
+    loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/runtime-main.js?v=20221213");
 
     window.MountFlex = MountFlex;
     window.ListViewInstance = ListViewInstance;
