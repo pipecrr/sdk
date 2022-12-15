@@ -1,6 +1,8 @@
+@inherits SDKComponent;
+
 <CascadingValue Value="this">
     <DxTabs ChildContent="@ChildContent" ActiveTabIndex="@ActiveTabIndex"
-        ActiveTabIndexChanged=@OnActiveTabIndexChanged ScrollMode="TabsScrollMode.Auto" />
+        ActiveTabIndexChanged=@OnActiveTabIndexChanged ScrollMode="TabsScrollMode.Auto" data-automation-id="@GetAutomationId()"/>
 </CascadingValue>
 @code {
     [Parameter]
@@ -12,6 +14,11 @@
     void OnActiveTabIndexChanged(int index)
     {
         ActiveTabIndex = index;
+    }
+
+    protected override string GetAutomationId()
+    {
+            return base.GetAutomationId();
     }
 
 }

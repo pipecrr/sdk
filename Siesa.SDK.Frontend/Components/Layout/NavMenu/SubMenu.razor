@@ -1,4 +1,6 @@
 @using Entities
+@inherits SDKComponent
+
 <div class="nav_dx_menu" @onclick="()=> HideSubmenu()" @onclick:stopPropagation="true"  @onclick:preventDefault>
     <div class="submenu-content">
         <a href="#" @onclick="()=> OnClickTitle()" @onclick:stopPropagation="true"  @onclick:preventDefault class="nav_btn_standar my-1">
@@ -11,7 +13,7 @@
             {
                 @foreach (var item in MainItem.SubMenus)
                 {
-                    <NavMenuItem MenuItem="item" OnClick="@OnClickSubMenu" />
+                        <NavMenuItem MenuItem="item" OnClick="@OnClickSubMenu" />
                 }
             }
         </div>
@@ -46,6 +48,13 @@
         }
         StateHasChanged();
     }
-
+    protected override string GetAutomationId()
+    {
+        @* if(string.IsNullOrEmpty(AutomationId))
+        {
+            AutomationId = Title;
+        } *@
+        return base.GetAutomationId();
+    }
 
 }

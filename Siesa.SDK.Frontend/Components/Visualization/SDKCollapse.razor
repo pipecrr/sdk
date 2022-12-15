@@ -1,3 +1,5 @@
+
+
 <div class="sdk_collapsible">
     <DxAccordion 
         ExpandMode="ExpandMode" 
@@ -14,7 +16,8 @@
     [Parameter] public string CssClass{get; set;}
     AccordionExpandMode ExpandMode { get; set; } = AccordionExpandMode.SingleOrNone;
     AccordionExpandCollapseAction ExpandCollapseAction { get; set; } = AccordionExpandCollapseAction.HeaderClick;
-    protected override async Task OnInitializedAsync() {
-        
-    }
+
+    protected override async Task OnInitializedAsync()
+    {  }
+
 }

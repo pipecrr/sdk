@@ -47,7 +47,7 @@
                         <h2 class="mb-md-2 mb-lg-3"><ResourceViewer ResourceTag="BLLogin.Demo.NewsTitle" RowidCulture=@RowidCulture /></h2>
                         <p class="mb-md-2 mb-lg-3"><ResourceViewer ResourceTag="BLLogin.Demo.NewsBody" RowidCulture=@RowidCulture /></p>
                         <div class="d-flex justify-content-between">
-                            <button class="btn btn-primary btn_ghost_def_1 btn-sm px-4"><ResourceViewer ResourceTag="BLLogin.MoreInfo" RowidCulture=@RowidCulture /></button>
+                            <SDKButton CssClass="btn btn-primary btn_ghost_def_1 btn-sm px-4" ResourceTag="BLLogin.MoreInfo"/>
                             <div>
                                 <button class="btn btn-primary btn_ghost_def_1 btn-sm"><i
                                         class="fa-solid fa-chevron-left"></i></button>
@@ -149,10 +149,7 @@
                                     </EditForm>
                                 </div>
                                 <div class="col-12 p-0 text-center pt-4">
-                                    <a class="link_login" @onclick="()=> ForgotPassword()">
-                                        <ResourceViewer ResourceTag="BLLogin.Project.ForgotPassword" RowidCulture=@RowidCulture />
-                                    </a>
-
+                                    <SDKButton RenderStyle="SDKButtonRenderStyle.Link" Click="@ForgotPassword" ResourceTag="BLLogin.Project.ForgotPassword"/>
                                 </div>
                             }
                         </div>
@@ -176,7 +173,7 @@
                     <h2 class="mb-2 pr-3"><ResourceViewer ResourceTag="BLLogin.Demo.NewsTitle" RowidCulture=@RowidCulture /></h2>
                     <p class="mb-2"><ResourceViewer ResourceTag="BLLogin.Demo.NewsBody" RowidCulture=@RowidCulture /></p>
                     <div class="d-flex justify-content-between">
-                        <button class="btn btn-primary btn_ghost_def_1 btn-sm px-4"><ResourceViewer ResourceTag="BLLogin.MoreInfo" RowidCulture=@RowidCulture /></button>
+                        <SDKButton CssClass="btn btn-primary btn_ghost_def_1 btn-sm px-4" ResourceTag="BLLogin.MoreInfo"/>
                         <div>
                             <button class="btn btn-primary btn_ghost_def_1 btn-sm"><i
                                     class="fa-solid fa-chevron-left"></i></button>

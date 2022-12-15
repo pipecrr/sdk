@@ -3,12 +3,13 @@
 @inject UtilsManager UtilManager
 @using Siesa.SDK.Frontend.Services
 @inject MenuService MenuService
+@inherits SDKComponent
 
 
 <div class="sdk_search" @onclick="()=>ShowSearch()">
     <input autocomplete="off" type="search" class="form-control form-control-sm pr-4" id="busqueda" placeholder="@placeholder"
         @bind-value:event="onchange" @oninput="@((ChangeEventArgs __e) => OnChangeSearch(__e?.Value?.ToString()))"
-        @bind-value="searchString">
+        @bind-value="searchString"  data-automation-id="@GetAutomationId()">
     <i class="fa-solid fa-magnifying-glass"></i>
 </div>
 @if (SearchEnabled && LastSearch.Count > 0)
@@ -91,6 +92,14 @@
            
         }
 
+    }
+    protected override string GetAutomationId()
+    {
+        if(string.IsNullOrEmpty(AutomationId))
+        {
+            AutomationId = placeholder;
+        }
+        return base.GetAutomationId();
     }
 
     private void OnChangeSearch(string value)

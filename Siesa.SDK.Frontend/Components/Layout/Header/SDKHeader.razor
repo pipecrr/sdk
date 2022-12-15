@@ -9,6 +9,7 @@
 @layout EmptyLayout
 @inject IBackendRouterService BackendRouterService
 @using Newtonsoft.Json;
+@inherits SDKComponent;
 
 <header class="col-12 pl-5 sdk_header">
     <div class="header_circles_box">
@@ -33,10 +34,11 @@
     <div class="col-xl-5 col-lg-6 col-md-6 col-sm-4 col-7 p-0 d-flex justify-content-end align-items-center info_head">
         <div class="sdk_conection">
             <div class="position-relative">
-                <button @onclick="()=> ToogleConnect()" class="btn btn_connect py-0 px-2 px-lg-3 d-flex align-items-center">
+                <button @onclick="()=> ToogleConnect()" class="btn btn_connect py-0 px-2 px-lg-3 d-flex align-items-center"   
+                        data-automation-id="@GetAutomationId()">
                     <div>
                         <p class="font-weight-bold m-0 text-truncate" data-toggle="tooltip" data-placement="bottom" title="">
-                            @GetCurrentConnectionName()
+                            @GetCurrentConnectionName()     
                             </p>
                         <p class="font-weight-bold m-0 text-truncate" data-toggle="tooltip" data-placement="bottom" title="">
                             @GetCurrentCompanyGroupName()
@@ -172,5 +174,19 @@
         {
             return "No hay conexión";
         }
+    }
+
+    protected override string GetAutomationId()
+    {
+            if(string.IsNullOrEmpty(AutomationId))
+            {
+                    
+                    string NameTag = GetCurrentCompanyGroupName();
+                    if (!string.IsNullOrEmpty(NameTag))
+                    {
+                            AutomationId = NameTag;
+                    }
+            }
+            return base.GetAutomationId();
     }
 }
