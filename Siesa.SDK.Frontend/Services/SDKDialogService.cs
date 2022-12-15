@@ -44,7 +44,7 @@ namespace Siesa.SDK.Frontend.Services
 
            SDKDialogOption customDialogOption = new SDKDialogOption {
             ShowTitle = ShowTitle,
-            Style=$"min-width:600px; width:{width}",
+            Style=$"min-width:400px; width:{width}",
             ShowClose = showClose,
             Resizable = true
            };
