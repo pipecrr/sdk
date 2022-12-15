@@ -500,10 +500,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         {
             if (Data != null)
             {
-                foreach (var d in Data)
-                {
-                    var s = d;
-                }
                 data = Data;
                 count = data.Count();
                 LoadingData = false;
