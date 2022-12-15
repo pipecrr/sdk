@@ -112,7 +112,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
-            SetParameters(BusinessObj, BusinessName);        
+            SetParameters(BusinessObj, BusinessName);
         }
 
         protected virtual void SetParameters(dynamic businessObj, string businessName){

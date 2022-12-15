@@ -34,13 +34,20 @@ namespace Siesa.SDK.Frontend.Services
 
             if (formatString != null)
             {
-                message = String.Format(resourceMessage, formatString);
+                var formats = new object[formatString.Length];
+
+                for (int i = 0; i < formats.Length; i++)
+                {
+                    var format = formatString[i].ToString();
+                    var resourceFormat = await UtilsManager.GetResource(format, rowidCulture);
+                    formats[i] = resourceFormat;
+                }
+                return String.Format(resourceMessage, formats);
             }
             else
             {
-                message = resourceMessage;
+                return resourceMessage;
             }
-            return message;
         }
         public async Task ShowError(string resourceMessage, object?[] variables = null, int duration = 999999, Int64 culture = 0)
         {

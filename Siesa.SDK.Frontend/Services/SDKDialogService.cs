@@ -35,18 +35,20 @@ namespace Siesa.SDK.Frontend.Services
          {
              
             return await ds.OpenAsync(title,GetConfirmComponent(childContent,ConfirmationButtonTag,CancelationButtonTag),
-            new SDKDialogOption(){ShowTitle=false, Style=$"min-width:300px; max-width:300px; width:{width};"});
+            new SDKDialogOption(){ShowTitle=false, Style=$"min-width:300px; width:{width};"});
          }
 
-         public async Task<dynamic> ShowCustomDialog (RenderFragment<DialogService> childContent,string width="400px", string title="",bool ShowTitle=true , bool showClose=true)
+         public async Task<dynamic> ShowCustomDialog (RenderFragment<DialogService> childContent,string width="600px", string title="",bool ShowTitle=true , bool showClose=true)
          {
+           string TitleTag = await UtilsManager.GetResource(title);
 
            SDKDialogOption customDialogOption = new SDKDialogOption {
             ShowTitle = ShowTitle,
-            Style=$"min-width:600px; width:{width};",
-            ShowClose = showClose
+            Style=$"min-width:400px; width:{width}",
+            ShowClose = showClose,
+            Resizable = true
            };
-           return await ds.OpenAsync(title, childContent,customDialogOption);
+           return await ds.OpenAsync(TitleTag, childContent,customDialogOption);
          }
 
     }

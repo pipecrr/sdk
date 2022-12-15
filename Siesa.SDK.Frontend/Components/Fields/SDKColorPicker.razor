@@ -5,6 +5,7 @@
     ShowHSV="@ShowHSV"
     ShowRGBA="@ShowRGBA"
     Style="@GetCss()"
+    Disabled="@Disabled"
     />
 
 @code {
@@ -49,4 +50,6 @@
         }
     }
     
+    [Parameter]
+    public bool Disabled { get; set; }
 }

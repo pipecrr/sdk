@@ -1,0 +1,42 @@
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Microsoft.AspNetCore.Components.Forms
+
+
+ @if(!string.IsNullOrEmpty(ErrorMsg) || EditFormContext.GetValidationMessages().Count() > 0 )
+        {
+                <SDKCollapse CssClass="sdk_error_feedback col-12 mb-3">
+                    <Items>                    
+                        <SDKCollapseItem ResourceTag="Custom.Generic.Message.Error" >
+                            @if(!string.IsNullOrEmpty(ErrorMsg)){
+                                <label>@((MarkupString)ErrorMsg)</label>
+                            }
+                            <ul>
+                                @foreach (var msgError in EditFormContext.GetValidationMessages())
+                                {
+                                    var messageSplit = msgError.Split("//");
+                                    if (messageSplit.Count() > 1)
+                                    {
+                                        var ResourceTag = messageSplit[0];
+                                        //var FieldEntity = messageSplit[1];
+                                        //remove first element from messageSplit
+                                        messageSplit = messageSplit.Skip(1).ToArray();
+                                        @* var FormatString = new object[]  { FieldEntity }; *@
+
+                                        <li><ResourceViewer ResourceTag= "@ResourceTag" FormatString="@messageSplit"/></li>
+                                    }else
+                                    {  
+                                        <ResourceViewer ResourceTag= "@msgError" />
+                                        @* <label>@msgError</label>  *@
+                                    }
+                                }
+                            </ul>
+                        </SDKCollapseItem>
+                    </Items>
+                </SDKCollapse>
+        }
+@code{
+
+    [Parameter] public EditContext EditFormContext { get; set; }
+
+    [Parameter] public string ErrorMsg { get; set; }
+}

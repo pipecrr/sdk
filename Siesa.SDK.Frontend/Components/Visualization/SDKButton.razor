@@ -35,6 +35,7 @@
     [Parameter] public SDKButtonRenderStyleMode RenderStyleMode { get; set; }
     [Parameter] public string ResourceTag { get; set; }
     [Parameter] public Int64? RowidResource { get; set; }
+    [Parameter] public Int64 RowidCulture { get; set;} = 1;
     [Parameter] public EventCallback<MouseEventArgs> Click { get; set; }
     [Parameter] public bool IsActionButton { get; set; }
     [Parameter] public string IconCssClass {get;set;}
@@ -52,22 +53,33 @@
 
     private async Task<string> GetText(){
         if((RowidResource == null || RowidResource == 0) && ResourceTag != null){
-            return await ResourceManager.GetResource(ResourceTag, AuthenticationService);
+            if (AuthenticationService != null && AuthenticationService.GetRoiwdCulture() != 0)
+            {
+                return await ResourceManager.GetResource(ResourceTag, AuthenticationService);
+            }else
+            {
+                return await ResourceManager.GetResource(ResourceTag, RowidCulture);
+            }
         }
         return await ResourceManager.GetResource(Convert.ToInt64(RowidResource), AuthenticationService);
     }
 
     protected override async Task OnInitializedAsync()
     {
-        if(!IsActionButton)
+        if(IsActionButton || (string.IsNullOrEmpty(ResourceTag) && (!RowidResource.HasValue || RowidResource == 0)))
         {
+            await base.OnInitializedAsync();
+        }else{
             Text = ResourceTag;
             await base.OnInitializedAsync();
             Text = await GetText();
-        }else{
-            await base.OnInitializedAsync();
         }
     }
+    protected override async Task OnParametersSetAsync(){
+        Text = ResourceTag;
+        await base.OnParametersSetAsync();
+    }
+
 
     private string GetCss(){
         if(IsActionButton)
@@ -87,6 +99,9 @@
 
             case SDKButtonRenderStyle.Danger:
                 return $"btn_secondary_danger {CssClass}";
+            
+            case SDKButtonRenderStyle.Link:
+                return $"btn_secondary_link {CssClass}";
 
             default:
                 return CssClass;

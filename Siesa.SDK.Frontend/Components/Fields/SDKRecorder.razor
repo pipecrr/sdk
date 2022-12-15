@@ -4,6 +4,7 @@
 @using System.IO
 @inject UtilsManager UtilsManager 
 @inject IJSRuntime jsRuntime
+@inject SDKNotificationService NotificationService
 
 <div class="m-5 sdk-render">
     <div class="main-controls">
@@ -20,15 +21,15 @@
     string url {get; set;}
     bool recording {get; set;} = false;
     bool notRecording {get; set;} = true;
-    public string resourceAction {get; set;} = "Action.SDKRecorder.Record";
+    string resourceAction {get; set;}
     [Parameter] public Action<byte[]> GetAudio {get; set;}
     private IJSObjectReference _jsModule;
 
     protected override async Task OnInitializedAsync()
     {
-        resourceAction = await UtilsManager.GetResource("Action.SDKRecorder.Record");        
+        resourceAction = await UtilsManager.GetResource("Action.SDKRecorder.Record");
     }
-
+    
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if(firstRender || _jsModule == null){
@@ -40,8 +41,9 @@
     {
         if (recording){
             await Stop();
+            resourceAction = await UtilsManager.GetResource("Action.SDKRecorder.Record");
         }else{
-            resourceAction = await UtilsManager.GetResource("SDKRecorder.Stop");
+            resourceAction = await UtilsManager.GetResource("Action.SDKRecorder.Stop");
             await Record();
         }
         StateHasChanged();
@@ -49,12 +51,23 @@
 
     private async Task Record()
     {
-        recordButton = "recording";
-        recording = true;
-        notRecording = false;
-        style = SDKButtonRenderStyle.Danger;
-        url = "";
-        await _jsModule.InvokeVoidAsync("startRecording");
+        var hasAudioDevice = await _jsModule.InvokeAsync<bool>("hasAudioDevice");
+        if(hasAudioDevice){
+            var hasPermission = await _jsModule.InvokeAsync<bool>("startRecording");
+            if(hasPermission){                
+                recording = true;            
+                notRecording = false;
+                recordButton = "recording";
+                style = SDKButtonRenderStyle.Danger;
+                url = "";
+            }else{
+                resourceAction = await UtilsManager.GetResource("Action.SDKRecorder.Record");
+                NotificationService.ShowWarning("Custom.SDKRecorder.DontHavePermission");
+            }
+        }else{
+            resourceAction = await UtilsManager.GetResource("Action.SDKRecorder.Record");
+            NotificationService.ShowWarning("Custom.SDKRecorder.DontHaveAudioDevice");
+        }
     }
 
     private async Task Stop()

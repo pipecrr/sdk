@@ -1,7 +1,9 @@
 @inject UtilsManager UtilManager
+@inherits SDKComponent
+
 
 <div class="sdk-steps">
-    <RadzenSteps class="@GetCss()" SelectedIndex="@SelectedIndex" ShowStepsButtons="@ShowStepsButtons" Change=@SelectedIndexChanged PreviousText="@Previous" NextText="@Next" Steps="@Steps">
+    <RadzenSteps class="@GetCss()" SelectedIndex="@SelectedIndex" ShowStepsButtons="@ShowStepsButtons" Change=@SelectedIndexChanged PreviousText="@Previous" NextText="@Next" Steps="@Steps" data-automation-id="@GetAutomationId()">
     </RadzenSteps>
 </div>
 
@@ -15,6 +17,7 @@
 
     [Parameter] public bool ShowStepsNumbers {get; set;} = true;
 
+    [Parameter] public string FieldName {get; set;}
     private string Previous {get; set;} 
     private string Next {get; set;}
 
@@ -32,6 +35,18 @@
         else{
             return "sdk-steps-no-numbers";
         }
+    }
+
+    protected override string GetAutomationId()
+    {
+        if(string.IsNullOrEmpty(AutomationId))
+        {
+            if(!string.IsNullOrEmpty(FieldName))
+            {
+                AutomationId = FieldName;
+            }
+        }
+        return base.GetAutomationId();
     }
 
     

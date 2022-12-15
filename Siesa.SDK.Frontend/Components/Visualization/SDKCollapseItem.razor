@@ -1,6 +1,7 @@
 @inject UtilsManager UtilManager
+@inherits SDKComponent
 
-<DxAccordionItem Text="@Text" Expanded="@Expanded" class="mt-3">
+<DxAccordionItem Text="@Text" Expanded="@Expanded" class="mt-3" data-automation-id="@GetAutomationId()">
         <ContentTemplate>
             
             @ChildContent
@@ -17,5 +18,17 @@
             Text = await UtilManager.GetResource(ResourceTag);
         }
         base.OnInitializedAsync();
+    }
+
+    protected override string GetAutomationId()
+    {
+        if(string.IsNullOrEmpty(AutomationId))
+        {
+            if(!string.IsNullOrEmpty(Text))
+            {
+                AutomationId = Text;
+            }
+        }
+        return base.GetAutomationId();
     }
 }

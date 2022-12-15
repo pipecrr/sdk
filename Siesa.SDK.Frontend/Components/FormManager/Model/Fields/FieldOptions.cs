@@ -125,22 +125,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             else
             {             
                 //Split Name
-                string[] fieldPath = Name.Split('.');
-                //loop through the path
-                object currentObject = modelObj;
-                for (int i = 0; i < (fieldPath.Length - 1); i++)
-                {
-                    var tmpType = currentObject.GetType();
-                    var tmpProperty = tmpType.GetProperty(fieldPath[i]);
-                    var tmpValue = tmpProperty.GetValue(currentObject, null);
-                    var isEntity = Utilities.IsAssignableToGenericType(tmpProperty.PropertyType, typeof(BaseSDK<>));
-                    if (tmpValue == null && isEntity)
-                    {
-                        tmpValue = Activator.CreateInstance(tmpProperty.PropertyType);
-                        tmpProperty.SetValue(currentObject, tmpValue);
-                    }
-                    currentObject = tmpValue;
-                }
+                string[] fieldPath = Name.Split('.');                
+                object currentObject = Utilities.CreateCurrentData(modelObj, fieldPath, typeof(BaseSDK<>));
                 field.ModelObj = currentObject;
                 field.Name = fieldPath[fieldPath.Length - 1];
                 PropertyName = fieldPath[fieldPath.Length - 1];

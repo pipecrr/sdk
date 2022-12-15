@@ -82,11 +82,21 @@
                     
                         <SDKTextField CssClass="text-area-demoviewdef" Value="@Buttons"/>
 
+                <p>Para utilizar el componente flex en el listar, se agrega "UseFlex: true" en el list.json </p>
+                <p>Tambien se puede especificar que pagine por servidor y el tamaño de la pagina, por defecto el take es 100 y la paginacion servidor en false</p>                    
+                        <SDKTextField CssClass="text-area-demoviewdef" Value="@ListFlex"/>
+
+                <p>Por defecto el listar no muestra el linkTo si se desea agregar el LisnkTO es necesario indicarlo en el list.json</p>
+                        <SDKTextField CssClass="text-area-demoviewdef" Value="@ShowLinkTo"/>
+                <p>El listar permite enviar acciones personalizadas se agregan a nivel general en el list.json</p>
+                        <SDKTextField CssClass="text-area-demoviewdef" Value="@CustomActions"/>
+
         </div>
     </div>
 </div>
 
 @code{
+    string ShowLinkTo = @"""ShowLinkTo"": true";
     string ViewdefCreate = @"{
                                 ""Panels"": [
                                     {
@@ -207,4 +217,16 @@
                         ""Action"": ""await MetodoBLFrontend()"",
                         ""Style"": ""secondary""
                         }]";
+
+    string ListFlex = @"
+                       ""UseFlex"": ""true"",
+                        ""FlexTake"": 100,
+                        ""ServerPaginationFlex"": ""true""
+                        ";
+    
+    string CustomActions = @"
+                            ""CustomActions"": [{                            
+                            ""Action"": ""await CustomAction()"",
+                            ""IconClass"": ""fa fa-plus""
+                            }]";
 }

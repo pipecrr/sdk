@@ -20,6 +20,9 @@ using Siesa.SDK.Frontend.Services;
 using Siesa.SDK.Shared.Utilities;
 using Siesa.SDK.Entities;
 using Blazored.LocalStorage;
+using Microsoft.CodeAnalysis.CSharp.Scripting;
+using Microsoft.CodeAnalysis.Scripting;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -57,9 +60,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public int FlexTake { get; set; } = 100;
         [Parameter]
         public bool ServerPaginationFlex { get; set; } = false;
+        [Parameter]
+        public bool ShowLinkTo {get; set;} = false;
 
         [Inject]
         public ILocalStorageService localStorageService { get; set; }
+
+        [Inject]
+        public IServiceProvider ServiceProvider { get;set; }
         private FreeForm SearchFormRef;
         private string FilterFlex { get; set; } = "";
 
@@ -118,6 +126,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public IEnumerable<object> Data { get; set; } = null;
 
         private IEnumerable<object> data;
+
+        private bool HasCustomActions { get; set; } = false;
+        private string WithActions {get; set;} = "100px";
         int count;
         public RadzenDataGrid<object> _gridRef;
 
@@ -240,7 +251,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 ListViewModel = JsonConvert.DeserializeObject<ListViewModel>(metadata);
                 UseFlex = ListViewModel.UseFlex;
                 FlexTake = ListViewModel.FlexTake;
+                ShowLinkTo = ListViewModel.ShowLinkTo;
                 ServerPaginationFlex = ListViewModel.ServerPaginationFlex;
+                if(ListViewModel.CustomActions != null && ListViewModel.CustomActions.Count > 0){
+                    HasCustomActions = true;
+                    var withInt = (ListViewModel.CustomActions.Count+2)*40;
+                    WithActions = $"{withInt}px";
+                }
                 foreach (var field in ListViewModel.Fields)
                 {
                     field.GetFieldObj(BusinessObj);
@@ -297,16 +314,46 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         protected override async Task OnInitializedAsync()
         {
-
             await base.OnInitializedAsync();
-            guidListView = Guid.NewGuid().ToString();
-            //await CheckPermissions();
-            //InitView();
+            guidListView = Guid.NewGuid().ToString();            
+            Restart();
         }
 
-        protected override void OnParametersSet()
+        public override async Task SetParametersAsync(ParameterView parameters)
         {
-            Restart();
+            bool shouldRestart = validateChanged(parameters);
+            await base.SetParametersAsync(parameters);
+            if(shouldRestart){
+                Restart();
+            }
+        }
+
+        private bool validateChanged(ParameterView parameters)
+        {
+            var type = this.GetType();
+            var properties = type.GetProperties();
+            var result = false;
+
+            foreach (var property in properties){
+                var HasCustomAttributes = property.GetCustomAttributes().Count() > 0;
+                if(!HasCustomAttributes){
+                    continue;
+                }
+                var dataAnnotationProperty = property.GetCustomAttributes().First().GetType();
+                var parameterType = typeof(ParameterAttribute);
+                if(dataAnnotationProperty == parameterType){
+                    try{
+                        if (parameters.TryGetValue<string>(property.Name, out var value)){
+                            var valueProperty = property.GetValue(this, null);
+                            if (value != null && value != valueProperty){
+                                result = true;
+                                break;
+                            }
+                        }
+                    }catch (Exception e){}
+                }
+            }
+            return result;
         }
 
         private void Restart()
@@ -681,11 +728,30 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
         }
 
-        private IDictionary<string, object> GetSelectFieldParameters(object data, FieldOptions field, string fieldName)
+        private async Task OnClickCustomAction(Button button, dynamic obj)
+        {
+            if (!string.IsNullOrEmpty(button.Action)){
+
+                var eject = await Evaluator.EvaluateCode(button.Action, BusinessObj, button.Action, true);
+                if (eject != null){
+                    eject(obj);
+                }
+            }
+        }
+
+        private IDictionary<string, object> GetSelectFieldParameters(dynamic data, FieldOptions field, string fieldName)
         {
             IDictionary<string, object> parameters = new Dictionary<string, object>();
-            parameters.Add("BindModel", data);
-            parameters.Add("FieldName", fieldName);
+            if(fieldName.Split(".").Length > 1)
+            {
+                string[] fieldPath = fieldName.Split('.');
+                var typeBaseSDK = typeof(BaseSDK<>);
+                object currentData = Utilities.CreateCurrentData(data,fieldPath,typeBaseSDK);
+                parameters.Add("BindModel", currentData);
+            }else{
+                parameters.Add("BindModel", data);
+            }
+            parameters.Add("FieldName", field.GetFieldObj(data).Name);
             parameters.Add("FieldOpt", field);
             return parameters;
         }

@@ -13,6 +13,7 @@ using System.Linq;
 using Siesa.SDK.Frontend.Utils;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Frontend.Services;
+using Siesa.SDK.Frontend.Application;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 {
@@ -75,6 +76,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public IBackendRouterService BackendRouterService { get; set; }
         [Inject] 
         public IFeaturePermissionService FeaturePermissionService { get; set; }
+
+        [Inject]
+        public IResourceManager ResourceManager { get; set; }
 
         protected bool CanCreate;
         protected bool CanEdit;
@@ -170,7 +174,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             var metadata = GetViewdef(bName);
             if (metadata == null || metadata == "")
             {
-                ErrorMsg = $"No hay definición para la vista {_viewdefName}";
+                //string ErrorTag = await ResourceManager.GetResource("Custom.Formview.NotDefinition", AuthenticationService.GetRoiwdCulture());
+                ErrorMsg = $"No hay definicion de la vista {_viewdefName}";
             }
             else
             {
@@ -352,7 +357,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
             ErrorMsg = string.Empty;
             if (result.Errors.Count > 0)
             {
-                ErrorMsg = "<ul>";
+                //ErrorMsg = "<ul>";
                 Type editFormCurrentType = EditFormContext.Model.GetType();
                 foreach (var error in result.Errors)
                 {
@@ -389,12 +394,13 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
                     
 
 
-                    ErrorMsg += $"<li>";
-                    ErrorMsg += !string.IsNullOrWhiteSpace(error.Attribute) ?  $"{error.Attribute} - " : string.Empty;
-                    ErrorMsg += error.Message.Replace("\n", "<br />");
-                    ErrorMsg += $"</li>";
+                    // ErrorMsg += $"<li>";
+                    // ErrorMsg += !string.IsNullOrWhiteSpace(error.Attribute) ?  $"{error.Attribute} - " : string.Empty;
+                    // string ErrorTag = await ResourceManager.GetResource(error.Message, AuthenticationService.GetRoiwdCulture());
+                    // ErrorMsg += ErrorTag;//error.Message.Replace("\n", "<br />");
+                    // ErrorMsg += $"</li>";
                 }
-                ErrorMsg += "</ul>";
+                //ErrorMsg += "</ul>";
                 EditFormContext.NotifyValidationStateChanged();
 
 
