@@ -9,7 +9,7 @@ using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Shared.DTOS;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-
+using Microsoft.AspNetCore.Http;
 namespace Siesa.SDK.Frontend.Services
 {
     public class AuthenticationService : IAuthenticationService
@@ -17,6 +17,7 @@ namespace Siesa.SDK.Frontend.Services
         private NavigationManager _navigationManager;
         private ILocalStorageService _localStorageService;
         private IBackendRouterService _backendRouterService;
+        private IHttpContextAccessor _contextAccesor;
         private string _secretKey;
         private int _minutesExp;
 
@@ -46,13 +47,14 @@ namespace Siesa.SDK.Frontend.Services
         public AuthenticationService(
             NavigationManager navigationManager,
             ILocalStorageService localStorageService,
-            IBackendRouterService BackendRouterService
+            IBackendRouterService BackendRouterService,
+            IHttpContextAccessor ContextAccessor
         )
         {
             _navigationManager = navigationManager;
             _localStorageService = localStorageService;
             _backendRouterService = BackendRouterService;
-
+            _contextAccesor = ContextAccessor;
             _minutesExp = 120; //TODO: get from config
             _secretKey = "testsecretKeyabc$"; //TODO: get from config
         }
@@ -79,10 +81,16 @@ namespace Siesa.SDK.Frontend.Services
             {
                 throw new Exception("Login Service not found");
             }
-            var loginRequest = await BLuser.Call("SignIn", new Dictionary<string, dynamic> {
+
+            string ipAddress = _contextAccesor.HttpContext.Connection.RemoteIpAddress?.ToString();
+            string browserName = _contextAccesor.HttpContext.Request.Headers["User-Agent"].ToString();
+
+            var loginRequest = await BLuser.Call("SignInSession", new Dictionary<string, dynamic> {
                 {"username", username},
                 {"password", password},
-                {"rowIdDBConnection", rowIdDBConnection}
+                {"rowIdDBConnection", rowIdDBConnection},
+                {"ipAddress", ipAddress},
+                {"browserName", browserName}
             });
             if (loginRequest.Success)
             {
