@@ -14,6 +14,7 @@
                         Filter="@filter"
                         DefaultFieldsCreate="@DefaultFieldsCreate" AllowCreate="@AllowCreate" AllowEdit="@AllowEdit" AllowDelete="@AllowDelete"
                         AllowDetail="@AllowDetail"
+                        Width="@GetWidth()"
                     />
                 </div>
             </SDKCollapseItem>
@@ -24,7 +25,7 @@
         BusinessName="@Relationship.RelatedBusiness"
         Filter="@filter"
         DefaultFieldsCreate="@DefaultFieldsCreate" AllowCreate="@AllowCreate" AllowEdit="@AllowEdit" AllowDelete="@AllowDelete"
-        AllowDetail="@AllowDetail" Width="@Width"
+        AllowDetail="@AllowDetail" Width="@GetWidth()"
         />
 }
 
@@ -51,6 +52,20 @@
     Guid listview_key = Guid.NewGuid();
 
     private Dictionary<string, object> DefaultFieldsCreate { get; set; }
+
+    private string GetWidth()
+    {
+        if(!string.IsNullOrEmpty(Width))
+        {
+            return Width;
+        }
+
+        if(Relationship != null && !string.IsNullOrEmpty(Relationship.Width))
+        {
+            return Relationship.Width;
+        }
+        return null;
+    }
 
     private void OnInit()
     {
