@@ -20,6 +20,8 @@ using Siesa.SDK.Frontend.Services;
 using Siesa.SDK.Shared.Utilities;
 using Siesa.SDK.Entities;
 using Blazored.LocalStorage;
+using Microsoft.CodeAnalysis.CSharp.Scripting;
+using Microsoft.CodeAnalysis.Scripting;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -57,6 +59,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public int FlexTake { get; set; } = 100;
         [Parameter]
         public bool ServerPaginationFlex { get; set; } = false;
+        [Parameter]
+        public bool ShowLinkTo {get; set;} = false;
 
         [Inject]
         public ILocalStorageService localStorageService { get; set; }
@@ -118,6 +122,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public IEnumerable<object> Data { get; set; } = null;
 
         private IEnumerable<object> data;
+
+        private bool HasCustomActions { get; set; } = false;
+        private string WithActions {get; set;} = "100px";
         int count;
         public RadzenDataGrid<object> _gridRef;
 
@@ -240,7 +247,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 ListViewModel = JsonConvert.DeserializeObject<ListViewModel>(metadata);
                 UseFlex = ListViewModel.UseFlex;
                 FlexTake = ListViewModel.FlexTake;
+                ShowLinkTo = ListViewModel.ShowLinkTo;
                 ServerPaginationFlex = ListViewModel.ServerPaginationFlex;
+                if(ListViewModel.CustomActions != null && ListViewModel.CustomActions.Count > 0){
+                    HasCustomActions = true;
+                    var withInt = (ListViewModel.CustomActions.Count+2)*40;
+                    WithActions = $"{withInt}px";
+                }
                 foreach (var field in ListViewModel.Fields)
                 {
                     field.GetFieldObj(BusinessObj);
@@ -678,6 +691,17 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 Evaluator.EvaluateCode(button.Action, BusinessObj);
                 hideCustomColumn();
+            }
+        }
+
+        private async Task OnClickCustomAction(Button button, dynamic obj)
+        {
+            if (!string.IsNullOrEmpty(button.Action)){
+
+                var eject = await Evaluator.EvaluateCode(button.Action, BusinessObj, button.Action, true);
+                if (eject != null){
+                    eject(obj);
+                }
             }
         }
 

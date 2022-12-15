@@ -41,7 +41,7 @@
         if (recording){
             await Stop();
         }else{
-            resourceAction = await UtilsManager.GetResource("SDKRecorder.Stop");
+            resourceAction = await UtilsManager.GetResource("Action.SDKRecorder.Stop");
             await Record();
         }
         StateHasChanged();
