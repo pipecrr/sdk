@@ -5,7 +5,6 @@
 @inject IAuthenticationService AuthenticationService
 @inherits SDKComponent
 
-
 <DxButton 
     RenderStyle="@RenderStyle.Get()" 
     RenderStyleMode="@RenderStyleMode.Get()" 
@@ -73,11 +72,20 @@
             Text = ResourceTag;
             await base.OnInitializedAsync();
             Text = await GetText();
+            //StateHasChanged();
         }
     }
+
     protected override async Task OnParametersSetAsync(){
-        Text = ResourceTag;
-        await base.OnParametersSetAsync();
+        if(IsActionButton || (string.IsNullOrEmpty(ResourceTag) && (!RowidResource.HasValue || RowidResource == 0)))
+        {
+            await base.OnParametersSetAsync();
+        }else{
+            Text = ResourceTag;
+            await base.OnParametersSetAsync();
+            Text = await GetText();
+            //StateHasChanged();
+        }
     }
 
 
