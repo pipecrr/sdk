@@ -55,11 +55,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter]
         public bool ShowList { get; set; } = true;
         [Parameter]
-        public bool UseFlex { get; set; } = false;
+        public bool UseFlex { get; set; } = true;
         [Parameter]
         public int FlexTake { get; set; } = 100;
         [Parameter]
-        public bool ServerPaginationFlex { get; set; } = false;
+        public bool ServerPaginationFlex { get; set; } = true;
         [Parameter]
         public bool ShowLinkTo {get; set;} = false;
 
@@ -253,6 +253,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 FlexTake = ListViewModel.FlexTake;
                 ShowLinkTo = ListViewModel.ShowLinkTo;
                 ServerPaginationFlex = ListViewModel.ServerPaginationFlex;
+                
+                //TODO: quitar cuando se pueda usar flex en los custom components
+                var fieldsCustomComponent = ListViewModel.Fields.Where(x => x.CustomComponent != null).ToList();
+                if(fieldsCustomComponent.Count > 0){
+                    UseFlex = false;
+                }
                 if(ListViewModel.CustomActions != null && ListViewModel.CustomActions.Count > 0){
                     HasCustomActions = true;
                     var withInt = (ListViewModel.CustomActions.Count+2)*40;
@@ -315,7 +321,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            guidListView = Guid.NewGuid().ToString();            
+            guidListView = Guid.NewGuid().ToString();
             Restart();
         }
 
