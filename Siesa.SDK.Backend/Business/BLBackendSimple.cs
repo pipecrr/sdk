@@ -740,7 +740,6 @@ namespace Siesa.SDK.Business
                 var entityType = typeof(T);
                 var rowidType = entityType.GetProperty("Rowid").PropertyType;
                 var rowidValue = Convert.ChangeType(rowid, rowidType);
-                
                 var query = context.Set<T>().AsQueryable();
                 query = query.Where("Rowid == @0", rowidValue);
                 var entity = query.FirstOrDefault();

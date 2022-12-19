@@ -627,12 +627,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         {
             Button button = CustomActions[(int)indexButton];
             var bl = BackendRouterService.GetSDKBusinessModel(BusinessName, AuthenticationService);
-            var c = await bl.Call("DataEntity", rowid);
-            /*if (OnClickCustomAction != null){
-                OnClickCustomAction(button, obj);
-                return true;
-            }*/
-
+            var result = await bl.Call("DataEntity", rowid.ToString());
+            if(result.Success){
+                var obj = result.Data;
+                if (OnClickCustomAction != null){
+                    OnClickCustomAction(button, obj);
+                    return true;
+                }
+            }
             return false;
         }
 
