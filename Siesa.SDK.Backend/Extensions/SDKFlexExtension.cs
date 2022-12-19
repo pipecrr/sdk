@@ -115,7 +115,7 @@ namespace Siesa.SDK.Backend.Extensions
                         // }
                         if(virtualColumns.Count > 0){
                             virtualColumnsName.Add(column.name);
-                            strColumns.Add("Rowid  as " + column.name);                            
+                            strColumns.Add("Rowid  as " + column.name);
                         }
                         continue;
                     }
