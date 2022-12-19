@@ -99,11 +99,16 @@ namespace Siesa.SDK.Backend.Extensions
                 List<SDKFlexVirtualColumnDTO> virtualColumns = new List<SDKFlexVirtualColumnDTO>();
                 List<string> virtualColumnsName = new List<string>();
                 var rowidType = entityType.GetProperty("Rowid").PropertyType;
+                //var selectedRowid = false;
+                strColumns.Add("np(Rowid) as rowid");
                 foreach (SDKFlexColumn column in columns)
                 {
                     if(column.customFn){
                         continue;
                     }
+                    /*if(column.name == "Rowid"){
+                        selectedRowid = true;
+                    }*/
                     if(column.is_dynamic_field){
                         var actualVirtualColumns = GetVirtualColumns(column.name, Context, dynamicEntityType);
                         virtualColumns.AddRange(actualVirtualColumns);
@@ -115,7 +120,7 @@ namespace Siesa.SDK.Backend.Extensions
                         // }
                         if(virtualColumns.Count > 0){
                             virtualColumnsName.Add(column.name);
-                            strColumns.Add("Rowid  as " + column.name);
+                            strColumns.Add("Rowid as " + column.name);
                         }
                         continue;
                     }
