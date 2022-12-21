@@ -1,11 +1,12 @@
 @using Siesa.SDK.Frontend.Components.Fields
 @using System.Linq.Expressions
+@using SDK.Frontend.Application
 @typeparam TItem
 @inherits FieldClass<TItem>
 @using Siesa.SDK.Shared.Services
 @inject IAuthenticationService AuthenticationService
 @inject IBackendRouterService BackendRouterService
-
+@inject IResourceManager ResourceManager
 
 @if (!FieldOpt.Hidden)
 {
@@ -36,7 +37,6 @@
     [Parameter] public IEnumerable<SelectBarItemWrap<TItem>> Options { get; set; }        
     Expression<Func<TItem>> ValueExpression { get; set; }
     private Type enumType { get; set; }
-
     private IEnumerable<SelectBarItemWrap<TItem>> _options
     {
         get
@@ -61,6 +61,7 @@
     }
     private async Task GetEnumValues()
     {
+        var SelectAllName = await ResourceManager.GetResource("Custom.Enum.SelectAll", AuthenticationService);
         var resourceBL = BackendRouterService.GetSDKBusinessModel("BLResource", AuthenticationService);
         var request = await resourceBL.Call("GetEnumValues", enumType.Name,
         Convert.ToInt64(AuthenticationService.GetRoiwdCulture()));
@@ -84,9 +85,14 @@
                 Options = Options.Append(new SelectBarItemWrap<TItem>
                 {
                     Key = (TItem)Enum.Parse(enumType, (enumValues.Select(x => x.Key).Last() + 1).ToString()),
-                    Name = "Todos"
+                    Name = SelectAllName
                 });
             }
+
+            Options = Options.Reverse();
+
+            BindValue = Options.Select(x => x.Key).First();
+
             StateHasChanged();
         }
     }
@@ -116,6 +122,7 @@
         var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
         ValueExpression = (Expression<Func<TItem>>)Expression.Lambda(typeof(Func<>).MakeGenericType(typeof(TItem)), access);
         isDisabled();
+
     }
 
     protected override void OnParametersSet()

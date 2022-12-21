@@ -1,10 +1,12 @@
 ﻿@using Siesa.SDK.Frontend.Components.Fields
 @using System.Linq.Expressions
+@using Siesa.SDK.Frontend.Application
 @typeparam TItem
 @inherits FieldClass<TItem>
 @using Siesa.SDK.Shared.Services
 @inject IAuthenticationService AuthenticationService
 @inject IBackendRouterService BackendRouterService
+@inject IResourceManager ResourceManager
 
 <SDKSelectField 
     ItemType="TItem"
@@ -43,6 +45,7 @@
 
     private async Task GetEnumValues()
     {
+        var SelectAllName = await ResourceManager.GetResource("Custom.Enum.SelectAll", AuthenticationService);
         var resourceBL = BackendRouterService.GetSDKBusinessModel("BLResource", AuthenticationService);
         var request = await resourceBL.Call("GetEnumValues", enumType.Name, Convert.ToInt64(AuthenticationService.GetRoiwdCulture()));
         if(request.Success){
@@ -56,12 +59,16 @@
             });
             if (ViewdefName == "search")
             {
-                Options = Options.(new SDKEnumWrapper<TItem>
+                Options = Options.Append(new SDKEnumWrapper<TItem>
                 {
                     Type = (TItem)Enum.Parse(enumType, (enumValues.Select(x => x.Key).Last() + 1).ToString()),
-                    DisplayText = "Todos"
+                    DisplayText = SelectAllName
                 });
             }
+            Options = Options.Reverse();
+
+            BindValue = Options.Select(x => x.Type).First();
+            
             if(_refField != null){
                 _refField.RefreshCurrentText();
             }
