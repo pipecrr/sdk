@@ -509,13 +509,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                 case FieldTypes.Custom:
                                     if (field.CustomType == "SelectBarField")
                                     {
-                                        // Type enumType = searchValue.GetType();
-                                        // //(searchValue.GetType())Enum.Parse(typeof(searchValue), 1);
-                                        // var key = Enum.Parse(enumType, searchValue.ToString());
                                         Type enumType = searchValue.GetType();
-                                        var size = Enum.GetValues(enumType).Length;
+                                        var EnumValues = Enum.GetValues(enumType);
+                                        var LastValue = EnumValues.GetValue(EnumValues.Length - 1);
                                         
-                                        if (Convert.ToInt32(Enum.GetValues(enumType).GetValue(size-1))+1 != Convert.ToInt32(searchValue))
+                                        if (Convert.ToInt32(LastValue)+1 != Convert.ToInt32(searchValue))
                                         { 
                                             tmpFilter = $"{fieldObj.Name} == {Convert.ToInt32(searchValue)}";
                                         }
