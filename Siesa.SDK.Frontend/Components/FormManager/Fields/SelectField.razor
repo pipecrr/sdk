@@ -54,6 +54,14 @@
                 Type = (TItem)Enum.Parse(enumType, x.Key.ToString()),
                 DisplayText = x.Value
             });
+            if (ViewdefName == "search")
+            {
+                Options = Options.(new SDKEnumWrapper<TItem>
+                {
+                    Type = (TItem)Enum.Parse(enumType, (enumValues.Select(x => x.Key).Last() + 1).ToString()),
+                    DisplayText = "Todos"
+                });
+            }
             if(_refField != null){
                 _refField.RefreshCurrentText();
             }

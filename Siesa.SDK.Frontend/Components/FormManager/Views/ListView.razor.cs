@@ -507,7 +507,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                     break;
                                 
                                 case FieldTypes.Custom:
-                                    if (field.CustomType == "SelectBarField")
+                                case FieldTypes.SelectField:
+                                    if (field.CustomType == "SelectBarField" || field.FieldType == FieldTypes.SelectField)
                                     {
                                         Type enumType = searchValue.GetType();
                                         var EnumValues = Enum.GetValues(enumType);
