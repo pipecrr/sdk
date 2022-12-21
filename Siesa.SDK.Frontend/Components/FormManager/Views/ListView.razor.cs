@@ -23,6 +23,7 @@ using Blazored.LocalStorage;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.Extensions.DependencyInjection;
+using Siesa.SDK.Entities.Enums;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -503,6 +504,23 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                     {
                                         tmpFilter = $"({fieldObj.Name} == null ? 0 : {fieldObj.Name}.Rowid) == {searchValue.Rowid}";
                                     }
+                                    break;
+                                
+                                case FieldTypes.Custom:
+                                    if (field.CustomType == "SelectBarField")
+                                    {
+                                        // Type enumType = searchValue.GetType();
+                                        // //(searchValue.GetType())Enum.Parse(typeof(searchValue), 1);
+                                        // var key = Enum.Parse(enumType, searchValue.ToString());
+                                        Type enumType = searchValue.GetType();
+                                        var size = Enum.GetValues(enumType).Length;
+                                        
+                                        if (Convert.ToInt32(Enum.GetValues(enumType).GetValue(size-1))+1 != Convert.ToInt32(searchValue))
+                                        { 
+                                            tmpFilter = $"{fieldObj.Name} == {Convert.ToInt32(searchValue)}";
+                                        }
+                                    }
+
                                     break;
                                 default:
                                     break;

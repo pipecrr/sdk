@@ -71,11 +71,22 @@
             {
                 return;
             }
+
+
             Options = enumValues.Select(x => new SelectBarItemWrap<TItem>
             {
                 Key = (TItem)Enum.Parse(enumType, x.Key.ToString()),
                 Name = x.Value
             });
+            
+            if (ViewdefName == "search")
+            {
+                Options = Options.Append(new SelectBarItemWrap<TItem>
+                {
+                    Key = (TItem)Enum.Parse(enumType, (enumValues.Select(x => x.Key).Last() + 1).ToString()),
+                    Name = "Todos"
+                });
+            }
             StateHasChanged();
         }
     }
