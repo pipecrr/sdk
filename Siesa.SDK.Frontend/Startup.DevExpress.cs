@@ -18,10 +18,25 @@ using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Builder;
 using Blazor.IndexedDB.Framework;
 using System.Collections.Generic;
+using GrapeCity.ActiveReports.Aspnetcore.Designer;
+using GrapeCity.ActiveReports.Aspnetcore.Viewer;
+
+
+using WebDesigner_Blazor.Implementation;
+using System.IO;
+using WebDesigner_Blazor.Services;
 
 namespace Siesa.SDK.Frontend {
     public static class SiesaSecurityExtensions
     {
+        // private static readonly DirectoryInfo ResourcesRootDirectory =
+		// 	new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), "resources" + Path.DirectorySeparatorChar));
+
+		// private static readonly DirectoryInfo TemplatesRootDirectory =
+		// 	new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), "templates" + Path.DirectorySeparatorChar));
+
+		// private static readonly DirectoryInfo DataSetsRootDirectory =
+		// 	new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), "datasets" + Path.DirectorySeparatorChar));
         public static void AddSiesaSDKFrontend(this IServiceCollection services, IConfiguration serviceConfiguration)
         {
             services.AddControllers().PartManager.ApplicationParts.Add(new AssemblyPart(typeof(SiesaSecurityExtensions).Assembly));
@@ -48,6 +63,14 @@ namespace Siesa.SDK.Frontend {
                 e.MaximumReceiveMessageSize = 102400000;
             });
             services.AddHttpContextAccessor();
+
+
+            services.AddReporting();
+			services.AddDesigner();
+			// services.AddSingleton<ITemplatesService>(new FileSystemTemplates(TemplatesRootDirectory));
+			// services.AddSingleton<IDataSetsService>(new FileSystemDataSets(DataSetsRootDirectory));
+			// services.AddRazorPages().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
+			// services.AddServerSideBlazor();
            /* services.AddBlazorDB(options =>
             {
                 options.Name = "SiesaSDK";
