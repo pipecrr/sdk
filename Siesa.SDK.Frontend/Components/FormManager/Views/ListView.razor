@@ -143,7 +143,7 @@ else
 
                             }
                             @if(HasCustomActions){
-                                @foreach (var action in ListViewModel.CustomActions)
+                                @foreach (var action in CustomActions)
                                 {
                                     <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="async () => await OnClickCustomAction(action, ((IBaseSDK)data))"><i
                                     class="@action.IconClass"></i></button>
@@ -316,7 +316,7 @@ else
     @if(SetTopBar)
     {
         <PageTitle><ResourceViewer ResourceTag="@($"{BusinessName}.Plural")" /></PageTitle>
-        <SetTopBar HasExtraButtons="@(ListViewModel.Buttons != null && ListViewModel.Buttons.Count > 0 ? true: false)" BusinessObj="@BusinessObj">
+        <SetTopBar HasExtraButtons="@HasExtraButtons" BusinessObj="@BusinessObj">
             <TopBarTitle><ResourceViewer ResourceTag="@($"{BusinessName}.Plural")" /></TopBarTitle>
             <TopBarButtons>
                 @if(ShowSearchForm && HasSearchViewdef && !_isEditingFlex)
@@ -336,7 +336,7 @@ else
                 }
             </TopBarButtons>
             <TopBarExtraButtons>
-                @foreach (var btn in ListViewModel.Buttons)
+                @foreach (var btn in ExtraButtons)
                 {
                     <TopBarButton Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" IconCssClass="@btn.IconClass" />
                 }

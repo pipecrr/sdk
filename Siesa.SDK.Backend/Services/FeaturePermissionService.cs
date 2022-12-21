@@ -27,7 +27,6 @@ namespace Siesa.SDK.Backend.Services
 
         public async Task<bool> CheckUserActionPermission(string featureBLName, int actionRowid, IAuthenticationService authenticationService)
         {
-            return true; //TODO: Para el review
             if (!BLNameToRowid.ContainsKey(featureBLName))
             {
                 var request = await _BackendRouter.GetSDKBusinessModel("BLFeature", authenticationService).Call("GetFeatureRowid", featureBLName);
@@ -39,6 +38,11 @@ namespace Siesa.SDK.Backend.Services
                  }
             }
             return Utilities.CheckUserActionPermission(BLNameToRowid[featureBLName], actionRowid, authenticationService); 
+        }
+
+        public Task<bool> CheckUserActionPermissions(string FeatureBLName, List<int> permissions, IAuthenticationService authenticationService)
+        {
+            throw new NotImplementedException();
         }
     }
 }

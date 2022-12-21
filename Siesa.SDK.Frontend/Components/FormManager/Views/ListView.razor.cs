@@ -130,6 +130,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private bool HasCustomActions { get; set; } = false;
         private string WithActions {get; set;} = "100px";
         int count;
+        private bool HasExtraButtons { get; set; } = false;
+        private List<Button> ExtraButtons { get; set; }
+        private List<Button> CustomActions { get; set; }
         public RadzenDataGrid<object> _gridRef;
 
         public List<FieldOptions> FieldsHidden { get; set; } = new List<FieldOptions>();
@@ -249,14 +252,37 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
                 }
                 ListViewModel = JsonConvert.DeserializeObject<ListViewModel>(metadata);
+                if(ListViewModel.Buttons != null && ListViewModel.Buttons.Count > 0){
+                    var showButton = false;
+                    ExtraButtons = new List<Button>();
+                    foreach (var button in ListViewModel.Buttons){
+                        showButton = await CheckPermissionsButton(button.ListPermission);
+                        if(showButton){
+                            ExtraButtons.Add(button);
+                        }
+                    }
+                    if(ExtraButtons.Count > 0){
+                        HasExtraButtons = true;
+                    }
+                }
                 UseFlex = ListViewModel.UseFlex;
                 FlexTake = ListViewModel.FlexTake;
                 ShowLinkTo = ListViewModel.ShowLinkTo;
                 ServerPaginationFlex = ListViewModel.ServerPaginationFlex;
                 if(ListViewModel.CustomActions != null && ListViewModel.CustomActions.Count > 0){
-                    HasCustomActions = true;
-                    var withInt = (ListViewModel.CustomActions.Count+2)*40;
-                    WithActions = $"{withInt}px";
+                    var showButton = false;
+                    CustomActions = new List<Button>();
+                    foreach (var button in ListViewModel.CustomActions){
+                        showButton = await CheckPermissionsButton(button.ListPermission);
+                        if(showButton){
+                            CustomActions.Add(button);
+                        }
+                    }
+                    if(CustomActions.Count > 0){
+                        var withInt = (CustomActions.Count+2)*40;
+                        WithActions = $"{withInt}px";
+                        HasCustomActions = true;
+                    }
                 }
                 foreach (var field in ListViewModel.Fields)
                 {
@@ -283,6 +309,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
             hideCustomColumn();
             StateHasChanged();
+        }
+
+        private async Task<bool> CheckPermissionsButton(List<int> ListPermission){
+            var showButton = false;
+            if(FeaturePermissionService != null){
+                try{
+                    showButton = await FeaturePermissionService.CheckUserActionPermissions(BusinessName, ListPermission, AuthenticationService);
+                }catch(System.Exception){
+
+                }
+            }
+            return showButton;
         }
 
         private async Task CheckPermissions()
