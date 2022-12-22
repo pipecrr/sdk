@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 using System.Globalization;
-namespace WebDesigner_Blazor.Controllers
+namespace SDK.Frontend.ReportDesigner.Controllers
 {
 
     public partial class DataSetModel
