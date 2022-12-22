@@ -40,9 +40,15 @@ namespace Siesa.SDK.Backend.Services
             return Utilities.CheckUserActionPermission(BLNameToRowid[featureBLName], actionRowid, authenticationService); 
         }
 
-        public Task<bool> CheckUserActionPermissions(string FeatureBLName, List<int> permissions, IAuthenticationService authenticationService)
-        {
-            throw new NotImplementedException();
+        public async Task<bool> CheckUserActionPermissions(string FeatureBLName, List<int> permissions, IAuthenticationService authenticationService){
+            var result = false;
+            foreach(var item in permissions){
+                result = await CheckUserActionPermission(FeatureBLName, item, authenticationService);
+                if(!result){
+                    break;
+                }
+            }
+            return result;
         }
     }
 }

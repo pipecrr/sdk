@@ -256,8 +256,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     var showButton = false;
                     ExtraButtons = new List<Button>();
                     foreach (var button in ListViewModel.Buttons){
-                        showButton = await CheckPermissionsButton(button.ListPermission);
-                        if(showButton){
+                        if(button.ListPermission != null && button.ListPermission.Count > 0){
+                            showButton = await CheckPermissionsButton(button.ListPermission);
+                            if(showButton){
+                                ExtraButtons.Add(button);
+                            }
+                        }else{
                             ExtraButtons.Add(button);
                         }
                     }

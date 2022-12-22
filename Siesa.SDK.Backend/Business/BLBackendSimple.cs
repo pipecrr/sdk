@@ -39,6 +39,8 @@ namespace Siesa.SDK.Business
     {
         [JsonIgnore]
         protected IAuthenticationService AuthenticationService { get; set; }
+        [JsonIgnore]
+        protected IFeaturePermissionService FeaturePermissionService { get; set; }
 
         private IServiceProvider _provider;
         private ILogger _logger;
@@ -46,6 +48,8 @@ namespace Siesa.SDK.Business
         protected dynamic _dbFactory;
 
         private SDKContext myContext;
+        private bool CanEdit { get; set; }
+        private bool CanCreate { get; set; }
         protected SDKContext Context { get { return myContext; } }
 
         private IEnumerable<INavigation> _navigationProperties = null;
@@ -58,6 +62,7 @@ namespace Siesa.SDK.Business
         public BLBackendSimple(IAuthenticationService authenticationService)
         {
             AuthenticationService = authenticationService;
+
         }
 
         public string BusinessName { get; set; }
@@ -115,6 +120,8 @@ namespace Siesa.SDK.Business
     {
         [JsonIgnore]
         protected IAuthenticationService AuthenticationService { get; set; }
+         [JsonIgnore]
+        protected IFeaturePermissionService FeaturePermissionService { get; set; }
 
         public SDKBusinessModel GetBackend(string business_name)
         {
