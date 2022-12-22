@@ -11,13 +11,15 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
          if(firstRender || _jsModule == null){
+             try
+            {
+                await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/js/utils.js");
+            }catch (Exception)
+            {
+            }
             _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/ActiveReport/Page/ReportDesigner.razor.js");
-            await JSRuntime.InvokeVoidAsync("initDesigner");
+            @* await JSRuntime.InvokeVoidAsync("initDesigner"); *@
         }
-        /*if (firstRender)
-        {
-            await JSRuntime.InvokeVoidAsync("initDesigner");
-        }*/
     }
 
 }
