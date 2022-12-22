@@ -20,11 +20,7 @@ using Blazor.IndexedDB.Framework;
 using System.Collections.Generic;
 using GrapeCity.ActiveReports.Aspnetcore.Designer;
 using GrapeCity.ActiveReports.Aspnetcore.Viewer;
-
-
-using WebDesigner_Blazor.Implementation;
 using System.IO;
-using WebDesigner_Blazor.Services;
 
 namespace Siesa.SDK.Frontend {
     public static class SiesaSecurityExtensions

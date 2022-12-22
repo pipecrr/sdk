@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using Siesa.SDK.Frontend.Services;
 using Siesa.SDK.Protos;
-using WebDesigner_Blazor.Services;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Shared.Utilities;
 using System.Linq;
+using Siesa.SDK.Frontend.Application;
+using System.Threading.Tasks;
 
 namespace SDK.Frontend.ReportDesigner.Controllers
 {
@@ -14,14 +14,18 @@ namespace SDK.Frontend.ReportDesigner.Controllers
 	public class DataSetsController : Controller
 	{
 		private IBackendRouterService _backendRouterService;
+		public IResourceManager _resourceManager;
+		IAuthenticationService _authenticationService;
 
-		public DataSetsController(IBackendRouterService backendRouterService)
+		public DataSetsController(IBackendRouterService backendRouterService, IResourceManager resourceManager, IAuthenticationService authenticationService)
         {
             _backendRouterService = backendRouterService;
+			_resourceManager = resourceManager;
+			_authenticationService = authenticationService;
         }
 
 		[HttpGet("{id}/content")]
-		public ActionResult GetDataSetContent([FromRoute] string id)
+		public async Task<dynamic> GetDataSetContent([FromRoute] string id)
 		{
 			if (string.IsNullOrWhiteSpace(id)) return BadRequest();
 
@@ -41,12 +45,20 @@ namespace SDK.Frontend.ReportDesigner.Controllers
 					Aggregate = "none"
 				});
 			}
-			var NameDataSet = EntityType.Name.Split('_').Last();
+
+			var NameDataSet =  await _resourceManager.GetResource($"{EntityType.Name}.Singular", 1);
+
 
 			 var _DataSetModel  = new DataSetModel(){
 			 	DataSet = new(){
 			 		Name = NameDataSet,
-			 		Fields = DataSetEntity.Select(x => new Field() { Name = x.Name, DataField = x.DataField, DataType = x.DataType, Aggregate = x.Aggregate }).ToArray()
+			 		Fields = await Task.WhenAll(DataSetEntity.Select(async x => new Field() 
+					{ 
+					Name = await _resourceManager.GetResource($"{EntityType.Name}.{x.Name}", 1), 
+					DataField = await _resourceManager.GetResource($"{EntityType.Name}.{x.DataField}", 1), 
+					DataType = await _resourceManager.GetResource($"{EntityType.Name}.{x.DataType}", 1) , 
+					Aggregate = await _resourceManager.GetResource($"{EntityType.Name}.{x.Aggregate }", 1) 
+					}))
 					,
 			 		Query = new(){
 			 			CommandText = "x",
@@ -54,7 +66,7 @@ namespace SDK.Frontend.ReportDesigner.Controllers
 			 		}
 			 	},
 			 	DataSource = new(){
-			 		Name = "Entities",
+			 		Name = "x",
 			 		ConnectionProperties = new(){
 			 			DataProvider = "x",
 			 			ConnectString = "x",
