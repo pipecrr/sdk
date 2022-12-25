@@ -39,6 +39,8 @@ namespace Siesa.SDK.Business
     {
         [JsonIgnore]
         protected IAuthenticationService AuthenticationService { get; set; }
+        [JsonIgnore]
+        protected IBackendRouterService _backendRouterService { get; set; }
 
         private IServiceProvider _provider;
         private ILogger _logger;
@@ -101,7 +103,6 @@ namespace Siesa.SDK.Business
             _provider = provider;
 
             _dbFactory = _provider.GetService(typeof(IDbContextFactory<SDKContext>));
-
             ILoggerFactory loggerFactory = (ILoggerFactory)_provider.GetService(typeof(ILoggerFactory));
             _logger = loggerFactory.CreateLogger(this.GetType().FullName);
 
@@ -109,6 +110,8 @@ namespace Siesa.SDK.Business
             myContext.SetProvider(_provider);
 
             AuthenticationService = (IAuthenticationService)_provider.GetService(typeof(IAuthenticationService));
+            
+            _backendRouterService = _provider.GetService(typeof(IBackendRouterService)) as IBackendRouterService;
         }
     }
     public class BLBackendSimple<T, K> : IBLBase<T> where T : class, IBaseSDK where K : BLBaseValidator<T>
@@ -731,7 +734,14 @@ namespace Siesa.SDK.Business
                 return new ActionResult<string>{Success = true, Data = base64};
             }
             return new BadRequestResult<string>{Success = false, Errors = new List<string> { "File not found" }};
-        } 
+        }
+
+        [SDKExposedMethod]
+        public async Task<ActionResult<int>> SaveAttachmentDetail(SDKFileUploadDTO obj){
+            var BLAttatchmentDetail = GetBackend("BLAttachmentDetail");
+            var result = await BLAttatchmentDetail.Call("SaveAttatchmentDetail", obj);
+            return null;
+        }
     }
 
 }

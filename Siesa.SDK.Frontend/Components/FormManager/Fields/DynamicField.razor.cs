@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
 using Siesa.SDK.Entities;
+using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
+using Siesa.SDK.Frontend.Components.Fields;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Fields
 {
@@ -13,7 +15,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
         [Parameter] public FieldOptions FieldOpt { get; set; }
         [Parameter] public object ModelObj { get; set; }
         [Parameter] public bool ValidateField { get; set; } = true;
-
+        [CascadingParameter] FormView formView { get; set; }
+        public SDKFileField UploadComponent { get; set; }
         private object fieldModelObj { get; set; }
 
         private string fieldName { get; set; }
@@ -54,7 +57,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
         public override async Task SetParametersAsync(ParameterView parameters)
         {
             await base.SetParametersAsync(parameters);
-            initField(true);   
+            initField(true);
+        }
+        public void AddUploadComponent(SDKFileField uploadComponent, string fieldName){
+            Dictionary<string, SDKFileField> uploadComponents = formView.FileFields;
+            if(uploadComponent != null){
+                if(!uploadComponents.ContainsKey(fieldName)){
+                    uploadComponents.Add(fieldName, uploadComponent);
+                }
+            }
         }
     }
 }

@@ -223,6 +223,10 @@
             <EntityField BaseModelObj="@ModelObj" BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" ValidateField="@ValidateField"  />
         }
         break;
+    case FieldTypes.FileField:
+        <SDKFileField Business="@ModelObj" FieldName="@fieldName" @ref=@UploadComponent Complete="@formView.OnComplete" Error="@formView.OnError"></SDKFileField>
+        AddUploadComponent(UploadComponent, fieldName);
+        break;
     case FieldTypes.Custom:
         <CustomField BaseModelObj="@ModelObj" BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  Definition="@FieldOpt.CustomComponent"/>
         break;

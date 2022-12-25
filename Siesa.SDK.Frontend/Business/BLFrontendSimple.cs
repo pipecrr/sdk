@@ -23,6 +23,7 @@ using Siesa.SDK.Shared.DataAnnotations;
 using Siesa.SDK.Shared.DTOS;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Siesa.SDK.Business
 {
@@ -429,5 +430,12 @@ namespace Siesa.SDK.Business
             }
             return result;
         }
+
+        public async Task<int> SaveAttachmentDetail(SDKFileUploadDTO obj){
+            var result = await Backend.Call("SaveAttachmentDetail", obj);
+
+            return result.Data;
+        }
+    
     }
 }
