@@ -39,13 +39,16 @@ namespace Siesa.SDK.Business
     {
         [JsonIgnore]
         protected IAuthenticationService AuthenticationService { get; set; }
+        [JsonIgnore]
+        protected IFeaturePermissionService FeaturePermissionService { get; set; }
 
         private IServiceProvider _provider;
         private ILogger _logger;
         protected ILogger Logger { get { return _logger; } }
-        protected dynamic _dbFactory;
+        protected dynamic _dbFactory;        
 
         private SDKContext myContext;
+
         protected SDKContext Context { get { return myContext; } }
 
         private IEnumerable<INavigation> _navigationProperties = null;
@@ -58,6 +61,7 @@ namespace Siesa.SDK.Business
         public BLBackendSimple(IAuthenticationService authenticationService)
         {
             AuthenticationService = authenticationService;
+
         }
 
         public string BusinessName { get; set; }
@@ -115,6 +119,8 @@ namespace Siesa.SDK.Business
     {
         [JsonIgnore]
         protected IAuthenticationService AuthenticationService { get; set; }
+         [JsonIgnore]
+        protected IFeaturePermissionService FeaturePermissionService { get; set; }
 
         public SDKBusinessModel GetBackend(string business_name)
         {
@@ -125,6 +131,7 @@ namespace Siesa.SDK.Business
         private ILogger _logger;
         protected ILogger Logger { get { return _logger; } }
         protected dynamic _dbFactory;
+        protected IFeaturePermissionService _featurePermissionService;
 
         public string BusinessName { get; set; }
         public T BaseObj { get; set; }
@@ -132,7 +139,9 @@ namespace Siesa.SDK.Business
         private string[] _relatedProperties = null;
         protected SDKContext ContextMetadata;
         public List<string> RelFieldsToSave { get; set; } = new List<string>();
-
+        private bool CanCreate { get; set; } = true;
+        private bool CanEdit { get; set; } = true;
+        private int RowidFeature { get; set; }
         private IEnumerable<INavigation> _navigationProperties = null;
 
         private List<object> unique_indexes = new List<object>();
@@ -212,6 +221,10 @@ namespace Siesa.SDK.Business
             };
 
             AuthenticationService = (IAuthenticationService)_provider.GetService(typeof(IAuthenticationService));
+
+            // _featurePermissionService = (IFeaturePermissionService)_provider.GetService(typeof(IFeaturePermissionService));
+
+            RowidFeature = GetRowidFeature(BusinessName);
         }
 
         [SDKExposedMethod]
@@ -310,10 +323,26 @@ namespace Siesa.SDK.Business
                 return query.FirstOrDefault();
             }
         }
+        private int GetRowidFeature(string business_name)
+        {
+            using (SDKContext context = CreateDbContext())
+            {
+                var query = context.Set<E00040_Feature>().Where(x => x.BusinessName == business_name).Select(x => x.Rowid).FirstOrDefault();
+                return query;
+            }
+        }
 
         public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave()
         {
             ValidateAndSaveBusinessObjResponse result = new();
+            if(_featurePermissionService != null){
+                CanCreate = _featurePermissionService.CheckUserActionPermission(RowidFeature, 6,AuthenticationService);
+                CanEdit = _featurePermissionService.CheckUserActionPermission(RowidFeature, 7,AuthenticationService);
+            }
+            if(!CanCreate && !CanEdit){
+                AddMessageToResult("Custom.UserNotPermisson.ExecuteAction", result);
+                return result;
+            }
 
             try
             {

@@ -14,6 +14,7 @@ using Siesa.SDK.Frontend.Utils;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Frontend.Services;
 using Siesa.SDK.Frontend.Application;
+using Siesa.SDK.Frontend.Extension;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 {
@@ -104,10 +105,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 {
                 }
             }
-
         }
-
-
+        
         private string GetViewdef(string businessName)
         {
             if (String.IsNullOrEmpty(ViewdefName))
@@ -318,26 +317,12 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
 
         public override async Task SetParametersAsync(ParameterView parameters)
         {
-            bool changeViewContext = false;
-            if (parameters.TryGetValue<DynamicViewType>(nameof(ViewContext), out var value2))
-            {
-                if (value2 != null && value2 != ViewContext)
-                {
-                    changeViewContext = true;
-                }
-            }
-            await base.SetParametersAsync(parameters);
-            if (parameters.TryGetValue<string>(nameof(BusinessName), out var value))
-            {
-                if (value != null && value != BusinessName)
-                {
-                    Loading = false;
-                    ErrorMsg = "";
-                    await InitView(value);
-                }
-            }
+            bool changeViewContext = parameters.DidParameterChange(nameof(ViewContext), ViewContext);
+            bool changeBusinessName = parameters.DidParameterChange(nameof(BusinessName), BusinessName);
 
-            if(changeViewContext)
+            await base.SetParametersAsync(parameters);
+
+            if(changeViewContext || changeBusinessName)
             {
                 Loading = false;
                 ErrorMsg = "";

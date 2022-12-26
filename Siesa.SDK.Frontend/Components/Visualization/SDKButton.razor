@@ -3,31 +3,34 @@
 @using Siesa.SDK.Shared.Services
 @inject IResourceManager ResourceManager
 @inject IAuthenticationService AuthenticationService
+@inject IFeaturePermissionService FeaturePermissionService
 @inherits SDKComponent
 
-<DxButton 
-    RenderStyle="@RenderStyle.Get()" 
-    RenderStyleMode="@RenderStyleMode.Get()" 
-    SubmitFormOnClick="@SubmitFormOnClick"
-    Click="@Click" 
-    Text="@Text" 
-    form="@form"
-    NavigateUrl="@NavigateUrl"
-    CssClass="@GetCss()"
-    Enabled="@Enabled"
-    data-automation-id="@GetAutomationId()"
-    >
-    @if(!string.IsNullOrEmpty(IconCssClass)){
-        <i class="@IconCssClass"></i>
-    }else{
-        @if(ChildContent != null)
-        {
-            @ChildContent
+@if(HasPermission){
+    <DxButton 
+        RenderStyle="@RenderStyle.Get()" 
+        RenderStyleMode="@RenderStyleMode.Get()" 
+        SubmitFormOnClick="@SubmitFormOnClick"
+        Click="@Click" 
+        Text="@Text" 
+        form="@form"
+        NavigateUrl="@NavigateUrl"
+        CssClass="@GetCss()"
+        Enabled="@Enabled"
+        data-automation-id="@GetAutomationId()"
+        >
+        @if(!string.IsNullOrEmpty(IconCssClass)){
+            <i class="@IconCssClass"></i>
         }else{
-            @Text
+            @if(ChildContent != null)
+            {
+                @ChildContent
+            }else{
+                @Text
+            }
         }
-    }
-    </DxButton>
+    </DxButton>    
+}
 
 @code {
     [Parameter] public SDKButtonRenderStyle RenderStyle { get; set; }
@@ -44,6 +47,9 @@
 
     [Parameter] public bool SubmitFormOnClick { get; set; } =  false;
 
+    [Parameter] public List<int> ListPermission { get; set; }
+    [Parameter] public string BusinessName { get; set; }    
+    private bool HasPermission = true;
     private string Text { get; set; }
 
     [Parameter] public string NavigateUrl { get; set; }
@@ -65,6 +71,12 @@
 
     protected override async Task OnInitializedAsync()
     {
+        if(ListPermission != null && ListPermission.Count > 0){
+            if(!string.IsNullOrEmpty(BusinessName)){
+                HasPermission = false;
+                HasPermission = await FeaturePermissionService.CheckUserActionPermissions(BusinessName, ListPermission, AuthenticationService);
+            }
+        }
         if(IsActionButton || (string.IsNullOrEmpty(ResourceTag) && (!RowidResource.HasValue || RowidResource == 0)))
         {
             await base.OnInitializedAsync();

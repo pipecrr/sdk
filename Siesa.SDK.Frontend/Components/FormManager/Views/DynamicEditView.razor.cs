@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Siesa.SDK.Business;
 using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
+using Siesa.SDK.Frontend.Extension;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -41,27 +42,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         public override async Task SetParametersAsync(ParameterView parameters)
         {
-            var originalBusinessObjId = BusinessObjId;
-            var originalBusinessName = BusinessName;
+            bool changeBusinessObjId = parameters.DidParameterChange(nameof(BusinessObjId), BusinessObjId);
+            bool changeBusinessName = parameters.DidParameterChange(nameof(BusinessName), BusinessName);
+
             await base.SetParametersAsync(parameters);
-            try
-            {
-                if (parameters.TryGetValue<string>(nameof(BusinessObjId), out var value))
-                {
-                    if (value != null && (value != originalBusinessObjId || originalBusinessName != BusinessName))
-                    {
-                        //BusinessObj = null;
-                        ErrorMsg = "";
 
-                        await InitEdit(Convert.ToInt64(value));
-                        StateHasChanged();
-                    }
-
-                }
-            }
-            catch (Exception e)
-            {
-
+            if(BusinessObjId != null && (changeBusinessObjId || changeBusinessName)){
+                ErrorMsg = "";
+                await InitEdit(Convert.ToInt64(BusinessObjId));
+                StateHasChanged();
             }
         }
     }

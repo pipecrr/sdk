@@ -139,16 +139,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         public override async Task SetParametersAsync(ParameterView parameters)
         {
+            bool changeBusinessName = parameters.DidParameterChange(nameof(BusinessName), BusinessName);
+
             await base.SetParametersAsync(parameters);
-            if (parameters.TryGetValue<string>(nameof(BusinessName), out var value))
-            {
-                if (value != null)
-                {
-                    Loading = false;
-                    this.ModelLoaded = false;
-                    ErrorMsg = "";
-                    await InitView(value);
-                }
+
+            if(BusinessName != null && (changeBusinessName)){
+                Loading = false;
+                this.ModelLoaded = false;
+                ErrorMsg = "";
+                await InitView(BusinessName);
             }
         }
 
