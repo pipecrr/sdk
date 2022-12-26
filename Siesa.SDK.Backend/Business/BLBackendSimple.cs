@@ -45,11 +45,10 @@ namespace Siesa.SDK.Business
         private IServiceProvider _provider;
         private ILogger _logger;
         protected ILogger Logger { get { return _logger; } }
-        protected dynamic _dbFactory;
+        protected dynamic _dbFactory;        
 
         private SDKContext myContext;
-        private bool CanEdit { get; set; }
-        private bool CanCreate { get; set; }
+
         protected SDKContext Context { get { return myContext; } }
 
         private IEnumerable<INavigation> _navigationProperties = null;
@@ -132,6 +131,7 @@ namespace Siesa.SDK.Business
         private ILogger _logger;
         protected ILogger Logger { get { return _logger; } }
         protected dynamic _dbFactory;
+        protected IFeaturePermissionService _featurePermissionService;
 
         public string BusinessName { get; set; }
         public T BaseObj { get; set; }
@@ -139,7 +139,9 @@ namespace Siesa.SDK.Business
         private string[] _relatedProperties = null;
         protected SDKContext ContextMetadata;
         public List<string> RelFieldsToSave { get; set; } = new List<string>();
-
+        private bool CanCreate { get; set; } = true;
+        private bool CanEdit { get; set; } = true;
+        private int RowidFecture { get; set; }
         private IEnumerable<INavigation> _navigationProperties = null;
 
         private List<object> unique_indexes = new List<object>();
@@ -219,6 +221,10 @@ namespace Siesa.SDK.Business
             };
 
             AuthenticationService = (IAuthenticationService)_provider.GetService(typeof(IAuthenticationService));
+
+            // _featurePermissionService = (IFeaturePermissionService)_provider.GetService(typeof(IFeaturePermissionService));
+
+            RowidFecture = GetRowidFeacture(BusinessName);
         }
 
         [SDKExposedMethod]
@@ -317,10 +323,26 @@ namespace Siesa.SDK.Business
                 return query.FirstOrDefault();
             }
         }
+        private int GetRowidFeacture(string business_name)
+        {
+            using (SDKContext context = CreateDbContext())
+            {
+                var query = context.Set<E00040_Feature>().Where(x => x.BusinessName == business_name).Select(x => x.Rowid).FirstOrDefault();
+                return query;
+            }
+        }
 
         public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave()
         {
             ValidateAndSaveBusinessObjResponse result = new();
+            if(_featurePermissionService != null){
+                CanCreate = _featurePermissionService.CheckUserActionPermission(RowidFecture, 6,AuthenticationService);
+                CanEdit = _featurePermissionService.CheckUserActionPermission(RowidFecture, 7,AuthenticationService);
+            }
+            if(!CanCreate && !CanEdit){
+                AddMessageToResult("Custom.UserNotPermisson.ExecuteAction", result);
+                return result;
+            }
 
             try
             {
