@@ -760,7 +760,31 @@ namespace Siesa.SDK.Business
                 return new ActionResult<string>{Success = true, Data = base64};
             }
             return new BadRequestResult<string>{Success = false, Errors = new List<string> { "File not found" }};
-        } 
+        }
+
+        [SDKExposedMethod]
+        public async Task<ActionResult<T>> DataEntity(object rowid){
+            using (SDKContext context = CreateDbContext())
+            {   
+                var entityType = typeof(T);
+                var rowidType = entityType.GetProperty("Rowid").PropertyType;
+                var rowidValue = Convert.ChangeType(rowid, rowidType);
+                var query = context.Set<T>().AsQueryable();
+                query = query.Where("Rowid == @0", rowidValue);
+                var entity = query.FirstOrDefault();
+                if (entity != null)
+                {
+                    return new ActionResult<T>
+                    {
+                        Data = entity
+                    };
+                }
+                return new ActionResult<T>
+                {
+                    Data = null
+                };
+            }
+        }
     }
 
 }
