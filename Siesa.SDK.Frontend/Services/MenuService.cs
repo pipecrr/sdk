@@ -14,6 +14,7 @@ using Siesa.SDK.Frontend.Components.Layout.NavMenu;
 using Siesa.SDK.Frontend.Application;
 using Siesa.SDK.Frontend.Components.Layout;
 using Siesa.SDK.Frontend.Components.FormManager.Model;
+using Siesa.SDK.Entities.Enums;
 
 namespace Siesa.SDK.Frontend.Services
 {
@@ -116,7 +117,8 @@ namespace Siesa.SDK.Frontend.Services
                     {
                         ResourceTag = $"{business.Name}.Plural",
                         Url = $"/{business.Name}/",
-                        SubMenus = new List<E00061_Menu>()
+                        SubMenus = new List<E00061_Menu>(),
+                        Type = MenuType.Separator
                     };
                     //search methods that return a RenderFragment
                     var customActions = businessType.GetMethods().Where(m => m.ReturnType == typeof(RenderFragment));
