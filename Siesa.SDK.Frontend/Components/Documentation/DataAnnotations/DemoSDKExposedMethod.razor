@@ -12,8 +12,23 @@
                 <SDKCard>
                     <p>Dentro del proyecto se ha utilizado multiples veces, veamos un ejemplo:</p>
                     
-                    <SDKFileViewer type="SDKTypeFile.Image" url="_content/Siesa.SDK.Frontend/images/SDKExposedMethod.png" />  
+                    <SDKFileViewer type="SDKTypeFile.Image" url="_content/Siesa.SDK.Frontend/images/SDKExposedMethod.png" />
+
+                    <p>En el SDKExposedMethod se puede especificar los permisos para poder ejecutar el metodo, "Permission" que es un arreglo de enteros que recibe el rowid de las acciones sobre las cuales el usuario debe tener permisos para ejecutar el metodo expuesto</p>
+                    <SDKTextField Value="@Permissions"/>
+                    <p>En el ejemplo anterior se valida que el usuario tenga permiso sobre las acciones con el rowid 1 y 2.</p>
+                    <p>En caso de no tener permisos para ejecutar la accion el Backend devuelve un error con el tag "Custom.UserNotPermisson.ExecuteAction"</p>
+                    <SDKTextField CssClass="text-area-demo-expodeMethod" Value="@Response"/>
                 </SDKCard>
         </div>
     </div>
 </div>
+
+@code{
+    string Permissions = @"[SDKExposedMethod(Permissions: new int[] { 1, 2 })]";
+
+    string Response = @"{
+        Success: false
+        Error: [""Custom.UserNotPermisson.ExecuteAction""]
+    }";
+}
