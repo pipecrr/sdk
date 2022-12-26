@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using Newtonsoft.Json;
 using Siesa.SDK.Frontend.Components.FormManager.Model;
 using Microsoft.JSInterop;
 using Siesa.SDK.Business;
@@ -20,9 +19,7 @@ using Siesa.SDK.Frontend.Services;
 using Siesa.SDK.Shared.Utilities;
 using Siesa.SDK.Entities;
 using Blazored.LocalStorage;
-using Microsoft.CodeAnalysis.CSharp.Scripting;
-using Microsoft.CodeAnalysis.Scripting;
-using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -55,11 +52,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter]
         public bool ShowList { get; set; } = true;
         [Parameter]
-        public bool UseFlex { get; set; } = false;
+        public bool UseFlex { get; set; } = true;
         [Parameter]
         public int FlexTake { get; set; } = 100;
         [Parameter]
-        public bool ServerPaginationFlex { get; set; } = false;
+        public bool ServerPaginationFlex { get; set; } = true;
         [Parameter]
         public bool ShowLinkTo {get; set;} = false;
 
@@ -128,6 +125,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private IEnumerable<object> data;
 
         private bool HasCustomActions { get; set; } = false;
+        private List<string> CustomActionIcons { get; set; } = new List<string>();
+        private List<Button> CustomActions { get; set; } = new List<Button>();
         private string WithActions {get; set;} = "100px";
         int count;
         public RadzenDataGrid<object> _gridRef;
@@ -253,10 +252,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 FlexTake = ListViewModel.FlexTake;
                 ShowLinkTo = ListViewModel.ShowLinkTo;
                 ServerPaginationFlex = ListViewModel.ServerPaginationFlex;
+                
+                //TODO: quitar cuando se pueda usar flex en los custom components
+                var fieldsCustomComponent = ListViewModel.Fields.Where(x => x.CustomComponent != null).ToList();
+                if(fieldsCustomComponent.Count > 0){
+                    UseFlex = false;
+                }
                 if(ListViewModel.CustomActions != null && ListViewModel.CustomActions.Count > 0){
                     HasCustomActions = true;
                     var withInt = (ListViewModel.CustomActions.Count+2)*40;
                     WithActions = $"{withInt}px";
+                    CustomActionIcons = ListViewModel.CustomActions.Select(x => x.IconClass).ToList();
+                    CustomActions = ListViewModel.CustomActions;
                 }
                 foreach (var field in ListViewModel.Fields)
                 {
@@ -315,7 +322,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            guidListView = Guid.NewGuid().ToString();            
+            guidListView = Guid.NewGuid().ToString();
             Restart();
         }
 
@@ -610,6 +617,22 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     if (result != null && result.Errors.Count == 0){
                         return true;
                     }
+                }
+            }
+            return false;
+        }
+
+        [JSInvokable]
+        public async Task<bool> CustomActionFromReact(Int64 indexButton, object rowid)
+        {
+            Button button = CustomActions[(int)indexButton];
+            var bl = BackendRouterService.GetSDKBusinessModel(BusinessName, AuthenticationService);
+            var result = await bl.Call("DataEntity", rowid.ToString());
+            if(result.Success){
+                var obj = result.Data;
+                if (OnClickCustomAction != null){
+                    OnClickCustomAction(button, obj);
+                    return true;
                 }
             }
             return false;
