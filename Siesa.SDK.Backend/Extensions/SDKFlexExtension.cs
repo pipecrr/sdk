@@ -261,7 +261,7 @@ namespace Siesa.SDK.Backend.Extensions
                 var dynamicListMethod = typeof(IEnumerable).GetExtensionMethod(_assemblyDynamic, "ToDynamicList", new[] { typeof(IEnumerable) });
                 var dynamicList = dynamicListMethod.Invoke(contextSet, new object[] { contextSet });
 
-                var jsonResource = JsonConvert.SerializeObject(dynamicList);
+                var jsonResource = JsonConvert.SerializeObject(dynamicList, Newtonsoft.Json.Formatting.None, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
                 var resourceDict = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(jsonResource);
 
                 if(enumsDict.Count>0){
