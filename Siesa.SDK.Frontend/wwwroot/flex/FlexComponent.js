@@ -62,12 +62,12 @@ function MountFlex(div_id, retries = 0)
 }
 (() => {
 
-    loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/2.css?v=20221219');
-    loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/main.css?v=20221219');
+    loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/2.css?v=20221220');
+    loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/main.css?v=20221220');
 
-    loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/2.chunk.js?v=20221219");
-    loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/main.chunk.js?v=20221219");
-    loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/runtime-main.js?v=20221219");
+    loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/2.chunk.js?v=20221220");
+    loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/main.chunk.js?v=20221220");
+    loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/runtime-main.js?v=20221220");
 
     window.MountFlex = MountFlex;
     window.ListViewInstance = ListViewInstance;
