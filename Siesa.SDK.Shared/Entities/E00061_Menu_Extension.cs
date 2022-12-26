@@ -41,7 +41,14 @@ namespace Siesa.SDK.Entities
                 {
                     if (!string.IsNullOrEmpty(this.Url)) 
                     {
-                        url = $"/{this.Url}";
+                        if (this.Url.StartsWith("/"))
+                        {
+                            url = this.Url;
+                        }
+                        else
+                        {
+                            url = $"/{this.Url}";
+                        }
                     }             
                 }
             }
