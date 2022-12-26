@@ -54,7 +54,9 @@
             if(enumValues == null || enumValues.Count == 0){
                 return;
             }
-           
+
+           Options = Enumerable.Empty<SDKEnumWrapper<TItem>>();
+
             if (ViewdefName == "search")
             {
                 var SelectAllName = await ResourceManager.GetResource("Custom.Enum.SelectAll", AuthenticationService);
@@ -65,6 +67,7 @@
                 });
                 BindValue = Options.Select(x => x.Type).First();
             }
+            
             Options = Options.Concat(enumValues.Select(x => new SDKEnumWrapper<TItem>{
                 Type = (TItem)Enum.Parse(enumType, x.Key.ToString()),
                 DisplayText = x.Value
