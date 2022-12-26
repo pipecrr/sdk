@@ -131,7 +131,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         int count;
         private bool HasExtraButtons { get; set; } = false;
         private List<Button> ExtraButtons { get; set; }
-        private List<Button> CustomActions { get; set; }
         public RadzenDataGrid<object> _gridRef;
 
         public List<FieldOptions> FieldsHidden { get; set; } = new List<FieldOptions>();
