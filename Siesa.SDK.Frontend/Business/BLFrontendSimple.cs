@@ -432,9 +432,14 @@ namespace Siesa.SDK.Business
         }
 
         public async Task<int> SaveAttachmentDetail(SDKFileUploadDTO obj){
-            var result = await Backend.Call("SaveAttachmentDetail", obj);
-
-            return result.Data;
+            var BLAttatchmentDetail = GetBackend("BLAttachmentDetail");
+            var result = await BLAttatchmentDetail.Call("SaveAttatchmentDetail", obj);
+            if(result.Success){
+                return result.Data;
+            }else{
+                var errors = JsonConvert.DeserializeObject<List<string>> (result.Errors.ToString());
+                throw new ArgumentException(errors[0]);
+            }
         }
     
     }

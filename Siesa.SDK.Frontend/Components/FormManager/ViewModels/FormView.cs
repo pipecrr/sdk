@@ -352,7 +352,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
 			SavingFile = false;
 		}
 
-        public async Task savingAttachment(SDKFileField fileField){
+        public async Task<int> savingAttachment(SDKFileField fileField){
             SavingFile = true;
             await fileField.Upload();
             var horaInicio = DateTime.Now.Minute;
@@ -364,7 +364,9 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
             }
             if(DataAttatchmentDetail != null){
                 var result = await BusinessObj.SaveAttachmentDetail(DataAttatchmentDetail);
+                return result;
             }
+            return 0;
         }
 
         public void OnComplete(SDKUploadCompleteEventArgsDTO args){
@@ -372,9 +374,6 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
 			var data = response.data;
             if(data != null){
                 DataAttatchmentDetail = JsonConvert.DeserializeObject<SDKFileUploadDTO>(data.ToString());
-                /*DataAttatchmentDetail.FileName = data.fileName;
-                DataAttatchmentDetail.FileType = data.fileType;
-                DataAttatchmentDetail.Url = data.Url;*/
             }
 			SavingFile = false;
         }
@@ -388,7 +387,13 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
                 foreach (var item in FileFields)
                 {
                     var fileField = item.Value;
-                    await savingAttachment(fileField);
+
+                    var rowidAttatchment = await savingAttachment(fileField);
+                    if(rowidAttatchment > 0){
+                        var field = "Description";//item.Key;
+                        var property = BusinessObj.BaseObj.GetType().GetProperty(field);
+                        property.SetValue(BusinessObj.BaseObj, rowidAttatchment.ToString());
+                    }
                 }
             }
             var result = await BusinessObj.ValidateAndSaveAsync();

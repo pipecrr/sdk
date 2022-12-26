@@ -118,6 +118,8 @@ namespace Siesa.SDK.Business
     {
         [JsonIgnore]
         protected IAuthenticationService AuthenticationService { get; set; }
+        [JsonIgnore]
+        protected IBackendRouterService _backendRouterService { get; set; }
 
         public SDKBusinessModel GetBackend(string business_name)
         {
@@ -215,6 +217,8 @@ namespace Siesa.SDK.Business
             };
 
             AuthenticationService = (IAuthenticationService)_provider.GetService(typeof(IAuthenticationService));
+
+            _backendRouterService = (IBackendRouterService)_provider.GetService(typeof(IBackendRouterService));
         }
 
         [SDKExposedMethod]
@@ -734,13 +738,6 @@ namespace Siesa.SDK.Business
                 return new ActionResult<string>{Success = true, Data = base64};
             }
             return new BadRequestResult<string>{Success = false, Errors = new List<string> { "File not found" }};
-        }
-
-        [SDKExposedMethod]
-        public async Task<ActionResult<int>> SaveAttachmentDetail(SDKFileUploadDTO obj){
-            var BLAttatchmentDetail = GetBackend("BLAttachmentDetail");
-            var result = await BLAttatchmentDetail.Call("SaveAttatchmentDetail", obj);
-            return null;
         }
     }
 
