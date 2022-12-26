@@ -38,7 +38,7 @@
        <hr class="m-0 sdk_separator"> 
     }else{
         @if(MenuItem.Feature != null && MenuItem.Type == MenuType.Feature)
-        {//MenuItem.Type == MenuType.Compound
+        {
             @if(FeaturePermissionService.CheckUserActionPermission(MenuItem.Feature.Rowid, 4, AuthenticationService))
             {
                 <a href="@MenuItem.CurrentURL" @attributes="@menuItemAttributes" @onmouseover="MouseOver" @onmouseout="MouseOut" @onclick:stopPropagation="true" @onclick="()=> OnClickItem(MenuItem)"  @onclick:preventDefault  class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
