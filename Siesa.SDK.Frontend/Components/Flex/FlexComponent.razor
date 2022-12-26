@@ -25,7 +25,7 @@
             <TopBarButton ResourceTag="Action.Flex.ExportToExcel" IconCssClass="fa-solid fa-file-excel" Click="ExportToExcel" />
             <TopBarButton ResourceTag="Action.Flex.Configure" IconCssClass="fa-solid fa-cog" Click="Configure" />
             <TopBarButton ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus" Click="GoToCreate"  />
-            <TopBarButton ResourceTag="Action.Modify" IconCssClass="fa-solid fa-pen" Click="GoToEdit"  />
+            <TopBarButton ResourceTag="Action.Edit" IconCssClass="fa-solid fa-pen" Click="GoToEdit"  />
             <TopBarButton ResourceTag="Action.List"  IconCssClass="fa-solid fa-list" Click="GoToList" />
             <TopBarButton ResourceTag="Action.Delete" IconCssClass="fa-solid fa-trash-can" Click="OnClickDelete" />
         }else{
@@ -57,19 +57,16 @@
     public bool CanDelete {get;set;}
     [Parameter]
     public bool EditingFlex {get;set;} = false;
-
     [Parameter]
     public int Take {get;set;} = 100;
-
     [Parameter]  
     public bool ServerPagination {get;set;} = false;
-
     [Parameter]
     public string FilterSearch {get;set;} = "";
-
     [Parameter]
     public string GuidFlex {get;set;} = "";
-
+    [Parameter]
+    public List<string> ActionIcons {get;set;} = new List<string>();
     private string _guid ="";
     private bool _isDebug = false;
 
@@ -142,7 +139,8 @@
         if(EditingFlex){
             _currentView = "edit";
         }
-        
+        var actionIconsString = JsonConvert.SerializeObject(ActionIcons);
+
         FlexAttributes.Clear();
         flexElementId = "flexdebug";//$"flex_{Guid.NewGuid().ToString()}";
         FlexAttributes.Add("id", flexElementId);
@@ -159,6 +157,7 @@
         FlexAttributes.Add("server_pagination", ServerPagination.ToString());
         FlexAttributes.Add("filter_search", FilterSearch);
         FlexAttributes.Add("guid", _guid);
+        FlexAttributes.Add("action_icons", actionIconsString);
         if(_flexRowId != 0)
         {
             FlexAttributes.Add("base_obj_id", _flexRowId);

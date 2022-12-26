@@ -70,27 +70,15 @@ else if (BusinessObj != null)
 
     public override async Task SetParametersAsync(ParameterView parameters)
         {
-            var originalDuplicateRowid = DuplicateRowid;
-            var originalBusinessName = BusinessName;
+            bool changeDuplicateRowid = parameters.DidParameterChange(nameof(DuplicateRowid), DuplicateRowid);
+            bool changeBusinessName = parameters.DidParameterChange(nameof(BusinessName), BusinessName);
+            
             await base.SetParametersAsync(parameters);
-            try
-            {
-                if (parameters.TryGetValue<string>(nameof(DuplicateRowid), out var value))
-                {
-                    if (value != null && (value != originalDuplicateRowid || originalBusinessName != BusinessName))
-                    {
-                        //BusinessObj = null;
-                        ErrorMsg = "";
 
-                        await GetDuplicateInfo(Convert.ToInt64(value));
-                        StateHasChanged();
-                    }
-
-                }
-            }
-            catch (Exception e)
-            {
-
+            if(DuplicateRowid != null && (changeDuplicateRowid || changeBusinessName)){
+                ErrorMsg = "";
+                await GetDuplicateInfo(Convert.ToInt64(DuplicateRowid));
+                StateHasChanged();
             }
         }
 

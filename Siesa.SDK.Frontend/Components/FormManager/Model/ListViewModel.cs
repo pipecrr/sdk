@@ -28,9 +28,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         public List<Button> Buttons { get; set; } = new List<Button>();
 
         public bool ShowActions { get; set; } = true;
-        public bool UseFlex { get; set; } = false;
+        public bool UseFlex { get; set; } = true;
         public int FlexTake { get; set; } = 100;
-        public bool ServerPaginationFlex { get; set; } = false;
+        public bool ServerPaginationFlex { get; set; } = true;
         public bool ShowLinkTo { get; set; } = false;
         public List<Button> CustomActions { get; set; } = new List<Button>();
     }

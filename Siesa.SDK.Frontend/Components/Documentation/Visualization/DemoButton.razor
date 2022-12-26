@@ -62,6 +62,17 @@
                 </SDKButton>
             </SDKCard>
         </div>
+        <div class="col-md-6 p-1">
+            <SDKCard>
+                <h3>Button Permission</h3>
+                <SDKButton  ResourceTag="Button Has Permission" RenderStyle="SDKButtonRenderStyle.Primary"
+                    BusinessName="BLCity" ListPermission=@HasPermission()/>
+                <SDKButton  ResourceTag="Button Dont Has Permission" RenderStyle="SDKButtonRenderStyle.Primary"
+                    BusinessName="BLCity" ListPermission=@DontHaspermission()/>
+                <SDKButton  ResourceTag="Button Has Permission" RenderStyle="SDKButtonRenderStyle.Primary"
+                    BusinessName="BLCity" ListPermission=@HasPermission()/>
+            </SDKCard>
+        </div>
     </div>
 </div>
 
@@ -70,5 +81,11 @@
 
     await SDKNotificationService.ShowSuccess("Confirmado");
     await SDKNotificationService.ShowError("Cancelado");
+    }
+    public List<int> HasPermission(){
+        return new List<int>(){1,2};
+    }
+    public List<int> DontHaspermission(){
+        return new List<int>(){1,2,6};
     }
 }

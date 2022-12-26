@@ -23,8 +23,7 @@ namespace Siesa.SDK.Entities
 		public override int Rowid { get; set; }
 
 		[ForeignKey("Attachment")]
-		[Required]
-		public int RowidAttachment { get; set; }
+		public int? RowidAttachment { get; set; }
 
 		[Required]
 		public string Url { get; set; }
@@ -37,8 +36,6 @@ namespace Siesa.SDK.Entities
 		public string? FileName { get; set; }
 
 
-		[SDKCheckRelationship]
-		[Required]
 		public virtual E00270_Attachment Attachment { get; set; }
 
 	}
