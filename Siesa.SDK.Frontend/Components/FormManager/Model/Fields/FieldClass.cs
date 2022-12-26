@@ -72,6 +72,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         [CascadingParameter] EditContext EditFormContext { get; set; }
         [CascadingParameter] FormView formView { get; set; }
 
+        public string ViewdefName { get => formView.ViewdefName; }
+
         protected async Task Init()
         {
             BindProperty = BindModel.GetType().GetProperty(FieldName);

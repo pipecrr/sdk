@@ -19,6 +19,10 @@ using Siesa.SDK.Frontend.Services;
 using Siesa.SDK.Shared.Utilities;
 using Siesa.SDK.Entities;
 using Blazored.LocalStorage;
+using Microsoft.CodeAnalysis.CSharp.Scripting;
+using Microsoft.CodeAnalysis.Scripting;
+using Microsoft.Extensions.DependencyInjection;
+using Siesa.SDK.Entities.Enums;
 using Newtonsoft.Json;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
@@ -549,6 +553,22 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                     {
                                         tmpFilter = $"({fieldObj.Name} == null ? 0 : {fieldObj.Name}.Rowid) == {searchValue.Rowid}";
                                     }
+                                    break;
+                                
+                                case FieldTypes.Custom:
+                                case FieldTypes.SelectField:
+                                    if (field.CustomType == "SelectBarField" || field.FieldType == FieldTypes.SelectField)
+                                    {
+                                        Type enumType = searchValue.GetType();
+                                        var EnumValues = Enum.GetValues(enumType);
+                                        var LastValue = EnumValues.GetValue(EnumValues.Length - 1);
+                                        
+                                        if (Convert.ToInt32(LastValue)+1 != Convert.ToInt32(searchValue))
+                                        { 
+                                            tmpFilter = $"{fieldObj.Name} == {Convert.ToInt32(searchValue)}";
+                                        }
+                                    }
+
                                     break;
                                 default:
                                     break;
