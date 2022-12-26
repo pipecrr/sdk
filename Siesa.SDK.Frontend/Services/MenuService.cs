@@ -117,8 +117,7 @@ namespace Siesa.SDK.Frontend.Services
                     {
                         ResourceTag = $"{business.Name}.Plural",
                         Url = $"/{business.Name}/",
-                        SubMenus = new List<E00061_Menu>(),
-                        Type = MenuType.Separator
+                        SubMenus = new List<E00061_Menu>()
                     };
                     //search methods that return a RenderFragment
                     var customActions = businessType.GetMethods().Where(m => m.ReturnType == typeof(RenderFragment));
