@@ -28,3 +28,7 @@
     margin-left: auto;
     text-overflow: unset;
 }
+
+.sdk_separator {
+   border-top: 2px solid #ccc;
+}	
