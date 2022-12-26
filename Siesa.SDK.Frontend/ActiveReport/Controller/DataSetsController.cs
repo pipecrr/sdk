@@ -99,19 +99,28 @@ namespace SDK.Frontend.ReportDesigner.Controllers
 					continue;
 				}
 
-				var BusinessMethods = businessType.GetMethods().Where(x => x.GetCustomAttributes(typeof(SDKDataSourceReport), false).Length > 0);
-
-				if(BusinessMethods != null)
-				{
-					string x = "";
-				}
-
 				var entityType = businessType.GetProperty("BaseObj").PropertyType;
 				string entityName = entityType.Name;
 
 				if (!DataSetEntity.Where(x => x.Id == entityType.FullName).Any())
 				{
 					DataSetEntity.Add(new { Id = entityType.FullName, Name = entityName });
+				}
+
+				var BusinessMethods = businessType.GetMethods().Where(x => x.GetCustomAttributes(typeof(SDKDataSourceReport), false).Length > 0);
+
+				if(BusinessMethods != null && businessType.Name == "BLCity")
+				{
+					foreach (var Method in BusinessMethods)
+					{
+						if (Method.ReturnType.IsGenericType)
+						{
+							var ReturnType = Method.ReturnType.GetGenericArguments()[0];
+							DataSetEntity.Add(new { Id = ReturnType.FullName, Name = ReturnType.Name });
+						}
+						//string x = Method.Name;	
+					}
+					//DataSetEntity.Add(new { Id = entityType.FullName, Name = entityName });
 				}
 			}
 
