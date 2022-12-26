@@ -1,6 +1,8 @@
 @using Siesa.SDK.Frontend.Components.Fields
 @using System.Linq.Expressions
 @using SDK.Frontend.Application
+@using System.Collections.Generic
+@using System.Linq
 @typeparam TItem
 @inherits FieldClass<TItem>
 @using Siesa.SDK.Shared.Services
@@ -34,7 +36,7 @@
 @code {
 
     private bool _disabled;
-    [Parameter] public IEnumerable<SelectBarItemWrap<TItem>> Options { get; set; }        
+    [Parameter] public IEnumerable<SelectBarItemWrap<TItem>> Options { get; set; }       
     Expression<Func<TItem>> ValueExpression { get; set; }
     private Type enumType { get; set; }
     private IEnumerable<SelectBarItemWrap<TItem>> _options
@@ -61,7 +63,6 @@
     }
     private async Task GetEnumValues()
     {
-        var SelectAllName = await ResourceManager.GetResource("Custom.Enum.SelectAll", AuthenticationService);
         var resourceBL = BackendRouterService.GetSDKBusinessModel("BLResource", AuthenticationService);
         var request = await resourceBL.Call("GetEnumValues", enumType.Name,
         Convert.ToInt64(AuthenticationService.GetRoiwdCulture()));
@@ -74,25 +75,25 @@
             }
 
 
-            Options = enumValues.Select(x => new SelectBarItemWrap<TItem>
-            {
-                Key = (TItem)Enum.Parse(enumType, x.Key.ToString()),
-                Name = x.Value
-            });
+            Options = Enumerable.Empty<SelectBarItemWrap<TItem>>();
             
             if (ViewdefName == "search")
             {
+                var SelectAllName = await ResourceManager.GetResource("Custom.Enum.SelectAll", AuthenticationService);
                 Options = Options.Append(new SelectBarItemWrap<TItem>
                 {
                     Key = (TItem)Enum.Parse(enumType, (enumValues.Select(x => x.Key).Last() + 1).ToString()),
                     Name = SelectAllName
                 });
-            }
+                BindValue = Options.Select(x => x.Key).First();
+            } 
+            Options = Options.Concat(enumValues.Select(x => new SelectBarItemWrap<TItem>
+            {
+                Key = (TItem)Enum.Parse(enumType, x.Key.ToString()),
+                Name = x.Value
+            }));
 
-            Options = Options.Reverse();
-
-            BindValue = Options.Select(x => x.Key).First();
-
+            
             StateHasChanged();
         }
     }
