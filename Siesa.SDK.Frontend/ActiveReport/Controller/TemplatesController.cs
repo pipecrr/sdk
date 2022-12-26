@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
-
-using WebDesigner_Blazor.Services;
+using SDK.Report.Services;
 
 namespace WebDesigner_Blazor.Controllers
 {
