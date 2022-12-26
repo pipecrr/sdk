@@ -328,7 +328,7 @@ else
                     <TopBarButton ResourceTag="Action.Flex.SaveAndClose" IconCssClass="fa-solid fa-floppy-disk" Click="SaveAndCloseList" />
                 }
                 @if(UseFlex && !_isEditingFlex && !_isSearchOpen){
-                    <TopBarButton Click="GoToEditFlex" ResourceTag="Action.Edit" IconCssClass="fa-solid fa-pen" />
+                    <TopBarButton Click="GoToEditFlex" ResourceTag="Action.EditListFlex" IconCssClass="fa-solid fa-pen" />
                 }                
                 @if(CanCreate && !_isEditingFlex)
                 {

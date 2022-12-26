@@ -14,7 +14,7 @@
 else if (BusinessObj.BaseObj.Rowid != 0)
 {
     @if(IsSubpanel && ShowTitle){
-        <h5 class="d-flex justify-content-center"><ResourceViewer ResourceTag="Action.Modify" /> @BusinessObj</h5>
+        <h5 class="d-flex justify-content-center"><ResourceViewer ResourceTag="Action.Edit" /> @BusinessObj</h5>
         <hr />
     }
     <CascadingValue Value="@this">
@@ -72,9 +72,9 @@ else if (BusinessObj.BaseObj.Rowid != 0)
     }
     @if(SetTopBar && !IsSubpanel)
     {
-        <PageTitle><ResourceViewer ResourceTag="Action.Modify" /> @BusinessObj</PageTitle>
+        <PageTitle><ResourceViewer ResourceTag="Action.Edit" /> @BusinessObj</PageTitle>
         <SetTopBar StyleName="toolbar_edition" HasExtraButtons="@(FormViewModel.Buttons != null && FormViewModel.Buttons.Count > 0 ? true: false)" BusinessObj="@BusinessObj">
-            <TopBarTitle><ResourceViewer ResourceTag="Action.Modify" /> @BusinessObj</TopBarTitle>
+            <TopBarTitle><ResourceViewer ResourceTag="Action.Edit" /> @BusinessObj</TopBarTitle>
             <TopBarButtons>
                 <TopBarButton form="@FormID" SubmitFormOnClick="true" ResourceTag="Action.Save" IconCssClass="@GetSaveBtnIcon()" Enabled="@(!Saving)" />
                 @* <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="GoToList" ResourceTag="Action.Cancel" /> *@
