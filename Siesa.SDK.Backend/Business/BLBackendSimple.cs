@@ -340,7 +340,7 @@ namespace Siesa.SDK.Business
                 CanEdit = _featurePermissionService.CheckUserActionPermission(RowidFeature, 7,AuthenticationService);
             }
             if(!CanCreate && !CanEdit){
-                AddMessageToResult("Custom.UserNotPermisson.ExecuteAction", result);
+                AddMessageToResult("Custom.Generic.Unauthorized", result);
                 return result;
             }
 

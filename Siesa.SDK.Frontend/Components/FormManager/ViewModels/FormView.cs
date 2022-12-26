@@ -174,7 +174,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             if (metadata == null || metadata == "")
             {
                 //string ErrorTag = await ResourceManager.GetResource("Custom.Formview.NotDefinition", AuthenticationService.GetRoiwdCulture());
-                ErrorMsg = $"No hay definicion de la vista {_viewdefName}";
+                ErrorMsg = $"Custom.Generic.ViewdefNotFound";
             }
             else
             {

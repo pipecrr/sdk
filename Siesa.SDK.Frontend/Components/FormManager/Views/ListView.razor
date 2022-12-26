@@ -12,8 +12,15 @@
 {
     <ResourceViewer ResourceTag="Custom.Generic.Loading" />
 }
+else if(!string.IsNullOrEmpty(ErrorMsg))
+{
+    <ErrorsContainer ErrorMsg="@ErrorMsg"/>
+}
 else
 {
+    @if(IsSubpanel){
+        UseFlex = false;
+    }
     @if(ShowSearchForm && HasSearchViewdef)
     {
         <div class="@StyleSearchForm">

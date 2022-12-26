@@ -126,7 +126,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private bool HasCustomActions { get; set; } = false;
         private List<string> CustomActionIcons { get; set; } = new List<string>();
-        private List<Button> CustomActions { get; set; } = new List<Button>();
+        private List<Button> CustomActions { get; set; }
         private string WithActions {get; set;} = "100px";
         int count;
         private bool HasExtraButtons { get; set; } = false;
@@ -203,7 +203,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             var metadata = GetViewdef(bName);
             if (metadata == null || metadata == "")
             {
-                ErrorMsg = "No hay definición para la vista de lista";
+                //ErrorMsg = "No hay definición para la vista de lista";
+                ErrorMsg = "Custom.Generic.ViewdefNotFound";
             }
             else
             {
@@ -281,7 +282,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     var showButton = false;
                     CustomActions = new List<Button>();
                     foreach (var button in ListViewModel.CustomActions){
-                        showButton = await CheckPermissionsButton(button.ListPermission);
+                        if(button.ListPermission != null && button.ListPermission.Count > 0){
+                            showButton = await CheckPermissionsButton(button.ListPermission);
+                        }else{
+                            showButton = true;
+                        }
                         if(showButton){
                             CustomActions.Add(button);
                         }
@@ -289,6 +294,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     if(CustomActions.Count > 0){
                         var withInt = (CustomActions.Count+2)*40;
                         WithActions = $"{withInt}px";
+                        CustomActionIcons = CustomActions.Select(x => x.IconClass).ToList();
                         HasCustomActions = true;
                     }
                 }
@@ -349,9 +355,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
                 if (!CanList)
                 {
-                    ErrorMsg = "Unauthorized";
+                    ErrorMsg = "Custom.Generic.Unauthorized";
                     NotificationService.ShowError("Custom.Generic.Unauthorized");
-                    NavigationService.NavigateTo("/", replace: true);
+                    if(!IsSubpanel){
+                        NavigationService.NavigateTo("/", replace: true);
+                    }
                 }
 
             }

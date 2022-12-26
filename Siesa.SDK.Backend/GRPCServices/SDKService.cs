@@ -247,7 +247,7 @@ namespace Siesa.SDK.GRPCServices
                             hasPermission = _featurePermissionService.CheckUserActionPermissions(request.BusinessName, permissions, _authenticationService).GetAwaiter().GetResult();
                             if(!hasPermission){
                                 response.Success = false;
-                                response.Errors.Add("Custom.UserNotPermisson.ExecuteAction");
+                                response.Errors.Add("Custom.Generic.Unauthorized");
                                 return Task.FromResult(response);
                             }
                         }catch(Exception e){
