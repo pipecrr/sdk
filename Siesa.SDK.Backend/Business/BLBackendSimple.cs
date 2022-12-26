@@ -141,7 +141,7 @@ namespace Siesa.SDK.Business
         public List<string> RelFieldsToSave { get; set; } = new List<string>();
         private bool CanCreate { get; set; } = true;
         private bool CanEdit { get; set; } = true;
-        private int RowidFecture { get; set; }
+        private int RowidFeature { get; set; }
         private IEnumerable<INavigation> _navigationProperties = null;
 
         private List<object> unique_indexes = new List<object>();
@@ -224,7 +224,7 @@ namespace Siesa.SDK.Business
 
             // _featurePermissionService = (IFeaturePermissionService)_provider.GetService(typeof(IFeaturePermissionService));
 
-            RowidFecture = GetRowidFeacture(BusinessName);
+            RowidFeature = GetRowidFeature(BusinessName);
         }
 
         [SDKExposedMethod]
@@ -323,7 +323,7 @@ namespace Siesa.SDK.Business
                 return query.FirstOrDefault();
             }
         }
-        private int GetRowidFeacture(string business_name)
+        private int GetRowidFeature(string business_name)
         {
             using (SDKContext context = CreateDbContext())
             {
@@ -336,8 +336,8 @@ namespace Siesa.SDK.Business
         {
             ValidateAndSaveBusinessObjResponse result = new();
             if(_featurePermissionService != null){
-                CanCreate = _featurePermissionService.CheckUserActionPermission(RowidFecture, 6,AuthenticationService);
-                CanEdit = _featurePermissionService.CheckUserActionPermission(RowidFecture, 7,AuthenticationService);
+                CanCreate = _featurePermissionService.CheckUserActionPermission(RowidFeature, 6,AuthenticationService);
+                CanEdit = _featurePermissionService.CheckUserActionPermission(RowidFeature, 7,AuthenticationService);
             }
             if(!CanCreate && !CanEdit){
                 AddMessageToResult("Custom.UserNotPermisson.ExecuteAction", result);
