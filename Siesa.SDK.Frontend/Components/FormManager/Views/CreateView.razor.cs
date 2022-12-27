@@ -23,7 +23,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if(!CanCreate)
             {
                 NotificationService.ShowError("Custom.Generic.Unauthorized");
-                NavigationService.NavigateTo("/", replace:true);
+                ErrorMsg = "Custom.Generic.Unauthorized";
+                if(!IsSubpanel){
+                    NavigationService.NavigateTo("/", replace:true);
+                }
             }
         }
         

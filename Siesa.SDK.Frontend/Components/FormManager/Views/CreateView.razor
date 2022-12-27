@@ -17,7 +17,12 @@
 @if (Loading == true)
 {
     <ResourceViewer ResourceTag="Custom.Generic.Loading" />
-} else if (Panels == null || Panels.Count <= 0)
+}
+else if(!string.IsNullOrEmpty(ErrorMsg))
+{
+    <ErrorsContainer ErrorMsg="@ErrorMsg"/>
+}
+else if (Panels == null || Panels.Count <= 0)
 {
     <ResourceViewer ResourceTag="Custom.Formview.NotDefinition" />
         @* <label>@((MarkupString)ErrorMsg)</label> *@
