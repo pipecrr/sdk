@@ -206,8 +206,6 @@
             }else{
                 <BooleanField BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" TBool="bool" ValidateField="@ValidateField"  />
             }
-            
-
         }
         break;
     case FieldTypes.Unknown:
@@ -221,11 +219,15 @@
         else
         {
             <EntityField BaseModelObj="@ModelObj" BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" ValidateField="@ValidateField"  />
-        }
+        } 
         break;
     case FieldTypes.FileField:
-        <SDKFileField Business="@ModelObj" FieldName="@fieldName" @ref=@UploadComponent Complete="@formView.OnComplete" Error="@formView.OnError"></SDKFileField>
-        AddUploadComponent(UploadComponent, fieldName);
+        if(!FieldOpt.ViewContext.Equals("DetailView")){
+            <SDKFileField Business="@ModelObj" FieldName="@fieldName" @ref=@UploadComponent Complete="@formView.OnComplete" Error="@formView.OnError" View="@FieldOpt.ViewContext"></SDKFileField>
+            AddUploadComponent(UploadComponent, fieldName);
+        }else{
+            <SDKFileField Business="@ModelObj" FieldName="@fieldName" View="@FieldOpt.ViewContext"></SDKFileField>
+        }
         break;
     case FieldTypes.Custom:
         <CustomField BaseModelObj="@ModelObj" BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  Definition="@FieldOpt.CustomComponent"/>

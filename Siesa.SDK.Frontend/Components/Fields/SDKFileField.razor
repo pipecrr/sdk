@@ -2,30 +2,37 @@
 @using Siesa.SDK.Shared.DTOS;
 @using Newtonsoft.Json;
 @using Siesa.SDK.Shared.Services;
+@using Siesa.SDK.Frontend.Components.Visualization;
 
 @inject UtilsManager UtilManager
-@inject IAuthenticationService AuthenticationService
 @inject IJSRuntime JSRuntime
+@inject IAuthenticationService AuthenticationService
+@inject IBackendRouterService BackendRouterService
 
 <div class="sdk-file-field" id="@Id">
-    <RadzenUpload 
-        Url="@Url" 
-        class="@GetCssClass()" 
-        ChooseText="@ResourceChooseText"
-        Accept="@Accept"
-        Progress="@SDKProgress"
-        Complete="@SDKComplete"
-        Change="@SDKChange"
-        Auto="@Auto"
-        @ref="sdkUpload"
-        Disabled="@Disabled"
-        Error="@SDKError"
-    > 
-        <RadzenUploadHeader Name="X-Auth-Token" Value="@AuthenticationService.UserToken" />
-    </RadzenUpload>
-    @if(ChildContent != null)
-    {
-        @ChildContent
+    @if(HasValue){
+        <SDKImageViewer Url="@UrlFile" Type="@TypeFile"></SDKImageViewer>
+    }
+    @if(!View.Equals("DetailView")){
+        <RadzenUpload 
+            Url="@Url" 
+            class="@GetCssClass()" 
+            ChooseText="@ResourceChooseText"
+            Accept="@Accept"
+            Progress="@SDKProgress"
+            Complete="@SDKComplete"
+            Change="@SDKChange"
+            Auto="@Auto"
+            @ref="sdkUpload"
+            Disabled="@Disabled"
+            Error="@SDKError"
+        > 
+            <RadzenUploadHeader Name="X-Auth-Token" Value="@AuthenticationService.UserToken" />
+        </RadzenUpload>
+        @if(ChildContent != null)
+        {
+            @ChildContent
+        }
     }
 </div>
 
@@ -43,7 +50,14 @@
     [Parameter] public Action<SDKUploadErrorEventArgsDTO> Error {get;set;}
     [Parameter] public string UploadMethodName {get;set;} = "UploadSingle";
     [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string View { get; set; }
+
+    private bool HasValue {get; set;} = false;
+    private int RowidAttachmentDetail {get; set;}
     private string ResourceChooseText {get; set;}
+    private string UrlFile {get; set;}
+
+    private SDKTypeFile TypeFile {get; set;} = SDKTypeFile.Image;
 
     string _Id;
     string Id
@@ -74,6 +88,21 @@
             Url = "api/"+Business.BusinessName+"/"+UploadMethodName;
         }
 
+        var fieldField = "Rowid"+FieldName;
+        var parameter = Business.BaseObj.GetType().GetProperty("Description");
+        if(parameter != null){
+            var value = parameter.GetValue(Business.BaseObj);
+            //TODO: corregir cuando tenga el campo attatchment detail
+            if(value != null && value.ToString() != "Prueba sin file"){
+                RowidAttachmentDetail = Int32.Parse(value.ToString());
+                var response = await Business.Backend.Call("DownloadFileByRowid", RowidAttachmentDetail);
+                if(response.Success){
+                    UrlFile = $"data:{response.Data.FileType};base64, {response.Data.FileBase64}";
+                    TypeFile = response.Data.FileType.Contains("image") ? SDKTypeFile.Image : SDKTypeFile.Other;
+                    HasValue = true;
+                }
+            }
+        }
         base.OnInitialized();
     }
 
@@ -142,6 +171,12 @@
     }
 
     private async Task SDKChange(UploadChangeEventArgs args){
+        if(args.Files.Count() > 0 || string.IsNullOrEmpty(UrlFile)){
+            HasValue = false;
+        }else{
+            HasValue = true;
+        }
+
         if(Change != null){
             SDKUploadChangeEventArgsDTO sDKUploadChangeEventArgsDTO = new SDKUploadChangeEventArgsDTO();
             List<SDKFileInfoDTO> files = new List<SDKFileInfoDTO>();

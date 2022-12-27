@@ -739,6 +739,36 @@ namespace Siesa.SDK.Business
             }
             return new BadRequestResult<string>{Success = false, Errors = new List<string> { "File not found" }};
         }
+
+        [SDKExposedMethod]
+        public async Task<ActionResult<SDKFileFieldDTO>> DownloadFileByRowid(Int32 rowid){
+            string url = "";
+            string dataType = "";
+            var BLAttatchmentDetail = GetBackend("BLAttachmentDetail");
+            var response = await BLAttatchmentDetail.Call("GetAttatchmentDetail", rowid);
+            SDKFileFieldDTO SDKFileField = new SDKFileFieldDTO();
+            if(response.Success){
+                var data = response.Data;                
+                SDKFileField = new SDKFileFieldDTO{
+                    Url = data.Url,
+                    FileName = data.FileName,
+                    FileType = data.FileType
+                };
+            }else{
+                var errors = JsonConvert.DeserializeObject<List<string>> (response.Errors.ToString());
+                throw new ArgumentException(errors[0]);
+            }
+            IWebHostEnvironment env = _provider.GetRequiredService<IWebHostEnvironment>();
+            var filePath = Path.Combine(SDKFileField.Url);
+            var file = new FileInfo(filePath);
+            if (file.Exists){
+                var fileBytes = await File.ReadAllBytesAsync(filePath);
+                var base64 = Convert.ToBase64String(fileBytes);
+                SDKFileField.FileBase64 = base64;
+                return new ActionResult<SDKFileFieldDTO>{Success = true, Data = SDKFileField};
+            }
+            return new BadRequestResult<SDKFileFieldDTO>{Success = false, Errors = new List<string> { "File not found" }};
+        }
     }
 
 }
