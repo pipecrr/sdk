@@ -34,7 +34,7 @@ namespace SDK.Frontend.ReportDesigner.Controllers
 
 			List<dynamic> DataSetEntity = new List<dynamic>();
 			
-			if (true)
+			if (true)//EntityType != null
 			{
 				
 				var EntityFields = EntityType.GetProperties();
@@ -61,21 +61,21 @@ namespace SDK.Frontend.ReportDesigner.Controllers
 			 		Fields = await Task.WhenAll(DataSetEntity.Select(async x => new Field() 
 					{ 
 					Name = await _resourceManager.GetResource($"{EntityType.Name}.{x.Name}", 1), 
-					DataField = await _resourceManager.GetResource($"{EntityType.Name}.{x.DataField}", 1), 
+					DataField = x.DataField, 
 					DataType = x.DataType, 
 					Aggregate = x.Aggregate
 					}))
 					,
-			 		Query = new(){
-			 			CommandText = "x",
-			 			DataSourceName = "x"
-			 		}
+			 		 Query = new(){
+			 		 	CommandText = "BLCity",
+			 		 	DataSourceName = "BLCity"
+			 		 }
 			 	},
 			 	DataSource = new(){
-			 		Name = "x",
+			 		Name = "BLCity",
 			 		ConnectionProperties = new(){
-			 			DataProvider = "x",
-			 			ConnectString = "x",
+			 			DataProvider = "Siesa.SDK.Business",
+			 			ConnectString = "BLCity",
 			 		}
 			 	}
 			 };

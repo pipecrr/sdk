@@ -21,18 +21,21 @@ using System.Collections.Generic;
 using GrapeCity.ActiveReports.Aspnetcore.Designer;
 using GrapeCity.ActiveReports.Aspnetcore.Viewer;
 using System.IO;
-
+using SDK.Report.Services;
+using SDK.Report.Implementation;
+using SDK.Frontend.ReportDesigner.Controllers;
 namespace Siesa.SDK.Frontend {
     public static class SiesaSecurityExtensions
     {
-        // private static readonly DirectoryInfo ResourcesRootDirectory =
-		// 	new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), "resources" + Path.DirectorySeparatorChar));
+        private static readonly DirectoryInfo ResourcesRootDirectory =
+			new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), "resources" + Path.DirectorySeparatorChar));
 
-		// private static readonly DirectoryInfo TemplatesRootDirectory =
-		// 	new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), "templates" + Path.DirectorySeparatorChar));
+		private static readonly DirectoryInfo TemplatesRootDirectory =
+			new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), "templates" + Path.DirectorySeparatorChar));
 
-		// private static readonly DirectoryInfo DataSetsRootDirectory =
-		// 	new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), "datasets" + Path.DirectorySeparatorChar));
+		private static readonly DirectoryInfo DataSetsRootDirectory =
+			new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), "datasets" + Path.DirectorySeparatorChar));
+
         public static void AddSiesaSDKFrontend(this IServiceCollection services, IConfiguration serviceConfiguration)
         {
             services.AddControllers().PartManager.ApplicationParts.Add(new AssemblyPart(typeof(SiesaSecurityExtensions).Assembly));
@@ -63,10 +66,10 @@ namespace Siesa.SDK.Frontend {
 
             services.AddReporting();
 			services.AddDesigner();
-			// services.AddSingleton<ITemplatesService>(new FileSystemTemplates(TemplatesRootDirectory));
-			// services.AddSingleton<IDataSetsService>(new FileSystemDataSets(DataSetsRootDirectory));
-			// services.AddRazorPages().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
-			// services.AddServerSideBlazor();
+			services.AddSingleton<ITemplatesService>(new FileSystemTemplates(TemplatesRootDirectory));
+			services.AddSingleton<IDataSetsService>(new FileSystemDataSets(DataSetsRootDirectory));
+			services.AddRazorPages().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
+			services.AddServerSideBlazor();
            /* services.AddBlazorDB(options =>
             {
                 options.Name = "SiesaSDK";
@@ -94,14 +97,43 @@ namespace Siesa.SDK.Frontend {
 
             app.UseStaticFiles();
 
+            app.UseReporting(config => {
+                    config.UseFileStore(ResourcesRootDirectory);
+                    GrapeCity.ActiveReports.Web.Viewer.DataProviderInfo[] providers = new []{
+                        new GrapeCity.ActiveReports.Web.Viewer.DataProviderInfo("Siesa.SDK.Business", typeof(SDKReportProvider).AssemblyQualifiedName),
+                    };
+                    config.UseDataProviders(providers);
+                    config.LocateDataSource = (args) =>
+                    {
+                        var x = 1;
+                        return x;
+                    };
+
+                    config.SetLocateDataSource((args) => {
+                        var x = 1;
+                        return x;
+                    });
+                });
+                app.UseDesigner(config => {
+                    config.UseFileStore(ResourcesRootDirectory, false);
+                    // DataProviderInfo[] providers = new []{
+                    //     new DataProviderInfo("Siesa.SDK.Business", "Siesa.SDK.Business"),
+                    // };
+                    // config.UseDataProviders(providers);
+
+                    config.SetLocateDataSource(() =>
+                    {
+                        var x = 1;
+                        return x;
+                    });
+                });
+
             app.UseRouting();
             
             app.UseEndpoints(endpoints =>
+
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "api/{blname}/{blaction}/",
-                    defaults: new { controller = "Api", action = "Index" });
+                endpoints.MapControllers();
             });
             return app;
         }

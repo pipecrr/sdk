@@ -164,5 +164,10 @@
 		<Folder Include="wwwroot\images\" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<Content Include="templates\**" CopyToPublishDirectory="PreserveNewest" />
+		<Content Include="resources\**" CopyToPublishDirectory="PreserveNewest" />
+  	</ItemGroup>
+
 
 </Project>
