@@ -108,6 +108,7 @@ namespace Siesa.SDK.Frontend.Services
                     {
                         ResourceTag = $"{business.Name}.Plural",
                         Url = $"/{business.Name}/explorer/",
+                        Type = MenuType.CustomMenu
                     };
                     DevMenu.Add(customActionMenu);
                 }
@@ -117,7 +118,8 @@ namespace Siesa.SDK.Frontend.Services
                     {
                         ResourceTag = $"{business.Name}.Plural",
                         Url = $"/{business.Name}/",
-                        SubMenus = new List<E00061_Menu>()
+                        SubMenus = new List<E00061_Menu>(),
+                        Type = MenuType.CustomMenu
                     };
                     //search methods that return a RenderFragment
                     var customActions = businessType.GetMethods().Where(m => m.ReturnType == typeof(RenderFragment));
@@ -126,7 +128,8 @@ namespace Siesa.SDK.Frontend.Services
                         var customActionMenu = new E00061_Menu
                         {
                             ResourceTag = $"{business.Name}.CustomAction.{customAction.Name}",
-                            Url = $"/{business.Name}/{customAction.Name}/"
+                            Url = $"/{business.Name}/{customAction.Name}/",
+                            Type = MenuType.CustomMenu
                         };
                         submenuItem.SubMenus.Add(customActionMenu);
                     }
@@ -159,6 +162,11 @@ namespace Siesa.SDK.Frontend.Services
         {
             foreach (var menuItem in _menus)
             {
+                if(menuItem.Feature != null && (menuItem.RowidResource == null || menuItem.RowidResource == 0) && menuItem.ResourceTag == null)
+                {
+                    menuItem.ResourceTag = $"{menuItem.Feature.BusinessName}.Plural";
+                }
+
                 if ((menuItem.RowidResource == null || menuItem.RowidResource == 0) && menuItem.ResourceTag != null)
                 {
                     menuItem.CurrentText = await UtilsManager.GetResource(menuItem.ResourceTag);

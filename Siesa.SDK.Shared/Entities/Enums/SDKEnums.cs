@@ -4,8 +4,8 @@ namespace Siesa.SDK.Entities.Enums
 
 	public enum MenuType
 	{
-		Feature = 1,
-		Separator = 2,
+		Separator = 1,
+		Feature = 2,
 		Compound = 3,
 		CustomMenu= 4
 	}
