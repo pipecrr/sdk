@@ -25,7 +25,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 NotificationService.ShowError("Custom.Generic.Unauthorized");
                 ErrorMsg = "Custom.Generic.Unauthorized";
                 if(!IsSubpanel){
-                    NavigationService.NavigateTo("/", replace:true);
+                    // NavigationService.NavigateTo("/", replace:true);
                 }
             }
         }

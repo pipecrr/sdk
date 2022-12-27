@@ -312,7 +312,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            await InitView();
+            //await InitView();
         }
 
         public override async Task SetParametersAsync(ParameterView parameters)

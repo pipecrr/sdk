@@ -362,7 +362,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     ErrorMsg = "Custom.Generic.Unauthorized";
                     NotificationService.ShowError("Custom.Generic.Unauthorized");
                     if(!IsSubpanel){
-                        NavigationService.NavigateTo("/", replace: true);
+                        // NavigationService.NavigateTo("/", replace: true);
                     }
                 }
 
@@ -374,7 +374,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         {
             await base.OnInitializedAsync();
             guidListView = Guid.NewGuid().ToString();
-            Restart();
+            //Restart();
         }
 
         public override async Task SetParametersAsync(ParameterView parameters)
