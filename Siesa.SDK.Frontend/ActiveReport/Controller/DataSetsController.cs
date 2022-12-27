@@ -109,18 +109,16 @@ namespace SDK.Frontend.ReportDesigner.Controllers
 
 				var BusinessMethods = businessType.GetMethods().Where(x => x.GetCustomAttributes(typeof(SDKDataSourceReport), false).Length > 0);
 
-				if(BusinessMethods != null && businessType.Name == "BLCity")
+				if(BusinessMethods != null && BusinessMethods.Count() != 0)
 				{
 					foreach (var Method in BusinessMethods)
 					{
 						if (Method.ReturnType.IsGenericType)
 						{
-							var ReturnType = Method.ReturnType.GetGenericArguments()[0];
-							DataSetEntity.Add(new { Id = ReturnType.FullName, Name = ReturnType.Name });
+							var ReturnValueType = Method.ReturnType.GetGenericArguments()[0];
+							DataSetEntity.Add(new { Id = ReturnValueType.FullName, Name = ReturnValueType.Name });
 						}
-						//string x = Method.Name;	
 					}
-					//DataSetEntity.Add(new { Id = entityType.FullName, Name = entityName });
 				}
 			}
 
