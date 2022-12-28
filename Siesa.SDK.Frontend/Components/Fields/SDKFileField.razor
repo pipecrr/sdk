@@ -12,8 +12,10 @@
 <div class="sdk-file-field" id="@Id">
     @if(HasValue){
         <SDKImageViewer Url="@UrlFile" Type="@TypeFile"></SDKImageViewer>
+    }else{
+        <SDKImageViewer Type="@TypeFile"></SDKImageViewer>
     }
-    @if(!View.Equals("DetailView")){
+    @if(string.IsNullOrEmpty(View) || !View.Equals("DetailView")){
         <RadzenUpload 
             Url="@Url" 
             class="@GetCssClass()" 
@@ -93,7 +95,8 @@
         if(parameter != null){
             var value = parameter.GetValue(Business.BaseObj);
             //TODO: corregir cuando tenga el campo attatchment detail
-            if(value != null && value.ToString() != "Prueba sin file"){
+            var isNum = Int32.TryParse(value.ToString(), out int n);
+            if(value != null && isNum){
                 RowidAttachmentDetail = Int32.Parse(value.ToString());
                 var response = await Business.Backend.Call("DownloadFileByRowid", RowidAttachmentDetail);
                 if(response.Success){

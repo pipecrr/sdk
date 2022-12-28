@@ -1,3 +1,7 @@
 .sdk-image-viewer{
     overflow: hidden;
 }
+
+.sdk-image-viewer-icon{
+    text-align: center;
+}

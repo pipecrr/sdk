@@ -222,11 +222,11 @@
         } 
         break;
     case FieldTypes.FileField:
-        if(!FieldOpt.ViewContext.Equals("DetailView")){
+        if(FieldOpt.ViewContext != null && FieldOpt.ViewContext.Equals("DetailView")){
+            <SDKFileField Business="@ModelObj" FieldName="@fieldName" View="@FieldOpt.ViewContext"></SDKFileField>
+        }else{
             <SDKFileField Business="@ModelObj" FieldName="@fieldName" @ref=@UploadComponent Complete="@formView.OnComplete" Error="@formView.OnError" View="@FieldOpt.ViewContext"></SDKFileField>
             AddUploadComponent(UploadComponent, fieldName);
-        }else{
-            <SDKFileField Business="@ModelObj" FieldName="@fieldName" View="@FieldOpt.ViewContext"></SDKFileField>
         }
         break;
     case FieldTypes.Custom:
