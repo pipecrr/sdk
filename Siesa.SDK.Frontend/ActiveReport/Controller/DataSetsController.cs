@@ -30,14 +30,22 @@ namespace Siesa.SDK.Frontend.Report.Controllers
 		{
 			if (string.IsNullOrWhiteSpace(id)) return BadRequest();
 
-			Type EntityType = Utilities.SearchType(id, true);
+			var idSplit = id.Split('-');
+
+			var Entity = idSplit.Last();
+
+			var BLNameSpace = idSplit.First();
+
+			var BLType = id.Split('-').First().Split('.').Last();
+			
+			Type EntityType = Utilities.SearchType(Entity, true);
 
 			List<dynamic> DataSetEntity = new List<dynamic>();
 			
-			if (EntityType != null)//EntityType != null
+			if (EntityType != null)
 			{
-				
 				var EntityFields = EntityType.GetProperties();
+				var NameDataSet =  await _resourceManager.GetResource($"{EntityType.Name}.Singular", 1);
 
 				
 				foreach (var EntityField in EntityFields)
@@ -50,12 +58,8 @@ namespace Siesa.SDK.Frontend.Report.Controllers
 						Aggregate = "none"
 					});
 				}
-			}
 
-			var NameDataSet =  await _resourceManager.GetResource($"{EntityType.Name}.Singular", 1);
-
-
-			 var _DataSetModel  = new DataSetModel(){
+				var _DataSetModel  = new DataSetModel(){
 			 	DataSet = new(){
 			 		Name = NameDataSet,
 			 		Fields = await Task.WhenAll(DataSetEntity.Select(async x => new Field() 
@@ -67,25 +71,27 @@ namespace Siesa.SDK.Frontend.Report.Controllers
 					}))
 					,
 			 		 Query = new(){
-			 		 	CommandText = "BLCity",
-			 		 	DataSourceName = "BLCity"
+			 		 	CommandText = BLNameSpace,
+			 		 	DataSourceName = BLType
 			 		 }
 			 	},
 			 	DataSource = new(){
-			 		Name = "BLCity",
+			 		Name = BLType,
 			 		ConnectionProperties = new(){
 			 			DataProvider = "Siesa.SDK.Business",
-			 			ConnectString = "BLCity",
+			 			ConnectString = BLType,
 			 		}
 			 	}
 			 };
-				
-			return Json(_DataSetModel);
-			
+			 return Json(_DataSetModel);
+
+			}
+	
+			return null;	
 		}
 
 		[HttpGet("list")]
-		public ActionResult GetDataSetsList()
+		public  async Task<ActionResult> GetDataSetsList()
 		{
 			List<BusinessModel> bussines = _backendRouterService.GetBusinessModelList();
 
@@ -104,7 +110,8 @@ namespace Siesa.SDK.Frontend.Report.Controllers
 
 				if (!DataSetEntity.Where(x => x.Id == entityType.FullName).Any())
 				{
-					DataSetEntity.Add(new { Id = entityType.FullName, Name = entityName });
+					DataSetEntity.Add(new { Id = $"{businessType.FullName}-{entityType.FullName}", 
+											Name = entityName});//Name = await _resourceManager.GetResource($"{entityName}.Plural",1) 
 				}
 
 				var BusinessMethods = businessType.GetMethods().Where(x => x.GetCustomAttributes(typeof(SDKDataSourceReport), false).Length > 0);
@@ -116,7 +123,8 @@ namespace Siesa.SDK.Frontend.Report.Controllers
 						if (Method.ReturnType.IsGenericType)
 						{
 							var ReturnValueType = Method.ReturnType.GetGenericArguments()[0];
-							DataSetEntity.Add(new { Id = ReturnValueType.FullName, Name = ReturnValueType.Name });
+							DataSetEntity.Add(new { Id = $"{businessType.FullName}-{ReturnValueType.FullName}", 
+												Name = ReturnValueType.Name});
 						}
 					}
 				}

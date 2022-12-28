@@ -68,16 +68,12 @@ namespace Siesa.SDK.Frontend.Report.Controllers
             _enumerator = null;
             _data = null;
         }
-
-        // public override IEnumerator GetEnumerator()
-        // {
-        //     return _enumerator;
-        // }
     }
 
     public class SDKReportCommand : TextDbCommand, IExDbCommand
     {
         private readonly string _connectionString;
+        private InternalSDKReportProvider _internalSDKReportProvider;
 
 
         private readonly Func<string, Stream> _resourceLocator;
@@ -98,26 +94,21 @@ namespace Siesa.SDK.Frontend.Report.Controllers
 
         public bool CanBeCached => false;
 
-        public SDKReportCommand(string pconnectionString, Func<string, Stream> presourceLocator)
+        public SDKReportCommand(string pconnectionString, Func<string, Stream> presourceLocator, InternalSDKReportProvider internalSDKReportProvider)
         {
             _resourceLocator = presourceLocator;
             _connectionString = pconnectionString;
+            _internalSDKReportProvider = internalSDKReportProvider;
+
         }
 
         protected override DbDataReader ExecuteDbDataReader(CommandBehavior commandBehavior)
         {
-            List<E00220_User> Data = new List<E00220_User>();
-            Data.Add(new E00220_User() { Rowid = 1, Id = "City 1 id", Name = "City 1 name", Description = "City 1 description"});
-            Data.Add(new E00220_User() { Rowid = 2, Id = "City 2 id", Name = "City 2 name", Description = "City 2 description"});
-            Data.Add(new E00220_User() { Rowid = 3, Id = "City 3 id", Name = "City 3 name", Description = "City 3 description"});
-            Data.Add(new E00220_User() { Rowid = 4, Id = "City 4 id", Name = "City 4 name", Description = "City 4 description"});
-            Data.Add(new E00220_User() { Rowid = 5, Id = "City 5 id", Name = "City 5 name", Description = "City 5 description"});
-            Data.Add(new E00220_User() { Rowid = 6, Id = "City 6 id", Name = "City 6 name", Description = "City 6 description"});
-            Data.Add(new E00220_User() { Rowid = 7, Id = "City 7 id", Name = "City 7 name", Description = "City 7 description"});
-            Data.Add(new E00220_User() { Rowid = 8, Id = "City 8 id", Name = "City 8 name", Description = "City 8 description"});
+            IEnumerable<object> data = _internalSDKReportProvider.GetBLData(CommandText);
+            Type type = _internalSDKReportProvider.GetBLType(CommandText);
 
 
-            return new SDKReportDataReader(Data, typeof(E00220_User));
+            return new SDKReportDataReader(data, type);
         }
     }
 
@@ -125,6 +116,13 @@ namespace Siesa.SDK.Frontend.Report.Controllers
     {
         private string _connectionString = string.Empty;
         private Func<string, Stream> _resourceLocator;
+        private InternalSDKReportProvider internalSDKReportProvider;
+
+        public SDKReportConnection(InternalSDKReportProvider internalSDKReportProvider)
+        {
+            this.internalSDKReportProvider = internalSDKReportProvider;
+        }
+
         public override string ConnectionString
         {
             get
@@ -151,7 +149,7 @@ namespace Siesa.SDK.Frontend.Report.Controllers
 
         protected override DbCommand CreateDbCommand()
         {
-            return new SDKReportCommand(_connectionString, ResourceLocator)
+            return new SDKReportCommand(_connectionString, ResourceLocator, internalSDKReportProvider)
             {
                 Connection = this
             };
