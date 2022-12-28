@@ -34,7 +34,7 @@ namespace Siesa.SDK.Frontend.Report.Controllers
 
 			List<dynamic> DataSetEntity = new List<dynamic>();
 			
-			if (true)//EntityType != null
+			if (EntityType != null)//EntityType != null
 			{
 				
 				var EntityFields = EntityType.GetProperties();

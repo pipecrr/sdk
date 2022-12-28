@@ -103,29 +103,16 @@ namespace Siesa.SDK.Frontend {
                         new GrapeCity.ActiveReports.Web.Viewer.DataProviderInfo("Siesa.SDK.Business", typeof(SDKReportProvider).AssemblyQualifiedName),
                     };
                     config.UseDataProviders(providers);
-                    config.LocateDataSource = (args) =>
-                    {
-                        var x = 1;
-                        return x;
-                    };
 
-                    config.SetLocateDataSource((args) => {
-                        var x = 1;
-                        return x;
-                    });
                 });
                 app.UseDesigner(config => {
                     config.UseFileStore(ResourcesRootDirectory, false);
-                    // DataProviderInfo[] providers = new []{
-                    //     new DataProviderInfo("Siesa.SDK.Business", "Siesa.SDK.Business"),
-                    // };
-                    // config.UseDataProviders(providers);
+                    DataProviderInfo[] providers = new []{
+                        new DataProviderInfo("Siesa.SDK.Business", typeof(SDKReportProvider).AssemblyQualifiedName),
+                    };
+                    config.UseDataProviders(providers);
 
-                    config.SetLocateDataSource(() =>
-                    {
-                        var x = 1;
-                        return x;
-                    });
+
                 });
 
             app.UseRouting();
