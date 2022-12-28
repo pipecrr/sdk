@@ -9,7 +9,7 @@ using Siesa.SDK.Frontend.Application;
 using System.Threading.Tasks;
 using Siesa.SDK.Shared.DataAnnotations;
 
-namespace SDK.Frontend.ReportDesigner.Controllers
+namespace Siesa.SDK.Frontend.Report.Controllers
 {
 	[Route("api/datasets")]
 	public class DataSetsController : Controller

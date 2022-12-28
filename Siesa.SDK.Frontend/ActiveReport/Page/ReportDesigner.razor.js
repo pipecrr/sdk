@@ -15,9 +15,9 @@
             designerOptions.saveButton.visible = true;
             designerOptions.saveAsButton.visible = true;
         
-            // Used in About dialog and File View Help tab.
+            
             designerOptions.documentation.home = 'https://www.grapecity.com/activereports/docs/v15/online-webdesigner/overview.html';
-            // Used in notifications about report items transformation.
+            
             designerOptions.documentation.reportItemsTransformation = 'https://www.grapecity.com/activereports/docs/v15/online-webdesigner/supportedcontrols.html';
         
             designerOptions.reportItemsFeatures.table.autoFillFooter = true;

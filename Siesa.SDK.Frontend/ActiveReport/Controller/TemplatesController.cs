@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
-using SDK.Report.Services;
+using Siesa.SDK.Frontend.Report.Services;
 
-namespace WebDesigner_Blazor.Controllers
+namespace Siesa.SDK.Frontend.Report.Controllers
 {
 	[Route("api/templates")]
     public class TemplatesController : Controller

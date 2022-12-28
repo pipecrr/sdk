@@ -3,10 +3,10 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using SDK.Report.Services;
+using Siesa.SDK.Frontend.Report.Services;
 using GrapeCity.ActiveReports.Aspnetcore.Designer.Utilities;
 
-namespace SDK.Report.Implementation
+namespace Siesa.SDK.Report.Implementation
 {
 	public class FileSystemTemplates : ITemplatesService
 	{

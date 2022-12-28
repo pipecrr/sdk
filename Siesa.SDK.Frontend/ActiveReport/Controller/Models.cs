@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 using System.Globalization;
-namespace SDK.Frontend.ReportDesigner.Controllers
+namespace Siesa.SDK.Frontend.Report.Controllers
 {
 
     public partial class DataSetModel

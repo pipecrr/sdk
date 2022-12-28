@@ -10,12 +10,12 @@ using GrapeCity.BI.Data.DataProviders.DataProviders;
 using GrapeCity.BI.Data.DataProviders.TextProvidersBase;
 using Siesa.SDK.Entities;
 
-namespace SDK.Frontend.ReportDesigner.Controllers
+namespace Siesa.SDK.Frontend.Report.Controllers
 {
 
     public class SDKReportDataReader : TextDbDataReader
     {
-        public override int FieldCount => 10;
+        public override int FieldCount => _entityType.GetProperties().Length;
         protected IEnumerable<object> _data { get; private set;}
         protected IEnumerator<object> _enumerator { get; private set;}
         protected Type _entityType { get; private set;}
@@ -62,21 +62,6 @@ namespace SDK.Frontend.ReportDesigner.Controllers
             }
         }
 
-        // public override int RecordsAffected
-        // {
-        //     get
-        //     {
-        //         return _data.Count();
-        //     }
-        // }
-
-        // public override bool HasRows
-        // {
-        //     get
-        //     {
-        //         return _data != null && _data.Count() > 0;
-        //     }
-        // }
 
         public override void Close()
         {

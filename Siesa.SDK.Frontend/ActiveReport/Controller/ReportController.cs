@@ -1,6 +1,6 @@
 using System;
 using System.Data.Common;
-namespace SDK.Frontend.ReportDesigner.Controllers
+namespace Siesa.SDK.Frontend.Report.Controllers
 {
     public class SDKReportProvider: DbProviderFactory {
         

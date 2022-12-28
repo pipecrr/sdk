@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SDK.Report.Services
+namespace Siesa.SDK.Frontend.Report.Services
 {
 	/// <summary>
 	/// Allows to load data definition from custom storage.

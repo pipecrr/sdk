@@ -21,9 +21,9 @@ using System.Collections.Generic;
 using GrapeCity.ActiveReports.Aspnetcore.Designer;
 using GrapeCity.ActiveReports.Aspnetcore.Viewer;
 using System.IO;
-using SDK.Report.Services;
-using SDK.Report.Implementation;
-using SDK.Frontend.ReportDesigner.Controllers;
+using Siesa.SDK.Frontend.Report.Services;
+using Siesa.SDK.Report.Implementation;
+using Siesa.SDK.Frontend.Report.Controllers;
 namespace Siesa.SDK.Frontend {
     public static class SiesaSecurityExtensions
     {
