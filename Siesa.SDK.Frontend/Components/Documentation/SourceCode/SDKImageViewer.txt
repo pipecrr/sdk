@@ -1,0 +1,21 @@
+@using Siesa.SDK.Components.Visualization
+
+<div class="container-fluid">
+    <div class="container-fluid">
+            <h2>SDKImageViewer</h2> 
+            <p>Demonstration and configuration of the SDKImageViewer component</p> 
+    </div>
+    <div class="row px-3"> 
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <SDKImageViewer Url="@Url" Type="@TypeFile" IsAvatar="true"></SDKImageViewer>
+            </SDKCard>
+        </div>
+    </div>
+</div>
+
+
+@code{
+    SDKTypeFile TypeFile {get; set;} = SDKTypeFile.Image;
+    string Url = "https://www.campusmvp.es/recursos/image.axd?picture=/2020/2T/blazor/blazor-esquema.png";    
+}

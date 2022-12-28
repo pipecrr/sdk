@@ -5,3 +5,25 @@
 .sdk-image-viewer-icon{
     text-align: center;
 }
+
+.sdk-image-viewer-avatar{
+    min-width: 2.25rem;
+    min-height: 2.25rem;
+    max-width: 2.25rem;
+    max-height: 2.25rem;
+    border-radius: 50%;
+    box-shadow: var(--shadow_standar);
+    padding: 0;
+    overflow: hidden;
+    border: 2px solid var(--color_light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 0.13rem 0.25rem 0.13rem;
+}
+
+.sdk-image-viewer-avatar > img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
