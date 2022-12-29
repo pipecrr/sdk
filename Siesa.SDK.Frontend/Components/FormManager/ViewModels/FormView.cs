@@ -16,6 +16,7 @@ using Siesa.SDK.Frontend.Services;
 using Siesa.SDK.Frontend.Application;
 using Siesa.SDK.Frontend.Components.Fields;
 using Siesa.SDK.Shared.DTOS;
+using Siesa.SDK.Frontend.Components.FormManager.Fields;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 {
@@ -89,7 +90,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         protected bool CanList;
         public bool FormHasErrors = false;
 
-        public Dictionary<string, SDKFileField> FileFields = new Dictionary<string, SDKFileField>();
+        public Dictionary<string, FileField> FileFields = new Dictionary<string, FileField>();
         public SDKFileUploadDTO DataAttatchmentDetail { get; set; }
         protected virtual async Task CheckPermissions()
         {
@@ -352,7 +353,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
 			SavingFile = false;
 		}
 
-        public async Task<int> savingAttachment(SDKFileField fileField){
+        public async Task<int> savingAttachment(FileField fileField){
             SavingFile = true;
             await fileField.Upload();
             var horaInicio = DateTime.Now.Minute;

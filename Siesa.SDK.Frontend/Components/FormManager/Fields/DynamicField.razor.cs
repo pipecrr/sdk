@@ -16,7 +16,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
         [Parameter] public object ModelObj { get; set; }
         [Parameter] public bool ValidateField { get; set; } = true;
         [CascadingParameter] FormView formView { get; set; }
-        public SDKFileField UploadComponent { get; set; }
+        public FileField UploadComponent { get; set; }
         private object fieldModelObj { get; set; }
 
         private string fieldName { get; set; }
@@ -59,8 +59,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
             await base.SetParametersAsync(parameters);
             initField(true);
         }
-        public void AddUploadComponent(SDKFileField uploadComponent, string fieldName){
-            Dictionary<string, SDKFileField> uploadComponents = formView.FileFields;
+        public void AddUploadComponent(FileField uploadComponent, string fieldName){
+            Dictionary<string, FileField> uploadComponents = formView.FileFields;
             if(uploadComponent != null){
                 if(!uploadComponents.ContainsKey(fieldName)){
                     uploadComponents.Add(fieldName, uploadComponent);
