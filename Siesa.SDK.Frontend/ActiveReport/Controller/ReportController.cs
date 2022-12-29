@@ -9,6 +9,9 @@ using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Shared.Utilities;
 using Siesa.SDK.Business;
 using System.Threading.Tasks;
+using System.Linq;
+using Siesa.SDK.Shared.DataAnnotations;
+using System.Reflection;
 
 namespace Siesa.SDK.Frontend.Report.Controllers
 {
@@ -27,27 +30,76 @@ namespace Siesa.SDK.Frontend.Report.Controllers
 
         internal IEnumerable<object>  GetBLData(string commandText)
         {
-            Type BLType = Utilities.SearchType(commandText, true);
+            string BlNameSpace = "";
+            string MethodName = "";
+            if (commandText.Split('-').Length > 1)
+            {
+                var commandTextSplit = commandText.Split('-');
+                BlNameSpace = commandTextSplit[0];
+                MethodName = commandTextSplit[1];
+            }else
+            {
+                BlNameSpace = commandText;
+            }
+           
+            Type BLType = Utilities.SearchType(BlNameSpace, true);
+
+            dynamic response = null;
 
             if (BLType != null)
             {
                 dynamic BLInstance =  ActivatorUtilities.CreateInstance(_serviceProvider, BLType);
 
-               // 
-
-                var response = BLInstance.GetData(null,null);
+                if (!string.IsNullOrEmpty(MethodName))
+                {
+                    MethodInfo method = BLInstance.GetType().GetMethod(MethodName);
+                    if (method != null)
+                    {
+                        response = method.Invoke(BLInstance, null);
+                    }
+                    return response;
+                }else
+                {
+                    response = BLInstance.GetData(null,null);
+                }
 
                 return response.Data;
             }
-
             return new List<dynamic>();
         }
 
         internal Type GetBLType(string commandText)
         {
-            Type BLType = Utilities.SearchType(commandText, true);
+            string BlNameSpace = "";
+            string MethodName = "";
+            if (commandText.Split('-').Length > 1)
+            {
+                var commandTextSplit = commandText.Split('-');
+                BlNameSpace = commandTextSplit[0];
+                MethodName = commandTextSplit[1];
+            }else{
+                BlNameSpace = commandText;
+            }
 
-            return BLType.GetProperty("BaseObj").PropertyType;
+            Type BLType = Utilities.SearchType(BlNameSpace, true);
+
+            if (BLType != null)
+            {
+                if (!string.IsNullOrEmpty(MethodName))
+                {
+                    MethodInfo method = BLType.GetMethod(MethodName);
+                    if (method != null)
+                    {
+                        return method.ReturnType.GetGenericArguments()[0];
+                    }
+                }else
+                {
+                    return BLType.GetProperty("BaseObj").PropertyType;
+                }
+            }
+            
+
+            return null;
         }
     }
 
