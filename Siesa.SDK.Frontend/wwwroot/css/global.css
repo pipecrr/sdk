@@ -646,6 +646,79 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_text{
     padding-bottom: 0;
     margin-bottom: 0;
 }
+.whcm_select_box > .whcm_select_list{
+    box-shadow: var(--shadow_standar);
+    border: 1px solid var(--color_border);
+    border-radius: var(--border_radius_standar);
+    background: var(--color_light);
+    color: var(--color_text);
+    position: absolute;
+    padding: 0;
+    top: 2rem;
+    min-width: 100%;
+    max-height: 240px;
+    overflow-y: auto;
+    z-index: 1;
+ }
+ .whcm_select_box > .whcm_select_list>ul{
+    padding: 0;
+    margin: 0;
+    list-style: none;
+ }
+ .whcm_select_box > .whcm_select_list>ul>li{
+    padding: 0.5rem;
+ }
+ .whcm_select_box > .whcm_select_list>ul>li:hover{
+    background: var(--color_back_2);
+ }
+ .whcm_select_box > .whcm_select_list>ul>li>div>div>p{
+    padding-left: 1rem;
+    text-indent: -1rem;
+ }
+ .whcm_select_box>.input-group-append>.whcm-btn-outline{
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+ }
+ .whcm_select_box>.input-group-append>.whcm-btn-outline:not(:last-child){
+    border-left: none;
+    border-right: none;
+ }
+ .whcm_select_box>.input-group-append>.whcm-btn-outline{
+    padding: 0.25rem 0.5rem;
+    font-size: 1.1rem !important;
+    line-height: 1 !important;
+    border-radius: 0.2rem;
+ }
+ .whcm_select_box>.input-group-append >.whcm-btn-outline:last-child{
+    border-top-right-radius: 0.2rem !important;
+    border-bottom-right-radius: 0.2rem !important;
+    border-left: none;
+ }
+ .whcm_select_box>.input-group-append >.whcm-btn-outline {
+    color: var(--color_primary_light);
+    border-color: #ced4da;
+ }
+ .whcm_select_box>.input-group-append >.whcm-btn-outline:hover {
+    color: var(--color_primary_light);
+    border-color: #ced4da;
+    background-color: var(--color_back_2);
+ }
+ .whcm_select_list_img {
+    min-width: 2.25rem;
+    min-height: 2.25rem;
+    max-width: 2.25rem;
+    max-height: 2.25rem;
+    border-radius: 50%;
+    box-shadow: var(--shadow_standar);
+    padding: 0;
+    overflow: hidden;
+    border: 2px solid var(--color_light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 0.13rem 0.25rem 0.13rem;
+ }
+ 
 
 .dxbs-memo  > .dxbs-input-group  > .input-group-append {
     width: 1.5rem!important;
