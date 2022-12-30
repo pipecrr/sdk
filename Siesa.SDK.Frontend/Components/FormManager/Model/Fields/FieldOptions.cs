@@ -93,6 +93,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             }
             return fieldObj;
         }
+        public RelatedParams  RelatedParams { get; set; }
 
         private List<Type> SupportedTypes = new List<Type>(){
             typeof(SwitchField),

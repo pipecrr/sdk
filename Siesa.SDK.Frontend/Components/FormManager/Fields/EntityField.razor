@@ -1,7 +1,16 @@
 ﻿@inherits FieldClass<dynamic>
+@using Siesa.SDK.Frontend.Components.Fields
 
 @if (!FieldOpt.Hidden)
 {
-    @FieldTemplate
-    //@FieldValidationTemplate
+    @FieldValidationTemplate
+
+    <SDKEntityField
+        BusinessName="@BaseModelObj.BusinessName"
+        RelatedBusiness="@FieldOpt.RelatedBusiness"
+        BaseModelObj="@BaseModelObj"
+        SetValue="@SetValue"
+        FieldName="@FieldName"
+        RelatedParams="@FieldOpt.RelatedParams"
+    />    
 }
