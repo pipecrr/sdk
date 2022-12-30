@@ -340,7 +340,7 @@ namespace Siesa.SDK.Business
         public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave()
         {
             ValidateAndSaveBusinessObjResponse result = new();
-            if(_featurePermissionService != null){
+            if(_featurePermissionService != null && RowidFeature != 0){
                 CanCreate = _featurePermissionService.CheckUserActionPermission(RowidFeature, 1,AuthenticationService);
                 CanEdit = _featurePermissionService.CheckUserActionPermission(RowidFeature, 2,AuthenticationService);
             }
