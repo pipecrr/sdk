@@ -14,6 +14,9 @@ using Siesa.SDK.Frontend.Utils;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Frontend.Services;
 using Siesa.SDK.Frontend.Application;
+using Siesa.SDK.Frontend.Components.Fields;
+using Siesa.SDK.Shared.DTOS;
+using Siesa.SDK.Frontend.Components.FormManager.Fields;
 using Siesa.SDK.Frontend.Extension;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
@@ -42,7 +45,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         public Boolean Loading = true;
         public bool Saving = false;
-
+        public bool SavingFile { get; set; } = false;
         public String ErrorMsg = "";
         [Parameter]
         public string FormID { get; set; } = Guid.NewGuid().ToString();
@@ -86,9 +89,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         protected bool CanDelete;
         protected bool CanDetail;
         protected bool CanList;
-
         public bool FormHasErrors = false;
 
+        public Dictionary<string, FileField> FileFields = new Dictionary<string, FileField>();
+        public SDKFileUploadDTO DataAttatchmentDetail { get; set; }
         protected virtual async Task CheckPermissions()
         {
             if (FeaturePermissionService != null)
@@ -328,15 +332,56 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
                 ErrorMsg = "";
                 await InitView();
             }
+        }
+        public void OnError(SDKUploadErrorEventArgsDTO args){
+			var error = args.Message;
+			SavingFile = false;
+		}
 
-            
-            
+        public async Task<int> savingAttachment(FileField fileField){
+            SavingFile = true;
+            await fileField.Upload();
+            var horaInicio = DateTime.Now.Minute;
+            while(SavingFile){
+                await Task.Delay(100);
+                if (DateTime.Now.Minute - horaInicio >= 2){
+                    throw new Exception("Timeout");
+                }
+            }
+            if(DataAttatchmentDetail != null){
+                var result = await BusinessObj.SaveAttachmentDetail(DataAttatchmentDetail);
+                return result;
+            }
+            return 0;
+        }
+
+        public void OnComplete(SDKUploadCompleteEventArgsDTO args){
+            var response  = JsonConvert.DeserializeObject<dynamic>(args.RawResponse);
+			var data = response.data;
+            if(data != null){
+                DataAttatchmentDetail = JsonConvert.DeserializeObject<SDKFileUploadDTO>(data.ToString());
+            }
+			SavingFile = false;
         }
         private async Task SaveBusiness()
         {
             Saving = true;
             StateHasChanged();
             //var id = await BusinessObj.SaveAsync();
+            //fielFields is empty
+            if(FileFields.Count>0){
+                foreach (var item in FileFields)
+                {
+                    var fileField = item.Value;
+
+                    var rowidAttatchment = await savingAttachment(fileField);
+                    if(rowidAttatchment > 0){
+                        var field = "Description";//item.Key;
+                        var property = BusinessObj.BaseObj.GetType().GetProperty(field);
+                        property.SetValue(BusinessObj.BaseObj, rowidAttatchment.ToString());
+                    }
+                }
+            }
             var result = await BusinessObj.ValidateAndSaveAsync();
             Saving = false;
             ErrorMsg = string.Empty;

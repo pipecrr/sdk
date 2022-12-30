@@ -1,0 +1,63 @@
+@if(Type == SDKTypeFile.Image){
+    if(IsAvatar){
+        @if(string.IsNullOrEmpty(Url)){
+            <div class="sdk-image-viewer-avatar mb-2">
+                <i class="fa-solid fa-image"></i>
+            </div>
+        }else{
+            <div class="sdk-image-viewer-avatar mb-2">
+                <img src="@Url" />
+            </div>
+        }
+    }else{
+        @if(string.IsNullOrEmpty(Url)){
+            <div class="sdk-image-viewer-icon mb-2">
+                <i class="fa-solid fa-image"></i>
+            </div>
+        }else{
+            <div class="sdk-image-viewer mb-2" style="@style" >
+                <img src="@Url" width="100%"/>
+            </div>
+        }
+    }    
+}else{
+   <div class="text-center">
+        <p>@GetName()</p>
+        <a href="@Url" target="_blank"><i class="fa-solid fa-file-arrow-down"></i></a>
+    </div>
+}
+
+@code{
+    [Parameter]
+    public SDKTypeFile Type {get; set;}
+
+    [Parameter]
+    public string Url {get; set;}
+
+    [Parameter]
+    public bool IsAvatar {get; set;} = false;
+
+    [Parameter]
+    public string BLName {get; set;}
+
+    [Parameter]
+    public string Name {get; set;}
+
+    [Parameter]
+    public string Height {get; set;}
+
+    private string style = "height: 100px;";
+
+    protected override void OnInitialized(){
+        if(!string.IsNullOrEmpty(Height)){
+            style = $"height: {Height};";
+        }
+        base.OnInitialized();
+    }
+    private string GetName(){
+        if(string.IsNullOrEmpty(Name)){
+            return Url.Split("/").Last();
+        }
+        return Name;
+    }
+} 

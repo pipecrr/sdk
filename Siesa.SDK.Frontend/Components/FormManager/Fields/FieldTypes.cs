@@ -19,5 +19,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
         EntityField,
         ByteField,
         BigIntegerField,
+        FileField
     }
 }
