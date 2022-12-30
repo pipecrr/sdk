@@ -5,6 +5,7 @@
 @using Siesa.SDK.Shared.Backend
 @using Siesa.SDK.Frontend.Components.Layout.Menu
 @using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Entities.Enums
 @inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavigationManager
 @using Siesa.SDK.Frontend.Services
@@ -111,11 +112,13 @@
             {
                 ResourceTag = "BLUser.EditProfile",
                 Url = $"/BLUser/edit/{AuthenticationService.User.Rowid}/",
+                Type = MenuType.CustomMenu
             });
             ProfileMenu.SubMenus.Add(new E00061_Menu()
             {
                 ResourceTag = "BLUser.Logout",
-                Url = "/logout"
+                Url = "logout",
+                Type = MenuType.CustomMenu
             });
             if(MenuService.Menus.Count == 0)
             {

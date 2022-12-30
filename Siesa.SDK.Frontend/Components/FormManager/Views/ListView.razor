@@ -12,8 +12,15 @@
 {
     <ResourceViewer ResourceTag="Custom.Generic.Loading" />
 }
+else if(!string.IsNullOrEmpty(ErrorMsg))
+{
+    <ErrorsContainer ErrorMsg="@ErrorMsg"/>
+}
 else
 {
+    @if(IsSubpanel){
+        UseFlex = false;
+    }
     @if(ShowSearchForm && HasSearchViewdef)
     {
         <div class="@StyleSearchForm">
@@ -143,7 +150,7 @@ else
 
                             }
                             @if(HasCustomActions){
-                                @foreach (var action in ListViewModel.CustomActions)
+                                @foreach (var action in CustomActions)
                                 {
                                     <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="async () => await OnClickCustomAction(action, ((IBaseSDK)data))"><i
                                     class="@action.IconClass"></i></button>
@@ -310,13 +317,13 @@ else
     }
 
     @if(ShowList && UseFlex){
-        <FlexComponent IsListView="true" BlNameList="@BusinessName" ViewdefName="@FinalViewdefName" ListView="@this" GuidListView="@guidListView" CanEdit="@CanEdit" CanDelete="@CanDelete" EditingFlex="@_isEditingFlex" Take="@FlexTake" ServerPagination="@ServerPaginationFlex" FilterSearch="@FilterFlex"></FlexComponent>
+        <FlexComponent IsListView="true" BlNameList="@BusinessName" ViewdefName="@FinalViewdefName" ListView="@this" GuidListView="@guidListView" CanEdit="@CanEdit" CanDelete="@CanDelete" EditingFlex="@_isEditingFlex" Take="@FlexTake" ServerPagination="@ServerPaginationFlex" FilterSearch="@FilterFlex" ActionIcons=@CustomActionIcons></FlexComponent>
     }
 
     @if(SetTopBar)
     {
         <PageTitle><ResourceViewer ResourceTag="@($"{BusinessName}.Plural")" /></PageTitle>
-        <SetTopBar HasExtraButtons="@(ListViewModel.Buttons != null && ListViewModel.Buttons.Count > 0 ? true: false)" BusinessObj="@BusinessObj">
+        <SetTopBar HasExtraButtons="@HasExtraButtons" BusinessObj="@BusinessObj">
             <TopBarTitle><ResourceViewer ResourceTag="@($"{BusinessName}.Plural")" /></TopBarTitle>
             <TopBarButtons>
                 @if(ShowSearchForm && HasSearchViewdef && !_isEditingFlex)
@@ -328,7 +335,7 @@ else
                     <TopBarButton ResourceTag="Action.Flex.SaveAndClose" IconCssClass="fa-solid fa-floppy-disk" Click="SaveAndCloseList" />
                 }
                 @if(UseFlex && !_isEditingFlex && !_isSearchOpen){
-                    <TopBarButton Click="GoToEditFlex" ResourceTag="Action.Edit" IconCssClass="fa-solid fa-pen" />
+                    <TopBarButton Click="GoToEditFlex" ResourceTag="Action.EditListFlex" IconCssClass="fa-solid fa-pen" />
                 }                
                 @if(CanCreate && !_isEditingFlex)
                 {
@@ -336,7 +343,7 @@ else
                 }
             </TopBarButtons>
             <TopBarExtraButtons>
-                @foreach (var btn in ListViewModel.Buttons)
+                @foreach (var btn in ExtraButtons)
                 {
                     <TopBarButton Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" IconCssClass="@btn.IconClass" />
                 }

@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Siesa.SDK.Shared.Json;
 using Microsoft.EntityFrameworkCore;
-
+using Siesa.SDK.Entities.Enums;
 
 namespace Siesa.SDK.Entities
 {
@@ -27,17 +27,31 @@ namespace Siesa.SDK.Entities
             {
                 url = $"/Menu/{Rowid}/";
             }else{
-                if (!string.IsNullOrEmpty(this.Url)) {
-                    url = this.Url;
-                }else{
+                if(this.Type == MenuType.Feature){
                     if(this.Feature != null){
                         url = $"/{this.Feature.BusinessName}/";
-                    }else{
-                        url = "/";
                     }
+                }else if (this.Type == MenuType.Compound)
+                {
+                    if (this.Feature != null && !string.IsNullOrEmpty(this.Url)) 
+                    {
+                        url = $"/{this.Feature.BusinessName}/{this.Url}";
+                    }
+                }else if (this.Type == MenuType.CustomMenu)
+                {
+                    if (!string.IsNullOrEmpty(this.Url)) 
+                    {
+                        if (this.Url.StartsWith("/"))
+                        {
+                            url = this.Url;
+                        }
+                        else
+                        {
+                            url = $"/{this.Url}";
+                        }
+                    }             
                 }
             }
-
             return url;
         } }
 
