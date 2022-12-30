@@ -4,8 +4,8 @@
     <div class="container-fluid">
         <h2>SDKImageViewer</h2> 
         <p>Demostracion uso de componente SDKImageViewer</p> 
+        <p>Por defcto el componente se muestra como una imagen o tipo vista, en este caso se muestra la imagen con un height de "100px", se puede especificar el tamaño enviando la propiedad Height, se puede enviar la propiedad "IsAvatar" en true para cambiar la visualizacion del componente, en caso de que no se le envie url muestra el icono de una imagen</p>
     </div>
-    <p>Por defcto el componente se muestra como una imagen o tipo vista, en este caso se muestra la imagen con un height de "100px", se puede especificar el tamaño enviando la propiedad Height, se puede enviar la propiedad "IsAvatar" en true para cambiar la visualizacion del componente, en caso de que no se le envie url muestra el icono de una imagen</p>
     <div class="row px-3"> 
         <div class="col-md-6 p-3">
             <SDKCard>
@@ -42,5 +42,5 @@
 
 @code{
     SDKTypeFile TypeFile {get; set;} = SDKTypeFile.Image;
-    string Url = "https://www.campusmvp.es/recursos/image.axd?picture=/2020/2T/blazor/blazor-esquema.png";    
+    string Url = "_content/Siesa.SDK.Frontend/assets/img/arnol.jpg";    
 }

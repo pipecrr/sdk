@@ -40,6 +40,7 @@ namespace Siesa.SDK.Business
         [JsonIgnore]
         protected IAuthenticationService AuthenticationService { get; set; }
         [JsonIgnore]
+        protected IBackendRouterService _backendRouterService { get; set; }
         protected IFeaturePermissionService FeaturePermissionService { get; set; }
 
         private IServiceProvider _provider;
@@ -105,7 +106,6 @@ namespace Siesa.SDK.Business
             _provider = provider;
 
             _dbFactory = _provider.GetService(typeof(IDbContextFactory<SDKContext>));
-
             ILoggerFactory loggerFactory = (ILoggerFactory)_provider.GetService(typeof(ILoggerFactory));
             _logger = loggerFactory.CreateLogger(this.GetType().FullName);
 
@@ -113,12 +113,16 @@ namespace Siesa.SDK.Business
             myContext.SetProvider(_provider);
 
             AuthenticationService = (IAuthenticationService)_provider.GetService(typeof(IAuthenticationService));
+            
+            _backendRouterService = _provider.GetService(typeof(IBackendRouterService)) as IBackendRouterService;
         }
     }
     public class BLBackendSimple<T, K> : IBLBase<T> where T : class, IBaseSDK where K : BLBaseValidator<T>
     {
         [JsonIgnore]
         protected IAuthenticationService AuthenticationService { get; set; }
+        [JsonIgnore]
+        protected IBackendRouterService _backendRouterService { get; set; }
          [JsonIgnore]
         protected IFeaturePermissionService FeaturePermissionService { get; set; }
 
@@ -222,7 +226,8 @@ namespace Siesa.SDK.Business
 
             AuthenticationService = (IAuthenticationService)_provider.GetService(typeof(IAuthenticationService));
 
-            // _featurePermissionService = (IFeaturePermissionService)_provider.GetService(typeof(IFeaturePermissionService));
+            _backendRouterService = (IBackendRouterService)_provider.GetService(typeof(IBackendRouterService));
+            _featurePermissionService = (IFeaturePermissionService)_provider.GetService(typeof(IFeaturePermissionService));
 
             RowidFeature = GetRowidFeature(BusinessName);
         }
@@ -336,8 +341,8 @@ namespace Siesa.SDK.Business
         {
             ValidateAndSaveBusinessObjResponse result = new();
             if(_featurePermissionService != null){
-                CanCreate = _featurePermissionService.CheckUserActionPermission(RowidFeature, 6,AuthenticationService);
-                CanEdit = _featurePermissionService.CheckUserActionPermission(RowidFeature, 7,AuthenticationService);
+                CanCreate = _featurePermissionService.CheckUserActionPermission(RowidFeature, 1,AuthenticationService);
+                CanEdit = _featurePermissionService.CheckUserActionPermission(RowidFeature, 2,AuthenticationService);
             }
             if(!CanCreate && !CanEdit){
                 AddMessageToResult("Custom.Generic.Unauthorized", result);
@@ -763,6 +768,35 @@ namespace Siesa.SDK.Business
         }
 
         [SDKExposedMethod]
+        public async Task<ActionResult<SDKFileFieldDTO>> DownloadFileByRowid(Int32 rowid){
+            string url = "";
+            string dataType = "";
+            var BLAttatchmentDetail = GetBackend("BLAttachmentDetail");
+            var response = await BLAttatchmentDetail.Call("GetAttatchmentDetail", rowid);
+            SDKFileFieldDTO SDKFileField = new SDKFileFieldDTO();
+            if(response.Success){
+                var data = response.Data;                
+                SDKFileField = new SDKFileFieldDTO{
+                    Url = data.Url,
+                    FileName = data.FileName,
+                    FileType = data.FileType
+                };
+            }else{
+                var errors = JsonConvert.DeserializeObject<List<string>> (response.Errors.ToString());
+                throw new ArgumentException(errors[0]);
+            }
+            IWebHostEnvironment env = _provider.GetRequiredService<IWebHostEnvironment>();
+            var filePath = Path.Combine(SDKFileField.Url);
+            var file = new FileInfo(filePath);
+            if (file.Exists){
+                var fileBytes = await File.ReadAllBytesAsync(filePath);
+                var base64 = Convert.ToBase64String(fileBytes);
+                SDKFileField.FileBase64 = base64;
+                return new ActionResult<SDKFileFieldDTO>{Success = true, Data = SDKFileField};
+            }
+            return new BadRequestResult<SDKFileFieldDTO>{Success = false, Errors = new List<string> { "File not found" }};
+        }
+        
         public async Task<ActionResult<T>> DataEntity(object rowid){
             using (SDKContext context = CreateDbContext())
             {   
