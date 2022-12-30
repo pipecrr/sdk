@@ -22,7 +22,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         [Parameter] public string FieldName { get; set; }
         [Parameter] public string BusinessName { get; set; }
         [Parameter] public string RelatedBusiness { get; set; }
-        [Parameter] public dynamic BaseModelObj { get; set; }    
+        [Parameter] public dynamic BaseObj { get; set; }    
         [Parameter] public int MinCharsEntityField { get; set; } = 2;
         [Parameter] public Dictionary<string, string> RelatedFilters { get; set; } = new Dictionary<string, string>();
         [Parameter] public RelatedParams RelatedParams { get; set; }
@@ -43,7 +43,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         protected override async Task OnInitializedAsync()
         {
             base.OnInitializedAsync();
-            SetVal(BaseModelObj.BaseObj.GetType().GetProperty(FieldName).GetValue(BaseModelObj.BaseObj));
+            SetVal(BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj));
             SDKBusinessModel relBusinessModel = BackendRouterService.GetSDKBusinessModel(RelatedBusiness, null);
             var relBusinessType = Utilities.SearchType(relBusinessModel.Namespace + "." + relBusinessModel.Name);
             RelBusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider, relBusinessType);
@@ -81,8 +81,8 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 SetValue(item);
                 Value = item.ToString();
             }else{
-                BindProperty = BaseModelObj.GetType().GetProperty(FieldName);
-                BindProperty.SetValue(BaseModelObj, item);
+                BindProperty = BaseObj.GetType().GetProperty(FieldName);
+                BindProperty.SetValue(BaseObj, item);
                 Value = item.ToString();
             }
         }
@@ -155,9 +155,9 @@ namespace Siesa.SDK.Frontend.Components.Fields
             if (searchText.Length > MinCharsEntityField || CacheLoadResult == null)
             {
                 var filters = "";
-                if (BaseModelObj != null && BaseModelObj.BaseObj != null && BaseModelObj.BaseObj.Rowid != 0 && RelBusinessObj != null && RelBusinessObj.BaseObj != null && RelBusinessObj.BaseObj.GetType() == BaseModelObj.BaseObj.GetType())
+                if (BaseObj != null && BaseObj.Rowid != 0 && RelBusinessObj != null && RelBusinessObj.BaseObj != null && RelBusinessObj.BaseObj.GetType() == BaseObj.GetType())
                 {
-                    filters = $"(Rowid != {BaseModelObj.BaseObj.Rowid})";
+                    filters = $"(Rowid != {BaseObj.Rowid})";
                 }
                 foreach (var item in RelatedFilters)
                 {
@@ -168,7 +168,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
                     dynamic dynamicValue;
                     try
                     {
-                        dynamicValue = await Utils.Evaluator.EvaluateCode(value, BaseModelObj);
+                        dynamicValue = await Utils.Evaluator.EvaluateCode(value, BaseObj);
                     }
                     catch (Exception ex)
                     {
