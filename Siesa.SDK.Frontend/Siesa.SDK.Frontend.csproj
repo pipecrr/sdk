@@ -125,6 +125,9 @@
 		<None Remove="Components\Documentation\SourceCode\SDKImageViewer.txt" />
 		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKImageViewer.txt" />
 
+		<None Remove="Components\Documentation\SourceCode\SDKEntityField.txt" />
+		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKEntityField.txt" />
+
 	</ItemGroup>
 
 

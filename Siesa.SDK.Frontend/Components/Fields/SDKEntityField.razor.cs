@@ -28,6 +28,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         [Parameter] public RelatedParams RelatedParams { get; set; }
 
         [Parameter] public Action<object> SetValue { get; set; }
+        [Parameter] public Action OnChange { get; set; }
         public dynamic RelBusinessObj { get; set; }
         private string Value = "";
         private Dictionary<int, object> CacheData = new Dictionary<int, object>();
@@ -40,6 +41,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         private int RowidCulture = 1;
         public PropertyInfo BindProperty { get; set; }
         public int FieldTemplate { get; set; } = 1;
+        
         protected override async Task OnInitializedAsync()
         {
             base.OnInitializedAsync();
@@ -47,7 +49,9 @@ namespace Siesa.SDK.Frontend.Components.Fields
             SDKBusinessModel relBusinessModel = BackendRouterService.GetSDKBusinessModel(RelatedBusiness, null);
             var relBusinessType = Utilities.SearchType(relBusinessModel.Namespace + "." + relBusinessModel.Name);
             RelBusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider, relBusinessType);
-            RowidCulture = AuthenticationService.User.RowidCulture;
+            if(AuthenticationService.User!=null){
+                RowidCulture = AuthenticationService.User.RowidCulture;
+            }
             if(RelatedParams != null){
                 FieldTemplate = RelatedParams.FieldTemplate;
             }
@@ -69,6 +73,9 @@ namespace Siesa.SDK.Frontend.Components.Fields
         {
             SetVal(item);
             LoadData("", null);
+            if(OnChange != null){
+                OnChange();
+            }
             OnBlur();
         }
 
@@ -95,7 +102,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 cancellationTokenSource.Cancel();
             }
             cancellationTokenSource = new CancellationTokenSource();
-            await LoadData(value, cancellationTokenSource.Token);
+            await LoadData(value, cancellationTokenSource.Token);            
             StateHasChanged();
         }
 
