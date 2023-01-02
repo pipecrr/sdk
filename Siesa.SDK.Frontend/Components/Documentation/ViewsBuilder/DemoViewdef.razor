@@ -72,15 +72,28 @@
                 <p>Tambien podemos definir el tamaño de un campo en especifico,
                      con la propiedad ColSize.</p> 
                 <p>por ejemplo:</p> 
-                    <SDKTextField CssClass="text-area-demoviewdef" Value="@ColSize"/>
-
+                    <SDKTextField CssClass="text-area-demoviewdef" Value="@ColSize"/>                
+                    
                 <p>Tabien podemos asignar el tamaño de todos los campos de la vista(Dentro de Fields, tenemos todos los campos de la vista), asi:</p>
 
                     <SDKTextField CssClass="text-area-demoviewdef" Value="@ColSizeAll"/>
 
+                <p>Para definir los campos extra que se muestran en un entityField se envia el parametro RelatedParams, es un objeto de tipo RelatedParams que tiene 3 propiedades:
+                    <ul>
+                        <li>ExtraFields: Lista de campos adicionales que se van a mostrar en la vista desplegable</li>
+                        <li>FieldTemplate: Entero, 1 plantilla sin foto, 2 plantilla con foto, por defecto se envia en 1, sin foto</li>
+                        <li>FieldPhoto: Nombre del campo de donde se va a traer la foto a pintar</li>
+                    </ul>
+                </p>
+                    <SDKTextField CssClass="text-area-demoviewdef" Value="@RelatedParams"/>
+
                 <p>Se da soporte para agregar botones que ejecuten metodos que se encuentren en el BL del Frontend:</p>
                     
                         <SDKTextField CssClass="text-area-demoviewdef" Value="@Buttons"/>
+
+                <p>En los botones se pueden especificar permisos para las acciones con el parametro ListPermission</p>
+
+                        <SDKTextField CssClass="text-area-demoviewdef" Value="@ButtonsActions"/>
 
                 <p>Por defecto se usa la flex en el listar, para quitar el componente flex en el listar, se agrega "UseFlex: false" en el list.json </p>
                 <p>Tambien se puede especificar que pagine por servidor y el tamaño de la pagina, por defecto el take es 100 y la paginacion servidor en true</p>                    
@@ -197,6 +210,16 @@
                         ""MD"": ""3"",
                         ""LG"": ""3""
                         }
+                    }," ;
+
+    string RelatedParams = @"{
+                        ""Name"": ""BaseObj.Id"",
+                        ""CustomAttributes"":{
+                        ""sdk-show"": ""ItemIdSite""},
+                        ""RelatedParams"": {
+                            ""ExtraFields"": ""[""Id"",""Country""]"",
+                            ""FieldTemplate"": 2
+                        }
                     }," ;        
 
     string ColSizeAll = @"{
@@ -216,6 +239,13 @@
                     ""Buttons"": [{
                         ""Action"": ""await MetodoBLFrontend()"",
                         ""Style"": ""secondary""
+                        }]";
+
+    string ButtonsActions=@"
+                    ""Buttons"": [{
+                        ""Action"": ""await MetodoBLFrontend()"",
+                        ""Style"": ""secondary""
+                        ""ListPermission"": [1,2,6]
                         }]";
 
     string ListFlex = @"
