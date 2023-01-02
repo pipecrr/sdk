@@ -28,14 +28,10 @@ namespace Siesa.SDK.Entities
                 url = $"/Menu/{Rowid}/";
             }else{
                 if(this.Type == MenuType.Feature){
-                    if(this.Feature != null){
-                        url = $"/{this.Feature.BusinessName}/";
-                    }
-                }else if (this.Type == MenuType.Compound)
-                {
-                    if (this.Feature != null && !string.IsNullOrEmpty(this.Url)) 
-                    {
+                    if(this.Feature != null && !string.IsNullOrEmpty(this.Url)){
                         url = $"/{this.Feature.BusinessName}/{this.Url}";
+                    }else{
+                        url = $"/{this.Feature.BusinessName}";
                     }
                 }else if (this.Type == MenuType.CustomMenu)
                 {
