@@ -37,7 +37,7 @@
     {
        <hr class="m-0 sdk_separator"> 
     }else{
-        @if(MenuItem.Feature != null && MenuItem.Type == MenuType.Feature)
+        @if(MenuItem.Feature != null && MenuItem.Type == MenuType.Feature && string.IsNullOrEmpty(MenuItem.Url))
         {
             @if(FeaturePermissionService.CheckUserActionPermission(MenuItem.Feature.Rowid, 4, AuthenticationService))
             {
