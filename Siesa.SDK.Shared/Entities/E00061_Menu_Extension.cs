@@ -29,22 +29,15 @@ namespace Siesa.SDK.Entities
             }else{
                 if(this.Type == MenuType.Feature){
                     if(this.Feature != null && !string.IsNullOrEmpty(this.Url)){
-                        url = $"/{this.Feature.BusinessName}/{this.Url}";
+                        url = $"/{this.Feature.BusinessName}/{this.Url}/";
                     }else{
-                        url = $"/{this.Feature.BusinessName}";
+                        url = $"/{this.Feature.BusinessName}/";
                     }
                 }else if (this.Type == MenuType.CustomMenu)
                 {
                     if (!string.IsNullOrEmpty(this.Url)) 
                     {
-                        if (this.Url.StartsWith("/"))
-                        {
-                            url = this.Url;
-                        }
-                        else
-                        {
-                            url = $"/{this.Url}";
-                        }
+                        url = this.Url;
                     }             
                 }
             }
