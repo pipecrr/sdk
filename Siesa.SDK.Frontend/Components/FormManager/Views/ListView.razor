@@ -139,7 +139,7 @@ else
                                 <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToEdit(((IBaseSDK)data).GetRowid())"><i
                                 class="fa-solid fa-pen"></i></button>
                             }
-                            @if(!ShowLinkTo){
+                            @if(!ShowLinkTo && AllowDetail){
                                 <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToDetail(((IBaseSDK)data).GetRowid())"><i
                                 class="fa-solid fa-eye"></i></button>
                             }
