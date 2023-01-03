@@ -1,9 +1,13 @@
 @using SDK.Components.Visualization
 @using Siesa.SDK.Frontend.Application
 @using Siesa.SDK.Shared.Services
+@using Microsoft.JSInterop
+@using Microsoft.AspNetCore.Components
 @inject IResourceManager ResourceManager
 @inject IAuthenticationService AuthenticationService
 @inject IFeaturePermissionService FeaturePermissionService
+@inject NavigationManager NavManager
+@inject IJSRuntime JSRuntime
 @inherits SDKComponent
 
 @if(HasPermission){
@@ -11,7 +15,7 @@
         RenderStyle="@RenderStyle.Get()" 
         RenderStyleMode="@RenderStyleMode.Get()" 
         SubmitFormOnClick="@SubmitFormOnClick"
-        Click="@Click" 
+        Click="@ActionClick" 
         Text="@Text" 
         form="@form"
         NavigateUrl="@NavigateUrl"
@@ -55,6 +59,29 @@
     [Parameter] public string NavigateUrl { get; set; }
     [Parameter] public bool Enabled { get; set; } = true;
     [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string Href { get; set; }
+    [Parameter] public string Target { get; set; }
+
+
+    private void ActionClick (MouseEventArgs Event)
+    {
+        if (Click.HasDelegate)
+        {
+            Click.InvokeAsync(Event);
+            StateHasChanged();
+        }
+        if (!string.IsNullOrEmpty(Href))
+        {
+            if (Target == "_blank")
+            {
+                _ = JSRuntime.InvokeVoidAsync("window.open", Href, "_blank");
+            }
+            else
+            {
+                NavManager.NavigateTo(Href);
+            }
+        }
+    }
 
     private async Task<string> GetText(){
         if((RowidResource == null || RowidResource == 0) && ResourceTag != null){
