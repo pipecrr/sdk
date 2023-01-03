@@ -23,7 +23,7 @@ namespace Siesa.SDK.Shared.DataAnnotations
                 return validationResult;
             }
 
-            return new ValidationResult(
+            return new ValidationResult( 
                 $"{validationResult.ErrorMessage}//{validationContext.ObjectType.Name}.{validationContext.MemberName}", new string[1] { validationContext.MemberName });
         }
     }

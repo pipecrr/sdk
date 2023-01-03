@@ -22,7 +22,16 @@ namespace Siesa.SDK.Shared.DataAnnotations
                 return validationResult;
             }
 
-            return new ValidationResult($"{validationResult.ErrorMessage}//{validationContext.ObjectType.Name}.{validationContext.MemberName}//{this.MaximumLength}//{this.MinimumLength}", new string[1] { validationContext.MemberName });
+            if (this.MinimumLength != 0)
+            {
+                this.ErrorMessage = "Custom.Validator.FieldLengthRange";
+                return new ValidationResult($"{validationResult.ErrorMessage}//{validationContext.ObjectType.Name}.{validationContext.MemberName}//{this.MaximumLength}//{this.MinimumLength}", new string[1] { validationContext.MemberName });
+            }  
+            
+            return new ValidationResult($"{validationResult.ErrorMessage}//{validationContext.ObjectType.Name}.{validationContext.MemberName}//{this.MaximumLength}", new string[1] { validationContext.MemberName });
+            
+
+            
         }
     }
 }
