@@ -2,15 +2,17 @@
 <div class="input-group input-group-sm whcm_select_box">
     <input type="text" class="form-control" @onfocus="@OnFocus" value="@Value" @oninput="@(e => OnChangeValue(e.Value.ToString()))" @onkeydown="@OnKeyDown">
     <div class="input-group-append">
-        <button class="btn whcm-btn-outline" type="button" data-toggle="tooltip" data-placement="top" title="Buscar"><i class="fa-solid fa-magnifying-glass"></i></button>
-        <button class="btn whcm-btn-outline" type="button" data-toggle="tooltip" data-placement="top" title="Crear"><i class="fa-solid fa-circle-plus"></i></button>
+        <button class="btn whcm-btn-outline" type="button" data-toggle="tooltip" data-placement="top" title="Buscar" @onclick="@(async ()=> { await OpenModalList();})"><i class="fa-solid fa-magnifying-glass"></i></button>
+        @if(CanCreate){
+            <button class="btn whcm-btn-outline" type="button" data-toggle="tooltip" data-placement="top" title="Crear" @onclick="@(async ()=> { await OpenModalCreate(); })" ><i class="fa-solid fa-circle-plus"></i></button>
+        }
     </div>
     <div class="@classList">
         <ul>
             @if(CacheData.Count()>0){
                 foreach (var item in CacheData)
                 {
-                    <li class="d-flex justify-content-between" @onclick="@(()=>OnSelectItem(item.Value))">
+                    <li class="d-flex justify-content-between" @onclick="@(()=> { OnSelectItem(item.Value); })">
                         <div class="d-flex align-items-center">
                             @if(FieldTemplate == 2){
                                 <div class="whcm_select_list_img">
@@ -30,11 +32,13 @@
                                 }
                             </div>
                         </div>
-                        <div>
-                            <button class="btn btn-sm layout_btn_standar-sm" data-toggle="tooltip" data-placement="top" title="Ampliar">
-                                <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
-                            </button>
-                        </div>
+                        @if(CanEdit || CanDetail){
+                            <div>
+                                <button class="btn btn-sm layout_btn_standar-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ampliar" @onclick="@(async ()=> { await OpenModalExpand(item.Value);})">
+                                    <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
+                                </button>
+                            </div>
+                        }
                     </li>                    
                 }
             }
@@ -44,5 +48,32 @@
 
 @code
 {
+    public async Task OpenModalCreate(){
+        OnBlur();
+        var CreateDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicCreateView BusinessName="@RelatedBusiness" IsSubpanel=true  ShowTitle="false" />, width: "90%", title:$"{RelatedBusiness}.Singular");
+        if(typeof(bool) != CreateDialog.GetType()){
+            await OnSave(CreateDialog);
+            StateHasChanged();
+        }
+    }
+
+    public async Task OpenModalExpand(object item){
+        OnBlur();
+        string rowid_item = item.GetType().GetProperty("Rowid").GetValue(item).ToString();
+        if(CanEdit){
+            var editDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicEditView BusinessName="@RelatedBusiness" BusinessObjId="@rowid_item" IsSubpanel=true  ShowTitle="false"/>, width: "90%", title:$"{RelatedBusiness}.Singular");
+            if(typeof(bool) != editDialog.GetType()){
+                await OnSave(editDialog);
+                StateHasChanged();
+            }
+        }else{
+            var ShowCreateDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicDetailView BusinessName="@RelatedBusiness" BusinessObjId="@rowid_item" IsSubpanel=true  ShowTitle="false"/>, width: "90%", title:$"{RelatedBusiness}.Singular");
+        }
+    }
     
+    public async Task OpenModalList(){
+        OnBlur();
+        var ShowCreateDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicListView BusinessName="@RelatedBusiness" IsSubpanel=true  ShowTitle="false" OnSelectedRow="OnSelectedRow"/>, width: "90%", title:$"{RelatedBusiness}.Singular");
+        StateHasChanged();
+    }
 }

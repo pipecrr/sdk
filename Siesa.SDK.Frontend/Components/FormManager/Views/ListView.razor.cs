@@ -131,7 +131,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private bool HasCustomActions { get; set; } = false;
         private List<string> CustomActionIcons { get; set; } = new List<string>();
         private List<Button> CustomActions { get; set; }
-        private string WithActions {get; set;} = "100px";
+        private string WithActions {get; set;} = "120px";
         int count;
         private bool HasExtraButtons { get; set; } = false;
         private List<Button> ExtraButtons { get; set; }
@@ -739,8 +739,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 Data = new List<object> { };
             }
-            if(ServerPaginationFlex ){
-                var dbData = await BusinessObj.GetDataAsync(0, 2, filters, "");
+            if(ServerPaginationFlex && UseFlex){
+                var dbData = await BusinessObj.GetDataAsync(0, FlexTake, filters, "");
                 Data = dbData.Data;
                 if (Data.Count() == 1)
                 {

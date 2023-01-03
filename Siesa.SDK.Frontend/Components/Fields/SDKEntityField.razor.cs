@@ -11,14 +11,18 @@ using Microsoft.AspNetCore.Components;
 using System.Reflection;
 using Microsoft.AspNetCore.Components.Web;
 using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
+using Siesa.SDK.Frontend.Services;
 
 namespace Siesa.SDK.Frontend.Components.Fields
 {
     public partial class SDKEntityField
     {
-        [Inject] IAuthenticationService AuthenticationService { get; set; }
-        [Inject] IBackendRouterService BackendRouterService { get; set; }
-        [Inject] IServiceProvider ServiceProvider { get; set; }
+        [Inject] public IAuthenticationService AuthenticationService { get; set; }
+        [Inject] public IBackendRouterService BackendRouterService { get; set; }
+        [Inject] public IServiceProvider ServiceProvider { get; set; }
+        [Inject] public IFeaturePermissionService FeaturePermissionService { get; set; }
+        [Inject] public SDKDialogService SDKDialogService { get; set; }
+
         [Parameter] public string FieldName { get; set; }
         [Parameter] public string BusinessName { get; set; }
         [Parameter] public string RelatedBusiness { get; set; }
@@ -32,6 +36,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         public dynamic RelBusinessObj { get; set; }
         private string Value = "";
         private Dictionary<int, object> CacheData = new Dictionary<int, object>();
+        SDKBusinessModel relBusinessModel = null;
         private LoadResult CacheLoadResult;
         private string LastSearchString;    
         private CancellationTokenSource cancellationTokenSource;
@@ -41,12 +46,17 @@ namespace Siesa.SDK.Frontend.Components.Fields
         private int RowidCulture = 1;
         public PropertyInfo BindProperty { get; set; }
         public int FieldTemplate { get; set; } = 1;
+
+        private bool CanCreate;
+        private bool CanEdit;
+        private bool CanDetail;
         
         protected override async Task OnInitializedAsync()
         {
             base.OnInitializedAsync();
+            CheckPermissions();
             SetVal(BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj));
-            SDKBusinessModel relBusinessModel = BackendRouterService.GetSDKBusinessModel(RelatedBusiness, null);
+            relBusinessModel = BackendRouterService.GetSDKBusinessModel(RelatedBusiness, null);
             var relBusinessType = Utilities.SearchType(relBusinessModel.Namespace + "." + relBusinessModel.Name);
             RelBusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider, relBusinessType);
             if(AuthenticationService.User!=null){
@@ -69,8 +79,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
             StateHasChanged();
         }
 
-        private void OnSelectItem(dynamic item)
-        {
+        private async Task OnSelectItem(dynamic item){
             SetVal(item);
             LoadData("", null);
             if(OnChange != null){
@@ -225,6 +234,40 @@ namespace Siesa.SDK.Frontend.Components.Fields
             else
             {
                 return CacheLoadResult;
+            }
+        }
+
+        private async Task CheckPermissions()
+        {
+            if (FeaturePermissionService != null)
+            {
+                try
+                {
+                    CanCreate = await FeaturePermissionService.CheckUserActionPermission(RelatedBusiness, 1, AuthenticationService);
+                    CanEdit = await FeaturePermissionService.CheckUserActionPermission(RelatedBusiness, 2, AuthenticationService);
+                    CanDetail = await FeaturePermissionService.CheckUserActionPermission(RelatedBusiness, 5, AuthenticationService);
+                }
+                catch (System.Exception)
+                {
+                }
+            }
+
+        }
+
+        public async Task OnSave(object rowid){
+            if(rowid != null){
+                var response = await RelBusinessObj.GetDataAsync(null, null, "Rowid=" + rowid.ToString(), "");
+                dynamic data = response.Data[0];
+                SetVal(data);
+                LoadData("", null);
+            }
+        }
+        
+        public void OnSelectedRow(object item){
+            if(item != null){
+                SetVal(item);
+                LoadData("", null);
+                SDKDialogService.Close(true);
             }
         }
     }
