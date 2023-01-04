@@ -49,31 +49,31 @@
 @code
 {
     public async Task OpenModalCreate(){
-        OnBlur();
         var CreateDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicCreateView BusinessName="@RelatedBusiness" IsSubpanel=true  ShowTitle="false" />, width: "90%", title:$"{RelatedBusiness}.Singular");
-        if(typeof(bool) != CreateDialog.GetType()){
+        OnBlur();
+        if(CreateDialog != null && CreateDialog.GetType() != typeof(bool)){
             await OnSave(CreateDialog);
             StateHasChanged();
         }
     }
 
     public async Task OpenModalExpand(object item){
-        OnBlur();
         string rowid_item = item.GetType().GetProperty("Rowid").GetValue(item).ToString();
+        OnBlur();
         if(CanEdit){
             var editDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicEditView BusinessName="@RelatedBusiness" BusinessObjId="@rowid_item" IsSubpanel=true  ShowTitle="false"/>, width: "90%", title:$"{RelatedBusiness}.Singular");
-            if(typeof(bool) != editDialog.GetType()){
+            if(editDialog != null && editDialog.GetType() != typeof(bool)){
                 await OnSave(editDialog);
                 StateHasChanged();
             }
         }else{
-            var ShowCreateDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicDetailView BusinessName="@RelatedBusiness" BusinessObjId="@rowid_item" IsSubpanel=true  ShowTitle="false"/>, width: "90%", title:$"{RelatedBusiness}.Singular");
+            var detailDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicDetailView BusinessName="@RelatedBusiness" BusinessObjId="@rowid_item" IsSubpanel=true  ShowTitle="false"/>, width: "90%", title:$"{RelatedBusiness}.Singular");
         }
     }
     
     public async Task OpenModalList(){
         OnBlur();
-        var ShowCreateDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicListView BusinessName="@RelatedBusiness" IsSubpanel=true  ShowTitle="false" OnSelectedRow="OnSelectedRow"/>, width: "90%", title:$"{RelatedBusiness}.Singular");
+        var listDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicListView BusinessName="@RelatedBusiness" IsSubpanel=true  ShowTitle="false" OnSelectedRow="OnSelectedRow"/>, width: "90%", title:$"{RelatedBusiness}.Singular");
         StateHasChanged();
     }
 }

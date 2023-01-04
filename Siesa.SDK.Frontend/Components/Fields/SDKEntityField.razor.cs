@@ -147,13 +147,13 @@ namespace Siesa.SDK.Frontend.Components.Fields
             }
             return param;
         }
-        private async Task<LoadResult> LoadData(string searchText, CancellationToken? cancellationToken)
+        private async Task<LoadResult> LoadData(string searchText, CancellationToken? cancellationToken, bool force = false)
         {
             if (cancellationToken != null && cancellationToken.Value.IsCancellationRequested)
             {
                 return CacheLoadResult;
             }
-            if (LastSearchString != searchText)
+            if (LastSearchString != searchText || force)
             {
                 LastSearchString = searchText;
                 CacheLoadResult = null;
@@ -259,7 +259,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 var response = await RelBusinessObj.GetDataAsync(null, null, "Rowid=" + rowid.ToString(), "");
                 dynamic data = response.Data[0];
                 SetVal(data);
-                LoadData("", null);
+                await LoadData("", null, true);
             }
         }
         

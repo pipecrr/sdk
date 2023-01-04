@@ -705,6 +705,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             return false;
         }
 
+        [JSInvokable]
+        public async Task OnSelectFromReact(string item){
+            if(string.IsNullOrEmpty(item)){
+                return;
+            }
+            IList<object> objects = JsonConvert.DeserializeObject<IList<object>>(item);
+            OnSelectionChanged(objects);
+        }
+
         private async Task GoToDelete(Int64 id, string object_string)
         {
             if (OnClickDelete != null){
@@ -740,7 +749,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 Data = new List<object> { };
             }
             if(ServerPaginationFlex && UseFlex){
-                var dbData = await BusinessObj.GetDataAsync(0, FlexTake, filters, "");
+                var dbData = await BusinessObj.GetDataAsync(0, 2, filters, "");
                 Data = dbData.Data;
                 if (Data.Count() == 1)
                 {
