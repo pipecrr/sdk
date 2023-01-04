@@ -10,6 +10,8 @@ using Siesa.SDK.Shared.DTOS;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
+using Microsoft.JSInterop;
+
 namespace Siesa.SDK.Frontend.Services
 {
     public class AuthenticationService : IAuthenticationService
@@ -18,6 +20,7 @@ namespace Siesa.SDK.Frontend.Services
         private ILocalStorageService _localStorageService;
         private IBackendRouterService _backendRouterService;
         private IHttpContextAccessor _contextAccesor;
+        private IJSRuntime _jsRuntime;
         private string _secretKey;
         private int _minutesExp;
 
@@ -48,7 +51,8 @@ namespace Siesa.SDK.Frontend.Services
             NavigationManager navigationManager,
             ILocalStorageService localStorageService,
             IBackendRouterService BackendRouterService,
-            IHttpContextAccessor ContextAccessor
+            IHttpContextAccessor ContextAccessor,
+            IJSRuntime jsRuntime
         )
         {
             _navigationManager = navigationManager;
@@ -57,6 +61,7 @@ namespace Siesa.SDK.Frontend.Services
             _contextAccesor = ContextAccessor;
             _minutesExp = 120; //TODO: get from config
             _secretKey = "testsecretKeyabc$"; //TODO: get from config
+            _jsRuntime = jsRuntime;
         }
 
         public async Task Initialize()
@@ -96,6 +101,7 @@ namespace Siesa.SDK.Frontend.Services
             {
                 UserToken = loginRequest.Data;
                 await _localStorageService.SetItemAsync("usertoken", UserToken);
+                //await SetCookie("usertoken", UserToken);
             }
             else
             {
@@ -276,6 +282,30 @@ namespace Siesa.SDK.Frontend.Services
                 throw new Exception("Custom.Generic.Message.Error");
             }
             return BLUser;
+        }
+
+        private async Task SetCookie(string key, string value)
+        {
+            //execut javascript to set cookie
+            try
+            {
+                await _jsRuntime.InvokeVoidAsync("window.createCookie", key, value);
+            }
+            catch (System.Exception)
+            {
+            }
+        }
+
+        private async Task RemoveCookie(string key)
+        {
+            //execut javascript to set cookie
+            try
+            {
+                await _jsRuntime.InvokeVoidAsync("window.deleteCookie", key);
+            }
+            catch (System.Exception)
+            {
+            }
         }
     }
 }
