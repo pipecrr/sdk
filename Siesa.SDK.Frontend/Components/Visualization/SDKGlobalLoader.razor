@@ -1,0 +1,12 @@
+@page "/develop"
+
+<div class="loader_container">
+        <div class="loader_box">
+            <span class="loader"></span>
+        </div>
+        <p class="p-3 text-white"><ResourceViewer ResourceTag="Custom.Generic.Loading" RowidCulture= "@RowidCulture"/></p>
+</div>
+
+@code{
+    private short RowidCulture { get; set; } = 1;
+}
