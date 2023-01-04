@@ -76,6 +76,12 @@ namespace Siesa.SDK.Frontend.Services
             catch (System.Exception)
             {
             }
+            try
+            {
+                await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/js/utils.js");
+            }catch (Exception)
+            {
+            }
             //Console.WriteLine($"UserToken: {UserToken}");
         }
 
