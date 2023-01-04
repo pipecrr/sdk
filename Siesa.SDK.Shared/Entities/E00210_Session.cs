@@ -16,7 +16,6 @@ namespace Siesa.SDK.Entities
 	/// Sesión
 	/// </summary>
 
-	[Index(nameof(Id), Name = "IX_e00210_1", IsUnique = true)]
 	public partial class E00210_Session : BaseSDK<int>
 	{
 		[Key]
@@ -47,12 +46,10 @@ namespace Siesa.SDK.Entities
 		[StringLength(2000)]
 		public string? AditionalInformation { get; set; }
 
-		[Required]
 		[StringLength(64)]
-		public string Id { get; set; }
+		public string? Id { get; set; }
 
-		[Required]
-		public string Token { get; set; }
+		public string? Token { get; set; }
 
 
 		[Required]
