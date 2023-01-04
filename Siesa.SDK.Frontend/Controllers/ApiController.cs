@@ -94,12 +94,20 @@ namespace Siesa.SDK.Frontend.Controllers
         {
             //get auth token from headers
             string authToken = "";
-            string token = Request.Headers["X-Auth-Token"];
-            if(token.Trim().StartsWith("\"")){
+            var sessionId = "";
+            Request.Cookies.TryGetValue("sdksession", out sessionId);
+            if (!string.IsNullOrEmpty(sessionId)){
+                var BLSession = BackendRouterService.GetSDKBusinessModel("BLSession", AuthenticationService);
+                var response = await BLSession.Call("GetSession", sessionId);
+                if(response.Success){
+                    authToken = response.Data;
+                }
+            }
+            /*if(token.Trim().StartsWith("\"")){
                 authToken = JsonConvert.DeserializeObject<string>(Request.Headers["X-Auth-Token"]);
             }else{
                 authToken = token;
-            }
+            }*/
             
             if (string.IsNullOrEmpty(authToken))
             {

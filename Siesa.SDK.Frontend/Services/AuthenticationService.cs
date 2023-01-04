@@ -105,9 +105,9 @@ namespace Siesa.SDK.Frontend.Services
             });
             if (loginRequest.Success)
             {
-                UserToken = loginRequest.Data;
+                UserToken = loginRequest.Data.Token;
                 await _localStorageService.SetItemAsync("usertoken", UserToken);
-                //await SetCookie("usertoken", UserToken);
+                await SetCookie("sdksession", loginRequest.Data.IdSession);
             }
             else
             {
@@ -129,6 +129,7 @@ namespace Siesa.SDK.Frontend.Services
             await _localStorageService.RemoveItemAsync("usertoken");
             await _localStorageService.RemoveItemAsync("lastInteraction");
             await _localStorageService.RemoveItemAsync("n_tabs");
+            await RemoveCookie("sdksession");
 
             _navigationManager.NavigateTo("login");
         }
