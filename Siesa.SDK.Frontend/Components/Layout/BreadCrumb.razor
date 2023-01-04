@@ -136,6 +136,7 @@
         if (string.IsNullOrEmpty(e.Location) || path == "/" || string.IsNullOrEmpty(path) )
         {
             breadcrumb.Clear();
+            _selectedMenu = null;
             StateHasChanged();
         }else
         {
