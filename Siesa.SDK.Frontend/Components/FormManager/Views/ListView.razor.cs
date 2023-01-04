@@ -131,7 +131,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private bool HasCustomActions { get; set; } = false;
         private List<string> CustomActionIcons { get; set; } = new List<string>();
         private List<Button> CustomActions { get; set; }
-        private string WithActions {get; set;} = "100px";
+        private string WithActions {get; set;} = "120px";
         int count;
         private bool HasExtraButtons { get; set; } = false;
         private List<Button> ExtraButtons { get; set; }
@@ -705,6 +705,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             return false;
         }
 
+        [JSInvokable]
+        public async Task OnSelectFromReact(string item){
+            if(string.IsNullOrEmpty(item)){
+                return;
+            }
+            IList<object> objects = JsonConvert.DeserializeObject<IList<object>>(item);
+            OnSelectionChanged(objects);
+        }
+
         private async Task GoToDelete(Int64 id, string object_string)
         {
             if (OnClickDelete != null){
@@ -739,7 +748,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 Data = new List<object> { };
             }
-            if(ServerPaginationFlex ){
+            if(ServerPaginationFlex && UseFlex){
                 var dbData = await BusinessObj.GetDataAsync(0, 2, filters, "");
                 Data = dbData.Data;
                 if (Data.Count() == 1)
