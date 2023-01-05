@@ -41,10 +41,9 @@ namespace Siesa.SDK.Frontend.Report.Controllers
             {
                 BlNameSpace = commandText;
             }
-           
-            Type BLType = Utilities.SearchType(BlNameSpace, true);
 
-            dynamic response = null;
+            dynamic Response = new List<dynamic>();
+            Type BLType = Utilities.SearchType(BlNameSpace, true);
 
             if (BLType != null)
             {
@@ -55,17 +54,15 @@ namespace Siesa.SDK.Frontend.Report.Controllers
                     MethodInfo method = BLInstance.GetType().GetMethod(MethodName);
                     if (method != null)
                     {
-                        response = method.Invoke(BLInstance, null);
+                        Response = method.Invoke(BLInstance, null);
                     }
-                    return response;
                 }else
                 {
-                    response = BLInstance.GetData(null,null);
+                    var Request = BLInstance.GetData(null,null);
+                    Response = Request.Data;
                 }
-
-                return response.Data;
             }
-            return new List<dynamic>();
+            return Response;
         }
 
         internal Type GetBLType(string commandText)
@@ -81,6 +78,7 @@ namespace Siesa.SDK.Frontend.Report.Controllers
                 BlNameSpace = commandText;
             }
 
+            Type response = null;
             Type BLType = Utilities.SearchType(BlNameSpace, true);
 
             if (BLType != null)
@@ -90,16 +88,16 @@ namespace Siesa.SDK.Frontend.Report.Controllers
                     MethodInfo method = BLType.GetMethod(MethodName);
                     if (method != null)
                     {
-                        return method.ReturnType.GetGenericArguments()[0];
+                        response = method.ReturnType.GetGenericArguments()[0];
+                        //return method.ReturnType.GetGenericArguments()[0];
                     }
                 }else
                 {
-                    return BLType.GetProperty("BaseObj").PropertyType;
+                    response = BLType.GetProperty("BaseObj").PropertyType;
+                    //return BLType.GetProperty("BaseObj").PropertyType;
                 }
             }
-            
-
-            return null;
+            return response;
         }
     }
 
