@@ -281,7 +281,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Hidden = ({(string)attr.Value
 try {{ Panels[{panel_index}].Fields[{field_index}].Required = ({(string)attr.Value}); }} catch (Exception ex) {{ throw;  }}";
                                 /*_ = Task.Run(async () =>
                                 {
-                                    var resuflt = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
+                                    var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
                                     field.Required = result;
                                     _ = InvokeAsync(() => StateHasChanged());
                                 });*/
