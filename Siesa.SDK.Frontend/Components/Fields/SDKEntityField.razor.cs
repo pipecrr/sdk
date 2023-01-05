@@ -12,6 +12,7 @@ using System.Reflection;
 using Microsoft.AspNetCore.Components.Web;
 using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
 using Siesa.SDK.Frontend.Services;
+using Microsoft.JSInterop;
 
 namespace Siesa.SDK.Frontend.Components.Fields
 {
@@ -22,6 +23,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         [Inject] public IServiceProvider ServiceProvider { get; set; }
         [Inject] public IFeaturePermissionService FeaturePermissionService { get; set; }
         [Inject] public SDKDialogService SDKDialogService { get; set; }
+        [Inject] public IJSRuntime jsRuntime { get; set; }
 
         [Parameter] public string FieldName { get; set; }
         [Parameter] public string BusinessName { get; set; }
@@ -41,8 +43,6 @@ namespace Siesa.SDK.Frontend.Components.Fields
         private string LastSearchString;    
         private CancellationTokenSource cancellationTokenSource;
         private int MinMillisecondsBetweenSearch = 100;
-        private string classList = "whcm_select_list d-none";
-        private bool isFocused = false;
         private int RowidCulture = 1;
         public PropertyInfo BindProperty { get; set; }
         public int FieldTemplate { get; set; } = 1;
@@ -50,9 +50,11 @@ namespace Siesa.SDK.Frontend.Components.Fields
         private bool CanCreate;
         private bool CanEdit;
         private bool CanDetail;
-        
+        private string idInput = "";
+
         protected override async Task OnInitializedAsync()
         {
+            idInput = Guid.NewGuid().ToString();
             base.OnInitializedAsync();
             CheckPermissions();
             SetVal(BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj));
@@ -68,24 +70,13 @@ namespace Siesa.SDK.Frontend.Components.Fields
             await LoadData("", null);
         }
 
-        private void OnFocus(){
-            isFocused = true;
-            classList = "whcm_select_list";
-            StateHasChanged();
-        }
-        private void OnBlur(){
-            isFocused = false;
-            classList = "whcm_select_list d-none";
-            StateHasChanged();
-        }
-
         private async Task OnSelectItem(dynamic item){
             SetVal(item);
-            LoadData("", null);
+            LoadData("", null, true);
             if(OnChange != null){
                 OnChange();
             }
-            OnBlur();
+            StateHasChanged();
         }
 
         private void SetVal(dynamic item)
@@ -115,11 +106,20 @@ namespace Siesa.SDK.Frontend.Components.Fields
             StateHasChanged();
         }
 
+        private void OnFocus()
+        {
+            SDKDropDown();
+        }
+
         private void OnKeyDown(KeyboardEventArgs e)
         {
+            if (!e.Key.Equals("Escape"))
+            {
+                SDKDropDown();
+            }
+
             if (e.Key == "Enter")
             {
-
                 if (CacheLoadResult != null && CacheLoadResult.data != null)
                 {
                     var results = CacheLoadResult.data as IEnumerable<dynamic>;
@@ -128,7 +128,6 @@ namespace Siesa.SDK.Frontend.Components.Fields
                     {
                         SetVal(results.First());
                         LoadData("", null);
-                        OnBlur();
                     }
                 }
                 StateHasChanged();
@@ -179,7 +178,6 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 {
                     var value = item.Value;
                     var key = item.Key;
-                    //remove "RelBaseObj." from key
                     key = key.Replace("RelBaseObj.", "");
                     dynamic dynamicValue;
                     try
@@ -216,8 +214,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
                     }
 
                 }
-                //Console.WriteLine($"filters: {searchText}");            
-                var result = await RelBusinessObj.EntityFieldSearchAsync(searchText, filters); //TODO: Paginación
+                var result = await RelBusinessObj.EntityFieldSearchAsync(searchText, filters);
                 var response = new LoadResult
                 {
                     data = result.Data,
@@ -269,6 +266,11 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 LoadData("", null);
                 SDKDialogService.Close(true);
             }
+        }
+
+        public async Task SDKDropDown(){
+            var elementInstance = await jsRuntime.InvokeAsync<IJSObjectReference>("$", $"#{idInput}");
+            await elementInstance.InvokeVoidAsync("dropdown","show");
         }
     }
 }
