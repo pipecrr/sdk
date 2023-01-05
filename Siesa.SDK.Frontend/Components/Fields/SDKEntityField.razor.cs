@@ -54,8 +54,13 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
         protected override async Task OnInitializedAsync()
         {
-            idInput = Guid.NewGuid().ToString();
             base.OnInitializedAsync();
+            await InitView();
+            
+        }
+
+        protected async Task InitView(){
+            idInput = Guid.NewGuid().ToString();
             CheckPermissions();
             SetVal(BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj));
             relBusinessModel = BackendRouterService.GetSDKBusinessModel(RelatedBusiness, null);
@@ -68,6 +73,13 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 FieldTemplate = RelatedParams.FieldTemplate;
             }
             await LoadData("", null);
+            StateHasChanged();
+        }
+
+        protected override async Task OnParametersSetAsync()
+        {
+            base.OnParametersSetAsync();
+            await InitView();
         }
 
         private async Task OnSelectItem(dynamic item){
@@ -127,7 +139,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
                     if (results.Count() > 0)
                     {
                         SetVal(results.First());
-                        LoadData("", null);
+                        LoadData("", null,true);
                     }
                 }
                 StateHasChanged();
@@ -269,7 +281,9 @@ namespace Siesa.SDK.Frontend.Components.Fields
         }
 
         public async Task SDKDropDown(){
-            var elementInstance = await jsRuntime.InvokeAsync<IJSObjectReference>("$", $"#{idInput}");
+            //wait 200ms
+            await Task.Delay(200);
+            var elementInstance = await jsRuntime.InvokeAsync<IJSObjectReference>("$", $"#{idInput}[aria-expanded=false]");
             await elementInstance.InvokeVoidAsync("dropdown","show");
         }
     }
