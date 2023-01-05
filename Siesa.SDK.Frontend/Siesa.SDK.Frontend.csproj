@@ -128,6 +128,9 @@
 		<None Remove="Components\Documentation\SourceCode\SDKEntityField.txt" />
 		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKEntityField.txt" />
 
+		<None Remove="Components\Documentation\SourceCode\SDKGlobalLoader.txt" />
+		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKGlobalLoader.txt" />
+
 	</ItemGroup>
 
 

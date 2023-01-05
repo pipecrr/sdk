@@ -8,22 +8,26 @@ using Siesa.SDK.Frontend.Components.Visualization;
 
 namespace Siesa.SDK.Frontend.Services
 {
-    public class SDKGlobalLoaderServices
+    public class SDKGlobalLoaderService
     {
-        private readonly SDKGlobalLoader _SDKGlobalLoader;
-        public SDKGlobalLoaderServices(SDKGlobalLoader SDKGlobalLoader)
+        private  SDKGlobalLoader _refSDKGlobalLoader;
+        public SDKGlobalLoaderService()
         {
-            _SDKGlobalLoader = SDKGlobalLoader;
         }
 
-        public RenderFragment<SDKGlobalLoader> GetLoader()
+        public void SetRef(SDKGlobalLoader refSDKGlobalLoader)
         {
-            return (_SDKGlobalLoader) => builder =>
-            {
-                builder.OpenComponent(0, typeof(SDKGlobalLoader));
-               //builder.OpenComponent<SDKGlobalLoader>(0);
-                builder.CloseComponent();
-            };
+            _refSDKGlobalLoader = refSDKGlobalLoader;
+        }
+
+        public void Show()
+        {
+            _refSDKGlobalLoader.ShowLoader();
+        }
+
+        public void Hide()
+        {
+            _refSDKGlobalLoader.HideLoader();
         }
 
     }

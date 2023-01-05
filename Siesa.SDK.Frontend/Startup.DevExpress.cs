@@ -43,7 +43,7 @@ namespace Siesa.SDK.Frontend {
 
             services.AddScoped<ISDKJWT, Siesa.SDK.Frontend.Criptography.SDKJWT>();
             services.AddScoped<SDKDialogService>();
-            //services.AddScoped<SDKGlobalLoaderServices>();
+            services.AddScoped<SDKGlobalLoaderService>();
             services.AddScoped<MenuService>();
             services.AddSignalR(e => {
                 e.MaximumReceiveMessageSize = 102400000;
