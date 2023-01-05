@@ -684,6 +684,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 if (confirm){
                     BusinessObj.BaseObj.Rowid = Convert.ToInt32(id);
                     var result = await BusinessObj.DeleteAsync();
+                    SDKGlobalLoaderService.Hide();
                     if (result != null && result.Errors.Count == 0){
                         return true;
                     }
