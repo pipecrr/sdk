@@ -1,7 +1,7 @@
 
 <div class="dropdown input-group input-group-sm whcm_select_box">
     @* <input type="text" class="form-control" @onfocus="@OnFocus" value="@Value" > *@
-    <input type="text" class="form-control" value="@Value" @oninput="@(e => OnChangeValue(e.Value.ToString()))" @onkeydown="@OnKeyDown" @onfocus="@OnFocus" id="@idInput" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <input autocomplete="off" type="text" class="form-control" value="@Value" @oninput="@(e => OnChangeValue(e.Value.ToString()))" @onkeydown="@OnKeyDown" @onfocus="@OnFocus" id="@idInput"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     <div class="input-group-append">
         <button class="btn whcm-btn-outline" type="button" data-toggle="tooltip" data-placement="top" title="Buscar" @onclick="@(async ()=> { await OpenModalList();})"><i class="fa-solid fa-magnifying-glass"></i></button>
         @if(CanCreate){

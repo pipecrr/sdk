@@ -3,7 +3,6 @@
 
 @if (!FieldOpt.Hidden)
 {
-    @FieldValidationTemplate
 
     <SDKEntityField
         BusinessName="@BaseModelObj.BusinessName"
@@ -14,4 +13,6 @@
         RelatedParams="@FieldOpt.RelatedParams"
         RelatedFilters="@FieldOpt.RelatedFilters"
     />
+
+    @FieldValidationTemplate
 }
