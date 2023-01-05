@@ -4,6 +4,9 @@
 @using Siesa.SDK.Frontend.Components.Layout.Detail.Relationship
 @using Siesa.SDK.Frontend.Components.Visualization
 @using System.Linq
+@using Siesa.SDK.Frontend.Services
+@inject SDKGlobalLoaderService SDKGlobalLoaderService
+
 @if (Loading == true)
 {
     <ResourceViewer ResourceTag="Custom.Generic.Loading" />
@@ -107,8 +110,13 @@ else if (ModelLoaded == true)
         var dialog = await dialogService.OpenAsync("",
             ds => @<ConfirmDelete DialogService=@ds />,
             new DialogOptions(){ShowTitle=false, Width="400"});
+
+        SDKGlobalLoaderService.Show();
+
         if(dialog != null && dialog == true){
             await this.DeleteBusiness();
         } 
+        
+        SDKGlobalLoaderService.Hide();
     }
 }
