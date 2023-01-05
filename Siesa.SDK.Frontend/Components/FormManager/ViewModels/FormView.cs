@@ -39,6 +39,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         [Inject] protected IAuthenticationService AuthenticationService { get; set; }
 
+        [Inject] public SDKGlobalLoaderService GlobalLoaderService { get; set; }
+
         protected FormViewModel FormViewModel { get; set; } = new FormViewModel();
 
         public List<Panel> Panels {get { return FormViewModel.Panels; } }
@@ -383,6 +385,8 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
                 }
             }
             var result = await BusinessObj.ValidateAndSaveAsync();
+
+            GlobalLoaderService.Hide();
             Saving = false;
             ErrorMsg = string.Empty;
             if (result.Errors.Count > 0)
@@ -459,6 +463,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
         {
             FormHasErrors = false;
             ErrorMsg = "";
+            GlobalLoaderService.Show();
             await SaveBusiness();
         }
         protected void HandleInvalidSubmit()

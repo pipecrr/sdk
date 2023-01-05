@@ -91,6 +91,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Inject] public SDKDialogService dialogService { get; set; }
         [Inject] public Radzen.DialogService dialogServiceRadzen { get; set; }
 
+        [Inject] public SDKGlobalLoaderService SDKGlobalLoaderService { get; set; }
+
         public bool Loading;
         public bool LoadingData;
         public bool LoadingSearch;
@@ -678,6 +680,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if (UseFlex)
             {
                 var confirm = await ConfirmDelete();
+                SDKGlobalLoaderService.Show();
                 if (confirm){
                     BusinessObj.BaseObj.Rowid = Convert.ToInt32(id);
                     var result = await BusinessObj.DeleteAsync();
@@ -685,6 +688,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         return true;
                     }
                 }
+                SDKGlobalLoaderService.Hide();
             }
             return false;
         }
