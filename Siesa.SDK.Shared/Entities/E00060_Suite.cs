@@ -34,6 +34,7 @@ namespace Siesa.SDK.Entities
 		public int? RowidImage { get; set; }
 
 
+		[SDKCheckRelationship]
 		[Required]
 		public virtual E00020_Resource Resource { get; set; }
 
