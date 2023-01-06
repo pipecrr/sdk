@@ -40,8 +40,10 @@ namespace Siesa.SDK.Entities
 		public DateTime DateLastUse { get; set; }
 
 
+		[SDKCheckRelationship]
 		public virtual E00066_MenuCustom MenuCustom { get; set; }
 
+		[SDKCheckRelationship]
 		public virtual E00061_Menu Menu { get; set; }
 
 	}
