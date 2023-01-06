@@ -14,6 +14,8 @@ using Siesa.SDK.Shared.DTOS;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Shared.Utilities;
 using Siesa.SDK.Entities.Enums;
+using Siesa.SDK.Backend.LinqHelper.DynamicLinqHelper;
+
 namespace Siesa.SDK.Backend.Extensions
 {
     public static class SDKFlexExtension
@@ -110,7 +112,7 @@ namespace Siesa.SDK.Backend.Extensions
                         selectedRowid = true;
                     }*/
                     if(column.is_dynamic_field){
-                        var actualVirtualColumns = GetVirtualColumns(column.name, Context, dynamicEntityType);
+                        /*var actualVirtualColumns = GetVirtualColumns(column.name, Context, dynamicEntityType);
                         virtualColumns.AddRange(actualVirtualColumns);
                         // Dictionary<object, object> virtualColumnValue = GetVirtualColumns(column.name, Context, dynamicEntityType, out object valueDefault);
                         // if(virtualColumnValue != null){
@@ -121,7 +123,8 @@ namespace Siesa.SDK.Backend.Extensions
                         if(virtualColumns.Count > 0){
                             virtualColumnsName.Add(column.name);
                             strColumns.Add("Rowid as " + column.name);
-                        }
+                        }*/
+                        virtualColumnsName.Add(column.key_name);                        
                         continue;
                     }
 
@@ -259,6 +262,37 @@ namespace Siesa.SDK.Backend.Extensions
 
                 _assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
                 var dynamicListMethod = typeof(IEnumerable).GetExtensionMethod(_assemblyDynamic, "ToDynamicList", new[] { typeof(IEnumerable) });
+
+                if(virtualColumnsName.Count>0){
+                    var dynamicContextSet = Context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(dynamicEntityType).Invoke(Context, null);
+
+                    var relatedColumnInclude = "EntityColumn";
+                    var includeMethodGeneric = includeMethod.MakeGenericMethod(dynamicEntityType);
+                    dynamicContextSet = includeMethodGeneric.Invoke(dynamicContextSet, new object[] { dynamicContextSet, relatedColumnInclude});
+
+                    var whereMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "Where", new[] { typeof(IQueryable), typeof(string), typeof(object[])});
+
+                    string filterIn = getFilterIn(virtualColumnsName);
+
+                    object[] parameters = virtualColumnsName.ToArray();
+
+                    dynamicContextSet = whereMethod.Invoke(dynamicContextSet, new object[] { dynamicContextSet, filterIn, parameters });
+
+                    Type _typeLeftJoinExtension = typeof(LeftJoinExtension);
+                    var leftJoinMethod = _typeLeftJoinExtension.GetMethod("LeftJoin");
+
+                    var result = leftJoinMethod.Invoke(null, new object[] { contextSet, dynamicContextSet, "Rowid", "RowidRecord", new List<string>() { "Id AS id_operation"}, new List<string>() { "TextData as text_value_d" } });
+                    
+                    Assembly _assemblyDynamic2 = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
+
+                    var dynamicListMethod2 = typeof(IEnumerable).GetExtensionMethod(_assemblyDynamic2, "ToDynamicList", new[] { typeof(IEnumerable) });
+
+                    var result2 = dynamicListMethod2.Invoke(result, new object[] { result });
+
+                }
+
+                // _assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
+                // var dynamicListMethod = typeof(IEnumerable).GetExtensionMethod(_assemblyDynamic, "ToDynamicList", new[] { typeof(IEnumerable) });
                 var dynamicList = dynamicListMethod.Invoke(contextSet, new object[] { contextSet });
 
                 var jsonResource = JsonConvert.SerializeObject(dynamicList, Newtonsoft.Json.Formatting.None, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
@@ -280,7 +314,6 @@ namespace Siesa.SDK.Backend.Extensions
                     }
                     return new ActionResult<List<Dictionary<string,object>>>() { Data = resourceDict};
                 }
-
                 // if(virtualColumns.Count>0){
                 //     foreach (var item in resourceDict){
                 //         foreach (var virtualkey in virtualColumns.Keys)
@@ -300,7 +333,7 @@ namespace Siesa.SDK.Backend.Extensions
                 //     return new ActionResult<List<Dictionary<string,object>>>() { Data = resourceDict};
                 // }
 
-                if(virtualColumns.Count>0){
+                /*if(virtualColumns.Count>0){
                     foreach (var item in resourceDict){
                         foreach (var columnName in virtualColumnsName){
                             var defaultvalue = virtualColumns.Where(x => x.ColumnName == columnName).Select(x => x).FirstOrDefault();
@@ -316,7 +349,7 @@ namespace Siesa.SDK.Backend.Extensions
                             item[columnName] = valueColumn;
                         }                        
                     }
-                }
+                }*/
 
                 if (resourceDict != null)
                 {
@@ -1141,6 +1174,20 @@ namespace Siesa.SDK.Backend.Extensions
             }
 
             return virtualColumns;
+        }
+
+        public static string getFilterIn(List<string> virtualColumns){
+            var filterIn = "EntityColumn.Id in (";
+
+            //EntityColumn.Id in (@0)
+            for (int i = 0; i < virtualColumns.Count; i++){
+                filterIn += "@" + i;
+                if(i < virtualColumns.Count - 1){
+                    filterIn += ",";
+                }
+            }
+            filterIn += ")";
+            return filterIn;
         }
 
         public static Dictionary<byte, string> GetEnumValues(string enumName, Int64 cultureRowid, SDKContext context){
