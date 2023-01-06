@@ -28,7 +28,7 @@ namespace Siesa.SDK.Frontend.Report.Controllers
 		[HttpGet("{id}/content")]
 		public async Task<dynamic> GetDataSetContent([FromRoute] string id)
 		{
-			if (string.IsNullOrWhiteSpace(id)) return BadRequest();
+			if (string.IsNullOrWhiteSpace(id)) return BadRequest();	
 
 			var idSplit = id.Split('-');
 
