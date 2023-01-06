@@ -26,6 +26,7 @@ namespace Siesa.SDK.Entities
 
 
 
+		[SDKCheckRelationship]
 		public virtual E00201_Company Company { get; set; }
 
 	}
