@@ -52,6 +52,7 @@ namespace Siesa.SDK.Entities
 		public string? Token { get; set; }
 
 
+		[SDKCheckRelationship]
 		[Required]
 		public virtual E00220_User User { get; set; }
 
