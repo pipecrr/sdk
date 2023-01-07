@@ -43,6 +43,7 @@ namespace Siesa.SDK.Entities
 		[SDKCheckRelationship]
 		public virtual E00230_Flex FlexParent { get; set; }
 
+		[SDKCheckRelationship]
 		public virtual E00040_Feature Feature { get; set; }
 
 	}
