@@ -125,6 +125,7 @@ namespace Siesa.SDK.Frontend.Report.Controllers
 				}
 
 				var entityType = businessType.GetProperty("BaseObj").PropertyType;
+				//string entityName = await _resourceManager.GetResource($"{entityType.Name}.Plural", 1); 
 				string entityName = entityType.Name;
 
 				if (!DataSetEntity.Where(x => x.Id == entityType.FullName).Any())

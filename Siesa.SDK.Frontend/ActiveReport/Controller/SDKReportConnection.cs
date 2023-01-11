@@ -9,9 +9,28 @@ using GrapeCity.BI.Data.DataProviders;
 using GrapeCity.BI.Data.DataProviders.DataProviders;
 using GrapeCity.BI.Data.DataProviders.TextProvidersBase;
 using Siesa.SDK.Entities;
+using System.Collections;
 
 namespace Siesa.SDK.Frontend.Report.Controllers
 {
+
+    public class SDKReportParameter : DbParameter //DbParameterCollection
+    {
+        public override DbType DbType { get;set;}
+        public override ParameterDirection Direction { get;set;}
+        public override bool IsNullable { get;set;}
+        public override string ParameterName { get;set;}
+        public override int Size { get;set;}
+        public override string SourceColumn { get;set;}
+        public override bool SourceColumnNullMapping { get;set;}
+        public override object Value { get;set;}
+
+        public override void ResetDbType()
+        {
+           DbType = DbType.String;
+        }
+    }
+
 
     public class SDKReportDataReader : TextDbDataReader
     {
@@ -104,11 +123,27 @@ namespace Siesa.SDK.Frontend.Report.Controllers
 
         protected override DbDataReader ExecuteDbDataReader(CommandBehavior commandBehavior)
         {
+            // var Parameter = CreateDbParameter();
+            // Parameter.ParameterName = "pconnectionString";
+            // Parameter.Value = "HolaMundo";
+            // this.Parameters.Add(Parameter);
             IEnumerable<object> data = _internalSDKReportProvider.GetBLData(CommandText);
             Type type = _internalSDKReportProvider.GetBLType(CommandText);
 
 
             return new SDKReportDataReader(data, type);
+        }
+
+        protected override DbParameter CreateDbParameter()
+        {
+            return new SDKReportParameter();
+        }
+
+        protected override DbParameterCollection DbParameterCollection {
+            get
+            {
+                return new SDKReportParameterCollection();
+            }
         }
     }
 
