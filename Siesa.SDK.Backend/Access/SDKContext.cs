@@ -22,6 +22,8 @@ namespace Siesa.SDK.Backend.Access
 {
     public class SDKContext : DbContext
     {
+	public DbSet<E00043_ChildFeature>? E00043_ChildFeature { get; set; }
+
 	public DbSet<E00251_DynamicEntityColumn>? E00251_DynamicEntityColumn { get; set; }
 
 	public DbSet<E00250_DynamicEntity>? E00250_DynamicEntity { get; set; }
