@@ -14,7 +14,7 @@ using System.Collections;
 namespace Siesa.SDK.Frontend.Report.Controllers
 {
 
-    public class SDKReportParameter : DbParameter //DbParameterCollection
+    public class SDKReportParameter : DbParameter 
     {
         public override DbType DbType { get;set;}
         public override ParameterDirection Direction { get;set;}
@@ -23,7 +23,7 @@ namespace Siesa.SDK.Frontend.Report.Controllers
         public override int Size { get;set;}
         public override string SourceColumn { get;set;}
         public override bool SourceColumnNullMapping { get;set;}
-        public override object Value { get;set;}
+        public override object Value {get;set;}
 
         public override void ResetDbType()
         {
@@ -93,6 +93,7 @@ namespace Siesa.SDK.Frontend.Report.Controllers
     {
         private readonly string _connectionString;
         private InternalSDKReportProvider _internalSDKReportProvider;
+        private DbParameterCollection _DbParameterCollection;
 
 
         private readonly Func<string, Stream> _resourceLocator;
@@ -118,20 +119,28 @@ namespace Siesa.SDK.Frontend.Report.Controllers
             _resourceLocator = presourceLocator;
             _connectionString = pconnectionString;
             _internalSDKReportProvider = internalSDKReportProvider;
+            _DbParameterCollection = new SDKReportParameterCollection();
 
         }
 
         protected override DbDataReader ExecuteDbDataReader(CommandBehavior commandBehavior)
         {
-            // var Parameter = CreateDbParameter();
-            // Parameter.ParameterName = "pconnectionString";
-            // Parameter.Value = "HolaMundo";
-            // this.Parameters.Add(Parameter);
-            IEnumerable<object> data = _internalSDKReportProvider.GetBLData(CommandText);
+            string Filters = GetParameters();
+            IEnumerable<object> data = _internalSDKReportProvider.GetBLData(CommandText,Filters);
             Type type = _internalSDKReportProvider.GetBLType(CommandText);
 
-
             return new SDKReportDataReader(data, type);
+        }
+
+        private string GetParameters()
+        {
+            string parameters = _internalSDKReportProvider.GetFilters(this._DbParameterCollection, CommandText);
+
+            if (!string.IsNullOrEmpty(parameters))
+            {
+                return parameters;
+            } 
+            return "";  
         }
 
         protected override DbParameter CreateDbParameter()
@@ -142,7 +151,7 @@ namespace Siesa.SDK.Frontend.Report.Controllers
         protected override DbParameterCollection DbParameterCollection {
             get
             {
-                return new SDKReportParameterCollection();
+                return _DbParameterCollection;
             }
         }
     }

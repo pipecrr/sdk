@@ -8,7 +8,7 @@ namespace Siesa.SDK.Frontend.Report.Controllers
 {
     internal class SDKReportParameterCollection : DbParameterCollection
     {
-        private List<SDKReportParameter> _parameters = new List<SDKReportParameter>();
+        public List<SDKReportParameter> _parameters = new List<SDKReportParameter>();
         public override int Count => _parameters.Count;
         public override object SyncRoot => _parameters;
 

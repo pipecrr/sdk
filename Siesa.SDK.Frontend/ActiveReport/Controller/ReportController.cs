@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Siesa.SDK.Shared.DataAnnotations;
 using System.Reflection;
+using Siesa.SDK.Frontend.Components.FormManager.Fields;
 
 namespace Siesa.SDK.Frontend.Report.Controllers
 {
@@ -28,7 +29,7 @@ namespace Siesa.SDK.Frontend.Report.Controllers
             _serviceProvider = serviceProvider;
         }
 
-        internal IEnumerable<object>  GetBLData(string commandText)
+        internal IEnumerable<object>  GetBLData(string commandText, string Filters="")
         {
             string BlNameSpace = "";
             string MethodName = "";
@@ -42,6 +43,8 @@ namespace Siesa.SDK.Frontend.Report.Controllers
                 BlNameSpace = commandText;
             }
 
+           
+            dynamic Request = new List<dynamic>();
             dynamic Response = new List<dynamic>();
             Type BLType = Utilities.SearchType(BlNameSpace, true);
 
@@ -58,7 +61,14 @@ namespace Siesa.SDK.Frontend.Report.Controllers
                     }
                 }else
                 {
-                    var Request = BLInstance.GetData(null,null);
+                    if (!string.IsNullOrEmpty(Filters))
+                    {
+                        Request = BLInstance.GetData(null,null,Filters);
+                    }else
+                    {
+                        Request = BLInstance.GetData(null,null);
+                    }
+
                     Response = Request.Data;
                 }
             }
@@ -89,16 +99,145 @@ namespace Siesa.SDK.Frontend.Report.Controllers
                     if (method != null)
                     {
                         response = method.ReturnType.GetGenericArguments()[0];
-                        //return method.ReturnType.GetGenericArguments()[0];
                     }
                 }else
                 {
                     response = BLType.GetProperty("BaseObj").PropertyType;
-                    //return BLType.GetProperty("BaseObj").PropertyType;
                 }
             }
             return response;
         }
+
+        internal string GetFilters(DbParameterCollection ParametersCollection, string commandText)
+        {
+            string Filters = string.Empty;
+
+            string BlNameSpace = "";
+            string MethodName = "";
+
+            if (commandText.Split('-').Length > 1)
+            {
+                var commandTextSplit = commandText.Split('-');
+                BlNameSpace = commandTextSplit[0];
+                MethodName = commandTextSplit[1];
+            }else{
+                BlNameSpace = commandText;
+            }
+
+            Type BLType = Utilities.SearchType(BlNameSpace, true);
+
+            if (BLType != null)
+            {
+                var Entity = BLType.GetProperty("BaseObj").PropertyType;
+                var EntityProperties = Entity.GetProperties();
+
+                var Parameters = ParametersCollection.Cast<SDKReportParameter>();
+
+                if (Parameters != null  && Parameters.Count() > 0)
+                {    
+                    foreach (var item in Parameters)
+                    {
+                        var Property = EntityProperties.Where(x=> x.Name == item.ParameterName).FirstOrDefault();
+
+                        if (Property != null)
+                        {
+                           Type propertyType =  Property.PropertyType;
+                           bool IsNullable = false;
+                           FieldTypes fieldType = FieldTypes.Unknown;
+
+                            if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                            {
+                                propertyType = propertyType.GetGenericArguments()[0];
+                                IsNullable = true;
+                            }
+                            switch (propertyType.Name)
+                            {
+                                case "String":
+                                    fieldType = FieldTypes.CharField;
+                                    break;
+                                case "Int64":
+                                    fieldType = FieldTypes.BigIntegerField;
+                                    break;
+                                case "Int32":
+                                    fieldType = FieldTypes.IntegerField;
+                                    break;
+                                case "Int16":
+                                    fieldType = FieldTypes.SmallIntegerField;
+                                    break;
+                                case "Byte":
+                                    fieldType = FieldTypes.ByteField;
+                                    break;
+                                case "Decimal":
+                                    fieldType = FieldTypes.DecimalField;
+                                    break;
+                                case "DateTime":
+                                    fieldType = FieldTypes.DateTimeField;
+                                    break;
+                                case "TimeOnly":
+                                case "TimeSpan":
+                                    fieldType = FieldTypes.TimeField;
+                                    break;
+                                case "DateOnly":
+                                    fieldType = FieldTypes.DateField;
+                                    break;
+                                case "Boolean":
+                                    fieldType = FieldTypes.BooleanField;
+                                    break;
+                                case "EntityTextField":
+                                    fieldType = FieldTypes.TextField;
+                                    break;
+                                default:
+                                    fieldType = FieldTypes.Unknown;
+                                    break;
+                            }
+                           switch (fieldType)
+                           {
+                            case FieldTypes.CharField:
+                            case FieldTypes.TextField:
+                                Filters = $"({item.ParameterName} == null ? \"\" : {item.ParameterName}).ToLower().Contains(\"{item.Value}\".ToLower())";
+                                break;
+
+                            case FieldTypes.IntegerField:
+                            case FieldTypes.DecimalField:
+                            case FieldTypes.SmallIntegerField:
+                            case FieldTypes.BigIntegerField:
+                            case FieldTypes.ByteField:
+                                if (!IsNullable)
+                                {
+                                    Filters = $"{item.ParameterName} == {item.Value}";
+                                }
+                                else
+                                {
+                                    Filters = $"({item.ParameterName} == null ? 0 : {item.ParameterName}) == {item.Value}";
+                                }
+                                break;
+                
+                            default:
+                            break;
+                           }
+                        }
+                    }
+                }
+            }
+
+            return Filters;
+        }
+
+        /*internal List<string> GetComandText(string _comandText)
+        {
+            List<string> Namespaces = new List<string>();
+
+            if (_commandText.Split('-').Length > 1)
+            {
+                var commandTextSplit = _commandText.Split('-');
+                Namespaces.Add(commandTextSplit[0]);
+                Namespaces.Add(commandTextSplit[1]);
+            }else{
+                Namespaces.Add(_commandText);
+            }
+
+            return Namespaces;
+        }*/
     }
 
     public class SDKReportProvider: DbProviderFactory {
