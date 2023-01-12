@@ -18,6 +18,7 @@ namespace Siesa.SDK.Entities
 
 	public partial class E00043_ChildFeature : BaseSDK<int>
 	{
+		[SDKIdentity]
 		[Key]
 		[Required]
 		public override int Rowid { get; set; }
