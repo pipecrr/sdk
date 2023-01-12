@@ -652,15 +652,24 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_text{
     border-radius: var(--border_radius_standar);
     background: var(--color_light);
     color: var(--color_text);
-    position: absolute;
+    position: absolute!important;
     padding: 0;
-    top: 2rem;
     min-width: 100%;
     max-width: 100%;
     max-height: 240px;
     overflow-y: auto;
-    z-index: 1;
+    overflow-x: hidden;
+    z-index: 4;
+    will-change: unset!important;
+    top: 0 !important;
+    left: 0 !important;
+    transform: translate3d(0px, 1.85rem, 0px) !important;
  }
+
+ .whcm_select_list > ul > .dropdown-item {
+    white-space: normal !important;
+ }
+
  .whcm_select_box > .whcm_select_list>ul{
     padding: 0;
     margin: 0;
@@ -688,7 +697,7 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_text{
     padding: 0.25rem 0.5rem;
     font-size: 1.1rem !important;
     line-height: 1 !important;
-    border-radius: 0.2rem;
+    border-radius: 0;
  }
  .whcm_select_box>.input-group-append >.whcm-btn-outline:last-child{
     border-top-right-radius: 0.2rem !important;
@@ -1077,9 +1086,9 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_text{
     color: var(--color_estado_card_pendiente);
 }
 
-/* .rz-dialog-content {
-    padding: 0 !important;
-} */
+.rz-dialog-content {
+    height: 100%;
+}
 
 .required-caption:after {
     content: '*';
