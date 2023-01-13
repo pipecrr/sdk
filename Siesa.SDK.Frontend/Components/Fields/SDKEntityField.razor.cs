@@ -182,9 +182,13 @@ namespace Siesa.SDK.Frontend.Components.Fields
             if (searchText.Length > MinCharsEntityField || CacheLoadResult == null)
             {
                 var filters = "";
-                if (BaseObj != null && BaseObj.Rowid != 0 && RelBusinessObj != null && RelBusinessObj.BaseObj != null && RelBusinessObj.BaseObj.GetType() == BaseObj.GetType())
+                if (BaseObj != null && RelBusinessObj != null && RelBusinessObj.BaseObj != null && RelBusinessObj.BaseObj.GetType() == BaseObj.GetType())
                 {
-                    filters = $"(Rowid != {BaseObj.Rowid})";
+                    var baseObjRowidProperty = BaseObj.GetType().GetProperty("Rowid");
+                    if(baseObjRowidProperty != null && baseObjRowidProperty.GetValue(BaseObj, 0) != 0 )
+                    {
+                        filters = $"(Rowid != {BaseObj.Rowid})";
+                    }
                 }
                 foreach (var item in RelatedFilters)
                 {
