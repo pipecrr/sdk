@@ -36,6 +36,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         public bool HiddenCompaies { get; set; } = false;
 
         [Parameter]
+        public bool ShowCompanies { get; set; } = false;
+
+        [Parameter]
         public bool DisableCompanies { get; set; }
 
         [Parameter] 

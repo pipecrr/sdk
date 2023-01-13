@@ -54,7 +54,7 @@
     </div>
     @if (!HiddenCompaies)
     {
-        @if (ShowCompanies)
+        @if (_internalShowCompanies || ShowCompanies)
         {
             <div>
                 <div class="whcm_company_select ">
@@ -87,7 +87,8 @@
 
     private bool ShowMoreOptions = false;
 
-    private bool ShowCompanies { get; set; } = false;
+    [Parameter] public bool ShowCompanies { get; set; } = false;
+    private bool _internalShowCompanies;
 
     public List<E00201_Company> CompaniesList { get; set; } = new List<E00201_Company>();
 
@@ -148,14 +149,14 @@
         {
             if (LayoutService?.BusinessObj?.BaseObj != null && InheritCompany())
             {
-                ShowCompanies = true;
+                _internalShowCompanies = true;
                 if(LayoutService.BusinessObj.BaseObj.RowidCompany != SelectedCompany.Rowid)
                 {
                     SetCompany(SelectedCompany.Rowid, true);
                 }
                 StateHasChanged();
             }else{
-                ShowCompanies = false;
+                _internalShowCompanies = false;
                 StateHasChanged();
             }
         }
@@ -168,6 +169,19 @@
             }else{
 
                 HiddenCompaies = false;
+            }
+
+            StateHasChanged();
+        }
+
+        if(e.PropertyName == nameof(ILayoutService.ShowCompanies))
+        {
+            if(LayoutService?.ShowCompanies == true){
+
+                ShowCompanies = LayoutService.ShowCompanies;
+            }else{
+
+                ShowCompanies = false;
             }
 
             StateHasChanged();
