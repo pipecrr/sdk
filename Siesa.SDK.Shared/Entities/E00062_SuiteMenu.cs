@@ -36,9 +36,11 @@ namespace Siesa.SDK.Entities
 		public byte Order { get; set; }
 
 
+		[SDKCheckRelationship]
 		[Required]
 		public virtual E00060_Suite Suite { get; set; }
 
+		[SDKCheckRelationship]
 		[Required]
 		public virtual E00061_Menu Menu { get; set; }
 

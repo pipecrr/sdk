@@ -37,9 +37,11 @@ namespace Siesa.SDK.Entities
 		public string Description { get; set; }
 
 
+		[SDKCheckRelationship]
 		[Required]
 		public virtual E00020_Resource Resource { get; set; }
 
+		[SDKCheckRelationship]
 		[Required]
 		public virtual E00021_Culture Culture { get; set; }
 

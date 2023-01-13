@@ -79,6 +79,7 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public virtual E00250_DynamicEntity DynamicEntity { get; set; }
 
+		[SDKCheckRelationship]
 		public virtual E00040_Feature Feature { get; set; }
 
 	}

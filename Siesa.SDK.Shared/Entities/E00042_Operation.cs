@@ -37,9 +37,11 @@ namespace Siesa.SDK.Entities
 		public byte Index { get; set; }
 
 
+		[SDKCheckRelationship]
 		[Required]
 		public virtual E00040_Feature Feature { get; set; }
 
+		[SDKCheckRelationship]
 		[Required]
 		public virtual E00041_Action Action { get; set; }
 

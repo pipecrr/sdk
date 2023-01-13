@@ -16,6 +16,7 @@ namespace Siesa.SDK.Entities
 		public virtual short RowidCompanyGroup { get; set; }
 
 
+		[SDKCheckRelationship]
 		public virtual E00200_CompanyGroup CompanyGroup { get; set; }
 
 	}

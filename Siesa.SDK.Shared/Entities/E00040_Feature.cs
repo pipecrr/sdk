@@ -33,6 +33,7 @@ namespace Siesa.SDK.Entities
 		public string BusinessName { get; set; }
 
 
+		[SDKCheckRelationship]
 		[Required]
 		public virtual E00020_Resource Resource { get; set; }
 

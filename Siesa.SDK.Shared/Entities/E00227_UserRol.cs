@@ -32,11 +32,13 @@ namespace Siesa.SDK.Entities
 		public int RowidUser { get; set; }
 
 
-		[Required]
-		public virtual E00226_Rol Rol { get; set; }
-
+		[SDKCheckRelationship]
 		[Required]
 		public virtual E00220_User User { get; set; }
+
+		[SDKCheckRelationship]
+		[Required]
+		public virtual E00226_Rol Rol { get; set; }
 
 	}
 }
