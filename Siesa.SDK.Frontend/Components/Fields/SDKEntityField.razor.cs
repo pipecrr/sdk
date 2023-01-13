@@ -185,7 +185,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 if (BaseObj != null && RelBusinessObj != null && RelBusinessObj.BaseObj != null && RelBusinessObj.BaseObj.GetType() == BaseObj.GetType())
                 {
                     var baseObjRowidProperty = BaseObj.GetType().GetProperty("Rowid");
-                    if(baseObjRowidProperty != null && baseObjRowidProperty.GetValue(BaseObj, 0) != 0 )
+                    if(baseObjRowidProperty != null && baseObjRowidProperty.GetValue(BaseObj) != null &&baseObjRowidProperty.GetValue(BaseObj) != 0 )
                     {
                         filters = $"(Rowid != {BaseObj.Rowid})";
                     }
