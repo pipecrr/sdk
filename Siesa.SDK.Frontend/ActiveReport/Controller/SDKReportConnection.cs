@@ -47,6 +47,8 @@ namespace Siesa.SDK.Frontend.Report.Controllers
             _enumerator = _data.GetEnumerator();
             _entityType = EntityType;
         }
+        public SDKReportDataReader()
+        {}
 
         public override Type GetFieldType(int ordinal)
         {
@@ -125,22 +127,18 @@ namespace Siesa.SDK.Frontend.Report.Controllers
 
         protected override DbDataReader ExecuteDbDataReader(CommandBehavior commandBehavior)
         {
-            string Filters = GetParameters();
-            IEnumerable<object> data = _internalSDKReportProvider.GetBLData(CommandText,Filters);
             Type type = _internalSDKReportProvider.GetBLType(CommandText);
+            IEnumerable<object> data = new List<object>();
+
+            if(commandBehavior == CommandBehavior.SingleRow)
+            {
+                return new SDKReportDataReader(data, type);
+            }
+
+            data = _internalSDKReportProvider.GetBLData(CommandText,this._DbParameterCollection);
+            
 
             return new SDKReportDataReader(data, type);
-        }
-
-        private string GetParameters()
-        {
-            string parameters = _internalSDKReportProvider.GetFilters(this._DbParameterCollection, CommandText);
-
-            if (!string.IsNullOrEmpty(parameters))
-            {
-                return parameters;
-            } 
-            return "";  
         }
 
         protected override DbParameter CreateDbParameter()

@@ -13,6 +13,8 @@ using System.Linq;
 using Siesa.SDK.Shared.DataAnnotations;
 using System.Reflection;
 using Siesa.SDK.Frontend.Components.FormManager.Fields;
+using Siesa.SDK.Protos;
+using System.Runtime.CompilerServices;
 
 namespace Siesa.SDK.Frontend.Report.Controllers
 {
@@ -29,7 +31,7 @@ namespace Siesa.SDK.Frontend.Report.Controllers
             _serviceProvider = serviceProvider;
         }
 
-        internal IEnumerable<object>  GetBLData(string commandText, string Filters="")
+        internal IEnumerable<object>  GetBLData(string commandText, DbParameterCollection ParametersCollection)
         {
             string BlNameSpace = "";
             string MethodName = "";
@@ -57,10 +59,20 @@ namespace Siesa.SDK.Frontend.Report.Controllers
                     MethodInfo method = BLInstance.GetType().GetMethod(MethodName);
                     if (method != null)
                     {
-                        Response = method.Invoke(BLInstance, null);
+                        object[] parameters = GetParameters(BlNameSpace, MethodName, ParametersCollection);
+  
+                            Response = method.Invoke(BLInstance, parameters);
+                            if (method.GetCustomAttributes(typeof(AsyncStateMachineAttribute), false).Length > 0)
+                            {
+                                //wait for task to complete
+                                var task = (Task)Response;
+                                task.Wait();
+                                Response = task.GetType().GetProperty("Result").GetValue(task);
+                            }
                     }
                 }else
                 {
+                    string Filters = GetFilters(BlNameSpace,ParametersCollection);
                     if (!string.IsNullOrEmpty(Filters))
                     {
                         Request = BLInstance.GetData(null,null,Filters);
@@ -108,21 +120,53 @@ namespace Siesa.SDK.Frontend.Report.Controllers
             return response;
         }
 
-        internal string GetFilters(DbParameterCollection ParametersCollection, string commandText)
+        internal object[] GetParameters(string BlNameSpace, string MethodName,DbParameterCollection ParametersCollection)
+        {
+
+            Type BLType = Utilities.SearchType(BlNameSpace, true);
+
+            object[] parameters = new object[]{};
+            if (BLType != null){
+                dynamic BLInstance =  ActivatorUtilities.CreateInstance(_serviceProvider, BLType);
+                
+                MethodInfo method = BLInstance.GetType().GetMethod(MethodName);
+                
+                var Parameters = ParametersCollection.Cast<SDKReportParameter>();
+                
+                ICollection<ExposedMethodParam> methodParameters = method.GetParameters().Select(x => new ExposedMethodParam
+                {
+                    Name = x.Name,
+                    Type = x.ParameterType.ToString(),
+                    Value = x.DefaultValue.ToString()
+                }).ToList();
+
+                if (Parameters != null && Parameters.Any())
+                {    
+                    foreach (var item in Parameters)
+                    {
+                        var param = methodParameters.Where(x=> x.Name == item.ParameterName).FirstOrDefault();
+
+                        if (param != null)
+                        {
+                            var paramType = Utilities.SearchType(param.Type, true);
+                            if (paramType != null)
+                            {
+                                var paramValue = Convert.ChangeType(item.Value, paramType);
+                                if (paramValue != null)
+                                {
+                                    parameters = parameters.Append(paramValue).ToArray();
+                                }
+                            }
+                        }
+                    }
+                }   
+            }
+            return parameters;
+        }
+
+        internal string GetFilters(string BlNameSpace, DbParameterCollection ParametersCollection)
         {
             string Filters = string.Empty;
-
-            string BlNameSpace = "";
-            string MethodName = "";
-
-            if (commandText.Split('-').Length > 1)
-            {
-                var commandTextSplit = commandText.Split('-');
-                BlNameSpace = commandTextSplit[0];
-                MethodName = commandTextSplit[1];
-            }else{
-                BlNameSpace = commandText;
-            }
 
             Type BLType = Utilities.SearchType(BlNameSpace, true);
 
@@ -222,22 +266,6 @@ namespace Siesa.SDK.Frontend.Report.Controllers
 
             return Filters;
         }
-
-        /*internal List<string> GetComandText(string _comandText)
-        {
-            List<string> Namespaces = new List<string>();
-
-            if (_commandText.Split('-').Length > 1)
-            {
-                var commandTextSplit = _commandText.Split('-');
-                Namespaces.Add(commandTextSplit[0]);
-                Namespaces.Add(commandTextSplit[1]);
-            }else{
-                Namespaces.Add(_commandText);
-            }
-
-            return Namespaces;
-        }*/
     }
 
     public class SDKReportProvider: DbProviderFactory {
