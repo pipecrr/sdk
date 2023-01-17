@@ -33,6 +33,9 @@ namespace Siesa.SDK.Entities
 
 		public int? RowidImage { get; set; }
 
+		[StringLength(6)]
+		public string? HexColor { get; set; }
+
 
 		[SDKCheckRelationship]
 		[Required]
