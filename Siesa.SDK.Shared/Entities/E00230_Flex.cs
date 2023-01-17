@@ -16,7 +16,7 @@ namespace Siesa.SDK.Entities
 	/// consultas flex
 	/// </summary>
 
-	public partial class E00230_Flex : BaseCompanyGroup<int>
+	public partial class E00230_Flex : BaseAudit<int>
 	{
 		[Key]
 		[Required]
