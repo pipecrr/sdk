@@ -1,7 +1,8 @@
+@using Siesa.SDK.Frontend.Components.Layout
 <p>
-@Value
+<ResourceViewer ResourceTag="@ResourceTag" />
 </p>
 
 @code {
-    [Parameter] public string Value { get; set; }
+    [Parameter] public string ResourceTag { get; set; }
 }
