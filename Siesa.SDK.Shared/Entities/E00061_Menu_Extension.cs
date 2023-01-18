@@ -20,6 +20,7 @@ namespace Siesa.SDK.Entities
         public virtual string CurrentText { get; set; }
 
         [NotMapped]
+        [JsonIgnore]
         public virtual string CurrentURL { get{
             var url = "";
 
