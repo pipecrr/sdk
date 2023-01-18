@@ -128,7 +128,7 @@ namespace Siesa.SDK.Frontend.Report.Controllers
 				//string entityName = await _resourceManager.GetResource($"{entityType.Name}.Plural", 1); 
 				string entityName = entityType.Name;
 
-				if (!DataSetEntity.Where(x => x.Id == entityType.FullName).Any())
+				if (!DataSetEntity.Where(x => x.Name == entityName).Any())
 				{
 					DataSetEntity.Add(new { Id = $"{businessType.FullName}-{entityType.FullName}", 
 											Name = entityName}); 

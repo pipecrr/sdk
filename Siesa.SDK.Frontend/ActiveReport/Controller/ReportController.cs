@@ -182,8 +182,9 @@ namespace Siesa.SDK.Frontend.Report.Controllers
                     foreach (var item in Parameters)
                     {
                         var Property = EntityProperties.Where(x=> x.Name == item.ParameterName).FirstOrDefault();
+                        string valueValidate = item.Value.ToString();
 
-                        if (Property != null)
+                        if (Property != null && !string.IsNullOrEmpty(valueValidate))
                         {
                            Type propertyType =  Property.PropertyType;
                            bool IsNullable = false;
