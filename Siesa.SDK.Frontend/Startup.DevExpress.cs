@@ -21,9 +21,11 @@ using System.Collections.Generic;
 using GrapeCity.ActiveReports.Aspnetcore.Designer;
 using GrapeCity.ActiveReports.Aspnetcore.Viewer;
 using System.IO;
-using Siesa.SDK.Frontend.Report.Services;
+
 using Siesa.SDK.Report.Implementation;
 using Siesa.SDK.Frontend.Report.Controllers;
+using GrapeCity.ActiveReports.Aspnetcore.Designer.Services;
+
 namespace Siesa.SDK.Frontend {
     public static class SiesaSecurityExtensions
     {
@@ -33,8 +35,9 @@ namespace Siesa.SDK.Frontend {
 		private static readonly DirectoryInfo TemplatesRootDirectory =
 			new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), "templates" + Path.DirectorySeparatorChar));
 
-		private static readonly DirectoryInfo DataSetsRootDirectory =
-			new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), "datasets" + Path.DirectorySeparatorChar));
+		
+
+        private static readonly SaveController _saveController = new SaveController(ResourcesRootDirectory);
 
         public static void AddSiesaSDKFrontend(this IServiceCollection services, IConfiguration serviceConfiguration)
         {
@@ -66,8 +69,8 @@ namespace Siesa.SDK.Frontend {
 
             services.AddReporting();
 			services.AddDesigner();
-			services.AddSingleton<ITemplatesService>(new FileSystemTemplates(TemplatesRootDirectory));
-			services.AddSingleton<IDataSetsService>(new FileSystemDataSets(DataSetsRootDirectory));
+			services.AddSingleton<IResourcesService>(new SaveController(ResourcesRootDirectory));
+			//services.AddSingleton<IDataSetsService>(new FileSystemDataSets(DataSetsRootDirectory));
 			services.AddRazorPages().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
 			services.AddServerSideBlazor();
            /* services.AddBlazorDB(options =>
@@ -106,7 +109,7 @@ namespace Siesa.SDK.Frontend {
 
                 });
                 app.UseDesigner(config => {
-                    config.UseFileStore(ResourcesRootDirectory, false);
+                    config.UseCustomStore(_saveController);
                     DataProviderInfo[] providers = new []{
                         new DataProviderInfo("Siesa.SDK.Business", typeof(SDKReportProvider).AssemblyQualifiedName),
                     };
