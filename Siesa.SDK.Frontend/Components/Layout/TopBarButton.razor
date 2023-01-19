@@ -22,8 +22,6 @@
 
 
 @code {
-    [Parameter] public string ResourceTag { get; set; }
-    [Parameter] public Int64? RowidResource { get; set; }
     [Parameter] public EventCallback<MouseEventArgs> Click { get; set; }
 
     [Parameter] public string form { get; set; }
@@ -39,13 +37,6 @@
     [Parameter] public string NavigateUrl { get; set; }
     [CascadingParameter]
     public TopBar? topBar { get; set; }
-
-    private async Task<string> GetText(){
-        if((RowidResource == null || RowidResource == 0) && ResourceTag != null){
-            return await ResourceManager.GetResource(ResourceTag, AuthenticationService);
-        }
-        return await ResourceManager.GetResource(Convert.ToInt64(RowidResource), AuthenticationService);
-    }
 
     protected override async Task OnInitializedAsync()
     {
