@@ -14,7 +14,7 @@
 
 
 @layout EmptyLayout
-
+<SDKGlobalLoader />
 <SDKCard StyleCss="cardmenu-content">
     <DxMenu Title="SDK Components" DropDownActionMode="MenuDropDownActionMode.Click" CollapseItemsToHamburgerMenu="true" Orientation="@SDKEnums.GetOrientationMenu(SDKOrientationMenu.Horizontal)" 
         CollapseItemToIconMode="MenuCollapseItemToIconMode.Sequentially">
@@ -84,7 +84,8 @@
                     new ComponentDemo{ComponentName="SDKEmailField",ComponentFragment = @<DemoEmailField />},
                     new ComponentDemo{ComponentName="SDKGrid",ComponentFragment = @<DemoGrid />},
                     new ComponentDemo{ComponentName="SDKRecorder",ComponentFragment = @<DemoRecorder />},
-                    new ComponentDemo{ComponentName="SDKRadioButton",ComponentFragment = @<DemoRadioButton />}
+                    new ComponentDemo{ComponentName="SDKRadioButton",ComponentFragment = @<DemoRadioButton />},
+                    new ComponentDemo{ComponentName="SDKEntityField",ComponentFragment = @<DemoEntityField />}
                 }, Icon ="fa-solid fa-cubes"
             },
              new ComponentCategory() {
@@ -116,6 +117,8 @@
                     new ComponentDemo{ComponentName="SDKTabs", ComponentFragment = @<DemoTabs />},
                     new ComponentDemo{ComponentName="SDKGrid",ComponentFragment = @<DemoGrid />},
                     new ComponentDemo{ComponentName="Diagrams",ComponentFragment = @<DemoDiagrams />},
+                    new ComponentDemo{ComponentName="SDKImageViewer", ComponentFragment = @<DemoImageViewer />},
+                    new ComponentDemo{ComponentName="SDKGlobalLoader", ComponentFragment = @<DemoGlobalLoader />}
                 },Icon ="fa-solid fa-cube" 
             },
             new ComponentCategory() {
@@ -133,6 +136,9 @@
                     new ComponentDemo{ComponentName="SDKIdentity", ComponentFragment = @<DemoSDKIdentity />},
                     new ComponentDemo{ComponentName="SDKLogEntity", ComponentFragment = @<DemoSDKLogEntity />},
                     new ComponentDemo{ComponentName="SDKRequired", ComponentFragment = @<DemoSDKRequired />},
+                    new ComponentDemo{ComponentName="SDKMaxLength", ComponentFragment = @<DemoSDKMaxLength />},
+                    new ComponentDemo{ComponentName="SDKStringLength", ComponentFragment = @<DemoSDKStringLength />},
+                    new ComponentDemo{ComponentName="SDKRegularExpression", ComponentFragment = @<DemoSDKRegularExpression />}
                 },Icon ="fa-solid fa-note-sticky"
             },
 

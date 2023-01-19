@@ -46,7 +46,13 @@ namespace Siesa.SDK.Entities
 		[StringLength(2000)]
 		public string? AditionalInformation { get; set; }
 
+		[StringLength(64)]
+		public string? Id { get; set; }
 
+		public string? Token { get; set; }
+
+
+		[SDKCheckRelationship]
 		[Required]
 		public virtual E00220_User User { get; set; }
 

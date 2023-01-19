@@ -1,0 +1,31 @@
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.FormManager.Model.Fields
+@using Siesa.SDK.Entities
+
+<div class="container-fluid">
+    <div class="container-fluid">
+            <h2>SDKEntityField</h2> 
+            <p>Demostración y documentacion de componente SDKEntityField</p> 
+    </div>
+    <div class="row px-3"> 
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <SDKEntityField
+                    RelatedBusiness="@RelatedBusiness"
+                    BaseObj="@BaseObj"
+                    FieldName="@FieldName"
+                    RelatedParams="@RelatedParams"
+                />
+            </SDKCard>
+        </div>        
+    </div>
+</div>
+
+@code {
+    string RelatedBusiness { get; set; } = "BLUser";
+    E00220_User BaseObj { get; set; } = new E00220_User();
+    string FieldName { get; set; } = "UserReportTo";
+    RelatedParams RelatedParams { get; set; } = new RelatedParams(){
+        ExtraFields = new List<string>(){"Id","Name"}
+    };
+}

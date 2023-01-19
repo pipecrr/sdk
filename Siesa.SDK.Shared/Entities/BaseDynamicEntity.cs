@@ -40,6 +40,7 @@ namespace Siesa.SDK.Entities
 
 
 
+		[SDKCheckRelationship]
 		[Required]
 		public virtual E00251_DynamicEntityColumn EntityColumn { get; set; }
 

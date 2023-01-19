@@ -2,6 +2,7 @@
 @using Siesa.SDK.Entities
 @using Siesa.SDK.Frontend.Services
 @using Siesa.SDK.Shared.Services
+@using System
 @inject ILayoutService LayoutService
 @inject NavigationManager NavigationManager
 @inject MenuService MenuService
@@ -125,8 +126,23 @@
 
     private void OnLocationChanged(object sender, LocationChangedEventArgs e)
     {
-        SetBreadCrum(e.Location);
-        //StateHasChanged();
+
+        string url = e.Location;
+
+        Uri uri = new Uri(url);
+
+        string path = uri.AbsolutePath;
+
+        if (string.IsNullOrEmpty(e.Location) || path == "/" || string.IsNullOrEmpty(path) )
+        {
+            breadcrumb.Clear();
+            _selectedMenu = null;
+            StateHasChanged();
+        }else
+        {
+            SetBreadCrum(e.Location);   
+        }
+
     }
 
     private void SearchMenuItem(string currentUrl, ICollection<E00061_Menu> menus, ref List<E00061_Menu> result, E00061_Menu parent = null)

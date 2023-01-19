@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using Newtonsoft.Json;
 using Siesa.SDK.Frontend.Components.FormManager.Model;
 using Microsoft.JSInterop;
 using Siesa.SDK.Business;
@@ -23,6 +22,8 @@ using Blazored.LocalStorage;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.Extensions.DependencyInjection;
+using Siesa.SDK.Entities.Enums;
+using Newtonsoft.Json;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -55,11 +56,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter]
         public bool ShowList { get; set; } = true;
         [Parameter]
-        public bool UseFlex { get; set; } = false;
+        public bool UseFlex { get; set; } = true;
         [Parameter]
         public int FlexTake { get; set; } = 100;
         [Parameter]
-        public bool ServerPaginationFlex { get; set; } = false;
+        public bool ServerPaginationFlex { get; set; } = true;
         [Parameter]
         public bool ShowLinkTo {get; set;} = false;
 
@@ -89,6 +90,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         [Inject] public SDKDialogService dialogService { get; set; }
         [Inject] public Radzen.DialogService dialogServiceRadzen { get; set; }
+
+        [Inject] public SDKGlobalLoaderService SDKGlobalLoaderService { get; set; }
 
         public bool Loading;
         public bool LoadingData;
@@ -128,8 +131,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private IEnumerable<object> data;
 
         private bool HasCustomActions { get; set; } = false;
-        private string WithActions {get; set;} = "100px";
+        private List<string> CustomActionIcons { get; set; } = new List<string>();
+        private List<Button> CustomActions { get; set; }
+        private string WithActions {get; set;} = "120px";
         int count;
+        private bool HasExtraButtons { get; set; } = false;
+        private List<Button> ExtraButtons { get; set; }
         public RadzenDataGrid<object> _gridRef;
 
         public List<FieldOptions> FieldsHidden { get; set; } = new List<FieldOptions>();
@@ -202,7 +209,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             var metadata = GetViewdef(bName);
             if (metadata == null || metadata == "")
             {
-                ErrorMsg = "No hay definición para la vista de lista";
+                //ErrorMsg = "No hay definición para la vista de lista";
+                ErrorMsg = "Custom.Generic.ViewdefNotFound";
             }
             else
             {
@@ -249,14 +257,52 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
                 }
                 ListViewModel = JsonConvert.DeserializeObject<ListViewModel>(metadata);
+                if(ListViewModel.Buttons != null && ListViewModel.Buttons.Count > 0){
+                    var showButton = false;
+                    ExtraButtons = new List<Button>();
+                    foreach (var button in ListViewModel.Buttons){
+                        if(button.ListPermission != null && button.ListPermission.Count > 0){
+                            showButton = await CheckPermissionsButton(button.ListPermission);
+                            if(showButton){
+                                ExtraButtons.Add(button);
+                            }
+                        }else{
+                            ExtraButtons.Add(button);
+                        }
+                    }
+                    if(ExtraButtons.Count > 0){
+                        HasExtraButtons = true;
+                    }
+                }
                 UseFlex = ListViewModel.UseFlex;
                 FlexTake = ListViewModel.FlexTake;
                 ShowLinkTo = ListViewModel.ShowLinkTo;
                 ServerPaginationFlex = ListViewModel.ServerPaginationFlex;
+                
+                //TODO: quitar cuando se pueda usar flex en los custom components
+                var fieldsCustomComponent = ListViewModel.Fields.Where(x => x.CustomComponent != null).ToList();
+                if(fieldsCustomComponent.Count > 0){
+                    UseFlex = false;
+                }
                 if(ListViewModel.CustomActions != null && ListViewModel.CustomActions.Count > 0){
-                    HasCustomActions = true;
-                    var withInt = (ListViewModel.CustomActions.Count+2)*40;
-                    WithActions = $"{withInt}px";
+                    var showButton = false;
+                    CustomActions = new List<Button>();
+                    foreach (var button in ListViewModel.CustomActions){
+                        if(button.ListPermission != null && button.ListPermission.Count > 0){
+                            showButton = await CheckPermissionsButton(button.ListPermission);
+                        }else{
+                            showButton = true;
+                        }
+                        if(showButton){
+                            CustomActions.Add(button);
+                        }
+                    }
+                    if(CustomActions.Count > 0){
+                        var withInt = (CustomActions.Count+2)*40;
+                        WithActions = $"{withInt}px";
+                        CustomActionIcons = CustomActions.Select(x => x.IconClass).ToList();
+                        HasCustomActions = true;
+                    }
                 }
                 foreach (var field in ListViewModel.Fields)
                 {
@@ -285,6 +331,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             StateHasChanged();
         }
 
+        private async Task<bool> CheckPermissionsButton(List<int> ListPermission){
+            var showButton = false;
+            if(FeaturePermissionService != null){
+                try{
+                    showButton = await FeaturePermissionService.CheckUserActionPermissions(BusinessName, ListPermission, AuthenticationService);
+                }catch(System.Exception){
+
+                }
+            }
+            return showButton;
+        }
+
         private async Task CheckPermissions()
         {
             if (FeaturePermissionService != null)
@@ -303,9 +361,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
                 if (!CanList)
                 {
-                    ErrorMsg = "Unauthorized";
+                    ErrorMsg = "Custom.Generic.Unauthorized";
                     NotificationService.ShowError("Custom.Generic.Unauthorized");
-                    NavigationService.NavigateTo("/", replace: true);
+                    if(!IsSubpanel){
+                        // NavigationService.NavigateTo("/", replace: true);
+                    }
                 }
 
             }
@@ -315,8 +375,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            guidListView = Guid.NewGuid().ToString();            
-            Restart();
+            guidListView = Guid.NewGuid().ToString();
+            //Restart();
         }
 
         public override async Task SetParametersAsync(ParameterView parameters)
@@ -504,6 +564,22 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                         tmpFilter = $"({fieldObj.Name} == null ? 0 : {fieldObj.Name}.Rowid) == {searchValue.Rowid}";
                                     }
                                     break;
+                                
+                                case FieldTypes.Custom:
+                                case FieldTypes.SelectField:
+                                    if (field.CustomType == "SelectBarField" || field.FieldType == FieldTypes.SelectField)
+                                    {
+                                        Type enumType = searchValue.GetType();
+                                        var EnumValues = Enum.GetValues(enumType);
+                                        var LastValue = EnumValues.GetValue(EnumValues.Length - 1);
+                                        
+                                        if (Convert.ToInt32(LastValue)+1 != Convert.ToInt32(searchValue))
+                                        { 
+                                            tmpFilter = $"{fieldObj.Name} == {Convert.ToInt32(searchValue)}";
+                                        }
+                                    }
+
+                                    break;
                                 default:
                                     break;
                             }
@@ -604,15 +680,43 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if (UseFlex)
             {
                 var confirm = await ConfirmDelete();
+                SDKGlobalLoaderService.Show();
                 if (confirm){
                     BusinessObj.BaseObj.Rowid = Convert.ToInt32(id);
                     var result = await BusinessObj.DeleteAsync();
+                    SDKGlobalLoaderService.Hide();
                     if (result != null && result.Errors.Count == 0){
                         return true;
                     }
                 }
+                SDKGlobalLoaderService.Hide();
             }
             return false;
+        }
+
+        [JSInvokable]
+        public async Task<bool> CustomActionFromReact(Int64 indexButton, object rowid)
+        {
+            Button button = CustomActions[(int)indexButton];
+            var bl = BackendRouterService.GetSDKBusinessModel(BusinessName, AuthenticationService);
+            var result = await bl.Call("DataEntity", rowid.ToString());
+            if(result.Success){
+                var obj = result.Data;
+                if (OnClickCustomAction != null){
+                    OnClickCustomAction(button, obj);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        [JSInvokable]
+        public async Task OnSelectFromReact(string item){
+            if(string.IsNullOrEmpty(item)){
+                return;
+            }
+            IList<object> objects = JsonConvert.DeserializeObject<IList<object>>(item);
+            OnSelectionChanged(objects);
         }
 
         private async Task GoToDelete(Int64 id, string object_string)
@@ -649,7 +753,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 Data = new List<object> { };
             }
-            if(ServerPaginationFlex ){
+            if(ServerPaginationFlex && UseFlex){
                 var dbData = await BusinessObj.GetDataAsync(0, 2, filters, "");
                 Data = dbData.Data;
                 if (Data.Count() == 1)

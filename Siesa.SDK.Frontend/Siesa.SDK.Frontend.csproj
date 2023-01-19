@@ -122,7 +122,15 @@
 		<None Remove="Components\Documentation\SourceCode\SDKRadioButton.txt" />
 		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKRadioButton.txt" />
 
-		
+		<None Remove="Components\Documentation\SourceCode\SDKImageViewer.txt" />
+		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKImageViewer.txt" />
+
+		<None Remove="Components\Documentation\SourceCode\SDKEntityField.txt" />
+		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKEntityField.txt" />
+
+		<None Remove="Components\Documentation\SourceCode\SDKGlobalLoader.txt" />
+		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKGlobalLoader.txt" />
+
 	</ItemGroup>
 
 

@@ -9,7 +9,7 @@
 
 @if(AllowCreate)
 {
-    <SDKButton CssClass="mb-1" RenderStyle="SDKButtonRenderStyle.Primary" Click="@(async ()=> { await OpenModalCreate(); })">
+    <SDKButton BusinessName="@BusinessName" ListPermission="@ListPermission" CssClass="mb-1" RenderStyle="SDKButtonRenderStyle.Primary" Click="@(async ()=> { await OpenModalCreate(); })">
         <ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer 
             ResourceTag="@($"{BusinessName}.Singular")" />
     </SDKButton>
@@ -50,6 +50,8 @@
     [Parameter] public string Width { get; set; } = "600px";
 
     private bool DefaultTitle = false;
+
+    public List<int> ListPermission { get; set; } = new List<int>(){1};
     
     Guid listview_key = Guid.NewGuid();
 
@@ -93,6 +95,4 @@
         listview_key = Guid.NewGuid();
         StateHasChanged();     
     }
-
-
 }

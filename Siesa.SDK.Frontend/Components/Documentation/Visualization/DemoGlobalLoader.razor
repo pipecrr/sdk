@@ -1,0 +1,31 @@
+
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Services
+@inject SDKGlobalLoaderService SDKGlobalLoaderService
+
+
+<div class="container-fluid m-3">
+    <div class="container-fluid">
+            <h2>SDKGlobalLoader</h2> 
+            <p>Demonstration and configuration of the SDKGlobalLoader component</p> 
+    </div>
+    <div class="row px-3"> 
+        <div class="col-md-6 p-1">
+            <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Show Loader" Click="@ShowLoader" />
+        </div>
+    </div>
+</div>
+
+
+@code{
+    
+    public async void ShowLoader()
+    {
+        SDKGlobalLoaderService.Show();
+
+        await Task.Delay(5000);
+
+        await InvokeAsync(() => SDKGlobalLoaderService.Hide());
+    }
+}

@@ -30,8 +30,10 @@ namespace Siesa.SDK.Entities
 		public virtual int? RowidSession { get; set; }
 
 
+		[SDKCheckRelationship]
 		public virtual E00220_User UserLastUpdate { get; set; }
 
+		[SDKCheckRelationship]
 		public virtual E00220_User UserCreates { get; set; }
 
 	}

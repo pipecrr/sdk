@@ -47,8 +47,10 @@ namespace Siesa.SDK.Entities
 		public bool IsPrivate { get; set; }
 
 
+		[SDKCheckRelationship]
 		public virtual E00040_Feature Feature { get; set; }
 
+		[SDKCheckRelationship]
 		public virtual E00066_MenuCustom MenuCustomParent { get; set; }
 
 	}

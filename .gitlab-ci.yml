@@ -13,7 +13,8 @@ build:
     only: 
       - develop
     script:
-      - dotnet nuget add source https://nuget.devexpress.com/api -n DXFeed -u DevExpress -p $DX_NUGET_TOKEN --store-password-in-clear-text
+      - dotnet nuget add source $PACKAGE_REGISTRY_URL --name gitlab --username gitlab-ci-token --password $CI_JOB_TOKEN --store-password-in-clear-text
+      #- dotnet nuget add source https://nuget.devexpress.com/api -n DXFeed -u DevExpress -p $DX_NUGET_TOKEN --store-password-in-clear-text
       - dotnet restore
       - dotnet pack -c Release -o nuget --version-suffix "$(date +%Y%m%d)"
     tags:

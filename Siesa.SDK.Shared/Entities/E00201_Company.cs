@@ -36,6 +36,7 @@ namespace Siesa.SDK.Entities
 		public string Name { get; set; }
 
 
+		[SDKCheckRelationship]
 		[Required]
 		public virtual E00200_CompanyGroup CompanyGroup { get; set; }
 

@@ -35,6 +35,7 @@ namespace Siesa.SDK.Entities
 		public int RowidEnum { get; set; }
 
 
+		[SDKCheckRelationship]
 		[Required]
 		public virtual E00024_Enum Enum { get; set; }
 

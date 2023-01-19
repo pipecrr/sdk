@@ -31,6 +31,7 @@ namespace Siesa.SDK.Entities
 		public int RowidUser { get; set; }
 
 
+		[SDKCheckRelationship]
 		[Required]
 		public virtual E00224_DataVisibilityGroup DataVisibilityGroup { get; set; }
 

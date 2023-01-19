@@ -12,7 +12,6 @@ using Siesa.SDK.Entities.Enums;
 
 namespace Siesa.SDK.Entities
 {
-
 	/// <summary>
 	/// Menú
 	/// </summary>
@@ -52,10 +51,13 @@ namespace Siesa.SDK.Entities
 		public string? IconClass { get; set; }
 
 
+		[SDKCheckRelationship]
 		public virtual E00020_Resource Resource { get; set; }
 
+		[SDKCheckRelationship]
 		public virtual E00040_Feature Feature { get; set; }
 
+		[SDKCheckRelationship]
 		public virtual E00061_Menu MenuParent { get; set; }
 
 	}

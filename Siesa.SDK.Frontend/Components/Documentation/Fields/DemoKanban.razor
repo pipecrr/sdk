@@ -43,17 +43,17 @@
     private List<Tuple<int,string>> StatusList = new List<Tuple<int,string>>()
     {
         new Tuple<int, string>(1, "Separator"),
-        new Tuple<int, string>(2, "Menu"),
+        new Tuple<int, string>(2, "CustomMenu"),
         new Tuple<int, string>(3, "Feacture")    
     };
 
     private List<E00061_Menu> Items = new List<E00061_Menu>()
     {
         new E00061_Menu(){Url= "Item 1", Type = MenuType.Separator},
-        new E00061_Menu(){Url= "Item 2", Type = MenuType.Menu},
+        new E00061_Menu(){Url= "Item 2", Type = MenuType.CustomMenu},
         new E00061_Menu(){Url= "Item 3", Type = MenuType.Feature},
         new E00061_Menu(){Url= "Item 4", Type = MenuType.Separator},
-        new E00061_Menu(){Url= "Item 5", Type = MenuType.Menu}
+        new E00061_Menu(){Url= "Item 5", Type = MenuType.CustomMenu}
     };
 
     private void OnchangeColumn(E00061_Menu menu, int column)
@@ -64,10 +64,10 @@
                 menu.Type = MenuType.Separator;
                 break;
             case 2:
-                menu.Type = MenuType.Menu;
+                menu.Type = MenuType.Feature;
                 break;
             case 3:
-                menu.Type = MenuType.Feature;
+                menu.Type = MenuType.CustomMenu;
                 break;
 
             default:
@@ -81,9 +81,9 @@
         {
             case MenuType.Separator:
                 return 1; 
-            case MenuType.Menu:
-                return 2;
             case MenuType.Feature:
+                return 2;
+            case MenuType.CustomMenu:
                 return 3;
             default:
                 break;

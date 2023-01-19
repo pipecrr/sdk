@@ -10,6 +10,8 @@ using Siesa.SDK.Shared.DTOS;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
+using Microsoft.JSInterop;
+
 namespace Siesa.SDK.Frontend.Services
 {
     public class AuthenticationService : IAuthenticationService
@@ -18,6 +20,7 @@ namespace Siesa.SDK.Frontend.Services
         private ILocalStorageService _localStorageService;
         private IBackendRouterService _backendRouterService;
         private IHttpContextAccessor _contextAccesor;
+        private IJSRuntime _jsRuntime;
         private string _secretKey;
         private int _minutesExp;
 
@@ -48,7 +51,8 @@ namespace Siesa.SDK.Frontend.Services
             NavigationManager navigationManager,
             ILocalStorageService localStorageService,
             IBackendRouterService BackendRouterService,
-            IHttpContextAccessor ContextAccessor
+            IHttpContextAccessor ContextAccessor,
+            IJSRuntime jsRuntime
         )
         {
             _navigationManager = navigationManager;
@@ -57,6 +61,7 @@ namespace Siesa.SDK.Frontend.Services
             _contextAccesor = ContextAccessor;
             _minutesExp = 120; //TODO: get from config
             _secretKey = "testsecretKeyabc$"; //TODO: get from config
+            _jsRuntime = jsRuntime;
         }
 
         public async Task Initialize()
@@ -69,6 +74,12 @@ namespace Siesa.SDK.Frontend.Services
                 SelectedConnection = JsonConvert.DeserializeObject<SDKDbConnection>(selectedConnection);
             }
             catch (System.Exception)
+            {
+            }
+            try
+            {
+                await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/js/utils.js");
+            }catch (Exception)
             {
             }
             //Console.WriteLine($"UserToken: {UserToken}");
@@ -94,8 +105,9 @@ namespace Siesa.SDK.Frontend.Services
             });
             if (loginRequest.Success)
             {
-                UserToken = loginRequest.Data;
+                UserToken = loginRequest.Data.Token;
                 await _localStorageService.SetItemAsync("usertoken", UserToken);
+                await SetCookie("sdksession", loginRequest.Data.IdSession);
             }
             else
             {
@@ -117,6 +129,7 @@ namespace Siesa.SDK.Frontend.Services
             await _localStorageService.RemoveItemAsync("usertoken");
             await _localStorageService.RemoveItemAsync("lastInteraction");
             await _localStorageService.RemoveItemAsync("n_tabs");
+            await RemoveCookie("sdksession");
 
             _navigationManager.NavigateTo("login");
         }
@@ -276,6 +289,30 @@ namespace Siesa.SDK.Frontend.Services
                 throw new Exception("Custom.Generic.Message.Error");
             }
             return BLUser;
+        }
+
+        private async Task SetCookie(string key, string value)
+        {
+            //execut javascript to set cookie
+            try
+            {
+                await _jsRuntime.InvokeVoidAsync("window.createCookie", key, value);
+            }
+            catch (System.Exception)
+            {
+            }
+        }
+
+        private async Task RemoveCookie(string key)
+        {
+            //execut javascript to set cookie
+            try
+            {
+                await _jsRuntime.InvokeVoidAsync("window.deleteCookie", key);
+            }
+            catch (System.Exception)
+            {
+            }
         }
     }
 }

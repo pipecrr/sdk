@@ -93,6 +93,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             }
             return fieldObj;
         }
+        public RelatedParams  RelatedParams { get; set; }
 
         private List<Type> SupportedTypes = new List<Type>(){
             typeof(SwitchField),
@@ -199,7 +200,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                         var exists = field.ModelObj.GetType().GetProperty($"Rowid{field.Name}");
                         if(exists != null)
                         {
-                            EntityRowidField = $"Rowid{field.Name}";
+                            if(field.UnknownFieldType.Equals("E00271_AttachmentDetail")){
+                                FieldType = FieldTypes.FileField;
+                                field.FieldType = FieldTypes.FileField;
+                                field.UnknownFieldType = null;
+                            }else{
+                                EntityRowidField = $"Rowid{field.Name}";
+                            }
                         }
                     }
                 }

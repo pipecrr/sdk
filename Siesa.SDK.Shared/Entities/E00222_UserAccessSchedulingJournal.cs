@@ -37,6 +37,7 @@ namespace Siesa.SDK.Entities
 		public TimeSpan EndTime { get; set; }
 
 
+		[SDKCheckRelationship]
 		[Required]
 		public virtual E00220_User User { get; set; }
 

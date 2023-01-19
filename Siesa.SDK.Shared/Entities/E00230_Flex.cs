@@ -16,7 +16,7 @@ namespace Siesa.SDK.Entities
 	/// consultas flex
 	/// </summary>
 
-	public partial class E00230_Flex : BaseCompanyGroup<int>
+	public partial class E00230_Flex : BaseAudit<int>
 	{
 		[Key]
 		[Required]
@@ -43,6 +43,7 @@ namespace Siesa.SDK.Entities
 		[SDKCheckRelationship]
 		public virtual E00230_Flex FlexParent { get; set; }
 
+		[SDKCheckRelationship]
 		public virtual E00040_Feature Feature { get; set; }
 
 	}

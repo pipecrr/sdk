@@ -206,8 +206,6 @@
             }else{
                 <BooleanField BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" TBool="bool" ValidateField="@ValidateField"  />
             }
-            
-
         }
         break;
     case FieldTypes.Unknown:
@@ -221,6 +219,14 @@
         else
         {
             <EntityField BaseModelObj="@ModelObj" BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" ValidateField="@ValidateField"  />
+        } 
+        break;
+    case FieldTypes.FileField:
+        if(FieldOpt.ViewContext != null && FieldOpt.ViewContext.Equals("DetailView")){
+            <FileField Business="@ModelObj" BindModel="@fieldModelObj" View="@FieldOpt.ViewContext" FieldOpt="@FieldOpt" FieldName="@fieldName"></FileField>
+        }else{
+            <FileField Business="@ModelObj" @ref=@UploadComponent Complete="@formView.OnComplete" Error="@formView.OnError" View="@FieldOpt.ViewContext" BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" ValidateField="@ValidateField"></FileField>
+            AddUploadComponent(UploadComponent, fieldName);
         }
         break;
     case FieldTypes.Custom:

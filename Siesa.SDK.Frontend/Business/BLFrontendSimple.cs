@@ -23,6 +23,7 @@ using Siesa.SDK.Shared.DataAnnotations;
 using Siesa.SDK.Shared.DTOS;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Siesa.SDK.Business
 {
@@ -428,6 +429,17 @@ namespace Siesa.SDK.Business
                 throw new ArgumentException(errors[0]);
             }
             return result;
+        }
+
+        public async Task<int> SaveAttachmentDetail(SDKFileUploadDTO obj){
+            var BLAttatchmentDetail = GetBackend("BLAttachmentDetail");
+            var result = await BLAttatchmentDetail.Call("SaveAttatchmentDetail", obj);
+            if(result.Success){
+                return result.Data;
+            }else{
+                var errors = JsonConvert.DeserializeObject<List<string>> (result.Errors.ToString());
+                throw new ArgumentException(errors[0]);
+            }
         }
     }
 }

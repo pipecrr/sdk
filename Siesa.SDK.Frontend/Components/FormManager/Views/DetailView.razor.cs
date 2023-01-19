@@ -103,7 +103,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             var metadata = BackendRouterService.GetViewdef(bName, "detail");
             if (metadata == null || metadata == "")
             {
-                ErrorMsg = "No hay definición para la vista de detalle";
+                //ErrorMsg = "No hay definición para la vista de detalle";
+                ErrorMsg = "Custom.Generic.ViewdefNotFound";
             }
             else
             {
@@ -139,16 +140,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         public override async Task SetParametersAsync(ParameterView parameters)
         {
+            bool changeBusinessName = parameters.DidParameterChange(nameof(BusinessName), BusinessName);
+
             await base.SetParametersAsync(parameters);
-            if (parameters.TryGetValue<string>(nameof(BusinessName), out var value))
-            {
-                if (value != null)
-                {
-                    Loading = false;
-                    this.ModelLoaded = false;
-                    ErrorMsg = "";
-                    await InitView(value);
-                }
+
+            if(BusinessName != null && (changeBusinessName)){
+                Loading = false;
+                this.ModelLoaded = false;
+                ErrorMsg = "";
+                await InitView(BusinessName);
             }
         }
 
@@ -192,15 +192,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
             if (result != null && result.Errors.Count > 0)
             {
-                ErrorMsg = "<ul>";
-                foreach (var error in result.Errors)
-                {
-                    ErrorMsg += $"<li>";
-                    ErrorMsg += !string.IsNullOrWhiteSpace(error.Attribute) ? $"{error.Attribute} - " : string.Empty;
-                    ErrorMsg += error.Message.Replace("\n", "<br />");
-                    ErrorMsg += $"</li>";
-                }
-                ErrorMsg += "</ul>";
+                var errorMessage ="Custom.Generic.Message.DeleteError";
+                NotificationService.ShowError(errorMessage);
+                // ErrorMsg = "<ul>";
+                // foreach (var error in result.Errors)
+                // {
+                //     ErrorMsg += $"<li>";
+                //     ErrorMsg += !string.IsNullOrWhiteSpace(error.Attribute) ? $"{error.Attribute} - " : string.Empty;
+                //     ErrorMsg += error.Message.Replace("\n", "<br />");
+                //     ErrorMsg += $"</li>";
+                // }
+                // ErrorMsg += "</ul>";
+
+
                 return;
             }
             if (result != null)
@@ -258,8 +262,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
                 if (!CanDetail)
                 {
+                    ErrorMsg = "Custom.Generic.Unauthorized";
                     NotificationService.ShowError("Custom.Generic.Unauthorized");
-                    NavigationService.NavigateTo("/", replace: true);
+                    if(!IsSubpanel){
+                        // NavigationService.NavigateTo("/", replace: true);
+                    }
                 }
             }
         }

@@ -39,13 +39,16 @@ namespace Siesa.SDK.Entities
 		public string Operation { get; set; }
 
 
-		public virtual E00201_Company Company { get; set; }
-
-		[Required]
-		public virtual E00228_RolAuthorizedOperation RolAuthorizedOperation { get; set; }
-
+		[SDKCheckRelationship]
 		[Required]
 		public virtual E00220_User User { get; set; }
+
+		[SDKCheckRelationship]
+		public virtual E00201_Company Company { get; set; }
+
+		[SDKCheckRelationship]
+		[Required]
+		public virtual E00228_RolAuthorizedOperation RolAuthorizedOperation { get; set; }
 
 	}
 }

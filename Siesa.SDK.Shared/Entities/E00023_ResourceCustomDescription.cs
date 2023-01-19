@@ -33,6 +33,7 @@ namespace Siesa.SDK.Entities
 		public string Description { get; set; }
 
 
+		[SDKCheckRelationship]
 		[Required]
 		public virtual E00022_ResourceDescription ResourceDescription { get; set; }
 

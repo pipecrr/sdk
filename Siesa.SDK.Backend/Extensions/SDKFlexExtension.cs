@@ -99,11 +99,16 @@ namespace Siesa.SDK.Backend.Extensions
                 List<SDKFlexVirtualColumnDTO> virtualColumns = new List<SDKFlexVirtualColumnDTO>();
                 List<string> virtualColumnsName = new List<string>();
                 var rowidType = entityType.GetProperty("Rowid").PropertyType;
+                //var selectedRowid = false;
+                strColumns.Add("np(Rowid) as rowid");
                 foreach (SDKFlexColumn column in columns)
                 {
                     if(column.customFn){
                         continue;
                     }
+                    /*if(column.name == "Rowid"){
+                        selectedRowid = true;
+                    }*/
                     if(column.is_dynamic_field){
                         var actualVirtualColumns = GetVirtualColumns(column.name, Context, dynamicEntityType);
                         virtualColumns.AddRange(actualVirtualColumns);
@@ -115,7 +120,7 @@ namespace Siesa.SDK.Backend.Extensions
                         // }
                         if(virtualColumns.Count > 0){
                             virtualColumnsName.Add(column.name);
-                            strColumns.Add("Rowid  as " + column.name);                            
+                            strColumns.Add("Rowid as " + column.name);
                         }
                         continue;
                     }
@@ -256,7 +261,7 @@ namespace Siesa.SDK.Backend.Extensions
                 var dynamicListMethod = typeof(IEnumerable).GetExtensionMethod(_assemblyDynamic, "ToDynamicList", new[] { typeof(IEnumerable) });
                 var dynamicList = dynamicListMethod.Invoke(contextSet, new object[] { contextSet });
 
-                var jsonResource = JsonConvert.SerializeObject(dynamicList);
+                var jsonResource = JsonConvert.SerializeObject(dynamicList, Newtonsoft.Json.Formatting.None, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
                 var resourceDict = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(jsonResource);
 
                 if(enumsDict.Count>0){
