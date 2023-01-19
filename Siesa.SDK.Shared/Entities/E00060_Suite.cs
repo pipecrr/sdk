@@ -36,6 +36,9 @@ namespace Siesa.SDK.Entities
 		[StringLength(6)]
 		public string? HexColor { get; set; }
 
+		[StringLength(80)]
+		public string? IconClass { get; set; }
+
 
 		[SDKCheckRelationship]
 		[Required]
