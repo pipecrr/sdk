@@ -37,7 +37,6 @@ namespace Siesa.SDK.Frontend {
 
 		
 
-        private static readonly SaveController _saveController = new SaveController(ResourcesRootDirectory);
 
         public static void AddSiesaSDKFrontend(this IServiceCollection services, IConfiguration serviceConfiguration)
         {
@@ -70,7 +69,7 @@ namespace Siesa.SDK.Frontend {
 
             services.AddReporting();
 			services.AddDesigner();
-			services.AddSingleton<IResourcesService>(new SaveController(ResourcesRootDirectory));
+			// services.AddSingleton<IResourcesService>(new SaveController(ResourcesRootDirectory));
 			//services.AddSingleton<IDataSetsService>(new FileSystemDataSets(DataSetsRootDirectory));
 			services.AddRazorPages().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
 			services.AddServerSideBlazor();
@@ -102,22 +101,26 @@ namespace Siesa.SDK.Frontend {
             app.UseStaticFiles();
 
             app.UseReporting(config => {
-                    config.UseFileStore(ResourcesRootDirectory);
-                    GrapeCity.ActiveReports.Web.Viewer.DataProviderInfo[] providers = new []{
-                        new GrapeCity.ActiveReports.Web.Viewer.DataProviderInfo("Siesa.SDK.Business", typeof(SDKReportProvider).AssemblyQualifiedName),
-                    };
-                    config.UseDataProviders(providers);
+                config.UseFileStore(ResourcesRootDirectory);
+                GrapeCity.ActiveReports.Web.Viewer.DataProviderInfo[] providers = new []{
+                    new GrapeCity.ActiveReports.Web.Viewer.DataProviderInfo("Siesa.SDK.Business", typeof(SDKReportProvider).AssemblyQualifiedName),
+                };
+                config.UseDataProviders(providers);
 
-                });
-                app.UseDesigner(config => {
-                    config.UseCustomStore(_saveController);
-                    DataProviderInfo[] providers = new []{
-                        new DataProviderInfo("Siesa.SDK.Business", typeof(SDKReportProvider).AssemblyQualifiedName),
-                    };
-                    config.UseDataProviders(providers);
+            });
+
+            app.UseDesigner(config => {
+                var serviceScope = app.ApplicationServices.CreateScope();
+                SaveController _saveController = ActivatorUtilities.CreateInstance<SaveController>(serviceScope.ServiceProvider);
+
+                config.UseCustomStore(_saveController);
+                DataProviderInfo[] providers = new []{
+                    new DataProviderInfo("Siesa.SDK.Business", typeof(SDKReportProvider).AssemblyQualifiedName),
+                };
+                config.UseDataProviders(providers);
 
 
-                });
+            });
 
             app.UseRouting();
             
