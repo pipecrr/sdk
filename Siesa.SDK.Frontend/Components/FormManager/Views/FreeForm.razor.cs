@@ -28,6 +28,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 BusinessName = BusinessObj.GetType().Name;
             }
             await base.OnInitializedAsync();
+            await InitView();
 
             if(OnReady.HasDelegate)
             {
@@ -49,7 +50,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     }
                 }
 
-                if (parameters.TryGetValue<string>(nameof(BusinessObj), out var value2))
+                if (parameters.TryGetValue<object>(nameof(BusinessObj), out var value2))
                 {
                     if (value2 != null && value2 != BusinessObj)
                     {
