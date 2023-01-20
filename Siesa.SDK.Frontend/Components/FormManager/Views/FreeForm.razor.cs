@@ -48,6 +48,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         StateHasChanged();
                     }
                 }
+
+                if (parameters.TryGetValue<string>(nameof(BusinessObj), out var value2))
+                {
+                    if (value2 != null && value2 != BusinessObj)
+                    {
+                        BusinessName = value2.GetType().Name;
+                        StateHasChanged();
+                    }
+                }
             }
             catch (Exception e)
             {
@@ -55,10 +64,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
 
             await base.SetParametersAsync(parameters);
-            if(string.IsNullOrEmpty(BusinessName) && BusinessObj != null)
-            {
-                BusinessName = BusinessObj.GetType().Name;
-            }
         }
 
         public List<FieldOptions> GetFields()
