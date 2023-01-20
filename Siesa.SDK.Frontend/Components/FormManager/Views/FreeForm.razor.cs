@@ -55,6 +55,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
 
             await base.SetParametersAsync(parameters);
+            if(string.IsNullOrEmpty(BusinessName) && BusinessObj != null)
+            {
+                BusinessName = BusinessObj.GetType().Name;
+            }
         }
 
         public List<FieldOptions> GetFields()
