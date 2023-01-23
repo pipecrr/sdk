@@ -1,3 +1,4 @@
+@inherits SDKComponent
 @if(string.IsNullOrEmpty(IconCssClass))
 {
     <RadzenStepsItem Text="@Text" Disabled="@Disabled">
@@ -16,6 +17,7 @@
 }
 
 @code{
+    [Obsolete("Use ResourceTag instead")]
     [Parameter]
     public string Text {get; set;}
     [Parameter]    
@@ -24,4 +26,19 @@
     public string IconCssClass {get; set;}
     [Parameter]
     public RenderFragment? ChildContent {get;set;}
+
+    protected override async Task OnInitializedAsync()
+    {
+        if(!string.IsNullOrEmpty(ResourceTag))
+        {
+            Text = ResourceTag;    
+        }
+        await base.OnInitializedAsync();
+        if(!string.IsNullOrEmpty(ResourceTag))
+        {
+            Text = await GetText();
+            StateHasChanged();
+        }
+    }
+
 }

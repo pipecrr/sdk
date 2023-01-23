@@ -40,9 +40,6 @@
 @code {
     [Parameter] public SDKButtonRenderStyle RenderStyle { get; set; }
     [Parameter] public SDKButtonRenderStyleMode RenderStyleMode { get; set; }
-    [Parameter] public string ResourceTag { get; set; }
-    [Parameter] public Int64? RowidResource { get; set; }
-    [Parameter] public Int64 RowidCulture { get; set;} = 1;
     [Parameter] public EventCallback<MouseEventArgs> Click { get; set; }
     [Parameter] public bool IsActionButton { get; set; }
     [Parameter] public string IconCssClass {get;set;}
@@ -81,19 +78,6 @@
                 NavManager.NavigateTo(Href);
             }
         }
-    }
-
-    private async Task<string> GetText(){
-        if((RowidResource == null || RowidResource == 0) && ResourceTag != null){
-            if (AuthenticationService != null && AuthenticationService.GetRoiwdCulture() != 0)
-            {
-                return await ResourceManager.GetResource(ResourceTag, AuthenticationService);
-            }else
-            {
-                return await ResourceManager.GetResource(ResourceTag, RowidCulture);
-            }
-        }
-        return await ResourceManager.GetResource(Convert.ToInt64(RowidResource), AuthenticationService);
     }
 
     protected override async Task OnInitializedAsync()
