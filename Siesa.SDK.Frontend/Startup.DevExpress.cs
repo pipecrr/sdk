@@ -106,7 +106,6 @@ namespace Siesa.SDK.Frontend {
 
             app.UseReporting(config => {
                 config.UseCustomStore(id => {
-                    var serviceScope = app.ApplicationServices.CreateScope();
                     //SaveController _saveController = ActivatorUtilities.CreateInstance<SaveController>(serviceScope.ServiceProvider);
                     return resourcesSaveService.GetReport(id);
                 });
@@ -118,7 +117,6 @@ namespace Siesa.SDK.Frontend {
             });
 
             app.UseDesigner(config => {
-                var serviceScope = app.ApplicationServices.CreateScope();
                 //SaveController _saveController = ActivatorUtilities.CreateInstance<SaveController>(serviceScope.ServiceProvider);
 
                 config.UseCustomStore(resourcesSaveService);
