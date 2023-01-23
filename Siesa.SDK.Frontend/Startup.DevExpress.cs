@@ -53,6 +53,7 @@ namespace Siesa.SDK.Frontend {
             services.AddSingleton<IResourceManager, ResourceManager>();
             services.AddScoped<IFeaturePermissionService, FeaturePermissionService>();
             services.AddScoped<UtilsManager>(sp => ActivatorUtilities.CreateInstance<UtilsManager>(sp));
+            services.AddScoped<SaveController>(sp => ActivatorUtilities.CreateInstance<SaveController>(sp));
             services.AddScoped<NotificationService, SDKNotificationService>(sp => ActivatorUtilities.CreateInstance<SDKNotificationService>(sp));
             services.AddScoped<SDKNotificationService>(sp => (SDKNotificationService)sp.GetRequiredService<NotificationService>());
             
@@ -99,9 +100,16 @@ namespace Siesa.SDK.Frontend {
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();
+            var serviceScope = app.ApplicationServices.CreateScope().ServiceProvider;
+
+            var resourcesSaveService = serviceScope.GetRequiredService<SaveController>();
 
             app.UseReporting(config => {
-                config.UseFileStore(ResourcesRootDirectory);
+                config.UseCustomStore(id => {
+                    var serviceScope = app.ApplicationServices.CreateScope();
+                    //SaveController _saveController = ActivatorUtilities.CreateInstance<SaveController>(serviceScope.ServiceProvider);
+                    return resourcesSaveService.GetReport(id);
+                });
                 GrapeCity.ActiveReports.Web.Viewer.DataProviderInfo[] providers = new []{
                     new GrapeCity.ActiveReports.Web.Viewer.DataProviderInfo("Siesa.SDK.Business", typeof(SDKReportProvider).AssemblyQualifiedName),
                 };
@@ -111,9 +119,9 @@ namespace Siesa.SDK.Frontend {
 
             app.UseDesigner(config => {
                 var serviceScope = app.ApplicationServices.CreateScope();
-                SaveController _saveController = ActivatorUtilities.CreateInstance<SaveController>(serviceScope.ServiceProvider);
+                //SaveController _saveController = ActivatorUtilities.CreateInstance<SaveController>(serviceScope.ServiceProvider);
 
-                config.UseCustomStore(_saveController);
+                config.UseCustomStore(resourcesSaveService);
                 DataProviderInfo[] providers = new []{
                     new DataProviderInfo("Siesa.SDK.Business", typeof(SDKReportProvider).AssemblyQualifiedName),
                 };
