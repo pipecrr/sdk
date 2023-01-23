@@ -26,6 +26,7 @@ namespace Siesa.SDK.Frontend.Services
         private IBackendRouterService BackendRouterService;
         private IAuthenticationService AuthenticationService;
         private UtilsManager UtilsManager { get; set; }
+        public Dictionary<int, List<E00061_Menu>> SuiteData {get; set;} = new();
 
         private bool loading = false;
 
@@ -144,16 +145,28 @@ namespace Siesa.SDK.Frontend.Services
             if (request.Success)
             {
                 SelectedSuite = ((List<E00060_Suite>)request.Data).First();
-                var menuRequest = await menuBL.Call("GetMenuItems", Convert.ToInt64(SelectedSuite.Rowid));
-                if (menuRequest.Success)
+
+                _ = MenuManagerBySuite(menuBL, SelectedSuite);
+            }
+        }
+
+        public async Task MenuManagerBySuite(SDKBusinessModel menuBL, E00060_Suite Suite)
+        {
+            var menuRequest = await menuBL.Call("GetMenu", Convert.ToInt64(Suite.Rowid));
+            if (menuRequest.Success)
+            {
+                List<E00061_Menu> menuResponse = menuRequest.Data;
+                menuResponse = menuResponse.OrderBy(x => x.Order).ToList();
+                //add menuResponse to Menus
+                Menus.AddRange(menuResponse);
+
+                if(!SuiteData.ContainsKey(Suite.Rowid))
                 {
-                    List<E00061_Menu> menuResponse = menuRequest.Data;
-                    menuResponse = menuResponse.OrderBy(x => x.Order).ToList();
-                    //add menuResponse to Menus
-                    Menus.AddRange(menuResponse);
-                    GetMenuResources(Menus);
-                    NotifyMenuLoaded();
+                    SuiteData.Add(Suite.Rowid, menuResponse);
                 }
+
+                _ = GetMenuResources(Menus);
+                NotifyMenuLoaded();
             }
         }
 
