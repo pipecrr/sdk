@@ -62,7 +62,11 @@ namespace Siesa.SDK.Frontend.Components.Fields
         protected async Task InitView(){
             idInput = Guid.NewGuid().ToString();
             CheckPermissions();
-            SetVal(BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj));
+            var currentValueObj = BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj);
+            if(currentValueObj != null)
+            {
+                Value = currentValueObj.ToString();
+            }
             relBusinessModel = BackendRouterService.GetSDKBusinessModel(RelatedBusiness, null);
             var relBusinessType = Utilities.SearchType(relBusinessModel.Namespace + "." + relBusinessModel.Name);
             RelBusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider, relBusinessType);
