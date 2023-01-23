@@ -36,9 +36,11 @@ namespace Siesa.SDK.Entities
 		public string Operation { get; set; }
 
 
+		[SDKCheckRelationship]
 		[Required]
 		public virtual E00040_Feature Feature { get; set; }
 
+		[SDKCheckRelationship]
 		[Required]
 		public virtual E00226_Rol Rol { get; set; }
 

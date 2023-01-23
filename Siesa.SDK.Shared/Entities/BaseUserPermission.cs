@@ -36,8 +36,10 @@ namespace Siesa.SDK.Entities
 
 
 
+		[SDKCheckRelationship]
 		public virtual E00220_User User { get; set; }
 
+		[SDKCheckRelationship]
 		public virtual E00224_DataVisibilityGroup DataVisibilityGroup { get; set; }
 
 	}

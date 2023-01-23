@@ -35,7 +35,6 @@ namespace Siesa.SDK.Entities
 		public string Path { get; set; }
 
 		[StringLength(128)]
-		[SDKDataEncrypt]
 		public string? Password { get; set; }
 
 		[ForeignKey("Culture")]
@@ -115,13 +114,17 @@ namespace Siesa.SDK.Entities
 		public bool IsAdministrator { get; set; }
 
 
+		[SDKCheckRelationship]
 		public virtual E00220_User UserSubstitute { get; set; }
 
+		[SDKCheckRelationship]
 		public virtual E00220_User UserReportTo { get; set; }
 
+		[SDKCheckRelationship]
 		[Required]
 		public virtual E00021_Culture Culture { get; set; }
 
+		// [SDKCheckRelationship]
 		// public virtual E00223_UserAccountPolicy UserAccountPolicy { get; set; }
 
 	}

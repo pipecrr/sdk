@@ -40,6 +40,7 @@ namespace Siesa.SDK.Entities
 		public byte LicenceType { get; set; }
 
 
+		[SDKCheckRelationship]
 		[Required]
 		public virtual E00020_Resource Resource { get; set; }
 

@@ -29,6 +29,7 @@ namespace Siesa.SDK.Entities
 		public int RowidResource { get; set; }
 
 
+		[SDKCheckRelationship]
 		[Required]
 		public virtual E00020_Resource Resource { get; set; }
 

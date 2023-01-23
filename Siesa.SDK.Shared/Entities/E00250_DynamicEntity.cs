@@ -56,8 +56,10 @@ namespace Siesa.SDK.Entities
 		public bool IsLocked { get; set; }
 
 
+		[SDKCheckRelationship]
 		public virtual E00201_Company Company { get; set; }
 
+		[SDKCheckRelationship]
 		public virtual E00040_Feature Feature { get; set; }
 
 	}

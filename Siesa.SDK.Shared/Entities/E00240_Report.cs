@@ -13,31 +13,25 @@ using Siesa.SDK.Entities.Enums;
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
-	/// Detalle adjuntos
+	/// reportes
 	/// </summary>
 
-	public partial class E00271_AttachmentDetail : BaseAudit<int>
+	public partial class E00240_Report : BaseAudit<int>
 	{
 		[Key]
 		[Required]
 		public override int Rowid { get; set; }
 
-		[ForeignKey("Attachment")]
-		public int? RowidAttachment { get; set; }
+		[Required]
+		[StringLength(255)]
+		public string Id { get; set; }
 
 		[Required]
-		public string Url { get; set; }
+		public string Content { get; set; }
 
 		[Required]
-		[StringLength(100)]
-		public string FileType { get; set; }
+		public bool IsTemporary { get; set; }
 
-		[StringLength(250)]
-		public string? FileName { get; set; }
-
-
-		[SDKCheckRelationship]
-		public virtual E00270_Attachment Attachment { get; set; }
 
 	}
 }

@@ -41,6 +41,7 @@ namespace Siesa.SDK.Entities
 		public DateTime PasswordLastUpdate { get; set; }
 
 
+		[SDKCheckRelationship]
 		[Required]
 		public virtual E00220_User User { get; set; }
 

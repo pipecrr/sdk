@@ -3,7 +3,7 @@
 
 
 <div class="sdk-steps">
-    <RadzenSteps class="@GetCss()" SelectedIndex="@SelectedIndex" ShowStepsButtons="@ShowStepsButtons" Change=@SelectedIndexChanged PreviousText="@Previous" NextText="@Next" Steps="@Steps" data-automation-id="@GetAutomationId()">
+    <RadzenSteps @ref="@_steps" class="@GetCss()" SelectedIndex="@SelectedIndex" ShowStepsButtons="@ShowStepsButtons" Change=@SelectedIndexChanged PreviousText="@Previous" NextText="@Next" Steps="@Steps" data-automation-id="@GetAutomationId()">
     </RadzenSteps>
 </div>
 
@@ -12,14 +12,27 @@
     [Parameter] public string NextResourceTag {get; set;} = "Action.SDKSteps.Next";
     [Parameter] public RenderFragment Steps{get; set;}
     [Parameter] public bool ShowStepsButtons{get;set;} = true;
-    [Parameter] public int SelectedIndex{get; set;}
     [Parameter] public EventCallback<int> SelectedIndexChanged {get;set;}
-
     [Parameter] public bool ShowStepsNumbers {get; set;} = true;
-
     [Parameter] public string FieldName {get; set;}
-    private string Previous {get; set;} 
-    private string Next {get; set;}
+    [Parameter] public int SelectedIndex {get {
+                                    if (_steps != null )
+                                    {
+                                        return _steps.SelectedIndex;
+                                    } 
+                                        return 0;
+                                    }
+                                    set {
+                                        if (_steps != null)
+                                        {
+                                            _steps.SelectedIndex = value;
+                                        }
+                                    }   
+                                }
+
+     private string Previous {get; set;} 
+    private string Next {get; set;}    
+    private RadzenSteps _steps; 
 
     protected override async Task OnInitializedAsync(){
         Previous = PreviousResourceTag;

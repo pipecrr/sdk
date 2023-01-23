@@ -33,9 +33,11 @@ namespace Siesa.SDK.Entities
 		public int RowidFeature { get; set; }
 
 
+		[SDKCheckRelationship]
 		[Required]
 		public virtual E00010_Module Module { get; set; }
 
+		[SDKCheckRelationship]
 		[Required]
 		public virtual E00040_Feature Feature { get; set; }
 

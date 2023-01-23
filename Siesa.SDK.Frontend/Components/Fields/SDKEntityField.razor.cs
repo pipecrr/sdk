@@ -62,7 +62,11 @@ namespace Siesa.SDK.Frontend.Components.Fields
         protected async Task InitView(){
             idInput = Guid.NewGuid().ToString();
             CheckPermissions();
-            SetVal(BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj));
+            var currentValueObj = BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj);
+            if(currentValueObj != null)
+            {
+                Value = currentValueObj.ToString();
+            }
             relBusinessModel = BackendRouterService.GetSDKBusinessModel(RelatedBusiness, null);
             var relBusinessType = Utilities.SearchType(relBusinessModel.Namespace + "." + relBusinessModel.Name);
             RelBusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider, relBusinessType);
@@ -182,9 +186,13 @@ namespace Siesa.SDK.Frontend.Components.Fields
             if (searchText.Length > MinCharsEntityField || CacheLoadResult == null)
             {
                 var filters = "";
-                if (BaseObj != null && BaseObj.Rowid != 0 && RelBusinessObj != null && RelBusinessObj.BaseObj != null && RelBusinessObj.BaseObj.GetType() == BaseObj.GetType())
+                if (BaseObj != null && RelBusinessObj != null && RelBusinessObj.BaseObj != null && RelBusinessObj.BaseObj.GetType() == BaseObj.GetType())
                 {
-                    filters = $"(Rowid != {BaseObj.Rowid})";
+                    var baseObjRowidProperty = BaseObj.GetType().GetProperty("Rowid");
+                    if(baseObjRowidProperty != null && baseObjRowidProperty.GetValue(BaseObj) != null &&baseObjRowidProperty.GetValue(BaseObj) != 0 )
+                    {
+                        filters = $"(Rowid != {BaseObj.Rowid})";
+                    }
                 }
                 foreach (var item in RelatedFilters)
                 {
