@@ -167,7 +167,8 @@ namespace Siesa.SDK.Backend.Extensions
                     if (column.type.Equals("SelectField"))
                     {   
                         if(!enumsDict.ContainsKey(column.key_name)){
-                            Dictionary<byte,string> enumValue = GetEnumValues(column.name, rowidCulture, Context);
+                            var enumType = entityType.GetProperty(column.name).PropertyType;
+                            Dictionary<byte,string> enumValue = GetEnumValues(column.name, rowidCulture, Context, enumType);
                             enumsDict.Add(column.key_name, enumValue);
                         }
                     }
@@ -518,7 +519,7 @@ namespace Siesa.SDK.Backend.Extensions
                     value = "";
                 }
 
-                if (value == null && !isNullable){
+                if (value == null && !isNullable && !filter.type.Equals("SelectField")){
                     value = Activator.CreateInstance(columnType);
                 }
 
@@ -1143,8 +1144,10 @@ namespace Siesa.SDK.Backend.Extensions
             return virtualColumns;
         }
 
-        public static Dictionary<byte, string> GetEnumValues(string enumName, Int64 cultureRowid, SDKContext context){
-            var enumValues = context.Set<E00025_EnumValue>().Where(x => x.Enum.Id == "enum"+enumName).Join(
+        public static Dictionary<byte, string> GetEnumValues(string enumName, Int64 cultureRowid, SDKContext context, Type enumType)
+        {
+            var enumId = enumType.ToString().Split('.').Last();
+            var enumValues = context.Set<E00025_EnumValue>().Where(x => x.Enum.Id == enumId).Join(
                 context.Set<E00022_ResourceDescription>(),
                 x =>  "Enum." + x.Enum.Id + "." + x.Id,
                 x => x.Resource.Id,
