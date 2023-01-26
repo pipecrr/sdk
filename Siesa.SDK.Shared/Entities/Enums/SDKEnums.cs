@@ -1,5 +1,5 @@
 
-namespace Siesa.SDK.Entities.Enums
+namespace Siesa.Global.Enums
 {
 
 	public enum MenuType
@@ -29,12 +29,6 @@ namespace Siesa.SDK.Entities.Enums
 		Disabled = 2
 	}
 
-	public enum enumYesNo
-	{
-		Yes = 1,
-		No = 0
-	}
-
 	public enum enumStatusBaseMaster
 	{
 		Active = 1,
@@ -45,5 +39,11 @@ namespace Siesa.SDK.Entities.Enums
 	{
 		Text = 0,
 		Number = 1
+	}
+
+	public enum enumYesNo
+	{
+		Yes = 1,
+		No = 0
 	}
 }
