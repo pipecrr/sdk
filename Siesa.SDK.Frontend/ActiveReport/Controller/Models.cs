@@ -67,4 +67,19 @@ namespace Siesa.SDK.Frontend.Report.Controllers
 
         public string DataProvider { get; set; }
     }
+    public class Parameter
+    {
+        public string name { get; set; }
+        public string type { get; set; }
+        public bool nullable { get; set; }
+        public Parameter(string name, string type, bool nullable)
+        {
+
+        this.name = name;
+
+        this.type = type;
+
+        this.nullable = nullable;
+        }
+    }
 }

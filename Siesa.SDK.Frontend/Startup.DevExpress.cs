@@ -25,15 +25,13 @@ using System.IO;
 using Siesa.SDK.Report.Implementation;
 using Siesa.SDK.Frontend.Report.Controllers;
 using GrapeCity.ActiveReports.Aspnetcore.Designer.Services;
+using Siesa.SDK.Frontend.Report.Services;
 
 namespace Siesa.SDK.Frontend {
     public static class SiesaSecurityExtensions
     {
-        private static readonly DirectoryInfo ResourcesRootDirectory =
-			new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), "resources" + Path.DirectorySeparatorChar));
-
-		private static readonly DirectoryInfo TemplatesRootDirectory =
-			new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), "templates" + Path.DirectorySeparatorChar));
+		// private static readonly DirectoryInfo TemplatesRootDirectory =
+		// 	new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), "templates" + Path.DirectorySeparatorChar));
 
 		
 
@@ -70,8 +68,7 @@ namespace Siesa.SDK.Frontend {
 
             services.AddReporting();
 			services.AddDesigner();
-			// services.AddSingleton<IResourcesService>(new SaveController(ResourcesRootDirectory));
-			//services.AddSingleton<IDataSetsService>(new FileSystemDataSets(DataSetsRootDirectory));
+			services.AddSingleton<ITemplatesService>(new SDKSystemTemplates());
 			services.AddRazorPages().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
 			services.AddServerSideBlazor();
            /* services.AddBlazorDB(options =>
@@ -118,12 +115,14 @@ namespace Siesa.SDK.Frontend {
 
             app.UseDesigner(config => {
                 //SaveController _saveController = ActivatorUtilities.CreateInstance<SaveController>(serviceScope.ServiceProvider);
-
+                config.EnabledDataApi = false;
                 config.UseCustomStore(resourcesSaveService);
                 DataProviderInfo[] providers = new []{
                     new DataProviderInfo("Siesa.SDK.Business", typeof(SDKReportProvider).AssemblyQualifiedName),
                 };
+                
                 config.UseDataProviders(providers);
+                // config
 
 
             });

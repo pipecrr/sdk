@@ -20,116 +20,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Remove="Components\Documentation\SourceCode\SDKBooleanField.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKBooleanField.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\SDKBadge.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKBadge.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\SDKButton.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKButton.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\SDKCard.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKCard.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\SDKCharField.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKCharField.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\SDKCollapse.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKCollapse.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\SDKColorPicker.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKColorPicker.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\SDKConfirmDialog.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKConfirmDialog.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\SDKDateField.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKDateField.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\SDKDecimalField.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKDecimalField.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\SDKFileViewer.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKFileViewer.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\SDKGrid.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKGrid.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\SDKIntegerField.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKIntegerField.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\SDKKanban.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKKanban.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\SDKProgressBar.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKProgressBar.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\SDKRadialGauge.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKRadialGauge.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\SDKSelectBar.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKSelectBar.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\SDKSteps.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKSteps.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\SDKSwitch.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKSwitch.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\SDKTabs.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKTabs.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\SDKTextField.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKTextField.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\SDKSelectField.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKSelectField.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\InlineCrud.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\InlineCrud.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\SDKFormLayout.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKFormLayout.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\DynamicListView.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\DynamicListView.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\DynamicCreateView.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\DynamicCreateView.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\DynamicEditView.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\DynamicEditView.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\DynamicDetailView.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\DynamicDetailView.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\FreeForm.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\FreeForm.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\RelationshipPanel.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\RelationshipPanel.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\SDKEmailField.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKEmailField.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\SDKRecorder.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKRecorder.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\Diagrams.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\Diagrams.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\SDKRadioButton.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKRadioButton.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\SDKImageViewer.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKImageViewer.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\SDKEntityField.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKEntityField.txt" />
-
-		<None Remove="Components\Documentation\SourceCode\SDKGlobalLoader.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKGlobalLoader.txt" />
+		
+		<EmbeddedResource Include="Components\Documentation\SourceCode\*.txt" />
+		<EmbeddedResource Include="ActiveReport\templates\*" />
 
 	</ItemGroup>
 
@@ -172,11 +65,5 @@
 	<ItemGroup>
 		<Folder Include="wwwroot\images\" />
 	</ItemGroup>
-
-	<ItemGroup>
-		<Content Include="templates\**" CopyToPublishDirectory="PreserveNewest" />
-		<Content Include="resources\**" CopyToPublishDirectory="PreserveNewest" />
-  	</ItemGroup>
-
 
 </Project>
