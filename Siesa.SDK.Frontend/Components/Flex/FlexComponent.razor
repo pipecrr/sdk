@@ -131,6 +131,15 @@
                 _flexRowId = int.Parse(SDKFlexRowIdVar);
             }  
         }else{
+            Navigation.TryGetQueryString("sdk_debug",out string SDKDebugVar);
+            if(!string.IsNullOrEmpty(SDKDebugVar))
+            {
+                if(!_isDebug)
+                {
+                    MountFlex = true;
+                }
+                _isDebug = true;
+            }
             _currentView = "detail";
         }
 
