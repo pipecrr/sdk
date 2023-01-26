@@ -8,11 +8,10 @@ using Siesa.SDK.Frontend.Services;
 using Siesa.SDK.Shared.Application;
 using Siesa.SDK.Shared.Utilities;
 
-namespace Siesa.SDK.Frontend.Report.Services
+namespace SDK
 {
-    public static class ExecuteService
+    public class Code
     {
-
         private static dynamic BusinessInstance(string business_name)
         {
             dynamic BusinessInstance = "";

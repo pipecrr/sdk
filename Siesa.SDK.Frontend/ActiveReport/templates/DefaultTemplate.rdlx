@@ -8,35 +8,6 @@
 		<ColumnSpacing>0in</ColumnSpacing>
 		<Height>1.4583in</Height>
 		<ReportItems>
-			<Textbox Name="TextBox1">
-				<Top>0.3021in</Top>
-				<Left>0.6576in</Left>
-				<Width>1in</Width>
-				<Height>0.25in</Height>
-				<Style>
-					<PaddingBottom>2pt</PaddingBottom>
-					<PaddingLeft>2pt</PaddingLeft>
-					<PaddingRight>2pt</PaddingRight>
-					<PaddingTop>2pt</PaddingTop>
-				</Style>
-				<CanGrow>true</CanGrow>
-				<Value>="123"</Value>
-			</Textbox>
-			<Textbox Name="TextBox2">
-				<Top>1.2083in</Top>
-				<Left>3.3451in</Left>
-				<Width>1in</Width>
-				<Height>0.25in</Height>
-				<Style>
-					<PaddingBottom>2pt</PaddingBottom>
-					<PaddingLeft>2pt</PaddingLeft>
-					<PaddingRight>2pt</PaddingRight>
-					<PaddingTop>2pt</PaddingTop>
-				</Style>
-				<ZIndex>1</ZIndex>
-				<CanGrow>true</CanGrow>
-				<Value>=Siesa.SDK.Frontend.Prueba.GetCustomFunction()</Value>
-			</Textbox>
 		</ReportItems>
 	</Body>
 	<BottomMargin>1in</BottomMargin>
