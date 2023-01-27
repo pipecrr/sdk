@@ -1,5 +1,5 @@
 
-namespace Siesa.SDK.Entities.Enums
+namespace Siesa.Global.Enums
 {
 
 	public enum MenuType
