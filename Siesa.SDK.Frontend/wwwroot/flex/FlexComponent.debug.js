@@ -43,10 +43,7 @@ function MountFlex(id)
 }
 
 (() => {
-    loadScript("http://127.0.0.1:3000/static/js/bundle.js");
-    loadScript("http://127.0.0.1:3000/static/js/0.chunk.js");
-    loadScript("http://127.0.0.1:3000/static/js/1.chunk.js");
-    loadScript("http://127.0.0.1:3000/static/js/main.chunk.js");
+    
     window.MountFlex = MountFlex;    
     window.ListViewInstance = ListViewInstance;
 
