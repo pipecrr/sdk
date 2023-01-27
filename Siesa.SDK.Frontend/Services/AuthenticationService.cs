@@ -129,6 +129,7 @@ namespace Siesa.SDK.Frontend.Services
             await _localStorageService.RemoveItemAsync("usertoken");
             await _localStorageService.RemoveItemAsync("lastInteraction");
             await _localStorageService.RemoveItemAsync("n_tabs");
+            await _localStorageService.RemoveItemAsync("bd");
             await RemoveCookie("sdksession");
 
             _navigationManager.NavigateTo("login");
