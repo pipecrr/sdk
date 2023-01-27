@@ -14,6 +14,8 @@ using Siesa.SDK.Shared.DTOS;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Shared.Utilities;
 using Siesa.SDK.Entities.Enums;
+using Siesa.SDK.Backend.LinqHelper.DynamicLinqHelper;
+
 namespace Siesa.SDK.Backend.Extensions
 {
     public static class SDKFlexExtension
@@ -45,16 +47,22 @@ namespace Siesa.SDK.Backend.Extensions
 
             List<string> strColumns = new List<string>();
             List<string> strColumnsVirtual = new List<string>();
+            List<string> strColumnsInLeft = new List<string>();
 
             List<SDKFlexFilters> filters = requestData.filters;
             List<SDKFlexFilters> generalFilters = new List<SDKFlexFilters>();
             List<SDKFlexFilters> relatedToManyFilters = new List<SDKFlexFilters>();
+            List<SDKFlexFilters> dynamicFilters = new List<SDKFlexFilters>();
 
             if(filters.Count > 0){
                 foreach (SDKFlexFilters filter in filters){
                     var filterPath = filter.path.Split("::");
                     if(filterPath.Length == 1){
-                        generalFilters.Add(filter);
+                        if(filter.is_dynamic_field){
+                            dynamicFilters.Add(filter);
+                        }else{
+                            generalFilters.Add(filter);
+                        }
                     }else{
                         var entityTypeTmp = entityType;
                         var isFilterToMany = false;
@@ -94,34 +102,21 @@ namespace Siesa.SDK.Backend.Extensions
                 var includeMethod = typeof(IQueryable<object>).GetExtensionMethod(_assemblyInclude, "Include", new[] { typeof(IQueryable<object>), typeof(string) });
 
                 Dictionary<string,Dictionary<byte,string>> enumsDict = new Dictionary<string, Dictionary<byte, string>>();
-                // Dictionary<object,Dictionary<object, object>> virtualColumns = new Dictionary<object, Dictionary<object, object>>();
-                // Dictionary<string, object> virtualColumnsValueDefault = new Dictionary<string, object>();
                 List<SDKFlexVirtualColumnDTO> virtualColumns = new List<SDKFlexVirtualColumnDTO>();
-                List<string> virtualColumnsName = new List<string>();
+                List<string> virtualColumnsName = new List<string>();                
+                Dictionary<string, string> virtualColumnsNameType = new Dictionary<string, string>();
                 var rowidType = entityType.GetProperty("Rowid").PropertyType;
-                //var selectedRowid = false;
+                
                 strColumns.Add("np(Rowid) as rowid");
+                strColumnsInLeft.Add("Rowid as rowid");
                 foreach (SDKFlexColumn column in columns)
                 {
                     if(column.customFn){
                         continue;
                     }
-                    /*if(column.name == "Rowid"){
-                        selectedRowid = true;
-                    }*/
                     if(column.is_dynamic_field){
-                        var actualVirtualColumns = GetVirtualColumns(column.name, Context, dynamicEntityType);
-                        virtualColumns.AddRange(actualVirtualColumns);
-                        // Dictionary<object, object> virtualColumnValue = GetVirtualColumns(column.name, Context, dynamicEntityType, out object valueDefault);
-                        // if(virtualColumnValue != null){
-                        //     virtualColumnsValueDefault.Add(column.name, valueDefault);
-                        //     virtualColumns.Add(column.name, virtualColumnValue);
-                        //     strColumns.Add("Rowid  as " + column.name);
-                        // }
-                        if(virtualColumns.Count > 0){
-                            virtualColumnsName.Add(column.name);
-                            strColumns.Add("Rowid as " + column.name);
-                        }
+                        virtualColumnsName.Add(column.key_name);
+                        virtualColumnsNameType.Add(column.key_name, column.type);
                         continue;
                     }
 
@@ -132,6 +127,7 @@ namespace Siesa.SDK.Backend.Extensions
                     var columnPath = column.path.Split("::");
                     if (columnPath.Count() == 1){
                         strColumns.Add("np(" + column.name + ")" + " as " + column.key_name);
+                        strColumnsInLeft.Add(column.name + " as " + column.key_name);
                     }else{
                         var relatedColumnInclude = string.Join(".", columnPath.Skip(1));
                         var entityTypeTmp = entityType;
@@ -151,6 +147,7 @@ namespace Siesa.SDK.Backend.Extensions
                                 if(!strColumnsVirtual.Contains(columnPath[j])){
                                     strColumnsVirtual.Add(columnPath[j]);
                                     strColumns.Add($"{columnPath[j]} as {columnPath[j]}");
+                                    strColumnsInLeft.Add($"{columnPath[j]} as {columnPath[j]}");
                                 }
                                 break;
                             }else{
@@ -160,6 +157,7 @@ namespace Siesa.SDK.Backend.Extensions
                                     relatedColumns.Add(relatedColumnInclude);
                                 }
                                 strColumns.Add($"np({relatedColumnInclude}.{column.name}) as {column.key_name}");
+                                strColumnsInLeft.Add($"{relatedColumnInclude}.{column.name} as {column.key_name}");
                             }
                             entityTypeTmp = Utilities.SearchType(nameEntityTmp, true);
                         }
@@ -260,6 +258,41 @@ namespace Siesa.SDK.Backend.Extensions
 
                 _assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
                 var dynamicListMethod = typeof(IEnumerable).GetExtensionMethod(_assemblyDynamic, "ToDynamicList", new[] { typeof(IEnumerable) });
+
+                if(virtualColumnsName.Count>0){
+
+                    var relatedColumnInclude = "EntityColumn";
+                    var includeMethodGeneric = includeMethod.MakeGenericMethod(dynamicEntityType);
+                    
+                    var whereMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "Where", new[] { typeof(IQueryable), typeof(string), typeof(object[])});
+
+                    Type _typeLeftJoinExtension = typeof(LeftJoinExtension);
+                    var leftJoinMethod = _typeLeftJoinExtension.GetMethod("LeftJoin");
+
+                    foreach (var virtualColumn in virtualColumnsNameType){
+                        var relatedColumn = virtualColumn.Key;
+                        var typeRelatedColumn = virtualColumn.Value;
+                        var dynamicContextSet = Context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(dynamicEntityType).Invoke(Context, null);
+                        dynamicContextSet = includeMethodGeneric.Invoke(dynamicContextSet, new object[] { dynamicContextSet, relatedColumnInclude});
+                        dynamicContextSet = whereMethod.Invoke(dynamicContextSet, new object[] { dynamicContextSet, "EntityColumn.Id = @0", new object[]{relatedColumn}});
+                        //var resultdynamic = dynamicListMethod2.Invoke(dynamicContextSet, new object[] { dynamicContextSet });
+                        var columnData = "TextData";
+                        if(typeRelatedColumn.Equals("IntegerField")){
+                            columnData = "NumericData";
+                        }else if(typeRelatedColumn.Equals("DateField")){
+                            columnData = "DateData";
+                        }
+                        contextSet = leftJoinMethod.Invoke(null, new object[] { contextSet, dynamicContextSet, "Rowid", "RowidRecord", strColumnsInLeft, new List<string>() { $"{columnData} as {relatedColumn}" } });
+                        strColumnsInLeft.Add($"{relatedColumn} as {relatedColumn}");
+                    }
+
+                    if(dynamicFilters.Count>0){
+                        CreateWhereString(ref contextSet,dynamicFilters,entityType);
+                    }
+
+                    //var result2 = dynamicListMethod2.Invoke(contextSet2, new object[] { contextSet2 });
+                }
+                
                 var dynamicList = dynamicListMethod.Invoke(contextSet, new object[] { contextSet });
 
                 var jsonResource = JsonConvert.SerializeObject(dynamicList, Newtonsoft.Json.Formatting.None, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
@@ -280,43 +313,6 @@ namespace Siesa.SDK.Backend.Extensions
                         }
                     }
                     return new ActionResult<List<Dictionary<string,object>>>() { Data = resourceDict};
-                }
-
-                // if(virtualColumns.Count>0){
-                //     foreach (var item in resourceDict){
-                //         foreach (var virtualkey in virtualColumns.Keys)
-                //         {
-                //             var virtualValue = virtualColumns[virtualkey];
-                //             var itemValue = Convert.ChangeType(item[virtualkey.ToString()], rowidType);
-                //             var descriptionObj = virtualColumnsValueDefault[virtualkey.ToString()];
-                //             var description = "--";
-                //             object value;
-                //             if(virtualValue.TryGetValue(itemValue, out value)){
-                //                 description = value.ToString();
-                //             }
-                //             item[$"{virtualkey}_oreports_key"] = item[virtualkey.ToString()];
-                //             item[virtualkey.ToString()] = description;
-                //         }
-                //     }
-                //     return new ActionResult<List<Dictionary<string,object>>>() { Data = resourceDict};
-                // }
-
-                if(virtualColumns.Count>0){
-                    foreach (var item in resourceDict){
-                        foreach (var columnName in virtualColumnsName){
-                            var defaultvalue = virtualColumns.Where(x => x.ColumnName == columnName).Select(x => x).FirstOrDefault();
-                            SDKFlexVirtualColumnDTO virtualColumn = virtualColumns.Where(x => x.ColumnName == columnName && x.RowidRecord.ToString().Equals(item[columnName].ToString())).FirstOrDefault();
-                            var columnType = typeof(string);
-                            if(defaultvalue.ColumnType == enumDynamicEntityDataType.Number){
-                                columnType = typeof(int);
-                            }
-                            var valueColumn = Convert.ChangeType(defaultvalue.DefaultValue, columnType);
-                            if(virtualColumn != null){
-                                valueColumn = Convert.ChangeType(virtualColumn.ColumnValue, columnType);
-                            }
-                            item[columnName] = valueColumn;
-                        }                        
-                    }
                 }
 
                 if (resourceDict != null)
@@ -340,25 +336,39 @@ namespace Siesa.SDK.Backend.Extensions
             List<object> whereList = new List<object>();
             foreach (var filter in filters){
                 Type columnType = entityType;
-                var filterColumnPath = filter.path.Split("::").Append(filter.name).ToList();
-                var filterName = string.Join(".", filterColumnPath.Skip(2));
-                for (int i = 1; i < filterColumnPath.Count(); i++){
-                    var propertyType = columnType.GetProperty(filterColumnPath[i]).PropertyType;
-                    var isICollection = false;
-                    if(propertyType.IsGenericType){
-                        if(propertyType.GetGenericTypeDefinition() == typeof (ICollection<>)){
-                            isICollection = true;
-                        }
-                    }
-                    if(isICollection){
-                        columnType = columnType.GetProperty(filterColumnPath[i]).PropertyType.GenericTypeArguments[0];
-                    }else{
-                        columnType = columnType.GetProperty(filterColumnPath[i]).PropertyType;
-                    }
-                }
-
                 var value = filter.equal_from;
                 var isNullable = false;
+                //TODO: filtros de columnas relacionadas y dinamicas pdte
+                var filterName = "";
+                if(!filter.is_dynamic_field){
+                    var filterColumnPath = filter.path.Split("::").Append(filter.name).ToList();
+                    filterName = string.Join(".", filterColumnPath.Skip(2));
+                    for (int i = 1; i < filterColumnPath.Count(); i++){
+                        var propertyType = columnType.GetProperty(filterColumnPath[i]).PropertyType;
+                        var isICollection = false;
+                        if(propertyType.IsGenericType){
+                            if(propertyType.GetGenericTypeDefinition() == typeof (ICollection<>)){
+                                isICollection = true;
+                            }
+                        }
+                        if(isICollection){
+                            columnType = columnType.GetProperty(filterColumnPath[i]).PropertyType.GenericTypeArguments[0];
+                        }else{
+                            columnType = columnType.GetProperty(filterColumnPath[i]).PropertyType;
+                        }
+                    }
+                }else{
+                    columnType = typeof(string);
+                    if(filter.type.Equals("IntegerField")){
+                        columnType = typeof(int);
+                    }else if(filter.type.Equals("DateField")){
+                        if(value != null && value != "" && value.GetType() != typeof(string)){
+                            value = DateTime.Parse(value.ToString()).Date;
+                        }
+                        isNullable = true;
+                        columnType = typeof(DateOnly);
+                    }
+                }
 
                 if(columnType.IsGenericType && columnType.GetGenericTypeDefinition() == typeof(Nullable<>)){
                     isNullable = true;
@@ -368,59 +378,63 @@ namespace Siesa.SDK.Backend.Extensions
                     value = "";
                 }
 
-                if ((value == null || value=="") && !isNullable && columnType != typeof(string)){
+                if ((value == null || value=="") && !isNullable && columnType != typeof(string) && !filter.is_dynamic_field){
                     value = Activator.CreateInstance(columnType);
                 }
 
                 whereList.Add(value);
+                var columnName = $"_B.{filterName}";
+                if(filter.is_dynamic_field){
+                    columnName = filter.name;
+                }
                 switch (filter.selected_operator){
                     case "equal":
-                        whereListString.Add($"_B.{filterName} == @{whereList.Count-1}");
+                        whereListString.Add($"{columnName} == @{whereList.Count-1}");
                         break;
                     case "not_equal":
-                        whereListString.Add($"_B.{filterName} != @{whereList.Count-1}");
+                        whereListString.Add($"{columnName} != @{whereList.Count-1}");
                         break;
                     case "starts_with":
-                        whereListString.Add($"_B.{filterName}.StartsWith(@{whereList.Count-1})");
+                        whereListString.Add($"{columnName}.StartsWith(@{whereList.Count-1})");
                         break;
                     case "end_with":
-                        whereListString.Add($"_B.{filterName}.EndsWith(@{whereList.Count-1})");
+                        whereListString.Add($"{columnName}.EndsWith(@{whereList.Count-1})");
                         break;
                     case "null_or_empty":
                     case "empty":
                         if(isNullable || columnType == typeof(string)){
-                            whereListString.Add($"(_B.{filterName} == null || _B.{filterName} == \"\")");
+                            whereListString.Add($"({columnName} == null || {columnName} == \"\")");
                         }else{
                             whereList.RemoveAt(whereList.Count-1);
                             value = Activator.CreateInstance(columnType);
                             whereList.Add(value);
-                            whereListString.Add($"(_B.{filterName} == @{whereList.Count-1})");
+                            whereListString.Add($"({columnName} == @{whereList.Count-1})");
                         }
                         break;
                     case "not_empty":
                         if(isNullable || columnType == typeof(string)){
-                            whereListString.Add($"(_B.{filterName} != null && _B.{filterName} != \"\")");
+                            whereListString.Add($"({columnName} != null && {columnName} != \"\")");
                         }else{
                             whereList.RemoveAt(whereList.Count-1);
                             value = Activator.CreateInstance(columnType);
                             whereList.Add(value);
-                            whereListString.Add($"(_B.{filterName} != @{whereList.Count-1})");
+                            whereListString.Add($"({columnName} != @{whereList.Count-1})");
                         }
                         break;
                     case "contains":
-                        whereListString.Add($"_B.{filterName}.Contains(@{whereList.Count-1})");
+                        whereListString.Add($"{columnName}.Contains(@{whereList.Count-1})");
                         break;
                     case "gt":
-                        whereListString.Add($"_B.{filterName} > @{whereList.Count-1}");
+                        whereListString.Add($"{columnName} > @{whereList.Count-1}");
                         break;
                     case "gte":
-                        whereListString.Add($"_B.{filterName} >= @{whereList.Count-1}");
+                        whereListString.Add($"{columnName} >= @{whereList.Count-1}");
                         break;
                     case "lt":
-                        whereListString.Add($"_B.{filterName} < @{whereList.Count-1}");
+                        whereListString.Add($"{columnName} < @{whereList.Count-1}");
                         break;
                     case "lte":
-                        whereListString.Add($"_B.{filterName} <= @{whereList.Count-1}");
+                        whereListString.Add($"{columnName} <= @{whereList.Count-1}");
                         break;
                     case "between":
                         var filterTo = filter.to;
@@ -430,7 +444,7 @@ namespace Siesa.SDK.Backend.Extensions
                         var indexValue = whereList.Count-1;
                         whereList.Add(filterTo);
                         var indexValueTo = whereList.Count-1;
-                        whereListString.Add($"_B.{filterName} >= @{indexValue} && _B.{filterName} <= @{indexValueTo}");
+                        whereListString.Add($"{columnName} >= @{indexValue} && {columnName} <= @{indexValueTo}");
                         break;
                     case "fk_in":
                         if(value == null || value.ToString() == "0"){
@@ -446,7 +460,7 @@ namespace Siesa.SDK.Backend.Extensions
                         for (int i = 0; i < listValueFk.Count; i++){
                             var fkValue = Convert.ChangeType(Int32.Parse(listValueFk[i].id.ToString()), columnType);
                             whereList.Add(fkValue);
-                            whereListOr.Add($"_B.{filterName} == @{whereList.Count-1}");
+                            whereListOr.Add($"{columnName} == @{whereList.Count-1}");
                         }
                         whereOr = string.Join(" or ", whereListOr);
                         whereListString.Add($"({whereOr})");
@@ -465,10 +479,128 @@ namespace Siesa.SDK.Backend.Extensions
                         for (int i = 0; i < listValueFkNotIn.Count; i++){
                             var fkValue = Convert.ChangeType(Int32.Parse(listValueFkNotIn[i].id.ToString()), columnType);
                             whereList.Add(fkValue);
-                            whereListOrNotIn.Add($"_B.{filterName} != @{whereList.Count-1}");
+                            whereListOrNotIn.Add($"{columnName} != @{whereList.Count-1}");
                         }
                         whereOrNotIn = string.Join(" and ", whereListOrNotIn);
                         whereListString.Add($"({whereOrNotIn})");
+                        break;
+                    case "before":
+                        whereListString.Add($"{columnName} < @{whereList.Count-1}");
+                        break;
+                    case "after":
+                        whereListString.Add($"{columnName} > @{whereList.Count-1}");
+                        break;
+                    case "in_past":
+                        whereListString.Add($"{columnName} < DateTime.Now");
+                        break;
+                    case "in_future":
+                        whereListString.Add($"{columnName} > DateTime.Now");
+                        break;
+                    case "current_month":
+                        var firstDayMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                        var lastDayMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
+                        whereList.RemoveAt(whereList.Count-1);
+                        whereList.Add(firstDayMonth);
+                        var indexFirstDayMonth = whereList.Count-1;
+                        whereList.Add(lastDayMonth);
+                        var indexLastDayMonth = whereList.Count-1;
+                        whereListString.Add($"{columnName} >= @{indexFirstDayMonth} and {columnName} <= @{indexLastDayMonth}");
+                        //whereListString.Add($"{columnName}.Month == DateTime.Now.Month");
+                        break;
+                    case "current_week":
+                        var firstDayWeek = DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek);
+                        var lastDayWeek = firstDayWeek.AddDays(6);
+                        whereList.RemoveAt(whereList.Count-1);
+                        whereList.Add(firstDayWeek);
+                        var indexFirstDayWeek = whereList.Count-1;
+                        whereList.Add(lastDayWeek);
+                        var indexLastDayWeek = whereList.Count-1;
+                        whereListString.Add($"{columnName} >= @{indexFirstDayWeek} and {columnName} <= @{indexLastDayWeek}");
+                        //whereListString.Add($"{columnName}.WeekOfYear == DateTime.Now.WeekOfYear && {columnName}.Year == DateTime.Now.Year");
+                        break;
+                    case "last_month":
+                        var firstDayLastMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-1);
+                        var lastDayLastMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddDays(-1);
+                        whereList.RemoveAt(whereList.Count-1);
+                        whereList.Add(firstDayLastMonth);
+                        var indexFirstDayLastMonth = whereList.Count-1;
+                        whereList.Add(lastDayLastMonth);
+                        var indexLastDayLastMonth = whereList.Count-1;
+                        whereListString.Add($"{columnName} >= @{indexFirstDayLastMonth} and {columnName} <= @{indexLastDayLastMonth}");
+                        break;
+                    case "today":
+                        var firstDayToday = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+                        var lastDayToday = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddDays(1);
+                        whereList.RemoveAt(whereList.Count-1);
+                        whereList.Add(firstDayToday);
+                        var indexFirstDayToday = whereList.Count-1;
+                        whereList.Add(lastDayToday);
+                        var indexLastDayToday = whereList.Count-1;
+                        whereListString.Add($"{columnName} >= @{indexFirstDayToday} and {columnName} < @{indexLastDayToday}");
+                        //whereListString.Add($"{columnName}.Day == DateTime.Now.Day && {columnName}.Month == DateTime.Now.Month && {columnName}.Year == DateTime.Now.Year");
+                        break;
+                    case "last_n_days":
+                        if(value == null || value.ToString().Equals("0") || value.ToString().Equals("") || value.GetType() == typeof(DateTime)){
+                            return;
+                        }
+                        var days = Convert.ToInt32(value);
+                        var lastNDays = DateTime.Now.AddDays(-days);
+                        var today = DateTime.Now;
+                        whereList.RemoveAt(whereList.Count-1);
+                        whereList.Add(lastNDays);
+                        var indexLastNDays = whereList.Count-1;
+                        whereList.Add(today);
+                        var indexToday = whereList.Count-1;
+                        whereListString.Add($"{columnName} >= @{indexLastNDays} and {columnName} <= @{indexToday}");
+                        //whereListString.Add($"{columnName} >= DateTime.Now.AddDays(-{days})");
+                        break;
+                    case "next_n_days":
+                        if(value == null || value.ToString().Equals("0") || value.ToString().Equals("") || value.GetType() == typeof(DateTime)){
+                            return;
+                        }
+                        var daysNext = Convert.ToInt32(value);
+                        var nextNDays = DateTime.Now.AddDays(daysNext);
+                        var todayNext = DateTime.Now;
+                        whereList.RemoveAt(whereList.Count-1);
+                        whereList.Add(nextNDays);
+                        var indexNextNDays = whereList.Count-1;
+                        whereList.Add(todayNext);
+                        var indexTodayNext = whereList.Count-1;
+                        whereListString.Add($"{columnName} >= @{indexTodayNext} and {columnName} <= @{indexNextNDays}");
+                        //whereListString.Add($"{columnName} <= DateTime.Now.AddDays({daysNext})");
+                        break;
+                    case "this_year":
+                        var firstDayYear = new DateTime(DateTime.Now.Year, 1, 1);
+                        var lastDayYear = new DateTime(DateTime.Now.Year, 12, 31);
+                        whereList.RemoveAt(whereList.Count-1);
+                        whereList.Add(firstDayYear);
+                        var indexFirstDayYear = whereList.Count-1;
+                        whereList.Add(lastDayYear);
+                        var indexLastDayYear = whereList.Count-1;
+                        whereListString.Add($"{columnName} >= @{indexFirstDayYear} and {columnName} <= @{indexLastDayYear}");
+                        //whereListString.Add($"{columnName}.Year == DateTime.Now.Year");
+                        break;
+                    case "last_year":
+                        var firstDayLastYear = new DateTime(DateTime.Now.Year, 1, 1).AddYears(-1);
+                        var lastDayLastYear = new DateTime(DateTime.Now.Year, 12, 31).AddYears(-1);
+                        whereList.RemoveAt(whereList.Count-1);
+                        whereList.Add(firstDayLastYear);
+                        var indexFirstDayLastYear = whereList.Count-1;
+                        whereList.Add(lastDayLastYear);
+                        var indexLastDayLastYear = whereList.Count-1;
+                        whereListString.Add($"{columnName} >= @{indexFirstDayLastYear} and {columnName} <= @{indexLastDayLastYear}");
+                        //whereListString.Add($"{columnName}.Year == DateTime.Now.AddYears(-1).Year");
+                        break;
+                    case "next_year":
+                        var firstDayNextYear = new DateTime(DateTime.Now.Year, 1, 1).AddYears(1);
+                        var lastDayNextYear = new DateTime(DateTime.Now.Year, 12, 31).AddYears(1);
+                        whereList.RemoveAt(whereList.Count-1);
+                        whereList.Add(firstDayNextYear);
+                        var indexFirstDayNextYear = whereList.Count-1;
+                        whereList.Add(lastDayNextYear);
+                        var indexLastDayNextYear = whereList.Count-1;
+                        whereListString.Add($"{columnName} >= @{indexFirstDayNextYear} and {columnName} <= @{indexLastDayNextYear}");
+                        //whereListString.Add($"{columnName}.Year == DateTime.Now.AddYears(1).Year");
                         break;
                 }
             }
