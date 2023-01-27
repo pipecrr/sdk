@@ -106,7 +106,6 @@ namespace Siesa.SDK.Backend.Extensions
                 List<string> virtualColumnsName = new List<string>();                
                 Dictionary<string, string> virtualColumnsNameType = new Dictionary<string, string>();
                 var rowidType = entityType.GetProperty("Rowid").PropertyType;
-                
                 strColumns.Add("np(Rowid) as rowid");
                 strColumnsInLeft.Add("Rowid as rowid");
                 foreach (SDKFlexColumn column in columns)
@@ -126,8 +125,12 @@ namespace Siesa.SDK.Backend.Extensions
                     var i = columns.IndexOf(column);
                     var columnPath = column.path.Split("::");
                     if (columnPath.Count() == 1){
-                        strColumns.Add("np(" + column.name + ")" + " as " + column.key_name);
-                        strColumnsInLeft.Add(column.name + " as " + column.key_name);
+                        if(column.type.Equals("ForeignKey")){
+                            strColumns.Add("np(" + column.name + ".ToString())" + " as " + column.key_name);
+                        }else{
+                            strColumns.Add("np(" + column.name + ")" + " as " + column.key_name);
+                        }
+                            strColumnsInLeft.Add(column.name + " as " + column.key_name);
                     }else{
                         var relatedColumnInclude = string.Join(".", columnPath.Skip(1));
                         var entityTypeTmp = entityType;
@@ -146,7 +149,11 @@ namespace Siesa.SDK.Backend.Extensions
                                 relatedVirtualColumns.Add(column);
                                 if(!strColumnsVirtual.Contains(columnPath[j])){
                                     strColumnsVirtual.Add(columnPath[j]);
-                                    strColumns.Add($"{columnPath[j]} as {columnPath[j]}");
+                                    if(column.type.Equals("ForeignKey")){
+                                        strColumns.Add($"{columnPath[j]}.ToString() as {columnPath[j]}");
+                                    }else{
+                                        strColumns.Add($"{columnPath[j]} as {columnPath[j]}");
+                                    }
                                     strColumnsInLeft.Add($"{columnPath[j]} as {columnPath[j]}");
                                 }
                                 break;
@@ -156,14 +163,17 @@ namespace Siesa.SDK.Backend.Extensions
                                     contextSet = includeMethodGeneric.Invoke(contextSet, new object[] { contextSet,relatedColumnInclude });
                                     relatedColumns.Add(relatedColumnInclude);
                                 }
-                                strColumns.Add($"np({relatedColumnInclude}.{column.name}) as {column.key_name}");
+                                if(column.type.Equals("ForeignKey")){
+                                    strColumns.Add($"np({relatedColumnInclude}.{column.name}.ToString()) as {column.key_name}");
+                                }else{
+                                    strColumns.Add($"np({relatedColumnInclude}.{column.name}) as {column.key_name}");
+                                }
                                 strColumnsInLeft.Add($"{relatedColumnInclude}.{column.name} as {column.key_name}");
                             }
                             entityTypeTmp = Utilities.SearchType(nameEntityTmp, true);
                         }
-                    }                    
-                    if (column.type.Equals("SelectField"))
-                    {   
+                    }
+                    if(column.type.Equals("SelectField")){
                         if(!enumsDict.ContainsKey(column.key_name)){
                             var enumType = entityType.GetProperty(column.name).PropertyType;
                             Dictionary<byte,string> enumValue = GetEnumValues(column.name, rowidCulture, Context, enumType);
@@ -275,7 +285,6 @@ namespace Siesa.SDK.Backend.Extensions
                         var dynamicContextSet = Context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(dynamicEntityType).Invoke(Context, null);
                         dynamicContextSet = includeMethodGeneric.Invoke(dynamicContextSet, new object[] { dynamicContextSet, relatedColumnInclude});
                         dynamicContextSet = whereMethod.Invoke(dynamicContextSet, new object[] { dynamicContextSet, "EntityColumn.Id = @0", new object[]{relatedColumn}});
-                        //var resultdynamic = dynamicListMethod2.Invoke(dynamicContextSet, new object[] { dynamicContextSet });
                         var columnData = "TextData";
                         if(typeRelatedColumn.Equals("IntegerField")){
                             columnData = "NumericData";
@@ -289,10 +298,8 @@ namespace Siesa.SDK.Backend.Extensions
                     if(dynamicFilters.Count>0){
                         CreateWhereString(ref contextSet,dynamicFilters,entityType);
                     }
-
-                    //var result2 = dynamicListMethod2.Invoke(contextSet2, new object[] { contextSet2 });
                 }
-                
+
                 var dynamicList = dynamicListMethod.Invoke(contextSet, new object[] { contextSet });
 
                 var jsonResource = JsonConvert.SerializeObject(dynamicList, Newtonsoft.Json.Formatting.None, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
@@ -637,6 +644,10 @@ namespace Siesa.SDK.Backend.Extensions
                     columnNameProperty = GetPropertyExpression(pe, filter.name);
                     columnType = entityType.GetProperty(filter.name).PropertyType;
                 }
+                if(filter.type.Equals("ForeignKey")){
+                    columnNameProperty = GetPropertyExpression(columnNameProperty, "Rowid");
+                    columnType = columnType.GetProperty("Rowid").PropertyType;
+                }
 
                 Expression columnValue;
                 //the name constant to match 
@@ -820,7 +831,6 @@ namespace Siesa.SDK.Backend.Extensions
                         }
                         Expression fkInExpression;
                         Expression fkInExpression2;
-                        
                         var listValueFk = JsonConvert.DeserializeObject<List<dynamic>>(value.ToString());
                         if(listValueFk.Count == 0){
                             return;
@@ -831,16 +841,14 @@ namespace Siesa.SDK.Backend.Extensions
                             fkInExpression2 = Expression.Equal(columnNameProperty, Expression.Constant(fkValue));
                             fkInExpression = Expression.Or(fkInExpression, fkInExpression2);
                         }
-                        
                         addExpression(ref combined, fkInExpression);
                         break;
-                    case "fk_not_in":                    
+                    case "fk_not_in":
                         if(value == null || value.ToString() == "0"){
                             return;
                         }
                         Expression fkNotInExpression;
                         Expression fkNotInExpression2;
-                        
                         var listValueFkNotIn = JsonConvert.DeserializeObject<List<dynamic>>(value.ToString());
                         if(listValueFkNotIn.Count == 0){
                             return;
