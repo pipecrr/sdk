@@ -45,6 +45,7 @@ namespace Siesa.SDK.Entities.Enums
 	public enum enumDynamicEntityDataType
 	{
 		Text = 0,
-		Number = 1
+		Number = 1,
+		Date = 2,
 	}
 }
