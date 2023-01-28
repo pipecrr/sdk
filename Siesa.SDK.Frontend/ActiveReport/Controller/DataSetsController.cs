@@ -8,6 +8,7 @@ using System.Linq;
 using Siesa.SDK.Frontend.Application;
 using System.Threading.Tasks;
 using Siesa.SDK.Shared.DataAnnotations;
+using System.Runtime.CompilerServices;
 
 namespace Siesa.SDK.Frontend.Report.Controllers
 {
@@ -142,8 +143,14 @@ namespace Siesa.SDK.Frontend.Report.Controllers
 					{
 						if (Method.ReturnType.IsGenericType)
 						{
+
 							var ReturnValueType = Method.ReturnType.GetGenericArguments()[0];
-							DataSetEntity.Add(new { Id = $"{businessType.FullName}-{ReturnValueType.FullName}-{Method.Name}", 
+							string ReturnValueNameSpace = ReturnValueType.FullName;
+							if(Method.GetCustomAttributes(typeof(AsyncStateMachineAttribute), false).Length > 0)
+							{
+								ReturnValueNameSpace = ReturnValueType.GetGenericArguments()[0].FullName;
+							}
+							DataSetEntity.Add(new { Id = $"{businessType.FullName}-{ReturnValueNameSpace}-{Method.Name}", 
 												Name = Method.Name});
 						}
 					}

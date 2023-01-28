@@ -111,8 +111,12 @@ namespace Siesa.SDK.Frontend.Report.Controllers
                     if (method != null)
                     {
                         response = method.ReturnType.GetGenericArguments()[0];
+                        if (method.GetCustomAttributes(typeof(AsyncStateMachineAttribute), false).Length > 0)
+                        {
+                            response = response.GetGenericArguments()[0];
+                        }
                     }
-                }else
+                 }else
                 {
                     response = BLType.GetProperty("BaseObj").PropertyType;
                 }
