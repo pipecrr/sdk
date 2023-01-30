@@ -38,7 +38,7 @@ function MountFlex(div_id, retries = 0)
     if(!window.ResourceFlex){
         window.ResourceFlex = {}
     }
-    if(document.getElementById("flexdebug") == null)
+    if(document.getElementById(div_id) == null)
     {
         console.log("Flex debug div not found, creating it", retries);
         if(retries < 10)
@@ -51,12 +51,12 @@ function MountFlex(div_id, retries = 0)
         }
     }
     //
-    document.getElementById("flexdebug").innerHTML = "";
+    document.getElementById(div_id).innerHTML = "";
 
     let interval_flexdebug = setInterval(function () {
         if ("mountOReportsReact" in window) {
             clearInterval(interval_flexdebug);
-            mountOReportsReact("flexdebug");
+            mountOReportsReact(div_id);
         }
     }, 100);
 }

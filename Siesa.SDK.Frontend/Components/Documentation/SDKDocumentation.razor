@@ -11,6 +11,7 @@
 @using Siesa.SDK.Frontend.Components.Documentation.Layout
 @using Siesa.SDK.Frontend.Components.Documentation.ViewsBuilder
 @using Siesa.SDK.Frontend.Components.Documentation.DataAnnotations
+@inject IJSRuntime JSRuntime
 
 
 @layout EmptyLayout
@@ -61,6 +62,8 @@
 
 
 @code {
+
+    private IJSObjectReference _jsModule;
     protected override void OnInitialized()
     {
         base.OnInitialized();
@@ -145,6 +148,17 @@
         };
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender || _jsModule == null){
+            await ImportJs();
+        }
+    }
+
+    private async Task ImportJs()
+    {
+        _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/Components/Documentation/SDKDocumentation.razor.js");
+    }
     
 }
 
