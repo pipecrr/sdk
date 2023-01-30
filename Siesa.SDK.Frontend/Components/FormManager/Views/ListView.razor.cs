@@ -194,6 +194,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if (String.IsNullOrEmpty(data) && viewdef != DefaultViewdefName)
             {
                 data = BackendRouterService.GetViewdef(businessName, DefaultViewdefName);
+                FinalViewdefName = DefaultViewdefName;
             }
             return data;
         }
