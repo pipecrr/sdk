@@ -8,6 +8,7 @@ namespace Siesa.SDK.Shared.DTOS
     public class FeactureOperationsDTO
     {
         public int RowidFeature {get; set;}
+        public int RowidRole {get; set;}
         public ICollection<E00042_Operation> Operations {get; set;}
         public List<ActionDescription> Actions {get; set;}
     }
