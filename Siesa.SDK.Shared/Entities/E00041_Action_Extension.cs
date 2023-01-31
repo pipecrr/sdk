@@ -7,14 +7,12 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Siesa.SDK.Shared.Json;
 using Microsoft.EntityFrameworkCore;
-
+using Siesa.SDK.Entities.Enums;
 
 namespace Siesa.SDK.Entities
 {
 	public partial class E00041_Action
 	{
-
-
 
 	}
 }

@@ -115,6 +115,44 @@ namespace Siesa.SDK.Business
             AuthenticationService = (IAuthenticationService)_provider.GetService(typeof(IAuthenticationService));
             
             _backendRouterService = _provider.GetService(typeof(IBackendRouterService)) as IBackendRouterService;
+
+        }
+
+        public SDKContext CreateDbContext(bool UseLazyLoadingProxies = false)
+        {
+            dynamic retContext = null;
+            try
+            {
+                var tenantProvider = _provider.GetRequiredService<ITenantProvider>();
+                if (UseLazyLoadingProxies)
+                {
+                    tenantProvider.SetUseLazyLoadingProxies(true);
+                    retContext = _provider.GetService(typeof(SDKContext));
+                }
+                else
+                {
+                    tenantProvider.SetUseLazyLoadingProxies(false);
+                }
+            }
+            catch (System.Exception)
+            {
+            }
+
+            if(retContext == null)
+            {
+                retContext = _dbFactory.CreateDbContext();
+            }
+
+            if (UseLazyLoadingProxies)
+            {
+                retContext.ChangeTracker.LazyLoadingEnabled = true;
+            }
+            else
+            {
+                retContext.ChangeTracker.LazyLoadingEnabled = false;
+            }
+            retContext.SetProvider(_provider);
+            return retContext;
         }
     }
     public class BLBackendSimple<T, K> : IBLBase<T> where T : class, IBaseSDK where K : BLBaseValidator<T>
