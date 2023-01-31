@@ -13,7 +13,7 @@ using Siesa.SDK.Shared.Business;
 using Siesa.SDK.Shared.DTOS;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Shared.Utilities;
-using Siesa.SDK.Entities.Enums;
+using Siesa.Global.Enums;
 using Siesa.SDK.Backend.LinqHelper.DynamicLinqHelper;
 
 namespace Siesa.SDK.Backend.Extensions

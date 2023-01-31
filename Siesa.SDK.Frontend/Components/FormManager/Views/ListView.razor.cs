@@ -22,7 +22,7 @@ using Blazored.LocalStorage;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.Extensions.DependencyInjection;
-using Siesa.SDK.Entities.Enums;
+using Siesa.Global.Enums;
 using Newtonsoft.Json;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
@@ -194,6 +194,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if (String.IsNullOrEmpty(data) && viewdef != DefaultViewdefName)
             {
                 data = BackendRouterService.GetViewdef(businessName, DefaultViewdefName);
+                FinalViewdefName = DefaultViewdefName;
             }
             return data;
         }

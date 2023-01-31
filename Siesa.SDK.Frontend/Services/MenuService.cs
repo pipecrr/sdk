@@ -14,7 +14,7 @@ using Siesa.SDK.Frontend.Components.Layout.NavMenu;
 using Siesa.SDK.Frontend.Application;
 using Siesa.SDK.Frontend.Components.Layout;
 using Siesa.SDK.Frontend.Components.FormManager.Model;
-using Siesa.SDK.Entities.Enums;
+using Siesa.Global.Enums;
 
 namespace Siesa.SDK.Frontend.Services
 {

@@ -1,4 +1,4 @@
-using Siesa.SDK.Entities.Enums;
+using Siesa.Global.Enums;
 
 namespace Siesa.SDK.Shared.DTOS
 {
