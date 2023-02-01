@@ -72,7 +72,8 @@
     }
     
     public async Task OpenModalList(){
-        var listDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicListView BusinessName="@RelatedBusiness" IsSubpanel=true  ShowTitle="false" OnSelectedRow="OnSelectedRow"/>, width: "90%", title:$"{RelatedBusiness}.Singular");
+        var filters = GetStringFilters();
+        var listDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicListView BusinessName="@RelatedBusiness" IsSubpanel=true  ShowTitle="false" OnSelectedRow="OnSelectedRow" SubpanelFilter="@filters" FromEntityField=true/>, width: "90%", title:$"{RelatedBusiness}.Singular");
         StateHasChanged();
     }
 }

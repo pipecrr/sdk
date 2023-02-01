@@ -294,5 +294,21 @@ namespace Siesa.SDK.Frontend.Components.Fields
             var elementInstance = await jsRuntime.InvokeAsync<IJSObjectReference>("$", $"#{idInput}[aria-expanded=false]");
             await elementInstance.InvokeVoidAsync("dropdown","show");
         }
+
+        public string GetStringFilters(){
+            var filters = "";
+            if(Value != null && Value != ""){
+                var properties = RelBusinessObj.BaseObj.GetType().GetProperties();
+                foreach (var property in properties){
+                    if(property.PropertyType == typeof(string)){
+                        if(!string.IsNullOrEmpty(filters)){
+                            filters += " || ";
+                        }
+                        filters += $"({property.Name} == null ? \"\" : {property.Name}).ToLower().Contains(\"{Value}\".ToLower())";
+                    }
+                }
+            }
+            return filters;
+        }
     }
 }
