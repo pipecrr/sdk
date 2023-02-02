@@ -31,7 +31,7 @@ namespace Siesa.SDK.Backend.Services
             return _user;
         }}
 
-        public async Task SetToken(string token)
+        public async Task SetToken(string token, bool saveLocalStorage = true)
         {
             UserToken = token;
         }

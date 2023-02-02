@@ -134,10 +134,13 @@ namespace Siesa.SDK.Frontend.Services
             _navigationManager.NavigateTo("login");
         }
 
-        public async Task SetToken(string token)
+        public async Task SetToken(string token, bool saveLocalStorage = true)
         {
             UserToken = token;
-            await _localStorageService.SetItemAsync("usertoken", UserToken);
+            if(saveLocalStorage)
+            {
+                await _localStorageService.SetItemAsync("usertoken", UserToken);
+            }
         }
 
         public async Task SetSelectedConnection(SDKDbConnection selectedConnection)
@@ -232,6 +235,7 @@ namespace Siesa.SDK.Frontend.Services
             var user = new SDKJWT(_secretKey, _minutesExp).Validate(token);
             return user != null;
         }
+
 
         public async Task<bool> ForgotPasswordAsync(string email){
 

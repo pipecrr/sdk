@@ -1,4 +1,4 @@
-(() => {
+export function ReportDesginer(){
 
     loadCss('/_content/Siesa.SDK.Frontend/vendor/css/fonts-googleapis.css');
     loadCss('/_content/Siesa.SDK.Frontend/jsViewer.min.css');
@@ -51,4 +51,4 @@
     });
 
     
-})();
+};

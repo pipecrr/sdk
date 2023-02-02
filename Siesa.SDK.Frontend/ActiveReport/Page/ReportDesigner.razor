@@ -1,4 +1,6 @@
-﻿@page "/ReportDesigner"
+﻿@* @page "/ReportDesigner"  Arreglar navegacion archivo .js, basarme en MainLayout*@
+
+
 
 @inject IJSRuntime JSRuntime;
 
@@ -10,15 +12,53 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-         if(firstRender || _jsModule == null){
-             try
-            {
-                await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/js/utils.js");
-            }catch (Exception)
-            {
-            }
-            _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/ActiveReport/Page/ReportDesigner.razor.js");
+        if(firstRender || _jsModule == null)
+        {
+            await ImportJs();
         }
     }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        _ = InitSDKJS();
+    }
+
+    private async Task InitSDKJS()
+    {
+        try
+        {
+            if(_jsModule == null)
+            {
+                await ImportJs();
+            }
+            await _jsModule.InvokeVoidAsync("ReportDesginer");
+            await _jsModule.InvokeVoidAsync("InitSDK", DotNetObjectReference.Create(this));
+        }
+        catch (Exception)
+        {
+        }
+        StateHasChanged();
+    }
+
+    private async Task ImportJs()
+    {
+        
+        try
+        {
+            await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/js/utils.js");
+        }catch (Exception)
+        {
+        }
+        try
+        {
+            _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/ActiveReport/Page/ReportDesigner.razor.js");
+        }
+        catch (Exception)
+        {
+        }
+        
+    }
+
 
 }
