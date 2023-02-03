@@ -8,10 +8,11 @@
 @code {
     private string _relatedEntityURL;
     private string Label;
+    private bool _isLoaded;
 
     private async Task GetObjectString(string relBusiness, Int64 relRowid)
     {
-        if(Label != null)
+        if(_isLoaded)
         {
             return;
         }
@@ -20,6 +21,7 @@
         if(request.Success)
         {
             Label = (string)request.Data;
+            _isLoaded = true;
         }
         StateHasChanged();
     }
@@ -41,7 +43,7 @@
         {
             var rowidValue = idProperty.GetValue(BindValue);
             _relatedEntityURL = $"/{FieldOpt.RelatedBusiness}/detail/{rowidValue}/";
-            GetObjectString(FieldOpt.RelatedBusiness, Convert.ToInt64(rowidValue));
+            _ = GetObjectString(FieldOpt.RelatedBusiness, Convert.ToInt64(rowidValue));
             return _relatedEntityURL;
         }
         
@@ -53,10 +55,35 @@
             return _relatedEntityURL != "" && _relatedEntityURL != null ? _relatedEntityURL : ObtainEntityURL();
         } }
 
+    private void SetLocalLabel()
+    {
+        if (BindValue == null)
+        {
+            Label = "";
+        }
+        else
+        {
+            try
+            {
+                Label = BindValue.ToString();
+            }
+            catch (System.Exception)
+            {
+                Label = "";
+            }
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        SetLocalLabel();
+        base.OnInitialized();
+    }
     public override async Task SetParametersAsync(ParameterView parameters)
     {
-        Label = null;
         _relatedEntityURL = null;
+        _isLoaded = false;
         await base.SetParametersAsync(parameters);
+        SetLocalLabel();
     }
 }
