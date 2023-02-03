@@ -755,14 +755,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 Data = new List<object> { };
             }
             if(ServerPaginationFlex && UseFlex){
-                var dbData = await BusinessObj.GetDataAsync(0, 2, filters, "");
+                /*var dbData = await BusinessObj.GetDataAsync(0, 2, filters, "");
                 Data = dbData.Data;
                 if (Data.Count() == 1)
                 {
                     GoToDetail(((dynamic)Data.First()).Rowid);
                     return;
                 }
-                count = dbData.TotalCount;
+                count = dbData.TotalCount;*/
             }else{
                 var dbData = await BusinessObj.GetDataAsync(null, null, filters, "");
                 Data = dbData.Data;

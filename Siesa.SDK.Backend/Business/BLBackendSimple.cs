@@ -592,7 +592,6 @@ namespace Siesa.SDK.Business
                 {
                     query = query.Where(filter);
                 }
-                var total = query.Count();
 
                 if (!string.IsNullOrEmpty(orderBy))
                 {
@@ -616,9 +615,7 @@ namespace Siesa.SDK.Business
                 {
                     query = queryFilter(query);
                 }
-                //total data
-                result.TotalCount = total;
-
+                
                 //data
                 result.Data = query.ToList();
             }
