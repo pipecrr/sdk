@@ -1,6 +1,8 @@
 @using Siesa.SDK.Frontend.Components.Fields
 @using Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 @using Siesa.SDK.Entities
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
 
 <div class="container-fluid">
     <div class="container-fluid">
@@ -48,10 +50,31 @@
                 />
             </SDKCard>
         </div>
+        <div class="col-md-6 p-3">
+            <h2>MultiSelect</h2>
+            <SDKCard>
+                <SDKEntityField
+                RelatedBusiness="@RelatedBusiness"
+                BaseObj="@BaseObj"
+                FieldName="@FieldName"
+                IsMultiple="true"
+                @ref="sdkEntityFieldRef"
+            />
+            <div>
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Get Value" Click="@GetValue"/>
+
+                @foreach (var item in valuesSelected){
+                    <SDKBadge Style="SDKBadgeStyle.Light" Value="@item.ToString()"></SDKBadge>
+                }
+            </div>
+            </SDKCard>
+        </div>
     </div>
 </div>
 
 @code {
+    List<dynamic> valuesSelected = new List<dynamic>();
+    SDKEntityField sdkEntityFieldRef;
     string BusinessName { get; set; } = "BLUser";
     string RelatedBusiness { get; set; } = "BLUser";
     E00220_User BaseObj { get; set; } = new E00220_User();
@@ -66,5 +89,8 @@
 
     public void OnChange(){
         Console.WriteLine("OnChange");
+    }
+    public void GetValue(){
+        valuesSelected = sdkEntityFieldRef.GetItemsSelected();
     }
 }
