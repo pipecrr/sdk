@@ -41,7 +41,6 @@ namespace Siesa.SDK.Shared.Services
             this.serviceConfiguration = serviceConfiguration.Value;
             _masterBackendURL = this.serviceConfiguration.MasterBackendUrl;
             Instance = this;
-            Console.WriteLine("inicia");
         }
 
         public BusinessModel GetBackend(string businessName)
