@@ -244,7 +244,8 @@ namespace Siesa.SDK.GRPCServices
                     if(_featurePermissionService != null){
                         try{
                             List<int> permissions = exposedMethod.Permissions.ToList();
-                            hasPermission = _featurePermissionService.CheckUserActionPermissions(request.BusinessName, permissions, _authenticationService).GetAwaiter().GetResult();
+                            hasPermission = _featurePermissionService.CheckUserActionPermissions(request.BusinessName,
+                                permissions, _authenticationService);
                             if(!hasPermission){
                                 response.Success = false;
                                 response.Errors.Add("Custom.Generic.Unauthorized");

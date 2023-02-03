@@ -256,13 +256,13 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
         private async Task CheckPermissions()
         {
-            if (FeaturePermissionService != null)
+            if (FeaturePermissionService != null && !string.IsNullOrEmpty(RelatedBusiness))
             {
                 try
                 {
-                    CanCreate = await FeaturePermissionService.CheckUserActionPermission(RelatedBusiness, 1, AuthenticationService);
-                    CanEdit = await FeaturePermissionService.CheckUserActionPermission(RelatedBusiness, 2, AuthenticationService);
-                    CanDetail = await FeaturePermissionService.CheckUserActionPermission(RelatedBusiness, 5, AuthenticationService);
+                    CanCreate = FeaturePermissionService.CheckUserActionPermission(RelatedBusiness, 1, AuthenticationService);
+                    CanEdit = FeaturePermissionService.CheckUserActionPermission(RelatedBusiness, 2, AuthenticationService);
+                    CanDetail = FeaturePermissionService.CheckUserActionPermission(RelatedBusiness, 5, AuthenticationService);
                 }
                 catch (System.Exception)
                 {

@@ -63,7 +63,7 @@
                     {
                         @if(submenu.Feature != null && submenu.Type == MenuType.Feature && string.IsNullOrEmpty(submenu.Url))
                         {
-                            @if(FeaturePermissionService.CheckUserActionPermission(submenu.Feature.Rowid, 4, AuthenticationService))
+                            @if(FeaturePermissionService.CheckUserActionPermission(submenu.Feature.BusinessName, 4, AuthenticationService))
                             {
                                 <div class="col-12 col-sm-6 col-md-4 py-3">
                                     <button @onclick="@(()=>OnClickItem(submenu))" class="whcm_panel_button w-100 p-3 font-weight-bold text-truncate">

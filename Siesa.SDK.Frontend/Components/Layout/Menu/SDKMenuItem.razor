@@ -21,7 +21,7 @@
     }else{
         @if(MenuItem.Feature != null)
         {
-            @if(Utilities.CheckUserActionPermission(MenuItem.Feature.Rowid, 4, AuthenticationService))
+            @if(Utilities.CheckUserActionPermission(MenuItem.Feature.BusinessName, 4, AuthenticationService))
             {
                 <DxMenuItem Text="@Title" IconCssClass="@MenuItem.IconClass" NavigateUrl="@NavigateUrl()" />
             }
