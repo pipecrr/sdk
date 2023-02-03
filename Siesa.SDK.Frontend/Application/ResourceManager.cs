@@ -115,6 +115,11 @@ namespace Siesa.SDK.Frontend.Application
         }
         public async Task<string> GetResource(string resourceTag, Int64 cultureRowid)
         {
+            if(resourceTag.StartsWith("SDKDev-"))
+            {
+                //remove SDKDev- prefix
+                return resourceTag.Substring(7);
+            }
             if(!IsInitialized)
             {
                 //wait until initialized is true
