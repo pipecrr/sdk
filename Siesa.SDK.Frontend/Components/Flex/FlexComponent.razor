@@ -67,6 +67,9 @@
     public string GuidFlex {get;set;} = "";
     [Parameter]
     public List<string> ActionIcons {get;set;} = new List<string>();
+
+    [Parameter]
+    public bool HasSearch {get;set;} = false;  
     private string _guid ="";
     private bool _isDebug = false;
 
@@ -157,6 +160,7 @@
         FlexAttributes.Add("current_view", _currentView);
         FlexAttributes.Add("is_list_view", IsListView.ToString());
         FlexAttributes.Add("bl_name_list", BlNameList);
+        FlexAttributes.Add("has_search", HasSearch.ToString());
         FlexAttributes.Add("viewdef_name", ViewdefName);
         FlexAttributes.Add("guid_list_view", GuidListView);
         FlexAttributes.Add("can_edit_list_view", CanEdit.ToString());

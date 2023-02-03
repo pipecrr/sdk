@@ -605,9 +605,7 @@ namespace Siesa.SDK.Business
                 {
                     query = queryFilter(query);
                 }
-                //total data
-                result.TotalCount = total;
-
+                
                 //data
                 result.Data = query.ToList();
             }
