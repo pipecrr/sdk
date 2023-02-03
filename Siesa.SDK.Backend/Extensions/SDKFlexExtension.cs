@@ -27,7 +27,7 @@ namespace Siesa.SDK.Backend.Extensions
 
         private static Assembly _assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
         
-        internal static ActionResult<List<Dictionary<string, object>>> SDKFlexPreviewData(SDKContext Context, SDKFlexRequestData requestData, IAuthenticationService authenticationService, bool setTop)
+        internal static ActionResult<dynamic> SDKFlexPreviewData(SDKContext Context, SDKFlexRequestData requestData, IAuthenticationService authenticationService, bool setTop)
         {
             var rowidCulture = authenticationService.User.RowidCulture;
             int? skip = requestData.skip;
@@ -36,7 +36,7 @@ namespace Siesa.SDK.Backend.Extensions
             List<SDKFlexColumn> columns = requestData.columns;
             if (columns.Count == 0)
             {
-                return new ActionResult<List<Dictionary<string,object>>>() { Data = new List<Dictionary<string, object>>()};
+                return new ActionResult<dynamic>() { Data = new List<Dictionary<string, object>>()};
             }
             var nameEntity = requestData.selected_class;
             var nameSpaceEntity = requestData.module_path;
@@ -127,6 +127,8 @@ namespace Siesa.SDK.Backend.Extensions
                     if (columnPath.Count() == 1){
                         if(column.type.Equals("ForeignKey")){
                             strColumns.Add("np(" + column.name + ".ToString())" + " as " + column.key_name);
+                        }else if(column.type.Equals("SelectField")){
+                            strColumns.Add("np(" + column.name + ".ToString())" + " as " + column.key_name);
                         }else{
                             strColumns.Add("np(" + column.name + ")" + " as " + column.key_name);
                         }
@@ -151,6 +153,8 @@ namespace Siesa.SDK.Backend.Extensions
                                     strColumnsVirtual.Add(columnPath[j]);
                                     if(column.type.Equals("ForeignKey")){
                                         strColumns.Add($"{columnPath[j]}.ToString() as {columnPath[j]}");
+                                    }else if(column.type.Equals("SelectField")){
+                                        strColumns.Add($"{columnPath[j]}.ToString() as {columnPath[j]}");
                                     }else{
                                         strColumns.Add($"{columnPath[j]} as {columnPath[j]}");
                                     }
@@ -165,6 +169,8 @@ namespace Siesa.SDK.Backend.Extensions
                                 }
                                 if(column.type.Equals("ForeignKey")){
                                     strColumns.Add($"np({relatedColumnInclude}.{column.name}.ToString()) as {column.key_name}");
+                                }else if(column.type.Equals("SelectField")){
+                                    strColumns.Add($"np({relatedColumnInclude}.{column.name}.ToString()) as {column.key_name}");
                                 }else{
                                     strColumns.Add($"np({relatedColumnInclude}.{column.name}) as {column.key_name}");
                                 }
@@ -173,13 +179,13 @@ namespace Siesa.SDK.Backend.Extensions
                             entityTypeTmp = Utilities.SearchType(nameEntityTmp, true);
                         }
                     }
-                    if(column.type.Equals("SelectField")){
-                        if(!enumsDict.ContainsKey(column.key_name)){
-                            var enumType = entityType.GetProperty(column.name).PropertyType;
-                            Dictionary<byte,string> enumValue = GetEnumValues(column.name, rowidCulture, Context, enumType);
-                            enumsDict.Add(column.key_name, enumValue);
-                        }
-                    }
+                    // if(column.type.Equals("SelectField")){
+                    //     if(!enumsDict.ContainsKey(column.key_name)){
+                    //         /*var enumType = entityType.GetProperty(column.name).PropertyType;
+                    //         Dictionary<byte,string> enumValue = GetEnumValues(column.name, rowidCulture, Context, enumType);
+                    //         enumsDict.Add(column.key_name, enumValue);*/
+                    //     }
+                    // }
                 }
                 //remove duplicate columns
                 strColumns = strColumns.Distinct().ToList();
@@ -302,7 +308,7 @@ namespace Siesa.SDK.Backend.Extensions
 
                 var dynamicList = dynamicListMethod.Invoke(contextSet, new object[] { contextSet });
 
-                var jsonResource = JsonConvert.SerializeObject(dynamicList, Newtonsoft.Json.Formatting.None, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+                /*var jsonResource = JsonConvert.SerializeObject(dynamicList, Newtonsoft.Json.Formatting.None, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
                 var resourceDict = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(jsonResource);
 
                 if(enumsDict.Count>0){
@@ -320,16 +326,18 @@ namespace Siesa.SDK.Backend.Extensions
                         }
                     }
                     return new ActionResult<List<Dictionary<string,object>>>() { Data = resourceDict};
-                }
+                }*/
+
+                var resourceDict = dynamicList;
 
                 if (resourceDict != null)
                 {
-                    return new ActionResult<List<Dictionary<string,object>>>() { Data = resourceDict };
+                    return new ActionResult<dynamic>() { Data = dynamicList };
                 }
             }
             catch (Exception e)
             {
-                return new ActionResult<List<Dictionary<string,object>>>() { Success = false, Errors = new List<string>() { "Error al crear la consulta" } };
+                return new ActionResult<dynamic>() { Success = false, Errors = new List<string>() { "Error al crear la consulta" } };
             }
 
             return null;
