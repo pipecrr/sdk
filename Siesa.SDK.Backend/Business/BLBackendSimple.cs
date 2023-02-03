@@ -695,7 +695,7 @@ namespace Siesa.SDK.Business
         }
 
         [SDKExposedMethod]
-        public virtual ActionResult<List<Dictionary<string,object>>> SDKFlexPreviewData(SDKFlexRequestData requestData, bool setTop = true)
+        public virtual ActionResult<dynamic> SDKFlexPreviewData(SDKFlexRequestData requestData, bool setTop = true)
         {
             using (var Context = CreateDbContext())
             {

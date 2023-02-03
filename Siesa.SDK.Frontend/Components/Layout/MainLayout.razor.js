@@ -76,13 +76,13 @@ export async function InitSDK(dotnethelper){
     // dispatch event
     var event = new CustomEvent('sdkinit', { detail: { dotnethelper: dotnethelper } });
     document.dispatchEvent(event);
+    
     var bd = localStorage.getItem('bd');
     if (bd == null || bd != 'sync'){
         var response = await getResouces();
         if(response.data.Data){
             var data = response.data.Data;
             const db = await new Dexie("IndexDb").open();
-            
             var Cultures = data.Cultures;
             db.table("Cultures").clear();
             db.table("Cultures").bulkPut(Cultures);
@@ -92,7 +92,30 @@ export async function InitSDK(dotnethelper){
             var ResourcesDetail = data.ResourcesDetail;
             db.table("ResourcesDetail").clear();
             db.table("ResourcesDetail").bulkPut(ResourcesDetail);
-    
+
+            let culture = {};
+            if(!window.sdkFlexCulture){
+                window.sdkFlexCulture = Cultures[0];
+                culture = Cultures[0];
+            }else{
+                culture = window.sdkFlexCulture;
+            }                       
+            var rowidCulture = culture.id; 
+            var resourcesDetail = ResourcesDetail.filter(x => x.CultureId == culture.Id).map(x => {return {[x.idResource]:x.description}})
+            if(!window.ResourceFlex){
+                window.ResourceFlex = {};
+                if(!window.ResourceFlex[rowidCulture]){
+                    window.ResourceFlex[rowidCulture] = resourcesDetail;
+                }else{
+                    window.ResourceFlex[rowidCulture] = {...window.ResourceFlex[rowidCulture], ...resourcesDetail};
+                }
+            }else{
+                if(!window.ResourceFlex[rowidCulture]){
+                    window.ResourceFlex[rowidCulture] = resourcesDetail;
+                }else{
+                    window.ResourceFlex[rowidCulture] = {...window.ResourceFlex[rowidCulture], ...resourcesDetail};
+                }
+            }
             db.close();
         }
         localStorage.setItem('bd', 'sync');        
