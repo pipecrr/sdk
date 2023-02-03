@@ -65,8 +65,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
             idInput = Guid.NewGuid().ToString();
             CheckPermissions();
             var currentValueObj = BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj);
-            if(currentValueObj != null)
-            {
+            if(currentValueObj != null && !IsMultiple){
                 Value = currentValueObj.ToString();
             }
             relBusinessModel = BackendRouterService.GetSDKBusinessModel(RelatedBusiness, null);
