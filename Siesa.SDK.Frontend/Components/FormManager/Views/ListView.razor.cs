@@ -768,8 +768,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }else{
                 var dbData = await BusinessObj.GetDataAsync(null, null, filters, "");
                 Data = dbData.Data;
-                if (Data.Count() == 1 && !FromEntityField){
-                    GoToDetail(((dynamic)Data.First()).Rowid);
+                if (Data.Count() == 1){
+                    if(!FromEntityField){
+                        GoToDetail(((dynamic)Data.First()).Rowid);
+                    }else{
+                        IList<object> objects = new List<object> { Data.First()};
+                        OnSelectionChanged(objects);
+                    }
                     return;
                 }
                 count = dbData.TotalCount;

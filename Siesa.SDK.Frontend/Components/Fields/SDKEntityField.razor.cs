@@ -24,7 +24,6 @@ namespace Siesa.SDK.Frontend.Components.Fields
         [Inject] public IFeaturePermissionService FeaturePermissionService { get; set; }
         [Inject] public SDKDialogService SDKDialogService { get; set; }
         [Inject] public IJSRuntime jsRuntime { get; set; }
-
         [Parameter] public string FieldName { get; set; }
         [Parameter] public string BusinessName { get; set; }
         [Parameter] public string RelatedBusiness { get; set; }
@@ -35,12 +34,15 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
         [Parameter] public Action<object> SetValue { get; set; }
         [Parameter] public Action OnChange { get; set; }
+        [Parameter] public bool IsMultiple { get; set; } = false;
         public dynamic RelBusinessObj { get; set; }
         private string Value = "";
+        private List<string> Values = new List<string>() {};
+        private List<dynamic> ItemsSelected = new List<dynamic>() {};
         private Dictionary<int, object> CacheData = new Dictionary<int, object>();
         SDKBusinessModel relBusinessModel = null;
         private LoadResult CacheLoadResult;
-        private string LastSearchString;    
+        private string LastSearchString;
         private CancellationTokenSource cancellationTokenSource;
         private int MinMillisecondsBetweenSearch = 100;
         private int RowidCulture = 1;
@@ -88,10 +90,10 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
         private async Task OnSelectItem(dynamic item){
             SetVal(item);
-            LoadData("", null, true);
             if(OnChange != null){
                 OnChange();
-            }
+            }            
+            LoadData("", null, true);
             StateHasChanged();
         }
 
@@ -108,6 +110,16 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 BindProperty.SetValue(BaseObj, item);
                 Value = item.ToString();
             }
+            if(IsMultiple){
+                Values.Add(Value);
+                ItemsSelected.Add(item);
+                Value = "";
+            }else{
+                Values.Clear();
+                ItemsSelected.Clear();
+                Values.Add(Value);
+                ItemsSelected.Add(item);
+            }
         }
         
         private async Task OnChangeValue(string value)
@@ -118,7 +130,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 cancellationTokenSource.Cancel();
             }
             cancellationTokenSource = new CancellationTokenSource();
-            await LoadData(value, cancellationTokenSource.Token);            
+            await LoadData(value, cancellationTokenSource.Token);
             StateHasChanged();
         }
 
@@ -309,6 +321,19 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 }
             }
             return filters;
+        }
+
+        public void closeItem(string item){
+            Values.Remove(item);
+            var itemSelected = ItemsSelected.FirstOrDefault(x => x.ToString() == item);
+            if(itemSelected != null){
+                ItemsSelected.Remove(itemSelected);
+            }
+            StateHasChanged();
+        }
+
+        public List<dynamic> GetItemsSelected(){
+            return ItemsSelected;
         }
     }
 }
