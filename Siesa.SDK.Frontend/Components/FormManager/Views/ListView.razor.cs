@@ -263,7 +263,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     ExtraButtons = new List<Button>();
                     foreach (var button in ListViewModel.Buttons){
                         if(button.ListPermission != null && button.ListPermission.Count > 0){
-                            showButton = await CheckPermissionsButton(button.ListPermission);
+                            showButton = CheckPermissionsButton(button.ListPermission);
                             if(showButton){
                                 ExtraButtons.Add(button);
                             }
@@ -290,7 +290,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     CustomActions = new List<Button>();
                     foreach (var button in ListViewModel.CustomActions){
                         if(button.ListPermission != null && button.ListPermission.Count > 0){
-                            showButton = await CheckPermissionsButton(button.ListPermission);
+                            showButton = CheckPermissionsButton(button.ListPermission);
                         }else{
                             showButton = true;
                         }
@@ -332,11 +332,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             StateHasChanged();
         }
 
-        private async Task<bool> CheckPermissionsButton(List<int> ListPermission){
+        private bool CheckPermissionsButton(List<int> ListPermission){
             var showButton = false;
             if(FeaturePermissionService != null){
                 try{
-                    showButton = await FeaturePermissionService.CheckUserActionPermissions(BusinessName, ListPermission, AuthenticationService);
+                    showButton = FeaturePermissionService.CheckUserActionPermissions(BusinessName, ListPermission, AuthenticationService);
                 }catch(System.Exception){
 
                 }
@@ -346,15 +346,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private async Task CheckPermissions()
         {
-            if (FeaturePermissionService != null)
+            if (FeaturePermissionService != null && !string.IsNullOrEmpty(BusinessName))
             {
                 try
                 {
-                    CanList = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 4, AuthenticationService);
-                    CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 1, AuthenticationService);
-                    CanEdit = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 2, AuthenticationService);
-                    CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 3, AuthenticationService);
-                    CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 5, AuthenticationService);
+                    CanList = FeaturePermissionService.CheckUserActionPermission(BusinessName, 4, AuthenticationService);
+                    CanCreate = FeaturePermissionService.CheckUserActionPermission(BusinessName, 1, AuthenticationService);
+                    CanEdit = FeaturePermissionService.CheckUserActionPermission(BusinessName, 2, AuthenticationService);
+                    CanDelete = FeaturePermissionService.CheckUserActionPermission(BusinessName, 3, AuthenticationService);
+                    CanDetail = FeaturePermissionService.CheckUserActionPermission(BusinessName, 5, AuthenticationService);
                 }
                 catch (System.Exception)
                 {
@@ -755,14 +755,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 Data = new List<object> { };
             }
             if(ServerPaginationFlex && UseFlex){
-                var dbData = await BusinessObj.GetDataAsync(0, 2, filters, "");
-                Data = dbData.Data;
-                if (Data.Count() == 1)
-                {
-                    GoToDetail(((dynamic)Data.First()).Rowid);
-                    return;
-                }
-                count = dbData.TotalCount;
+                // var dbData = await BusinessObj.GetDataAsync(0, 2, filters, "");
+                // Data = dbData.Data;
+                // if (Data.Count() == 1)
+                // {
+                //     GoToDetail(((dynamic)Data.First()).Rowid);
+                //     return;
+                // }
+                // count = dbData.TotalCount;
             }else{
                 var dbData = await BusinessObj.GetDataAsync(null, null, filters, "");
                 Data = dbData.Data;
