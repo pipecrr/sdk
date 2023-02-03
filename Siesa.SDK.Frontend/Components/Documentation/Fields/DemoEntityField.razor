@@ -3,6 +3,7 @@
 @using Siesa.SDK.Entities
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Documentation.DTOs
 
 <div class="container-fluid">
     <div class="container-fluid">
@@ -54,9 +55,9 @@
             <h2>MultiSelect</h2>
             <SDKCard>
                 <SDKEntityField
-                RelatedBusiness="@RelatedBusiness"
-                BaseObj="@BaseObj"
-                FieldName="@FieldName"
+                RelatedBusiness="@RelatedBusinessMulti"
+                BaseObj="@BaseObjMulti"
+                FieldName="@FieldNameMulti"
                 IsMultiple="true"
                 @ref="sdkEntityFieldRef"
             />
@@ -79,6 +80,11 @@
     string RelatedBusiness { get; set; } = "BLUser";
     E00220_User BaseObj { get; set; } = new E00220_User();
     string FieldName { get; set; } = "UserReportTo";
+
+    string RelatedBusinessMulti { get; set; } = "BLUser";
+    TestMultiSelectDTO BaseObjMulti { get; set; } = new TestMultiSelectDTO();
+    string FieldNameMulti { get; set; } = "Users";
+
     RelatedParams RelatedParams1 { get; set; } = new RelatedParams(){
         ExtraFields = new List<string>(){"Id","Name"}
     };

@@ -65,7 +65,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
             idInput = Guid.NewGuid().ToString();
             CheckPermissions();
             var currentValueObj = BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj);
-            if(currentValueObj != null && !IsMultiple){
+            if(currentValueObj != null){
                 Value = currentValueObj.ToString();
             }
             relBusinessModel = BackendRouterService.GetSDKBusinessModel(RelatedBusiness, null);
@@ -81,11 +81,11 @@ namespace Siesa.SDK.Frontend.Components.Fields
             StateHasChanged();
         }
 
-        protected override async Task OnParametersSetAsync()
+        /*protected override async Task OnParametersSetAsync()
         {
             base.OnParametersSetAsync();
             await InitView();
-        }
+        }*/
 
         private async Task OnSelectItem(dynamic item){
             SetVal(item);
@@ -106,7 +106,15 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 Value = item.ToString();
             }else{
                 BindProperty = BaseObj.GetType().GetProperty(FieldName);
-                BindProperty.SetValue(BaseObj, item);
+                if(IsMultiple){
+                    var typeProperty = BindProperty.PropertyType;
+                    var list = Activator.CreateInstance(typeProperty);
+                    var addMethod = typeProperty.GetMethod("Add");
+                    addMethod.Invoke(list, new object[] { item });
+                    BindProperty.SetValue(BaseObj, list);
+                }else{
+                    BindProperty.SetValue(BaseObj, item);
+                }
                 Value = item.ToString();
             }
             if(IsMultiple){
