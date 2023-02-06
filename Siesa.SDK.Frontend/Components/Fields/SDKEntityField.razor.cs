@@ -18,7 +18,6 @@ namespace Siesa.SDK.Frontend.Components.Fields
 {
     public partial class SDKEntityField
     {
-        [Inject] public IAuthenticationService AuthenticationService { get; set; }
         [Inject] public IBackendRouterService BackendRouterService { get; set; }
         [Inject] public IServiceProvider ServiceProvider { get; set; }
         [Inject] public IFeaturePermissionService FeaturePermissionService { get; set; }
@@ -341,6 +340,15 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
         public List<dynamic> GetItemsSelected(){
             return ItemsSelected;
+        }
+
+        protected override string GetAutomationId()
+        {
+            if(string.IsNullOrEmpty(AutomationId))
+            {
+                AutomationId = FieldName;
+            }
+            return base.GetAutomationId();
         }
     }
 }
