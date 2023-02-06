@@ -63,6 +63,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public bool ServerPaginationFlex { get; set; } = true;
         [Parameter]
         public bool ShowLinkTo {get; set;} = false;
+        [Parameter]
+        public bool FromEntityField {get; set;} = false;
 
         [Inject]
         public ILocalStorageService localStorageService { get; set; }
@@ -766,9 +768,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }else{
                 var dbData = await BusinessObj.GetDataAsync(null, null, filters, "");
                 Data = dbData.Data;
-                if (Data.Count() == 1)
-                {
-                    GoToDetail(((dynamic)Data.First()).Rowid);
+                if (Data.Count() == 1){
+                    if(!FromEntityField){
+                        GoToDetail(((dynamic)Data.First()).Rowid);
+                    }else{
+                        IList<object> objects = new List<object> { Data.First()};
+                        OnSelectionChanged(objects);
+                    }
                     return;
                 }
                 count = dbData.TotalCount;
