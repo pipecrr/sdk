@@ -4,7 +4,7 @@
 @inject IResourceManager ResourceManager
 @inject IAuthenticationService AuthenticationService
 @using Siesa.SDK.Shared.Utilities
-@using Siesa.SDK.Entities.Enums
+@using Siesa.Global.Enums
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
 @inject IFeaturePermissionService FeaturePermissionService
@@ -39,7 +39,7 @@
     }else{
         @if(MenuItem.Feature != null && MenuItem.Type == MenuType.Feature && string.IsNullOrEmpty(MenuItem.Url))
         {
-            @if(FeaturePermissionService.CheckUserActionPermission(MenuItem.Feature.Rowid, 4, AuthenticationService))
+            @if(FeaturePermissionService.CheckUserActionPermission(MenuItem.Feature.BusinessName, 4, AuthenticationService))
             {
                 <a href="@MenuItem.CurrentURL" @attributes="@menuItemAttributes" @onmouseover="MouseOver" @onmouseout="MouseOut" @onclick:stopPropagation="true" @onclick="()=> OnClickItem(MenuItem)"  @onclick:preventDefault  class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
                     title="@Title" data-automation-id="@GetAutomationId()">

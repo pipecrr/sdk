@@ -129,6 +129,7 @@ namespace Siesa.SDK.Frontend.Services
             await _localStorageService.RemoveItemAsync("usertoken");
             await _localStorageService.RemoveItemAsync("lastInteraction");
             await _localStorageService.RemoveItemAsync("n_tabs");
+            await _localStorageService.RemoveItemAsync("bd");
             await RemoveCookie("sdksession");
 
             _navigationManager.NavigateTo("login");
@@ -189,7 +190,8 @@ namespace Siesa.SDK.Frontend.Services
             {
                 throw new Exception("Occurio un error");
             }
-            var CompanyGroup = await BLUser.Call("ChangeCompanyGroup", rowid);
+            var sessionId = await GetCookie("sdksession");
+            var CompanyGroup = await BLUser.Call("ChangeCompanyGroup", rowid, sessionId);
 
             if (CompanyGroup.Success)
             {
@@ -300,6 +302,20 @@ namespace Siesa.SDK.Frontend.Services
             }
             catch (System.Exception)
             {
+            }
+        }
+
+        //read cookie
+        private async Task<string> GetCookie(string key)
+        {
+            //execut javascript to set cookie
+            try
+            {
+                return await _jsRuntime.InvokeAsync<string>("window.readCookie", key);
+            }
+            catch (System.Exception)
+            {
+                return "";
             }
         }
 

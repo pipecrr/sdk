@@ -1,0 +1,43 @@
+.badge-container {
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-top-left-radius: 0.2rem;
+    padding: 4px;
+}
+
+.badge-container input{
+    outline: none;
+    border: 0;
+}
+
+.badge-container > span > button {
+    border: 0;
+    background: none;
+    padding: 0 2px;
+}
+
+.input-badge-container {
+    flex: 1;
+}
+
+.input-badge-container ::deep .whcm_select_list.dropdown-menu.show{
+    width: 100%;
+}
+
+.input-badge-container > .dropdown ::deep > input{
+    position: relative;
+    border: 0;
+    outline: none;
+    border-bottom: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-radius: 0;
+    border-bottom-left-radius: 0.2rem;
+}
+
+.input-badge-container > .dropdown ::deep > input.form-control:focus{
+    box-shadow: none;
+}
+
+.input-badge-container > .dropdown ::deep .whcm_select_list.dropdown-menu ul {
+    padding-left: 0;
+}

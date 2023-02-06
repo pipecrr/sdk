@@ -28,7 +28,7 @@ else if (BusinessObj != null)
     [Parameter] public string ViewdefName { get; set; } = "related_list";
 
     [Parameter] public IEnumerable<object> Data { get; set; } = null;
-
+    [Parameter] public bool FromEntityField { get; set; } = false;
     protected override void OnInitialized()
     {
         ViewType = ViewModels.DynamicViewType.List;
@@ -46,6 +46,7 @@ else if (BusinessObj != null)
         new_params.Add("AllowDetail", AllowDetail);
         new_params.Add("OnSelectedRow", OnSelectedRow);
         new_params.Add("Data", Data);
+        new_params.Add("FromEntityField", FromEntityField);
         if (IsSubpanel)
         {
             new_params.Add("IsSubpanel", true);

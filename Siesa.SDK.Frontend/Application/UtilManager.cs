@@ -49,16 +49,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
             return resourceTag;
         }
 
-        public async Task GetResourceByContainId(Int64 cultureRowid = 0){
-                if(cultureRowid != 0){
-                    await this.ResourceManager.GetResourceByContainId(cultureRowid);
-                }
-                if(AuthenticationService.User != null){
-                    cultureRowid = AuthenticationService.GetRoiwdCulture();
-                    await ResourceManager.GetResourceByContainId(cultureRowid);
-                }
-        }
-
         public async Task<string> GetResourceFlex(string resourceTag, Int64 cultureRowid = 0){
             resourceValuesDictUtil = ResourceManager.GetResourceValuesDict();
             if(resourceValuesDictUtil.Count == 0){

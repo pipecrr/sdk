@@ -52,6 +52,18 @@ namespace Siesa.SDK.Backend.Extensions
                 {
                     opts.UseNpgsql(tenant.ConnectionString);
                 }else { //Default to SQL Server
+
+                    //get machine name
+                    var machineName = Environment.MachineName;
+                    var connectionString = tenant.ConnectionString;
+                    //add Application Name= if not present
+                    if(!connectionString.Contains("Application Name=")){
+                        //check if last char is ;
+                        if(connectionString.Last() != ';'){
+                            connectionString += ";";
+                        }
+                        connectionString += "Application Name=" + machineName;
+                    }
                     opts.UseSqlServer(tenant.ConnectionString);
 
                 }

@@ -85,7 +85,7 @@
         if(ListPermission != null && ListPermission.Count > 0){
             if(!string.IsNullOrEmpty(BusinessName)){
                 HasPermission = false;
-                HasPermission = await FeaturePermissionService.CheckUserActionPermissions(BusinessName, ListPermission, AuthenticationService);
+                HasPermission = FeaturePermissionService.CheckUserActionPermissions(BusinessName, ListPermission, AuthenticationService);
             }
         }
         if(IsActionButton || (string.IsNullOrEmpty(ResourceTag) && (!RowidResource.HasValue || RowidResource == 0)))
