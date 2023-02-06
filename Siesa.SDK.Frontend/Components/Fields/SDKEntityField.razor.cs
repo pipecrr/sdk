@@ -80,18 +80,19 @@ namespace Siesa.SDK.Frontend.Components.Fields
             await LoadData("", null);
             StateHasChanged();
         }
+        public override async Task SetParametersAsync(ParameterView parameters){
+            await base.SetParametersAsync(parameters);
+        }
 
-        /*protected override async Task OnParametersSetAsync()
-        {
-            base.OnParametersSetAsync();
-            await InitView();
-        }*/
-
+        protected override async Task OnParametersSetAsync(){
+            await base.OnParametersSetAsync();
+            await LoadData("", null, true);
+        }
         private async Task OnSelectItem(dynamic item){
             SetVal(item);
             if(OnChange != null){
                 OnChange();
-            }            
+            }
             LoadData("", null, true);
             StateHasChanged();
         }
@@ -137,6 +138,9 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 cancellationTokenSource.Cancel();
             }
             cancellationTokenSource = new CancellationTokenSource();
+            if(OnChange != null){
+                OnChange();
+            }
             await LoadData(value, cancellationTokenSource.Token);
             StateHasChanged();
         }
@@ -316,7 +320,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
         public string GetStringFilters(){
             var filters = "";
-            if(Value != null && Value != ""){
+            if(Value != null && Value != "" && ItemsSelected.Count == 0){
                 var properties = RelBusinessObj.BaseObj.GetType().GetProperties();
                 foreach (var property in properties){
                     if(property.PropertyType == typeof(string)){

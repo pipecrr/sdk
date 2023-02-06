@@ -1,7 +1,7 @@
 <div class="input-group input-group-sm whcm_select_box">
     <div class="input-badge-container">
-        <div class="badge-container">
-            @if(IsMultiple){
+        @if(IsMultiple){
+            <div class="badge-container">
                 @foreach (var item in Values){
                     <span class="badge badge-pill badge-light">@item
                         <button @onclick="@(()=> {closeItem(item);})">
@@ -9,8 +9,8 @@
                         </button>
                     </span>
                 }
-            }
-        </div>
+            </div>
+        }
         
         <div class="dropdown">
             <input autocomplete="off" type="text" class="form-control" value="@Value" @oninput="@(e => OnChangeValue(e.Value.ToString()))" @onkeydown="@OnKeyDown" @onfocus="@OnFocus" id="@idInput"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">            
@@ -90,6 +90,9 @@
     public async Task OpenModalList(){
         var filters = GetStringFilters();
         var listDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicListView BusinessName="@RelatedBusiness" IsSubpanel=true  ShowTitle="false" OnSelectedRow="OnSelectedRow" SubpanelFilter="@filters" FromEntityField=true/>, width: "90%", title:$"{RelatedBusiness}.Singular");
-        StateHasChanged();
+        if(listDialog != null && listDialog){
+            await OnChangeValue(Value);
+            StateHasChanged();
+        }
     }
 }
