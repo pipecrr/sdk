@@ -14,7 +14,7 @@ using Siesa.SDK.Frontend.Components.Layout.NavMenu;
 using Siesa.SDK.Frontend.Application;
 using Siesa.SDK.Frontend.Components.Layout;
 using Siesa.SDK.Frontend.Components.FormManager.Model;
-using Siesa.SDK.Entities.Enums;
+using Siesa.Global.Enums;
 using Siesa.SDK.Shared.Business;
 
 namespace Siesa.SDK.Frontend.Services
@@ -54,7 +54,7 @@ namespace Siesa.SDK.Frontend.Services
             {
                 Menus.Add(new E00061_Menu()
                 {
-                    ResourceTag = "DevMenu",
+                    ResourceTag = "SDKDev-DevMenu",
                     IconClass = "fa-solid fa-code",
                     SubMenus = new List<E00061_Menu>(),
                     CurrentText = "DevMenu",
@@ -90,7 +90,7 @@ namespace Siesa.SDK.Frontend.Services
 
         public async Task LoadMenu()
         {
-            var DevMenu = Menus.FirstOrDefault(x => x.ResourceTag == "DevMenu")?.SubMenus;
+            var DevMenu = Menus.FirstOrDefault(x => x.ResourceTag == "SDKDev-DevMenu")?.SubMenus;
 
             foreach (var business in BackendRouterService.GetBusinessModelList())
             {
@@ -108,7 +108,7 @@ namespace Siesa.SDK.Frontend.Services
                 {
                     var customActionMenu = new E00061_Menu
                     {
-                        ResourceTag = $"{business.Name}.Plural",
+                        ResourceTag = $"SDKDev-{business.Name}.Plural",
                         Url = $"/{business.Name}/explorer/",
                         Type = MenuType.CustomMenu
                     };
@@ -118,7 +118,7 @@ namespace Siesa.SDK.Frontend.Services
                 {
                     var submenuItem = new E00061_Menu
                     {
-                        ResourceTag = $"{business.Name}.Plural",
+                        ResourceTag = $"SDKDev-{business.Name}.Plural",
                         Url = $"/{business.Name}/",
                         SubMenus = new List<E00061_Menu>(),
                         Type = MenuType.CustomMenu
@@ -129,7 +129,7 @@ namespace Siesa.SDK.Frontend.Services
                     {
                         var customActionMenu = new E00061_Menu
                         {
-                            ResourceTag = $"{business.Name}.CustomAction.{customAction.Name}",
+                            ResourceTag = $"SDKDev-{business.Name}.CustomAction.{customAction.Name}",
                             Url = $"/{business.Name}/{customAction.Name}/",
                             Type = MenuType.CustomMenu
                         };

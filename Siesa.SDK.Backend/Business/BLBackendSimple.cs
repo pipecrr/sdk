@@ -183,7 +183,6 @@ namespace Siesa.SDK.Business
         public List<string> RelFieldsToSave { get; set; } = new List<string>();
         private bool CanCreate { get; set; } = true;
         private bool CanEdit { get; set; } = true;
-        private int RowidFeature { get; set; }
         private IEnumerable<INavigation> _navigationProperties = null;
 
         private List<object> unique_indexes = new List<object>();
@@ -267,7 +266,6 @@ namespace Siesa.SDK.Business
             _backendRouterService = (IBackendRouterService)_provider.GetService(typeof(IBackendRouterService));
             _featurePermissionService = (IFeaturePermissionService)_provider.GetService(typeof(IFeaturePermissionService));
 
-            RowidFeature = GetRowidFeature(BusinessName);
         }
 
         [SDKExposedMethod]
@@ -366,21 +364,12 @@ namespace Siesa.SDK.Business
                 return query.FirstOrDefault();
             }
         }
-        private int GetRowidFeature(string business_name)
-        {
-            using (SDKContext context = CreateDbContext())
-            {
-                var query = context.Set<E00040_Feature>().Where(x => x.BusinessName == business_name).Select(x => x.Rowid).FirstOrDefault();
-                return query;
-            }
-        }
-
         public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave()
         {
             ValidateAndSaveBusinessObjResponse result = new();
-            if(_featurePermissionService != null && RowidFeature != 0){
-                CanCreate = _featurePermissionService.CheckUserActionPermission(RowidFeature, 1,AuthenticationService);
-                CanEdit = _featurePermissionService.CheckUserActionPermission(RowidFeature, 2,AuthenticationService);
+            if(_featurePermissionService != null && !string.IsNullOrEmpty(BusinessName)){
+                CanCreate = _featurePermissionService.CheckUserActionPermission(BusinessName, 1,AuthenticationService);
+                CanEdit = _featurePermissionService.CheckUserActionPermission(BusinessName, 2,AuthenticationService);
             }
             if(!CanCreate && !CanEdit){
                 AddMessageToResult("Custom.Generic.Unauthorized", result);
@@ -630,7 +619,7 @@ namespace Siesa.SDK.Business
                 {
                     query = query.Where(filter);
                 }
-                var total = query.Count();
+                var total = 0;
 
                 if (!string.IsNullOrEmpty(orderBy))
                 {
@@ -654,9 +643,7 @@ namespace Siesa.SDK.Business
                 {
                     query = queryFilter(query);
                 }
-                //total data
-                result.TotalCount = total;
-
+                
                 //data
                 result.Data = query.ToList();
             }
@@ -746,7 +733,7 @@ namespace Siesa.SDK.Business
         }
 
         [SDKExposedMethod]
-        public virtual ActionResult<List<Dictionary<string,object>>> SDKFlexPreviewData(SDKFlexRequestData requestData, bool setTop = true)
+        public virtual ActionResult<dynamic> SDKFlexPreviewData(SDKFlexRequestData requestData, bool setTop = true)
         {
             using (var Context = CreateDbContext())
             {

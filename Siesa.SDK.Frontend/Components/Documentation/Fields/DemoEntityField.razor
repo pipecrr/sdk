@@ -1,6 +1,9 @@
 @using Siesa.SDK.Frontend.Components.Fields
 @using Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 @using Siesa.SDK.Entities
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Documentation.DTOs
 
 <div class="container-fluid">
     <div class="container-fluid">
@@ -48,14 +51,40 @@
                 />
             </SDKCard>
         </div>
+        <div class="col-md-6 p-3">
+            <h2>MultiSelect</h2>
+            <SDKCard>
+                <SDKEntityField
+                RelatedBusiness="@RelatedBusinessMulti"
+                BaseObj="@BaseObjMulti"
+                FieldName="@FieldNameMulti"
+                IsMultiple="true"
+                @ref="sdkEntityFieldRef"
+            />
+            <div>
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Get Value" Click="@GetValue"/>
+
+                @foreach (var item in valuesSelected){
+                    <SDKBadge Style="SDKBadgeStyle.Light" Value="@item.ToString()"></SDKBadge>
+                }
+            </div>
+            </SDKCard>
+        </div>
     </div>
 </div>
 
 @code {
+    List<dynamic> valuesSelected = new List<dynamic>();
+    SDKEntityField sdkEntityFieldRef;
     string BusinessName { get; set; } = "BLUser";
     string RelatedBusiness { get; set; } = "BLUser";
     E00220_User BaseObj { get; set; } = new E00220_User();
     string FieldName { get; set; } = "UserReportTo";
+
+    string RelatedBusinessMulti { get; set; } = "BLUser";
+    TestMultiSelectDTO BaseObjMulti { get; set; } = new TestMultiSelectDTO();
+    string FieldNameMulti { get; set; } = "Users";
+
     RelatedParams RelatedParams1 { get; set; } = new RelatedParams(){
         ExtraFields = new List<string>(){"Id","Name"}
     };
@@ -66,5 +95,8 @@
 
     public void OnChange(){
         Console.WriteLine("OnChange");
+    }
+    public void GetValue(){
+        valuesSelected = sdkEntityFieldRef.GetItemsSelected();
     }
 }

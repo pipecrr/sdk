@@ -23,7 +23,10 @@ namespace Siesa.SDK.Frontend.Components
 
         protected virtual string GetAutomationId()
         {
-            return $"{this.GetType().Name}_{AutomationId}";
+            var componentType = this.GetType().Name;
+            //split by ` and take the first part
+            var componentTypeSplit = componentType.Split('`')[0];
+            return $"{componentTypeSplit}_{AutomationId}";
         }
 
         protected async Task<string> GetText(){

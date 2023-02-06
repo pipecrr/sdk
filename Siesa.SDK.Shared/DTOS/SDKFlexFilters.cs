@@ -17,5 +17,6 @@ namespace Siesa.SDK.Shared.DTOS
         public string selected_operator { get; set; }
         public object equal_from { get; set; }
         public string to { get; set; }
+        public bool is_dynamic_field { get; set; }
     }
 }

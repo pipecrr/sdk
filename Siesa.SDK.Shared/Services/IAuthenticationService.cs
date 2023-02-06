@@ -22,10 +22,10 @@ namespace Siesa.SDK.Shared.Services
         public short RowidCompanyGroup { get; set; } 
         public short RowIdDBConnection { get; set; }
 
-        public Dictionary<int, Dictionary<int, bool>> FeaturePermissions { get; set; } = new Dictionary<int, Dictionary<int, bool>>();
+        public Dictionary<string, List<int>> FeaturePermissions { get; set; } = new();
         // public string[] Teams { get; set; }
 
-        // public bool IsSuperAdmin { get; set; }
+        public bool IsAdministrator { get; set; }
 
         public override string ToString()
         {
