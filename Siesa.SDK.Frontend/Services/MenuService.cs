@@ -162,6 +162,11 @@ namespace Siesa.SDK.Frontend.Services
         {
             foreach (var menuItem in _menus)
             {
+                if(menuItem.Type == MenuType.Separator)
+                {
+                    menuItem.CurrentText = " ";
+                    continue;
+                }
                 if(menuItem.Feature != null && (menuItem.RowidResource == null || menuItem.RowidResource == 0) && menuItem.ResourceTag == null)
                 {
                     menuItem.ResourceTag = $"{menuItem.Feature.BusinessName}.Plural";
