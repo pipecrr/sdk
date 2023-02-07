@@ -6,7 +6,7 @@
             @if(IsMultiple){
                 @foreach (var item in Values){
                     <span class="badge badge-pill badge-light">@item
-                        <button @onclick="@(()=> {closeItem(item);})">
+                        <button disabled="@Disabled" @onclick="@(()=> {closeItem(item);})">
                             <i class="fa-solid fa-xmark"></i>
                         </button>
                     </span>
@@ -15,7 +15,7 @@
         </div>
         
         <div class="dropdown">
-            <input autocomplete="off" type="text" data-automation-id="@GetAutomationId()_inputtext" class="form-control" value="@Value" @oninput="@(e => OnChangeValue(e.Value.ToString()))" @onkeydown="@OnKeyDown" @onfocus="@OnFocus" id="@idInput"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">            
+            <input autocomplete="off" type="text" disabled="@Disabled" data-automation-id="@GetAutomationId()_inputtext" class="form-control" value="@Value" @oninput="@(e => OnChangeValue(e.Value.ToString()))" @onkeydown="@OnKeyDown" @onfocus="@OnFocus" id="@idInput"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">            
             <div class="whcm_select_list dropdown-menu" aria-labelledby="@idInput">
                 <ul>
                     @if(CacheData.Count()>0){
@@ -46,7 +46,7 @@
                                 </div>
                                 @if(CanEdit || CanDetail){
                                     <div>
-                                        <button class="btn btn-sm layout_btn_standar-sm" data-automation-id="@GetAutomationIdItem(item)_ExpandBtn" type="button" data-toggle="tooltip" data-placement="top" title="Ampliar" @onclick="@(async ()=> { await OpenModalExpand(item.Value);})">
+                                        <button disabled="@Disabled" class="btn btn-sm layout_btn_standar-sm" data-automation-id="@GetAutomationIdItem(item)_ExpandBtn" type="button" data-toggle="tooltip" data-placement="top" title="Ampliar" @onclick="@(async ()=> { await OpenModalExpand(item.Value);})">
                                             <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
                                         </button>
                                     </div>
@@ -59,9 +59,9 @@
         </div>
     </div>
     <div class="input-group-append">
-        <button class="btn whcm-btn-outline" type="button"  data-automation-id="@GetAutomationId()_SearchBtn" data-toggle="tooltip" data-placement="top" title="Buscar" @onclick="@(async ()=> { await OpenModalList();})"><i class="fa-solid fa-magnifying-glass"></i></button>
+        <button disabled="@Disabled" class="btn whcm-btn-outline" type="button"  data-automation-id="@GetAutomationId()_SearchBtn" data-toggle="tooltip" data-placement="top" title="Buscar" @onclick="@(async ()=> { await OpenModalList();})"><i class="fa-solid fa-magnifying-glass"></i></button>
         @if(CanCreate){
-            <button class="btn whcm-btn-outline" type="button" data-automation-id="@GetAutomationId()_CreateBtn" data-toggle="tooltip" data-placement="top" title="Crear" @onclick="@(async ()=> { await OpenModalCreate(); })" ><i class="fa-solid fa-circle-plus"></i></button>
+            <button disabled="@Disabled" class="btn whcm-btn-outline" type="button" data-automation-id="@GetAutomationId()_CreateBtn" data-toggle="tooltip" data-placement="top" title="Crear" @onclick="@(async ()=> { await OpenModalCreate(); })" ><i class="fa-solid fa-circle-plus"></i></button>
         }
     </div>
 </div>

@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Siesa.SDK.Shared.Configurations;
 
 namespace Siesa.SDK.Backend.Extensions
 {
@@ -52,17 +53,32 @@ namespace Siesa.SDK.Backend.Extensions
                 {
                     opts.UseNpgsql(tenant.ConnectionString);
                 }else { //Default to SQL Server
-
-                    //get machine name
-                    var machineName = Environment.MachineName;
-                    var connectionString = tenant.ConnectionString;
                     //add Application Name= if not present
-                    if(!connectionString.Contains("Application Name=")){
-                        //check if last char is ;
-                        if(connectionString.Last() != ';'){
-                            connectionString += ";";
+                    if(!tenant.ConnectionString.Contains("Application Name=")){
+                        var serviceConfiguration = configurationManager.GetSection("ServiceConfiguration");
+                        ServiceConfiguration sc = serviceConfiguration.Get<ServiceConfiguration>();
+                        var currentUrl = sc?.CurrentUrl;
+                        if(!String.IsNullOrEmpty(currentUrl)){
+                            //delete http:// or https://
+                            currentUrl = currentUrl.Replace("http://", "");
+                            currentUrl = currentUrl.Replace("https://", "");
+                            //delete last /
+                            if(currentUrl.Last() == '/'){
+                                currentUrl = currentUrl.Substring(0, currentUrl.Length - 1);
+                            }
                         }
-                        connectionString += "Application Name=" + machineName;
+                        //get machine name
+                        var machineName = Environment.MachineName;
+                        //check if last char is ;
+                        if(tenant.ConnectionString.Last() != ';'){
+                            tenant.ConnectionString += ";";
+                        }
+                        var appName = $"{machineName}";
+
+                        if(!String.IsNullOrEmpty(currentUrl)){
+                            appName += $"-{currentUrl}";
+                        }
+                        tenant.ConnectionString += $"Application Name=SDK-{appName};";
                     }
                     opts.UseSqlServer(tenant.ConnectionString);
 
