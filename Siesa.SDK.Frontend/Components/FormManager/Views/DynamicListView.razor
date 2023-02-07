@@ -29,6 +29,7 @@ else if (BusinessObj != null)
 
     [Parameter] public IEnumerable<object> Data { get; set; } = null;
     [Parameter] public bool FromEntityField { get; set; } = false;
+    [Parameter] public bool IsMultiple { get; set; } = false;
     protected override void OnInitialized()
     {
         ViewType = ViewModels.DynamicViewType.List;
@@ -47,6 +48,7 @@ else if (BusinessObj != null)
         new_params.Add("OnSelectedRow", OnSelectedRow);
         new_params.Add("Data", Data);
         new_params.Add("FromEntityField", FromEntityField);
+        new_params.Add("IsMultiple", IsMultiple);
         if (IsSubpanel)
         {
             new_params.Add("IsSubpanel", true);

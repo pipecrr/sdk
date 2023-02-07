@@ -77,7 +77,8 @@ else
             AllowVirtualization="@(ListViewModel.InfiniteScroll)"
             ShowPagingSummary="true"
             PageSizeOptions="ListViewModel.Paging.AllowedPageSizes" 
-            SelectionMode="Radzen.DataGridSelectionMode.Single"
+            SelectionMode="@SelectionMode"
+            AllowRowSelectOnRowClick="true"
             Value=@SelectedObjects
             ValueChanged="((objects) => OnSelectionChanged(objects))"
             class="whcm_table"

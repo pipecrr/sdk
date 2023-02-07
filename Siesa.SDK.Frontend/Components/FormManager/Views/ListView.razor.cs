@@ -130,6 +130,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter]
         public IEnumerable<object> Data { get; set; } = null;
 
+        [Parameter]
+        public bool IsMultiple { get; set; } = false;
+
         private IEnumerable<object> data;
 
         private bool HasCustomActions { get; set; } = false;
@@ -159,13 +162,17 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private bool CanList;
         private string defaultStyleSearchForm = "search_back position-relative";
         private string StyleSearchForm { get; set; } = "search_back position-relative";
-
-
+        private Radzen.DataGridSelectionMode SelectionMode { get; set; } = Radzen.DataGridSelectionMode.Single;
+        private bool allowRowSelectOnRowClick = true;
         Guid needUpdate;
 
         private void OnSelectionChanged(IList<object> objects)
         {
-            if (OnSelectedRow != null)
+            if(IsMultiple)
+            {
+                SelectedObjects = objects;
+            }
+            if (OnSelectedRow != null && !IsMultiple)
             {
                 SelectedObjects = objects;
                 if (SelectedObjects?.Any() == true)
@@ -203,7 +210,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         protected async void InitView(string bName = null)
         {
-            Loading = true;            
+            Loading = true;
             if (bName == null)
             {
                 bName = BusinessName;
@@ -280,8 +287,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 UseFlex = ListViewModel.UseFlex;
                 FlexTake = ListViewModel.FlexTake;
                 ShowLinkTo = ListViewModel.ShowLinkTo;
-                ServerPaginationFlex = ListViewModel.ServerPaginationFlex;
-                
+                ServerPaginationFlex = ListViewModel.ServerPaginationFlex;                
                 //TODO: quitar cuando se pueda usar flex en los custom components
                 var fieldsCustomComponent = ListViewModel.Fields.Where(x => x.CustomComponent != null).ToList();
                 if(fieldsCustomComponent.Count > 0){
@@ -379,6 +385,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         {
             await base.OnInitializedAsync();
             guidListView = Guid.NewGuid().ToString();
+            if (IsMultiple){
+                SelectionMode = Radzen.DataGridSelectionMode.Multiple;
+            }
             //Restart();
         }
 
@@ -955,6 +964,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     localStorageService.SetItemAsync($"{BusinessName}.Search.HiddenFields", returnFields);
                 }
             }
+        }
+
+        public void SelectValues(){
+            
         }
     }
 }

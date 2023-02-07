@@ -70,6 +70,8 @@
 
     [Parameter]
     public bool HasSearch {get;set;} = false;  
+    [Parameter]
+    public bool IsMultiple {get;set;} = false;
     private string _guid ="";
     private bool _isDebug = false;
 
@@ -171,6 +173,7 @@
         FlexAttributes.Add("filter_search", FilterSearch);
         FlexAttributes.Add("guid", _guid);
         FlexAttributes.Add("action_icons", actionIconsString);
+        FlexAttributes.Add("is_multiple", IsMultiple.ToString());
         if(_flexRowId != 0)
         {
             FlexAttributes.Add("base_obj_id", _flexRowId);

@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
 using Siesa.SDK.Frontend.Services;
 using Microsoft.JSInterop;
+using Newtonsoft.Json;
 
 namespace Siesa.SDK.Frontend.Components.Fields
 {
@@ -20,7 +21,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
     {
         [Inject] public IBackendRouterService BackendRouterService { get; set; }
         [Inject] public IServiceProvider ServiceProvider { get; set; }
-        [Inject] public IFeaturePermissionService FeaturePermissionService { get; set; }
+        [Inject] public IFeaturePermissionService FeaturePermissionService { get; set; }        
         [Inject] public SDKDialogService SDKDialogService { get; set; }
         [Inject] public IJSRuntime jsRuntime { get; set; }
         [Parameter] public string FieldName { get; set; }
@@ -57,7 +58,6 @@ namespace Siesa.SDK.Frontend.Components.Fields
         {
             base.OnInitializedAsync();
             await InitView();
-            
         }
 
         protected async Task InitView(){
@@ -95,7 +95,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
             StateHasChanged();
         }
 
-        private void SetVal(dynamic item)
+        private async Task SetVal(dynamic item)
         {
             if(item == null){
                 return;
@@ -105,6 +105,13 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 Value = item.ToString();
             }else{
                 BindProperty = BaseObj.GetType().GetProperty(FieldName);
+                if(!item.GetType().ToString().Equals(BindProperty.ToString())){
+                    var rowidItem = Int64.Parse(item.rowid.ToString());
+                    var response = await relBusinessModel.Get(rowidItem);
+                    if(response!=null){
+                        item = JsonConvert.DeserializeObject(response, BindProperty.PropertyType);
+                    }
+                }
                 if(IsMultiple){
                     var typeProperty = BindProperty.PropertyType;
                     var list = Activator.CreateInstance(typeProperty);
@@ -299,11 +306,15 @@ namespace Siesa.SDK.Frontend.Components.Fields
         }
         
         public void OnSelectedRow(object item){
-            if(item != null){
+            if(item != null && !IsMultiple){
                 SetVal(item);
                 LoadData("", null);
                 SDKDialogService.Close(true);
             }
+        }
+
+        public void SelectValues(){
+            
         }
 
         public async Task SDKDropDown(){
