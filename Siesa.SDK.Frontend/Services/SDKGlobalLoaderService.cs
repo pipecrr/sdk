@@ -20,9 +20,9 @@ namespace Siesa.SDK.Frontend.Services
             _refSDKGlobalLoader = refSDKGlobalLoader;
         }
 
-        public void Show()
+        public void Show(string messageResourceTag = "")
         {
-            _refSDKGlobalLoader.ShowLoader();
+            _refSDKGlobalLoader.ShowLoader(messageResourceTag);
         }
 
         public void Hide()
