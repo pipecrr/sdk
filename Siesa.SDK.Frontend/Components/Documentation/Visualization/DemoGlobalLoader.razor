@@ -2,6 +2,7 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Components.Visualization
 @using Siesa.SDK.Frontend.Services
+@using Siesa.SDK.Frontend.Components.Fields
 @inject SDKGlobalLoaderService SDKGlobalLoaderService
 
 
@@ -12,6 +13,8 @@
     </div>
     <div class="row px-3"> 
         <div class="col-md-6 p-1">
+            <b>ResourceTag: (Optional)</b>
+            <SDKCharField @bind-Value="@ResourceTag" Placeholder="Custom.Generic.Loading" />
             <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Show Loader" Click="@ShowLoader" />
         </div>
     </div>
@@ -19,10 +22,11 @@
 
 
 @code{
-    
+
+    private string ResourceTag { get; set; }
     public async void ShowLoader()
     {
-        SDKGlobalLoaderService.Show();
+        SDKGlobalLoaderService.Show(ResourceTag);
 
         await Task.Delay(5000);
 
