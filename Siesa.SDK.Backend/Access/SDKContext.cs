@@ -256,24 +256,23 @@ namespace Siesa.SDK.Backend.Access
                 }
                 
             }
-        
             LogCreator logCreator = ActivatorUtilities.CreateInstance<LogCreator>(ServiceProvider, ChangeTracker.Entries());
             //LogCreator logCreator = new(ChangeTracker.Entries());
             logCreator.ProccessBeforeSaveChanges();
             var result = base.SaveChanges();
             logCreator.ProccessAfterSaveChanges();
-            CollectChanges(logCreator);
+            _ = CollectChanges(logCreator);
             return result;
         }
 
 
-        private void CollectChanges(LogCreator logCreator)
+        private async Task CollectChanges(LogCreator logCreator)
         {
             try
             {
                 if (ServiceProvider != null)
                 {
-                    LogService.SaveDataEntityLog(logCreator.DataEntityLogs, ServiceProvider);
+                    await Task.Run(() => LogService.SaveDataEntityLog(logCreator.DataEntityLogs, ServiceProvider));
                 }
             }
             catch (Exception) { }
