@@ -111,7 +111,7 @@ namespace Siesa.SDK.Shared.Services
         {
             try
             {
-                if(this.serviceConfiguration.CurrentUrl == _masterBackendURL)
+                if(this.serviceConfiguration.GetCurrentUrl() == _masterBackendURL)
                 {
                     await Task.Delay(5000); //wait for the master backend to be ready
                 }
@@ -123,7 +123,7 @@ namespace Siesa.SDK.Shared.Services
                     BackendInfo = new Protos.BackendInfo
                     {
                         BackendName = "",
-                        BackendUrl = this.serviceConfiguration.CurrentUrl
+                        BackendUrl = this.serviceConfiguration.GetCurrentUrl()
                     }
                 };
                 if (businessNames != null)
