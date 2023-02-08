@@ -7,6 +7,7 @@ using Siesa.SDK.Protos;
 using Siesa.SDK.Shared.Backend;
 using Siesa.SDK.Shared.Configurations;
 using System.Linq;
+using Siesa.SDK.Shared.GRPCServices;
 
 namespace Siesa.SDK.Shared.Services
 {
@@ -91,7 +92,7 @@ namespace Siesa.SDK.Shared.Services
             {
                 try
                 {
-                    using var channel = GrpcChannel.ForAddress(observer.BackendUrl);
+                    using var channel = GrpcUtils.GetChannel(observer.BackendUrl);
                     var client = new Protos.Shared.SharedClient(channel);
                     var request = new Protos.SetBackendServicesRequest
                     {
@@ -115,7 +116,7 @@ namespace Siesa.SDK.Shared.Services
                     await Task.Delay(5000); //wait for the master backend to be ready
                 }
 
-                using var channel = GrpcChannel.ForAddress(_masterBackendURL);
+                using var channel = GrpcUtils.GetChannel(_masterBackendURL);
                 var client = new Protos.GRPCBackendManagerService.GRPCBackendManagerServiceClient(channel);
                 var request = new Protos.RegisterBackendRequest
                 {
