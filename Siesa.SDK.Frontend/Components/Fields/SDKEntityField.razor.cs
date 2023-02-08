@@ -18,7 +18,6 @@ namespace Siesa.SDK.Frontend.Components.Fields
 {
     public partial class SDKEntityField
     {
-        [Inject] public IAuthenticationService AuthenticationService { get; set; }
         [Inject] public IBackendRouterService BackendRouterService { get; set; }
         [Inject] public IServiceProvider ServiceProvider { get; set; }
         [Inject] public IFeaturePermissionService FeaturePermissionService { get; set; }
@@ -35,6 +34,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         [Parameter] public Action<object> SetValue { get; set; }
         [Parameter] public Action OnChange { get; set; }
         [Parameter] public bool IsMultiple { get; set; } = false;
+        [Parameter] public bool Disabled { get; set; }
         public dynamic RelBusinessObj { get; set; }
         private string Value = "";
         private List<string> Values = new List<string>() {};
@@ -358,6 +358,15 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
         public List<dynamic> GetItemsSelected(){
             return ItemsSelected;
+        }
+
+        protected override string GetAutomationId()
+        {
+            if(string.IsNullOrEmpty(AutomationId))
+            {
+                AutomationId = FieldName;
+            }
+            return base.GetAutomationId();
         }
     }
 }

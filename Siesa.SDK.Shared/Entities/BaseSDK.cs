@@ -11,6 +11,10 @@ namespace Siesa.SDK.Entities
 
         void SetRowid(Int64 rowid);
 
+        object GetRowidObject();
+
+        Type GetRowidType();
+
     }
     public abstract class BaseSDK<T>: IBaseSDK
     {
@@ -30,6 +34,16 @@ namespace Siesa.SDK.Entities
         public virtual Int64 GetRowid()
         {
             return Convert.ToInt64(Rowid);
+        }
+
+        public object GetRowidObject()
+        {
+            return Rowid;
+        }
+
+        public Type GetRowidType()
+        {
+            return typeof(T);
         }
 
         public virtual void SetRowid(Int64 rowid)

@@ -104,9 +104,10 @@
         SearchMenuItem(currentUrl, MenuService.Menus, ref result);
 
         //get the result most close to the current url
-        _selectedMenu = result.OrderByDescending(x => x.CurrentURL.Length).FirstOrDefault();
-        if (_selectedMenu != null)
+        var _newSelectedMenu = result.OrderByDescending(x => x.CurrentURL.Length).FirstOrDefault();
+        if (_newSelectedMenu != null && _newSelectedMenu != _selectedMenu)
         {
+            _selectedMenu = _newSelectedMenu;
             var BLRecentMenu = BackendRouterService.GetSDKBusinessModel("BLRecentMenu", AuthenticationService);
             BLRecentMenu.Call("AddRecentMenu",currentUrl,_selectedMenu.Rowid);
             breadcrumb.Clear();

@@ -368,7 +368,6 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
         private async Task SaveBusiness()
         {
             Saving = true;
-            StateHasChanged();
             //var id = await BusinessObj.SaveAsync();
             //fielFields is empty
             if(FileFields.Count>0){
@@ -446,6 +445,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
                 if(OnSave != null){
                     OnSave(id);
                 }
+                StateHasChanged();
             }else{
                 NavigationService.RemoveCurrentItem();
                 NavManager.NavigateTo($"{BusinessName}/detail/{id}/");

@@ -1,10 +1,12 @@
-<div class="input-group input-group-sm whcm_select_box">
+@using Siesa.SDK.Frontend.Components
+@inherits SDKComponent
+<div class="input-group input-group-sm whcm_select_box" data-automation-id="@GetAutomationId()">
     <div class="input-badge-container">
         @if(IsMultiple){
             <div class="@badgeContainerClass">
                 @foreach (var item in Values){
                     <span class="badge badge-pill badge-light">@item
-                        <button @onclick="@(()=> {closeItem(item);})">
+                        <button disabled="@Disabled" @onclick="@(()=> {closeItem(item);})">
                             <i class="fa-solid fa-xmark"></i>
                         </button>
                     </span>
@@ -13,7 +15,7 @@
         }
         
         <div class="dropdown">
-            <input autocomplete="off" type="text" class="form-control" value="@Value" @oninput="@(e => OnChangeValue(e.Value.ToString()))" @onkeydown="@OnKeyDown" @onfocus="@OnFocus" @onfocusout="@OnFocusOut" id="@idInput"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" placeholder="@placeholder">
+            <input autocomplete="off" type="text" disabled="@Disabled" data-automation-id="@GetAutomationId()_inputtext" class="form-control" value="@Value" @oninput="@(e => OnChangeValue(e.Value.ToString()))" @onkeydown="@OnKeyDown" @onfocus="@OnFocus" @onfocusout="@OnFocusOut" id="@idInput"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" placeholder="@placeholder">
             <div class="whcm_select_list dropdown-menu" aria-labelledby="@idInput">
                 <ul>
                     @if(CacheData.Count()>0){
@@ -22,7 +24,7 @@
                             if(IsMultiple && Values.Contains(item.Value.ToString())){
                                 continue;
                             }
-                            <li class="d-flex justify-content-between dropdown-item" @onclick="@(()=> { OnSelectItem(item.Value); })">
+                            <li class="d-flex justify-content-between dropdown-item" data-automation-id="@GetAutomationIdItem(item)" @onclick="@(()=> { OnSelectItem(item.Value); })">
                                 <div class="d-flex align-items-center">
                                     @if(FieldTemplate == 2){
                                         <div class="whcm_select_list_img">
@@ -44,7 +46,7 @@
                                 </div>
                                 @if(CanEdit || CanDetail){
                                     <div>
-                                        <button class="btn btn-sm layout_btn_standar-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ampliar" @onclick="@(async ()=> { await OpenModalExpand(item.Value);})">
+                                        <button disabled="@Disabled" class="btn btn-sm layout_btn_standar-sm" data-automation-id="@GetAutomationIdItem(item)_ExpandBtn" type="button" data-toggle="tooltip" data-placement="top" title="Ampliar" @onclick="@(async ()=> { await OpenModalExpand(item.Value);})">
                                             <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
                                         </button>
                                     </div>
@@ -57,15 +59,19 @@
         </div>
     </div>
     <div class="input-group-append">
-        <button class="btn whcm-btn-outline" type="button" data-toggle="tooltip" data-placement="top" title="Buscar" @onclick="@(async ()=> { await OpenModalList();})"><i class="fa-solid fa-magnifying-glass"></i></button>
+        <button disabled="@Disabled" class="btn whcm-btn-outline" type="button"  data-automation-id="@GetAutomationId()_SearchBtn" data-toggle="tooltip" data-placement="top" title="Buscar" @onclick="@(async ()=> { await OpenModalList();})"><i class="fa-solid fa-magnifying-glass"></i></button>
         @if(CanCreate){
-            <button class="btn whcm-btn-outline" type="button" data-toggle="tooltip" data-placement="top" title="Crear" @onclick="@(async ()=> { await OpenModalCreate(); })" ><i class="fa-solid fa-circle-plus"></i></button>
+            <button disabled="@Disabled" class="btn whcm-btn-outline" type="button" data-automation-id="@GetAutomationId()_CreateBtn" data-toggle="tooltip" data-placement="top" title="Crear" @onclick="@(async ()=> { await OpenModalCreate(); })" ><i class="fa-solid fa-circle-plus"></i></button>
         }
     </div>
 </div>
 
 @code
 {
+    private string GetAutomationIdItem(dynamic item)
+    {
+        return $"{GetAutomationId()}_{item.Value.Rowid}";
+    }
     public async Task OpenModalCreate(){
         var CreateDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicCreateView BusinessName="@RelatedBusiness" IsSubpanel=true  ShowTitle="false" />, width: "90%", title:$"{RelatedBusiness}.Singular");        
         if(CreateDialog != null && CreateDialog.GetType() != typeof(bool)){
