@@ -17,6 +17,7 @@ namespace Siesa.SDK.Entities
 	/// </summary>
 
 	[Index(nameof(RowidResource), Name = "IX_e00040_1", IsUnique = true)]
+	[Index(nameof(BusinessName), Name = "IX_e00040_2")]
 	public partial class E00040_Feature : BaseSDK<int>
 	{
 		[SDKIdentity]
