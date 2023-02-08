@@ -40,6 +40,16 @@ namespace Siesa.SDK.Shared.Logs.DataEventLog
             throw new NotImplementedException();
         }
 
+        public object GetRowidObject()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Type GetRowidType()
+        {
+            throw new NotImplementedException();
+        }
+
         public void SetRowid(long rowid)
         {
             throw new NotImplementedException();

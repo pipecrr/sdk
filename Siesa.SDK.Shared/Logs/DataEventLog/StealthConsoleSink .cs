@@ -5,6 +5,7 @@ using Serilog.Core;
 using Serilog.Events;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Siesa.SDK.Shared.Logs.DataEventLog
 {
@@ -12,7 +13,7 @@ namespace Siesa.SDK.Shared.Logs.DataEventLog
     {
         IFormatProvider _formatProvider;
         ISDKLogStorageService _logStorageService;
-        
+
 
         public StealthConsoleSink(IFormatProvider formatProvider, ISDKLogStorageService logStorageService)
         {
@@ -37,13 +38,19 @@ namespace Siesa.SDK.Shared.Logs.DataEventLog
             _logStorageService.Save(logString);
             */
             //TODO
-            var logString = JsonConvert.SerializeObject(logEvent);
-            if (_logStorageService == null)
+
+            _ = Task.Run(() =>
             {
-                Console.WriteLine(logString);
-                return;
+                var logString = JsonConvert.SerializeObject(logEvent);
+                if (_logStorageService == null)
+                {
+                    Console.WriteLine(logString);
+                    return;
+                }
+                _logStorageService.Save(logString);
             }
-            _logStorageService.Save(logString);
+            );
+            //_logStorageService.Save(logString);
         }
     }
 }

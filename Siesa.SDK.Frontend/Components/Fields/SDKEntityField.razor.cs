@@ -27,7 +27,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         [Parameter] public string FieldName { get; set; }
         [Parameter] public string BusinessName { get; set; }
         [Parameter] public string RelatedBusiness { get; set; }
-        [Parameter] public dynamic BaseObj { get; set; }    
+        [Parameter] public dynamic BaseObj { get; set; }
         [Parameter] public int MinCharsEntityField { get; set; } = 2;
         [Parameter] public Dictionary<string, string> RelatedFilters { get; set; } = new Dictionary<string, string>();
         [Parameter] public RelatedParams RelatedParams { get; set; }
@@ -35,6 +35,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         [Parameter] public Action<object> SetValue { get; set; }
         [Parameter] public Action OnChange { get; set; }
         [Parameter] public bool IsMultiple { get; set; } = false;
+        [Parameter] public bool Disabled { get; set; }
         public dynamic RelBusinessObj { get; set; }
         private string Value = "";
         private List<string> Values = new List<string>() {};
@@ -54,6 +55,8 @@ namespace Siesa.SDK.Frontend.Components.Fields
         private bool CanDetail;
         private string idInput = "";
 
+        private string badgeContainerClass = "badge-container d-none";
+        private string placeholder = "";
         protected override async Task OnInitializedAsync()
         {
             base.OnInitializedAsync();
@@ -79,18 +82,19 @@ namespace Siesa.SDK.Frontend.Components.Fields
             await LoadData("", null);
             StateHasChanged();
         }
+        public override async Task SetParametersAsync(ParameterView parameters){
+            await base.SetParametersAsync(parameters);
+        }
 
-        /*protected override async Task OnParametersSetAsync()
-        {
-            base.OnParametersSetAsync();
-            await InitView();
-        }*/
-
+        protected override async Task OnParametersSetAsync(){
+            await base.OnParametersSetAsync();
+            await LoadData("", null, true);
+        }
         private async Task OnSelectItem(dynamic item){
             SetVal(item);
             if(OnChange != null){
                 OnChange();
-            }            
+            }
             LoadData("", null, true);
             StateHasChanged();
         }
@@ -127,6 +131,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 Values.Add(Value);
                 ItemsSelected.Add(item);
                 Value = "";
+                placeholder = ItemsSelected.Count + " items selected";
             }else{
                 Values.Clear();
                 ItemsSelected.Clear();
@@ -143,13 +148,21 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 cancellationTokenSource.Cancel();
             }
             cancellationTokenSource = new CancellationTokenSource();
+            if(OnChange != null){
+                OnChange();
+            }
             await LoadData(value, cancellationTokenSource.Token);
             StateHasChanged();
         }
 
-        private void OnFocus()
-        {
+        private void OnFocus(){
             SDKDropDown();
+            badgeContainerClass = "badge-container";
+        }
+
+        private async Task OnFocusOut(){
+            await Task.Delay(200);
+            badgeContainerClass = "badge-container d-none";
         }
 
         private void OnKeyDown(KeyboardEventArgs e)
@@ -326,7 +339,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
         public string GetStringFilters(){
             var filters = "";
-            if(Value != null && Value != ""){
+            if(Value != null && Value != "" && ItemsSelected.Count == 0){
                 var properties = RelBusinessObj.BaseObj.GetType().GetProperties();
                 foreach (var property in properties){
                     if(property.PropertyType == typeof(string)){
@@ -345,6 +358,11 @@ namespace Siesa.SDK.Frontend.Components.Fields
             var itemSelected = ItemsSelected.FirstOrDefault(x => x.ToString() == item);
             if(itemSelected != null){
                 ItemsSelected.Remove(itemSelected);
+                if(ItemsSelected.Count>0){
+                    placeholder = ItemsSelected.Count + " items selected";
+                }else{
+                    placeholder = "";
+                }
             }
             StateHasChanged();
         }

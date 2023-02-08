@@ -31,26 +31,32 @@ namespace Siesa.SDK.Frontend.Services
             };
         }
 
-         public async Task<dynamic> ShowConfirmDialog (RenderFragment childContent,string width="400px", string ConfirmationButtonTag="Action.Confirm", string CancelationButtonTag="Action.Cancel",string title="")
+         public async Task<dynamic> ShowConfirmDialog (RenderFragment childContent,string width="400px", string ConfirmationButtonTag="Action.Confirm", string CancelationButtonTag="Action.Cancel",string title="", string ResourceTag="")
          {
-             
-            return await ds.OpenAsync(title,GetConfirmComponent(childContent,ConfirmationButtonTag,CancelationButtonTag),
+            var _title = title;
+            if(!string.IsNullOrEmpty(ResourceTag)){
+                _title = await UtilsManager.GetResource(ResourceTag);
+            }
+            return await ds.OpenAsync(_title,GetConfirmComponent(childContent,ConfirmationButtonTag,CancelationButtonTag),
             new SDKDialogOption(){ShowTitle=false, Style=$"min-width:300px; width:{width};"});
          }
 
-         public async Task<dynamic> ShowCustomDialog (RenderFragment<DialogService> childContent,string width="600px", string title="",bool ShowTitle=true , bool showClose=true, string height="")
+         public async Task<dynamic> ShowCustomDialog (RenderFragment<DialogService> childContent,string width="600px", string title="",bool ShowTitle=true , bool showClose=true, string height="", string ResourceTag="")
          {
-           string TitleTag = await UtilsManager.GetResource(title);
-           string style = $"min-width:400px; width:{width}";
+            if(!string.IsNullOrEmpty(ResourceTag)){
+                title = await UtilsManager.GetResource(ResourceTag);
+            }
+            string TitleTag = await UtilsManager.GetResource(title);
+            string style = $"min-width:400px; width:{width}";
             if(!string.IsNullOrEmpty(height)){
                 style += $"; height:{height}";
             }
-           SDKDialogOption customDialogOption = new SDKDialogOption {
-            ShowTitle = ShowTitle,
-            Style=style,
-            ShowClose = showClose,
-            Resizable = true
-           };
+            SDKDialogOption customDialogOption = new SDKDialogOption {
+                ShowTitle = ShowTitle,
+                Style=style,
+                ShowClose = showClose,
+                Resizable = true
+            };
            return await ds.OpenAsync(TitleTag, childContent,customDialogOption);
          }
 

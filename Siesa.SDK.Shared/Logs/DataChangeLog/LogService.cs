@@ -1,4 +1,5 @@
 ﻿using AuditAppGrpcClient;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
@@ -13,21 +14,21 @@ namespace Siesa.SDK.Shared.Logs.DataChangeLog
 {
     public static class LogService
     {
-        public static void SaveDataEntityLog(List<DataEntityLog> logs, System.IServiceProvider serviceProvider)
+        public static void SaveDataEntityLog(List<DataEntityLog> logs, IConfiguration configuration)
         {
-            var dataChangeLog =  ActivatorUtilities.CreateInstance<SDKGrpcChangeLogStorageService>(serviceProvider);
+            var dataChangeLog =  new SDKGrpcChangeLogStorageService(configuration);
             Parallel.ForEach(logs, log => ConvertAndSave(log, dataChangeLog));
         }
 
-        public static QueryLogReply QueryEntityLog(QueryLogRequest request, System.IServiceProvider serviceProvider)
+        public static QueryLogReply QueryEntityLog(QueryLogRequest request, IConfiguration configuration)
         {
-            var dataChangeLog =  ActivatorUtilities.CreateInstance<SDKGrpcChangeLogStorageService>(serviceProvider);
+            var dataChangeLog =  new SDKGrpcLogStorageService(configuration);
             return dataChangeLog.QueryEntityLog(request);
         }
 
-        public static QueryLogReply QueryEntityEventLog(QueryLogRequest request, System.IServiceProvider serviceProvider)
+        public static QueryLogReply QueryEntityEventLog(QueryLogRequest request, IConfiguration configuration)
         {
-            var dataChangeLog =  ActivatorUtilities.CreateInstance<SDKGrpcLogStorageService>(serviceProvider);
+            var dataChangeLog =  new SDKGrpcLogStorageService(configuration);
             return dataChangeLog.QueryEntityLog(request);
         }
 
