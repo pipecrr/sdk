@@ -175,7 +175,7 @@ window.addEventListener('beforeunload', function (e) {
     var search = window.location.search;
     var params = search.substring(1,search.length).split('&');
     var sdk_debug = params.find(x => x == 'sdk_debug=1');
-    //sdk_debug = true;
+    sdk_debug = true;
     if(sdk_debug){
         loadScript("http://127.0.0.1:3000/static/js/bundle.js");
         loadScript("http://127.0.0.1:3000/static/js/0.chunk.js");

@@ -1,6 +1,7 @@
 @using Siesa.SDK.Frontend.Components
 @using Siesa.SDK.Frontend.Components.Visualization
 @using SDK.Components.Visualization
+@inject UtilsManager UtilsManager
 @inherits SDKComponent
 <div class="input-group input-group-sm whcm_select_box" data-automation-id="@GetAutomationId()">
     <div class="input-badge-container">
@@ -97,11 +98,12 @@
     
     public async Task OpenModalList(){
         var filters = GetStringFilters();
-        var listDialog = await SDKDialogService.ShowCustomDialog(ds => @<div><DynamicListView BusinessName="@RelatedBusiness" IsSubpanel=true  ShowTitle="false" OnSelectedRow="OnSelectedRow" SubpanelFilter="@filters" FromEntityField=true IsMultiple="@IsMultiple"/>@if(IsMultiple){<div class="float-right pt-2"><SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Style Primary" Click="@(() => SelectValues())"/></div>}
+        var listDialog = await SDKDialogService.ShowCustomDialog(ds => @<div><DynamicListView BusinessName="@RelatedBusiness" IsSubpanel=true  ShowTitle="false" OnSelectedRow="OnSelectedRow" SubpanelFilter="@filters" FromEntityField=true IsMultiple="@IsMultiple"/>@if(IsMultiple){<div class="float-right pt-2"><SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Custom.EntityField.SelectButton" Click="@(() => SelectValues())"/></div>}
         </div>, width: "90%", title:$"{RelatedBusiness}.Singular");
         if(listDialog != null && listDialog){
             await OnChangeValue(Value);
+            await LoadData("", null);
             StateHasChanged();
         }
     }
-}
+} 

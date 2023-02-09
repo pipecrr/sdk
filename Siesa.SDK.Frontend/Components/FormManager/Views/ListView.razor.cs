@@ -102,7 +102,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private bool _isEditingFlex = false;
         private bool _isSearchOpen = false;
         public String ErrorMsg = "";
-        private IList<object> SelectedObjects { get; set; }
+        private IList<dynamic> SelectedObjects { get; set; }
 
         private ListViewModel ListViewModel { get; set; }
 
@@ -125,7 +125,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public Action OnClickNew { get; set; } = null;
 
         [Parameter]
-        public Action<object> OnSelectedRow { get; set; } = null;
+        public Action<IList<dynamic>> OnSelectedRow { get; set; } = null;
 
         [Parameter]
         public IEnumerable<object> Data { get; set; } = null;
@@ -164,26 +164,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private string StyleSearchForm { get; set; } = "search_back position-relative";
         private Radzen.DataGridSelectionMode SelectionMode { get; set; } = Radzen.DataGridSelectionMode.Single;
         private bool allowRowSelectOnRowClick = true;
+        private bool valueCheckAll { get; set;}
+        private bool valueCheckItem { get; set;}
         Guid needUpdate;
 
         private void OnSelectionChanged(IList<object> objects)
         {
-            if(IsMultiple)
+            if (OnSelectedRow != null)
             {
                 SelectedObjects = objects;
-            }
-            if (OnSelectedRow != null && !IsMultiple)
-            {
-                SelectedObjects = objects;
-                if (SelectedObjects?.Any() == true)
-                {
-                    OnSelectedRow(objects.First());
-                }
-                else
-                {
-                    OnSelectedRow(null);
-                }
-
+                OnSelectedRow(SelectedObjects);
             }
         }
 
@@ -287,7 +277,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 UseFlex = ListViewModel.UseFlex;
                 FlexTake = ListViewModel.FlexTake;
                 ShowLinkTo = ListViewModel.ShowLinkTo;
-                ServerPaginationFlex = ListViewModel.ServerPaginationFlex;                
+                ServerPaginationFlex = ListViewModel.ServerPaginationFlex;
                 //TODO: quitar cuando se pueda usar flex en los custom components
                 var fieldsCustomComponent = ListViewModel.Fields.Where(x => x.CustomComponent != null).ToList();
                 if(fieldsCustomComponent.Count > 0){
@@ -966,8 +956,21 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
         }
 
-        public void SelectValues(){
-            
+        public void Onchange(bool value, dynamic data){
+            if (value){
+                SelectedObjects.Add(data);
+            }else{
+                SelectedObjects.Remove(data);
+            }
+        }
+
+        public void OnChangeAll(bool value){
+            if (value){
+                SelectedObjects = _gridRef.Data.ToList();
+            }else{
+                SelectedObjects.Clear();
+                _gridRef.ValueChanged.InvokeAsync(SelectedObjects);
+            }
         }
     }
 }

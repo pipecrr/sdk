@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Components.Web;
 using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
 using Siesa.SDK.Frontend.Services;
 using Microsoft.JSInterop;
-using Newtonsoft.Json;
 
 namespace Siesa.SDK.Frontend.Components.Fields
 {
@@ -21,9 +20,9 @@ namespace Siesa.SDK.Frontend.Components.Fields
     {
         [Inject] public IBackendRouterService BackendRouterService { get; set; }
         [Inject] public IServiceProvider ServiceProvider { get; set; }
-        [Inject] public IFeaturePermissionService FeaturePermissionService { get; set; }        
+        [Inject] public IFeaturePermissionService FeaturePermissionService { get; set; }
         [Inject] public SDKDialogService SDKDialogService { get; set; }
-        [Inject] public IJSRuntime jsRuntime { get; set; }
+        [Inject] public IJSRuntime JsRuntime { get; set; }
         [Parameter] public string FieldName { get; set; }
         [Parameter] public string BusinessName { get; set; }
         [Parameter] public string RelatedBusiness { get; set; }
@@ -39,7 +38,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         public dynamic RelBusinessObj { get; set; }
         private string Value = "";
         private List<string> Values = new List<string>() {};
-        private List<dynamic> ItemsSelected = new List<dynamic>() {};
+        private IList<dynamic> ItemsSelected = new List<dynamic>() {};
         private Dictionary<int, object> CacheData = new Dictionary<int, object>();
         SDKBusinessModel relBusinessModel = null;
         private LoadResult CacheLoadResult;
@@ -109,16 +108,19 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 Value = item.ToString();
             }else{
                 BindProperty = BaseObj.GetType().GetProperty(FieldName);
-                if(!item.GetType().ToString().Equals(BindProperty.ToString())){
+                /*if(!item.GetType().ToString().Equals(BindProperty.ToString())){
                     var rowidItem = Int64.Parse(item.rowid.ToString());
                     var response = await relBusinessModel.Get(rowidItem);
                     if(response!=null){
                         item = JsonConvert.DeserializeObject(response, BindProperty.PropertyType);
                     }
-                }
+                }*/
                 if(IsMultiple){
                     var typeProperty = BindProperty.PropertyType;
-                    var list = Activator.CreateInstance(typeProperty);
+                    var list = BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj);
+                    if(list == null){
+                        list = Activator.CreateInstance(typeProperty);
+                    }
                     var addMethod = typeProperty.GetMethod("Add");
                     addMethod.Invoke(list, new object[] { item });
                     BindProperty.SetValue(BaseObj, list);
@@ -129,9 +131,17 @@ namespace Siesa.SDK.Frontend.Components.Fields
             }
             if(IsMultiple){
                 Values.Add(Value);
+                ItemsSelected.Remove(item);
                 ItemsSelected.Add(item);
                 Value = "";
-                placeholder = ItemsSelected.Count + " items selected";
+                if(ItemsSelected.Count==1){
+                    var tag = await UtilsManager.GetResource("Custom.EntityField.MultiSelect.Placeholder.Singular");
+                    placeholder = ItemsSelected.Count + " " + tag;
+                }else{
+                    var tag = await UtilsManager.GetResource("Custom.EntityField.MultiSelect.Placeholder.Plural");
+                    placeholder = ItemsSelected.Count + " " + tag;
+                }
+
             }else{
                 Values.Clear();
                 ItemsSelected.Clear();
@@ -318,22 +328,30 @@ namespace Siesa.SDK.Frontend.Components.Fields
             }
         }
         
-        public void OnSelectedRow(object item){
-            if(item != null && !IsMultiple){
-                SetVal(item);
+        public void OnSelectedRow(IList<dynamic> items){
+            if(items != null){
+                if(!IsMultiple){
+                    SetVal(items.First());
+                    SDKDialogService.Close(true);
+                }else{
+                    ItemsSelected = items;
+                }
                 LoadData("", null);
-                SDKDialogService.Close(true);
             }
         }
-
-        public void SelectValues(){
-            
+        public async Task SelectValues(){
+            SDKDialogService.Close(true);
+            if(ItemsSelected != null && ItemsSelected.Count > 0){
+                foreach (var item in ItemsSelected){
+                    await SetVal(item);
+                }
+            }
         }
 
         public async Task SDKDropDown(){
             //wait 200ms
             await Task.Delay(200);
-            var elementInstance = await jsRuntime.InvokeAsync<IJSObjectReference>("$", $"#{idInput}[aria-expanded=false]");
+            var elementInstance = await JsRuntime.InvokeAsync<IJSObjectReference>("$", $"#{idInput}[aria-expanded=false]");
             await elementInstance.InvokeVoidAsync("dropdown","show");
         }
 
@@ -353,13 +371,19 @@ namespace Siesa.SDK.Frontend.Components.Fields
             return filters;
         }
 
-        public void closeItem(string item){
+        public async Task closeItem(string item){
             Values.Remove(item);
             var itemSelected = ItemsSelected.FirstOrDefault(x => x.ToString() == item);
             if(itemSelected != null){
                 ItemsSelected.Remove(itemSelected);
                 if(ItemsSelected.Count>0){
-                    placeholder = ItemsSelected.Count + " items selected";
+                    if(ItemsSelected.Count==1){
+                        var tag = await UtilsManager.GetResource("Custom.EntityField.MultiSelect.Placeholder.Singular");
+                        placeholder = ItemsSelected.Count + " " + tag;
+                    }else{
+                        var tag = await UtilsManager.GetResource("Custom.EntityField.MultiSelect.Placeholder.Plural");
+                        placeholder = ItemsSelected.Count + " " + tag;
+                    }
                 }else{
                     placeholder = "";
                 }
@@ -367,7 +391,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
             StateHasChanged();
         }
 
-        public List<dynamic> GetItemsSelected(){
+        public IList<dynamic> GetItemsSelected(){
             return ItemsSelected;
         }
 

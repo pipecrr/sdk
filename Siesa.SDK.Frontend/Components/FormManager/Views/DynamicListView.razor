@@ -23,7 +23,7 @@ else if (BusinessObj != null)
     [Parameter] public bool AllowEdit { get; set; } = true;
     [Parameter] public bool AllowDelete { get; set; } = true;
     [Parameter] public bool AllowDetail { get; set; } = true;
-    [Parameter] public Action<object> OnSelectedRow { get; set; } = null;
+    [Parameter] public Action<IList<dynamic>> OnSelectedRow { get; set; } = null;
 
     [Parameter] public string ViewdefName { get; set; } = "related_list";
 

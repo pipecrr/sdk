@@ -3,6 +3,7 @@
 @using Siesa.SDK.Entities
 @using Siesa.SDK.Frontend.Components.FormManager.Views
 @using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Fields
 @using Siesa.SDK.Frontend.Components.Flex
 @using Newtonsoft.Json;
 @using Siesa.SDK.Shared.Extensions
@@ -120,8 +121,22 @@ else
                 </div>
             </EmptyTemplate>
             <Columns>
+            @if(IsMultiple){
+                <RadzenDataGridColumn TItem="object" Width="50px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" HeaderCssClass="grid-column-action">
+                    <HeaderTemplate>
+                        <SDKBooleanField Value="@(SelectedObjects != null && SelectedObjects.Count>0)" Enabled="true" ValueChanged="(value => SelectedObjects = value ? _gridRef.Data.ToList() : null)">
+                        </SDKBooleanField>                        
+                    </HeaderTemplate>
+                    <Template Context="data">
+                        <div class="d-flex justify-content-center">
+                            <SDKBooleanField Value="@(SelectedObjects != null && SelectedObjects.Contains(data))" Enabled="true" ValueChanged="((value) => Onchange(value, data))">
+                            </SDKBooleanField>
+                        </div>
+                    </Template>
+                </RadzenDataGridColumn>
+            }
             @if(ListViewModel.ShowActions)
-            {                
+            {
                 <RadzenDataGridColumn TItem="object" Title="Acciones" Width="@WithActions" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" HeaderCssClass="grid-column-action">
                     <HeaderTemplate>
                         <div class="untruncate-grid-column-action">
@@ -131,9 +146,8 @@ else
                             }else{
                                 <span><ResourceViewer ResourceTag="Action.Generic.Actions" /></span>
                             }    
-                        </div>                    
+                        </div>
                     </HeaderTemplate>
-                
                     <Template Context="data">
                         <div class="action-buttons d-flex justify-content-center">
                             @if(CanEdit && AllowEdit){
