@@ -15,6 +15,26 @@ namespace Siesa.SDK.Shared.Configurations
 
         public string CurrentUrl { get; set; } = String.Empty;
 
+        private string _currentUrl = String.Empty;
+
+        public string GetCurrentUrl()
+        {
+            if(!string.IsNullOrEmpty(_currentUrl))
+            {
+                return _currentUrl;
+            }
+            
+            if (string.IsNullOrEmpty(CurrentUrl))
+            {
+                var machineName = Environment.MachineName;
+                return _currentUrl = $"https://{machineName}";
+            }
+            else
+            {
+                return _currentUrl = CurrentUrl;
+            }
+        }
+
     }
 
     public static class ServiceConfigurationExtension

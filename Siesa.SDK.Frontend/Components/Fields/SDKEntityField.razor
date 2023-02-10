@@ -2,8 +2,8 @@
 @inherits SDKComponent
 <div class="input-group input-group-sm whcm_select_box" data-automation-id="@GetAutomationId()">
     <div class="input-badge-container">
-        <div class="badge-container">
-            @if(IsMultiple){
+        @if(IsMultiple){
+            <div class="@badgeContainerClass">
                 @foreach (var item in Values){
                     <span class="badge badge-pill badge-light">@item
                         <button disabled="@Disabled" @onclick="@(()=> {closeItem(item);})">
@@ -11,11 +11,11 @@
                         </button>
                     </span>
                 }
-            }
-        </div>
+            </div>
+        }
         
         <div class="dropdown">
-            <input autocomplete="off" type="text" disabled="@Disabled" data-automation-id="@GetAutomationId()_inputtext" class="form-control" value="@Value" @oninput="@(e => OnChangeValue(e.Value.ToString()))" @onkeydown="@OnKeyDown" @onfocus="@OnFocus" id="@idInput"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">            
+            <input autocomplete="off" type="text" disabled="@Disabled" data-automation-id="@GetAutomationId()_inputtext" class="form-control" value="@Value" @oninput="@(e => OnChangeValue(e.Value.ToString()))" @onkeydown="@OnKeyDown" @onfocus="@OnFocus" @onfocusout="@OnFocusOut" id="@idInput"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" placeholder="@placeholder">
             <div class="whcm_select_list dropdown-menu" aria-labelledby="@idInput">
                 <ul>
                     @if(CacheData.Count()>0){
@@ -96,6 +96,9 @@
     public async Task OpenModalList(){
         var filters = GetStringFilters();
         var listDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicListView BusinessName="@RelatedBusiness" IsSubpanel=true  ShowTitle="false" OnSelectedRow="OnSelectedRow" SubpanelFilter="@filters" FromEntityField=true/>, width: "90%", title:$"{RelatedBusiness}.Singular");
-        StateHasChanged();
+        if(listDialog != null && listDialog){
+            await OnChangeValue(Value);
+            StateHasChanged();
+        }
     }
 }

@@ -360,7 +360,7 @@ namespace Siesa.SDK.Business
                 {
                     query = query.Include(relatedProperty);
                 }
-                query = query.Where("Rowid == @0", rowid);
+                query = query.Where("Rowid == @0", ConvertToRowidType(rowid));
                 return query.FirstOrDefault();
             }
         }
@@ -520,7 +520,15 @@ namespace Siesa.SDK.Business
                     // {
                     //     query = query.Include(relatedProperty);
                     // }
-                    query = query.Where("Rowid == @0", BaseObj.GetRowid());
+                    var rowidSearch = BaseObj.GetRowid();
+                    try
+                    {
+                        rowidSearch = ((dynamic)BaseObj).Rowid;
+                    }
+                    catch (System.Exception)
+                    {
+                    }
+                    query = query.Where("Rowid == @0", rowidSearch);
                     T entity = query.FirstOrDefault();
                     context.ResetConcurrencyValues(entity, BaseObj);
                     DisableRelatedProperties(BaseObj, _navigationProperties, RelFieldsToSave);
@@ -696,6 +704,18 @@ namespace Siesa.SDK.Business
             return retContext;
         }
 
+        private object ConvertToRowidType(Int64 rowid)
+        {
+            try
+            {
+                return Convert.ChangeType(rowid, BaseObj.GetRowidType());
+            }
+            catch (System.Exception)
+            {
+                return rowid;
+            }
+        }
+
         [SDKExposedMethod]
         public virtual ActionResult<string> GetObjectString(Int64 rowid)
         {
@@ -703,7 +723,7 @@ namespace Siesa.SDK.Business
             {
                 context.SetProvider(_provider);
                 var query = context.Set<T>().AsQueryable();
-                query = query.Where("Rowid == @0", rowid);
+                query = query.Where("Rowid == @0", ConvertToRowidType(rowid));
                 var entity = query.FirstOrDefault();
                 if (entity != null)
                 {
