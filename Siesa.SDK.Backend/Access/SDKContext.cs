@@ -17,6 +17,8 @@ using Siesa.SDK.Backend.Extensions;
 using System.Reflection;
 using Siesa.SDK.Shared.Criptography;
 using Siesa.SDK.Shared.DataAnnotations;
+using Microsoft.Extensions.Configuration;
+using System.Threading;
 
 namespace Siesa.SDK.Backend.Access
 {
@@ -157,6 +159,11 @@ namespace Siesa.SDK.Backend.Access
             return InternalSaveChanges(false);
         }
 
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(InternalSaveChanges(true));
+        }
+
         public override int SaveChanges()
         {
             return InternalSaveChanges(true);
@@ -272,7 +279,8 @@ namespace Siesa.SDK.Backend.Access
             {
                 if (ServiceProvider != null)
                 {
-                    await Task.Run(() => LogService.SaveDataEntityLog(logCreator.DataEntityLogs, ServiceProvider));
+                    IConfiguration configuration = (IConfiguration)ServiceProvider.GetService(typeof(IConfiguration));
+                    await Task.Run(() => LogService.SaveDataEntityLog(logCreator.DataEntityLogs, configuration));
                 }
             }
             catch (Exception) { }

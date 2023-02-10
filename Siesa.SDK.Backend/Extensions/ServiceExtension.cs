@@ -57,8 +57,8 @@ namespace Siesa.SDK.Backend.Extensions
                     if(!tenant.ConnectionString.Contains("Application Name=")){
                         var serviceConfiguration = configurationManager.GetSection("ServiceConfiguration");
                         ServiceConfiguration sc = serviceConfiguration.Get<ServiceConfiguration>();
-                        var currentUrl = sc?.CurrentUrl;
-                        if(!String.IsNullOrEmpty(currentUrl)){
+                        var currentUrl = sc?.GetCurrentUrl();
+                        if(!string.IsNullOrEmpty(currentUrl)){
                             //delete http:// or https://
                             currentUrl = currentUrl.Replace("http://", "");
                             currentUrl = currentUrl.Replace("https://", "");
@@ -75,7 +75,7 @@ namespace Siesa.SDK.Backend.Extensions
                         }
                         var appName = $"{machineName}";
 
-                        if(!String.IsNullOrEmpty(currentUrl)){
+                        if(!string.IsNullOrEmpty(currentUrl)){
                             appName += $"-{currentUrl}";
                         }
                         tenant.ConnectionString += $"Application Name=SDK-{appName};";

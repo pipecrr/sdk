@@ -675,7 +675,7 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_text{
     margin: 0;
     list-style: none;
  }
- .whcm_select_box > .whcm_select_list>ul>li{
+ .whcm_select_box .whcm_select_list>ul>li{
     padding: 0.5rem;
  }
  .whcm_select_box > .whcm_select_list>ul>li:hover{
