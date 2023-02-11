@@ -102,8 +102,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private bool _isEditingFlex = false;
         private bool _isSearchOpen = false;
         public String ErrorMsg = "";
-        private IList<dynamic> SelectedObjects { get; set; }
-
+        private IList<dynamic> SelectedObjects { get; set; } = new List<dynamic>();
+        [Parameter] 
+        public IList<dynamic> SelectedItems { get; set; }
         private ListViewModel ListViewModel { get; set; }
 
         [Parameter]
@@ -163,9 +164,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private string defaultStyleSearchForm = "search_back position-relative";
         private string StyleSearchForm { get; set; } = "search_back position-relative";
         private Radzen.DataGridSelectionMode SelectionMode { get; set; } = Radzen.DataGridSelectionMode.Single;
-        private bool allowRowSelectOnRowClick = true;
-        private bool valueCheckAll { get; set;}
-        private bool valueCheckItem { get; set;}
         Guid needUpdate;
 
         private void OnSelectionChanged(IList<object> objects)
@@ -389,7 +387,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 Restart();
             }
         }
-
+        /*protected override void OnAfterRender(bool firstRender){
+            if(SelectedItems!=null && firstRender){
+                foreach (var item in SelectedItems){
+                    SelectedObjects.Add(item);
+                }
+            }
+            base.OnAfterRender(firstRender);
+        }*/
         private bool validateChanged(ParameterView parameters)
         {
             var type = this.GetType();
@@ -961,15 +966,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 SelectedObjects.Add(data);
             }else{
                 SelectedObjects.Remove(data);
-            }
-        }
-
-        public void OnChangeAll(bool value){
-            if (value){
-                SelectedObjects = _gridRef.Data.ToList();
-            }else{
-                SelectedObjects.Clear();
-                _gridRef.ValueChanged.InvokeAsync(SelectedObjects);
             }
         }
     }

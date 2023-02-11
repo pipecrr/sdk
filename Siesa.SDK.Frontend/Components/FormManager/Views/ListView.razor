@@ -19,9 +19,9 @@ else if(!string.IsNullOrEmpty(ErrorMsg))
 }
 else
 {
-    @if(IsSubpanel){
+    /*@if(IsSubpanel){
         UseFlex = false;
-    }
+    }*/
     @if(ShowSearchForm && HasSearchViewdef)
     {
         <div class="@StyleSearchForm">
@@ -129,7 +129,7 @@ else
                     </HeaderTemplate>
                     <Template Context="data">
                         <div class="d-flex justify-content-center">
-                            <SDKBooleanField Value="@(SelectedObjects != null && SelectedObjects.Contains(data))" Enabled="true" ValueChanged="((value) => Onchange(value, data))">
+                            <SDKBooleanField Value="@(SelectedObjects != null && SelectedObjects.Contains(data))" Enabled="true" ValueChanged="@(args => {  _gridRef.SelectRow(data); })">
                             </SDKBooleanField>
                         </div>
                     </Template>
@@ -332,7 +332,7 @@ else
     }
 
     @if(ShowList && UseFlex){
-        <FlexComponent IsListView="true" BlNameList="@BusinessName" ViewdefName="@FinalViewdefName" ListView="@this" GuidListView="@guidListView" CanEdit="@CanEdit" CanDelete="@CanDelete" EditingFlex="@_isEditingFlex" Take="@FlexTake" ServerPagination="@ServerPaginationFlex" FilterSearch="@FilterFlex" ActionIcons=@CustomActionIcons HasSearch=@ShowSearchForm></FlexComponent>
+        <FlexComponent IsListView="true" BlNameList="@BusinessName" ViewdefName="@FinalViewdefName" ListView="@this" GuidListView="@guidListView" CanEdit="@CanEdit" CanDelete="@CanDelete" EditingFlex="@_isEditingFlex" Take="@FlexTake" ServerPagination="@ServerPaginationFlex" FilterSearch="@FilterFlex" ActionIcons=@CustomActionIcons HasSearch=@ShowSearchForm IsMultiple="@IsMultiple"></FlexComponent>
     }
 
     @if(SetTopBar)
@@ -414,5 +414,15 @@ else
         }
 
         return result;
+    }
+
+    public bool GetValueCheck(dynamic data){
+        var r = false;
+        /*if(SelectedObjects != null){
+            Type dataType = data.GetType();
+            var dynamicData = Convert.ChangeType(data, dataType);
+            r = SelectedObjects.Any(x => x.Rowid == dynamicData.Rowid);            
+        }*/
+        return SelectedObjects != null && SelectedObjects.Any(x => x.Rowid == data.Rowid);
     }
 }
