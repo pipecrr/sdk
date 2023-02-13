@@ -15,8 +15,6 @@ namespace Siesa.SDK.Frontend.Services
     {
         public bool CheckUserActionPermission(string businessName, int actionRowid, IAuthenticationService authenticationService)
         {
-            
-            return true;
             return Utilities.CheckUserActionPermission(businessName, actionRowid, authenticationService);
         }
 

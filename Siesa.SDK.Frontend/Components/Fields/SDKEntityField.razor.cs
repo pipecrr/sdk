@@ -14,6 +14,7 @@ using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
 using Siesa.SDK.Frontend.Services;
 using Microsoft.JSInterop;
 using Newtonsoft.Json;
+using Siesa.SDK.Frontend.Extension;
 
 namespace Siesa.SDK.Frontend.Components.Fields
 {
@@ -93,6 +94,9 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
         protected override async Task OnParametersSetAsync(){
             await base.OnParametersSetAsync();
+            if(BaseObj != null){
+                SetVal(BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj));
+            }
             await LoadData("", null, true);
         }
         private async Task OnSelectItem(dynamic item){
@@ -137,6 +141,9 @@ namespace Siesa.SDK.Frontend.Components.Fields
                     BindProperty.SetValue(BaseObj, item);
                 }
                 Value = item.ToString();
+                if(item.Rowid == 0){
+                    Value = "";
+                }
             }
             if(IsMultiple){
                 if(BadgeByData.TryGetValue("_item_replace", out dynamic itemReplace)){
@@ -159,8 +166,10 @@ namespace Siesa.SDK.Frontend.Components.Fields
             }else{
                 Values.Clear();
                 ItemsSelected.Clear();
-                Values.Add(Value);
-                ItemsSelected.Add(item);
+                if(Value != ""){                
+                    Values.Add(Value);
+                    ItemsSelected.Add(item);
+                }
             }
         }
         
@@ -247,55 +256,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
             //check length of search text
             if (searchText.Length > MinCharsEntityField || CacheLoadResult == null)
             {
-                var filters = "";
-                if (BaseObj != null && RelBusinessObj != null && RelBusinessObj.BaseObj != null && RelBusinessObj.BaseObj.GetType() == BaseObj.GetType())
-                {
-                    var baseObjRowidProperty = BaseObj.GetType().GetProperty("Rowid");
-                    if(baseObjRowidProperty != null && baseObjRowidProperty.GetValue(BaseObj) != null &&baseObjRowidProperty.GetValue(BaseObj) != 0 )
-                    {
-                        filters = $"(Rowid != {BaseObj.Rowid})";
-                    }
-                }
-                foreach (var item in RelatedFilters)
-                {
-                    var value = item.Value;
-                    var key = item.Key;
-                    key = key.Replace("RelBaseObj.", "");
-                    dynamic dynamicValue;
-                    try
-                    {
-                        dynamicValue = await Utils.Evaluator.EvaluateCode(value, BaseObj);
-                    }
-                    catch (Exception ex)
-                    {
-                        dynamicValue = value;
-                    }
-                    if (dynamicValue == null)
-                    {
-                        continue;
-                    }
-                    if (!string.IsNullOrEmpty(filters))
-                    {
-                        filters += " && ";
-                    }
-                    switch (dynamicValue)
-                    {
-                        case System.Boolean boolean:
-                            filters += $"({key} == {dynamicValue})";
-                            break;
-
-                        case System.Int64 int64:
-                        case System.Int32 int32:
-                        case System.Double doubleValue:
-                        case System.Decimal decimalValue:
-                            filters += $"({key} == {dynamicValue})";
-                            break;
-                        default:
-                            filters += $"({key} == null ? \"\" : {key}).Equals(\"{dynamicValue.ToString()}\")";
-                            break;
-                    }
-
-                }
+                var filters = await GetFilters();
                 var result = await RelBusinessObj.EntityFieldSearchAsync(searchText, filters);
                 var response = new LoadResult
                 {
@@ -314,6 +275,59 @@ namespace Siesa.SDK.Frontend.Components.Fields
             {
                 return CacheLoadResult;
             }
+        }
+
+        private async Task<string> GetFilters()
+        {
+            var filters = "";
+            if (BaseObj != null && RelBusinessObj != null && RelBusinessObj.BaseObj != null && RelBusinessObj.BaseObj.GetType() == BaseObj.GetType())
+            {
+                var baseObjRowidProperty = BaseObj.GetType().GetProperty("Rowid");
+                if(baseObjRowidProperty != null && baseObjRowidProperty.GetValue(BaseObj) != null &&baseObjRowidProperty.GetValue(BaseObj) != 0 )
+                {
+                    filters = $"(Rowid != {BaseObj.Rowid})";
+                }
+            }
+            foreach (var item in RelatedFilters)
+            {
+                var value = item.Value;
+                var key = item.Key;
+                key = key.Replace("RelBaseObj.", "");
+                dynamic dynamicValue;
+                try
+                {
+                    dynamicValue = await Utils.Evaluator.EvaluateCode(value, BaseObj);
+                }
+                catch (Exception ex)
+                {
+                    dynamicValue = value;
+                }
+                if (dynamicValue == null)
+                {
+                    continue;
+                }
+                if (!string.IsNullOrEmpty(filters))
+                {
+                    filters += " && ";
+                }
+                switch (dynamicValue)
+                {
+                    case System.Boolean boolean:
+                        filters += $"({key} == {dynamicValue})";
+                        break;
+
+                    case System.Int64 int64:
+                    case System.Int32 int32:
+                    case System.Double doubleValue:
+                    case System.Decimal decimalValue:
+                        filters += $"({key} == {dynamicValue})";
+                        break;
+                    default:
+                        filters += $"({key} == null ? \"\" : {key}).Equals(\"{dynamicValue.ToString()}\")";
+                        break;
+                }
+            }
+            return filters;
         }
 
         private async Task CheckPermissions()
@@ -373,18 +387,25 @@ namespace Siesa.SDK.Frontend.Components.Fields
             await elementInstance.InvokeVoidAsync("dropdown","show");
         }
 
-        public string GetStringFilters(){
-            var filters = "";
+        public async Task<string> GetStringFilters(){
+            var filters = await GetFilters();
+            var filtersSearch = "";
             if(Value != null && Value != "" && ItemsSelected.Count == 0){
                 var properties = RelBusinessObj.BaseObj.GetType().GetProperties();
                 foreach (var property in properties){
                     if(property.PropertyType == typeof(string)){
-                        if(!string.IsNullOrEmpty(filters)){
-                            filters += " || ";
+                        if(!string.IsNullOrEmpty(filtersSearch)){
+                            filtersSearch += " || ";
                         }
-                        filters += $"({property.Name} == null ? \"\" : {property.Name}).ToLower().Contains(\"{Value}\".ToLower())";
+                        filtersSearch += $"({property.Name} == null ? \"\" : {property.Name}).ToLower().Contains(\"{Value}\".ToLower())";
                     }
                 }
+            }
+            if(!string.IsNullOrEmpty(filtersSearch)){
+                if(!string.IsNullOrEmpty(filters)){
+                    filters += " && ";
+                }
+                filters += $"({filtersSearch})";
             }
             return filters;
         }

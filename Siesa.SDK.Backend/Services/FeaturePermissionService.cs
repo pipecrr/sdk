@@ -13,7 +13,6 @@ namespace Siesa.SDK.Backend.Services
     {
         public bool CheckUserActionPermission(string businessName, int actionRowid, IAuthenticationService authenticationService)
         {
-            return true;
             return Utilities.CheckUserActionPermission(businessName, actionRowid, authenticationService);
         }
         public bool CheckUserActionPermissions(string businessName, List<int> permissions, IAuthenticationService authenticationService){
