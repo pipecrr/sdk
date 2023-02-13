@@ -11,7 +11,11 @@
     z-index: 3;
     width: 100%;
 }
-
+.dropdown-item.active, .dropdown-item:active {
+    color: var(--color_text);
+    text-decoration: none;
+    background-color: var(--color_back_2)
+}
 .badge-container input{
     outline: none;
     border: 0;
@@ -33,6 +37,7 @@
 
 .input-badge-container ::deep .whcm_select_list.dropdown-menu.show{
     width: 100%;
+    transform: translate3d(0px, 1.938rem, 0px) !important;
 }
 
 .input-badge-container > .dropdown ::deep > input{

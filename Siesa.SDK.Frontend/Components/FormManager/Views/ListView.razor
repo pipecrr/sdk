@@ -3,6 +3,7 @@
 @using Siesa.SDK.Entities
 @using Siesa.SDK.Frontend.Components.FormManager.Views
 @using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Fields
 @using Siesa.SDK.Frontend.Components.Flex
 @using Newtonsoft.Json;
 @using Siesa.SDK.Shared.Extensions
@@ -77,7 +78,8 @@ else
             AllowVirtualization="@(ListViewModel.InfiniteScroll)"
             ShowPagingSummary="true"
             PageSizeOptions="ListViewModel.Paging.AllowedPageSizes" 
-            SelectionMode="Radzen.DataGridSelectionMode.Single"
+            SelectionMode="@SelectionMode"
+            AllowRowSelectOnRowClick="true"
             Value=@SelectedObjects
             ValueChanged="((objects) => OnSelectionChanged(objects))"
             class="whcm_table"
@@ -119,8 +121,22 @@ else
                 </div>
             </EmptyTemplate>
             <Columns>
+            @if(IsMultiple){
+                <RadzenDataGridColumn TItem="object" Width="50px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" HeaderCssClass="grid-column-action">
+                    <HeaderTemplate>
+                        <SDKBooleanField Value="@(SelectedObjects != null && SelectedObjects.Count>0)" Enabled="true" ValueChanged="(value => SelectedObjects = value ? _gridRef.Data.ToList() : null)">
+                        </SDKBooleanField>                        
+                    </HeaderTemplate>
+                    <Template Context="data">
+                        <div class="d-flex justify-content-center">
+                            <SDKBooleanField Value="@(SelectedObjects != null && SelectedObjects.Contains(data))" Enabled="true" ValueChanged="@(args => {  _gridRef.SelectRow(data); })">
+                            </SDKBooleanField>
+                        </div>
+                    </Template>
+                </RadzenDataGridColumn>
+            }
             @if(ListViewModel.ShowActions)
-            {                
+            {
                 <RadzenDataGridColumn TItem="object" Title="Acciones" Width="@WithActions" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" HeaderCssClass="grid-column-action">
                     <HeaderTemplate>
                         <div class="untruncate-grid-column-action">
@@ -130,9 +146,8 @@ else
                             }else{
                                 <span><ResourceViewer ResourceTag="Action.Generic.Actions" /></span>
                             }    
-                        </div>                    
+                        </div>
                     </HeaderTemplate>
-                
                     <Template Context="data">
                         <div class="action-buttons d-flex justify-content-center">
                             @if(CanEdit && AllowEdit){
@@ -317,7 +332,7 @@ else
     }
 
     @if(ShowList && UseFlex){
-        <FlexComponent IsListView="true" BlNameList="@BusinessName" ViewdefName="@FinalViewdefName" ListView="@this" GuidListView="@guidListView" CanEdit="@CanEdit" CanDelete="@CanDelete" EditingFlex="@_isEditingFlex" Take="@FlexTake" ServerPagination="@ServerPaginationFlex" FilterSearch="@FilterFlex" ActionIcons=@CustomActionIcons HasSearch=@ShowSearchForm></FlexComponent>
+        <FlexComponent IsListView="true" BlNameList="@BusinessName" ViewdefName="@FinalViewdefName" ListView="@this" GuidListView="@guidListView" CanEdit="@CanEdit" CanDelete="@CanDelete" EditingFlex="@_isEditingFlex" Take="@FlexTake" ServerPagination="@ServerPaginationFlex" FilterSearch="@FilterFlex" ActionIcons=@CustomActionIcons HasSearch=@ShowSearchForm IsMultiple="@IsMultiple"></FlexComponent>
     }
 
     @if(SetTopBar)
@@ -399,5 +414,15 @@ else
         }
 
         return result;
+    }
+
+    public bool GetValueCheck(dynamic data){
+        var r = false;
+        /*if(SelectedObjects != null){
+            Type dataType = data.GetType();
+            var dynamicData = Convert.ChangeType(data, dataType);
+            r = SelectedObjects.Any(x => x.Rowid == dynamicData.Rowid);            
+        }*/
+        return SelectedObjects != null && SelectedObjects.Any(x => x.Rowid == data.Rowid);
     }
 }

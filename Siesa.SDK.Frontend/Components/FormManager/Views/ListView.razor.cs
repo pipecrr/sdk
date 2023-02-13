@@ -102,8 +102,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private bool _isEditingFlex = false;
         private bool _isSearchOpen = false;
         public String ErrorMsg = "";
-        private IList<object> SelectedObjects { get; set; }
-
+        private IList<dynamic> SelectedObjects { get; set; } = new List<dynamic>();
+        [Parameter] 
+        public IList<dynamic> SelectedItems { get; set; }
         private ListViewModel ListViewModel { get; set; }
 
         [Parameter]
@@ -125,10 +126,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public Action OnClickNew { get; set; } = null;
 
         [Parameter]
-        public Action<object> OnSelectedRow { get; set; } = null;
+        public Action<IList<dynamic>> OnSelectedRow { get; set; } = null;
 
         [Parameter]
         public IEnumerable<object> Data { get; set; } = null;
+
+        [Parameter]
+        public bool IsMultiple { get; set; } = false;
 
         private IEnumerable<object> data;
 
@@ -159,8 +163,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private bool CanList;
         private string defaultStyleSearchForm = "search_back position-relative";
         private string StyleSearchForm { get; set; } = "search_back position-relative";
-
-
+        private Radzen.DataGridSelectionMode SelectionMode { get; set; } = Radzen.DataGridSelectionMode.Single;
         Guid needUpdate;
 
         private void OnSelectionChanged(IList<object> objects)
@@ -168,15 +171,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if (OnSelectedRow != null)
             {
                 SelectedObjects = objects;
-                if (SelectedObjects?.Any() == true)
-                {
-                    OnSelectedRow(objects.First());
-                }
-                else
-                {
-                    OnSelectedRow(null);
-                }
-
+                OnSelectedRow(SelectedObjects);
             }
         }
 
@@ -203,7 +198,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         protected async void InitView(string bName = null)
         {
-            Loading = true;            
+            Loading = true;
             if (bName == null)
             {
                 bName = BusinessName;
@@ -281,7 +276,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 FlexTake = ListViewModel.FlexTake;
                 ShowLinkTo = ListViewModel.ShowLinkTo;
                 ServerPaginationFlex = ListViewModel.ServerPaginationFlex;
-                
                 //TODO: quitar cuando se pueda usar flex en los custom components
                 var fieldsCustomComponent = ListViewModel.Fields.Where(x => x.CustomComponent != null).ToList();
                 if(fieldsCustomComponent.Count > 0){
@@ -379,6 +373,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         {
             await base.OnInitializedAsync();
             guidListView = Guid.NewGuid().ToString();
+            if (IsMultiple){
+                SelectionMode = Radzen.DataGridSelectionMode.Multiple;
+            }
             //Restart();
         }
 
@@ -390,7 +387,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 Restart();
             }
         }
-
+        /*protected override void OnAfterRender(bool firstRender){
+            if(SelectedItems!=null && firstRender){
+                foreach (var item in SelectedItems){
+                    SelectedObjects.Add(item);
+                }
+            }
+            base.OnAfterRender(firstRender);
+        }*/
         private bool validateChanged(ParameterView parameters)
         {
             var type = this.GetType();
@@ -954,6 +958,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 {
                     localStorageService.SetItemAsync($"{BusinessName}.Search.HiddenFields", returnFields);
                 }
+            }
+        }
+
+        public void Onchange(bool value, dynamic data){
+            if (value){
+                SelectedObjects.Add(data);
+            }else{
+                SelectedObjects.Remove(data);
             }
         }
     }

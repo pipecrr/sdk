@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Components.Web;
 using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
 using Siesa.SDK.Frontend.Services;
 using Microsoft.JSInterop;
+using Newtonsoft.Json;
+using Siesa.SDK.Frontend.Extension;
 
 namespace Siesa.SDK.Frontend.Components.Fields
 {
@@ -22,7 +24,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         [Inject] public IServiceProvider ServiceProvider { get; set; }
         [Inject] public IFeaturePermissionService FeaturePermissionService { get; set; }
         [Inject] public SDKDialogService SDKDialogService { get; set; }
-        [Inject] public IJSRuntime jsRuntime { get; set; }
+        [Inject] public IJSRuntime JsRuntime { get; set; }
         [Parameter] public string FieldName { get; set; }
         [Parameter] public string BusinessName { get; set; }
         [Parameter] public string RelatedBusiness { get; set; }
@@ -38,7 +40,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         public dynamic RelBusinessObj { get; set; }
         private string Value = "";
         private List<string> Values = new List<string>() {};
-        private List<dynamic> ItemsSelected = new List<dynamic>() {};
+        private IList<dynamic> ItemsSelected = new List<dynamic>() {};
         private Dictionary<int, object> CacheData = new Dictionary<int, object>();
         SDKBusinessModel relBusinessModel = null;
         private LoadResult CacheLoadResult;
@@ -47,6 +49,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         private int MinMillisecondsBetweenSearch = 100;
         private int RowidCulture = 1;
         public PropertyInfo BindProperty { get; set; }
+        public Type typeProperty { get; set; }
         public int FieldTemplate { get; set; } = 1;
 
         private bool CanCreate;
@@ -56,11 +59,12 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
         private string badgeContainerClass = "badge-container d-none";
         private string placeholder = "";
+
+        private Dictionary<string, dynamic> BadgeByData = new Dictionary<string, dynamic>();
         protected override async Task OnInitializedAsync()
         {
             base.OnInitializedAsync();
             await InitView();
-            
         }
 
         protected async Task InitView(){
@@ -80,6 +84,8 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 FieldTemplate = RelatedParams.FieldTemplate;
             }
             await LoadData("", null);
+            BindProperty = BaseObj.GetType().GetProperty(FieldName);
+            typeProperty = BindProperty.PropertyType;
             StateHasChanged();
         }
         public override async Task SetParametersAsync(ParameterView parameters){
@@ -88,6 +94,9 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
         protected override async Task OnParametersSetAsync(){
             await base.OnParametersSetAsync();
+            if(BaseObj != null){
+                SetVal(BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj));
+            }
             await LoadData("", null, true);
         }
         private async Task OnSelectItem(dynamic item){
@@ -99,7 +108,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
             StateHasChanged();
         }
 
-        private void SetVal(dynamic item)
+        private async Task SetVal(dynamic item, bool existItem = false)
         {
             if(item == null){
                 return;
@@ -108,10 +117,23 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 SetValue(item);
                 Value = item.ToString();
             }else{
-                BindProperty = BaseObj.GetType().GetProperty(FieldName);
+                if(item.GetType().ToString().Equals("Newtonsoft.Json.Linq.JObject")){
+                    BadgeByData.Add("_item_replace", item);
+                    var rowidItem = Int64.Parse(item.rowid.ToString());
+                    var response = await relBusinessModel.Get(rowidItem);
+                    if(response!=null){
+                        if(IsMultiple){
+                            item = JsonConvert.DeserializeObject(response.ToString(), typeProperty.GetGenericArguments().First());
+                        }else{
+                            item = JsonConvert.DeserializeObject(response.ToString(), typeProperty);
+                        }
+                    }
+                }
                 if(IsMultiple){
-                    var typeProperty = BindProperty.PropertyType;
-                    var list = Activator.CreateInstance(typeProperty);
+                    var list = BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj);
+                    if(list == null){
+                        list = Activator.CreateInstance(typeProperty);
+                    }
                     var addMethod = typeProperty.GetMethod("Add");
                     addMethod.Invoke(list, new object[] { item });
                     BindProperty.SetValue(BaseObj, list);
@@ -119,17 +141,35 @@ namespace Siesa.SDK.Frontend.Components.Fields
                     BindProperty.SetValue(BaseObj, item);
                 }
                 Value = item.ToString();
+                if(item.Rowid == 0){
+                    Value = "";
+                }
             }
             if(IsMultiple){
+                if(BadgeByData.TryGetValue("_item_replace", out dynamic itemReplace)){
+                    BadgeByData.Remove("_item_replace");
+                    BadgeByData.Add(Value, itemReplace);
+                }
                 Values.Add(Value);
-                ItemsSelected.Add(item);
+                if(!existItem){
+                    ItemsSelected.Add(item);
+                }
                 Value = "";
-                placeholder = ItemsSelected.Count + " items selected";
+                if(ItemsSelected.Count==1){
+                    var tag = await UtilsManager.GetResource("Custom.EntityField.MultiSelect.Placeholder.Singular");
+                    placeholder = ItemsSelected.Count + " " + tag;
+                }else{
+                    var tag = await UtilsManager.GetResource("Custom.EntityField.MultiSelect.Placeholder.Plural");
+                    placeholder = ItemsSelected.Count + " " + tag;
+                }
+
             }else{
                 Values.Clear();
                 ItemsSelected.Clear();
-                Values.Add(Value);
-                ItemsSelected.Add(item);
+                if(Value != ""){                
+                    Values.Add(Value);
+                    ItemsSelected.Add(item);
+                }
             }
         }
         
@@ -216,55 +256,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
             //check length of search text
             if (searchText.Length > MinCharsEntityField || CacheLoadResult == null)
             {
-                var filters = "";
-                if (BaseObj != null && RelBusinessObj != null && RelBusinessObj.BaseObj != null && RelBusinessObj.BaseObj.GetType() == BaseObj.GetType())
-                {
-                    var baseObjRowidProperty = BaseObj.GetType().GetProperty("Rowid");
-                    if(baseObjRowidProperty != null && baseObjRowidProperty.GetValue(BaseObj) != null &&baseObjRowidProperty.GetValue(BaseObj) != 0 )
-                    {
-                        filters = $"(Rowid != {BaseObj.Rowid})";
-                    }
-                }
-                foreach (var item in RelatedFilters)
-                {
-                    var value = item.Value;
-                    var key = item.Key;
-                    key = key.Replace("RelBaseObj.", "");
-                    dynamic dynamicValue;
-                    try
-                    {
-                        dynamicValue = await Utils.Evaluator.EvaluateCode(value, BaseObj);
-                    }
-                    catch (Exception ex)
-                    {
-                        dynamicValue = value;
-                    }
-                    if (dynamicValue == null)
-                    {
-                        continue;
-                    }
-                    if (!string.IsNullOrEmpty(filters))
-                    {
-                        filters += " && ";
-                    }
-                    switch (dynamicValue)
-                    {
-                        case System.Boolean boolean:
-                            filters += $"({key} == {dynamicValue})";
-                            break;
-
-                        case System.Int64 int64:
-                        case System.Int32 int32:
-                        case System.Double doubleValue:
-                        case System.Decimal decimalValue:
-                            filters += $"({key} == {dynamicValue})";
-                            break;
-                        default:
-                            filters += $"({key} == null ? \"\" : {key}).Equals(\"{dynamicValue.ToString()}\")";
-                            break;
-                    }
-
-                }
+                var filters = await GetFilters();
                 var result = await RelBusinessObj.EntityFieldSearchAsync(searchText, filters);
                 var response = new LoadResult
                 {
@@ -283,6 +275,59 @@ namespace Siesa.SDK.Frontend.Components.Fields
             {
                 return CacheLoadResult;
             }
+        }
+
+        private async Task<string> GetFilters()
+        {
+            var filters = "";
+            if (BaseObj != null && RelBusinessObj != null && RelBusinessObj.BaseObj != null && RelBusinessObj.BaseObj.GetType() == BaseObj.GetType())
+            {
+                var baseObjRowidProperty = BaseObj.GetType().GetProperty("Rowid");
+                if(baseObjRowidProperty != null && baseObjRowidProperty.GetValue(BaseObj) != null &&baseObjRowidProperty.GetValue(BaseObj) != 0 )
+                {
+                    filters = $"(Rowid != {BaseObj.Rowid})";
+                }
+            }
+            foreach (var item in RelatedFilters)
+            {
+                var value = item.Value;
+                var key = item.Key;
+                key = key.Replace("RelBaseObj.", "");
+                dynamic dynamicValue;
+                try
+                {
+                    dynamicValue = await Utils.Evaluator.EvaluateCode(value, BaseObj);
+                }
+                catch (Exception ex)
+                {
+                    dynamicValue = value;
+                }
+                if (dynamicValue == null)
+                {
+                    continue;
+                }
+                if (!string.IsNullOrEmpty(filters))
+                {
+                    filters += " && ";
+                }
+                switch (dynamicValue)
+                {
+                    case System.Boolean boolean:
+                        filters += $"({key} == {dynamicValue})";
+                        break;
+
+                    case System.Int64 int64:
+                    case System.Int32 int32:
+                    case System.Double doubleValue:
+                    case System.Decimal decimalValue:
+                        filters += $"({key} == {dynamicValue})";
+                        break;
+                    default:
+                        filters += $"({key} == null ? \"\" : {key}).Equals(\"{dynamicValue.ToString()}\")";
+                        break;
+                }
+            }
+            return filters;
         }
 
         private async Task CheckPermissions()
@@ -311,44 +356,76 @@ namespace Siesa.SDK.Frontend.Components.Fields
             }
         }
         
-        public void OnSelectedRow(object item){
-            if(item != null){
-                SetVal(item);
+        public void OnSelectedRow(IList<dynamic> items){
+            if(items != null){
+                if(!IsMultiple){
+                    BadgeByData.Clear();
+                    SetVal(items.First());
+                    SDKDialogService.Close(true);
+                }else{
+                    ItemsSelected = items;
+                }
                 LoadData("", null);
-                SDKDialogService.Close(true);
+            }
+        }
+        public async Task SelectValues(){
+            SDKDialogService.Close(true);
+            if(ItemsSelected != null && ItemsSelected.Count > 0){
+                var list = Activator.CreateInstance(typeProperty);
+                BindProperty.SetValue(BaseObj, list);
+                BadgeByData.Clear();
+                foreach (var item in ItemsSelected){
+                    await SetVal(item, true);
+                }
             }
         }
 
         public async Task SDKDropDown(){
             //wait 200ms
             await Task.Delay(200);
-            var elementInstance = await jsRuntime.InvokeAsync<IJSObjectReference>("$", $"#{idInput}[aria-expanded=false]");
+            var elementInstance = await JsRuntime.InvokeAsync<IJSObjectReference>("$", $"#{idInput}[aria-expanded=false]");
             await elementInstance.InvokeVoidAsync("dropdown","show");
         }
 
-        public string GetStringFilters(){
-            var filters = "";
+        public async Task<string> GetStringFilters(){
+            var filters = await GetFilters();
+            var filtersSearch = "";
             if(Value != null && Value != "" && ItemsSelected.Count == 0){
                 var properties = RelBusinessObj.BaseObj.GetType().GetProperties();
                 foreach (var property in properties){
                     if(property.PropertyType == typeof(string)){
-                        if(!string.IsNullOrEmpty(filters)){
-                            filters += " || ";
+                        if(!string.IsNullOrEmpty(filtersSearch)){
+                            filtersSearch += " || ";
                         }
-                        filters += $"({property.Name} == null ? \"\" : {property.Name}).ToLower().Contains(\"{Value}\".ToLower())";
+                        filtersSearch += $"({property.Name} == null ? \"\" : {property.Name}).ToLower().Contains(\"{Value}\".ToLower())";
                     }
                 }
+            }
+            if(!string.IsNullOrEmpty(filtersSearch)){
+                if(!string.IsNullOrEmpty(filters)){
+                    filters += " && ";
+                }
+                filters += $"({filtersSearch})";
             }
             return filters;
         }
 
-        public void closeItem(string item){
+        public async Task closeItem(string item){
             Values.Remove(item);
-            var itemSelected = ItemsSelected.FirstOrDefault(x => x.ToString() == item);
+            dynamic itemSelected = ItemsSelected.FirstOrDefault(x => x.ToString() == item);
+            if(itemSelected == null){
+                BadgeByData.TryGetValue(item, out itemSelected);
+            }
             if(itemSelected != null){
                 ItemsSelected.Remove(itemSelected);
                 if(ItemsSelected.Count>0){
-                    placeholder = ItemsSelected.Count + " items selected";
+                    if(ItemsSelected.Count==1){
+                        var tag = await UtilsManager.GetResource("Custom.EntityField.MultiSelect.Placeholder.Singular");
+                        placeholder = ItemsSelected.Count + " " + tag;
+                    }else{
+                        var tag = await UtilsManager.GetResource("Custom.EntityField.MultiSelect.Placeholder.Plural");
+                        placeholder = ItemsSelected.Count + " " + tag;
+                    }
                 }else{
                     placeholder = "";
                 }
@@ -356,7 +433,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
             StateHasChanged();
         }
 
-        public List<dynamic> GetItemsSelected(){
+        public IList<dynamic> GetItemsSelected(){
             return ItemsSelected;
         }
 
