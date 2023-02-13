@@ -18,6 +18,7 @@ using System.Reflection;
 using Siesa.SDK.Shared.Criptography;
 using Siesa.SDK.Shared.DataAnnotations;
 using Microsoft.Extensions.Configuration;
+using System.Threading;
 
 namespace Siesa.SDK.Backend.Access
 {
@@ -156,6 +157,11 @@ namespace Siesa.SDK.Backend.Access
         public int SaveSystemChanges()
         {
             return InternalSaveChanges(false);
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(InternalSaveChanges(true));
         }
 
         public override int SaveChanges()
