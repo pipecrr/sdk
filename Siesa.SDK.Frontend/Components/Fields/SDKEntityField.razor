@@ -5,7 +5,7 @@
 @inherits SDKComponent
 <div class="input-group input-group-sm whcm_select_box" data-automation-id="@GetAutomationId()">
     <div class="input-badge-container">
-        @if(IsMultiple){
+        @if(IsMultiple && Values.Count()>0){
             <div class="@badgeContainerClass">
                 @foreach (var item in Values){
                     <span class="badge badge-pill badge-light">@item
@@ -102,7 +102,7 @@
         </div>, width: "90%", title:$"{RelatedBusiness}.Singular");
         if(listDialog != null && listDialog){
             await OnChangeValue(Value);
-            await LoadData("", null);
+            await LoadData("", null, true);
             StateHasChanged();
         }
     }
