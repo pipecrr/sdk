@@ -1,0 +1,67 @@
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
+
+<div class="container-fluid">
+    <div class="container-fluid">
+        <h2>SDKPieChart</h2> 
+        <p>Demonstration and configuration of the SDKPieChart component</p>
+        <p>El componente SDKPieChart recibe como parametros:</p>
+        <ul>
+            <li>TItem: Tipo de elemento de los datos</li>
+            <li>Data: IEnumerable tel tipo TItem</li>
+            <li>Diameter: Valor entre 0 y 1 que especifica la relación entre el diámetro del gráfico circular y el lado más pequeño del área del gráfico. Por defecto 0.6</li>
+            <li>InnerDiameter: Valor entre 0 y 1 que es la relacion entre el diámetro interior y diámetro exterior(Diameter). Por defecto 0.8</li>
+        </ul>
+        <p>El componente SDKPieChart tambien puede renderizar en su interior cualquier tipo de componente, para el caso de la dona se recomienda usar los componentes SDKPieChartSeries y SDKChartLegend</p>
+        <p>El componente SDKPieChartSeries recibe como parametros:</p>
+        <ul>
+            <li>TItem: Tipo de elemento de los datos.</li>
+            <li>TValue: Tipo dato del valor de los datos.</li>
+            <li>TArgument: Tipo de dato del argumento.</li>
+            <li>ValueField: Funcion que retorna el valor de la fuente de datos.</li>
+            <li>ArgumentField: Funcion que retorna el argumento de la fuente de datos.</li>
+            <li>SummaryMethod: Especifica el método que calcula resúmenes para puntos con el mismo valor de argumento.</li>
+            <li>VisibleLabel: Especifica la visibilidad del label de la serie. Por defecto true</li>
+            <li>RelativePositionLabel: Indica la posición del lebal con respecto al pie, es de tipo SDKChartRelativePosition. Por defecto SDKChartRelativePosition.Inside</li>
+            <li>VisibleConector: especifica la visibilidad de los conectores. Por defecto true </li>
+        </ul>
+        <p>El componente SDKChartLegend recibe como parametros:</p>
+        <ul>
+            <li>HorizontalAlignmentLegend: Especifica la alineación horizontal de la leyenda, es de tipo SDKChartHorizontalAlignment. Por defecto SDKChartHorizontalAlignment.Center</li>
+            <li>VerticalAlignmentLegend: Especifica la alineación vertical de la leyenda, es de tipo SDKChartVerticalEdge. Por defecto SDKChartVerticalEdge.Bottom</li>
+            <li>RelativePositionLegend: Especifica la posición de la leyenda, es de tipo SDKChartRelativePosition. Por defecto SDKChartRelativePosition.Outside</li>
+            <li>OrientationLegend: Especifica la orientación de la leyenda, es de tipo SDKChartOrientation. Por defecto SDKChartOrientation.Vertical</li>
+        </ul>
+        <p>El titulo en este ejemplo se agrega con una simple etiqueta h4, pero podria ser cualquier tipo de etiqueta</p>
+    </div>
+    <SDKPieChart TItem="ProfileCandidate" Data="@Data">
+        <SDKPieChartSeries TItem="ProfileCandidate" TValue="decimal" TArgument="string" ValueField="x=>x.valueOfpercentaje" ArgumentField="x=>x.nameOfItemProfile" SummaryMethod="Enumerable.Sum">
+        </SDKPieChartSeries>
+        <h4 class="align-items-center font-weight-bold">Perfil</h4>
+        <SDKChartLegend OrientationLegend="@orientationLegend" />
+    </SDKPieChart>
+</div>
+
+@code{
+    public SDKChartOrientation orientationLegend { get; set; } = SDKChartOrientation.Horizontal;
+    public List<ProfileCandidate> Data { get; set; }
+    public class ProfileCandidate{
+        public decimal valueOfpercentaje { get; set; }
+        public string nameOfItemProfile { get; set; }
+    }
+    
+    protected override void OnInitialized(){
+        Data = Profile();
+    }
+
+    public List<ProfileCandidate> Profile(){
+        List<ProfileCandidate> ListProfileCandidate = new List<ProfileCandidate>(){
+            new ProfileCandidate{nameOfItemProfile="Experiencias 10%",valueOfpercentaje= 10},
+            new ProfileCandidate{nameOfItemProfile="Profesiones 20%",valueOfpercentaje= 20},
+            new ProfileCandidate{nameOfItemProfile="Habilidades 30%",valueOfpercentaje= 30},
+            new ProfileCandidate{nameOfItemProfile="Items conocimiento 40%",valueOfpercentaje= 40}
+        };
+        return ListProfileCandidate;
+    }
+    
+}
