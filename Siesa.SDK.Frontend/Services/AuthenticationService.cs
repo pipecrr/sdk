@@ -25,6 +25,7 @@ namespace Siesa.SDK.Frontend.Services
         private int _minutesExp;
 
         private short CustomRowidCulture = 0;
+        public short RowidCultureChanged { get; set; } = 0;
 
         private SDKDbConnection SelectedConnection = new SDKDbConnection();
 
@@ -101,7 +102,8 @@ namespace Siesa.SDK.Frontend.Services
                 {"password", password},
                 {"rowIdDBConnection", rowIdDBConnection},
                 {"ipAddress", ipAddress},
-                {"browserName", browserName}
+                {"browserName", browserName},
+                {"rowidCulture", RowidCultureChanged}
             });
             if (loginRequest.Success)
             {
