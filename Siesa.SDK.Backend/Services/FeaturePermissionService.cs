@@ -17,7 +17,6 @@ namespace Siesa.SDK.Backend.Services
         }
         public bool CheckUserActionPermissions(string businessName, List<int> permissions, IAuthenticationService authenticationService){
             var result = false;
-            return true;
             foreach(var item in permissions){
                 result = CheckUserActionPermission(businessName, item, authenticationService);
                 if(!result){
