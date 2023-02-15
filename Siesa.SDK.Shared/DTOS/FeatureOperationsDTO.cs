@@ -1,7 +1,7 @@
 
 using System.Collections.Generic;
 using Siesa.SDK.Entities;
-using Siesa.SDK.Entities.Enums;
+using Siesa.Global.Enums;
 
 namespace Siesa.SDK.Shared.DTOS
 {
