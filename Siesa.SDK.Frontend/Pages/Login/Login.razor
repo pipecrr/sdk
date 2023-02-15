@@ -79,7 +79,7 @@
                                     @if(selectedCulture != null)
                                     {
                                         @*fi fi-selectedCulture.CountryCode fis rounded-circle*@
-                                        <span class="fi fi-co fis rounded-circle"
+                                        <span class="@classCulture"
                                         style="height:16px"></span>
                                     }else{
                                         <span class="fi fi-globe fis rounded-circle" style="height:16px"></span>
@@ -225,6 +225,7 @@
 </DxDropDown>
 
 @code {
+    string classCulture = "";
     public string FormID { get; set; } = Guid.NewGuid().ToString();
     private Model model = new Model();
     private bool init_loading = true;
@@ -274,7 +275,7 @@
             return;
         }
         cultureDefault();
-        await InitLogin();
+        await InitLogin();        
     }
 
     private async Task InitLogin()
@@ -294,6 +295,7 @@
         RowidCulture = rowidCulture;
         IsOpen = false;
         getSelectedCulture();
+        AuthenticationService.RowidCultureChanged = rowidCulture;
         await AuthenticationService.SetCustomRowidCulture(rowidCulture);
         StateHasChanged();
         //await localStorageService.SetItemAsync("userlang", RowidCulture.ToString());
@@ -402,7 +404,6 @@
     }
     private void getSelectedCulture()
     {
-
         if (cultures != null)
         {
             selectedCulture = cultures.FirstOrDefault(x => x.Rowid == RowidCulture);
@@ -411,6 +412,8 @@
         {
             cultureDefault();
         }
+        classCulture = $"fi fi-{GetCountryFlagCode(selectedCulture)} fis rounded-circle";
+        
     }
 
     private async Task getUserlang()
@@ -462,7 +465,7 @@
                 CountryCode = "co",
                 Description = "Colombia",
                 LanguageCode = "Es-co"
-            };
+            };        
     }
 
     void OnChangeConnection(ChangeEventArgs e)
@@ -495,5 +498,39 @@
 
     public async Task setDataIndexedDB(short RowidCulture){
         await DbFactory.Create<IndexDb>();
+    }
+
+    private string GetCountryFlagCode (E00021_Culture culture)
+    {
+        if(!string.IsNullOrEmpty(culture.CountryCode))
+        {
+            return culture.CountryCode;
+        }
+
+        switch (culture.LanguageCode)
+        {
+            case "en":
+                return "us";
+            case "es":
+                return "co";
+            case "fr":
+                return "fr";
+            case "de":
+                return "de";
+            case "it":
+                return "it";
+            case "pt":
+                return "pt";
+            case "ru":
+                return "ru";
+            case "zh":
+                return "cn";
+            case "ja":
+                return "jp";
+            case "ko":
+                return "kr";
+            default:
+                return "co";
+        }
     }
 }

@@ -258,7 +258,7 @@ namespace Siesa.SDK.Business
                         foreach (var index_field in index_fields)
                         {
                             var columnNameProperty = SDKFlexExtension.GetPropertyExpression(pe, index_field);
-                            var field_value = requestObj.GetType().GetProperty(index_field).GetValue(requestObj, null);                                              
+                            var field_value = requestObj.GetType().GetProperty(index_field).GetValue(requestObj, null);
                             if (index_field.StartsWith("Rowid"))
                             {
                                 try
