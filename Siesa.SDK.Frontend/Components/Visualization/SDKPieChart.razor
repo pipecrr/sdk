@@ -1,0 +1,16 @@
+@typeparam TItem
+@using System.Linq.Expressions
+
+<DxPieChart Data="@Data"
+            Diameter="@Diameter"
+            InnerDiameter="@InnerDiameter"
+            T="TItem">
+    @ChildContent
+</DxPieChart>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public IEnumerable<TItem> Data { get; set; }
+    [Parameter] public double Diameter { get; set; } = 0.8;
+    [Parameter] public double InnerDiameter { get; set; } = 0.6;    
+}

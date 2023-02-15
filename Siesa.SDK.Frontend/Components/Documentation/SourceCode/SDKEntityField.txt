@@ -74,7 +74,7 @@
 </div>
 
 @code {
-    List<dynamic> valuesSelected = new List<dynamic>();
+    IList<dynamic> valuesSelected = new List<dynamic>();
     SDKEntityField sdkEntityFieldRef;
     string BusinessName { get; set; } = "BLUser";
     string RelatedBusiness { get; set; } = "BLUser";
