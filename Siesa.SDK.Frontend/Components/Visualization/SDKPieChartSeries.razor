@@ -1,0 +1,30 @@
+@typeparam TItem
+@typeparam TValue
+@typeparam TArgument
+@using System.Linq.Expressions
+
+<DxPieChartSeries T="TItem"
+                TArgument="TArgument"
+                TValue="TValue"
+                ValueField="@ValueField"
+                ArgumentField="@ArgumentField"
+                SummaryMethod="@SummaryMethod">
+    <DxChartSeriesLabel Visible="@VisibleLabel"
+                        Position="@_relativePositionLabel" >
+        <DxChartSeriesLabelConnector Visible="@VisibleConector" />
+    </DxChartSeriesLabel>
+</DxPieChartSeries>    
+
+@code {   
+    [Parameter] public Expression<Func<TItem, TValue>> ValueField { get; set; }
+    [Parameter] public Expression<Func<TItem, TArgument>> ArgumentField { get; set; }
+    [Parameter] public Func<IEnumerable<TValue>, TValue> SummaryMethod { get; set; }
+    [Parameter] public bool VisibleLabel {get; set; } = true;
+    [Parameter] public bool VisibleConector { get; set; } = true;
+    [Parameter] public SDKChartRelativePosition RelativePositionLabel { get; set; } = SDKChartRelativePosition.Inside;    
+    private RelativePosition _relativePositionLabel = RelativePosition.Inside;
+    protected override void OnParametersSet()
+    {
+        _relativePositionLabel = SDKEnums.Get(RelativePositionLabel);
+    }
+}

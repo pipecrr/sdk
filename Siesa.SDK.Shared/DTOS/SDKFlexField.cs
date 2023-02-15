@@ -14,5 +14,6 @@ namespace Siesa.SDK.Shared.DTOS
         public List<object> results { get; set; }
         public SDKSelectFieldParams selectfield_params { get; set; }
         public bool is_dynamic_field { get; set; }
+        public string id_enum { get; set; }
     } 
 }

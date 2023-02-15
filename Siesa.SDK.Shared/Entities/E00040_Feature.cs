@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Siesa.SDK.Shared.Json;
 using Microsoft.EntityFrameworkCore;
-using Siesa.SDK.Entities.Enums;
+using Siesa.Global.Enums;
 
 
 namespace Siesa.SDK.Entities
@@ -17,6 +17,7 @@ namespace Siesa.SDK.Entities
 	/// </summary>
 
 	[Index(nameof(RowidResource), Name = "IX_e00040_1", IsUnique = true)]
+	[Index(nameof(BusinessName), Name = "IX_e00040_2")]
 	public partial class E00040_Feature : BaseSDK<int>
 	{
 		[SDKIdentity]

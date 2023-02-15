@@ -2,7 +2,7 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Components.Visualization
 @using Siesa.SDK.Entities
-@using Siesa.SDK.Entities.Enums
+@using Siesa.Global.Enums
 @using System.Globalization
 
 @layout EmptyLayout

@@ -319,7 +319,7 @@ namespace Siesa.SDK.Business
                 var result = await Backend.GetData(skip, take, filter, orderBy);
 
                 response.Data = result.Data.Select(x => JsonConvert.DeserializeObject<T>(x)).ToList();
-                response.TotalCount = result.TotalCount;
+                response.TotalCount = result.Data.Count;
                 response.GroupCount = result.GroupCount;
 
                 return response;

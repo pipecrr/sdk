@@ -27,7 +27,8 @@
         ValueChanged="@((newVal) => SetValue(newVal))"
         Data="@_options"
         Disabled="@_disabled"
-        ValueExpression="@ValueExpression" />
+        ValueExpression="@ValueExpression"
+        FieldName="@FieldName" />
 
         @FieldValidationTemplate
     }
