@@ -14,6 +14,9 @@ using Siesa.SDK.Frontend.Components.Layout.NavMenu;
 using Siesa.SDK.Frontend.Application;
 using Siesa.SDK.Frontend.Components.Layout;
 using Siesa.SDK.Frontend.Components.FormManager.Model;
+
+using Siesa.SDK.Shared.Business;
+
 using Siesa.Global.Enums;
 
 namespace Siesa.SDK.Frontend.Services
@@ -26,6 +29,7 @@ namespace Siesa.SDK.Frontend.Services
         private IBackendRouterService BackendRouterService;
         private IAuthenticationService AuthenticationService;
         private UtilsManager UtilsManager { get; set; }
+        public Dictionary<int, List<E00061_Menu>> SuiteData {get; set;} = new();
 
         private bool loading = false;
 
@@ -144,17 +148,63 @@ namespace Siesa.SDK.Frontend.Services
             if (request.Success)
             {
                 SelectedSuite = ((List<E00060_Suite>)request.Data).First();
+
                 var menuRequest = await menuBL.Call("GetMenuItems", Convert.ToInt64(SelectedSuite.Rowid));
-                if (menuRequest.Success)
+
+                if(menuRequest.Success)
                 {
-                    List<E00061_Menu> menuResponse = menuRequest.Data;
-                    menuResponse = menuResponse.OrderBy(x => x.Order).ToList();
-                    //add menuResponse to Menus
-                    Menus.AddRange(menuResponse);
-                    GetMenuResources(Menus);
-                    NotifyMenuLoaded();
+                    var Data = menuRequest.Data;
+                    MenuManagerBySuite(menuBL, SelectedSuite.Rowid, Data);
                 }
             }
+        }
+
+        public async Task<bool> GetMenuItemsWithoutSubLevelsBySuite(SDKBusinessModel menuBL, int RowidSuite)
+        {
+            if(menuBL is null || RowidSuite <= 0) return false;
+
+            var menuRequest = await menuBL.Call("GetMenuItemsWithoutSubLevels", RowidSuite, 0);
+
+            if(!menuRequest.Success) return false;
+
+            var Data = menuRequest.Data;
+            MenuManagerBySuite(menuBL, RowidSuite, Data, true, true);
+
+            return true;
+        }
+
+        public async Task<List<E00061_Menu>> GetMenuItemsWithoutSubLevelsByMenu(SDKBusinessModel menuBL, int RowidMenuParent)
+        {
+            if(menuBL is null || RowidMenuParent <= 0) return null;
+
+            var menuRequest = await menuBL.Call("GetMenuItemsWithoutSubLevels", 0, RowidMenuParent);
+
+            if(!menuRequest.Success) return null;
+
+            var Data = menuRequest.Data;
+            MenuManagerBySuite(menuBL, 0, Data, true, false);
+
+            return Data;
+        }
+
+        public void MenuManagerBySuite(SDKBusinessModel menuBL, int RowidSuite, List<E00061_Menu> menuResponse, bool IgnoreGeneralMenu = false, bool SetInSuiteData = false)
+        {
+            menuResponse = menuResponse.OrderBy(x => x.Order).ToList();
+
+            if(!IgnoreGeneralMenu)
+            {
+                //add menuResponse to Menus
+                Menus.AddRange(menuResponse);
+            }else
+            {
+                if(SetInSuiteData && !SuiteData.ContainsKey(RowidSuite))
+                {
+                    SuiteData.Add(RowidSuite, menuResponse);
+                }
+            }
+
+            _ = GetMenuResources(menuResponse);
+            NotifyMenuLoaded();
         }
 
 

@@ -7,14 +7,15 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Siesa.SDK.Shared.Json;
 using Microsoft.EntityFrameworkCore;
-
+using Siesa.SDK.Shared.DTOS;
 
 namespace Siesa.SDK.Entities
 {
 	public partial class E00040_Feature
 	{
-
-
+		[NotMapped]
+		[JsonIgnore]
+		public FeactureOperationsDTO OperationsInfo {get; set;}
 
 	}
 }

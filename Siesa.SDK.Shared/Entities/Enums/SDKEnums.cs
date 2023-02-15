@@ -48,4 +48,14 @@ namespace Siesa.Global.Enums
 		Yes = 1,
 		No = 0
 	}
+
+	public enum enumGeneralAction
+	{
+		None = 0,
+		Create = 1,
+		Edit = 2,
+		Delete = 3,
+		List = 4,
+		Consult = 5
+	}
 }
