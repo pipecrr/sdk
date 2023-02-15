@@ -23,12 +23,15 @@ else if (BusinessObj != null)
     [Parameter] public bool AllowEdit { get; set; } = true;
     [Parameter] public bool AllowDelete { get; set; } = true;
     [Parameter] public bool AllowDetail { get; set; } = true;
-    [Parameter] public Action<object> OnSelectedRow { get; set; } = null;
+    [Parameter] public Action<IList<dynamic>> OnSelectedRow { get; set; } = null;
 
     [Parameter] public string ViewdefName { get; set; } = "related_list";
 
     [Parameter] public IEnumerable<object> Data { get; set; } = null;
     [Parameter] public bool FromEntityField { get; set; } = false;
+    [Parameter] public bool IsMultiple { get; set; } = false;
+
+    [Parameter] public IList<dynamic> SelectedItems { get; set; }
     protected override void OnInitialized()
     {
         ViewType = ViewModels.DynamicViewType.List;
@@ -47,6 +50,8 @@ else if (BusinessObj != null)
         new_params.Add("OnSelectedRow", OnSelectedRow);
         new_params.Add("Data", Data);
         new_params.Add("FromEntityField", FromEntityField);
+        new_params.Add("IsMultiple", IsMultiple);
+        new_params.Add("SelectedItems", SelectedItems);
         if (IsSubpanel)
         {
             new_params.Add("IsSubpanel", true);
