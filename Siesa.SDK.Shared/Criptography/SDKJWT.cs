@@ -8,6 +8,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Siesa.SDK.Shared.Criptography
 {
@@ -57,7 +58,7 @@ namespace Siesa.SDK.Shared.Criptography
             }
         }
 
-        public string Generate(E00220_User? user, Dictionary<int, Dictionary<int, bool>>? featurePermissions, List<SessionRol> roles,  short rowIdDBConnection, short rowidcompanygroup =0)
+        public string Generate(E00220_User? user, Dictionary<string, List<int>>? featurePermissions, List<SessionRol> roles,  short rowIdDBConnection, short rowidcompanygroup =0)
         {
             // generate token that is valid for 7 days
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -73,9 +74,8 @@ namespace Siesa.SDK.Shared.Criptography
                 Roles = roles,
                 FeaturePermissions = featurePermissions,
                 RowidCompanyGroup = rowidcompanygroup,
-                RowIdDBConnection = rowIdDBConnection
-                // Teams = user.Teams.Select(x => x.TeamName).ToArray(),
-                //IsSuperAdmin = user.IsSuperAdmin
+                RowIdDBConnection = rowIdDBConnection,
+                IsAdministrator = user.IsAdministrator
             };
 
 
@@ -83,7 +83,7 @@ namespace Siesa.SDK.Shared.Criptography
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] { 
-                    new Claim("user", Newtonsoft.Json.JsonConvert.SerializeObject(userToken)),
+                    new Claim("user", Newtonsoft.Json.JsonConvert.SerializeObject(userToken, Formatting.None))
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(_minutesExp),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

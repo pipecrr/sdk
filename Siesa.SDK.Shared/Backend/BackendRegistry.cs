@@ -9,6 +9,7 @@ using Grpc.Core;
 using Siesa.SDK.Shared.Business;
 using Siesa.SDK.Shared.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Siesa.SDK.Shared.GRPCServices;
 namespace Siesa.SDK.Shared.Backend
 {
     public class BackendRegistry
@@ -42,7 +43,7 @@ namespace Siesa.SDK.Shared.Backend
 
         public async Task<ValidateAndSaveBusinessObjResponse> ValidateAndSaveBusiness(string business_name, dynamic obj)
         {
-            using var channel = GrpcChannel.ForAddress(this.Url);
+            using var channel = GrpcUtils.GetChannel(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(obj);
             var request = new Protos.ValidateAndSaveBusinessObjRequest
@@ -57,7 +58,7 @@ namespace Siesa.SDK.Shared.Backend
         }
         public async Task<Protos.LoadResult> EntityFieldSearch(string business_name, string searchText, string filters)
         {
-            var channel = GrpcChannel.ForAddress(this.Url);
+            var channel = GrpcUtils.GetChannel(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
             var request = new Protos.EntityFieldSearchRequest
             {
@@ -82,7 +83,7 @@ namespace Siesa.SDK.Shared.Backend
 
         public async Task<Int64> SaveBusiness(string business_name, dynamic obj)
         {
-            using var channel = GrpcChannel.ForAddress(this.Url);
+            using var channel = GrpcUtils.GetChannel(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(obj);
             var request = new Protos.SaveBusinessObjRequest
@@ -99,7 +100,7 @@ namespace Siesa.SDK.Shared.Backend
 
         public async Task<dynamic> GetBusinessObj(string business_name, Int64 id)
         {
-            using var channel = GrpcChannel.ForAddress(this.Url);
+            using var channel = GrpcUtils.GetChannel(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
             var request = new Protos.GetBusinessObjRequest
             {
@@ -115,7 +116,7 @@ namespace Siesa.SDK.Shared.Backend
 
         public async Task<DeleteBusinessObjResponse> DeleteBusinessObj(string business_name, Int64 id)
         {
-            using var channel = GrpcChannel.ForAddress(this.Url);
+            using var channel = GrpcUtils.GetChannel(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
             var request = new Protos.DeleteBusinessObjRequest
             {
@@ -131,7 +132,7 @@ namespace Siesa.SDK.Shared.Backend
 
         public async Task<Protos.LoadResult> GetDataBusinessObj(string business_name, int? skip, int? take, string filter = "", string orderBy = "")
         {
-            var channel = GrpcChannel.ForAddress(this.Url);
+            var channel = GrpcUtils.GetChannel(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
             var request = new Protos.GetDataBusinessObjRequest
             {
@@ -158,7 +159,7 @@ namespace Siesa.SDK.Shared.Backend
 
         public async Task<Protos.MenuGroupsResponse> GetMenuGroupsAsync()
         {
-            using var channel = GrpcChannel.ForAddress(this.Url);
+            using var channel = GrpcUtils.GetChannel(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
             var request = new Protos.GetMenuGroupsRequest{
                 CurrentUserToken = (AuthenticationService != null && AuthenticationService.UserToken != null ? AuthenticationService.UserToken : ""),
@@ -170,7 +171,7 @@ namespace Siesa.SDK.Shared.Backend
 
         public async Task<Protos.MenuItemsResponse> GetMenuItemsAsync(int groupId)
         {
-            using var channel = GrpcChannel.ForAddress(this.Url);
+            using var channel = GrpcUtils.GetChannel(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
             var request = new Protos.GetMenuItemsRequest
             {
@@ -194,7 +195,7 @@ namespace Siesa.SDK.Shared.Backend
 
         public async Task<Protos.ExposedMethodResponse> CallBusinessMethod(string business_name, string method, ICollection<ExposedMethodParam> parameters)
         {
-            var channel = GrpcChannel.ForAddress(this.Url);
+            var channel = GrpcUtils.GetChannel(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
             var request = new Protos.ExposedMethodRequest
             {

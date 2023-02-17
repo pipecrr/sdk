@@ -61,6 +61,51 @@ namespace Siesa.SDK.Frontend.Components
             };
         }
 
+        public static CaptionPosition Get(this SDKCaptionPosition captionPosition)
+        {
+            return captionPosition switch
+            {
+                SDKCaptionPosition.Vertical => CaptionPosition.Vertical,
+                SDKCaptionPosition.Horizontal => CaptionPosition.Horizontal,
+            };
+        }
+
+        public static RelativePosition Get(this SDKChartRelativePosition relativePosition)
+        {
+            return relativePosition switch
+            {
+                SDKChartRelativePosition.Inside => RelativePosition.Inside,
+                SDKChartRelativePosition.Outside => RelativePosition.Outside
+            };
+        }
+
+        public static HorizontalAlignment Get(this SDKChartHorizontalAlignment horizontalAlignment)
+        {
+            return horizontalAlignment switch
+            {
+                SDKChartHorizontalAlignment.Center => HorizontalAlignment.Center,
+                SDKChartHorizontalAlignment.Left => HorizontalAlignment.Left,
+                SDKChartHorizontalAlignment.Right => HorizontalAlignment.Right
+            };
+        }
+
+        public static VerticalEdge Get(this SDKChartVerticalEdge verticalAlignment)
+        {
+            return verticalAlignment switch
+            {
+                SDKChartVerticalEdge.Top => VerticalEdge.Top,
+                SDKChartVerticalEdge.Bottom => VerticalEdge.Bottom
+            };
+        }
+
+        public static DevExpress.Blazor.Orientation Get(this SDKChartOrientation orientation)
+        {
+            return orientation switch
+            {
+                SDKChartOrientation.Horizontal => DevExpress.Blazor.Orientation.Horizontal,
+                SDKChartOrientation.Vertical => DevExpress.Blazor.Orientation.Vertical
+            };
+        }
     }
 
     public enum SDKClearButtonDisplayMode
@@ -113,5 +158,32 @@ namespace Siesa.SDK.Frontend.Components
         Horizontal = 1,
         Vertical = 2
 
+    }
+
+    public enum SDKCaptionPosition {
+        Vertical = CaptionPosition.Vertical,
+
+        Horizontal = CaptionPosition.Horizontal
+    }
+
+    public enum SDKChartRelativePosition {
+        Inside = CaptionPosition.Vertical,
+        Outside = CaptionPosition.Horizontal
+    }
+
+    public enum SDKChartHorizontalAlignment {
+        Center = HorizontalAlignment.Center,
+        Left = HorizontalAlignment.Left,
+        Right = HorizontalAlignment.Right
+    }
+
+    public enum SDKChartVerticalEdge {
+        Top = VerticalEdge.Top,
+        Bottom = VerticalEdge.Bottom
+    }
+
+    public enum SDKChartOrientation {
+        Horizontal = DevExpress.Blazor.Orientation.Horizontal,
+        Vertical = DevExpress.Blazor.Orientation.Vertical
     }
 }

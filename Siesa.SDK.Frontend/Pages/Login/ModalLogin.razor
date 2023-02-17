@@ -20,17 +20,6 @@
     <EditForm id="@FormID" Model="@model" OnValidSubmit="HandleValidSubmit" OnInvalidSubmit="HandleInvalidSubmit">
         <DataAnnotationsValidator />
         <div class="form-group">
-            <label class="col-form-label col-form-label-sm font-weight-bold" for="Username">
-                <ResourceViewer ResourceTag="BLUser.Username" />
-            </label>
-            <SDKCharField 
-                @bind-Value="model.Username" 
-                AllowAutoComplete="true" 
-                AutomationId="BLLogin.Username"
-            />
-            <SDKValidationMessage For="@(() => model.Username)" />
-        </div>
-        <div class="form-group">
             <label class="col-form-label col-form-label-sm font-weight-bold" for="Password">
                 <ResourceViewer ResourceTag="BLUser.Password" />
             </label>
@@ -38,7 +27,7 @@
                 @bind-Value="model.Password" 
                 Password="true" 
                 AllowAutoComplete="true"
-                AutomationId="BLLogin.Username"
+                AutomationId="BLLogin.Password"
             />
             <SDKValidationMessage For="@(() => model.Password)" />
         </div>
@@ -59,6 +48,12 @@
     private string error;
     [Parameter]
     public DialogService DialogService { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        model.Username = AuthenticationService.User.Id;
+    }
 
 
 

@@ -1,0 +1,109 @@
+@using Siesa.SDK.Frontend.Components
+@using Siesa.SDK.Frontend.Components.Visualization
+@using SDK.Components.Visualization
+@inject UtilsManager UtilsManager
+@inherits SDKComponent
+<div class="input-group input-group-sm whcm_select_box" data-automation-id="@GetAutomationId()">
+    <div class="input-badge-container">
+        @if(IsMultiple && Values.Count()>0){
+            <div class="@badgeContainerClass">
+                @foreach (var item in Values){
+                    <span class="badge badge-pill badge-light">@item
+                        <button disabled="@Disabled" @onclick="@(()=> {closeItem(item);})">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </span>
+                }
+            </div>
+        }
+        
+        <div class="dropdown">
+            <input autocomplete="off" type="text" disabled="@Disabled" data-automation-id="@GetAutomationId()_inputtext" class="form-control" value="@Value" @oninput="@(e => OnChangeValue(e.Value.ToString()))" @onkeydown="@OnKeyDown" @onfocus="@OnFocus" @onfocusout="@OnFocusOut" id="@idInput"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" placeholder="@placeholder">
+            <div class="whcm_select_list dropdown-menu" aria-labelledby="@idInput">
+                <ul>
+                    @if(CacheData.Count()>0){
+                        foreach (var item in CacheData)
+                        {   
+                            if(IsMultiple && Values.Contains(item.Value.ToString())){
+                                continue;
+                            }
+                            <li class="d-flex justify-content-between dropdown-item" data-automation-id="@GetAutomationIdItem(item)" @onclick="@(()=> { OnSelectItem(item.Value); })">
+                                <div class="d-flex align-items-center">
+                                    @if(FieldTemplate == 2){
+                                        <div class="whcm_select_list_img">
+                                            <img src="" height="36px" alt="imagen">
+                                        </div>
+                                    }
+                                    <div class="ml-1">
+                                        <p class="font_size_087 m-0 font-weight-bold"><span>@item.Value.ToString()</span></p>
+                                        @if(RelatedParams != null && RelatedParams.ExtraFields.Count()>0){
+                                            foreach (var field in RelatedParams.ExtraFields)
+                                            {
+                                                string paramValue = GetParamValue(field, item.Value);
+                                                string resourceTag = item.Value.GetType().Name + "." + field;
+                                                                                        
+                                                <p class="font_size_087 m-0"><span><ResourceViewer ResourceTag="@resourceTag" RowidCulture="@RowidCulture"/>:</span> <span>@paramValue</span></p>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                                @if(CanEdit || CanDetail){
+                                    <div>
+                                        <button disabled="@Disabled" class="btn btn-sm layout_btn_standar-sm" data-automation-id="@GetAutomationIdItem(item)_ExpandBtn" type="button" data-toggle="tooltip" data-placement="top" title="Ampliar" @onclick="@(async ()=> { await OpenModalExpand(item.Value);})">
+                                            <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
+                                        </button>
+                                    </div>
+                                }
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="input-group-append">
+        <button disabled="@Disabled" class="btn whcm-btn-outline" type="button"  data-automation-id="@GetAutomationId()_SearchBtn" data-toggle="tooltip" data-placement="top" title="Buscar" @onclick="@(async ()=> { await OpenModalList();})"><i class="fa-solid fa-magnifying-glass"></i></button>
+        @if(CanCreate){
+            <button disabled="@Disabled" class="btn whcm-btn-outline" type="button" data-automation-id="@GetAutomationId()_CreateBtn" data-toggle="tooltip" data-placement="top" title="Crear" @onclick="@(async ()=> { await OpenModalCreate(); })" ><i class="fa-solid fa-circle-plus"></i></button>
+        }
+    </div>
+</div>
+
+@code
+{
+    private string GetAutomationIdItem(dynamic item)
+    {
+        return $"{GetAutomationId()}_{item.Value.Rowid}";
+    }
+    public async Task OpenModalCreate(){
+        var CreateDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicCreateView BusinessName="@RelatedBusiness" IsSubpanel=true  ShowTitle="false" />, width: "90%", title:$"{RelatedBusiness}.Singular");        
+        if(CreateDialog != null && CreateDialog.GetType() != typeof(bool)){
+            await OnSave(CreateDialog);
+            StateHasChanged();
+        }
+    }
+
+    public async Task OpenModalExpand(object item){
+        string rowid_item = item.GetType().GetProperty("Rowid").GetValue(item).ToString();        
+        if(CanEdit){
+            var editDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicEditView BusinessName="@RelatedBusiness" BusinessObjId="@rowid_item" IsSubpanel=true  ShowTitle="false"/>, width: "90%", title:$"{RelatedBusiness}.Singular");
+            if(editDialog != null && editDialog.GetType() != typeof(bool)){
+                await OnSave(editDialog);
+                StateHasChanged();
+            }
+        }else{
+            var detailDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicDetailView BusinessName="@RelatedBusiness" BusinessObjId="@rowid_item" IsSubpanel=true  ShowTitle="false"/>, width: "90%", title:$"{RelatedBusiness}.Singular");
+        }
+    }
+    
+    public async Task OpenModalList(){
+        var filters = await GetStringFilters();
+        var listDialog = await SDKDialogService.ShowCustomDialog(ds => @<div><DynamicListView BusinessName="@RelatedBusiness" IsSubpanel=true  ShowTitle="false" OnSelectedRow="OnSelectedRow" SubpanelFilter="@filters" FromEntityField=true IsMultiple="@IsMultiple" SelectedItems="@ItemsSelected"/>@if(IsMultiple){<div class="float-right pt-2"><SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Custom.EntityField.SelectButton" Click="@(() => SelectValues())"/></div>}
+        </div>, width: "90%", title:$"{RelatedBusiness}.Singular");
+        if(listDialog != null && listDialog){
+            await OnChangeValue(Value);
+            await LoadData("", null, true);
+            StateHasChanged();
+        }
+    }
+} 

@@ -18,6 +18,8 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Shared.DataAnnotations
 @using Siesa.SDK.Frontend.Components.Fields
+@using Blazor.IndexedDB.Framework;
+@inject IIndexedDbFactory DbFactory
 
 <PageTitle>Login</PageTitle>
 
@@ -45,7 +47,7 @@
                         <h2 class="mb-md-2 mb-lg-3"><ResourceViewer ResourceTag="BLLogin.Demo.NewsTitle" RowidCulture=@RowidCulture /></h2>
                         <p class="mb-md-2 mb-lg-3"><ResourceViewer ResourceTag="BLLogin.Demo.NewsBody" RowidCulture=@RowidCulture /></p>
                         <div class="d-flex justify-content-between">
-                            <button class="btn btn-primary btn_ghost_def_1 btn-sm px-4"><ResourceViewer ResourceTag="BLLogin.MoreInfo" RowidCulture=@RowidCulture /></button>
+                            <SDKButton CssClass="btn btn-primary btn_ghost_def_1 btn-sm px-4" ResourceTag="BLLogin.MoreInfo"/>
                             <div>
                                 <button class="btn btn-primary btn_ghost_def_1 btn-sm"><i
                                         class="fa-solid fa-chevron-left"></i></button>
@@ -77,7 +79,7 @@
                                     @if(selectedCulture != null)
                                     {
                                         @*fi fi-selectedCulture.CountryCode fis rounded-circle*@
-                                        <span class="fi fi-co fis rounded-circle"
+                                        <span class="@classCulture"
                                         style="height:16px"></span>
                                     }else{
                                         <span class="fi fi-globe fis rounded-circle" style="height:16px"></span>
@@ -147,10 +149,7 @@
                                     </EditForm>
                                 </div>
                                 <div class="col-12 p-0 text-center pt-4">
-                                    <a class="link_login" @onclick="()=> ForgotPassword()">
-                                        <ResourceViewer ResourceTag="BLLogin.Project.ForgotPassword" RowidCulture=@RowidCulture />
-                                    </a>
-
+                                    <SDKButton RenderStyle="SDKButtonRenderStyle.Link" Click="@ForgotPassword" ResourceTag="BLLogin.Project.ForgotPassword"/>
                                 </div>
                             }
                         </div>
@@ -174,7 +173,7 @@
                     <h2 class="mb-2 pr-3"><ResourceViewer ResourceTag="BLLogin.Demo.NewsTitle" RowidCulture=@RowidCulture /></h2>
                     <p class="mb-2"><ResourceViewer ResourceTag="BLLogin.Demo.NewsBody" RowidCulture=@RowidCulture /></p>
                     <div class="d-flex justify-content-between">
-                        <button class="btn btn-primary btn_ghost_def_1 btn-sm px-4"><ResourceViewer ResourceTag="BLLogin.MoreInfo" RowidCulture=@RowidCulture /></button>
+                        <SDKButton CssClass="btn btn-primary btn_ghost_def_1 btn-sm px-4" ResourceTag="BLLogin.MoreInfo"/>
                         <div>
                             <button class="btn btn-primary btn_ghost_def_1 btn-sm"><i
                                     class="fa-solid fa-chevron-left"></i></button>
@@ -204,7 +203,7 @@
 
     <div class="login_loading @GetCssLoding()">
         <div>
-            <div class="text-center fa-4x font_color_3 mb-4">
+            <div class="text-center fa-4x font_color_primary_light mb-4">
                 <i class="fas fa-spinner fa-pulse"></i>
             </div>
             <div class="text-center">
@@ -226,6 +225,7 @@
 </DxDropDown>
 
 @code {
+    string classCulture = "";
     public string FormID { get; set; } = Guid.NewGuid().ToString();
     private Model model = new Model();
     private bool init_loading = true;
@@ -275,7 +275,7 @@
             return;
         }
         cultureDefault();
-        await InitLogin();
+        await InitLogin();        
     }
 
     private async Task InitLogin()
@@ -286,6 +286,7 @@
         //await getUserlang();
         init_loading = false;
         await base.OnInitializedAsync();
+        await ImportJs();
         StateHasChanged();
     }
 
@@ -294,6 +295,7 @@
         RowidCulture = rowidCulture;
         IsOpen = false;
         getSelectedCulture();
+        AuthenticationService.RowidCultureChanged = rowidCulture;
         await AuthenticationService.SetCustomRowidCulture(rowidCulture);
         StateHasChanged();
         //await localStorageService.SetItemAsync("userlang", RowidCulture.ToString());
@@ -329,6 +331,13 @@
         try
         {
             await AuthenticationService.Login(model.Username, model.Password,SelectedConnection.Rowid);
+            try
+            {
+                setDataIndexedDB(RowidCulture);            
+            }catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
             NavigationManager.TryGetQueryString("returnUrl", out string returnUrl);
             if (returnUrl == null || returnUrl == "null")
             {
@@ -395,7 +404,6 @@
     }
     private void getSelectedCulture()
     {
-
         if (cultures != null)
         {
             selectedCulture = cultures.FirstOrDefault(x => x.Rowid == RowidCulture);
@@ -404,6 +412,8 @@
         {
             cultureDefault();
         }
+        classCulture = $"fi fi-{GetCountryFlagCode(selectedCulture)} fis rounded-circle";
+        
     }
 
     private async Task getUserlang()
@@ -455,7 +465,7 @@
                 CountryCode = "co",
                 Description = "Colombia",
                 LanguageCode = "Es-co"
-            };
+            };        
     }
 
     void OnChangeConnection(ChangeEventArgs e)
@@ -473,5 +483,54 @@
         AuthenticationService.SetSelectedConnection(SelectedConnection);
         
         StateHasChanged();
+    }
+
+    private async Task ImportJs()
+    {
+        try
+        {
+            await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/Pages/Login/Login.razor.js");
+        }
+        catch (Exception)
+        {
+        }
+    }
+
+    public async Task setDataIndexedDB(short RowidCulture){
+        await DbFactory.Create<IndexDb>();
+    }
+
+    private string GetCountryFlagCode (E00021_Culture culture)
+    {
+        if(!string.IsNullOrEmpty(culture.CountryCode))
+        {
+            return culture.CountryCode;
+        }
+
+        switch (culture.LanguageCode)
+        {
+            case "en":
+                return "us";
+            case "es":
+                return "co";
+            case "fr":
+                return "fr";
+            case "de":
+                return "de";
+            case "it":
+                return "it";
+            case "pt":
+                return "pt";
+            case "ru":
+                return "ru";
+            case "zh":
+                return "cn";
+            case "ja":
+                return "jp";
+            case "ko":
+                return "kr";
+            default:
+                return "co";
+        }
     }
 }

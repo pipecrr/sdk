@@ -9,6 +9,8 @@ using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Shared.DTOS;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
+using Microsoft.JSInterop;
 
 namespace Siesa.SDK.Frontend.Services
 {
@@ -17,10 +19,13 @@ namespace Siesa.SDK.Frontend.Services
         private NavigationManager _navigationManager;
         private ILocalStorageService _localStorageService;
         private IBackendRouterService _backendRouterService;
+        private IHttpContextAccessor _contextAccesor;
+        private IJSRuntime _jsRuntime;
         private string _secretKey;
         private int _minutesExp;
 
         private short CustomRowidCulture = 0;
+        public short RowidCultureChanged { get; set; } = 0;
 
         private SDKDbConnection SelectedConnection = new SDKDbConnection();
 
@@ -46,15 +51,18 @@ namespace Siesa.SDK.Frontend.Services
         public AuthenticationService(
             NavigationManager navigationManager,
             ILocalStorageService localStorageService,
-            IBackendRouterService BackendRouterService
+            IBackendRouterService BackendRouterService,
+            IHttpContextAccessor ContextAccessor,
+            IJSRuntime jsRuntime
         )
         {
             _navigationManager = navigationManager;
             _localStorageService = localStorageService;
             _backendRouterService = BackendRouterService;
-
+            _contextAccesor = ContextAccessor;
             _minutesExp = 120; //TODO: get from config
             _secretKey = "testsecretKeyabc$"; //TODO: get from config
+            _jsRuntime = jsRuntime;
         }
 
         public async Task Initialize()
@@ -69,6 +77,12 @@ namespace Siesa.SDK.Frontend.Services
             catch (System.Exception)
             {
             }
+            try
+            {
+                await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/js/utils.js");
+            }catch (Exception)
+            {
+            }
             //Console.WriteLine($"UserToken: {UserToken}");
         }
 
@@ -79,15 +93,23 @@ namespace Siesa.SDK.Frontend.Services
             {
                 throw new Exception("Login Service not found");
             }
-            var loginRequest = await BLuser.Call("SignIn", new Dictionary<string, dynamic> {
+
+            string ipAddress = _contextAccesor.HttpContext.Connection.RemoteIpAddress?.ToString();
+            string browserName = _contextAccesor.HttpContext.Request.Headers["User-Agent"].ToString();
+
+            var loginRequest = await BLuser.Call("SignInSession", new Dictionary<string, dynamic> {
                 {"username", username},
                 {"password", password},
-                {"rowIdDBConnection", rowIdDBConnection}
+                {"rowIdDBConnection", rowIdDBConnection},
+                {"ipAddress", ipAddress},
+                {"browserName", browserName},
+                {"rowidCulture", RowidCultureChanged}
             });
             if (loginRequest.Success)
             {
-                UserToken = loginRequest.Data;
+                UserToken = loginRequest.Data.Token;
                 await _localStorageService.SetItemAsync("usertoken", UserToken);
+                await SetCookie("sdksession", loginRequest.Data.IdSession);
             }
             else
             {
@@ -109,6 +131,8 @@ namespace Siesa.SDK.Frontend.Services
             await _localStorageService.RemoveItemAsync("usertoken");
             await _localStorageService.RemoveItemAsync("lastInteraction");
             await _localStorageService.RemoveItemAsync("n_tabs");
+            await _localStorageService.RemoveItemAsync("bd");
+            await RemoveCookie("sdksession");
 
             _navigationManager.NavigateTo("login");
         }
@@ -168,7 +192,8 @@ namespace Siesa.SDK.Frontend.Services
             {
                 throw new Exception("Occurio un error");
             }
-            var CompanyGroup = await BLUser.Call("ChangeCompanyGroup", rowid);
+            var sessionId = await GetCookie("sdksession");
+            var CompanyGroup = await BLUser.Call("ChangeCompanyGroup", rowid, sessionId);
 
             if (CompanyGroup.Success)
             {
@@ -246,7 +271,7 @@ namespace Siesa.SDK.Frontend.Services
             {
                 if (NewPassword != ConfirmPassword)
                 {
-                    throw new Exception("Las contraseñas no coinciden");
+                    throw new Exception("Custom.ForgotPassword.ChangePasswordError");
                 }else
                 {
                     var resultChangePassword = await request.Call("RecoveryPassword",rowidUser,NewPassword,ConfirmPassword,SelectedConnection.Rowid);
@@ -265,9 +290,47 @@ namespace Siesa.SDK.Frontend.Services
 
             if (BLUser == null)
             {
-                throw new Exception("Occurio un error");
+                throw new Exception("Custom.Generic.Message.Error");
             }
             return BLUser;
+        }
+
+        private async Task SetCookie(string key, string value)
+        {
+            //execut javascript to set cookie
+            try
+            {
+                await _jsRuntime.InvokeVoidAsync("window.createCookie", key, value);
+            }
+            catch (System.Exception)
+            {
+            }
+        }
+
+        //read cookie
+        private async Task<string> GetCookie(string key)
+        {
+            //execut javascript to set cookie
+            try
+            {
+                return await _jsRuntime.InvokeAsync<string>("window.readCookie", key);
+            }
+            catch (System.Exception)
+            {
+                return "";
+            }
+        }
+
+        private async Task RemoveCookie(string key)
+        {
+            //execut javascript to set cookie
+            try
+            {
+                await _jsRuntime.InvokeVoidAsync("window.deleteCookie", key);
+            }
+            catch (System.Exception)
+            {
+            }
         }
     }
 }

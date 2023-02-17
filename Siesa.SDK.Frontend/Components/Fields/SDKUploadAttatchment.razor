@@ -1,0 +1,146 @@
+@using Microsoft.AspNetCore.Components;
+@using Siesa.SDK.Shared.DTOS;
+@using Newtonsoft.Json;
+@using Siesa.SDK.Shared.Services;
+@using Siesa.SDK.Components.Visualization;
+@using Siesa.SDK.Frontend.Components.Visualization;
+@using Microsoft.AspNetCore.Http
+
+@inject UtilsManager UtilManager
+@inject IAuthenticationService AuthenticationService
+@inject IBackendRouterService BackendRouterService
+
+<div class="sdk-upload-attatchment">
+    <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" IconCssClass="@iconClass" Click="@TestClickButton"/>
+    @if(useRecorder){
+        <SDKRecorder GetAudio="@GetAudio"></SDKRecorder>
+    }else{
+        <div class="m-5">
+            <RadzenUpload Url="@Url" class="@StyleCss" ChooseText="@ResourceChooseText"
+            Accept="@Accept" Progress="@SDKProgress" Complete="@SDKComplete" Change="@SDKChange" Auto="@Auto" @ref="sdkUpload" Disabled="@Disabled" Error="@SDKError">             
+            </RadzenUpload >
+        </div>
+    }
+</div>
+
+@code {
+    [JsonIgnore]
+    [Parameter]public dynamic Business { get; set; }     
+    [Parameter]public string StyleCss {get; set;}
+    [Parameter]public List<string> Extensions {get; set;}
+    [Parameter]public bool Disabled {get; set;}
+    [Parameter]public bool Auto {get; set;} = false;
+    [Parameter]public string FieldName {get; set;}
+    [Parameter]public Action<SDKUploadProgressArgsDTO> Progress {get;set;}
+    [Parameter]public Action<SDKUploadCompleteEventArgsDTO> Complete {get;set;}
+    [Parameter]public Action<SDKUploadChangeEventArgsDTO> Change {get;set;}
+    [Parameter]public Action<SDKUploadErrorEventArgsDTO> Error {get;set;}
+    private string ResourceChooseText {get; set;}
+    private IFormFile file;
+    private byte[] fileBytes;
+    private bool useRecorder = false; 
+    private string iconClass = "fa-solid fa-microphone";
+    private string Url {get; set;}
+    private string Accept = "";
+    [JsonIgnore]
+    RadzenUpload sdkUpload;
+    protected override async Task OnInitializedAsync(){
+        ResourceChooseText = "Custom.SDKUpload.Choose";
+        ResourceChooseText = await UtilManager.GetResource("Custom.SDKUpload.Choose");
+        Url = "api/"+Business.BLName+"/UploadSingle";
+        if(Business != null && !string.IsNullOrEmpty(FieldName)){
+            Business.GetType().GetProperty(FieldName).SetValue(Business, this);
+        }
+
+        base.OnInitialized();
+    }
+
+    protected override void OnParametersSet(){
+        if (Extensions != null){
+            Accept = string.Join(", ", Extensions);
+        }
+    }
+
+    public async Task Upload(){
+        if(useRecorder){
+            var bl = BackendRouterService.GetSDKBusinessModel(Business.BLName, AuthenticationService);
+            var nameAudio = DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss");
+            var response = await bl.Call("SaveFile", fileBytes, $"{nameAudio}.wav");
+
+            var fileUploadStr = JsonConvert.SerializeObject(response);
+            await sdkUpload.OnComplete(fileUploadStr, false);
+
+        }else{
+            await sdkUpload.Upload();
+        }
+    }
+
+    private async Task SDKComplete(UploadCompleteEventArgs args){
+        if(Complete != null){            
+            SDKUploadCompleteEventArgsDTO sDKUploadCompleteEventArgsDTO = new SDKUploadCompleteEventArgsDTO();
+            sDKUploadCompleteEventArgsDTO.JsonResponse = args.JsonResponse;
+            sDKUploadCompleteEventArgsDTO.RawResponse = args.RawResponse;
+            sDKUploadCompleteEventArgsDTO.Cancelled = args.Cancelled;
+
+            Complete(sDKUploadCompleteEventArgsDTO);
+        }
+    }
+
+    private async Task SDKProgress(UploadProgressArgs args){
+        if(Progress != null){
+            SDKUploadProgressArgsDTO sDKUploadProgressArgsDTO = new SDKUploadProgressArgsDTO();
+            sDKUploadProgressArgsDTO.Loaded = args.Loaded;
+            sDKUploadProgressArgsDTO.Total = args.Total;
+            sDKUploadProgressArgsDTO.Progress = args.Progress;
+            List<SDKFileInfoDTO> files = new List<SDKFileInfoDTO>();
+            foreach (FileInfo item in args.Files){
+                SDKFileInfoDTO fileInfoDTO = new SDKFileInfoDTO();
+                fileInfoDTO.Name = item.Name;
+                fileInfoDTO.Size = item.Size;
+                files.Add(fileInfoDTO);
+            }
+            sDKUploadProgressArgsDTO.Files = files;
+            sDKUploadProgressArgsDTO.Cancel = args.Cancel;
+
+            Progress(sDKUploadProgressArgsDTO);
+        }
+    }
+
+    private async Task SDKChange(UploadChangeEventArgs args){
+        if(Change != null){
+            SDKUploadChangeEventArgsDTO sDKUploadChangeEventArgsDTO = new SDKUploadChangeEventArgsDTO();
+            List<SDKFileInfoDTO> files = new List<SDKFileInfoDTO>();
+            foreach (FileInfo item in args.Files){
+                SDKFileInfoDTO fileInfoDTO = new SDKFileInfoDTO();
+                fileInfoDTO.Name = item.Name;
+                fileInfoDTO.Size = item.Size;
+                files.Add(fileInfoDTO);
+            }
+            sDKUploadChangeEventArgsDTO.Files = files;
+            Change(sDKUploadChangeEventArgsDTO);
+
+        }
+    }
+
+    private async Task SDKError(UploadErrorEventArgs args){
+        if(Error != null){
+            SDKUploadErrorEventArgsDTO sDKUploadErrorEventArgsDTO = new SDKUploadErrorEventArgsDTO();
+            sDKUploadErrorEventArgsDTO.Message = args.Message;
+            Error(sDKUploadErrorEventArgsDTO);
+        }
+    }
+   
+    public void GetAudio(byte[] file){
+        this.fileBytes = file;
+    }
+
+    public async Task TestClickButton(){
+        useRecorder = !useRecorder;
+        if(useRecorder){
+            iconClass = "fa-solid fa-file-arrow-up";
+        }else{
+            iconClass = "fa-solid fa-microphone";
+        }
+        StateHasChanged();
+    }
+}

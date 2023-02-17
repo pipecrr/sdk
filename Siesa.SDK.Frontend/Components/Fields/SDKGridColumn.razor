@@ -1,11 +1,14 @@
 @typeparam TItem
+@inherits SDKComponent
 @using Siesa.SDK.Frontend.Components
 <RadzenDataGridColumn TItem="@TItem" Title="@Title" Width="@Width" Filterable="@Filterable" Sortable="@Sortable" Property="@Property" Type="@ColumnType" Template="@Template" TextAlign="@TextAlignInternal" FormatString="@FormatString" CssClass="@GetCssClass()" HeaderTemplate="@HeaderTemplate">
 </RadzenDataGridColumn>
 
 @code {
     [Parameter] public RenderFragment<TItem> Template { get; set; }
-    [Parameter] public string Title { get; set; }
+    [Obsolete("Use ResourceTag instead")]
+    [Parameter] 
+    public string Title { get; set; }
     [Parameter] public bool Filterable { get; set; } = true;
     [Parameter] public bool Sortable { get; set; }
     [Parameter] public string Width { get; set; } = "auto";
@@ -37,6 +40,20 @@
             return "internal-sdk-gridcolumn-action";
         }
         return "";
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if(!string.IsNullOrEmpty(ResourceTag))
+        {
+            Title = ResourceTag;    
+        }
+        await base.OnInitializedAsync();
+        if(!string.IsNullOrEmpty(ResourceTag))
+        {
+            Title = await GetText();
+            StateHasChanged();
+        }
     }
     
 }

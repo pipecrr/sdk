@@ -10,12 +10,19 @@ namespace Siesa.SDK.Frontend.Utils
 {
     public static class Evaluator
     {
-        public static async Task<object> EvaluateCode(string code, object globals)
+        public static async Task<object> EvaluateCode(string code, object globals, string action = "", bool createDelegate = false)
         {
             object result;
             try
             {
-                result = await CSharpScript.EvaluateAsync(code, options: ScriptOptions.Default.WithImports("System"), globals: globals);
+                if(createDelegate){
+                    var script = CSharpScript.Create("",  options: ScriptOptions.Default.WithImports("System"), globalsType: globals.GetType());
+                    var scriptAction = script.ContinueWith(action);
+                    var scriptDelegate = scriptAction.CreateDelegate();
+                    result = await scriptDelegate.Invoke(globals);
+                }else{
+                    result = await CSharpScript.EvaluateAsync(code, options: ScriptOptions.Default.WithImports("System"), globals: globals);
+                }
             }
             catch (Exception ex)
             {

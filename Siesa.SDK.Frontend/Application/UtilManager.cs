@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blazor.IndexedDB.Framework;
 using Blazored.LocalStorage;
 using Newtonsoft.Json;
 using Siesa.SDK.Frontend.Application;
+using Siesa.SDK.Frontend.Data;
 using Siesa.SDK.Shared.Services;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Model
@@ -14,12 +16,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         private IAuthenticationService AuthenticationService;
         private IResourceManager ResourceManager;
         private ILocalStorageService _localStorageService;
+        private IIndexedDbFactory _dbFactoryService;
         private Dictionary<Int64, Dictionary<string, string>> resourceValuesDictUtil = new Dictionary<Int64, Dictionary<string, string>>();
-        public UtilsManager(IAuthenticationService authenticationService, IResourceManager resourceManager, ILocalStorageService localStorageService)
+        public UtilsManager(IAuthenticationService authenticationService, IResourceManager resourceManager, ILocalStorageService localStorageService, IIndexedDbFactory dbFactoryService)
         {
             AuthenticationService = authenticationService;
             ResourceManager = resourceManager;
             _localStorageService = localStorageService;
+            _dbFactoryService = dbFactoryService;
         }
 
         public async Task<string> GetResource(Int64 resourceRowid, Int64 cultureRowid = 0){
@@ -43,16 +47,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
                 return await ResourceManager.GetResource(resourceTag, cultureRowid);
             }
             return resourceTag;
-        }
-
-        public async Task GetResourceByContainId(Int64 cultureRowid = 0){                
-                if(cultureRowid != 0){
-                    await this.ResourceManager.GetResourceByContainId(cultureRowid);
-                }
-                if(AuthenticationService.User != null){
-                    cultureRowid = AuthenticationService.GetRoiwdCulture();
-                    await ResourceManager.GetResourceByContainId(cultureRowid);
-                }
         }
 
         public async Task<string> GetResourceFlex(string resourceTag, Int64 cultureRowid = 0){
@@ -86,9 +80,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         }
 
         public async Task<Dictionary<byte,string>> GetEnumValues(string enumName, Int64 rowidCulture = 0){
-            
+
             if(rowidCulture != 0){
-                return await ResourceManager.GetEnumValues(enumName, rowidCulture);                
+                return await ResourceManager.GetEnumValues(enumName, rowidCulture);
             }
             if(AuthenticationService.User != null){
                 rowidCulture = AuthenticationService.GetRoiwdCulture();
@@ -97,4 +91,4 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
             return null;
         }
     }
-}   
+}

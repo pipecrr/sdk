@@ -49,9 +49,12 @@ namespace Siesa.SDK.Backend.Extensions
                 //get text before first underscore
                 var prefix = table_name_parts[0];
                 //if first character is an "U" then replaceit with "CU"
-                if (prefix.StartsWith("U"))
+                if (prefix.StartsWith("u"))
                 {
                     prefix = "cu" + prefix.Substring(1);
+                }else if (prefix.StartsWith("d"))
+                {
+                    prefix = "cd" + prefix.Substring(1);
                 }else{
                     prefix = "c" + prefix.Substring(1);
                 }
@@ -88,6 +91,16 @@ namespace Siesa.SDK.Backend.Extensions
                 if(xmin_property != null)
                 {
                     builder.Entity(et.Name).Ignore(xmin_property.Name);
+                }
+            });
+        }
+        public static void RemoveRowVersionConvention(this ModelBuilder builder)
+        {
+            Conventions.Add(et => {
+                var rowversion_property = et.FindProperty("RowVersion");
+                if(rowversion_property != null)
+                {
+                    builder.Entity(et.Name).Ignore(rowversion_property.Name);
                 }
             });
         }

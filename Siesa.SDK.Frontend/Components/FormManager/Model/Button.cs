@@ -30,7 +30,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
 
         public string Target { get; set; } = "_self";
         public string Href { get; set; }
-
         public string IconClass { get; set; }
+        public List<int> ListPermission { get; set; }
     }
 }

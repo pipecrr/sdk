@@ -19,7 +19,6 @@ using Google.Protobuf;
 using Siesa.SDK.Shared.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System.Runtime.CompilerServices;
-
 namespace Siesa.SDK.GRPCServices
 {
     public class SDKService : Siesa.SDK.Protos.SDK.SDKBase
@@ -30,12 +29,14 @@ namespace Siesa.SDK.GRPCServices
         private IAuthenticationService _authenticationService;
         private IBackendRouterService _backendRouterService;
         private ITenantProvider _tenantProvider;
-        
+        private IFeaturePermissionService _featurePermissionService;
+
         public SDKService(
             ILogger<SDKService> logger,
             IServiceProvider provider,
             IAuthenticationService AuthenticationService, IBackendRouterService backendRouterService,
-            ITenantProvider tenantProvider
+            ITenantProvider tenantProvider,
+            IFeaturePermissionService featurePermissionService
         )
         {
             _logger = logger;
@@ -43,6 +44,7 @@ namespace Siesa.SDK.GRPCServices
             _authenticationService = AuthenticationService;
             _tenantProvider = tenantProvider;
             _backendRouterService = backendRouterService;
+            _featurePermissionService = featurePermissionService;
 
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
@@ -235,6 +237,23 @@ namespace Siesa.SDK.GRPCServices
                     response.Success = false;
                     response.Errors.Add($"Method {methodName} not exposed in business {businessRegistry.Name}");
                     return Task.FromResult(response);
+                }
+                var exposedMethod = customAttributes.FirstOrDefault() as SDKExposedMethod;
+                if(exposedMethod.Permissions.Length > 0){
+                    var hasPermission = true;
+                    if(_featurePermissionService != null){
+                        try{
+                            List<int> permissions = exposedMethod.Permissions.ToList();
+                            hasPermission = _featurePermissionService.CheckUserActionPermissions(request.BusinessName,
+                                permissions, _authenticationService);
+                            if(!hasPermission){
+                                response.Success = false;
+                                response.Errors.Add("Custom.Generic.Unauthorized");
+                                return Task.FromResult(response);
+                            }
+                        }catch(Exception e){
+                        }
+                    }
                 }
 
                 ICollection<ExposedMethodParam> methodParameters = request.Parameters;

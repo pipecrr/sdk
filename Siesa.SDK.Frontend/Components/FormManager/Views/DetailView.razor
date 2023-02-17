@@ -4,12 +4,20 @@
 @using Siesa.SDK.Frontend.Components.Layout.Detail.Relationship
 @using Siesa.SDK.Frontend.Components.Visualization
 @using System.Linq
+@using Siesa.SDK.Frontend.Services
+@inject SDKGlobalLoaderService SDKGlobalLoaderService
+
 @if (Loading == true)
 {
     <ResourceViewer ResourceTag="Custom.Generic.Loading" />
-} else if (Panels == null || Panels.Count <= 0)
+}
+else if(!string.IsNullOrEmpty(ErrorMsg))
 {
-    <ResourceViewer ResourceTag="Module.SDK.ViewdefNotFound" />
+    <ErrorsContainer ErrorMsg="@ErrorMsg"/>
+}
+else if (Panels == null || Panels.Count <= 0)
+{
+    <ResourceViewer ResourceTag="Custom.Formview.NotDefinition" />
 }
 else if (ModelLoaded == true)
 {
@@ -54,11 +62,11 @@ else if (ModelLoaded == true)
             {
                 <SDKButton RenderStyle="@btn.RenderStyle" Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" />
             }
-            @if (ShowDeleteButton){
-                <SDKButton RenderStyle="SDKButtonRenderStyle.Danger" Click="DeleteBusiness" ResourceTag="Action.Delete" />                
-            }
             @if (ShowCancelButton){
                 <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" Click="@((args) => dialogService.Close(false))" ResourceTag="Action.Close"/>
+            }
+            @if (ShowDeleteButton){
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Danger" Click="DeleteBusiness" ResourceTag="Action.Delete" />                
             }
         </div>
     }
@@ -76,7 +84,7 @@ else if (ModelLoaded == true)
                 <TopBarButton Click="GoToDuplicate" ResourceTag="Action.Duplicate" IconCssClass="fa-solid fa-copy"  />
                 }
                 @if(CanEdit){
-                <TopBarButton Click="GoToEdit" ResourceTag="Action.Modify"  IconCssClass="fa-solid fa-pen"  />
+                <TopBarButton Click="GoToEdit" ResourceTag="Action.Edit"  IconCssClass="fa-solid fa-pen"  />
                 }
                 @if(CanList){
                 <TopBarButton Click="GoToList" ResourceTag="Action.List"  IconCssClass="fa-solid fa-list"  />
@@ -102,8 +110,13 @@ else if (ModelLoaded == true)
         var dialog = await dialogService.OpenAsync("",
             ds => @<ConfirmDelete DialogService=@ds />,
             new DialogOptions(){ShowTitle=false, Width="400"});
+
+        SDKGlobalLoaderService.Show();
+
         if(dialog != null && dialog == true){
             await this.DeleteBusiness();
         } 
+        
+        SDKGlobalLoaderService.Hide();
     }
 }

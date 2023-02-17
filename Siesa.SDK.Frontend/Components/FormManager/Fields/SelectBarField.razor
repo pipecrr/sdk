@@ -1,11 +1,14 @@
 @using Siesa.SDK.Frontend.Components.Fields
 @using System.Linq.Expressions
+@using SDK.Frontend.Application
+@using System.Collections.Generic
+@using System.Linq
 @typeparam TItem
 @inherits FieldClass<TItem>
 @using Siesa.SDK.Shared.Services
 @inject IAuthenticationService AuthenticationService
 @inject IBackendRouterService BackendRouterService
-
+@inject IResourceManager ResourceManager
 
 @if (!FieldOpt.Hidden)
 {
@@ -23,7 +26,9 @@
         Value="@BindValue"
         ValueChanged="@((newVal) => SetValue(newVal))"
         Data="@_options"
-        Disabled="@_disabled" />
+        Disabled="@_disabled"
+        ValueExpression="@ValueExpression"
+        FieldName="@FieldName" />
 
         @FieldValidationTemplate
     }
@@ -32,10 +37,9 @@
 @code {
 
     private bool _disabled;
-    [Parameter] public IEnumerable<SelectBarItemWrap<TItem>> Options { get; set; }
-
+    [Parameter] public IEnumerable<SelectBarItemWrap<TItem>> Options { get; set; }       
+    Expression<Func<TItem>> ValueExpression { get; set; }
     private Type enumType { get; set; }
-
     private IEnumerable<SelectBarItemWrap<TItem>> _options
     {
         get
@@ -70,11 +74,26 @@
             {
                 return;
             }
-            Options = enumValues.Select(x => new SelectBarItemWrap<TItem>
+
+            Options = Enumerable.Empty<SelectBarItemWrap<TItem>>();
+            
+            if (ViewdefName == "search")
+            {
+                var SelectAllName = await ResourceManager.GetResource("Custom.Enum.SelectAll", AuthenticationService);
+                Options = Options.Append(new SelectBarItemWrap<TItem>
+                {
+                    Key = (TItem)Enum.Parse(enumType, (enumValues.Select(x => x.Key).Last() + 1).ToString()),
+                    Name = SelectAllName
+                });
+                BindValue = Options.Select(x => x.Key).First();
+            } 
+            Options = Options.Concat(enumValues.Select(x => new SelectBarItemWrap<TItem>
             {
                 Key = (TItem)Enum.Parse(enumType, x.Key.ToString()),
                 Name = x.Value
-            });
+            }));
+
+            
             StateHasChanged();
         }
     }
@@ -101,6 +120,15 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
+        var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
+        ValueExpression = (Expression<Func<TItem>>)Expression.Lambda(typeof(Func<>).MakeGenericType(typeof(TItem)), access);
+        isDisabled();
+
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
         isDisabled();
     }
 

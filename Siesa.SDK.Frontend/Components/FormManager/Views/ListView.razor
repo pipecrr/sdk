@@ -3,28 +3,63 @@
 @using Siesa.SDK.Entities
 @using Siesa.SDK.Frontend.Components.FormManager.Views
 @using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.Flex
+@using Newtonsoft.Json;
+@using Siesa.SDK.Shared.Extensions
+@inject UtilsManager UtilManager
 
 @if (Loading == true)
 {
     <ResourceViewer ResourceTag="Custom.Generic.Loading" />
 }
+else if(!string.IsNullOrEmpty(ErrorMsg))
+{
+    <ErrorsContainer ErrorMsg="@ErrorMsg"/>
+}
 else
 {
+    @if(IsSubpanel){
+        UseFlex = false;
+    }
     @if(ShowSearchForm && HasSearchViewdef)
     {
-        <FreeForm @ref="@SearchFormRef" @key="@GetFormKey()"  FormID="@SearchFormID" Viewdef="search" BusinessName="@BusinessName" BusinessObj="@BusinessObj" SetTopBar="false" ValidateForm="false" OnSubmit="@OnClickSearch" />
-        <div class="col-md-4 col-sm-6 col-12">
-            <SDKButton form="@SearchFormID" CssClass="mb-1" RenderStyle="SDKButtonRenderStyle.Primary" SubmitFormOnClick="true" Click="@OnClickSearch">
-                @if(LoadingSearch)
+        <div class="@StyleSearchForm">
+            <FreeForm 
+                @ref="@SearchFormRef" 
+                @key="@GetFormKey()"  
+                FormID="@SearchFormID" 
+                Viewdef="search" 
+                BusinessName="@BusinessName" 
+                BusinessObj="@BusinessObj" 
+                SetTopBar="false" 
+                ValidateForm="false" 
+                OnSubmit="@OnClickSearch"
+                OnReady="@OnReadySearchForm"
+                />
+            <div class="d-flex flex-wrap justify-content-center">
+                @if(FieldsHidden.Any())
                 {
-                    <i class="mr-1 fas fa-spinner fa-pulse"></i>
+                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
+                        <SDKButton CssClass="w-100 mb-3 mb-sm-0" RenderStyle="SDKButtonRenderStyle.Secondary" Click="@OpenModalFilter">
+                            <ResourceViewer ResourceTag="Action.AddFilter" />
+                        </SDKButton>
+                    </div>
                 }
-                <ResourceViewer ResourceTag="Action.Search" />
-            </SDKButton>
+                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
+                    <SDKButton form="@SearchFormID" CssClass="w-100" RenderStyle="SDKButtonRenderStyle.Primary" SubmitFormOnClick="true" Click="@OnClickSearch">
+                        @if(LoadingSearch)
+                        {
+                            <i class="mr-1 fas fa-spinner fa-pulse"></i>
+                        }
+                        <ResourceViewer ResourceTag="Action.Search" />
+                    </SDKButton>
+                </div>
+            </div>
         </div>
     }
 
-    @if(ShowList)
+    @if(ShowList && !UseFlex)
     {
         <RadzenDataGrid 
             AllowFiltering="true" 
@@ -43,7 +78,8 @@ else
             AllowVirtualization="@(ListViewModel.InfiniteScroll)"
             ShowPagingSummary="true"
             PageSizeOptions="ListViewModel.Paging.AllowedPageSizes" 
-            SelectionMode="Radzen.DataGridSelectionMode.Single"
+            SelectionMode="@SelectionMode"
+            AllowRowSelectOnRowClick="true"
             Value=@SelectedObjects
             ValueChanged="((objects) => OnSelectionChanged(objects))"
             class="whcm_table"
@@ -85,9 +121,23 @@ else
                 </div>
             </EmptyTemplate>
             <Columns>
+            @if(IsMultiple){
+                <RadzenDataGridColumn TItem="object" Width="50px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" HeaderCssClass="grid-column-action">
+                    <HeaderTemplate>
+                        <SDKBooleanField Value="@(SelectedObjects != null && SelectedObjects.Count>0)" Enabled="true" ValueChanged="(value => SelectedObjects = value ? _gridRef.Data.ToList() : null)">
+                        </SDKBooleanField>                        
+                    </HeaderTemplate>
+                    <Template Context="data">
+                        <div class="d-flex justify-content-center">
+                            <SDKBooleanField Value="@(SelectedObjects != null && SelectedObjects.Contains(data))" Enabled="true" ValueChanged="@(args => {  _gridRef.SelectRow(data); })">
+                            </SDKBooleanField>
+                        </div>
+                    </Template>
+                </RadzenDataGridColumn>
+            }
             @if(ListViewModel.ShowActions)
             {
-                <RadzenDataGridColumn TItem="object" Title="Acciones" Width="100px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" HeaderCssClass="grid-column-action">
+                <RadzenDataGridColumn TItem="object" Title="Acciones" Width="@WithActions" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" HeaderCssClass="grid-column-action">
                     <HeaderTemplate>
                         <div class="untruncate-grid-column-action">
                             @if(IsSubpanel && AllowCreate && CanCreate){
@@ -96,25 +146,35 @@ else
                             }else{
                                 <span><ResourceViewer ResourceTag="Action.Generic.Actions" /></span>
                             }    
-                        </div>                    
+                        </div>
                     </HeaderTemplate>
-                
                     <Template Context="data">
                         <div class="action-buttons d-flex justify-content-center">
                             @if(CanEdit && AllowEdit){
                                 <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToEdit(((IBaseSDK)data).GetRowid())"><i
                                 class="fa-solid fa-pen"></i></button>
                             }
-                            
+                            @if(!ShowLinkTo && AllowDetail){
+                                <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToDetail(((IBaseSDK)data).GetRowid())"><i
+                                class="fa-solid fa-eye"></i></button>
+                            }
                             
                             @if(CanDelete && IsSubpanel && AllowDelete){
-                                <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToDelete(((IBaseSDK)data).GetRowid(), data.ToString())"><span
-                                class="fa-solid fa-trash-can"></span></button>
+                                <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToDelete(((IBaseSDK)data).GetRowid(), data.ToString())"><i
+                                class="fa-solid fa-trash-can"></i></button>
 
+                            }
+                            @if(HasCustomActions){
+                                @foreach (var action in CustomActions)
+                                {
+                                    <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="async () => await OnClickCustomAction(action, ((IBaseSDK)data))"><i
+                                    class="@action.IconClass"></i></button>
+                                }
                             }
                             @* <button class="btn btn-link grid-btn-link"
                             @onclick="() => GoToDetail(((BaseSDK<>)data).Rowid)"><span class="oi oi-eye"></span></button> *@
                         </div>
+                        
                     </Template>
                 </RadzenDataGridColumn>
                 }
@@ -158,7 +218,7 @@ else
                     }                
                     
                     if(!field.Hidden){
-                        if(field.Name == ListViewModel.LinkTo)
+                        if(field.Name == ListViewModel.LinkTo && ShowLinkTo)
                         {
                             <RadzenDataGridColumn Property="@fieldName" TItem="object" Title="" Type="@columnType" Width="@columnWidth">
                                 <HeaderTemplate>
@@ -264,7 +324,6 @@ else
                                 </HeaderTemplate>
                             </RadzenDataGridColumn>
                             }
-                            
                         }
                     }
                 }
@@ -272,23 +331,98 @@ else
         </RadzenDataGrid>
     }
 
+    @if(ShowList && UseFlex){
+        <FlexComponent IsListView="true" BlNameList="@BusinessName" ViewdefName="@FinalViewdefName" ListView="@this" GuidListView="@guidListView" CanEdit="@CanEdit" CanDelete="@CanDelete" EditingFlex="@_isEditingFlex" Take="@FlexTake" ServerPagination="@ServerPaginationFlex" FilterSearch="@FilterFlex" ActionIcons=@CustomActionIcons HasSearch=@ShowSearchForm IsMultiple="@IsMultiple"></FlexComponent>
+    }
+
     @if(SetTopBar)
     {
         <PageTitle><ResourceViewer ResourceTag="@($"{BusinessName}.Plural")" /></PageTitle>
-        <SetTopBar HasExtraButtons="@(ListViewModel.Buttons != null && ListViewModel.Buttons.Count > 0 ? true: false)" BusinessObj="@BusinessObj">
+        <SetTopBar HasExtraButtons="@HasExtraButtons" BusinessObj="@BusinessObj">
             <TopBarTitle><ResourceViewer ResourceTag="@($"{BusinessName}.Plural")" /></TopBarTitle>
             <TopBarButtons>
-                @if(CanCreate)
+                @if(ShowSearchForm && HasSearchViewdef && !_isEditingFlex)
+                {
+                    <TopBarButton ResourceTag="Action.AdvanceSearch" IconCssClass="fa-solid fa-magnifying-glass-plus" Click="@(()=> SetSearchFromVisibility(false))"/>
+                }
+                @if(_isEditingFlex){
+                    <TopBarButton ResourceTag="Action.Cancel" IconCssClass="fa-solid fa-times" Click="CancelEdit"/>
+                    <TopBarButton ResourceTag="Action.Flex.SaveAndClose" IconCssClass="fa-solid fa-floppy-disk" Click="SaveAndCloseList" />
+                }
+                @if(UseFlex && !_isEditingFlex && !_isSearchOpen){
+                    <TopBarButton Click="GoToEditFlex" ResourceTag="Action.EditListFlex" IconCssClass="fa-solid fa-pen" />
+                }                
+                @if(CanCreate && !_isEditingFlex)
                 {
                     <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus" />
                 }
             </TopBarButtons>
             <TopBarExtraButtons>
-                @foreach (var btn in ListViewModel.Buttons)
+                @foreach (var btn in ExtraButtons)
                 {
                     <TopBarButton Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" IconCssClass="@btn.IconClass" />
                 }
             </TopBarExtraButtons>
         </SetTopBar>
+    }
+}
+
+@code{
+    
+    private async Task OpenModalFilter()
+    {
+        if(FieldsHidden.Any()){
+            string resourceTitle = await UtilManager.GetResource("Action.AddFilter");
+            List<FieldOptions> modalFields = FieldsHidden.Clone();
+            modalFields.ForEach(x => x.Hidden = !x.Hidden);
+            await dialogService.ShowCustomDialog(ds =>
+                @<div>
+                    <AddFilter Fields="@modalFields" OnchageFields="@OnchageFields"/>
+                </div>,
+                title: resourceTitle
+            );   
+        }
+    }
+
+    public void OnchageFields(List<FieldOptions> returnFields)
+    {
+        UpdateSearchForm(returnFields);
+        StateHasChanged();
+    }
+
+    public async Task OnReadySearchForm(FreeForm formInstance)
+    {
+        if(SavedHiddenFields != null && SavedHiddenFields.Any())
+        {
+            await UpdateSearchForm(SavedHiddenFields, false, formInstance);
+            StateHasChanged();
+        }
+    }
+    
+    public async Task<bool> ConfirmDelete(){
+
+        var result = false;
+
+        var dialog = await dialogService.ShowCustomDialog(ds =>
+            @<ConfirmDelete DialogService=@ds />
+        );
+
+        if(dialog){
+            result = true;
+        }else{
+            result = false;
+        }
+
+        return result;
+    }
+
+    public bool GetValueCheck(dynamic data){
+        var r = false;
+        /*if(SelectedObjects != null){
+            Type dataType = data.GetType();
+            var dynamicData = Convert.ChangeType(data, dataType);
+            r = SelectedObjects.Any(x => x.Rowid == dynamicData.Rowid);            
+        }*/
+        return SelectedObjects != null && SelectedObjects.Any(x => x.Rowid == data.Rowid);
     }
 }

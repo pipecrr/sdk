@@ -5,6 +5,7 @@
 @using Siesa.SDK.Shared.Backend
 @using Siesa.SDK.Frontend.Components.Layout.Menu
 @using Siesa.SDK.Shared.Services
+@using Siesa.Global.Enums
 @inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavigationManager
 @using Siesa.SDK.Frontend.Services
@@ -25,7 +26,7 @@
         <i class="fa-solid fa-angles-right font_size_112"></i>
     </div>
     <div class="nav_btn_standar_text">
-        <ResourceViewer ResourceTag="Menu.SDK.NavMenu.Collapse" />
+        <ResourceViewer ResourceTag="Custom.Menu.Collapse" />
     </div>
 </label>
 <nav class="menu_content">
@@ -111,11 +112,13 @@
             {
                 ResourceTag = "BLUser.EditProfile",
                 Url = $"/BLUser/edit/{AuthenticationService.User.Rowid}/",
+                Type = MenuType.CustomMenu
             });
             ProfileMenu.SubMenus.Add(new E00061_Menu()
             {
                 ResourceTag = "BLUser.Logout",
-                Url = "/logout"
+                Url = "logout",
+                Type = MenuType.CustomMenu
             });
             if(MenuService.Menus.Count == 0)
             {

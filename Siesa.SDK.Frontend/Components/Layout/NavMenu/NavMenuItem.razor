@@ -4,7 +4,7 @@
 @inject IResourceManager ResourceManager
 @inject IAuthenticationService AuthenticationService
 @using Siesa.SDK.Shared.Utilities
-@using Siesa.SDK.Entities.Enums
+@using Siesa.Global.Enums
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
 @inject IFeaturePermissionService FeaturePermissionService
@@ -35,11 +35,11 @@
 }else{
     @if(MenuItem.Type == MenuType.Separator)
     {
-        @* <DxMenuItem CssClass="separator" /> *@
+       <hr class="m-0 sdk_separator"> 
     }else{
-        @if(MenuItem.Feature != null)
+        @if(MenuItem.Feature != null && MenuItem.Type == MenuType.Feature && string.IsNullOrEmpty(MenuItem.Url))
         {
-            @if(FeaturePermissionService.CheckUserActionPermission(MenuItem.Feature.Rowid, 4, AuthenticationService))
+            @if(FeaturePermissionService.CheckUserActionPermission(MenuItem.Feature.BusinessName, 4, AuthenticationService))
             {
                 <a href="@MenuItem.CurrentURL" @attributes="@menuItemAttributes" @onmouseover="MouseOver" @onmouseout="MouseOut" @onclick:stopPropagation="true" @onclick="()=> OnClickItem(MenuItem)"  @onclick:preventDefault  class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
                     title="@Title" data-automation-id="@GetAutomationId()">
@@ -53,7 +53,6 @@
                     </div>
                     <div class="nav_btn_standar_text nav_btn_external" hidden="@(!ShowIconExternal)"  @onclick:stopPropagation="true"  @onclick="()=> OnClickItem(MenuItem, true)"  @onclick:preventDefault ><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
                 </a>
-
             }
 
         }else{
@@ -161,9 +160,20 @@
 
     protected override string GetAutomationId()
     {
-        if(string.IsNullOrEmpty(AutomationId))
+        if(!string.IsNullOrEmpty(AutomationId))
         {
-            AutomationId = Title;
+            if (MenuItem != null && MenuItem.Level > 1 && OnClick.Target != null)
+            {
+                var ParentMenu =  OnClick.Target.GetType().GetProperty("MainItem").GetValue(OnClick.Target);
+                if (ParentMenu != null)
+                {
+                    var ParentMenuName = ParentMenu.GetType().GetProperty("CurrentText").GetValue(ParentMenu);
+                    if (!string.IsNullOrEmpty(ParentMenuName.ToString()))
+                    {
+                        AutomationId = $"{ParentMenuName}_SubMenu_{Title}";
+                    }
+                }
+            }
         }
         return base.GetAutomationId();
     }

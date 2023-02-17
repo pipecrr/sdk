@@ -1,4 +1,5 @@
 ﻿@using SDK.Components.Visualization
+@using Siesa.SDK.Components.Visualization
 @using Siesa.SDK.Frontend.Components.Fields
 @using Siesa.SDK.Frontend.Components.FormManager.Fields
 @using System;
@@ -6,6 +7,7 @@
 @using Siesa.SDK.Frontend.Application
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Frontend.Components.Visualization
 @inject IResourceManager ResourceManager
 @inject IAuthenticationService AuthenticationService
 @inject SDKNotificationService Notification
@@ -15,9 +17,15 @@
 @if (Loading == true)
 {
     <ResourceViewer ResourceTag="Custom.Generic.Loading" />
-} else if (Panels == null || Panels.Count <= 0)
+}
+else if(!string.IsNullOrEmpty(ErrorMsg))
 {
-    <ResourceViewer ResourceTag="Module.SDK.ViewdefNotFound" />
+    <ErrorsContainer ErrorMsg="@ErrorMsg"/>
+}
+else if (Panels == null || Panels.Count <= 0)
+{
+    <ResourceViewer ResourceTag="Custom.Formview.NotDefinition" />
+        @* <label>@((MarkupString)ErrorMsg)</label> *@
 } else if (BusinessObj.BaseObj != null)
 {
     @if(IsSubpanel && ShowTitle){        
@@ -26,6 +34,7 @@
         <hr />
     }
     <CascadingValue Value="@this">
+       <ErrorsContainer ErrorMsg="@ErrorMsg" EditFormContext="@EditFormContext" />
     <EditForm id="@FormID"
               OnValidSubmit="@HandleValidSubmit"
               OnInvalidSubmit="@HandleInvalidSubmit"
@@ -56,11 +65,6 @@
 
             }
         </DxFormLayout>
-        @* <ValidationSummary /> *@
-        @if(!string.IsNullOrEmpty(ErrorMsg))
-        {
-            <label>@((MarkupString)ErrorMsg)</label>
-        }
     </EditForm>
     </CascadingValue>
     @if(IsSubpanel && ShowButtons){
@@ -69,11 +73,11 @@
             {
                 <SDKButton RenderStyle="@btn.RenderStyle"  Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag"  />
             }
-            @if(ShowSaveButton){
-                <SDKButton form="@FormID" RenderStyle="SDKButtonRenderStyle.Primary" SubmitFormOnClick="true" ResourceTag="Action.Save"/>
-            }
             @if(ShowCancelButton){
                 <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" Click="@((args) => {CancelButton();})" ResourceTag="Action.Cancel" />
+            }
+            @if(ShowSaveButton){
+                <SDKButton form="@FormID" RenderStyle="SDKButtonRenderStyle.Primary" SubmitFormOnClick="true" ResourceTag="Action.Save"/>
             }
         </div>
     }

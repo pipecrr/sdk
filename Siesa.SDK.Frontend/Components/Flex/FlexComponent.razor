@@ -1,16 +1,20 @@
 @inject IJSRuntime JSRuntime
 @inject NavigationManager Navigation
+@inject NavigationService NavigationService
 @inject Radzen.DialogService dialogService
 @using Siesa.SDK.Frontend.Components.Layout
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Frontend.Components.FormManager.Views
 @using Siesa.SDK.Frontend.Components.FormManager.Model
+@using Newtonsoft.Json;
 @inject UtilsManager UtilsManager
 @implements IDisposable
 
 <div @attributes="@FlexAttributes">
 </div>
 
+@if(!IsListView)
+{    
 <PageTitle>Flex</PageTitle>
 <SetTopBar>
     <TopBarTitle>Flex</TopBarTitle>
@@ -21,7 +25,7 @@
             <TopBarButton ResourceTag="Action.Flex.ExportToExcel" IconCssClass="fa-solid fa-file-excel" Click="ExportToExcel" />
             <TopBarButton ResourceTag="Action.Flex.Configure" IconCssClass="fa-solid fa-cog" Click="Configure" />
             <TopBarButton ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus" Click="GoToCreate"  />
-            <TopBarButton ResourceTag="Action.Modify" IconCssClass="fa-solid fa-pen" Click="GoToEdit"  />
+            <TopBarButton ResourceTag="Action.Edit" IconCssClass="fa-solid fa-pen" Click="GoToEdit"  />
             <TopBarButton ResourceTag="Action.List"  IconCssClass="fa-solid fa-list" Click="GoToList" />
             <TopBarButton ResourceTag="Action.Delete" IconCssClass="fa-solid fa-trash-can" Click="OnClickDelete" />
         }else{
@@ -33,11 +37,42 @@
         
     </TopBarButtons>
 </SetTopBar>
-
+}
 @code {
     [Parameter]
     public dynamic Business {get;set;}
-    
+    [Parameter]
+    public bool IsListView {get;set;} = false;
+    [Parameter]
+    public string BlNameList {get;set;} = "";
+    [Parameter]
+    public string ViewdefName {get;set;} = "";
+    [Parameter]
+    public ListView ListView {get;set;}
+    [Parameter]
+    public string GuidListView {get;set;} = "";
+    [Parameter]
+    public bool CanEdit {get;set;}
+    [Parameter]
+    public bool CanDelete {get;set;}
+    [Parameter]
+    public bool EditingFlex {get;set;} = false;
+    [Parameter]
+    public int Take {get;set;} = 100;
+    [Parameter]  
+    public bool ServerPagination {get;set;} = false;
+    [Parameter]
+    public string FilterSearch {get;set;} = "";
+    [Parameter]
+    public string GuidFlex {get;set;} = "";
+    [Parameter]
+    public List<string> ActionIcons {get;set;} = new List<string>();
+
+    [Parameter]
+    public bool HasSearch {get;set;} = false;  
+    [Parameter]
+    public bool IsMultiple {get;set;} = false;
+    private string _guid ="";
     private bool _isDebug = false;
 
     private bool _isDetail = false;
@@ -53,49 +88,131 @@
 
     private IJSObjectReference _jsModule;
 
+    private bool _isMounted = false;
+
     private void Init()
     {
-        Navigation.TryGetQueryString("sdk_debug",out string SDKDebugVar);
-        if(!string.IsNullOrEmpty(SDKDebugVar))
-        {
-            _isDebug = true;
+        bool MountFlex = false;
+        if(!IsListView){            
+            Navigation.TryGetQueryString("sdk_debug",out string SDKDebugVar);
+            if(!string.IsNullOrEmpty(SDKDebugVar))
+            {
+                if(!_isDebug)
+                {
+                    MountFlex = true;
+                }
+                _isDebug = true;
+            }            
+
+            Navigation.TryGetQueryString("currentView",out string SDKCurrentView);
+            
+            if(string.IsNullOrEmpty(SDKCurrentView))
+            {
+                SDKCurrentView = "create";
+            }
+
+            if(SDKCurrentView != _currentView)
+            {
+                MountFlex = true;
+                _currentView = SDKCurrentView;
+            }
+
+            if(_currentView == "detail")
+            {
+                if(!_isDetail)
+                {
+                    MountFlex = true;
+                }
+                _isDetail = true;
+            }
+
+            Navigation.TryGetQueryString("flexRowid",out string SDKFlexRowIdVar);
+            if(!string.IsNullOrEmpty(SDKFlexRowIdVar))
+            {
+                if(int.Parse(SDKFlexRowIdVar) != _flexRowId)
+                {
+                    MountFlex = true;
+                }
+                _flexRowId = int.Parse(SDKFlexRowIdVar);
+            }  
+        }else{
+            Navigation.TryGetQueryString("sdk_debug",out string SDKDebugVar);
+            if(!string.IsNullOrEmpty(SDKDebugVar))
+            {
+                if(!_isDebug)
+                {
+                    MountFlex = true;
+                }
+                _isDebug = true;
+            }
+            _currentView = "detail";
         }
+
         //_isDebug = true;
 
-        Navigation.TryGetQueryString("currentView",out _currentView);
-        if(string.IsNullOrEmpty(_currentView))
-        {
-            _currentView = "create";
-        }else if(_currentView == "detail")
-        {
-            _isDetail = true;
+        if(EditingFlex){
+            _currentView = "edit";
         }
+        var actionIconsString = JsonConvert.SerializeObject(ActionIcons);
 
-        Navigation.TryGetQueryString("flexRowid",out string SDKFlexRowIdVar);
-        if(!string.IsNullOrEmpty(SDKFlexRowIdVar))
-        {
-            _flexRowId = int.Parse(SDKFlexRowIdVar);
-        }  
         FlexAttributes.Clear();
         flexElementId = "flexdebug";//$"flex_{Guid.NewGuid().ToString()}";
         FlexAttributes.Add("id", flexElementId);
         FlexAttributes.Add("class", "root_oreports");
         FlexAttributes.Add("current_view", _currentView);
+        FlexAttributes.Add("is_list_view", IsListView.ToString());
+        FlexAttributes.Add("bl_name_list", BlNameList);
+        FlexAttributes.Add("has_search", HasSearch.ToString());
+        FlexAttributes.Add("viewdef_name", ViewdefName);
+        FlexAttributes.Add("guid_list_view", GuidListView);
+        FlexAttributes.Add("can_edit_list_view", CanEdit.ToString());
+        FlexAttributes.Add("can_delete_list_view", CanDelete.ToString());
+        FlexAttributes.Add("editing_flex", EditingFlex.ToString());
+        FlexAttributes.Add("take", Take.ToString());
+        FlexAttributes.Add("server_pagination", ServerPagination.ToString());
+        FlexAttributes.Add("filter_search", FilterSearch);
+        FlexAttributes.Add("guid", _guid);
+        FlexAttributes.Add("action_icons", actionIconsString);
+        FlexAttributes.Add("is_multiple", IsMultiple.ToString());
         if(_flexRowId != 0)
         {
             FlexAttributes.Add("base_obj_id", _flexRowId);
-        }        
+        }
 
         StateHasChanged();
+        if(MountFlex || !_isMounted)
+        {
+            if(_jsModule == null){
+                _ = InvokeAsync(async () => {
+                    await Task.Delay(250);
+                    JSRuntime.InvokeAsync<object>("window.MountFlex", flexElementId);
+                    if(IsListView){
+                        JSRuntime.InvokeVoidAsync("window.ListViewInstance", DotNetObjectReference.Create(ListView), GuidListView);
+                    }
+                });
+            }else{
+                
+                JSRuntime.InvokeAsync<object>("window.MountFlex", flexElementId);
+                if(IsListView){
+                    JSRuntime.InvokeVoidAsync("window.ListViewInstance", DotNetObjectReference.Create(ListView), GuidListView);
+                }
+            }
+            _isMounted = true;
+        }
 
-        JSRuntime.InvokeAsync<object>("window.MountFlex", flexElementId);
 
     }
 
     protected override async Task OnInitializedAsync()
     {
         //Init();
-        UtilsManager.GetResourceByContainId();
+        if(String.IsNullOrEmpty(GuidListView))
+        {
+            _guid = Guid.NewGuid().ToString();
+        }else{
+            _guid = GuidListView;
+        }
+
         await base.OnInitializedAsync();
     }
 
@@ -119,47 +236,48 @@
 
     void AddGraphic()
     {
-        JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.toggleChartsModal");
+        JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+_guid+".props.toggleChartsModal");
     }
 
     void Configure()
     {
-        JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.toggleConfigModal");
+        Guid guid = Guid.NewGuid();
+        JSRuntime.InvokeVoidAsync("oreports_app_flexdebug_"+_guid+".props.toggleConfigModal", guid.ToString());
     }
 
     void SaveAndContinue()
     {
-        JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.save");
+        JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+_guid+".props.save");
     }
 
     void SaveAndClose()
     {
-        JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.save", true);
+        JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+_guid+".props.save", true);
     }
 
     void RefreshData()
     {
-        JSRuntime.InvokeAsync<object>("oreports_app_flexdebug.props.fetchPreviewData");
+        JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+_guid+".props.fetchPreviewData");
     }
 
     void ExportToExcel()
     {
-        JSRuntime.InvokeAsync<object>("oreports_app_table_flexdebug.dataGridRef.instance.exportToExcel", false);
+        JSRuntime.InvokeAsync<object>("oreports_app_table_flexdebug_"+_guid+".dataGridRef.instance.exportToExcel", false);
     }
 
     void GoToCreate()
     {
-        Navigation.NavigateTo($"/{_blName}/create/");
+        NavigationService.NavigateTo($"/{_blName}/create/");
     }
 
     void GoToEdit()
     {
-        Navigation.NavigateTo($"/{_blName}/edit/{_flexRowId}/");
+        NavigationService.NavigateTo($"/{_blName}/edit/{_flexRowId}/");
     }
 
     void GoToList()
     {
-        Navigation.NavigateTo($"/{_blName}/");
+        NavigationService.NavigateTo($"/{_blName}/");
     }
 
     async Task OnClickDelete()
@@ -170,7 +288,7 @@
         if(dialog != null && dialog == true){
             Business.BaseObj.Rowid = _flexRowId;
             await Business.DeleteAsync();
-            Navigation.NavigateTo($"/{_blName}/");
+            NavigationService.NavigateTo($"/{_blName}/");
         }
         //StateHasChanged();
     }

@@ -1,0 +1,45 @@
+@using Siesa.SDK.Frontend.Services
+@inject SDKGlobalLoaderService SDKGlobalLoaderService
+
+@if(Show)
+{
+    <div class="loader_container">
+        <div class="loader_box">
+            <span class="loader"></span>
+        </div>
+        <p class="p-3 text-white"><ResourceViewer ResourceTag="@MessageResourceTag" /></p>
+    </div>
+}
+
+@code {
+    private bool Show { get; set; }
+    private string DefaultMessageResourceTag = "Custom.Generic.Loading";
+    private string MessageResourceTag { get; set; }
+    protected override void OnInitialized()
+    {
+        SDKGlobalLoaderService.SetRef(this);
+    }
+
+    public void ShowLoader(string messageResourceTag = "")
+    {
+        Show = true;
+        if (!string.IsNullOrEmpty(messageResourceTag))
+        {
+            MessageResourceTag = messageResourceTag;
+        }
+        else
+        {
+            MessageResourceTag = DefaultMessageResourceTag;
+        }
+        StateHasChanged();
+    }
+
+    public void HideLoader()
+    {
+        Show = false;
+        MessageResourceTag = DefaultMessageResourceTag;
+        StateHasChanged();
+    }
+
+
+}

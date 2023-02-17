@@ -1,0 +1,208 @@
+@using Microsoft.AspNetCore.Components;
+@using Siesa.SDK.Shared.DTOS;
+@using Newtonsoft.Json;
+@using Siesa.SDK.Shared.Services;
+@using Siesa.SDK.Frontend.Components.Visualization;
+
+@inject UtilsManager UtilManager
+@inject IJSRuntime JSRuntime
+@inject IAuthenticationService AuthenticationService
+@inject IBackendRouterService BackendRouterService
+
+<div class="sdk-file-field" id="@Id">
+    @if(HasValue){
+        <SDKImageViewer Url="@UrlFile" Type="@TypeFile" Height="@HeightView"></SDKImageViewer>
+    }else{
+        <SDKImageViewer Type="@TypeFile"></SDKImageViewer>
+    }
+    @if(string.IsNullOrEmpty(View) || !View.Equals("DetailView")){
+        <RadzenUpload 
+            Url="@Url" 
+            class="@GetCssClass()" 
+            ChooseText="@ResourceChooseText"
+            Accept="@Accept"
+            Progress="@SDKProgress"
+            Complete="@SDKComplete"
+            Change="@SDKChange"
+            Auto="@Auto"
+            @ref="sdkUpload"
+            Disabled="@Disabled"
+            Error="@SDKError"
+        >
+        </RadzenUpload>
+        @if(ChildContent != null)
+        {
+            @ChildContent
+        }
+    }
+</div>
+
+@code {
+    [JsonIgnore]
+    [Parameter] public dynamic Business { get; set; }
+    [Parameter]public string StyleCss {get; set;}
+    [Parameter]public List<string> Extensions {get; set;} = new List<string>(){"image/*"};
+    [Parameter]public bool Disabled {get; set;}
+    [Parameter]public bool Auto {get; set;} = false;
+    [Parameter]public string FieldName {get; set;}
+    [Parameter] public Action<SDKUploadProgressArgsDTO> Progress {get;set;}
+    [Parameter] public Action<SDKUploadCompleteEventArgsDTO> Complete {get;set;}
+    [Parameter] public Action<SDKUploadChangeEventArgsDTO> Change {get;set;}
+    [Parameter] public Action<SDKUploadErrorEventArgsDTO> Error {get;set;}
+    [Parameter] public string UploadMethodName {get;set;} = "UploadSingle";
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string View { get; set; }
+    [Parameter] public string HeightView { get; set; } = "100px";
+
+    private bool HasValue {get; set;} = false;
+    private int RowidAttachmentDetail {get; set;}
+    private string ResourceChooseText {get; set;}
+    private string UrlFile {get; set;}
+
+    private SDKTypeFile TypeFile {get; set;} = SDKTypeFile.Image;
+
+    string _Id;
+    string Id
+    {
+        get
+        {
+            if (_Id == null)
+            {
+                _Id = $"{Guid.NewGuid()}";
+            }
+
+            return _Id;
+        }
+    }
+    
+    private string Url {get; set;}
+    private string Accept = "";
+    [JsonIgnore]
+    RadzenUpload sdkUpload;
+    protected override async Task OnInitializedAsync(){
+        ResourceChooseText = "Custom.SDKUpload.Choose";
+        ResourceChooseText = await UtilManager.GetResource("Custom.SDKUpload.Choose");        
+
+        //check if business has a property named "BLName"
+        if(Business != null && Business.GetType().GetProperty("BLName") != null){
+            Url = "api/"+Business.BLName+"/"+UploadMethodName;
+        }else if(Business != null && Business.GetType().GetProperty("BusinessName") != null){
+            Url = "api/"+Business.BusinessName+"/"+UploadMethodName;
+        }
+
+        var fieldField = "Rowid"+FieldName;
+        var parameter = Business.BaseObj.GetType().GetProperty("Description");
+        if(parameter != null){
+            var value = parameter.GetValue(Business.BaseObj);
+            //TODO: corregir cuando tenga el campo attatchment detail
+            if(value != null){
+                var isNum = Int32.TryParse(value.ToString(), out int n);
+                if(isNum){
+                    RowidAttachmentDetail = Int32.Parse(value.ToString());
+                    var response = await Business.Backend.Call("DownloadFileByRowid", RowidAttachmentDetail);
+                    if(response.Success){
+                        UrlFile = $"data:{response.Data.FileType};base64, {response.Data.FileBase64}";
+                        TypeFile = response.Data.FileType.Contains("image") ? SDKTypeFile.Image : SDKTypeFile.Other;
+                        HasValue = true;
+                    }
+                }
+            }
+        }
+        base.OnInitialized();
+    }
+
+    private string GetCssClass(){
+        var result = $"{StyleCss}";
+        if(this.ChildContent != null)
+        {
+            return $"{result} d-none";
+        }
+        return result;
+    }
+
+    protected override void OnParametersSet(){
+        if (Extensions != null){
+            Accept = string.Join(", ", Extensions);
+        }
+    }
+
+    public async Task Upload(){
+        await sdkUpload.Upload();        
+    }
+
+    public async Task OpenFileSelector(){
+        try
+        {
+            var elementInstance = await JSRuntime.InvokeAsync<IJSObjectReference>("document.getElementById", Id);
+            var querySelector = await elementInstance.InvokeAsync<IJSObjectReference>("querySelector", "input[type=file]");
+            await querySelector.InvokeVoidAsync("click");
+            
+        }
+        catch (System.Exception)
+        {
+            
+        }
+    }
+
+    private async Task SDKComplete(UploadCompleteEventArgs args){
+        if(Complete != null){            
+            SDKUploadCompleteEventArgsDTO sDKUploadCompleteEventArgsDTO = new SDKUploadCompleteEventArgsDTO();
+            sDKUploadCompleteEventArgsDTO.JsonResponse = args.JsonResponse;
+            sDKUploadCompleteEventArgsDTO.RawResponse = args.RawResponse;
+            sDKUploadCompleteEventArgsDTO.Cancelled = args.Cancelled;
+
+            Complete(sDKUploadCompleteEventArgsDTO);
+        }
+    }
+
+    private async Task SDKProgress(UploadProgressArgs args){
+        if(Progress != null){
+            SDKUploadProgressArgsDTO sDKUploadProgressArgsDTO = new SDKUploadProgressArgsDTO();
+            sDKUploadProgressArgsDTO.Loaded = args.Loaded;
+            sDKUploadProgressArgsDTO.Total = args.Total;
+            sDKUploadProgressArgsDTO.Progress = args.Progress;
+            List<SDKFileInfoDTO> files = new List<SDKFileInfoDTO>();
+            foreach (FileInfo item in args.Files){
+                SDKFileInfoDTO fileInfoDTO = new SDKFileInfoDTO();
+                fileInfoDTO.Name = item.Name;
+                fileInfoDTO.Size = item.Size;
+                files.Add(fileInfoDTO);
+            }
+            sDKUploadProgressArgsDTO.Files = files;
+            sDKUploadProgressArgsDTO.Cancel = args.Cancel;
+
+            Progress(sDKUploadProgressArgsDTO);
+        }
+    }
+
+    private async Task SDKChange(UploadChangeEventArgs args){
+        if(args.Files.Count() > 0 || string.IsNullOrEmpty(UrlFile)){
+            HasValue = false;
+        }else{
+            HasValue = true;
+        }
+
+        if(Change != null){
+            SDKUploadChangeEventArgsDTO sDKUploadChangeEventArgsDTO = new SDKUploadChangeEventArgsDTO();
+            List<SDKFileInfoDTO> files = new List<SDKFileInfoDTO>();
+            foreach (FileInfo item in args.Files){
+                SDKFileInfoDTO fileInfoDTO = new SDKFileInfoDTO();
+                fileInfoDTO.Name = item.Name;
+                fileInfoDTO.Size = item.Size;
+                files.Add(fileInfoDTO);
+            }
+            sDKUploadChangeEventArgsDTO.Files = files;
+            Change(sDKUploadChangeEventArgsDTO);
+
+        }
+    }
+
+    private async Task SDKError(UploadErrorEventArgs args){
+        if(Error != null){
+            SDKUploadErrorEventArgsDTO sDKUploadErrorEventArgsDTO = new SDKUploadErrorEventArgsDTO();
+            sDKUploadErrorEventArgsDTO.Message = args.Message;
+            Error(sDKUploadErrorEventArgsDTO);
+        }
+    }
+
+}

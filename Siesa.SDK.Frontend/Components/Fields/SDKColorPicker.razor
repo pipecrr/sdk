@@ -4,6 +4,8 @@
     ShowColors="@ShowColors"
     ShowHSV="@ShowHSV"
     ShowRGBA="@ShowRGBA"
+    Style="@GetCss()"
+    Disabled="@Disabled"
     />
 
 @code {
@@ -21,5 +23,33 @@
 
     [Parameter]
     public bool ShowRGBA { get; set; }
+
+    [Parameter]
+    public string CssClass { get; set; }
+
+    [Parameter]
+    public bool FullWidth { get; set; } = false;
+
+    private string GetCss(){
+        
+        if (string.IsNullOrEmpty(CssClass) && FullWidth)
+        {
+            return "width: 100%;";
+        }
+        else if (string.IsNullOrEmpty(CssClass) && !FullWidth)
+        {
+            return "";
+        }
+        else if (!string.IsNullOrEmpty(CssClass) && FullWidth)
+        {
+            return $"width: 100% {CssClass}";
+        }
+        else
+        {
+            return CssClass;
+        }
+    }
     
+    [Parameter]
+    public bool Disabled { get; set; }
 }

@@ -4,7 +4,19 @@
 
 @foreach (var message in ValidationMessages)
 {
-    <div class="@Class">
-        <ResourceViewer ResourceTag="@message" DefaultRowidCulture=1 />
-    </div>
+    var messageSplit = message.Split("//");
+        if (messageSplit.Count() > 1)
+        {
+            var ResourceTag = messageSplit[0];
+            //var FieldEntity = messageSplit[1];
+            messageSplit = messageSplit.Skip(1).ToArray();
+            <div class="@Class">
+                <ResourceViewer ResourceTag="@ResourceTag" DefaultRowidCulture=1 FormatString="@messageSplit" />
+            </div>
+        }else
+        {
+            <div class="@Class">
+                <ResourceViewer ResourceTag="@message" DefaultRowidCulture=1 />
+            </div>
+        }
 }

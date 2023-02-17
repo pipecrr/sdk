@@ -12,8 +12,9 @@
     [Parameter] public Int64 RowidCulture { get; set; }
 
     [Parameter] public Int64 DefaultRowidCulture { get; set; }
-
+    [Parameter] public object[] FormatString { get; set; } = null;
     private string Text { get; set; }
+    private string Resource { get; set; }
 
     private async Task<string> GetText(){
         if(DefaultRowidCulture != 0  && RowidCulture == 0 && (AuthenticationService.User == null || AuthenticationService.GetRoiwdCulture() == 0)){
@@ -25,7 +26,7 @@
                 return await ResourceManager.GetResource(ResourceTag, RowidCulture);
             }else{
                 return await ResourceManager.GetResource(ResourceTag, AuthenticationService);
-            }
+            }   
         }
         if(RowidResource != 0 && RowidResource != null){
             if(RowidCulture != 0 && (AuthenticationService == null || AuthenticationService.User == null || AuthenticationService.GetRoiwdCulture() == 0)){
@@ -37,11 +38,27 @@
         return Text;
     }
 
+    private async Task<string> StringFormat(string text){
+        if(FormatString != null){
+
+            var FormatTag = await ResourceManager.GetResource(FormatString[0].ToString(), AuthenticationService);
+            FormatString[0] = FormatTag;
+     
+            return String.Format(text, FormatString);
+        }
+        return "";
+    }
+
     protected override async Task OnInitializedAsync()
     {
         Text = ResourceTag;
         await base.OnInitializedAsync();
         Text = await GetText();
+        Resource = await StringFormat(Text);
+        if (!string.IsNullOrEmpty(Resource))
+        {
+            Text = Resource;
+        }
     }
 
     protected override async Task OnParametersSetAsync()
@@ -49,6 +66,11 @@
         Text = ResourceTag;
         await base.OnParametersSetAsync();
         Text = await GetText();
+        Resource = await StringFormat(Text);
+        if (!string.IsNullOrEmpty(Resource))
+        {
+            Text = Resource;
+        }
     }
 }
 

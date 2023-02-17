@@ -13,38 +13,20 @@ namespace Siesa.SDK.Frontend.Services
 {
     public class FeaturePermissionService : IFeaturePermissionService
     {
-        // private readonly IAuthenticationService _authenticationService;
-        // private readonly ILocalStorageService _localStorageService;
-        protected IBackendRouterService _BackendRouter {get; set;}
-
-        public FeaturePermissionService(IBackendRouterService backendRouterService)
+        public bool CheckUserActionPermission(string businessName, int actionRowid, IAuthenticationService authenticationService)
         {
-            _BackendRouter = backendRouterService;
-            // _authenticationService = authenticationService;
-            // _localStorageService = localStorageService;
-        }
-        private Dictionary<string, int> BLNameToRowid { get; set; } = new Dictionary<string, int>();
-
-        public bool CheckUserActionPermission(int rowidFeature, int actionRowid, IAuthenticationService authenticationService)
-        {
-            return Utilities.CheckUserActionPermission(rowidFeature, actionRowid, authenticationService);
+            return Utilities.CheckUserActionPermission(businessName, actionRowid, authenticationService);
         }
 
-        public async Task<bool> CheckUserActionPermission(string featureBLName, int actionRowid, IAuthenticationService authenticationService)
-        {
-            return true; //TODO: Para el review
-            if (!BLNameToRowid.ContainsKey(featureBLName))
-            {
-                var backend = _BackendRouter.GetSDKBusinessModel("BLFeature", authenticationService);
-                var request = await backend.Call("GetFeatureRowid", featureBLName);
-                if(request.Success)
-                {
-                    BLNameToRowid[featureBLName] = request.Data;
-                }else{
-                    return false;
+        public bool CheckUserActionPermissions(string businessName, List<int> permissions, IAuthenticationService authenticationService){
+            var result = false;
+            foreach(var item in permissions){
+                result = CheckUserActionPermission(businessName, item, authenticationService);
+                if(!result){
+                    break;
                 }
             }
-            return Utilities.CheckUserActionPermission(BLNameToRowid[featureBLName], actionRowid, authenticationService); 
+            return result;
         }
     }
 }

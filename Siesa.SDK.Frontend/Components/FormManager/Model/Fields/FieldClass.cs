@@ -72,6 +72,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         [CascadingParameter] EditContext EditFormContext { get; set; }
         [CascadingParameter] FormView formView { get; set; }
 
+        public string ViewdefName { get => formView.ViewdefName; }
+
         protected async Task Init()
         {
             BindProperty = BindModel.GetType().GetProperty(FieldName);
@@ -107,7 +109,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             {
                 IsRequired = false;
             }
-            //TODO: Optimizar, el parametro deberia entrar por parametro y no consultar la entidad por cada campo
+            //TODO: Optimizar, el parametro deberia entrar por parametro y no consultar la entidad por cada campo            
             var entityAttributes = BindModel.GetType().GetCustomAttributes();
             foreach (var attr in entityAttributes)
             {

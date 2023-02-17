@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 
 
+
 namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 {
     public class FieldObj
@@ -33,7 +34,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         public ICollection<Type> Generics {get; set;} = new List<Type>();
     }
 
-    public class FieldOptions
+    public class FieldOptions: ICloneable
     {
         public string Name { get; set; }
         public string PropertyName { get; set; }
@@ -92,12 +93,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             }
             return fieldObj;
         }
+        public RelatedParams  RelatedParams { get; set; }
 
         private List<Type> SupportedTypes = new List<Type>(){
             typeof(SwitchField),
             typeof(SelectBarField<>),
             typeof(TextField),
-            typeof(EmailField)
+            typeof(EmailField),
+            typeof(RadioButtonField<>)
         };
 
         private FieldObj InitField(object modelObj)
@@ -123,22 +126,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             else
             {             
                 //Split Name
-                string[] fieldPath = Name.Split('.');
-                //loop through the path
-                object currentObject = modelObj;
-                for (int i = 0; i < (fieldPath.Length - 1); i++)
-                {
-                    var tmpType = currentObject.GetType();
-                    var tmpProperty = tmpType.GetProperty(fieldPath[i]);
-                    var tmpValue = tmpProperty.GetValue(currentObject, null);
-                    var isEntity = Utilities.IsAssignableToGenericType(tmpProperty.PropertyType, typeof(BaseSDK<>));
-                    if (tmpValue == null && isEntity)
-                    {
-                        tmpValue = Activator.CreateInstance(tmpProperty.PropertyType);
-                        tmpProperty.SetValue(currentObject, tmpValue);
-                    }
-                    currentObject = tmpValue;
-                }
+                string[] fieldPath = Name.Split('.');                
+                object currentObject = Utilities.CreateCurrentData(modelObj, fieldPath, typeof(BaseSDK<>));
                 field.ModelObj = currentObject;
                 field.Name = fieldPath[fieldPath.Length - 1];
                 PropertyName = fieldPath[fieldPath.Length - 1];
@@ -211,7 +200,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                         var exists = field.ModelObj.GetType().GetProperty($"Rowid{field.Name}");
                         if(exists != null)
                         {
-                            EntityRowidField = $"Rowid{field.Name}";
+                            if(field.UnknownFieldType.Equals("E00271_AttachmentDetail")){
+                                FieldType = FieldTypes.FileField;
+                                field.FieldType = FieldTypes.FileField;
+                                field.UnknownFieldType = null;
+                            }else{
+                                EntityRowidField = $"Rowid{field.Name}";
+                            }
                         }
                     }
                 }
@@ -244,6 +239,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             field.FieldType = FieldType;
             field.IsNullable = IsNullable;
             return field;
+        }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
         }
     }
 

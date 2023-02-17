@@ -1,0 +1,27 @@
+
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Fields
+
+<div class="container-fluid">
+    <div class="row p-3">
+        <div class="col-12"><h2>SDKApiMethod</h2></div>
+        <div class="col-12"><p>Demonstration and configuration of the SDKApiMethod</p></div> 
+    </div>
+    <div class="row px-3 mt-3"> 
+        <div class="col-md-6 p-3 ">
+                <h5><strong>Este atributo se utiliza para indicar que un método es un método de API.</strong></h5>
+                <SDKCard>
+                    <p>En el BLFrontendSimple, vemos un ejemplo de como utilizarlo:</p>
+                    
+                     <SDKFileViewer type="SDKTypeFile.Image" url="_content/Siesa.SDK.Frontend/images/SDKApiMethod.png" />  
+              
+                    <p>Esta DataAnnotation por defecto es un metodo tipo GET, 
+                    pero tambien se le puede indicar por parametro si necesitamos un metodo tipo POST, 
+                    como se muestra en el ejemplo anterior.</p>
+                </SDKCard>
+        </div>
+    </div>
+</div>
+
+
+

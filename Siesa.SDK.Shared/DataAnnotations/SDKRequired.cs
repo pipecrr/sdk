@@ -14,5 +14,15 @@ namespace Siesa.SDK.Shared.DataAnnotations
         {
             this.ErrorMessage = "Custom.Validator.FieldRequired";
         }
+
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            ValidationResult validationResult = base.IsValid(value, validationContext);
+            if (validationResult == ValidationResult.Success)
+            {
+                return validationResult;
+            }
+            return new ValidationResult($"{validationResult.ErrorMessage}//{validationContext.ObjectType.Name}.{ validationContext.MemberName }", new string[1] { validationContext.MemberName });
+        }
     }
 }

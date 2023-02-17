@@ -14,6 +14,7 @@
 @inject IJSRuntime JSRuntime
 @inject NavigationService NavigationService
 @inject SDKDialogService SDKDialogService
+@inject SDKNotificationService SDKNotificationService
 
 @if(AuthenticationService.GetSelectedConnection() != null && AuthenticationService.GetSelectedConnection().Rowid != 0)
 {
@@ -32,77 +33,65 @@
 
 <RadzenDialog />
 <NotificationServiceSDK />
+<SDKGlobalLoader />
 
-
-@if(IsEmptyLayout)
-{
-    <ErrorBoundary @ref="errorBoundary">
-        <ChildContent>
-            <CascadingValue Value="@this">
-                <div class="main">    
-                    <div>
-                        @Body
-                    </div>
-                </div>
-            </CascadingValue>
-        </ChildContent> 
-        <ErrorContent Context="Exception" >
-            <SDKError CurrentException="@Exception" Error="@errorBoundary" IsEmptyLayout="true" />
-        </ErrorContent>
-    </ErrorBoundary>
-}else{
-    <DxGridLayout>
-        <Rows>
-            <DxGridLayoutRow Height="auto" />
-            <DxGridLayoutRow />
-        </Rows>
-        <Columns>
-            <DxGridLayoutColumn />
-        </Columns>
-        <Items>
-            <DxGridLayoutItem Row="0" Column="0">
-                <Template>
+<DxGridLayout>
+    <Rows>
+        <DxGridLayoutRow Height="auto" />
+        <DxGridLayoutRow />
+    </Rows>
+    <Columns>
+        <DxGridLayoutColumn />
+    </Columns>
+    <Items>
+        <DxGridLayoutItem Row="0" Column="0">
+            <Template>
+                @if(!IsEmptyLayout)
+                {
                     <SDKHeader />
-                </Template>
-            </DxGridLayoutItem>
-            <DxGridLayoutItem Row="1" Column="0">
-                <Template>
-                    <div class="sdk_nav">
+                }
+            </Template>
+        </DxGridLayoutItem>
+        <DxGridLayoutItem Row="1" Column="0">
+            <Template>
+                <div class="@GetCssNav()">
+                    @if(!IsEmptyLayout)
+                    {
                         <NavMenu ShowMenu="@showNavMenu" />
-                            <ErrorBoundary @ref="errorBoundary">
-                                <ChildContent> 
-                                <aside class="col-12 sdk_home_content">
-                                    <div
-                                        class="@GetCssBody()">
-
+                    }
+                    <ErrorBoundary @ref="errorBoundary">
+                        <ChildContent> 
+                            <aside class="@GetCssAside()">
+                                <div
+                                    class="@GetCssBody()">
+                                    @if(!IsEmptyLayout)
+                                    {
                                         <BreadCrumb />
-                                        <CascadingValue Value="@this">
-                                            @if(IsDefaultArea)
+                                    }
+                                    <CascadingValue Value="@this">
+                                        <div class="@GetCssMainArea()">
+                                            @if(!IsEmptyLayout)
                                             {
-                                                <div class="col-12 area2 px-3">
-                                                    <TopBar />
-                                                    <div class="col-12 px-0 py-3">
-                                                        @Body
-                                                    </div>
-                                                </div>
-                                            }else{
-                                                @Body
+                                                <TopBar />
                                             }
-                                        </CascadingValue>
-                                    </div>
-                                </aside>
-                                </ChildContent> 
-                                <ErrorContent Context="Exception" >
-                                    <SDKError CurrentException="@Exception" Error="@errorBoundary" />
-                                </ErrorContent>
-                        </ErrorBoundary>
-                    </div>
+                                            <div class="@GetCssInternalArea()">
+                                                @Body
+                                            </div>
+                                        </div>
+                                    </CascadingValue>
+                                </div>
+                            </aside>
+                        </ChildContent> 
+                        <ErrorContent Context="Exception" >
+                            <SDKError CurrentException="@Exception" Error="@errorBoundary" />
+                        </ErrorContent>
+                    </ErrorBoundary>
+                </div>
+            </Template>
+        </DxGridLayoutItem>
+    </Items>
+</DxGridLayout>
 
-                </Template>
-            </DxGridLayoutItem>
-        </Items>
-    </DxGridLayout>
-}
 
 <SDKGoTop />
 @code {
@@ -247,6 +236,10 @@
 
     private string GetCssBody()
     {
+        if(IsEmptyLayout)
+        {
+            return "";
+        }
         var xxl_offset = "offset-xxl-1";
         var xxl = "col-xxl-10";
 
@@ -258,7 +251,63 @@
 
         return $"offset-lg-0 col-lg-12 offset-xl-0 col-xl-12 {xxl_offset} {xxl} px-0 px-md";
     }
-     
+
+    private string GetCssNav()
+    {
+        if(IsEmptyLayout)
+        {
+            return "";
+        }
+
+        return "sdk_nav";
+    }
+
+    private string GetCssAside()
+    {
+        if(IsEmptyLayout)
+        {
+            return "";
+        }
+
+        return "col-12 sdk_home_content";
+    }
+
+    private string GetCssMainArea()
+    {
+        if(IsEmptyLayout || !IsDefaultArea)
+        {
+            return "";
+        }
+
+        return "col-12 area2 px-3";
+    }
+
+    private string GetCssInternalArea()
+    {
+        if(IsEmptyLayout || !IsDefaultArea)
+        {
+            return "";
+        }
+
+        return "col-12 px-0 py-3";
+    }
 
 
+    
+    [JSInvokable]
+    public async Task ShowError(string msg, object?[] variables = null){
+        await SDKNotificationService.ShowError(msg, variables);
+    }
+
+    [JSInvokable]
+    public async Task ShowSuccess(string msg, object?[] variables = null){
+        await SDKNotificationService.ShowSuccess(msg, variables);
+    }
+
+
+    [JSInvokable]
+    public void NavigateTo(string url)
+    {
+        NavigationService.NavigateTo(url);
+    }
 }

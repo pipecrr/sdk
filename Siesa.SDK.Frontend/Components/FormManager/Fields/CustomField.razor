@@ -55,10 +55,12 @@
         SetParameters();
     }
 
-    @* protected override void OnParametersSet()
+    protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        SetParameters();
-    } *@
+        if(!string.IsNullOrEmpty(FieldOpt.CustomType)){
+            SetParameters();
+        }
+    }
 }
 

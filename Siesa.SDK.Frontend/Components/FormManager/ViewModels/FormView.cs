@@ -13,6 +13,11 @@ using System.Linq;
 using Siesa.SDK.Frontend.Utils;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Frontend.Services;
+using Siesa.SDK.Frontend.Application;
+using Siesa.SDK.Frontend.Components.Fields;
+using Siesa.SDK.Shared.DTOS;
+using Siesa.SDK.Frontend.Components.FormManager.Fields;
+using Siesa.SDK.Frontend.Extension;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 {
@@ -34,13 +39,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         [Inject] protected IAuthenticationService AuthenticationService { get; set; }
 
+        [Inject] public SDKGlobalLoaderService GlobalLoaderService { get; set; }
+
         protected FormViewModel FormViewModel { get; set; } = new FormViewModel();
 
-        protected List<Panel> Panels {get { return FormViewModel.Panels; } }
+        public List<Panel> Panels {get { return FormViewModel.Panels; } }
 
         public Boolean Loading = true;
         public bool Saving = false;
-
+        public bool SavingFile { get; set; } = false;
         public String ErrorMsg = "";
         [Parameter]
         public string FormID { get; set; } = Guid.NewGuid().ToString();
@@ -76,34 +83,36 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Inject] 
         public IFeaturePermissionService FeaturePermissionService { get; set; }
 
+        [Inject]
+        public IResourceManager ResourceManager { get; set; }
+
         protected bool CanCreate;
         protected bool CanEdit;
         protected bool CanDelete;
         protected bool CanDetail;
         protected bool CanList;
-
         public bool FormHasErrors = false;
 
+        public Dictionary<string, FileField> FileFields = new Dictionary<string, FileField>();
+        public SDKFileUploadDTO DataAttatchmentDetail { get; set; }
         protected virtual async Task CheckPermissions()
         {
-            if (FeaturePermissionService != null)
+            if (FeaturePermissionService != null && !String.IsNullOrEmpty(BusinessName))
             {
                 try
                 {
-                    CanList = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 4, AuthenticationService);
-                    CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 1, AuthenticationService);
-                    CanEdit = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 2, AuthenticationService);
-                    CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 3, AuthenticationService);
-                    CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 5, AuthenticationService);
+                    CanList = FeaturePermissionService.CheckUserActionPermission(BusinessName, 4, AuthenticationService);
+                    CanCreate = FeaturePermissionService.CheckUserActionPermission(BusinessName, 1, AuthenticationService);
+                    CanEdit = FeaturePermissionService.CheckUserActionPermission(BusinessName, 2, AuthenticationService);
+                    CanDelete = FeaturePermissionService.CheckUserActionPermission(BusinessName, 3, AuthenticationService);
+                    CanDetail = FeaturePermissionService.CheckUserActionPermission(BusinessName, 5, AuthenticationService);
                 }
                 catch (System.Exception)
                 {
                 }
             }
-
         }
-
-
+        
         private string GetViewdef(string businessName)
         {
             if (String.IsNullOrEmpty(ViewdefName))
@@ -170,7 +179,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             var metadata = GetViewdef(bName);
             if (metadata == null || metadata == "")
             {
-                ErrorMsg = $"No hay definición para la vista {_viewdefName}";
+                //string ErrorTag = await ResourceManager.GetResource("Custom.Formview.NotDefinition", AuthenticationService.GetRoiwdCulture());
+                ErrorMsg = $"Custom.Generic.ViewdefNotFound";
             }
             else
             {
@@ -308,51 +318,79 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            await InitView();
+            //await InitView();
         }
 
         public override async Task SetParametersAsync(ParameterView parameters)
         {
-            bool changeViewContext = false;
-            if (parameters.TryGetValue<DynamicViewType>(nameof(ViewContext), out var value2))
-            {
-                if (value2 != null && value2 != ViewContext)
-                {
-                    changeViewContext = true;
-                }
-            }
-            await base.SetParametersAsync(parameters);
-            if (parameters.TryGetValue<string>(nameof(BusinessName), out var value))
-            {
-                if (value != null && value != BusinessName)
-                {
-                    Loading = false;
-                    ErrorMsg = "";
-                    await InitView(value);
-                }
-            }
+            bool changeViewContext = parameters.DidParameterChange(nameof(ViewContext), ViewContext);
+            bool changeBusinessName = parameters.DidParameterChange(nameof(BusinessName), BusinessName);
 
-            if(changeViewContext)
+            await base.SetParametersAsync(parameters);
+
+            if(changeViewContext || changeBusinessName)
             {
                 Loading = false;
                 ErrorMsg = "";
                 await InitView();
             }
+        }
+        public void OnError(SDKUploadErrorEventArgsDTO args){
+			var error = args.Message;
+			SavingFile = false;
+		}
 
-            
-            
+        public async Task<int> savingAttachment(FileField fileField){
+            SavingFile = true;
+            await fileField.Upload();
+            var horaInicio = DateTime.Now.Minute;
+            while(SavingFile){
+                await Task.Delay(100);
+                if (DateTime.Now.Minute - horaInicio >= 2){
+                    throw new Exception("Timeout");
+                }
+            }
+            if(DataAttatchmentDetail != null){
+                var result = await BusinessObj.SaveAttachmentDetail(DataAttatchmentDetail);
+                return result;
+            }
+            return 0;
+        }
+
+        public void OnComplete(SDKUploadCompleteEventArgsDTO args){
+            var response  = JsonConvert.DeserializeObject<dynamic>(args.RawResponse);
+			var data = response.data;
+            if(data != null){
+                DataAttatchmentDetail = JsonConvert.DeserializeObject<SDKFileUploadDTO>(data.ToString());
+            }
+			SavingFile = false;
         }
         private async Task SaveBusiness()
         {
             Saving = true;
-            StateHasChanged();
             //var id = await BusinessObj.SaveAsync();
+            //fielFields is empty
+            if(FileFields.Count>0){
+                foreach (var item in FileFields)
+                {
+                    var fileField = item.Value;
+
+                    var rowidAttatchment = await savingAttachment(fileField);
+                    if(rowidAttatchment > 0){
+                        var field = "Description";//item.Key;
+                        var property = BusinessObj.BaseObj.GetType().GetProperty(field);
+                        property.SetValue(BusinessObj.BaseObj, rowidAttatchment.ToString());
+                    }
+                }
+            }
             var result = await BusinessObj.ValidateAndSaveAsync();
+
+            GlobalLoaderService.Hide();
             Saving = false;
             ErrorMsg = string.Empty;
             if (result.Errors.Count > 0)
             {
-                ErrorMsg = "<ul>";
+                //ErrorMsg = "<ul>";
                 Type editFormCurrentType = EditFormContext.Model.GetType();
                 foreach (var error in result.Errors)
                 {
@@ -389,12 +427,13 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
                     
 
 
-                    ErrorMsg += $"<li>";
-                    ErrorMsg += !string.IsNullOrWhiteSpace(error.Attribute) ?  $"{error.Attribute} - " : string.Empty;
-                    ErrorMsg += error.Message.Replace("\n", "<br />");
-                    ErrorMsg += $"</li>";
+                    // ErrorMsg += $"<li>";
+                    // ErrorMsg += !string.IsNullOrWhiteSpace(error.Attribute) ?  $"{error.Attribute} - " : string.Empty;
+                    // string ErrorTag = await ResourceManager.GetResource(error.Message, AuthenticationService.GetRoiwdCulture());
+                    // ErrorMsg += ErrorTag;//error.Message.Replace("\n", "<br />");
+                    // ErrorMsg += $"</li>";
                 }
-                ErrorMsg += "</ul>";
+                //ErrorMsg += "</ul>";
                 EditFormContext.NotifyValidationStateChanged();
 
 
@@ -406,6 +445,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
                 if(OnSave != null){
                     OnSave(id);
                 }
+                StateHasChanged();
             }else{
                 NavigationService.RemoveCurrentItem();
                 NavManager.NavigateTo($"{BusinessName}/detail/{id}/");
@@ -423,6 +463,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
         {
             FormHasErrors = false;
             ErrorMsg = "";
+            GlobalLoaderService.Show();
             await SaveBusiness();
         }
         protected void HandleInvalidSubmit()

@@ -1,22 +1,20 @@
 using System;
+using System.Collections.Generic;
 
 namespace Siesa.SDK.Shared.DataAnnotations
 {
     [AttributeUsage(AttributeTargets.Method)]
     public class SDKExposedMethod : Attribute
     {
-        //List of fields
-        public string TableName { get; set; }
 
-        //Constructor
-        public SDKExposedMethod(string table_name)
+        public int[] Permissions { get; set; }
+        public SDKExposedMethod(int[] Permissions)
         {
-            TableName = table_name;
+            this.Permissions = Permissions;
         }
-
         public SDKExposedMethod()
         {
-            TableName = "";
+            Permissions = new int[] {};
         }
     }
 }

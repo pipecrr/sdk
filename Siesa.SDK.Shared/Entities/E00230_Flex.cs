@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Siesa.SDK.Shared.Json;
 using Microsoft.EntityFrameworkCore;
-using Siesa.SDK.Entities.Enums;
+using Siesa.Global.Enums;
 
 
 namespace Siesa.SDK.Entities
@@ -22,7 +22,7 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public override int Rowid { get; set; }
 
-		[Required]
+		[SDKRequired]
 		[StringLength(250)]
 		public string Name { get; set; }
 

@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Siesa.SDK.Shared.Json;
 using Microsoft.EntityFrameworkCore;
-using Siesa.SDK.Entities.Enums;
+using Siesa.Global.Enums;
 
 
 namespace Siesa.SDK.Entities
@@ -47,8 +47,8 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public DateTime PasswordLastUpdate { get; set; }
 
-		[ForeignKey("UserAccountPolicy")]
-		public int? RowidUserAccountPolicy { get; set; }
+		// [ForeignKey("UserAccountPolicy")]
+		// public int? RowidUserAccountPolicy { get; set; }
 
 		[Required]
 		public bool ChangePasswordFirstLogin { get; set; }
@@ -124,8 +124,8 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public virtual E00021_Culture Culture { get; set; }
 
-		[SDKCheckRelationship]
-		public virtual E00223_UserAccountPolicy UserAccountPolicy { get; set; }
+		// [SDKCheckRelationship]
+		// public virtual E00223_UserAccountPolicy UserAccountPolicy { get; set; }
 
 	}
 }

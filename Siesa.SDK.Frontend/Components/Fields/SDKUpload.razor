@@ -5,12 +5,27 @@
 
 @inject UtilsManager UtilManager
 @inject IAuthenticationService AuthenticationService
+@inject IJSRuntime JSRuntime
 
-<div class="sdk-upload">   
-<RadzenUpload Url="@Url" class="@StyleCss" ChooseText="@ResourceChooseText"
-Accept="@Accept" Progress="@SDKProgress" Complete="@SDKComplete" Change="@SDKChange" Auto="false" @ref="sdkUpload" Disabled="@Disabled" Error="@SDKError"> 
-<RadzenUploadHeader Name="X-Auth-Token" Value="@AuthenticationService.UserToken"></RadzenUploadHeader>
-</RadzenUpload >
+<div class="sdk-upload" id="@Id">
+    <RadzenUpload 
+        Url="@Url" 
+        class="@GetCssClass()" 
+        ChooseText="@ResourceChooseText"
+        Accept="@Accept"
+        Progress="@SDKProgress"
+        Complete="@SDKComplete"
+        Change="@SDKChange"
+        Auto="@Auto"
+        @ref="sdkUpload"
+        Disabled="@Disabled"
+        Error="@SDKError"
+    >
+    </RadzenUpload>
+    @if(ChildContent != null)
+    {
+        @ChildContent
+    }
 </div>
 
 @code {
@@ -19,12 +34,29 @@ Accept="@Accept" Progress="@SDKProgress" Complete="@SDKComplete" Change="@SDKCha
     [Parameter]public string StyleCss {get; set;}
     [Parameter]public List<string> Extensions {get; set;}
     [Parameter]public bool Disabled {get; set;}
+    [Parameter]public bool Auto {get; set;} = false;
     [Parameter]public string FieldName {get; set;}
     [Parameter] public Action<SDKUploadProgressArgsDTO> Progress {get;set;}
     [Parameter] public Action<SDKUploadCompleteEventArgsDTO> Complete {get;set;}
     [Parameter] public Action<SDKUploadChangeEventArgsDTO> Change {get;set;}
     [Parameter] public Action<SDKUploadErrorEventArgsDTO> Error {get;set;}
+    [Parameter] public string UploadMethodName {get;set;} = "UploadSingle";
+    [Parameter] public RenderFragment? ChildContent { get; set; }
     private string ResourceChooseText {get; set;}
+
+    string _Id;
+    string Id
+    {
+        get
+        {
+            if (_Id == null)
+            {
+                _Id = $"{Guid.NewGuid()}";
+            }
+
+            return _Id;
+        }
+    }
     
     private string Url {get; set;}
     private string Accept = "";
@@ -33,12 +65,27 @@ Accept="@Accept" Progress="@SDKProgress" Complete="@SDKComplete" Change="@SDKCha
     protected override async Task OnInitializedAsync(){
         ResourceChooseText = "Custom.SDKUpload.Choose";
         ResourceChooseText = await UtilManager.GetResource("Custom.SDKUpload.Choose");
-        Url = "api/"+Business.BLName+"/UploadSingle";
         if(Business != null && !string.IsNullOrEmpty(FieldName)){
             Business.GetType().GetProperty(FieldName).SetValue(Business, this);
         }
 
+        //check if business has a property named "BLName"
+        if(Business != null && Business.GetType().GetProperty("BLName") != null){
+            Url = "api/"+Business.BLName+"/"+UploadMethodName;
+        }else if(Business != null && Business.GetType().GetProperty("BusinessName") != null){
+            Url = "api/"+Business.BusinessName+"/"+UploadMethodName;
+        }
+
         base.OnInitialized();
+    }
+
+    private string GetCssClass(){
+        var result = $"{StyleCss}";
+        if(this.ChildContent != null)
+        {
+            return $"{result} d-none";
+        }
+        return result;
     }
 
     protected override void OnParametersSet(){
@@ -49,6 +96,20 @@ Accept="@Accept" Progress="@SDKProgress" Complete="@SDKComplete" Change="@SDKCha
 
     public async Task Upload(){
         await sdkUpload.Upload();        
+    }
+
+    public async Task OpenFileSelector(){
+        try
+        {
+            var elementInstance = await JSRuntime.InvokeAsync<IJSObjectReference>("document.getElementById", Id);
+            var querySelector = await elementInstance.InvokeAsync<IJSObjectReference>("querySelector", "input[type=file]");
+            await querySelector.InvokeVoidAsync("click");
+            
+        }
+        catch (System.Exception)
+        {
+            
+        }
     }
 
     private async Task SDKComplete(UploadCompleteEventArgs args){

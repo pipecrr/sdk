@@ -38,9 +38,10 @@ export function checkAndRenewToken(dotnethelper) {
     
 } 
 
-export function InitSDK(dotnethelper){
+export async function InitSDK(dotnethelper){
     document.onmousemove = resetTimeDelay;
     document.onkeypress = resetTimeDelay;
+    window.SDKDotNetHelper = dotnethelper;
 
     function resetTimeDelay() {
         //save the last time the user interacted with the page
@@ -71,6 +72,70 @@ export function InitSDK(dotnethelper){
     // //save the guid in session storage
     // sessionStorage.setItem('guid', tab_guid);
     checkAndRenewToken(dotnethelper);
+
+    // dispatch event
+    var event = new CustomEvent('sdkinit', { detail: { dotnethelper: dotnethelper } });
+    document.dispatchEvent(event);
+    
+    var bd = localStorage.getItem('bd');
+    if (bd == null || bd != 'sync'){
+        var response = await getResouces();
+        if(response.data.Data){
+            var data = response.data.Data;
+            const db = await new Dexie("IndexDb").open();
+            var Cultures = data.Cultures;
+            db.table("Cultures").clear();
+            db.table("Cultures").bulkPut(Cultures);
+            var Resources = data.Resources;
+            db.table("Resources").clear();
+            db.table("Resources").bulkPut(Resources);
+            var ResourcesDetail = data.ResourcesDetail;
+            db.table("ResourcesDetail").clear();
+            db.table("ResourcesDetail").bulkPut(ResourcesDetail);
+
+            let culture = {};
+            if(!window.sdkFlexCulture){
+                window.sdkFlexCulture = Cultures[0];
+                culture = Cultures[0];
+            }else{
+                culture = window.sdkFlexCulture;
+            }                       
+            var rowidCulture = culture.id; 
+            var resourcesDetail = ResourcesDetail.filter(x => x.CultureId == culture.Id).map(x => {return {[x.idResource]:x.description}})
+            if(!window.ResourceFlex){
+                window.ResourceFlex = {};
+                if(!window.ResourceFlex[rowidCulture]){
+                    window.ResourceFlex[rowidCulture] = resourcesDetail;
+                }else{
+                    window.ResourceFlex[rowidCulture] = {...window.ResourceFlex[rowidCulture], ...resourcesDetail};
+                }
+            }else{
+                if(!window.ResourceFlex[rowidCulture]){
+                    window.ResourceFlex[rowidCulture] = resourcesDetail;
+                }else{
+                    window.ResourceFlex[rowidCulture] = {...window.ResourceFlex[rowidCulture], ...resourcesDetail};
+                }
+            }
+            db.close();
+        }
+        localStorage.setItem('bd', 'sync');        
+    }
+}
+
+async function getResouces() {
+    
+    return await fetch('/api/BLResource/GetAllResourcesForIndexedDB/', {
+        method: 'GET',
+        credentials: "same-origin",
+        headers: {
+          "Accept": "application/json",
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      }).then(res => {
+        return res.json();
+      }).catch(err => {
+        console.log(err);
+    });
 }
 
 window.addEventListener('storage', function(event){
@@ -79,10 +144,10 @@ window.addEventListener('storage', function(event){
             window.location.href = '/login';
         }
         
-        // if(event.oldValue != null && event.oldValue != event.newValue){
-        //     //reload page
-        //     window.location.reload();
-        // }
+        if(event.oldValue != event.newValue && window.location.pathname == '/login'){
+            // reload page
+            window.location.reload();
+        }
     }
 });
 
@@ -105,3 +170,24 @@ window.addEventListener('beforeunload', function (e) {
         
     }
 });
+
+(() => {
+    var search = window.location.search;
+    var params = search.substring(1,search.length).split('&');
+    var sdk_debug = params.find(x => x == 'sdk_debug=1');
+    //sdk_debug = true;
+    if(sdk_debug){
+        loadScript("http://127.0.0.1:3000/static/js/bundle.js");
+        loadScript("http://127.0.0.1:3000/static/js/0.chunk.js");
+        loadScript("http://127.0.0.1:3000/static/js/1.chunk.js");
+        loadScript("http://127.0.0.1:3000/static/js/main.chunk.js");
+    }else{
+        loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/2.css?v=20230213');
+        loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/main.css?v=20230213');
+
+        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/2.chunk.js?v=20230213");
+        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/main.chunk.js?v=20230213");
+        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/runtime-main.js?v=20230213");
+    }
+    loadScript("/_content/Siesa.SDK.Frontend/vendor/dexie/dexie.js");
+})();

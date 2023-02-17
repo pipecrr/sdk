@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Siesa.SDK.Frontend.Components.Fields
 {
-    public partial class SDKSelectBar<ItemType> : ComponentBase
+    public partial class SDKSelectBar<ItemType> : SDKComponent
     {
 
         [Parameter] public IEnumerable<SelectBarItemWrap<ItemType>> Data { get; set; }

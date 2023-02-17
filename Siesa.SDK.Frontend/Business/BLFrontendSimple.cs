@@ -23,6 +23,7 @@ using Siesa.SDK.Shared.DataAnnotations;
 using Siesa.SDK.Shared.DTOS;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Siesa.SDK.Business
 {
@@ -318,7 +319,7 @@ namespace Siesa.SDK.Business
                 var result = await Backend.GetData(skip, take, filter, orderBy);
 
                 response.Data = result.Data.Select(x => JsonConvert.DeserializeObject<T>(x)).ToList();
-                response.TotalCount = result.TotalCount;
+                response.TotalCount = result.Data.Count;
                 response.GroupCount = result.GroupCount;
 
                 return response;
@@ -422,12 +423,23 @@ namespace Siesa.SDK.Business
             if(response.Success){
                 result.Url = response.Data.Url;
                 result.FileType = file.ContentType;
-                result.FileName = response.Data.FileName;
+                result.FileName = file.FileName;
             }else{
                 var errors = JsonConvert.DeserializeObject<List<string>> (response.Errors.ToString());
                 throw new ArgumentException(errors[0]);
             }
             return result;
+        }
+
+        public async Task<int> SaveAttachmentDetail(SDKFileUploadDTO obj){
+            var BLAttatchmentDetail = GetBackend("BLAttachmentDetail");
+            var result = await BLAttatchmentDetail.Call("SaveAttatchmentDetail", obj);
+            if(result.Success){
+                return result.Data;
+            }else{
+                var errors = JsonConvert.DeserializeObject<List<string>> (result.Errors.ToString());
+                throw new ArgumentException(errors[0]);
+            }
         }
     }
 }

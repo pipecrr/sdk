@@ -15,7 +15,7 @@ using Siesa.SDK.Shared.Services;
 using Microsoft.EntityFrameworkCore.Utilities;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
-using Siesa.SDK.Entities.Enums;
+using Siesa.Global.Enums;
 using Siesa.SDK.Shared.Utilities;
 //using System.Linq.Dynamic.Core;
 

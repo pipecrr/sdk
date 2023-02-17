@@ -13,8 +13,7 @@
     Data="@Data" 
     TItem="@TItem" 
     IsLoading="@Loading"
-    Count="@Count"
-    Columns="@Columns"
+    Count="@Count"    
     LoadData="@LoadData"
     AllowVirtualization="@AllowVirtualization"
     ShowPagingSummary="@ShowPagingSummary"
@@ -52,6 +51,7 @@
     LessThanOrEqualsText="Menor o igual que"
     EnumFilterSelectText="Seleccione"
     PagingSummaryFormat="Página {0} de {1} ({2} registros)"
+    AllowRowSelectOnRowClick="AllowRowSelectOnRowClick"
     @ref="_grid">
     <EmptyTemplate>
         @if(EmptyTemplate != null){
@@ -63,6 +63,18 @@
             </div>
         }
     </EmptyTemplate>
+    <Columns>
+        @if(ShowRadioButtons){
+            <SDKGridColumn TItem="TItem" Width="50px">
+                <Template Context="Data">
+                    <div class="d-flex justify-content-center" data-automation-id="SDKGridRadioButton_CheckItem">
+                        <input type="radio" Value="@(Value != null && Value.Contains(Data))" checked="@check(Data)">
+                    </div>
+                </Template>
+            </SDKGridColumn>
+        }
+        @Columns
+    </Columns>
 </RadzenDataGrid>
 
 @if (CardView)
@@ -103,6 +115,8 @@
 }
 
 @code {
+    [Parameter] public bool AllowRowSelectOnRowClick { get; set; } = false;
+    [Parameter] public bool ShowRadioButtons { get; set; }
     [Parameter] public RenderFragment? EmptyTemplate { get; set; }
     [Parameter] public RenderFragment? Columns { get; set; }
     [Parameter] public bool AllowFiltering { get; set; }
@@ -119,17 +133,21 @@
     [Parameter] public SDKSelectionMode SelectionMode {get; set;}
     [Parameter] public IList<TItem> Value {get; set;} 
     [Parameter] public EventCallback<IList<TItem>> ValueChanged {get; set;}
-
+    [Parameter] public Action<TItem> OnChangeSelect {get; set;}
+    
     [Parameter] public bool CardView {get; set;} = false;
 
     [Parameter] public bool AllowVirtualization {get; set;}
     [Parameter] public bool AllowColumnResize  {get; set;}
 
     private RadzenDataGrid<TItem> _grid;
-
+    
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
+        if(ShowRadioButtons){
+            AllowRowSelectOnRowClick = true;
+        }
         if (Data != null && !LoadData.HasDelegate)
         {
             Count = Data.Count();
@@ -156,6 +174,18 @@
     public void Reload()
     {
         _grid.Reload();
+    }
+
+    private bool check(TItem item){
+        if(Value.Count == 0){
+            return false;
+        }        
+        if(Value[0].Equals(item)){
+            OnChangeSelect?.Invoke(item);
+            return true;
+        }else{
+            return false;
+        }
     }
 
 }

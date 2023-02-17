@@ -1,10 +1,14 @@
 ﻿@using Siesa.SDK.Frontend.Components.Fields
 @using System.Linq.Expressions
+@using Siesa.SDK.Frontend.Application
+@using System.Collections.Generic
+@using System.Linq
 @typeparam TItem
 @inherits FieldClass<TItem>
 @using Siesa.SDK.Shared.Services
 @inject IAuthenticationService AuthenticationService
 @inject IBackendRouterService BackendRouterService
+@inject IResourceManager ResourceManager
 
 <SDKSelectField 
     ItemType="TItem"
@@ -50,10 +54,27 @@
             if(enumValues == null || enumValues.Count == 0){
                 return;
             }
-            Options = enumValues.Select(x => new SDKEnumWrapper<TItem>{
+
+           Options = Enumerable.Empty<SDKEnumWrapper<TItem>>();
+
+            if (ViewdefName == "search")
+            {
+                var SelectAllName = await ResourceManager.GetResource("Custom.Enum.SelectAll", AuthenticationService);
+                Options = Options.Append(new SDKEnumWrapper<TItem>
+                {
+                    Type = (TItem)Enum.Parse(enumType, (enumValues.Select(x => x.Key).Last() + 1).ToString()),
+                    DisplayText = SelectAllName
+                });
+                BindValue = Options.Select(x => x.Type).First();
+            }
+            
+            Options = Options.Concat(enumValues.Select(x => new SDKEnumWrapper<TItem>{
                 Type = (TItem)Enum.Parse(enumType, x.Key.ToString()),
                 DisplayText = x.Value
-            });
+            }));
+
+
+            
             if(_refField != null){
                 _refField.RefreshCurrentText();
             }

@@ -1,3 +1,5 @@
+@inherits SDKComponent
+
 <DxMemo 
     Text="@Value" 
     TextChanged="@ValueChanged" 
@@ -5,6 +7,8 @@
     ReadOnly="@ReadOnly"
     CssClass="@GetCssClass()"
     maxlength = "@MaxLength"
+    data-automation-id="@GetAutomationId()"
+    field-name="@FieldName"
 >
 @ChildContent
 </DxMemo>
@@ -20,6 +24,7 @@
     [Parameter] public string IsPassword { get; set; }
     [Parameter] public string MaxLength { get; set; }
     [Parameter] public string CssClass { get; set; }
+    [Parameter] public string FieldName { get; set; }
 
     private string GetCssClass()
     {
@@ -29,6 +34,15 @@
             cssClass += " invalid";
         }
         return cssClass;
+    }
+
+    protected override string GetAutomationId()
+    {
+        if(string.IsNullOrEmpty(AutomationId))
+        {
+            AutomationId = FieldName;
+        }
+        return base.GetAutomationId();
     }
 
     

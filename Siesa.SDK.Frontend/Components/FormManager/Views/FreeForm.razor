@@ -8,7 +8,7 @@
     <ResourceViewer ResourceTag="Custom.Generic.Loading" />
 }else if (Panels == null || Panels.Count <= 0)
 {
-    <ResourceViewer ResourceTag="Module.SDK.ViewdefNotFound" />
+    <ResourceViewer ResourceTag="Custom.Formview.NotDefinition" />
 }
 else if (BusinessObj != null)
 {
@@ -82,7 +82,7 @@ else if (BusinessObj != null)
 @if(this.SetTopBar)
 {
 
-    <SetTopBar>
+    <SetTopBar BusinessObj="@BusinessObj">
         <TopBarTitle>@Title</TopBarTitle>
         <TopBarButtons>
             @foreach (var btn in FormViewModel.Buttons)

@@ -1,9 +1,13 @@
 @implements IDisposable
 @using Siesa.SDK.Entities
+@using Siesa.SDK.Frontend.Services
+@using Siesa.SDK.Shared.Services
+@using System
 @inject ILayoutService LayoutService
 @inject NavigationManager NavigationManager
-@using Siesa.SDK.Frontend.Services
 @inject MenuService MenuService
+@inject IBackendRouterService BackendRouterService
+@inject IAuthenticationService AuthenticationService
 
 
 <div class="col-12 area1 pb-3 px-0">
@@ -100,9 +104,12 @@
         SearchMenuItem(currentUrl, MenuService.Menus, ref result);
 
         //get the result most close to the current url
-        _selectedMenu = result.OrderByDescending(x => x.CurrentURL.Length).FirstOrDefault();
-        if (_selectedMenu != null)
+        var _newSelectedMenu = result.OrderByDescending(x => x.CurrentURL.Length).FirstOrDefault();
+        if (_newSelectedMenu != null && _newSelectedMenu != _selectedMenu)
         {
+            _selectedMenu = _newSelectedMenu;
+            var BLRecentMenu = BackendRouterService.GetSDKBusinessModel("BLRecentMenu", AuthenticationService);
+            BLRecentMenu.Call("AddRecentMenu",currentUrl,_selectedMenu.Rowid);
             breadcrumb.Clear();
             breadcrumb.Add(_selectedMenu);
             var _parent = _selectedMenu.MenuParent;
@@ -120,8 +127,23 @@
 
     private void OnLocationChanged(object sender, LocationChangedEventArgs e)
     {
-        SetBreadCrum(e.Location);
-        //StateHasChanged();
+
+        string url = e.Location;
+
+        Uri uri = new Uri(url);
+
+        string path = uri.AbsolutePath;
+
+        if (string.IsNullOrEmpty(e.Location) || path == "/" || string.IsNullOrEmpty(path) )
+        {
+            breadcrumb.Clear();
+            _selectedMenu = null;
+            StateHasChanged();
+        }else
+        {
+            SetBreadCrum(e.Location);   
+        }
+
     }
 
     private void SearchMenuItem(string currentUrl, ICollection<E00061_Menu> menus, ref List<E00061_Menu> result, E00061_Menu parent = null)

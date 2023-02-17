@@ -54,16 +54,16 @@
     </div>
     @if (!HiddenCompaies)
     {
-        @if (ShowCompanies)
+        @if (_internalShowCompanies || ShowCompanies)
         {
             <div>
                 <div class="whcm_company_select ">
-                            <select class="form-select form-control form-control-sm font-weight-bold" disabled="@DisableCompanies"
+                            <select class="form-select form-control form-control-sm font-weight-bold" data-automation-id="SDKSelect_CompanySelect"  disabled="@DisableCompanies"
                             id="inputCompany" @onchange="@ChangeCompany">
                                 @foreach (var company in CompaniesList)
                                     {
                                         <option value="@company.Rowid"
-                                        selected="@(company.Rowid == SelectedCompany.Rowid)">@company.ToString()</option>
+                                        selected="@(company.Rowid == SelectedCompany.Rowid)" data-automation-id="SDKSelect_CompanySelect_@company.Rowid">@company.ToString()</option>
                                     }
                             </select>
                 </div>
@@ -87,7 +87,8 @@
 
     private bool ShowMoreOptions = false;
 
-    private bool ShowCompanies { get; set; } = false;
+    [Parameter] public bool ShowCompanies { get; set; } = false;
+    private bool _internalShowCompanies;
 
     public List<E00201_Company> CompaniesList { get; set; } = new List<E00201_Company>();
 
@@ -148,14 +149,14 @@
         {
             if (LayoutService?.BusinessObj?.BaseObj != null && InheritCompany())
             {
-                ShowCompanies = true;
+                _internalShowCompanies = true;
                 if(LayoutService.BusinessObj.BaseObj.RowidCompany != SelectedCompany.Rowid)
                 {
                     SetCompany(SelectedCompany.Rowid, true);
                 }
                 StateHasChanged();
             }else{
-                ShowCompanies = false;
+                _internalShowCompanies = false;
                 StateHasChanged();
             }
         }
@@ -168,6 +169,19 @@
             }else{
 
                 HiddenCompaies = false;
+            }
+
+            StateHasChanged();
+        }
+
+        if(e.PropertyName == nameof(ILayoutService.ShowCompanies))
+        {
+            if(LayoutService?.ShowCompanies == true){
+
+                ShowCompanies = LayoutService.ShowCompanies;
+            }else{
+
+                ShowCompanies = false;
             }
 
             StateHasChanged();
@@ -200,7 +214,7 @@
             e.PropertyName == nameof(ILayoutService.TopBarButtons) || 
             e.PropertyName == nameof(ILayoutService.TopBarExtraButtons) || 
             e.PropertyName == nameof(ILayoutService.StyleName) ||
-            e.PropertyName == nameof(ILayoutService.HasExtraButtons) 
+            e.PropertyName == nameof(ILayoutService.HasExtraButtons)
             ) 
         {
             StateHasChanged();

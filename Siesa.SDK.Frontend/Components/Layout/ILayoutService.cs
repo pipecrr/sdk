@@ -18,6 +18,7 @@ namespace Siesa.SDK.Frontend.Components.Layout
         string StyleName { get; }
         bool HasExtraButtons { get; }
         bool HiddenCompaies { get; }
+        bool ShowCompanies { get; }
         bool DisableCompanies { get; }
         dynamic BusinessObj { get; }
         EventCallback<E00201_Company> OnChangeCompany { get; }

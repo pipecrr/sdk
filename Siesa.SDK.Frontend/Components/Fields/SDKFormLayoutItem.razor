@@ -9,6 +9,7 @@
                 ColSpanXl="@ColSizeXl"
                 ColSpanSm="@ColSizeSm"
                 CaptionCssClass="@CaptionCssClass"
+                CssClass="@GetCssClass()"
                 ColSpanXs="@ColSizeXs">
     <Template>
         @ChildContent
@@ -67,6 +68,19 @@
         }else{
             Label = "";
         }
+    }
+
+    private string GetAutomationId()
+    {
+        if(!string.IsNullOrEmpty(ResourceTag)){
+            return $"{this.GetType().Name}_{ResourceTag}";
+        }
+        return $"{this.GetType().Name}_{Label}";
+    }
+
+    private string GetCssClass()
+    {
+        return GetAutomationId();
     }
     
     

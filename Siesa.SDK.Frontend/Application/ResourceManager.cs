@@ -22,7 +22,6 @@ namespace Siesa.SDK.Frontend.Application
         public Task<Dictionary<string, string>> GetResourceByCulture(int rowidCulture);
         public Task<string> GetEnumValues(string enumName, Int64 cultureRowid, Int64 moduleRowid);
         public Task<Dictionary<byte,string>> GetEnumValues(string enumName, Int64 cultureRowid);
-        public Task GetResourceByContainId(Int64 cultureRowid);
         Dictionary<long, Dictionary<string, string>> GetResourceValuesDict();
     }
     public class ResourceManager: IResourceManager
@@ -41,7 +40,8 @@ namespace Siesa.SDK.Frontend.Application
             Configuration = configuration;
             try
             {
-                var cultureRowid = Convert.ToInt64(Configuration["DefaultRowidCulture"]);
+                var defaultRowidCulture = Configuration["DefaultRowidCulture"] ?? "1";
+                var cultureRowid = Convert.ToInt64(defaultRowidCulture);
                 this.GetAllResources(cultureRowid);
             }
             catch (System.Exception)
@@ -115,6 +115,11 @@ namespace Siesa.SDK.Frontend.Application
         }
         public async Task<string> GetResource(string resourceTag, Int64 cultureRowid)
         {
+            if(resourceTag.StartsWith("SDKDev-"))
+            {
+                //remove SDKDev- prefix
+                return resourceTag.Substring(7);
+            }
             if(!IsInitialized)
             {
                 //wait until initialized is true
@@ -178,27 +183,6 @@ namespace Siesa.SDK.Frontend.Application
                 return request.Data as Dictionary<byte, string>;
             }
             return null;
-        }
-
-        public async Task GetResourceByContainId(long cultureRowid)
-        {
-            var request = await Backend.Call("GetResourcesByContainId", cultureRowid);
-            if(request.Success)
-            {
-                var resources = request.Data as List<Tuple<Int64, string, string>>;
-                if(resources != null)
-                {
-                    if (!resourceValuesDict.ContainsKey(cultureRowid))
-                    {
-                        resourceValuesDict[cultureRowid] = new Dictionary<string, string>();
-                    }
-                    foreach (var resource in resources)
-                    {
-                        resourceValuesDict[cultureRowid][resource.Item2] = resource.Item3;
-                        resourceDict[resource.Item1] = resource.Item2;
-                    }
-                }
-            }
         }
 
         public async Task<Dictionary<string, string>> GetResourceByCulture(int rowidCulture)

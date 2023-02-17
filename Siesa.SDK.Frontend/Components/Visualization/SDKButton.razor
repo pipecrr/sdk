@@ -1,40 +1,45 @@
 @using SDK.Components.Visualization
 @using Siesa.SDK.Frontend.Application
 @using Siesa.SDK.Shared.Services
+@using Microsoft.JSInterop
+@using Microsoft.AspNetCore.Components
 @inject IResourceManager ResourceManager
 @inject IAuthenticationService AuthenticationService
+@inject IFeaturePermissionService FeaturePermissionService
+@inject NavigationManager NavManager
+@inject IJSRuntime JSRuntime
 @inherits SDKComponent
 
-
-<DxButton 
-    RenderStyle="@RenderStyle.Get()" 
-    RenderStyleMode="@RenderStyleMode.Get()" 
-    SubmitFormOnClick="@SubmitFormOnClick"
-    Click="@Click" 
-    Text="@Text" 
-    form="@form"
-    NavigateUrl="@NavigateUrl"
-    CssClass="@GetCss()"
-    Enabled="@Enabled"
-    data-automation-id="@GetAutomationId()"
-    >
-    @if(!string.IsNullOrEmpty(IconCssClass)){
-        <i class="@IconCssClass"></i>
-    }else{
-        @if(ChildContent != null)
-        {
-            @ChildContent
+@if(HasPermission){
+    <DxButton 
+        RenderStyle="@RenderStyle.Get()" 
+        RenderStyleMode="@RenderStyleMode.Get()" 
+        SubmitFormOnClick="@SubmitFormOnClick"
+        Click="@ActionClick" 
+        Text="@Text" 
+        form="@form"
+        NavigateUrl="@NavigateUrl"
+        CssClass="@GetCss()"
+        Enabled="@Enabled"
+        data-automation-id="@GetAutomationId()"
+        title="@Text"
+        >
+        @if(!string.IsNullOrEmpty(IconCssClass)){
+            <i class="@IconCssClass"></i>
         }else{
-            @Text
+            @if(ChildContent != null)
+            {
+                @ChildContent
+            }else{
+                @Text
+            }
         }
-    }
-    </DxButton>
+    </DxButton>    
+}
 
 @code {
     [Parameter] public SDKButtonRenderStyle RenderStyle { get; set; }
     [Parameter] public SDKButtonRenderStyleMode RenderStyleMode { get; set; }
-    [Parameter] public string ResourceTag { get; set; }
-    [Parameter] public Int64? RowidResource { get; set; }
     [Parameter] public EventCallback<MouseEventArgs> Click { get; set; }
     [Parameter] public bool IsActionButton { get; set; }
     [Parameter] public string IconCssClass {get;set;}
@@ -44,30 +49,68 @@
 
     [Parameter] public bool SubmitFormOnClick { get; set; } =  false;
 
+    [Parameter] public List<int> ListPermission { get; set; }
+    [Parameter] public string BusinessName { get; set; }    
+    private bool HasPermission = true;
     private string Text { get; set; }
 
     [Parameter] public string NavigateUrl { get; set; }
     [Parameter] public bool Enabled { get; set; } = true;
     [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string Href { get; set; }
+    [Parameter] public string Target { get; set; }
 
-    private async Task<string> GetText(){
-        if((RowidResource == null || RowidResource == 0) && ResourceTag != null){
-            return await ResourceManager.GetResource(ResourceTag, AuthenticationService);
+
+    private void ActionClick (MouseEventArgs Event)
+    {
+        if (Click.HasDelegate)
+        {
+            Click.InvokeAsync(Event);
+            StateHasChanged();
+        }else if (!string.IsNullOrEmpty(Href))
+        {
+            if (Target == "_blank")
+            {
+                _ = JSRuntime.InvokeVoidAsync("window.open", Href, "_blank");
+            }
+            else
+            {
+                NavManager.NavigateTo(Href);
+            }
         }
-        return await ResourceManager.GetResource(Convert.ToInt64(RowidResource), AuthenticationService);
     }
 
     protected override async Task OnInitializedAsync()
     {
-        if(!IsActionButton)
+        if(ListPermission != null && ListPermission.Count > 0){
+            if(!string.IsNullOrEmpty(BusinessName)){
+                HasPermission = false;
+                HasPermission = FeaturePermissionService.CheckUserActionPermissions(BusinessName, ListPermission, AuthenticationService);
+            }
+        }
+        if(IsActionButton || (string.IsNullOrEmpty(ResourceTag) && (!RowidResource.HasValue || RowidResource == 0)))
         {
+            await base.OnInitializedAsync();
+        }else{
             Text = ResourceTag;
             await base.OnInitializedAsync();
             Text = await GetText();
-        }else{
-            await base.OnInitializedAsync();
+            //StateHasChanged();
         }
     }
+
+    protected override async Task OnParametersSetAsync(){
+        if(IsActionButton || (string.IsNullOrEmpty(ResourceTag) && (!RowidResource.HasValue || RowidResource == 0)))
+        {
+            await base.OnParametersSetAsync();
+        }else{
+            Text = ResourceTag;
+            await base.OnParametersSetAsync();
+            Text = await GetText();
+            //StateHasChanged();
+        }
+    }
+
 
     private string GetCss(){
         if(IsActionButton)
@@ -87,6 +130,9 @@
 
             case SDKButtonRenderStyle.Danger:
                 return $"btn_secondary_danger {CssClass}";
+            
+            case SDKButtonRenderStyle.Link:
+                return $"btn_secondary_link {CssClass}";
 
             default:
                 return CssClass;
