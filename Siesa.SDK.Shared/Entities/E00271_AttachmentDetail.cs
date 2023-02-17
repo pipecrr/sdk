@@ -35,6 +35,8 @@ namespace Siesa.SDK.Entities
 		[StringLength(250)]
 		public string? FileName { get; set; }
 
+		public byte[]? FileInternalAttached { get; set; }
+
 
 		[SDKCheckRelationship]
 		public virtual E00270_Attachment Attachment { get; set; }
