@@ -88,10 +88,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
             typeProperty = BindProperty.PropertyType;
             StateHasChanged();
         }
-        public override async Task SetParametersAsync(ParameterView parameters){
-            await base.SetParametersAsync(parameters);
-        }
-
+        
         protected override async Task OnParametersSetAsync(){
             await base.OnParametersSetAsync();
             if(BaseObj != null){
@@ -176,6 +173,10 @@ namespace Siesa.SDK.Frontend.Components.Fields
         private async Task OnChangeValue(string value)
         {
             Value = value;
+            if(string.IsNullOrEmpty(Value) && !IsMultiple){
+                ItemsSelected.Clear();
+                Values.Clear();
+            }
             if (cancellationTokenSource != null)
             {
                 cancellationTokenSource.Cancel();
