@@ -124,7 +124,14 @@ else
             @if(IsMultiple){
                 <RadzenDataGridColumn TItem="object" Width="50px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" HeaderCssClass="grid-column-action">
                     <HeaderTemplate>
-                        <SDKBooleanField Value="@(SelectedObjects != null && SelectedObjects.Count>0)" Enabled="true" ValueChanged="(value => SelectedObjects = value ? _gridRef.Data.ToList() : null)">
+                        <SDKBooleanField Value="@(SelectedObjects != null && SelectedObjects.Count>0)" Enabled="true" ValueChanged="(value => {
+                            SelectedObjects = value ? _gridRef.Data.ToList() : null;
+                            if(value){
+                                OnSelectionChanged(_gridRef.Data.ToList());
+                            }else{
+                                OnSelectionChanged(SelectedItems);
+                            }
+                            })">
                         </SDKBooleanField>                        
                     </HeaderTemplate>
                     <Template Context="data">
