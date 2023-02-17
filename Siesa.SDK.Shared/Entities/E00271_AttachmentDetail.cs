@@ -7,7 +7,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Siesa.SDK.Shared.Json;
 using Microsoft.EntityFrameworkCore;
-using Siesa.SDK.Entities.Enums;
+using Siesa.Global.Enums;
+
 
 
 namespace Siesa.SDK.Entities
@@ -34,6 +35,8 @@ namespace Siesa.SDK.Entities
 
 		[StringLength(250)]
 		public string? FileName { get; set; }
+
+		public byte[]? FileInternalAttached { get; set; }
 
 
 		[SDKCheckRelationship]
