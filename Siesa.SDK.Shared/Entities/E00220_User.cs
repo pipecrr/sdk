@@ -114,7 +114,8 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public bool IsAdministrator { get; set; }
 
-		public bool? IsVisibilityAdministrator { get; set; }
+		[Required]
+		public bool IsVisibilityAdministrator { get; set; }
 
 
 		[SDKCheckRelationship]
