@@ -114,7 +114,7 @@ namespace Siesa.SDK.Frontend {
 
             app.UseDesigner(config => {
                 //SaveController _saveController = ActivatorUtilities.CreateInstance<SaveController>(serviceScope.ServiceProvider);
-                //config.EnabledDataApi = false;
+                config.EnabledDataApi = false;
                 config.UseCustomStore(resourcesSaveService);
                 DataProviderInfo[] providers = new []{
                     new DataProviderInfo("Siesa.SDK.Business", typeof(SDKReportProvider).AssemblyQualifiedName),

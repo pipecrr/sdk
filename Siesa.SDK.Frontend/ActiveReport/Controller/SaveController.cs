@@ -31,7 +31,6 @@ namespace Siesa.SDK.Frontend.Report.Controllers
             _backendRouterService = backendRouterService;
             _authenticationService = authenticationService;
             _httpContextAccessor = httpContextAccessor;
-           //_authenticationService.SetToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..wq3yYhfdTxMqKuaefQIUfbYUiCgqny-HTa9DErB7Llk");
         }
 
         private async Task _setValidUserToken()
@@ -155,7 +154,7 @@ namespace Siesa.SDK.Frontend.Report.Controllers
 
         public void DeleteReport(string id)
         {
-             ValidateUser();
+            ValidateUser();
             if (!id.StartsWith("temp_"))
             {
                 var BL = _backendRouterService.GetSDKBusinessModel("BLSDKReport", _authenticationService);
