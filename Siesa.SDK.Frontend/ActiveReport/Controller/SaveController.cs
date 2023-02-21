@@ -131,6 +131,7 @@ namespace Siesa.SDK.Frontend.Report.Controllers
                     name = $"temp_{Guid.NewGuid().ToString()}.rdlx";
                 }
                 var result = BL.Call("SaveReport", xmlContent, name, isTemporary).GetAwaiter().GetResult();
+
             }
 
             return name;
@@ -155,13 +156,12 @@ namespace Siesa.SDK.Frontend.Report.Controllers
         public void DeleteReport(string id)
         {
             ValidateUser();
-            if (!id.StartsWith("temp_"))
+            if (id.StartsWith("temp_"))
             {
                 var BL = _backendRouterService.GetSDKBusinessModel("BLSDKReport", _authenticationService);
-
                 if (BL != null)
                 {
-                    var result = BL.Call("DeleteReport", id).GetAwaiter().GetResult();
+                    var result = BL.Call("DeleteReport", id,_authenticationService.User.Rowid).GetAwaiter().GetResult();
                 }
             }
         }
