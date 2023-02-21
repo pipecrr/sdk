@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Siesa.Global.Enums;
 
 
+
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
@@ -33,10 +34,10 @@ namespace Siesa.SDK.Entities
 
 		public int? RowidImage { get; set; }
 
-		[StringLength(6)]
+		[StringLength(7)]
 		public string? HexColor { get; set; }
 
-		[StringLength(80)]
+		[StringLength(250)]
 		public string? IconClass { get; set; }
 
 

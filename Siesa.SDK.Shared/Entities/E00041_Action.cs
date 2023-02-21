@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Siesa.Global.Enums;
 
 
+
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
@@ -27,6 +28,17 @@ namespace Siesa.SDK.Entities
 		[ForeignKey("Resource")]
 		[Required]
 		public int RowidResource { get; set; }
+
+		public short? Priority { get; set; }
+
+		[StringLength(7)]
+		public string? HexColor { get; set; }
+
+		[StringLength(250)]
+		public string? IconClass { get; set; }
+
+		[StringLength(250)]
+		public string? Style { get; set; }
 
 
 		[SDKCheckRelationship]
