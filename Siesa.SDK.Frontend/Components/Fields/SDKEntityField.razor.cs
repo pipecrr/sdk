@@ -105,9 +105,6 @@ namespace Siesa.SDK.Frontend.Components.Fields
         
         protected override async Task OnParametersSetAsync(){
             await base.OnParametersSetAsync();
-            /*if(BaseObj != null){
-                SetVal(BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj));
-            }*/
             await LoadData("", null, true);
         }
 
