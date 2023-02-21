@@ -179,7 +179,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
                     Values.Add(Value);
                     ItemsSelected.Add(item);
                 }
-                rowidLastValue = item.Rowid;
+                rowidLastValue = long.Parse(item.Rowid.ToString());
             }
         }
         
