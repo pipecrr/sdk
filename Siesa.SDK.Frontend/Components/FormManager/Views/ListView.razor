@@ -19,7 +19,7 @@ else if(!string.IsNullOrEmpty(ErrorMsg))
 }
 else
 {
-    @if(IsSubpanel){
+     @if(IsSubpanel){
         UseFlex = false;
     }
     @if(ShowSearchForm && HasSearchViewdef)
@@ -339,6 +339,7 @@ else
     }
 
     @if(ShowList && UseFlex){
+        FilterFlex = GetFilters();
         <FlexComponent IsListView="true" BlNameList="@BusinessName" ViewdefName="@FinalViewdefName" ListView="@this" GuidListView="@guidListView" CanEdit="@CanEdit" CanDelete="@CanDelete" EditingFlex="@_isEditingFlex" Take="@FlexTake" ServerPagination="@ServerPaginationFlex" FilterSearch="@FilterFlex" ActionIcons=@CustomActionIcons HasSearch=@ShowSearchForm IsMultiple="@IsMultiple"></FlexComponent>
     }
 
