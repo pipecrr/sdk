@@ -45,6 +45,7 @@
     [Parameter]public bool Disabled {get; set;}
     [Parameter]public bool Auto {get; set;} = false;
     [Parameter]public string FieldName {get; set;}
+    [Parameter]public bool SaveByte {get; set;} = false;
     [Parameter] public Action<SDKUploadProgressArgsDTO> Progress {get;set;}
     [Parameter] public Action<SDKUploadCompleteEventArgsDTO> Complete {get;set;}
     [Parameter] public Action<SDKUploadChangeEventArgsDTO> Change {get;set;}
@@ -82,7 +83,9 @@
     protected override async Task OnInitializedAsync(){
         ResourceChooseText = "Custom.SDKUpload.Choose";
         ResourceChooseText = await UtilManager.GetResource("Custom.SDKUpload.Choose");        
-
+        if(SaveByte){
+            UploadMethodName = "UploadSingleByte";
+        }
         //check if business has a property named "BLName"
         if(Business != null && Business.GetType().GetProperty("BLName") != null){
             Url = "api/"+Business.BLName+"/"+UploadMethodName;
