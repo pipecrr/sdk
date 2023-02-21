@@ -32,7 +32,7 @@ namespace Siesa.SDK.Entities
 		public short? Priority { get; set; }
 
 		[StringLength(7)]
-		public string? Color { get; set; }
+		public string? HexColor { get; set; }
 
 		[StringLength(250)]
 		public string? IconClass { get; set; }
