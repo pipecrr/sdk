@@ -19,5 +19,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         public string RelatedField { get; set; }
         public bool Enabled {get;set;} = true;
         public string Width {get; set;}
+        public string Height {get; set;}
     }
 }
