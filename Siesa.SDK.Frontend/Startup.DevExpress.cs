@@ -35,6 +35,7 @@ namespace Siesa.SDK.Frontend {
             services.AddScoped<NavigationService>();
             services.AddBlazorDragDrop();
             services.AddSingleton<IResourceManager, ResourceManager>();
+            services.AddSingleton<IViewdefManager, ViewdefManager>();
             services.AddScoped<IFeaturePermissionService, FeaturePermissionService>();
             services.AddScoped<UtilsManager>(sp => ActivatorUtilities.CreateInstance<UtilsManager>(sp));
             services.AddScoped<NotificationService, SDKNotificationService>(sp => ActivatorUtilities.CreateInstance<SDKNotificationService>(sp));
