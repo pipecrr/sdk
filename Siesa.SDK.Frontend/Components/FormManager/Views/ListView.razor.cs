@@ -628,7 +628,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 LoadingData = true;
             }
             var filters = GetFilters(args.Filter);
-
             if (LastFilter != filters)
             {
                 LastFilter = filters;
@@ -636,6 +635,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 data = null;
             }
 
+            FilterFlex = filters;
             var dbData = await BusinessObj.GetDataAsync(args.Skip, args.Top, filters, args.OrderBy);
             data = dbData.Data;
             count = dbData.TotalCount;
