@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Siesa.SDK.Shared.Json;
 using Microsoft.EntityFrameworkCore;
-using Siesa.SDK.Entities.Enums;
+using Siesa.Global.Enums;
 
 namespace Siesa.SDK.Entities
 {
@@ -20,6 +20,7 @@ namespace Siesa.SDK.Entities
         public virtual string CurrentText { get; set; }
 
         [NotMapped]
+        [JsonIgnore]
         public virtual string CurrentURL { get{
             var url = "";
 

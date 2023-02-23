@@ -115,6 +115,44 @@ namespace Siesa.SDK.Business
             AuthenticationService = (IAuthenticationService)_provider.GetService(typeof(IAuthenticationService));
             
             _backendRouterService = _provider.GetService(typeof(IBackendRouterService)) as IBackendRouterService;
+
+        }
+
+        public SDKContext CreateDbContext(bool UseLazyLoadingProxies = false)
+        {
+            dynamic retContext = null;
+            try
+            {
+                var tenantProvider = _provider.GetRequiredService<ITenantProvider>();
+                if (UseLazyLoadingProxies)
+                {
+                    tenantProvider.SetUseLazyLoadingProxies(true);
+                    retContext = _provider.GetService(typeof(SDKContext));
+                }
+                else
+                {
+                    tenantProvider.SetUseLazyLoadingProxies(false);
+                }
+            }
+            catch (System.Exception)
+            {
+            }
+
+            if(retContext == null)
+            {
+                retContext = _dbFactory.CreateDbContext();
+            }
+
+            if (UseLazyLoadingProxies)
+            {
+                retContext.ChangeTracker.LazyLoadingEnabled = true;
+            }
+            else
+            {
+                retContext.ChangeTracker.LazyLoadingEnabled = false;
+            }
+            retContext.SetProvider(_provider);
+            return retContext;
         }
     }
     public class BLBackendSimple<T, K> : IBLBase<T> where T : class, IBaseSDK where K : BLBaseValidator<T>
@@ -145,7 +183,6 @@ namespace Siesa.SDK.Business
         public List<string> RelFieldsToSave { get; set; } = new List<string>();
         private bool CanCreate { get; set; } = true;
         private bool CanEdit { get; set; } = true;
-        private int RowidFeature { get; set; }
         private IEnumerable<INavigation> _navigationProperties = null;
 
         private List<object> unique_indexes = new List<object>();
@@ -229,7 +266,6 @@ namespace Siesa.SDK.Business
             _backendRouterService = (IBackendRouterService)_provider.GetService(typeof(IBackendRouterService));
             _featurePermissionService = (IFeaturePermissionService)_provider.GetService(typeof(IFeaturePermissionService));
 
-            RowidFeature = GetRowidFeature(BusinessName);
         }
 
         [SDKExposedMethod]
@@ -260,7 +296,7 @@ namespace Siesa.SDK.Business
                         foreach (var index_field in index_fields)
                         {
                             var columnNameProperty = SDKFlexExtension.GetPropertyExpression(pe, index_field);
-                            var field_value = requestObj.GetType().GetProperty(index_field).GetValue(requestObj, null);                                              
+                            var field_value = requestObj.GetType().GetProperty(index_field).GetValue(requestObj, null);
                             if (index_field.StartsWith("Rowid"))
                             {
                                 try
@@ -324,25 +360,16 @@ namespace Siesa.SDK.Business
                 {
                     query = query.Include(relatedProperty);
                 }
-                query = query.Where("Rowid == @0", rowid);
+                query = query.Where("Rowid == @0", ConvertToRowidType(rowid));
                 return query.FirstOrDefault();
             }
         }
-        private int GetRowidFeature(string business_name)
-        {
-            using (SDKContext context = CreateDbContext())
-            {
-                var query = context.Set<E00040_Feature>().Where(x => x.BusinessName == business_name).Select(x => x.Rowid).FirstOrDefault();
-                return query;
-            }
-        }
-
         public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave()
         {
             ValidateAndSaveBusinessObjResponse result = new();
-            if(_featurePermissionService != null && RowidFeature != 0){
-                CanCreate = _featurePermissionService.CheckUserActionPermission(RowidFeature, 1,AuthenticationService);
-                CanEdit = _featurePermissionService.CheckUserActionPermission(RowidFeature, 2,AuthenticationService);
+            if(_featurePermissionService != null && !string.IsNullOrEmpty(BusinessName)){
+                CanCreate = _featurePermissionService.CheckUserActionPermission(BusinessName, 1,AuthenticationService);
+                CanEdit = _featurePermissionService.CheckUserActionPermission(BusinessName, 2,AuthenticationService);
             }
             if(!CanCreate && !CanEdit){
                 AddMessageToResult("Custom.Generic.Unauthorized", result);
@@ -493,7 +520,15 @@ namespace Siesa.SDK.Business
                     // {
                     //     query = query.Include(relatedProperty);
                     // }
-                    query = query.Where("Rowid == @0", BaseObj.GetRowid());
+                    var rowidSearch = BaseObj.GetRowid();
+                    try
+                    {
+                        rowidSearch = ((dynamic)BaseObj).Rowid;
+                    }
+                    catch (System.Exception)
+                    {
+                    }
+                    query = query.Where("Rowid == @0", rowidSearch);
                     T entity = query.FirstOrDefault();
                     context.ResetConcurrencyValues(entity, BaseObj);
                     DisableRelatedProperties(BaseObj, _navigationProperties, RelFieldsToSave);
@@ -592,7 +627,7 @@ namespace Siesa.SDK.Business
                 {
                     query = query.Where(filter);
                 }
-                var total = query.Count();
+                var total = 0;
 
                 if (!string.IsNullOrEmpty(orderBy))
                 {
@@ -616,9 +651,7 @@ namespace Siesa.SDK.Business
                 {
                     query = queryFilter(query);
                 }
-                //total data
-                result.TotalCount = total;
-
+                
                 //data
                 result.Data = query.ToList();
             }
@@ -671,6 +704,18 @@ namespace Siesa.SDK.Business
             return retContext;
         }
 
+        private object ConvertToRowidType(Int64 rowid)
+        {
+            try
+            {
+                return Convert.ChangeType(rowid, BaseObj.GetRowidType());
+            }
+            catch (System.Exception)
+            {
+                return rowid;
+            }
+        }
+
         [SDKExposedMethod]
         public virtual ActionResult<string> GetObjectString(Int64 rowid)
         {
@@ -678,7 +723,7 @@ namespace Siesa.SDK.Business
             {
                 context.SetProvider(_provider);
                 var query = context.Set<T>().AsQueryable();
-                query = query.Where("Rowid == @0", rowid);
+                query = query.Where("Rowid == @0", ConvertToRowidType(rowid));
                 var entity = query.FirstOrDefault();
                 if (entity != null)
                 {
@@ -708,7 +753,7 @@ namespace Siesa.SDK.Business
         }
 
         [SDKExposedMethod]
-        public virtual ActionResult<List<Dictionary<string,object>>> SDKFlexPreviewData(SDKFlexRequestData requestData, bool setTop = true)
+        public virtual ActionResult<dynamic> SDKFlexPreviewData(SDKFlexRequestData requestData, bool setTop = true)
         {
             using (var Context = CreateDbContext())
             {

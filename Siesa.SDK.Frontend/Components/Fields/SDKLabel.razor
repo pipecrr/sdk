@@ -1,8 +1,16 @@
 @using Siesa.SDK.Frontend.Components.Layout
-<p>
+<p class="@GetCss()">
 <ResourceViewer ResourceTag="@ResourceTag" />
 </p>
 
 @code {
     [Parameter] public string ResourceTag { get; set; }
+    [Parameter] public string? CssClass {get; set;}
+
+    private string GetCss()
+    {
+        if(string.IsNullOrEmpty(CssClass)) return string.Empty;
+
+        return CssClass;
+    }
 }

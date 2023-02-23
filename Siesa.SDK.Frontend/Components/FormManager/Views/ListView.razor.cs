@@ -22,7 +22,7 @@ using Blazored.LocalStorage;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.Extensions.DependencyInjection;
-using Siesa.SDK.Entities.Enums;
+using Siesa.Global.Enums;
 using Newtonsoft.Json;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
@@ -63,6 +63,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public bool ServerPaginationFlex { get; set; } = true;
         [Parameter]
         public bool ShowLinkTo {get; set;} = false;
+        [Parameter]
+        public bool FromEntityField {get; set;} = false;
 
         [Inject]
         public ILocalStorageService localStorageService { get; set; }
@@ -100,8 +102,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private bool _isEditingFlex = false;
         private bool _isSearchOpen = false;
         public String ErrorMsg = "";
-        private IList<object> SelectedObjects { get; set; }
-
+        private IList<dynamic> SelectedObjects { get; set; } = new List<dynamic>();
+        [Parameter] 
+        public IList<dynamic> SelectedItems { get; set; }
         private ListViewModel ListViewModel { get; set; }
 
         [Parameter]
@@ -123,10 +126,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public Action OnClickNew { get; set; } = null;
 
         [Parameter]
-        public Action<object> OnSelectedRow { get; set; } = null;
+        public Action<IList<dynamic>> OnSelectedRow { get; set; } = null;
 
         [Parameter]
         public IEnumerable<object> Data { get; set; } = null;
+
+        [Parameter]
+        public bool IsMultiple { get; set; } = false;
 
         private IEnumerable<object> data;
 
@@ -157,8 +163,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private bool CanList;
         private string defaultStyleSearchForm = "search_back position-relative";
         private string StyleSearchForm { get; set; } = "search_back position-relative";
-
-
+        private Radzen.DataGridSelectionMode SelectionMode { get; set; } = Radzen.DataGridSelectionMode.Single;
         Guid needUpdate;
 
         private void OnSelectionChanged(IList<object> objects)
@@ -166,15 +171,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if (OnSelectedRow != null)
             {
                 SelectedObjects = objects;
-                if (SelectedObjects?.Any() == true)
-                {
-                    OnSelectedRow(objects.First());
-                }
-                else
-                {
-                    OnSelectedRow(null);
-                }
-
+                OnSelectedRow(SelectedObjects);
             }
         }
 
@@ -194,13 +191,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if (String.IsNullOrEmpty(data) && viewdef != DefaultViewdefName)
             {
                 data = BackendRouterService.GetViewdef(businessName, DefaultViewdefName);
+                FinalViewdefName = DefaultViewdefName;
             }
             return data;
         }
 
         protected async void InitView(string bName = null)
         {
-            Loading = true;            
+            Loading = true;
             if (bName == null)
             {
                 bName = BusinessName;
@@ -262,7 +260,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     ExtraButtons = new List<Button>();
                     foreach (var button in ListViewModel.Buttons){
                         if(button.ListPermission != null && button.ListPermission.Count > 0){
-                            showButton = await CheckPermissionsButton(button.ListPermission);
+                            showButton = CheckPermissionsButton(button.ListPermission);
                             if(showButton){
                                 ExtraButtons.Add(button);
                             }
@@ -278,7 +276,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 FlexTake = ListViewModel.FlexTake;
                 ShowLinkTo = ListViewModel.ShowLinkTo;
                 ServerPaginationFlex = ListViewModel.ServerPaginationFlex;
-                
                 //TODO: quitar cuando se pueda usar flex en los custom components
                 var fieldsCustomComponent = ListViewModel.Fields.Where(x => x.CustomComponent != null).ToList();
                 if(fieldsCustomComponent.Count > 0){
@@ -289,7 +286,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     CustomActions = new List<Button>();
                     foreach (var button in ListViewModel.CustomActions){
                         if(button.ListPermission != null && button.ListPermission.Count > 0){
-                            showButton = await CheckPermissionsButton(button.ListPermission);
+                            showButton = CheckPermissionsButton(button.ListPermission);
                         }else{
                             showButton = true;
                         }
@@ -331,11 +328,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             StateHasChanged();
         }
 
-        private async Task<bool> CheckPermissionsButton(List<int> ListPermission){
+        private bool CheckPermissionsButton(List<int> ListPermission){
             var showButton = false;
             if(FeaturePermissionService != null){
                 try{
-                    showButton = await FeaturePermissionService.CheckUserActionPermissions(BusinessName, ListPermission, AuthenticationService);
+                    showButton = FeaturePermissionService.CheckUserActionPermissions(BusinessName, ListPermission, AuthenticationService);
                 }catch(System.Exception){
 
                 }
@@ -345,15 +342,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private async Task CheckPermissions()
         {
-            if (FeaturePermissionService != null)
+            if (FeaturePermissionService != null && !string.IsNullOrEmpty(BusinessName))
             {
                 try
                 {
-                    CanList = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 4, AuthenticationService);
-                    CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 1, AuthenticationService);
-                    CanEdit = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 2, AuthenticationService);
-                    CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 3, AuthenticationService);
-                    CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, 5, AuthenticationService);
+                    CanList = FeaturePermissionService.CheckUserActionPermission(BusinessName, 4, AuthenticationService);
+                    CanCreate = FeaturePermissionService.CheckUserActionPermission(BusinessName, 1, AuthenticationService);
+                    CanEdit = FeaturePermissionService.CheckUserActionPermission(BusinessName, 2, AuthenticationService);
+                    CanDelete = FeaturePermissionService.CheckUserActionPermission(BusinessName, 3, AuthenticationService);
+                    CanDetail = FeaturePermissionService.CheckUserActionPermission(BusinessName, 5, AuthenticationService);
                 }
                 catch (System.Exception)
                 {
@@ -376,6 +373,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         {
             await base.OnInitializedAsync();
             guidListView = Guid.NewGuid().ToString();
+            if (IsMultiple){
+                SelectionMode = Radzen.DataGridSelectionMode.Multiple;
+            }
             //Restart();
         }
 
@@ -387,7 +387,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 Restart();
             }
         }
-
+        /*protected override void OnAfterRender(bool firstRender){
+            if(SelectedItems!=null && firstRender){
+                foreach (var item in SelectedItems){
+                    SelectedObjects.Add(item);
+                }
+            }
+            base.OnAfterRender(firstRender);
+        }*/
         private bool validateChanged(ParameterView parameters)
         {
             var type = this.GetType();
@@ -621,7 +628,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 LoadingData = true;
             }
             var filters = GetFilters(args.Filter);
-
             if (LastFilter != filters)
             {
                 LastFilter = filters;
@@ -629,6 +635,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 data = null;
             }
 
+            FilterFlex = filters;
             var dbData = await BusinessObj.GetDataAsync(args.Skip, args.Top, filters, args.OrderBy);
             data = dbData.Data;
             count = dbData.TotalCount;
@@ -754,20 +761,24 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 Data = new List<object> { };
             }
             if(ServerPaginationFlex && UseFlex){
-                var dbData = await BusinessObj.GetDataAsync(0, 2, filters, "");
-                Data = dbData.Data;
-                if (Data.Count() == 1)
-                {
-                    GoToDetail(((dynamic)Data.First()).Rowid);
-                    return;
-                }
-                count = dbData.TotalCount;
+                // var dbData = await BusinessObj.GetDataAsync(0, 2, filters, "");
+                // Data = dbData.Data;
+                // if (Data.Count() == 1)
+                // {
+                //     GoToDetail(((dynamic)Data.First()).Rowid);
+                //     return;
+                // }
+                // count = dbData.TotalCount;
             }else{
                 var dbData = await BusinessObj.GetDataAsync(null, null, filters, "");
                 Data = dbData.Data;
-                if (Data.Count() == 1)
-                {
-                    GoToDetail(((dynamic)Data.First()).Rowid);
+                if (Data.Count() == 1){
+                    if(!FromEntityField){
+                        GoToDetail(((dynamic)Data.First()).Rowid);
+                    }else{
+                        IList<object> objects = new List<object> { Data.First()};
+                        OnSelectionChanged(objects);
+                    }
                     return;
                 }
                 count = dbData.TotalCount;
@@ -947,6 +958,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 {
                     localStorageService.SetItemAsync($"{BusinessName}.Search.HiddenFields", returnFields);
                 }
+            }
+        }
+
+        public void Onchange(bool value, dynamic data){
+            if (value){
+                SelectedObjects.Add(data);
+            }else{
+                SelectedObjects.Remove(data);
             }
         }
     }

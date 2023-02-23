@@ -6,6 +6,7 @@ using Siesa.SDK.Protos;
 using System;
 using System.Threading.Tasks;
 using static Siesa.SDK.Protos.DataLogEvent;
+using Siesa.SDK.Shared.GRPCServices;
 
 namespace Siesa.SDK.Shared.Logs.DataEventLog
 {
@@ -18,7 +19,7 @@ namespace Siesa.SDK.Shared.Logs.DataEventLog
         public SDKGrpcLogStorageService(IConfiguration configuration)
         {
             var auditUrl = configuration["ServiceConfiguration:AuditServerUrl"];
-            var _channel = GrpcChannel.ForAddress(auditUrl);
+            var _channel = GrpcUtils.GetChannel(auditUrl);
             _client = new DataLogEventClient(_channel);
         }
 

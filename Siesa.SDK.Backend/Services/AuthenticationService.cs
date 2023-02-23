@@ -13,7 +13,7 @@ namespace Siesa.SDK.Backend.Services
         public string UserToken { get; set; } = "";
         private string _secretKey;
         private int _minutesExp;
-
+        public short RowidCultureChanged { get; set; } = 0;
         public AuthenticationService(){
             _minutesExp = 120; //TODO: get from config
             _secretKey = "testsecretKeyabc$"; //TODO: get from config

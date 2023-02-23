@@ -7,6 +7,7 @@ using Siesa.SDK.Shared.Configurations;
 using System;
 using System.Threading.Tasks;
 using static Siesa.SDK.Protos.DataLogChange;
+using Siesa.SDK.Shared.GRPCServices;
 
 namespace Siesa.SDK.Shared.Logs.DataChangeLog
 {
@@ -19,7 +20,7 @@ namespace Siesa.SDK.Shared.Logs.DataChangeLog
         public SDKGrpcChangeLogStorageService(IConfiguration configuration)
         {
             var auditUrl = configuration["ServiceConfiguration:AuditServerUrl"];
-            var _channel = GrpcChannel.ForAddress(auditUrl);
+            var _channel = GrpcUtils.GetChannel(auditUrl);
             _client = new DataLogChangeClient(_channel);     
         }
 

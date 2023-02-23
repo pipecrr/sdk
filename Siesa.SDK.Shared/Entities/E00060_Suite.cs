@@ -7,7 +7,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Siesa.SDK.Shared.Json;
 using Microsoft.EntityFrameworkCore;
-using Siesa.SDK.Entities.Enums;
+using Siesa.Global.Enums;
+
 
 
 namespace Siesa.SDK.Entities
@@ -33,10 +34,10 @@ namespace Siesa.SDK.Entities
 
 		public int? RowidImage { get; set; }
 
-		[StringLength(6)]
+		[StringLength(7)]
 		public string? HexColor { get; set; }
 
-		[StringLength(80)]
+		[StringLength(250)]
 		public string? IconClass { get; set; }
 
 
