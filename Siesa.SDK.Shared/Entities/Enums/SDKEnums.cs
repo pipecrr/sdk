@@ -2,13 +2,6 @@
 namespace Siesa.Global.Enums
 {
 
-	public enum MenuType
-	{
-		Separator = 1,
-		Menu = 2,
-		Feature = 3
-	}
-
 	public enum PermissionUserTypes
 	{
 		User = 1,
@@ -51,5 +44,13 @@ namespace Siesa.Global.Enums
 	{
 		Automatic = 0,
 		Manual = 1
+	}
+
+	public enum MenuType
+	{
+		Separator = 1,
+		Submenu = 2,
+		Feature = 3,
+		CustomMenu = 4
 	}
 }
