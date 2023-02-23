@@ -28,12 +28,6 @@ namespace Siesa.Global.Enums
 		Inactive = 0
 	}
 
-	public enum enumDynamicEntityDataType
-	{
-		Text = 0,
-		Number = 1
-	}
-
 	public enum enumYesNo
 	{
 		Yes = 1,
@@ -62,5 +56,12 @@ namespace Siesa.Global.Enums
 		Delete = 3,
 		List = 4,
 		Consult = 5
+	}
+
+	public enum enumDynamicEntityDataType
+	{
+		Text = 0,
+		Number = 1,
+		Date = 2
 	}
 }
