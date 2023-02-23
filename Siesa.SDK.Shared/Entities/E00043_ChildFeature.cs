@@ -10,12 +10,14 @@ using Microsoft.EntityFrameworkCore;
 using Siesa.Global.Enums;
 
 
+
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
 	/// BL hijos
 	/// </summary>
 
+	[Index(nameof(RowidFeature), Name = "IX_e00043_1")]
 	public partial class E00043_ChildFeature : BaseSDK<int>
 	{
 		[SDKIdentity]
