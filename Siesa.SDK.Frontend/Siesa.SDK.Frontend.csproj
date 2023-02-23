@@ -24,9 +24,6 @@
 		<EmbeddedResource Include="Components\Documentation\SourceCode\*.txt" />
 		<EmbeddedResource Include="ActiveReport\templates\*" />
 
-		<None Remove="Components\Documentation\SourceCode\SDKPieChart.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKPieChart.txt" />
-
 	</ItemGroup>
 
 
