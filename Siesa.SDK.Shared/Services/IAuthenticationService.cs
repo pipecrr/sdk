@@ -41,7 +41,7 @@ namespace Siesa.SDK.Shared.Services
         Task Initialize();
         Task Login(string username, string password, short rowIdDBConnection);
         Task Logout();
-        public Task SetToken(string token);
+        public Task SetToken(string token, bool saveLocalStorage = true);
         Task SetCustomRowidCulture(short rowid);
         short GetRoiwdCulture();
         Task SetRowidCompanyGroup(short rowid);
