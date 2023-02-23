@@ -24,7 +24,7 @@
                     <SDKBooleanField @bind-Value="@AllowDetail"> AllowDetail</SDKBooleanField>
                 </div>
                 <InlineCrud BusinessName="BLCulture" AllowCreate="@AllowCreate" AllowDelete="@AllowDelete"
-                    AllowEdit="@AllowEdit" AllowDetail="@AllowDetail" />
+                    AllowEdit="@AllowEdit" AllowDetail="@AllowDetail" Width="900px"/>
             </SDKCard>
         </div>
         <div class="col-md-6 p-3">

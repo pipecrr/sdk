@@ -11,7 +11,12 @@
 <div class="container-fluid">
     <div class="container-fluid">
             <h2>RelationshipPanel</h2> 
-            <p>Demonstration and configuration of the RelationshipPanel component</p> 
+            <p>Demonstration and configuration of the RelationshipPanel component</p>
+            <p>El RelationshipPanel component permite configurar el ancho y alto del modal con las propiedades:</p>
+            <ul>
+                <li>Width: para definir el ancho del modal, por defecto 600 px, por ejemplo Width="700px"</li>
+                <li>Height: para definit el alto del modal, por defecto lo calcula basado en el anlto de la ventana, por ejemplo Height="500px" </li>
+            </ul>
     </div>
     <div class="row px-3"> 
         <div class="col-md-6 p-3">
@@ -23,7 +28,7 @@
                     <SDKBooleanField @bind-Value="@AllowEdit"> AllowEdit</SDKBooleanField>
                     <SDKBooleanField @bind-Value="@AllowDetail"> AllowDetail</SDKBooleanField>
                 </div>
-            <RelationshipPanel Relationship="@pbrRelationShip" Parent="@pbrUser" ShowHeader="false" AllowCreate="@AllowCreate"   AllowDelete="@AllowDelete"   AllowEdit="@AllowEdit" AllowDetail="@AllowDetail" />
+            <RelationshipPanel Relationship="@pbrRelationShip" Parent="@pbrUser" ShowHeader="false" AllowCreate="@AllowCreate"   AllowDelete="@AllowDelete"   AllowEdit="@AllowEdit" AllowDetail="@AllowDetail"  Width="200px"/>
             </SDKCard>
         </div>
         <div class="col-md-6 p-3">
