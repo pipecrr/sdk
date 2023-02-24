@@ -340,7 +340,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
 			SavingFile = false;
 		}
 
-        public async Task<int> savingAttachment(FileField fileField){
+        public async Task<int> savingAttachment(FileField fileField, int rowid = 0){
             SavingFile = true;
             await fileField.Upload();
             var horaInicio = DateTime.Now.Minute;
@@ -351,8 +351,8 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
                 }
             }
             if(DataAttatchmentDetail != null){
-                var result = await BusinessObj.SaveAttachmentDetail(DataAttatchmentDetail);
-                return result;
+                var result = await BusinessObj.SaveAttachmentDetail(DataAttatchmentDetail, rowid);
+                return 0;
             }
             return 0;
         }
@@ -374,12 +374,19 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
                 foreach (var item in FileFields)
                 {
                     var fileField = item.Value;
-
-                    var rowidAttatchment = await savingAttachment(fileField);
+                    var rowidAttatchment = 0;
+                    var field = item.Key;
+                    var property = BusinessObj.BaseObj.GetType().GetProperty(field);
+                    var rowidProp = property.PropertyType.GetProperty("Rowid").GetValue(property.GetValue(BusinessObj.BaseObj));
+                    if(rowidProp != null){
+                        rowidAttatchment = await savingAttachment(fileField, (int)rowidProp);
+                    }else{
+                        rowidAttatchment = await savingAttachment(fileField);
+                    }
                     if(rowidAttatchment > 0){
-                        var field = "Description";//item.Key;
-                        var property = BusinessObj.BaseObj.GetType().GetProperty(field);
-                        property.SetValue(BusinessObj.BaseObj, rowidAttatchment.ToString());
+                        var AttatchmentDetail = Activator.CreateInstance(BusinessObj.BaseObj.GetType().GetProperty(field).PropertyType);
+                        AttatchmentDetail.GetType().GetProperty("Rowid").SetValue(AttatchmentDetail, rowidAttatchment);
+                        property.SetValue(BusinessObj.BaseObj, AttatchmentDetail);
                     }
                 }
             }

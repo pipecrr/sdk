@@ -45,7 +45,7 @@
     [Parameter]public bool Disabled {get; set;}
     [Parameter]public bool Auto {get; set;} = false;
     [Parameter]public string FieldName {get; set;}
-    [Parameter]public bool SaveByte {get; set;} = false;
+    [Parameter]public bool SaveByte {get; set;} = true;
     [Parameter] public Action<SDKUploadProgressArgsDTO> Progress {get;set;}
     [Parameter] public Action<SDKUploadCompleteEventArgsDTO> Complete {get;set;}
     [Parameter] public Action<SDKUploadChangeEventArgsDTO> Change {get;set;}
@@ -84,24 +84,21 @@
         ResourceChooseText = "Custom.SDKUpload.Choose";
         ResourceChooseText = await UtilManager.GetResource("Custom.SDKUpload.Choose");        
         if(SaveByte){
-            UploadMethodName = "UploadSingleByte";
+            UploadMethodName = $"UploadSingleByte";
         }
-        //check if business has a property named "BLName"
         if(Business != null && Business.GetType().GetProperty("BLName") != null){
             Url = "api/"+Business.BLName+"/"+UploadMethodName;
         }else if(Business != null && Business.GetType().GetProperty("BusinessName") != null){
             Url = "api/"+Business.BusinessName+"/"+UploadMethodName;
         }
 
-        var fieldField = "Rowid"+FieldName;
-        var parameter = Business.BaseObj.GetType().GetProperty("Description");
+        var nameField = "Rowid"+FieldName;
+        var parameter = Business.BaseObj.GetType().GetProperty(nameField);
         if(parameter != null){
             var value = parameter.GetValue(Business.BaseObj);
-            //TODO: corregir cuando tenga el campo attatchment detail
             if(value != null){
-                var isNum = Int32.TryParse(value.ToString(), out int n);
-                if(isNum){
-                    RowidAttachmentDetail = Int32.Parse(value.ToString());
+                if(Int32.TryParse(value.ToString(), out int n)){
+                    RowidAttachmentDetail = n;
                     var response = await Business.Backend.Call("DownloadFileByRowid", RowidAttachmentDetail);
                     if(response.Success){
                         UrlFile = $"data:{response.Data.FileType};base64, {response.Data.FileBase64}";
@@ -148,7 +145,7 @@
     }
 
     private async Task SDKComplete(UploadCompleteEventArgs args){
-        if(Complete != null){            
+        if(Complete != null){
             SDKUploadCompleteEventArgsDTO sDKUploadCompleteEventArgsDTO = new SDKUploadCompleteEventArgsDTO();
             sDKUploadCompleteEventArgsDTO.JsonResponse = args.JsonResponse;
             sDKUploadCompleteEventArgsDTO.RawResponse = args.RawResponse;

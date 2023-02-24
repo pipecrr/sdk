@@ -56,6 +56,9 @@
                     <li>sdk-change: Ejecuta el código cuando se cambia el valor del campo</li>
                 </ul>
 
+                <p>Expecificamente en los campos tipo archivo se puede definir el tipo de archivo que se puede subir, en la propiedad CustomAtributtes.Extensions, por defecto el componente expecifica imagenes tipo archivo</p>
+                <SDKTextField CssClass="text-area-demoviewdef" Value="@CustomAtributtesExtenxions"/>
+
                 <p>El generador de vistas tambien nos permite especificar un campo de tipo personalizado, 
                     los soportados hasta el momento son los siguientes:</p>
 
@@ -194,6 +197,13 @@
                                     ""CustomAttributes"": {
                                     ""sdk-show"": ""(int)BaseObj.PersonType == 2""}
                                 }" ;
+
+    string CustomAtributtesExtenxions = @"{
+                            ""Name"": ""BaseObj.AttachmentDetail"",
+                            ""CustomAttributes"": {                                
+                                ""Extensions"":["".jpg"", "".png"", "".jpeg""]
+                                }
+                            }";
 
     string CustomType = @"{
                             ""Name"": ""BaseObj.IsClient"", 
