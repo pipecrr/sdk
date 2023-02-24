@@ -11,7 +11,7 @@
         <div class="nav_section_1 w-100">
             @if(MainItem.SubMenus != null)
             {
-                @foreach (var item in MainItem.SubMenus)
+                @foreach (var item in MainItem.SubMenus.OrderBy(x => x.Order))
                 {
                         <NavMenuItem MenuItem="item" OnClick="@OnClickSubMenu" />
                 }

@@ -101,6 +101,12 @@ namespace Siesa.SDK.Business
             bl.SetProvider(_provider);
         }
 
+        public IServiceProvider GetProvider()
+        {
+            return _provider;
+        }
+
+
         public void SetProvider(IServiceProvider provider)
         {
             _provider = provider;
