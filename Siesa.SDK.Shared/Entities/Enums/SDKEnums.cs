@@ -59,10 +59,4 @@ namespace Siesa.Global.Enums
 		Consult = 5
 	}
 
-	public enum enumAllPartialNone
-	{
-		None = 0,
-		Partial = 1,
-		All = 2
-	}
 }

@@ -20,7 +20,7 @@ namespace Siesa.SDK.Entities
 		[NotMapped]
 		public List<E00040_Feature> Childs {get; set;}
 		[NotMapped]
-		public int Level {get; set;}
+		public bool IsChildOfAnyFeature {get; set;}
 
 	}
 }

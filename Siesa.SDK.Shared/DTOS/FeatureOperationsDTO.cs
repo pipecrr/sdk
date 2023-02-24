@@ -21,4 +21,10 @@ namespace Siesa.SDK.Shared.DTOS
         public bool Status {get; set;}
         public enumGeneralAction GeneralAction {get; set;} = enumGeneralAction.None;
     }
+
+    public class OperationDescription
+    {
+        public int RowidFeature {get; set;}
+        public string Operation {get; set;}
+    }
 }
