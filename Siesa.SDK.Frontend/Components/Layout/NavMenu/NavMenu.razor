@@ -37,7 +37,7 @@
          <div class="p-2 input-group input-group-sm d-flex align-items-center d-block d-sm-none">
             <SDKSearch />
         </div>
-        @foreach (var menuItem in MenuService.Menus)
+        @foreach (var menuItem in MenuService.Menus.OrderBy(x => x.Order))
         {
             <NavMenuItem MenuItem="@menuItem" OnClick="@OnMenuItemClick" Focus="@(SelectedMainMenu == menuItem)" />
         }

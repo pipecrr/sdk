@@ -126,6 +126,19 @@ namespace Siesa.SDK.Shared.Utilities
             }
 
         }
+        public static List<string> GetAssemblyResources(Assembly asm, string path)
+        {
+            try
+            {
+                string fullpath = $"{asm.GetName().Name}.{path}";
+                return asm.GetManifestResourceNames().Where(str => str.StartsWith(fullpath)).ToList();
+                
+            }
+            catch (Exception e) {
+                return null;
+            }
+
+        }
 
         public static object CreateCurrentData(dynamic data, string[] fieldPath, Type typeBaseSDK)
         {

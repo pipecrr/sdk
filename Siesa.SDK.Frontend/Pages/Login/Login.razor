@@ -139,7 +139,7 @@
                                             />
                                             <SDKValidationMessage For="@(() => model.Password)" />
                                         </div>
-                                        <SDKButton form="@FormID" SubmitFormOnClick="true" RenderStyle="SDKButtonRenderStyle.Primary" CssClass="btn-sm w-100 mt-2">
+                                        <SDKButton form="@FormID" SubmitFormOnClick="true" RenderStyle="SDKButtonRenderStyle.Primary" CssClass="btn-sm w-100 mt-2" Enabled="@(!loading)">
                                             @if (loading)
                                             {
                                                 <span class="spinner-border spinner-border-sm mr-1"></span>

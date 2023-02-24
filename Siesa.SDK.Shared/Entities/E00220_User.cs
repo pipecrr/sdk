@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Siesa.Global.Enums;
 
 
+
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
@@ -112,6 +113,9 @@ namespace Siesa.SDK.Entities
 
 		[Required]
 		public bool IsAdministrator { get; set; }
+
+		[Required]
+		public bool IsVisibilityAdministrator { get; set; }
 
 
 		[SDKCheckRelationship]

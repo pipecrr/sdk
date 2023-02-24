@@ -2,14 +2,6 @@
 namespace Siesa.Global.Enums
 {
 
-	public enum MenuType
-	{
-		Separator = 1,
-		Submenu = 2,
-		Feature = 3,
-		CustomMenu= 4
-	}
-
 	public enum PermissionUserTypes
 	{
 		User = 1,
@@ -36,17 +28,24 @@ namespace Siesa.Global.Enums
 		Inactive = 0
 	}
 
-	public enum enumDynamicEntityDataType
-	{
-		Text = 0,
-		Number = 1,
-		Date = 2,
-	}
-
 	public enum enumYesNo
 	{
 		Yes = 1,
 		No = 0
+	}
+
+	public enum enumAsignPassword
+	{
+		Automatic = 0,
+		Manual = 1
+	}
+
+	public enum MenuType
+	{
+		Separator = 1,
+		Submenu = 2,
+		Feature = 3,
+		CustomMenu = 4
 	}
 
 	public enum enumGeneralAction
@@ -59,4 +58,10 @@ namespace Siesa.Global.Enums
 		Consult = 5
 	}
 
+	public enum enumDynamicEntityDataType
+	{
+		Text = 0,
+		Number = 1,
+		Date = 2
+	}
 }

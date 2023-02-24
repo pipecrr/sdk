@@ -39,6 +39,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         [Parameter] public bool Disabled { get; set; }
         public dynamic RelBusinessObj { get; set; }
         private string Value = "";
+        private long rowidLastValue = 0;
         private List<string> Values = new List<string>() {};
         private IList<dynamic> ItemsSelected = new List<dynamic>() {};
         private Dictionary<int, object> CacheData = new Dictionary<int, object>();
@@ -88,14 +89,25 @@ namespace Siesa.SDK.Frontend.Components.Fields
             typeProperty = BindProperty.PropertyType;
             StateHasChanged();
         }
+
+        public override async Task SetParametersAsync(ParameterView parameters){
+            if (parameters.TryGetValue<dynamic>("BaseObj", out dynamic baseObjNew) && !IsMultiple){
+                if(BaseObj != null && baseObjNew != null){
+                    dynamic baseObjNewRelated = baseObjNew.GetType().GetProperty(FieldName).GetValue(baseObjNew);
+                    if(baseObjNewRelated != null && baseObjNewRelated.Rowid != rowidLastValue){
+                        SetVal(BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj));
+                    }
+                }
+            }
+            
+            await base.SetParametersAsync(parameters);
+        }
         
         protected override async Task OnParametersSetAsync(){
             await base.OnParametersSetAsync();
-            if(BaseObj != null){
-                SetVal(BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj));
-            }
             await LoadData("", null, true);
         }
+
         private async Task OnSelectItem(dynamic item){
             SetVal(item);
             if(OnChange != null){
@@ -163,10 +175,11 @@ namespace Siesa.SDK.Frontend.Components.Fields
             }else{
                 Values.Clear();
                 ItemsSelected.Clear();
-                if(Value != ""){                
+                if(Value != ""){
                     Values.Add(Value);
                     ItemsSelected.Add(item);
                 }
+                rowidLastValue = long.Parse(item.Rowid.ToString());
             }
         }
         

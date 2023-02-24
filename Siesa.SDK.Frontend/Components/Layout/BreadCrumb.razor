@@ -120,7 +120,10 @@
             }
             breadcrumb.Reverse();
         }else{
-            breadcrumb.Clear();
+            if(_newSelectedMenu == null)
+            {
+                breadcrumb.Clear();
+            }
         }
         StateHasChanged();
     }
@@ -151,7 +154,7 @@
         string blName = currentUrl.Substring(0, currentUrl.IndexOf("/", 1) + 1);
         foreach (var menu in menus)
         {
-            if(menu.ResourceTag == "DevMenu")
+            if(menu.ResourceTag == "SDKDev-DevMenu")
             {
                 continue;
             }

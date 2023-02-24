@@ -5,13 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Siesa.SDK.Shared.Json;
-
 namespace Siesa.SDK.Shared.Application
 {
     public static class SDKApp
     {
+        private static IServiceProvider _serviceProvider;
         public static List<System.Reflection.Assembly> AsembliesReg { get; set; }
-
         static SDKApp()
         {
             AsembliesReg = new List<System.Reflection.Assembly>();
@@ -21,10 +20,17 @@ namespace Siesa.SDK.Shared.Application
                 ContractResolver = new SDKContractResolver()
             };
         }
-
         public static void AddAssembly(System.Reflection.Assembly configuration)
         {
             AsembliesReg.Add(configuration);
+        }
+        public static void SetServiceProvider(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
+        public static IServiceProvider GetServiceProvider()
+        {
+            return _serviceProvider;
         }
     }
 }
