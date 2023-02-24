@@ -130,9 +130,12 @@ namespace Siesa.SDK.Frontend {
             app.UseRouting();
             
             app.UseEndpoints(endpoints =>
-
-            {
+            {   
                 endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "api/{blname}/{blaction}/",
+                    defaults: new { controller = "Api", action = "Index" });
             });
             return app;
         }

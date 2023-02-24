@@ -24,7 +24,6 @@
 		
 		<EmbeddedResource Include="Components\Documentation\SourceCode\*.txt" />
 		<EmbeddedResource Include="ActiveReport\templates\*" />
-		<EmbeddedResource Include=".gclicx" />
 
 		<!-- <None Remove="Components\Documentation\SourceCode\SDKPieChart.txt" />
 		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKPieChart.txt" /> -->
