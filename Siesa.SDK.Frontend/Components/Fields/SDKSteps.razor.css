@@ -5,3 +5,136 @@
 .sdk-steps ::deep .rz-steps.sdk-steps-no-numbers .rz-steps-number.sdk-steps-icon {
     display: unset;
 }
+
+/**LO PROPUESTO POR DUQUE*/
+
+
+::deep .rz-steps > ul {
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-top: 0 !important;
+}
+
+::deep  .rz-steps > ul li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 15%;
+    min-width: 15%;
+    position: relative;
+}
+
+::deep  .rz-steps .rz-state-highlight .rz-steps-title {
+    color: var(--color_primary) !important;
+    font-weight: 700;
+}
+
+::deep .rz-steps .rz-state-disabled .rz-steps-title {
+    color: var(--color_border) !important;
+}
+
+::deep .rz-steps .rz-menuitem-link {
+    color: var(--color_primary) !important;
+    cursor: pointer !important;
+    position: relative !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-direction: column !important;
+}
+
+::deep  .rz-menuitem-link>.rz-steps-number {
+    background: var(--color_primary) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    color: var(--color_light) !important;
+    height: 2.5rem !important;
+    width: 2.5rem !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    font-size: 1.15rem !important;
+    position: absolute !important;
+    top: 0 !important;
+}
+
+::deep  .rz-state-highlight>.rz-menuitem-link>.rz-steps-number {
+    background: var(--color_primary) !important;
+    color: var(--color_light) !important;
+}
+
+::deep .rz-state-disabled>.rz-menuitem-link>.rz-steps-number {
+    background: var(--color_border) !important;
+    color: var(--color_light) !important;
+}
+
+::deep  .rz-state-visited>.rz-menuitem-link>.rz-steps-number {
+    background: var(--color_primary) !important;
+    color: var(--color_light) !important;
+}
+
+::deep  .rz-steps .rz-state-visited .rz-steps-title {
+    color: var(--color_primary) !important;
+    font-weight: 400;
+}
+
+::deep .rz-steps-title {
+    margin: 0 !important;
+    padding: 3rem 0.25rem 0 0.25rem !important;
+    text-align: center;
+    font-size: 0.875rem;
+}
+
+::deep .rz-steps > ul li:nth-child(n + 2)::before{
+    position: absolute !important;
+    height: 1px !important;
+    margin: 0 !important;
+    content: "" !important;
+    background-color: var(--color_border) !important;
+    right: calc(50% + 2rem) !important;
+    top: 1.25rem !important;
+    width: calc(50% - 2rem) !important;
+}
+
+::deep .rz-steps > ul li:not(:last-child)::after {
+    position: absolute !important;
+    height: 1px !important;
+    margin: 0 !important;
+    content: "" !important;
+    background-color: var(--color_border) !important;
+    left: calc(50% + 2rem) !important;
+    top: 1.25rem !important;
+    width: calc(50% - 2rem) !important;
+}
+
+@media (max-width: 991.98px) { 
+    ::deep  .rz-steps > ul li {
+        max-width: 16.6666%;
+        min-width: 16.6666%;
+    }
+    ::deep .rz-steps-title {
+        font-size: 0.75rem;
+    }
+}
+@media (max-width: 767.98px) { 
+    ::deep  .rz-steps > ul li {
+        max-width: 16.6666%;
+        min-width: 16.6666%;
+    }
+}
+@media (max-width: 575.98px) { 
+    ::deep  .rz-steps > ul li {
+        max-width: 16.6666%;
+        min-width: 16.6666%;
+    }
+    ::deep  .rz-steps-title {
+        font-size: 0.6rem;
+    }
+}
+
+
+
+/***fIN LO propuesto por duque*/
