@@ -22,7 +22,7 @@ namespace Siesa.SDK.Shared.Logs.DataChangeLog
 
         public static QueryLogReply QueryEntityLog(QueryLogRequest request, IConfiguration configuration)
         {
-            var dataChangeLog =  new SDKGrpcLogStorageService(configuration);
+            var dataChangeLog =  new SDKGrpcChangeLogStorageService(configuration);
             return dataChangeLog.QueryEntityLog(request);
         }
 
