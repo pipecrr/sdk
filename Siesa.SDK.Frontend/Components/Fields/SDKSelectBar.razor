@@ -4,10 +4,25 @@
 
 
 <div class="sdk-selectbar-container">
-<RadzenSelectBar Value=@Value Change="@ValueChanged" TValue="ItemType"
-        Data="@Data" TextProperty="Name" ValueProperty="Key" Disabled = "@Disabled" ValueExpression="@ValueExpression"  
-        data-automation-id="@GetAutomationId()" />
-</div>
+        @if(typeof(ItemType) == typeof(bool))
+        {    
+                <RadzenSelectBar Value=@Value Change="@ValueChanged" TValue="ItemType" Disabled = "@Disabled" ValueExpression="@ValueExpression"  
+                        data-automation-id="@GetAutomationId()">
+                        <Items>
+                                <RadzenSelectBarItem Text="Si" Value="true" />
+                                <RadzenSelectBarItem Text="No" Value="false" />
+                        </Items>
+                </RadzenSelectBar>
+        }else
+        {
+
+                <RadzenSelectBar Value=@Value Change="@ValueChanged" TValue="ItemType"
+                        Data="@Data" TextProperty="Name" ValueProperty="Key" Disabled = "@Disabled" ValueExpression="@ValueExpression"  
+                        data-automation-id="@GetAutomationId()" />
+        
+        }
+</div>   
+
 
 @code{
         [Parameter] public Expression<Func<ItemType>> ValueExpression { get; set; }
