@@ -120,10 +120,6 @@
                 Url = "logout",
                 Type = MenuType.CustomMenu
             });
-            if(MenuService.Menus.Count == 0)
-            {
-                MenuService.ReloadMenu();
-            }
         }
         await base.OnInitializedAsync();
     }

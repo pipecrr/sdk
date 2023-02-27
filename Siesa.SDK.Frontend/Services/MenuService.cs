@@ -22,8 +22,7 @@ namespace Siesa.SDK.Frontend.Services
     public class MenuService
     {
         public List<E00061_Menu> Menus { get; set; }
-        private string environment;
-        private E00060_Suite SelectedSuite { get; set; }
+        public List<E00060_Suite> Suites { get; set; }
         private IBackendRouterService BackendRouterService;
         private IAuthenticationService AuthenticationService;
         private UtilsManager UtilsManager { get; set; }
@@ -31,25 +30,36 @@ namespace Siesa.SDK.Frontend.Services
 
         private bool loading = false;
 
+        private SDKBusinessModel _menuBL { get { return BackendRouterService.GetSDKBusinessModel("BLAdminMenu", AuthenticationService); } }
+
         public MenuService(IBackendRouterService backendRouterService, IAuthenticationService authenticationService, UtilsManager utilsManager)
         {
             BackendRouterService = backendRouterService;
             AuthenticationService = authenticationService;
             UtilsManager = utilsManager;
+            Menus = new List<E00061_Menu>();
 
             _ = Init();
         }
 
-        private async Task Init()
+        private async Task GetSuites()
         {
-            if(loading)
+            Suites = new List<E00060_Suite>();
+            var request = await _menuBL.Call("GetSuites");
+            if (request.Success)
             {
-                return;
+                Suites = (List<E00060_Suite>)request.Data;
             }
 
-            loading = true;
-            Menus = new List<E00061_Menu>();
-            environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            if(Suites.Count == 1 || AuthenticationService.GetSelectedSuite() == 0)
+            {
+                AuthenticationService.SetSelectedSuite(Suites.First().Rowid);
+            }
+        }
+
+        private void AddDevMenu(List<E00061_Menu> menus)
+        {
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             if (environment == Environments.Development)
             {
                 Menus.Add(new E00061_Menu()
@@ -60,7 +70,20 @@ namespace Siesa.SDK.Frontend.Services
                     CurrentText = "DevMenu",
                 });
             }
-            await LoadMenu();
+        }
+
+        private async Task Init()
+        {
+            if(loading)
+            {
+                return;
+            }
+            await GetSuites();
+
+            loading = true;
+            Menus = new List<E00061_Menu>();
+            AddDevMenu(Menus);
+            await LoadMenu(AuthenticationService.GetSelectedSuite());
             loading = false;
         }
 
@@ -88,7 +111,7 @@ namespace Siesa.SDK.Frontend.Services
             Menus.Clear();
         }
 
-        public async Task LoadMenu()
+        public async Task LoadMenu(int suiteRowid)
         {
             var DevMenu = Menus.FirstOrDefault(x => x.ResourceTag == "SDKDev-DevMenu")?.SubMenus;
 
@@ -140,20 +163,12 @@ namespace Siesa.SDK.Frontend.Services
                 }
             }
 
+            var menuRequest = await _menuBL.Call("GetMenuItems", Convert.ToInt64(suiteRowid));
 
-            var menuBL = BackendRouterService.GetSDKBusinessModel("BLAdminMenu", AuthenticationService);
-            var request = await menuBL.Call("GetSuites");
-            if (request.Success)
+            if(menuRequest.Success)
             {
-                SelectedSuite = ((List<E00060_Suite>)request.Data).First();
-
-                var menuRequest = await menuBL.Call("GetMenuItems", Convert.ToInt64(SelectedSuite.Rowid));
-
-                if(menuRequest.Success)
-                {
-                    var Data = menuRequest.Data;
-                    MenuManagerBySuite(menuBL, SelectedSuite.Rowid, Data);
-                }
+                var Data = menuRequest.Data;
+                MenuManagerBySuite(_menuBL, suiteRowid, Data);
             }
         }
 
@@ -249,6 +264,26 @@ namespace Siesa.SDK.Frontend.Services
             }
         }
 
-
+        public async Task SetSelectedSuite(int suiteRowid)
+        {
+            var suite = Suites.FirstOrDefault(x => x.Rowid == suiteRowid);
+            if (suite != null)
+            {
+                AuthenticationService.SetSelectedSuite(suiteRowid);
+                Menus.Clear();
+                AddDevMenu(Menus);
+                if (SuiteData.ContainsKey(suiteRowid))
+                {
+                    Menus.AddRange(SuiteData[suiteRowid]);
+                }
+                else
+                {
+                    await LoadMenu(suiteRowid);
+                }
+            }else
+            {
+                throw new Exception("Suite not found");
+            }
+        }
     }
 }
