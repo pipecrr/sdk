@@ -19,7 +19,8 @@ namespace Siesa.SDK.Shared.DTOS
         public int RowidResource {get; set;}
         public string ResourceTag {get; set;}
         public bool Status {get; set;}
-        public enumGeneralAction GeneralAction {get; set;} = enumGeneralAction.None;
+        public string IconCss {get; set;}
+        public string HexColor {get; set;}
     }
 
     public class OperationDescription
