@@ -2,7 +2,7 @@
 @attribute [Authorize]
 @using Siesa.SDK.Shared.Application
 
-@if(SDKApp.GetIndexComponent == null) 
+@if(SDKApp.GetIndexComponent() == null) 
 {
     <PageTitle><ResourceViewer ResourceTag="Custom.Project.Name" /></PageTitle>
 
