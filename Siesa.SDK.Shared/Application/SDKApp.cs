@@ -10,6 +10,8 @@ namespace Siesa.SDK.Shared.Application
     public static class SDKApp
     {
         private static IServiceProvider _serviceProvider;
+        //TODO: Solución temporal
+        private static Type _indexComponent;
         public static List<System.Reflection.Assembly> AsembliesReg { get; set; }
         static SDKApp()
         {
@@ -31,6 +33,15 @@ namespace Siesa.SDK.Shared.Application
         public static IServiceProvider GetServiceProvider()
         {
             return _serviceProvider;
+        }
+        public static void SetIndexComponent(Type indexComponent)
+        {
+            _indexComponent = indexComponent;
+        }
+
+        public static Type GetIndexComponent()
+        {
+            return _indexComponent;
         }
     }
 }
