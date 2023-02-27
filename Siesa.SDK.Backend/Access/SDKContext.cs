@@ -48,8 +48,6 @@ namespace Siesa.SDK.Backend.Access
 
         public DbSet<U00223_UserAccountPolicy>? U00223_UserAccountPolicy { get; set; }
 
-        public DbSet<U00222_UserAccessSchedulingJournal>? U00222_UserAccessSchedulingJournal { get; set; }
-
         public DbSet<U00220_User>? U00220_User { get; set; }
         // public DbSet<E00223_UserAccountPolicy>? E00223_UserAccountPolicy { get; set; }
 
