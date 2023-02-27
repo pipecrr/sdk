@@ -10,12 +10,14 @@ using Microsoft.EntityFrameworkCore;
 using Siesa.Global.Enums;
 
 
+
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
 	/// Entidades dinámicas
 	/// </summary>
-
+	[SDKLogEntity]
+	[Index(nameof(RowidCompanyGroup), nameof(RowidFeature), nameof(RowidCompany), nameof(RowidGenericEntity), nameof(Id), Name = "IX_e00250_1", IsUnique = true)]
 	public partial class E00250_DynamicEntity : BaseCompanyGroup<int>
 	{
 		[Key]

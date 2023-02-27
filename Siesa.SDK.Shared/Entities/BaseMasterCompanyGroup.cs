@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Siesa.Global.Enums;
 using Siesa.SDK.Shared.DataAnnotations;
 
+
 namespace Siesa.SDK.Entities
 {
 

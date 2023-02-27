@@ -10,12 +10,14 @@ using Microsoft.EntityFrameworkCore;
 using Siesa.Global.Enums;
 
 
+
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
 	/// Sesión
 	/// </summary>
 
+	[Index(nameof(Id), Name = "IX_e00210_1")]
 	public partial class E00210_Session : BaseSDK<int>
 	{
 		[Key]

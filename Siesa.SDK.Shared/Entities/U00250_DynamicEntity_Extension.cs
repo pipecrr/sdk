@@ -12,13 +12,10 @@ using Siesa.Global.Enums;
 
 namespace Siesa.SDK.Entities
 {
-	/// <summary>
-	/// Permisos de usuario por fila
-	/// </summary>
-	[SDKLogEntity]
-	[Index(nameof(RowidUser), nameof(RowidRecord), nameof(RowidDataVisibilityGroup), Name = "IX_u00222_1", IsUnique = true)]
-	public partial class U00222_UserAccessSchedulingJournal : BaseUserPermission<E00222_UserAccessSchedulingJournal, int>
+	public partial class U00250_DynamicEntity
 	{
+
+
 
 	}
 }

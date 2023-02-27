@@ -10,12 +10,14 @@ using Microsoft.EntityFrameworkCore;
 using Siesa.Global.Enums;
 
 
+
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
 	/// Columna entidad dinámica
 	/// </summary>
-
+	[SDKLogEntity]
+	[Index(nameof(RowidDynamicEntity), nameof(Id), Name = "IX_e00251_1", IsUnique = true)]
 	public partial class E00251_DynamicEntityColumn : BaseAudit<int>
 	{
 		[Key]
@@ -55,6 +57,7 @@ namespace Siesa.SDK.Entities
 
 		[Required]
 		[RegularExpression(@"^\d{1,22}([.,]\d{0,6})?$", ErrorMessage = "El tamaño del campo {0} está fuera del rango.")]
+		[Precision(28, 6)]
 		public decimal DefaultValueNumber { get; set; }
 
 		[Required]
@@ -62,10 +65,12 @@ namespace Siesa.SDK.Entities
 
 		[Required]
 		[RegularExpression(@"^\d{1,22}([.,]\d{0,6})?$", ErrorMessage = "El tamaño del campo {0} está fuera del rango.")]
+		[Precision(28, 6)]
 		public decimal MinValue { get; set; }
 
 		[Required]
 		[RegularExpression(@"^\d{1,22}([.,]\d{0,6})?$", ErrorMessage = "El tamaño del campo {0} está fuera del rango.")]
+		[Precision(28, 6)]
 		public decimal MaxValue { get; set; }
 
 		[ForeignKey("Feature")]
