@@ -31,6 +31,8 @@ namespace Siesa.SDK.Frontend.Services
 
         public string UserToken { get; private set; } = "";
 
+        private int _selectedSuite;
+
         private JwtUserData? _user;
         public JwtUserData User
         {
@@ -69,6 +71,7 @@ namespace Siesa.SDK.Frontend.Services
         {
             UserToken = await _localStorageService.GetItemAsync<string>("usertoken");
             CustomRowidCulture = await _localStorageService.GetItemAsync<short>("customrowidculture");
+            _selectedSuite = await _localStorageService.GetItemAsync<int>("selectedSuite");
             var selectedConnection = await _localStorageService.GetItemAsync<string>("selectedConnection");
             try
             {
@@ -132,6 +135,7 @@ namespace Siesa.SDK.Frontend.Services
             await _localStorageService.RemoveItemAsync("lastInteraction");
             await _localStorageService.RemoveItemAsync("n_tabs");
             await _localStorageService.RemoveItemAsync("bd");
+            await _localStorageService.RemoveItemAsync("selectedSuite");
             await RemoveCookie("sdksession");
 
             _navigationManager.NavigateTo("login");
@@ -335,6 +339,18 @@ namespace Siesa.SDK.Frontend.Services
             catch (System.Exception)
             {
             }
+        }
+
+        public int GetSelectedSuite()
+        {
+            return _selectedSuite;
+        }
+
+        public void SetSelectedSuite(int rowid)
+        {
+            _ = _localStorageService.SetItemAsync("selectedSuite", rowid);
+            _selectedSuite = rowid;
+            
         }
     }
 }

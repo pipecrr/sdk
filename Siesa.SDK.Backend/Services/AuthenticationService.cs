@@ -110,6 +110,15 @@ namespace Siesa.SDK.Backend.Services
         public async Task<bool> ChangePassword(int rowidUser, string NewPassword="", string ConfirmPassword=""){
              throw new NotImplementedException();
         }
-        
+
+        public int GetSelectedSuite()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetSelectedSuite(int rowid)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

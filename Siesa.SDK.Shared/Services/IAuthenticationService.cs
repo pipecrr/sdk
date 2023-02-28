@@ -50,6 +50,8 @@ namespace Siesa.SDK.Shared.Services
         short GetRowidCompanyGroup();
         Task SetSelectedConnection(SDKDbConnection selectedConnection);
         SDKDbConnection GetSelectedConnection();
+        int GetSelectedSuite();
+        void SetSelectedSuite(int rowid);
         string GetConnectionLogo();
         string GetConnectionStyle();
         Task<bool> IsValidToken();

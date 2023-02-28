@@ -24,6 +24,10 @@ namespace Siesa.SDK.Backend.Access
 {
     public class SDKContext : DbContext
     {
+	public DbSet<E00222_UserAccessSchedulingJournal>? E00222_UserAccessSchedulingJournal { get; set; }
+
+	public DbSet<U00250_DynamicEntity>? U00250_DynamicEntity { get; set; }
+
 	public DbSet<E00240_Report>? E00240_Report { get; set; }
 
 	public DbSet<E00043_ChildFeature>? E00043_ChildFeature { get; set; }
@@ -46,12 +50,8 @@ namespace Siesa.SDK.Backend.Access
 
         public DbSet<U00223_UserAccountPolicy>? U00223_UserAccountPolicy { get; set; }
 
-        public DbSet<U00222_UserAccessSchedulingJournal>? U00222_UserAccessSchedulingJournal { get; set; }
-
         public DbSet<U00220_User>? U00220_User { get; set; }
         // public DbSet<E00223_UserAccountPolicy>? E00223_UserAccountPolicy { get; set; }
-
-        public DbSet<E00222_UserAccessSchedulingJournal>? E00222_UserAccessSchedulingJournal { get; set; }
 
         public DbSet<E00224_DataVisibilityGroup>? E00224_DataVisibilityGroup { get; set; }
 
