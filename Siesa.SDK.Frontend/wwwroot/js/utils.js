@@ -44,8 +44,13 @@ function deleteCookie(name) {
     document.cookie = name + '=; Max-Age=-99999999;';
 }
 
+function SetFocusToElement(dataAutomationId){
+    document.querySelector(`[data-automation-id="${dataAutomationId}"]`).focus();
+};
+
 window.loadScript = loadScript;
 window.loadCss = loadCss;
 window.createCookie = createCookie;
 window.readCookie = readCookie;
 window.deleteCookie = deleteCookie;
+window.SetFocusToElement = SetFocusToElement;
