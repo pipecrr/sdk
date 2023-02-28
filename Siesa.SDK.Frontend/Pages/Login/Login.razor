@@ -489,6 +489,12 @@
     {
         try
         {
+            await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/js/utils.js");
+        }catch (Exception)
+        {
+        }
+        try
+        {
             await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/Pages/Login/Login.razor.js");
         }
         catch (Exception)

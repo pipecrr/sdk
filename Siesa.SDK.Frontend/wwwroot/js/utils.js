@@ -1,4 +1,16 @@
 function loadScript(url, in_head = false, callback = null) {
+
+    //check if script is already loaded
+    var scripts = document.getElementsByTagName('script');
+    for (var i = 0; i < scripts.length; i++) {
+        if (scripts[i].src == url) {
+            // if (callback) {
+            //     callback();
+            // }
+            return;
+        }
+    }
+
     var parent = in_head ? document.head : document.body;
     var script = document.createElement('script');
     script.type = 'text/javascript';
@@ -12,6 +24,13 @@ function loadScript(url, in_head = false, callback = null) {
 }
 
 function loadCss(url){
+    //check if css is already loaded
+    var links = document.getElementsByTagName('link');
+    for (var i = 0; i < links.length; i++) {
+        if (links[i].href == url) {
+            return;
+        }
+    }
     var link = document.createElement("link");
     link.type = "text/css";
     link.rel = "stylesheet";
@@ -44,8 +63,30 @@ function deleteCookie(name) {
     document.cookie = name + '=; Max-Age=-99999999;';
 }
 
+function preloadFlex(){
+    var search = window.location.search;
+    var params = search.substring(1,search.length).split('&');
+    var sdk_debug = params.find(x => x == 'sdk_debug=1');
+    //sdk_debug = true;
+    if(sdk_debug){
+        loadScript("http://127.0.0.1:3000/static/js/bundle.js");
+        loadScript("http://127.0.0.1:3000/static/js/0.chunk.js");
+        loadScript("http://127.0.0.1:3000/static/js/1.chunk.js");
+        loadScript("http://127.0.0.1:3000/static/js/main.chunk.js");
+    }else{
+        loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/2.css?v=20230213');
+        loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/main.css?v=20230213');
+
+        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/2.chunk.js?v=20230213");
+        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/main.chunk.js?v=20230213");
+        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/runtime-main.js?v=20230213");
+    }
+    loadScript("/_content/Siesa.SDK.Frontend/vendor/dexie/dexie.js");
+}
+
 window.loadScript = loadScript;
 window.loadCss = loadCss;
 window.createCookie = createCookie;
 window.readCookie = readCookie;
 window.deleteCookie = deleteCookie;
+window.preloadFlex = preloadFlex;
