@@ -48,6 +48,16 @@ namespace Siesa.Global.Enums
 		CustomMenu = 4
 	}
 
+	public enum enumGeneralAction
+	{
+		None = 0,
+		Create = 1,
+		Edit = 2,
+		Delete = 3,
+		List = 4,
+		Consult = 5
+	}
+
 	public enum enumDynamicEntityDataType
 	{
 		Text = 0,
