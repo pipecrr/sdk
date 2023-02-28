@@ -122,6 +122,10 @@
             });
         }
         await base.OnInitializedAsync();
+        if(MenuService.Menus == null || MenuService.Menus.Count == 0)
+        {
+            _ = MenuService.ReloadMenu();
+        }
     }
 
     private void ShowProfileMenu()
