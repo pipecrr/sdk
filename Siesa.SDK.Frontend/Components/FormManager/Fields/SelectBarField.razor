@@ -22,15 +22,21 @@
     }
     else
     {
-        <SDKSelectBar ItemType="TItem"
-        Value="@BindValue"
-        ValueChanged="@((newVal) => SetValue(newVal))"
-        Data="@_options"
-        Disabled="@_disabled"
-        ValueExpression="@ValueExpression"
-        FieldName="@FieldName" />
+
+        <SDKSelectBar 
+            ItemType="TItem"
+            Value="@BindValue"
+            ValueChanged="@((newVal) => SetValue(newVal))"
+            Data="@_options"
+            Disabled="@_disabled"
+            ValueExpression="@ValueExpression"
+            FieldName="@FieldName" 
+            AffirmationResourceTag="@AffirmationTag"
+            DenialResourceTag="@DenialTag"
+        />
 
         @FieldValidationTemplate
+
     }
 }
 
@@ -40,6 +46,10 @@
     [Parameter] public IEnumerable<SelectBarItemWrap<TItem>> Options { get; set; }       
     Expression<Func<TItem>> ValueExpression { get; set; }
     private Type enumType { get; set; }
+
+    public string AffirmationTag => GetCustomAttributeValue("BooleanYesResourceTag");
+    public string DenialTag => GetCustomAttributeValue("BooleanNoResourceTag");
+
     private IEnumerable<SelectBarItemWrap<TItem>> _options
     {
         get
@@ -116,6 +126,15 @@
     {
         _disabled = (FieldOpt.Disabled || FieldOpt.ViewContext == "DetailView");
     }
+    
+    private string GetCustomAttributeValue(string attributeName)
+    {
+        if (FieldOpt.CustomAttributes?.Count > 0 && typeof(TItem) == typeof(bool))
+        {
+            return FieldOpt.CustomAttributes.FirstOrDefault(x => x.Key == attributeName).Value?.ToString();
+        }
+        return string.Empty;
+    }
 
     protected override void OnInitialized()
     {
@@ -123,7 +142,6 @@
         var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
         ValueExpression = (Expression<Func<TItem>>)Expression.Lambda(typeof(Func<>).MakeGenericType(typeof(TItem)), access);
         isDisabled();
-
     }
 
     protected override void OnParametersSet()

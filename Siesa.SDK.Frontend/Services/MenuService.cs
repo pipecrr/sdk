@@ -39,7 +39,7 @@ namespace Siesa.SDK.Frontend.Services
             UtilsManager = utilsManager;
             Menus = new List<E00061_Menu>();
 
-            _ = Init();
+            //_ = Init();
         }
 
         private async Task GetSuites()
@@ -103,6 +103,10 @@ namespace Siesa.SDK.Frontend.Services
 
         public async Task ReloadMenu()
         {
+            if(Menus != null)
+            {
+                Menus.Clear();
+            }
             await Init();
         }
 
@@ -198,6 +202,21 @@ namespace Siesa.SDK.Frontend.Services
             MenuManagerBySuite(menuBL, 0, Data, true, false);
 
             return Data;
+        }
+
+        public async Task<bool> GetMenuItemsWithChilds(int RowidSuite)
+        {
+            var menuBL = BackendRouterService.GetSDKBusinessModel("BLAdminMenu", AuthenticationService);
+
+            var Request = await menuBL.Call("GetMenuItemsWithChilds", RowidSuite);
+
+            if(!Request.Success) return false;
+
+            var Data = Request.Data;
+
+            MenuManagerBySuite(menuBL, RowidSuite, Data, true, true);
+
+            return true;
         }
 
         public void MenuManagerBySuite(SDKBusinessModel menuBL, int RowidSuite, List<E00061_Menu> menuResponse, bool IgnoreGeneralMenu = false, bool SetInSuiteData = false)

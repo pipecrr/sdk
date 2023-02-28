@@ -56,6 +56,9 @@
                     <li>sdk-change: Ejecuta el código cuando se cambia el valor del campo</li>
                 </ul>
 
+                <p>Expecificamente en los campos tipo archivo se puede definir el tipo de archivo que se puede subir, en la propiedad CustomAtributtes.Extensions, por defecto el componente expecifica imagenes tipo archivo</p>
+                <SDKTextField CssClass="text-area-demoviewdef" Value="@CustomAtributtesExtenxions"/>
+
                 <p>El generador de vistas tambien nos permite especificar un campo de tipo personalizado, 
                     los soportados hasta el momento son los siguientes:</p>
 
@@ -101,9 +104,13 @@
 
                 <p>Por defecto el listar no muestra el linkTo si se desea agregar el LisnkTO es necesario indicarlo en el list.json</p>
                         <SDKTextField CssClass="text-area-demoviewdef" Value="@ShowLinkTo"/>
+                        
                 <p>El listar permite enviar acciones personalizadas se agregan a nivel general en el list.json</p>
                         <SDKTextField CssClass="text-area-demoviewdef" Value="@CustomActions"/>
 
+                <p>Utilizando la propiedad CustomAtributtes ahora podemos definir para un campo de tipo Booleano, 
+                    las opciones que se mostraran luego de definirlo como tipo Selectbar, enviando el tag del recurso de la siguiente manera:</p>
+                         <SDKTextField CssClass="text-area-demoviewdef" Value="@SelectbarBoolean"/>
         </div>
     </div>
 </div>
@@ -195,6 +202,13 @@
                                     ""sdk-show"": ""(int)BaseObj.PersonType == 2""}
                                 }" ;
 
+    string CustomAtributtesExtenxions = @"{
+                            ""Name"": ""BaseObj.AttachmentDetail"",
+                            ""CustomAttributes"": {                                
+                                ""Extensions"":["".jpg"", "".png"", "".jpeg""]
+                                }
+                            }";
+
     string CustomType = @"{
                             ""Name"": ""BaseObj.IsClient"", 
                             ""CustomType"": ""SwitchField"",
@@ -259,4 +273,12 @@
                             ""Action"": ""CustomAction"",
                             ""IconClass"": ""fa fa-plus""
                             }]";
+
+    string SelectbarBoolean = @"
+                                    ""Name"": ""BaseObj.HasScheduledAccess"", 
+                                    ""CustomType"": ""SelectBarField"",
+                                        ""CustomAttributes"": {
+                                        ""BooleanYesResourceTag"": ""Custom.Prueba.Si"",
+                                        ""BooleanNoResourceTag"": ""Custom.Prueba.No""
+                                        }" ;
 }
