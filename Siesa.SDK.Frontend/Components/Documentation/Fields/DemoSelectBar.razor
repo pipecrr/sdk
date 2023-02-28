@@ -27,12 +27,21 @@
             <p>Item Selected: @myValue2</p>
             </SDKCard>
         </div>
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>Select Bool Value</h3>
+            <SDKSelectBar ItemType="bool" Value="@myValue3"  ValueChanged="(myValue3)=>OnchangeBool(myValue3)" 
+                    DenialResourceTag="Demo.Option.Affirmation" AffirmationResourceTag="Demo.Option.Denial"/>
+            <p>Item Selected: @myValue3</p>
+            </SDKCard>
+        </div>
     </div>
 </div>
 @code
 {
     int myValue;
     int myValue2;
+    bool myValue3;
     List<SelectBarItemWrap<int>> TestList = new List<SelectBarItemWrap<int>>()
     {
         new SelectBarItemWrap<int>() {Key=1, Name="Item 1"},
@@ -51,6 +60,20 @@
                 return myValue2;
             case 3:
                 Notification.ShowError("Item Selected 3");
+                return myValue2;
+            default:
+                return 0;
+        }
+    }
+    public int OnchangeBool(bool item){
+    myValue3 = item;
+        switch (item)
+        {
+            case true:
+                Notification.ShowSuccess("Item Selected true");
+                return myValue2;
+            case false:
+                Notification.ShowWarning("Item Selected false");
                 return myValue2;
             default:
                 return 0;

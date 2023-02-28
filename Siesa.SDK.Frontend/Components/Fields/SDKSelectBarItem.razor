@@ -1,0 +1,9 @@
+@inherits SDKComponent
+
+<RadzenSelectBarItem Text="@Text" Value="@Value" />
+
+@code
+{
+    [Parameter] public string Text {get; set;}
+    [Parameter] public bool Value {get; set;}
+}

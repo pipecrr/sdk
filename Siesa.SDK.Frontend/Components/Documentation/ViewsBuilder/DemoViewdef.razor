@@ -104,9 +104,13 @@
 
                 <p>Por defecto el listar no muestra el linkTo si se desea agregar el LisnkTO es necesario indicarlo en el list.json</p>
                         <SDKTextField CssClass="text-area-demoviewdef" Value="@ShowLinkTo"/>
+                        
                 <p>El listar permite enviar acciones personalizadas se agregan a nivel general en el list.json</p>
                         <SDKTextField CssClass="text-area-demoviewdef" Value="@CustomActions"/>
 
+                <p>Utilizando la propiedad CustomAtributtes ahora podemos definir para un campo de tipo Booleano, 
+                    las opciones que se mostraran luego de definirlo como tipo Selectbar, enviando el tag del recurso de la siguiente manera:</p>
+                         <SDKTextField CssClass="text-area-demoviewdef" Value="@SelectbarBoolean"/>
         </div>
     </div>
 </div>
@@ -269,4 +273,12 @@
                             ""Action"": ""CustomAction"",
                             ""IconClass"": ""fa fa-plus""
                             }]";
+
+    string SelectbarBoolean = @"
+                                    ""Name"": ""BaseObj.HasScheduledAccess"", 
+                                    ""CustomType"": ""SelectBarField"",
+                                        ""CustomAttributes"": {
+                                        ""BooleanYesResourceTag"": ""Custom.Prueba.Si"",
+                                        ""BooleanNoResourceTag"": ""Custom.Prueba.No""
+                                        }" ;
 }
