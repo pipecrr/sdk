@@ -431,9 +431,33 @@ namespace Siesa.SDK.Business
             return result;
         }
 
-        public async Task<int> SaveAttachmentDetail(SDKFileUploadDTO obj){
+        [SDKApiMethod("POST")]
+        public virtual async Task<SDKFileUploadDTO> UploadSingleByte(IFormFile file){
+            var result = new SDKFileUploadDTO();
+            if (file == null){
+                throw new Exception("File is null");
+            }
+            byte[] fileBytes = null;
+            using (var ms = new MemoryStream()){
+                file.CopyTo(ms);
+                fileBytes = ms.ToArray();
+            }
+            var response = await Backend.Call("SaveFile", fileBytes, file.FileName);
+            if(response.Success){
+                result.Url = response.Data.Url;
+                result.FileType = file.ContentType;
+                result.FileName = file.FileName;
+                result.FileContent = fileBytes;
+            }else{
+                var errors = JsonConvert.DeserializeObject<List<string>> (response.Errors.ToString());
+                throw new ArgumentException(errors[0]);
+            }
+            return result;
+        }
+
+        public async Task<int> SaveAttachmentDetail(SDKFileUploadDTO obj, int rowid = 0){
             var BLAttatchmentDetail = GetBackend("BLAttachmentDetail");
-            var result = await BLAttatchmentDetail.Call("SaveAttatchmentDetail", obj);
+            var result = await BLAttatchmentDetail.Call("SaveAttatchmentDetail", obj, rowid);
             if(result.Success){
                 return result.Data;
             }else{

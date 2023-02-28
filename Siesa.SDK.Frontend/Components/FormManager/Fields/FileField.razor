@@ -22,12 +22,13 @@
         FieldName="@FieldName"
         Progress="@Progress"
         Complete="@Complete"
-        Change="@Change"
+        Change="((val)=>OnChange(val))"
         Error="@Error"
         UploadMethodName="@UploadMethodName"
         View="@View"
         HeightView="@Height"
         @ref="SDKFileField"
+        SaveByte="@SaveByte"
         
     />
 }
@@ -42,7 +43,7 @@
     [Parameter]public List<string> Extensions {get; set;} = new List<string>(){"image/*"};
     [Parameter]public bool Disabled {get; set;}
     [Parameter]public bool Auto {get; set;} = false;
-    
+    [Parameter]public bool SaveByte {get; set;} = true;
     [Parameter] public Action<SDKUploadProgressArgsDTO> Progress {get;set;}
     [Parameter] public Action<SDKUploadCompleteEventArgsDTO> Complete {get;set;}
     [Parameter] public Action<SDKUploadChangeEventArgsDTO> Change {get;set;}
@@ -51,6 +52,8 @@
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public string View { get; set; }
     [Parameter] public string Height { get; set; }
+
+    private SDKFileUploadDTO DataAttatchmentDetail { get; set; }
     
     private RenderFragment? _fieldValidationTemplate;
     
@@ -62,8 +65,22 @@
             {
                 foreach (var attr in FieldOpt.CustomAttributes.Where(a => !a.Key.StartsWith("sdk-")))
                 {
-                    this.GetType().GetProperty(attr.Key)?.SetValue(this, attr.Value);                    
+                    if(attr.Value.GetType() == typeof(Newtonsoft.Json.Linq.JArray)){
+                        var value = JsonConvert.DeserializeObject<List<string>>(attr.Value.ToString());
+                        this.GetType().GetProperty(attr.Key)?.SetValue(this, value);
+                    }else{
+                        this.GetType().GetProperty(attr.Key)?.SetValue(this, attr.Value);
+                    }
                 }
             }        
+    }
+    
+    private async Task OnChange(SDKUploadChangeEventArgsDTO args){
+        var rowid = Business.BaseObj.GetType().GetProperty("AttachmentDetail").PropertyType.GetProperty("Rowid").GetValue(Business.BaseObj.GetType().GetProperty("AttachmentDetail").GetValue(Business.BaseObj));
+        E00271_AttachmentDetail AttachmentDetail = new E00271_AttachmentDetail();        
+        if(rowid != null){
+            AttachmentDetail.Rowid = rowid;
+        }
+        SetValue(AttachmentDetail);
     }
 }

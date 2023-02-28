@@ -39,7 +39,7 @@ namespace Siesa.SDK.Frontend.Services
             UtilsManager = utilsManager;
             Menus = new List<E00061_Menu>();
 
-            _ = Init();
+            //_ = Init();
         }
 
         private async Task GetSuites()
@@ -103,6 +103,10 @@ namespace Siesa.SDK.Frontend.Services
 
         public async Task ReloadMenu()
         {
+            if(Menus != null)
+            {
+                Menus.Clear();
+            }
             await Init();
         }
 
