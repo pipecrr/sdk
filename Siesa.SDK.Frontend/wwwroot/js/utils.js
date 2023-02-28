@@ -63,6 +63,10 @@ function deleteCookie(name) {
     document.cookie = name + '=; Max-Age=-99999999;';
 }
 
+function SetFocusToElement(dataAutomationId){
+    document.querySelector(`[data-automation-id="${dataAutomationId}"]`).focus();
+}
+
 function preloadFlex(){
     var search = window.location.search;
     var params = search.substring(1,search.length).split('&');
@@ -89,4 +93,5 @@ window.loadCss = loadCss;
 window.createCookie = createCookie;
 window.readCookie = readCookie;
 window.deleteCookie = deleteCookie;
+window.SetFocusToElement = SetFocusToElement;
 window.preloadFlex = preloadFlex;

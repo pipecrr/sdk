@@ -76,6 +76,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Parameter]
         public Action OnCancel {get; set;} = null;
 
+        public int CountUnicErrors = 0;
+
         private string _viewdefName = "";
 
         [Inject]
@@ -369,7 +371,16 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
         {
             Saving = true;
             //var id = await BusinessObj.SaveAsync();
-            //fielFields is empty
+            if(CountUnicErrors>0){
+                GlobalLoaderService.Hide();
+                Saving = false;
+                var existeUniqueIndexValidation = NotificationService.Messages.Where(x => x.Summary == "Custom.Generic.UniqueIndexValidation").Any();
+                if(!existeUniqueIndexValidation){
+                    NotificationService.ShowError("Custom.Generic.UniqueIndexValidation");
+                }
+                return;
+            }
+            GlobalLoaderService.Show();
             if(FileFields.Count>0){
                 foreach (var item in FileFields)
                 {
@@ -469,8 +480,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
         protected async Task HandleValidSubmit()
         {
             FormHasErrors = false;
-            ErrorMsg = "";
-            GlobalLoaderService.Show();
+            ErrorMsg = "";            
             await SaveBusiness();
         }
         protected void HandleInvalidSubmit()
