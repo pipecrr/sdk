@@ -514,6 +514,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                             {
                                 continue;
                             }
+                            dynamic defaultValue = Activator.CreateInstance(searchValue.GetType());
+                            if (searchValue == defaultValue)
+                            {
+                                continue;
+                            }
                             switch (fieldObj.FieldType)
                             {
                                 case FieldTypes.CharField:
