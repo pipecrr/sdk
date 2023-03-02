@@ -180,6 +180,8 @@
         }
 
         StateHasChanged();
+        
+        var existMountFlex = JSRuntime.InvokeAsync<object>("existMountFlex");
         if(MountFlex || !_isMounted)
         {
             if(_jsModule == null){

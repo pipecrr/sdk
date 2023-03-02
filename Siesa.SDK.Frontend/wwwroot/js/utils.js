@@ -13,7 +13,7 @@ function loadScript(url, in_head = false, callback = null) {
 
     var parent = in_head ? document.head : document.body;
     var script = document.createElement('script');
-    script.type = 'text/javascript';
+    script.type = 'application/javascript';
     script.src = url;
 
     if (callback) {

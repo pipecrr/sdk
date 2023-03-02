@@ -33,6 +33,12 @@ function ListViewInstance(dotnethelper, key){
     }
 }
 
+function existMountFlex(){
+    console.log("existMountFlex ");
+    console.log(window.MountFlex != null);
+    return window.MountFlex != null;
+}
+
 function MountFlex(div_id, retries = 0)
 {
     if(!window.ResourceFlex){
@@ -63,6 +69,7 @@ function MountFlex(div_id, retries = 0)
 (() => {
     window.MountFlex = MountFlex;
     window.ListViewInstance = ListViewInstance;
+    window.existMountFlex = existMountFlex;
 /*
     window.addEventListener('locationchange', function () {
         console.log("locationchange probando");

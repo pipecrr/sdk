@@ -26,6 +26,8 @@ using Siesa.SDK.Report.Implementation;
 using Siesa.SDK.Frontend.Report.Controllers;
 using GrapeCity.ActiveReports.Aspnetcore.Designer.Services;
 using Siesa.SDK.Frontend.Report.Services;
+using Microsoft.AspNetCore.ResponseCompression;
+using System.Linq;
 
 namespace Siesa.SDK.Frontend {
     public static class SiesaSecurityExtensions
@@ -68,6 +70,15 @@ namespace Siesa.SDK.Frontend {
 
 
             services.AddReporting();
+            services.Configure<GzipCompressionProviderOptions>(options => {
+                options.Level = System.IO.Compression.CompressionLevel.Optimal;
+            });
+            services.AddResponseCompression(options =>
+            {
+                options.EnableForHttps = true;
+                options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[] { "application/javascript"});
+                options.Providers.Add<GzipCompressionProvider>();
+            });
 			services.AddDesigner();
 			services.AddSingleton<ITemplatesService>(new SDKSystemTemplates());
 			services.AddRazorPages().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
@@ -95,9 +106,14 @@ namespace Siesa.SDK.Frontend {
 
         public static IApplicationBuilder UseSDK(this IApplicationBuilder app)
         {
+
+            //Habilita la compresion gZip
+            app.UseResponseCompression();
             app.UseHttpsRedirection();
 
+
             app.UseStaticFiles();
+
             var serviceScope = app.ApplicationServices.CreateScope().ServiceProvider;
 
             var resourcesSaveService = serviceScope.GetRequiredService<SaveController>();
@@ -137,6 +153,8 @@ namespace Siesa.SDK.Frontend {
                     pattern: "api/{blname}/{blaction}/",
                     defaults: new { controller = "Api", action = "Index" });
             });
+
+            
             return app;
         }
 
