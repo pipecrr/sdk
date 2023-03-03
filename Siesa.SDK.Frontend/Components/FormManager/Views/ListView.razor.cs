@@ -504,8 +504,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         var fieldObj = field.GetFieldObj(BusinessObj);
                         if (fieldObj != null)
                         {
-                            dynamic searchValue = fieldObj.ModelObj.GetType().GetProperty(fieldObj.Name).GetValue(fieldObj.ModelObj, null);
-                            Type searchValueType = searchValue.GetType();
+                            dynamic searchValue = fieldObj.ModelObj.GetType().GetProperty(fieldObj.Name).GetValue(fieldObj.ModelObj, null);                            
                             if (searchValue == null)
                             {
                                 continue;
@@ -516,10 +515,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                 continue;
                             }
                             try{
+                                Type searchValueType = searchValue.GetType();
                                 dynamic defaultValue = null;
-                                if (searchValueType == typeof(string)) {
-                                    defaultValue = default(string);
-                                } else {
+                                if(searchValueType.IsValueType){
                                     defaultValue = Activator.CreateInstance(searchValueType);
                                 }
                                 if (searchValue == defaultValue)
