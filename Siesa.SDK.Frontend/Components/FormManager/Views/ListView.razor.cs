@@ -514,10 +514,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                             {
                                 continue;
                             }
-                            dynamic defaultValue = Activator.CreateInstance(searchValue.GetType());
-                            if (searchValue == defaultValue)
+                            if (!(searchValue is string)) 
                             {
-                                continue;
+                                dynamic defaultValue = Activator.CreateInstance(searchValue.GetType());
+                                if (searchValue == defaultValue)
+                                {
+                                    continue;
+                                }
                             }
                             switch (fieldObj.FieldType)
                             {
@@ -766,7 +769,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 Data = new List<object> { };
             }
             if(ServerPaginationFlex && UseFlex){
-                // var dbData = await BusinessObj.GetDataAsync(0, 2, filters, "");
+                Data = await BusinessObj.GetDataWidthTop(filters);
+                 if (Data != null && Data.Count() == 1){
+                    GoToDetail((dynamic)Data.First());
+                     return;
+                 }
                 // Data = dbData.Data;
                 // if (Data.Count() == 1)
                 // {

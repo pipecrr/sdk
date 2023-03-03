@@ -311,6 +311,15 @@ namespace Siesa.SDK.Business
             return response;
         }
 
+        public async Task<List<dynamic>> GetDataWidthTop(string filters = ""){
+            var result = new List<dynamic>();
+            var response = await Backend.Call("GetDataWidthTop", filters);
+            if(response != null){
+                result = response.Data;
+            }
+            return result;
+        }
+
         public async virtual Task<Siesa.SDK.Shared.Business.LoadResult> GetDataAsync(int? skip, int? take, string filter = "", string orderBy = "")
         {
             Siesa.SDK.Shared.Business.LoadResult response = new Siesa.SDK.Shared.Business.LoadResult();
