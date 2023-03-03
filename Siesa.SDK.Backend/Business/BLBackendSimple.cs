@@ -616,6 +616,28 @@ namespace Siesa.SDK.Business
             return this.GetData(0, 10, filter, "", filterDelegate);
         }
 
+        [SDKExposedMethod]
+        public async Task<ActionResult<List<dynamic>>> GetDataWithTop(string filter = ""){
+            var result = new List<dynamic>();
+            using (SDKContext context = CreateDbContext())
+            {
+                context.SetProvider(_provider);
+                IQueryable query = context.Set<T>();
+                if(!string.IsNullOrEmpty(filter)){
+                    query = query.Where(filter);
+                }
+                query = query.OrderBy("Rowid");
+                query = query.Take(2);
+                query = query.Select("Rowid");
+                var data = query.ToDynamicList();
+                result = data;
+            }
+            return new ActionResult<List<dynamic>>
+                    {
+                        Data = result
+                    };
+        }
+
         public virtual Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null)
         {
             this._logger.LogInformation($"Get Data {this.GetType().Name}");

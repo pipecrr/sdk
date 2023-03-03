@@ -504,7 +504,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         var fieldObj = field.GetFieldObj(BusinessObj);
                         if (fieldObj != null)
                         {
-                            dynamic searchValue = fieldObj.ModelObj.GetType().GetProperty(fieldObj.Name).GetValue(fieldObj.ModelObj, null);
+                            dynamic searchValue = fieldObj.ModelObj.GetType().GetProperty(fieldObj.Name).GetValue(fieldObj.ModelObj, null);                            
                             if (searchValue == null)
                             {
                                 continue;
@@ -514,10 +514,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                             {
                                 continue;
                             }
-                            dynamic defaultValue = Activator.CreateInstance(searchValue.GetType());
-                            if (searchValue == defaultValue)
-                            {
-                                continue;
+                            try{
+                                Type searchValueType = searchValue.GetType();
+                                dynamic defaultValue = null;
+                                if(searchValueType.IsValueType && !searchValueType.IsEnum){
+                                    defaultValue = Activator.CreateInstance(searchValueType);
+                                }
+                                if (searchValue == defaultValue)
+                                {
+                                    continue;
+                                }
+                            }catch(Exception e){
+                                Console.WriteLine(e);
                             }
                             switch (fieldObj.FieldType)
                             {
@@ -766,7 +774,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 Data = new List<object> { };
             }
             if(ServerPaginationFlex && UseFlex){
-                // var dbData = await BusinessObj.GetDataAsync(0, 2, filters, "");
+                Data = await BusinessObj.GetDataWithTop(filters);
+                 if (Data != null && Data.Count() == 1){
+                    GoToDetail((dynamic)Data.First());
+                     return;
+                 }
                 // Data = dbData.Data;
                 // if (Data.Count() == 1)
                 // {
