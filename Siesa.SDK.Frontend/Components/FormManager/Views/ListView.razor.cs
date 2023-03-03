@@ -517,7 +517,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                             try{
                                 Type searchValueType = searchValue.GetType();
                                 dynamic defaultValue = null;
-                                if(searchValueType.IsValueType){
+                                if(searchValueType.IsValueType && !searchValueType.IsEnum){
                                     defaultValue = Activator.CreateInstance(searchValueType);
                                 }
                                 if (searchValue == defaultValue)
