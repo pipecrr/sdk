@@ -58,7 +58,8 @@ namespace Siesa.SDK.Frontend.Report.Controllers
 
         private void ValidateUser()
         {
-            if (string.IsNullOrEmpty(_authenticationService.UserToken))
+            _setValidUserToken().GetAwaiter().GetResult();
+            /*if (string.IsNullOrEmpty(_authenticationService.UserToken))
             {
                  _setValidUserToken().GetAwaiter().GetResult();
             }else
@@ -67,7 +68,7 @@ namespace Siesa.SDK.Frontend.Report.Controllers
                 {
                     _setValidUserToken().GetAwaiter().GetResult();
                 }
-            }
+            }*/
         }
 
         public GrapeCity.ActiveReports.PageReportModel.Report GetReport(string id)
