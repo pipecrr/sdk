@@ -311,9 +311,9 @@ namespace Siesa.SDK.Business
             return response;
         }
 
-        public async Task<List<dynamic>> GetDataWidthTop(string filters = ""){
+        public async Task<List<dynamic>> GetDataWithTop(string filters = ""){
             var result = new List<dynamic>();
-            var response = await Backend.Call("GetDataWidthTop", filters);
+            var response = await Backend.Call("GetDataWithTop", filters);
             if(response != null){
                 result = response.Data;
             }

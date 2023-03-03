@@ -617,7 +617,7 @@ namespace Siesa.SDK.Business
         }
 
         [SDKExposedMethod]
-        public async Task<ActionResult<List<dynamic>>> GetDataWidthTop(string filter = ""){
+        public async Task<ActionResult<List<dynamic>>> GetDataWithTop(string filter = ""){
             var result = new List<dynamic>();
             using (SDKContext context = CreateDbContext())
             {
@@ -626,6 +626,7 @@ namespace Siesa.SDK.Business
                 if(!string.IsNullOrEmpty(filter)){
                     query = query.Where(filter);
                 }
+                query = query.OrderBy("Rowid");
                 query = query.Take(2);
                 query = query.Select("Rowid");
                 var data = query.ToDynamicList();

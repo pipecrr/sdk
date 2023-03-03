@@ -774,7 +774,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 Data = new List<object> { };
             }
             if(ServerPaginationFlex && UseFlex){
-                Data = await BusinessObj.GetDataWidthTop(filters);
+                Data = await BusinessObj.GetDataWithTop(filters);
                  if (Data != null && Data.Count() == 1){
                     GoToDetail((dynamic)Data.First());
                      return;
