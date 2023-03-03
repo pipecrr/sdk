@@ -205,6 +205,6 @@
             {
                 return x.CurrentText.ToLower().Contains(SearchString.ToLower());
             }
-        });
+        }).OrderBy(x => x.Order);
     }
 }
