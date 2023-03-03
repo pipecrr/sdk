@@ -86,8 +86,6 @@
 
     private Dictionary<string, object> FlexAttributes { get; set; } = new Dictionary<string, object>();
 
-    private IJSObjectReference _jsModule;
-
     private bool _isMounted = false;
 
     private void Init()
@@ -180,27 +178,40 @@
         }
 
         StateHasChanged();
+        
+        
         if(MountFlex || !_isMounted)
         {
-            if(_jsModule == null){
-                _ = InvokeAsync(async () => {
-                    await Task.Delay(250);
-                    JSRuntime.InvokeAsync<object>("window.MountFlex", flexElementId);
-                    if(IsListView){
-                        JSRuntime.InvokeVoidAsync("window.ListViewInstance", DotNetObjectReference.Create(ListView), GuidListView);
-                    }
-                });
-            }else{
-                
-                JSRuntime.InvokeAsync<object>("window.MountFlex", flexElementId);
-                if(IsListView){
-                    JSRuntime.InvokeVoidAsync("window.ListViewInstance", DotNetObjectReference.Create(ListView), GuidListView);
-                }
-            }
+            _= MountFlexComponent();
             _isMounted = true;
         }
 
 
+    }
+
+    private async Task MountFlexComponent()
+    {
+        try
+        {
+            var existMountFlex = await JSRuntime.InvokeAsync<bool>("existMountFlex");
+            if(!existMountFlex)
+            {
+                //wait for mount flex and retry
+                await Task.Delay(250);
+                _ = MountFlexComponent();
+                return;
+            }
+        }catch(Exception ex)
+        {
+            //wait for mount flex and retry
+            await Task.Delay(250);
+            _ = MountFlexComponent();
+            return;
+        }
+        await JSRuntime.InvokeAsync<object>("window.MountFlex", flexElementId);
+        if(IsListView){
+            await JSRuntime.InvokeVoidAsync("window.ListViewInstance", DotNetObjectReference.Create(ListView), GuidListView);
+        }
     }
 
     protected override async Task OnInitializedAsync()
@@ -214,18 +225,6 @@
         }
 
         await base.OnInitializedAsync();
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if(firstRender || _jsModule == null){
-            if(_isDebug)
-            {
-                _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/flex/FlexComponent.debug.js");
-            }else{
-                _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/flex/FlexComponent.js");
-            }
-        }
     }
 
     protected override void OnParametersSet()
