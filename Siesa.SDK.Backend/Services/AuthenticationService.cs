@@ -41,7 +41,7 @@ namespace Siesa.SDK.Backend.Services
             throw new NotImplementedException();
         }
 
-        public Task Login(string username, string password, short rowIdDBConnection)
+        public Task Login(string username, string password, short rowIdDBConnection, bool IsUpdateSession = false)
         {
             throw new NotImplementedException();
         }

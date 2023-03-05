@@ -89,16 +89,23 @@ namespace Siesa.SDK.Frontend.Services
             //Console.WriteLine($"UserToken: {UserToken}");
         }
 
-        public async Task Login(string username, string password, short rowIdDBConnection)
-        {
+        public async Task Login(string username, string password, short rowIdDBConnection, bool IsUpdateSession = false)
+        {//Banderita para saber si actualizo o creo sdksesion
             var BLuser = _backendRouterService.GetSDKBusinessModel("BLUser", this);
             if (BLuser == null)
             {
                 throw new Exception("Login Service not found");
             }
 
+            //Sacar la IP verdadera del Header**
+
             string ipAddress = _contextAccesor.HttpContext.Connection.RemoteIpAddress?.ToString();
+
             string browserName = _contextAccesor.HttpContext.Request.Headers["User-Agent"].ToString();
+
+            string sessionId = "";
+
+            _contextAccesor.HttpContext.Request.Cookies.TryGetValue("sdksession", out sessionId);
 
             var loginRequest = await BLuser.Call("SignInSession", new Dictionary<string, dynamic> {
                 {"username", username},
@@ -106,13 +113,16 @@ namespace Siesa.SDK.Frontend.Services
                 {"rowIdDBConnection", rowIdDBConnection},
                 {"ipAddress", ipAddress},
                 {"browserName", browserName},
-                {"rowidCulture", RowidCultureChanged}
+                {"rowidCulture", RowidCultureChanged},
+                {"sessionId", sessionId},
+                {"IsUpdateSession", IsUpdateSession}
             });
             if (loginRequest.Success)
             {
                 UserToken = loginRequest.Data.Token;
+                var sdksesion = loginRequest.Data.IdSession;
                 await _localStorageService.SetItemAsync("usertoken", UserToken);
-                await SetCookie("sdksession", loginRequest.Data.IdSession);
+                await SetCookie("sdksession", sdksesion);
             }
             else
             {

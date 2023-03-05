@@ -82,8 +82,8 @@
         }
 
         try
-        {
-            await AuthenticationService.Login(model.Username, model.Password,SelectedConnection.Rowid);
+        {//Evniar Banderita al login para saber que voy actualizar, boo updateTokenSession = true
+            await AuthenticationService.Login(model.Username, model.Password,SelectedConnection.Rowid, true);
             NavigationManager.TryGetQueryString("returnUrl", out string returnUrl);
             if (returnUrl == null || returnUrl == "null")
             {
