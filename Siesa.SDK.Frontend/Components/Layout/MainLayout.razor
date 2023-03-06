@@ -225,6 +225,17 @@
     }
 
     [JSInvokable]
+    public async Task RenewToken()
+    {
+        if(AuthenticationService?.User != null )
+        { //&& await AuthenticationService.IsValidToken()
+            await AuthenticationService.RenewToken();
+        }
+        //await AuthenticationService.Login(model.Username, model.Password,SelectedConnection.Rowid, true);
+        StateHasChanged();
+    }
+
+    [JSInvokable]
     public async Task HideLogin()
     {
         if(_showingLogin && AuthenticationService != null && AuthenticationService.User != null && await AuthenticationService.IsValidToken()){

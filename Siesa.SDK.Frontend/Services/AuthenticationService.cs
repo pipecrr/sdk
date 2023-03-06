@@ -62,7 +62,7 @@ namespace Siesa.SDK.Frontend.Services
             _localStorageService = localStorageService;
             _backendRouterService = BackendRouterService;
             _contextAccesor = ContextAccessor;
-            _minutesExp = 120; //TODO: get from config
+            _minutesExp = 1; //TODO: get from config
             _secretKey = "testsecretKeyabc$"; //TODO: get from config
             _jsRuntime = jsRuntime;
         }
@@ -103,9 +103,7 @@ namespace Siesa.SDK.Frontend.Services
 
             string browserName = _contextAccesor.HttpContext.Request.Headers["User-Agent"].ToString();
 
-            string sessionId = "";
-
-            _contextAccesor.HttpContext.Request.Cookies.TryGetValue("sdksession", out sessionId);
+            string sessionId = IsUpdateSession ? _contextAccesor.HttpContext.Request.Cookies["sdksession"].ToString() : "";
 
             var loginRequest = await BLuser.Call("SignInSession", new Dictionary<string, dynamic> {
                 {"username", username},
@@ -133,6 +131,25 @@ namespace Siesa.SDK.Frontend.Services
                 else
                 {
                     throw new Exception("Login failed");
+                }
+            }
+        }
+
+        //RenewToken method
+        public async Task RenewToken()
+        {
+            var sessionId = "";
+            
+            _contextAccesor.HttpContext.Request.Cookies.TryGetValue("sdksession", out sessionId);
+
+            var BLuser = _backendRouterService.GetSDKBusinessModel("BLUser", this);
+            if (BLuser != null)
+            {
+                var _renewToken = await BLuser.Call("RenewToken",sessionId);
+                if (_renewToken.Success)
+                {
+                    UserToken = _renewToken.Data;
+                    await _localStorageService.SetItemAsync("usertoken", UserToken);
                 }
             }
         }
