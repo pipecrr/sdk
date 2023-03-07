@@ -53,6 +53,8 @@ namespace Siesa.SDK.Entities
 
 		public string? Token { get; set; }
 
+		public DateTime? EndDate { get; set; }
+
 
 		[SDKCheckRelationship]
 		[Required]
