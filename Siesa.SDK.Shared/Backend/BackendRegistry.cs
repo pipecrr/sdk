@@ -130,7 +130,7 @@ namespace Siesa.SDK.Shared.Backend
 
         }
 
-        public async Task<Protos.LoadResult> GetDataBusinessObj(string business_name, int? skip, int? take, string filter = "", string orderBy = "")
+        public async Task<Protos.LoadResult> GetDataBusinessObj(string business_name, int? skip, int? take, string filter = "", string orderBy = "", bool includeCount = false)
         {
             var channel = GrpcUtils.GetChannel(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
@@ -142,7 +142,8 @@ namespace Siesa.SDK.Shared.Backend
                 Filter = filter,
                 OrderBy = orderBy,
                 CurrentUserToken = (AuthenticationService != null && AuthenticationService.UserToken != null ? AuthenticationService.UserToken : ""),
-                CurrentUserRowid = (AuthenticationService != null && AuthenticationService.User != null ? AuthenticationService.User.Rowid: 0)
+                CurrentUserRowid = (AuthenticationService != null && AuthenticationService.User != null ? AuthenticationService.User.Rowid: 0),
+                IncludeCount = includeCount
             };
             try
             {

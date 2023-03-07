@@ -91,7 +91,7 @@ namespace Siesa.SDK.Business
             return null;
         }
 
-        public Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<BaseSDK<int>> queryFilter = null)
+        public Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<BaseSDK<int>> queryFilter = null, bool includeDeleted = false)
         {
             return null;
         }
@@ -291,7 +291,7 @@ namespace Siesa.SDK.Business
             return BaseObj.ToString();
         }
 
-        public virtual Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null)
+        public virtual Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null, bool includeCount = false)
         {
             return GetDataAsync(skip, take, filter, orderBy).GetAwaiter().GetResult();
         }
@@ -320,15 +320,18 @@ namespace Siesa.SDK.Business
             return result;
         }
 
-        public async virtual Task<Siesa.SDK.Shared.Business.LoadResult> GetDataAsync(int? skip, int? take, string filter = "", string orderBy = "")
+        public async virtual Task<Siesa.SDK.Shared.Business.LoadResult> GetDataAsync(int? skip, int? take, string filter = "", string orderBy = "", bool includeCount = false)
         {
             Siesa.SDK.Shared.Business.LoadResult response = new Siesa.SDK.Shared.Business.LoadResult();
             try
             {
-                var result = await Backend.GetData(skip, take, filter, orderBy);
+                var result = await Backend.GetData(skip, take, filter, orderBy, includeCount);
 
                 response.Data = result.Data.Select(x => JsonConvert.DeserializeObject<T>(x)).ToList();
                 response.TotalCount = result.Data.Count;
+                if(includeCount){
+                    response.TotalCount = result.TotalCount;
+                }
                 response.GroupCount = result.GroupCount;
 
                 return response;
