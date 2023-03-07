@@ -157,7 +157,9 @@ namespace Siesa.SDK.Frontend.Services
         public async Task Logout()
         {
            
-            string sessionId =  _contextAccesor.HttpContext.Request.Cookies["sdksession"].ToString();
+            var sessionId = "";
+            
+            _contextAccesor.HttpContext.Request.Cookies.TryGetValue("sdksession", out sessionId);
 
             var BLSession = _backendRouterService.GetSDKBusinessModel("BLSession", this);
             if (BLSession == null)
@@ -165,7 +167,7 @@ namespace Siesa.SDK.Frontend.Services
                 throw new Exception("Failed Logout");
             }
             
-            var updateSession = await BLSession.Call("UpdateSession",sessionId ,UserToken, true);
+            var updateSession = await BLSession.Call("UpdateSessionToken",sessionId ,UserToken, true);
             if(updateSession.Success)
             {
 
