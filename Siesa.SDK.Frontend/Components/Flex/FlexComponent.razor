@@ -6,14 +6,14 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Frontend.Components.FormManager.Views
 @using Siesa.SDK.Frontend.Components.FormManager.Model
-@using Newtonsoft.Json;
+@using Newtonsoft.Json
 @inject UtilsManager UtilsManager
 @implements IDisposable
 
 <div @attributes="@FlexAttributes">
 </div>
 
-@if(!IsListView)
+@if(!IsListView && FlexRowId == 0)
 {    
 <PageTitle>Flex</PageTitle>
 <SetTopBar>
@@ -63,15 +63,23 @@
     public bool ServerPagination {get;set;} = false;
     [Parameter]
     public string FilterSearch {get;set;} = "";
+
+    [Parameter]
+    public string FlexFilters {get;set;} = "";
+
     [Parameter]
     public string GuidFlex {get;set;} = "";
     [Parameter]
     public List<string> ActionIcons {get;set;} = new List<string>();
 
     [Parameter]
-    public bool HasSearch {get;set;} = false;  
+    public bool HasSearch {get;set;} = false;
     [Parameter]
     public bool IsMultiple {get;set;} = false;
+
+    [Parameter]
+    public int FlexRowId {get;set;} = 0;
+
     private string _guid ="";
     private bool _isDebug = false;
 
@@ -152,7 +160,10 @@
             _currentView = "edit";
         }
         var actionIconsString = JsonConvert.SerializeObject(ActionIcons);
-
+        if(FlexRowId != 0){
+            _flexRowId = FlexRowId;
+            _currentView = "detail";
+        }
         FlexAttributes.Clear();
         flexElementId = "flexdebug";//$"flex_{Guid.NewGuid().ToString()}";
         FlexAttributes.Add("id", flexElementId);
