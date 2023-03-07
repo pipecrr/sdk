@@ -95,10 +95,17 @@ namespace Siesa.SDK.Frontend.Controllers
             //get auth token from headers
             string authToken = "";
             var sessionId = "";
+            short rowIdDBConnection = 1;
             Request.Cookies.TryGetValue("sdksession", out sessionId);
+            Request.Cookies.TryGetValue("selectedConnection", out string rowIdDBConnectionStr);
+
+            if (!string.IsNullOrEmpty(rowIdDBConnectionStr))
+            {
+                rowIdDBConnection = short.Parse(rowIdDBConnectionStr);
+            }
             if (!string.IsNullOrEmpty(sessionId)){
                 var BLSession = BackendRouterService.GetSDKBusinessModel("BLSession", AuthenticationService);
-                var response = await BLSession.Call("GetSession", sessionId);
+                var response = await BLSession.Call("GetSession", sessionId, rowIdDBConnection);
                 if(response.Success){
                     authToken = response.Data;
                 }

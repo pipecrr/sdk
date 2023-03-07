@@ -83,7 +83,7 @@ namespace Siesa.SDK.Business
             return null;
         }
 
-        public Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<BaseSDK<int>> queryFilter = null)
+        public Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<BaseSDK<int>> queryFilter = null, bool includeCount = false)
         {
             return null;
         }
@@ -638,7 +638,7 @@ namespace Siesa.SDK.Business
                     };
         }
 
-        public virtual Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null)
+        public virtual Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null, bool includeCount = false)
         {
             this._logger.LogInformation($"Get Data {this.GetType().Name}");
             var result = new Siesa.SDK.Shared.Business.LoadResult();
@@ -656,6 +656,9 @@ namespace Siesa.SDK.Business
                     query = query.Where(filter);
                 }
                 var total = 0;
+                if(includeCount){
+                    total = query.Select("Rowid").Count();
+                }
 
                 if (!string.IsNullOrEmpty(orderBy))
                 {
@@ -679,7 +682,8 @@ namespace Siesa.SDK.Business
                 {
                     query = queryFilter(query);
                 }
-                
+                //total data
+                result.TotalCount = total;
                 //data
                 result.Data = query.ToList();
             }
