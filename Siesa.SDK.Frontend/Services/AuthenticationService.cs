@@ -90,7 +90,7 @@ namespace Siesa.SDK.Frontend.Services
         }
 
         public async Task Login(string username, string password, short rowIdDBConnection, bool IsUpdateSession = false)
-        {//Banderita para saber si actualizo o creo sdksesion
+        {
             var BLuser = _backendRouterService.GetSDKBusinessModel("BLUser", this);
             if (BLuser == null)
             {
@@ -156,16 +156,35 @@ namespace Siesa.SDK.Frontend.Services
 
         public async Task Logout()
         {
-            UserToken = "";
-            _user = null;
-            await _localStorageService.RemoveItemAsync("usertoken");
-            await _localStorageService.RemoveItemAsync("lastInteraction");
-            await _localStorageService.RemoveItemAsync("n_tabs");
-            await _localStorageService.RemoveItemAsync("bd");
-            await _localStorageService.RemoveItemAsync("selectedSuite");
-            await RemoveCookie("sdksession");
+           
+            string sessionId =  _contextAccesor.HttpContext.Request.Cookies["sdksession"].ToString();
 
-            _navigationManager.NavigateTo("login");
+            var BLSession = _backendRouterService.GetSDKBusinessModel("BLSession", this);
+            if (BLSession == null)
+            {
+                throw new Exception("Failed Logout");
+            }
+            
+            var updateSession = await BLSession.Call("UpdateSession",sessionId ,UserToken, true);
+            if(updateSession.Success)
+            {
+
+                await _localStorageService.RemoveItemAsync("usertoken");
+                await _localStorageService.RemoveItemAsync("lastInteraction");
+                await _localStorageService.RemoveItemAsync("n_tabs");
+                await _localStorageService.RemoveItemAsync("bd");
+                await _localStorageService.RemoveItemAsync("selectedSuite");
+                await RemoveCookie("sdksession");
+                UserToken = "";
+                _user = null;
+
+                _navigationManager.NavigateTo("login");
+            }
+            else
+            {
+                throw new Exception("Failed Logout");
+            }
+
         }
 
         public async Task SetToken(string token, bool saveLocalStorage = true)

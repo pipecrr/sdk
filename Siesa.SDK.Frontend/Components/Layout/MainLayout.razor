@@ -228,10 +228,9 @@
     public async Task RenewToken()
     {
         if(AuthenticationService?.User != null )
-        { //&& await AuthenticationService.IsValidToken()
+        { 
             await AuthenticationService.RenewToken();
         }
-        //await AuthenticationService.Login(model.Username, model.Password,SelectedConnection.Rowid, true);
         StateHasChanged();
     }
 
