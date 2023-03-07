@@ -624,7 +624,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         async Task LoadData(LoadDataArgs args)
         {
-            if (Data != null)
+            if (Data != null && ListViewModel.InfiniteScroll && UseFlex)
             {
                 data = Data;
                 count = data.Count();
@@ -649,7 +649,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
 
             FilterFlex = filters;
-            var dbData = await BusinessObj.GetDataAsync(args.Skip, args.Top, filters, args.OrderBy);
+            bool includeCount = false;
+            if(!UseFlex && !ListViewModel.InfiniteScroll){
+                includeCount = true;
+            }
+            var dbData = await BusinessObj.GetDataAsync(args.Skip, args.Top, filters, args.OrderBy, includeCount);
             data = dbData.Data;
             count = dbData.TotalCount;
             LoadingData = false;
@@ -782,12 +786,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 // Data = dbData.Data;
                 // if (Data.Count() == 1)
                 // {
-                //     GoToDetail(((dynamic)Data.First()).Rowid);
+                //     GoToDetail(((dynamic)Data.First()).Rowid);   
                 //     return;
                 // }
                 // count = dbData.TotalCount;
             }else{
-                var dbData = await BusinessObj.GetDataAsync(null, null, filters, "");
+                bool includeCount = false;
+                if(!UseFlex && !ListViewModel.InfiniteScroll){
+                    includeCount = true;
+                }
+                var dbData = await BusinessObj.GetDataAsync(0, ListViewModel.Paging.PageSize, filters, "", includeCount);
                 Data = dbData.Data;
                 if (Data.Count() == 1){
                     if(!FromEntityField){
