@@ -39,11 +39,18 @@
             var metadataObj = JsonConvert.DeserializeObject<SDKFlexRequestSaveData>(metadata);
             
             if(FlexFilters != null && metadataObj != null && metadataObj.filter_list != null && metadataObj.filter_list.Count > 0){
-                foreach(var filter in metadataObj.filter_list){
-                    if(FlexFilters.ContainsKey(filter.name)){
-                        filter.equal_from = FlexFilters[filter.name];
-                        if(filter.to != null && FlexFiltersTo != null && FlexFiltersTo.ContainsKey(filter.name)){
-                            var val = JsonConvert.SerializeObject(FlexFiltersTo[filter.name]);
+                foreach(SDKFlexFilters filter in metadataObj.filter_list){
+                    var nameColumn = "";
+                    if(filter.path.Contains("::")){
+                        var splitPath = filter.path.Split("::").Skip(1);
+                        nameColumn = string.Join(".", splitPath)+ "." + filter.name;
+                    }else{
+                        nameColumn = filter.name;
+                    }
+                    if(FlexFilters.ContainsKey(nameColumn)){
+                        filter.equal_from = FlexFilters[nameColumn];
+                        if(filter.to != null && FlexFiltersTo != null && FlexFiltersTo.ContainsKey(nameColumn)){
+                            var val = JsonConvert.SerializeObject(FlexFiltersTo[nameColumn]);
                             filter.to = val;
                         }
                     }
