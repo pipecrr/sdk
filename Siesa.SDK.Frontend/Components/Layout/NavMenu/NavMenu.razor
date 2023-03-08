@@ -10,15 +10,18 @@
 @inject NavigationManager NavigationManager
 @using Siesa.SDK.Frontend.Services
 @inject MenuService MenuService
+@inject UtilsManager UtilManager
+@inject SDKNotificationService NotificationService
 
 <input type="checkbox" name="" checked id="menu">
-<label class="sdk_nav_head" for="menu">
-    <div class="nav_btn_standar" data-toggle="tooltip" data-placement="right" title="Mostrar/Ocultar">
-        <div class="nav_btn_standar_icon">
-            <i class="fa-solid fa-bars font_size_112"></i>
+    <label class="sdk_nav_head" for="menu">
+        <div class="nav_btn_standar_suite" data-toggle="tooltip" data-placement="right" title="Nombre suite">
+            <div class="back_suite" style="background: #13849E;"></div>
+            <div class="nav_btn_standar_icon_suite">
+                <i class="fa-solid fa-bars font_size_112" style="color: #13849E;"></i> 
+            </div>
         </div>
-    </div>
-</label>
+    </label>
 
 <input class="" type="checkbox" name="" id="collapse_open">
 <label class="collapse_open_btn" for="collapse_open">
@@ -42,20 +45,42 @@
             <NavMenuItem MenuItem="@menuItem" OnClick="@OnMenuItemClick" Focus="@(SelectedMainMenu == menuItem)" />
         }
     </div>
-    @if (AuthenticationService.User != null)
-    {
         <div class="nav_section_2 w-100">
             <hr class="mb-2">
-            <div class="nav_profile_btn" @onclick="@(()=> ShowProfileMenu())">
-                <div class="nav_btn_standar_icon nav_profile_photo">
-                    <img src="_content/Siesa.SDK.Frontend/assets/img/profile_img.jpg" height="36px" alt="imagen perfil">
+            <a class="nav_btn_standar_suite my-1" data-toggle="tooltip" data-placement="right" 
+            title="@TitleSuite" @onclick="@(()=> ShowSuiteMenu())">
+                    <div class="back_suite back_suite_general"></div>
+                    <div class="nav_btn_standar_icon_suite">
+                        <i class="fa-solid fa-grid font_size_125"  style="color: #13849E;"></i> 
+                    </div>
+                    <div class="nav_btn_standar_text">
+                       <ResourceViewer ResourceTag="@SuiteMenu.ResourceTag" />
+                    </div>
+            </a>	
+            <a class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right" 
+            title="@TitleSuite" @onclick="@(()=> AuthenticationService.Logout())">
+                    <div class="nav_btn_standar_icon">
+                        <i class="fa-solid fa-right-from-bracket font_size_112"></i>
+                    </div>
+                    <div class="nav_btn_standar_text">
+                       <ResourceViewer ResourceTag="BLUser.Logout" />
+                    </div>
+            </a>
+            @if (AuthenticationService.User != null)
+            {
+                
+                <div class="nav_profile_btn" @onclick="@(()=> ShowProfileMenu())">
+                    <div class="nav_btn_standar_icon nav_profile_photo">
+                        <img src="_content/Siesa.SDK.Frontend/assets/img/profile_img.jpg" height="36px" alt="imagen perfil">
+                    </div>
+                    <div class="nav_btn_standar_text">
+                        @AuthenticationService.User
+                    </div>
                 </div>
-                <div class="nav_btn_standar_text">
-                    @AuthenticationService.User
-                </div>
-            </div>
+            }
+            
         </div>
-    }
+
 </nav>
 @if (SelectedMenu != null && ShowSubMenu && SelectedMenu.SubMenus?.Count > 0)
 {
@@ -75,6 +100,10 @@
     private bool ShowSubMenu { get; set; }
 
     private E00061_Menu ProfileMenu { get; set; }
+
+    private E00061_Menu SuiteMenu { get; set; }
+    private string TitleSuite { get; set; }
+    private string TitleLogout { get; set; }
 
     public void OnMenuItemClick(E00061_Menu menuItem)
     {
@@ -100,6 +129,19 @@
     protected async override Task OnInitializedAsync()
     {
         MenuService.MenuLoaded += OnMenuLoaded;
+
+        SuiteMenu = new E00061_Menu()
+        {
+            ResourceTag = "Custom.Menu.Suite",
+            SubMenus = new List<E00061_Menu>(),
+            Type  = MenuType.CustomMenu,
+            CurrentText = await UtilManager.GetResource("Custom.Menu.Suite")
+        };
+
+       TitleSuite = await UtilManager.GetResource("Custom.Menu.Suite");
+       TitleLogout = await UtilManager.GetResource("BLUser.Logout");
+
+
         if(AuthenticationService.User != null)
         {
             ProfileMenu = new E00061_Menu()
@@ -120,7 +162,8 @@
                 Url = "logout",
                 Type = MenuType.CustomMenu
             });
-        }
+        }  
+
         await base.OnInitializedAsync();
         if(MenuService.Menus == null || MenuService.Menus.Count == 0)
         {
@@ -132,6 +175,36 @@
     {
         ShowSubMenu = true;
         SelectedMenu = ProfileMenu;
+        StateHasChanged();
+    }
+
+    private void SetSuite(E00061_Menu _tempMenu)
+    {
+        _ = MenuService.SetSelectedSuite(_tempMenu.Rowid);
+    }
+
+    private void ShowSuiteMenu()
+    {
+        if(MenuService.Suites != null)
+        {   
+            if (SuiteMenu.SubMenus.Count == 0)
+            {    
+                foreach (var suite in MenuService.Suites)
+                {
+                    SuiteMenu.SubMenus.Add(new E00061_Menu()
+                    {
+                        CurrentText = suite.CurrentText,
+                        Type = MenuType.CustomMenu,
+                        IconClass = suite.IconClass,
+                        StyleColor = suite.HexColor,
+                        Rowid = suite.Rowid,
+                        CustomAction = SetSuite
+                    });
+                }
+            }
+            ShowSubMenu = true;
+            SelectedMenu = SuiteMenu;  
+        }
         StateHasChanged();
     }
 
