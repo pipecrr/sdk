@@ -240,16 +240,13 @@
         }
     }
 
-    private string GetIconClass(E00061_Menu menu)
+    private string GetIconClass()
     {
-        if (menu.Type == MenuType.CustomMenu)
+        if (SuiteMenu?.SubMenus?.Count > 0)
         {
-            return menu.IconClass;
+            return "fa-solid fa-cog";
         }
-        else
-        {
-            return menu.Type == MenuType.Menu ? "fa-solid fa-grid" : "fa-solid fa-right-from-bracket";
-        }
+
     }
 
     private string GetStyleColor()
