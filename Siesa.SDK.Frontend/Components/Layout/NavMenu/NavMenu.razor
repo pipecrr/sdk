@@ -15,10 +15,10 @@
 
 <input type="checkbox" name="" checked id="menu">
     <label class="sdk_nav_head" for="menu">
-        <div class="nav_btn_standar_suite" data-toggle="tooltip" data-placement="right" title="Nombre suite">
-            <div class="back_suite" style="background: @GetStyleColor()"></div>
+        <div class="nav_btn_standar_suite" data-toggle="tooltip" data-placement="right" title="@SuiteName">
+            <div class="back_suite" style="background: @StyleColor"></div>
             <div class="nav_btn_standar_icon_suite">
-                <i class="@GetIconClass()" style="color: @GetStyleColor()"></i> 
+                <i class="@IconClass" style="color: @StyleColor"></i> 
             </div>
         </div>
     </label>
@@ -105,6 +105,10 @@
     private string TitleSuite { get; set; }
     private string TitleLogout { get; set; }
 
+    private string SuiteName { get; set; } = "Maestros generales";
+    private string IconClass { get; set; } = "fa-solid fa-people-group";
+    private string StyleColor { get; set; } = "#20CAE1";
+
     public void OnMenuItemClick(E00061_Menu menuItem)
     {
         
@@ -165,7 +169,7 @@
         }  
 
         await base.OnInitializedAsync();
-        if(MenuService.Menus == null || MenuService.Menus.Count == 0)
+        if(MenuService.Menus == null || MenuService.Menus.Count == 0 || MenuService.Suites == null || MenuService.Suites.Count == 0)
         {
             _ = MenuService.ReloadMenu();
         }
@@ -181,6 +185,12 @@
     private void SetSuite(E00061_Menu _tempMenu)
     {
         _ = MenuService.SetSelectedSuite(_tempMenu.Rowid);
+
+        SuiteName = _tempMenu.CurrentText;
+        IconClass = _tempMenu.IconClass;
+        StyleColor = $"#{_tempMenu.StyleColor};";
+
+        StateHasChanged();
     }
 
     private void ShowSuiteMenu()
@@ -240,21 +250,4 @@
         }
     }
 
-    private string GetIconClass()
-    {
-        if (SuiteMenu?.SubMenus?.Count > 0)
-        {
-            return "fa-solid fa-cog";
-        }
-
-    }
-
-    private string GetStyleColor()
-    {
-        if(!string.IsNullOrEmpty(MenuItem.StyleColor))
-        {
-            return $"#{MenuItem.StyleColor};";
-        }
-        return "";
-    }
 }
