@@ -366,6 +366,9 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 var response = await RelBusinessObj.GetDataAsync(null, null, "Rowid=" + rowid.ToString(), "");
                 dynamic data = response.Data[0];
                 SetVal(data);
+                if(OnChange != null){
+                    OnChange();
+                }
                 await LoadData("", null, true);
             }
         }
