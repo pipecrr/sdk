@@ -16,9 +16,9 @@
 <input type="checkbox" name="" checked id="menu">
     <label class="sdk_nav_head" for="menu">
         <div class="nav_btn_standar_suite" data-toggle="tooltip" data-placement="right" title="Nombre suite">
-            <div class="back_suite" style="background: #13849E;"></div>
+            <div class="back_suite" style="background: @GetStyleColor()"></div>
             <div class="nav_btn_standar_icon_suite">
-                <i class="fa-solid fa-bars font_size_112" style="color: #13849E;"></i> 
+                <i class="@GetIconClass()" style="color: @GetStyleColor()"></i> 
             </div>
         </div>
     </label>
@@ -238,5 +238,26 @@
         {
             MenuService.MenuLoaded -= OnMenuLoaded;
         }
+    }
+
+    private string GetIconClass(E00061_Menu menu)
+    {
+        if (menu.Type == MenuType.CustomMenu)
+        {
+            return menu.IconClass;
+        }
+        else
+        {
+            return menu.Type == MenuType.Menu ? "fa-solid fa-grid" : "fa-solid fa-right-from-bracket";
+        }
+    }
+
+    private string GetStyleColor()
+    {
+        if(!string.IsNullOrEmpty(MenuItem.StyleColor))
+        {
+            return $"#{MenuItem.StyleColor};";
+        }
+        return "";
     }
 }
