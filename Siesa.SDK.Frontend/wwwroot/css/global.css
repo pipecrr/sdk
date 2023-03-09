@@ -670,6 +670,15 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_text{
     white-space: normal !important;
  }
 
+ .whcm_modal_relacion 
+ {
+    overflow: unset !important;
+ }
+ .whcm_modal_relacion > .rz-dialog-content
+ {
+    overflow: unset !important;
+ }
+
  .whcm_select_box > .whcm_select_list>ul{
     padding: 0;
     margin: 0;

@@ -38,7 +38,7 @@ namespace Siesa.SDK.Frontend.Services
                 _title = await UtilsManager.GetResource(ResourceTag);
             }
             return await ds.OpenAsync(_title,GetConfirmComponent(childContent,ConfirmationButtonTag,CancelationButtonTag),
-            new SDKDialogOption(){ShowTitle=false, Style=$"min-width:300px; width:{width};"});
+            new SDKDialogOption(){ShowTitle=false, Style=$"min-width:300px; width:{width};", CssClass="whcm_modal_relacion"});
          }
 
          public async Task<dynamic> ShowCustomDialog (RenderFragment<DialogService> childContent,string width="600px", string title="",bool ShowTitle=true , bool showClose=true, string height="", string ResourceTag="")
@@ -55,7 +55,8 @@ namespace Siesa.SDK.Frontend.Services
                 ShowTitle = ShowTitle,
                 Style=style,
                 ShowClose = showClose,
-                Resizable = true
+                Resizable = true,
+                CssClass="whcm_modal_relacion"
             };
            return await ds.OpenAsync(TitleTag, childContent,customDialogOption);
          }
