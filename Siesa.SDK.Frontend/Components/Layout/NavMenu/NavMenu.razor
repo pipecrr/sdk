@@ -16,9 +16,9 @@
 <input type="checkbox" name="" checked id="menu">
     <label class="sdk_nav_head" for="menu">
         <div class="nav_btn_standar_suite" data-toggle="tooltip" data-placement="right" title="@SuiteName">
-            <div class="back_suite" style="background: @StyleColor"></div>
+            <div class="back_suite" style="background: #@StyleColor"></div>
             <div class="nav_btn_standar_icon_suite">
-                <i class="@IconClass" style="color: @StyleColor"></i> 
+                <i class="@IconClass" style="color: #@StyleColor"></i> 
             </div>
         </div>
     </label>
@@ -107,7 +107,7 @@
 
     private string SuiteName { get; set; } = "Maestros generales";
     private string IconClass { get; set; } = "fa-solid fa-people-group";
-    private string StyleColor { get; set; } = "#20CAE1";
+    private string StyleColor { get; set; } = "20CAE1";
 
     public void OnMenuItemClick(E00061_Menu menuItem)
     {
@@ -133,6 +133,19 @@
     protected async override Task OnInitializedAsync()
     {
         MenuService.MenuLoaded += OnMenuLoaded;
+
+        if(MenuService.Menus == null || MenuService.Menus.Count == 0 || MenuService.Suites == null || MenuService.Suites.Count == 0)
+        {
+            _ = MenuService.ReloadMenu();
+        }
+        
+        if(MenuService.Suites != null)
+        {
+            var SelectedSuite = MenuService.Suites.FirstOrDefault(x => x.Rowid == AuthenticationService.GetSelectedSuite());
+            IconClass = SelectedSuite?.IconClass;
+            StyleColor = SelectedSuite?.HexColor;
+            SuiteName = SelectedSuite?.CurrentText;
+        }
 
         SuiteMenu = new E00061_Menu()
         {
@@ -169,10 +182,10 @@
         }  
 
         await base.OnInitializedAsync();
-        if(MenuService.Menus == null || MenuService.Menus.Count == 0 || MenuService.Suites == null || MenuService.Suites.Count == 0)
+        /*if(MenuService.Menus == null || MenuService.Menus.Count == 0 || MenuService.Suites == null || MenuService.Suites.Count == 0)
         {
             _ = MenuService.ReloadMenu();
-        }
+        } */
     }
 
     private void ShowProfileMenu()
@@ -188,7 +201,7 @@
 
         SuiteName = _tempMenu.CurrentText;
         IconClass = _tempMenu.IconClass;
-        StyleColor = $"#{_tempMenu.StyleColor};";
+        StyleColor = _tempMenu.StyleColor;
 
         StateHasChanged();
     }
