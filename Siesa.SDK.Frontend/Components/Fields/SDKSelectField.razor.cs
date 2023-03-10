@@ -61,6 +61,11 @@ namespace Siesa.SDK.Frontend.Components.Fields
             }
             return base.GetAutomationId();
         }
+
+        private async Task OnFocusOut()
+        {
+                ValueChanged(Value);
+        }
     }
 
 }

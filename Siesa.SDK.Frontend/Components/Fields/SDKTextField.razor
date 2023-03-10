@@ -9,6 +9,7 @@
     maxlength = "@MaxLength"
     data-automation-id="@GetAutomationId()"
     field-name="@FieldName"
+    @onfocusout="@OnFocusOut"
 >
 @ChildContent
 </DxMemo>
@@ -43,6 +44,10 @@
             AutomationId = FieldName;
         }
         return base.GetAutomationId();
+    }
+    private async Task OnFocusOut()
+    {
+        ValueChanged(Value);
     }
 
     

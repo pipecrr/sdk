@@ -8,6 +8,7 @@
     CssClass="@CssClass"
     maxlength = "@MaxLength"
     Mask="@Mask"
+    @onfocusout="@OnFocusOut"
 >
 @if(Culture != null){
     <DxNumericMaskProperties Culture="@Culture" />
@@ -28,4 +29,9 @@
     [Parameter] public string CssClass { get; set; }
     [Parameter] public string Mask { get; set; }
     [Parameter] public CultureInfo Culture { get; set; }
+
+    private async Task OnFocusOut()
+    {
+        ValueChanged(Value);
+    }
 }

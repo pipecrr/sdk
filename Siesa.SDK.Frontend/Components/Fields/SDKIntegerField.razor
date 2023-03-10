@@ -10,6 +10,7 @@
     maxlength = "@MaxLength"
     Mask="@Mask"
     ValueExpression="@ValueExpression"
+    @onfocusout="@OnFocusOut"
 >
 @if(Culture != null){
     <DxNumericMaskProperties Culture="@Culture" />
@@ -33,5 +34,10 @@
     [Parameter] public CultureInfo Culture { get; set; }
     [Parameter] public Expression<Func<TInt>> ValueExpression { get; set; }
 
+
+    private async Task OnFocusOut()
+    {
+            ValueChanged(Value);
+    }
     
 }
