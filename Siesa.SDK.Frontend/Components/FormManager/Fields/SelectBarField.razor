@@ -12,17 +12,14 @@
 
 @if (!FieldOpt.Hidden)
 {
-    @if (FieldOpt.ViewContext == "DetailView")
+    @* @if (FieldOpt.ViewContext == "DetailView")
     {
         <p style="word-wrap: break-word">@if (BindValue != null)
             {
                 <ResourceViewer ResourceTag="@_value" />
             }
         </p>
-    }
-    else
-    {
-
+    } *@
         <SDKSelectBar 
             ItemType="TItem"
             Value="@BindValue"
@@ -36,8 +33,6 @@
         />
 
         @FieldValidationTemplate
-
-    }
 }
 
 @code {
