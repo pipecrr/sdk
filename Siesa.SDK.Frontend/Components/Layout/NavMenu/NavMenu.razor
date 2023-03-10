@@ -105,9 +105,9 @@
     private string TitleSuite { get; set; }
     private string TitleLogout { get; set; }
 
-    private string SuiteName { get; set; } = "Maestros generales";
-    private string IconClass { get; set; } = "fa-solid fa-people-group";
-    private string StyleColor { get; set; } = "20CAE1";
+    private string SuiteName { get; set; }
+    private string IconClass { get; set; }
+    private string StyleColor { get; set; }
 
     public void OnMenuItemClick(E00061_Menu menuItem)
     {
@@ -133,19 +133,6 @@
     protected async override Task OnInitializedAsync()
     {
         MenuService.MenuLoaded += OnMenuLoaded;
-
-        if(MenuService.Menus == null || MenuService.Menus.Count == 0 || MenuService.Suites == null || MenuService.Suites.Count == 0)
-        {
-            _ = MenuService.ReloadMenu();
-        }
-        
-        if(MenuService.Suites != null)
-        {
-            var SelectedSuite = MenuService.Suites.FirstOrDefault(x => x.Rowid == AuthenticationService.GetSelectedSuite());
-            IconClass = SelectedSuite?.IconClass;
-            StyleColor = SelectedSuite?.HexColor;
-            SuiteName = SelectedSuite?.CurrentText;
-        }
 
         SuiteMenu = new E00061_Menu()
         {
@@ -182,10 +169,24 @@
         }  
 
         await base.OnInitializedAsync();
-        /*if(MenuService.Menus == null || MenuService.Menus.Count == 0 || MenuService.Suites == null || MenuService.Suites.Count == 0)
+
+        if(MenuService.Menus == null || MenuService.Menus.Count == 0)
         {
             _ = MenuService.ReloadMenu();
-        } */
+        }
+        
+        if(MenuService.Suites == null || MenuService.Suites.Count == 0)
+        {
+            SuiteName = "Maestros generales";
+            IconClass = "fa-solid fa-people-group";
+            StyleColor = "20CAE1";
+        }else
+        {
+            var SelectedSuite = MenuService.Suites.FirstOrDefault(x => x.Rowid == AuthenticationService.GetSelectedSuite());
+            IconClass = SelectedSuite?.IconClass;
+            StyleColor = SelectedSuite?.HexColor;
+            SuiteName = SelectedSuite?.CurrentText;
+        }
     }
 
     private void ShowProfileMenu()
