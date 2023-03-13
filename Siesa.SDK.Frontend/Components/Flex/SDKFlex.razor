@@ -50,8 +50,7 @@
                     if(FlexFilters.ContainsKey(nameColumn)){
                         filter.equal_from = FlexFilters[nameColumn];
                         if(filter.to != null && FlexFiltersTo != null && FlexFiltersTo.ContainsKey(nameColumn)){
-                            var val = JsonConvert.SerializeObject(FlexFiltersTo[nameColumn]);
-                            filter.to = val;
+                            filter.to = FlexFiltersTo[nameColumn].ToString();
                         }
                     }
                 }
