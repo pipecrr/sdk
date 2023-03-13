@@ -23,6 +23,7 @@ namespace Siesa.SDK.Entities
         public virtual string StyleColor { get; set; }
         
         [NotMapped]
+        [JsonIgnore]
         public virtual Action<E00061_Menu> CustomAction {get;set;}
 
         [NotMapped]
