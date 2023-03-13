@@ -167,7 +167,7 @@
 
         if(MenuService.Menus == null || MenuService.Menus.Count == 0 || MenuService.Suites == null || MenuService.Suites.Count == 0)
         {
-            await MenuService.ReloadMenu();
+            _  = MenuService.ReloadMenu();
         }
         
         if (AuthenticationService != null)
