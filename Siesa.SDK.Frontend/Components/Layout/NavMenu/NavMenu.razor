@@ -40,7 +40,7 @@
          <div class="p-2 input-group input-group-sm d-flex align-items-center d-block d-sm-none">
             <SDKSearch />
         </div>
-        @foreach (var menuItem in MenuService.Menus.OrderBy(x => x.Order))
+        @foreach (var menuItem in MenuService?.Menus?.OrderBy(x => x.Order))
         {
             <NavMenuItem MenuItem="@menuItem" OnClick="@OnMenuItemClick" Focus="@(SelectedMainMenu == menuItem)" />
         }
@@ -58,7 +58,7 @@
                     </div>
             </a>	
             <a class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right" 
-            title="@TitleSuite" @onclick="@(()=> AuthenticationService.Logout())">
+            title="@TitleLogout" @onclick="@(()=> AuthenticationService.Logout())">
                     <div class="nav_btn_standar_icon">
                         <i class="fa-solid fa-right-from-bracket font_size_112"></i>
                     </div>
@@ -134,13 +134,8 @@
         {
             ResourceTag = "Custom.Menu.Suite",
             SubMenus = new List<E00061_Menu>(),
-            Type  = MenuType.CustomMenu,
-            CurrentText = await UtilManager.GetResource("Custom.Menu.Suite")
+            Type  = MenuType.CustomMenu
         };
-
-       TitleSuite = await UtilManager.GetResource("Custom.Menu.Suite");
-       TitleLogout = await UtilManager.GetResource("BLUser.Logout");
-
 
         if(AuthenticationService.User != null)
         {
@@ -169,6 +164,9 @@
         {
             _ = MenuService.ReloadMenu();
         }
+        TitleSuite = await UtilManager.GetResource("Custom.Menu.Suite");
+        TitleLogout = await UtilManager.GetResource("BLUser.Logout");
+        SuiteMenu.CurrentText = await UtilManager.GetResource("Custom.Menu.Suite");
     }
 
     private void ShowProfileMenu()
