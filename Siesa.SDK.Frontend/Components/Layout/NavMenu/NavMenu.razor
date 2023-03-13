@@ -40,12 +40,9 @@
          <div class="p-2 input-group input-group-sm d-flex align-items-center d-block d-sm-none">
             <SDKSearch />
         </div>
-        @if (MenuService?.Menus != null && MenuService.Menus.Count > 0)
-        {    
-            @foreach (var menuItem in MenuService.Menus.OrderBy(x => x.Order))
-            {
-                <NavMenuItem MenuItem="@menuItem" OnClick="@OnMenuItemClick" Focus="@(SelectedMainMenu == menuItem)" />
-            }
+        @foreach (var menuItem in MenuService?.Menus?.OrderBy(x => x.Order))
+        {
+            <NavMenuItem MenuItem="@menuItem" OnClick="@OnMenuItemClick" Focus="@(SelectedMainMenu == menuItem)" />
         }
     </div>
         <div class="nav_section_2 w-100">
@@ -141,13 +138,8 @@
         {
             ResourceTag = "Custom.Menu.Suite",
             SubMenus = new List<E00061_Menu>(),
-            Type  = MenuType.CustomMenu,
-            CurrentText = await UtilManager.GetResource("Custom.Menu.Suite")
+            Type  = MenuType.CustomMenu
         };
-
-       TitleSuite = await UtilManager.GetResource("Custom.Menu.Suite");
-       TitleLogout = await UtilManager.GetResource("BLUser.Logout");
-
 
         if(AuthenticationService.User != null)
         {
@@ -177,7 +169,7 @@
         {
             await MenuService.ReloadMenu();
         }
-
+        
         if (AuthenticationService != null)
         {
             var SelectedSuite = MenuService.Suites.FirstOrDefault(x => x.Rowid == AuthenticationService.GetSelectedSuite());
@@ -186,18 +178,9 @@
             SuiteName = SelectedSuite?.CurrentText;
         }
 
-        /*if(MenuService.Suites == null || MenuService.Suites.Count == 0)
-        {
-            SuiteName = "Maestros generales";
-            IconClass = "fa-solid fa-people-group";
-            StyleColor = "20CAE1";
-        }else
-        {
-            var SelectedSuite = MenuService.Suites.FirstOrDefault(x => x.Rowid == AuthenticationService.GetSelectedSuite());
-            IconClass = SelectedSuite?.IconClass;
-            StyleColor = SelectedSuite?.HexColor;
-            SuiteName = SelectedSuite?.CurrentText;
-        }*/
+        TitleSuite = await UtilManager.GetResource("Custom.Menu.Suite");
+        TitleLogout = await UtilManager.GetResource("BLUser.Logout");
+        SuiteMenu.CurrentText = await UtilManager.GetResource("Custom.Menu.Suite");
     }
 
     private void ShowProfileMenu()

@@ -624,7 +624,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         async Task LoadData(LoadDataArgs args)
         {
-            if (Data != null && ListViewModel.InfiniteScroll && UseFlex)
+            if (Data != null)
             {
                 data = Data;
                 count = data.Count();
@@ -773,10 +773,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             LoadingData = true;
             data = null;
             var filters = GetFilters();
-            if (Data == null)
-            {
-                Data = new List<object> { };
-            }
             if(ServerPaginationFlex && UseFlex){
                 Data = await BusinessObj.GetDataWithTop(filters);
                  if (Data != null && Data.Count() == 1){
@@ -792,22 +788,33 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 // count = dbData.TotalCount;
             }else{
                 bool includeCount = false;
+                int? skip = null;
+                int? take = null;
                 if(!UseFlex && !ListViewModel.InfiniteScroll){
                     includeCount = true;
+                    skip = 0;
+                    take = ListViewModel.Paging.PageSize;
+                    if(_gridRef != null){
+                        var currentPage = _gridRef.GetType().GetProperty("CurrentPage").GetValue(_gridRef);
+                        skip = (int)currentPage * ListViewModel.Paging.PageSize;
+                    }
                 }
-                var dbData = await BusinessObj.GetDataAsync(0, ListViewModel.Paging.PageSize, filters, "", includeCount);
-                Data = dbData.Data;
-                if (Data.Count() == 1){
+                var dbData = await BusinessObj.GetDataAsync(skip, take, filters, "", includeCount);
+                count = dbData.TotalCount;
+                data = dbData.Data;
+                if (count == 1){
                     if(!FromEntityField){
-                        GoToDetail(((dynamic)Data.First()).Rowid);
+                        GoToDetail(((dynamic)data.First()).Rowid);
                     }else{
-                        IList<object> objects = new List<object> { Data.First()};
+                        IList<object> objects = new List<object> { data.First()};
                         OnSelectionChanged(objects);
                     }
                     return;
                 }
-                count = dbData.TotalCount;
-                data = Data;
+
+                if(!UseFlex && ListViewModel.InfiniteScroll){
+                    Data = data;
+                }
             }
             LoadingData = false;
             LoadingSearch = false;
