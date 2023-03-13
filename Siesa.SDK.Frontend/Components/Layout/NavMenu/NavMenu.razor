@@ -40,9 +40,12 @@
          <div class="p-2 input-group input-group-sm d-flex align-items-center d-block d-sm-none">
             <SDKSearch />
         </div>
-        @foreach (var menuItem in MenuService.Menus.OrderBy(x => x.Order))
-        {
-            <NavMenuItem MenuItem="@menuItem" OnClick="@OnMenuItemClick" Focus="@(SelectedMainMenu == menuItem)" />
+        @if (MenuService?.Menus != null && MenuService.Menus.Count > 0)
+        {    
+            @foreach (var menuItem in MenuService.Menus.OrderBy(x => x.Order))
+            {
+                <NavMenuItem MenuItem="@menuItem" OnClick="@OnMenuItemClick" Focus="@(SelectedMainMenu == menuItem)" />
+            }
         }
     </div>
         <div class="nav_section_2 w-100">
@@ -58,7 +61,7 @@
                     </div>
             </a>	
             <a class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right" 
-            title="@TitleSuite" @onclick="@(()=> AuthenticationService.Logout())">
+            title="@TitleLogout" @onclick="@(()=> AuthenticationService.Logout())">
                     <div class="nav_btn_standar_icon">
                         <i class="fa-solid fa-right-from-bracket font_size_112"></i>
                     </div>
@@ -108,7 +111,6 @@
     private string SuiteName { get; set; }
     private string IconClass { get; set; }
     private string StyleColor { get; set; }
-
     public void OnMenuItemClick(E00061_Menu menuItem)
     {
         
@@ -132,6 +134,7 @@
 
     protected async override Task OnInitializedAsync()
     {
+        
         MenuService.MenuLoaded += OnMenuLoaded;
 
         SuiteMenu = new E00061_Menu()
@@ -170,12 +173,20 @@
 
         await base.OnInitializedAsync();
 
-        if(MenuService.Menus == null || MenuService.Menus.Count == 0)
+        if(MenuService.Menus == null || MenuService.Menus.Count == 0 || MenuService.Suites == null || MenuService.Suites.Count == 0)
         {
-            _ = MenuService.ReloadMenu();
+            await MenuService.ReloadMenu();
         }
-        
-        if(MenuService.Suites == null || MenuService.Suites.Count == 0)
+
+        if (AuthenticationService != null)
+        {
+            var SelectedSuite = MenuService.Suites.FirstOrDefault(x => x.Rowid == AuthenticationService.GetSelectedSuite());
+            IconClass = SelectedSuite?.IconClass;
+            StyleColor = SelectedSuite?.HexColor;
+            SuiteName = SelectedSuite?.CurrentText;
+        }
+
+        /*if(MenuService.Suites == null || MenuService.Suites.Count == 0)
         {
             SuiteName = "Maestros generales";
             IconClass = "fa-solid fa-people-group";
@@ -186,7 +197,7 @@
             IconClass = SelectedSuite?.IconClass;
             StyleColor = SelectedSuite?.HexColor;
             SuiteName = SelectedSuite?.CurrentText;
-        }
+        }*/
     }
 
     private void ShowProfileMenu()
@@ -203,6 +214,8 @@
         SuiteName = _tempMenu.CurrentText;
         IconClass = _tempMenu.IconClass;
         StyleColor = _tempMenu.StyleColor;
+
+        ShowSubMenu = false;
 
         StateHasChanged();
     }
