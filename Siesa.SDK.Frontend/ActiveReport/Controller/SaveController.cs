@@ -39,12 +39,19 @@ namespace Siesa.SDK.Frontend.Report.Controllers
             
             var sessionId = "";
             string authToken = "";
+            short rowIdDBConnection = 1;
+            httpContext.Request.Cookies.TryGetValue("selectedConnection", out string rowIdDBConnectionStr);
+
+            if (!string.IsNullOrEmpty(rowIdDBConnectionStr))
+            {
+                rowIdDBConnection = short.Parse(rowIdDBConnectionStr);
+            }
 
             httpContext.Request.Cookies.TryGetValue("sdksession", out sessionId);
             if (!string.IsNullOrEmpty(sessionId))
             {
                 var BLSession = _backendRouterService.GetSDKBusinessModel("BLSession", _authenticationService);
-                var response = await BLSession.Call("GetSession", sessionId);
+                var response = await BLSession.Call("GetSession", sessionId, rowIdDBConnection);
                 if (response.Success)
                 {
                     authToken = response.Data;

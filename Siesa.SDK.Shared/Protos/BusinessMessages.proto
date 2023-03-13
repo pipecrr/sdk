@@ -77,6 +77,7 @@ message GetDataBusinessObjRequest {
   string orderBy = 5;
   string currentUserToken = 6;
   google.protobuf.Int32Value currentUserRowid = 7;
+  bool includeCount = 8;
 }
 
 message EntityFieldSearchRequest {
@@ -85,6 +86,7 @@ message EntityFieldSearchRequest {
   string currentUserToken = 3;
   google.protobuf.Int32Value currentUserRowid = 4;
   string filters = 5;
+  google.protobuf.Int32Value top = 6;
 }
 
 message LoadResult {

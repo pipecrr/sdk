@@ -113,6 +113,7 @@ namespace Siesa.SDK.Frontend.Services
                 UserToken = loginRequest.Data.Token;
                 await _localStorageService.SetItemAsync("usertoken", UserToken);
                 await SetCookie("sdksession", loginRequest.Data.IdSession);
+                await SetCookie("selectedConnection", rowIdDBConnection.ToString());
             }
             else
             {
@@ -137,6 +138,7 @@ namespace Siesa.SDK.Frontend.Services
             await _localStorageService.RemoveItemAsync("bd");
             await _localStorageService.RemoveItemAsync("selectedSuite");
             await RemoveCookie("sdksession");
+            await RemoveCookie("selectedConnection");
 
             _navigationManager.NavigateTo("login");
         }

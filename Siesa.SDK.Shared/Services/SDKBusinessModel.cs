@@ -125,12 +125,12 @@ namespace Siesa.SDK.Shared.Services
         }
 
 
-        public async Task<Protos.LoadResult> GetData(int? skip, int? take, string filter = "", string orderBy = "")
+        public async Task<Protos.LoadResult> GetData(int? skip, int? take, string filter = "", string orderBy = "", bool includeCount = false)
         {
             Protos.LoadResult result = new();
             try
             {
-                result = await Backend.GetDataBusinessObj(Name, skip, take, filter, orderBy);
+                result = await Backend.GetDataBusinessObj(Name, skip, take, filter, orderBy, includeCount);
             }
             catch (RpcException ex)
             {
@@ -139,12 +139,12 @@ namespace Siesa.SDK.Shared.Services
             return result;
         }
 
-         public async Task<Protos.LoadResult> EntityFieldSearch(string searchText, string filters)
+         public async Task<Protos.LoadResult> EntityFieldSearch(string searchText, string filters, int? top = null)
         {
             Protos.LoadResult result = new();
             try
             {
-                result = await Backend.EntityFieldSearch(Name, searchText, filters);
+                result = await Backend.EntityFieldSearch(Name, searchText, filters, top);
             }
             catch (RpcException ex)
             {

@@ -32,15 +32,18 @@ else if (BusinessObj != null)
     [Parameter] public bool IsMultiple { get; set; } = false;
 
     [Parameter] public IList<dynamic> SelectedItems { get; set; }
+    
+    [Parameter] public dynamic businessObj { get; set; }
     protected override void OnInitialized()
     {
         ViewType = ViewModels.DynamicViewType.List;
         base.OnInitialized();
     }
-
-        
-    protected override void SetParameters(dynamic businessObj, string businessName){
+    protected override void SetParameters(dynamic _businessObj, string businessName){
         var new_params = new Dictionary<string, object>();
+        if(businessObj == null){
+            businessObj = _businessObj;
+        }
         new_params.Add("BusinessObj", businessObj);
         new_params.Add("BusinessName", businessName);
         new_params.Add("AllowCreate", AllowCreate);

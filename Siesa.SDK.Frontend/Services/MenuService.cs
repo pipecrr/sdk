@@ -55,6 +55,18 @@ namespace Siesa.SDK.Frontend.Services
             {
                 AuthenticationService.SetSelectedSuite(Suites.First().Rowid);
             }
+
+            _ = GetSuiteResources(Suites);
+        }
+        private async Task GetSuiteResources(List<E00060_Suite> _suites)
+        {
+            foreach (var Suite in _suites)
+            {
+                if (string.IsNullOrEmpty(Suite.CurrentText) && Suite.RowidResource != 0)
+                {
+                  Suite.CurrentText = await UtilsManager.GetResource(Suite.RowidResource);
+                }                
+            }
         }
 
         private void AddDevMenu(List<E00061_Menu> menus)

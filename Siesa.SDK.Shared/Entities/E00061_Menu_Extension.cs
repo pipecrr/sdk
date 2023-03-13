@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Siesa.SDK.Shared.Json;
 using Microsoft.EntityFrameworkCore;
 using Siesa.Global.Enums;
+using Microsoft.AspNetCore.Components;
 
 namespace Siesa.SDK.Entities
 {
@@ -18,6 +19,12 @@ namespace Siesa.SDK.Entities
         public virtual string ResourceTag { get; set; }
         [NotMapped]
         public virtual string CurrentText { get; set; }
+        [NotMapped]
+        public virtual string StyleColor { get; set; }
+        
+        [NotMapped]
+        [JsonIgnore]
+        public virtual Action<E00061_Menu> CustomAction {get;set;}
 
         [NotMapped]
         [JsonIgnore]

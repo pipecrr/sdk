@@ -83,7 +83,7 @@ namespace Siesa.SDK.Business
             return null;
         }
 
-        public Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<BaseSDK<int>> queryFilter = null)
+        public Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<BaseSDK<int>> queryFilter = null, bool includeCount = false)
         {
             return null;
         }
@@ -595,7 +595,7 @@ namespace Siesa.SDK.Business
             return query;
         }
 
-        public virtual Siesa.SDK.Shared.Business.LoadResult EntityFieldSearch(string searchText, string prefilters = "")
+        public virtual Siesa.SDK.Shared.Business.LoadResult EntityFieldSearch(string searchText, string prefilters = "", int? top = null)
         {
             this._logger.LogInformation($"Field Search {this.GetType().Name}");
             var string_fields = BaseObj.GetType().GetProperties().Where(p => p.PropertyType == typeof(string) && p.GetCustomAttributes().Where(x => x.GetType() == typeof(NotMappedAttribute)).Count() == 0).Select(p => p.Name).ToArray();
@@ -613,7 +613,11 @@ namespace Siesa.SDK.Business
                 filter = $"({prefilters}) && ({filter})";
             }
             QueryFilterDelegate<T> filterDelegate = EntityFieldFilters;
-            return this.GetData(0, 10, filter, "", filterDelegate);
+            var take = 10;
+            if (top.HasValue){
+                take = top.Value;
+            }
+            return this.GetData(0, take, filter, "", filterDelegate);
         }
 
         [SDKExposedMethod]
@@ -638,7 +642,7 @@ namespace Siesa.SDK.Business
                     };
         }
 
-        public virtual Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null)
+        public virtual Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null, bool includeCount = false)
         {
             this._logger.LogInformation($"Get Data {this.GetType().Name}");
             var result = new Siesa.SDK.Shared.Business.LoadResult();
@@ -656,6 +660,9 @@ namespace Siesa.SDK.Business
                     query = query.Where(filter);
                 }
                 var total = 0;
+                if(includeCount){
+                    total = query.Select("Rowid").Count();
+                }
 
                 if (!string.IsNullOrEmpty(orderBy))
                 {
@@ -679,7 +686,8 @@ namespace Siesa.SDK.Business
                 {
                     query = queryFilter(query);
                 }
-                
+                //total data
+                result.TotalCount = total;
                 //data
                 result.Data = query.ToList();
             }

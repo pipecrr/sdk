@@ -39,7 +39,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         [Parameter] public bool Disabled { get; set; }
         public dynamic RelBusinessObj { get; set; }
         private string Value = "";
-        private long rowidLastValue = 0;
+        private long rowidLastValue = -1;
         private List<string> Values = new List<string>() {};
         private IList<dynamic> ItemsSelected = new List<dynamic>() {};
         private Dictionary<int, object> CacheData = new Dictionary<int, object>();
@@ -71,10 +71,10 @@ namespace Siesa.SDK.Frontend.Components.Fields
         protected async Task InitView(){
             idInput = Guid.NewGuid().ToString();
             CheckPermissions();
-            var currentValueObj = BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj);
+            /*var currentValueObj = BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj);
             if(currentValueObj != null){
                 Value = currentValueObj.ToString();
-            }
+            }*/
             relBusinessModel = BackendRouterService.GetSDKBusinessModel(RelatedBusiness, null);
             var relBusinessType = Utilities.SearchType(relBusinessModel.Namespace + "." + relBusinessModel.Name);
             RelBusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider, relBusinessType);
@@ -93,10 +93,15 @@ namespace Siesa.SDK.Frontend.Components.Fields
         public override async Task SetParametersAsync(ParameterView parameters){
             if (parameters.TryGetValue<dynamic>("BaseObj", out dynamic baseObjNew) && !IsMultiple){
                 if(BaseObj != null && baseObjNew != null){
+                    BindProperty = BaseObj.GetType().GetProperty(FieldName);
                     dynamic baseObjNewRelated = baseObjNew.GetType().GetProperty(FieldName).GetValue(baseObjNew);
-                    if(baseObjNewRelated != null && baseObjNewRelated.Rowid != rowidLastValue){
+                    var rowidNew = baseObjNewRelated != null ? baseObjNewRelated.GetType().GetProperty("Rowid").GetValue(baseObjNewRelated) : 0;
+                    if(baseObjNewRelated != null && rowidNew != rowidLastValue){
                         SetVal(BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj));
                     }
+                    BaseObj = baseObjNew;
+                    RelBusinessObj.GetType().GetProperty("BaseObj").SetValue(RelBusinessObj, baseObjNewRelated);
+                    rowidLastValue = rowidNew;
                 }
             }
             
@@ -124,7 +129,9 @@ namespace Siesa.SDK.Frontend.Components.Fields
             }
             if(SetValue != null){
                 SetValue(item);
-                Value = item.ToString();
+                if(item.Rowid != 0){
+                    Value = item.ToString();
+                }
             }else{
                 if(item.GetType().ToString().Equals("Newtonsoft.Json.Linq.JObject")){
                     BadgeByData.Add("_item_replace", item);
@@ -149,9 +156,8 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 }else{
                     BindProperty.SetValue(BaseObj, item);
                 }
-                Value = item.ToString();
-                if(item.Rowid == 0){
-                    Value = "";
+                if(item.Rowid != 0){
+                    Value = item.ToString();
                 }
             }
             if(IsMultiple){
@@ -179,13 +185,12 @@ namespace Siesa.SDK.Frontend.Components.Fields
                     Values.Add(Value);
                     ItemsSelected.Add(item);
                 }
-                rowidLastValue = long.Parse(item.Rowid.ToString());
             }
+            rowidLastValue = item.Rowid;
         }
         
         private async Task OnChangeValue(string value)
         {
-            Value = value;
             if(string.IsNullOrEmpty(Value) && !IsMultiple){
                 ItemsSelected.Clear();
                 Values.Clear();
@@ -195,9 +200,9 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 cancellationTokenSource.Cancel();
             }
             cancellationTokenSource = new CancellationTokenSource();
-            if(OnChange != null){
-                OnChange();
-            }
+            // if(OnChange != null){
+            //     OnChange();
+            // }
             await LoadData(value, cancellationTokenSource.Token);
             StateHasChanged();
         }
@@ -228,7 +233,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
                     if (results.Count() > 0)
                     {
                         SetVal(results.First());
-                        LoadData("", null,true);
+                        //LoadData("", null,true);
                     }
                 }
                 StateHasChanged();
@@ -249,10 +254,6 @@ namespace Siesa.SDK.Frontend.Components.Fields
         }
         private async Task<LoadResult> LoadData(string searchText, CancellationToken? cancellationToken, bool force = false)
         {
-            if (cancellationToken != null && cancellationToken.Value.IsCancellationRequested)
-            {
-                return CacheLoadResult;
-            }
             if (LastSearchString != searchText || force)
             {
                 LastSearchString = searchText;
@@ -267,11 +268,16 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 await Task.Delay(MinMillisecondsBetweenSearch, cancellationToken.Value);
             }
 
+            if (cancellationToken != null && cancellationToken.Value.IsCancellationRequested)
+            {
+                return CacheLoadResult;
+            }
+
             //check length of search text
             if (searchText.Length > MinCharsEntityField || CacheLoadResult == null)
             {
                 var filters = await GetFilters();
-                var result = await RelBusinessObj.EntityFieldSearchAsync(searchText, filters);
+                var result = await RelBusinessObj.EntityFieldSearchAsync(searchText, filters, 3);
                 var response = new LoadResult
                 {
                     data = result.Data,
@@ -366,6 +372,9 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 var response = await RelBusinessObj.GetDataAsync(null, null, "Rowid=" + rowid.ToString(), "");
                 dynamic data = response.Data[0];
                 SetVal(data);
+                if(OnChange != null){
+                    OnChange();
+                }
                 await LoadData("", null, true);
             }
         }
@@ -378,6 +387,9 @@ namespace Siesa.SDK.Frontend.Components.Fields
                     SDKDialogService.Close(true);
                 }else{
                     ItemsSelected = items;
+                }
+                if(OnChange != null){
+                    OnChange();
                 }
                 LoadData("", null);
             }

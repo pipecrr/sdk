@@ -649,7 +649,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
 
             FilterFlex = filters;
-            var dbData = await BusinessObj.GetDataAsync(args.Skip, args.Top, filters, args.OrderBy);
+            bool includeCount = false;
+            if(!UseFlex && !ListViewModel.InfiniteScroll){
+                includeCount = true;
+            }
+            var dbData = await BusinessObj.GetDataAsync(args.Skip, args.Top, filters, args.OrderBy, includeCount);
             data = dbData.Data;
             count = dbData.TotalCount;
             LoadingData = false;
@@ -769,10 +773,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             LoadingData = true;
             data = null;
             var filters = GetFilters();
-            if (Data == null)
-            {
-                Data = new List<object> { };
-            }
             if(ServerPaginationFlex && UseFlex){
                 Data = await BusinessObj.GetDataWithTop(filters);
                  if (Data != null && Data.Count() == 1){
@@ -782,24 +782,39 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 // Data = dbData.Data;
                 // if (Data.Count() == 1)
                 // {
-                //     GoToDetail(((dynamic)Data.First()).Rowid);
+                //     GoToDetail(((dynamic)Data.First()).Rowid);   
                 //     return;
                 // }
                 // count = dbData.TotalCount;
             }else{
-                var dbData = await BusinessObj.GetDataAsync(null, null, filters, "");
-                Data = dbData.Data;
-                if (Data.Count() == 1){
+                bool includeCount = false;
+                int? skip = null;
+                int? take = null;
+                if(!UseFlex && !ListViewModel.InfiniteScroll){
+                    includeCount = true;
+                    skip = 0;
+                    take = ListViewModel.Paging.PageSize;
+                    if(_gridRef != null){
+                        var currentPage = _gridRef.GetType().GetProperty("CurrentPage").GetValue(_gridRef);
+                        skip = (int)currentPage * ListViewModel.Paging.PageSize;
+                    }
+                }
+                var dbData = await BusinessObj.GetDataAsync(skip, take, filters, "", includeCount);
+                count = dbData.TotalCount;
+                data = dbData.Data;
+                if (count == 1){
                     if(!FromEntityField){
-                        GoToDetail(((dynamic)Data.First()).Rowid);
+                        GoToDetail(((dynamic)data.First()).Rowid);
                     }else{
-                        IList<object> objects = new List<object> { Data.First()};
+                        IList<object> objects = new List<object> { data.First()};
                         OnSelectionChanged(objects);
                     }
                     return;
                 }
-                count = dbData.TotalCount;
-                data = Data;
+
+                if(!UseFlex && ListViewModel.InfiniteScroll){
+                    Data = data;
+                }
             }
             LoadingData = false;
             LoadingSearch = false;
