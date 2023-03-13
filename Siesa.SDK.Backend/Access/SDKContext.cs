@@ -24,6 +24,8 @@ namespace Siesa.SDK.Backend.Access
 {
     public class SDKContext : DbContext
     {
+	public DbSet<E00231_FlexDelta>? E00231_FlexDelta { get; set; }
+
 	public DbSet<E00222_UserAccessSchedulingJournal>? E00222_UserAccessSchedulingJournal { get; set; }
 
 	public DbSet<U00250_DynamicEntity>? U00250_DynamicEntity { get; set; }
