@@ -10,6 +10,7 @@
     data-automation-id="@GetAutomationId()"
     CheckedExpression="@ValueExpression"
     field-name="@FieldName"
+    @onfocusout="@OnFocusOut"
 >
 @ChildContent
 </DxCheckBox>
@@ -33,6 +34,11 @@
             AutomationId = FieldName;
         }
         return base.GetAutomationId();
+    }
+
+    private async Task OnFocusOut()
+    {
+        ValueChanged(Value);
     }
 
     

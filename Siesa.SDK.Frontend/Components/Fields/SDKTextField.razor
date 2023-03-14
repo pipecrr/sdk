@@ -1,3 +1,4 @@
+@using System.Linq.Expressions
 @inherits SDKComponent
 
 <DxMemo 
@@ -9,7 +10,10 @@
     maxlength = "@MaxLength"
     data-automation-id="@GetAutomationId()"
     field-name="@FieldName"
+    ClearButtonDisplayMode="@ClearButtonDisplayMode.Get()"
+    TextExpression="@ValueExpression"
     @onfocusout="@OnFocusOut"
+    tabindex="1"
 >
 @ChildContent
 </DxMemo>
@@ -26,6 +30,8 @@
     [Parameter] public string MaxLength { get; set; }
     [Parameter] public string CssClass { get; set; }
     [Parameter] public string FieldName { get; set; }
+    [Parameter] public Expression<Func<string>> ValueExpression { get; set; }
+    [Parameter] public SDKClearButtonDisplayMode ClearButtonDisplayMode { get; set; }
 
     private string GetCssClass()
     {

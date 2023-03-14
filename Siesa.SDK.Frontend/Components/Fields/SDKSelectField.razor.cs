@@ -64,7 +64,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
         private async Task OnFocusOut()
         {
-                ValueChanged(Value);
+            ValueChanged(Value);
         }
     }
 

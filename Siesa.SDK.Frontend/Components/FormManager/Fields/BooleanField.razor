@@ -1,6 +1,6 @@
 ﻿@typeparam TBool
-@inherits FieldClass<TBool>
-
+@inherits FieldClass<bool>
+@using Siesa.SDK.Frontend.Components.Fields
 @using System.Linq.Expressions
 @if (!FieldOpt.Hidden)
 {
@@ -21,15 +21,14 @@
                 var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
                 var lambda = Expression.Lambda(typeof(Func<>).MakeGenericType(access.Type), access);
 
-                builder.OpenComponent(0, typeof(DxCheckBox<TBool>));
-                builder.AddAttribute(1, "CheckedExpression", lambda);
-                builder.AddAttribute(2, "Checked", BindValue);
-                builder.AddAttribute(3, "CheckedChanged", EventCallback.Factory.Create<TBool>(this, str => { SetValue(str); }));
-                builder.AddAttribute(4, "NullText", FieldOpt.Placeholder);
+                builder.OpenComponent(0, typeof(SDKBooleanField));
+                builder.AddAttribute(1, "ValueExpression", lambda);
+                builder.AddAttribute(2, "Value", BindValue);
+                builder.AddAttribute(3, "ValueChanged", new Action<bool>(value => SetValue(value)));
+                builder.AddAttribute(4, "Placeholder", FieldOpt.Placeholder);
                 builder.AddAttribute(5, "CssClass", FieldOpt.CssClass);
                 builder.AddAttribute(6, "Enabled", !FieldOpt.Disabled);
-                builder.AddAttribute(7, "field-name", FieldOpt.Name);
-                builder.AddAttribute(8, "data-automation-id", $"BooleanField_{FieldOpt.Name}");
+                builder.AddAttribute(7, "FieldName", FieldOpt.Name);
 
 
                 builder.CloseComponent();
