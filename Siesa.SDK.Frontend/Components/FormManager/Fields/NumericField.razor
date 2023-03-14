@@ -1,6 +1,8 @@
 ﻿@typeparam TNum
 @inherits FieldClass<TNum>
 @using System.Linq.Expressions
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components
 @if (!FieldOpt.Hidden)
 {
     @FieldTemplate
@@ -20,18 +22,18 @@
                 var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
                 var lambda = Expression.Lambda(typeof(Func<>).MakeGenericType(access.Type), access);
 
-                var dxSpinField = typeof(DxSpinEdit<>).MakeGenericType(access.Type);
-                builder.OpenComponent(0, dxSpinField);
+                //var dxSpinField = typeof(DxSpinEdit<>).MakeGenericType(access.Type);
+                builder.OpenComponent(0, typeof(SDKIntegerField<TNum>));
                 builder.AddAttribute(1, "ValueExpression", lambda);
                 builder.AddAttribute(2, "Value", BindValue);
-                builder.AddAttribute(3, "ValueChanged", EventCallback.Factory.Create<TNum> (this, str => { SetValue(str); }));
-                builder.AddAttribute(4, "NullText", FieldOpt.Placeholder);
+                builder.AddAttribute(3, "ValueChanged", new Action<TNum>(value => SetValue(value)));//EventCallback.Factory.Create<TNum> (this, str => { SetValue(str); }));
+                builder.AddAttribute(4, "Placeholder", FieldOpt.Placeholder);
                 builder.AddAttribute(5, "CssClass", (IsRequired && (BindValue == null || Convert.ToInt64(BindValue) == 0) ? "invalid" : "") + FieldOpt.CssClass);
                 builder.AddAttribute(6, "ReadOnly", FieldOpt.Disabled);
-                builder.AddAttribute(7, "ClearButtonDisplayMode", DataEditorClearButtonDisplayMode.Auto);
-                builder.AddAttribute(8, "maxlength", MaxLength > 0 ? MaxLength : null);
-                builder.AddAttribute(9, "field-name", FieldOpt.Name);
-                builder.AddAttribute(10, "data-automation-id", $"NumericField_{FieldOpt.Name}");
+                builder.AddAttribute(7, "ClearButtonDisplayMode", SDKClearButtonDisplayMode.Auto);
+                builder.AddAttribute(8, "MaxLength", MaxLength > 0 ? MaxLength : null);
+                builder.AddAttribute(9, "FieldName", FieldOpt.Name);
+                //builder.AddAttribute(10, "data-automation-id", $"NumericField_{FieldOpt.Name}");
 
                 builder.CloseComponent();
             };
