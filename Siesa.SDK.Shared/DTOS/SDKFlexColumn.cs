@@ -19,5 +19,6 @@ namespace Siesa.SDK.Shared.DTOS
         public string formula { get; set; }
         public bool customFn { get; set; }
         public bool is_dynamic_field { get; set; }
+        public string aggregate { get; set; }
     }
 }
