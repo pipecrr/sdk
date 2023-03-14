@@ -158,13 +158,19 @@ namespace Siesa.SDK.Frontend.Services
         public async Task Logout()
         {
             
+            try
+            {
+                var sessionId = await GetCookie("sdksession");
 
-            var sessionId = await GetCookie("sdksession");
+                var BLSession = _backendRouterService.GetSDKBusinessModel("BLSession", this);
 
-            var BLSession = _backendRouterService.GetSDKBusinessModel("BLSession", this);
+                var updateSession = BLSession.Call("UpdateEndDate",sessionId);
+                
+            }catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
 
-            var updateSession = BLSession.Call("UpdateEndDate",sessionId);
-            
             await _localStorageService.RemoveItemAsync("usertoken");
             await _localStorageService.RemoveItemAsync("lastInteraction");
             await _localStorageService.RemoveItemAsync("n_tabs");
