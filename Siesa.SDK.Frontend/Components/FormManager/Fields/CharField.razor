@@ -31,7 +31,8 @@
                 builder.AddAttribute(7, "ClearButtonDisplayMode", SDKClearButtonDisplayMode.Auto);
                 builder.AddAttribute(8, "MaxLength", MaxLength > 0 ? MaxLength : null);
                 builder.AddAttribute(9, "FieldName", FieldOpt.Name);
-                var lastIndex = 9;
+                builder.AddAttribute(10, "OnFocusOut", new Action(() => CheckUniqueValue()));
+                var lastIndex = 10;
                 if(FieldOpt.CustomAttributes != null && FieldOpt.CustomAttributes.Count > 0)
                 {
                     foreach (var attr in FieldOpt.CustomAttributes.Where(a => !a.Key.StartsWith("sdk-")))
