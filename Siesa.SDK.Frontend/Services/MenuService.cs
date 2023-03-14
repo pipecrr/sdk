@@ -28,6 +28,8 @@ namespace Siesa.SDK.Frontend.Services
         private UtilsManager UtilsManager { get; set; }
         public Dictionary<int, List<E00061_Menu>> SuiteData {get; set;} = new();
 
+        public E00060_Suite SelectedSuite { get; set; } = new();
+
         private bool loading = false;
 
         private SDKBusinessModel _menuBL { get { return BackendRouterService.GetSDKBusinessModel("BLAdminMenu", AuthenticationService); } }
@@ -54,6 +56,11 @@ namespace Siesa.SDK.Frontend.Services
             if(Suites.Count == 1 || AuthenticationService.GetSelectedSuite() == 0)
             {
                 AuthenticationService.SetSelectedSuite(Suites.First().Rowid);
+                SelectedSuite = Suites.FirstOrDefault(x => x.Rowid == Suites.First().Rowid);
+            }
+            else
+            {
+                SelectedSuite = Suites.FirstOrDefault(x => x.Rowid == AuthenticationService.GetSelectedSuite());
             }
 
             _ = GetSuiteResources(Suites);
@@ -95,7 +102,8 @@ namespace Siesa.SDK.Frontend.Services
             loading = true;
             Menus = new List<E00061_Menu>();
             AddDevMenu(Menus);
-            await LoadMenu(AuthenticationService.GetSelectedSuite());
+            int rowidSuite = AuthenticationService.GetSelectedSuite(); 
+            await LoadMenu(rowidSuite);
             loading = false;
         }
 
@@ -300,6 +308,7 @@ namespace Siesa.SDK.Frontend.Services
             var suite = Suites.FirstOrDefault(x => x.Rowid == suiteRowid);
             if (suite != null)
             {
+                SelectedSuite = suite;
                 AuthenticationService.SetSelectedSuite(suiteRowid);
                 Menus.Clear();
                 AddDevMenu(Menus);
