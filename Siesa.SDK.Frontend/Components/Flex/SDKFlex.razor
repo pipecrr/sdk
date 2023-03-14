@@ -1,0 +1,64 @@
+@using Siesa.SDK.Shared.Services
+@using Newtonsoft.Json
+@using Siesa.SDK.Shared.DTOS
+
+@if(_flexRowid != 0){
+    <FlexComponent FlexRowid="@_flexRowid" FlexFilters="@_flexFilters"></FlexComponent>
+}
+
+@code{
+
+    [Inject] 
+    public IBackendRouterService BackendRouterService { get; set; }
+
+    [Inject] 
+    public IAuthenticationService AuthenticationService { get; set; }
+
+    [Parameter]
+    public int FlexRowid { get; set; }
+    [Parameter]
+    public Dictionary<string, object> FlexFilters { get; set; }
+    [Parameter]
+    public Dictionary<string, object> FlexFiltersTo { get; set; }
+
+    private int _flexRowid = 0;
+
+    private string _flexFilters = "";
+    protected override async Task OnInitializedAsync(){
+        await Init();
+        base.OnInitializedAsync();
+    }
+
+    private async Task Init(){
+        var BLFlex = BackendRouterService.GetSDKBusinessModel("BLFlex", AuthenticationService);
+        var response = await BLFlex.Call("GetFlexById", FlexRowid.ToString());
+        if(response.Success){
+            var flex = response.Data;
+            var metadata = response.Data.GetType().GetProperty("Metadata").GetValue(response.Data);
+            var rowid = response.Data.GetType().GetProperty("Rowid").GetValue(response.Data);
+            var metadataObj = JsonConvert.DeserializeObject<SDKFlexRequestSaveData>(metadata);
+            
+            if(FlexFilters != null && metadataObj != null && metadataObj.filter_list != null && metadataObj.filter_list.Count > 0){
+                foreach(SDKFlexFilters filter in metadataObj.filter_list){
+                    var nameColumn = "";
+                    if(filter.path.Contains("::")){
+                        var splitPath = filter.path.Split("::").Skip(1);
+                        nameColumn = string.Join(".", splitPath)+ "." + filter.name;
+                    }else{
+                        nameColumn = filter.name;
+                    }
+                    if(FlexFilters.ContainsKey(nameColumn)){
+                        filter.equal_from = FlexFilters[nameColumn];
+                        if(filter.to != null && FlexFiltersTo != null && FlexFiltersTo.ContainsKey(nameColumn)){
+                            filter.to = FlexFiltersTo[nameColumn].ToString();
+                        }
+                    }
+                }
+                _flexFilters = JsonConvert.SerializeObject(metadataObj.filter_list);
+            }
+
+            _flexRowid = rowid;
+        }
+    }
+    
+}
