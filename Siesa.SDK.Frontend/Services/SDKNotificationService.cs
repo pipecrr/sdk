@@ -49,7 +49,7 @@ namespace Siesa.SDK.Frontend.Services
                 return resourceMessage;
             }
         }
-        public async Task ShowError(string resourceMessage, object?[] variables = null, int duration = 999999, Int64 culture = 0)
+        public async Task ShowError(string resourceMessage, object?[] variables = null, int duration = 7000, Int64 culture = 0)
         {
             var message = await GetResourceMessage(resourceMessage, culture, variables);
 
