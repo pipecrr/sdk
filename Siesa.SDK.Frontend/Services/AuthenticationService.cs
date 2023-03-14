@@ -165,10 +165,9 @@ namespace Siesa.SDK.Frontend.Services
                 var BLSession = _backendRouterService.GetSDKBusinessModel("BLSession", this);
 
                 var updateSession = BLSession.Call("UpdateEndDate",sessionId);
-                
+
             }catch (Exception e)
             {
-                throw new Exception(e.Message);
             }
 
             await _localStorageService.RemoveItemAsync("usertoken");
