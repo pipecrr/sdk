@@ -81,17 +81,25 @@
             }
 
             Options = Enumerable.Empty<SelectBarItemWrap<TItem>>();
-            
-            if (ViewdefName == "search")
+            try
             {
-                var SelectAllName = await ResourceManager.GetResource("Custom.Enum.SelectAll", AuthenticationService);
-                Options = Options.Append(new SelectBarItemWrap<TItem>
+                if (ViewdefName == "search")
                 {
-                    Key = (TItem)Enum.Parse(enumType, (enumValues.Select(x => x.Key).Last() + 1).ToString()),
-                    Name = SelectAllName
-                });
-                BindValue = Options.Select(x => x.Key).First();
-            } 
+                    var SelectAllName = await ResourceManager.GetResource("Custom.Enum.SelectAll", AuthenticationService);
+                    Options = Options.Append(new SelectBarItemWrap<TItem>
+                    {
+                        Key = (TItem)Enum.Parse(enumType, (enumValues.Select(x => x.Key).Last() + 1).ToString()),
+                        Name = SelectAllName
+                    });
+                    BindValue = Options.Select(x => x.Key).First();
+                } 
+            }
+            catch (System.Exception)
+            {
+                
+                throw;
+            }
+           
             Options = Options.Concat(enumValues.Select(x => new SelectBarItemWrap<TItem>
             {
                 Key = (TItem)Enum.Parse(enumType, x.Key.ToString()),
