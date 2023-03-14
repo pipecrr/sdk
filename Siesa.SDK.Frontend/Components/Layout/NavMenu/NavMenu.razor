@@ -15,10 +15,10 @@
 
 <input type="checkbox" name="" checked id="menu">
     <label class="sdk_nav_head" for="menu">
-        <div class="nav_btn_standar_suite" data-toggle="tooltip" data-placement="right" title="Nombre suite">
-            <div class="back_suite" style="background: #13849E;"></div>
+        <div class="nav_btn_standar_suite" data-toggle="tooltip" data-placement="right" title="@MenuService?.SelectedSuite?.CurrentText">
+            <div class="back_suite" style="background: #@MenuService?.SelectedSuite?.HexColor"></div>
             <div class="nav_btn_standar_icon_suite">
-                <i class="fa-solid fa-bars font_size_112" style="color: #13849E;"></i> 
+                <i class="@MenuService?.SelectedSuite?.IconClass" style="color: #@MenuService?.SelectedSuite?.HexColor"></i> 
             </div>
         </div>
     </label>
@@ -51,7 +51,7 @@
             title="@TitleSuite" @onclick="@(()=> ShowSuiteMenu())">
                     <div class="back_suite back_suite_general"></div>
                     <div class="nav_btn_standar_icon_suite">
-                        <i class="fa-solid fa-grid font_size_125"  style="color: #13849E;"></i> 
+                        <i class="fa-solid fa-grid font_size_125"  style="color: #@MenuService?.SelectedSuite?.HexColor"></i> 
                     </div>
                     <div class="nav_btn_standar_text">
                        <ResourceViewer ResourceTag="@SuiteMenu.ResourceTag" />
@@ -71,7 +71,7 @@
                 
                 <div class="nav_profile_btn" @onclick="@(()=> ShowProfileMenu())">
                     <div class="nav_btn_standar_icon nav_profile_photo">
-                        <img src="_content/Siesa.SDK.Frontend/assets/img/profile_img.jpg" height="36px" alt="imagen perfil">
+                        <img src="_content/Siesa.SDK.Frontend/assets/img/Profile_default.png" height="36px" alt="imagen perfil">
                     </div>
                     <div class="nav_btn_standar_text">
                         @AuthenticationService.User
@@ -104,7 +104,7 @@
     private E00061_Menu SuiteMenu { get; set; }
     private string TitleSuite { get; set; }
     private string TitleLogout { get; set; }
-
+    
     public void OnMenuItemClick(E00061_Menu menuItem)
     {
         
@@ -128,6 +128,7 @@
 
     protected async override Task OnInitializedAsync()
     {
+        
         MenuService.MenuLoaded += OnMenuLoaded;
 
         SuiteMenu = new E00061_Menu()
@@ -160,15 +161,17 @@
         }  
 
         await base.OnInitializedAsync();
-        if(MenuService.Menus == null || MenuService.Menus.Count == 0)
+
+        if(MenuService.Menus == null || MenuService.Menus.Count == 0 || MenuService.Suites == null || MenuService.Suites.Count == 0)
         {
-            _ = MenuService.ReloadMenu();
+            _  = MenuService.ReloadMenu();
         }
+
         TitleSuite = await UtilManager.GetResource("Custom.Menu.Suite");
         TitleLogout = await UtilManager.GetResource("BLUser.Logout");
         SuiteMenu.CurrentText = await UtilManager.GetResource("Custom.Menu.Suite");
+        
     }
-
     private void ShowProfileMenu()
     {
         ShowSubMenu = true;
@@ -176,9 +179,16 @@
         StateHasChanged();
     }
 
-    private void SetSuite(E00061_Menu _tempMenu)
+    private async Task SetSuite(E00061_Menu _tempMenu)
     {
-        _ = MenuService.SetSelectedSuite(_tempMenu.Rowid);
+        await MenuService.SetSelectedSuite(_tempMenu.Rowid);
+        ShowSubMenu = false;
+        StateHasChanged();
+    }
+
+    private void _setSuite(E00061_Menu _tempMenu)
+    {
+        _ = SetSuite(_tempMenu);
     }
 
     private void ShowSuiteMenu()
@@ -196,7 +206,7 @@
                         IconClass = suite.IconClass,
                         StyleColor = suite.HexColor,
                         Rowid = suite.Rowid,
-                        CustomAction = SetSuite
+                        CustomAction = _setSuite
                     });
                 }
             }
@@ -224,7 +234,7 @@
         }
     }
 
-    private void OnMenuLoaded(object sender, EventArgs e)
+    private void OnMenuLoaded(dynamic sender, EventArgs e)
     {
         StateHasChanged();
     }
@@ -237,4 +247,5 @@
             MenuService.MenuLoaded -= OnMenuLoaded;
         }
     }
+
 }

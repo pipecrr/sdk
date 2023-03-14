@@ -39,7 +39,7 @@ namespace Siesa.SDK.Shared.Services
         JwtUserData User { get; }
         short RowidCultureChanged { get; set; }
         Task Initialize();
-        Task Login(string username, string password, short rowIdDBConnection);
+        Task Login(string username, string password, short rowIdDBConnection, bool IsUpdateSession = false);
         Task Logout();
         public Task SetToken(string token, bool saveLocalStorage = true);
         Task SetCustomRowidCulture(short rowid);
@@ -58,6 +58,7 @@ namespace Siesa.SDK.Shared.Services
         Task<bool> ForgotPasswordAsync(string email);
         Task<bool> ValidateUserToken(int rowidUser);
         Task<bool> ChangePassword(int rowidUser, string NewPassword, string ConfirmPassword);
+        Task RenewToken();
         
     }
 

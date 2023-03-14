@@ -13,8 +13,6 @@ function ListViewInstance(dotnethelper, key){
 }
 
 function existMountFlex(){
-    console.log("existMountFlex ");
-    console.log(window.MountFlex != null);
     return window.MountFlex != null;
 }
 
