@@ -75,7 +75,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         [CascadingParameter] EditContext EditFormContext { get; set; }
         [CascadingParameter] FormView formView { get; set; }
 
-        public string ViewdefName { get => formView.ViewdefName; }
+        public string ViewdefName { get 
+        {
+            if(formView == null)
+            {
+                return "";
+            }
+            return formView.ViewdefName;
+        }}
 
         protected async Task Init()
         {
