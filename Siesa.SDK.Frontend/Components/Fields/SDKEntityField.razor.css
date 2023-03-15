@@ -38,6 +38,9 @@
 .input-badge-container ::deep .whcm_select_list.dropdown-menu.show{
     width: 100%;
     transform: translate3d(0px, 1.938rem, 0px) !important;
+    z-index: 3;
+    top: 0;
+    left: 0;
 }
 
 .input-badge-container > .dropdown ::deep > input{

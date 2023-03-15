@@ -12,6 +12,7 @@
     }, 500);
 }
 
+
 export function checkAndRenewToken(dotnethelper) {
     var timeout_seconds = 10;
     var token = localStorage.getItem('usertoken');
@@ -19,11 +20,13 @@ export function checkAndRenewToken(dotnethelper) {
         var tokenData = JSON.parse(atob(token.split('.')[1]));
         var now = new Date();
         var tokenExpiration = new Date(tokenData.exp * 1000);
-        if (now > tokenExpiration) {
+        var lastInteraction = localStorage.getItem('lastInteraction');
+        if (now > new Date(tokenExpiration - 60000 * 5) && ((now - lastInteraction) < 60000 * 2)) {
+            dotnethelper.invokeMethodAsync("RenewToken");
+            timeout_seconds = 5;
+        } else if (now > tokenExpiration) {
             dotnethelper.invokeMethodAsync("ShowLogin");
             timeout_seconds = 5;
-        }else if (now > new Date(tokenExpiration - 60000 * 5)) {
-            dotnethelper.invokeMethodAsync("RenewToken");
         }else{
             //check if exits a div with class sdk-modal-login
             var loginModal = document.querySelector('.sdk-modal-login');

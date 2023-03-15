@@ -172,6 +172,15 @@ input#menu:checked~ ::deep .nav_dx_menu {
     border-radius: 4px 4px 24px 4px;
     overflow: hidden;
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav_profile_photo > img {
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
 }
 
 .nav_profile_photo::before {

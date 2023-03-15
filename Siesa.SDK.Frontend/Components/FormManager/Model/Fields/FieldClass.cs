@@ -75,7 +75,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         [CascadingParameter] EditContext EditFormContext { get; set; }
         [CascadingParameter] FormView formView { get; set; }
 
-        public string ViewdefName { get => formView.ViewdefName; }
+        public string ViewdefName { get 
+        {
+            if(formView == null)
+            {
+                return "";
+            }
+            return formView.ViewdefName;
+        }}
 
         protected async Task Init()
         {
@@ -152,10 +159,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             fieldProperty.SetValue(BindModel, value);
         }
 
-        private async Task CheckUniqueValue()
+        public async Task CheckUniqueValue()
         {
             try
             {
+                if (!IsUnique || !ValidateField)
+                {
+                    return;
+                }
                 var request = await _backendRouterService.GetSDKBusinessModel(this.formView.BusinessName, _authenticationService).Call("CheckUnique", this.BindModel);
                 if (request.Success)
                 {
@@ -256,11 +267,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             {
                 //MuestreError();
             }
-            if (IsUnique && ValidateField)
-            {
-                CheckUniqueValue();
-                 //Console.WriteLine($"El campo {FieldName} es único y debe revisar el valor {value}");
-            }
+            
+            CheckUniqueValue();
 
         }
 
