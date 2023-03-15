@@ -31,23 +31,43 @@ namespace Siesa.SDK.Frontend.Services
             };
         }
 
-         public async Task<dynamic> ShowConfirmDialog (RenderFragment childContent,string width="400px", string ConfirmationButtonTag="Action.Confirm", string CancelationButtonTag="Action.Cancel",string title="", string ResourceTag="")
+         public async Task<dynamic> ShowConfirmDialog (RenderFragment childContent,string width="400px", string ConfirmationButtonTag="Action.Confirm", string CancelationButtonTag="Action.Cancel",string title="", string ResourceTag="", SDKModalWidth standardWidth=SDKModalWidth.Undefined)
          {
             var _title = title;
             if(!string.IsNullOrEmpty(ResourceTag)){
                 _title = await UtilsManager.GetResource(ResourceTag);
             }
+            string _width = width;
+            if(standardWidth != SDKModalWidth.Undefined){
+                if(standardWidth == SDKModalWidth.Small){
+                    _width = "300px";
+                }else if(standardWidth == SDKModalWidth.Medium){
+                    _width = "600px";
+                }else{
+                    _width = "80%";
+                }
+            }
             return await ds.OpenAsync(_title,GetConfirmComponent(childContent,ConfirmationButtonTag,CancelationButtonTag),
-            new SDKDialogOption(){ShowTitle=false, Style=$"min-width:300px; width:{width};", CssClass="whcm_modal_relacion"});
+            new SDKDialogOption(){ShowTitle=false, Style=$"min-width:300px; width:{_width};", CssClass="whcm_modal_relacion"});
          }
 
-         public async Task<dynamic> ShowCustomDialog (RenderFragment<DialogService> childContent,string width="600px", string title="",bool ShowTitle=true , bool showClose=true, string height="", string ResourceTag="")
+         public async Task<dynamic> ShowCustomDialog (RenderFragment<DialogService> childContent,string width="600px", string title="",bool ShowTitle=true , bool showClose=true, string height="", string ResourceTag="", SDKModalWidth standardWidth=SDKModalWidth.Undefined)
          {
             if(!string.IsNullOrEmpty(ResourceTag)){
                 title = await UtilsManager.GetResource(ResourceTag);
             }
             string TitleTag = await UtilsManager.GetResource(title);
-            string style = $"min-width:400px; width:{width}";
+            string _width = width;
+            if(standardWidth != SDKModalWidth.Undefined){
+                if(standardWidth == SDKModalWidth.Small){
+                    _width = "300px";
+                }else if(standardWidth == SDKModalWidth.Medium){
+                    _width = "600px";
+                }else{
+                    _width = "80%";
+                }
+            }
+            string style = $"min-width:300px; width:{_width}";
             if(!string.IsNullOrEmpty(height)){
                 style += $"; height:{height}";
             }

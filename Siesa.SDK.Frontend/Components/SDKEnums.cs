@@ -186,4 +186,11 @@ namespace Siesa.SDK.Frontend.Components
         Horizontal = DevExpress.Blazor.Orientation.Horizontal,
         Vertical = DevExpress.Blazor.Orientation.Vertical
     }
+
+    public enum SDKModalWidth {
+        Undefined = 0,
+        Small = 1,
+        Medium = 2,
+        Large = 3
+    }
 }
