@@ -245,13 +245,18 @@ namespace Siesa.SDK.Backend.Access
                         foreach (var Property in Properties)
                         {
                             var propertyValue =  Property.GetValue(Field.Entity);
+                            var originalValue = originalEntity.GetType().GetProperty(Property.Name).GetValue(originalEntity);
                             if (propertyValue == null || (propertyValue is string && string.IsNullOrEmpty(propertyValue.ToString())))
                             {
-                                var originalValue = originalEntity.GetType().GetProperty(Property.Name).GetValue(originalEntity);
                                 if (originalValue != null)
                                 {
                                     Field.Context.Entry(Field.Entity).Property(Property.Name).CurrentValue = originalValue;
                                 }
+                                continue;
+                            }
+
+                            if(propertyValue == originalValue)
+                            {
                                 continue;
                             }
                             var EncryptValue = SDKDataEncrypt.FieldEncrypt(propertyValue);
