@@ -949,22 +949,22 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_text{
 
 .rz-growl-image.rzi-check:before {
     content: "\f058" !important;
-    font-family: "Font Awesome 6 Free" !important;
+    font-family: "Font Awesome 6 Pro" !important;
 }
 
 .rz-growl-image.rzi-info-circle:before {
     content: "\f05a" !important;
-    font-family: "Font Awesome 6 Free" !important;
+    font-family: "Font Awesome 6 Pro" !important;
 }
 
 .rz-growl-image.rzi-times:before {
     content: "\f06a" !important;
-    font-family: "Font Awesome 6 Free" !important;
+    font-family: "Font Awesome 6 Pro" !important;
 }
 
 .rz-growl-image.rzi-exclamation-triangle:before {
     content: "\f071" !important;
-    font-family: "Font Awesome 6 Free" !important;
+    font-family: "Font Awesome 6 Pro" !important;
 }
 
 .rz-notification-message.rz-growl {
