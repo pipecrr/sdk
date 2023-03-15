@@ -231,6 +231,21 @@ namespace Siesa.SDK.Frontend.Services
             return true;
         }
 
+        public async Task<bool> GetMenuItemsWithChildsAndOperations(int RowidSuite)
+        {
+            var menuBL = BackendRouterService.GetSDKBusinessModel("BLAdminMenu", AuthenticationService);
+
+            var Request = await menuBL.Call("GetMenuItemsWithChildsAndOperations", RowidSuite);
+
+            if(!Request.Success) return false;
+
+            var Data = Request.Data;
+
+            MenuManagerBySuite(menuBL, RowidSuite, Data, true, true);
+
+            return true;
+        }
+
         public void MenuManagerBySuite(SDKBusinessModel menuBL, int RowidSuite, List<E00061_Menu> menuResponse, bool IgnoreGeneralMenu = false, bool SetInSuiteData = false)
         {
             menuResponse = menuResponse.OrderBy(x => x.Order).ToList();
