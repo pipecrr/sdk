@@ -156,10 +156,22 @@
             await ImportJs();
         }
     }
-
+    
     private async Task ImportJs()
     {
-        _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/Components/Documentation/SDKDocumentation.razor.js");
+        try
+        {
+            _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/Components/Documentation/SDKDocumentation.razor.js");
+        }
+        catch (Exception)
+        {
+        }
+        try
+        {
+            await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/js/utils.js");
+        }catch (Exception)
+        {
+        }
     }
     
 }
