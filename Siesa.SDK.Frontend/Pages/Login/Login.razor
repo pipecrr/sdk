@@ -283,7 +283,7 @@
         await getDbConnections();
         await getCultures();
         getSelectedCulture();
-        //await getUserlang();
+        await getUserlang();
         init_loading = false;
         await base.OnInitializedAsync();
         await ImportJs();
@@ -433,8 +433,9 @@
            cultures = await getCulturesAsync();
 
         }
-
-        if (userlang == 0)
+        try
+        {
+            if (userlang == 0)
             {
                 var BrowserLang = await JSRuntime.InvokeAsync<string>("getBrowserLang");
                 string[] language = BrowserLang.Split('-');
@@ -444,18 +445,21 @@
             {
                 selectedCulture = cultures.FirstOrDefault(x => x.Rowid == userlang);
             }
+        }catch(Exception ex)
+        {
+        }
 
-            if (selectedCulture == null){
-                cultureDefault();
-                try {
+        if (selectedCulture == null){
+            cultureDefault();
+            try {
 
-                    await AuthenticationService.RemoveCustomRowidCulture();
-                }catch(Exception ex){
-                   
-                }
-            }else{
-                OnChangeCulture(selectedCulture.Rowid);
+                await AuthenticationService.RemoveCustomRowidCulture();
+            }catch(Exception ex){
+                
             }
+        }else{
+            OnChangeCulture(selectedCulture.Rowid);
+        }
     }
 
     private void cultureDefault(){

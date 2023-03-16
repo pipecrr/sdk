@@ -157,8 +157,19 @@ namespace Siesa.SDK.Frontend.Services
 
         public async Task Logout()
         {
-            UserToken = "";
-            _user = null;
+            
+            try
+            {
+                var sessionId = await GetCookie("sdksession");
+
+                var BLSession = _backendRouterService.GetSDKBusinessModel("BLSession", this);
+
+                var updateSession = BLSession.Call("UpdateEndDate",sessionId);
+
+            }catch (Exception e)
+            {
+            }
+
             await _localStorageService.RemoveItemAsync("usertoken");
             await _localStorageService.RemoveItemAsync("lastInteraction");
             await _localStorageService.RemoveItemAsync("n_tabs");
@@ -166,6 +177,10 @@ namespace Siesa.SDK.Frontend.Services
             //await _localStorageService.RemoveItemAsync("selectedSuite");
             await RemoveCookie("sdksession");
             await RemoveCookie("selectedConnection");
+            UserToken = "";
+            _user = null;
+
+            _navigationManager.NavigateTo("login");
 
         }
 
