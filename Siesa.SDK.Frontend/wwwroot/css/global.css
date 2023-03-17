@@ -112,6 +112,9 @@ html{
 .font_color_primary_light{
     color: var(--color_primary_light);
 }
+.font_color_primary_dark{
+    color: var(--color_primary_dark);
+}
 .font_color_validacion{
     color: var(--color_validacion_error);
 }

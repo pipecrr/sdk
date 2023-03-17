@@ -41,10 +41,10 @@ else if (BusinessObj != null)
     }
     protected override void SetParameters(dynamic _businessObj, string businessName){
         var new_params = new Dictionary<string, object>();
-        if(businessObj == null){
-            businessObj = _businessObj;
+        if(businessObj != null){
+            _businessObj = businessObj;
         }
-        new_params.Add("BusinessObj", businessObj);
+        new_params.Add("BusinessObj", _businessObj);
         new_params.Add("BusinessName", businessName);
         new_params.Add("AllowCreate", AllowCreate);
         new_params.Add("AllowEdit", AllowEdit);
