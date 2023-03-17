@@ -118,8 +118,8 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public bool IsVisibilityAdministrator { get; set; }
 
-		[StringLength(250)]
-		public string? UrlProfilePicture { get; set; }
+		[ForeignKey("AttachmentUserProfilePicture")]
+		public int? RowidAttachmentUserProfilePicture { get; set; }
 
 
 		[SDKCheckRelationship]
@@ -134,6 +134,8 @@ namespace Siesa.SDK.Entities
 
 		[SDKCheckRelationship]
 		public virtual E00223_UserAccountPolicy UserAccountPolicy { get; set; }
+
+		public virtual E00271_AttachmentDetail AttachmentUserProfilePicture { get; set; }
 
 	}
 }
