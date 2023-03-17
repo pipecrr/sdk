@@ -118,6 +118,9 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public bool IsVisibilityAdministrator { get; set; }
 
+		[StringLength(250)]
+		public string? UrlProfilePicture { get; set; }
+
 
 		[SDKCheckRelationship]
 		public virtual E00220_User UserSubstitute { get; set; }
