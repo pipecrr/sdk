@@ -19,6 +19,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         public string UnknownFieldType { get; set; }
 
         public bool IsNullable { get; set; }
+        public bool SensitiveData { get; set; }
     }
 
     public class CustomComponent
@@ -61,6 +62,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 
         public bool Hidden { get; set; } = false;
         public bool Required { get; set; } = false;
+
+        public bool SensitiveData { get; set; } = false;
 
         public int ColumnWidth { get; set; } = 0;
 
@@ -238,6 +241,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             }
             field.FieldType = FieldType;
             field.IsNullable = IsNullable;
+            //field.SensitiveData = SensitiveData;
             return field;
         }
 

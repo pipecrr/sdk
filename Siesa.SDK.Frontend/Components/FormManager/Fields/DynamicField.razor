@@ -1,5 +1,9 @@
 ﻿
 @using Siesa.SDK.Frontend.Components.Fields
+@if (FieldOpt.ViewContext == "DetailView" && SensitiveData)
+{
+    <CharField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" ValidateField="@ValidateField" />
+}
 @switch (FieldType)
 {
     case FieldTypes.CharField:

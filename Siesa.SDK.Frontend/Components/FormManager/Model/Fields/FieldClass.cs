@@ -101,6 +101,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                     case SDKDataEncrypt _:
                         IsEncrypted = true;
                         break;
+                    case SDKSensitveData _:
+                        FieldOpt.SensitiveData = true;
+                        break;
                 }
             }
             if (FieldOpt.Required)
