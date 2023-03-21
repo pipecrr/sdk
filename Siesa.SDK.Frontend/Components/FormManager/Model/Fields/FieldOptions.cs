@@ -1,6 +1,7 @@
 ﻿using Siesa.SDK.Entities;
 using Siesa.SDK.Frontend.Components.Fields;
 using Siesa.SDK.Frontend.Components.FormManager.Fields;
+using Siesa.SDK.Shared.DataAnnotations;
 using Siesa.SDK.Shared.Utilities;
 using System;
 using System.Collections.Generic;
@@ -145,6 +146,17 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 }
                 var propertyType = field.ModelObj.GetType().GetProperty(field.Name).PropertyType;
                 originalPropertyType = propertyType;
+                var customAttr = field.ModelObj.GetType().GetProperty(field.Name).CustomAttributes;
+                if (customAttr != null)
+                {
+                    foreach (var item in customAttr)
+                    {
+                        if (item.AttributeType == typeof(SDKSensitveData))
+                        {
+                            SensitiveData = true;
+                        }
+                    }
+                }
                 //Console.WriteLine(fieldName + " , " + propertyType);
                 if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
                 {
@@ -241,7 +253,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             }
             field.FieldType = FieldType;
             field.IsNullable = IsNullable;
-            //field.SensitiveData = SensitiveData;
+            field.SensitiveData = SensitiveData;
             return field;
         }
 
