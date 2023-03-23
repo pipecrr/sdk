@@ -1,0 +1,234 @@
+@using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Layout
+@inject SDKDialogService SDKDialogService
+@inject DialogService DialogService
+@inject IAuthenticationService AuthenticationService
+
+<div class="@CssClassRelationship col-12 p-0">
+
+    <button class="whcm_data_related_btn" @onclick="() => _isOpen = !_isOpen ">
+        <p>
+            <ResourceViewer ResourceTag="Custom.SDK.RelationshipPanel" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
+            <i class="fa-solid fa-folder-tree"></i>
+        </p>
+    </button>
+    <div class="whcm_data_related_content p-3">
+        <div class="border-bottom pb-3 pt-1 text-center">
+            <h6><span><ResourceViewer ResourceTag="Custom.SDK.DataRelationship" RowidCulture=@AuthenticationService.GetRoiwdCulture() /></span></h6>
+            <p class="m-0 font_size_087 text-left">
+                <ResourceViewer ResourceTag="Custom.SDK.RelationshipInformation" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
+            </p>
+        </div>
+        <div class="whcm_row panel_box_data">
+            <div class="col-12">
+                @foreach (var Relationship in Relationships)
+                {    
+                    <button class="nav_btn_standar index_btn_related my-1" @onclick="()=>OpenModal(Relationship)" >
+                        <div class="nav_btn_standar_text">
+                            <ResourceViewer ResourceTag="@Relationship.ResourceTag" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
+                        </div>
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+        @if (_openModal)
+        {
+            <div class="col-12 whcm_data_open_box p-3">
+                <div class="d-flex justify-content-between align-items-center border-bottom pb-1">
+                    <h6 class="mb-0">
+                        <ResourceViewer ResourceTag="Custom.SDK.DataRelationshipItem" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
+                    </h6>
+                    <div class="d-flex">
+                        <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => _openModal = !_openModal">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                        <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => CloseRelationshipPanel()">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-12 p-0 pt-3">               
+                    <InlineCrud
+                    BLNameParentAttatchment="@BLNameParentAttatchment"
+                    BusinessName="@SelectedRelationship.RelatedBusiness"
+                    Filter="@filter"
+                    DefaultFieldsCreate="@DefaultFieldsCreate" AllowCreate="@AllowCreate" AllowEdit="@AllowEdit" AllowDelete="@AllowDelete"
+                    AllowDetail="@AllowDetail" Width="@GetWidth()"
+                    Height="@GetHeight()"
+                    />
+                </div>
+            </div>  
+        }
+    <div class="whcm_data_related_back"></div>
+</div>
+		
+
+@code
+{
+    [Parameter] public List<Relationship> Relationships { get; set; }
+    [Parameter] public Relationship SelectedRelationship { get; set; }
+    [Parameter] public string BLNameParentAttatchment { get; set; }
+    [Parameter] public dynamic Parent { get; set; }
+    [Parameter] public bool AllowCreate { get; set; } = true;
+    [Parameter] public bool AllowEdit { get; set; } = true;
+    [Parameter] public bool AllowDelete { get; set; } = true;
+    [Parameter] public bool AllowDetail { get; set; } = true;
+    [Parameter] public Action<string> OnClickEdit { get; set; } = null;
+    [Parameter] public Action<string> OnClickDetail { get; set; } = null;
+    [Parameter] public Action<string,string> OnClickDelete { get; set; } = null;
+    [Parameter] public Action OnClickNew { get; set; } = null;
+    [Parameter] public bool ShowHeader { get; set; } = true;
+
+    [Parameter] public string Width { get; set; }
+    [Parameter] public string Height { get; set; }
+    int? count = null;
+    bool isOpen = false;
+    string filter = "";
+    Guid listview_key = Guid.NewGuid();
+
+    private Dictionary<string, object> DefaultFieldsCreate { get; set; }
+
+    private bool _isOpen = false;
+
+    private bool _openModal  = false;
+
+    private string CssClassRelationship { 
+        get 
+        {
+            if (_openModal)
+            {
+                return "whcm_data_related_box_crud";
+            }
+            if (_isOpen)
+            {
+                return "whcm_data_related_box";
+            }
+            else
+            {
+                return "whcm_data_related_box_hide"; 
+            }
+        }
+    }
+
+    private void OpenModal(Relationship relationship)
+    {
+        SelectedRelationship = relationship;
+        _openModal = true;
+        OnInit();
+        StateHasChanged();
+    }
+
+
+    public void CloseRelationshipPanel()
+    {
+        _isOpen = false;
+        _openModal = false;
+        StateHasChanged();
+    }
+
+    private string GetWidth()
+    {
+        if(!string.IsNullOrEmpty(Width))
+        {
+            return Width;
+        }
+
+        if(SelectedRelationship != null && !string.IsNullOrEmpty(SelectedRelationship.Width))
+        {
+            return SelectedRelationship.Width;
+        }
+        return null;
+    }
+
+    private string GetHeight()
+    {
+        if (!string.IsNullOrEmpty(Height))
+        {
+            return Height;
+        }
+
+        if (SelectedRelationship != null && !string.IsNullOrEmpty(SelectedRelationship.Height))
+        {
+            return SelectedRelationship.Height;
+        }
+        return null;
+    }
+
+    private void OnInit()
+    {
+        if (SelectedRelationship?.RelatedField != null)
+        {
+            CalculateFilter();
+            DefaultFieldsCreate = new Dictionary<string, object>();
+            DefaultFieldsCreate.Add(SelectedRelationship.RelatedField, Parent);
+        }
+    }
+    public void Toggle()
+    {
+        isOpen = !isOpen;
+    }
+
+    private void CalculateFilter()
+    {
+        var field = SelectedRelationship.RelatedField;
+        var parent_rowid = 0;
+        if(Parent != null)
+        {
+            parent_rowid = Parent.Rowid;
+        }
+        //remove "BaseObj" from the field name if it exists
+        if (field.StartsWith("BaseObj."))
+        {
+            field = field.Substring(8);
+        }
+        if(SelectedRelationship.Type == RelationshipType.ManyToMany)
+        {
+            var filter_parts = field.Split('.');
+            filter = $"({filter_parts[0]} != NULL && {filter_parts[0]}.Any({filter_parts[1]}.Rowid == {parent_rowid}))";
+        }
+        else
+        {
+            filter = $"({field}.Rowid == {parent_rowid})";
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        SetParameters();
+        OnInit();
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        SetParameters();
+        OnInit();
+        listview_key = Guid.NewGuid();
+        StateHasChanged();     
+    } 
+
+    protected virtual void SetParameters()
+    {
+        var new_params = new Dictionary<string, object>();
+            if (OnClickEdit != null)
+            {
+                new_params.Add("OnClickEdit", OnClickEdit);
+            }
+            if (OnClickDetail != null)
+            {
+                new_params.Add("OnClickDetail", OnClickDetail);
+            }
+            if (OnClickDelete != null)
+            {
+                new_params.Add("OnClickDelete", OnClickDelete);
+            }
+            if (OnClickNew != null)
+            {
+                new_params.Add("OnClickNew", OnClickNew);
+            }
+    }
+
+}

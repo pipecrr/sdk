@@ -52,10 +52,9 @@ else if (ModelLoaded == true)
         {
             <label>@((MarkupString)ErrorMsg)</label>
         }
-         @foreach (var rel in FormViewModel.Relationships.Where(x=>x.Enabled))
-            {
-               <RelationshipPanel Relationship="@rel" Parent="@BusinessObj.BaseObj" />
-            }
+
+        <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" />
+
     @if(IsSubpanel && ShowButtons){
         <div class="buttons-container">
             @foreach (var btn in FormViewModel.Buttons)
@@ -105,6 +104,7 @@ else if (ModelLoaded == true)
 }
 
 @code {
+
     public async Task OnClickDelete()
     {
         var dialog = await dialogService.OpenAsync("",
