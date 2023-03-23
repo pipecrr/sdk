@@ -129,6 +129,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             {
                 data = BackendRouterService.GetViewdef(businessName, DefaultViewdefName);
             }
+            if(String.IsNullOrEmpty(data)){
+                _viewdefName = "default";
+                data = BackendRouterService.GetViewdef(businessName, _viewdefName);
+            }
             return data;
         }
 
