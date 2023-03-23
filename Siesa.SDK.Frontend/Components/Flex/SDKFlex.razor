@@ -1,6 +1,8 @@
 @using Siesa.SDK.Shared.Services
 @using Newtonsoft.Json
 @using Siesa.SDK.Shared.DTOS
+@using Siesa.SDK.Shared.Utilities
+@using Microsoft.Extensions.DependencyInjection
 
 @if(_flexRowid != 0){
     <FlexComponent FlexRowid="@_flexRowid" FlexFilters="@_flexFilters"></FlexComponent>
@@ -13,13 +15,13 @@
 
     [Inject] 
     public IAuthenticationService AuthenticationService { get; set; }
+    [Inject]
+    public IServiceProvider ServiceProvider { get; set; }
 
     [Parameter]
     public int FlexRowid { get; set; }
     [Parameter]
-    public Dictionary<string, object> FlexFilters { get; set; }
-    [Parameter]
-    public Dictionary<string, object> FlexFiltersTo { get; set; }
+    public Dictionary<string, object> FlexFilters { get; set; }    
 
     private int _flexRowid = 0;
 
@@ -31,27 +33,56 @@
 
     private async Task Init(){
         var BLFlex = BackendRouterService.GetSDKBusinessModel("BLFlex", AuthenticationService);
-        var response = await BLFlex.Call("GetFlexById", FlexRowid.ToString());
+        var response = await BLFlex.Call("GetFlexById", FlexRowid.ToString());        
+        
         if(response.Success){
+            Type BLFlexFront = Utilities.SearchType(BLFlex.Namespace+"."+BLFlex.Name, true);
+            dynamic instanceFlex = ActivatorUtilities.CreateInstance(ServiceProvider,BLFlexFront);
+
             var flex = response.Data;
             var metadata = response.Data.GetType().GetProperty("Metadata").GetValue(response.Data);
             var rowid = response.Data.GetType().GetProperty("Rowid").GetValue(response.Data);
             var metadataObj = JsonConvert.DeserializeObject<SDKFlexRequestSaveData>(metadata);
-            
             if(FlexFilters != null && metadataObj != null && metadataObj.filter_list != null && metadataObj.filter_list.Count > 0){
                 foreach(SDKFlexFilters filter in metadataObj.filter_list){
-                    var nameColumn = "";
+                    var nameColumn = filter.name;
+                    if(filter.type.Equals("ForeignKey")){
+                        nameColumn = "Rowid"+nameColumn;
+                    }
                     if(filter.path.Contains("::")){
                         var splitPath = filter.path.Split("::").Skip(1);
-                        nameColumn = string.Join(".", splitPath)+ "." + filter.name;
-                    }else{
-                        nameColumn = filter.name;
-                    }
+                        nameColumn = string.Join(".", splitPath)+ "." + nameColumn;
+                    }                    
                     if(FlexFilters.ContainsKey(nameColumn)){
-                        filter.equal_from = FlexFilters[nameColumn];
-                        if(filter.to != null && FlexFiltersTo != null && FlexFiltersTo.ContainsKey(nameColumn)){
-                            filter.to = FlexFiltersTo[nameColumn].ToString();
+                        var val = FlexFilters[nameColumn];
+                        if(filter.type.Equals("DateField")){
+                            val = DateTime.Parse(val.ToString());
+                        }else if(filter.type.Equals("ForeignKey")){
+                            var valStr = val.ToString();
+                            if(valStr.StartsWith("System.Collections.Generic.List")){
+                                List<object> list = JsonConvert.DeserializeObject<List<object>>(JsonConvert.SerializeObject(val));
+                                var listVal = new List<object>();
+                                foreach (object item in list){
+                                    var record = await instanceFlex.GetRecordByRowid(item,filter.module_name.ToString());
+                                    if(record != null){
+                                        listVal.Add(record);
+                                    }
+                                }
+                                val = listVal;
+                            }else{
+                                continue;
+                            }
                         }
+                        filter.equal_from = val;
+                    }
+                    var filters_to = nameColumn+"__to";
+                    if(FlexFilters.ContainsKey(filters_to)){
+                        var val = FlexFilters[filters_to];
+                        if(filter.type.Equals("DateField")){
+                            //val format yyyy-MM-dd
+                            val = DateTime.Parse(val.ToString()).ToString("yyyy-MM-dd");
+                        }
+                        filter.to = val.ToString();
                     }
                 }
                 _flexFilters = JsonConvert.SerializeObject(metadataObj.filter_list);
