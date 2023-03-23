@@ -7,30 +7,33 @@
 @inject IBackendRouterService BackendRouterService
 @inject SDKDialogService SDKDialogService
 
-@if(AllowCreate)
-{
-    <SDKButton BusinessName="@BusinessName" ListPermission="@ListPermission" CssClass="mb-1" RenderStyle="SDKButtonRenderStyle.Primary" Click="@(async ()=> { await OpenModalCreate(); })">
-        <ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer 
-            ResourceTag="@($"{BusinessName}.Singular")" />
-    </SDKButton>
-}
+<div class="sdk-inlinecrud-container">
+    @if(AllowCreate)
+    {
 
-<DynamicListView
-    BusinessName="@BusinessName"
-    IsSubpanel=true
-    SubpanelFilter="@Filter"
-    @key="listview_key"
-    OnClickEdit="@(async (string item_rowid)=> { await OpenModalEdit(item_rowid); })"
-    OnClickDetail="@(async (string item_rowid)=> { await OpenModalDetail(item_rowid); })"
-    OnClickDelete="@(async (string item_rowid, string object_string)=> { await OpenModalDelete(item_rowid, object_string); })" 
-    OnClickNew="@(async ()=> { await OpenModalCreate(); })"
-    AllowCreate="false"
-    AllowEdit="@AllowEdit"
-    AllowDelete="@AllowDelete"
-    AllowDetail="@AllowDetail"
-    OnSelectedRow=@OnSelectedRow
-    Data="@Data"
-    />
+        <SDKButton BusinessName="@BusinessName" ListPermission="@ListPermission" CssClass="mb-1" RenderStyle="SDKButtonRenderStyle.Primary" Click="@(async ()=> { await OpenModalCreate(); })">
+            <ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer 
+                ResourceTag="@($"{BusinessName}.Singular")" />
+        </SDKButton>
+    }
+
+    <DynamicListView
+        BusinessName="@BusinessName"
+        IsSubpanel=true
+        SubpanelFilter="@Filter"
+        @key="listview_key"
+        OnClickEdit="@(async (string item_rowid)=> { await OpenModalEdit(item_rowid); })"
+        OnClickDetail="@(async (string item_rowid)=> { await OpenModalDetail(item_rowid); })"
+        OnClickDelete="@(async (string item_rowid, string object_string)=> { await OpenModalDelete(item_rowid, object_string); })" 
+        OnClickNew="@(async ()=> { await OpenModalCreate(); })"
+        AllowCreate="false"
+        AllowEdit="@AllowEdit"
+        AllowDelete="@AllowDelete"
+        AllowDetail="@AllowDetail"
+        OnSelectedRow=@OnSelectedRow
+        Data="@Data"
+        />
+</div>
 
 
 

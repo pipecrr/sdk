@@ -1,9 +1,11 @@
 @using Siesa.SDK.Shared.Services
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Frontend.Components.Layout
+@using Siesa.SDK.Entities
 @inject SDKDialogService SDKDialogService
 @inject DialogService DialogService
 @inject IAuthenticationService AuthenticationService
+@inject IBackendRouterService BackendRouterService
 
 <div class="@CssClassRelationship col-12 p-0">
 
@@ -22,9 +24,17 @@
         </div>
         <div class="whcm_row panel_box_data">
             <div class="col-12">
+                @if (_containAttachments)
+                {
+                    <button class="nav_btn_standar index_btn_related my-1" @onclick="async ()=>await OpenModal(RelationshipAttatchment)" >
+                        <div class="nav_btn_standar_text">
+                            <ResourceViewer ResourceTag="@RelationshipAttatchment.ResourceTag" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
+                        </div>
+                    </button> 
+                }
                 @foreach (var Relationship in Relationships)
                 {    
-                    <button class="nav_btn_standar index_btn_related my-1" @onclick="()=>OpenModal(Relationship)" >
+                    <button class="nav_btn_standar index_btn_related my-1" @onclick="async ()=>await OpenModal(Relationship)" >
                         <div class="nav_btn_standar_text">
                             <ResourceViewer ResourceTag="@Relationship.ResourceTag" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
                         </div>
@@ -38,7 +48,7 @@
             <div class="col-12 whcm_data_open_box p-3">
                 <div class="d-flex justify-content-between align-items-center border-bottom pb-1">
                     <h6 class="mb-0">
-                        <ResourceViewer ResourceTag="Custom.SDK.DataRelationshipItem" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
+                        <ResourceViewer ResourceTag="@SelectedRelationship.ResourceTag" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
                     </h6>
                     <div class="d-flex">
                         <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => _openModal = !_openModal">
@@ -68,7 +78,6 @@
 @code
 {
     [Parameter] public List<Relationship> Relationships { get; set; }
-    [Parameter] public Relationship SelectedRelationship { get; set; }
     [Parameter] public string BLNameParentAttatchment { get; set; }
     [Parameter] public dynamic Parent { get; set; }
     [Parameter] public bool AllowCreate { get; set; } = true;
@@ -79,10 +88,15 @@
     [Parameter] public Action<string> OnClickDetail { get; set; } = null;
     [Parameter] public Action<string,string> OnClickDelete { get; set; } = null;
     [Parameter] public Action OnClickNew { get; set; } = null;
-    [Parameter] public bool ShowHeader { get; set; } = true;
+    [Parameter] public bool ContainAttachments { get; set; } = false;
 
     [Parameter] public string Width { get; set; }
     [Parameter] public string Height { get; set; }
+
+    [Parameter] public dynamic BusinessObj { get; set; }
+    private Relationship SelectedRelationship { get; set; }
+    private Relationship RelationshipAttatchment { get; set; }
+    public dynamic ParentAttachment { get; set; }
     int? count = null;
     bool isOpen = false;
     string filter = "";
@@ -92,7 +106,11 @@
 
     private bool _isOpen = false;
 
+    private bool _containAttachments = false;
+
     private bool _openModal  = false;
+
+    private dynamic _parent;
 
     private string CssClassRelationship { 
         get 
@@ -111,10 +129,54 @@
             }
         }
     }
+/*
+var rowidAttachment = Parent.RowidAttachment;
+            ParentAttachment = new E00270_Attachment();
 
-    private void OpenModal(Relationship relationship)
+            ParentAttachment.Rowid = rowidAttachment;
+
+RelationshipAttatchment = new Relationship(){
+            Name  = "BLAttachmentDetail",
+            Type = RelationshipType.OneToMany,
+            RelatedBusiness = "BLAttachmentDetail",
+            RelatedField = "BaseObj.Attachment",
+            ResourceTag = "BLAttachmentDetail.Plural"
+            };
+*/
+    private async Task OpenModal(Relationship relationship)
     {
         SelectedRelationship = relationship;
+        
+        if (SelectedRelationship.Name.Equals("BLAttachmentDetail"))
+        {
+            if (_parent == null)
+            {
+                _parent = Parent;
+            }
+            var rowidAttachment = _parent.RowidAttachment;
+            
+            if(rowidAttachment == null && _parent?.Rowid != 0 ){
+            try{
+                var BLAttachment = BackendRouterService.GetSDKBusinessModel("BLAttachment", AuthenticationService);
+                var responseAtt = await BLAttachment.Call("SaveAttachment");
+                if(responseAtt.Success){
+                    rowidAttachment = Convert.ToInt32(responseAtt.Data);
+                    _parent.RowidAttachment = rowidAttachment;
+                    BusinessObj.Backend.Call("SaveAttachmentEntity",_parent);
+
+                    ParentAttachment.Rowid = rowidAttachment;
+
+                }else{
+                    throw new Exception("No se pudo crear el registro de attachment");
+                }
+            }catch(Exception ex){
+                throw new Exception(ex.Message);
+            }
+            }
+
+            _parent = ParentAttachment;
+        }
+        
         _openModal = true;
         OnInit();
         StateHasChanged();
@@ -125,6 +187,7 @@
     {
         _isOpen = false;
         _openModal = false;
+        _parent = null;
         StateHasChanged();
     }
 
@@ -158,11 +221,12 @@
 
     private void OnInit()
     {
+         _parent = Parent; 
         if (SelectedRelationship?.RelatedField != null)
         {
             CalculateFilter();
             DefaultFieldsCreate = new Dictionary<string, object>();
-            DefaultFieldsCreate.Add(SelectedRelationship.RelatedField, Parent);
+            DefaultFieldsCreate.Add(SelectedRelationship.RelatedField, _parent);
         }
     }
     public void Toggle()
@@ -174,9 +238,9 @@
     {
         var field = SelectedRelationship.RelatedField;
         var parent_rowid = 0;
-        if(Parent != null)
+        if(_parent != null)
         {
-            parent_rowid = Parent.Rowid;
+            parent_rowid = _parent.Rowid;
         }
         //remove "BaseObj" from the field name if it exists
         if (field.StartsWith("BaseObj."))
@@ -196,6 +260,22 @@
 
     protected override void OnInitialized()
     {
+        if (ContainAttachments)
+        {
+
+            ParentAttachment = new E00270_Attachment();
+
+            RelationshipAttatchment = new Relationship(){
+            Name  = "BLAttachmentDetail",
+            Type = RelationshipType.OneToMany,
+            RelatedBusiness = "BLAttachmentDetail",
+            RelatedField = "BaseObj.Attachment",
+            ResourceTag = "BLAttachmentDetail.Plural"
+            };
+
+            _containAttachments = true;
+        }
+
         base.OnInitialized();
         SetParameters();
         OnInit();
