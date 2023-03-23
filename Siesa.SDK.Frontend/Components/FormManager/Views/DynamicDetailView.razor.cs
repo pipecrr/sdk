@@ -32,8 +32,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             parameters.Add("ShowDeleteButton", ShowDeleteButton);
             if (IsSubpanel)
             {
-                parameters.Add("SetTopBar", false);                
-            }            
+                parameters.Add("SetTopBar", false);
+                parameters.Add("ViewdefName", "related_detail");
+            }
         }
 
         public override async Task SetParametersAsync(ParameterView parameters)
