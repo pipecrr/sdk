@@ -50,7 +50,7 @@ else if (ModelLoaded == true)
             <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" 
                 Parent="@BusinessObj.BaseObj" ContainAttachments="@ContainAttachments" BLNameParentAttatchment="@BusinessName"
                 BusinessObj="@BusinessObj"/>
-        }else
+        }else if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
         {
              <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" />
         }

@@ -146,13 +146,11 @@ RelationshipAttatchment = new Relationship(){
     private async Task OpenModal(Relationship relationship)
     {
         SelectedRelationship = relationship;
+
+        _parent = Parent;
         
         if (SelectedRelationship.Name.Equals("BLAttachmentDetail"))
-        {
-            if (_parent == null)
-            {
-                _parent = Parent;
-            }
+        {    
             var rowidAttachment = _parent.RowidAttachment;
             
             if(rowidAttachment == null && _parent?.Rowid != 0 ){
@@ -174,11 +172,17 @@ RelationshipAttatchment = new Relationship(){
             }
             }
 
+            if(ParentAttachment.Rowid == 0 && _parent?.RowidAttachment != null)
+            {
+                ParentAttachment = new E00270_Attachment();
+                ParentAttachment.Rowid = _parent.RowidAttachment;
+            }
+
             _parent = ParentAttachment;
         }
         
         _openModal = true;
-        OnInit();
+        await OnInit();
         StateHasChanged();
     }
 
@@ -219,9 +223,9 @@ RelationshipAttatchment = new Relationship(){
         return null;
     }
 
-    private void OnInit()
+    private async Task OnInit()
     {
-         _parent = Parent; 
+         //_parent = Parent; 
         if (SelectedRelationship?.RelatedField != null)
         {
             CalculateFilter();
@@ -278,7 +282,7 @@ RelationshipAttatchment = new Relationship(){
 
         base.OnInitialized();
         SetParameters();
-        OnInit();
+        //OnInit();
     }
 
     protected override void OnParametersSet()
