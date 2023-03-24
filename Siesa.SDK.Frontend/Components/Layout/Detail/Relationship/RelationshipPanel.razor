@@ -1,7 +1,10 @@
 @using Siesa.SDK.Shared.Services
 @using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Layout
+@inject SDKDialogService SDKDialogService
 @inject DialogService DialogService
 @inject IAuthenticationService AuthenticationService
+
 
 @if(ShowHeader){
      <SDKCollapse>
@@ -32,6 +35,7 @@
 }
 
 
+
 @code {
     [Parameter] public string BLNameParentAttatchment { get; set; }
     [Parameter] public Relationship Relationship { get; set; }
@@ -49,12 +53,43 @@
 
     [Parameter] public string Width { get; set; }
     [Parameter] public string Height { get; set; }
+
     int? count = null;
     bool isOpen = false;
     string filter = "";
     Guid listview_key = Guid.NewGuid();
 
     private Dictionary<string, object> DefaultFieldsCreate { get; set; }
+
+    private bool _isOpen = false;
+
+    private bool _openModal {get; set;} = false;
+
+
+    private string CssClassRelationship { 
+        get 
+        {
+            if(_openModal)
+            {
+                return "whcm_data_related_box_crud";
+            }
+            else if (_isOpen)
+            {
+                return "whcm_data_related_box";
+            }
+            else
+            {
+                return "whcm_data_related_box_hide"; 
+            }
+        }
+    }
+
+    private void CloseRelationshipPanel()
+    {
+        _isOpen = false;
+        _openModal = false;
+        StateHasChanged();
+    }
 
     private string GetWidth()
     {
