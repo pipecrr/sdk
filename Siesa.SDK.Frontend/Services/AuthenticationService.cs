@@ -89,7 +89,8 @@ namespace Siesa.SDK.Frontend.Services
             //Console.WriteLine($"UserToken: {UserToken}");
         }
 
-        public async Task Login(string username, string password, short rowIdDBConnection, bool IsUpdateSession = false)
+        public async Task Login(string username, string password, short rowIdDBConnection, 
+        bool IsUpdateSession = false, short rowIdCompanyGroup = 1)
         {
             var BLuser = _backendRouterService.GetSDKBusinessModel("BLUser", this);
             if (BLuser == null)
@@ -113,7 +114,8 @@ namespace Siesa.SDK.Frontend.Services
                 {"browserName", browserName},
                 {"rowidCulture", RowidCultureChanged},
                 {"sessionId", sessionId},
-                {"IsUpdateSession", IsUpdateSession}
+                {"IsUpdateSession", IsUpdateSession},
+                {"rowIdCompanyGroup", rowIdCompanyGroup}
             });
             if (loginRequest.Success)
             {
@@ -394,6 +396,11 @@ namespace Siesa.SDK.Frontend.Services
             _ = _localStorageService.SetItemAsync("selectedSuite", rowid);
             _selectedSuite = rowid;
             
+        }
+
+        public Task Login(string username, string password, short rowIdDBConnection, bool IsUpdateSession = false)
+        {
+            throw new NotImplementedException();
         }
     }
 }
