@@ -40,6 +40,7 @@ test:
     stage: test
     only: 
       - develop
+      - docker-labs
     tags:
       - docker
     script:
@@ -73,6 +74,7 @@ deploy:
     stage: deploy
     only: 
       - develop
+      - docker-labs
     tags:
       - docker
     script:
