@@ -582,12 +582,11 @@ namespace Siesa.SDK.Business
             }
             catch (Exception e)
             {
-                //response.Errors.AddRange(result.Errors);
-
-                return null;
+                this._logger.LogError(e, $"Error deleting {this.GetType().Name}");
+                response.Errors.Add(new OperationError() { Message = e.Message });
             }
 
-            return new DeleteBusinessObjResponse();
+            return response;
         }
 
         public virtual IQueryable<T> EntityFieldFilters(IQueryable<T> query)
