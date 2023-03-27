@@ -706,7 +706,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 var confirm = await ConfirmDelete();
                 SDKGlobalLoaderService.Show();
                 if (confirm){
-                    BusinessObj.BaseObj.Rowid = Convert.ToInt32(id);
+                    BusinessObj.BaseObj.Rowid = Convert.ChangeType(id, BusinessObj.BaseObj.Rowid.GetType());
                     var result = await BusinessObj.DeleteAsync();
                     SDKGlobalLoaderService.Hide();
                     if (result != null && result.Errors.Count == 0){
