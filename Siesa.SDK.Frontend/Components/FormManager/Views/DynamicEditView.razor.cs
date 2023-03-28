@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Siesa.SDK.Business;
@@ -9,6 +11,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
     public partial class DynamicEditView : DynamicBaseViewModel
     {
+
+        [Parameter] public Dictionary<string, object> DefaultFields { get; set; }
+
+        public dynamic ParentBaseObj { get 
+        { 
+            return DefaultFields.Keys.ToList();
+        } 
+    }
         private async Task InitEdit(Int64 business_obj_id){
             try
             {
@@ -36,6 +46,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 parameters.Add("SetTopBar", false);
                 parameters.Add("ViewdefName", "related_edit");
+                parameters.Add("ParentBaseObj", ParentBaseObj);
             }
         }
 
