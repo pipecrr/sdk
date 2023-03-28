@@ -14,11 +14,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         [Parameter] public Dictionary<string, object> DefaultFields { get; set; }
 
-        public dynamic ParentBaseObj { get 
-        { 
-            return DefaultFields.Keys.ToList();
-        } 
-    }
+        public dynamic ParentBaseObj { get; set; }
         private async Task InitEdit(Int64 business_obj_id){
             try
             {
@@ -47,6 +43,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 parameters.Add("SetTopBar", false);
                 parameters.Add("ViewdefName", "related_edit");
                 parameters.Add("ParentBaseObj", ParentBaseObj);
+                
+                if(DefaultFields != null)
+                {
+                    ParentBaseObj = DefaultFields.Keys.ToList();
+                    parameters.Add("ParentBaseObj", ParentBaseObj);
+                } 
             }
         }
 

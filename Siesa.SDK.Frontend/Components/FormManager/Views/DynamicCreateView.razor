@@ -20,11 +20,7 @@ else if (BusinessObj != null)
     [Parameter] public Dictionary<string, object> DefaultFields { get; set; }
     [Parameter] public string DuplicateRowid { get; set; }    
 
-    public dynamic ParentBaseObj { get 
-        { 
-            return DefaultFields.Keys.ToList();
-        } 
-    }
+    public dynamic ParentBaseObj {get; set;}
 
     private async Task GetDuplicateInfo(Int64 duplicateRowid){
         try
@@ -71,7 +67,11 @@ else if (BusinessObj != null)
         {
             parameters.Add("SetTopBar", false);
             parameters.Add("ViewdefName", "related_create");
-            parameters.Add("ParentBaseObj", ParentBaseObj);
+            if(DefaultFields != null)
+            {
+                ParentBaseObj = DefaultFields.Keys.ToList();
+                parameters.Add("ParentBaseObj", ParentBaseObj);
+            } 
         }   
     }
 
