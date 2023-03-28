@@ -42,8 +42,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 parameters.Add("SetTopBar", false);
                 parameters.Add("ViewdefName", "related_edit");
-                parameters.Add("ParentBaseObj", ParentBaseObj);
-                
                 if(DefaultFields != null)
                 {
                     ParentBaseObj = DefaultFields.Keys.ToList();
