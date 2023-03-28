@@ -37,5 +37,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         public bool? AllowEdit { get; set; }
         public bool? AllowDelete { get; set; }
         public bool? AllowDetail { get; set; }
+        public bool? AllowCreate { get; set; }
     }
 }

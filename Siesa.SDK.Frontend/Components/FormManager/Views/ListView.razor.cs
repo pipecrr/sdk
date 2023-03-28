@@ -286,6 +286,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 if(ListViewModel.AllowDetail != null){
                     AllowDetail = ListViewModel.AllowDetail.Value;
                 }
+                if(ListViewModel.AllowCreate != null){
+                    AllowCreate = ListViewModel.AllowCreate.Value;
+                }
                 //TODO: quitar cuando se pueda usar flex en los custom components
                 var fieldsCustomComponent = ListViewModel.Fields.Where(x => x.CustomComponent != null).ToList();
                 if(fieldsCustomComponent.Count > 0){

@@ -360,7 +360,7 @@ else
                 @if(UseFlex && !_isEditingFlex && !_isSearchOpen){
                     <TopBarButton Click="GoToEditFlex" ResourceTag="Action.EditListFlex" IconCssClass="fa-solid fa-pen" />
                 }                
-                @if(CanCreate && !_isEditingFlex)
+                @if((CanCreate && AllowCreate) && !_isEditingFlex)
                 {
                     <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus" />
                 }
