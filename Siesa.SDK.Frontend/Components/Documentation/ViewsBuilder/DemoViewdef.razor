@@ -15,6 +15,9 @@
                 </p>
                     <SDKTextField CssClass="text-area-demoviewdef" Value="@ViewdefCreate"/>
 
+                <p>Es posible crear un único Viewdef con el nombre "default.json" para cargar las vistas de creación, edición y detalle, en caso de que exista un "create.json", "edit.json" y/o "detail.json" estos últimos tendrán prioridad sobre el "default.json", igualmente para el caso de los "related_*.json" este tendrá prioridad sobre los anteriores.</p>
+                <br/>
+
                 <p>El archivo de metadatos para una vista de lista, tiene el siguiente formato:</p>
                     <SDKTextField CssClass="text-area-demoviewdef" Value="@ViewdefList"/>
                 
@@ -40,8 +43,8 @@
                     correspondientes al ingresar a la URL del negocio:</p>
                     <ul>
                         <li>Creación: /NombreDelNegocio/create/</li>
-                        <li>Edición: /NombreDelNegocio/edit/RowId/</li>
-                        <li>Detalle: /NombreDelNegocio/detail/RowId/</li>
+                        <li>Edición: /NombreDelNegocio/edit/{RowId}/</li>
+                        <li>Detalle: /NombreDelNegocio/detail/{RowId}/</li>
                         <li>Lista: /NombreDelNegocio/</li>
                     </ul>
 
