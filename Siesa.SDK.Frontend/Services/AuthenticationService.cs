@@ -217,7 +217,7 @@ namespace Siesa.SDK.Frontend.Services
             if(SelectedConnection != null && SelectedConnection.Rowid != 0 && !string.IsNullOrEmpty(SelectedConnection.LogoUrl)){
                 return SelectedConnection.LogoUrl;
             }
-            return "_content/Siesa.SDK.Frontend/assets/img/login_logo_empresa.png";
+            return "_content/Siesa.SDK.Frontend/assets/img/LogoSiesaNoSub.svg";
         }
         public string GetConnectionStyle()
         {
