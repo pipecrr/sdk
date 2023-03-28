@@ -112,7 +112,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
             
             var metadata = BackendRouterService.GetViewdef(bName, _viewdefName);
-            if (String.IsNullOrEmpty(metadata))
+            if (String.IsNullOrEmpty(metadata) && _viewdefName.Equals("related_detail"))
+            {
+                metadata = BackendRouterService.GetViewdef(bName, "detail");
+            }
+            if(String.IsNullOrEmpty(metadata))
             {
                 metadata = BackendRouterService.GetViewdef(bName, "default");
             }
