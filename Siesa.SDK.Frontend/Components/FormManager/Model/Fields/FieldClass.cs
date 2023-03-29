@@ -109,10 +109,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             }
             if (IsEncrypted)
             {
-                if (BindValue != null)
-                {
-                    BindProperty.SetValue(BindModel, null);
-                }
+                // if (BindValue != null)
+                // {
+                //     BindProperty.SetValue(BindModel, null);
+                // }
             }
 
             if(IsRequired && !ValidateField)

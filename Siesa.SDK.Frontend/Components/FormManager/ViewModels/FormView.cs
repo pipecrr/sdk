@@ -76,6 +76,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Parameter]
         public Action OnCancel {get; set;} = null;
 
+        [Parameter]
+        public List<string> ParentBaseObj { get; set; }
+
         public int CountUnicErrors = 0;
 
         private string _viewdefName = "";

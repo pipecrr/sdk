@@ -50,6 +50,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
                 parameters.Add("FieldOpt", FieldOpt);
                 //parameters.Add("TItem", field.SelectFieldType);
             }
+            if(formView != null)
+            {    
+                if(formView.IsSubpanel && (formView.ParentBaseObj?.Contains(FieldOpt.Name) ?? false))
+                {
+                    FieldOpt.Disabled = true;
+                }
+            }
 
             StateHasChanged();
         }

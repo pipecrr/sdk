@@ -71,7 +71,7 @@
 
     public async Task OpenModalEdit(string item_rowid)
     {
-        var ShowEditDialog = await SDKDialogService.ShowCustomDialog(ds =>@<DynamicEditView BusinessName="@BusinessName" IsSubpanel=true  BusinessObjId="@item_rowid" BLNameParentAttatchment="@BLNameParentAttatchment" ShowTitle="@DefaultTitle"/>, Width, $"{BusinessName}.Singular", true, true, Height);
+        var ShowEditDialog = await SDKDialogService.ShowCustomDialog(ds =>@<DynamicEditView BusinessName="@BusinessName" IsSubpanel=true  BusinessObjId="@item_rowid"  DefaultFields="@DefaultFieldsCreate" BLNameParentAttatchment="@BLNameParentAttatchment" ShowTitle="@DefaultTitle"/>, Width, $"{BusinessName}.Singular", true, true, Height);
         listview_key = Guid.NewGuid();
         StateHasChanged();
     }
