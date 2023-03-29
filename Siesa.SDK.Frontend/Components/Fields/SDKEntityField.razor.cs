@@ -66,15 +66,20 @@ namespace Siesa.SDK.Frontend.Components.Fields
         {
             base.OnInitializedAsync();
             await InitView();
+            StateHasChanged();
         }
 
         protected async Task InitView(){
             idInput = Guid.NewGuid().ToString();
             CheckPermissions();
-            /*var currentValueObj = BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj);
+            
+            var currentValueObj = BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj);
             if(currentValueObj != null){
-                Value = currentValueObj.ToString();
-            }*/
+                if(currentValueObj.GetType().GetProperty("Rowid").GetValue(currentValueObj) != 0)
+                {
+                    Value = currentValueObj.ToString();
+                }
+            }
             relBusinessModel = BackendRouterService.GetSDKBusinessModel(RelatedBusiness, null);
             var relBusinessType = Utilities.SearchType(relBusinessModel.Namespace + "." + relBusinessModel.Name);
             RelBusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider, relBusinessType);
