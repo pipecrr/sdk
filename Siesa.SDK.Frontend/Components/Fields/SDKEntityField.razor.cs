@@ -231,6 +231,10 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
         private void OnKeyDown(KeyboardEventArgs e)
         {
+            if(e == null || e.Key == null){
+                return;
+            }
+            
             if (!e.Key.Equals("Escape"))
             {
                 SDKDropDown();
