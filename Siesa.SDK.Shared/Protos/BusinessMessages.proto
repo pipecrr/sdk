@@ -87,6 +87,7 @@ message EntityFieldSearchRequest {
   google.protobuf.Int32Value currentUserRowid = 4;
   string filters = 5;
   google.protobuf.Int32Value top = 6;
+  string orderBy = 7;
 }
 
 message LoadResult {
