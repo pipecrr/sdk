@@ -32,6 +32,7 @@ using Microsoft.AspNetCore.Http;
 using System.Net;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using Siesa.Global.Enums;
 
 namespace Siesa.SDK.Business
 {
@@ -591,6 +592,17 @@ namespace Siesa.SDK.Business
 
         public virtual IQueryable<T> EntityFieldFilters(IQueryable<T> query)
         {
+            //check if has field Status
+            try{
+                var statusProperty = BaseObj.GetType().GetProperty("Status");
+                //check if status is a enumStatusBaseMaster 
+                if (statusProperty != null && statusProperty.PropertyType == typeof(enumStatusBaseMaster))
+                {
+                    query = query.Where("Status == @0", enumStatusBaseMaster.Active);
+                }
+            }catch(Exception e){
+                this._logger.LogError(e, $"Error checking status property {this.GetType().Name}");
+            }
             return query;
         }
 
