@@ -1,7 +1,7 @@
 :root {
     --color_back_body: #F0F3F4;
 
-    --color_primary: #001AAE;
+    --color_primary: #1031a7;
     --color_secondary: #1864F3;
     --color_cancel: #808791;
     --color_text: #172642; 
@@ -10,8 +10,8 @@
     --color_back_2: #F0F0F0;
     --color_delete: #c82333;
 
-    --color_primary_dark: #011865;
-    --color_primary_light: #585AD5;
+    --color_primary_dark: #1031a7;
+    --color_primary_light: #2d71ea;
     --color_cancel_dark: #747d8d;
     --color_text_2: #808791;
     --color_light: #FFFFFF;
@@ -35,8 +35,8 @@
 
 
     /* Base: color primario light */
-    --color_button_back: linear-gradient(135deg, rgba(88,90,213,.3) 0%, rgba(88,90,213,1) 100%);
-    --color_button_back_180: linear-gradient(180deg, rgba(88,90,213,.3) 0%, rgba(88,90,213,1) 100%);
+    --color_button_back: linear-gradient(135deg, rgba(45,113,234,.3) 0%, rgba(45,113,234,1) 100%);
+    --color_button_back_180: linear-gradient(180deg, rgba(45,113,234,.3) 0%, rgba(45,113,234,1) 100%);
     /* Base: color primario light */
     --color_search_back: linear-gradient(180deg, rgba(88,90,213,.3) 0%, rgba(88,90,213,1) 100%);
     /* Base: color primario con 20% de transparencia */
@@ -46,9 +46,9 @@
     --color_primary_shadow_min: #1030a30d;
     --shadow_standar_min: 0px 3px 12px var(--color_primary_shadow_min);
     /* Base: color primario light (Para even de tablas) */
-    --color_table_even: rgba(88,90,213,0.04);
+    --color_table_even: rgba(45,113,234,0.04);
     /* Base: color primario light (Para hover de tablas) */
-    --color_table_hover: rgba(88,90,213,0.1);
+    --color_table_hover: rgba(45,113,234,0.1);
 
     --border_radius_card_login: 1.25rem;
     --border_radius_standar: .2rem;
