@@ -419,6 +419,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         }
 
         public async Task<string> GetStringFilters(){
+            //Deprecated
             var filters = await GetFilters();
             var filtersSearch = "";
             if(Value != null && Value != "" && ItemsSelected.Count == 0){
