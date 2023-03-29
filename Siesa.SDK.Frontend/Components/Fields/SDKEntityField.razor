@@ -19,7 +19,7 @@
         
         <div class="dropdown">
             <input autocomplete="off" type="text" disabled="@Disabled" data-automation-id="@GetAutomationId()_inputtext" class="form-control" @bind-value:event="onchange" @bind-value="Value" @oninput="@(e => OnChangeValue(e.Value.ToString()))" @onkeydown="@OnKeyDown" @onfocus="@OnFocus" @onfocusout="@OnFocusOut" id="@idInput"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" placeholder="@placeholder">
-            <div class="whcm_select_list dropdown-menu" aria-labelledby="@idInput">
+            <div class="whcm_select_list dropdown-menu sdk-entity-result" aria-labelledby="@idInput">
                 <ul>
                     @if(CacheData.Count()>0){
                         foreach (var item in CacheData)

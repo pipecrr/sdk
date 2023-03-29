@@ -251,9 +251,11 @@ namespace Siesa.SDK.Backend.Extensions
                     contextSet = selectMethod.Invoke(contextSet, new object[] { contextSet, $"new ({strSelectMany})", null });
                 }
 
+                var orderMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "OrderBy", new[] { typeof(IQueryable), typeof(string), typeof(object[]) });
                 if (!orderBy.Equals("")){
-                    var orderMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "OrderBy", new[] { typeof(IQueryable), typeof(string), typeof(object[]) });
                     contextSet = orderMethod.Invoke(contextSet, new object[] { contextSet, orderBy, null });
+                }else{
+                    contextSet = orderMethod.Invoke(contextSet, new object[] { contextSet, "Rowid", null });
                 }
 
                 if (skip.HasValue)

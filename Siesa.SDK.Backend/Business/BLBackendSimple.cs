@@ -594,7 +594,7 @@ namespace Siesa.SDK.Business
             return query;
         }
 
-        public virtual Siesa.SDK.Shared.Business.LoadResult EntityFieldSearch(string searchText, string prefilters = "", int? top = null)
+        public virtual Siesa.SDK.Shared.Business.LoadResult EntityFieldSearch(string searchText, string prefilters = "", int? top = null, string orderBy = "")
         {
             this._logger.LogInformation($"Field Search {this.GetType().Name}");
             var string_fields = BaseObj.GetType().GetProperties().Where(p => p.PropertyType == typeof(string) && p.GetCustomAttributes().Where(x => x.GetType() == typeof(NotMappedAttribute)).Count() == 0).Select(p => p.Name).ToArray();
@@ -616,7 +616,7 @@ namespace Siesa.SDK.Business
             if (top.HasValue){
                 take = top.Value;
             }
-            return this.GetData(0, take, filter, "", filterDelegate);
+            return this.GetData(0, take, filter, orderBy, filterDelegate);
         }
 
         [SDKExposedMethod]
