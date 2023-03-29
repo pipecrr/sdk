@@ -71,7 +71,7 @@ namespace Siesa.SDK.GRPCServices
             businessObj.SetProvider(_provider);
 
             var response = new Protos.BusinessObjResponse();
-            var result = businessObj.Get(request.Id);
+            var result = businessObj.Get(request.Id, request.ExtraFields.ToList()); //request.Extrafields
 
             businessObj.DetachedBaseObj();
 

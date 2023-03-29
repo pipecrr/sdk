@@ -73,12 +73,12 @@ namespace Siesa.SDK.Business
             return new DeleteBusinessObjResponse();
         }
 
-        public BaseSDK<int> Get(Int64 rowid)
+        public BaseSDK<int> Get(Int64 rowid, List<string> extraFields = null)
         {
             return null;
         }
 
-        public Task<BaseSDK<int>> GetAsync(Int64 rowid)
+        public Task<BaseSDK<int>> GetAsync(Int64 rowid, List<string> extraFields = null)
         {
             return null;
         }
@@ -357,7 +357,7 @@ namespace Siesa.SDK.Business
             }
         }
 
-        public virtual T Get(Int64 rowid)
+        /*public virtual T Get(Int64 rowid, List<string> extraFields = null)
         {
             using (SDKContext context = CreateDbContext())
             {
@@ -369,7 +369,35 @@ namespace Siesa.SDK.Business
                 query = query.Where("Rowid == @0", ConvertToRowidType(rowid));
                 return query.FirstOrDefault();
             }
+        }*/
+
+        
+        public virtual T Get(Int64 rowid, List<string> extraFields = null)
+        {
+            using (SDKContext context = CreateDbContext())
+            {
+                var query = context.Set<T>().AsQueryable();
+
+                
+                if (extraFields != null && extraFields.Count > 0)
+                {
+                    extraFields.Add("Rowid");
+                    var selectedFields = string.Join(",", extraFields);
+                    query = query.Select<T>($"new ({selectedFields})");
+                }else
+                {
+                    foreach (var relatedProperty in _relatedProperties)
+                    {
+                        query = query.Include(relatedProperty);
+                    }
+                }
+
+                query = query.Where("Rowid == @0", ConvertToRowidType(rowid));
+
+                return query.FirstOrDefault();
+            }
         }
+        
         public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave()
         {
             ValidateAndSaveBusinessObjResponse result = new();
@@ -693,7 +721,7 @@ namespace Siesa.SDK.Business
             return result;
         }
 
-        public Task<T> GetAsync(Int64 rowid)
+        public Task<T> GetAsync(Int64 rowid,List<string> extraFields = null)
         {
             throw new NotImplementedException();
         }

@@ -45,13 +45,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     {   
                         var defaultFields = FormViewModel.Panels.SelectMany(panel => panel.Fields)
                                         .Select(field => field.Name)
-                                        .Distinct()
                                         .ToList(); 
 
                         _extraFields =  FormViewModel.ExtraFields.Select(f => f.Name)                        
                         .Union(defaultFields)
                         .ToList();
-                        //_extraFields = _extraFields.Union(defaultFields).ToList();
+
+                        _extraFields = _extraFields.Select(field => field.Replace("BaseObj.", "")).ToList();
                     }
                 }
                 catch (System.Exception)
@@ -68,7 +68,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             await GetExtraFields(BusinessName);
             try
             {
-                await BusinessObj.InitializeBusiness(business_obj_id);
+                await BusinessObj.InitializeBusiness(business_obj_id,_extraFields);
             }
             catch (System.Exception e)
             {
