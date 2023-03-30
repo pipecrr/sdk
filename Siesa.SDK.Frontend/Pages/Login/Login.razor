@@ -47,7 +47,7 @@
                         <h2 class="mb-md-2 mb-lg-3"><ResourceViewer ResourceTag="BLLogin.Demo.NewsTitle" RowidCulture=@RowidCulture /></h2>
                         <p class="mb-md-2 mb-lg-3"><ResourceViewer ResourceTag="BLLogin.Demo.NewsBody" RowidCulture=@RowidCulture /></p>
                         <div class="d-flex justify-content-between">
-                            <SDKButton CssClass="btn btn-primary btn_ghost_def_1 btn-sm px-4" ResourceTag="BLLogin.MoreInfo"/>
+                            <SDKButton CssClass="btn btn-primary btn_ghost_def_1 btn-sm px-4" ResourceTag="BLLogin.MoreInfo" RowidCulture=@RowidCulture />
                             <div>
                                 <button class="btn btn-primary btn_ghost_def_1 btn-sm"><i
                                         class="fa-solid fa-chevron-left"></i></button>
@@ -75,7 +75,7 @@
                         <div id="lang">
                             <div class="position-relative">
                                 <button class="btn ml-2 d-flex btn_region" style="padding:0"
-                                    @onclick="() => IsOpen = !IsOpen">
+                                    @onclick="() => IsOpen = !IsOpen" data-automation-id="Button_Select_Culture">
                                     @if(selectedCulture != null)
                                     {
                                         @*fi fi-selectedCulture.CountryCode fis rounded-circle*@
@@ -370,9 +370,16 @@
             if(AuthenticationService.GetSelectedConnection() == null || AuthenticationService.GetSelectedConnection().Rowid == 0){
 
                 SelectedConnection = ConnectionList.First();
-                AuthenticationService.SetSelectedConnection(SelectedConnection);
+                _ = AuthenticationService.SetSelectedConnection(SelectedConnection);
             }else{
-                SelectedConnection = AuthenticationService.GetSelectedConnection();
+                var _selectedConnection = ConnectionList.FirstOrDefault(x => x.Rowid == AuthenticationService.GetSelectedConnection().Rowid);
+                if(_selectedConnection != null){
+                    SelectedConnection = _selectedConnection;
+
+                }else{
+                    SelectedConnection = ConnectionList.First();
+                }
+                _ = AuthenticationService.SetSelectedConnection(SelectedConnection);
             }
 
             //DbConnections = result.Data as List<(short,string)>;

@@ -23,7 +23,7 @@
         </div>
     </label>
 
-<input class="" type="checkbox" name="" id="collapse_open">
+<input class="" type="checkbox" name="" id="collapse_open" data-automation-id="Button_Menu_Collapse">
 <label class="collapse_open_btn" for="collapse_open">
     <div class="nav_btn_standar_icon">
         <i class="fa-solid fa-angles-right font_size_112"></i>
@@ -48,7 +48,7 @@
         <div class="nav_section_2 w-100">
             <hr class="mb-2">
             <a class="nav_btn_standar_suite my-1" data-toggle="tooltip" data-placement="right" 
-            title="@TitleSuite" @onclick="@(()=> ShowSuiteMenu())">
+            title="@TitleSuite" @onclick="@(()=> ShowSuiteMenu())" data-automation-id="Button_ShowSuiteMenu">
                     <div class="back_suite back_suite_general"></div>
                     <div class="nav_btn_standar_icon_suite">
                         <i class="fa-solid fa-grid font_size_125"  style="color: #@MenuService?.SelectedSuite?.HexColor"></i> 
@@ -58,7 +58,7 @@
                     </div>
             </a>	
             <a class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right" 
-            title="@TitleLogout" @onclick="@(()=> AuthenticationService.Logout())">
+            title="@TitleLogout" @onclick="@(()=> AuthenticationService.Logout())" data-automation-id="Button_Logout">
                     <div class="nav_btn_standar_icon">
                         <i class="fa-solid fa-right-from-bracket font_size_112"></i>
                     </div>
@@ -68,8 +68,7 @@
             </a>
             @if (AuthenticationService.User != null)
             {
-                
-                <div class="nav_profile_btn" @onclick="@(()=> ShowProfileMenu())">
+                <div class="nav_profile_btn" @onclick="@(()=> ShowProfileMenu())" data-automation-id="Button_ShowProfileMenu">
                     <div class="nav_btn_standar_icon nav_profile_photo">
                         <img src="_content/Siesa.SDK.Frontend/assets/img/Profile_default.png" height="36px" alt="imagen perfil">
                     </div>

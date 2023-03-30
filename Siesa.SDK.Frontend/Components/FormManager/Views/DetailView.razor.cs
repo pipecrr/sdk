@@ -39,6 +39,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter]
         public bool ShowDeleteButton { get; set; } = true;
 
+        [Parameter]
+        public string ViewdefName { get; set; }
+
         public Boolean Loading = true;
 
         [Inject] public IJSRuntime JSRuntime { get; set; }
@@ -66,6 +69,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public Boolean ContainAttachments = false;
         Relationship RelationshipAttachment = new Relationship();
         E00270_Attachment ParentAttachment = new E00270_Attachment();
+
+        private string _viewdefName;
         private void setViewContext(List<Panel> panels)
         {
             for (int i = 0; i < panels.Count; i++)
@@ -100,8 +105,22 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }            
             await CheckPermissions();
             await CreateRelationshipAttachment();
-            var metadata = BackendRouterService.GetViewdef(bName, "detail");
-            if (metadata == null || metadata == "")
+            if(String.IsNullOrEmpty(ViewdefName)){
+                _viewdefName = "detail";
+            }else{
+                _viewdefName = ViewdefName;
+            }
+            
+            var metadata = BackendRouterService.GetViewdef(bName, _viewdefName);
+            if (String.IsNullOrEmpty(metadata) && _viewdefName.Equals("related_detail"))
+            {
+                metadata = BackendRouterService.GetViewdef(bName, "detail");
+            }
+            if(String.IsNullOrEmpty(metadata))
+            {
+                metadata = BackendRouterService.GetViewdef(bName, "default");
+            }
+            if (String.IsNullOrEmpty(metadata))
             {
                 //ErrorMsg = "No hay definición para la vista de detalle";
                 ErrorMsg = "Custom.Generic.ViewdefNotFound";

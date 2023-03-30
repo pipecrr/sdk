@@ -147,7 +147,7 @@ namespace Siesa.SDK.GRPCServices
             dynamic businessObj = ActivatorUtilities.CreateInstance(_provider,businessType);
             businessObj.SetProvider(_provider);
 
-            var result = businessObj.EntityFieldSearch(request.SearchText, request.Filters, request.Top);
+            var result = businessObj.EntityFieldSearch(request.SearchText, request.Filters, request.Top, request.OrderBy);
             var response = new Protos.LoadResult();
             response.TotalCount = result.TotalCount;
             response.GroupCount = result.GroupCount;

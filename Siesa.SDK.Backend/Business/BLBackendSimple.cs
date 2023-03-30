@@ -32,6 +32,7 @@ using Microsoft.AspNetCore.Http;
 using System.Net;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using Siesa.Global.Enums;
 
 namespace Siesa.SDK.Business
 {
@@ -582,20 +583,30 @@ namespace Siesa.SDK.Business
             }
             catch (Exception e)
             {
-                //response.Errors.AddRange(result.Errors);
-
-                return null;
+                this._logger.LogError(e, $"Error deleting {this.GetType().Name}");
+                response.Errors.Add(new OperationError() { Message = e.Message });
             }
 
-            return new DeleteBusinessObjResponse();
+            return response;
         }
 
         public virtual IQueryable<T> EntityFieldFilters(IQueryable<T> query)
         {
+            //check if has field Status
+            try{
+                var statusProperty = BaseObj.GetType().GetProperty("Status");
+                //check if status is a enumStatusBaseMaster 
+                if (statusProperty != null && statusProperty.PropertyType == typeof(enumStatusBaseMaster))
+                {
+                    query = query.Where("Status == @0", enumStatusBaseMaster.Active);
+                }
+            }catch(Exception e){
+                this._logger.LogError(e, $"Error checking status property {this.GetType().Name}");
+            }
             return query;
         }
 
-        public virtual Siesa.SDK.Shared.Business.LoadResult EntityFieldSearch(string searchText, string prefilters = "", int? top = null)
+        public virtual Siesa.SDK.Shared.Business.LoadResult EntityFieldSearch(string searchText, string prefilters = "", int? top = null, string orderBy = "")
         {
             this._logger.LogInformation($"Field Search {this.GetType().Name}");
             var string_fields = BaseObj.GetType().GetProperties().Where(p => p.PropertyType == typeof(string) && p.GetCustomAttributes().Where(x => x.GetType() == typeof(NotMappedAttribute)).Count() == 0).Select(p => p.Name).ToArray();
@@ -617,7 +628,7 @@ namespace Siesa.SDK.Business
             if (top.HasValue){
                 take = top.Value;
             }
-            return this.GetData(0, take, filter, "", filterDelegate);
+            return this.GetData(0, take, filter, orderBy, filterDelegate);
         }
 
         [SDKExposedMethod]
