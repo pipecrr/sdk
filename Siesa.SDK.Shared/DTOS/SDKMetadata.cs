@@ -67,13 +67,9 @@ namespace Siesa.SDK.Shared.DTOS
         public List<string> search_fields { get; set; }
         public object results { get; set; }
         public SDKSelectFieldParams selectfield_params { get; set; }
-<<<<<<< Siesa.SDK.Shared/DTOS/SDKMetadata.cs
         public string id_enum { get; set; }
-=======
->>>>>>> Siesa.SDK.Shared/DTOS/SDKMetadata.cs
         public string path { get; set; }
         public string key_name { get; set; }
         public bool is_dynamic_field { get; set; }
-        public string id_enum { get; set; }
     }
 }
