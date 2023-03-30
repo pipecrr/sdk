@@ -57,3 +57,8 @@
 .input-badge-container > .dropdown ::deep .whcm_select_list.dropdown-menu ul {
     padding-left: 0;
 }
+
+.sdk-entity-result{
+    overflow-y: auto;
+    max-height: 10rem;
+}

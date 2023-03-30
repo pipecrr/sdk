@@ -16,7 +16,7 @@ namespace Siesa.SDK.Entities
 
 		public override string ToString()
 		{
-			return $"({Rowid}) - {Name}";
+			return $"({Id}) - {Name}";
 		}
 
 

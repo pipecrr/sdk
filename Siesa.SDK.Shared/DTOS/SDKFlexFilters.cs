@@ -18,5 +18,8 @@ namespace Siesa.SDK.Shared.DTOS
         public object equal_from { get; set; }
         public string to { get; set; }
         public bool is_dynamic_field { get; set; }
+        public bool alow_edit { get; set; }
+        public SDKSelectFieldParams selectfield_params { get; set; }
+        public string id_enum { get; set; }
     }
 }
