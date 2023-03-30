@@ -38,7 +38,7 @@
     --color_button_back: linear-gradient(135deg, rgba(45,113,234,.3) 0%, rgba(45,113,234,1) 100%);
     --color_button_back_180: linear-gradient(180deg, rgba(45,113,234,.3) 0%, rgba(45,113,234,1) 100%);
     /* Base: color primario light */
-    --color_search_back: linear-gradient(180deg, rgba(88,90,213,.3) 0%, rgba(88,90,213,1) 100%);
+    --color_search_back: linear-gradient(180deg, rgba(45,113,234,0.3) 0%, rgba(45,113,234,1) 100%);
     /* Base: color primario con 20% de transparencia */
     --color_primary_shadow: #1031A333;
     --shadow_standar: 0px 3px 12px var(--color_primary_shadow);
