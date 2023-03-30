@@ -64,4 +64,13 @@ namespace Siesa.Global.Enums
 		Number = 1,
 		Date = 2
 	}
+
+	public enum CustomTypeField
+	{
+		SwitchField = 1,
+		SelectBarField = 2,
+		TextField = 3,
+		EmailField = 4,
+		RadioButtonField = 5
+	}
 }
