@@ -1,238 +1,245 @@
 ﻿
 @using Siesa.SDK.Frontend.Components.Fields
-@switch (FieldType)
+@if (FieldOpt.ViewContext == "DetailView" && SensitiveData)
 {
-    case FieldTypes.CharField:
-        @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
-        {
-            if(IsNullable)
+     <p>SensitveData</p>
+}
+else
+{
+    @switch (FieldType)
+    {
+        case FieldTypes.CharField:
+            @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
             {
-                <GenericFieldDetail TValue="string?" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
-            }else{
-                <GenericFieldDetail TValue="string" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+                if(IsNullable)
+                {
+                    <GenericFieldDetail TValue="string?" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+                }else{
+                    <GenericFieldDetail TValue="string" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+                }
             }
-        }
-        else
-        {
-            <CharField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" ValidateField="@ValidateField" />
-        }
-        break;
-    case FieldTypes.DecimalField:
-        
-        @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
-        {
+            else
+            {
+                <CharField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" ValidateField="@ValidateField" />
+            }
+            break;
+        case FieldTypes.DecimalField:
+            
+            @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
+            {
 
-            if(IsNullable)
+                if(IsNullable)
+                {
+                    <GenericFieldDetail TValue="decimal?" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+                }else{
+                    <GenericFieldDetail TValue="decimal" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+                }
+            }
+            else
             {
-                <GenericFieldDetail TValue="decimal?" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
-            }else{
-                <GenericFieldDetail TValue="decimal" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+                if(IsNullable){
+                    <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="decimal?" ValidateField="@ValidateField" />
+                }else{
+                    <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="decimal" ValidateField="@ValidateField" />
+                }
             }
-        }
-        else
-        {
-            if(IsNullable){
-                <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="decimal?" ValidateField="@ValidateField" />
-            }else{
-                <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="decimal" ValidateField="@ValidateField" />
-            }
-        }
-        break;
-    case FieldTypes.BigIntegerField:
-        @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
-        {
-            if(IsNullable)
+            break;
+        case FieldTypes.BigIntegerField:
+            @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
             {
-                <GenericFieldDetail TValue="Int64?" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
-            }else{
-                <GenericFieldDetail TValue="Int64" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+                if(IsNullable)
+                {
+                    <GenericFieldDetail TValue="Int64?" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+                }else{
+                    <GenericFieldDetail TValue="Int64" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+                }
             }
-        }
-        else
-        {
-            if(IsNullable){
-                <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="Int64?" ValidateField="@ValidateField"  />
-            }else{
-                <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="Int64" ValidateField="@ValidateField" />
-            }
-            
-        }
-        break;
-    case FieldTypes.IntegerField:
-        @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
-        {
-            if(IsNullable)
+            else
             {
-                <GenericFieldDetail TValue="int?" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
-            }else{
-                <GenericFieldDetail TValue="int" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+                if(IsNullable){
+                    <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="Int64?" ValidateField="@ValidateField"  />
+                }else{
+                    <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="Int64" ValidateField="@ValidateField" />
+                }
+                
             }
-        }
-        else
-        {
-            if(IsNullable){
-                <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="int?" ValidateField="@ValidateField" />
-            }else{
-                <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="int" ValidateField="@ValidateField" />
+            break;
+        case FieldTypes.IntegerField:
+            @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
+            {
+                if(IsNullable)
+                {
+                    <GenericFieldDetail TValue="int?" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+                }else{
+                    <GenericFieldDetail TValue="int" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+                }
             }
-            
-        }
-        break;
-    case FieldTypes.SmallIntegerField:
-        @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
-        {
+            else
+            {
+                if(IsNullable){
+                    <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="int?" ValidateField="@ValidateField" />
+                }else{
+                    <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="int" ValidateField="@ValidateField" />
+                }
+                
+            }
+            break;
+        case FieldTypes.SmallIntegerField:
+            @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
+            {
 
-            if(IsNullable)
+                if(IsNullable)
+                {
+                    <GenericFieldDetail TValue="Int16?" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+                }else{
+                    <GenericFieldDetail TValue="Int16" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+                }
+            }
+            else
             {
-                <GenericFieldDetail TValue="Int16?" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
-            }else{
-                <GenericFieldDetail TValue="Int16" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+                if(IsNullable){
+                    <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="Int16?" ValidateField="@ValidateField"  />
+                }else{
+                    <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="Int16" ValidateField="@ValidateField" />
+                }
             }
-        }
-        else
-        {
-            if(IsNullable){
-                <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="Int16?" ValidateField="@ValidateField"  />
-            }else{
-                <NumericField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TNum="Int16" ValidateField="@ValidateField" />
-            }
-        }
-        break;        
-    case FieldTypes.ByteField:
-        @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
-        {
+            break;        
+        case FieldTypes.ByteField:
+            @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
+            {
 
-            if(IsNullable)
+                if(IsNullable)
+                {
+                    <GenericFieldDetail TValue="byte?" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+                }else{
+                    <GenericFieldDetail TValue="byte" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+                }
+            }
+            else
             {
-                <GenericFieldDetail TValue="byte?" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
-            }else{
-                <GenericFieldDetail TValue="byte" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+                if(IsNullable)
+                {
+                    <ByteField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TByte="byte?" ValidateField="@ValidateField" />
+                }else{
+                    <ByteField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TByte="byte" ValidateField="@ValidateField" />
+                }
             }
-        }
-        else
-        {
-            if(IsNullable)
+            break;
+        case FieldTypes.MultiSelectField:
+            <MultiSelectField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  />
+            break;
+        case FieldTypes.SelectField:
+            @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
             {
-                <ByteField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TByte="byte?" ValidateField="@ValidateField" />
-            }else{
-                <ByteField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TByte="byte" ValidateField="@ValidateField" />
+                <DynamicComponent Type="@SelectFieldDetailType" Parameters="@parameters" />
             }
-        }
-        break;
-    case FieldTypes.MultiSelectField:
-        <MultiSelectField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  />
-        break;
-    case FieldTypes.SelectField:
-        @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
-        {
-            <DynamicComponent Type="@SelectFieldDetailType" Parameters="@parameters" />
-        }
-        else
-        {
-            <DynamicComponent Type="@SelectFieldType" Parameters="@parameters" />
-        }
-        break;
-    case FieldTypes.DateField:
-        @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
-        {
-            if(IsNullable){
-                <DateFieldDetail BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TDate="DateOnly?" />
-            }else{
-                <DateFieldDetail BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TDate="DateOnly" />
-            }
-            
-        }
-        else
-        {
-            if(IsNullable){
-                <DateField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" ShowTime="false" TDate="DateOnly?" ValidateField="@ValidateField" />
-            }else{
-                <DateField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" ShowTime="false" TDate="DateOnly" ValidateField="@ValidateField" />
-            }
-            
-        }
-        break;
-    case FieldTypes.TimeField:
-        @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
-        {
-            if(IsNullable)
+            else
             {
-                <GenericFieldDetail TValue="TimeSpan?" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
-            }else{
-                <GenericFieldDetail TValue="TimeSpan" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+                <DynamicComponent Type="@SelectFieldType" Parameters="@parameters" />
             }
-        }
-        else
-        {
-            if(IsNullable){
-                <TimeField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TTime="TimeSpan?" ValidateField="@ValidateField" />
-            }else{
-                <TimeField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TTime="TimeSpan" ValidateField="@ValidateField"/>
-            }
-        }
-        break;
-    case FieldTypes.DateTimeField:
-        @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
-        {
-            if(IsNullable)
+            break;
+        case FieldTypes.DateField:
+            @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
             {
-                <GenericFieldDetail TValue="DateTime?" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
-            }else{
-                <GenericFieldDetail TValue="DateTime" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+                if(IsNullable){
+                    <DateFieldDetail BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TDate="DateOnly?" />
+                }else{
+                    <DateFieldDetail BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TDate="DateOnly" />
+                }
+                
             }
-        }
-        else
-        {
-            if(IsNullable){
-                <DateTimeField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TDate="DateTime?" ShowTime="true" ValidateField="@ValidateField" />
-            }else{
-                <DateTimeField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TDate="DateTime" ShowTime="true" ValidateField="@ValidateField" />
+            else
+            {
+                if(IsNullable){
+                    <DateField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" ShowTime="false" TDate="DateOnly?" ValidateField="@ValidateField" />
+                }else{
+                    <DateField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" ShowTime="false" TDate="DateOnly" ValidateField="@ValidateField" />
+                }
+                
             }
-            
-        }
-        break;
-    case FieldTypes.TextField:
-        <TextField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  />
-        break;
-    case FieldTypes.BooleanField:
-        @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
-        {
-            <BooleanFieldDetail BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
-        }
-        else
-        {
-            if(IsNullable){
-                <BooleanField BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" TBool="bool?" ValidateField="@ValidateField" />
-            }else{
-                <BooleanField BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" TBool="bool" ValidateField="@ValidateField"  />
+            break;
+        case FieldTypes.TimeField:
+            @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
+            {
+                if(IsNullable)
+                {
+                    <GenericFieldDetail TValue="TimeSpan?" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+                }else{
+                    <GenericFieldDetail TValue="TimeSpan" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+                }
             }
-        }
-        break;
-    case FieldTypes.Unknown:
-        <span>@UnknownFieldType No implementado</span>
-        break;
-    case FieldTypes.EntityField:
-        @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
-        {
-            <EntityFieldDetail BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" />
-        }
-        else
-        {
-            <EntityField BaseModelObj="@ModelObj" BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" ValidateField="@ValidateField"  />
-        } 
-        break;
-    case FieldTypes.FileField:
-        if(FieldOpt.ViewContext != null && FieldOpt.ViewContext.Equals("DetailView")){
-            <FileField Business="@ModelObj" BindModel="@fieldModelObj" View="@FieldOpt.ViewContext" FieldOpt="@FieldOpt" FieldName="@fieldName"></FileField>
-        }else{
-            <FileField Business="@ModelObj" @ref=@UploadComponent Complete="@formView.OnComplete" Error="@formView.OnError" View="@FieldOpt.ViewContext" BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" ValidateField="@ValidateField"></FileField>
-            AddUploadComponent(UploadComponent, fieldName);
-        }
-        break;
-    case FieldTypes.Custom:
-        <CustomField BaseModelObj="@ModelObj" BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  Definition="@FieldOpt.CustomComponent"/>
-        break;
-    default:
-        <span>@FieldType No implementado</span>
-        break;
+            else
+            {
+                if(IsNullable){
+                    <TimeField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TTime="TimeSpan?" ValidateField="@ValidateField" />
+                }else{
+                    <TimeField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TTime="TimeSpan" ValidateField="@ValidateField"/>
+                }
+            }
+            break;
+        case FieldTypes.DateTimeField:
+            @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
+            {
+                if(IsNullable)
+                {
+                    <GenericFieldDetail TValue="DateTime?" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+                }else{
+                    <GenericFieldDetail TValue="DateTime" BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+                }
+            }
+            else
+            {
+                if(IsNullable){
+                    <DateTimeField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TDate="DateTime?" ShowTime="true" ValidateField="@ValidateField" />
+                }else{
+                    <DateTimeField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" TDate="DateTime" ShowTime="true" ValidateField="@ValidateField" />
+                }
+                
+            }
+            break;
+        case FieldTypes.TextField:
+            <TextField BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  />
+            break;
+        case FieldTypes.BooleanField:
+            @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
+            {
+                <BooleanFieldDetail BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" />
+            }
+            else
+            {
+                if(IsNullable){
+                    <BooleanField BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" TBool="bool?" ValidateField="@ValidateField" />
+                }else{
+                    <BooleanField BindModel="@fieldModelObj" FieldName="@fieldName" FieldOpt="@FieldOpt" TBool="bool" ValidateField="@ValidateField"  />
+                }
+            }
+            break;
+        case FieldTypes.Unknown:
+            <span>@UnknownFieldType No implementado</span>
+            break;
+        case FieldTypes.EntityField:
+            @if (FieldOpt.ViewContext != null && FieldOpt.ViewContext == "DetailView")
+            {
+                <EntityFieldDetail BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" />
+            }
+            else
+            {
+                <EntityField BaseModelObj="@ModelObj" BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" ValidateField="@ValidateField"  />
+            } 
+            break;
+        case FieldTypes.FileField:
+            if(FieldOpt.ViewContext != null && FieldOpt.ViewContext.Equals("DetailView")){
+                <FileField Business="@ModelObj" BindModel="@fieldModelObj" View="@FieldOpt.ViewContext" FieldOpt="@FieldOpt" FieldName="@fieldName"></FileField>
+            }else{
+                <FileField Business="@ModelObj" @ref=@UploadComponent Complete="@formView.OnComplete" Error="@formView.OnError" View="@FieldOpt.ViewContext" BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" ValidateField="@ValidateField"></FileField>
+                AddUploadComponent(UploadComponent, fieldName);
+            }
+            break;
+        case FieldTypes.Custom:
+            <CustomField BaseModelObj="@ModelObj" BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName"  Definition="@FieldOpt.CustomComponent"/>
+            break;
+        default:
+            <span>@FieldType No implementado</span>
+            break;
+    }
 }
