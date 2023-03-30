@@ -23,6 +23,7 @@ message GetBusinessObjRequest {
 	string businessName = 2;
   string currentUserToken = 3;
   google.protobuf.Int32Value currentUserRowid = 4;
+  repeated string extraFields = 5;
 }
 
 message BusinessObjResponse {
