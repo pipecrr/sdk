@@ -76,7 +76,8 @@ namespace Siesa.SDK.Frontend.Components.Fields
             CheckPermissions();
             
             var currentValueObj = BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj);
-            if(currentValueObj != null){
+            if(currentValueObj != null && !IsMultiple)
+            {
                 if(currentValueObj.GetType().GetProperty("Rowid").GetValue(currentValueObj) != 0)
                 {
                     Value = currentValueObj.ToString();
