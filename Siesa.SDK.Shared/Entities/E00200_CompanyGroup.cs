@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Siesa.Global.Enums;
 
 
+
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
@@ -31,6 +32,11 @@ namespace Siesa.SDK.Entities
 		[StringLength(250)]
 		public string Name { get; set; }
 
+		[ForeignKey("Logo")]
+		public int? RowidLogo { get; set; }
+
+
+		public virtual E00271_AttachmentDetail Logo { get; set; }
 
 	}
 }
