@@ -357,21 +357,6 @@ namespace Siesa.SDK.Business
             }
         }
 
-        /*public virtual T Get(Int64 rowid, List<string> extraFields = null)
-        {
-            using (SDKContext context = CreateDbContext())
-            {
-                var query = context.Set<T>().AsQueryable();
-                foreach (var relatedProperty in _relatedProperties)
-                {
-                    query = query.Include(relatedProperty);
-                }
-                query = query.Where("Rowid == @0", ConvertToRowidType(rowid));
-                return query.FirstOrDefault();
-            }
-        }*/
-
-        
     public virtual T Get(Int64 rowid, List<string> extraFields = null)
     {
         using (SDKContext context = CreateDbContext())
