@@ -15,6 +15,7 @@ using Siesa.SDK.Frontend.Services;
 using Microsoft.JSInterop;
 using Newtonsoft.Json;
 using Siesa.SDK.Frontend.Extension;
+using Siesa.SDK.Entities;
 
 namespace Siesa.SDK.Frontend.Components.Fields
 {
@@ -51,6 +52,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         private int RowidCulture = 1;
         public PropertyInfo BindProperty { get; set; }
         public Type typeProperty { get; set; }
+        public string orderBy { get; set; } = "Rowid";
         public int FieldTemplate { get; set; } = 1;
 
         private bool CanCreate;
@@ -66,15 +68,21 @@ namespace Siesa.SDK.Frontend.Components.Fields
         {
             base.OnInitializedAsync();
             await InitView();
+            StateHasChanged();
         }
 
         protected async Task InitView(){
             idInput = Guid.NewGuid().ToString();
             CheckPermissions();
-            /*var currentValueObj = BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj);
-            if(currentValueObj != null){
-                Value = currentValueObj.ToString();
-            }*/
+            
+            var currentValueObj = BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj);
+            if(currentValueObj != null && !IsMultiple)
+            {
+                if(currentValueObj.GetType().GetProperty("Rowid").GetValue(currentValueObj) != 0)
+                {
+                    Value = currentValueObj.ToString();
+                }
+            }
             relBusinessModel = BackendRouterService.GetSDKBusinessModel(RelatedBusiness, null);
             var relBusinessType = Utilities.SearchType(relBusinessModel.Namespace + "." + relBusinessModel.Name);
             RelBusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider, relBusinessType);
@@ -87,6 +95,11 @@ namespace Siesa.SDK.Frontend.Components.Fields
             await LoadData("", null);
             BindProperty = BaseObj.GetType().GetProperty(FieldName);
             typeProperty = BindProperty.PropertyType;
+            if (Utilities.IsAssignableToGenericType(typeProperty, typeof(BaseMaster<,>))){
+                orderBy = "Id";
+            }else{
+                orderBy = "Rowid";
+            }
             StateHasChanged();
         }
 
@@ -219,9 +232,10 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
         private void OnKeyDown(KeyboardEventArgs e)
         {
-            if(e == null){
+            if(e == null || e.Key == null){
                 return;
             }
+            
             if (!e.Key.Equals("Escape"))
             {
                 SDKDropDown();
@@ -280,7 +294,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
             if (searchText.Length > MinCharsEntityField || CacheLoadResult == null)
             {
                 var filters = await GetFilters();
-                var result = await RelBusinessObj.EntityFieldSearchAsync(searchText, filters, 3);
+                var result = await RelBusinessObj.EntityFieldSearchAsync(searchText, filters, 10, orderBy);
                 var response = new LoadResult
                 {
                     data = result.Data,
@@ -417,6 +431,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         }
 
         public async Task<string> GetStringFilters(){
+            //Deprecated
             var filters = await GetFilters();
             var filtersSearch = "";
             if(Value != null && Value != "" && ItemsSelected.Count == 0){

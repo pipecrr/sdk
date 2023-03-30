@@ -300,14 +300,14 @@ namespace Siesa.SDK.Business
             return GetDataAsync(skip, take, filter, orderBy).GetAwaiter().GetResult();
         }
 
-        public virtual Siesa.SDK.Shared.Business.LoadResult EntityFieldSearch(string searchText, string filters, int? top = null)
+        public virtual Siesa.SDK.Shared.Business.LoadResult EntityFieldSearch(string searchText, string filters, int? top = null, string orderBy = "")
         {
-            return EntityFieldSearchAsync(searchText, filters, top).GetAwaiter().GetResult();
+            return EntityFieldSearchAsync(searchText, filters, top, orderBy).GetAwaiter().GetResult();
         }
 
-        public async virtual Task<Siesa.SDK.Shared.Business.LoadResult> EntityFieldSearchAsync(string searchText, string filters, int? top = null)
+        public async virtual Task<Siesa.SDK.Shared.Business.LoadResult> EntityFieldSearchAsync(string searchText, string filters, int? top = null, string orderBy = "")
         {
-            var result = await Backend.EntityFieldSearch(searchText, filters, top);
+            var result = await Backend.EntityFieldSearch(searchText, filters, top, orderBy);
             Siesa.SDK.Shared.Business.LoadResult response = new Siesa.SDK.Shared.Business.LoadResult();
             response.Data = result.Data.Select(x => JsonConvert.DeserializeObject<T>(x)).ToList();
             response.TotalCount = result.TotalCount;

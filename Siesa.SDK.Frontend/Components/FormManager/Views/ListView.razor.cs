@@ -200,6 +200,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         protected async void InitView(string bName = null)
         {
             Loading = true;
+            _isEditingFlex = false;
             if (bName == null)
             {
                 bName = BusinessName;
@@ -547,8 +548,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         protected override async Task OnInitializedAsync()
         {
-            await base.OnInitializedAsync();
-            guidListView = Guid.NewGuid().ToString();
+            await base.OnInitializedAsync();            
             if (IsMultiple){
                 SelectionMode = Radzen.DataGridSelectionMode.Multiple;
             }
@@ -601,7 +601,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private void Restart()
         {
-
+            guidListView = Guid.NewGuid().ToString();
             Loading = false;
             ErrorMsg = "";
             InitView();

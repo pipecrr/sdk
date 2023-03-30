@@ -56,7 +56,7 @@ namespace Siesa.SDK.Shared.Backend
             var response = await client.ValidateAndSaveBusinessObjAsync(request);
             return response;
         }
-        public async Task<Protos.LoadResult> EntityFieldSearch(string business_name, string searchText, string filters, int? top = null)
+        public async Task<Protos.LoadResult> EntityFieldSearch(string business_name, string searchText, string filters, int? top = null, string orderBy = "")
         {
             var channel = GrpcUtils.GetChannel(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
@@ -67,7 +67,8 @@ namespace Siesa.SDK.Shared.Backend
                 Filters = filters,
                 CurrentUserToken = (AuthenticationService != null && AuthenticationService.UserToken != null ? AuthenticationService.UserToken : ""),
                 CurrentUserRowid = (AuthenticationService != null && AuthenticationService.User != null ? AuthenticationService.User.Rowid: 0),
-                Top = top
+                Top = top,
+                OrderBy = orderBy
             };
             try
             {

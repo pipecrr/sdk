@@ -30,6 +30,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
         private IDictionary<string, object> parameters = new Dictionary<string, object>();
 
         private bool IsNullable { get; set; }
+        public bool SensitiveData { get; set; }
 
         private void initField(bool force = false)
         {
@@ -39,6 +40,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
             FieldType = field.FieldType;
             UnknownFieldType = field.UnknownFieldType;
             IsNullable = field.IsNullable;
+            SensitiveData = FieldOpt.SensitiveData;
+
             if(field.SelectFieldType != null)
             {
                 SelectFieldType = typeof(SelectField<>).MakeGenericType(field.SelectFieldType);
@@ -49,6 +52,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
                 parameters.Add("FieldName", fieldName);
                 parameters.Add("FieldOpt", FieldOpt);
                 //parameters.Add("TItem", field.SelectFieldType);
+            }
+            if(formView != null)
+            {    
+                if(formView.IsSubpanel && (formView.ParentBaseObj?.Contains(FieldOpt.Name) ?? false))
+                {
+                    FieldOpt.Disabled = true;
+                }
             }
 
             StateHasChanged();
