@@ -100,20 +100,22 @@ namespace Siesa.SDK.Shared.Backend
 
         }
 
-        public async Task<dynamic> GetBusinessObj(string business_name, Int64 id)
+        public async Task<dynamic> GetBusinessObj(string business_name, Int64 id,List<string> extraFields = null)
         {
             using var channel = GrpcUtils.GetChannel(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
+            List<string> fields = extraFields ?? new List<string>();
             var request = new Protos.GetBusinessObjRequest
             {
                 Id = id,
                 BusinessName = business_name,
                 CurrentUserToken = (AuthenticationService != null && AuthenticationService.UserToken != null ? AuthenticationService.UserToken : ""),
-                CurrentUserRowid = (AuthenticationService != null && AuthenticationService.User != null ? AuthenticationService.User.Rowid: 0)
+                CurrentUserRowid = (AuthenticationService != null && AuthenticationService.User != null ? AuthenticationService.User.Rowid: 0),
+                ExtraFields = {fields}
+
             };
             var response = await client.GetBusinessObjAsync(request);
             return response.Response;
-
         }
 
         public async Task<DeleteBusinessObjResponse> DeleteBusinessObj(string business_name, Int64 id)

@@ -118,6 +118,9 @@ namespace Siesa.SDK.Entities
 		[Required]
 		public bool IsVisibilityAdministrator { get; set; }
 
+		// [ForeignKey("AttachmentUserProfilePicture")]
+		// public int? RowidAttachmentUserProfilePicture { get; set; }
+
 
 		[SDKCheckRelationship]
 		public virtual E00220_User UserSubstitute { get; set; }
@@ -131,6 +134,8 @@ namespace Siesa.SDK.Entities
 
 		// [SDKCheckRelationship]
 		// public virtual E00223_UserAccountPolicy UserAccountPolicy { get; set; }
+
+		//public virtual E00271_AttachmentDetail AttachmentUserProfilePicture { get; set; }
 
 	}
 }

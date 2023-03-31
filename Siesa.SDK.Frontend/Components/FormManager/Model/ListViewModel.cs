@@ -20,7 +20,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         public OrderBy OrderBy { get; set; }
         public Paging Paging { get; set; }
         public bool InfiniteScroll { get; set; } = true;
-        public List<object> Filters { get; set; } //TODO: Filtrar desde metadata
+        public List<List<object>> Filters { get; set; } //TODO: Filtrar desde metadata
         public List<FieldOptions> Fields { get; set; } 
 
         public string LinkTo { get; set; }
@@ -33,5 +33,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         public bool ServerPaginationFlex { get; set; } = true;
         public bool ShowLinkTo { get; set; } = false;
         public List<Button> CustomActions { get; set; } = new List<Button>();
+
+        public bool? AllowEdit { get; set; }
+        public bool? AllowDelete { get; set; }
+        public bool? AllowDetail { get; set; }
+        public bool? AllowCreate { get; set; }
     }
 }
