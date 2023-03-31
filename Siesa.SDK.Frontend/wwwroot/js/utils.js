@@ -79,23 +79,13 @@ function preloadFlex(){
         loadScript("http://127.0.0.1:3000/static/js/1.chunk.js");
         loadScript("http://127.0.0.1:3000/static/js/main.chunk.js");
     }else{
-<<<<<<< HEAD
-        loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/2.css?v=20230328');
-        loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/main.css?v=20230328');
+        loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/2.css?v=20230331');
+        loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/main.css?v=20230331');
 
-        loadScript('/_content/Siesa.SDK.Frontend/flex/FlexComponent.js?v=20230328');
-        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/2.chunk.js?v=20230328");
-        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/main.chunk.js?v=20230328");
-        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/runtime-main.js?v=20230328");
-=======
-        loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/2.css?v=20230321');
-        loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/main.css?v=20230321');
-
-        loadScript('/_content/Siesa.SDK.Frontend/flex/FlexComponent.js?v=20230321');
-        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/2.chunk.js?v=20230321");
-        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/main.chunk.js?v=20230321");
-        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/runtime-main.js?v=20230321");
->>>>>>> develop
+        loadScript('/_content/Siesa.SDK.Frontend/flex/FlexComponent.js?v=20230331');
+        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/2.chunk.js?v=20230331");
+        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/main.chunk.js?v=20230331");
+        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/runtime-main.js?v=20230331");
     }
     loadScript("/_content/Siesa.SDK.Frontend/vendor/dexie/dexie.js");
 }
