@@ -76,6 +76,10 @@ namespace Siesa.SDK.Business
             // Do nothing
         }
 
+        public virtual RenderFragment Main(){
+            return null;
+        }
+
         public DeleteBusinessObjResponse Delete()
         {
             return new DeleteBusinessObjResponse();
@@ -476,6 +480,10 @@ namespace Siesa.SDK.Business
                 var errors = JsonConvert.DeserializeObject<List<string>> (result.Errors.ToString());
                 throw new ArgumentException(errors[0]);
             }
+        }
+
+        public virtual RenderFragment Main(){
+            return null;
         }
     }
 }
