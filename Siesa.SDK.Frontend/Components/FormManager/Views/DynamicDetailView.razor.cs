@@ -22,44 +22,39 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private List<string> _extraFields = new List<string>();
         private async Task GetExtraFields(string bName = null)
         {
-            string _viewdefName = "detail";     
+            try
+            {
+                string _viewdefName = "detail";
 
-            var metadata = BackendRouterService.GetViewdef(bName, _viewdefName);
-
-            if(String.IsNullOrEmpty(metadata))
-            {
-                metadata = BackendRouterService.GetViewdef(bName, "default");
-            }
-            if (String.IsNullOrEmpty(metadata))
-            {
-                //ErrorMsg = "No hay definición para la vista de detalle";
-                ErrorMsg = "Custom.Generic.ViewdefNotFound";
-            }
-            else
-            {
-                try
+                if (IsSubpanel)
                 {
-                    FormViewModel = JsonConvert.DeserializeObject<FormViewModel>(metadata);
+                    _viewdefName = "related_detail";
+                }     
 
-                    if (FormViewModel.ExtraFields.Count > 0)
-                    {   
-                        var defaultFields = FormViewModel.Panels.SelectMany(panel => panel.Fields)
-                                        .Select(field => field.Name)
-                                        .ToList(); 
+                var metadata = BackendRouterService.GetViewdef(bName, _viewdefName);
 
-                        _extraFields =  FormViewModel.ExtraFields.Select(f => f.Name)                        
-                        .Union(defaultFields)
-                        .ToList();
-
-                        _extraFields = _extraFields.Select(field => field.Replace("BaseObj.", "")).ToList();
-                    }
-                }
-                catch (System.Exception)
+                if(String.IsNullOrEmpty(metadata))
                 {
-                    //Soporte a viewdefs anteriores
-                    // var panels = JsonConvert.DeserializeObject<List<Panel>>(metadata);
-                    // FormViewModel.Panels = panels;
+                    metadata = BackendRouterService.GetViewdef(bName, "default");
                 }
+
+                FormViewModel = JsonConvert.DeserializeObject<FormViewModel>(metadata);
+
+                if (FormViewModel.ExtraFields.Count > 0)
+                {   
+                    var defaultFields = FormViewModel.Panels.SelectMany(panel => panel.Fields)
+                                    .Select(field => field.Name)
+                                    .ToList(); 
+
+                    _extraFields =  FormViewModel.ExtraFields.Select(f => f.Name)                        
+                    .Union(defaultFields)
+                    .ToList();
+
+                    _extraFields = _extraFields.Select(field => field.Replace("BaseObj.", "")).ToList();
+                }
+            }
+            catch (System.Exception)
+            {
             }
         }
 
