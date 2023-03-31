@@ -58,9 +58,9 @@ namespace Siesa.SDK.Shared.Services
             return await Backend.DeleteBusinessObj(Name, id);
         }
 
-        public dynamic Get(Int64 id)
+        public dynamic Get(Int64 id, List<string> extraFields = null)
         {
-            return Backend.GetBusinessObj(Name, id);
+            return Backend.GetBusinessObj(Name, id, extraFields);
         }
 
         private async Task<ActionResult<dynamic>> transformCallResponse(ExposedMethodResponse grpcResult){

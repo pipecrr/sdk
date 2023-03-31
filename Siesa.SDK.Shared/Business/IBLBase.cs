@@ -14,8 +14,8 @@ namespace Siesa.SDK.Shared.Business
     {
         string BusinessName { get; set; }
         T BaseObj { get; set; }
-        T Get(Int64 rowid);
-        Task<T> GetAsync(Int64 rowid);
+        T Get(Int64 rowid, List<string> extraFields = null);
+        Task<T> GetAsync(Int64 rowid, List<string> extraFields = null);
         ValidateAndSaveBusinessObjResponse ValidateAndSave();
         void Update();
         DeleteBusinessObjResponse Delete();

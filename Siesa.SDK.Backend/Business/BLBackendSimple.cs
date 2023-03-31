@@ -74,12 +74,12 @@ namespace Siesa.SDK.Business
             return new DeleteBusinessObjResponse();
         }
 
-        public BaseSDK<int> Get(Int64 rowid)
+        public BaseSDK<int> Get(Int64 rowid, List<string> extraFields = null)
         {
             return null;
         }
 
-        public Task<BaseSDK<int>> GetAsync(Int64 rowid)
+        public Task<BaseSDK<int>> GetAsync(Int64 rowid, List<string> extraFields = null)
         {
             return null;
         }
@@ -358,19 +358,47 @@ namespace Siesa.SDK.Business
             }
         }
 
-        public virtual T Get(Int64 rowid)
+    public virtual T Get(Int64 rowid, List<string> extraFields = null)
+    {
+        using (SDKContext context = CreateDbContext())
         {
-            using (SDKContext context = CreateDbContext())
+            var query = context.Set<T>().AsQueryable();
+
+            if (extraFields != null && extraFields.Count > 0)
             {
-                var query = context.Set<T>().AsQueryable();
+                extraFields.Add("Rowid");
+
+                var selectedFields = string.Join(",", extraFields.Select(x =>
+                {
+                    var splitInclude = x.Split('.');
+                    if (splitInclude.Length > 1) 
+                    {
+                        for (int i = 1; i <= splitInclude.Length; i++)
+                        {
+                            var include = string.Join(".", splitInclude.Take(i));
+                            query = query.Include(include);
+                        }
+                    }
+                    return splitInclude[0];
+                }).Distinct());
+
+                query = query.Select<T>($"new ({selectedFields})");
+
+            }
+            else
+            {
                 foreach (var relatedProperty in _relatedProperties)
                 {
                     query = query.Include(relatedProperty);
                 }
-                query = query.Where("Rowid == @0", ConvertToRowidType(rowid));
-                return query.FirstOrDefault();
             }
+
+            query = query.Where("Rowid == @0", ConvertToRowidType(rowid));
+
+            return query.FirstOrDefault();
         }
+    }
+        
         public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave()
         {
             ValidateAndSaveBusinessObjResponse result = new();
@@ -705,7 +733,7 @@ namespace Siesa.SDK.Business
             return result;
         }
 
-        public Task<T> GetAsync(Int64 rowid)
+        public Task<T> GetAsync(Int64 rowid,List<string> extraFields = null)
         {
             throw new NotImplementedException();
         }
