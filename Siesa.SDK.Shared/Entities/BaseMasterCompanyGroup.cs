@@ -20,9 +20,8 @@ namespace Siesa.SDK.Entities
 		[StringLength(250)]
 		public virtual string Name { get; set; }
 
-		[Required]
 		[StringLength(2000)]
-		public virtual string Description { get; set; }
+		public virtual string? Description { get; set; }
 
 		[Required]
 		public virtual enumStatusBaseMaster Status { get; set; }
