@@ -24,6 +24,9 @@ using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.Extensions.DependencyInjection;
 using Siesa.Global.Enums;
 using Newtonsoft.Json;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.ComponentModel.DataAnnotations;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -165,6 +168,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private string StyleSearchForm { get; set; } = "search_back position-relative";
         private Radzen.DataGridSelectionMode SelectionMode { get; set; } = Radzen.DataGridSelectionMode.Single;
         Guid needUpdate;
+
+        public dynamic BusinessObjNullable { get; set; }
 
         private void OnSelectionChanged(IList<object> objects)
         {
@@ -372,11 +377,125 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         protected override async Task OnInitializedAsync()
         {
-            await base.OnInitializedAsync();            
+            await base.OnInitializedAsync();
             if (IsMultiple){
                 SelectionMode = Radzen.DataGridSelectionMode.Multiple;
             }
+            
+            Type newTypeBase = CreateNullableType(BusinessObj.BaseObj.GetType(), true);
+            var instanceBase = Activator.CreateInstance(newTypeBase);
+
+            Type newType = CreateNullableType(BusinessObj.GetType(), false, newTypeBase);
+            var instance = SetValuesObjToNullable(newType, BusinessObj, instanceBase);
+
+            BusinessObjNullable = instance;            
             //Restart();
+        }
+
+        private object SetValuesObjToNullable(Type newType, dynamic originalObj, dynamic instanceBase = null){
+            var instance = Activator.CreateInstance(newType);
+            var originalProperties = originalObj.GetType().GetProperties();
+            var newProperties = newType.GetProperties();
+
+            foreach (var originalProperty in originalProperties){
+                var newProperty = newProperties.FirstOrDefault(p => p.Name == originalProperty.Name);
+                if (newProperty != null)
+                {
+                    var originalValue = originalProperty.GetValue(originalObj);
+                    if (originalValue != null && originalProperty.Name == "BaseObj"){
+                        newProperty.SetValue(instance, instanceBase);
+                    }else{
+                        newProperty.SetValue(instance, originalValue);
+                    }
+                }
+            }
+
+            return instance;
+        }
+
+        public Type CreateNullableType(Type originalType, bool includeNonNullable = false, Type baseType = null)
+        {
+            // Crea una nueva assembly dinámica.
+            AssemblyName assemblyName = new AssemblyName("DynamicAssembly");
+            AssemblyBuilder assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
+            
+            // Crea un nuevo módulo en la assembly dinámica.
+            ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("DynamicModule");
+            
+            // Crea un nuevo tipo basado en el tipo original con propiedades nulas.
+            TypeBuilder typeBuilder = moduleBuilder.DefineType($"{originalType.Name}", TypeAttributes.Public | TypeAttributes.Class | TypeAttributes.Sealed, typeof(object));
+            
+            foreach (var property in originalType.GetProperties())
+            {   
+                Type newType = null;
+                Type propertyType = property.PropertyType;
+                if(property.Name.Equals("BaseObj")){
+                    propertyType = baseType;
+                }
+                if(includeNonNullable){
+                // Obtiene el tipo anulable correspondiente a la propiedad.
+                    Type nullableType = Nullable.GetUnderlyingType(propertyType);
+                    if (nullableType == null && propertyType.IsValueType)
+                    {
+                        nullableType = typeof(Nullable<>).MakeGenericType(propertyType);
+                    }
+                    else if (nullableType == null)
+                    {
+                        nullableType = propertyType;
+                    }
+                    newType = nullableType;
+                }else{
+                    newType = propertyType;
+                }
+                // Crea un campo privado para cada propiedad del tipo original.
+                FieldBuilder fieldBuilder = typeBuilder.DefineField($"_{property.Name}", newType, FieldAttributes.Private);
+                
+                // Crea una propiedad pública con el mismo nombre y tipo, pero con un tipo anulable.
+                PropertyBuilder propertyBuilder = typeBuilder.DefineProperty(property.Name, PropertyAttributes.None, newType, new Type[] { newType });
+                MethodBuilder getMethodBuilder = typeBuilder.DefineMethod($"get_{property.Name}", MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, newType, Type.EmptyTypes);
+                ILGenerator getIL = getMethodBuilder.GetILGenerator();
+                getIL.Emit(OpCodes.Ldarg_0);
+                getIL.Emit(OpCodes.Ldfld, fieldBuilder);
+                getIL.Emit(OpCodes.Ret);
+                propertyBuilder.SetGetMethod(getMethodBuilder);
+
+                // Crea el método set para la propiedad
+                MethodBuilder setMethodBuilder = typeBuilder.DefineMethod($"set_{property.Name}", MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, typeof(void), new Type[] { newType });
+                ILGenerator setIL = setMethodBuilder.GetILGenerator();
+                setIL.Emit(OpCodes.Ldarg_0);
+                setIL.Emit(OpCodes.Ldarg_1);
+                setIL.Emit(OpCodes.Stfld, fieldBuilder);
+                setIL.Emit(OpCodes.Ret);
+                propertyBuilder.SetSetMethod(setMethodBuilder);
+                
+                // Agrega el atributo [Required] a la propiedad.
+                if (Attribute.IsDefined(property, typeof(RequiredAttribute)))
+                {
+                    ConstructorInfo requiredAttributeConstructor = typeof(RequiredAttribute).GetConstructor(Type.EmptyTypes);
+                    CustomAttributeBuilder requiredAttributeBuilder = new CustomAttributeBuilder(requiredAttributeConstructor, new object[] { });
+                    propertyBuilder.SetCustomAttribute(requiredAttributeBuilder);
+                }
+                
+                // Agrega el atributo [StringLength] a la propiedad.
+                if (Attribute.IsDefined(property, typeof(StringLengthAttribute)))
+                {
+                    StringLengthAttribute stringLengthAttribute = (StringLengthAttribute)Attribute.GetCustomAttribute(property, typeof(StringLengthAttribute));
+                    ConstructorInfo stringLengthAttributeConstructor = typeof(StringLengthAttribute).GetConstructor(new Type[] { typeof(int) });
+                    CustomAttributeBuilder stringLengthAttributeBuilder = new CustomAttributeBuilder(stringLengthAttributeConstructor, new object[] { stringLengthAttribute.MaximumLength });
+                    propertyBuilder.SetCustomAttribute(stringLengthAttributeBuilder);
+                }
+            }
+            
+            // Crea el constructor por defecto.
+            ConstructorBuilder constructorBuilder = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, Type.EmptyTypes);
+            ILGenerator constructorIL = constructorBuilder.GetILGenerator();
+            constructorIL.Emit(OpCodes.Ldarg_0);
+            constructorIL.Emit(OpCodes.Call, typeof(object).GetConstructor(Type.EmptyTypes));
+            constructorIL.Emit(OpCodes.Ret);
+            
+            // Crea el tipo y lo devuelve.
+            Type nullType = typeBuilder.CreateType();
+            return nullType;
         }
 
         public override async Task SetParametersAsync(ParameterView parameters)
