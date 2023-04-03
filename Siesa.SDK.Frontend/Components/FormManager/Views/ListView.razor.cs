@@ -558,14 +558,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if (IsMultiple){
                 SelectionMode = Radzen.DataGridSelectionMode.Multiple;
             }
-            
-            Type newTypeBase = CreateNullableType(BusinessObj.BaseObj.GetType(), true);
-            var instanceBase = Activator.CreateInstance(newTypeBase);
 
-            Type newType = CreateNullableType(BusinessObj.GetType(), false, newTypeBase);
-            var instance = SetValuesObjToNullable(newType, BusinessObj, instanceBase);
-
-            BusinessObjNullable = instance;            
             //Restart();
         }
 
@@ -609,7 +602,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 if(property.Name.Equals("BaseObj")){
                     propertyType = baseType;
                 }
-                if(includeNonNullable){
+
+                bool propertyNullable = propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>);
+
+                if(includeNonNullable && !propertyNullable){
                 // Obtiene el tipo anulable correspondiente a la propiedad.
                     Type nullableType = Nullable.GetUnderlyingType(propertyType);
                     if (nullableType == null && propertyType.IsValueType)
@@ -644,23 +640,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 setIL.Emit(OpCodes.Stfld, fieldBuilder);
                 setIL.Emit(OpCodes.Ret);
                 propertyBuilder.SetSetMethod(setMethodBuilder);
-                
-                // Agrega el atributo [Required] a la propiedad.
-                if (Attribute.IsDefined(property, typeof(RequiredAttribute)))
-                {
-                    ConstructorInfo requiredAttributeConstructor = typeof(RequiredAttribute).GetConstructor(Type.EmptyTypes);
-                    CustomAttributeBuilder requiredAttributeBuilder = new CustomAttributeBuilder(requiredAttributeConstructor, new object[] { });
-                    propertyBuilder.SetCustomAttribute(requiredAttributeBuilder);
-                }
-                
-                // Agrega el atributo [StringLength] a la propiedad.
-                if (Attribute.IsDefined(property, typeof(StringLengthAttribute)))
-                {
-                    StringLengthAttribute stringLengthAttribute = (StringLengthAttribute)Attribute.GetCustomAttribute(property, typeof(StringLengthAttribute));
-                    ConstructorInfo stringLengthAttributeConstructor = typeof(StringLengthAttribute).GetConstructor(new Type[] { typeof(int) });
-                    CustomAttributeBuilder stringLengthAttributeBuilder = new CustomAttributeBuilder(stringLengthAttributeConstructor, new object[] { stringLengthAttribute.MaximumLength });
-                    propertyBuilder.SetCustomAttribute(stringLengthAttributeBuilder);
-                }
             }
             
             // Crea el constructor por defecto.
@@ -719,12 +698,25 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             return result;
         }
 
+        private void initNullable(){
+            Type newTypeBase = CreateNullableType(BusinessObj.BaseObj.GetType(), true);
+            var instanceBase = Activator.CreateInstance(newTypeBase);
+
+            Type newType = CreateNullableType(BusinessObj.GetType(), false, newTypeBase);
+            var instance = SetValuesObjToNullable(newType, BusinessObj, instanceBase);
+
+            BusinessObjNullable = instance;
+        }
+
         private void Restart()
         {
             guidListView = Guid.NewGuid().ToString();
             Loading = false;
             ErrorMsg = "";
             InitView();
+            if(ShowSearchForm && HasSearchViewdef){
+                initNullable();
+            }
             data = null;
             if (Data != null)
             {
@@ -797,7 +789,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     {
                         var tmpFilter = "";
 
-                        var fieldObj = field.GetFieldObj(BusinessObj);
+                        var fieldObj = field.GetFieldObj(BusinessObjNullable);
                         if (fieldObj != null)
                         {
                             dynamic searchValue = fieldObj.ModelObj.GetType().GetProperty(fieldObj.Name).GetValue(fieldObj.ModelObj, null);
@@ -810,7 +802,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                             {
                                 continue;
                             }
-                            try{
+                            /*try{
                                 Type searchValueType = searchValue.GetType();
                                 dynamic defaultValue = null;
                                 if(searchValueType.IsValueType && !searchValueType.IsEnum){
@@ -822,7 +814,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                 }
                             }catch(Exception e){
                                 Console.WriteLine(e);
-                            }
+                            }*/
                             switch (fieldObj.FieldType)
                             {
                                 case FieldTypes.CharField:
@@ -1125,7 +1117,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if (UseFlex)
             {
                 _isSearchOpen = false;
-                JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+guidListView+".props.setSearchListFlex", filter);                
+                JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+guidListView+".props.setSearchListFlex", filter);
             }
         }
 
