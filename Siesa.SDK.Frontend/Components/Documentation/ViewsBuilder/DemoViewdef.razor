@@ -127,6 +127,16 @@
                 <p>Utilizando la propiedad CustomAtributtes ahora podemos definir para un campo de tipo Booleano, 
                     las opciones que se mostraran luego de definirlo como tipo Selectbar, enviando el tag del recurso de la siguiente manera:</p>
                          <SDKTextField CssClass="text-area-demoviewdef" Value="@SelectbarBoolean"/>
+
+                <p>Los Viewdef soportan a traves de un nuevo objeto llamado ExtraFields enviar los campos especificos que vamos a necesitar/consultar(Esto aplica por ahora para las vistas "DetailView").
+                    Si no se especifica ExtraFields, se consultaran todos los campos del objeto, si se especifica, se consultaran solo los campos que se envien en el ExtraFields:</p>
+                    <SDKTextField CssClass="text-area-demoviewdef" Value="@ExtraFields"/>
+                <p>
+                    Esto tambien aplica si queremos traer campos relacionados, como se ve en el ejemplo anterior,
+                    se envia el campo "BaseObj.City.State" indicando que quiero traer en este caso la ciudad y el departamente de un barrio
+                    y "BaseObj.City.State.Country", indicando que quiero ahora consultar tambien el Pais.
+                </p>
+                
         </div>
     </div>
 </div>
@@ -307,4 +317,23 @@
                                         ""BooleanYesResourceTag"": ""Custom.Prueba.Si"",
                                         ""BooleanNoResourceTag"": ""Custom.Prueba.No""
                                         }" ;
+    
+    string ExtraFields = @"
+                            ""{
+                            ""Panels"": [
+                                {
+                                ""Fields"": [
+                                ""...""
+                                ""...""
+                                ""...""
+                                ""]""
+                                ""}""
+                            ""],""
+                            ""ExtraFields"": ""[
+                            ""Name: Id"",
+                            ""Name: Name"",
+                            ""Name: BaseObj.City.State"",
+                            ""Name: BaseObj.City.State.Country""
+                            ""]""
+                            }";
 }
