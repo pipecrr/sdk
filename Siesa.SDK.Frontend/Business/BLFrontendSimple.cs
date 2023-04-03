@@ -76,17 +76,21 @@ namespace Siesa.SDK.Business
             // Do nothing
         }
 
+        public virtual RenderFragment Main(){
+            return null;
+        }
+
         public DeleteBusinessObjResponse Delete()
         {
             return new DeleteBusinessObjResponse();
         }
 
-        public BaseSDK<int> Get(Int64 rowid)
+        public BaseSDK<int> Get(Int64 rowid, List<string> extraFields = null)
         {
             return null;
         }
 
-        public Task<BaseSDK<int>> GetAsync(Int64 rowid)
+        public Task<BaseSDK<int>> GetAsync(Int64 rowid, List<string> extraFields = null)
         {
             return null;
         }
@@ -200,14 +204,14 @@ namespace Siesa.SDK.Business
             InternalConstructor(authService, notiService,loggerFactory);
         }
 
-        public virtual T Get(Int64 rowid)
+        public virtual T Get(Int64 rowid, List<string> extraFields = null)
         {
             return GetAsync(rowid).GetAwaiter().GetResult();
         }
 
-        public async virtual Task<T> GetAsync(Int64 rowid)
+        public async virtual Task<T> GetAsync(Int64 rowid, List<string> extraFields = null)
         {
-            var message = await Backend.Get(rowid);
+            var message = await Backend.Get(rowid, extraFields);
             var result = JsonConvert.DeserializeObject<T>(message);
             return result;
         }
@@ -218,9 +222,9 @@ namespace Siesa.SDK.Business
             return result;
         }
 
-        public async virtual Task InitializeBusiness(Int64 rowid)
+        public async virtual Task InitializeBusiness(Int64 rowid, List<string> extraFields = null)
         {
-            BaseObj = await GetAsync(rowid);
+            BaseObj = await GetAsync(rowid, extraFields );
         }
 
         public async virtual Task GetDuplicateInfo(Int64 rowid)
@@ -476,6 +480,10 @@ namespace Siesa.SDK.Business
                 var errors = JsonConvert.DeserializeObject<List<string>> (result.Errors.ToString());
                 throw new ArgumentException(errors[0]);
             }
+        }
+
+        public virtual RenderFragment Main(){
+            return null;
         }
     }
 }

@@ -56,6 +56,8 @@
     [Parameter]
     public bool CanDelete {get;set;}
     [Parameter]
+    public bool CanDetail {get;set;}
+    [Parameter]
     public bool EditingFlex {get;set;} = false;
     [Parameter]
     public int Take {get;set;} = 100;
@@ -176,6 +178,7 @@
         FlexAttributes.Add("guid_list_view", GuidListView);
         FlexAttributes.Add("can_edit_list_view", CanEdit.ToString());
         FlexAttributes.Add("can_delete_list_view", CanDelete.ToString());
+        FlexAttributes.Add("can_detail_list_view", CanDetail.ToString());
         FlexAttributes.Add("editing_flex", EditingFlex.ToString());
         FlexAttributes.Add("take", Take.ToString());
         FlexAttributes.Add("server_pagination", ServerPagination.ToString());

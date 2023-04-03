@@ -20,6 +20,19 @@
 
                 <p>El archivo de metadatos para una vista de lista, tiene el siguiente formato:</p>
                     <SDKTextField CssClass="text-area-demoviewdef" Value="@ViewdefList"/>
+                
+                <p>Los filtros son una lista de listas de object donde cada elemento de la lista es un or y cada propiedad del objeto es un and, los tipos de filtros soportados son:</p>
+                <ul>
+                    <li>{FieldName}__in: para filtro in, se debe enviar una lista del tipo del campo con los elementos que se van a filtrar</li>
+                    <li>{FieldName}__not_in: para filtro not in, se debe enviar una lista del tipo del campo con los elementos que se van a filtrar</li>
+                    <li>{FieldName}__contains: para filtro contains</li>
+                    <li>{FieldName}__gt: para filtro mayor que</li>
+                    <li>{FieldName}__gte: para filtro mayor o igual que</li>
+                    <li>{FieldName}__lt: para filtro menor que</li>
+                    <li>{FieldName}__lte: para filtro menor o igual que</li>
+                    <li>{FieldName}: para filtrar por un valor igual a</li>
+                </ul>
+                
 
                 <p>Tambien se da soporte para los campos de tipo control entidad, 
                     indicando el campo que se relaciona y con cual entidad hace relacion. Genera un campo de tipo
@@ -155,7 +168,13 @@
                                     100
                                     ]
                                 },
-                                ""Filters"": [],
+                                ""Filters"": [
+                                    [
+                                        {
+                                            ""Status__in"": ""GetFilter()""
+                                        }
+                                    ]
+                                ],
                                 ""Fields"": [
                                     {
                                     ""Name"": ""BaseObj.Name""
@@ -166,7 +185,11 @@
                                     {
                                     ""Name"": ""BaseObj.Status""
                                     }
-                                ]
+                                ],
+                                ""AllowEdit"": ""false"",
+                                ""AllowDelete"": ""false"",
+                                ""AllowDetail"": ""false"",
+                                ""AllowCreate"": ""false""
                             }";
 
     string ControlEntidad = @"  {
