@@ -21,34 +21,34 @@ namespace Siesa.SDK.Entities
 	public partial class E00210_Session : BaseSDK<int>
 	{
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override int Rowid { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public DateTime StartDate { get; set; }
 
-		[Required]
-		[StringLength(200)]
+		[SDKRequired]
+		[SDKStringLength(200)]
 		public string Service { get; set; }
 
 		[ForeignKey("User")]
-		[Required]
+		[SDKRequired]
 		public int RowidUser { get; set; }
 
-		[StringLength(50)]
+		[SDKStringLength(50)]
 		public string? IpAddress { get; set; }
 
-		[StringLength(200)]
+		[SDKStringLength(200)]
 		public string? MachineName { get; set; }
 
-		[Required]
-		[StringLength(200)]
+		[SDKRequired]
+		[SDKStringLength(200)]
 		public string UserDataBase { get; set; }
 
-		[StringLength(2000)]
+		[SDKStringLength(2000)]
 		public string? AditionalInformation { get; set; }
 
-		[StringLength(64)]
+		[SDKStringLength(64)]
 		public string? Id { get; set; }
 
 		public string? Token { get; set; }
@@ -57,7 +57,7 @@ namespace Siesa.SDK.Entities
 
 
 		[SDKCheckRelationship]
-		[Required]
+		[SDKRequired]
 		public virtual E00220_User User { get; set; }
 
 	}

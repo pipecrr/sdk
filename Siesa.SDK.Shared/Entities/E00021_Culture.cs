@@ -21,18 +21,18 @@ namespace Siesa.SDK.Entities
 	{
 		[SDKIdentity]
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override short Rowid { get; set; }
 
-		[Required]
-		[StringLength(3)]
+		[SDKRequired]
+		[SDKStringLength(3)]
 		public string LanguageCode { get; set; }
 
-		[StringLength(3)]
+		[SDKStringLength(3)]
 		public string? CountryCode { get; set; }
 
-		[Required]
-		[StringLength(500)]
+		[SDKRequired]
+		[SDKStringLength(500)]
 		public string Description { get; set; }
 
 
