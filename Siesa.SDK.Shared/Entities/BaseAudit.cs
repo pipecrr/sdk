@@ -12,15 +12,15 @@ namespace Siesa.SDK.Entities
 		
 
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-		[Required]
+		[SDKRequired]
 		public virtual DateTime CreationDate { get; set; } = DateTime.UtcNow;
 
 		public virtual DateTime? LastUpdateDate { get; set; } = DateTime.UtcNow;
 
-		[StringLength(2000)]
+		[SDKStringLength(2000)]
 		public virtual string? Source { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public virtual int RowidUserCreates { get; set; }
 
 		public virtual int? RowidUserLastUpdate { get; set; }
