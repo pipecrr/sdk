@@ -56,7 +56,7 @@ namespace Siesa.SDK.Entities
 		public string? DefaultValueText { get; set; }
 
 		[SDKRequired]
-		[SDKRegularExpression(@"^\d{1,22}([.,]\d{0,6})?$", ErrorMessage = "El tamaño del campo {0} está fuera del rango.")]
+		[SDKRegularExpression(@"^\d{1,22}([.,]\d{0,6})?$")]
 		[Precision(28, 6)]
 		public decimal DefaultValueNumber { get; set; }
 
@@ -64,12 +64,12 @@ namespace Siesa.SDK.Entities
 		public bool ValidateMinMax { get; set; }
 
 		[SDKRequired]
-		[SDKRegularExpression(@"^\d{1,22}([.,]\d{0,6})?$", ErrorMessage = "El tamaño del campo {0} está fuera del rango.")]
+		[SDKRegularExpression(@"^\d{1,22}([.,]\d{0,6})?$")]
 		[Precision(28, 6)]
 		public decimal MinValue { get; set; }
 
 		[SDKRequired]
-		[SDKRegularExpression(@"^\d{1,22}([.,]\d{0,6})?$", ErrorMessage = "El tamaño del campo {0} está fuera del rango.")]
+		[SDKRegularExpression(@"^\d{1,22}([.,]\d{0,6})?$")]
 		[Precision(28, 6)]
 		public decimal MaxValue { get; set; }
 
