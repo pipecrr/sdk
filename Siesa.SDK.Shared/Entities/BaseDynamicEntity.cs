@@ -27,7 +27,7 @@ namespace Siesa.SDK.Entities
 		[SDKStringLength(4000)]
 		public virtual string? TextData { get; set; }
 
-		[SDKRegularExpression(@"^\d{1,22}([.,]\d{0,6})?$", ErrorMessage = "El tamaño del campo {0} está fuera del rango.")]
+		[SDKRegularExpression(@"^\d{1,22}([.,]\d{0,6})?$")]
 		[Precision(28, 6)]
 		public virtual decimal? NumericData { get; set; }
 
