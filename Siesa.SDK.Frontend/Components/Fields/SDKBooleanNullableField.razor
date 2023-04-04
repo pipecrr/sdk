@@ -1,0 +1,41 @@
+@using System.Linq.Expressions
+@inherits Siesa.SDK.Frontend.Components.SDKComponent
+
+<DxCheckBox 
+    Checked="@Value" 
+    CheckedChanged="@ValueChanged" 
+    NullText="@Placeholder"
+    Enabled="@Enabled"
+    CssClass="@CssClass"
+    data-automation-id="@GetAutomationId()"
+    CheckedExpression="@ValueExpression"
+    field-name="@FieldName"
+    AllowIndeterminateStateByClick="@AllowIndeterminateStateByClick"
+>
+@ChildContent
+</DxCheckBox>
+
+@code {
+    [Parameter] public bool? Value { get; set; }
+    [Parameter] public bool Enabled { get; set; } = true;
+    [Parameter] public Action<bool?> ValueChanged { get; set; } = (value) => { };
+    [Parameter] public Expression<Func<bool?>> ValueExpression { get; set; }
+    [Parameter] public string FieldName { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter] public string Placeholder { get; set; }
+    [Parameter] public bool Required { get; set; }
+    [Parameter] public string CssClass { get; set; }
+    [Parameter] public bool AllowIndeterminateStateByClick { get; set; } = true;
+
+    protected override string GetAutomationId()
+    {
+        if(string.IsNullOrEmpty(AutomationId))
+        {
+            AutomationId = FieldName;
+        }
+        return base.GetAutomationId();
+    }
+
+    
+}
