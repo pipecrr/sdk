@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Siesa.Global.Enums;
 
 
+
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
@@ -19,14 +20,14 @@ namespace Siesa.SDK.Entities
 	public partial class E00230_Flex : BaseAudit<int>
 	{
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override int Rowid { get; set; }
 
 		[SDKRequired]
-		[StringLength(250)]
+		[SDKStringLength(250)]
 		public string Name { get; set; }
 
-		[StringLength(500)]
+		[SDKStringLength(500)]
 		public string? Description { get; set; }
 
 		public string? Metadata { get; set; }

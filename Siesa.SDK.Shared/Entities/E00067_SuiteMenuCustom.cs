@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Siesa.Global.Enums;
 
 
+
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
@@ -20,11 +21,11 @@ namespace Siesa.SDK.Entities
 	public partial class E00067_SuiteMenuCustom : BaseAudit<int>
 	{
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override int Rowid { get; set; }
 
 		[ForeignKey("SuiteCustom")]
-		[Required]
+		[SDKRequired]
 		public short RowidSuiteCustom { get; set; }
 
 		[ForeignKey("MenuCustom")]
@@ -33,10 +34,10 @@ namespace Siesa.SDK.Entities
 		[ForeignKey("Menu")]
 		public int? RowidMenu { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public byte Order { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public bool IsPrivate { get; set; }
 
 
@@ -44,7 +45,7 @@ namespace Siesa.SDK.Entities
 		public virtual E00066_MenuCustom MenuCustom { get; set; }
 
 		[SDKCheckRelationship]
-		[Required]
+		[SDKRequired]
 		public virtual E00065_SuiteCustom SuiteCustom { get; set; }
 
 		[SDKCheckRelationship]

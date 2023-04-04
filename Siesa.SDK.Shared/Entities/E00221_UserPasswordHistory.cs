@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Siesa.Global.Enums;
 
 
+
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
@@ -20,29 +21,29 @@ namespace Siesa.SDK.Entities
 	public partial class E00221_UserPasswordHistory : BaseSDK<int>
 	{
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override int Rowid { get; set; }
 
 		[ForeignKey("User")]
-		[Required]
+		[SDKRequired]
 		public int RowidUser { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public short PasswordSequence { get; set; }
 
-		[Required]
-		[StringLength(128)]
+		[SDKRequired]
+		[SDKStringLength(128)]
 		public string Password { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public DateTime PasswordAssignmentDate { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public DateTime PasswordLastUpdate { get; set; }
 
 
 		[SDKCheckRelationship]
-		[Required]
+		[SDKRequired]
 		public virtual E00220_User User { get; set; }
 
 	}

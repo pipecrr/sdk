@@ -22,15 +22,15 @@ namespace Siesa.SDK.Entities
 	{
 		[SDKIdentity]
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override int Rowid { get; set; }
 
 		[ForeignKey("Feature")]
-		[Required]
+		[SDKRequired]
 		public int RowidFeature { get; set; }
 
 		[ForeignKey("FeatureChild")]
-		[Required]
+		[SDKRequired]
 		public int RowidFeatureChild { get; set; }
 
 

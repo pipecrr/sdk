@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Siesa.Global.Enums;
 
 
+
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
@@ -20,23 +21,23 @@ namespace Siesa.SDK.Entities
 	public partial class E00025_EnumValue : BaseSDK<int>
 	{
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override int Rowid { get; set; }
 
-		[Required]
-		[StringLength(100)]
+		[SDKRequired]
+		[SDKStringLength(100)]
 		public string Id { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public byte Value { get; set; }
 
 		[ForeignKey("Enum")]
-		[Required]
+		[SDKRequired]
 		public int RowidEnum { get; set; }
 
 
 		[SDKCheckRelationship]
-		[Required]
+		[SDKRequired]
 		public virtual E00024_Enum Enum { get; set; }
 
 	}

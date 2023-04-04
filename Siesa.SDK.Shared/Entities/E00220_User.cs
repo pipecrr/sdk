@@ -21,41 +21,41 @@ namespace Siesa.SDK.Entities
 	public partial class E00220_User : BaseMaster<int, string>
 	{
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override int Rowid { get; set; }
 
-		[Required]
-		[StringLength(20)]
+		[SDKRequired]
+		[SDKStringLength(20)]
 		public override string Id { get; set; }
 
-		[MaxLength(128)]
+		[SDKMaxLength(128)]
 		public byte[]? Sid { get; set; }
 
-		[Required]
-		[StringLength(1024)]
+		[SDKRequired]
+		[SDKStringLength(1024)]
 		public string Path { get; set; }
 
 		[SDKDataEncrypt]
-		[StringLength(128)]
+		[SDKStringLength(128)]
 		public string? Password { get; set; }
 
 		[ForeignKey("Culture")]
-		[Required]
+		[SDKRequired]
 		public short RowidCulture { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public DateTime PasswordAssignmentDate { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public DateTime PasswordLastUpdate { get; set; }
 
 		[ForeignKey("UserAccountPolicy")]
 		public int? RowidUserAccountPolicy { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public bool ChangePasswordFirstLogin { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public DateTime StartDateValidity { get; set; }
 
 		public DateTime? EndDateValidity { get; set; }
@@ -64,15 +64,15 @@ namespace Siesa.SDK.Entities
 
 		public DateTime? LastDateInvalidLogin { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public byte NumberIncorrectPasswords { get; set; } = 0;
 
-		[Required]
+		[SDKRequired]
 		public bool IsLocked { get; set; }
 
 		public DateTime? LastDateLocked { get; set; }
 
-		[StringLength(256)]
+		[SDKStringLength(256)]
 		public string? PasswordRecoveryEmail { get; set; }
 
 		[ForeignKey("UserSubstitute")]
@@ -82,40 +82,40 @@ namespace Siesa.SDK.Entities
 
 		public DateTime? SubstitutionEndDate { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public bool AllowAccessSustitutedUser { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public bool HasScheduledAccess { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public bool HasTotalAccessMonday { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public bool HasTotalAccessTuesday { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public bool HasTotalAccessWednesday { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public bool HasTotalAccessThursday { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public bool HasTotalAccessFriday { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public bool HasTotalAccessSaturday { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public bool HasTotalAccessSunday { get; set; }
 
 		[ForeignKey("UserReportTo")]
 		public int? RowidUserReportTo { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public bool IsAdministrator { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public bool IsVisibilityAdministrator { get; set; }
 
 		[ForeignKey("AttachmentUserProfilePicture")]
@@ -123,7 +123,7 @@ namespace Siesa.SDK.Entities
 
 
 		[SDKCheckRelationship]
-		[Required]
+		[SDKRequired]
 		public virtual E00021_Culture Culture { get; set; }
 
 		[SDKCheckRelationship]

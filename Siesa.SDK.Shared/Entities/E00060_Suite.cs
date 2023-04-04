@@ -22,27 +22,27 @@ namespace Siesa.SDK.Entities
 	{
 		[SDKIdentity]
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override short Rowid { get; set; }
 
 		[ForeignKey("Resource")]
-		[Required]
+		[SDKRequired]
 		public int RowidResource { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public byte Order { get; set; }
 
 		public int? RowidImage { get; set; }
 
-		[StringLength(7)]
+		[SDKStringLength(7)]
 		public string? HexColor { get; set; }
 
-		[StringLength(250)]
+		[SDKStringLength(250)]
 		public string? IconClass { get; set; }
 
 
 		[SDKCheckRelationship]
-		[Required]
+		[SDKRequired]
 		public virtual E00020_Resource Resource { get; set; }
 
 	}

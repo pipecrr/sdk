@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Siesa.Global.Enums;
 
 
+
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
@@ -21,24 +22,24 @@ namespace Siesa.SDK.Entities
 	{
 		[SDKIdentity]
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override int Rowid { get; set; }
 
 		[ForeignKey("Module")]
-		[Required]
+		[SDKRequired]
 		public short RowidModule { get; set; }
 
 		[ForeignKey("Feature")]
-		[Required]
+		[SDKRequired]
 		public int RowidFeature { get; set; }
 
 
 		[SDKCheckRelationship]
-		[Required]
+		[SDKRequired]
 		public virtual E00010_Module Module { get; set; }
 
 		[SDKCheckRelationship]
-		[Required]
+		[SDKRequired]
 		public virtual E00040_Feature Feature { get; set; }
 
 	}

@@ -21,7 +21,7 @@ namespace Siesa.SDK.Entities
 	public partial class E00250_DynamicEntity : BaseCompanyGroup<int>
 	{
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override int Rowid { get; set; }
 
 		[ForeignKey("Feature")]
@@ -32,29 +32,29 @@ namespace Siesa.SDK.Entities
 
 		public int? RowidGenericEntity { get; set; }
 
-		[Required]
-		[StringLength(100)]
+		[SDKRequired]
+		[SDKStringLength(100)]
 		public string Id { get; set; }
 
-		[StringLength(100)]
+		[SDKStringLength(100)]
 		public string? Tag { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public short Order { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public bool IsInternal { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public bool IsMultiRecord { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public bool IsOptional { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public bool IsDisable { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public bool IsLocked { get; set; }
 
 

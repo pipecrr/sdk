@@ -21,67 +21,67 @@ namespace Siesa.SDK.Entities
 	public partial class E00251_DynamicEntityColumn : BaseAudit<int>
 	{
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override int Rowid { get; set; }
 
 		[ForeignKey("DynamicEntity")]
-		[Required]
+		[SDKRequired]
 		public int RowidDynamicEntity { get; set; }
 
-		[Required]
-		[StringLength(100)]
+		[SDKRequired]
+		[SDKStringLength(100)]
 		public string Id { get; set; }
 
-		[StringLength(100)]
+		[SDKStringLength(100)]
 		public string? Tag { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public short Order { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public bool IsOptional { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public bool IsDisable { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public bool IsLocked { get; set; }
 
 		public short? Size { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public byte Decimal { get; set; }
 
-		[StringLength(4000)]
+		[SDKStringLength(4000)]
 		public string? DefaultValueText { get; set; }
 
-		[Required]
-		[RegularExpression(@"^\d{1,22}([.,]\d{0,6})?$", ErrorMessage = "El tamaño del campo {0} está fuera del rango.")]
+		[SDKRequired]
+		[SDKRegularExpression(@"^\d{1,22}([.,]\d{0,6})?$", ErrorMessage = "El tamaño del campo {0} está fuera del rango.")]
 		[Precision(28, 6)]
 		public decimal DefaultValueNumber { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public bool ValidateMinMax { get; set; }
 
-		[Required]
-		[RegularExpression(@"^\d{1,22}([.,]\d{0,6})?$", ErrorMessage = "El tamaño del campo {0} está fuera del rango.")]
+		[SDKRequired]
+		[SDKRegularExpression(@"^\d{1,22}([.,]\d{0,6})?$", ErrorMessage = "El tamaño del campo {0} está fuera del rango.")]
 		[Precision(28, 6)]
 		public decimal MinValue { get; set; }
 
-		[Required]
-		[RegularExpression(@"^\d{1,22}([.,]\d{0,6})?$", ErrorMessage = "El tamaño del campo {0} está fuera del rango.")]
+		[SDKRequired]
+		[SDKRegularExpression(@"^\d{1,22}([.,]\d{0,6})?$", ErrorMessage = "El tamaño del campo {0} está fuera del rango.")]
 		[Precision(28, 6)]
 		public decimal MaxValue { get; set; }
 
 		[ForeignKey("Feature")]
 		public int? RowidFeature { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public enumDynamicEntityDataType DataType { get; set; }
 
 
 		[SDKCheckRelationship]
-		[Required]
+		[SDKRequired]
 		public virtual E00250_DynamicEntity DynamicEntity { get; set; }
 
 		[SDKCheckRelationship]

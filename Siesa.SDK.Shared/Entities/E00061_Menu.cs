@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Siesa.Global.Enums;
 
 
+
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
@@ -21,7 +22,7 @@ namespace Siesa.SDK.Entities
 	{
 		[SDKIdentity]
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override int Rowid { get; set; }
 
 		[ForeignKey("MenuParent")]
@@ -33,21 +34,21 @@ namespace Siesa.SDK.Entities
 		[ForeignKey("Feature")]
 		public int? RowidFeature { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public byte Order { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public MenuType Type { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public byte Level { get; set; }
 
 		public int? RowidImage { get; set; }
 
-		[StringLength(250)]
+		[SDKStringLength(250)]
 		public string? Url { get; set; }
 
-		[StringLength(250)]
+		[SDKStringLength(250)]
 		public string? IconClass { get; set; }
 
 

@@ -21,14 +21,14 @@ namespace Siesa.SDK.Entities
 	{
 		[SDKIdentity]
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override int Rowid { get; set; }
 
-		[Required]
-		[StringLength(500)]
+		[SDKRequired]
+		[SDKStringLength(500)]
 		public string Id { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public byte Type { get; set; }
 
 
