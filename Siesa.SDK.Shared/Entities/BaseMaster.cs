@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Siesa.Global.Enums;
 using Siesa.SDK.Shared.DataAnnotations;
 
+
 namespace Siesa.SDK.Entities
 {
 
@@ -13,13 +14,12 @@ namespace Siesa.SDK.Entities
 
 		public virtual U Id { get; set; }
 
-		[SDKRequired]
+		[Required]
 		[StringLength(250)]
 		public virtual string Name { get; set; }
 
-		[SDKRequired]
 		[StringLength(2000)]
-		public virtual string Description { get; set; }
+		public virtual string? Description { get; set; }
 
 		[Required]
 		public virtual enumStatusBaseMaster Status { get; set; }
@@ -30,6 +30,9 @@ namespace Siesa.SDK.Entities
 		[ForeignKey("Attachment")]
 		public virtual int? RowidAttachment { get; set; }
 
+
+		[SDKCheckRelationship]
+		public virtual E00270_Attachment Attachment { get; set; }
 
 	}
 }

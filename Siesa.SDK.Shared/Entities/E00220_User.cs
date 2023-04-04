@@ -123,14 +123,14 @@ namespace Siesa.SDK.Entities
 
 
 		[SDKCheckRelationship]
+		[Required]
+		public virtual E00021_Culture Culture { get; set; }
+
+		[SDKCheckRelationship]
 		public virtual E00220_User UserSubstitute { get; set; }
 
 		[SDKCheckRelationship]
 		public virtual E00220_User UserReportTo { get; set; }
-
-		[SDKCheckRelationship]
-		[Required]
-		public virtual E00021_Culture Culture { get; set; }
 
 		// [SDKCheckRelationship]
 		// public virtual E00223_UserAccountPolicy UserAccountPolicy { get; set; }
