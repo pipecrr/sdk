@@ -370,9 +370,16 @@
             if(AuthenticationService.GetSelectedConnection() == null || AuthenticationService.GetSelectedConnection().Rowid == 0){
 
                 SelectedConnection = ConnectionList.First();
-                AuthenticationService.SetSelectedConnection(SelectedConnection);
+                _ = AuthenticationService.SetSelectedConnection(SelectedConnection);
             }else{
-                SelectedConnection = AuthenticationService.GetSelectedConnection();
+                var _selectedConnection = ConnectionList.FirstOrDefault(x => x.Rowid == AuthenticationService.GetSelectedConnection().Rowid);
+                if(_selectedConnection != null){
+                    SelectedConnection = _selectedConnection;
+
+                }else{
+                    SelectedConnection = ConnectionList.First();
+                }
+                _ = AuthenticationService.SetSelectedConnection(SelectedConnection);
             }
 
             //DbConnections = result.Data as List<(short,string)>;
