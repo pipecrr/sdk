@@ -49,8 +49,8 @@ namespace Siesa.SDK.Entities
 		[SDKRequired]
 		public DateTime PasswordLastUpdate { get; set; }
 
-		// [ForeignKey("UserAccountPolicy")]
-		// public int? RowidUserAccountPolicy { get; set; }
+		[ForeignKey("UserAccountPolicy")]
+		public int? RowidUserAccountPolicy { get; set; }
 
 		[SDKRequired]
 		public bool ChangePasswordFirstLogin { get; set; }
@@ -118,8 +118,8 @@ namespace Siesa.SDK.Entities
 		[SDKRequired]
 		public bool IsVisibilityAdministrator { get; set; }
 
-		// [ForeignKey("AttachmentUserProfilePicture")]
-		// public int? RowidAttachmentUserProfilePicture { get; set; }
+		[ForeignKey("AttachmentUserProfilePicture")]
+		public int? RowidAttachmentUserProfilePicture { get; set; }
 
 
 		[SDKCheckRelationship]
@@ -132,10 +132,10 @@ namespace Siesa.SDK.Entities
 		[SDKCheckRelationship]
 		public virtual E00220_User UserReportTo { get; set; }
 
-		// [SDKCheckRelationship]
-		// public virtual E00223_UserAccountPolicy UserAccountPolicy { get; set; }
+		[SDKCheckRelationship]
+		public virtual E00223_UserAccountPolicy UserAccountPolicy { get; set; }
 
-		//public virtual E00271_AttachmentDetail AttachmentUserProfilePicture { get; set; }
+		public virtual E00271_AttachmentDetail AttachmentUserProfilePicture { get; set; }
 
 	}
 }
