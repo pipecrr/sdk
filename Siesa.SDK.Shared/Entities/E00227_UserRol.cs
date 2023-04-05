@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Siesa.Global.Enums;
 
 
+
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
@@ -20,25 +21,25 @@ namespace Siesa.SDK.Entities
 	public partial class E00227_UserRol : BaseAudit<int>
 	{
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override int Rowid { get; set; }
 
 		[ForeignKey("Rol")]
-		[Required]
+		[SDKRequired]
 		public int RowidRol { get; set; }
 
 		[ForeignKey("User")]
-		[Required]
+		[SDKRequired]
 		public int RowidUser { get; set; }
 
 
 		[SDKCheckRelationship]
-		[Required]
-		public virtual E00220_User User { get; set; }
+		[SDKRequired]
+		public virtual E00226_Rol Rol { get; set; }
 
 		[SDKCheckRelationship]
-		[Required]
-		public virtual E00226_Rol Rol { get; set; }
+		[SDKRequired]
+		public virtual E00220_User User { get; set; }
 
 	}
 }

@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Siesa.Global.Enums;
 
 
+
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
@@ -20,19 +21,19 @@ namespace Siesa.SDK.Entities
 	public partial class E00225_UserDataVisibilityGroup : BaseAudit<int>
 	{
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override int Rowid { get; set; }
 
 		[ForeignKey("DataVisibilityGroup")]
-		[Required]
+		[SDKRequired]
 		public int RowidDataVisibilityGroup { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public int RowidUser { get; set; }
 
 
 		[SDKCheckRelationship]
-		[Required]
+		[SDKRequired]
 		public virtual E00224_DataVisibilityGroup DataVisibilityGroup { get; set; }
 
 	}

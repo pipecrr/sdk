@@ -21,15 +21,15 @@ namespace Siesa.SDK.Entities
 	{
 		[SDKIdentity]
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override short Rowid { get; set; }
 
-		[Required]
-		[StringLength(20)]
+		[SDKRequired]
+		[SDKStringLength(20)]
 		public string Id { get; set; }
 
-		[Required]
-		[StringLength(250)]
+		[SDKRequired]
+		[SDKStringLength(250)]
 		public string Name { get; set; }
 
 		[ForeignKey("Logo")]

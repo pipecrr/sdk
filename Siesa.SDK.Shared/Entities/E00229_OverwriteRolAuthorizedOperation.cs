@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Siesa.Global.Enums;
 
 
+
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
@@ -20,35 +21,35 @@ namespace Siesa.SDK.Entities
 	public partial class E00229_OverwriteRolAuthorizedOperation : BaseAudit<int>
 	{
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override int Rowid { get; set; }
 
 		[ForeignKey("RolAuthorizedOperation")]
-		[Required]
+		[SDKRequired]
 		public int RowidRolAuthorizedOperation { get; set; }
 
 		[ForeignKey("Company")]
 		public short? RowidCompany { get; set; }
 
 		[ForeignKey("User")]
-		[Required]
+		[SDKRequired]
 		public int RowidUser { get; set; }
 
-		[Required]
-		[StringLength(225)]
+		[SDKRequired]
+		[SDKStringLength(225)]
 		public string Operation { get; set; }
 
-
-		[SDKCheckRelationship]
-		[Required]
-		public virtual E00220_User User { get; set; }
 
 		[SDKCheckRelationship]
 		public virtual E00201_Company Company { get; set; }
 
 		[SDKCheckRelationship]
-		[Required]
+		[SDKRequired]
 		public virtual E00228_RolAuthorizedOperation RolAuthorizedOperation { get; set; }
+
+		[SDKCheckRelationship]
+		[SDKRequired]
+		public virtual E00220_User User { get; set; }
 
 	}
 }

@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Siesa.Global.Enums;
 
 
+
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
@@ -20,24 +21,24 @@ namespace Siesa.SDK.Entities
 	{
 		[SDKIdentity]
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override short Rowid { get; set; }
 
 		[ForeignKey("CompanyGroup")]
-		[Required]
+		[SDKRequired]
 		public short RowidCompanyGroup { get; set; }
 
-		[Required]
-		[StringLength(20)]
+		[SDKRequired]
+		[SDKStringLength(20)]
 		public string Id { get; set; }
 
-		[Required]
-		[StringLength(250)]
+		[SDKRequired]
+		[SDKStringLength(250)]
 		public string Name { get; set; }
 
 
 		[SDKCheckRelationship]
-		[Required]
+		[SDKRequired]
 		public virtual E00200_CompanyGroup CompanyGroup { get; set; }
 
 	}

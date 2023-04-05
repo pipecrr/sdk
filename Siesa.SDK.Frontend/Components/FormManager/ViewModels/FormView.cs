@@ -361,7 +361,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
             }
             if(DataAttatchmentDetail != null){
                 var result = await BusinessObj.SaveAttachmentDetail(DataAttatchmentDetail, rowid);
-                return 0;
+                return result;
             }
             return 0;
         }
@@ -394,17 +394,18 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
                     var fileField = item.Value;
                     var rowidAttatchment = 0;
                     var field = item.Key;
-                    var property = BusinessObj.BaseObj.GetType().GetProperty(field);
-                    var rowidProp = property.PropertyType.GetProperty("Rowid").GetValue(property.GetValue(BusinessObj.BaseObj));
-                    if(rowidProp != null){
-                        rowidAttatchment = await savingAttachment(fileField, (int)rowidProp);
+                    dynamic property = BusinessObj.BaseObj.GetType().GetProperty(field).GetValue(BusinessObj.BaseObj);
+                    if(property != null){ 
+                        var rowidProp = property.PropertyType.GetProperty("Rowid").GetValue(property.GetValue(BusinessObj.BaseObj));
+                        if(rowidProp != null)
+                            rowidAttatchment = await savingAttachment(fileField, (int)rowidProp);
                     }else{
                         rowidAttatchment = await savingAttachment(fileField);
                     }
                     if(rowidAttatchment > 0){
                         var AttatchmentDetail = Activator.CreateInstance(BusinessObj.BaseObj.GetType().GetProperty(field).PropertyType);
                         AttatchmentDetail.GetType().GetProperty("Rowid").SetValue(AttatchmentDetail, rowidAttatchment);
-                        property.SetValue(BusinessObj.BaseObj, AttatchmentDetail);
+                        BusinessObj.BaseObj.GetType().GetProperty(field).SetValue(BusinessObj.BaseObj, AttatchmentDetail);
                     }
                 }
             }

@@ -20,8 +20,8 @@ namespace Siesa.SDK.Entities
 	[Index(nameof(RowidCompanyGroup), nameof(Id), Name = "IX_e00226_1", IsUnique = true)]
 	public partial class E00226_Rol : BaseMasterCompanyGroup<string>
 	{
-		[Required]
-		[StringLength(20)]
+		[SDKRequired]
+		[SDKStringLength(20)]
 		public override string Id { get; set; }
 
 		[ForeignKey("Company")]

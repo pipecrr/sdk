@@ -11,16 +11,16 @@ namespace Siesa.SDK.Entities
 	public abstract partial class BaseCompanySummary : BaseSDK<int>
 	{
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override int Rowid { get; set; }
 
 		[ForeignKey("Company")]
-		[Required]
+		[SDKRequired]
 		public virtual short RowidCompany { get; set; }
 
 
 		[SDKCheckRelationship]
-		[Required]
+		[SDKRequired]
 		public virtual E00201_Company Company { get; set; }
 
 	}

@@ -19,7 +19,7 @@ namespace Siesa.SDK.Entities
 	public partial class E00270_Attachment : BaseSDK<int>
 	{
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override int Rowid { get; set; }
 
 

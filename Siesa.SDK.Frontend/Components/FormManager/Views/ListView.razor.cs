@@ -25,6 +25,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Siesa.Global.Enums;
 using Newtonsoft.Json;
 using System.Collections;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.ComponentModel.DataAnnotations;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -167,6 +170,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private Radzen.DataGridSelectionMode SelectionMode { get; set; } = Radzen.DataGridSelectionMode.Single;
         Guid needUpdate;
         private string _base_filter = "";
+
+        public dynamic BusinessObjNullable { get; set; }
+
         private void OnSelectionChanged(IList<object> objects)
         {
             if (OnSelectedRow != null)
@@ -548,11 +554,104 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         protected override async Task OnInitializedAsync()
         {
-            await base.OnInitializedAsync();            
+            await base.OnInitializedAsync();
             if (IsMultiple){
                 SelectionMode = Radzen.DataGridSelectionMode.Multiple;
             }
+
             //Restart();
+        }
+
+        private object SetValuesObjToNullable(Type newType, dynamic originalObj, dynamic instanceBase = null){
+            var instance = Activator.CreateInstance(newType);
+            var originalProperties = originalObj.GetType().GetProperties();
+            var newProperties = newType.GetProperties();
+
+            foreach (var originalProperty in originalProperties){
+                var newProperty = newProperties.FirstOrDefault(p => p.Name == originalProperty.Name);
+                if (newProperty != null)
+                {
+                    var originalValue = originalProperty.GetValue(originalObj);
+                    if (originalValue != null && originalProperty.Name == "BaseObj"){
+                        newProperty.SetValue(instance, instanceBase);
+                    }else{
+                        newProperty.SetValue(instance, originalValue);
+                    }
+                }
+            }
+
+            return instance;
+        }
+
+        public Type CreateNullableType(Type originalType, bool includeNonNullable = false, Type baseType = null)
+        {
+            // Crea una nueva assembly dinámica.
+            AssemblyName assemblyName = new AssemblyName("DynamicAssembly");
+            AssemblyBuilder assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
+            
+            // Crea un nuevo módulo en la assembly dinámica.
+            ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("DynamicModule");
+            
+            // Crea un nuevo tipo basado en el tipo original con propiedades nulas.
+            TypeBuilder typeBuilder = moduleBuilder.DefineType($"{originalType.Name}", TypeAttributes.Public | TypeAttributes.Class | TypeAttributes.Sealed, typeof(object));
+            
+            foreach (var property in originalType.GetProperties())
+            {   
+                Type newType = null;
+                Type propertyType = property.PropertyType;
+                if(property.Name.Equals("BaseObj")){
+                    propertyType = baseType;
+                }
+
+                bool propertyNullable = propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>);
+
+                if(includeNonNullable && !propertyNullable){
+                // Obtiene el tipo anulable correspondiente a la propiedad.
+                    Type nullableType = Nullable.GetUnderlyingType(propertyType);
+                    if (nullableType == null && propertyType.IsValueType)
+                    {
+                        nullableType = typeof(Nullable<>).MakeGenericType(propertyType);
+                    }
+                    else if (nullableType == null)
+                    {
+                        nullableType = propertyType;
+                    }
+                    newType = nullableType;
+                }else{
+                    newType = propertyType;
+                }
+                // Crea un campo privado para cada propiedad del tipo original.
+                FieldBuilder fieldBuilder = typeBuilder.DefineField($"_{property.Name}", newType, FieldAttributes.Private);
+                
+                // Crea una propiedad pública con el mismo nombre y tipo, pero con un tipo anulable.
+                PropertyBuilder propertyBuilder = typeBuilder.DefineProperty(property.Name, PropertyAttributes.None, newType, new Type[] { newType });
+                MethodBuilder getMethodBuilder = typeBuilder.DefineMethod($"get_{property.Name}", MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, newType, Type.EmptyTypes);
+                ILGenerator getIL = getMethodBuilder.GetILGenerator();
+                getIL.Emit(OpCodes.Ldarg_0);
+                getIL.Emit(OpCodes.Ldfld, fieldBuilder);
+                getIL.Emit(OpCodes.Ret);
+                propertyBuilder.SetGetMethod(getMethodBuilder);
+
+                // Crea el método set para la propiedad
+                MethodBuilder setMethodBuilder = typeBuilder.DefineMethod($"set_{property.Name}", MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, typeof(void), new Type[] { newType });
+                ILGenerator setIL = setMethodBuilder.GetILGenerator();
+                setIL.Emit(OpCodes.Ldarg_0);
+                setIL.Emit(OpCodes.Ldarg_1);
+                setIL.Emit(OpCodes.Stfld, fieldBuilder);
+                setIL.Emit(OpCodes.Ret);
+                propertyBuilder.SetSetMethod(setMethodBuilder);
+            }
+            
+            // Crea el constructor por defecto.
+            ConstructorBuilder constructorBuilder = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, Type.EmptyTypes);
+            ILGenerator constructorIL = constructorBuilder.GetILGenerator();
+            constructorIL.Emit(OpCodes.Ldarg_0);
+            constructorIL.Emit(OpCodes.Call, typeof(object).GetConstructor(Type.EmptyTypes));
+            constructorIL.Emit(OpCodes.Ret);
+            
+            // Crea el tipo y lo devuelve.
+            Type nullType = typeBuilder.CreateType();
+            return nullType;
         }
 
         public override async Task SetParametersAsync(ParameterView parameters)
@@ -599,12 +698,25 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             return result;
         }
 
+        private void initNullable(){
+            Type newTypeBase = CreateNullableType(BusinessObj.BaseObj.GetType(), true);
+            var instanceBase = Activator.CreateInstance(newTypeBase);
+
+            Type newType = CreateNullableType(BusinessObj.GetType(), false, newTypeBase);
+            var instance = SetValuesObjToNullable(newType, BusinessObj, instanceBase);
+
+            BusinessObjNullable = instance;
+        }
+
         private void Restart()
         {
             guidListView = Guid.NewGuid().ToString();
             Loading = false;
             ErrorMsg = "";
             InitView();
+            if(ShowSearchForm && HasSearchViewdef){
+                initNullable();
+            }
             data = null;
             if (Data != null)
             {
@@ -677,7 +789,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     {
                         var tmpFilter = "";
 
-                        var fieldObj = field.GetFieldObj(BusinessObj);
+                        var fieldObj = field.GetFieldObj(BusinessObjNullable);
                         if (fieldObj != null)
                         {
                             dynamic searchValue = fieldObj.ModelObj.GetType().GetProperty(fieldObj.Name).GetValue(fieldObj.ModelObj, null);
@@ -690,7 +802,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                             {
                                 continue;
                             }
-                            try{
+                            /*try{
                                 Type searchValueType = searchValue.GetType();
                                 dynamic defaultValue = null;
                                 if(searchValueType.IsValueType && !searchValueType.IsEnum){
@@ -702,7 +814,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                 }
                             }catch(Exception e){
                                 Console.WriteLine(e);
-                            }
+                            }*/
                             switch (fieldObj.FieldType)
                             {
                                 case FieldTypes.CharField:
@@ -898,11 +1010,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public async Task<bool> CustomActionFromReact(Int64 indexButton, object rowid)
         {
             Button button = CustomActions[(int)indexButton];
-            var bl = BackendRouterService.GetSDKBusinessModel(BusinessName, AuthenticationService);
-            var result = await bl.Call("DataEntity", rowid.ToString());
-            if(result.Success){
-                var obj = result.Data;
-                if (OnClickCustomAction != null){
+            if(button != null){
+                var bl = BackendRouterService.GetSDKBusinessModel(BusinessName, AuthenticationService);
+                var result = await bl.Call("DataEntity", rowid.ToString());
+                if(result.Success){
+                    var obj = result.Data;
                     OnClickCustomAction(button, obj);
                     return true;
                 }
@@ -1005,7 +1117,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if (UseFlex)
             {
                 _isSearchOpen = false;
-                JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+guidListView+".props.setSearchListFlex", filter);                
+                JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+guidListView+".props.setSearchListFlex", filter);
             }
         }
 

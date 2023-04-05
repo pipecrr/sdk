@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Siesa.Global.Enums;
 using Siesa.SDK.Shared.DataAnnotations;
 
-
 namespace Siesa.SDK.Entities
 {
 
@@ -13,29 +12,21 @@ namespace Siesa.SDK.Entities
 		
 
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-		[Required]
+		[SDKRequired]
 		public virtual DateTime CreationDate { get; set; } = DateTime.UtcNow;
 
 		public virtual DateTime? LastUpdateDate { get; set; } = DateTime.UtcNow;
 
-		[StringLength(2000)]
+		[SDKStringLength(2000)]
 		public virtual string? Source { get; set; }
 
-		[ForeignKey("UserCreates")]
-		[Required]
+		[SDKRequired]
 		public virtual int RowidUserCreates { get; set; }
 
-		[ForeignKey("UserLastUpdate")]
 		public virtual int? RowidUserLastUpdate { get; set; }
 
 		public virtual int? RowidSession { get; set; }
 
-
-		[SDKCheckRelationship]
-		public virtual E00220_User UserLastUpdate { get; set; }
-
-		[SDKCheckRelationship]
-		public virtual E00220_User UserCreates { get; set; }
 
 	}
 }

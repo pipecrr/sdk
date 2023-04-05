@@ -69,7 +69,17 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
             await base.SetParametersAsync(parameters);
             initField(true);
         }
-        public void AddUploadComponent(FileField uploadComponent, string fieldName){
+
+        protected override async Task OnAfterRenderAsync(bool firstRender){
+            if(UploadComponent!=null && firstRender){
+                await AddUploadComponent(UploadComponent, fieldName);
+            }
+        }
+        
+
+        public async Task AddUploadComponent(FileField uploadComponent, string fieldName){
+
+
             Dictionary<string, FileField> uploadComponents = formView.FileFields;
             if(uploadComponent != null){
                 if(!uploadComponents.ContainsKey(fieldName)){

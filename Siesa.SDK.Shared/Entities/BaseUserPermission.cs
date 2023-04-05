@@ -4,25 +4,26 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Siesa.Global.Enums;
 using Siesa.SDK.Shared.DataAnnotations;
 
+
 namespace Siesa.SDK.Entities
 {
 
 	public abstract partial class BaseUserPermission<T, U> : BaseAudit<int>
 	{
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override int Rowid { get; set; }
 
 		[ForeignKey("Record")]
 		public virtual U? RowidRecord { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public virtual PermissionUserTypes UserType { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public virtual PermissionAuthTypes AuthorizationType { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public virtual PermissionRestrictionType RestrictionType { get; set; }
 
 		[ForeignKey("DataVisibilityGroup")]

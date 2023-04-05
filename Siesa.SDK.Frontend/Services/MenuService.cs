@@ -88,6 +88,55 @@ namespace Siesa.SDK.Frontend.Services
                     SubMenus = new List<E00061_Menu>(),
                     CurrentText = "DevMenu",
                 });
+                var DevMenu = Menus.FirstOrDefault(x => x.ResourceTag == "SDKDev-DevMenu")?.SubMenus;
+
+                foreach (var business in BackendRouterService.GetBusinessModelList())
+                {
+                    if (DevMenu == null)
+                    {
+                        continue;
+                    }
+                    var businessType = Utilities.SearchType(business.Namespace + "." + business.Name);
+                    if (businessType == null)
+                    {
+                        continue;
+                    }
+                    var isBLExplorer = Utilities.IsAssignableToGenericType(businessType, typeof(BLFrontendExplorer<>));
+                    if (isBLExplorer)
+                    {
+                        var customActionMenu = new E00061_Menu
+                        {
+                            ResourceTag = $"SDKDev-{business.Name}.Plural",
+                            Url = $"/{business.Name}/explorer/",
+                            Type = MenuType.CustomMenu
+                        };
+                        DevMenu.Add(customActionMenu);
+                    }
+                    else
+                    {
+                        var submenuItem = new E00061_Menu
+                        {
+                            ResourceTag = $"SDKDev-{business.Name}.Plural",
+                            Url = $"/{business.Name}/",
+                            SubMenus = new List<E00061_Menu>(),
+                            Type = MenuType.CustomMenu
+                        };
+                        //search methods that return a RenderFragment
+                        var customActions = businessType.GetMethods().Where(m => m.ReturnType == typeof(RenderFragment));
+                        foreach (var customAction in customActions)
+                        {
+                            var customActionMenu = new E00061_Menu
+                            {
+                                ResourceTag = $"SDKDev-{business.Name}.CustomAction.{customAction.Name}",
+                                Url = $"/{business.Name}/{customAction.Name}/",
+                                Type = MenuType.CustomMenu
+                            };
+                            submenuItem.SubMenus.Add(customActionMenu);
+                        }
+
+                        DevMenu.Add(submenuItem);
+                    }
+                }
             }
         }
 
@@ -137,56 +186,6 @@ namespace Siesa.SDK.Frontend.Services
 
         public async Task LoadMenu(int suiteRowid)
         {
-            var DevMenu = Menus.FirstOrDefault(x => x.ResourceTag == "SDKDev-DevMenu")?.SubMenus;
-
-            foreach (var business in BackendRouterService.GetBusinessModelList())
-            {
-                if (DevMenu == null)
-                {
-                    continue;
-                }
-                var businessType = Utilities.SearchType(business.Namespace + "." + business.Name);
-                if (businessType == null)
-                {
-                    continue;
-                }
-                var isBLExplorer = Utilities.IsAssignableToGenericType(businessType, typeof(BLFrontendExplorer<>));
-                if (isBLExplorer)
-                {
-                    var customActionMenu = new E00061_Menu
-                    {
-                        ResourceTag = $"SDKDev-{business.Name}.Plural",
-                        Url = $"/{business.Name}/explorer/",
-                        Type = MenuType.CustomMenu
-                    };
-                    DevMenu.Add(customActionMenu);
-                }
-                else
-                {
-                    var submenuItem = new E00061_Menu
-                    {
-                        ResourceTag = $"SDKDev-{business.Name}.Plural",
-                        Url = $"/{business.Name}/",
-                        SubMenus = new List<E00061_Menu>(),
-                        Type = MenuType.CustomMenu
-                    };
-                    //search methods that return a RenderFragment
-                    var customActions = businessType.GetMethods().Where(m => m.ReturnType == typeof(RenderFragment));
-                    foreach (var customAction in customActions)
-                    {
-                        var customActionMenu = new E00061_Menu
-                        {
-                            ResourceTag = $"SDKDev-{business.Name}.CustomAction.{customAction.Name}",
-                            Url = $"/{business.Name}/{customAction.Name}/",
-                            Type = MenuType.CustomMenu
-                        };
-                        submenuItem.SubMenus.Add(customActionMenu);
-                    }
-
-                    DevMenu.Add(submenuItem);
-                }
-            }
-
             var menuRequest = await _menuBL.Call("GetMenuItems", Convert.ToInt64(suiteRowid));
 
             if(menuRequest.Success)

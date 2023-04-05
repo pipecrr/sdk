@@ -19,17 +19,17 @@ namespace Siesa.SDK.Entities
 	public partial class E00240_Report : BaseAudit<int>
 	{
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override int Rowid { get; set; }
 
-		[Required]
-		[StringLength(255)]
+		[SDKRequired]
+		[SDKStringLength(255)]
 		public string Id { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public string Content { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public bool IsTemporary { get; set; }
 
 

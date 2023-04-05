@@ -23,27 +23,27 @@ namespace Siesa.SDK.Entities
 	{
 		[SDKIdentity]
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override int Rowid { get; set; }
 
 		[ForeignKey("Feature")]
-		[Required]
+		[SDKRequired]
 		public int RowidFeature { get; set; }
 
 		[ForeignKey("Action")]
-		[Required]
+		[SDKRequired]
 		public int RowidAction { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public byte Index { get; set; }
 
 
 		[SDKCheckRelationship]
-		[Required]
+		[SDKRequired]
 		public virtual E00040_Feature Feature { get; set; }
 
 		[SDKCheckRelationship]
-		[Required]
+		[SDKRequired]
 		public virtual E00041_Action Action { get; set; }
 
 	}

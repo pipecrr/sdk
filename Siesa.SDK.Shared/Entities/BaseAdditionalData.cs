@@ -4,13 +4,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Siesa.Global.Enums;
 using Siesa.SDK.Shared.DataAnnotations;
 
+
 namespace Siesa.SDK.Entities
 {
 
 	public abstract partial class BaseAdditionalData<T, U> : BaseAudit<int>
 	{
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override int Rowid { get; set; }
 
 		[ForeignKey("Record")]

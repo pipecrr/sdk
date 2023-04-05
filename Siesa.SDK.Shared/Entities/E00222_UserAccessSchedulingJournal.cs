@@ -21,25 +21,25 @@ namespace Siesa.SDK.Entities
 	public partial class E00222_UserAccessSchedulingJournal : BaseAudit<int>
 	{
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override int Rowid { get; set; }
 
 		[ForeignKey("User")]
-		[Required]
+		[SDKRequired]
 		public int RowidUser { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public byte DayWeek { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public TimeSpan StartTime { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public TimeSpan EndTime { get; set; }
 
 
 		[SDKCheckRelationship]
-		[Required]
+		[SDKRequired]
 		public virtual E00220_User User { get; set; }
 
 	}

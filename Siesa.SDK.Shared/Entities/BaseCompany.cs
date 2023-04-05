@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Siesa.Global.Enums;
 using Siesa.SDK.Shared.DataAnnotations;
 
+
 namespace Siesa.SDK.Entities
 {
 
@@ -12,12 +13,12 @@ namespace Siesa.SDK.Entities
 		
 
 		[ForeignKey("Company")]
-		[Required]
+		[SDKRequired]
 		public virtual short RowidCompany { get; set; }
 
 
 		[SDKCheckRelationship]
-		[Required]
+		[SDKRequired]
 		public virtual E00201_Company Company { get; set; }
 
 	}

@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Siesa.Global.Enums;
 
 
+
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
@@ -21,27 +22,27 @@ namespace Siesa.SDK.Entities
 	{
 		[SDKIdentity]
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override int Rowid { get; set; }
 
 		[ForeignKey("Suite")]
-		[Required]
+		[SDKRequired]
 		public short RowidSuite { get; set; }
 
 		[ForeignKey("Menu")]
-		[Required]
+		[SDKRequired]
 		public int RowidMenu { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public byte Order { get; set; }
 
 
 		[SDKCheckRelationship]
-		[Required]
+		[SDKRequired]
 		public virtual E00060_Suite Suite { get; set; }
 
 		[SDKCheckRelationship]
-		[Required]
+		[SDKRequired]
 		public virtual E00061_Menu Menu { get; set; }
 
 	}

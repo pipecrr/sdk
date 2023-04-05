@@ -20,11 +20,11 @@ namespace Siesa.SDK.Entities
 	public partial class E00231_FlexDelta : BaseAudit<int>
 	{
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override int Rowid { get; set; }
 
-		[Required]
-		[StringLength(250)]
+		[SDKRequired]
+		[SDKStringLength(250)]
 		public string Name { get; set; }
 
 		public string? Delta { get; set; }
