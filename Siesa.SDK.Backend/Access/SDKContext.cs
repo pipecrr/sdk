@@ -255,7 +255,7 @@ namespace Siesa.SDK.Backend.Access
                                 continue;
                             }
 
-                            if(propertyValue == originalValue)
+                            if(propertyValue == originalValue && Field.State != EntityState.Added)
                             {
                                 continue;
                             }
