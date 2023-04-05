@@ -93,7 +93,7 @@ namespace Siesa.SDK.Business
         {
         }
 
-        public ValidateAndSaveBusinessObjResponse ValidateAndSave()
+        public ValidateAndSaveBusinessObjResponse ValidateAndSave(bool ignorePermissions = false)
         {
             return null;
         }
@@ -399,16 +399,18 @@ namespace Siesa.SDK.Business
         }
     }
         
-        public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave()
+        public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave(bool ignorePermissions = false)
         {
             ValidateAndSaveBusinessObjResponse result = new();
-            if(_featurePermissionService != null && !string.IsNullOrEmpty(BusinessName)){
-                CanCreate = _featurePermissionService.CheckUserActionPermission(BusinessName, 1,AuthenticationService);
-                CanEdit = _featurePermissionService.CheckUserActionPermission(BusinessName, 2,AuthenticationService);
-            }
-            if(!CanCreate && !CanEdit){
-                AddMessageToResult("Custom.Generic.Unauthorized", result);
-                return result;
+            if(!ignorePermissions){
+                if(_featurePermissionService != null && !string.IsNullOrEmpty(BusinessName)){
+                    CanCreate = _featurePermissionService.CheckUserActionPermission(BusinessName, 1,AuthenticationService);
+                    CanEdit = _featurePermissionService.CheckUserActionPermission(BusinessName, 2,AuthenticationService);
+                }
+                if(!CanCreate && !CanEdit){
+                    AddMessageToResult("Custom.Generic.Unauthorized", result);
+                    return result;
+                }
             }
 
             try
