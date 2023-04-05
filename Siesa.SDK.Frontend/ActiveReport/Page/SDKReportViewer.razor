@@ -1,16 +1,51 @@
-
 @using GrapeCity.ActiveReports.Blazor.Viewer
+@using Siesa.SDK.Shared.Services
 
-@page "/ReportViewer"
 
 <div class="main">
     <div id="viewerContainer" class="sdk_reportviewer">
-        <ReportViewer @ref="_viewer" ReportName="@_currentReport" />
+        @if(!string.IsNullOrEmpty(_currentReport))
+        {
+            <ReportViewer @ref="_viewer" ReportName="@_currentReport" Parameters="@Paramaters"/>
+        }
     </div>
 </div>
 
 @code{
 
     private ReportViewer _viewer;
-    private string _currentReport = "PruebaVentas.rdlx";
+    [Parameter] public string CurrentReport {get; set;}
+
+    [Parameter] public Dictionary<string, dynamic> ReportParameters { get; set; }
+    
+    private string _currentReport;
+
+    private Parameter[] Paramaters ;
+
+    protected override async Task OnInitializedAsync()
+    {
+       if(!string.IsNullOrEmpty(CurrentReport))
+       {
+        _currentReport = $"{CurrentReport}.rdlx";
+        }
+
+
+        if (ReportParameters != null)
+        {   
+            var paramentersList = new List<Parameter>();
+            foreach(var parameter in ReportParameters)
+            {
+                var _parameter = new Parameter();
+                _parameter.Name = parameter.Key;
+                _parameter.Values = new string[] { parameter.Value };
+
+                paramentersList.Add(_parameter);
+            }
+
+            Paramaters = paramentersList.ToArray();
+        }
+
+         await base.OnInitializedAsync();
+    }
+
 }
