@@ -26,7 +26,8 @@ namespace Siesa.SDK.Shared.Services
         // public string[] Teams { get; set; }
 
         public bool IsAdministrator { get; set; }
-
+        public int? RowidAttachmentUserProfilePicture { get; set; }
+        
         public override string ToString()
         {
             return $"({Id}) - {Name}";
