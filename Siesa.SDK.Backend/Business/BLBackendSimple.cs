@@ -917,6 +917,7 @@ namespace Siesa.SDK.Business
             return new BadRequestResult<SDKFileFieldDTO>{Success = false, Errors = new List<string> { "File not found" }};
         }
         
+        [SDKExposedMethod]
         public async Task<ActionResult<T>> DataEntity(object rowid){
             using (SDKContext context = CreateDbContext())
             {   

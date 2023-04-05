@@ -121,7 +121,7 @@
                 <p>Por defecto el listar no muestra el linkTo si se desea agregar el LisnkTO es necesario indicarlo en el list.json</p>
                         <SDKTextField CssClass="text-area-demoviewdef" Value="@ShowLinkTo"/>
                         
-                <p>El listar permite enviar acciones personalizadas se agregan a nivel general en el list.json</p>
+                <p>El listar permite enviar acciones personalizadas se agregan a nivel general en el list.json, en el BL el metodo "CustomAction" recibe como parametro un objeto del tipo del registro</p>
                         <SDKTextField CssClass="text-area-demoviewdef" Value="@CustomActions"/>
 
                 <p>Utilizando la propiedad CustomAtributtes ahora podemos definir para un campo de tipo Booleano, 
@@ -298,7 +298,13 @@
                             ""CustomActions"": [{                            
                             ""Action"": ""CustomAction"",
                             ""IconClass"": ""fa fa-plus""
-                            }]";
+                            }]
+                            
+                            ///BL
+                            public async Task CustomAction([tipo del baseObj] obj){
+                                 //Todo lo que se quiera hacer
+                            }
+                            ";
 
     string SelectbarBoolean = @"
                                     ""Name"": ""BaseObj.HasScheduledAccess"", 

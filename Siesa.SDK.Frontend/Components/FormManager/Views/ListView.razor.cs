@@ -1010,11 +1010,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public async Task<bool> CustomActionFromReact(Int64 indexButton, object rowid)
         {
             Button button = CustomActions[(int)indexButton];
-            var bl = BackendRouterService.GetSDKBusinessModel(BusinessName, AuthenticationService);
-            var result = await bl.Call("DataEntity", rowid.ToString());
-            if(result.Success){
-                var obj = result.Data;
-                if (OnClickCustomAction != null){
+            if(button != null){
+                var bl = BackendRouterService.GetSDKBusinessModel(BusinessName, AuthenticationService);
+                var result = await bl.Call("DataEntity", rowid.ToString());
+                if(result.Success){
+                    var obj = result.Data;
                     OnClickCustomAction(button, obj);
                     return true;
                 }

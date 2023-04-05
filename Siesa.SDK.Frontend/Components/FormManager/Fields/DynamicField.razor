@@ -232,7 +232,6 @@ else
                 <FileField Business="@ModelObj" BindModel="@fieldModelObj" View="@FieldOpt.ViewContext" FieldOpt="@FieldOpt" FieldName="@fieldName"></FileField>
             }else{
                 <FileField Business="@ModelObj" @ref=@UploadComponent Complete="@formView.OnComplete" Error="@formView.OnError" View="@FieldOpt.ViewContext" BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" ValidateField="@ValidateField"></FileField>
-                AddUploadComponent(UploadComponent, fieldName);
             }
             break;
         case FieldTypes.Custom:
