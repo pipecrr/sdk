@@ -108,7 +108,7 @@ namespace Siesa.SDK.Business
         }
 
 
-        public void SetProvider(IServiceProvider provider)
+        public virtual void SetProvider(IServiceProvider provider)
         {
             _provider = provider;
 
@@ -250,7 +250,7 @@ namespace Siesa.SDK.Business
             return _provider;
         }
 
-        public void SetProvider(IServiceProvider provider)
+        public virtual void SetProvider(IServiceProvider provider)
         {
             _provider = provider;
 
