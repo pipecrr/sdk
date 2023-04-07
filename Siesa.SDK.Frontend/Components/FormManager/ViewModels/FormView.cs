@@ -18,6 +18,7 @@ using Siesa.SDK.Frontend.Components.Fields;
 using Siesa.SDK.Shared.DTOS;
 using Siesa.SDK.Frontend.Components.FormManager.Fields;
 using Siesa.SDK.Frontend.Extension;
+using Microsoft.Extensions.Configuration;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 {
@@ -36,6 +37,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Inject] public NavigationManager NavManager { get; set; }
         [Inject] public NavigationService NavigationService { get; set; }
         [Inject] public SDKNotificationService NotificationService { get; set; }
+        [Inject] public IConfiguration configuration { get; set; }
+        private bool UseRoslynToEval { get; set; }
 
         [Inject] protected IAuthenticationService AuthenticationService { get; set; }
 
@@ -260,65 +263,112 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     }
 
                     var fieldCustomAttr = field.CustomAttributes.Where(x => x.Key.StartsWith("sdk-") && x.Key != "sdk-change");
-                    foreach (var attr in fieldCustomAttr)
+                    if(UseRoslynToEval)
                     {
-                        //hacer casteo a enum y refactorizar
-                        switch (attr.Key)
+                        foreach (var attr in fieldCustomAttr)
                         {
-                            case "sdk-show":
-                                code += @$"
+                            switch (attr.Key)
+                            {
+                                case "sdk-show":
+                                    code += @$"
 try {{ Panels[{panel_index}].Fields[{field_index}].Hidden = !({(string)attr.Value}); }} catch (Exception ex) {{ throw;  }}";
-                                /*_ = Task.Run(async () =>
-                                {
-                                    var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
-                                    field.Hidden = !result;
-                                    _ = InvokeAsync(() => StateHasChanged());
-                                });*/
-                                break;
-                            case "sdk-hide":
-                                code += @$"
+                                    break;
+                                case "sdk-hide":
+                                    code += @$"
 try {{ Panels[{panel_index}].Fields[{field_index}].Hidden = ({(string)attr.Value}); }} catch (Exception ex) {{ throw;  }}";
-                                /*_ = Task.Run(async () =>
-                                {
-                                    var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
-                                    field.Hidden = result;
-                                    _ = InvokeAsync(() => StateHasChanged());
-                                });*/
-                                break;
-                            case "sdk-required":
-                                code += @$"
+                                    break;
+                                case "sdk-required":
+                                    code += @$"
 try {{ Panels[{panel_index}].Fields[{field_index}].Required = ({(string)attr.Value}); }} catch (Exception ex) {{ throw;  }}";
-                                /*_ = Task.Run(async () =>
-                                {
-                                    var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
-                                    field.Required = result;
-                                    _ = InvokeAsync(() => StateHasChanged());
-                                });*/
-                                break;
-                            case "sdk-readonly":
-                            case "sdk-disabled":
-                                code += @$"
+                                    break;
+                                case "sdk-readonly":
+                                case "sdk-disabled":
+                                    code += @$"
 try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Value}); }} catch (Exception ex) {{ throw; }}";
-                                /*_ = Task.Run(async () =>
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    }else{
+                        
+                        List<string> allowAttr = new List<string>(){
+                            "sdk-show",
+                            "sdk-hide",
+                            "sdk-required",
+                            "sdk-readonly",
+                            "sdk-disabled"
+                        }; //TODO: Enum
+                        
+
+                        _ = Task.Run(async () =>
+                        {
+                            bool shouldUpdate = false;
+                            foreach (var attr in fieldCustomAttr)
+                            {
+                                if(!allowAttr.Contains(attr.Key))
+                                {
+                                    continue;
+                                }
+                                
+                                try
                                 {
                                     var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
-                                    field.Disabled = result;
-                                    _ = InvokeAsync(() => StateHasChanged());
-                                });*/
-                                break;
-                            default:
-                                break;
-                        }
+                                    switch (attr.Key)
+                                    {
+                                        case "sdk-show":
+                                            if(field.Hidden != !result)
+                                            {
+                                                field.Hidden = !result;
+                                                shouldUpdate = true;
+                                            }
+                                            break;
+                                        case "sdk-hide":
+                                            if(field.Hidden != result)
+                                            {
+                                                field.Hidden = result;
+                                                shouldUpdate = true;
+                                            }
+                                            break;
+                                        case "sdk-required":
+                                            if(field.Required != result)
+                                            {
+                                                field.Required = result;
+                                                shouldUpdate = true;
+                                            }
+                                            break;
+                                        case "sdk-readonly":
+                                        case "sdk-disabled":
+                                            if(field.Disabled != result)
+                                            {
+                                                field.Disabled = result;
+                                                shouldUpdate = true;
+                                            }
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                }
+                                catch (System.Exception ex)
+                                {
+                                    Console.WriteLine($"Error: {ex.Message}");
+                                }
+                            }
+                            if(shouldUpdate)
+                            {
+                                _ = InvokeAsync(() => StateHasChanged());
+                            }
+                        });
                     }
                 }
             }
             //Console.WriteLine(code);
-            if(code != null & code != "")
+            if(UseRoslynToEval && code != null & code != "")
             {
                 _ = Task.Run(async () =>
                  {
                      BusinessObj.Panels = Panels;
-                     await Evaluator.EvaluateCode(code, BusinessObj);
+                     await Evaluator.EvaluateCode(code, BusinessObj, useRoslyn: UseRoslynToEval); //Revisar
                      _ = InvokeAsync(() => StateHasChanged());
                  });
             }
@@ -327,6 +377,13 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
+            try
+            {
+                UseRoslynToEval = configuration.GetValue<bool>("UseRoslynToEval");
+            }
+            catch (System.Exception ex)
+            {
+            }
             //await InitView();
         }
 
@@ -519,7 +576,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
             }
             else if (!string.IsNullOrEmpty(button.Action))
             {
-                await Evaluator.EvaluateCode(button.Action, BusinessObj);
+                await Evaluator.EvaluateCode(button.Action, BusinessObj, useRoslyn: UseRoslynToEval); //Revisar
                 StateHasChanged();
             }
         }
