@@ -1,0 +1,82 @@
+@if(_errorCount > 0 ){
+    <div class=@(ClassError +" col-12 p-0")>
+        <button class="sdk_error_log_btn d-flex align-items-center justify-content-between" @onclick="showDedtail">
+            <div class="d-flex align-items-center justify-content-center">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                &nbsp;&nbsp;Ventana de errores&nbsp;&nbsp;
+                <span class="rz-badge rz-badge-danger rz-variant-filled rz-shade-default rz-badge-pill" id="e-ap89kcR0" _bl_ed1a2bd5-f153-4727-94d3-fc34ec66d983="">
+                    @_errorCount
+                </span>
+            </div>
+            <i class="ml-2 fa-solid fa-chevron-down"></i>
+        </button>
+    </div>
+    <div class="sdk_error_log_box_detail">
+        <div class="col-xl-6 offset-xl-3 col-lg-8 offset-lg-2 col-sm-12 offset-sm-0 sdk_error_log_box p-3">
+            <div class="sdk_error_log_box_head">
+                <p class="m-0">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    &nbsp;&nbsp;Ventana de errores&nbsp;&nbsp; 
+                    <span class="rz-badge rz-badge-danger rz-variant-filled rz-shade-default rz-badge-pill" id="e-ap89kcR0" _bl_ed1a2bd5-f153-4727-94d3-fc34ec66d983="">
+                        @_errorCount
+                    </span>
+                </p>
+                <button class="btn btn-sm ml-1 p-0 text-light" @onclick="showDedtail">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="col-12 whcm_card sdk_error_log_box_body py-0">
+                <div class="table-responsive">
+                    <table class="table table-striped sdk_table_v2">
+                        <thead>
+                            <tr>
+                                <th class="col-3">
+                                    Campo 
+                                </th>
+                                <th class="col-9">
+                                    Descripción
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in _errors){
+                                <tr>
+                                    <td class="align-middle">@item.Field</td>
+                                    <td>
+                                        <ul class="ul_list_error">
+                                            @foreach (var error in item.Errors){
+                                                <li>@error</li>
+                                            }
+                                        </ul>
+                                    </td>
+                                </tr>
+                                
+                            }                            
+                        </tbody>
+                    </table>
+                    <table class="table table-striped sdk_table_v2">
+                        <thead>
+                            <tr>
+                                <th class="col-12">
+                                    Error general 
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <ul class="ul_list_error">
+                                        <li>Exception updating record(s) in th database: 23505: duplicate key value violates unique constraint "pk_e00220" DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information. Bussiness Name: BLUser Object (Nombre.Apellido) - Nombre Apellido</li>
+                                        <li>Descripción de error general</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="sdk_error_log_back"></div>
+    </div>
+}

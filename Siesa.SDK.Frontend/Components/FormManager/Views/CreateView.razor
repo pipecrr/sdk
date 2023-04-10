@@ -20,7 +20,7 @@
 }
 else if(!string.IsNullOrEmpty(ErrorMsg))
 {
-    <ErrorsContainer ErrorMsg="@ErrorMsg"/>
+    <ErrorsWindow />
 }
 else if (Panels == null || Panels.Count <= 0)
 {
@@ -34,7 +34,8 @@ else if (Panels == null || Panels.Count <= 0)
         <hr />
     }
     <CascadingValue Value="@this">
-       <ErrorsContainer ErrorMsg="@ErrorMsg" EditFormContext="@EditFormContext" />
+       <ErrorsContainer EditFormContext="@EditFormContext" ErrorMsg="@ErrorMsg"/>
+       <ErrorsWindow EditFormContext="@EditFormContext" ErrorMsg="@ErrorMsg"/>
     <EditForm id="@FormID"
               OnValidSubmit="@HandleValidSubmit"
               OnInvalidSubmit="@HandleInvalidSubmit"

@@ -50,6 +50,10 @@
     /* Base: color primario light (Para hover de tablas) */
     --color_table_hover: rgba(45,113,234,0.1);
 
+    --color_error_log: #dd003b;
+    /* Base: color error log */
+    --color_error_log_back_180: linear-gradient(180deg, rgba(221, 0, 59,0) 0%, rgba(221, 0, 59,1) 100%);
+
     --border_radius_card_login: 1.25rem;
     --border_radius_standar: .2rem;
     --border_radius_btn_min: .2rem;
