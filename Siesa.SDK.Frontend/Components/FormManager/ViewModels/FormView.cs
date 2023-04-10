@@ -83,6 +83,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         private string _viewdefName = "";
 
+        public bool ContainAttachments = false;
+
         [Inject]
         public IBackendRouterService BackendRouterService { get; set; }
         [Inject] 
@@ -117,7 +119,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 }
             }
         }
-        
+        private void CreateRelationshipAttachment()
+        {
+            var attachment = BusinessObj.BaseObj.GetType().GetProperty("RowidAttachment");
+            if(attachment == null || BusinessName == "BLAttachmentDetail"){
+                return;
+            }
+            ContainAttachments = true;
+        }
         private string GetViewdef(string businessName)
         {
             if (String.IsNullOrEmpty(ViewdefName))
@@ -179,6 +188,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         }
         protected virtual async Task InitView(string bName = null)
         {
+            CreateRelationshipAttachment();
             Loading = true;
             if (bName == null)
             {
