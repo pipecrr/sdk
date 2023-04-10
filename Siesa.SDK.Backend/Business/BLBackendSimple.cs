@@ -398,7 +398,10 @@ namespace Siesa.SDK.Business
             return query.FirstOrDefault();
         }
     }
-        
+
+        public virtual void AfterValidateAndSave(ref ValidateAndSaveBusinessObjResponse result){
+            //Do nothing
+        }
         public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave(bool ignorePermissions = false)
         {
             ValidateAndSaveBusinessObjResponse result = new();
@@ -437,7 +440,7 @@ namespace Siesa.SDK.Business
                 AddExceptionToResult(exception, result);
                 _logger.LogError(exception, "Error saving in BLBackend");
             }
-
+            AfterValidateAndSave(ref result);
             return result;
         }
 
