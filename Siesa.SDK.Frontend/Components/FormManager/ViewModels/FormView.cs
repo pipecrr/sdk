@@ -453,7 +453,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
                     var field = item.Key;
                     dynamic property = BusinessObj.BaseObj.GetType().GetProperty(field).GetValue(BusinessObj.BaseObj);
                     if(property != null){ 
-                        var rowidProp = property.PropertyType.GetProperty("Rowid").GetValue(property.GetValue(BusinessObj.BaseObj));
+                        var rowidProp = property.GetType().GetProperty("Rowid").GetValue(property);
                         if(rowidProp != null)
                             rowidAttatchment = await savingAttachment(fileField, (int)rowidProp);
                     }else{
