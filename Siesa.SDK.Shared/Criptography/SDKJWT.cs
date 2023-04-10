@@ -103,7 +103,8 @@ namespace Siesa.SDK.Shared.Criptography
                 FeaturePermissions = featurePermissions,
                 RowidCompanyGroup = rowidcompanygroup,
                 RowIdDBConnection = rowIdDBConnection,
-                IsAdministrator = user.IsAdministrator
+                IsAdministrator = user.IsAdministrator,
+                RowidAttachmentUserProfilePicture = user.RowidAttachmentUserProfilePicture
             };
 
 

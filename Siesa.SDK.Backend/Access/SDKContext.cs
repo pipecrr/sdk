@@ -255,7 +255,7 @@ namespace Siesa.SDK.Backend.Access
                                 continue;
                             }
 
-                            if(propertyValue == originalValue)
+                            if(propertyValue == originalValue && Field.State != EntityState.Added)
                             {
                                 continue;
                             }
@@ -343,6 +343,14 @@ namespace Siesa.SDK.Backend.Access
                 modelBuilder.RemoveXMINConvention();
             }
             modelBuilder.ApplyConventions();
+
+            modelBuilder.Entity<E00220_User>().HasOne(x => x.Culture).WithMany().HasForeignKey(x => x.RowidCulture);
+            modelBuilder.Entity<E00220_User>().HasOne(x => x.UserAccountPolicy).WithMany().HasForeignKey(x => x.RowidUserAccountPolicy);
+            modelBuilder.Entity<E00220_User>().HasOne(x => x.UserSubstitute).WithMany().HasForeignKey(x => x.RowidUserSubstitute);
+            modelBuilder.Entity<E00220_User>().HasOne(x => x.UserReportTo).WithMany().HasForeignKey(x => x.RowidUserReportTo);
+            modelBuilder.Entity<E00220_User>().HasOne(x => x.AttachmentUserProfilePicture).WithMany().HasForeignKey(x => x.RowidAttachmentUserProfilePicture);
+            modelBuilder.Entity<E00220_User>().HasOne(x => x.UserCreates).WithMany().HasForeignKey(x => x.RowidUserCreates);
+            modelBuilder.Entity<E00220_User>().HasOne(x => x.UserLastUpdate).WithMany().HasForeignKey(x => x.RowidUserLastUpdate);
             base.OnModelCreating(modelBuilder);
         }
 
