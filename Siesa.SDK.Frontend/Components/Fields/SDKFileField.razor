@@ -9,7 +9,7 @@
 @inject IAuthenticationService AuthenticationService
 @inject IBackendRouterService BackendRouterService
 
-<div class="sdk-file-field" id="@Id">
+<div class="sdk-file-field @ParentStyleCss" id="@Id">
     @if(HasValue){
         <SDKImageViewer Url="@UrlFile" Type="@TypeFile" Height="@HeightView"></SDKImageViewer>
     }else{
@@ -54,6 +54,7 @@
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public string View { get; set; }
     [Parameter] public string HeightView { get; set; } = "100px";
+    [Parameter] public string ParentStyleCss { get; set; } = "";
 
     private bool HasValue {get; set;} = false;
     private int RowidAttachmentDetail {get; set;}
