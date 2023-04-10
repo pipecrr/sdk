@@ -11,7 +11,7 @@
 
 <div class="sdk-file-field @ParentStyleCss" id="@Id">
     @if(HasValue){
-        <SDKImageViewer Url="@UrlFile" Type="@TypeFile" Height="@HeightView"></SDKImageViewer>
+        <SDKImageViewer Url="@UrlFile" Type="@TypeFile" Height="@HeightView" StyleCss="@ImgStyleCss"></SDKImageViewer>
     }else{
         <SDKImageViewer Type="@TypeFile"></SDKImageViewer>
     }
@@ -55,6 +55,8 @@
     [Parameter] public string View { get; set; }
     [Parameter] public string HeightView { get; set; } = "100px";
     [Parameter] public string ParentStyleCss { get; set; } = "";
+    
+    [Parameter] public string ImgStyleCss { get; set; } = "";
 
     private bool HasValue {get; set;} = false;
     private int RowidAttachmentDetail {get; set;}

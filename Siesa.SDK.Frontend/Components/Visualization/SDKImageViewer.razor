@@ -15,7 +15,7 @@
                 <i class="fa-solid fa-image"></i>
             </div>
         }else{
-            <div class="sdk-image-viewer mb-2" style="@style" >
+            <div class="sdk-image-viewer mb-2 @StyleCss" style="@style" >
                 <img src="@Url" width="100%"/>
             </div>
         }
@@ -45,6 +45,9 @@
 
     [Parameter]
     public string Height {get; set;}
+
+    [Parameter]
+    public string StyleCss {get; set;}
 
     private string style = "height: 100px;";
 
