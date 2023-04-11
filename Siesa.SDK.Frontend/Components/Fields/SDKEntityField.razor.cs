@@ -48,7 +48,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         private LoadResult CacheLoadResult;
         private string LastSearchString;
         private CancellationTokenSource cancellationTokenSource;
-        private int MinMillisecondsBetweenSearch = 100;
+        private int MinMillisecondsBetweenSearch = 200;
         private int RowidCulture = 1;
         public PropertyInfo BindProperty { get; set; }
         public Type typeProperty { get; set; }
@@ -62,6 +62,8 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
         private string badgeContainerClass = "badge-container d-none";
         private string placeholder = "";
+
+        private long lastRefresh;
 
         private Dictionary<string, dynamic> BadgeByData = new Dictionary<string, dynamic>();
         protected override async Task OnInitializedAsync()
@@ -123,7 +125,12 @@ namespace Siesa.SDK.Frontend.Components.Fields
         
         protected override async Task OnParametersSetAsync(){
             await base.OnParametersSetAsync();
-            //await LoadData("", null, true);
+            var currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            if((currentTime - lastRefresh) > 1000)
+            {
+                lastRefresh = currentTime;
+                await LoadData("", null, true);
+            }
         }
 
         private async Task OnSelectItem(dynamic item){
@@ -131,7 +138,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
             if(OnChange != null){
                 OnChange();
             }
-            // LoadData("", null, true);
+            LoadData("", null, true);
             StateHasChanged();
         }
 
