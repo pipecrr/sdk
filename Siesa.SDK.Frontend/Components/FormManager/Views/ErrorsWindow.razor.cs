@@ -23,6 +23,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private List<string> _errorgGeneral = new List<string>();
         protected override async Task OnParametersSetAsync(){
             if (EditFormContext != null){
+                _errors = new List<SDKErrorsWindowDTO>();
                 _errorCount = EditFormContext.GetValidationMessages().Count();
                 var groupErrors = EditFormContext.GetValidationMessages().GroupBy(x => x.Split("//")[1]);
                 foreach (var item in groupErrors){

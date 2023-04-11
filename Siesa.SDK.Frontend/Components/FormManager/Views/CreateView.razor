@@ -34,7 +34,6 @@ else if (Panels == null || Panels.Count <= 0)
         <hr />
     }
     <CascadingValue Value="@this">
-       <ErrorsContainer EditFormContext="@EditFormContext" ErrorMsg="@ErrorMsg"/>
        <ErrorsWindow EditFormContext="@EditFormContext" ErrorMsg="@ErrorMsg"/>
     <EditForm id="@FormID"
               OnValidSubmit="@HandleValidSubmit"
