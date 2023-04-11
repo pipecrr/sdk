@@ -123,7 +123,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         
         protected override async Task OnParametersSetAsync(){
             await base.OnParametersSetAsync();
-            await LoadData("", null, true);
+            //await LoadData("", null, true);
         }
 
         private async Task OnSelectItem(dynamic item){
@@ -131,7 +131,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
             if(OnChange != null){
                 OnChange();
             }
-            LoadData("", null, true);
+            // LoadData("", null, true);
             StateHasChanged();
         }
 
