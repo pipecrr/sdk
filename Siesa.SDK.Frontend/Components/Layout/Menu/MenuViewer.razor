@@ -65,28 +65,59 @@
                         {
                             @if(FeaturePermissionService.CheckUserActionPermission(submenu.Feature.BusinessName, 4, AuthenticationService))
                             {
-                                <div class="col-12 col-sm-6 col-md-4 py-3">
-                                    <button @onclick="@(()=>OnClickItem(submenu))" class="whcm_panel_button w-100 p-3 font-weight-bold text-truncate">
-                                        @if(string.IsNullOrEmpty(submenu.CurrentText))
+                                <div class="col-12 col-sm-6 col-md-6 col-lg-4 py-3">
+                                    <button @onclick="@(()=>OnClickItem(submenu))" @onclick:stopPropagation="true"  
+                                        class="whcm_panel_button_box w-100 text-left pt-3 h-100" >
+                                        @if(!string.IsNullOrEmpty(submenu.CurrentText))
                                         {
-                                            <ResourceViewer RowidResource="@submenu.RowidResource" />
+                                            <div class="panel_button_head text-truncate" style="background: #@MenuService?.SelectedSuite?.HexColor" data-toggle="tooltip" data-placement="top" title="@submenu.CurrentText">
+                                                @submenu.CurrentText    
+                                            </div>
                                         }else{
-                                            @submenu.CurrentText
+                                            <div class="panel_button_head text-truncate" style="background: #@MenuService?.SelectedSuite?.HexColor" data-toggle="tooltip" data-placement="top">
+                                            <ResourceViewer RowidResource="@submenu.RowidResource" />   
+                                            </div>
                                         }
+                                        <div class="whcm_panel_button h-100">
+                                            <a href="@submenu.CurrentURL" target="_blank"  @onclick:stopPropagation="true" 
+                                            class="panel_button_icon_style" style="color: #@MenuService?.SelectedSuite?.HexColor" >
+                                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                            </a>
+                                            <div class="panel_button_icon_arrow">
+                                                <i class="fa-solid fa-chevron-right"></i>
+                                            </div>
+                                            <p class="font_color_text m-0">Texto descriptivo para el feature</p>
+                                            <div class="panel_button_back" style="background: #@MenuService?.SelectedSuite?.HexColor"></div>
+                                        </div>
                                     </button>
                                 </div>
                             }
                         }else
                         {
-                            <div class="col-12 col-sm-6 col-md-4 py-3">
-                                    <button @onclick="@(()=>OnClickItem(submenu))" class="whcm_panel_button w-100 p-3 font-weight-bold text-truncate">
-                                        @if(string.IsNullOrEmpty(submenu.CurrentText))
-                                        {
-                                            <ResourceViewer RowidResource="@submenu.RowidResource" />
-                                        }else{
-                                            @submenu.CurrentText
-                                        }
-                                    </button>
+                            <div class="col-12 col-sm-6 col-md-6 col-lg-4 py-3">
+                                <button @onclick="@(()=>OnClickItem(submenu))" @onclick:stopPropagation="true"  class="whcm_panel_button_box w-100 text-left pt-3 h-100" >
+                                    @if(!string.IsNullOrEmpty(submenu.CurrentText))
+                                    {
+                                        <div class="panel_button_head text-truncate" style="background: #@MenuService?.SelectedSuite?.HexColor" data-toggle="tooltip" data-placement="top" title="@submenu.CurrentText">
+                                            @submenu.CurrentText    
+                                        </div>
+                                    }else{
+                                        <div class="panel_button_head text-truncate" style="background: #@MenuService?.SelectedSuite?.HexColor" data-toggle="tooltip" data-placement="top">
+                                           <ResourceViewer RowidResource="@submenu.RowidResource" />   
+                                        </div>
+                                    }
+                                    <div class="whcm_panel_button h-100">
+                                        <a href="@submenu.CurrentURL" target="_blank"  @onclick:stopPropagation="true"  
+                                        class="panel_button_icon_style" style="color: #@MenuService?.SelectedSuite?.HexColor">
+                                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                        </a>
+                                        <div class="panel_button_icon_arrow">
+                                            <i class="fa-solid fa-chevron-right"></i>
+                                        </div>
+                                        <p class="font_color_text m-0">Texto descriptivo para el feature</p>
+                                        <div class="panel_button_back" style="background: #@MenuService?.SelectedSuite?.HexColor"></div>
+                                    </div>
+                                </button>
                             </div>
                         }  
                     }
