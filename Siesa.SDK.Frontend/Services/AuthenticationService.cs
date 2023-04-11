@@ -33,6 +33,8 @@ namespace Siesa.SDK.Frontend.Services
 
         private int _selectedSuite;
 
+        private short _rowIdCompanyGroup = 0;
+
         private JwtUserData? _user;
         public JwtUserData User
         {
@@ -72,6 +74,7 @@ namespace Siesa.SDK.Frontend.Services
             UserToken = await _localStorageService.GetItemAsync<string>("usertoken");
             CustomRowidCulture = await _localStorageService.GetItemAsync<short>("customrowidculture");
             _selectedSuite = await _localStorageService.GetItemAsync<int>("selectedSuite");
+            _rowIdCompanyGroup = await _localStorageService.GetItemAsync<short>("rowIdCompanyGroup");
             var selectedConnection = await _localStorageService.GetItemAsync<string>("selectedConnection");
             try
             {
@@ -212,13 +215,41 @@ namespace Siesa.SDK.Frontend.Services
             return SelectedConnection;
         }
 
-        public string GetConnectionLogo()
+        public async Task<string> GetConnectionLogo(short rowidCompanyGroup = 0)
         {
-            if(SelectedConnection != null && SelectedConnection.Rowid != 0 && !string.IsNullOrEmpty(SelectedConnection.LogoUrl)){
-                return SelectedConnection.LogoUrl;
-            }
-            return "_content/Siesa.SDK.Frontend/assets/img/LogoSiesaNoSub.svg";
+            string LogoUrl = await _localStorageService.GetItemAsync<string>("imageCompanyGroup");
+
+            E00200_CompanyGroup SelectedGroup = new E00200_CompanyGroup();
+
+            if (string.IsNullOrEmpty(LogoUrl) || rowidCompanyGroup > 0)
+            {
+                var BLCompanyGroup = _backendRouterService.GetSDKBusinessModel("BLSDKCompanyGroup",this);
+
+                var companyGroup = await BLCompanyGroup.Call("GetCompanyGroupLogo",rowidCompanyGroup);
+
+                if (companyGroup.Success)
+                {
+                    SelectedGroup = companyGroup.Data;
+                    
+                    if (SelectedGroup.Logo?.FileInternalAttached != null && SelectedGroup.Logo?.FileType != null)
+                    {
+                        string ImageBase64 = Convert.ToBase64String(SelectedGroup.Logo.FileInternalAttached);
+                    
+                        LogoUrl = $"data:{SelectedGroup.Logo.FileType};base64,{ImageBase64}";
+
+                    }else
+                    {
+                        LogoUrl = "_content/Siesa.SDK.Frontend/assets/img/LogoSiesaNoSub.svg";
+                    }
+
+                    await _localStorageService.SetItemAsync("imageCompanyGroup", LogoUrl);
+                }
+            }  
+
+            return LogoUrl;
+
         }
+
         public string GetConnectionStyle()
         {
                 return SelectedConnection.StyleUrl;
@@ -250,17 +281,38 @@ namespace Siesa.SDK.Frontend.Services
             if (CompanyGroup.Success)
             {
                 await this.SetToken(CompanyGroup.Data);
-            }
 
+                await this.GetConnectionLogo(rowid);
+
+                await _localStorageService.SetItemAsync("rowidCompanyGroup", rowid);
+            }
+        }
+
+        private async Task GetCustomRowidCompanyGroup()
+        {
+            _rowIdCompanyGroup = await _localStorageService.GetItemAsync<short>("rowidCompanyGroup");
+            if (_rowIdCompanyGroup == null)
+            {
+                _rowIdCompanyGroup = 0;
+            }
         }
 
         public short GetRowidCompanyGroup()
         {
-            if (this.User == null)
+            //GetCustomRowidCompanyGroup().Wait();
+
+            short rowid = 0;
+            if (_rowIdCompanyGroup > 0)
             {
-             return 0;   
+                rowid = _rowIdCompanyGroup;
+
             }
-            return this.User.RowidCompanyGroup;
+            else if (this.User != null)
+            {
+             rowid = this.User.RowidCompanyGroup;
+            }
+
+            return rowid;   
         }
 
         public short GetRoiwdCulture()
