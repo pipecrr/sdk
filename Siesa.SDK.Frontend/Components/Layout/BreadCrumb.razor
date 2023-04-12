@@ -13,7 +13,7 @@
 
 <div class="col-12 area1 pb-3 px-0">
 
-@if(RecentRoutes != null && RecentRoutes.Count > 0)
+@if((RecentRoutes != null && RecentRoutes.Count > 0) && (breadcrumb != null && breadcrumb.Count > 0))
 {
     <div class="dropdown position-absolute">
         <button class="btn btn-sm layout_btn_standar-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Rutas recientes">
@@ -39,6 +39,10 @@
                                 <div class="d-flex justify-content-start align-items-end flex-wrap margenes_box pl-4 pt-1">
                                     @foreach (var menu in recentMenu.Value)
                                     {
+                                        if(menu.Type == MenuType.Separator )
+                                        {
+                                            continue;
+                                        }
                                         <div class="@((menu == recentMenu.Value.Last()) ? "rectangle_borders_active" : "rectangle_borders") d-flex align-items-center">
                                             @if((menu == recentMenu.Value.Last()) && (menu.Feature != null))
                                             {
@@ -63,7 +67,7 @@
         </div>
     </div>
 }
-    <nav class="" aria-label="breadcrumb">
+    <nav class="pl-4 ml-3" aria-label="breadcrumb">
         @if(breadcrumb != null && breadcrumb.Count > 0)
         {
             <ol class="breadcrumb p-0">
@@ -135,40 +139,48 @@
     {
         StateHasChanged();
     }
+
     private async Task<Dictionary<int, List<E00061_Menu>>> GetRecentMenus()
     {
         var _recentRoutes  = new Dictionary<int, List<E00061_Menu>>();
-
-        var BLRecentMenu = BackendRouterService.GetSDKBusinessModel("BLRecentMenu", AuthenticationService);
-        if(BLRecentMenu != null)
+        try
         {
-            var result = await BLRecentMenu.Call("GetRecentMenus");
-
-            if(result.Success)
+            var BLRecentMenu = BackendRouterService.GetSDKBusinessModel("BLRecentMenu", AuthenticationService);
+            if(BLRecentMenu != null)
             {
-               var RecentMenus = result.Data;
-                
-                foreach (var Recent in RecentMenus)
+                var result = await BLRecentMenu.Call("GetRecentMenus");
+
+                if(result.Success)
                 {
-                    List<E00061_Menu> auxRecentMenu = new List<E00061_Menu>();
-                    auxRecentMenu.Add(Recent.Menu);
-                    OrderRecentMenu(ref auxRecentMenu);
-
-                    if(auxRecentMenu.Any())
+                var RecentMenus = result.Data;
+                    
+                    foreach (var Recent in RecentMenus)
                     {
-                        var Rowid = auxRecentMenu.Last().Rowid;
+                        List<E00061_Menu> auxRecentMenu = new List<E00061_Menu>();
+                        auxRecentMenu.Add(Recent.Menu);
+                        OrderRecentMenu(ref auxRecentMenu);
 
-                        if(!(_recentRoutes.ContainsKey(Rowid)))
+                        if(auxRecentMenu.Any())
                         {
-                            _recentRoutes.Add(Rowid, auxRecentMenu);
+                            var Rowid = auxRecentMenu.Last().Rowid;
+
+                            if(!(_recentRoutes.ContainsKey(Rowid)))
+                            {
+                                _recentRoutes.Add(Rowid, auxRecentMenu);
+                            }
                         }
                     }
                 }
             }
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
 
         return _recentRoutes;
     }
+
     private void OrderRecentMenu(ref List<E00061_Menu> FinalList, E00061_Menu Actualmenu = null){
         
                 if(Actualmenu != null){
@@ -191,6 +203,7 @@
                     OrderRecentMenu(ref FinalList, FisrtMenu);
                 }
     }
+
     private string GetCssBreadCrumItem(int i)
     {
         if(i == breadcrumb.Count - 1)
