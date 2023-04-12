@@ -35,6 +35,9 @@
                         <i class="fa-solid fa-chevron-left"></i>
                     </button>
                 }
+                <div class="d-flex align-items-center justify-content-center icono_cabecera" style="background: #@MenuService?.SelectedSuite?.HexColor">
+                   <i class="@MenuService?.SelectedSuite?.IconClass"></i> 
+                </div>
                 <h3 class="mb-0">
                     @if(string.IsNullOrEmpty(Menu.CurrentText))
                     {
