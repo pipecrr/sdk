@@ -9,14 +9,15 @@
 @inject MenuService MenuService
 @inject IBackendRouterService BackendRouterService
 @inject IAuthenticationService AuthenticationService
+@inject UtilsManager UtilManager
 
 
 <div class="col-12 area1 pb-3 px-0">
 
-@if((RecentRoutes != null && RecentRoutes.Count > 0) && (breadcrumb != null && breadcrumb.Count > 0))
+@if(breadcrumb != null && breadcrumb.Count > 0)
 {
     <div class="dropdown position-absolute">
-        <button class="btn btn-sm layout_btn_standar-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Rutas recientes">
+        <button class="btn btn-sm layout_btn_standar-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="@TooltipRecentMenu"  @onclick="@RecentMenuClick">
             <i class="fa-solid fa-clock-rotate-left"></i>
         </button>
         <div class="dropdown-menu whcm_recent_box" aria-labelledby="dropdownMenuButton">
@@ -122,17 +123,21 @@
     private List<E00061_Menu> breadcrumb = new List<E00061_Menu>();
     
     private Dictionary<int, List<E00061_Menu>> RecentRoutes {get; set;} = new Dictionary<int, List<E00061_Menu>>();
+
+    private string TooltipRecentMenu { get; set; } = "";
     
 
     protected override async Task OnInitializedAsync()
     {
-        RecentRoutes = await GetRecentMenus();
+        //RecentRoutes = await GetRecentMenus();
 
         LayoutService.PropertyChanged += LayoutService_PropertyChanged;
         NavigationManager.LocationChanged += OnLocationChanged;
         MenuService.MenuLoaded += OnMenuLoaded;
         //SetBreadCrum(NavigationManager.Uri);
         base.OnInitialized();
+
+        TooltipRecentMenu = await UtilManager.GetResource("Custom.SDKBreadcrumb.ButtonRecents.Tooltip");
     }
 
     private void OnMenuLoaded(object sender, EventArgs e)
@@ -140,6 +145,10 @@
         StateHasChanged();
     }
 
+    private async Task RecentMenuClick()
+    {
+        RecentRoutes = await GetRecentMenus();
+    }
     private async Task<Dictionary<int, List<E00061_Menu>>> GetRecentMenus()
     {
         var _recentRoutes  = new Dictionary<int, List<E00061_Menu>>();
