@@ -91,7 +91,9 @@
                                                 }
                                             </p>
                                             <p class="font_color_text m-0">
-                                                @string.Join(", ", submenu.SubMenus.Select(x => x.CurrentText))
+                                                @string.Join(", ", submenu.SubMenus
+                                                            .Where(x => !string.IsNullOrEmpty(x.CurrentText))
+                                                            .Select(x => x.CurrentText))
                      
                                             </p>
                                             <div class="panel_button_back" style="background: #13849e;"></div>
@@ -150,9 +152,9 @@
                                                 }
                                             </p>
                                             <p class="font_color_text m-0">
-                                        @string.Join(" , ", submenu.SubMenus
-                                                    .Where(x => !string.IsNullOrEmpty(x.CurrentText))
-                                                    .Select(x => x.CurrentText))
+                                                @string.Join(" , ", submenu.SubMenus
+                                                            .Where(x => !string.IsNullOrEmpty(x.CurrentText))
+                                                            .Select(x => x.CurrentText))
                                             </p>
                                             <div class="panel_button_back" style="background: #13849e;"></div>
                                         </div>
