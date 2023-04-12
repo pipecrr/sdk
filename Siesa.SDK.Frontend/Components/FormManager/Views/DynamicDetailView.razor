@@ -4,14 +4,13 @@
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
 @if (ErrorMsg != null && ErrorMsg != "")
 {
-    <text>@ErrorMsg</text>
+    <ErrorsWindow ErrorsMsg="@ErrorList" />
 }
 else if (BusinessObj.BaseObj == null)
 {
     <text>Loading...</text>
 }
-else if (BusinessObj.BaseObj.Rowid != 0)
-{
+else if (BusinessObj.BaseObj.Rowid != 0){
     <DynamicComponent Type="@(typeof(Views.DetailView))" Parameters="@parameters" />
 }
 

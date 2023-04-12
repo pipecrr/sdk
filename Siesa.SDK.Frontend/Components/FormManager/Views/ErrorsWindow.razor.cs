@@ -13,15 +13,17 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Inject] public IAuthenticationService AuthenticationService { get; set; }
         [Inject] public UtilsManager UtilsManager { get; set; }
         [Parameter] public EditContext EditFormContext { get; set; }
-        [Parameter] public string ErrorMsg { get; set; }
+        [Parameter] public List<string> ErrorsMsg { get; set; }
         private bool _detailVisible = false;
         private int _errorCount = 0;
         private string ClassError = "sdk_error_log_box_sup";
 
         private List<SDKErrorsWindowDTO> _errors = new List<SDKErrorsWindowDTO>();
 
-        private List<string> _errorgGeneral = new List<string>();
+        private List<string> _generalErrors = new List<string>();
         protected override async Task OnParametersSetAsync(){
+            _errorCount = 0;
+            _generalErrors = new List<string>();
             if (EditFormContext != null){
                 _errors = new List<SDKErrorsWindowDTO>();
                 _errorCount = EditFormContext.GetValidationMessages().Count();
@@ -45,8 +47,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     });
                 }
             }
-            if(!string.IsNullOrEmpty(ErrorMsg)) {
-                _errorCount += 1;
+            if(ErrorsMsg.Count() > 0) {
+                _errorCount += ErrorsMsg.Count();
+                foreach (var err in ErrorsMsg){
+                    if(err.StartsWith("Exception: ")){
+                        _generalErrors.Add(err.Replace("Exception: ", ""));
+                    }else{
+                        var errorMsg = await UtilsManager.GetResource(err);
+                        _generalErrors.Add(errorMsg);
+                    }
+                }
             }
             if (_errorCount > 0){
                 ClassError = "sdk_error_log_box_sup sdk_error_log_show";

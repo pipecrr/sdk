@@ -7,13 +7,10 @@
 @if (Loading == true)
 {
     <ResourceViewer ResourceTag="Custom.Generic.Loading" />
-} else if(!string.IsNullOrEmpty(ErrorMsg))
-{
-    <ErrorsContainer ErrorMsg="@ErrorMsg"/>
 }
 else if (Panels == null || Panels.Count <= 0)
 {
-    <ResourceViewer ResourceTag="Custom.Formview.NotDefinition" />
+    <ErrorsWindow EditFormContext="@EditFormContext" ErrorsMsg="@ErrorList"/>
 }
 else if (BusinessObj.BaseObj.Rowid != 0)
 {
@@ -21,8 +18,8 @@ else if (BusinessObj.BaseObj.Rowid != 0)
         <h5 class="d-flex justify-content-center"><ResourceViewer ResourceTag="Action.Edit" /> @BusinessObj</h5>
         <hr />
     }
-    <CascadingValue Value="@this">
-        <ErrorsContainer ErrorMsg="@ErrorMsg" EditFormContext="@EditFormContext"/>
+    <CascadingValue Value="@this">        
+        <ErrorsWindow EditFormContext="@EditFormContext" ErrorsMsg="@ErrorList"/>
     <EditForm id="@FormID"
               OnValidSubmit="@HandleValidSubmit"
               OnInvalidSubmit="@HandleInvalidSubmit"

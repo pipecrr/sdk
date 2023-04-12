@@ -59,8 +59,7 @@
                     {
                         <NavMenu ShowMenu="@showNavMenu" />
                     }
-                    <ErrorBoundary @ref="errorBoundary">
-                        <ChildContent> 
+                     
                             <aside class="@GetCssAside()">
                                 <div
                                     class="@GetCssBody()">
@@ -75,17 +74,23 @@
                                                 <TopBar />
                                             }
                                             <div class="@GetCssInternalArea()">
-                                                @Body
+                                                <ErrorBoundary @ref="errorBoundary">
+                                                    <ChildContent>
+                                                        @Body
+                                                    </ChildContent> 
+                                                    <ErrorContent Context="Exception" >
+                                                        @{
+                                                            List<string> errors = new List<string>();
+                                                            errors.Add("Exception: " + Exception.StackTrace);
+                                                        }
+                                                        <ErrorsWindow ErrorsMsg="@errors" />
+                                                    </ErrorContent>
+                                                </ErrorBoundary>
                                             </div>
                                         </div>
                                     </CascadingValue>
                                 </div>
-                            </aside>
-                        </ChildContent> 
-                        <ErrorContent Context="Exception" >
-                            <SDKError CurrentException="@Exception" Error="@errorBoundary" />
-                        </ErrorContent>
-                    </ErrorBoundary>
+                            </aside>                        
                 </div>
             </Template>
         </DxGridLayoutItem>

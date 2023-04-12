@@ -11,16 +11,16 @@
 {
     <ResourceViewer ResourceTag="Custom.Generic.Loading" />
 }
-else if(!string.IsNullOrEmpty(ErrorMsg))
-{
-    <ErrorsContainer ErrorMsg="@ErrorMsg"/>
-}
 else if (Panels == null || Panels.Count <= 0)
 {
-    <ResourceViewer ResourceTag="Custom.Formview.NotDefinition" />
+    @* <ResourceViewer ResourceTag="Custom.Formview.NotDefinition" /> *@
+    <ErrorsWindow ErrorsMsg="@ErrorList"/>
 }
 else if (ModelLoaded == true)
 {
+    if(!string.IsNullOrEmpty(ErrorMsg)){
+        <ErrorsWindow ErrorsMsg="@ErrorList"/>
+    }
         @if(IsSubpanel && ShowTitle){
             <h5 class="d-flex justify-content-center">@BusinessObj</h5>
             <hr />
@@ -53,10 +53,7 @@ else if (ModelLoaded == true)
         {
              <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" />
         }
-        @if(!string.IsNullOrEmpty(ErrorMsg))
-        {
-            <label>@((MarkupString)ErrorMsg)</label>
-        }
+        
     @if(IsSubpanel && ShowButtons){
         <div class="buttons-container">
             @foreach (var btn in FormViewModel.Buttons)
@@ -67,7 +64,7 @@ else if (ModelLoaded == true)
                 <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" Click="@((args) => dialogService.Close(false))" ResourceTag="Action.Close"/>
             }
             @if (ShowDeleteButton){
-                <SDKButton RenderStyle="SDKButtonRenderStyle.Danger" Click="DeleteBusiness" ResourceTag="Action.Delete" />                
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Danger" Click="DeleteBusiness" ResourceTag="Action.Delete" />
             }
         </div>
     }
