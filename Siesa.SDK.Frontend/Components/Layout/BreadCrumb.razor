@@ -12,6 +12,49 @@
 
 
 <div class="col-12 area1 pb-3 px-0">
+
+@if(RecentRoutes != null && RecentRoutes.Count > 0)
+{
+    <div class="dropdown position-absolute">
+        <button class="btn btn-sm layout_btn_standar-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Rutas recientes">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+        </button>
+        <div class="dropdown-menu whcm_recent_box" aria-labelledby="dropdownMenuButton">
+            <div class="pt-3 pl-3 pr-3 pb-0 text-center">
+                <h6 class="font-weight-bold m-0 border-bottom pb-3">
+                    <span>
+                        <ResourceViewer ResourceTag="Custom.SDKBreadcrumb.ButtonRecents" RowidCulture=@AuthenticationService.GetRoiwdCulture/>
+                    </span>
+                </h6>
+            </div>
+            <div class="whcm_recent_list">
+                @foreach (var recentMenu in RecentRoutes)
+                {
+                    <a class="dropdown-item border-bottom py-3 px-0" href="#">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="position-relative pr-3">
+                                <div class="d-flex justify-content-center align-items-center whcm_dot font_color_primary">
+                                    <i class="fa-solid fa-people-arrows"></i>
+                                </div>
+                                <div class="d-flex justify-content-start align-items-end flex-wrap margenes_box pl-4 pt-1">
+                                    @foreach (var menu in recentMenu.Value)
+                                    {
+                                        <div class="@((recentMenu.Value.Last()) ? "rectangle_borders_active" : "rectangle_borders") d-flex align-items-center">
+                                            <p class="font_size_075 p-0 m-0"> <ResourceViewer RowidResource="@menu.RowidResource" /></p>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="pl-2 py-2 border-left">
+                                <i class="fa-solid fa-arrow-up-right-from-square pointer"></i>
+                            </div>
+                        </div>
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+}
     <nav class="" aria-label="breadcrumb">
         @if(breadcrumb != null && breadcrumb.Count > 0)
         {
@@ -65,9 +108,14 @@
 
     private E00061_Menu _selectedMenu;
     private List<E00061_Menu> breadcrumb = new List<E00061_Menu>();
+    
+    private Dictionary<int, List<E00061_Menu>> RecentRoutes {get; set;} = new Dictionary<int, List<E00061_Menu>>();
+    
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
+        RecentRoutes = await GetRecentMenus();
+
         LayoutService.PropertyChanged += LayoutService_PropertyChanged;
         NavigationManager.LocationChanged += OnLocationChanged;
         MenuService.MenuLoaded += OnMenuLoaded;
@@ -80,6 +128,62 @@
         StateHasChanged();
     }
 
+    private async Task<Dictionary<int, List<E00061_Menu>>> GetRecentMenus()
+    {
+        var _recentRoutes  = new Dictionary<int, List<E00061_Menu>>();
+
+        var BLRecentMenu = BackendRouterService.GetSDKBusinessModel("BLRecentMenu", AuthenticationService);
+        if(BLRecentMenu != null)
+        {
+            var result = await BLRecentMenu.Call("GetRecentMenus");
+
+            if(result.Success)
+            {
+               var RecentMenus = result.Data;
+                
+                foreach (var Recent in RecentMenus)
+                {
+                    List<E00061_Menu> auxRecentMenu = new List<E00061_Menu>();
+                    auxRecentMenu.Add(Recent.Menu);
+                    OrderRecentMenu(ref auxRecentMenu);
+
+                    if(auxRecentMenu.Any())
+                    {
+                        var Rowid = auxRecentMenu.Last().Rowid;
+
+                        if(!(_recentRoutes.ContainsKey(Rowid)))
+                        {
+                            _recentRoutes.Add(Rowid, auxRecentMenu);
+                        }
+                    }
+                }
+            }
+        }
+
+        return _recentRoutes;
+    }
+    private void OrderRecentMenu(ref List<E00061_Menu> FinalList, E00061_Menu Actualmenu = null){
+        
+                if(Actualmenu != null){
+                    if (Actualmenu.MenuParent != null)
+                    {
+                        var Parent = Actualmenu.MenuParent;
+                        FinalList.Add(Parent);
+                        OrderRecentMenu(ref FinalList, Parent);
+                    }else
+                    {
+                        if(!(FinalList.Contains(Actualmenu)))
+                        {
+                            FinalList.Add(Actualmenu);
+                        }
+                        FinalList.Reverse();  
+                    }
+                }else
+                {
+                    var FisrtMenu = FinalList.First();
+                    OrderRecentMenu(ref FinalList, FisrtMenu);
+                }
+    }
     private string GetCssBreadCrumItem(int i)
     {
         if(i == breadcrumb.Count - 1)
