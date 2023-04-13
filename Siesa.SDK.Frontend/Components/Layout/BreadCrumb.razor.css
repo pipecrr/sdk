@@ -67,6 +67,7 @@
 
 /*Estilos Boton Recientes*/
 .whcm_recent_box{
+    position: absolute;
     min-width: 450px !important;
     padding: 0rem !important;
     font-size: 0.875rem !important;
@@ -79,6 +80,22 @@
     left: 0 !important;
     transform: translate3d(0px, 0px, 0px) !important;
     z-index: 3 !important;
+}
+.sdk_recent_box
+{
+    display: block;
+    width: 100%;
+    clear: both;
+    color: var(--color_text);
+    text-align: inherit;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+    text-decoration: none;
+}
+.sdk_recent_box:hover
+{
+    background-color: var(--color_back_2);
 }
 .whcm_recent_box::before {
     content: "";
