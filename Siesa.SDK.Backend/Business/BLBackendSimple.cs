@@ -84,7 +84,7 @@ namespace Siesa.SDK.Business
             return null;
         }
 
-        public Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<BaseSDK<int>> queryFilter = null, bool includeCount = false)
+        public Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<BaseSDK<int>> queryFilter = null, bool includeCount = false, bool includeAttachments = true)
         {
             return null;
         }
@@ -186,6 +186,7 @@ namespace Siesa.SDK.Business
         public T BaseObj { get; set; }
 
         private string[] _relatedProperties = null;
+        private string[] _relatedAttachmentsType = null;
         protected SDKContext ContextMetadata;
         public List<string> RelFieldsToSave { get; set; } = new List<string>();
         private bool CanCreate { get; set; } = true;
@@ -213,6 +214,7 @@ namespace Siesa.SDK.Business
                     && p.Name != "RowVersion"
                     && p.GetCustomAttribute(typeof(NotMappedAttribute)) == null
             ).Select(p => p.Name).ToArray();
+            _relatedAttachmentsType = BaseObj.GetType().GetProperties().Where(p => p.PropertyType == typeof(E00271_AttachmentDetail)).Select(p => p.Name).ToArray();
             unique_indexes = BaseObj.GetType()
                 .GetCustomAttributes(typeof(Microsoft.EntityFrameworkCore.IndexAttribute), false)
                 .Where(x =>
@@ -656,7 +658,7 @@ namespace Siesa.SDK.Business
             if (top.HasValue){
                 take = top.Value;
             }
-            return this.GetData(0, take, filter, orderBy, filterDelegate);
+            return this.GetData(0, take, filter, orderBy, filterDelegate, includeAttachments: false);
         }
 
         [SDKExposedMethod]
@@ -681,7 +683,7 @@ namespace Siesa.SDK.Business
                     };
         }
 
-        public virtual Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null, bool includeCount = false)
+        public virtual Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null, bool includeCount = false, bool includeAttachments = true)
         {
             this._logger.LogInformation($"Get Data {this.GetType().Name}");
             var result = new Siesa.SDK.Shared.Business.LoadResult();
@@ -691,6 +693,10 @@ namespace Siesa.SDK.Business
                 var query = context.Set<T>().AsQueryable();
                 foreach (var relatedProperty in _relatedProperties)
                 {
+                    if(!includeAttachments && _relatedAttachmentsType != null && _relatedAttachmentsType.Contains(relatedProperty))
+                    {
+                        continue;
+                    }
                     query = query.Include(relatedProperty);
                 }
 

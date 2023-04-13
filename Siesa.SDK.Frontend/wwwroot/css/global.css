@@ -1147,3 +1147,23 @@ div.dxbs-btn-group.dxbs-input-group-append>.btn.dx-btn:not(.dxbs-editor-clear-bt
     min-height: 2rem !important;
     line-height: 1rem !important;
 }
+
+.object-fit-contain {
+    object-fit: contain;
+}
+
+.object-fit-cover {
+    object-fit: cover;
+}
+
+.object-fit-fill {
+    object-fit: fill;
+}
+
+.object-fit-none {
+    object-fit: none;
+}
+
+.object-fit-scale-down {
+    object-fit: scale-down;
+}
