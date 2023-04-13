@@ -134,10 +134,11 @@ namespace Siesa.SDK.Shared.Backend
 
         }
 
-        public async Task<Protos.LoadResult> GetDataBusinessObj(string business_name, int? skip, int? take, string filter = "", string orderBy = "", bool includeCount = false)
+        public async Task<Protos.LoadResult> GetDataBusinessObj(string business_name, int? skip, int? take, string filter = "", string orderBy = "", bool includeCount = false,  List<string> extraFields = null)
         {
             var channel = GrpcUtils.GetChannel(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
+            List<string> fields = extraFields ?? new List<string>();
             var request = new Protos.GetDataBusinessObjRequest
             {
                 BusinessName = business_name,
@@ -147,7 +148,8 @@ namespace Siesa.SDK.Shared.Backend
                 OrderBy = orderBy,
                 CurrentUserToken = (AuthenticationService != null && AuthenticationService.UserToken != null ? AuthenticationService.UserToken : ""),
                 CurrentUserRowid = (AuthenticationService != null && AuthenticationService.User != null ? AuthenticationService.User.Rowid: 0),
-                IncludeCount = includeCount
+                IncludeCount = includeCount,
+                ExtraFields = {fields}
             };
             try
             {
