@@ -254,8 +254,6 @@ namespace Siesa.SDK.Frontend.Services
                 }
             }
 
-
-
             return LogoUrl;
         }
 
