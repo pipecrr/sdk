@@ -265,7 +265,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
                 }
                 ListViewModel = JsonConvert.DeserializeObject<ListViewModel>(metadata);
-                _extraFields.Clear();
+                
                 if (ListViewModel.ExtraFields.Count > 0)
                 {   
                     var defaultFields = ListViewModel.Fields.Select(f => f.Name).ToList();
@@ -726,6 +726,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             guidListView = Guid.NewGuid().ToString();
             Loading = false;
             ErrorMsg = "";
+            _extraFields = new List<string>();
             InitView();
             if(ShowSearchForm && HasSearchViewdef){
                 initNullable();
