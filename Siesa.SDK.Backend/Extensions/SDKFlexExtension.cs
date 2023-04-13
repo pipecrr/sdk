@@ -53,38 +53,43 @@ namespace Siesa.SDK.Backend.Extensions
             List<SDKFlexFilters> generalFilters = new List<SDKFlexFilters>();
             List<SDKFlexFilters> relatedToManyFilters = new List<SDKFlexFilters>();
             List<SDKFlexFilters> dynamicFilters = new List<SDKFlexFilters>();
-
-            if(filters.Count > 0){
-                foreach (SDKFlexFilters filter in filters){
-                    var filterPath = filter.path.Split("::");
-                    if(filterPath.Length == 1){
-                        if(filter.is_dynamic_field){
-                            dynamicFilters.Add(filter);
+            try{
+                if(filters.Count > 0){
+                    foreach (SDKFlexFilters filter in filters){
+                        var filterPath = filter.path.Split("::");
+                        if(filterPath.Length == 1){
+                            if(filter.is_dynamic_field){
+                                dynamicFilters.Add(filter);
+                            }else{
+                                generalFilters.Add(filter);
+                            }
                         }else{
-                            generalFilters.Add(filter);
-                        }
-                    }else{
-                        var entityTypeTmp = entityType;
-                        var isFilterToMany = false;
-                        for (int j = 1; j < filterPath.Length; j++){
-                            var property = entityTypeTmp.GetProperty(filterPath[j]);
-                            var propertyType = property.PropertyType;
-                            var nameEntityTmp = propertyType.FullName;
-                            if(propertyType.IsGenericType && property.GetGetMethod().IsVirtual){
-                                if(propertyType.GetGenericTypeDefinition() == typeof (ICollection<>)){
-                                    nameEntityTmp = propertyType.GetGenericArguments().Single().FullName;
-                                    isFilterToMany = true;
-                                    break;
+                            var entityTypeTmp = entityType;
+                            var isFilterToMany = false;
+                            for (int j = 1; j < filterPath.Length; j++){
+                                var property = entityTypeTmp.GetProperty(filterPath[j]);
+                                var propertyType = property.PropertyType;
+                                var nameEntityTmp = propertyType.FullName;
+                                if(propertyType.IsGenericType && property.GetGetMethod().IsVirtual){
+                                    if(propertyType.GetGenericTypeDefinition() == typeof (ICollection<>)){
+                                        nameEntityTmp = propertyType.GetGenericArguments().Single().FullName;
+                                        isFilterToMany = true;
+                                        break;
+                                    }
                                 }
                             }
-                        }
-                        if(isFilterToMany){
-                            relatedToManyFilters.Add(filter);
-                        }else{
-                            generalFilters.Add(filter);
+                            if(isFilterToMany){
+                                relatedToManyFilters.Add(filter);
+                            }else{
+                                generalFilters.Add(filter);
+                            }
                         }
                     }
                 }
+            }catch(Exception e){
+                List<string> errors = new List<string>();
+                errors.Add(e.Message + e.StackTrace);
+                return new BadRequestResult<dynamic> {Success = false, Errors = errors};
             }
 
             List<SDKFlexColumn> groups = requestData.groups;
@@ -340,7 +345,7 @@ namespace Siesa.SDK.Backend.Extensions
             catch (Exception e)
             {
                 List<string> errors = new List<string>();
-                errors.Add(e.Message);
+                errors.Add(e.Message + e.StackTrace);
                 
                 return new BadRequestResult<dynamic> {Success = false, Errors = errors};
             }

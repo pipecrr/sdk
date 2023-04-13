@@ -387,6 +387,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
                 var existeUniqueIndexValidation = NotificationService.Messages.Where(x => x.Summary == "Custom.Generic.UniqueIndexValidation").Any();
                 if(!existeUniqueIndexValidation){
                     NotificationService.ShowError("Custom.Generic.UniqueIndexValidation");
+                    ErrorList.Add("Custom.Generic.UniqueIndexValidation");
                 }
                 return;
             }
@@ -506,6 +507,12 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
             //ErrorMsg = @"Form data is invalid";
             FormHasErrors = true;
             NotificationService.ShowError("Custom.Generic.FormError");
+            var existeUniqueIndexValidation = NotificationService.Messages.Where(x => x.Summary == "Custom.Generic.UniqueIndexValidation").Any();
+            if(existeUniqueIndexValidation){
+                ErrorList.Add("Custom.Generic.UniqueIndexValidation");
+            }else{
+                ErrorList.Clear();
+            }
         }
         protected void GoToList()
         {

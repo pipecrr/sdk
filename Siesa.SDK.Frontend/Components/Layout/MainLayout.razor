@@ -157,6 +157,8 @@
 
     protected override async Task OnParametersSetAsync(){
         errorBoundary?.Recover();
+        FieldErrors = new List<string>();
+        GeneralErrors = new List<string>();
         base.OnParametersSetAsync();
     }
 
@@ -164,7 +166,9 @@
     {
         IsDefaultArea = true;
         base.OnInitializedAsync();
-        errorBoundary = new ErrorBoundary();        
+        errorBoundary = new ErrorBoundary();
+        FieldErrors = new List<string>();
+        GeneralErrors = new List<string>();
         InitSDKJS();
     }
 
