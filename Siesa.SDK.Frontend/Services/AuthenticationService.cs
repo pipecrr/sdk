@@ -74,7 +74,7 @@ namespace Siesa.SDK.Frontend.Services
             UserToken = await _localStorageService.GetItemAsync<string>("usertoken");
             CustomRowidCulture = await _localStorageService.GetItemAsync<short>("customrowidculture");
             _selectedSuite = await _localStorageService.GetItemAsync<int>("selectedSuite");
-            _rowIdCompanyGroup = await _localStorageService.GetItemAsync<short>("rowIdCompanyGroup");
+            //_rowIdCompanyGroup = await _localStorageService.GetItemAsync<short>("rowIdCompanyGroup");
             var selectedConnection = await _localStorageService.GetItemAsync<string>("selectedConnection");
             try
             {
@@ -109,6 +109,14 @@ namespace Siesa.SDK.Frontend.Services
 
             string sessionId = IsUpdateSession ? _contextAccesor.HttpContext.Request.Cookies["sdksession"].ToString() : "";
 
+            short LastCompanyGroupSelected = await _localStorageService.GetItemAsync<short>("rowidCompanyGroup");
+
+            if(LastCompanyGroupSelected > 0 && LastCompanyGroupSelected != rowIdCompanyGroup) 
+            {
+                rowIdCompanyGroup = LastCompanyGroupSelected;
+            }
+
+            
             var loginRequest = await BLuser.Call("SignInSession", new Dictionary<string, dynamic> {
                 {"username", username},
                 {"password", password},
@@ -241,13 +249,14 @@ namespace Siesa.SDK.Frontend.Services
                     {
                         LogoUrl = "_content/Siesa.SDK.Frontend/assets/img/LogoSiesaNoSub.svg";
                     }
-
+                    
                     await _localStorageService.SetItemAsync("imageCompanyGroup", LogoUrl);
                 }
-            }  
+            }
+
+
 
             return LogoUrl;
-
         }
 
         public string GetConnectionStyle()
@@ -288,26 +297,11 @@ namespace Siesa.SDK.Frontend.Services
             }
         }
 
-        private async Task GetCustomRowidCompanyGroup()
-        {
-            _rowIdCompanyGroup = await _localStorageService.GetItemAsync<short>("rowidCompanyGroup");
-            if (_rowIdCompanyGroup == null)
-            {
-                _rowIdCompanyGroup = 0;
-            }
-        }
-
         public short GetRowidCompanyGroup()
         {
-            //GetCustomRowidCompanyGroup().Wait();
-
             short rowid = 0;
-            if (_rowIdCompanyGroup > 0)
-            {
-                rowid = _rowIdCompanyGroup;
 
-            }
-            else if (this.User != null)
+            if (this.User != null)
             {
              rowid = this.User.RowidCompanyGroup;
             }

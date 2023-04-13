@@ -201,18 +201,17 @@
         </div>
     </div>
 
-    <div class="login_loading @GetCssLoding()">
-        <div>
-            <div class="text-center fa-4x font_color_primary_light mb-4">
-                <i class="fas fa-spinner fa-pulse"></i>
-            </div>
-            <div class="text-center">
-                <img src="@LogoUrl" height="82px" alt="logo_siesa">
+        <div class="login_loading @GetCssLoding()">
+            <div>
+                <div class="text-center fa-4x font_color_primary_light mb-4">
+                    <i class="fas fa-spinner fa-pulse"></i>
+                </div>
+                <div class="text-center">
+                    <img src="@LogoUrl" height="82px" alt="logo_siesa">
+                </div>
             </div>
         </div>
-    </div>
-
-
+        
 </div>
 
 <DxDropDown @bind-IsOpen="@IsOpen" PositionMode="DropDownPositionMode.Bottom" PositionTarget="#lang"
@@ -277,6 +276,7 @@
             NavigationManager.NavigateTo("");
             return;
         }
+        
         cultureDefault();
         await InitLogin();        
     }
@@ -482,19 +482,28 @@
             };        
     }
 
-    void OnChangeConnection(ChangeEventArgs e)
+    private async Task OnChangeConnection(ChangeEventArgs e)
     {
         try
         {
-           var rowidConnection = Convert.ToInt16(e.Value.ToString());
-            SelectedConnection = ConnectionList.FirstOrDefault(x => x.Rowid == rowidConnection); 
+            var rowidConnection = Convert.ToInt16(e.Value.ToString());
+            SelectedConnection = ConnectionList.FirstOrDefault(x => x.Rowid == rowidConnection);
+
+            if(SelectedConnection != null)
+            {
+                await localStorageService.RemoveItemAsync("rowidCompanyGroup");
+                await localStorageService.RemoveItemAsync("imageCompanyGroup");
+
+                LogoUrl = await AuthenticationService.GetConnectionLogo();
+            } 
+
         }
         catch (System.Exception)
         {
             
             SelectedConnection = new SDKDbConnection();
         }
-        AuthenticationService.SetSelectedConnection(SelectedConnection);
+         _ = AuthenticationService.SetSelectedConnection(SelectedConnection);
         
         StateHasChanged();
     }
