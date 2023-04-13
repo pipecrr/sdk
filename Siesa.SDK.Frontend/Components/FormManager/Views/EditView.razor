@@ -10,7 +10,7 @@
 }
 else if (Panels == null || Panels.Count <= 0)
 {
-    <ErrorsWindow EditFormContext="@EditFormContext" ErrorsMsg="@ErrorList"/>
+    <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList"/>
 }
 else if (BusinessObj.BaseObj.Rowid != 0)
 {
@@ -19,7 +19,7 @@ else if (BusinessObj.BaseObj.Rowid != 0)
         <hr />
     }
     <CascadingValue Value="@this">        
-        <ErrorsWindow EditFormContext="@EditFormContext" ErrorsMsg="@ErrorList"/>
+        <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList"/>
     <EditForm id="@FormID"
               OnValidSubmit="@HandleValidSubmit"
               OnInvalidSubmit="@HandleInvalidSubmit"

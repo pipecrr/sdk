@@ -339,7 +339,10 @@ namespace Siesa.SDK.Backend.Extensions
             }
             catch (Exception e)
             {
-                return new ActionResult<dynamic>() { Success = false, Errors = new List<string>() { "Error al crear la consulta" } };
+                List<string> errors = new List<string>();
+                errors.Add(e.Message);
+                
+                return new BadRequestResult<dynamic> {Success = false, Errors = errors};
             }
 
             return null;

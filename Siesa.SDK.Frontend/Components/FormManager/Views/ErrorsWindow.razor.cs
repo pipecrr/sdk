@@ -13,7 +13,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Inject] public IAuthenticationService AuthenticationService { get; set; }
         [Inject] public UtilsManager UtilsManager { get; set; }
         [Parameter] public EditContext EditFormContext { get; set; }
-        [Parameter] public List<string> ErrorsMsg { get; set; }
+        [Parameter] public List<string> GeneralErrors { get; set; }
+        [Parameter] public List<string> ErrorMsg { get; set; }
         private bool _detailVisible = false;
         private int _errorCount = 0;
         private string ClassError = "sdk_error_log_box_sup";
@@ -24,8 +25,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         protected override async Task OnParametersSetAsync(){
             _errorCount = 0;
             _generalErrors = new List<string>();
+            _errors = new List<SDKErrorsWindowDTO>();
             if (EditFormContext != null){
-                _errors = new List<SDKErrorsWindowDTO>();
                 _errorCount = EditFormContext.GetValidationMessages().Count();
                 var groupErrors = EditFormContext.GetValidationMessages().GroupBy(x => x.Split("//")[1]);
                 foreach (var item in groupErrors){
@@ -47,9 +48,31 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     });
                 }
             }
-            if(ErrorsMsg.Count() > 0) {
-                _errorCount += ErrorsMsg.Count();
-                foreach (var err in ErrorsMsg){
+            if(ErrorMsg?.Count() > 0) {
+                _errorCount += ErrorMsg.Count();
+                var groupErrors = ErrorMsg.GroupBy(x => x.Split("//")[1]);
+                foreach (var item in groupErrors){
+                    var field = UtilsManager.GetResource(item.Key).Result;
+                    var listErrors = item.Select(x => {
+                        var errorTag = x.Split("//");
+                        var resourceTag = errorTag[0];
+                        var resourceTagValue = UtilsManager.GetResource(resourceTag).Result;
+                        var errorSkip = errorTag.Skip(1).ToArray();
+                        if(errorSkip[0].Equals(item.Key)){
+                            errorSkip[0] = field;
+                        }
+                        string errorFormat = errorFormat = string.Format(resourceTagValue, errorSkip);
+                        return errorFormat;
+                    }).ToList();
+                    _errors.Add(new SDKErrorsWindowDTO(){
+                        Field = field,
+                        Errors = listErrors
+                    });
+                }
+            }
+            if(GeneralErrors?.Count() > 0) {
+                _errorCount += GeneralErrors.Count();
+                foreach (var err in GeneralErrors){
                     if(err.StartsWith("Exception: ")){
                         _generalErrors.Add(err.Replace("Exception: ", ""));
                     }else{

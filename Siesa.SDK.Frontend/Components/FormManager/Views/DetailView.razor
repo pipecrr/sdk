@@ -14,12 +14,12 @@
 else if (Panels == null || Panels.Count <= 0)
 {
     @* <ResourceViewer ResourceTag="Custom.Formview.NotDefinition" /> *@
-    <ErrorsWindow ErrorsMsg="@ErrorList"/>
+    <ErrorsWindow GeneralErrors="@ErrorList"/>
 }
 else if (ModelLoaded == true)
 {
     if(!string.IsNullOrEmpty(ErrorMsg)){
-        <ErrorsWindow ErrorsMsg="@ErrorList"/>
+        <ErrorsWindow GeneralErrors="@ErrorList"/>
     }
         @if(IsSubpanel && ShowTitle){
             <h5 class="d-flex justify-content-center">@BusinessObj</h5>

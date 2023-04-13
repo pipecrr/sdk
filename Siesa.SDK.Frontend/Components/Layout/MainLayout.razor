@@ -77,13 +77,17 @@
                                                 <ErrorBoundary @ref="errorBoundary">
                                                     <ChildContent>
                                                         @Body
+                                                        @if(GeneralErrors?.Count > 0 || FieldErrors?.Count > 0)
+                                                        {
+                                                            <ErrorsWindow GeneralErrors="@GeneralErrors" ErrorMsg="FieldErrors" />
+                                                        }
                                                     </ChildContent> 
                                                     <ErrorContent Context="Exception" >
                                                         @{
                                                             List<string> errors = new List<string>();
                                                             errors.Add("Exception: " + Exception.StackTrace);
                                                         }
-                                                        <ErrorsWindow ErrorsMsg="@errors" />
+                                                        <ErrorsWindow GeneralErrors="@errors" />
                                                     </ErrorContent>
                                                 </ErrorBoundary>
                                             </div>
@@ -118,6 +122,8 @@
 
     private bool isMaximized = false;
 
+    private List<string> GeneralErrors = new List<string>();
+    private List<string> FieldErrors = new List<string>();
     public async Task ToogleMaximize()
     {
         isMaximized = !isMaximized;
@@ -147,6 +153,11 @@
         {
             StateHasChanged();
         }
+    }
+
+    protected override async Task OnParametersSetAsync(){
+        errorBoundary?.Recover();
+        base.OnParametersSetAsync();
     }
 
     protected override async Task OnInitializedAsync()
@@ -307,18 +318,43 @@
         return "col-12 px-0 py-3";
     }
 
-
-    
     [JSInvokable]
     public async Task ShowError(string msg, object?[] variables = null){
-        await SDKNotificationService.ShowError(msg, variables);
+        await SDKNotificationService.ShowError(msg, variables);        
+        StateHasChanged();
     }
 
     [JSInvokable]
     public async Task ShowSuccess(string msg, object?[] variables = null){
+        FieldErrors.Clear();
+        GeneralErrors.Clear();
+        StateHasChanged();
         await SDKNotificationService.ShowSuccess(msg, variables);
     }
 
+    [JSInvokable]
+    public async Task ErrorsFlex(object?[] errors){
+        foreach (var error in errors){
+            var err = error.ToString();
+            if(err.Contains("//")){
+                if(!FieldErrors.Contains(err)){
+                    FieldErrors.Add(err);
+                }
+            }else{
+                if(!GeneralErrors.Contains(err)){
+                    GeneralErrors.Add(err);
+                }
+            }
+        }
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public async Task SuccessFlex(){
+        FieldErrors.Clear();
+        GeneralErrors.Clear();
+        StateHasChanged();
+    }
 
     [JSInvokable]
     public void NavigateTo(string url)
@@ -326,3 +362,4 @@
         NavigationService.NavigateTo(url);
     }
 }
+

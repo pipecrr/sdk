@@ -21,7 +21,7 @@
 else if (Panels == null || Panels.Count <= 0)
 {
     @* <ResourceViewer ResourceTag="Custom.Formview.NotDefinition" /> *@
-    <ErrorsWindow EditFormContext="@EditFormContext" ErrorsMsg="@ErrorList"/>
+    <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList"/>
 } else if (BusinessObj.BaseObj != null)
 {
     @if(IsSubpanel && ShowTitle){        
@@ -30,7 +30,7 @@ else if (Panels == null || Panels.Count <= 0)
         <hr />
     }
     <CascadingValue Value="@this">
-       <ErrorsWindow EditFormContext="@EditFormContext" ErrorsMsg="@ErrorList"/>
+       <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList"/>
     <EditForm id="@FormID"
               OnValidSubmit="@HandleValidSubmit"
               OnInvalidSubmit="@HandleInvalidSubmit"
