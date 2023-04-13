@@ -71,7 +71,7 @@ function preloadFlex(){
     var search = window.location.search;
     var params = search.substring(1,search.length).split('&');
     var sdk_debug = params.find(x => x == 'sdk_debug=1');
-    sdk_debug = true;
+    //sdk_debug = true;
     if(sdk_debug){
         loadScript('/_content/Siesa.SDK.Frontend/flex/FlexComponent.debug.js');
         loadScript("http://127.0.0.1:3000/static/js/bundle.js");
@@ -79,13 +79,13 @@ function preloadFlex(){
         loadScript("http://127.0.0.1:3000/static/js/1.chunk.js");
         loadScript("http://127.0.0.1:3000/static/js/main.chunk.js");
     }else{
-        loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/2.css?v=20230331');
-        loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/main.css?v=20230331');
+        loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/2.css?v=20230413');
+        loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/main.css?v=20230413');
 
-        loadScript('/_content/Siesa.SDK.Frontend/flex/FlexComponent.js?v=20230331');
-        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/2.chunk.js?v=20230331");
-        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/main.chunk.js?v=20230331");
-        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/runtime-main.js?v=20230331");
+        loadScript('/_content/Siesa.SDK.Frontend/flex/FlexComponent.js?v=20230413');
+        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/2.chunk.js?v=20230413");
+        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/main.chunk.js?v=20230413");
+        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/runtime-main.js?v=20230413");
     }
     loadScript("/_content/Siesa.SDK.Frontend/vendor/dexie/dexie.js");
 }
