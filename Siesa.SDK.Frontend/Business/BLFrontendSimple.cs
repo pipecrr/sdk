@@ -280,9 +280,8 @@ namespace Siesa.SDK.Business
             }
             catch (Exception e)
             {
-            await GetNotificacionService("Custom.Generic.Message.DeleteError");
-
-            return null;
+                await GetNotificacionService("Custom.Generic.Message.DeleteError");
+                throw new Exception(e.Message);
             }
         }
 

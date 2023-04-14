@@ -68,7 +68,7 @@ namespace Siesa.SDK.Shared.Services
                 return new ActionResult<dynamic>(){
                     Success = false,
                     Errors = new List<string>(){
-                        "No response from backend"
+                        "Custom.Backend.NoResponse"
                     }
                 };
             }

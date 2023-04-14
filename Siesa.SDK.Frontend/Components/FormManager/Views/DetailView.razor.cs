@@ -61,6 +61,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         public Boolean ModelLoaded = false;
         public String ErrorMsg = "";
+        public List<string> ErrorList = new List<string>();
         protected bool CanCreate;
         protected bool CanEdit;
         protected bool CanDelete;
@@ -124,6 +125,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 //ErrorMsg = "No hay definición para la vista de detalle";
                 ErrorMsg = "Custom.Generic.ViewdefNotFound";
+                ErrorList.Add(ErrorMsg);
             }
             else
             {
@@ -167,6 +169,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 Loading = false;
                 this.ModelLoaded = false;
                 ErrorMsg = "";
+                ErrorList = new List<string>();
                 await InitView(BusinessName);
             }
         }
@@ -207,12 +210,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private async Task DeleteBusiness()
         {
-            var result = await BusinessObj.DeleteAsync();
+            dynamic result = null;
+            try{
+                result = await BusinessObj.DeleteAsync();
+            }catch(Exception ex){
+                ErrorMsg = ex.Message;
+                ErrorList.Add(ErrorMsg);
+            }
 
             if (result != null && result.Errors.Count > 0)
             {
                 var errorMessage ="Custom.Generic.Message.DeleteError";
                 NotificationService.ShowError(errorMessage);
+                ErrorList.Add(errorMessage);
                 // ErrorMsg = "<ul>";
                 // foreach (var error in result.Errors)
                 // {
@@ -283,6 +293,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 {
                     ErrorMsg = "Custom.Generic.Unauthorized";
                     NotificationService.ShowError("Custom.Generic.Unauthorized");
+                    ErrorList.Add("Custom.Generic.Unauthorized");
                     if(!IsSubpanel){
                         // NavigationService.NavigateTo("/", replace: true);
                     }

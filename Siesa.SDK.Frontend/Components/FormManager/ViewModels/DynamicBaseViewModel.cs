@@ -49,6 +49,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         public string ErrorMsg { get; set; }
 
+        public List<string> ErrorList { get; set; }
+
         public Type businessType;
 
         public dynamic BusinessObj { get; set; }
@@ -82,11 +84,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 {
                     Console.WriteLine("Error BaseViewModel" + e.ToString());
                     ErrorMsg = e.ToString();
+                    ErrorList.Add("Exception: "+e.ToString());
                 }
             }
             else
             {
                 this.ErrorMsg = "404 Not Found.";
+                ErrorList.Add("404 Not Found.");
             }
             StateHasChanged();
         }
@@ -138,7 +142,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                         businessType = null;
                         BusinessModel = null;
                         ErrorMsg = "";
-
+                        ErrorList = new List<string>();
 
                         InitGenericView(value);
                     }
