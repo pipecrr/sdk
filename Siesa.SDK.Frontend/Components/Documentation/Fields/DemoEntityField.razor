@@ -35,7 +35,6 @@
                     BaseObj="@BaseObj"
                     FieldName="@FieldName"
                     RelatedParams="@RelatedParams1"
-                    OnChange="@OnChange"
                 />
             </SDKCard>
         </div>
@@ -70,10 +69,25 @@
             </div>
             </SDKCard>
         </div>
+        <div class="col-md-6 p-3">
+            <h2>Filters</h2>
+            <SDKCard>
+                <SDKEntityField
+                    BusinessName="@BusinessName"
+                    RelatedBusiness="@RelatedBusiness"
+                    BaseObj="@BaseObj"
+                    FieldName="@FieldName"
+                    RelatedParams="@RelatedParams3"
+                    OnChange="@OnChange"
+                    Filters="@Filters"
+                />
+            </SDKCard>
+        </div>
     </div>
 </div>
 
 @code {
+    public List<List<object>> Filters { get; set; }
     IList<dynamic> valuesSelected = new List<dynamic>();
     SDKEntityField sdkEntityFieldRef;
     string BusinessName { get; set; } = "BLUser";
@@ -92,11 +106,23 @@
         ExtraFields = new List<string>(){"Id","Name"},
         FieldTemplate = 2
     };
+    RelatedParams RelatedParams3 { get; set; } = new RelatedParams(){
+        ExtraFields = new List<string>(){"Id","Name"}
+    };
 
     public void OnChange(){
         Console.WriteLine("OnChange");
     }
     public void GetValue(){
         valuesSelected = sdkEntityFieldRef.GetItemsSelected();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        Filters = new List<List<object>>();
+        object filter1 = new {Name__contains="Us"};
+        Filters.Add(new List<object>() { filter1 });
+        
+        base.OnParametersSet();
     }
 }
