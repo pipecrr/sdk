@@ -71,5 +71,6 @@ namespace Siesa.SDK.Shared.DTOS
         public string path { get; set; }
         public string key_name { get; set; }
         public bool is_dynamic_field { get; set; }
+        public bool hide { get; set; }
     }
 }
