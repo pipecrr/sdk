@@ -24,10 +24,11 @@ namespace Siesa.SDK.Entities
 		public override int Rowid { get; set; }
 
 		[SDKRequired]
-		[SDKStringLength(250)]
+		[SDKStringLength(2)]
+		[SDKRegularExpression(@"^\d{1,7}([.,]\d{0,2})?$")]
 		public string Name { get; set; }
-
-		[SDKStringLength(500)]
+		
+		[SDKStringLength(5)]
 		public string? Description { get; set; }
 
 		public string? Metadata { get; set; }

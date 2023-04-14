@@ -838,9 +838,9 @@ namespace Siesa.SDK.Business
         {
             using (var Context = CreateDbContext())
             {
-                return SDKFlexExtension.SDKFlexPreviewData(Context, requestData, AuthenticationService, setTop);
+                var response = SDKFlexExtension.SDKFlexPreviewData(Context, requestData, AuthenticationService, setTop);
+                return response;
             }
-            return null;
         }
 
         [SDKExposedMethod]

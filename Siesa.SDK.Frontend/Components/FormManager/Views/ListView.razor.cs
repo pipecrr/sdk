@@ -106,6 +106,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private bool _isEditingFlex = false;
         private bool _isSearchOpen = false;
         public String ErrorMsg = "";
+        public List<String> ErrorList = new List<string>();
         private IList<dynamic> SelectedObjects { get; set; } = new List<dynamic>();
         [Parameter] 
         public IList<dynamic> SelectedItems { get; set; }
@@ -217,6 +218,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 //ErrorMsg = "No hay definición para la vista de lista";
                 ErrorMsg = "Custom.Generic.ViewdefNotFound";
+                ErrorList.Add("Custom.Generic.ViewdefNotFound");
             }
             else
             {
@@ -542,6 +544,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 if (!CanList)
                 {
                     ErrorMsg = "Custom.Generic.Unauthorized";
+                    ErrorList.Add("Custom.Generic.Unauthorized");
                     NotificationService.ShowError("Custom.Generic.Unauthorized");
                     if(!IsSubpanel){
                         // NavigationService.NavigateTo("/", replace: true);
@@ -713,6 +716,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             guidListView = Guid.NewGuid().ToString();
             Loading = false;
             ErrorMsg = "";
+            ErrorList = new List<string>();
             InitView();
             if(ShowSearchForm && HasSearchViewdef){
                 initNullable();

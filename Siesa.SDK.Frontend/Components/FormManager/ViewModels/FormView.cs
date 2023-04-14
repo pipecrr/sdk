@@ -49,6 +49,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public bool Saving = false;
         public bool SavingFile { get; set; } = false;
         public String ErrorMsg = "";
+        public List<string> ErrorList = new List<string>();
         [Parameter]
         public string FormID { get; set; } = Guid.NewGuid().ToString();
         protected ValidationMessageStore _messageStore;
@@ -190,6 +191,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             {
                 //string ErrorTag = await ResourceManager.GetResource("Custom.Formview.NotDefinition", AuthenticationService.GetRoiwdCulture());
                 ErrorMsg = $"Custom.Generic.ViewdefNotFound";
+                ErrorList.Add($"Custom.Generic.ViewdefNotFound");
             }
             else
             {
@@ -341,6 +343,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
             {
                 Loading = false;
                 ErrorMsg = "";
+                ErrorList = new List<string>();
                 await InitView();
             }
         }
@@ -384,6 +387,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
                 var existeUniqueIndexValidation = NotificationService.Messages.Where(x => x.Summary == "Custom.Generic.UniqueIndexValidation").Any();
                 if(!existeUniqueIndexValidation){
                     NotificationService.ShowError("Custom.Generic.UniqueIndexValidation");
+                    ErrorList.Add("Custom.Generic.UniqueIndexValidation");
                 }
                 return;
             }
@@ -409,7 +413,16 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
                     }
                 }
             }
-            var result = await BusinessObj.ValidateAndSaveAsync();
+            dynamic result = null;
+            try{
+                result = await BusinessObj.ValidateAndSaveAsync();
+            }catch(Exception ex){
+                GlobalLoaderService.Hide();
+                Saving = false;
+                ErrorMsg = ex.Message;
+                ErrorList.Add("Exception: "+ex.Message);
+                return;
+            }
 
             GlobalLoaderService.Hide();
             Saving = false;
@@ -446,18 +459,15 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
                     // {
                     //     _messageStore.Add(fieldIdentifier, (string)error.Message);
                     // }
-
                     fieldIdentifier = new FieldIdentifier(EditFormContext.Model, error.Attribute);
                     _messageStore.Add(fieldIdentifier, (string)error.Message);
-                    
-                    
-
-
                     // ErrorMsg += $"<li>";
                     // ErrorMsg += !string.IsNullOrWhiteSpace(error.Attribute) ?  $"{error.Attribute} - " : string.Empty;
                     // string ErrorTag = await ResourceManager.GetResource(error.Message, AuthenticationService.GetRoiwdCulture());
                     // ErrorMsg += ErrorTag;//error.Message.Replace("\n", "<br />");
                     // ErrorMsg += $"</li>";
+
+                    ErrorList.Add("Exception: "+error.Message);
                 }
                 //ErrorMsg += "</ul>";
                 EditFormContext.NotifyValidationStateChanged();
@@ -488,7 +498,8 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
         protected async Task HandleValidSubmit()
         {
             FormHasErrors = false;
-            ErrorMsg = "";            
+            ErrorMsg = "";
+            ErrorList.Clear();
             await SaveBusiness();
         }
         protected void HandleInvalidSubmit()
@@ -496,6 +507,12 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
             //ErrorMsg = @"Form data is invalid";
             FormHasErrors = true;
             NotificationService.ShowError("Custom.Generic.FormError");
+            var existeUniqueIndexValidation = NotificationService.Messages.Where(x => x.Summary == "Custom.Generic.UniqueIndexValidation").Any();
+            if(existeUniqueIndexValidation){
+                ErrorList.Add("Custom.Generic.UniqueIndexValidation");
+            }else{
+                ErrorList.Clear();
+            }
         }
         protected void GoToList()
         {
