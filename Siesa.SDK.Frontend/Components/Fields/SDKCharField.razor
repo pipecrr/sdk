@@ -13,7 +13,7 @@
     data-automation-id="@GetAutomationId()"
     ClearButtonDisplayMode="@ClearButtonDisplayMode.Get()"
     field-name="@FieldName"
-    @onfocusout="@OnFocusOut"
+    @onfocusout="@_OnFocusOut"
 >
 @ChildContent
 </DxTextBox>
@@ -33,6 +33,7 @@
     [Parameter] public SDKClearButtonDisplayMode ClearButtonDisplayMode { get; set; }
     [Parameter] public string FieldName { get; set; }
     [Parameter] public bool AllowAutoComplete { get; set; } = false;
+    [Parameter] public Action OnFocusOut { get; set; } = () => { };
     private string GetAutoComplete() {
         if (AllowAutoComplete) {
             return "on";
@@ -49,7 +50,10 @@
         return base.GetAutomationId();
     }
 
-    private async Task OnFocusOut(){
-        ValueChanged(Value);
+    private async Task _OnFocusOut()
+    {
+        if(OnFocusOut != null){
+            OnFocusOut();
+        }
     }
 }

@@ -10,7 +10,7 @@
     data-automation-id="@GetAutomationId()"
     CheckedExpression="@ValueExpression"
     field-name="@FieldName"
-    @onfocusout="@OnFocusOut"
+    @onfocusout="@_OnFocusOut"
 >
 @ChildContent
 </DxCheckBox>
@@ -26,6 +26,8 @@
     [Parameter] public string Placeholder { get; set; }
     [Parameter] public bool Required { get; set; }
     [Parameter] public string CssClass { get; set; }
+    [Parameter] public Action OnFocusOut { get; set; } = () => { };
+    
 
     protected override string GetAutomationId()
     {
@@ -36,9 +38,12 @@
         return base.GetAutomationId();
     }
 
-    private async Task OnFocusOut()
+    private async Task _OnFocusOut()
     {
-        ValueChanged(Value);
+        if(OnFocusOut != null)
+        {
+            OnFocusOut();
+        }
     }
 
     

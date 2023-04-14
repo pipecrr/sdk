@@ -12,7 +12,7 @@
     field-name="@FieldName"
     ClearButtonDisplayMode="@ClearButtonDisplayMode.Get()"
     TextExpression="@ValueExpression"
-    @onfocusout="@OnFocusOut"
+    @onfocusout="@_OnFocusOut"
     tabindex="1"
 >
 @ChildContent
@@ -32,6 +32,7 @@
     [Parameter] public string FieldName { get; set; }
     [Parameter] public Expression<Func<string>> ValueExpression { get; set; }
     [Parameter] public SDKClearButtonDisplayMode ClearButtonDisplayMode { get; set; }
+    [Parameter] public Action OnFocusOut { get; set; } = () => { };
 
     private string GetCssClass()
     {
@@ -51,9 +52,12 @@
         }
         return base.GetAutomationId();
     }
-    private async Task OnFocusOut()
+
+    private async Task _OnFocusOut()
     {
-        ValueChanged(Value);
+        if(OnFocusOut != null){
+            OnFocusOut();
+        }
     }
 
     

@@ -152,7 +152,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             fieldProperty.SetValue(BindModel, value);
         }
 
-        private async Task CheckUniqueValue()
+        public async Task CheckUniqueValue()
         {
             try
             {
@@ -237,17 +237,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                     break;
                 case "DecimalField":
                 case "BigIntegerField":
-                    result = "SDKDecimalField";
-                    break;
                 case "IntegerField":
                 case "SmallIntegerField":
-                    result = "SDKIntegerField";
+                    result = "NumericField";
                     break;
                 case "BooleanField":
                     result = "SDKBooleanField";
                     break;
                 case "DateField":
-                    result = "SDKDateField";
+                    result = "DateField";
                     break;
                 case "Custom":
                     result = $"SDK{FieldOpt.CustomType.ToString()}";

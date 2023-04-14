@@ -29,6 +29,7 @@
                 builder.AddAttribute(5, "CssClass", FieldOpt.CssClass);
                 builder.AddAttribute(6, "Enabled", !FieldOpt.Disabled);
                 builder.AddAttribute(7, "FieldName", FieldOpt.Name);
+                builder.AddAttribute(8, "OnFocusOut", new Action(() => CheckUniqueValue()));
 
 
                 builder.CloseComponent();
