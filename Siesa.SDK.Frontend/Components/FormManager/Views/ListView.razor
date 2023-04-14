@@ -31,7 +31,7 @@ else
                 FormID="@SearchFormID" 
                 Viewdef="search" 
                 BusinessName="@BusinessName" 
-                BusinessObj="@BusinessObj" 
+                BusinessObj="@BusinessObjNullable" 
                 SetTopBar="false" 
                 ValidateForm="false" 
                 OnSubmit="@OnClickSearch"
@@ -115,9 +115,9 @@ else
             @key="needUpdate"
             >
             <EmptyTemplate>
-                <div class="sdk-empty-list">
-                    <i class="fa-solid fa-eye-slash"></i>
-                    <p><ResourceViewer ResourceTag="Custom.Generic.NoData" /></p>
+                <div class="col-12 text-center font_color_primary_dark py-4">
+                    <i class="fa-solid fa-eye-slash fa-3x"></i>
+                    <p class="pt-3 m-0"><ResourceViewer ResourceTag="Custom.Generic.NoData" /></p>
                 </div>
             </EmptyTemplate>
             <Columns>
@@ -339,8 +339,8 @@ else
     }
 
     @if(ShowList && UseFlex){
-        FilterFlex = GetFilters();
-        <FlexComponent IsListView="true" BlNameList="@BusinessName" ViewdefName="@FinalViewdefName" ListView="@this" GuidListView="@guidListView" CanEdit="@CanEdit" CanDelete="@CanDelete" EditingFlex="@_isEditingFlex" Take="@FlexTake" ServerPagination="@ServerPaginationFlex" FilterSearch="@FilterFlex" ActionIcons=@CustomActionIcons HasSearch=@HasSearchViewdef IsMultiple="@IsMultiple"></FlexComponent>
+        FilterFlex = GetFilters(_base_filter);
+        <FlexComponent IsListView="true" BlNameList="@BusinessName" ViewdefName="@FinalViewdefName" ListView="@this" GuidListView="@guidListView" CanEdit="@(CanEdit && AllowEdit)" CanDelete="@(CanDelete && AllowDelete)" CanDetail="@(CanDetail && AllowDetail)" EditingFlex="@_isEditingFlex" Take="@FlexTake" ServerPagination="@ServerPaginationFlex" FilterSearch="@FilterFlex" ActionIcons=@CustomActionIcons HasSearch=@HasSearchViewdef IsMultiple="@IsMultiple"></FlexComponent>
     }
 
     @if(SetTopBar)
@@ -351,7 +351,7 @@ else
             <TopBarButtons>
                 @if(ShowSearchForm && HasSearchViewdef && !_isEditingFlex)
                 {
-                    <TopBarButton ResourceTag="Action.AdvanceSearch" IconCssClass="fa-solid fa-magnifying-glass-plus" Click="@(()=> SetSearchFromVisibility(false))"/>
+                    <TopBarButton ResourceTag="Action.AdvanceSearch" IconCssClass="fa-solid fa-magnifying-glass" Click="@(()=> SetSearchFromVisibility(false))"/>
                 }
                 @if(_isEditingFlex){
                     <TopBarButton ResourceTag="Action.Cancel" IconCssClass="fa-solid fa-times" Click="CancelEdit"/>
@@ -360,7 +360,7 @@ else
                 @if(UseFlex && !_isEditingFlex && !_isSearchOpen){
                     <TopBarButton Click="GoToEditFlex" ResourceTag="Action.EditListFlex" IconCssClass="fa-solid fa-pen" />
                 }                
-                @if(CanCreate && !_isEditingFlex)
+                @if((CanCreate && AllowCreate) && !_isEditingFlex)
                 {
                     <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus" />
                 }

@@ -76,22 +76,26 @@ namespace Siesa.SDK.Business
             // Do nothing
         }
 
+        public virtual RenderFragment Main(){
+            return null;
+        }
+
         public DeleteBusinessObjResponse Delete()
         {
             return new DeleteBusinessObjResponse();
         }
 
-        public BaseSDK<int> Get(Int64 rowid)
+        public BaseSDK<int> Get(Int64 rowid, List<string> extraFields = null)
         {
             return null;
         }
 
-        public Task<BaseSDK<int>> GetAsync(Int64 rowid)
+        public Task<BaseSDK<int>> GetAsync(Int64 rowid, List<string> extraFields = null)
         {
             return null;
         }
 
-        public Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<BaseSDK<int>> queryFilter = null, bool includeCount = false)
+        public Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<BaseSDK<int>> queryFilter = null, bool includeCount = false, bool includeAttachments = true)
         {
             return null;
         }
@@ -200,14 +204,14 @@ namespace Siesa.SDK.Business
             InternalConstructor(authService, notiService,loggerFactory);
         }
 
-        public virtual T Get(Int64 rowid)
+        public virtual T Get(Int64 rowid, List<string> extraFields = null)
         {
             return GetAsync(rowid).GetAwaiter().GetResult();
         }
 
-        public async virtual Task<T> GetAsync(Int64 rowid)
+        public async virtual Task<T> GetAsync(Int64 rowid, List<string> extraFields = null)
         {
-            var message = await Backend.Get(rowid);
+            var message = await Backend.Get(rowid, extraFields);
             var result = JsonConvert.DeserializeObject<T>(message);
             return result;
         }
@@ -218,9 +222,9 @@ namespace Siesa.SDK.Business
             return result;
         }
 
-        public async virtual Task InitializeBusiness(Int64 rowid)
+        public async virtual Task InitializeBusiness(Int64 rowid, List<string> extraFields = null)
         {
-            BaseObj = await GetAsync(rowid);
+            BaseObj = await GetAsync(rowid, extraFields );
         }
 
         public async virtual Task GetDuplicateInfo(Int64 rowid)
@@ -291,19 +295,19 @@ namespace Siesa.SDK.Business
             return BaseObj.ToString();
         }
 
-        public virtual Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null, bool includeCount = false)
+        public virtual Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null, bool includeCount = false, bool includeAttachments = true)
         {
             return GetDataAsync(skip, take, filter, orderBy).GetAwaiter().GetResult();
         }
 
-        public virtual Siesa.SDK.Shared.Business.LoadResult EntityFieldSearch(string searchText, string filters)
+        public virtual Siesa.SDK.Shared.Business.LoadResult EntityFieldSearch(string searchText, string filters, int? top = null, string orderBy = "")
         {
-            return EntityFieldSearchAsync(searchText, filters).GetAwaiter().GetResult();
+            return EntityFieldSearchAsync(searchText, filters, top, orderBy).GetAwaiter().GetResult();
         }
 
-        public async virtual Task<Siesa.SDK.Shared.Business.LoadResult> EntityFieldSearchAsync(string searchText, string filters)
+        public async virtual Task<Siesa.SDK.Shared.Business.LoadResult> EntityFieldSearchAsync(string searchText, string filters, int? top = null, string orderBy = "")
         {
-            var result = await Backend.EntityFieldSearch(searchText, filters);
+            var result = await Backend.EntityFieldSearch(searchText, filters, top, orderBy);
             Siesa.SDK.Shared.Business.LoadResult response = new Siesa.SDK.Shared.Business.LoadResult();
             response.Data = result.Data.Select(x => JsonConvert.DeserializeObject<T>(x)).ToList();
             response.TotalCount = result.TotalCount;
@@ -476,6 +480,10 @@ namespace Siesa.SDK.Business
                 var errors = JsonConvert.DeserializeObject<List<string>> (result.Errors.ToString());
                 throw new ArgumentException(errors[0]);
             }
+        }
+
+        public virtual RenderFragment Main(){
+            return null;
         }
     }
 }

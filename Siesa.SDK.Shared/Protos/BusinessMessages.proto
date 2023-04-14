@@ -23,6 +23,7 @@ message GetBusinessObjRequest {
 	string businessName = 2;
   string currentUserToken = 3;
   google.protobuf.Int32Value currentUserRowid = 4;
+  repeated string extraFields = 5;
 }
 
 message BusinessObjResponse {
@@ -86,6 +87,8 @@ message EntityFieldSearchRequest {
   string currentUserToken = 3;
   google.protobuf.Int32Value currentUserRowid = 4;
   string filters = 5;
+  google.protobuf.Int32Value top = 6;
+  string orderBy = 7;
 }
 
 message LoadResult {

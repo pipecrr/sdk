@@ -24,6 +24,10 @@ using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.Extensions.DependencyInjection;
 using Siesa.Global.Enums;
 using Newtonsoft.Json;
+using System.Collections;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.ComponentModel.DataAnnotations;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -165,6 +169,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private string StyleSearchForm { get; set; } = "search_back position-relative";
         private Radzen.DataGridSelectionMode SelectionMode { get; set; } = Radzen.DataGridSelectionMode.Single;
         Guid needUpdate;
+        private string _base_filter = "";
+
+        public dynamic BusinessObjNullable { get; set; }
 
         private void OnSelectionChanged(IList<object> objects)
         {
@@ -199,6 +206,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         protected async void InitView(string bName = null)
         {
             Loading = true;
+            _isEditingFlex = false;
             if (bName == null)
             {
                 bName = BusinessName;
@@ -276,6 +284,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 FlexTake = ListViewModel.FlexTake;
                 ShowLinkTo = ListViewModel.ShowLinkTo;
                 ServerPaginationFlex = ListViewModel.ServerPaginationFlex;
+                if(ListViewModel.AllowEdit != null){
+                    AllowEdit = ListViewModel.AllowEdit.Value;
+                }
+                if(ListViewModel.AllowDelete != null){
+                    AllowDelete = ListViewModel.AllowDelete.Value;
+                }
+                if(ListViewModel.AllowDetail != null){
+                    AllowDetail = ListViewModel.AllowDetail.Value;
+                }
+                if(ListViewModel.AllowCreate != null){
+                    AllowCreate = ListViewModel.AllowCreate.Value;
+                }
                 //TODO: quitar cuando se pueda usar flex en los custom components
                 var fieldsCustomComponent = ListViewModel.Fields.Where(x => x.CustomComponent != null).ToList();
                 if(fieldsCustomComponent.Count > 0){
@@ -305,6 +325,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 {
                     field.GetFieldObj(BusinessObj);
                 }
+                if(ListViewModel.Filters != null && ListViewModel.Filters.Count > 0){
+                    _base_filter = await GenerateFilters(ListViewModel.Filters);
+                }
             }
             data = null;
             Loading = false;
@@ -316,6 +339,166 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             hideCustomColumn();
             StateHasChanged();
 
+        }
+
+        private async Task<string> GenerateFilters(List<List<object>> filters)
+        {
+            var filter = "";
+            List<string> filtersOr = new List<string>();
+            foreach (var itemAnd in filters){
+                List<object> filtersInside = (List<object>)itemAnd;
+                if(filtersInside.Count > 0){
+                    string filtersOrStr = "";
+                    List<string> filtersOrInside = new List<string>();
+                    foreach (var item in filtersInside){
+                        string filtersOrInsideStr = "";
+                        var properties = JsonConvert.DeserializeObject<dynamic>(item.ToString()).Properties();
+                        List<string> filtersAnd = new List<string>();
+                        foreach (var property in properties){
+                            string filtersAndStr = "";
+                            string name = property.Name;
+                            var codeValue = property.Value.ToString();
+                            dynamic dynamicValue;
+                            if (String.IsNullOrEmpty(codeValue)){
+                                continue;
+                            }
+                            dynamicValue = await Evaluator.EvaluateCode(codeValue, BusinessObj);
+                            dynamicValue = GetFilterValue(dynamicValue);
+                            filtersAndStr = GetFiltersStr(name, dynamicValue);
+                            filtersAnd.Add(filtersAndStr);
+                        }
+                        if(filtersAnd.Count > 1){
+                            filtersOrInsideStr += "(";
+                            filtersOrInsideStr += string.Join(" and ", filtersAnd);
+                            filtersOrInsideStr += ")";
+                        }else{
+                            filtersOrInsideStr += string.Join(" and ", filtersAnd);
+                        }
+                        filtersOrInside.Add(filtersOrInsideStr);
+                    }
+                    if(filtersOrInside.Count > 1){
+                        filtersOrStr += "(";
+                        filtersOrStr += string.Join(" or ", filtersOrInside);
+                        filtersOrStr += ")";
+                    }else{
+                        filtersOrStr += string.Join(" or ", filtersOrInside);
+                    }
+                    filtersOr.Add(filtersOrStr);
+                }
+            }
+            if(filtersOr.Count > 1){
+                filter += "(";
+                filter += string.Join(" and ", filtersOr);
+                filter += ")";
+            }else{
+                filter += string.Join(" and ", filtersOr);
+            }
+            return filter;
+        }
+
+        private string GetFiltersStr(string name, dynamic dynamicValue)
+        {
+            string filtersAndStr = "(";
+            Type type = dynamicValue.GetType();
+            bool isNullable = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>) ? true : false;
+            if(name.EndsWith("__in")){
+                var list = JsonConvert.DeserializeObject<List<dynamic>>(JsonConvert.SerializeObject(dynamicValue));
+                if(list.Count > 0){
+                    name = name.Replace("__in", "");
+                    foreach (var itemIn in list){
+                        dynamic itemInValue = GetFilterValue(itemIn);
+                        Type typeIn = itemIn.GetType();
+                        if(filtersAndStr != "("){
+                            filtersAndStr += " or ";
+                        }
+                        if(typeIn == typeof(int?) || typeIn == typeof(int) || typeIn == typeof(decimal?) || typeIn == typeof(decimal) || typeIn == typeof(byte?) || typeIn == typeof(byte)){
+                            filtersAndStr += $"({name} == null ? 0 : {name}) == {itemInValue}";
+                        }else if(typeIn == typeof(bool) || typeIn == typeof(bool?)){
+                            filtersAndStr += $"({name} == null ? false : {name}) == {itemInValue}";
+                        }else if(typeIn == typeof(string)){
+                            filtersAndStr += $"({name} == null ? \"\" : {name}) == {itemInValue}";
+                        }
+                        else{
+                            filtersAndStr += $"{name} == {itemInValue}";
+                        }
+                    }
+                }
+            }else if(name.EndsWith("__notin")){
+                var list = (List<object>)dynamicValue;
+                if(list.Count > 0){
+                    name = name.Replace("__notin", "");
+                    foreach (var itemIn in list){
+                        dynamic itemInValue = GetFilterValue(itemIn);
+                        Type typeIn = itemIn.GetType();
+                        if(filtersAndStr != "("){
+                            filtersAndStr += " and ";
+                        }
+                        if(typeIn == typeof(int?) || typeIn == typeof(int) || typeIn == typeof(decimal?) || typeIn == typeof(decimal) || typeIn == typeof(byte?) || typeIn == typeof(byte)){
+                            filtersAndStr += $"({name} == null ? 0 : {name}) != {itemInValue}";
+                        }else if(typeIn == typeof(bool) || typeIn == typeof(bool?)){
+                            filtersAndStr += $"({name} == null ? false : {name}) != {itemInValue}";
+                        }else if(typeIn == typeof(string)){
+                            filtersAndStr += $"({name} == null ? \"\" : {name}) != {itemInValue}";
+                        }else{
+                            filtersAndStr += $"{name} != {itemInValue}";
+                        }
+                    }
+                }
+            }
+            else if(name.EndsWith("__gt")){
+                name = name.Replace("__gt", "");
+                if(type == typeof(int?) || type == typeof(int) || type == typeof(decimal?) || type == typeof(decimal) || type == typeof(byte?) || type == typeof(byte)){
+                    filtersAndStr += $"({name} == null ? 0 : {name}) > {dynamicValue}";
+                }else{
+                    filtersAndStr += $"{name} > {dynamicValue}";
+                }
+            }else if(name.EndsWith("__gte")){
+                name = name.Replace("__gte", "");
+                if(type == typeof(int?) || type == typeof(int) || type == typeof(decimal?) || type == typeof(decimal) || type == typeof(byte?) || type == typeof(byte)){
+                    filtersAndStr += $"({name} == null ? 0 : {name}) >= {dynamicValue}";
+                }else{
+                    filtersAndStr += $"{name} >= {dynamicValue}";
+                }                
+            }else if(name.EndsWith("__lt")){
+                name = name.Replace("__lt", "");
+                if(type == typeof(int?) || type == typeof(int) || type == typeof(decimal?) || type == typeof(decimal) || type == typeof(byte?) || type == typeof(byte)){
+                    filtersAndStr += $"({name} == null ? 0 : {name}) < {dynamicValue}";
+                }else{
+                    filtersAndStr += $"{name} < {dynamicValue}";
+                }
+            }else if(name.EndsWith("__lte")){
+                name = name.Replace("__lte", "");
+                if(type == typeof(int?) || type == typeof(int) || type == typeof(decimal?) || type == typeof(decimal) || type == typeof(byte?) || type == typeof(byte)){
+                    filtersAndStr += $"({name} == null ? 0 : {name}) <= {dynamicValue}";
+                }else{
+                    filtersAndStr += $"{name} <= {dynamicValue}";
+                }
+            }else if(name.EndsWith("__contains")){
+                name = name.Replace("__contains", "");
+                filtersAndStr += $"({name} == null ? \"\" : {name}).ToLower().Contains(\"{dynamicValue}\".ToLower())";
+            }else{
+                if(type == typeof(int?) || type == typeof(int) || type == typeof(decimal?) || type == typeof(decimal) || type == typeof(byte?) || type == typeof(byte)){
+                    filtersAndStr += $"({name} == null ? 0 : {name}) == {dynamicValue}";
+                }else if(type == typeof(bool) || type == typeof(bool?)){
+                    filtersAndStr += $"({name} == null ? false : {name}) == {dynamicValue}";
+                }else if(type == typeof(string)){
+                    filtersAndStr += $"({name} == null ? \"\" : {name}).ToLower() == \"{dynamicValue}\".ToLower()";
+                }else{
+                    filtersAndStr += $"{name} == {dynamicValue}";
+                }
+            }
+            filtersAndStr += ")";
+            return filtersAndStr;
+        }
+
+        private dynamic GetFilterValue(dynamic dynamicValue)
+        {
+            Type type = dynamicValue.GetType();
+            dynamic filterValue = dynamicValue;
+            if(type.IsEnum){
+                filterValue = (int)dynamicValue;
+            }
+            return filterValue;
         }
 
         public async Task Refresh(bool Reload = false)
@@ -372,11 +555,103 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            guidListView = Guid.NewGuid().ToString();
             if (IsMultiple){
                 SelectionMode = Radzen.DataGridSelectionMode.Multiple;
             }
+
             //Restart();
+        }
+
+        private object SetValuesObjToNullable(Type newType, dynamic originalObj, dynamic instanceBase = null){
+            var instance = Activator.CreateInstance(newType);
+            var originalProperties = originalObj.GetType().GetProperties();
+            var newProperties = newType.GetProperties();
+
+            foreach (var originalProperty in originalProperties){
+                var newProperty = newProperties.FirstOrDefault(p => p.Name == originalProperty.Name);
+                if (newProperty != null)
+                {
+                    var originalValue = originalProperty.GetValue(originalObj);
+                    if (originalValue != null && originalProperty.Name == "BaseObj"){
+                        newProperty.SetValue(instance, instanceBase);
+                    }else{
+                        newProperty.SetValue(instance, originalValue);
+                    }
+                }
+            }
+
+            return instance;
+        }
+
+        public Type CreateNullableType(Type originalType, bool includeNonNullable = false, Type baseType = null)
+        {
+            // Crea una nueva assembly dinámica.
+            AssemblyName assemblyName = new AssemblyName("DynamicAssembly");
+            AssemblyBuilder assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
+            
+            // Crea un nuevo módulo en la assembly dinámica.
+            ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("DynamicModule");
+            
+            // Crea un nuevo tipo basado en el tipo original con propiedades nulas.
+            TypeBuilder typeBuilder = moduleBuilder.DefineType($"{originalType.Name}", TypeAttributes.Public | TypeAttributes.Class | TypeAttributes.Sealed, typeof(object));
+            
+            foreach (var property in originalType.GetProperties())
+            {   
+                Type newType = null;
+                Type propertyType = property.PropertyType;
+                if(property.Name.Equals("BaseObj")){
+                    propertyType = baseType;
+                }
+
+                bool propertyNullable = propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>);
+
+                if(includeNonNullable && !propertyNullable){
+                // Obtiene el tipo anulable correspondiente a la propiedad.
+                    Type nullableType = Nullable.GetUnderlyingType(propertyType);
+                    if (nullableType == null && propertyType.IsValueType)
+                    {
+                        nullableType = typeof(Nullable<>).MakeGenericType(propertyType);
+                    }
+                    else if (nullableType == null)
+                    {
+                        nullableType = propertyType;
+                    }
+                    newType = nullableType;
+                }else{
+                    newType = propertyType;
+                }
+                // Crea un campo privado para cada propiedad del tipo original.
+                FieldBuilder fieldBuilder = typeBuilder.DefineField($"_{property.Name}", newType, FieldAttributes.Private);
+                
+                // Crea una propiedad pública con el mismo nombre y tipo, pero con un tipo anulable.
+                PropertyBuilder propertyBuilder = typeBuilder.DefineProperty(property.Name, PropertyAttributes.None, newType, new Type[] { newType });
+                MethodBuilder getMethodBuilder = typeBuilder.DefineMethod($"get_{property.Name}", MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, newType, Type.EmptyTypes);
+                ILGenerator getIL = getMethodBuilder.GetILGenerator();
+                getIL.Emit(OpCodes.Ldarg_0);
+                getIL.Emit(OpCodes.Ldfld, fieldBuilder);
+                getIL.Emit(OpCodes.Ret);
+                propertyBuilder.SetGetMethod(getMethodBuilder);
+
+                // Crea el método set para la propiedad
+                MethodBuilder setMethodBuilder = typeBuilder.DefineMethod($"set_{property.Name}", MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, typeof(void), new Type[] { newType });
+                ILGenerator setIL = setMethodBuilder.GetILGenerator();
+                setIL.Emit(OpCodes.Ldarg_0);
+                setIL.Emit(OpCodes.Ldarg_1);
+                setIL.Emit(OpCodes.Stfld, fieldBuilder);
+                setIL.Emit(OpCodes.Ret);
+                propertyBuilder.SetSetMethod(setMethodBuilder);
+            }
+            
+            // Crea el constructor por defecto.
+            ConstructorBuilder constructorBuilder = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, Type.EmptyTypes);
+            ILGenerator constructorIL = constructorBuilder.GetILGenerator();
+            constructorIL.Emit(OpCodes.Ldarg_0);
+            constructorIL.Emit(OpCodes.Call, typeof(object).GetConstructor(Type.EmptyTypes));
+            constructorIL.Emit(OpCodes.Ret);
+            
+            // Crea el tipo y lo devuelve.
+            Type nullType = typeBuilder.CreateType();
+            return nullType;
         }
 
         public override async Task SetParametersAsync(ParameterView parameters)
@@ -423,12 +698,25 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             return result;
         }
 
+        private void initNullable(){
+            Type newTypeBase = CreateNullableType(BusinessObj.BaseObj.GetType(), true);
+            var instanceBase = Activator.CreateInstance(newTypeBase);
+
+            Type newType = CreateNullableType(BusinessObj.GetType(), false, newTypeBase);
+            var instance = SetValuesObjToNullable(newType, BusinessObj, instanceBase);
+
+            BusinessObjNullable = instance;
+        }
+
         private void Restart()
         {
-
+            guidListView = Guid.NewGuid().ToString();
             Loading = false;
             ErrorMsg = "";
             InitView();
+            if(ShowSearchForm && HasSearchViewdef){
+                initNullable();
+            }
             data = null;
             if (Data != null)
             {
@@ -501,10 +789,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     {
                         var tmpFilter = "";
 
-                        var fieldObj = field.GetFieldObj(BusinessObj);
+                        var fieldObj = field.GetFieldObj(BusinessObjNullable);
                         if (fieldObj != null)
                         {
-                            dynamic searchValue = fieldObj.ModelObj.GetType().GetProperty(fieldObj.Name).GetValue(fieldObj.ModelObj, null);                            
+                            dynamic searchValue = fieldObj.ModelObj.GetType().GetProperty(fieldObj.Name).GetValue(fieldObj.ModelObj, null);
                             if (searchValue == null)
                             {
                                 continue;
@@ -514,7 +802,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                             {
                                 continue;
                             }
-                            try{
+                            /*try{
                                 Type searchValueType = searchValue.GetType();
                                 dynamic defaultValue = null;
                                 if(searchValueType.IsValueType && !searchValueType.IsEnum){
@@ -526,7 +814,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                 }
                             }catch(Exception e){
                                 Console.WriteLine(e);
-                            }
+                            }*/
                             switch (fieldObj.FieldType)
                             {
                                 case FieldTypes.CharField:
@@ -706,7 +994,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 var confirm = await ConfirmDelete();
                 SDKGlobalLoaderService.Show();
                 if (confirm){
-                    BusinessObj.BaseObj.Rowid = Convert.ToInt32(id);
+                    BusinessObj.BaseObj.Rowid = Convert.ChangeType(id, BusinessObj.BaseObj.Rowid.GetType());
                     var result = await BusinessObj.DeleteAsync();
                     SDKGlobalLoaderService.Hide();
                     if (result != null && result.Errors.Count == 0){
@@ -722,11 +1010,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public async Task<bool> CustomActionFromReact(Int64 indexButton, object rowid)
         {
             Button button = CustomActions[(int)indexButton];
-            var bl = BackendRouterService.GetSDKBusinessModel(BusinessName, AuthenticationService);
-            var result = await bl.Call("DataEntity", rowid.ToString());
-            if(result.Success){
-                var obj = result.Data;
-                if (OnClickCustomAction != null){
+            if(button != null){
+                var bl = BackendRouterService.GetSDKBusinessModel(BusinessName, AuthenticationService);
+                var result = await bl.Call("DataEntity", rowid.ToString());
+                if(result.Success){
+                    var obj = result.Data;
                     OnClickCustomAction(button, obj);
                     return true;
                 }
@@ -772,7 +1060,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             LoadingSearch = true;
             LoadingData = true;
             data = null;
-            var filters = GetFilters();
+            var filters = GetFilters(_base_filter);
             if(ServerPaginationFlex && UseFlex){
                 Data = await BusinessObj.GetDataWithTop(filters);
                  if (Data != null && Data.Count() == 1){
@@ -829,7 +1117,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if (UseFlex)
             {
                 _isSearchOpen = false;
-                JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+guidListView+".props.setSearchListFlex", filter);                
+                JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+guidListView+".props.setSearchListFlex", filter);
             }
         }
 

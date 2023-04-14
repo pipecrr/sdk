@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Siesa.Global.Enums;
 
 
+
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
@@ -22,20 +23,20 @@ namespace Siesa.SDK.Entities
 	{
 		[SDKIdentity]
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override int Rowid { get; set; }
 
 		[ForeignKey("Resource")]
-		[Required]
+		[SDKRequired]
 		public int RowidResource { get; set; }
 
-		[Required]
-		[StringLength(100)]
+		[SDKRequired]
+		[SDKStringLength(100)]
 		public string BusinessName { get; set; }
 
 
 		[SDKCheckRelationship]
-		[Required]
+		[SDKRequired]
 		public virtual E00020_Resource Resource { get; set; }
 
 	}

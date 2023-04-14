@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Siesa.Global.Enums;
 
 
+
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
@@ -19,20 +20,20 @@ namespace Siesa.SDK.Entities
 	public partial class E00271_AttachmentDetail : BaseAudit<int>
 	{
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override int Rowid { get; set; }
 
 		[ForeignKey("Attachment")]
 		public int? RowidAttachment { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public string Url { get; set; }
 
-		[Required]
-		[StringLength(100)]
+		[SDKRequired]
+		[SDKStringLength(100)]
 		public string FileType { get; set; }
 
-		[StringLength(250)]
+		[SDKStringLength(250)]
 		public string? FileName { get; set; }
 
 		public byte[]? FileInternalAttached { get; set; }

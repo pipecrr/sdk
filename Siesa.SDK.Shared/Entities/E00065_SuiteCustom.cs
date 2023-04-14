@@ -20,19 +20,19 @@ namespace Siesa.SDK.Entities
 	public partial class E00065_SuiteCustom : BaseAudit<short>
 	{
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override short Rowid { get; set; }
 
-		[Required]
-		[StringLength(500)]
+		[SDKRequired]
+		[SDKStringLength(500)]
 		public string Id { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public byte Order { get; set; }
 
 		public int? RowidImage { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public bool IsPrivate { get; set; }
 
 

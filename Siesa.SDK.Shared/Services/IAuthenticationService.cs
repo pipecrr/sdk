@@ -26,7 +26,8 @@ namespace Siesa.SDK.Shared.Services
         // public string[] Teams { get; set; }
 
         public bool IsAdministrator { get; set; }
-
+        public int? RowidAttachmentUserProfilePicture { get; set; }
+        
         public override string ToString()
         {
             return $"({Id}) - {Name}";
@@ -39,7 +40,8 @@ namespace Siesa.SDK.Shared.Services
         JwtUserData User { get; }
         short RowidCultureChanged { get; set; }
         Task Initialize();
-        Task Login(string username, string password, short rowIdDBConnection);
+        Task Login(string username, string password, short rowIdDBConnection,
+                     bool IsUpdateSession = false, short rowIdCompanyGroup = 1);
         Task Logout();
         public Task SetToken(string token, bool saveLocalStorage = true);
         Task SetCustomRowidCulture(short rowid);
@@ -58,6 +60,7 @@ namespace Siesa.SDK.Shared.Services
         Task<bool> ForgotPasswordAsync(string email);
         Task<bool> ValidateUserToken(int rowidUser);
         Task<bool> ChangePassword(int rowidUser, string NewPassword, string ConfirmPassword);
+        Task RenewToken();
         
     }
 

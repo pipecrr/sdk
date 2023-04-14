@@ -46,16 +46,17 @@ else if (ModelLoaded == true)
             }
         </DxFormLayout>
         @if(ContainAttachments){
-            <AttachmentPanel BusinessObj="@BusinessObj" BLNameParentAttatchment="@BusinessName"/>
+            <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" 
+                Parent="@BusinessObj.BaseObj" ContainAttachments="@ContainAttachments" BLNameParentAttatchment="@BusinessName"
+                BusinessObj="@BusinessObj"/>
+        }else if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
+        {
+             <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" />
         }
         @if(!string.IsNullOrEmpty(ErrorMsg))
         {
             <label>@((MarkupString)ErrorMsg)</label>
         }
-         @foreach (var rel in FormViewModel.Relationships.Where(x=>x.Enabled))
-            {
-               <RelationshipPanel Relationship="@rel" Parent="@BusinessObj.BaseObj" />
-            }
     @if(IsSubpanel && ShowButtons){
         <div class="buttons-container">
             @foreach (var btn in FormViewModel.Buttons)
@@ -105,6 +106,7 @@ else if (ModelLoaded == true)
 }
 
 @code {
+
     public async Task OnClickDelete()
     {
         var dialog = await dialogService.OpenAsync("",

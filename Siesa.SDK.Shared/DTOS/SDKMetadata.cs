@@ -48,16 +48,13 @@ namespace Siesa.SDK.Shared.DTOS
         public object class_name { get; set; }
         public List<string> search_fields { get; set; }
         public object results { get; set; }
-        public SDKSelectfieldParams selectfield_params { get; set; }
+        public SDKSelectFieldParams selectfield_params { get; set; }
+        public string id_enum { get; set; }
         public string path { get; set; }
         public string key_name { get; set; }
-        public List<SDKMetaOption> options { get; set; }
+        public List<SDKMetaOption> options { get; set; }        
     }
 
-    public class SDKSelectfieldParams
-    {
-        public string list_name { get; set; }
-    }
 
     public class SDKMetaOption
     {
@@ -69,8 +66,10 @@ namespace Siesa.SDK.Shared.DTOS
         public object class_name { get; set; }
         public List<string> search_fields { get; set; }
         public object results { get; set; }
-        public SDKSelectfieldParams selectfield_params { get; set; }
+        public SDKSelectFieldParams selectfield_params { get; set; }
+        public string id_enum { get; set; }
         public string path { get; set; }
         public string key_name { get; set; }
+        public bool is_dynamic_field { get; set; }
     }
 }

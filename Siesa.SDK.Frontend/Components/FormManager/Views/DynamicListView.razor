@@ -1,4 +1,5 @@
 ﻿@page "/{BusinessName}/"
+@using System.Reflection
 @attribute [Authorize]
 @using Microsoft.AspNetCore.Authorization
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
@@ -8,7 +9,13 @@
 }
 else if (BusinessObj != null)
 {
-    <DynamicComponent Type="@(typeof(Views.ListView))" Parameters="@parameters" />
+    if(RenderMain != null){
+        <CascadingValue Value="this">
+            @RenderMain
+        </CascadingValue>
+    }else{
+        <DynamicComponent Type="@(typeof(Views.ListView))" Parameters="@parameters" />        
+    }
 }
 
 @code {
@@ -32,58 +39,76 @@ else if (BusinessObj != null)
     [Parameter] public bool IsMultiple { get; set; } = false;
 
     [Parameter] public IList<dynamic> SelectedItems { get; set; }
+    
+    [Parameter] public dynamic businessObj { get; set; }
+    private RenderFragment RenderMain = null;
     protected override void OnInitialized()
     {
         ViewType = ViewModels.DynamicViewType.List;
         base.OnInitialized();
     }
+    protected override void SetParameters(dynamic _businessObj, string businessName){
 
-        
-    protected override void SetParameters(dynamic businessObj, string businessName){
-        var new_params = new Dictionary<string, object>();
-        new_params.Add("BusinessObj", businessObj);
-        new_params.Add("BusinessName", businessName);
-        new_params.Add("AllowCreate", AllowCreate);
-        new_params.Add("AllowEdit", AllowEdit);
-        new_params.Add("AllowDelete", AllowDelete);
-        new_params.Add("AllowDetail", AllowDetail);
-        new_params.Add("OnSelectedRow", OnSelectedRow);
-        new_params.Add("Data", Data);
-        new_params.Add("FromEntityField", FromEntityField);
-        new_params.Add("IsMultiple", IsMultiple);
-        new_params.Add("SelectedItems", SelectedItems);
-        if (IsSubpanel)
+        RenderMain = GetRenderFragment();
+        if (RenderMain == null)
         {
-            new_params.Add("IsSubpanel", true);
-            new_params.Add("SetTopBar", false);
-            if(!String.IsNullOrEmpty(SubpanelFilter))
-            {
-                new_params.Add("ConstantFilters", new List<string>() { SubpanelFilter });
+            var new_params = new Dictionary<string, object>();
+            if(businessObj != null){
+                _businessObj = businessObj;
             }
-            
-            new_params.Add("ViewdefName", ViewdefName);
-            if (OnClickEdit != null)
+            new_params.Add("BusinessObj", _businessObj);
+            new_params.Add("BusinessName", businessName);
+            new_params.Add("AllowCreate", AllowCreate);
+            new_params.Add("AllowEdit", AllowEdit);
+            new_params.Add("AllowDelete", AllowDelete);
+            new_params.Add("AllowDetail", AllowDetail);
+            new_params.Add("OnSelectedRow", OnSelectedRow);
+            new_params.Add("Data", Data);
+            new_params.Add("FromEntityField", FromEntityField);
+            new_params.Add("IsMultiple", IsMultiple);
+            new_params.Add("SelectedItems", SelectedItems);
+            if (IsSubpanel)
             {
-                new_params.Add("OnClickEdit", OnClickEdit);
+                new_params.Add("IsSubpanel", true);
+                new_params.Add("SetTopBar", false);
+                if(!String.IsNullOrEmpty(SubpanelFilter))
+                {
+                    new_params.Add("ConstantFilters", new List<string>() { SubpanelFilter });
+                }
+                
+                new_params.Add("ViewdefName", ViewdefName);
+                if (OnClickEdit != null)
+                {
+                    new_params.Add("OnClickEdit", OnClickEdit);
+                }
+                if (OnClickDetail != null)
+                {
+                    new_params.Add("OnClickDetail", OnClickDetail);
+                }
+                if (OnClickDelete != null)
+                {
+                    new_params.Add("OnClickDelete", OnClickDelete);
+                }
+                if (OnClickNew != null)
+                {
+                    new_params.Add("OnClickNew", OnClickNew);
+                }
             }
-            if (OnClickDetail != null)
-            {
-                new_params.Add("OnClickDetail", OnClickDetail);
-            }
-            if (OnClickDelete != null)
-            {
-                new_params.Add("OnClickDelete", OnClickDelete);
-            }
-            if (OnClickNew != null)
-            {
-                new_params.Add("OnClickNew", OnClickNew);
-            }
-        }
 
-        //check if new_params is equal to parametersm, if not, set parameters to new_params
-        if (!new_params.SequenceEqual(parameters))
-        {
-            parameters = new_params;
+            //check if new_params is equal to parametersm, if not, set parameters to new_params
+            if (!new_params.SequenceEqual(parameters))
+            {
+                parameters = new_params;
+            }
         }
     }
+
+    private RenderFragment GetRenderFragment(){
+        if(BusinessObj == null){
+            return null;
+        }
+        MethodInfo method = BusinessObj.GetType().GetMethod("Main");
+        return (RenderFragment)method.Invoke(BusinessObj, null);
+    }
+
 }

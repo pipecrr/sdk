@@ -1,0 +1,39 @@
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.Flex
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Components.FormManager.Model
+@using Siesa.SDK.Frontend.Components.FormManager.Views
+
+<div class="container-fluid">
+    <div class="container-fluid">
+        <h2>SDKFlex</h2>
+        <p>Demostracion y configuracion Flex como componente</p>
+        <p>Para agregar una flex de una consulta ya existente definiendo rowid</p>
+        <ul>
+            <li>Rowid: Indica el rowid de la consulta flex que se va a mostrar</li>
+            <li>FlexFilters: para indicar los filtros que se enviaran en la ocnsulta si es necesario, es necesario que los filtros existan en la ocnsulta previa, tipo diccionario de string y object, donde la llave es el nombre del campo y el valor es el valor del filtro. Formas de filtros</li>
+            <li>Para enviar un filtro hasta en el parametro debe enviar el nombre del filtro precedido con un "__to" como llave y surespectivo valor</li>
+            <li>Para enviar un filtro en un campo tipo enum en el parametro se debe enviar el nombre del filtro como llave y en el valor enviar una lista con el o los enums que desea filtrar</li>
+            <li>Para enviar un filtro en un campo relacionado en el parametro se debe enviar el nombre del filtro como llave y en el valor enviar una lista con el o los rowid que desea filtrar</li>            
+        </ul>
+    </div>
+    <div class="row px-3">
+        <div class="col-md-6 p-3">
+            <h3>SDKFlex</h3>
+            <SDKFlex FlexRowId="@FlexRowId" FlexFilters="@filters"></SDKFlex>            
+        </div>        
+    </div>
+</div>
+
+
+@code {
+    protected override async Task OnInitializedAsync(){
+        
+        filters.Add("Rowid", "5");
+        filters.Add("Rowid__to", "10");
+    }
+
+    int FlexRowId = 18;
+    Dictionary<string, object> filters = new Dictionary<string, object>();
+
+}

@@ -6,18 +6,18 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Frontend.Components.FormManager.Views
 @using Siesa.SDK.Frontend.Components.FormManager.Model
-@using Newtonsoft.Json;
+@using Newtonsoft.Json
 @inject UtilsManager UtilsManager
 @implements IDisposable
 
 <div @attributes="@FlexAttributes">
 </div>
 
-@if(!IsListView)
+@if(!IsListView && FlexRowId == 0)
 {    
-<PageTitle>Flex</PageTitle>
+<PageTitle><ResourceViewer ResourceTag="Custom.BLFlex.Title" /></PageTitle>
 <SetTopBar>
-    <TopBarTitle>Flex</TopBarTitle>
+    <TopBarTitle><ResourceViewer ResourceTag="Custom.BLFlex.Title" /></TopBarTitle>
     <TopBarButtons>
         @if(_isDetail)
         {
@@ -56,6 +56,8 @@
     [Parameter]
     public bool CanDelete {get;set;}
     [Parameter]
+    public bool CanDetail {get;set;}
+    [Parameter]
     public bool EditingFlex {get;set;} = false;
     [Parameter]
     public int Take {get;set;} = 100;
@@ -63,15 +65,23 @@
     public bool ServerPagination {get;set;} = false;
     [Parameter]
     public string FilterSearch {get;set;} = "";
+
+    [Parameter]
+    public string FlexFilters {get;set;} = "";
+
     [Parameter]
     public string GuidFlex {get;set;} = "";
     [Parameter]
     public List<string> ActionIcons {get;set;} = new List<string>();
 
     [Parameter]
-    public bool HasSearch {get;set;} = false;  
+    public bool HasSearch {get;set;} = false;
     [Parameter]
     public bool IsMultiple {get;set;} = false;
+
+    [Parameter]
+    public int FlexRowId {get;set;} = 0;
+
     private string _guid ="";
     private bool _isDebug = false;
 
@@ -152,7 +162,10 @@
             _currentView = "edit";
         }
         var actionIconsString = JsonConvert.SerializeObject(ActionIcons);
-
+        if(FlexRowId != 0){
+            _flexRowId = FlexRowId;
+            _currentView = "detail";
+        }
         FlexAttributes.Clear();
         flexElementId = "flexdebug";//$"flex_{Guid.NewGuid().ToString()}";
         FlexAttributes.Add("id", flexElementId);
@@ -165,6 +178,7 @@
         FlexAttributes.Add("guid_list_view", GuidListView);
         FlexAttributes.Add("can_edit_list_view", CanEdit.ToString());
         FlexAttributes.Add("can_delete_list_view", CanDelete.ToString());
+        FlexAttributes.Add("can_detail_list_view", CanDetail.ToString());
         FlexAttributes.Add("editing_flex", EditingFlex.ToString());
         FlexAttributes.Add("take", Take.ToString());
         FlexAttributes.Add("server_pagination", ServerPagination.ToString());
@@ -172,6 +186,7 @@
         FlexAttributes.Add("guid", _guid);
         FlexAttributes.Add("action_icons", actionIconsString);
         FlexAttributes.Add("is_multiple", IsMultiple.ToString());
+        FlexAttributes.Add("flex_filters", FlexFilters);
         if(_flexRowId != 0)
         {
             FlexAttributes.Add("base_obj_id", _flexRowId);

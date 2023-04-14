@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Siesa.Global.Enums;
 
 
+
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
@@ -20,41 +21,41 @@ namespace Siesa.SDK.Entities
 	public partial class E00223_UserAccountPolicy : BaseMaster<int, string>
 	{
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override int Rowid { get; set; }
 
-		[Required]
-		[StringLength(20)]
+		[SDKRequired]
+		[SDKStringLength(20)]
 		public override string Id { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public bool IsDefault { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public short MinimumPasswordAge { get; set; } = 0;
 
-		[Required]
+		[SDKRequired]
 		public short MaximumPasswordAge { get; set; } = 0;
 
-		[Required]
+		[SDKRequired]
 		public byte MinimumPasswordLength { get; set; } = 0;
 
-		[Required]
+		[SDKRequired]
 		public bool PasswordMustComplexityRequirements { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public bool KeepPasswordHistory { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public short NumberPasswordsRemembered { get; set; } = 0;
 
-		[Required]
+		[SDKRequired]
 		public bool AcountWillLockOut { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public byte NumberInvalidLoginAttempts { get; set; } = 0;
 
-		[Required]
+		[SDKRequired]
 		public short AcountLockoutDuration { get; set; } = 0;
 
 

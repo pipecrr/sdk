@@ -58,6 +58,34 @@ namespace Siesa.SDK.Shared.Criptography
             }
         }
 
+        public JwtSecurityToken ValidateToken(string token)
+        {
+            if (String.IsNullOrEmpty(token)){
+                return null;
+            }
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_secretKey);
+            try
+            {
+                tokenHandler.ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    // set clockskew to zero so tokens expire exactly at token expiration time (instead of 5 minutes later)
+                    ClockSkew = TimeSpan.Zero
+                }, out SecurityToken validatedToken);
+
+                var jwtToken = (JwtSecurityToken)validatedToken;
+                return jwtToken;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public string Generate(E00220_User? user, Dictionary<string, List<int>>? featurePermissions, List<SessionRol> roles,  short rowIdDBConnection, short rowidcompanygroup =0)
         {
             // generate token that is valid for 7 days
@@ -75,7 +103,8 @@ namespace Siesa.SDK.Shared.Criptography
                 FeaturePermissions = featurePermissions,
                 RowidCompanyGroup = rowidcompanygroup,
                 RowIdDBConnection = rowIdDBConnection,
-                IsAdministrator = user.IsAdministrator
+                IsAdministrator = user.IsAdministrator,
+                RowidAttachmentUserProfilePicture = user.RowidAttachmentUserProfilePicture
             };
 
 

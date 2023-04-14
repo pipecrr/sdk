@@ -11,23 +11,22 @@ namespace Siesa.SDK.Entities
 	public abstract partial class BaseMasterCompanyGroup<T> : BaseCompanyGroup<int>
 	{
 		[Key]
-		[Required]
+		[SDKRequired]
 		public override int Rowid { get; set; }
 
 		public virtual T Id { get; set; }
 
-		[Required]
-		[StringLength(250)]
+		[SDKRequired]
+		[SDKStringLength(250)]
 		public virtual string Name { get; set; }
 
-		[Required]
-		[StringLength(2000)]
-		public virtual string Description { get; set; }
+		[SDKStringLength(2000)]
+		public virtual string? Description { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public virtual enumStatusBaseMaster Status { get; set; }
 
-		[Required]
+		[SDKRequired]
 		public virtual bool IsPrivate { get; set; }
 
 		public virtual int? RowidAttachment { get; set; }

@@ -3,6 +3,7 @@
 @using Siesa.SDK.Frontend.Services
 @using Siesa.SDK.Shared.Services
 @using System
+@using Siesa.Global.Enums
 @inject ILayoutService LayoutService
 @inject NavigationManager NavigationManager
 @inject MenuService MenuService
@@ -108,8 +109,17 @@
         if (_newSelectedMenu != null && _newSelectedMenu != _selectedMenu)
         {
             _selectedMenu = _newSelectedMenu;
-            var BLRecentMenu = BackendRouterService.GetSDKBusinessModel("BLRecentMenu", AuthenticationService);
-            BLRecentMenu.Call("AddRecentMenu",currentUrl,_selectedMenu.Rowid);
+            if(_selectedMenu.Type != MenuType.Submenu && _selectedMenu.Type != MenuType.Separator)
+            {
+                try
+                {
+                    var BLRecentMenu = BackendRouterService.GetSDKBusinessModel("BLRecentMenu", AuthenticationService);
+                    _ = BLRecentMenu.Call("AddRecentMenu",currentUrl,_selectedMenu.Rowid);
+                }catch(Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
             breadcrumb.Clear();
             breadcrumb.Add(_selectedMenu);
             var _parent = _selectedMenu.MenuParent;
@@ -152,7 +162,7 @@
     private void SearchMenuItem(string currentUrl, ICollection<E00061_Menu> menus, ref List<E00061_Menu> result, E00061_Menu parent = null)
     {
         string blName = currentUrl.Substring(0, currentUrl.IndexOf("/", 1) + 1);
-        foreach (var menu in menus)
+        foreach (var menu in menus.Where(x => x.Type != MenuType.Separator))
         {
             if(menu.ResourceTag == "SDKDev-DevMenu")
             {

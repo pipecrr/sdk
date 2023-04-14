@@ -28,6 +28,8 @@ namespace Siesa.SDK.Frontend.Services
         private UtilsManager UtilsManager { get; set; }
         public Dictionary<int, List<E00061_Menu>> SuiteData {get; set;} = new();
 
+        public E00060_Suite SelectedSuite { get; set; } = new();
+
         private bool loading = false;
 
         private SDKBusinessModel _menuBL { get { return BackendRouterService.GetSDKBusinessModel("BLAdminMenu", AuthenticationService); } }
@@ -54,6 +56,11 @@ namespace Siesa.SDK.Frontend.Services
             if(Suites.Count == 1 || AuthenticationService.GetSelectedSuite() == 0)
             {
                 AuthenticationService.SetSelectedSuite(Suites.First().Rowid);
+                SelectedSuite = Suites.FirstOrDefault(x => x.Rowid == Suites.First().Rowid);
+            }
+            else
+            {
+                SelectedSuite = Suites.FirstOrDefault(x => x.Rowid == AuthenticationService.GetSelectedSuite());
             }
 
             _ = GetSuiteResources(Suites);
@@ -81,6 +88,55 @@ namespace Siesa.SDK.Frontend.Services
                     SubMenus = new List<E00061_Menu>(),
                     CurrentText = "DevMenu",
                 });
+                var DevMenu = Menus.FirstOrDefault(x => x.ResourceTag == "SDKDev-DevMenu")?.SubMenus;
+
+                foreach (var business in BackendRouterService.GetBusinessModelList())
+                {
+                    if (DevMenu == null)
+                    {
+                        continue;
+                    }
+                    var businessType = Utilities.SearchType(business.Namespace + "." + business.Name);
+                    if (businessType == null)
+                    {
+                        continue;
+                    }
+                    var isBLExplorer = Utilities.IsAssignableToGenericType(businessType, typeof(BLFrontendExplorer<>));
+                    if (isBLExplorer)
+                    {
+                        var customActionMenu = new E00061_Menu
+                        {
+                            ResourceTag = $"SDKDev-{business.Name}.Plural",
+                            Url = $"/{business.Name}/explorer/",
+                            Type = MenuType.CustomMenu
+                        };
+                        DevMenu.Add(customActionMenu);
+                    }
+                    else
+                    {
+                        var submenuItem = new E00061_Menu
+                        {
+                            ResourceTag = $"SDKDev-{business.Name}.Plural",
+                            Url = $"/{business.Name}/",
+                            SubMenus = new List<E00061_Menu>(),
+                            Type = MenuType.CustomMenu
+                        };
+                        //search methods that return a RenderFragment
+                        var customActions = businessType.GetMethods().Where(m => m.ReturnType == typeof(RenderFragment));
+                        foreach (var customAction in customActions)
+                        {
+                            var customActionMenu = new E00061_Menu
+                            {
+                                ResourceTag = $"SDKDev-{business.Name}.CustomAction.{customAction.Name}",
+                                Url = $"/{business.Name}/{customAction.Name}/",
+                                Type = MenuType.CustomMenu
+                            };
+                            submenuItem.SubMenus.Add(customActionMenu);
+                        }
+
+                        DevMenu.Add(submenuItem);
+                    }
+                }
             }
         }
 
@@ -95,7 +151,8 @@ namespace Siesa.SDK.Frontend.Services
             loading = true;
             Menus = new List<E00061_Menu>();
             AddDevMenu(Menus);
-            await LoadMenu(AuthenticationService.GetSelectedSuite());
+            int rowidSuite = AuthenticationService.GetSelectedSuite(); 
+            await LoadMenu(rowidSuite);
             loading = false;
         }
 
@@ -129,56 +186,6 @@ namespace Siesa.SDK.Frontend.Services
 
         public async Task LoadMenu(int suiteRowid)
         {
-            var DevMenu = Menus.FirstOrDefault(x => x.ResourceTag == "SDKDev-DevMenu")?.SubMenus;
-
-            foreach (var business in BackendRouterService.GetBusinessModelList())
-            {
-                if (DevMenu == null)
-                {
-                    continue;
-                }
-                var businessType = Utilities.SearchType(business.Namespace + "." + business.Name);
-                if (businessType == null)
-                {
-                    continue;
-                }
-                var isBLExplorer = Utilities.IsAssignableToGenericType(businessType, typeof(BLFrontendExplorer<>));
-                if (isBLExplorer)
-                {
-                    var customActionMenu = new E00061_Menu
-                    {
-                        ResourceTag = $"SDKDev-{business.Name}.Plural",
-                        Url = $"/{business.Name}/explorer/",
-                        Type = MenuType.CustomMenu
-                    };
-                    DevMenu.Add(customActionMenu);
-                }
-                else
-                {
-                    var submenuItem = new E00061_Menu
-                    {
-                        ResourceTag = $"SDKDev-{business.Name}.Plural",
-                        Url = $"/{business.Name}/",
-                        SubMenus = new List<E00061_Menu>(),
-                        Type = MenuType.CustomMenu
-                    };
-                    //search methods that return a RenderFragment
-                    var customActions = businessType.GetMethods().Where(m => m.ReturnType == typeof(RenderFragment));
-                    foreach (var customAction in customActions)
-                    {
-                        var customActionMenu = new E00061_Menu
-                        {
-                            ResourceTag = $"SDKDev-{business.Name}.CustomAction.{customAction.Name}",
-                            Url = $"/{business.Name}/{customAction.Name}/",
-                            Type = MenuType.CustomMenu
-                        };
-                        submenuItem.SubMenus.Add(customActionMenu);
-                    }
-
-                    DevMenu.Add(submenuItem);
-                }
-            }
-
             var menuRequest = await _menuBL.Call("GetMenuItems", Convert.ToInt64(suiteRowid));
 
             if(menuRequest.Success)
@@ -221,6 +228,21 @@ namespace Siesa.SDK.Frontend.Services
             var menuBL = BackendRouterService.GetSDKBusinessModel("BLAdminMenu", AuthenticationService);
 
             var Request = await menuBL.Call("GetMenuItemsWithChilds", RowidSuite);
+
+            if(!Request.Success) return false;
+
+            var Data = Request.Data;
+
+            MenuManagerBySuite(menuBL, RowidSuite, Data, true, true);
+
+            return true;
+        }
+
+        public async Task<bool> GetMenuItemsWithChildsAndOperations(int RowidSuite)
+        {
+            var menuBL = BackendRouterService.GetSDKBusinessModel("BLAdminMenu", AuthenticationService);
+
+            var Request = await menuBL.Call("GetMenuItemsWithChildsAndOperations", RowidSuite);
 
             if(!Request.Success) return false;
 
@@ -300,6 +322,7 @@ namespace Siesa.SDK.Frontend.Services
             var suite = Suites.FirstOrDefault(x => x.Rowid == suiteRowid);
             if (suite != null)
             {
+                SelectedSuite = suite;
                 AuthenticationService.SetSelectedSuite(suiteRowid);
                 Menus.Clear();
                 AddDevMenu(Menus);

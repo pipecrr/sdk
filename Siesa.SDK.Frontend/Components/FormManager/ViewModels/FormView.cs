@@ -76,6 +76,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Parameter]
         public Action OnCancel {get; set;} = null;
 
+        [Parameter]
+        public List<string> ParentBaseObj { get; set; }
+
         public int CountUnicErrors = 0;
 
         private string _viewdefName = "";
@@ -128,6 +131,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             if (String.IsNullOrEmpty(data) && _viewdefName != DefaultViewdefName)
             {
                 data = BackendRouterService.GetViewdef(businessName, DefaultViewdefName);
+            }
+            if(String.IsNullOrEmpty(data)){
+                _viewdefName = "default";
+                data = BackendRouterService.GetViewdef(businessName, _viewdefName);
             }
             return data;
         }
@@ -354,7 +361,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
             }
             if(DataAttatchmentDetail != null){
                 var result = await BusinessObj.SaveAttachmentDetail(DataAttatchmentDetail, rowid);
-                return 0;
+                return result;
             }
             return 0;
         }
@@ -387,17 +394,18 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
                     var fileField = item.Value;
                     var rowidAttatchment = 0;
                     var field = item.Key;
-                    var property = BusinessObj.BaseObj.GetType().GetProperty(field);
-                    var rowidProp = property.PropertyType.GetProperty("Rowid").GetValue(property.GetValue(BusinessObj.BaseObj));
-                    if(rowidProp != null){
-                        rowidAttatchment = await savingAttachment(fileField, (int)rowidProp);
+                    dynamic property = BusinessObj.BaseObj.GetType().GetProperty(field).GetValue(BusinessObj.BaseObj);
+                    if(property != null){ 
+                        var rowidProp = property.GetType().GetProperty("Rowid").GetValue(property);
+                        if(rowidProp != null)
+                            rowidAttatchment = await savingAttachment(fileField, (int)rowidProp);
                     }else{
                         rowidAttatchment = await savingAttachment(fileField);
                     }
                     if(rowidAttatchment > 0){
                         var AttatchmentDetail = Activator.CreateInstance(BusinessObj.BaseObj.GetType().GetProperty(field).PropertyType);
                         AttatchmentDetail.GetType().GetProperty("Rowid").SetValue(AttatchmentDetail, rowidAttatchment);
-                        property.SetValue(BusinessObj.BaseObj, AttatchmentDetail);
+                        BusinessObj.BaseObj.GetType().GetProperty(field).SetValue(BusinessObj.BaseObj, AttatchmentDetail);
                     }
                 }
             }

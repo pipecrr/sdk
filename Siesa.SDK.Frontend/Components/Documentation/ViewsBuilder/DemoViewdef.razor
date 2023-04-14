@@ -15,8 +15,24 @@
                 </p>
                     <SDKTextField CssClass="text-area-demoviewdef" Value="@ViewdefCreate"/>
 
+                <p>Es posible crear un único Viewdef con el nombre "default.json" para cargar las vistas de creación, edición y detalle, en caso de que exista un "create.json", "edit.json" y/o "detail.json" estos últimos tendrán prioridad sobre el "default.json", igualmente para el caso de los "related_*.json" este tendrá prioridad sobre los anteriores.</p>
+                <br/>
+
                 <p>El archivo de metadatos para una vista de lista, tiene el siguiente formato:</p>
                     <SDKTextField CssClass="text-area-demoviewdef" Value="@ViewdefList"/>
+                
+                <p>Los filtros son una lista de listas de object donde cada elemento de la lista es un or y cada propiedad del objeto es un and, los tipos de filtros soportados son:</p>
+                <ul>
+                    <li>{FieldName}__in: para filtro in, se debe enviar una lista del tipo del campo con los elementos que se van a filtrar</li>
+                    <li>{FieldName}__not_in: para filtro not in, se debe enviar una lista del tipo del campo con los elementos que se van a filtrar</li>
+                    <li>{FieldName}__contains: para filtro contains</li>
+                    <li>{FieldName}__gt: para filtro mayor que</li>
+                    <li>{FieldName}__gte: para filtro mayor o igual que</li>
+                    <li>{FieldName}__lt: para filtro menor que</li>
+                    <li>{FieldName}__lte: para filtro menor o igual que</li>
+                    <li>{FieldName}: para filtrar por un valor igual a</li>
+                </ul>
+                
 
                 <p>Tambien se da soporte para los campos de tipo control entidad, 
                     indicando el campo que se relaciona y con cual entidad hace relacion. Genera un campo de tipo
@@ -27,8 +43,8 @@
                     correspondientes al ingresar a la URL del negocio:</p>
                     <ul>
                         <li>Creación: /NombreDelNegocio/create/</li>
-                        <li>Edición: /NombreDelNegocio/edit/RowId/</li>
-                        <li>Detalle: /NombreDelNegocio/detail/RowId/</li>
+                        <li>Edición: /NombreDelNegocio/edit/{RowId}/</li>
+                        <li>Detalle: /NombreDelNegocio/detail/{RowId}/</li>
                         <li>Lista: /NombreDelNegocio/</li>
                     </ul>
 
@@ -105,12 +121,22 @@
                 <p>Por defecto el listar no muestra el linkTo si se desea agregar el LisnkTO es necesario indicarlo en el list.json</p>
                         <SDKTextField CssClass="text-area-demoviewdef" Value="@ShowLinkTo"/>
                         
-                <p>El listar permite enviar acciones personalizadas se agregan a nivel general en el list.json</p>
+                <p>El listar permite enviar acciones personalizadas se agregan a nivel general en el list.json, en el BL el metodo "CustomAction" recibe como parametro un objeto del tipo del registro</p>
                         <SDKTextField CssClass="text-area-demoviewdef" Value="@CustomActions"/>
 
                 <p>Utilizando la propiedad CustomAtributtes ahora podemos definir para un campo de tipo Booleano, 
                     las opciones que se mostraran luego de definirlo como tipo Selectbar, enviando el tag del recurso de la siguiente manera:</p>
                          <SDKTextField CssClass="text-area-demoviewdef" Value="@SelectbarBoolean"/>
+
+                <p>Los Viewdef soportan a traves de un nuevo objeto llamado ExtraFields enviar los campos especificos que vamos a necesitar/consultar(Esto aplica por ahora para las vistas "DetailView").
+                    Si no se especifica ExtraFields, se consultaran todos los campos del objeto, si se especifica, se consultaran solo los campos que se envien en el ExtraFields:</p>
+                    <SDKTextField CssClass="text-area-demoviewdef" Value="@ExtraFields"/>
+                <p>
+                    Esto tambien aplica si queremos traer campos relacionados, como se ve en el ejemplo anterior,
+                    se envia el campo "BaseObj.City.State" indicando que quiero traer en este caso la ciudad y el departamente de un barrio
+                    y "BaseObj.City.State.Country", indicando que quiero ahora consultar tambien el Pais.
+                </p>
+                
         </div>
     </div>
 </div>
@@ -152,7 +178,13 @@
                                     100
                                     ]
                                 },
-                                ""Filters"": [],
+                                ""Filters"": [
+                                    [
+                                        {
+                                            ""Status__in"": ""GetFilter()""
+                                        }
+                                    ]
+                                ],
                                 ""Fields"": [
                                     {
                                     ""Name"": ""BaseObj.Name""
@@ -163,7 +195,11 @@
                                     {
                                     ""Name"": ""BaseObj.Status""
                                     }
-                                ]
+                                ],
+                                ""AllowEdit"": ""false"",
+                                ""AllowDelete"": ""false"",
+                                ""AllowDetail"": ""false"",
+                                ""AllowCreate"": ""false""
                             }";
 
     string ControlEntidad = @"  {
@@ -272,7 +308,13 @@
                             ""CustomActions"": [{                            
                             ""Action"": ""CustomAction"",
                             ""IconClass"": ""fa fa-plus""
-                            }]";
+                            }]
+                            
+                            ///BL
+                            public async Task CustomAction([tipo del baseObj] obj){
+                                 //Todo lo que se quiera hacer
+                            }
+                            ";
 
     string SelectbarBoolean = @"
                                     ""Name"": ""BaseObj.HasScheduledAccess"", 
@@ -281,4 +323,23 @@
                                         ""BooleanYesResourceTag"": ""Custom.Prueba.Si"",
                                         ""BooleanNoResourceTag"": ""Custom.Prueba.No""
                                         }" ;
+    
+    string ExtraFields = @"
+                            ""{
+                            ""Panels"": [
+                                {
+                                ""Fields"": [
+                                ""...""
+                                ""...""
+                                ""...""
+                                ""]""
+                                ""}""
+                            ""],""
+                            ""ExtraFields"": ""[
+                            ""Name: Id"",
+                            ""Name: Name"",
+                            ""Name: BaseObj.City.State"",
+                            ""Name: BaseObj.City.State.Country""
+                            ""]""
+                            }";
 }

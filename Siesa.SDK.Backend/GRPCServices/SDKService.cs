@@ -71,7 +71,7 @@ namespace Siesa.SDK.GRPCServices
             businessObj.SetProvider(_provider);
 
             var response = new Protos.BusinessObjResponse();
-            var result = businessObj.Get(request.Id);
+            var result = businessObj.Get(request.Id, request.ExtraFields.ToList()); //request.Extrafields
 
             businessObj.DetachedBaseObj();
 
@@ -147,7 +147,7 @@ namespace Siesa.SDK.GRPCServices
             dynamic businessObj = ActivatorUtilities.CreateInstance(_provider,businessType);
             businessObj.SetProvider(_provider);
 
-            var result = businessObj.EntityFieldSearch(request.SearchText, request.Filters);
+            var result = businessObj.EntityFieldSearch(request.SearchText, request.Filters, request.Top, request.OrderBy);
             var response = new Protos.LoadResult();
             response.TotalCount = result.TotalCount;
             response.GroupCount = result.GroupCount;

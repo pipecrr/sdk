@@ -1,19 +1,69 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Newtonsoft.Json;
 using Siesa.SDK.Business;
+using Siesa.SDK.Frontend.Components.FormManager.Model;
 using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
 using Siesa.SDK.Frontend.Extension;
+using Siesa.SDK.Frontend.Services;
+using Siesa.SDK.Shared.Services;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
     public partial class DynamicDetailView : DynamicBaseViewModel
     {
-        private async Task InitDetail(Int64 business_obj_id)
+        [Inject]
+        public IBackendRouterService BackendRouterService { get; set; }
+        private FormViewModel FormViewModel { get; set; } = new FormViewModel();
+
+        private List<string> _extraFields = new List<string>();
+        private async Task GetExtraFields(string bName = null)
         {
             try
             {
-                await BusinessObj.InitializeBusiness(business_obj_id);
+                string _viewdefName = "detail";
+
+                if (IsSubpanel)
+                {
+                    _viewdefName = "related_detail";
+                }     
+
+                var metadata = BackendRouterService.GetViewdef(bName, _viewdefName);
+
+                if(String.IsNullOrEmpty(metadata))
+                {
+                    metadata = BackendRouterService.GetViewdef(bName, "default");
+                }
+
+                FormViewModel = JsonConvert.DeserializeObject<FormViewModel>(metadata);
+
+                if (FormViewModel.ExtraFields.Count > 0)
+                {   
+                    var defaultFields = FormViewModel.Panels.SelectMany(panel => panel.Fields)
+                                    .Select(field => field.Name)
+                                    .ToList(); 
+
+                    _extraFields =  FormViewModel.ExtraFields.Select(f => f.Name)                        
+                    .Union(defaultFields)
+                    .ToList();
+
+                    _extraFields = _extraFields.Select(field => field.Replace("BaseObj.", "")).ToList();
+                }
+            }
+            catch (System.Exception)
+            {
+            }
+        }
+
+        private async Task InitDetail(Int64 business_obj_id)
+        {
+            await GetExtraFields(BusinessName);
+            try
+            {
+                await BusinessObj.InitializeBusiness(business_obj_id,_extraFields);
             }
             catch (System.Exception e)
             {
@@ -32,8 +82,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             parameters.Add("ShowDeleteButton", ShowDeleteButton);
             if (IsSubpanel)
             {
-                parameters.Add("SetTopBar", false);                
-            }            
+                parameters.Add("SetTopBar", false);
+                parameters.Add("ViewdefName", "related_detail");
+            }
         }
 
         public override async Task SetParametersAsync(ParameterView parameters)

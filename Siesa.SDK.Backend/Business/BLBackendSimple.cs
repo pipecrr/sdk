@@ -32,6 +32,7 @@ using Microsoft.AspNetCore.Http;
 using System.Net;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using Siesa.Global.Enums;
 
 namespace Siesa.SDK.Business
 {
@@ -73,17 +74,17 @@ namespace Siesa.SDK.Business
             return new DeleteBusinessObjResponse();
         }
 
-        public BaseSDK<int> Get(Int64 rowid)
+        public BaseSDK<int> Get(Int64 rowid, List<string> extraFields = null)
         {
             return null;
         }
 
-        public Task<BaseSDK<int>> GetAsync(Int64 rowid)
+        public Task<BaseSDK<int>> GetAsync(Int64 rowid, List<string> extraFields = null)
         {
             return null;
         }
 
-        public Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<BaseSDK<int>> queryFilter = null, bool includeCount = false)
+        public Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<BaseSDK<int>> queryFilter = null, bool includeCount = false, bool includeAttachments = true)
         {
             return null;
         }
@@ -107,7 +108,7 @@ namespace Siesa.SDK.Business
         }
 
 
-        public void SetProvider(IServiceProvider provider)
+        public virtual void SetProvider(IServiceProvider provider)
         {
             _provider = provider;
 
@@ -185,6 +186,7 @@ namespace Siesa.SDK.Business
         public T BaseObj { get; set; }
 
         private string[] _relatedProperties = null;
+        private string[] _relatedAttachmentsType = null;
         protected SDKContext ContextMetadata;
         public List<string> RelFieldsToSave { get; set; } = new List<string>();
         private bool CanCreate { get; set; } = true;
@@ -212,6 +214,7 @@ namespace Siesa.SDK.Business
                     && p.Name != "RowVersion"
                     && p.GetCustomAttribute(typeof(NotMappedAttribute)) == null
             ).Select(p => p.Name).ToArray();
+            _relatedAttachmentsType = BaseObj.GetType().GetProperties().Where(p => p.PropertyType == typeof(E00271_AttachmentDetail)).Select(p => p.Name).ToArray();
             unique_indexes = BaseObj.GetType()
                 .GetCustomAttributes(typeof(Microsoft.EntityFrameworkCore.IndexAttribute), false)
                 .Where(x =>
@@ -249,7 +252,7 @@ namespace Siesa.SDK.Business
             return _provider;
         }
 
-        public void SetProvider(IServiceProvider provider)
+        public virtual void SetProvider(IServiceProvider provider)
         {
             _provider = provider;
 
@@ -357,19 +360,47 @@ namespace Siesa.SDK.Business
             }
         }
 
-        public virtual T Get(Int64 rowid)
+    public virtual T Get(Int64 rowid, List<string> extraFields = null)
+    {
+        using (SDKContext context = CreateDbContext())
         {
-            using (SDKContext context = CreateDbContext())
+            var query = context.Set<T>().AsQueryable();
+
+            if (extraFields != null && extraFields.Count > 0)
             {
-                var query = context.Set<T>().AsQueryable();
+                extraFields.Add("Rowid");
+
+                var selectedFields = string.Join(",", extraFields.Select(x =>
+                {
+                    var splitInclude = x.Split('.');
+                    if (splitInclude.Length > 1) 
+                    {
+                        for (int i = 1; i <= splitInclude.Length; i++)
+                        {
+                            var include = string.Join(".", splitInclude.Take(i));
+                            query = query.Include(include);
+                        }
+                    }
+                    return splitInclude[0];
+                }).Distinct());
+
+                query = query.Select<T>($"new ({selectedFields})");
+
+            }
+            else
+            {
                 foreach (var relatedProperty in _relatedProperties)
                 {
                     query = query.Include(relatedProperty);
                 }
-                query = query.Where("Rowid == @0", ConvertToRowidType(rowid));
-                return query.FirstOrDefault();
             }
+
+            query = query.Where("Rowid == @0", ConvertToRowidType(rowid));
+
+            return query.FirstOrDefault();
         }
+    }
+        
         public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave()
         {
             ValidateAndSaveBusinessObjResponse result = new();
@@ -582,20 +613,30 @@ namespace Siesa.SDK.Business
             }
             catch (Exception e)
             {
-                //response.Errors.AddRange(result.Errors);
-
-                return null;
+                this._logger.LogError(e, $"Error deleting {this.GetType().Name}");
+                response.Errors.Add(new OperationError() { Message = e.Message });
             }
 
-            return new DeleteBusinessObjResponse();
+            return response;
         }
 
         public virtual IQueryable<T> EntityFieldFilters(IQueryable<T> query)
         {
+            //check if has field Status
+            try{
+                var statusProperty = BaseObj.GetType().GetProperty("Status");
+                //check if status is a enumStatusBaseMaster 
+                if (statusProperty != null && statusProperty.PropertyType == typeof(enumStatusBaseMaster))
+                {
+                    query = query.Where("Status == @0", enumStatusBaseMaster.Active);
+                }
+            }catch(Exception e){
+                this._logger.LogError(e, $"Error checking status property {this.GetType().Name}");
+            }
             return query;
         }
 
-        public virtual Siesa.SDK.Shared.Business.LoadResult EntityFieldSearch(string searchText, string prefilters = "")
+        public virtual Siesa.SDK.Shared.Business.LoadResult EntityFieldSearch(string searchText, string prefilters = "", int? top = null, string orderBy = "")
         {
             this._logger.LogInformation($"Field Search {this.GetType().Name}");
             var string_fields = BaseObj.GetType().GetProperties().Where(p => p.PropertyType == typeof(string) && p.GetCustomAttributes().Where(x => x.GetType() == typeof(NotMappedAttribute)).Count() == 0).Select(p => p.Name).ToArray();
@@ -613,7 +654,11 @@ namespace Siesa.SDK.Business
                 filter = $"({prefilters}) && ({filter})";
             }
             QueryFilterDelegate<T> filterDelegate = EntityFieldFilters;
-            return this.GetData(0, 10, filter, "", filterDelegate);
+            var take = 10;
+            if (top.HasValue){
+                take = top.Value;
+            }
+            return this.GetData(0, take, filter, orderBy, filterDelegate, includeAttachments: false);
         }
 
         [SDKExposedMethod]
@@ -638,7 +683,7 @@ namespace Siesa.SDK.Business
                     };
         }
 
-        public virtual Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null, bool includeCount = false)
+        public virtual Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null, bool includeCount = false, bool includeAttachments = true)
         {
             this._logger.LogInformation($"Get Data {this.GetType().Name}");
             var result = new Siesa.SDK.Shared.Business.LoadResult();
@@ -648,6 +693,10 @@ namespace Siesa.SDK.Business
                 var query = context.Set<T>().AsQueryable();
                 foreach (var relatedProperty in _relatedProperties)
                 {
+                    if(!includeAttachments && _relatedAttachmentsType != null && _relatedAttachmentsType.Contains(relatedProperty))
+                    {
+                        continue;
+                    }
                     query = query.Include(relatedProperty);
                 }
 
@@ -690,7 +739,7 @@ namespace Siesa.SDK.Business
             return result;
         }
 
-        public Task<T> GetAsync(Int64 rowid)
+        public Task<T> GetAsync(Int64 rowid,List<string> extraFields = null)
         {
             throw new NotImplementedException();
         }
@@ -874,6 +923,7 @@ namespace Siesa.SDK.Business
             return new BadRequestResult<SDKFileFieldDTO>{Success = false, Errors = new List<string> { "File not found" }};
         }
         
+        [SDKExposedMethod]
         public async Task<ActionResult<T>> DataEntity(object rowid){
             using (SDKContext context = CreateDbContext())
             {   

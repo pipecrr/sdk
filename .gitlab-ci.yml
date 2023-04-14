@@ -8,25 +8,39 @@ stages:
 variables:
   PACKAGE_REGISTRY_URL: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/nuget/index.json"
 
-build:
+build_dev:
     stage: build
     only: 
       - develop
     script:
       - dotnet nuget add source $PACKAGE_REGISTRY_URL --name gitlab --username gitlab-ci-token --password $CI_JOB_TOKEN --store-password-in-clear-text
-      #- dotnet nuget add source https://nuget.devexpress.com/api -n DXFeed -u DevExpress -p $DX_NUGET_TOKEN --store-password-in-clear-text
       - dotnet restore
-      - dotnet pack -c Release -o nuget --version-suffix "$(date +%Y%m%d)"
+      - dotnet pack -c Release -o nuget --version-suffix "dev"
     tags:
       - docker
     artifacts:
         paths:
           - nuget/
 
+build:
+    stage: build
+    only: 
+      - docker-labs
+    script:
+      - dotnet nuget add source $PACKAGE_REGISTRY_URL --name gitlab --username gitlab-ci-token --password $CI_JOB_TOKEN --store-password-in-clear-text
+      - dotnet restore
+      - dotnet pack -c Release -o nuget --version-suffix "$(date +%Y%m%d)"
+    tags:
+      - docker
+    artifacts:
+        paths:
+          - nuget/          
+
 test:
     stage: test
     only: 
       - develop
+      - docker-labs
     tags:
       - docker
     script:
@@ -60,6 +74,7 @@ deploy:
     stage: deploy
     only: 
       - develop
+      - docker-labs
     tags:
       - docker
     script:

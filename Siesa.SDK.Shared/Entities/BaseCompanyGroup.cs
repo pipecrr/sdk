@@ -13,7 +13,7 @@ namespace Siesa.SDK.Entities
 		
 
 		[ForeignKey("CompanyGroup")]
-		[Required]
+		[SDKRequired]
 		public virtual short RowidCompanyGroup { get; set; }
 
 
