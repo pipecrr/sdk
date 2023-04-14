@@ -23,6 +23,18 @@
                 </ul>
             </li>
             <li>OnChange: Evento que se dispara cuando se selecciona un elemento de la vista desplegable</li>
+            <li>Filters: Los filtros son una lista de listas de object donde cada elemento de la lista es un or y cada propiedad del objeto es un and, los tipos de filtros soportados son:
+                <ul>
+                    <li>{FieldName}__in: para filtro in, se debe enviar una lista del tipo del campo con los elementos que se van a filtrar</li>
+                    <li>{FieldName}__not_in: para filtro not in, se debe enviar una lista del tipo del campo con los elementos que se van a filtrar</li>
+                    <li>{FieldName}__contains: para filtro contains</li>
+                    <li>{FieldName}__gt: para filtro mayor que</li>
+                    <li>{FieldName}__gte: para filtro mayor o igual que</li>
+                    <li>{FieldName}__lt: para filtro menor que</li>
+                    <li>{FieldName}__lte: para filtro menor o igual que</li>
+                    <li>{FieldName}: para filtrar por un valor igual a</li>
+                </ul>
+            </li>
         </ul>
     </div>
     <div class="row px-3"> 
