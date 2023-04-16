@@ -54,6 +54,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         public Type typeProperty { get; set; }
         public string orderBy { get; set; } = "Rowid";
         public int FieldTemplate { get; set; } = 1;
+        public Dictionary<string, object> DefaultFieldsCreate { get; set; } = new Dictionary<string, object>();
 
         private bool CanCreate;
         private bool CanEdit;
@@ -495,6 +496,25 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 AutomationId = FieldName;
             }
             return base.GetAutomationId();
+        }
+
+        public async Task InheritCompany()
+        {
+            Type typeParent = BaseObj.GetType();
+            
+            if (Utilities.IsAssignableToGenericType(typeParent, typeof(BaseCompany<>)))
+            {
+                Type RelatedType = BindProperty.PropertyType;
+
+                if (Utilities.IsAssignableToGenericType(RelatedType, typeof(BaseCompany<>)))
+                {
+                    if (BaseObj.Company != null)
+                    {
+                        DefaultFieldsCreate.Add("BaseObj.Company", BaseObj.Company);
+                    }
+                }
+            }
+
         }
     }
 }
