@@ -64,7 +64,15 @@ function deleteCookie(name) {
 }
 
 function SetFocusToElement(dataAutomationId){
-    document.querySelector(`[data-automation-id="${dataAutomationId}"]`).focus();
+    try {
+        const element = document.querySelector(`[data-automation-id="${dataAutomationId}"]`);
+        if (element) {
+          element.focus();
+        }
+      } catch (error) {
+        // No hacer nada en caso de que el elemento no se encuentre
+      }
+    //document.querySelector(`[data-automation-id="${dataAutomationId}"]`).focus();
 }
 
 function preloadFlex(){

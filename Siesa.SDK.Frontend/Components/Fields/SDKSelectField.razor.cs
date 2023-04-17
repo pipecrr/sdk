@@ -29,6 +29,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         [Parameter] public string TextProperty { get; set; }
         [Parameter] public string ValueProperty { get; set; }
         [Parameter] public string FieldName { get; set; }
+        [Parameter] public Action OnFocusOut { get; set; } = () => { };
 
         public void RefreshCurrentText()
         {
@@ -60,6 +61,13 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 AutomationId = FieldName;
             }
             return base.GetAutomationId();
+        }
+
+        private async Task _OnFocusOut()
+        {
+            if(OnFocusOut != null){
+               OnFocusOut();
+            }
         }
     }
 
