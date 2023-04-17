@@ -125,11 +125,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         }
         private void CreateRelationshipAttachment()
         {
-            var attachment = BusinessObj.BaseObj.GetType().GetProperty("RowidAttachment");
-            if(attachment == null || BusinessName == "BLAttachmentDetail"){
-                return;
+            try
+            {
+                var attachment = BusinessObj.BaseObj.GetType().GetProperty("RowidAttachment");
+                if(attachment == null || BusinessName == "BLAttachmentDetail"){
+                    return;
+                }
+                ContainAttachments = true;
             }
-            ContainAttachments = true;
+            catch (System.Exception)
+            {
+                ContainAttachments = false;
+            }
         }
         private string GetViewdef(string businessName)
         {
