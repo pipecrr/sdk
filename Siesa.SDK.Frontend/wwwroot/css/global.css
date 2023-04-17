@@ -979,11 +979,11 @@ input#collapse_open:checked ~ .collapse_open_btn > .nav_btn_standar_text{
 }
 
 .sdk_card{
-    background-color: var(--color_light);
+    background-color: var(--color_light) !important;
     background-clip: border-box;
     border: 1px solid rgba(0,0,0,.125);
-    border-radius: var(--border_radius_standar);
-    box-shadow: var(--shadow_standar_min);
+    border-radius: var(--border_radius_standar) !important;
+    box-shadow: var(--shadow_standar_min) !important;
 }
 
 .sdk_button_box{
