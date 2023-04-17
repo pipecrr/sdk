@@ -79,9 +79,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 
         //for entity fields
         public string RelatedBusiness { get; set; } = "";
-        public Dictionary<string, string> RelatedFilters { get; set; } = new Dictionary<string, string>()
-        {
+        public Dictionary<string, string> RelatedFilters { get; set; } = new Dictionary<string, string>(){
         };
+
+        public List<List<object>> Filters { get; set; }
 
         public int MinCharsEntityField { get; set; } = 2;
         public string EntityRowidField;
