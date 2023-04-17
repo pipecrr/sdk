@@ -104,7 +104,7 @@ namespace Siesa.SDK.Business
         {
         }
 
-        public ValidateAndSaveBusinessObjResponse ValidateAndSave()
+        public ValidateAndSaveBusinessObjResponse ValidateAndSave(bool ignorePermissions = false)
         {
             return null;
         }
@@ -256,7 +256,7 @@ namespace Siesa.SDK.Business
             return SaveAsync().GetAwaiter().GetResult();
         }
 
-        public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave()
+        public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave(bool ignorePermissions = false)
         {
             return ValidateAndSaveAsync().GetAwaiter().GetResult();
         }
