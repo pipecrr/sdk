@@ -342,7 +342,9 @@ namespace Siesa.SDK.Business
             catch (Exception e)
             {
                 await GetNotificacionService("Custom.Generic.Message.Error");
-
+                var errors = new List<string>();
+                errors.Add("Exception: " + e.Message + " " + e.StackTrace);
+                response.Errors = errors;
                 return response;
             }
 

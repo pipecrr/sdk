@@ -960,6 +960,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 includeCount = true;
             }
             var dbData = await BusinessObj.GetDataAsync(args.Skip, args.Top, filters, args.OrderBy, includeCount, _extraFields);
+            if(dbData.Errors != null && dbData.Errors.Count > 0){
+                ErrorList = dbData.Errors;
+            }
             data = dbData.Data;
             count = dbData.TotalCount;
             LoadingData = false;
@@ -1106,6 +1109,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     }
                 }
                 var dbData = await BusinessObj.GetDataAsync(skip, take, filters, "", includeCount, _extraFields);
+                if(dbData.Errors != null && dbData.Errors.Count > 0){
+                    ErrorList = dbData.Errors;
+                }
                 count = dbData.TotalCount;
                 data = dbData.Data;
                 if (count == 1){
