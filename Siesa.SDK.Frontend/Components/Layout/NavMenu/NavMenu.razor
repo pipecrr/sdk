@@ -35,7 +35,7 @@
 <nav class="menu_content">
     <div class="nav_section_1 w-100">
         <a class="nav_logo" href="/">
-            <img class="" src="@AuthenticationService.GetConnectionLogo()" height="30px" alt="Logo compania">
+            <img class="" src="@LogoUrl" height="30px" alt="Logo compania">
         </a>
          <div class="p-2 input-group input-group-sm d-flex align-items-center d-block d-sm-none">
             <SDKSearch />
@@ -103,6 +103,8 @@
     private E00061_Menu SuiteMenu { get; set; }
     private string TitleSuite { get; set; }
     private string TitleLogout { get; set; }
+
+    private string LogoUrl { get; set; } = "";
     
     public void OnMenuItemClick(E00061_Menu menuItem)
     {
@@ -157,7 +159,9 @@
                 Url = "logout",
                 Type = MenuType.CustomMenu
             });
-        }  
+        }
+
+        LogoUrl = await AuthenticationService.GetConnectionLogo();  
 
         await base.OnInitializedAsync();
 
