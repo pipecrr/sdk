@@ -511,6 +511,11 @@ namespace Siesa.SDK.Frontend.Components.Fields
                     if (BaseObj.Company != null)
                     {
                         DefaultFieldsCreate.Add("BaseObj.Company", BaseObj.Company);
+                        
+                         if (BaseObj.RowidCompany != null)
+                         {
+                              DefaultFieldsCreate.Add("BaseObj.RowidCompany", BaseObj.RowidCompany);
+                         }
                     }
                 }
             }
