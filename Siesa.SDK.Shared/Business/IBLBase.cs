@@ -19,7 +19,7 @@ namespace Siesa.SDK.Shared.Business
         ValidateAndSaveBusinessObjResponse ValidateAndSave(bool ignorePermissions = false);
         void Update();
         DeleteBusinessObjResponse Delete();
-        Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter, string orderBy, QueryFilterDelegate<T> queryFilter, bool includeCount = false, bool includeAttachments = true);
+        Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter, string orderBy, QueryFilterDelegate<T> queryFilter, bool includeCount = false, bool includeAttachments = true,  List<string> extraFields = null);
     }
 
 }

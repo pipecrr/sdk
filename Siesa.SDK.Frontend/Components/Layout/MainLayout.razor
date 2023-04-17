@@ -85,7 +85,7 @@
                                                     <ErrorContent Context="Exception" >
                                                         @{
                                                             List<string> errors = new List<string>();
-                                                            errors.Add("Exception: " + Exception.StackTrace);
+                                                            errors.Add("Exception: " + Exception.Message + " " + Exception.StackTrace);
                                                         }
                                                         <ErrorsWindow GeneralErrors="@errors" />
                                                     </ErrorContent>

@@ -82,7 +82,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 }
             }
             if (_errorCount > 0){
-                ClassError = "sdk_error_log_box_sup sdk_error_log_show";
+                ClassError = "sdk_error_log_box_sup sdk_error_log_show sdk_error_log_show_detail";
+                _detailVisible = true;
             }else{
                 ClassError = "sdk_error_log_box_sup";
             }

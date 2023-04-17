@@ -161,6 +161,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         public string FinalViewdefName { get; set; }
 
+        private List<string> _extraFields = new List<string>();
+
         private bool CanCreate;
         private bool CanEdit;
         private bool CanDelete;
@@ -265,6 +267,17 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
                 }
                 ListViewModel = JsonConvert.DeserializeObject<ListViewModel>(metadata);
+                
+                if (ListViewModel.ExtraFields.Count > 0)
+                {   
+                    var defaultFields = ListViewModel.Fields.Select(f => f.Name).ToList();
+
+                    _extraFields =  ListViewModel.ExtraFields.Select(f => f)
+                    .Union(defaultFields)
+                    .ToList();
+
+                    _extraFields = _extraFields.Select(field => field.Replace("BaseObj.", "")).ToList();
+                }
                 if(ListViewModel.Buttons != null && ListViewModel.Buttons.Count > 0){
                     var showButton = false;
                     ExtraButtons = new List<Button>();
@@ -717,6 +730,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             Loading = false;
             ErrorMsg = "";
             ErrorList = new List<string>();
+            _extraFields = new List<string>();
             InitView();
             if(ShowSearchForm && HasSearchViewdef){
                 initNullable();
@@ -945,7 +959,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if(!UseFlex && !ListViewModel.InfiniteScroll){
                 includeCount = true;
             }
-            var dbData = await BusinessObj.GetDataAsync(args.Skip, args.Top, filters, args.OrderBy, includeCount);
+            var dbData = await BusinessObj.GetDataAsync(args.Skip, args.Top, filters, args.OrderBy, includeCount, _extraFields);
+            if(dbData.Errors != null && dbData.Errors.Count > 0){
+                ErrorList = dbData.Errors;
+            }
             data = dbData.Data;
             count = dbData.TotalCount;
             LoadingData = false;
@@ -1091,7 +1108,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         skip = (int)currentPage * ListViewModel.Paging.PageSize;
                     }
                 }
-                var dbData = await BusinessObj.GetDataAsync(skip, take, filters, "", includeCount);
+                var dbData = await BusinessObj.GetDataAsync(skip, take, filters, "", includeCount, _extraFields);
+                if(dbData.Errors != null && dbData.Errors.Count > 0){
+                    ErrorList = dbData.Errors;
+                }
                 count = dbData.TotalCount;
                 data = dbData.Data;
                 if (count == 1){

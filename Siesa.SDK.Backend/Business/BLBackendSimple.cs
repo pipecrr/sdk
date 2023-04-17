@@ -84,7 +84,7 @@ namespace Siesa.SDK.Business
             return null;
         }
 
-        public Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<BaseSDK<int>> queryFilter = null, bool includeCount = false, bool includeAttachments = true)
+        public Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<BaseSDK<int>> queryFilter = null, bool includeCount = false, bool includeAttachments = true, List<string> extraFields = null)
         {
             return null;
         }
@@ -688,7 +688,7 @@ namespace Siesa.SDK.Business
                     };
         }
 
-        public virtual Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null, bool includeCount = false, bool includeAttachments = true)
+        public virtual Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null, bool includeCount = false, bool includeAttachments = true, List<string> extraFields = null)
         {
             this._logger.LogInformation($"Get Data {this.GetType().Name}");
             var result = new Siesa.SDK.Shared.Business.LoadResult();
@@ -696,13 +696,38 @@ namespace Siesa.SDK.Business
             {
                 context.SetProvider(_provider);
                 var query = context.Set<T>().AsQueryable();
-                foreach (var relatedProperty in _relatedProperties)
+
+                if(extraFields != null && extraFields.Count > 0)
                 {
-                    if(!includeAttachments && _relatedAttachmentsType != null && _relatedAttachmentsType.Contains(relatedProperty))
+                    extraFields.Add("Rowid");
+
+                    var selectedFields = string.Join(",", extraFields.Select(x =>
                     {
-                        continue;
+                        var splitInclude = x.Split('.');
+                        if (splitInclude.Length > 1) 
+                        {
+                            for (int i = 1; i <= splitInclude.Length; i++)
+                            {
+                                var include = string.Join(".", splitInclude.Take(i));
+                                query = query.Include(include);
+                            }
+                        }
+                        return splitInclude[0];
+                    }).Distinct());
+
+                    query = query.Select<T>($"new ({selectedFields})");
+
+                }
+                else
+                {
+                    foreach (var relatedProperty in _relatedProperties)
+                    {
+                        if(!includeAttachments && _relatedAttachmentsType != null && _relatedAttachmentsType.Contains(relatedProperty))
+                        {
+                            continue;
+                        }
+                        query = query.Include(relatedProperty);
                     }
-                    query = query.Include(relatedProperty);
                 }
 
                 if (!string.IsNullOrEmpty(filter))

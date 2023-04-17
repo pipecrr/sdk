@@ -13,9 +13,9 @@
 {
     <ResourceViewer ResourceTag="Custom.Generic.Loading" />
 }
-else if(!string.IsNullOrEmpty(ErrorMsg))
+else if(!string.IsNullOrEmpty(ErrorMsg) || ErrorList.Any())
 {
-    <ErrorsWindow ErrorMsg="@ErrorList"/>
+    <ErrorsWindow GeneralErrors="@ErrorList"/>
 }
 else
 {

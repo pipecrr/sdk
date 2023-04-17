@@ -46,7 +46,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                     .Select(field => field.Name)
                                     .ToList(); 
 
-                    _extraFields =  FormViewModel.ExtraFields.Select(f => f.Name)                        
+                    _extraFields =  FormViewModel.ExtraFields.Select(f => f)
                     .Union(defaultFields)
                     .ToList();
 
