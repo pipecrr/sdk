@@ -1,9 +1,11 @@
-﻿@using SDK.Components.Visualization
+@using SDK.Components.Visualization
 @using Siesa.SDK.Frontend.Components.Fields
 @using Siesa.SDK.Frontend.Components.FormManager.Fields
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
 @using Siesa.SDK.Entities;
 @using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Layout.Detail.Relationship
+
 @if (Loading == true)
 {
     <ResourceViewer ResourceTag="Custom.Generic.Loading" />
@@ -17,6 +19,14 @@ else if (BusinessObj.BaseObj.Rowid != 0)
     @if(IsSubpanel && ShowTitle){
         <h5 class="d-flex justify-content-center"><ResourceViewer ResourceTag="Action.Edit" /> @BusinessObj</h5>
         <hr />
+    }
+    @if(ContainAttachments){
+        <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" 
+            Parent="@BusinessObj.BaseObj" ContainAttachments="@ContainAttachments" BLNameParentAttatchment="@BusinessName"
+            BusinessObj="@BusinessObj"/>
+    }else if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
+    {
+            <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" />
     }
     <CascadingValue Value="@this">        
         <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList"/>

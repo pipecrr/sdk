@@ -7,7 +7,7 @@
 @using Siesa.SDK.Frontend.Application
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Shared.Services
-@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Layout.Detail.Relationship
 @inject IResourceManager ResourceManager
 @inject IAuthenticationService AuthenticationService
 @inject SDKNotificationService Notification
@@ -28,6 +28,14 @@ else if (Panels == null || Panels.Count <= 0)
             <h5 class="d-flex justify-content-center"><ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer 
             ResourceTag="@($"{BusinessName}.Singular")" /></h5>
         <hr />
+    }
+    @if(ContainAttachments){
+        <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" 
+            Parent="@BusinessObj.BaseObj" ContainAttachments="@ContainAttachments" BLNameParentAttatchment="@BusinessName"
+            BusinessObj="@BusinessObj" isCreateView="true"/>
+    }else if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
+    {
+        <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" isCreateView="true"/>
     }
     <CascadingValue Value="@this">
        <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList"/>
