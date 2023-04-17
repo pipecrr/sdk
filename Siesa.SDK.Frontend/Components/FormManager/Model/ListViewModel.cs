@@ -39,6 +39,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         public bool? AllowDetail { get; set; }
         public bool? AllowCreate { get; set; }
 
-        public List<ExtraField> ExtraFields { get; set; } = new List<ExtraField>(); 
+        public List<string> ExtraFields { get; set; } = new List<string>(); 
     }
 }

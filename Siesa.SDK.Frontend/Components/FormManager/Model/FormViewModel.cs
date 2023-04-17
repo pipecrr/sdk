@@ -11,6 +11,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
 
         public List<Relationship> Relationships { get; set; } = new List<Relationship>(); //Used for relationships in detailview
 
-        public List<ExtraField> ExtraFields { get; set; } = new List<ExtraField>(); 
+        public List<string> ExtraFields { get; set; } = new List<string>(); 
     }
 }

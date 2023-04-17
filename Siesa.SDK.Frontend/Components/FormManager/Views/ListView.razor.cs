@@ -272,7 +272,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 {   
                     var defaultFields = ListViewModel.Fields.Select(f => f.Name).ToList();
 
-                    _extraFields =  ListViewModel.ExtraFields.Select(f => f.Name)                        
+                    _extraFields =  ListViewModel.ExtraFields.Select(f => f)
                     .Union(defaultFields)
                     .ToList();
 
