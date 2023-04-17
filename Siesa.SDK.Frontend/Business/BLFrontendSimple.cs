@@ -95,7 +95,7 @@ namespace Siesa.SDK.Business
             return null;
         }
 
-        public Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<BaseSDK<int>> queryFilter = null, bool includeCount = false)
+        public Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<BaseSDK<int>> queryFilter = null, bool includeCount = false, bool includeAttachments = true, List<string> extraFields = null)
         {
             return null;
         }
@@ -104,7 +104,7 @@ namespace Siesa.SDK.Business
         {
         }
 
-        public ValidateAndSaveBusinessObjResponse ValidateAndSave()
+        public ValidateAndSaveBusinessObjResponse ValidateAndSave(bool ignorePermissions = false)
         {
             return null;
         }
@@ -256,7 +256,7 @@ namespace Siesa.SDK.Business
             return SaveAsync().GetAwaiter().GetResult();
         }
 
-        public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave()
+        public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave(bool ignorePermissions = false)
         {
             return ValidateAndSaveAsync().GetAwaiter().GetResult();
         }
@@ -280,9 +280,8 @@ namespace Siesa.SDK.Business
             }
             catch (Exception e)
             {
-            await GetNotificacionService("Custom.Generic.Message.DeleteError");
-
-            return null;
+                await GetNotificacionService("Custom.Generic.Message.DeleteError");
+                throw new Exception(e.Message);
             }
         }
 
@@ -295,9 +294,9 @@ namespace Siesa.SDK.Business
             return BaseObj.ToString();
         }
 
-        public virtual Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null, bool includeCount = false)
+        public virtual Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null, bool includeCount = false, bool includeAttachments = true, List<string> extraFields = null)
         {
-            return GetDataAsync(skip, take, filter, orderBy).GetAwaiter().GetResult();
+            return GetDataAsync(skip, take, filter, orderBy, extraFields: extraFields).GetAwaiter().GetResult();
         }
 
         public virtual Siesa.SDK.Shared.Business.LoadResult EntityFieldSearch(string searchText, string filters, int? top = null, string orderBy = "")
@@ -324,12 +323,12 @@ namespace Siesa.SDK.Business
             return result;
         }
 
-        public async virtual Task<Siesa.SDK.Shared.Business.LoadResult> GetDataAsync(int? skip, int? take, string filter = "", string orderBy = "", bool includeCount = false)
+        public async virtual Task<Siesa.SDK.Shared.Business.LoadResult> GetDataAsync(int? skip, int? take, string filter = "", string orderBy = "", bool includeCount = false, List<string> extraFields = null)
         {
             Siesa.SDK.Shared.Business.LoadResult response = new Siesa.SDK.Shared.Business.LoadResult();
             try
             {
-                var result = await Backend.GetData(skip, take, filter, orderBy, includeCount);
+                var result = await Backend.GetData(skip, take, filter, orderBy, includeCount, extraFields);
 
                 response.Data = result.Data.Select(x => JsonConvert.DeserializeObject<T>(x)).ToList();
                 response.TotalCount = result.Data.Count;
@@ -343,7 +342,9 @@ namespace Siesa.SDK.Business
             catch (Exception e)
             {
                 await GetNotificacionService("Custom.Generic.Message.Error");
-
+                var errors = new List<string>();
+                errors.Add("Exception: " + e.Message + " " + e.StackTrace);
+                response.Errors = errors;
                 return response;
             }
 

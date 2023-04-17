@@ -18,14 +18,10 @@
 {
     <ResourceViewer ResourceTag="Custom.Generic.Loading" />
 }
-else if(!string.IsNullOrEmpty(ErrorMsg))
-{
-    <ErrorsContainer ErrorMsg="@ErrorMsg"/>
-}
 else if (Panels == null || Panels.Count <= 0)
 {
-    <ResourceViewer ResourceTag="Custom.Formview.NotDefinition" />
-        @* <label>@((MarkupString)ErrorMsg)</label> *@
+    @* <ResourceViewer ResourceTag="Custom.Formview.NotDefinition" /> *@
+    <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList"/>
 } else if (BusinessObj.BaseObj != null)
 {
     @if(IsSubpanel && ShowTitle){        
@@ -42,7 +38,7 @@ else if (Panels == null || Panels.Count <= 0)
         <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" isCreateView="true"/>
     }
     <CascadingValue Value="@this">
-       <ErrorsContainer ErrorMsg="@ErrorMsg" EditFormContext="@EditFormContext" />
+       <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList"/>
     <EditForm id="@FormID"
               OnValidSubmit="@HandleValidSubmit"
               OnInvalidSubmit="@HandleInvalidSubmit"
@@ -60,17 +56,13 @@ else if (Panels == null || Panels.Count <= 0)
                             </CascadingValue>
                         </SDKFormLayoutTabPage>
                     }
-
-
                 </DxFormLayoutTabPages>
-
             }
             else
             {
                 <CascadingValue Value="@EditFormContext">
                     <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef" DefaultColSize="@Panels[0].ColSize" ModelObj="@BusinessObj" />
                 </CascadingValue>
-
             }
         </DxFormLayout>
     </EditForm>
