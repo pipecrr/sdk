@@ -1052,6 +1052,40 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             OnSelectionChanged(objects);
         }
 
+        [JSInvokable]
+        public async Task<bool> DisableActionFromReact(string rowid, Int64 index){
+            Button button = CustomActions[(int)index];
+            bool res = false;
+            if(button != null){
+                dynamic disableCondition = null;
+                if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-disabled")){
+                    var sdkDisable = button.CustomAttributes["sdk-disabled"];
+                    if(sdkDisable != null){
+                        disableCondition = sdkDisable;
+                    }
+                }
+                if(disableCondition != null){
+                    var bl = BackendRouterService.GetSDKBusinessModel(BusinessName, AuthenticationService);
+                    var result = await bl.Call("DataEntity", rowid.ToString());
+                    if(result.Success){
+                        dynamic obj = result.Data;
+                        if(disableCondition is bool){
+                            res = (bool)disableCondition;
+                        }else {
+                            var eject = await Evaluator.EvaluateCode(disableCondition, BusinessObj, disableCondition, true, useRoslyn: true); //revisar
+                            if (eject != null){
+                                if(eject is bool)
+                                    res = (bool)eject;
+                                else
+                                    res = await eject(obj);
+                            }
+                        }
+                    }
+                }
+            }
+            return res;
+        }
+
         private async Task GoToDelete(Int64 id, string object_string)
         {
             if (OnClickDelete != null){
