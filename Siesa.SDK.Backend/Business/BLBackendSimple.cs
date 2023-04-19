@@ -33,6 +33,8 @@ using System.Net;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Siesa.Global.Enums;
+using Siesa.SDK.Shared.Utilities;
+using System.Collections;
 
 namespace Siesa.SDK.Business
 {
@@ -943,6 +945,78 @@ namespace Siesa.SDK.Business
                 return new ActionResult<T>
                 {
                     Data = null
+                };
+            }
+        }
+
+        [SDKExposedMethod]
+        public ActionResult<dynamic> GetDataFromU(int RowidDataVisibilityGroup, int RowidUser)
+        {
+            try
+            {
+                if(RowidDataVisibilityGroup <= 0 && RowidUser <= 0)
+                    throw new Exception("Invalid parameters");
+
+                var _assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
+                var _assemblySelect = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
+
+                //Actualmente no hay necesidad de incluir las foraneas
+
+                var Property = BaseObj.GetType();
+
+                var Namespace = Property.Namespace;
+                var Name = Property.Name;
+                Name = Name.Replace(Name[0], 'U');
+
+                var DynamicEntityType = Utilities.SearchType($"{Namespace}.{Name}", true);
+
+                ParameterExpression pe = Expression.Parameter(DynamicEntityType, DynamicEntityType.Name);
+
+                using(var Context = CreateDbContext())
+                {
+                    var DataFound = Context.GetType().GetMethod("Set", types: Type.EmptyTypes)
+                                .MakeGenericMethod(DynamicEntityType)
+                                .Invoke(Context, null);
+
+                    Expression CoincidenceExpression;
+                    Expression ColumnNameProperty;
+                    Expression ColumnValue;
+
+                    if(RowidDataVisibilityGroup > 0)
+                    {
+                        ColumnNameProperty = Expression.Property(pe, "RowidDataVisibilityGroup");
+                        ColumnValue = Expression.Constant(RowidDataVisibilityGroup, typeof(int?));
+                    }else
+                    {
+                        ColumnNameProperty = Expression.Property(pe, "RowidUser");
+                        ColumnValue = Expression.Constant(RowidUser, typeof(int?));
+                    }
+
+                    CoincidenceExpression = Expression.Equal(ColumnNameProperty, ColumnValue);
+
+                    var funcExpression = typeof(Func<,>).MakeGenericType(new Type[] { DynamicEntityType, typeof(bool) });
+                    var returnExp = Expression.Lambda(funcExpression, CoincidenceExpression, new ParameterExpression[] { pe });
+
+                    var whereMethod = typeof(IQueryable<object>).GetExtensionMethod(_assemblySelect, "Where", new[] { typeof(IQueryable<object>), typeof(LambdaExpression) });
+
+                    var whereMethodGeneric = whereMethod.MakeGenericMethod(DynamicEntityType);
+
+                    DataFound = whereMethodGeneric.Invoke(DataFound, new object[] { DataFound, returnExp });
+
+                    var dynamicListMethod = typeof(IEnumerable).GetExtensionMethod(_assemblyDynamic, "ToDynamicList", new[] { typeof(IEnumerable) });
+                    var dynamicList = dynamicListMethod.Invoke(DataFound, new object[] { DataFound });
+
+                    return new ActionResult<dynamic>()
+                    {
+                        Success = true,
+                        Data = dynamicList
+                    };
+                }
+            }
+            catch (Exception e)
+            {
+                return new BadRequestResult<dynamic>(){
+                    Errors = new List<string>(){e.Message}
                 };
             }
         }
