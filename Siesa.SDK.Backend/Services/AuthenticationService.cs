@@ -125,5 +125,10 @@ namespace Siesa.SDK.Backend.Services
         {
             throw new NotImplementedException();
         }
+        
+        public async Task<string> GetUserPhoto()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

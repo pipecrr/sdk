@@ -61,6 +61,7 @@ namespace Siesa.SDK.Shared.Services
         Task<bool> ValidateUserToken(int rowidUser);
         Task<bool> ChangePassword(int rowidUser, string NewPassword, string ConfirmPassword);
         Task RenewToken();
+        Task<string> GetUserPhoto();
     }
 
     

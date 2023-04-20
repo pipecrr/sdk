@@ -135,6 +135,7 @@ namespace Siesa.SDK.Frontend.Services
                 await _localStorageService.SetItemAsync("usertoken", UserToken);
                 await SetCookie("sdksession", loginRequest.Data.IdSession);
                 await SetCookie("selectedConnection", rowIdDBConnection.ToString());
+                await GetUserPhoto();
             }
             else
             {
@@ -187,6 +188,7 @@ namespace Siesa.SDK.Frontend.Services
             await _localStorageService.RemoveItemAsync("lastInteraction");
             await _localStorageService.RemoveItemAsync("n_tabs");
             await _localStorageService.RemoveItemAsync("bd");
+            await _localStorageService.RemoveItemAsync("userPhoto");
             //await _localStorageService.RemoveItemAsync("selectedSuite");
             await RemoveCookie("sdksession");
             await RemoveCookie("selectedConnection");
@@ -255,6 +257,34 @@ namespace Siesa.SDK.Frontend.Services
             }
 
             return LogoUrl;
+        }
+
+        public async Task<string> GetUserPhoto()
+        {
+            string UserPhoto = await _localStorageService.GetItemAsync<string>("userPhoto");
+
+            if(string.IsNullOrEmpty(UserPhoto))
+            {
+                var request = await GetBLUser();
+
+                if(request != null)
+                {
+                    var result = await request.Call("GetImageUserBase64", this.User.RowidAttachmentUserProfilePicture);
+
+                    if(result.Success)
+                    {
+                        UserPhoto = result.Data;
+
+                    }else
+                    {
+                        UserPhoto = "_content/Siesa.SDK.Frontend/assets/img/Profile_default.png";
+                    }
+                    
+                    await _localStorageService.SetItemAsync("userPhoto", UserPhoto);
+                }
+            }
+
+            return UserPhoto;
         }
 
         public string GetConnectionStyle()
