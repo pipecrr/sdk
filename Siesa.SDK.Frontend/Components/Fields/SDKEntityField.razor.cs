@@ -69,7 +69,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         private string badgeContainerClass = "badge-container d-none";
         private string placeholder = "";
 
-        //private long lastRefresh;
+        private long lastRefresh;
 
         private Dictionary<string, dynamic> BadgeByData = new Dictionary<string, dynamic>();
         protected override async Task OnInitializedAsync()
@@ -472,12 +472,45 @@ namespace Siesa.SDK.Frontend.Components.Fields
             }else{
                 search = Value;
             }
-            await LoadData(search, null);
+            var currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            if((currentTime - lastRefresh) > 1000)
+            {
+                lastRefresh = currentTime;
+                var force = false;
+                if(search.Equals("")){
+                    force = true;
+                }
+                await LoadData(search, null, force);
+            }
             await Task.Delay(100);
             var elementInstance = await JsRuntime.InvokeAsync<IJSObjectReference>("$", $"#{idInput}[aria-expanded=false]");
             await elementInstance.InvokeVoidAsync("dropdown","show");
             StateHasChanged();
         }
+
+        // public async Task<string> GetStringFilters(){
+        //     //Deprecated
+        //     var filters = await GetFilters();
+        //     var filtersSearch = "";
+        //     if(Value != null && Value != "" && ItemsSelected.Count == 0){
+        //         var properties = RelBusinessObj.BaseObj.GetType().GetProperties();
+        //         foreach (var property in properties){
+        //             if(property.PropertyType == typeof(string)){
+        //                 if(!string.IsNullOrEmpty(filtersSearch)){
+        //                     filtersSearch += " || ";
+        //                 }
+        //                 filtersSearch += $"({property.Name} == null ? \"\" : {property.Name}).ToLower().Contains(\"{Value}\".ToLower())";
+        //             }
+        //         }
+        //     }
+        //     if(!string.IsNullOrEmpty(filtersSearch)){
+        //         if(!string.IsNullOrEmpty(filters)){
+        //             filters += " && ";
+        //         }
+        //         filters += $"({filtersSearch})";
+        //     }
+        //     return filters;
+        // }
 
         public async Task closeItem(string item){
             Values.Remove(item);
