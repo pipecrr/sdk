@@ -7,7 +7,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
     {
         [Parameter]
         public dynamic BaseModelObj { get; set; }
-        
         public string RelatedBusiness { get; set; }
     }
 

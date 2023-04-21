@@ -46,7 +46,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                     .Select(field => field.Name)
                                     .ToList(); 
 
-                    _extraFields =  FormViewModel.ExtraFields.Select(f => f.Name)                        
+                    _extraFields =  FormViewModel.ExtraFields.Select(f => f)
                     .Union(defaultFields)
                     .ToList();
 
@@ -69,6 +69,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 Console.WriteLine("Error DetailViewModel", e.ToString());
                 ErrorMsg = e.ToString();
+                ErrorList.Add("Exception: "+e.ToString());
             }
         }
 
@@ -97,6 +98,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             await base.SetParametersAsync(parameters);
             if(BusinessObjId !=null && (changeBusinessObjId || changeBusinessName)){
                 ErrorMsg = "";
+                ErrorList = new List<string>();
                 await InitDetail(Convert.ToInt64(BusinessObjId));
                 StateHasChanged();
             }

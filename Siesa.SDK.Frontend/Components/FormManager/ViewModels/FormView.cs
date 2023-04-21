@@ -18,6 +18,7 @@ using Siesa.SDK.Frontend.Components.Fields;
 using Siesa.SDK.Shared.DTOS;
 using Siesa.SDK.Frontend.Components.FormManager.Fields;
 using Siesa.SDK.Frontend.Extension;
+using Microsoft.Extensions.Configuration;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 {
@@ -36,6 +37,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Inject] public NavigationManager NavManager { get; set; }
         [Inject] public NavigationService NavigationService { get; set; }
         [Inject] public SDKNotificationService NotificationService { get; set; }
+        [Inject] public IConfiguration configuration { get; set; }
+        private bool UseRoslynToEval { get; set; }
 
         [Inject] protected IAuthenticationService AuthenticationService { get; set; }
 
@@ -49,6 +52,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public bool Saving = false;
         public bool SavingFile { get; set; } = false;
         public String ErrorMsg = "";
+        public List<string> ErrorList = new List<string>();
         [Parameter]
         public string FormID { get; set; } = Guid.NewGuid().ToString();
         protected ValidationMessageStore _messageStore;
@@ -82,6 +86,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public int CountUnicErrors = 0;
 
         private string _viewdefName = "";
+
+        public bool ContainAttachments = false;
 
         [Inject]
         public IBackendRouterService BackendRouterService { get; set; }
@@ -117,7 +123,21 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 }
             }
         }
-        
+        private void CreateRelationshipAttachment()
+        {
+            try
+            {
+                var attachment = BusinessObj.BaseObj.GetType().GetProperty("RowidAttachment");
+                if(attachment == null || BusinessName == "BLAttachmentDetail"){
+                    return;
+                }
+                ContainAttachments = true;
+            }
+            catch (System.Exception)
+            {
+                ContainAttachments = false;
+            }
+        }
         private string GetViewdef(string businessName)
         {
             if (String.IsNullOrEmpty(ViewdefName))
@@ -179,6 +199,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         }
         protected virtual async Task InitView(string bName = null)
         {
+            CreateRelationshipAttachment();
             Loading = true;
             if (bName == null)
             {
@@ -190,6 +211,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             {
                 //string ErrorTag = await ResourceManager.GetResource("Custom.Formview.NotDefinition", AuthenticationService.GetRoiwdCulture());
                 ErrorMsg = $"Custom.Generic.ViewdefNotFound";
+                ErrorList.Add($"Custom.Generic.ViewdefNotFound");
             }
             else
             {
@@ -260,65 +282,112 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     }
 
                     var fieldCustomAttr = field.CustomAttributes.Where(x => x.Key.StartsWith("sdk-") && x.Key != "sdk-change");
-                    foreach (var attr in fieldCustomAttr)
+                    if(UseRoslynToEval)
                     {
-                        //hacer casteo a enum y refactorizar
-                        switch (attr.Key)
+                        foreach (var attr in fieldCustomAttr)
                         {
-                            case "sdk-show":
-                                code += @$"
+                            switch (attr.Key)
+                            {
+                                case "sdk-show":
+                                    code += @$"
 try {{ Panels[{panel_index}].Fields[{field_index}].Hidden = !({(string)attr.Value}); }} catch (Exception ex) {{ throw;  }}";
-                                /*_ = Task.Run(async () =>
-                                {
-                                    var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
-                                    field.Hidden = !result;
-                                    _ = InvokeAsync(() => StateHasChanged());
-                                });*/
-                                break;
-                            case "sdk-hide":
-                                code += @$"
+                                    break;
+                                case "sdk-hide":
+                                    code += @$"
 try {{ Panels[{panel_index}].Fields[{field_index}].Hidden = ({(string)attr.Value}); }} catch (Exception ex) {{ throw;  }}";
-                                /*_ = Task.Run(async () =>
-                                {
-                                    var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
-                                    field.Hidden = result;
-                                    _ = InvokeAsync(() => StateHasChanged());
-                                });*/
-                                break;
-                            case "sdk-required":
-                                code += @$"
+                                    break;
+                                case "sdk-required":
+                                    code += @$"
 try {{ Panels[{panel_index}].Fields[{field_index}].Required = ({(string)attr.Value}); }} catch (Exception ex) {{ throw;  }}";
-                                /*_ = Task.Run(async () =>
-                                {
-                                    var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
-                                    field.Required = result;
-                                    _ = InvokeAsync(() => StateHasChanged());
-                                });*/
-                                break;
-                            case "sdk-readonly":
-                            case "sdk-disabled":
-                                code += @$"
+                                    break;
+                                case "sdk-readonly":
+                                case "sdk-disabled":
+                                    code += @$"
 try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Value}); }} catch (Exception ex) {{ throw; }}";
-                                /*_ = Task.Run(async () =>
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    }else{
+                        
+                        List<string> allowAttr = new List<string>(){
+                            "sdk-show",
+                            "sdk-hide",
+                            "sdk-required",
+                            "sdk-readonly",
+                            "sdk-disabled"
+                        }; //TODO: Enum
+                        
+
+                        _ = Task.Run(async () =>
+                        {
+                            bool shouldUpdate = false;
+                            foreach (var attr in fieldCustomAttr)
+                            {
+                                if(!allowAttr.Contains(attr.Key))
+                                {
+                                    continue;
+                                }
+                                
+                                try
                                 {
                                     var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
-                                    field.Disabled = result;
-                                    _ = InvokeAsync(() => StateHasChanged());
-                                });*/
-                                break;
-                            default:
-                                break;
-                        }
+                                    switch (attr.Key)
+                                    {
+                                        case "sdk-show":
+                                            if(field.Hidden != !result)
+                                            {
+                                                field.Hidden = !result;
+                                                shouldUpdate = true;
+                                            }
+                                            break;
+                                        case "sdk-hide":
+                                            if(field.Hidden != result)
+                                            {
+                                                field.Hidden = result;
+                                                shouldUpdate = true;
+                                            }
+                                            break;
+                                        case "sdk-required":
+                                            if(field.Required != result)
+                                            {
+                                                field.Required = result;
+                                                shouldUpdate = true;
+                                            }
+                                            break;
+                                        case "sdk-readonly":
+                                        case "sdk-disabled":
+                                            if(field.Disabled != result)
+                                            {
+                                                field.Disabled = result;
+                                                shouldUpdate = true;
+                                            }
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                }
+                                catch (System.Exception ex)
+                                {
+                                    Console.WriteLine($"Error: {ex.Message}");
+                                }
+                            }
+                            if(shouldUpdate)
+                            {
+                                _ = InvokeAsync(() => StateHasChanged());
+                            }
+                        });
                     }
                 }
             }
             //Console.WriteLine(code);
-            if(code != null & code != "")
+            if(UseRoslynToEval && code != null & code != "")
             {
                 _ = Task.Run(async () =>
                  {
                      BusinessObj.Panels = Panels;
-                     await Evaluator.EvaluateCode(code, BusinessObj);
+                     await Evaluator.EvaluateCode(code, BusinessObj, useRoslyn: UseRoslynToEval); //Revisar
                      _ = InvokeAsync(() => StateHasChanged());
                  });
             }
@@ -327,6 +396,13 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
+            try
+            {
+                UseRoslynToEval = configuration.GetValue<bool>("UseRoslynToEval");
+            }
+            catch (System.Exception ex)
+            {
+            }
             //await InitView();
         }
 
@@ -341,6 +417,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
             {
                 Loading = false;
                 ErrorMsg = "";
+                ErrorList = new List<string>();
                 await InitView();
             }
         }
@@ -384,6 +461,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
                 var existeUniqueIndexValidation = NotificationService.Messages.Where(x => x.Summary == "Custom.Generic.UniqueIndexValidation").Any();
                 if(!existeUniqueIndexValidation){
                     NotificationService.ShowError("Custom.Generic.UniqueIndexValidation");
+                    ErrorList.Add("Custom.Generic.UniqueIndexValidation");
                 }
                 return;
             }
@@ -409,7 +487,16 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
                     }
                 }
             }
-            var result = await BusinessObj.ValidateAndSaveAsync();
+            dynamic result = null;
+            try{
+                result = await BusinessObj.ValidateAndSaveAsync();
+            }catch(Exception ex){
+                GlobalLoaderService.Hide();
+                Saving = false;
+                ErrorMsg = ex.Message;
+                ErrorList.Add("Exception: "+ex.Message);
+                return;
+            }
 
             GlobalLoaderService.Hide();
             Saving = false;
@@ -446,18 +533,15 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
                     // {
                     //     _messageStore.Add(fieldIdentifier, (string)error.Message);
                     // }
-
                     fieldIdentifier = new FieldIdentifier(EditFormContext.Model, error.Attribute);
                     _messageStore.Add(fieldIdentifier, (string)error.Message);
-                    
-                    
-
-
                     // ErrorMsg += $"<li>";
                     // ErrorMsg += !string.IsNullOrWhiteSpace(error.Attribute) ?  $"{error.Attribute} - " : string.Empty;
                     // string ErrorTag = await ResourceManager.GetResource(error.Message, AuthenticationService.GetRoiwdCulture());
                     // ErrorMsg += ErrorTag;//error.Message.Replace("\n", "<br />");
                     // ErrorMsg += $"</li>";
+
+                    ErrorList.Add("Exception: "+error.Message);
                 }
                 //ErrorMsg += "</ul>";
                 EditFormContext.NotifyValidationStateChanged();
@@ -488,7 +572,8 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
         protected async Task HandleValidSubmit()
         {
             FormHasErrors = false;
-            ErrorMsg = "";            
+            ErrorMsg = "";
+            ErrorList.Clear();
             await SaveBusiness();
         }
         protected void HandleInvalidSubmit()
@@ -496,6 +581,12 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
             //ErrorMsg = @"Form data is invalid";
             FormHasErrors = true;
             NotificationService.ShowError("Custom.Generic.FormError");
+            var existeUniqueIndexValidation = NotificationService.Messages.Where(x => x.Summary == "Custom.Generic.UniqueIndexValidation").Any();
+            if(existeUniqueIndexValidation){
+                ErrorList.Add("Custom.Generic.UniqueIndexValidation");
+            }else{
+                ErrorList.Clear();
+            }
         }
         protected void GoToList()
         {
@@ -519,7 +610,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
             }
             else if (!string.IsNullOrEmpty(button.Action))
             {
-                await Evaluator.EvaluateCode(button.Action, BusinessObj);
+                await Evaluator.EvaluateCode(button.Action, BusinessObj, useRoslyn: UseRoslynToEval); //Revisar
                 StateHasChanged();
             }
         }

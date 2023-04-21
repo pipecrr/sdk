@@ -79,6 +79,7 @@ message GetDataBusinessObjRequest {
   string currentUserToken = 6;
   google.protobuf.Int32Value currentUserRowid = 7;
   bool includeCount = 8;
+  repeated string extraFields = 9;
 }
 
 message EntityFieldSearchRequest {

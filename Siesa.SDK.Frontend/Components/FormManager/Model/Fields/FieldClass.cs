@@ -240,6 +240,39 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 case "FileField":
                     result = "SDKFileField";
                     break;
+                case "SelectField":
+                    result = "SDKSelectField";
+                    break;
+                case "TextField":
+                    result = "SDKTextField";
+                    break;
+                case "DecimalField":
+                case "BigIntegerField":
+                case "IntegerField":
+                case "SmallIntegerField":
+                    result = "NumericField";
+                    break;
+                case "BooleanField":
+                    result = "SDKBooleanField";
+                    break;
+                case "DateTimeField":
+                    result = "DateTimeField";
+                    break;
+                // case "Custom":
+                //    switch(FieldOpt.CustomType.ToString())
+                //     {
+                //         case "SelectBarField":
+                //             result = "SDKSelectBar";
+                //             break;
+                //         case "RadioButtonField":
+                //             result = "SDKRadioButton";
+                //             break;
+                //         case "SwitchField":
+                //             result = "SDKSwitch";
+                //             break;
+                //     }
+                //     break;
+                
             }
             return  result;
         }
