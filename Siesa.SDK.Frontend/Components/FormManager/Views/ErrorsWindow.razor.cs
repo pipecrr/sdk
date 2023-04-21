@@ -26,27 +26,38 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             _errorCount = 0;
             _generalErrors = new List<string>();
             _errors = new List<SDKErrorsWindowDTO>();
-            if (EditFormContext != null){
-                _errorCount = EditFormContext.GetValidationMessages().Count();
-                var groupErrors = EditFormContext.GetValidationMessages().GroupBy(x => x.Split("//")[1]);
+            if (EditFormContext != null && EditFormContext.GetValidationMessages().Count() > 0){
+                var groupErrors = EditFormContext.GetValidationMessages().GroupBy(x => {
+                    var errorsSplit = x.Split("//");
+                    if(errorsSplit.Count() > 1){
+                        return errorsSplit[1];
+                    }else{
+                        return "General";
+                    }
+                });
                 foreach (var item in groupErrors){
-                    var field = UtilsManager.GetResource(item.Key).Result;
-                    var listErrors = item.Select(x => {
-                        var errorTag = x.Split("//");
-                        var resourceTag = errorTag[0];
-                        var resourceTagValue = UtilsManager.GetResource(resourceTag).Result;
-                        var errorSkip = errorTag.Skip(1).ToArray();
-                        if(errorSkip[0].Equals(item.Key)){
-                            errorSkip[0] = field;
-                        }
-                        string errorFormat = errorFormat = string.Format(resourceTagValue, errorSkip);
-                        return errorFormat;
-                    }).ToList();
-                    _errors.Add(new SDKErrorsWindowDTO(){
-                        Field = field,
-                        Errors = listErrors
-                    });
+                    if(!item.Key.Equals("General")){
+                        var field = UtilsManager.GetResource(item.Key).Result;
+                        var listErrors = item.Select(x => {
+                            var errorTag = x.Split("//");
+                            var resourceTag = errorTag[0];
+                            var resourceTagValue = UtilsManager.GetResource(resourceTag).Result;
+                            var errorSkip = errorTag.Skip(1).ToArray();
+                            if(errorSkip[0].Equals(item.Key)){
+                                errorSkip[0] = field;
+                            }
+                            string errorFormat = errorFormat = string.Format(resourceTagValue, errorSkip);
+                            return errorFormat;
+                        }).ToList();
+                        _errors.Add(new SDKErrorsWindowDTO(){
+                            Field = field,
+                            Errors = listErrors
+                        });
+                    }else{
+                        _generalErrors.AddRange(item);
+                    }
                 }
+                _errorCount = _errors.Count();
             }
             if(ErrorMsg?.Count() > 0) {
                 _errorCount += ErrorMsg.Count();
@@ -73,10 +84,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if(GeneralErrors?.Count() > 0) {
                 _errorCount += GeneralErrors.Count();
                 foreach (var err in GeneralErrors){
+                    var errorMsg = "";
                     if(err.StartsWith("Exception: ")){
-                        _generalErrors.Add(err.Replace("Exception: ", ""));
+                         errorMsg = err.Replace("Exception: ", "");
+                         if(_generalErrors.Contains(errorMsg)){
+                            _generalErrors.Remove(errorMsg);
+                            errorMsg = await UtilsManager.GetResource(errorMsg);
+                         }
+                        _generalErrors.Add(errorMsg);
                     }else{
-                        var errorMsg = await UtilsManager.GetResource(err);
+                        errorMsg = await UtilsManager.GetResource(err);
                         _generalErrors.Add(errorMsg);
                     }
                 }
