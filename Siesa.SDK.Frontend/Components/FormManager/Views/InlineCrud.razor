@@ -78,7 +78,7 @@
     
     public async Task OpenModalDetail(string item_rowid)
     {
-        var ShowDetailDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicDetailView BusinessName="@BusinessName" IsSubpanel=true  BusinessObjId="@item_rowid" BLNameParentAttatchment="@BLNameParentAttatchment" ShowTitle="@DefaultTitle"/>, Width, $"{BusinessName}.Singular", true, true, Height);
+        var ShowDetailDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicDetailView BusinessName="@BusinessName" IsSubpanel=true  BusinessObjId="@item_rowid" BLNameParentAttatchment="@BLNameParentAttatchment" ShowTitle="@DefaultTitle" AllowDelete="@AllowDelete" />, Width, $"{BusinessName}.Singular", true, true, Height);
         listview_key = Guid.NewGuid();
         StateHasChanged();
     }
