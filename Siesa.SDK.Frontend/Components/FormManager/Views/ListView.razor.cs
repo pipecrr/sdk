@@ -28,6 +28,7 @@ using System.Collections;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json.Linq;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -142,7 +143,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private IEnumerable<object> data;
 
         private bool HasCustomActions { get; set; } = false;
-        private List<string> CustomActionIcons { get; set; } = new List<string>();
+        private List<dynamic> CustomActionIcons { get; set; } = new List<dynamic>();
         private List<Button> CustomActions { get; set; }
         private string WithActions {get; set;} = "120px";
         int count;
@@ -332,7 +333,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     if(CustomActions.Count > 0){
                         var withInt = (CustomActions.Count+2)*40;
                         WithActions = $"{withInt}px";
-                        CustomActionIcons = CustomActions.Select(x => x.IconClass).ToList();
+                        CustomActionIcons = new List<dynamic>();
+                        foreach (var action in CustomActions)
+                        {
+                            var obj = new{
+                                icon = action.IconClass,
+                                disabled = action.Disabled,
+                                hide = action.Hide
+                            };
+                            CustomActionIcons.Add(obj);
+                        }
                         HasCustomActions = true;
                     }
                 }
@@ -355,166 +365,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             StateHasChanged();
 
         }
-
-        // private async Task<string> GenerateFilters(List<List<object>> filters)
-        // {
-        //     var filter = "";
-        //     List<string> filtersOr = new List<string>();
-        //     foreach (var itemAnd in filters){
-        //         List<object> filtersInside = (List<object>)itemAnd;
-        //         if(filtersInside.Count > 0){
-        //             string filtersOrStr = "";
-        //             List<string> filtersOrInside = new List<string>();
-        //             foreach (var item in filtersInside){
-        //                 string filtersOrInsideStr = "";
-        //                 var properties = JsonConvert.DeserializeObject<dynamic>(item.ToString()).Properties();
-        //                 List<string> filtersAnd = new List<string>();
-        //                 foreach (var property in properties){
-        //                     string filtersAndStr = "";
-        //                     string name = property.Name;
-        //                     var codeValue = property.Value.ToString();
-        //                     dynamic dynamicValue;
-        //                     if (String.IsNullOrEmpty(codeValue)){
-        //                         continue;
-        //                     }
-        //                     dynamicValue = await Evaluator.EvaluateCode(codeValue, BusinessObj);
-        //                     dynamicValue = GetFilterValue(dynamicValue);
-        //                     filtersAndStr = GetFiltersStr(name, dynamicValue);
-        //                     filtersAnd.Add(filtersAndStr);
-        //                 }
-        //                 if(filtersAnd.Count > 1){
-        //                     filtersOrInsideStr += "(";
-        //                     filtersOrInsideStr += string.Join(" and ", filtersAnd);
-        //                     filtersOrInsideStr += ")";
-        //                 }else{
-        //                     filtersOrInsideStr += string.Join(" and ", filtersAnd);
-        //                 }
-        //                 filtersOrInside.Add(filtersOrInsideStr);
-        //             }
-        //             if(filtersOrInside.Count > 1){
-        //                 filtersOrStr += "(";
-        //                 filtersOrStr += string.Join(" or ", filtersOrInside);
-        //                 filtersOrStr += ")";
-        //             }else{
-        //                 filtersOrStr += string.Join(" or ", filtersOrInside);
-        //             }
-        //             filtersOr.Add(filtersOrStr);
-        //         }
-        //     }
-        //     if(filtersOr.Count > 1){
-        //         filter += "(";
-        //         filter += string.Join(" and ", filtersOr);
-        //         filter += ")";
-        //     }else{
-        //         filter += string.Join(" and ", filtersOr);
-        //     }
-        //     return filter;
-        // }
-
-        // private string GetFiltersStr(string name, dynamic dynamicValue)
-        // {
-        //     string filtersAndStr = "(";
-        //     Type type = dynamicValue.GetType();
-        //     bool isNullable = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>) ? true : false;
-        //     if(name.EndsWith("__in")){
-        //         var list = JsonConvert.DeserializeObject<List<dynamic>>(JsonConvert.SerializeObject(dynamicValue));
-        //         if(list.Count > 0){
-        //             name = name.Replace("__in", "");
-        //             foreach (var itemIn in list){
-        //                 dynamic itemInValue = GetFilterValue(itemIn);
-        //                 Type typeIn = itemIn.GetType();
-        //                 if(filtersAndStr != "("){
-        //                     filtersAndStr += " or ";
-        //                 }
-        //                 if(typeIn == typeof(int?) || typeIn == typeof(int) || typeIn == typeof(decimal?) || typeIn == typeof(decimal) || typeIn == typeof(byte?) || typeIn == typeof(byte)){
-        //                     filtersAndStr += $"({name} == null ? 0 : {name}) == {itemInValue}";
-        //                 }else if(typeIn == typeof(bool) || typeIn == typeof(bool?)){
-        //                     filtersAndStr += $"({name} == null ? false : {name}) == {itemInValue}";
-        //                 }else if(typeIn == typeof(string)){
-        //                     filtersAndStr += $"({name} == null ? \"\" : {name}) == {itemInValue}";
-        //                 }
-        //                 else{
-        //                     filtersAndStr += $"{name} == {itemInValue}";
-        //                 }
-        //             }
-        //         }
-        //     }else if(name.EndsWith("__notin")){
-        //         var list = (List<object>)dynamicValue;
-        //         if(list.Count > 0){
-        //             name = name.Replace("__notin", "");
-        //             foreach (var itemIn in list){
-        //                 dynamic itemInValue = GetFilterValue(itemIn);
-        //                 Type typeIn = itemIn.GetType();
-        //                 if(filtersAndStr != "("){
-        //                     filtersAndStr += " and ";
-        //                 }
-        //                 if(typeIn == typeof(int?) || typeIn == typeof(int) || typeIn == typeof(decimal?) || typeIn == typeof(decimal) || typeIn == typeof(byte?) || typeIn == typeof(byte)){
-        //                     filtersAndStr += $"({name} == null ? 0 : {name}) != {itemInValue}";
-        //                 }else if(typeIn == typeof(bool) || typeIn == typeof(bool?)){
-        //                     filtersAndStr += $"({name} == null ? false : {name}) != {itemInValue}";
-        //                 }else if(typeIn == typeof(string)){
-        //                     filtersAndStr += $"({name} == null ? \"\" : {name}) != {itemInValue}";
-        //                 }else{
-        //                     filtersAndStr += $"{name} != {itemInValue}";
-        //                 }
-        //             }
-        //         }
-        //     }
-        //     else if(name.EndsWith("__gt")){
-        //         name = name.Replace("__gt", "");
-        //         if(type == typeof(int?) || type == typeof(int) || type == typeof(decimal?) || type == typeof(decimal) || type == typeof(byte?) || type == typeof(byte)){
-        //             filtersAndStr += $"({name} == null ? 0 : {name}) > {dynamicValue}";
-        //         }else{
-        //             filtersAndStr += $"{name} > {dynamicValue}";
-        //         }
-        //     }else if(name.EndsWith("__gte")){
-        //         name = name.Replace("__gte", "");
-        //         if(type == typeof(int?) || type == typeof(int) || type == typeof(decimal?) || type == typeof(decimal) || type == typeof(byte?) || type == typeof(byte)){
-        //             filtersAndStr += $"({name} == null ? 0 : {name}) >= {dynamicValue}";
-        //         }else{
-        //             filtersAndStr += $"{name} >= {dynamicValue}";
-        //         }                
-        //     }else if(name.EndsWith("__lt")){
-        //         name = name.Replace("__lt", "");
-        //         if(type == typeof(int?) || type == typeof(int) || type == typeof(decimal?) || type == typeof(decimal) || type == typeof(byte?) || type == typeof(byte)){
-        //             filtersAndStr += $"({name} == null ? 0 : {name}) < {dynamicValue}";
-        //         }else{
-        //             filtersAndStr += $"{name} < {dynamicValue}";
-        //         }
-        //     }else if(name.EndsWith("__lte")){
-        //         name = name.Replace("__lte", "");
-        //         if(type == typeof(int?) || type == typeof(int) || type == typeof(decimal?) || type == typeof(decimal) || type == typeof(byte?) || type == typeof(byte)){
-        //             filtersAndStr += $"({name} == null ? 0 : {name}) <= {dynamicValue}";
-        //         }else{
-        //             filtersAndStr += $"{name} <= {dynamicValue}";
-        //         }
-        //     }else if(name.EndsWith("__contains")){
-        //         name = name.Replace("__contains", "");
-        //         filtersAndStr += $"({name} == null ? \"\" : {name}).ToLower().Contains(\"{dynamicValue}\".ToLower())";
-        //     }else{
-        //         if(type == typeof(int?) || type == typeof(int) || type == typeof(decimal?) || type == typeof(decimal) || type == typeof(byte?) || type == typeof(byte)){
-        //             filtersAndStr += $"({name} == null ? 0 : {name}) == {dynamicValue}";
-        //         }else if(type == typeof(bool) || type == typeof(bool?)){
-        //             filtersAndStr += $"({name} == null ? false : {name}) == {dynamicValue}";
-        //         }else if(type == typeof(string)){
-        //             filtersAndStr += $"({name} == null ? \"\" : {name}).ToLower() == \"{dynamicValue}\".ToLower()";
-        //         }else{
-        //             filtersAndStr += $"{name} == {dynamicValue}";
-        //         }
-        //     }
-        //     filtersAndStr += ")";
-        //     return filtersAndStr;
-        // }
-
-        // private dynamic GetFilterValue(dynamic dynamicValue)
-        // {
-        //     Type type = dynamicValue.GetType();
-        //     dynamic filterValue = dynamicValue;
-        //     if(type.IsEnum){
-        //         filterValue = (int)dynamicValue;
-        //     }
-        //     return filterValue;
-        // }
 
         public async Task Refresh(bool Reload = false)
         {
@@ -1003,7 +853,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 NavManager.NavigateTo($"{BusinessName}/detail/{id}/");
             }
         }
-
+        
         [JSInvokable]
         public async Task<bool> DeleteFromReact(Int64 id, string object_string)
         {
@@ -1053,10 +903,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         }
 
         [JSInvokable]
-        public async Task<bool> DisableActionFromReact(string rowid, Int64 index){
+        public async Task<bool> DisableActionFromReact(string dataStr, Int64 index){
             Button button = CustomActions[(int)index];
             bool res = false;
             if(button != null){
+                var data = JsonConvert.DeserializeObject<dynamic>(dataStr);
                 dynamic disableCondition = null;
                 if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-disabled")){
                     var sdkDisable = button.CustomAttributes["sdk-disabled"];
@@ -1065,25 +916,111 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     }
                 }
                 if(disableCondition != null){
-                    var bl = BackendRouterService.GetSDKBusinessModel(BusinessName, AuthenticationService);
-                    var result = await bl.Call("DataEntity", rowid.ToString());
-                    if(result.Success){
-                        dynamic obj = result.Data;
-                        if(disableCondition is bool){
-                            res = (bool)disableCondition;
-                        }else {
-                            var eject = await Evaluator.EvaluateCode(disableCondition, BusinessObj, disableCondition, true, useRoslyn: true); //revisar
-                            if (eject != null){
-                                if(eject is bool)
-                                    res = (bool)eject;
-                                else
-                                    res = await eject(obj);
-                            }
-                        }
-                    }
+                    res = await EvaluateCondition(data, disableCondition);
                 }
             }
             return res;
+        }
+
+        [JSInvokable]
+        public async Task<bool> HideActionFromReact(string rowid, Int64 index){
+            Button button = CustomActions[(int)index];
+            bool res = false;
+            if(button != null){
+                dynamic hideCondition = null;
+                if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-hide")){
+                    var sdkHide = button.CustomAttributes["sdk-hide"];
+                    if(sdkHide != null){
+                        hideCondition = sdkHide;
+                    }
+                }
+                if(hideCondition != null){
+                    //res = await EvaluateCondition(rowid, hideCondition);
+                }
+            }
+            return res;
+        }
+
+        private async Task<bool> EvaluateCondition(dynamic data, dynamic condition){
+            bool res = false;
+            //var bl = BackendRouterService.GetSDKBusinessModel(BusinessName, AuthenticationService);
+            dynamic obj = JsonConvert.DeserializeObject(data.ToString(), BusinessObj.BaseObj.GetType());
+
+            foreach (var prop in data){
+                var propertyName = prop.Name;
+                if(propertyName.Equals("rowid")){
+                    propertyName = "Rowid";
+                }
+            }
+            
+            if(condition is bool){
+                res = (bool)condition;
+            }else{
+                var eject = await Evaluator.EvaluateCode(condition, BusinessObj, condition, true, useRoslyn: true); //revisar
+                if(eject != null){
+                    if(eject is bool)
+                        res = (bool)eject;
+                    else
+                        res = await eject(obj);
+                }
+            }
+            //var result = await bl.Call("DataEntity", rowid.ToString());
+            // if(result.Success){
+            //     dynamic obj = result.Data;
+            //     if(condition is bool){
+            //         res = (bool)condition;
+            //     }else {
+            //         var eject = await Evaluator.EvaluateCode(condition, BusinessObj, condition, true, useRoslyn: true); //revisar
+            //         if (eject != null){
+            //             if(eject is bool)
+            //                 res = (bool)eject;
+            //             else
+            //                 res = await eject(obj);
+            //         }
+            //     }
+            // }
+
+            return res;
+        }
+
+        private void SetValueObj(dynamic obj, dynamic propertyName, dynamic value)
+        {
+            var type = obj.GetType();
+            var propertyNameSplit = propertyName.Split('.');
+            if(propertyNameSplit.Length > 1){
+                var property = type.GetProperty(propertyNameSplit[0]);
+                if (property != null){
+                    for (int i = 1; i < propertyNameSplit.Length; i++){
+                        var objProp = property.GetValue(obj);
+                        if(objProp == null){
+                            objProp = Activator.CreateInstance(property.PropertyType);
+                        }
+                        var newName = propertyNameSplit[i];
+                        if(i == propertyNameSplit.Length - 1){
+                            var val = Convert.ChangeType(value, property.PropertyType);
+                            property.SetValue(obj, val);
+                        }else{
+                            property.SetValue(obj, objProp);
+                        }
+                    }
+
+                    // var objProp = property.GetValue(obj);
+                    // if(objProp == null){
+                    //     objProp = Activator.CreateInstance(property.PropertyType);
+                    // }
+                    // var newName = propertyName.Substring(propertyName.IndexOf('.') + 1);
+                    // SetValueObj(objProp, newName, value);
+                    // property.SetValue(obj, objProp);
+                }
+            }else{
+                var property = type.GetProperty(propertyName);
+                if (property != null){
+                    if(!propertyName.Equals("Status")){
+                        var val = Convert.ChangeType(value, property.PropertyType);
+                        property.SetValue(obj, val);
+                    }
+                }
+            }
         }
 
         private async Task GoToDelete(Int64 id, string object_string)
