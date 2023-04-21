@@ -35,6 +35,8 @@ namespace Siesa.SDK.Frontend.Services
 
         private short _rowIdCompanyGroup = 0;
 
+        private string _userPhoto = "";
+
         private JwtUserData? _user;
         public JwtUserData User
         {
@@ -75,6 +77,7 @@ namespace Siesa.SDK.Frontend.Services
             CustomRowidCulture = await _localStorageService.GetItemAsync<short>("customrowidculture");
             _selectedSuite = await _localStorageService.GetItemAsync<int>("selectedSuite");
             //_rowIdCompanyGroup = await _localStorageService.GetItemAsync<short>("rowIdCompanyGroup");
+            _userPhoto = await _localStorageService.GetItemAsync<string>("userPhoto");
             var selectedConnection = await _localStorageService.GetItemAsync<string>("selectedConnection");
             try
             {
@@ -135,7 +138,7 @@ namespace Siesa.SDK.Frontend.Services
                 await _localStorageService.SetItemAsync("usertoken", UserToken);
                 await SetCookie("sdksession", loginRequest.Data.IdSession);
                 await SetCookie("selectedConnection", rowIdDBConnection.ToString());
-                await GetUserPhoto();
+                await SetUserPhoto(loginRequest.Data.UserPhoto);
             }
             else
             {
@@ -208,6 +211,16 @@ namespace Siesa.SDK.Frontend.Services
             }
         }
 
+        public async Task SetUserPhoto(string _data, bool saveLocalStorage = true)
+        {
+            _userPhoto = _data;
+
+            if(saveLocalStorage)
+            {
+                await _localStorageService.SetItemAsync("userPhoto", _userPhoto);
+            }
+        }
+
         public async Task SetSelectedConnection(SDKDbConnection selectedConnection)
         {
             SelectedConnection = selectedConnection;
@@ -259,32 +272,14 @@ namespace Siesa.SDK.Frontend.Services
             return LogoUrl;
         }
 
-        public async Task<string> GetUserPhoto()
+        public string GetUserPhoto()
         {
-            string UserPhoto = await _localStorageService.GetItemAsync<string>("userPhoto");
-
-            if(string.IsNullOrEmpty(UserPhoto))
+            if (string.IsNullOrEmpty(_userPhoto))
             {
-                var request = await GetBLUser();
-
-                if(request != null)
-                {
-                    var result = await request.Call("GetImageUserBase64", this.User.RowidAttachmentUserProfilePicture);
-
-                    if(result.Success)
-                    {
-                        UserPhoto = result.Data;
-
-                    }else
-                    {
-                        UserPhoto = "_content/Siesa.SDK.Frontend/assets/img/Profile_default.png";
-                    }
-                    
-                    await _localStorageService.SetItemAsync("userPhoto", UserPhoto);
-                }
+                _userPhoto = "_content/Siesa.SDK.Frontend/assets/img/Profile_default.png";
             }
 
-            return UserPhoto;
+            return _userPhoto;
         }
 
         public string GetConnectionStyle()
