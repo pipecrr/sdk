@@ -35,7 +35,7 @@
 <nav class="menu_content">
     <div class="nav_section_1 w-100">
         <a class="nav_logo" href="/">
-            <img class="" src="@AuthenticationService.GetConnectionLogo()" height="30px" alt="Logo compania">
+            <img class="" src="@LogoUrl" height="30px" alt="Logo compania">
         </a>
          <div class="p-2 input-group input-group-sm d-flex align-items-center d-block d-sm-none">
             <SDKSearch />
@@ -70,7 +70,7 @@
             {
                 <div class="nav_profile_btn" @onclick="@(()=> ShowProfileMenu())" data-automation-id="Button_ShowProfileMenu">
                     <div class="nav_btn_standar_icon nav_profile_photo">
-                        <img src="_content/Siesa.SDK.Frontend/assets/img/Profile_default.png" height="36px" alt="imagen perfil">
+                        <img src="@UserPhoto" height="36px" alt="imagen perfil">
                     </div>
                     <div class="nav_btn_standar_text">
                         @AuthenticationService.User
@@ -103,6 +103,11 @@
     private E00061_Menu SuiteMenu { get; set; }
     private string TitleSuite { get; set; }
     private string TitleLogout { get; set; }
+
+    private string LogoUrl { get; set; } = "";
+
+    private string UserPhoto { get; set; } = "";
+
     
     public void OnMenuItemClick(E00061_Menu menuItem)
     {
@@ -157,7 +162,10 @@
                 Url = "logout",
                 Type = MenuType.CustomMenu
             });
-        }  
+        }
+
+        LogoUrl = await AuthenticationService.GetConnectionLogo();
+        UserPhoto = await AuthenticationService.GetUserPhoto();
 
         await base.OnInitializedAsync();
 

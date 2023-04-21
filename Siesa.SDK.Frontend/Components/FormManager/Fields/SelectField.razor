@@ -22,6 +22,7 @@
     ValueProperty="Type"
     FieldName="@FieldOpt.Name"
     @ref="_refField"
+    OnFocusOut = "@OnFocusOutAction"
     />
 @FieldValidationTemplate
 
@@ -83,10 +84,13 @@
         }
     }
 
+    private Action OnFocusOutAction { get; set; } = () => {};
     protected override void OnInitialized()
     {
         base.OnInitialized();
         var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
         ValueExpression = (Expression<Func<TItem>>)Expression.Lambda(typeof(Func<>).MakeGenericType(typeof(TItem)), access);
+
+         OnFocusOutAction = () => { CheckUniqueValue(); };
     }
 }

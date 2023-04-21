@@ -33,6 +33,8 @@ namespace Siesa.SDK.Frontend.Services
 
         private int _selectedSuite;
 
+        private short _rowIdCompanyGroup = 0;
+
         private JwtUserData? _user;
         public JwtUserData User
         {
@@ -72,6 +74,7 @@ namespace Siesa.SDK.Frontend.Services
             UserToken = await _localStorageService.GetItemAsync<string>("usertoken");
             CustomRowidCulture = await _localStorageService.GetItemAsync<short>("customrowidculture");
             _selectedSuite = await _localStorageService.GetItemAsync<int>("selectedSuite");
+            //_rowIdCompanyGroup = await _localStorageService.GetItemAsync<short>("rowIdCompanyGroup");
             var selectedConnection = await _localStorageService.GetItemAsync<string>("selectedConnection");
             try
             {
@@ -106,6 +109,14 @@ namespace Siesa.SDK.Frontend.Services
 
             string sessionId = IsUpdateSession ? _contextAccesor.HttpContext.Request.Cookies["sdksession"].ToString() : "";
 
+            short LastCompanyGroupSelected = await _localStorageService.GetItemAsync<short>("rowidCompanyGroup");
+
+            if(LastCompanyGroupSelected > 0 && LastCompanyGroupSelected != rowIdCompanyGroup) 
+            {
+                rowIdCompanyGroup = LastCompanyGroupSelected;
+            }
+
+            
             var loginRequest = await BLuser.Call("SignInSession", new Dictionary<string, dynamic> {
                 {"username", username},
                 {"password", password},
@@ -124,6 +135,7 @@ namespace Siesa.SDK.Frontend.Services
                 await _localStorageService.SetItemAsync("usertoken", UserToken);
                 await SetCookie("sdksession", loginRequest.Data.IdSession);
                 await SetCookie("selectedConnection", rowIdDBConnection.ToString());
+                await GetUserPhoto();
             }
             else
             {
@@ -176,6 +188,7 @@ namespace Siesa.SDK.Frontend.Services
             await _localStorageService.RemoveItemAsync("lastInteraction");
             await _localStorageService.RemoveItemAsync("n_tabs");
             await _localStorageService.RemoveItemAsync("bd");
+            await _localStorageService.RemoveItemAsync("userPhoto");
             //await _localStorageService.RemoveItemAsync("selectedSuite");
             await RemoveCookie("sdksession");
             await RemoveCookie("selectedConnection");
@@ -212,13 +225,68 @@ namespace Siesa.SDK.Frontend.Services
             return SelectedConnection;
         }
 
-        public string GetConnectionLogo()
+        public async Task<string> GetConnectionLogo(short rowidCompanyGroup = 0)
         {
-            if(SelectedConnection != null && SelectedConnection.Rowid != 0 && !string.IsNullOrEmpty(SelectedConnection.LogoUrl)){
-                return SelectedConnection.LogoUrl;
+            string LogoUrl = await _localStorageService.GetItemAsync<string>("imageCompanyGroup");
+
+            E00200_CompanyGroup SelectedGroup = new E00200_CompanyGroup();
+
+            if (string.IsNullOrEmpty(LogoUrl) || rowidCompanyGroup > 0)
+            {
+                var BLCompanyGroup = _backendRouterService.GetSDKBusinessModel("BLSDKCompanyGroup",this);
+
+                var companyGroup = await BLCompanyGroup.Call("GetCompanyGroupLogo",rowidCompanyGroup);
+
+                if (companyGroup.Success)
+                {
+                    SelectedGroup = companyGroup.Data;
+                    
+                    if (SelectedGroup.Logo?.FileInternalAttached != null && SelectedGroup.Logo?.FileType != null)
+                    {
+                        string ImageBase64 = Convert.ToBase64String(SelectedGroup.Logo.FileInternalAttached);
+                    
+                        LogoUrl = $"data:{SelectedGroup.Logo.FileType};base64,{ImageBase64}";
+
+                    }else
+                    {
+                        LogoUrl = "_content/Siesa.SDK.Frontend/assets/img/LogoSiesaNoSub.svg";
+                    }
+                    
+                    await _localStorageService.SetItemAsync("imageCompanyGroup", LogoUrl);
+                }
             }
-            return "_content/Siesa.SDK.Frontend/assets/img/LogoSiesaNoSub.svg";
+
+            return LogoUrl;
         }
+
+        public async Task<string> GetUserPhoto()
+        {
+            string UserPhoto = await _localStorageService.GetItemAsync<string>("userPhoto");
+
+            if(string.IsNullOrEmpty(UserPhoto))
+            {
+                var request = await GetBLUser();
+
+                if(request != null)
+                {
+                    var result = await request.Call("GetImageUserBase64", this.User.RowidAttachmentUserProfilePicture);
+
+                    if(result.Success)
+                    {
+                        UserPhoto = result.Data;
+
+                    }else
+                    {
+                        UserPhoto = "_content/Siesa.SDK.Frontend/assets/img/Profile_default.png";
+                    }
+                    
+                    await _localStorageService.SetItemAsync("userPhoto", UserPhoto);
+                }
+            }
+
+            return UserPhoto;
+        }
+
         public string GetConnectionStyle()
         {
                 return SelectedConnection.StyleUrl;
@@ -250,17 +318,23 @@ namespace Siesa.SDK.Frontend.Services
             if (CompanyGroup.Success)
             {
                 await this.SetToken(CompanyGroup.Data);
-            }
 
+                await this.GetConnectionLogo(rowid);
+
+                await _localStorageService.SetItemAsync("rowidCompanyGroup", rowid);
+            }
         }
 
         public short GetRowidCompanyGroup()
         {
-            if (this.User == null)
+            short rowid = 0;
+
+            if (this.User != null)
             {
-             return 0;   
+             rowid = this.User.RowidCompanyGroup;
             }
-            return this.User.RowidCompanyGroup;
+
+            return rowid;   
         }
 
         public short GetRoiwdCulture()

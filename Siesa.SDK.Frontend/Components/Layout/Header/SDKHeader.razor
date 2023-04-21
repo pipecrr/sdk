@@ -24,7 +24,7 @@
     </div>
     <div class="col-xl-5 col-lg-4 col-md-4 col-sm-5 col-5 sdk_company_logo">
          <a class="nav_logo" href="/">
-            <img class="whcm_logo_compania" src="@AuthenticationService.GetConnectionLogo()" height="30px"
+            <img class="whcm_logo_compania" src="@LogoUrl" height="30px"
                 alt="Logo compania">
         </a>
     </div>
@@ -115,6 +115,8 @@
     private E00200_CompanyGroup SelectedGroup { get; set; } = new E00200_CompanyGroup();
 
     private bool loading = false;
+    
+    private string LogoUrl { get; set; } = "";
 
     private SDKDbConnection _connection { get; set; } = new SDKDbConnection();
 
@@ -134,6 +136,8 @@
             SelectedGroup = CompanyGroups.First();
             AuthenticationService.SetRowidCompanyGroup(SelectedGroup.Rowid);
         }
+
+        LogoUrl = await AuthenticationService.GetConnectionLogo();
 
         base.OnInitializedAsync(); 
 

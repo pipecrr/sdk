@@ -84,7 +84,7 @@ namespace Siesa.SDK.Business
             return null;
         }
 
-        public Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<BaseSDK<int>> queryFilter = null, bool includeCount = false, bool includeAttachments = true)
+        public Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<BaseSDK<int>> queryFilter = null, bool includeCount = false, bool includeAttachments = true, List<string> extraFields = null)
         {
             return null;
         }
@@ -93,7 +93,7 @@ namespace Siesa.SDK.Business
         {
         }
 
-        public ValidateAndSaveBusinessObjResponse ValidateAndSave()
+        public ValidateAndSaveBusinessObjResponse ValidateAndSave(bool ignorePermissions = false)
         {
             return null;
         }
@@ -400,17 +400,22 @@ namespace Siesa.SDK.Business
             return query.FirstOrDefault();
         }
     }
-        
-        public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave()
+
+        public virtual void AfterValidateAndSave(ref ValidateAndSaveBusinessObjResponse result){
+            //Do nothing
+        }
+        public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave(bool ignorePermissions = false)
         {
             ValidateAndSaveBusinessObjResponse result = new();
-            if(_featurePermissionService != null && !string.IsNullOrEmpty(BusinessName)){
-                CanCreate = _featurePermissionService.CheckUserActionPermission(BusinessName, 1,AuthenticationService);
-                CanEdit = _featurePermissionService.CheckUserActionPermission(BusinessName, 2,AuthenticationService);
-            }
-            if(!CanCreate && !CanEdit){
-                AddMessageToResult("Custom.Generic.Unauthorized", result);
-                return result;
+            if(!ignorePermissions){
+                if(_featurePermissionService != null && !string.IsNullOrEmpty(BusinessName)){
+                    CanCreate = _featurePermissionService.CheckUserActionPermission(BusinessName, 1,AuthenticationService);
+                    CanEdit = _featurePermissionService.CheckUserActionPermission(BusinessName, 2,AuthenticationService);
+                }
+                if(!CanCreate && !CanEdit){
+                    AddMessageToResult("Custom.Generic.Unauthorized", result);
+                    return result;
+                }
             }
 
             try
@@ -437,7 +442,7 @@ namespace Siesa.SDK.Business
                 AddExceptionToResult(exception, result);
                 _logger.LogError(exception, "Error saving in BLBackend");
             }
-
+            AfterValidateAndSave(ref result);
             return result;
         }
 
@@ -683,7 +688,7 @@ namespace Siesa.SDK.Business
                     };
         }
 
-        public virtual Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null, bool includeCount = false, bool includeAttachments = true)
+        public virtual Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null, bool includeCount = false, bool includeAttachments = true, List<string> extraFields = null)
         {
             this._logger.LogInformation($"Get Data {this.GetType().Name}");
             var result = new Siesa.SDK.Shared.Business.LoadResult();
@@ -691,13 +696,38 @@ namespace Siesa.SDK.Business
             {
                 context.SetProvider(_provider);
                 var query = context.Set<T>().AsQueryable();
-                foreach (var relatedProperty in _relatedProperties)
+
+                if(extraFields != null && extraFields.Count > 0)
                 {
-                    if(!includeAttachments && _relatedAttachmentsType != null && _relatedAttachmentsType.Contains(relatedProperty))
+                    extraFields.Add("Rowid");
+
+                    var selectedFields = string.Join(",", extraFields.Select(x =>
                     {
-                        continue;
+                        var splitInclude = x.Split('.');
+                        if (splitInclude.Length > 1) 
+                        {
+                            for (int i = 1; i <= splitInclude.Length; i++)
+                            {
+                                var include = string.Join(".", splitInclude.Take(i));
+                                query = query.Include(include);
+                            }
+                        }
+                        return splitInclude[0];
+                    }).Distinct());
+
+                    query = query.Select<T>($"new ({selectedFields})");
+
+                }
+                else
+                {
+                    foreach (var relatedProperty in _relatedProperties)
+                    {
+                        if(!includeAttachments && _relatedAttachmentsType != null && _relatedAttachmentsType.Contains(relatedProperty))
+                        {
+                            continue;
+                        }
+                        query = query.Include(relatedProperty);
                     }
-                    query = query.Include(relatedProperty);
                 }
 
                 if (!string.IsNullOrEmpty(filter))
@@ -838,9 +868,9 @@ namespace Siesa.SDK.Business
         {
             using (var Context = CreateDbContext())
             {
-                return SDKFlexExtension.SDKFlexPreviewData(Context, requestData, AuthenticationService, setTop);
+                var response = SDKFlexExtension.SDKFlexPreviewData(Context, requestData, AuthenticationService, setTop);
+                return response;
             }
-            return null;
         }
 
         [SDKExposedMethod]

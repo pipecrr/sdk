@@ -26,7 +26,7 @@ namespace Siesa.SDK.Entities
 		[SDKRequired]
 		[SDKStringLength(250)]
 		public string Name { get; set; }
-
+		
 		[SDKStringLength(500)]
 		public string? Description { get; set; }
 

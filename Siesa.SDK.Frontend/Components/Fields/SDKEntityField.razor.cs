@@ -16,6 +16,7 @@ using Microsoft.JSInterop;
 using Newtonsoft.Json;
 using Siesa.SDK.Frontend.Extension;
 using Siesa.SDK.Entities;
+using Siesa.SDK.Frontend.Components.FormManager;
 
 namespace Siesa.SDK.Frontend.Components.Fields
 {
@@ -30,6 +31,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         [Parameter] public string BusinessName { get; set; }
         [Parameter] public string RelatedBusiness { get; set; }
         [Parameter] public dynamic BaseObj { get; set; }
+        [Parameter] public dynamic ParentBusinessObj { get; set; }
         [Parameter] public int MinCharsEntityField { get; set; } = 2;
         [Parameter] public Dictionary<string, string> RelatedFilters { get; set; } = new Dictionary<string, string>();
         [Parameter] public RelatedParams RelatedParams { get; set; }
@@ -38,6 +40,8 @@ namespace Siesa.SDK.Frontend.Components.Fields
         [Parameter] public Action OnChange { get; set; }
         [Parameter] public bool IsMultiple { get; set; } = false;
         [Parameter] public bool Disabled { get; set; }
+
+        [Parameter] public List<List<object>> Filters { get; set; }
         public dynamic RelBusinessObj { get; set; }
         private string Value = "";
         private long rowidLastValue = -1;
@@ -54,6 +58,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         public Type typeProperty { get; set; }
         public string orderBy { get; set; } = "Rowid";
         public int FieldTemplate { get; set; } = 1;
+        public Dictionary<string, object> DefaultFieldsCreate { get; set; } = new Dictionary<string, object>();
 
         private bool CanCreate;
         private bool CanEdit;
@@ -371,6 +376,20 @@ namespace Siesa.SDK.Frontend.Components.Fields
                         break;
                 }
             }
+
+            if(Filters?.Count > 0){
+                string? paramFilter = "";
+                paramFilter = await FormUtils.GenerateFilters(Filters, ParentBusinessObj);
+                if(!string.IsNullOrEmpty(paramFilter)){
+                    if (!string.IsNullOrEmpty(filters))
+                    {
+                        filters += " && ";
+                    }else{
+                        filters += paramFilter;
+                    }
+                }
+            }
+
             return filters;
         }
 
@@ -437,29 +456,29 @@ namespace Siesa.SDK.Frontend.Components.Fields
             await elementInstance.InvokeVoidAsync("dropdown","show");
         }
 
-        public async Task<string> GetStringFilters(){
-            //Deprecated
-            var filters = await GetFilters();
-            var filtersSearch = "";
-            if(Value != null && Value != "" && ItemsSelected.Count == 0){
-                var properties = RelBusinessObj.BaseObj.GetType().GetProperties();
-                foreach (var property in properties){
-                    if(property.PropertyType == typeof(string)){
-                        if(!string.IsNullOrEmpty(filtersSearch)){
-                            filtersSearch += " || ";
-                        }
-                        filtersSearch += $"({property.Name} == null ? \"\" : {property.Name}).ToLower().Contains(\"{Value}\".ToLower())";
-                    }
-                }
-            }
-            if(!string.IsNullOrEmpty(filtersSearch)){
-                if(!string.IsNullOrEmpty(filters)){
-                    filters += " && ";
-                }
-                filters += $"({filtersSearch})";
-            }
-            return filters;
-        }
+        // public async Task<string> GetStringFilters(){
+        //     //Deprecated
+        //     var filters = await GetFilters();
+        //     var filtersSearch = "";
+        //     if(Value != null && Value != "" && ItemsSelected.Count == 0){
+        //         var properties = RelBusinessObj.BaseObj.GetType().GetProperties();
+        //         foreach (var property in properties){
+        //             if(property.PropertyType == typeof(string)){
+        //                 if(!string.IsNullOrEmpty(filtersSearch)){
+        //                     filtersSearch += " || ";
+        //                 }
+        //                 filtersSearch += $"({property.Name} == null ? \"\" : {property.Name}).ToLower().Contains(\"{Value}\".ToLower())";
+        //             }
+        //         }
+        //     }
+        //     if(!string.IsNullOrEmpty(filtersSearch)){
+        //         if(!string.IsNullOrEmpty(filters)){
+        //             filters += " && ";
+        //         }
+        //         filters += $"({filtersSearch})";
+        //     }
+        //     return filters;
+        // }
 
         public async Task closeItem(string item){
             Values.Remove(item);
@@ -495,6 +514,30 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 AutomationId = FieldName;
             }
             return base.GetAutomationId();
+        }
+
+        public async Task InheritCompany()
+        {
+            Type typeParent = BaseObj.GetType();
+            
+            if (Utilities.IsAssignableToGenericType(typeParent, typeof(BaseCompany<>)))
+            {
+                Type RelatedType = BindProperty.PropertyType;
+
+                if (Utilities.IsAssignableToGenericType(RelatedType, typeof(BaseCompany<>)))
+                {
+                    if (BaseObj.Company != null)
+                    {
+                        DefaultFieldsCreate.Add("BaseObj.Company", BaseObj.Company);
+                        
+                         if (BaseObj.RowidCompany != null)
+                         {
+                              DefaultFieldsCreate.Add("BaseObj.RowidCompany", BaseObj.RowidCompany);
+                         }
+                    }
+                }
+            }
+
         }
     }
 }

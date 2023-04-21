@@ -1,6 +1,7 @@
 @typeparam TInt
 @using System.Globalization
 @using System.Linq.Expressions
+@inherits SDKComponent
 <DxSpinEdit 
     Value="@Value" 
     ValueChanged="@ValueChanged" 
@@ -10,6 +11,10 @@
     maxlength = "@MaxLength"
     Mask="@Mask"
     ValueExpression="@ValueExpression"
+    ClearButtonDisplayMode="@ClearButtonDisplayMode.Get()"
+    field-name="@FieldName"
+    data-automation-id="@GetAutomationId()"
+    @onfocusout="@OnFocusOut"
 >
 @if(Culture != null){
     <DxNumericMaskProperties Culture="@Culture" />
@@ -29,9 +34,24 @@
     [Parameter] public string MaxLength { get; set; }
     [Parameter] public string CssClass { get; set; }
     [Parameter] public string Mask { get; set; }
+    [Parameter] public SDKClearButtonDisplayMode ClearButtonDisplayMode { get; set; }
+    [Parameter] public string FieldName { get; set; }
 
     [Parameter] public CultureInfo Culture { get; set; }
     [Parameter] public Expression<Func<TInt>> ValueExpression { get; set; }
 
+
+    protected override string GetAutomationId()
+        {
+            if(string.IsNullOrEmpty(AutomationId))
+            {
+                AutomationId = FieldName;
+            }
+            return base.GetAutomationId();
+        }
+    private async Task OnFocusOut()
+    {
+        ValueChanged(Value);
+    }
     
 }

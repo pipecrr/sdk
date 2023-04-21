@@ -75,8 +75,11 @@
     {
         return $"{GetAutomationId()}_{item.Value.Rowid}";
     }
-    public async Task OpenModalCreate(){
-        var CreateDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicCreateView BusinessName="@RelatedBusiness" IsSubpanel=true  ShowTitle="false" />, width: "90%", title:$"{RelatedBusiness}.Singular");        
+    public async Task OpenModalCreate()
+    {
+        await InheritCompany();
+        
+        var CreateDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicCreateView BusinessName="@RelatedBusiness" IsSubpanel=true  ShowTitle="false" DefaultFields="@DefaultFieldsCreate" />, width: "90%", title:$"{RelatedBusiness}.Singular");        
         if(CreateDialog != null && CreateDialog.GetType() != typeof(bool)){
             await OnSave(CreateDialog);
             StateHasChanged();

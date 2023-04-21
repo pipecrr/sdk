@@ -14,6 +14,7 @@
     autocomplete="@GetAutoComplete()"
     field-name="@FieldName"
     Enabled="@(!Disabled)"
+    @onfocusout="@OnFocusOut"
 />
 
 @code {
@@ -55,6 +56,10 @@
             cssClass += " invalid";
         }
         return cssClass;
+    }
+    private async Task OnFocusOut()
+    {
+        ValueChanged(Value);
     }
 
 }
