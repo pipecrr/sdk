@@ -87,7 +87,7 @@ namespace Siesa.SDK.Backend.Services
             throw new NotImplementedException();
         }
 
-        public async Task<string> GetConnectionLogo(short rowidCompanyGroup = 0)
+        public string GetConnectionLogo()
         {
             throw new NotImplementedException();
         }
@@ -126,7 +126,7 @@ namespace Siesa.SDK.Backend.Services
             throw new NotImplementedException();
         }
         
-        public async Task<string> GetUserPhoto()
+        public string GetUserPhoto()
         {
             throw new NotImplementedException();
         }
