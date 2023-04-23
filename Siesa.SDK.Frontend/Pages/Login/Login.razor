@@ -266,7 +266,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        LogoUrl = await AuthenticationService.GetConnectionLogo();
+        LogoUrl = AuthenticationService.GetConnectionLogo();
         init_loading = true;
         // redirect to home if already logged in
         if (AuthenticationService.User != null)
@@ -492,7 +492,7 @@
                 await localStorageService.RemoveItemAsync("rowidCompanyGroup");
                 await localStorageService.RemoveItemAsync("imageCompanyGroup");
 
-                LogoUrl = await AuthenticationService.GetConnectionLogo();
+                LogoUrl = AuthenticationService.GetConnectionLogo();
             } 
 
         }

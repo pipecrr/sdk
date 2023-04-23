@@ -124,6 +124,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        LogoUrl = AuthenticationService.GetConnectionLogo();
         var BL = BackendRouterService.GetSDKBusinessModel("BLSDKCompanyGroup",AuthenticationService);
         
         var DataCompanyGroup = await BL.GetData(null, null);
@@ -136,11 +137,7 @@
             SelectedGroup = CompanyGroups.First();
             AuthenticationService.SetRowidCompanyGroup(SelectedGroup.Rowid);
         }
-
-        LogoUrl = await AuthenticationService.GetConnectionLogo();
-
-        base.OnInitializedAsync(); 
-
+        await base.OnInitializedAsync(); 
     }
 
     public async  Task SetCompanyGroup()
