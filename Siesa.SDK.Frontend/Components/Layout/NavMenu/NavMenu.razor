@@ -164,8 +164,8 @@
             });
         }
 
-        LogoUrl = await AuthenticationService.GetConnectionLogo();
-        UserPhoto = await AuthenticationService.GetUserPhoto();
+        LogoUrl = AuthenticationService.GetConnectionLogo();
+        UserPhoto = AuthenticationService.GetUserPhoto();
 
         await base.OnInitializedAsync();
 
