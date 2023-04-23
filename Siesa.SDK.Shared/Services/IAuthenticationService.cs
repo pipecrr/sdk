@@ -54,7 +54,7 @@ namespace Siesa.SDK.Shared.Services
         SDKDbConnection GetSelectedConnection();
         int GetSelectedSuite();
         void SetSelectedSuite(int rowid);
-        Task<string> GetConnectionLogo(short rowidCompanyGroup = 0);
+        string GetConnectionLogo();
         string GetConnectionStyle();
         Task<bool> IsValidToken();
         Task<bool> ForgotPasswordAsync(string email);

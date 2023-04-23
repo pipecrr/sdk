@@ -36,6 +36,7 @@ namespace Siesa.SDK.Frontend.Services
         private short _rowIdCompanyGroup = 0;
 
         private string _userPhoto = "";
+        private string _logoPhoto = "";
 
         private JwtUserData? _user;
         public JwtUserData User
@@ -78,6 +79,7 @@ namespace Siesa.SDK.Frontend.Services
             _selectedSuite = await _localStorageService.GetItemAsync<int>("selectedSuite");
             //_rowIdCompanyGroup = await _localStorageService.GetItemAsync<short>("rowIdCompanyGroup");
             _userPhoto = await _localStorageService.GetItemAsync<string>("userPhoto");
+            _logoPhoto = await _localStorageService.GetItemAsync<string>("imageCompanyGroup");
             var selectedConnection = await _localStorageService.GetItemAsync<string>("selectedConnection");
             try
             {
@@ -221,6 +223,16 @@ namespace Siesa.SDK.Frontend.Services
             }
         }
 
+        public async Task SetConnectionLogo(string _data, bool saveLocalStorage = true)
+        {
+            _logoPhoto = _data;
+
+            if(saveLocalStorage)
+            {
+                await _localStorageService.SetItemAsync("imageCompanyGroup", _logoPhoto);
+            }
+        }
+
         public async Task SetSelectedConnection(SDKDbConnection selectedConnection)
         {
             SelectedConnection = selectedConnection;
@@ -238,14 +250,13 @@ namespace Siesa.SDK.Frontend.Services
             return SelectedConnection;
         }
 
-        public async Task<string> GetConnectionLogo(short rowidCompanyGroup = 0)
+        public async Task<string> FetchConnectionLogo(short rowidCompanyGroup = 0)
         {
-            string LogoUrl = await _localStorageService.GetItemAsync<string>("imageCompanyGroup");
-
-            E00200_CompanyGroup SelectedGroup = new E00200_CompanyGroup();
-
-            if (string.IsNullOrEmpty(LogoUrl) || rowidCompanyGroup > 0)
+            var respose = "";
+            if (rowidCompanyGroup > 0)
             {
+                E00200_CompanyGroup SelectedGroup = new E00200_CompanyGroup();
+
                 var BLCompanyGroup = _backendRouterService.GetSDKBusinessModel("BLSDKCompanyGroup",this);
 
                 var companyGroup = await BLCompanyGroup.Call("GetCompanyGroupLogo",rowidCompanyGroup);
@@ -258,18 +269,16 @@ namespace Siesa.SDK.Frontend.Services
                     {
                         string ImageBase64 = Convert.ToBase64String(SelectedGroup.Logo.FileInternalAttached);
                     
-                        LogoUrl = $"data:{SelectedGroup.Logo.FileType};base64,{ImageBase64}";
+                        respose = $"data:{SelectedGroup.Logo.FileType};base64,{ImageBase64}";
 
                     }else
                     {
-                        LogoUrl = "_content/Siesa.SDK.Frontend/assets/img/LogoSiesaNoSub.svg";
+                        respose = "_content/Siesa.SDK.Frontend/assets/img/LogoSiesaNoSub.svg";
                     }
-                    
-                    await _localStorageService.SetItemAsync("imageCompanyGroup", LogoUrl);
                 }
             }
 
-            return LogoUrl;
+            return respose;
         }
 
         public string GetUserPhoto()
@@ -280,6 +289,16 @@ namespace Siesa.SDK.Frontend.Services
             }
 
             return _userPhoto;
+        }
+
+        public string GetConnectionLogo()
+        {
+            if (string.IsNullOrEmpty(_logoPhoto))
+            {
+                _logoPhoto = "_content/Siesa.SDK.Frontend/assets/img/LogoSiesaNoSub.svg";
+            }
+
+            return _logoPhoto;
         }
 
         public string GetConnectionStyle()
@@ -313,9 +332,8 @@ namespace Siesa.SDK.Frontend.Services
             if (CompanyGroup.Success)
             {
                 await this.SetToken(CompanyGroup.Data);
-
-                await this.GetConnectionLogo(rowid);
-
+                var _connectionLogo = await FetchConnectionLogo(rowid);
+                await this.SetConnectionLogo(_connectionLogo);
                 await _localStorageService.SetItemAsync("rowidCompanyGroup", rowid);
             }
         }
