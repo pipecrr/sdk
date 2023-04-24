@@ -3,11 +3,13 @@ using Microsoft.CodeAnalysis.Scripting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis.Scripting;
+using System.Globalization;
 
 namespace Siesa.SDK.Frontend.Utils
 {
@@ -20,9 +22,9 @@ namespace Siesa.SDK.Frontend.Utils
 
             string[] fieldPath = singleProperty.Split('.');
             if(fieldPath.Length > 1){
-                if(double.TryParse(singleProperty, out double doubleNumber)){
+                if(double.TryParse(singleProperty, NumberStyles.Any ,CultureInfo.InvariantCulture, out double doubleNumber)){
                     return doubleNumber;
-                }else if(decimal.TryParse(singleProperty, out decimal decimalNumber)){
+                }else if(decimal.TryParse(singleProperty, NumberStyles.Any ,CultureInfo.InvariantCulture, out decimal decimalNumber)){
                     return decimalNumber;
                 }
 
@@ -43,12 +45,23 @@ namespace Siesa.SDK.Frontend.Utils
             if(property != null){
                 return property.GetValue(context);
             }else{
+                var _method = contextType.GetMethod(singleProperty);
+                if(_method != null){
+                    //return delegate to execute
+                    var parameters = _method.GetParameters();
+                    List<Type> delegateTypes = new List<Type>();
+                    foreach(var parameter in parameters){
+                        delegateTypes.Add(parameter.ParameterType);
+                    }
+                    delegateTypes.Add(_method.ReturnType);
+                    return Delegate.CreateDelegate(Expression.GetDelegateType(delegateTypes.ToArray()), context, _method);
+                }
                 //check if is a number
                 if(int.TryParse(singleProperty, out int number)){
                     return number;
-                }else if(double.TryParse(singleProperty, out double doubleNumber)){
+                }else if(double.TryParse(singleProperty, NumberStyles.Any ,CultureInfo.InvariantCulture, out double doubleNumber)){
                     return doubleNumber;
-                }else if(decimal.TryParse(singleProperty, out decimal decimalNumber)){
+                }else if(decimal.TryParse(singleProperty, NumberStyles.Any ,CultureInfo.InvariantCulture, out decimal decimalNumber)){
                     return decimalNumber;
                 }else if(DateTime.TryParse(singleProperty, out DateTime date)){
                     return date;
