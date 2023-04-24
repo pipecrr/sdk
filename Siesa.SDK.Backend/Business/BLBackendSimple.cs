@@ -949,8 +949,24 @@ namespace Siesa.SDK.Business
             }
         }
 
+        private Expression GetInExpression(Expression ColumNameProperty, List<int> RowidRecords)
+        {
+            RowidRecords = RowidRecords.Distinct().ToList();
+
+            Type ColumNameType = ColumNameProperty.Type;
+            Expression InExpression = Expression.Equal(ColumNameProperty, Expression.Constant(RowidRecords[0], ColumNameType));
+
+            for (int i = 1; i < RowidRecords.Count; i++)
+            {
+                var OrValueExpression = Expression.Equal(ColumNameProperty, Expression.Constant(RowidRecords[i], ColumNameType));
+                InExpression = Expression.Or(InExpression, OrValueExpression);
+            }
+
+            return InExpression;
+        }
+
         [SDKExposedMethod]
-        public ActionResult<dynamic> GetDataFromU(int RowidDataVisibilityGroup, int RowidUser)
+        public ActionResult<dynamic> GetDataFromU(int RowidDataVisibilityGroup, int RowidUser, List<int> RowidRecords)
         {
             try
             {
@@ -993,6 +1009,13 @@ namespace Siesa.SDK.Business
                     }
 
                     CoincidenceExpression = Expression.Equal(ColumnNameProperty, ColumnValue);
+
+                    if(RowidRecords.Any())
+                    {
+                        var RowidRecordProperty = Expression.Property(pe, "RowidRecord");
+                        var InExpression = GetInExpression(RowidRecordProperty, RowidRecords);
+                        CoincidenceExpression = Expression.And(CoincidenceExpression, InExpression);
+                    }
 
                     var funcExpression = typeof(Func<,>).MakeGenericType(new Type[] { DynamicEntityType, typeof(bool) });
                     var returnExp = Expression.Lambda(funcExpression, CoincidenceExpression, new ParameterExpression[] { pe });
