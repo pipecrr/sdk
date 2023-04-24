@@ -42,6 +42,8 @@ namespace Siesa.SDK.Frontend.Components.Fields
         [Parameter] public bool Disabled { get; set; }
 
         [Parameter] public List<List<object>> Filters { get; set; }
+
+        [Parameter] public List<string> ExtraFields { get; set; } = new List<string>();
         public dynamic RelBusinessObj { get; set; }
         private string Value = "";
         private long rowidLastValue = -1;
@@ -306,7 +308,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
             if (searchText.Length > MinCharsEntityField || CacheLoadResult == null)
             {
                 var filters = await GetFilters();
-                var result = await RelBusinessObj.EntityFieldSearchAsync(searchText, filters, 10, orderBy);
+                var result = await RelBusinessObj.EntityFieldSearchAsync(searchText, filters, 10, orderBy, ExtraFields);
                 var response = new LoadResult
                 {
                     data = result.Data,
