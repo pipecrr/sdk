@@ -18,14 +18,48 @@
     animation-fill-mode: forwards;
 }
 .back_login {
-    background-image: url(assets/img/Background_Gris.jpg);
+    /* background-image: url(assets/img/Background_Gris.jpg);
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
+    background-repeat: no-repeat; */
+    background-color: var(--color_back_body);
     height: 100vh;
     display: flex;
     place-items: center;
 }
+
+.back_login_2 {
+    /* background-image: url(../assets/img/Background_Gris_2.jpg); background-size: cover; background-position: center; background-repeat: no-repeat;*/
+    background-color: var(--color_back_body);
+    background-attachment: fixed;
+    height: 100vh;
+}
+
+.back_login_2::before {
+    content: '';
+    background: #6E6E6E;
+    position: fixed;
+    width: 460px;
+    height: 460px;
+    left: 0;
+    top: 0;
+    clip-path: polygon(0 0, 0% 100%, 100% 0);
+    opacity: 0.08;
+}
+
+.back_login_2::after {
+    content: '';
+    background: #6E6E6E;
+    position: fixed;
+    width: 460px;
+    height: 460px;
+    right: 0;
+    bottom: 0;
+    clip-path: polygon(100% 100%, 0% 100%, 100% 0);
+    opacity: 0.08;
+    z-index: -1;
+}
+
 .card_login{
     border-radius: var(--border_radius_card_login);
     box-shadow: 6px 6px 24px #00000017;

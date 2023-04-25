@@ -59,10 +59,11 @@
 }
 .panel_head_text{
     position: absolute !important;
-    top: 1rem;
+    top: 0.875rem;
     left: 5rem;
     font-weight: bold;
     max-width: calc(100% - 7rem);
+    font-size: 1rem;
 }
 .panel_button_icon_style{
     position: absolute;
@@ -111,7 +112,7 @@
 .whcm_panel_button_box:hover > .whcm_panel_button > .panel_button_icon_arrow{
     opacity: 1;
     left: calc(100% - 1.125rem);
-    transition: var(--animate_faster);
+    transition: all .6s ease;
 }
 
 @media (max-width: 991.98px) { 

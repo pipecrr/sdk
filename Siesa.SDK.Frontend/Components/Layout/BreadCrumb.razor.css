@@ -112,6 +112,7 @@
 .whcm_recent_list{
     max-height: 400px;
     overflow-y: scroll;
+    scrollbar-width: thin;
     padding: 0rem 0.65rem 1rem 1rem;
 }
 .whcm_dot {
@@ -146,10 +147,10 @@
 .rectangle_borders_active{
     min-height: 24px;
     position: relative;
-    border: 1px solid var(--color_primary_light);
+    border: 1px solid var(--color_primary);
     border-radius: 0px;          
-    padding: 2px 6px 2px 18px;
-    background: var(--color_primary_light);
+    padding: 2px 6px 2px 12px;
+    background: var(--color_primary);
     color: var(--color_light);
     margin-bottom: -1px; 
 }
@@ -164,52 +165,53 @@
     border-radius: 0% 50% 50% 0%;
     border-left: none;
 }
-.rectangle_borders::before{
+.rectangle_borders::before {
     content: '';
-    background: linear-gradient(90deg, #00000000 49%, var(--color_light) 50%, var(--color_light) 100%);
-    width: 12px;
-    height: 24px;
-    position: absolute;
-    left: 0px;
-    border: 1px solid var(--color_border);
-    border-radius: 0% 12px 12px 0%;
-    border-left: none;
-}
-.rectangle_borders::after{
-    content: '';
-    background: linear-gradient(90deg, #00000000 49%, var(--color_light) 50%, var(--color_light) 100%);
-    width: 24px;
-    height: 24px;
-    position: absolute;
-    right: -10px;
-    border: 1px solid var(--color_border);
-    border-radius: 0% 50% 50% 0%;
-    border-left: none;
-}
-.rectangle_borders_active::before{
-    content: '';
-    background: linear-gradient(90deg, var(--color_light) 0%, var(--color_light) 100%);
-    width: 12px;
+    background: linear-gradient(108deg, var(--color_border) 57%, var(--color_light) 57%);
+    width: 8px;
     height: 24px;
     position: absolute;
     left: -2px;
-    border: 1px solid var(--color_primary_light);
-    border-radius: 0% 12px 12px 0%;
-    border-left: none;
+    border-bottom: 1px solid var(--color_border);
+    clip-path: polygon(93% 0, 100% 0, 100% 100%, 0 100%, 0 93%);
 }
-.rectangle_borders_active::after{
+
+.rectangle_borders::after {
     content: '';
-    background: linear-gradient(90deg, #00000000 49%, var(--color_primary_light) 50%, var(--color_primary_light) 100%);
-    width: 24px;
+    background: linear-gradient(108deg, var(--color_light) 45%, var(--color_border) 45%);
+    width: 8px;
     height: 24px;
     position: absolute;
-    right: -12px;
-    border: 1px solid var(--color_primary_light);
-    border-radius: 0% 50% 50% 0%;
-    border-left: none;
+    right: -7px;
+    border-top: 1px solid var(--color_border);
+    border-radius: 0%;
+    clip-path: polygon(100% 8%, 100% 0, 0 0, 0 100%, 8% 100%);
 }
+
+.rectangle_borders_active::before {
+    content: '';
+    background: var(--color_primary);
+    width: 8px;
+    height: 24px;
+    position: absolute;
+    left: -8px;
+    border-radius: 0%;
+    clip-path: polygon(100% 0, 0% 100%, 100% 100%);
+}
+
+.rectangle_borders_active::after {
+    content: '';
+    background: var(--color_primary);
+    width: 8px;
+    height: 24px;
+    position: absolute;
+    right: -8px;
+    border-radius: 0%;
+    clip-path: polygon(100% 0, 0% 110%, 0 0);
+}
+
 @media (max-width: 575.98px) {
-    .whcm_recent_box{
+    .whcm_recent_box {
         min-width: calc(100vw - 2rem) !important;
     }
 }

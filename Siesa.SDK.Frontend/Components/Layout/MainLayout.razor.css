@@ -32,13 +32,13 @@
 ::deep .whcm_panel{
     background: var(--color_light);
     box-shadow: var(--shadow_standar);
-    border-radius: var(--border_radius_standar);
+    border-radius: var(--border_radius_standar_max);
     border: none;
 }
 
 ::deep .whcm_panel_glass{
     background: rgba(255, 255, 255, 0.7);
-    border-radius: var(--border_radius_standar);
+    border-radius: var(--border_radius_standar_max);
     box-shadow: var(--shadow_standar_min);
     backdrop-filter: blur(30px);
     border: 1px solid white;
