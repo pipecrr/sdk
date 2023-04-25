@@ -1043,6 +1043,14 @@ namespace Siesa.SDK.Business
                 };
             }
         }
+
+        public virtual ValidateAndSaveBusinessObjResponse U_ValidateAndSave()
+        {
+            ValidateAndSaveBusinessObjResponse Response = new();
+            
+
+            return Response;
+        }
     }
 
 }
