@@ -128,13 +128,19 @@
                     las opciones que se mostraran luego de definirlo como tipo Selectbar, enviando el tag del recurso de la siguiente manera:</p>
                          <SDKTextField CssClass="text-area-demoviewdef" Value="@SelectbarBoolean"/>
 
-                <p>Los Viewdef soportan a traves de un nuevo objeto llamado ExtraFields enviar los campos especificos que vamos a necesitar/consultar(Esto aplica por ahora para las vistas "DetailView").
-                    Si no se especifica ExtraFields, se consultaran todos los campos del objeto, si se especifica, se consultaran solo los campos que se envien en el ExtraFields:</p>
+                <p>Los Viewdef soportan a traves de un nuevo objeto llamado ExtraFields(Lista de string) enviar los campos especificos que vamos a necesitar/consultar, esto aplica por ahora para las vistas "DetailView" y Listview(tanto Flex como Radzen).
+                    Si no se especifica ExtraFields, se consultaran todos los campos del objeto, si se especifica, se consultaran los campos que se envien en el ExtraFields mas los campos por defecto en el Viewdef, los Extrafields no se mostraran en el formulario pero si los tendremos disponibles en BaseObj:</p>
                     <SDKTextField CssClass="text-area-demoviewdef" Value="@ExtraFields"/>
                 <p>
                     Esto tambien aplica si queremos traer campos relacionados, como se ve en el ejemplo anterior,
                     se envia el campo "BaseObj.City.State" indicando que quiero traer en este caso la ciudad y el departamente de un barrio
                     y "BaseObj.City.State.Country", indicando que quiero ahora consultar tambien el Pais.
+
+                    Por ahora solo la <strong>Listview Flex</strong> soporta propiedades especificas del objeto relacionado por ejemplo:
+                    <ul>
+                        <li>BaseObj.City.State.Name</li>
+                        <li>BaseObj.City.State.Country.Rowid</li>
+                    </ul>
                 </p>
                 
         </div>
@@ -336,10 +342,10 @@
                                 ""}""
                             ""],""
                             ""ExtraFields"": ""[
-                            ""Name: Id"",
-                            ""Name: Name"",
-                            ""Name: BaseObj.City.State"",
-                            ""Name: BaseObj.City.State.Country""
+                            ""BaseObj.Id"",
+                            ""BaseObj.Name"",
+                            ""BaseObj.City.State"",
+                            ""BaseObj.City.State.Country""
                             ""]""
                             }";
 }

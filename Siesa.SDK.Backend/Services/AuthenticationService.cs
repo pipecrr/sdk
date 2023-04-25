@@ -125,5 +125,10 @@ namespace Siesa.SDK.Backend.Services
         {
             throw new NotImplementedException();
         }
+        
+        public string GetUserPhoto()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

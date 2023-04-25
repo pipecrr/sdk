@@ -2,10 +2,9 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Frontend.Components.Layout
 @using Siesa.SDK.Entities
-@inject SDKDialogService SDKDialogService
-@inject DialogService DialogService
 @inject IAuthenticationService AuthenticationService
 @inject IBackendRouterService BackendRouterService
+@inject SDKNotificationService SDKNotificationService
 
 <div class="@CssClassRelationship col-12 p-0">
 
@@ -94,6 +93,8 @@
     [Parameter] public string Height { get; set; }
 
     [Parameter] public dynamic BusinessObj { get; set; }
+
+    [Parameter] public bool isCreateView { get; set; } = false;
     private Relationship SelectedRelationship { get; set; }
     private Relationship RelationshipAttatchment { get; set; }
     public dynamic ParentAttachment { get; set; }
@@ -145,6 +146,12 @@ RelationshipAttatchment = new Relationship(){
 */
     private async Task OpenModal(Relationship relationship)
     {
+        if(Parent.Rowid == 0 && isCreateView)
+        {
+           _ = SDKNotificationService.ShowError("Custom.RelationshipContainer.Error",new object[] {$"{BusinessObj.BusinessName}.Singular"} , culture: AuthenticationService.GetRoiwdCulture());
+           _isOpen = false;
+            return;
+        }
         SelectedRelationship = relationship;
 
         _parent = Parent;

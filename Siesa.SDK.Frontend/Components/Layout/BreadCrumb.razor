@@ -9,10 +9,73 @@
 @inject MenuService MenuService
 @inject IBackendRouterService BackendRouterService
 @inject IAuthenticationService AuthenticationService
+@inject UtilsManager UtilManager
 
 
 <div class="col-12 area1 pb-3 px-0">
-    <nav class="" aria-label="breadcrumb">
+@if(breadcrumb != null && breadcrumb.Count > 0)
+{
+    <div class="position-absolute">
+        <button class="btn btn-sm layout_btn_standar-sm" type="button" title="@TooltipRecentMenu"
+         @onclick="@(async ()=> { await RecentMenuClick();})" @onclick:preventDefault >
+            <i class="fa-solid fa-clock-rotate-left"></i>
+        </button>
+        @if(IsOpenRecentMenu)
+        {
+            <div class="whcm_recent_box">
+                <div class="pt-3 pl-3 pr-3 pb-0 text-center">
+                    <h6 class="font-weight-bold m-0 border-bottom pb-3">
+                        <span>
+                            <ResourceViewer ResourceTag="Custom.SDKBreadcrumb.ButtonRecents" RowidCulture=@AuthenticationService.GetRoiwdCulture()/>
+                        </span>
+                    </h6>
+                </div>
+                <div class="whcm_recent_list">
+                
+                        @foreach (var recentMenu in RecentRoutes)
+                        {
+                            <a class="sdk_recent_box border-bottom py-3 px-0" href="@recentMenu.Value.Last().CurrentURL" @onclick:stopPropagation="true" 
+                                @onclick="() => IsOpenRecentMenu = !IsOpenRecentMenu">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="position-relative pr-3">
+                                        <div class="d-flex justify-content-center align-items-center whcm_dot font_color_primary">
+                                            <i class="@recentMenu.Value.First().IconClass"></i>
+                                        </div>
+                                        <div class="d-flex justify-content-start align-items-end flex-wrap margenes_box pl-4 pt-1">
+                                            @foreach (var menu in recentMenu.Value)
+                                            {
+                                                if(menu.Type == MenuType.Separator )
+                                                {
+                                                    continue;
+                                                }
+                                                <div class="@((menu == recentMenu.Value.Last()) ? "rectangle_borders_active" : "rectangle_borders") d-flex align-items-center">
+                                                    @if((menu == recentMenu.Value.Last()) && (menu.Feature != null))
+                                                    {
+                                                        <p class="font_size_075 p-0 m-0"> <ResourceViewer RowidResource="@menu.Feature.RowidResource" /></p>
+                                                    }else
+                                                    {
+                                                        <p class="font_size_075 p-0 m-0"> <ResourceViewer RowidResource="@menu.RowidResource" /></p>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="p-2 border-left">
+                                        <a class="font_color_text" href="@recentMenu.Value.Last().CurrentURL" target="_blank" @onclick:stopPropagation="true" 
+                                            @onclick="() => IsOpenRecentMenu = !IsOpenRecentMenu">
+                                            <i class="fa-solid fa-arrow-up-right-from-square pointer"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </a>
+                        }
+                    
+                </div>
+            </div>
+        }
+    </div>
+}
+    <nav class="pl-4 ml-3" aria-label="breadcrumb">
         @if(breadcrumb != null && breadcrumb.Count > 0)
         {
             <ol class="breadcrumb p-0">
@@ -65,19 +128,103 @@
 
     private E00061_Menu _selectedMenu;
     private List<E00061_Menu> breadcrumb = new List<E00061_Menu>();
+    
+    private Dictionary<int, List<E00061_Menu>> RecentRoutes {get; set;} = new Dictionary<int, List<E00061_Menu>>();
 
-    protected override void OnInitialized()
+    private string TooltipRecentMenu { get; set; } = "";
+
+    private bool IsOpenRecentMenu { get; set; } = false;
+    
+
+    protected override async Task OnInitializedAsync()
     {
         LayoutService.PropertyChanged += LayoutService_PropertyChanged;
         NavigationManager.LocationChanged += OnLocationChanged;
         MenuService.MenuLoaded += OnMenuLoaded;
         //SetBreadCrum(NavigationManager.Uri);
         base.OnInitialized();
+
+        TooltipRecentMenu = await UtilManager.GetResource("Custom.SDKBreadcrumb.ButtonRecents.Tooltip");
     }
 
     private void OnMenuLoaded(object sender, EventArgs e)
     {
         StateHasChanged();
+    }
+
+    private async Task RecentMenuClick()
+    {
+        IsOpenRecentMenu = !IsOpenRecentMenu;
+
+        if(IsOpenRecentMenu)
+        {
+            RecentRoutes = await GetRecentMenus();
+        }
+        
+        StateHasChanged();
+    }
+    private async Task<Dictionary<int, List<E00061_Menu>>> GetRecentMenus()
+    {
+        var _recentRoutes  = new Dictionary<int, List<E00061_Menu>>();
+        try
+        {
+            var BLRecentMenu = BackendRouterService.GetSDKBusinessModel("BLRecentMenu", AuthenticationService);
+            if(BLRecentMenu != null)
+            {
+                var result = await BLRecentMenu.Call("GetRecentMenus");
+
+                if(result.Success)
+                {
+                var RecentMenus = result.Data;
+                    
+                    foreach (var Recent in RecentMenus)
+                    {
+                        List<E00061_Menu> auxRecentMenu = new List<E00061_Menu>();
+                        auxRecentMenu.Add(Recent.Menu);
+                        OrderRecentMenu(ref auxRecentMenu);
+
+                        if(auxRecentMenu.Any())
+                        {
+                            var Rowid = auxRecentMenu.Last().Rowid;
+
+                            if(!(_recentRoutes.ContainsKey(Rowid)))
+                            {
+                                _recentRoutes.Add(Rowid, auxRecentMenu);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+
+        return _recentRoutes;
+    }
+
+    private void OrderRecentMenu(ref List<E00061_Menu> FinalList, E00061_Menu Actualmenu = null){
+        
+                if(Actualmenu != null){
+                    if (Actualmenu.MenuParent != null)
+                    {
+                        var Parent = Actualmenu.MenuParent;
+                        FinalList.Add(Parent);
+                        OrderRecentMenu(ref FinalList, Parent);
+                    }else
+                    {
+                        if(!(FinalList.Contains(Actualmenu)))
+                        {
+                            FinalList.Add(Actualmenu);
+                        }
+                        FinalList.Reverse();  
+                    }
+                }else
+                {
+                    var FisrtMenu = FinalList.First();
+                    OrderRecentMenu(ref FinalList, FisrtMenu);
+                }
     }
 
     private string GetCssBreadCrumItem(int i)

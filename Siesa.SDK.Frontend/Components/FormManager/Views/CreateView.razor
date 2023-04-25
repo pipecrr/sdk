@@ -7,7 +7,7 @@
 @using Siesa.SDK.Frontend.Application
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Shared.Services
-@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Layout.Detail.Relationship
 @inject IResourceManager ResourceManager
 @inject IAuthenticationService AuthenticationService
 @inject SDKNotificationService Notification
@@ -18,14 +18,10 @@
 {
     <ResourceViewer ResourceTag="Custom.Generic.Loading" />
 }
-else if(!string.IsNullOrEmpty(ErrorMsg))
-{
-    <ErrorsContainer ErrorMsg="@ErrorMsg"/>
-}
 else if (Panels == null || Panels.Count <= 0)
 {
-    <ResourceViewer ResourceTag="Custom.Formview.NotDefinition" />
-        @* <label>@((MarkupString)ErrorMsg)</label> *@
+    @* <ResourceViewer ResourceTag="Custom.Formview.NotDefinition" /> *@
+    <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList"/>
 } else if (BusinessObj.BaseObj != null)
 {
     @if(IsSubpanel && ShowTitle){        
@@ -33,8 +29,16 @@ else if (Panels == null || Panels.Count <= 0)
             ResourceTag="@($"{BusinessName}.Singular")" /></h5>
         <hr />
     }
+    @if(ContainAttachments){
+        <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" 
+            Parent="@BusinessObj.BaseObj" ContainAttachments="@ContainAttachments" BLNameParentAttatchment="@BusinessName"
+            BusinessObj="@BusinessObj" isCreateView="true"/>
+    }else if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
+    {
+        <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" isCreateView="true"/>
+    }
     <CascadingValue Value="@this">
-       <ErrorsContainer ErrorMsg="@ErrorMsg" EditFormContext="@EditFormContext" />
+       <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList"/>
     <EditForm id="@FormID"
               OnValidSubmit="@HandleValidSubmit"
               OnInvalidSubmit="@HandleInvalidSubmit"
@@ -52,17 +56,13 @@ else if (Panels == null || Panels.Count <= 0)
                             </CascadingValue>
                         </SDKFormLayoutTabPage>
                     }
-
-
                 </DxFormLayoutTabPages>
-
             }
             else
             {
                 <CascadingValue Value="@EditFormContext">
                     <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef" DefaultColSize="@Panels[0].ColSize" ModelObj="@BusinessObj" />
                 </CascadingValue>
-
             }
         </DxFormLayout>
     </EditForm>
