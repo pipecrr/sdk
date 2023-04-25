@@ -306,7 +306,10 @@ namespace Siesa.SDK.Frontend.Components.Fields
             if (searchText.Length > MinCharsEntityField || CacheLoadResult == null)
             {
                 var filters = await GetFilters();
-                var result = await RelBusinessObj.EntityFieldSearchAsync(searchText, filters, 10, orderBy, RelatedParams.ExtraFields);
+
+                var extraFields = RelatedParams?.ExtraFields ?? new List<string>();
+
+                var result = await RelBusinessObj.EntityFieldSearchAsync(searchText, filters, 10, orderBy, extraFields);
                 var response = new LoadResult
                 {
                     data = result.Data,
