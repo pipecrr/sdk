@@ -8,18 +8,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
     {
         [Parameter]
         public dynamic BaseModelObj { get; set; }
-        [Parameter]
-        public DynamicViewType ViewContext { get; set; }
         public string RelatedBusiness { get; set; }
-        public bool AutoValueInUnique { get; set; } = false;
-
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
-            if(ViewContext == DynamicViewType.Create){
-                AutoValueInUnique = FieldOpt.AutoValueInUnique;
-            }
-        }
     }
 
 }

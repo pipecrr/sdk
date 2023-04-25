@@ -81,8 +81,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         public string RelatedBusiness { get; set; } = "";
         public Dictionary<string, string> RelatedFilters { get; set; } = new Dictionary<string, string>(){
         };
-        public bool AutoValueInUnique { get; set; } = false;
-
+        
         public List<List<object>> Filters { get; set; }
 
         public int MinCharsEntityField { get; set; } = 2;
