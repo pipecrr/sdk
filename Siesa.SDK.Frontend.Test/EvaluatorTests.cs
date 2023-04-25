@@ -390,6 +390,7 @@ namespace Siesa.SDK.Frontend.Tests
             testCases.Add("MyMethod", globals.MyMethod);
             testCases.Add("MyAsyncMethod", globals.MyAsyncMethod);
             testCases.Add("MyVoidMethod", globals.MyVoidMethod);
+            testCases.Add("Parent.MyBoolProperty", globals.Parent.MyBoolProperty);
 
 
             foreach (var testCase in testCases)
