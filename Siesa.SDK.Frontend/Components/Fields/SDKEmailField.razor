@@ -14,7 +14,7 @@
     autocomplete="@GetAutoComplete()"
     field-name="@FieldName"
     Enabled="@(!Disabled)"
-    @onfocusout="@OnFocusOut"
+    @onfocusout="@_OnFocusOut"
 />
 
 @code {
@@ -32,6 +32,7 @@
     [Parameter] public string FieldName { get; set; }
 
     [Parameter] public bool AllowAutoComplete { get; set; } = false;
+    [Parameter] public Action OnFocusOut { get; set; } = () => { };
     private string GetAutoComplete() {
         if (AllowAutoComplete) {
             return "on";
@@ -57,9 +58,12 @@
         }
         return cssClass;
     }
-    private async Task OnFocusOut()
-    {
-        ValueChanged(Value);
+    
+
+    private async Task _OnFocusOut(){
+        if(OnFocusOut != null){
+            OnFocusOut();
+        }
     }
 
 }
