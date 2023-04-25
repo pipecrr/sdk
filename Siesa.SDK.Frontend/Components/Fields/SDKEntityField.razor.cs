@@ -500,31 +500,6 @@ namespace Siesa.SDK.Frontend.Components.Fields
             await elementInstance.InvokeVoidAsync("dropdown","show");
             StateHasChanged();
         }
-
-        // public async Task<string> GetStringFilters(){
-        //     //Deprecated
-        //     var filters = await GetFilters();
-        //     var filtersSearch = "";
-        //     if(Value != null && Value != "" && ItemsSelected.Count == 0){
-        //         var properties = RelBusinessObj.BaseObj.GetType().GetProperties();
-        //         foreach (var property in properties){
-        //             if(property.PropertyType == typeof(string)){
-        //                 if(!string.IsNullOrEmpty(filtersSearch)){
-        //                     filtersSearch += " || ";
-        //                 }
-        //                 filtersSearch += $"({property.Name} == null ? \"\" : {property.Name}).ToLower().Contains(\"{Value}\".ToLower())";
-        //             }
-        //         }
-        //     }
-        //     if(!string.IsNullOrEmpty(filtersSearch)){
-        //         if(!string.IsNullOrEmpty(filters)){
-        //             filters += " && ";
-        //         }
-        //         filters += $"({filtersSearch})";
-        //     }
-        //     return filters;
-        // }
-
         public async Task closeItem(string item){
             Values.Remove(item);
             dynamic itemSelected = ItemsSelected.FirstOrDefault(x => x.ToString() == item);
