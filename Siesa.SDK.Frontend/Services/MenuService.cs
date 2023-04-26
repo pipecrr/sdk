@@ -122,7 +122,7 @@ namespace Siesa.SDK.Frontend.Services
                             Type = MenuType.CustomMenu
                         };
                         //search methods that return a RenderFragment
-                        var customActions = businessType.GetMethods().Where(m => m.ReturnType == typeof(RenderFragment));
+                        var customActions = businessType.GetMethods().Where(m => m.ReturnType == typeof(RenderFragment) && m.Name != "Main");
                         foreach (var customAction in customActions)
                         {
                             var customActionMenu = new E00061_Menu

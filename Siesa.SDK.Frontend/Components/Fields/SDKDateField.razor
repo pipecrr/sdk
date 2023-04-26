@@ -4,7 +4,7 @@
     NullText="@Placeholder"
     ReadOnly="@ReadOnly"
     CssClass="@CssClass"
-    @onfocusout="@OnFocusOut"
+    @onfocusout="@_OnFocusOut"
 >
 @ChildContent
 </DxDateEdit>
@@ -18,8 +18,11 @@
     [Parameter] public bool Required { get; set; }
     [Parameter] public string CssClass { get; set; }
 
-    private async Task OnFocusOut()
-    {
-        ValueChanged(Value);
+    [Parameter] public Action OnFocusOut { get; set; } = () => { };
+
+    private async Task _OnFocusOut(){
+        if(OnFocusOut != null){
+            OnFocusOut();
+        }
     }
 }

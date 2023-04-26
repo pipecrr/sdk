@@ -44,7 +44,7 @@ namespace Siesa.SDK.Shared.Utilities
                     return false;
                 }
 
-                if(!authenticationService.User.FeaturePermissions[businessName].Contains(actionRowid))
+                if(!authenticationService.User.FeaturePermissions[businessName].Contains(actionRowid) && !authenticationService.User.FeaturePermissions[businessName].Contains(-999))
                 {
                     return false;
                 }

@@ -387,6 +387,10 @@ namespace Siesa.SDK.Frontend.Tests
             testCases.Add("MyDynamicMethod(Parent.Parent.MyDateTimeProperty)", new DateTime(2018, 1, 3));
             testCases.Add("MyDynamicMethod(Parent.Parent.MyBoolProperty)", true);
             testCases.Add("MyDynamicMethod(Parent.Parent.MyIntProperty)", 789);
+            testCases.Add("MyMethod", globals.MyMethod);
+            testCases.Add("MyAsyncMethod", globals.MyAsyncMethod);
+            testCases.Add("MyVoidMethod", globals.MyVoidMethod);
+            testCases.Add("Parent.MyBoolProperty", globals.Parent.MyBoolProperty);
 
 
             foreach (var testCase in testCases)
@@ -450,6 +454,11 @@ namespace Siesa.SDK.Frontend.Tests
             public dynamic MyDynamicMethod(dynamic a)
             {
                 return a;
+            }
+
+            public void MyVoidMethod()
+            {
+                MyProperty = "Hello World";
             }
         }
     }

@@ -428,7 +428,13 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
 
         public async Task<int> savingAttachment(FileField fileField, int rowid = 0){
             SavingFile = true;
-            await fileField.Upload();
+            try{
+                await fileField.Upload();
+            }catch(Exception ex){
+                //TODO: pdte por revision 
+                SavingFile = false;
+                return 0;
+            }
             var horaInicio = DateTime.Now.Minute;
             while(SavingFile){
                 await Task.Delay(100);

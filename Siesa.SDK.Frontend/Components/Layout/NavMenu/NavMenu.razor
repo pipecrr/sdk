@@ -42,6 +42,9 @@
         </div>
         @foreach (var menuItem in MenuService?.Menus?.OrderBy(x => x.Order))
         {
+            @if(menuItem.RowidResource == 14010 && (AuthenticationService.User == null || !AuthenticationService.User.IsAdministrator)){
+                continue;
+            }
             <NavMenuItem MenuItem="@menuItem" OnClick="@OnMenuItemClick" Focus="@(SelectedMainMenu == menuItem)" />
         }
     </div>
@@ -164,8 +167,8 @@
             });
         }
 
-        LogoUrl = await AuthenticationService.GetConnectionLogo();
-        UserPhoto = await AuthenticationService.GetUserPhoto();
+        LogoUrl = AuthenticationService.GetConnectionLogo();
+        UserPhoto = AuthenticationService.GetUserPhoto();
 
         await base.OnInitializedAsync();
 

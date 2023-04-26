@@ -54,14 +54,14 @@ namespace Siesa.SDK.Shared.Services
         SDKDbConnection GetSelectedConnection();
         int GetSelectedSuite();
         void SetSelectedSuite(int rowid);
-        Task<string> GetConnectionLogo(short rowidCompanyGroup = 0);
+        string GetConnectionLogo();
         string GetConnectionStyle();
         Task<bool> IsValidToken();
         Task<bool> ForgotPasswordAsync(string email);
         Task<bool> ValidateUserToken(int rowidUser);
         Task<bool> ChangePassword(int rowidUser, string NewPassword, string ConfirmPassword);
         Task RenewToken();
-        Task<string> GetUserPhoto();
+        string GetUserPhoto();
     }
 
     
