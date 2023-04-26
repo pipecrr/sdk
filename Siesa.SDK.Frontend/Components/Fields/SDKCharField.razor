@@ -7,19 +7,14 @@
 @if(Password)
 {
     <SDKPasswordField
-            Text="@Value" 
-            TextChanged="@ValueChanged" 
-            NullText="@Placeholder"
+            Value="@Value"
+            Placeholder="@Placeholder"
             ReadOnly="@ReadOnly"
             CssClass="@CssClass"
-            maxlength = "@MaxLength"
-            Password="@Password"
-            TextExpression="@ValueExpression"
-            autocomplete="@GetAutoComplete()"
-            data-automation-id="@GetAutomationId()"
-            ClearButtonDisplayMode="@ClearButtonDisplayMode.Get()"
-            field-name="@FieldName"
-            @onfocusout="@_OnFocusOut" 
+            MaxLength = "@MaxLength"
+            AllowAutoComplete="@AllowAutoComplete"
+            FieldName="@FieldName"
+            ValueChanged="@ValueChanged"
     />
 }
 else
