@@ -284,10 +284,22 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     foreach (var button in ListViewModel.Buttons){
                         if(button.ListPermission != null && button.ListPermission.Count > 0){
                             showButton = CheckPermissionsButton(button.ListPermission);
-                            if(showButton){
-                                ExtraButtons.Add(button);
-                            }
                         }else{
+                            showButton = true;
+                        }
+                        if(showButton){
+                            if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-disabled")){
+                                var disabled = await evaluateCodeButtons(button, "sdk-disabled");
+                                button.Disabled = disabled;
+                            }
+                            if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-hide")){
+                                var hidden = await evaluateCodeButtons(button, "sdk-hide");
+                                button.Hidden= hidden;
+                            }
+                            if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-show")){
+                                var show = await evaluateCodeButtons(button, "sdk-show");
+                                button.Hidden= !show;
+                            }
                             ExtraButtons.Add(button);
                         }
                     }
@@ -351,6 +363,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 BLEntityName = BusinessObj.BaseObj.GetType().Name;
             }
             BusinessObj.ParentComponent = this;
+            
             hideCustomColumn();
             StateHasChanged();
 
@@ -577,6 +590,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
             //Restart();
         }
+
+        public async Task<bool> evaluateCodeButtons(Button button, string condition){
+            bool disabled = button.Disabled;
+            var sdkDisable = button.CustomAttributes[condition];
+            if(sdkDisable != null){
+                var eject = await Evaluator.EvaluateCode(sdkDisable.ToString(), BusinessObj); //revisar
+                if(eject != null){
+                    disabled = (bool)eject;
+                }
+            }
+            return disabled;
+        }
+        
 
         private object SetValuesObjToNullable(Type newType, dynamic originalObj, dynamic instanceBase = null){
             var instance = Activator.CreateInstance(newType);
@@ -927,7 +953,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
             return filters;
         }
-
+        
         async Task LoadData(LoadDataArgs args)
         {
             if (Data != null)
