@@ -4,23 +4,44 @@
 
 @inherits SDKComponent
 
-<DxTextBox 
-    Text="@Value" 
-    TextChanged="@ValueChanged" 
-    NullText="@Placeholder"
-    ReadOnly="@ReadOnly"
-    CssClass="@CssClass"
-    maxlength = "@MaxLength"
-    Password="@Password"
-    TextExpression="@ValueExpression"
-    autocomplete="@GetAutoComplete()"
-    data-automation-id="@GetAutomationId()"
-    ClearButtonDisplayMode="@ClearButtonDisplayMode.Get()"
-    field-name="@FieldName"
-    @onfocusout="@_OnFocusOut"
->
-@ChildContent
-</DxTextBox>
+@if(Password)
+{
+    <SDKPasswordField
+            Text="@Value" 
+            TextChanged="@ValueChanged" 
+            NullText="@Placeholder"
+            ReadOnly="@ReadOnly"
+            CssClass="@CssClass"
+            maxlength = "@MaxLength"
+            Password="@Password"
+            TextExpression="@ValueExpression"
+            autocomplete="@GetAutoComplete()"
+            data-automation-id="@GetAutomationId()"
+            ClearButtonDisplayMode="@ClearButtonDisplayMode.Get()"
+            field-name="@FieldName"
+            @onfocusout="@_OnFocusOut" 
+    />
+}
+else
+{
+    <DxTextBox 
+        Text="@Value" 
+        TextChanged="@ValueChanged" 
+        NullText="@Placeholder"
+        ReadOnly="@ReadOnly"
+        CssClass="@CssClass"
+        maxlength = "@MaxLength"
+        Password="@Password"
+        TextExpression="@ValueExpression"
+        autocomplete="@GetAutoComplete()"
+        data-automation-id="@GetAutomationId()"
+        ClearButtonDisplayMode="@ClearButtonDisplayMode.Get()"
+        field-name="@FieldName"
+        @onfocusout="@_OnFocusOut"
+    >
+    @ChildContent
+    </DxTextBox>
+}
 
 @code {
     [Parameter] public string Value { get; set; }
