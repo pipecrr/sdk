@@ -4,11 +4,14 @@
 @using System.Collections.Generic
 @using Siesa.SDK.Frontend.Components.FormManager.ViewModels
 @using System.Linq
+@using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Frontend.Application
 @typeparam TItem
 @inherits FieldClass<TItem>
 @using Siesa.SDK.Shared.Services
 @inject IAuthenticationService AuthenticationService
 @inject IBackendRouterService BackendRouterService
+@inject IResourceManager ResourceManager
 @inject IResourceManager ResourceManager
 
 @if (!FieldOpt.Hidden)
@@ -48,86 +51,11 @@
     public string AffirmationTag => GetCustomAttributeValue("BooleanYesResourceTag");
     public string DenialTag => GetCustomAttributeValue("BooleanNoResourceTag");
 
-    private IEnumerable<SelectBarItemWrap<TItem>> _options
-    {
-        get
-        {
-            if (Options == null)
-            {
-                enumType = typeof(TItem);
-                if (typeof(TItem).IsGenericType && typeof(TItem).GetGenericTypeDefinition() == typeof(Nullable<>))
-                {
-                    enumType = typeof(TItem).GetGenericArguments()[0];
-                }
-                GetEnumValues();
-                /*Options = Enum.GetValues(enumType).OfType<TItem>().Select(x => new SelectBarItemWrap<TItem>
-                {
-                Key = x,
-                Name = $"Enum.{enumType.Name}.{x.ToString()}"
-                });*/
+    private IEnumerable<SelectBarItemWrap<TItem>> _options {get; set;} = Enumerable.Empty<SelectBarItemWrap<TItem>>();
 
-            }
-            return Options;
-        }
-    }
-    private async Task GetEnumValues()
-    {
-        var resourceBL = BackendRouterService.GetSDKBusinessModel("BLResource", AuthenticationService);
-        var request = await resourceBL.Call("GetEnumValues", enumType.Name,
-        Convert.ToInt64(AuthenticationService.GetRoiwdCulture()));
-        if (request.Success)
-        {
-            var enumValues = (Dictionary<byte, string>)request.Data;
-            if (enumValues == null || enumValues.Count == 0)
-            {
-                return;
-            }
+   
 
-            Options = Enumerable.Empty<SelectBarItemWrap<TItem>>();
-            try
-            {
-                if (ViewdefName == "search")
-                {
-                    var SelectAllName = await ResourceManager.GetResource("Custom.Enum.SelectAll", AuthenticationService);
-                    Options = Options.Append(new SelectBarItemWrap<TItem>
-                    {
-                        Key = (TItem)Enum.Parse(enumType, (enumValues.Select(x => x.Key).Last() + 1).ToString()),
-                        Name = SelectAllName
-                    });
-                    BindValue = Options.Select(x => x.Key).First();
-                } 
-            }
-            catch (System.Exception)
-            {
-                
-                throw;
-            }
-
-           await Task.Delay(4000);
-           
-            /*Options = Options.Concat(enumValues.Select(x => new SelectBarItemWrap<TItem>
-            {
-                Key = (TItem)Enum.Parse(enumType, x.Key.ToString()),
-                Name = x.Value
-            }));*/
-            if(!fixValues)
-            {
-                foreach (var option in enumValues)
-                {
-                    Options = Options.Append(new SelectBarItemWrap<TItem>
-                    {
-                        Key = (TItem)Enum.Parse(enumType, option.Key.ToString()),
-                        Name = option.Value
-                    });
-                }
-                fixValues = true;
-            }
-
-            StateHasChanged();
-        }
-    }
-
-    string? _value
+   /*string? _value
     {
         get
         {
@@ -139,7 +67,7 @@
             }
             return $"Enum.{enumType.Name}.{BindValue}";
         }
-    }
+    }*/
 
     private void isDisabled()
     {
@@ -155,9 +83,11 @@
         return string.Empty;
     }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        base.OnInitialized();
+        await GetEnumValues();
+
+        await base.OnInitializedAsync();
         var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
         ValueExpression = (Expression<Func<TItem>>)Expression.Lambda(typeof(Func<>).MakeGenericType(typeof(TItem)), access);
         isDisabled();
@@ -167,6 +97,68 @@
     {
         base.OnParametersSet();
         isDisabled();
+    }
+
+    private async Task GetEnumValues()
+    {
+        enumType = typeof(TItem);
+
+        if (typeof(TItem).IsGenericType && typeof(TItem).GetGenericTypeDefinition() == typeof(Nullable<>))
+        {
+            enumType = typeof(TItem).GetGenericArguments()[0];
+        }
+
+        /*var resourceBL = BackendRouterService.GetSDKBusinessModel("BLResource", AuthenticationService);
+        var request = await resourceBL.Call("GetEnumValues", enumType.Name,
+        Convert.ToInt64(AuthenticationService.GetRoiwdCulture()));*/
+
+        Dictionary<byte, string> enumValues = await ResourceManager.GetEnumValues(enumType.Name, AuthenticationService.GetRoiwdCulture());
+        //var enumValues = (Dictionary<byte, string>)request.Data;
+
+        if (enumValues == null || enumValues.Count == 0)
+        {
+            return;
+        }
+
+        //Options = Enumerable.Empty<SelectBarItemWrap<TItem>>();
+        try
+        {
+            if (ViewdefName == "search")
+            {
+                var SelectAllName = await ResourceManager.GetResource("Custom.Enum.SelectAll", AuthenticationService);
+                _options = _options.Append(new SelectBarItemWrap<TItem>
+                {
+                    Key = (TItem)Enum.Parse(enumType, (enumValues.Select(x => x.Key).Last() + 1).ToString()),
+                    Name = SelectAllName
+                });
+                BindValue = _options.Select(x => x.Key).First();
+            } 
+        }
+        catch (System.Exception)
+        {
+            
+            throw;
+        }
+
+        await Task.Delay(4000);
+        
+        foreach (var option in enumValues)
+        {
+            _options = _options.Append(new SelectBarItemWrap<TItem>
+            {
+                Key = (TItem)Enum.Parse(enumType, option.Key.ToString()),
+                Name = option.Value
+            });
+        }
+        
+        StateHasChanged();
+
+        
+        /*Options = Options.Concat(enumValues.Select(x => new SelectBarItemWrap<TItem>
+        {
+            Key = (TItem)Enum.Parse(enumType, x.Key.ToString()),
+            Name = x.Value
+        }));*/
     }
 
 }
