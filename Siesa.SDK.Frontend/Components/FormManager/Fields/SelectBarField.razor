@@ -2,6 +2,7 @@
 @using System.Linq.Expressions
 @using SDK.Frontend.Application
 @using System.Collections.Generic
+@using Siesa.SDK.Frontend.Components.FormManager.ViewModels
 @using System.Linq
 @typeparam TItem
 @inherits FieldClass<TItem>
@@ -41,6 +42,8 @@
     [Parameter] public IEnumerable<SelectBarItemWrap<TItem>> Options { get; set; }       
     Expression<Func<TItem>> ValueExpression { get; set; }
     private Type enumType { get; set; }
+
+    private bool fixValues = false;
 
     public string AffirmationTag => GetCustomAttributeValue("BooleanYesResourceTag");
     public string DenialTag => GetCustomAttributeValue("BooleanNoResourceTag");
@@ -99,14 +102,27 @@
                 
                 throw;
             }
+
+           await Task.Delay(4000);
            
-            Options = Options.Concat(enumValues.Select(x => new SelectBarItemWrap<TItem>
+            /*Options = Options.Concat(enumValues.Select(x => new SelectBarItemWrap<TItem>
             {
                 Key = (TItem)Enum.Parse(enumType, x.Key.ToString()),
                 Name = x.Value
-            }));
+            }));*/
+            if(!fixValues)
+            {
+                foreach (var option in enumValues)
+                {
+                    Options = Options.Append(new SelectBarItemWrap<TItem>
+                    {
+                        Key = (TItem)Enum.Parse(enumType, option.Key.ToString()),
+                        Name = option.Value
+                    });
+                }
+                fixValues = true;
+            }
 
-            
             StateHasChanged();
         }
     }
