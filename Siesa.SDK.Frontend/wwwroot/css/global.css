@@ -227,6 +227,7 @@ body {
     font-weight: 700 !important;
     color: var(--color_primary) !important;
     min-width: 31px;
+    min-height: 31px;
     box-shadow: inset 0px 0px 0px 1px var(--color_primary);
 }
 
