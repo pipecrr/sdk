@@ -1217,51 +1217,112 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private void hideCustomColumn()
         {
-            string code = "";
-            for (int i = 0; i < ListViewModel.Fields.Count; i++)
+            var useRoslyn = false;
+            if(useRoslyn)
             {
-                var field = ListViewModel.Fields[i];
-                if (field.CustomAttributes != null)
+                string code = "";
+                for (int i = 0; i < ListViewModel.Fields.Count; i++)
                 {
-                    var fieldCustomAttr = field.CustomAttributes;
-                    foreach (var CustomAttr in fieldCustomAttr)
+                    var field = ListViewModel.Fields[i];
+                    if (field.CustomAttributes != null)
                     {
-                        if (CustomAttr.Key == "sdk-hide")
+                        var fieldCustomAttr = field.CustomAttributes;
+                        foreach (var CustomAttr in fieldCustomAttr)
                         {
-                            try
+                            if (CustomAttr.Key == "sdk-hide")
                             {
-                                code += @$"
-                                try {{ ListViewFields[{i}].Hidden = ({(string)CustomAttr.Value}); }} catch (Exception ex) {{ throw;}}";
+                                try
+                                {
+                                    code += @$"
+                                    try {{ ListViewFields[{i}].Hidden = ({(string)CustomAttr.Value}); }} catch (Exception ex) {{ throw;}}";
+                                }
+                                catch (Exception e)
+                                {
+                                    throw;
+                                }
                             }
-                            catch (Exception e)
+                            if (CustomAttr.Key == "sdk-show")
                             {
-                                throw;
-                            }
-                        }
-                        if (CustomAttr.Key == "sdk-show")
-                        {
-                            try
-                            {
-                                code += @$"
-                                try {{ ListViewFields[{i}].Hidden = !({(string)CustomAttr.Value}); }} catch (Exception ex) {{ throw;}}";
-                            }
-                            catch (Exception e)
-                            {
-                                throw;
+                                try
+                                {
+                                    code += @$"
+                                    try {{ ListViewFields[{i}].Hidden = !({(string)CustomAttr.Value}); }} catch (Exception ex) {{ throw;}}";
+                                }
+                                catch (Exception e)
+                                {
+                                    throw;
+                                }
                             }
                         }
                     }
                 }
-            }
-            if (code != null & code != "")
-            {
-                _ = Task.Run(async () =>
+                if (code != null & code != "")
                 {
-                    BusinessObj.ListViewFields = ListViewModel.Fields;
-                    await Evaluator.EvaluateCode(code, BusinessObj);
-                    _ = InvokeAsync(() => StateHasChanged());
-                });
+                    _ = Task.Run(async () =>
+                    {
+                        BusinessObj.ListViewFields = ListViewModel.Fields;
+                        await Evaluator.EvaluateCode(code, BusinessObj);
+                        _ = InvokeAsync(() => StateHasChanged());
+                    });
+                }
+            }else{
+                List<string> allowAttr = new List<string>(){
+                    "sdk-show",
+                    "sdk-hide",
+                }; //TODO: Enum
+                for (int i = 0; i < ListViewModel.Fields.Count; i++)
+                {
+                    var field = ListViewModel.Fields[i];
+                    if (field.CustomAttributes != null)
+                    {
+                        _ = Task.Run(async () =>
+                        {
+                            bool shouldUpdate = false;
+                            foreach (var attr in field.CustomAttributes)
+                            {
+                                if(!allowAttr.Contains(attr.Key))
+                                {
+                                    continue;
+                                }
+                                
+                                try
+                                {
+                                    var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
+                                    switch (attr.Key)
+                                    {
+                                        case "sdk-show":
+                                            if(field.Hidden != !result)
+                                            {
+                                                field.Hidden = !result;
+                                                shouldUpdate = true;
+                                            }
+                                            break;
+                                        case "sdk-hide":
+                                            if(field.Hidden != result)
+                                            {
+                                                field.Hidden = result;
+                                                shouldUpdate = true;
+                                            }
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                }
+                                catch (System.Exception ex)
+                                {
+                                    Console.WriteLine($"Error: {ex.Message}");
+                                }
+                            }
+                            if(shouldUpdate)
+                            {
+                                _ = InvokeAsync(() => StateHasChanged());
+                            }
+                        });
+                    }
+                }
+
             }
+            
         }
 
         protected async Task UpdateSearchForm(List<FieldOptions> returnFields, bool SaveFields = true, FreeForm formInstance = null)
