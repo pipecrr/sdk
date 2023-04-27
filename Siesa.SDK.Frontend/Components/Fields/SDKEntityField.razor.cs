@@ -38,6 +38,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
         [Parameter] public Action<object> SetValue { get; set; }
         [Parameter] public Action OnChange { get; set; }
+        [Parameter] public Action<List<dynamic>> OnReady { get; set; }
         [Parameter] public bool IsMultiple { get; set; } = false;
         [Parameter] public bool Disabled { get; set; }
         [Parameter] public List<List<object>> Filters { get; set; }
@@ -47,6 +48,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         private List<string> Values = new List<string>() {};
         private IList<dynamic> ItemsSelected = new List<dynamic>() {};
         private Dictionary<int, object> CacheData = new Dictionary<int, object>();
+        private IList<dynamic> CacheDataObjcts = new List<dynamic>();
         SDKBusinessModel relBusinessModel = null;
         private LoadResult CacheLoadResult;
         private string? LastSearchString;
@@ -74,14 +76,17 @@ namespace Siesa.SDK.Frontend.Components.Fields
         {
             base.OnInitializedAsync();
             await InitView();
+            await LoadData("", null);
             if(RelatedParams != null && RelatedParams.AutoValueInUnique){
-                await LoadData("", null);
                 if(CacheData != null && CacheData.Count == 1){
                     var item = CacheData.First().Value;
                     Value = item.ToString();
                     SetVal(item);
                     HasValue = true;
                 }
+            }
+            if(OnReady != null){
+                OnReady(CacheDataObjcts.ToList());
             }
             StateHasChanged();
         }
@@ -129,6 +134,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
                         Value = "";
                         ItemsSelected.Clear();
                         CacheData.Clear();
+                        CacheDataObjcts.Clear();
                         HasValue = false;
                         SetVal(BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj));
                     }
@@ -140,7 +146,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
             
             await base.SetParametersAsync(parameters);
         }
-        
+
         // protected override async Task OnParametersSetAsync(){
         //     await base.OnParametersSetAsync();
         //     var currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
@@ -335,9 +341,12 @@ namespace Siesa.SDK.Frontend.Components.Fields
                     groupCount = result.GroupCount
                 };
                 CacheData.Clear();
+                CacheDataObjcts.Clear();
                 foreach (var item in result.Data){
                     CacheData.Add(item.Rowid, item);
+                    CacheDataObjcts.Add(item);
                 }
+                response.totalCount = CacheData.Count;
                 CacheLoadResult = response;
                 return response;
             }
