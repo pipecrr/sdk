@@ -635,6 +635,50 @@ input#collapse_open:checked~.collapse_open_btn>.nav_btn_standar_text {
     transition-duration: .2s;
 }
 
+.layout_btn_negative-sm {
+    max-width: 31px;
+    min-width: 31px;
+    max-height: 31px;
+    min-height: 31px;
+    color: var(--color_light_btn) !important;
+    padding: 0.25rem !important;
+    font-size: 1.35rem !important;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background: none;
+}
+
+.layout_btn_negative-sm::before {
+    content: "";
+    border-radius: var(--border_radius_standar);
+    width: 20%;
+    height: 100%;
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    box-shadow: var(--shadow_standar);
+    background: var(--color_button_negative_back);
+    transition-duration: .2s;
+}
+
+.layout_btn_negative-sm:hover::before,
+.layout_btn_negative-sm:focus::before {
+    width: 100%;
+    opacity: 1;
+    transition-duration: .2s;
+}
+
+.layout_btn_negative-sm:hover i,
+.layout_btn_negative-sm:focus i {
+    color: var(--color_primary);
+    z-index: 1;
+    transition-duration: .2s;
+}
+
 .whcm_table {
     max-height: calc(100vh - 300px);
 }
