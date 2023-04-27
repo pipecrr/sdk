@@ -100,6 +100,11 @@ namespace Siesa.SDK.Business
             return null;
         }
 
+        public Shared.Business.LoadResult GetUData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<BaseSDK<int>> queryFilter = null, bool includeCount = false, List<string> extraFields = null)
+        {
+            return null;
+        }
+
         public void Update()
         {
         }
@@ -299,6 +304,11 @@ namespace Siesa.SDK.Business
             return GetDataAsync(skip, take, filter, orderBy, extraFields: extraFields).GetAwaiter().GetResult();
         }
 
+        public virtual Siesa.SDK.Shared.Business.LoadResult GetUData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null, bool includeCount = false, List<string> extraFields = null)
+        {
+            return GetUDataAsync(skip, take, filter, orderBy, extraFields: extraFields).GetAwaiter().GetResult();
+        }
+
         public virtual Siesa.SDK.Shared.Business.LoadResult EntityFieldSearch(string searchText, string filters, int? top = null, string orderBy = "")
         {
             return EntityFieldSearchAsync(searchText, filters, top, orderBy).GetAwaiter().GetResult();
@@ -329,6 +339,33 @@ namespace Siesa.SDK.Business
             try
             {
                 var result = await Backend.GetData(skip, take, filter, orderBy, includeCount, extraFields);
+
+                response.Data = result.Data.Select(x => JsonConvert.DeserializeObject<T>(x)).ToList();
+                response.TotalCount = result.Data.Count;
+                if(includeCount){
+                    response.TotalCount = result.TotalCount;
+                }
+                response.GroupCount = result.GroupCount;
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                await GetNotificacionService("Custom.Generic.Message.Error");
+                var errors = new List<string>();
+                errors.Add("Exception: " + e.Message + " " + e.StackTrace);
+                response.Errors = errors;
+                return response;
+            }
+
+        }
+
+        public async virtual Task<Siesa.SDK.Shared.Business.LoadResult> GetUDataAsync(int? skip, int? take, string filter = "", string orderBy = "", bool includeCount = false, List<string> extraFields = null)
+        {
+            var response = new Siesa.SDK.Shared.Business.LoadResult();
+            try
+            {
+                var result = await Backend.GetUData(skip, take, filter, orderBy, includeCount, extraFields);
 
                 response.Data = result.Data.Select(x => JsonConvert.DeserializeObject<T>(x)).ToList();
                 response.TotalCount = result.Data.Count;

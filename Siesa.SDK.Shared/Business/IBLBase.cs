@@ -20,6 +20,7 @@ namespace Siesa.SDK.Shared.Business
         void Update();
         DeleteBusinessObjResponse Delete();
         Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter, string orderBy, QueryFilterDelegate<T> queryFilter, bool includeCount = false, bool includeAttachments = true,  List<string> extraFields = null);
+        Siesa.SDK.Shared.Business.LoadResult GetUData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null, bool includeCount = false, List<string> selectFields = null);
     }
 
 }

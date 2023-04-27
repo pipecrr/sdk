@@ -164,6 +164,36 @@ namespace Siesa.SDK.Shared.Backend
             
         }
 
+        public async Task<Protos.LoadResult> GetUData(string business_name, int? skip, int? take, string filter = "", string orderBy = "", bool includeCount = false,  List<string> extraFields = null)
+        {
+            var channel = GrpcUtils.GetChannel(this.Url);
+            var client = new Protos.SDK.SDKClient(channel);
+            List<string> fields = extraFields ?? new List<string>();
+            var request = new Protos.GetUDataRequest
+            {
+                BusinessName = business_name,
+                Skip = skip,
+                Take = take,
+                Filter = filter,
+                OrderBy = orderBy,
+                CurrentUserToken = (AuthenticationService != null && AuthenticationService.UserToken != null ? AuthenticationService.UserToken : ""),
+                CurrentUserRowid = (AuthenticationService != null && AuthenticationService.User != null ? AuthenticationService.User.Rowid: 0),
+                IncludeCount = includeCount,
+                SelectFields = {fields}
+            };
+            try
+            {
+                var response = await client.GetUDataBusinessObjAsync(request);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return null;
+            
+        }
+
         public async Task<Protos.MenuGroupsResponse> GetMenuGroupsAsync()
         {
             using var channel = GrpcUtils.GetChannel(this.Url);

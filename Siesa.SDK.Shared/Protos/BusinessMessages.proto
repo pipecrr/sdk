@@ -82,6 +82,18 @@ message GetDataBusinessObjRequest {
   repeated string extraFields = 9;
 }
 
+message GetUDataRequest {
+  string businessName = 1;
+  google.protobuf.Int32Value skip = 2;
+  google.protobuf.Int32Value take = 3;
+  string filter = 4;
+  string orderBy = 5;
+  string currentUserToken = 6;
+  google.protobuf.Int32Value currentUserRowid = 7;
+  bool includeCount = 8;
+  repeated string selectFields = 9;
+}
+
 message EntityFieldSearchRequest {
   string businessName = 1;
   string searchText = 2;

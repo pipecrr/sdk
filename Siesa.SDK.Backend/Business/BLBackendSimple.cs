@@ -91,6 +91,11 @@ namespace Siesa.SDK.Business
             return null;
         }
 
+        public Shared.Business.LoadResult GetUData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<BaseSDK<int>> queryFilter = null, bool includeCount = false, List<string> selectFields = null)
+        {
+            return null;
+        }
+
         public void Update()
         {
         }
@@ -979,108 +984,247 @@ namespace Siesa.SDK.Business
             }
         }
 
-        private Expression GetInExpression(Expression ColumNameProperty, List<int> RowidRecords)
+        // private Expression GetInExpression(Expression ColumNameProperty, List<int> RowidRecords)
+        // {
+        //     RowidRecords = RowidRecords.Distinct().ToList();
+
+        //     Type ColumNameType = ColumNameProperty.Type;
+        //     Expression InExpression = Expression.Equal(ColumNameProperty, Expression.Constant(RowidRecords[0], ColumNameType));
+
+        //     for (int i = 1; i < RowidRecords.Count; i++)
+        //     {
+        //         var OrValueExpression = Expression.Equal(ColumNameProperty, Expression.Constant(RowidRecords[i], ColumNameType));
+        //         InExpression = Expression.Or(InExpression, OrValueExpression);
+        //     }
+
+        //     return InExpression;
+        // }
+
+        // [SDKExposedMethod]
+        // public ActionResult<dynamic> GetDataFromU(int RowidDataVisibilityGroup, int RowidUser, List<int> RowidRecords)
+        // {
+        //     try
+        //     {
+        //         if(RowidDataVisibilityGroup <= 0 && RowidUser <= 0)
+        //             throw new Exception("Invalid parameters");
+
+        //         var _assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
+        //         var _assemblySelect = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
+
+        //         //Actualmente no hay necesidad de incluir las foraneas
+
+        //         var Property = BaseObj.GetType();
+
+        //         var Namespace = Property.Namespace;
+        //         var Name = Property.Name;
+        //         Name = Name.Replace(Name[0], 'U');
+
+        //         var DynamicEntityType = Utilities.SearchType($"{Namespace}.{Name}", true);
+
+        //         ParameterExpression pe = Expression.Parameter(DynamicEntityType, DynamicEntityType.Name);
+
+        //         using(var Context = CreateDbContext())
+        //         {
+        //             var DataFound = Context.GetType().GetMethod("Set", types: Type.EmptyTypes)
+        //                         .MakeGenericMethod(DynamicEntityType)
+        //                         .Invoke(Context, null);
+
+        //             Expression CoincidenceExpression;
+        //             Expression ColumnNameProperty;
+        //             Expression ColumnValue;
+
+        //             if(RowidDataVisibilityGroup > 0)
+        //             {
+        //                 ColumnNameProperty = Expression.Property(pe, "RowidDataVisibilityGroup");
+        //                 ColumnValue = Expression.Constant(RowidDataVisibilityGroup, typeof(int?));
+        //             }else
+        //             {
+        //                 ColumnNameProperty = Expression.Property(pe, "RowidUser");
+        //                 ColumnValue = Expression.Constant(RowidUser, typeof(int?));
+        //             }
+
+        //             CoincidenceExpression = Expression.Equal(ColumnNameProperty, ColumnValue);
+
+        //             if(RowidRecords.Any())
+        //             {
+        //                 var RowidRecordProperty = Expression.Property(pe, "RowidRecord");
+        //                 var InExpression = GetInExpression(RowidRecordProperty, RowidRecords);
+        //                 CoincidenceExpression = Expression.And(CoincidenceExpression, InExpression);
+        //             }
+
+        //             var funcExpression = typeof(Func<,>).MakeGenericType(new Type[] { DynamicEntityType, typeof(bool) });
+        //             var returnExp = Expression.Lambda(funcExpression, CoincidenceExpression, new ParameterExpression[] { pe });
+
+        //             var whereMethod = typeof(IQueryable<object>).GetExtensionMethod(_assemblySelect, "Where", new[] { typeof(IQueryable<object>), typeof(LambdaExpression) });
+
+        //             var whereMethodGeneric = whereMethod.MakeGenericMethod(DynamicEntityType);
+
+        //             DataFound = whereMethodGeneric.Invoke(DataFound, new object[] { DataFound, returnExp });
+
+        //             var dynamicListMethod = typeof(IEnumerable).GetExtensionMethod(_assemblyDynamic, "ToDynamicList", new[] { typeof(IEnumerable) });
+        //             var dynamicList = dynamicListMethod.Invoke(DataFound, new object[] { DataFound });
+
+        //             return new ActionResult<dynamic>()
+        //             {
+        //                 Success = true,
+        //                 Data = dynamicList
+        //             };
+        //         }
+        //     }
+        //     catch (Exception e)
+        //     {
+        //         return new BadRequestResult<dynamic>(){
+        //             Errors = new List<string>(){e.Message}
+        //         };
+        //     }
+        // }
+
+        private string GetUTableEntity()
         {
-            RowidRecords = RowidRecords.Distinct().ToList();
+            var dataAnnotation = typeof(T).GetCustomAttributes(typeof(SDKAuthorization), false);
 
-            Type ColumNameType = ColumNameProperty.Type;
-            Expression InExpression = Expression.Equal(ColumNameProperty, Expression.Constant(RowidRecords[0], ColumNameType));
+            string TableName = "";
 
-            for (int i = 1; i < RowidRecords.Count; i++)
+            if (dataAnnotation.Length > 0)
             {
-                var OrValueExpression = Expression.Equal(ColumNameProperty, Expression.Constant(RowidRecords[i], ColumNameType));
-                InExpression = Expression.Or(InExpression, OrValueExpression);
+                //Get the table name
+                TableName = ((SDKAuthorization)dataAnnotation[0]).TableName;
+
+                if(!string.IsNullOrEmpty(TableName))
+                    return TableName;
             }
 
-            return InExpression;
+            //Get table name from the context
+            TableName = typeof(T).Name;
+
+            //Replace the first character of the table name with the letter "u"
+            if (TableName.Length > 0)
+            {
+                TableName = "U" + TableName.Substring(1);
+            }
+
+            TableName = $"{typeof(T).Namespace}.{TableName}";
+            return TableName;
         }
 
-        [SDKExposedMethod]
-        public ActionResult<dynamic> GetDataFromU(int RowidDataVisibilityGroup, int RowidUser, List<int> RowidRecords)
+        private dynamic GetUJoinData(dynamic Object, string ColumnName)
         {
-            try
+            var ValueType = Object.GetType().GetProperty(ColumnName);
+            var Value = ValueType.GetValue(Object);
+            return Value;
+        }
+
+        public virtual Siesa.SDK.Shared.Business.LoadResult GetUData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null, bool includeCount = false, List<string> selectFields = null)
+        {
+            this._logger.LogInformation($"Get UData {this.GetType().Name}");
+
+            var result = new Siesa.SDK.Shared.Business.LoadResult();
+            using (SDKContext context = CreateDbContext())
             {
-                if(RowidDataVisibilityGroup <= 0 && RowidUser <= 0)
-                    throw new Exception("Invalid parameters");
+                context.SetProvider(_provider);
+                var query = context.Set<T>().AsQueryable();
 
-                var _assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
-                var _assemblySelect = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
-
-                //Actualmente no hay necesidad de incluir las foraneas
-
-                var Property = BaseObj.GetType();
-
-                var Namespace = Property.Namespace;
-                var Name = Property.Name;
-                Name = Name.Replace(Name[0], 'U');
-
-                var DynamicEntityType = Utilities.SearchType($"{Namespace}.{Name}", true);
-
-                ParameterExpression pe = Expression.Parameter(DynamicEntityType, DynamicEntityType.Name);
-
-                using(var Context = CreateDbContext())
+                if (!string.IsNullOrEmpty(orderBy))
                 {
-                    var DataFound = Context.GetType().GetMethod("Set", types: Type.EmptyTypes)
-                                .MakeGenericMethod(DynamicEntityType)
-                                .Invoke(Context, null);
-
-                    Expression CoincidenceExpression;
-                    Expression ColumnNameProperty;
-                    Expression ColumnValue;
-
-                    if(RowidDataVisibilityGroup > 0)
-                    {
-                        ColumnNameProperty = Expression.Property(pe, "RowidDataVisibilityGroup");
-                        ColumnValue = Expression.Constant(RowidDataVisibilityGroup, typeof(int?));
-                    }else
-                    {
-                        ColumnNameProperty = Expression.Property(pe, "RowidUser");
-                        ColumnValue = Expression.Constant(RowidUser, typeof(int?));
-                    }
-
-                    CoincidenceExpression = Expression.Equal(ColumnNameProperty, ColumnValue);
-
-                    if(RowidRecords.Any())
-                    {
-                        var RowidRecordProperty = Expression.Property(pe, "RowidRecord");
-                        var InExpression = GetInExpression(RowidRecordProperty, RowidRecords);
-                        CoincidenceExpression = Expression.And(CoincidenceExpression, InExpression);
-                    }
-
-                    var funcExpression = typeof(Func<,>).MakeGenericType(new Type[] { DynamicEntityType, typeof(bool) });
-                    var returnExp = Expression.Lambda(funcExpression, CoincidenceExpression, new ParameterExpression[] { pe });
-
-                    var whereMethod = typeof(IQueryable<object>).GetExtensionMethod(_assemblySelect, "Where", new[] { typeof(IQueryable<object>), typeof(LambdaExpression) });
-
-                    var whereMethodGeneric = whereMethod.MakeGenericMethod(DynamicEntityType);
-
-                    DataFound = whereMethodGeneric.Invoke(DataFound, new object[] { DataFound, returnExp });
-
-                    var dynamicListMethod = typeof(IEnumerable).GetExtensionMethod(_assemblyDynamic, "ToDynamicList", new[] { typeof(IEnumerable) });
-                    var dynamicList = dynamicListMethod.Invoke(DataFound, new object[] { DataFound });
-
-                    return new ActionResult<dynamic>()
-                    {
-                        Success = true,
-                        Data = dynamicList
-                    };
+                    query = query.OrderBy(orderBy);
                 }
+                else
+                {
+                    query = query.OrderBy("Rowid");
+                }
+
+                var total = 0;
+                if(includeCount){
+                    total = query.Select("Rowid").Count();
+                }
+
+                if (skip.HasValue)
+                {
+                    query = query.Skip(skip.Value);
+                }
+                if (take.HasValue)
+                {
+                    query = query.Take(take.Value);
+                }
+
+                var UTableName = GetUTableEntity();
+                Type authEntityType = typeof(T).Assembly.GetType(UTableName);
+
+                dynamic TableProxy = context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(authEntityType).Invoke(context, null);
+
+                var authSet = TableProxy.AsQueryable();
+
+                var JoinQuery = authSet;
+
+                // if(!string.IsNullOrEmpty(filter))
+                // {
+                //     var Split = filter.Split("/");
+                //     var FilterU = Split[0] == "U";
+                //     if(FilterU)
+                //     {
+                //         JoinQuery = JoinQuery.Where(Split[1]);
+                //         filter = "";
+                //     }
+                // }
+
+                // var JoinQuery = query.Join(authSet,
+                //     e => e.GetRowid(),
+                //     u => u.RowidRecord,
+                //     (e, u) => new { e, u });
+
+
+                // if(selectFields != null && selectFields.Count > 0)
+                // {
+                //     selectFields.Add("Rowid");
+
+                //     var selectedFields = string.Join(",", selectFields.Select(x =>
+                //     {
+                //         var splitInclude = x.Split('.');
+                //         if (splitInclude.Length > 1) 
+                //         {
+                //             for (int i = 1; i <= splitInclude.Length; i++)
+                //             {
+                //                 var include = string.Join(".", splitInclude.Take(i));
+                //                 JoinQuery = JoinQuery.Include(include);
+                //             }
+                //         }
+                //         return $"e.{splitInclude[0]}";
+                //     }).Distinct());
+
+                //     var uFields = new List<string>(){
+                //         "Rowid",
+                //         "UserType",
+                //         "AuthorizationType",
+                //         "RestrictionType",
+                //     };
+
+                //     foreach (var uField in uFields)
+                //     {
+                //         selectedFields += $",u.{uField}";
+                //     }
+
+                //     // JoinQuery = JoinQuery.Select<dynamic>($"new ({selectedFields})");
+
+                // }
+                
+                // if (!string.IsNullOrEmpty(filter))
+                // {
+                //     JoinQuery = JoinQuery.Where(filter);
+                // }
+
+                // if (queryFilter != null)
+                // {
+                //     // JoinQuery = queryFilter(JoinQuery);
+                // }
+
+                //total data
+                result.TotalCount = total;
+                //data
+                result.Data = query.ToList();
             }
-            catch (Exception e)
-            {
-                return new BadRequestResult<dynamic>(){
-                    Errors = new List<string>(){e.Message}
-                };
-            }
+            return result;
         }
 
-        public virtual ValidateAndSaveBusinessObjResponse U_ValidateAndSave()
-        {
-            ValidateAndSaveBusinessObjResponse Response = new();
-            
-
-            return Response;
-        }
     }
 
 }
