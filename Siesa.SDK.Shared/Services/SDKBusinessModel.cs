@@ -139,12 +139,13 @@ namespace Siesa.SDK.Shared.Services
             return result;
         }
 
-         public async Task<Protos.LoadResult> EntityFieldSearch(string searchText, string filters, int? top = null, string orderBy = "")
+        public async Task<Protos.LoadResult> EntityFieldSearch(string searchText, string filters, int? top = null, string orderBy = "",
+         List<string> extraFields = null)
         {
             Protos.LoadResult result = new();
             try
             {
-                result = await Backend.EntityFieldSearch(Name, searchText, filters, top, orderBy);
+                result = await Backend.EntityFieldSearch(Name, searchText, filters, top, orderBy, extraFields);
             }
             catch (RpcException ex)
             {
