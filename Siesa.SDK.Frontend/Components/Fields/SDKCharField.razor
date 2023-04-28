@@ -1,22 +1,42 @@
 @using System.Linq.Expressions
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
+
 @inherits SDKComponent
-<DxTextBox 
-    Text="@Value" 
-    TextChanged="@ValueChanged" 
-    NullText="@Placeholder"
-    ReadOnly="@ReadOnly"
-    CssClass="@CssClass"
-    maxlength = "@MaxLength"
-    Password="@Password"
-    TextExpression="@ValueExpression"
-    autocomplete="@GetAutoComplete()"
-    data-automation-id="@GetAutomationId()"
-    ClearButtonDisplayMode="@ClearButtonDisplayMode.Get()"
-    field-name="@FieldName"
-    @onfocusout="@_OnFocusOut"
->
-@ChildContent
-</DxTextBox>
+
+@if(Password)
+{
+    <SDKPasswordField
+            Value="@Value"
+            Placeholder="@Placeholder"
+            ReadOnly="@ReadOnly"
+            CssClass="@CssClass"
+            MaxLength = "@MaxLength"
+            AllowAutoComplete="@AllowAutoComplete"
+            FieldName="@FieldName"
+            ValueChanged="@ValueChanged"
+    />
+}
+else
+{
+    <DxTextBox 
+        Text="@Value" 
+        TextChanged="@ValueChanged" 
+        NullText="@Placeholder"
+        ReadOnly="@ReadOnly"
+        CssClass="@CssClass"
+        maxlength = "@MaxLength"
+        Password="@Password"
+        TextExpression="@ValueExpression"
+        autocomplete="@GetAutoComplete()"
+        data-automation-id="@GetAutomationId()"
+        ClearButtonDisplayMode="@ClearButtonDisplayMode.Get()"
+        field-name="@FieldName"
+        @onfocusout="@_OnFocusOut"
+    >
+    @ChildContent
+    </DxTextBox>
+}
 
 @code {
     [Parameter] public string Value { get; set; }
