@@ -367,7 +367,7 @@ namespace Siesa.SDK.Business
             {
                 var result = await Backend.GetUData(skip, take, filter, uFilter, orderBy, includeCount, extraFields);
 
-                response.Data = result.Data.Select(x => JsonConvert.DeserializeObject<object>(x)).ToList();
+                response.Data = result.Data.Select(x => JsonConvert.DeserializeObject<dynamic>(x)).ToList();
                 response.TotalCount = result.Data.Count;
                 if(includeCount){
                     response.TotalCount = result.TotalCount;
