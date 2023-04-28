@@ -956,7 +956,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
             FilterFlex = filters;
             bool includeCount = false;
-            if(!UseFlex && !ListViewModel.InfiniteScroll){
+            if(!UseFlex){
                 includeCount = true;
             }
             var dbData = await BusinessObj.GetDataAsync(args.Skip, args.Top, filters, args.OrderBy, includeCount, _extraFields);
@@ -1099,7 +1099,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 bool includeCount = false;
                 int? skip = null;
                 int? take = null;
-                if(!UseFlex && !ListViewModel.InfiniteScroll){
+                if(!UseFlex){
                     includeCount = true;
                     skip = 0;
                     take = ListViewModel.Paging.PageSize;
@@ -1124,9 +1124,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     return;
                 }
 
-                if(!UseFlex && ListViewModel.InfiniteScroll){
-                    Data = data;
-                }
+                // if(!UseFlex){
+                //     Data = data;
+                // }
             }
             LoadingData = false;
             LoadingSearch = false;
