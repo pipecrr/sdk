@@ -90,6 +90,7 @@ message EntityFieldSearchRequest {
   string filters = 5;
   google.protobuf.Int32Value top = 6;
   string orderBy = 7;
+  repeated string extraFields = 8;
 }
 
 message LoadResult {

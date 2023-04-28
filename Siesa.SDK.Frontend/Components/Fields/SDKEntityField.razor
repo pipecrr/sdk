@@ -36,7 +36,7 @@
                                     }
                                     <div class="ml-1">
                                         <p class="font_size_087 m-0 font-weight-bold"><span>@item.Value.ToString()</span></p>
-                                        @if(RelatedParams != null && RelatedParams.ExtraFields.Count()>0){
+                                        @if(RelatedParams != null && RelatedParams.ExtraFields.Count()>0 && !RelatedParams.ShowExtraFields){
                                             foreach (var field in RelatedParams.ExtraFields)
                                             {
                                                 string paramValue = GetParamValue(field, item.Value);
