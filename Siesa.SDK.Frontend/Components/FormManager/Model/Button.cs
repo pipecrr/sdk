@@ -32,5 +32,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         public string Href { get; set; }
         public string IconClass { get; set; }
         public List<int> ListPermission { get; set; }
+        public bool Disabled { get; set; }
+        public bool Hidden { get; set; }
+        public Dictionary<string, object> CustomAttributes { get; set; }
     }
 }

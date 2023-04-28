@@ -368,7 +368,9 @@ else
             <TopBarExtraButtons>
                 @foreach (var btn in ExtraButtons)
                 {
-                    <TopBarButton Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" IconCssClass="@btn.IconClass" />
+                    if(!btn.Hidden){
+                        <TopBarButton Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" IconCssClass="@btn.IconClass" Enabled="@(!btn.Disabled)"/>
+                    }
                 }
             </TopBarExtraButtons>
         </SetTopBar>
