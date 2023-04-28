@@ -119,8 +119,6 @@
             throw;
         }
 
-        await Task.Delay(4000);
-        
         foreach (var option in enumValues)
         {
             _options = _options.Append(new SelectBarItemWrap<TItem>
