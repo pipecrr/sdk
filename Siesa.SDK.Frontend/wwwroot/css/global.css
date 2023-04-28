@@ -812,13 +812,14 @@ input#collapse_open:checked~.collapse_open_btn>.nav_btn_standar_text {
     overflow: unset !important;
 }
 
-/* .whcm_modal_relacion>.rz-dialog-content {
+.whcm_modal_relacion>.rz-dialog-content {
     overflow: unset !important;
-} */
+    background: var(--color_light);
+}
 
-/* .rz-dialog-wrapper {
-    background: red;
-} */
+.rz-dialog-wrapper {
+    overflow-y: scroll;
+}
 
 .whcm_select_box>.whcm_select_list>ul {
     padding: 0;

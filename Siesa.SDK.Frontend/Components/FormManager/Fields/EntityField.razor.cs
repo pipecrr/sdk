@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
+using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
 
-namespace Siesa.SDK.Frontend.Components.FormManager.Fields 
+namespace Siesa.SDK.Frontend.Components.FormManager.Fields
 {
     public partial class EntityField : FieldClass<dynamic>
     {
