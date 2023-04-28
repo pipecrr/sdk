@@ -53,21 +53,6 @@
 
     private IEnumerable<SelectBarItemWrap<TItem>> _options {get; set;} = Enumerable.Empty<SelectBarItemWrap<TItem>>();
 
-   
-
-   /*string? _value
-    {
-        get
-        {
-            if (BindValue == null) return null;
-            Type enumType = typeof(TItem);
-            if (typeof(TItem).IsGenericType && typeof(TItem).GetGenericTypeDefinition() == typeof(Nullable<>))
-            {
-                enumType = typeof(TItem).GetGenericArguments()[0];
-            }
-            return $"Enum.{enumType.Name}.{BindValue}";
-        }
-    }*/
 
     private void isDisabled()
     {
@@ -108,19 +93,13 @@
             enumType = typeof(TItem).GetGenericArguments()[0];
         }
 
-        /*var resourceBL = BackendRouterService.GetSDKBusinessModel("BLResource", AuthenticationService);
-        var request = await resourceBL.Call("GetEnumValues", enumType.Name,
-        Convert.ToInt64(AuthenticationService.GetRoiwdCulture()));*/
-
         Dictionary<byte, string> enumValues = await ResourceManager.GetEnumValues(enumType.Name, AuthenticationService.GetRoiwdCulture());
-        //var enumValues = (Dictionary<byte, string>)request.Data;
 
         if (enumValues == null || enumValues.Count == 0)
         {
             return;
         }
 
-        //Options = Enumerable.Empty<SelectBarItemWrap<TItem>>();
         try
         {
             if (ViewdefName == "search")
@@ -152,13 +131,22 @@
         }
         
         StateHasChanged();
-
-        
-        /*Options = Options.Concat(enumValues.Select(x => new SelectBarItemWrap<TItem>
-        {
-            Key = (TItem)Enum.Parse(enumType, x.Key.ToString()),
-            Name = x.Value
-        }));*/
     }
+
+       
+
+   /*string? _value
+    {
+        get
+        {
+            if (BindValue == null) return null;
+            Type enumType = typeof(TItem);
+            if (typeof(TItem).IsGenericType && typeof(TItem).GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                enumType = typeof(TItem).GetGenericArguments()[0];
+            }
+            return $"Enum.{enumType.Name}.{BindValue}";
+        }
+    }*/
 
 }
