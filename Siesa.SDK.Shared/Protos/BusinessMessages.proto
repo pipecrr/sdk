@@ -87,11 +87,12 @@ message GetUDataRequest {
   google.protobuf.Int32Value skip = 2;
   google.protobuf.Int32Value take = 3;
   string filter = 4;
-  string orderBy = 5;
-  string currentUserToken = 6;
-  google.protobuf.Int32Value currentUserRowid = 7;
-  bool includeCount = 8;
-  repeated string selectFields = 9;
+  string uFilter = 5;
+  string orderBy = 6;
+  string currentUserToken = 7;
+  google.protobuf.Int32Value currentUserRowid = 8;
+  bool includeCount = 9;
+  repeated string selectFields = 10;
 }
 
 message EntityFieldSearchRequest {

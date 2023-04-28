@@ -141,12 +141,12 @@ namespace Siesa.SDK.Shared.Services
         /*
         List<string> selectFields, int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null, bool includeCount = false
         */
-        public async Task<Protos.LoadResult> GetUData(int? skip, int? take, string filter = "", string orderBy = "", bool includeCount = false, List<string> extraFields = null)
+        public async Task<Protos.LoadResult> GetUData(int? skip, int? take, string filter = "", string uFilter = "", string orderBy = "", bool includeCount = false, List<string> extraFields = null)
         {
             Protos.LoadResult result = new();
             try
             {
-                result = await Backend.GetUData(Name, skip, take, filter, orderBy, includeCount, extraFields);
+                result = await Backend.GetUData(Name, skip, take, filter, uFilter, orderBy, includeCount, extraFields);
             }
             catch (RpcException ex)
             {

@@ -164,7 +164,7 @@ namespace Siesa.SDK.Shared.Backend
             
         }
 
-        public async Task<Protos.LoadResult> GetUData(string business_name, int? skip, int? take, string filter = "", string orderBy = "", bool includeCount = false,  List<string> extraFields = null)
+        public async Task<Protos.LoadResult> GetUData(string business_name, int? skip, int? take, string filter = "", string uFilter = "", string orderBy = "", bool includeCount = false,  List<string> extraFields = null)
         {
             var channel = GrpcUtils.GetChannel(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
@@ -175,6 +175,7 @@ namespace Siesa.SDK.Shared.Backend
                 Skip = skip,
                 Take = take,
                 Filter = filter,
+                UFilter = uFilter,
                 OrderBy = orderBy,
                 CurrentUserToken = (AuthenticationService != null && AuthenticationService.UserToken != null ? AuthenticationService.UserToken : ""),
                 CurrentUserRowid = (AuthenticationService != null && AuthenticationService.User != null ? AuthenticationService.User.Rowid: 0),

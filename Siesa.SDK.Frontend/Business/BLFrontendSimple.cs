@@ -100,7 +100,7 @@ namespace Siesa.SDK.Business
             return null;
         }
 
-        public Shared.Business.LoadResult GetUData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<BaseSDK<int>> queryFilter = null, bool includeCount = false, List<string> extraFields = null)
+        public Shared.Business.LoadResult GetUData(int? skip, int? take, string filter = "", string uFilter = "", string orderBy = "", QueryFilterDelegate<BaseSDK<int>> queryFilter = null, bool includeCount = false, List<string> extraFields = null)
         {
             return null;
         }
@@ -304,7 +304,7 @@ namespace Siesa.SDK.Business
             return GetDataAsync(skip, take, filter, orderBy, extraFields: extraFields).GetAwaiter().GetResult();
         }
 
-        public virtual Siesa.SDK.Shared.Business.LoadResult GetUData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null, bool includeCount = false, List<string> extraFields = null)
+        public virtual Siesa.SDK.Shared.Business.LoadResult GetUData(int? skip, int? take, string filter = "", string uFilter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null, bool includeCount = false, List<string> extraFields = null)
         {
             return GetUDataAsync(skip, take, filter, orderBy, extraFields: extraFields).GetAwaiter().GetResult();
         }
@@ -360,14 +360,14 @@ namespace Siesa.SDK.Business
 
         }
 
-        public async virtual Task<Siesa.SDK.Shared.Business.LoadResult> GetUDataAsync(int? skip, int? take, string filter = "", string orderBy = "", bool includeCount = false, List<string> extraFields = null)
+        public async virtual Task<Siesa.SDK.Shared.Business.LoadResult> GetUDataAsync(int? skip, int? take, string filter = "", string uFilter = "", string orderBy = "", bool includeCount = false, List<string> extraFields = null)
         {
             var response = new Siesa.SDK.Shared.Business.LoadResult();
             try
             {
-                var result = await Backend.GetUData(skip, take, filter, orderBy, includeCount, extraFields);
+                var result = await Backend.GetUData(skip, take, filter, uFilter, orderBy, includeCount, extraFields);
 
-                response.Data = result.Data.Select(x => JsonConvert.DeserializeObject<T>(x)).ToList();
+                response.Data = result.Data.Select(x => JsonConvert.DeserializeObject<object>(x)).ToList();
                 response.TotalCount = result.Data.Count;
                 if(includeCount){
                     response.TotalCount = result.TotalCount;
