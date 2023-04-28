@@ -19,7 +19,7 @@ namespace Siesa.SDK.Backend.Services
             _AuthenticationService = authenticationService;
         }
 
-        public async Task<bool> SendEmail(string subject, string body, List<string> recipients, List<string> cc = null, List<string> bcc = null)
+        public async Task<bool> SendEmail(string subject, string body, List<string> recipients, List<string> cc = null, List<string> bcc = null, Dictionary<string, byte[]> attachment = null)
         {
             if (cc == null)
             {
@@ -30,7 +30,7 @@ namespace Siesa.SDK.Backend.Services
                 bcc = new List<string>();
             }
 
-            var request = await _BackendRouter.GetSDKBusinessModel("BLSDKEmail", _AuthenticationService).Call("SendEmail", subject, body, recipients, cc, bcc);
+            var request = await _BackendRouter.GetSDKBusinessModel("BLSDKEmail", _AuthenticationService).Call("SendEmail", subject, body, recipients, cc, bcc, attachment);
 
             try
             {
