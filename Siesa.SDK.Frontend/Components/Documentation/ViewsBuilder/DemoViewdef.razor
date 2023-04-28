@@ -113,6 +113,14 @@
                 <p>En los botones se pueden especificar permisos para las acciones con el parametro ListPermission</p>
 
                         <SDKTextField CssClass="text-area-demoviewdef" Value="@ButtonsActions"/>
+                    
+                <p>En los botones se pueden especificar si estan ocultos o deshabilitados por defecto </p>
+
+                        <SDKTextField CssClass="text-area-demoviewdef" Value="@ButtonsDefault"/>                
+
+                <p>En los botones se pueden especificar en el CustomAttributtes las opciones "sdk-disabled", "sdk-hide" y "sdk-show"</p>
+
+                        <SDKTextField CssClass="text-area-demoviewdef" Value="@ButtonsCustomAttributes"/>
 
                 <p>Por defecto se usa la flex en el listar, para quitar el componente flex en el listar, se agrega "UseFlex: false" en el list.json </p>
                 <p>Tambien se puede especificar que pagine por servidor y el tamaño de la pagina, por defecto el take es 100 y la paginacion servidor en true</p>                    
@@ -300,8 +308,27 @@
     string ButtonsActions=@"
                     ""Buttons"": [{
                         ""Action"": ""await MetodoBLFrontend()"",
-                        ""Style"": ""secondary""
+                        ""Style"": ""secondary"",
                         ""ListPermission"": [1,2,6]
+                        }]";
+
+    string ButtonsDefault =@"
+                    ""Buttons"": [{
+                        ""Action"": ""await MetodoBLFrontend()"",
+                        ""Style"": ""secondary"",
+                        ""Hidden"": ""true"",
+                        ""Disabled"": ""true""
+                        }]";
+
+    string ButtonsCustomAttributes =@"
+                    ""Buttons"": [{
+                        ""Action"": ""await MetodoBLFrontend()"",
+                        ""Style"": ""secondary"",
+                        ""CustomAttributes"": {
+                            ""sdk-disabled"":""onDisabled()"",
+                            ""sdk-hide"":""onHide()"",
+                            ""sdk-show"":""onShow()""
+                            }
                         }]";
 
     string ListFlex = @"

@@ -44,7 +44,7 @@ namespace Siesa.SDK.Frontend.Services
                 }else if(standardWidth == SDKModalWidth.Medium){
                     _width = "600px";
                 }else{
-                    _width = "80%";
+                    _width = "90%";
                 }
             }
             return await ds.OpenAsync(_title,GetConfirmComponent(childContent,ConfirmationButtonTag,CancelationButtonTag),
@@ -64,7 +64,7 @@ namespace Siesa.SDK.Frontend.Services
                 }else if(standardWidth == SDKModalWidth.Medium){
                     _width = "600px";
                 }else{
-                    _width = "80%";
+                    _width = "90%";
                 }
             }
             string style = $"min-width:300px; width:{_width}";

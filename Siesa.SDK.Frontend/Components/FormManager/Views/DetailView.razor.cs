@@ -154,9 +154,42 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 }
                 ModelLoaded = true;
             }
+            await EvaluateButtonAttributes();
 
             Loading = false;
             StateHasChanged();
+        }
+
+        private async Task EvaluateButtonAttributes()
+        {
+            if(FormViewModel.Buttons != null){
+                foreach (var button in FormViewModel.Buttons){
+                    if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-disabled")){
+                        var disabled = await evaluateCodeButtons(button, "sdk-disabled");
+                        button.Disabled = disabled;
+                    }
+                    if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-hide")){
+                        var hidden = await evaluateCodeButtons(button, "sdk-hide");
+                        button.Hidden = hidden;
+                    }
+                    if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-show")){
+                        var show = await evaluateCodeButtons(button, "sdk-show");
+                        button.Hidden = !show;
+                    }
+                }
+            }
+        }
+
+        public async Task<bool> evaluateCodeButtons(Button button, string condition){
+            bool disabled = button.Disabled;
+            var sdkDisable = button.CustomAttributes[condition];
+            if(sdkDisable != null){
+                var eject = (bool)await Evaluator.EvaluateCode((string)sdkDisable, BusinessObj); //revisar
+                if(eject != null){
+                    disabled = eject;
+                }
+            }
+            return disabled;
         }
 
         public override async Task SetParametersAsync(ParameterView parameters)
