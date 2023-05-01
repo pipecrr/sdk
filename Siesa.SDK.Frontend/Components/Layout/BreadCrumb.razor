@@ -34,7 +34,7 @@
                 
                         @foreach (var recentMenu in RecentRoutes)
                         {
-                            <a class="sdk_recent_box border-bottom py-3 px-0" href="@recentMenu.Value.Last().CurrentURL" @onclick:stopPropagation="true" 
+                            <a class="sdk_recent_box py-2 px-0" href="@recentMenu.Value.Last().CurrentURL" @onclick:stopPropagation="true" 
                                 @onclick="() => IsOpenRecentMenu = !IsOpenRecentMenu">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="position-relative pr-3">

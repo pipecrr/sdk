@@ -55,6 +55,7 @@
     box-shadow: var(--shadow_standar);
     transform: rotate(180deg);
     transition: var(--animate_faster);
+    min-width: 1.5rem;
 }
 .whcm_data_related_btn{
     position: absolute;
@@ -71,6 +72,7 @@
     box-shadow: var(--shadow_standar);
     transform: rotate(180deg);
     transition: var(--animate_faster);
+    min-width: 1.5rem;
 }
 .whcm_data_related_btn > p > i{
     transform: rotate(180deg);
@@ -110,7 +112,7 @@
     transition: var(--animate_faster);
 }
 .panel_box_data{
-    max-height: calc(100vh - 24.5rem);
+    max-height: calc(100vh - 17rem);
     overflow: auto;
 }
 .whcm_data_related_box_crud > .whcm_data_open_box{
