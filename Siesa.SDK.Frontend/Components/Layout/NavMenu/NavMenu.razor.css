@@ -80,7 +80,7 @@ input#menu:checked~.menu_content {
     max-height: 100vh;
     background: var(--color_light);
     box-shadow: var(--shadow_standar);
-    border-bottom-right-radius: 1.5rem;
+    /* border-bottom-right-radius: 1.5rem; */
     transition-duration: .25s;
 }
 
@@ -153,7 +153,7 @@ input#menu:checked~ ::deep .nav_dx_menu {
 
 .nav_profile_btn::before {
     content: "";
-    border-radius: 4px 4px 24px 4px;
+    border-radius: var(--border_radius_standar);
     width: 10%;
     height: 36px;
     position: absolute;
@@ -169,7 +169,7 @@ input#menu:checked~ ::deep .nav_dx_menu {
 .nav_profile_photo {
     height: 36px;
     box-shadow: var(--shadow_standar);
-    border-radius: 4px 4px 24px 4px;
+    border-radius: var(--border_radius_standar);
     overflow: hidden;
     position: relative;
     display: flex;
@@ -185,7 +185,7 @@ input#menu:checked~ ::deep .nav_dx_menu {
 
 .nav_profile_photo::before {
     content: "";
-    border-radius: 4px 4px 24px 4px;
+    border-radius: var(--border_radius_standar);
     width: 36px;
     height: 36px;
     position: absolute;

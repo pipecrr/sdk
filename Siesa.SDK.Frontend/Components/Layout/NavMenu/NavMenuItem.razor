@@ -10,18 +10,11 @@
 @inject IFeaturePermissionService FeaturePermissionService
 @inherits Siesa.SDK.Frontend.Components.SDKComponent
 @if(MenuItem.SubMenus?.Count > 0){
-    @* <DxMenuItem Text="@Title" IconCssClass="@MenuItem.IconClass"> 
-        <Items>
-        @foreach(var subMenuItem in MenuItem.SubMenus.OrderBy(x => x.Order)){
-            <SDKMenuItem MenuItem="@subMenuItem" />
-        }
-        </Items>
-    </DxMenuItem>        *@
     <a href="#" @ref="btnRef" @attributes="@menuItemAttributes" @onclick:stopPropagation="true" @onclick="()=> OnClick(MenuItem)"  @onclick:preventDefault class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
         title="@Title" data-automation-id="@GetAutomationId()">
         @if(MenuItem.IconClass != null){
             <div class="nav_btn_standar_icon">
-                <i class=@(MenuItem.IconClass + " font_size_112")></i>
+                <i class=@(GetIconClass() + " font_size_112")></i>
             </div>
         }
         
@@ -45,7 +38,7 @@
                     title="@Title" data-automation-id="@GetAutomationId()">
                     @if(MenuItem.IconClass != null){
                         <div class="nav_btn_standar_icon">
-                            <i class=@(MenuItem.IconClass + " font_size_112")></i>
+                            <i class=@(GetIconClass() + " font_size_112")></i>
                         </div>
                     }
                     <div class="nav_btn_standar_text">
@@ -60,7 +53,7 @@
                 title="@Title" data-automation-id="@GetAutomationId()">
                 @if(MenuItem.IconClass != null){
                     <div class="nav_suite_box_icon" style="background: @GetStyleColor()">
-                        <i class=@(MenuItem.IconClass + " font_size_112") ></i>
+                        <i class=@(GetIconClass() + " font_size_112") ></i>
                     </div>
                 }
                 <div class="nav_btn_standar_text">
@@ -87,6 +80,19 @@
     private bool ShowIconExternal { get; set; }
 
     private Dictionary<string, object> menuItemAttributes { get; set; } = new Dictionary<string, object>();
+
+    private string GetIconClass(){
+        if(MenuItem.IconClass != null){
+            //check if contains fontawesome icon style
+            var iconSplit = MenuItem.IconClass.Split(" ");
+            if(iconSplit.Length == 1){
+                return "fa-solid " + MenuItem.IconClass; //TODO: Temporal, cambiar por preferencia de usuario
+            }
+
+            return MenuItem.IconClass;
+        }
+        return "";
+    }
 
     private async Task<string> GetTitle(){
         if((MenuItem.RowidResource == null || MenuItem.RowidResource == 0) && MenuItem.ResourceTag != null){

@@ -1,8 +1,7 @@
 using Siesa.SDK.Shared.DataAnnotations;
-
-namespace Siesa.SDK.Frontend.Pages.Login
+namespace Siesa.SDK.Shared.DTOS
 {
-    public class Model
+    public class SDKLoginModelDTO
     {
         [SDKRequired]
         public string Username { get; set; }
@@ -10,5 +9,4 @@ namespace Siesa.SDK.Frontend.Pages.Login
         [SDKRequired]
         public string Password { get; set; }
     }
-
 }
