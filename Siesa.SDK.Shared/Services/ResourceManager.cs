@@ -7,7 +7,6 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Shared.Json;
-using Siesa.SDK.Shared.Services;
 
 namespace Siesa.SDK.Shared.Services
 {
