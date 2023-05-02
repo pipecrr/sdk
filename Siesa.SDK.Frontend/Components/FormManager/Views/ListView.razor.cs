@@ -917,7 +917,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         }
 
         [JSInvokable]
-        public async Task<bool> HideActionFromReact(string rowid, Int64 index){
+        public async Task<bool> HideActionFromReact(string dataStr, Int64 index){
             Button button = CustomActions[(int)index];
             bool res = false;
             if(button != null){
@@ -929,7 +929,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     }
                 }
                 if(hideCondition != null){
-                    //res = await EvaluateCondition(rowid, hideCondition);
+                    res = await EvaluateCondition(data, hideCondition);
                 }
             }
             return res;
