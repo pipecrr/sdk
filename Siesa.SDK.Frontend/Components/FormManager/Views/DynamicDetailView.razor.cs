@@ -15,6 +15,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
     public partial class DynamicDetailView : DynamicBaseViewModel
     {
+        [Parameter] 
+        public bool AllowDelete { get; set; } = true;
+        
         [Inject]
         public IBackendRouterService BackendRouterService { get; set; }
         private FormViewModel FormViewModel { get; set; } = new FormViewModel();
@@ -73,14 +76,23 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
         }
 
-        protected override void SetParameters(dynamic businessObj, string businessName){
+        protected override void SetParameters(dynamic businessObj, string businessName)
+        {
+
+            
             parameters.Clear();
             parameters.Add("BusinessObj", businessObj);
             parameters.Add("BusinessName", businessName);
             parameters.Add("IsSubpanel", IsSubpanel);
             parameters.Add("ShowTitle", ShowTitle);
             parameters.Add("ShowButtons", ShowButtons);
+
+            if(!AllowDelete && IsSubpanel)
+            {
+                ShowDeleteButton = AllowDelete;
+            }
             parameters.Add("ShowDeleteButton", ShowDeleteButton);
+
             if (IsSubpanel)
             {
                 parameters.Add("SetTopBar", false);

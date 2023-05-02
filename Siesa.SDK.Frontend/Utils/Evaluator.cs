@@ -127,7 +127,7 @@ namespace Siesa.SDK.Frontend.Utils
                 }
 
                 var contextType = globals.GetType();
-                var methodPattern = @"^(\w+)\((.*)\)$|^(\w+)$";
+                var methodPattern = @"^([\w\.]+)\((.*)\)$|^([\w\.]+)$";
                 var match = Regex.Match(code.Trim(), methodPattern);
 
                 if (!match.Success)

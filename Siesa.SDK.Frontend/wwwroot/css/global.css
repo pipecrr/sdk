@@ -895,7 +895,12 @@ input#collapse_open:checked~.collapse_open_btn>.nav_btn_standar_text {
 }
 
 .whcm_modal_relacion>.rz-dialog-content {
-    /* overflow: unset !important; */
+    overflow: unset !important;
+    background: var(--color_light);
+}
+
+.rz-dialog-wrapper {
+    overflow-y: scroll;
 }
 
 .whcm_select_box>.whcm_select_list>ul {
