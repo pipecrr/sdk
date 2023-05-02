@@ -76,6 +76,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         [Inject]
         public IServiceProvider ServiceProvider { get;set; }
+        [Inject]
+        public UtilsManager UtilsManager { get; set; }
         private FreeForm SearchFormRef;
         private string FilterFlex { get; set; } = "";
 
@@ -339,7 +341,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                             var obj = new{
                                 icon = action.IconClass,
                                 disabled = action.Disabled,
-                                hide = action.Hide
+                                hide = action.Hidden
                             };
                             CustomActionIcons.Add(obj);
                         }
@@ -527,15 +529,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if(shouldRestart){
                 Restart();
             }
-        }
-        /*protected override void OnAfterRender(bool firstRender){
-            if(SelectedItems!=null && firstRender){
-                foreach (var item in SelectedItems){
-                    SelectedObjects.Add(item);
-                }
-            }
-            base.OnAfterRender(firstRender);
-        }*/
+        }        
         private bool validateChanged(ParameterView parameters)
         {
             var type = this.GetType();
@@ -943,81 +937,68 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private async Task<bool> EvaluateCondition(dynamic data, dynamic condition){
             bool res = false;
-            //var bl = BackendRouterService.GetSDKBusinessModel(BusinessName, AuthenticationService);
-            dynamic obj = JsonConvert.DeserializeObject(data.ToString(), BusinessObj.BaseObj.GetType());
-
-            foreach (var prop in data){
-                var propertyName = prop.Name;
-                if(propertyName.Equals("rowid")){
-                    propertyName = "Rowid";
-                }
-            }
-            
+            data = JsonConvert.DeserializeObject(data.ToString());
+            dynamic obj = Activator.CreateInstance(BusinessObj.BaseObj.GetType());
             if(condition is bool){
                 res = (bool)condition;
             }else{
                 var eject = await Evaluator.EvaluateCode(condition, BusinessObj, condition, true, useRoslyn: true); //revisar
                 if(eject != null){
-                    if(eject is bool)
+                    if(eject is bool){
                         res = (bool)eject;
-                    else
+                    }else{
+                        foreach(var prop in data){
+                            var propertyName = prop.Name;
+                            if(propertyName.Equals("rowid")){
+                                propertyName = "Rowid";
+                            }
+                            await SetValueObj(obj, propertyName, prop.Value);
+                        }
                         res = await eject(obj);
+                    }
                 }
             }
-            //var result = await bl.Call("DataEntity", rowid.ToString());
-            // if(result.Success){
-            //     dynamic obj = result.Data;
-            //     if(condition is bool){
-            //         res = (bool)condition;
-            //     }else {
-            //         var eject = await Evaluator.EvaluateCode(condition, BusinessObj, condition, true, useRoslyn: true); //revisar
-            //         if (eject != null){
-            //             if(eject is bool)
-            //                 res = (bool)eject;
-            //             else
-            //                 res = await eject(obj);
-            //         }
-            //     }
-            // }
-
             return res;
         }
 
-        private void SetValueObj(dynamic obj, dynamic propertyName, dynamic value)
+        private async Task SetValueObj(dynamic obj, string propertyName, dynamic value)
         {
             var type = obj.GetType();
             var propertyNameSplit = propertyName.Split('.');
-            if(propertyNameSplit.Length > 1){
-                var property = type.GetProperty(propertyNameSplit[0]);
-                if (property != null){
-                    for (int i = 1; i < propertyNameSplit.Length; i++){
+            string propertyNameAux = propertyNameSplit[0];
+            var property = type.GetProperty(propertyNameAux);
+            if (property != null){
+                for (int i = 0; i < propertyNameSplit.Length; i++){
+                    var propertyType = property.PropertyType;
+                    if(i == propertyNameSplit.Length - 1){
+                        var val = value;
+                        if(propertyType.IsEnum){
+                            var enumType = propertyType;
+                            var EnumValues = Enum.GetValues(enumType);
+                            foreach(var enumValue in EnumValues){
+                                var tagEnum = $"Enum.{enumType.Name}.{enumValue.ToString()}";
+                                var resource = await UtilsManager.GetResource(tagEnum);
+                                if(resource.ToString().Equals(value.ToString())){
+                                    val = enumValue;
+                                    break;
+                                }
+                            }
+                            if(val != null && !val.ToString().Equals(value.ToString())){
+                                property.SetValue(obj, val);
+                            }
+                        }else{
+                            val = Convert.ChangeType(value, propertyType);
+                            property.SetValue(obj, val);
+                        }
+                    }else{
                         var objProp = property.GetValue(obj);
                         if(objProp == null){
-                            objProp = Activator.CreateInstance(property.PropertyType);
+                            objProp = Activator.CreateInstance(propertyType);
                         }
-                        var newName = propertyNameSplit[i];
-                        if(i == propertyNameSplit.Length - 1){
-                            var val = Convert.ChangeType(value, property.PropertyType);
-                            property.SetValue(obj, val);
-                        }else{
-                            property.SetValue(obj, objProp);
-                        }
-                    }
-
-                    // var objProp = property.GetValue(obj);
-                    // if(objProp == null){
-                    //     objProp = Activator.CreateInstance(property.PropertyType);
-                    // }
-                    // var newName = propertyName.Substring(propertyName.IndexOf('.') + 1);
-                    // SetValueObj(objProp, newName, value);
-                    // property.SetValue(obj, objProp);
-                }
-            }else{
-                var property = type.GetProperty(propertyName);
-                if (property != null){
-                    if(!propertyName.Equals("Status")){
-                        var val = Convert.ChangeType(value, property.PropertyType);
-                        property.SetValue(obj, val);
+                        propertyNameAux = propertyNameSplit[i+1];
+                        await SetValueObj(objProp, propertyNameAux, value);
+                        property.SetValue(obj, objProp);
+                        break;
                     }
                 }
             }
@@ -1164,7 +1145,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
                 var eject = await Evaluator.EvaluateCode(button.Action, BusinessObj, button.Action, true, useRoslyn: true); //revisar
                 if (eject != null){
-                    eject(obj);
+                    await eject(obj);
                 }
             }
         }
