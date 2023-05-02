@@ -131,6 +131,8 @@
                         
                 <p>El listar permite enviar acciones personalizadas se agregan a nivel general en el list.json, en el BL el metodo "CustomAction" recibe como parametro un objeto del tipo del registro</p>
                         <SDKTextField CssClass="text-area-demoviewdef" Value="@CustomActions"/>
+                <p>Para deshabilitar u ocultar un CustomActions es posible enviar la propiedad disabled o hidden en el CustomAction, adicionalemente se puede habilitar o deshabilitar dependiendo una condicion añadiendo en los CustomAtributtes las propiedades "sdk-disabled" y "sdk-hide" para deshabilitar y/o ocultar los botones, ambos metodos reciben como parametro el objeto seleccionado y debe retornar un bool que indica si habilita o no el boton.</p>
+                        <SDKTextField CssClass="text-area-demoviewdef" Value="@CustomActionsDisabled"/>
 
                 <p>Utilizando la propiedad CustomAtributtes ahora podemos definir para un campo de tipo Booleano, 
                     las opciones que se mostraran luego de definirlo como tipo Selectbar, enviando el tag del recurso de la siguiente manera:</p>
@@ -346,6 +348,22 @@
                             ///BL
                             public async Task CustomAction([tipo del baseObj] obj){
                                  //Todo lo que se quiera hacer
+                            }
+                            ";
+
+    string CustomActionsDisabled = @"
+                            ""CustomActions"": [{                            
+                            ""Action"": ""CustomAction"",
+                            ""IconClass"": ""fa fa-plus"",
+                            ""Disabled"": ""true"",
+                            ""Hidden"": ""true"",
+                            ""CustomAttributes"": {
+                                ""sdk-disabled"": ""DisableCondition""
+                            }]
+
+                            ///BL
+                            public async Task<bool> DisableCondition([Tipo baseObj] obj){
+                                 var result = true; //Todo: Implement logic return result; 
                             }
                             ";
 
