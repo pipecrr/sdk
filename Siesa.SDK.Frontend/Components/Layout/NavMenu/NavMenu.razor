@@ -42,6 +42,9 @@
         </div>
         @foreach (var menuItem in MenuService?.Menus?.OrderBy(x => x.Order))
         {
+            @if(menuItem.RowidResource == 14010 && (AuthenticationService.User == null || !AuthenticationService.User.IsAdministrator)){
+                continue;
+            }
             <NavMenuItem MenuItem="@menuItem" OnClick="@OnMenuItemClick" Focus="@(SelectedMainMenu == menuItem)" />
         }
     </div>
@@ -70,7 +73,7 @@
             {
                 <div class="nav_profile_btn" @onclick="@(()=> ShowProfileMenu())" data-automation-id="Button_ShowProfileMenu">
                     <div class="nav_btn_standar_icon nav_profile_photo">
-                        <img src="_content/Siesa.SDK.Frontend/assets/img/Profile_default.png" height="36px" alt="imagen perfil">
+                        <img src="@UserPhoto" height="36px" alt="imagen perfil">
                     </div>
                     <div class="nav_btn_standar_text">
                         @AuthenticationService.User
@@ -105,6 +108,9 @@
     private string TitleLogout { get; set; }
 
     private string LogoUrl { get; set; } = "";
+
+    private string UserPhoto { get; set; } = "";
+
     
     public void OnMenuItemClick(E00061_Menu menuItem)
     {
@@ -161,7 +167,8 @@
             });
         }
 
-        LogoUrl = await AuthenticationService.GetConnectionLogo();  
+        LogoUrl = AuthenticationService.GetConnectionLogo();
+        UserPhoto = AuthenticationService.GetUserPhoto();
 
         await base.OnInitializedAsync();
 

@@ -15,7 +15,7 @@
         PickerDisplayMode="DatePickerDisplayMode.Auto"
         field-name="@FieldOpt.Name"
         TimeExpression="@TimeExpression"
-        
+        data-automation-id="@GetDataAutomationId()"
     />
 }
 
@@ -29,5 +29,10 @@
         base.OnInitialized();
         var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
         TimeExpression = (Expression<Func<TTime>>)Expression.Lambda(typeof(Func<>).MakeGenericType(typeof(TTime)), access);
+    }
+
+    private string GetDataAutomationId()
+    {
+        return $"TimeField_{FieldOpt.Name}";
     }
 }

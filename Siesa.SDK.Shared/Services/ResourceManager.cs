@@ -5,11 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using Siesa.SDK.Frontend.Services;
-using Siesa.SDK.Shared.Json;
 using Siesa.SDK.Shared.Services;
+using Siesa.SDK.Shared.Json;
 
-namespace Siesa.SDK.Frontend.Application
+namespace Siesa.SDK.Shared.Services
 {
     public interface IResourceManager {
         public Task<string> GetResource(Int64 resourceRowid, Int64 cultureRowid);
@@ -30,25 +29,33 @@ namespace Siesa.SDK.Frontend.Application
 
         Dictionary<Int64, string> resourceDict = new Dictionary<Int64, string>();
 
-        public SDKBusinessModel Backend {get { return BackendRouterService.Instance.GetSDKBusinessModel("BLResource", null); } }
+        public SDKBusinessModel Backend {get { return BackendRouterServiceBase.Instance.GetSDKBusinessModel("BLResource", null); } }
 
         private IConfiguration Configuration;
 
         private bool IsInitialized = false;
-        public ResourceManager(IConfiguration configuration)
+        public ResourceManager(IConfiguration configuration, bool getAllResource = true)
         {
-            Configuration = configuration;
-            try
+            if(getAllResource)
             {
-                var defaultRowidCulture = Configuration["DefaultRowidCulture"] ?? "1";
-                var cultureRowid = Convert.ToInt64(defaultRowidCulture);
-                this.GetAllResources(cultureRowid);
+                Configuration = configuration;
+                try
+                {
+                    var defaultRowidCulture = Configuration["DefaultRowidCulture"] ?? "1";
+                    var cultureRowid = Convert.ToInt64(defaultRowidCulture);
+                    this.GetAllResources(cultureRowid);
+                }
+                catch (System.Exception)
+                {
+                    Console.WriteLine("no se pudo obtener la cultura por defecto");
+                    IsInitialized = true;
+                }
             }
-            catch (System.Exception)
+            else
             {
-                Console.WriteLine("no se pudo obtener la cultura por defecto");
                 IsInitialized = true;
             }
+
         }
 
         public async Task GetAllResources(Int64 cultureRowid)

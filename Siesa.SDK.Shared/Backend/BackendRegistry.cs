@@ -56,10 +56,11 @@ namespace Siesa.SDK.Shared.Backend
             var response = await client.ValidateAndSaveBusinessObjAsync(request);
             return response;
         }
-        public async Task<Protos.LoadResult> EntityFieldSearch(string business_name, string searchText, string filters, int? top = null, string orderBy = "")
+        public async Task<Protos.LoadResult> EntityFieldSearch(string business_name, string searchText, string filters, int? top = null, string orderBy = "", List<string> extraFields = null)
         {
             var channel = GrpcUtils.GetChannel(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
+            List<string> fields = extraFields ?? new List<string>();
             var request = new Protos.EntityFieldSearchRequest
             {
                 BusinessName = business_name,
@@ -68,7 +69,8 @@ namespace Siesa.SDK.Shared.Backend
                 CurrentUserToken = (AuthenticationService != null && AuthenticationService.UserToken != null ? AuthenticationService.UserToken : ""),
                 CurrentUserRowid = (AuthenticationService != null && AuthenticationService.User != null ? AuthenticationService.User.Rowid: 0),
                 Top = top,
-                OrderBy = orderBy
+                OrderBy = orderBy,
+                ExtraFields = {fields}
             };
             try
             {

@@ -4,8 +4,20 @@
 @using Siesa.SDK.Frontend.Components
 @if (!FieldOpt.Hidden)
 {
-    @FieldTemplate
-    @FieldValidationTemplate
+    @if (FieldOpt.ViewContext == "DetailView")
+    {
+        <p style="word-wrap: break-word">
+            @if (BindValue != null)
+            {
+                @BindValue
+            }
+        </p>
+    }
+    else
+    {
+        @FieldTemplate
+        @FieldValidationTemplate
+    }
 }
 
 

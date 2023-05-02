@@ -87,6 +87,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         private string _viewdefName = "";
 
+        public bool ContainAttachments = false;
+
         [Inject]
         public IBackendRouterService BackendRouterService { get; set; }
         [Inject] 
@@ -121,7 +123,21 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 }
             }
         }
-        
+        private void CreateRelationshipAttachment()
+        {
+            try
+            {
+                var attachment = BusinessObj.BaseObj.GetType().GetProperty("RowidAttachment");
+                if(attachment == null || BusinessName == "BLAttachmentDetail"){
+                    return;
+                }
+                ContainAttachments = true;
+            }
+            catch (System.Exception)
+            {
+                ContainAttachments = false;
+            }
+        }
         private string GetViewdef(string businessName)
         {
             if (String.IsNullOrEmpty(ViewdefName))
@@ -183,6 +199,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         }
         protected virtual async Task InitView(string bName = null)
         {
+            CreateRelationshipAttachment();
+
             Loading = true;
             if (bName == null)
             {
@@ -233,14 +251,47 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             _messageStore = new ValidationMessageStore(EditFormContext);
             EditFormContext.OnValidationRequested += (s, e) => _messageStore.Clear();
             EvaluateDynamicAttributes(null);
+            EvaluateButtonAttributes();
             BusinessObj.ParentComponent = this;
             StateHasChanged();
+        }
+
+        private async Task EvaluateButtonAttributes()
+        {
+            if(FormViewModel.Buttons != null ){
+                foreach (var button in FormViewModel.Buttons){
+                    if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-disabled")){
+                        var disabled = await evaluateCodeButtons(button, "sdk-disabled");
+                        button.Disabled = disabled;
+                    }
+                    if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-hide")){
+                        var hidden = await evaluateCodeButtons(button, "sdk-hide");
+                        button.Hidden = hidden;
+                    }
+                    if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-show")){
+                        var show = await evaluateCodeButtons(button, "sdk-show");
+                        button.Hidden = !show;
+                    }
+                }
+            }
+        }
+        public async Task<bool> evaluateCodeButtons(Button button, string condition){
+            bool disabled = button.Disabled;
+            var sdkDisable = button.CustomAttributes[condition];
+            if(sdkDisable != null){
+                var eject = (bool)await Evaluator.EvaluateCode((string)sdkDisable, BusinessObj); //revisar
+                if(eject != null){
+                    disabled = eject;
+                }
+            }
+            return disabled;
         }
 
         private void EditContext_OnFieldChanged(object sender, FieldChangedEventArgs e)
         {
             _messageStore.Clear(e.FieldIdentifier);
             EvaluateDynamicAttributes(e);
+            EvaluateButtonAttributes();
         }
 
         private void EvaluateDynamicAttributes(FieldChangedEventArgs e)
@@ -411,7 +462,13 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
 
         public async Task<int> savingAttachment(FileField fileField, int rowid = 0){
             SavingFile = true;
-            await fileField.Upload();
+            try{
+                await fileField.Upload();
+            }catch(Exception ex){
+                //TODO: pdte por revision 
+                SavingFile = false;
+                return 0;
+            }
             var horaInicio = DateTime.Now.Minute;
             while(SavingFile){
                 await Task.Delay(100);
