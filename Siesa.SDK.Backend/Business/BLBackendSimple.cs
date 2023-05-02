@@ -650,7 +650,7 @@ namespace Siesa.SDK.Business
             return query;
         }
 
-        public virtual Siesa.SDK.Shared.Business.LoadResult EntityFieldSearch(string searchText, string prefilters = "", int? top = null, string orderBy = "")
+        public virtual Siesa.SDK.Shared.Business.LoadResult EntityFieldSearch(string searchText, string prefilters = "", int? top = null, string orderBy = "", List<string> extraFields = null)
         {
             this._logger.LogInformation($"Field Search {this.GetType().Name}");
             var string_fields = BaseObj.GetType().GetProperties().Where(p => p.PropertyType == typeof(string) && p.GetCustomAttributes().Where(x => x.GetType() == typeof(NotMappedAttribute)).Count() == 0).Select(p => p.Name).ToArray();
@@ -672,7 +672,7 @@ namespace Siesa.SDK.Business
             if (top.HasValue){
                 take = top.Value;
             }
-            return this.GetData(0, take, filter, orderBy, filterDelegate, includeAttachments: false);
+            return this.GetData(0, take, filter, orderBy, filterDelegate, includeAttachments: false, extraFields: extraFields);
         }
 
         [SDKExposedMethod]
@@ -705,12 +705,13 @@ namespace Siesa.SDK.Business
             {
                 context.SetProvider(_provider);
                 var query = context.Set<T>().AsQueryable();
+                string selectedFields = "";
 
                 if(extraFields != null && extraFields.Count > 0)
                 {
                     extraFields.Add("Rowid");
 
-                    var selectedFields = string.Join(",", extraFields.Select(x =>
+                    selectedFields = string.Join(",", extraFields.Select(x =>
                     {
                         var splitInclude = x.Split('.');
                         if (splitInclude.Length > 1) 
@@ -724,8 +725,7 @@ namespace Siesa.SDK.Business
                         return splitInclude[0];
                     }).Distinct());
 
-                    query = query.Select<T>($"new ({selectedFields})");
-
+                    //query = query.Select<T>($"new ({selectedFields})");
                 }
                 else
                 {
@@ -772,6 +772,11 @@ namespace Siesa.SDK.Business
                 }
                 //total data
                 result.TotalCount = total;
+
+                //select data
+                if(!string.IsNullOrEmpty(selectedFields))
+                    query = query.Select<T>($"new ({selectedFields})");
+                    
                 //data
                 result.Data = query.ToList();
             }

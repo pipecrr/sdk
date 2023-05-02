@@ -200,6 +200,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         protected virtual async Task InitView(string bName = null)
         {
             CreateRelationshipAttachment();
+
             Loading = true;
             if (bName == null)
             {
@@ -250,14 +251,47 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             _messageStore = new ValidationMessageStore(EditFormContext);
             EditFormContext.OnValidationRequested += (s, e) => _messageStore.Clear();
             EvaluateDynamicAttributes(null);
+            EvaluateButtonAttributes();
             BusinessObj.ParentComponent = this;
             StateHasChanged();
+        }
+
+        private async Task EvaluateButtonAttributes()
+        {
+            if(FormViewModel.Buttons != null ){
+                foreach (var button in FormViewModel.Buttons){
+                    if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-disabled")){
+                        var disabled = await evaluateCodeButtons(button, "sdk-disabled");
+                        button.Disabled = disabled;
+                    }
+                    if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-hide")){
+                        var hidden = await evaluateCodeButtons(button, "sdk-hide");
+                        button.Hidden = hidden;
+                    }
+                    if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-show")){
+                        var show = await evaluateCodeButtons(button, "sdk-show");
+                        button.Hidden = !show;
+                    }
+                }
+            }
+        }
+        public async Task<bool> evaluateCodeButtons(Button button, string condition){
+            bool disabled = button.Disabled;
+            var sdkDisable = button.CustomAttributes[condition];
+            if(sdkDisable != null){
+                var eject = (bool)await Evaluator.EvaluateCode((string)sdkDisable, BusinessObj); //revisar
+                if(eject != null){
+                    disabled = eject;
+                }
+            }
+            return disabled;
         }
 
         private void EditContext_OnFieldChanged(object sender, FieldChangedEventArgs e)
         {
             _messageStore.Clear(e.FieldIdentifier);
             EvaluateDynamicAttributes(e);
+            EvaluateButtonAttributes();
         }
 
         private void EvaluateDynamicAttributes(FieldChangedEventArgs e)

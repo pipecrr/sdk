@@ -1,20 +1,22 @@
 :root {
     --color_back_body: #F0F3F4;
 
-    --color_primary: #1031a7;
+    --color_primary: #0e79fd;
     --color_secondary: #1864F3;
-    --color_cancel: #808791;
+    --color_cancel: #434343;
     --color_text: #172642;
     --color_border: #CCCCCC;
     --color_back: #FCFCFC;
     --color_back_2: #F0F0F0;
     --color_delete: #c82333;
 
-    --color_primary_dark: #1031a7;
-    --color_primary_light: #2d71ea;
+    --color_primary_dark: #2345cb;
+    --color_primary_light: #5BA4FD;
+    --color_primary_light_2: #e2ecf7;
     --color_cancel_dark: #747d8d;
     --color_text_2: #808791;
     --color_light: #FFFFFF;
+    --color_light_btn: #FFFFFF;
     --color_delete_dark: #bd2130;
 
     --color_siesa_1: #001AAE;
@@ -36,6 +38,9 @@
 
     /* Base: color primario light */
     --color_button_back: linear-gradient(135deg, rgba(45, 113, 234, .3) 0%, rgba(45, 113, 234, 1) 100%);
+    /* Base: color primario light */
+    --color_button_negative_back: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgb(255, 255, 255) 100%);
+
     --color_button_back_180: linear-gradient(180deg, rgba(45, 113, 234, .3) 0%, rgba(45, 113, 234, 1) 100%);
     /* Base: color primario light */
     --color_search_back: linear-gradient(180deg, rgba(45, 113, 234, 0.3) 0%, rgba(45, 113, 234, 1) 100%);
@@ -56,6 +61,7 @@
 
     --border_radius_card_login: 1.25rem;
     --border_radius_standar: .2rem;
+    --border_radius_standar_max: .5rem;
     --border_radius_btn_min: .2rem;
     --border_radius_btn: 1.5rem;
 
@@ -215,23 +221,23 @@ body {
 }
 
 .btn_secondary_def_1 {
-    background-color: var(--color_light) !important;
+    background-color: transparent !important;
     border-color: transparent !important;
     border-radius: var(--border_radius_btn) !important;
     font-weight: 700 !important;
     color: var(--color_primary) !important;
     min-width: 31px;
-    box-shadow: inset 0px 0px 0px 2px var(--color_primary);
+    min-height: 31px;
+    box-shadow: inset 0px 0px 0px 1px var(--color_primary);
 }
 
 .btn_secondary_def_1:hover {
-    background-color: var(--color_back_2) !important;
+    background-color: var(--color_primary) !important;
     border-color: transparent !important;
     border-radius: var(--border_radius_btn) !important;
     font-weight: 700 !important;
-    color: var(--color_primary);
-    min-width: 31px;
-    box-shadow: inset 0px 0px 0px 2px var(--color_primary);
+    color: var(--color_light) !important;
+    box-shadow: inset 0px 0px 0px 1px var(--color_primary);
 }
 
 .btn_secondary_def_1:focus {
@@ -311,6 +317,38 @@ body {
 .btn_ghost_def_2:focus {
     background-color: var(--color_back_2) !important;
     border-color: var(--color_back_2) !important;
+}
+
+.btn_ghost_def_3 {
+    background-color: var(--color_primary_light) !important;
+    border-color: transparent !important;
+    border-radius: var(--border_radius_btn) !important;
+    font-weight: 700 !important;
+    color: var(--color_light);
+    min-width: 31px;
+    box-shadow: inset 0px 0px 0px 2px var(--color_light);
+}
+
+.btn_ghost_def_3:hover,
+.btn_ghost_def_3:active,
+.btn_ghost_def_3:focus {
+    background-color: var(--color_primary_light) !important;
+    border-color: transparent !important;
+    border-radius: var(--border_radius_btn) !important;
+    font-weight: 700 !important;
+    color: var(--color_light);
+    min-width: 31px;
+    box-shadow: inset 0px 0px 0px 2px var(--color_light) !important;
+}
+
+.btn_link_def_1 {
+    padding: 0 !important;
+    color: var(--color_text) !important;
+    font-size: 1rem !important;
+    font-weight: bold !important;
+    text-decoration: underline;
+    text-underline-offset: 0.25rem;
+    margin: 0;
 }
 
 .nav_btn_standar {
@@ -561,7 +599,7 @@ input#collapse_open:checked~.collapse_open_btn>.nav_btn_standar_text {
     min-height: 31px;
     color: var(--color_primary) !important;
     padding: 0.25rem !important;
-    font-size: 1.2rem !important;
+    font-size: 1.3rem !important;
     display: flex !important;
     justify-content: center;
     align-items: center;
@@ -594,6 +632,50 @@ input#collapse_open:checked~.collapse_open_btn>.nav_btn_standar_text {
 .layout_btn_standar-sm:hover i,
 .layout_btn_standar-sm:focus i {
     color: var(--color_light);
+    z-index: 1;
+    transition-duration: .2s;
+}
+
+.layout_btn_negative-sm {
+    max-width: 31px;
+    min-width: 31px;
+    max-height: 31px;
+    min-height: 31px;
+    color: var(--color_light_btn) !important;
+    padding: 0.25rem !important;
+    font-size: 1.35rem !important;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background: none;
+}
+
+.layout_btn_negative-sm::before {
+    content: "";
+    border-radius: var(--border_radius_standar);
+    width: 20%;
+    height: 100%;
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    box-shadow: var(--shadow_standar);
+    background: var(--color_button_negative_back);
+    transition-duration: .2s;
+}
+
+.layout_btn_negative-sm:hover::before,
+.layout_btn_negative-sm:focus::before {
+    width: 100%;
+    opacity: 1;
+    transition-duration: .2s;
+}
+
+.layout_btn_negative-sm:hover i,
+.layout_btn_negative-sm:focus i {
+    color: var(--color_primary);
     z-index: 1;
     transition-duration: .2s;
 }
@@ -646,7 +728,7 @@ input#collapse_open:checked~.collapse_open_btn>.nav_btn_standar_text {
 .whcm_panel_button {
     background: var(--color_light);
     box-shadow: var(--shadow_standar_min);
-    border-radius: var(--border_radius_standar);
+    border-radius: var(--border_radius_standar_max);
     border: none;
     cursor: pointer;
 }
@@ -710,7 +792,7 @@ input#collapse_open:checked~.collapse_open_btn>.nav_btn_standar_text {
 
 .area2 {
     background: var(--color_light);
-    border-radius: var(--border_radius_standar);
+    border-radius: var(--border_radius_standar_max);
     box-shadow: var(--shadow_standar);
     position: relative;
     margin-top: 2.063rem;
@@ -813,7 +895,12 @@ input#collapse_open:checked~.collapse_open_btn>.nav_btn_standar_text {
 }
 
 .whcm_modal_relacion>.rz-dialog-content {
-    /* overflow: unset !important; */
+    overflow: unset !important;
+    background: var(--color_light);
+}
+
+.rz-dialog-wrapper {
+    overflow-y: scroll;
 }
 
 .whcm_select_box>.whcm_select_list>ul {
@@ -1135,17 +1222,58 @@ input#collapse_open:checked~.collapse_open_btn>.nav_btn_standar_text {
     width: 100% !important;
 }
 
-.sdk_card {
-    background-color: var(--color_light);
+.sdk_card{
+    background-color: var(--color_light) !important;
     background-clip: border-box;
-    border: 1px solid rgba(0, 0, 0, .125);
-    border-radius: var(--border_radius_standar);
-    box-shadow: var(--shadow_standar_min);
-}
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: var(--border_radius_standar) !important;
+    box-shadow: var(--shadow_standar_min) !important;
+} 
 
 .sdk_button_box {
-    background-color: var(--color_table_even);
-    border-right: 1px solid rgba(0, 0, 0, .125);
+    background-color: var(--color_primary_light_2);
+    border-top-left-radius: var(--border_radius_standar_max);
+    border-bottom-left-radius: var(--border_radius_standar_max);
+    position: relative;
+}
+
+.sdk_button_box::after {
+    content: '';
+    background: var(--color_primary_light_2);
+    width: 1rem;
+    height: 1rem;
+    position: absolute;
+    right: -1rem;
+    top: 0;
+    border: 1px solid var(--color_primary_light_2);
+    border-radius: 0%;
+    border-top: 0.5rem solid var(--color_primary_light_2);
+    border-right: 0.5rem solid var(--color_light);
+    border-bottom: 0.5rem solid var(--color_light);
+    border-left: 0.5rem solid var(--color_primary_light_2);
+}
+
+.sdk_button_box_2 {
+    background-color: var(--color_primary);
+    border-top-left-radius: var(--border_radius_standar_max);
+    border-bottom-left-radius: var(--border_radius_standar_max);
+    position: relative;
+}
+
+.sdk_button_box_2::after {
+    content: '';
+    background: var(--color_primary);
+    width: 1rem;
+    height: 1rem;
+    position: absolute;
+    right: -1rem;
+    top: 0;
+    border: 1px solid var(--color_primary);
+    border-radius: 0%;
+    border-top: 0.5rem solid var(--color_primary);
+    border-right: 0.5rem solid var(--color_light);
+    border-bottom: 0.5rem solid var(--color_light);
+    border-left: 0.5rem solid var(--color_primary);
 }
 
 .rz-card {

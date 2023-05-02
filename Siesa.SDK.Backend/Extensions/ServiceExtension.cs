@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Siesa.SDK.Shared.Configurations;
+using Siesa.SDK.Shared.Application;
 
 namespace Siesa.SDK.Backend.Extensions
 {
@@ -30,6 +31,7 @@ namespace Siesa.SDK.Backend.Extensions
             services.AddScoped<IFeaturePermissionService, FeaturePermissionService>();
             services.AddSingleton<IBackendRouterService, BackendRouterService>();
             services.AddScoped<EmailService>();
+            services.AddSingleton<IResourceManager, ResourceManager>(sp => ActivatorUtilities.CreateInstance<ResourceManager>(sp, false));
 
             services.AddScoped<ISDKJWT, Siesa.SDK.Backend.Criptography.SDKJWT>();
 

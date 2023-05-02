@@ -21,7 +21,7 @@
     @if(AuthenticationService.GetSelectedConnection().IsTest && !string.IsNullOrEmpty(WatermarkText))
     {
         <div class="sdk-test-watermark" data-watermark="@WatermarkText"></div>
-    }
+    } 
 
     @if(!string.IsNullOrEmpty(AuthenticationService.GetSelectedConnection().StyleUrl))
     {

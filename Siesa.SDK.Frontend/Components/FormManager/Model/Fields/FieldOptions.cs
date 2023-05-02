@@ -81,7 +81,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         public string RelatedBusiness { get; set; } = "";
         public Dictionary<string, string> RelatedFilters { get; set; } = new Dictionary<string, string>(){
         };
-
+        
         public List<List<object>> Filters { get; set; }
 
         public int MinCharsEntityField { get; set; } = 2;
@@ -145,7 +145,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             else
             {             
                 //Split Name
-                string[] fieldPath = Name.Split('.');                
+                string[] fieldPath = Name.Split('.');
                 object currentObject = Utilities.CreateCurrentData(modelObj, fieldPath, typeof(BaseSDK<>));
                 field.ModelObj = currentObject;
                 field.Name = fieldPath[fieldPath.Length - 1];
