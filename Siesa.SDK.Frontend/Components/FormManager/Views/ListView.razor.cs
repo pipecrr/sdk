@@ -29,6 +29,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json.Linq;
+using System.Runtime.CompilerServices;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -968,7 +969,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if(condition is bool){
                 res = (bool)condition;
             }else{
-                var eject = await Evaluator.EvaluateCode(condition, BusinessObj, condition, true, useRoslyn: true); //revisar
+                var eject = await Evaluator.EvaluateCode(condition, BusinessObj);
                 if(eject != null){
                     if(eject is bool){
                         res = (bool)eject;
@@ -980,7 +981,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                             }
                             await SetValueObj(obj, propertyName, prop.Value);
                         }
-                        res = await eject(obj);
+                        MethodInfo methodInfo = (MethodInfo)(eject.GetType().GetProperty("Method").GetValue(eject));
+                        if(methodInfo != null){
+                            if(methodInfo.GetCustomAttributes(typeof(AsyncStateMachineAttribute), false).Length > 0){
+                                res = await eject(obj);
+                            }else{
+                                res = eject(obj);
+                            }
+                        }
                     }
                 }
             }
@@ -1169,7 +1177,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         {
             if (!string.IsNullOrEmpty(button.Action)){
 
-                var eject = await Evaluator.EvaluateCode(button.Action, BusinessObj, button.Action, true, useRoslyn: true); //revisar
+                var eject = await Evaluator.EvaluateCode(button.Action, BusinessObj);
                 if (eject != null){
                     await eject(obj);
                 }
@@ -1262,7 +1270,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                 {
                                     continue;
                                 }
-                                
                                 try
                                 {
                                     var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
