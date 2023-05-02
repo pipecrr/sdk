@@ -22,7 +22,13 @@ namespace Siesa.SDK.Shared.DataAnnotations
             {
                 return validationResult;
             }
-            return new ValidationResult($"{validationResult.ErrorMessage}//{validationContext.ObjectType.Name}.{ validationContext.MemberName }", new string[1] { validationContext.MemberName });
+            var modelTypeName = validationContext.ObjectType.Name;
+            if(modelTypeName.EndsWith("DTO"))
+            {
+            
+                modelTypeName = $"DTO.{modelTypeName.Substring(0, modelTypeName.Length - 3)}";
+            }
+            return new ValidationResult($"{validationResult.ErrorMessage}//{modelTypeName}.{ validationContext.MemberName }", new string[1] { validationContext.MemberName });
         }
     }
 }

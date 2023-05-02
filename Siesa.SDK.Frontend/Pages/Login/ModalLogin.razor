@@ -43,7 +43,7 @@
 @code {
     public string FormID { get; set; } = Guid.NewGuid().ToString();
     public bool loading { get; set; } = false;
-    private Model model = new Model();
+    private SDKLoginModelDTO model = new SDKLoginModelDTO();
     private SDKDbConnection SelectedConnection  { get; set; } = new SDKDbConnection();
     private string error;
     [Parameter]
