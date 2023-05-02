@@ -11,56 +11,45 @@
 @inject UtilsManager UtilManager
 
 
-<div class="col-12 area1 pb-3 px-0">
-    <div class="whcm_recent_box">
-        <div class="pt-3 pl-3 pr-3 pb-0">
-            <h6 class="font-weight-bold m-0 pb-3">
-                <span>
-                    <ResourceViewer ResourceTag="Custom.SDKBreadcrumb.ButtonRecents" RowidCulture=@AuthenticationService.GetRoiwdCulture()/>
-                </span>
-            </h6>
-        </div>
-        <div class="whcm_recent_list">
-                @foreach (var recentMenu in RecentRoutes)
-                {
-                    <a class="sdk_recent_box py-3 px-0" href="@recentMenu.Value.Last().CurrentURL" @onclick:stopPropagation="true">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="position-relative pr-3">
-                                <div class="d-flex justify-content-center align-items-center whcm_dot font_color_primary">
-                                    <i class="@recentMenu.Value.First().IconClass"></i>
-                                </div>
-                                <div class="d-flex justify-content-start align-items-end flex-wrap margenes_box pl-4 pt-1">
-                                    @foreach (var menu in recentMenu.Value)
-                                    {
-                                        if(menu.Type == MenuType.Separator )
-                                        {
-                                            continue;
-                                        }
-                                        <div class="@((menu == recentMenu.Value.Last()) ? "rectangle_borders_active" : "rectangle_borders") d-flex align-items-center">
-                                            @if((menu == recentMenu.Value.Last()) && (menu.Feature != null))
-                                            {
-                                                <p class="font_size_075 p-0 m-0"> <ResourceViewer RowidResource="@menu.Feature.RowidResource" /></p>
-                                            }else
-                                            {
-                                                <p class="font_size_075 p-0 m-0"> <ResourceViewer RowidResource="@menu.RowidResource" /></p>
-                                            }
-                                        </div>
-                                    }
-                                </div>
+@if(_loadingRecentMenu)
+{    
+    @foreach (var recentMenu in RecentRoutes)
+    {
+        <a class="sdk_recent_box py-2 px-0" href="@recentMenu.Value.Last().CurrentURL" @onclick="@ActionClick" @onclick:stopPropagation="true">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="position-relative pr-3">
+                    <div class="d-flex justify-content-center align-items-center whcm_dot font_color_primary">
+                        <i class="@GetIconClass(recentMenu.Value.First())"></i>
+                    </div>
+                    <div class="d-flex justify-content-start align-items-end flex-wrap margenes_box pl-4 pt-1">
+                        @foreach (var menu in recentMenu.Value)
+                        {
+                            if(menu.Type == MenuType.Separator )
+                            {
+                                continue;
+                            }
+                            <div class="@((menu == recentMenu.Value.Last()) ? "rectangle_borders_active" : "rectangle_borders") d-flex align-items-center">
+                                @if((menu == recentMenu.Value.Last()) && (menu.Feature != null))
+                                {
+                                    <p class="font_size_075 p-0 m-0"> <ResourceViewer RowidResource="@menu.Feature.RowidResource" /></p>
+                                }else
+                                {
+                                    <p class="font_size_075 p-0 m-0"> <ResourceViewer RowidResource="@menu.RowidResource" /></p>
+                                }
                             </div>
-                            <div class="p-2 border-left">
-                                <a class="font_color_text" href="@recentMenu.Value.Last().CurrentURL" target="_blank" @onclick:stopPropagation="true">
-                                    <i class="fa-solid fa-arrow-up-right-from-square pointer"></i>
-                                </a>
-                            </div>
-                        </div>
+                        }
+                    </div>
+                </div>
+                <div class="p-2 border-left">
+                    <a class="font_color_text" href="@recentMenu.Value.Last().CurrentURL" target="_blank"  @onclick="@ActionClick" @onclick:stopPropagation="true">
+                        <i class="fa-solid fa-arrow-up-right-from-square pointer"></i>
                     </a>
-                }
+                </div>
+            </div>
+        </a>
+    }
+}
             
-        </div>
-    </div>
-</div>
-
 
 @code
 {
@@ -69,30 +58,20 @@
 
     private string TooltipRecentMenu { get; set; } = "";
 
-    private bool IsOpenRecentMenu { get; set; } = false;
+    private bool _loadingRecentMenu { get; set; } = false;
+
+
+    [Parameter] public EventCallback<MouseEventArgs> Click { get; set; }
     
 
     protected override async Task OnInitializedAsync()
     {
         RecentRoutes = await GetRecentMenus();
+        _loadingRecentMenu = true;
         StateHasChanged();
         base.OnInitialized();        
         TooltipRecentMenu = await UtilManager.GetResource("Custom.SDKBreadcrumb.ButtonRecents.Tooltip");
     }
-
-
-
-    /*private async Task RecentMenuClick()
-    {
-        IsOpenRecentMenu = !IsOpenRecentMenu;
-
-        if(IsOpenRecentMenu)
-        {
-            //RecentRoutes = await GetRecentMenus();
-        }
-        
-        StateHasChanged();
-    }*/
 
     private async Task<Dictionary<int, List<E00061_Menu>>> GetRecentMenus()
     {
@@ -135,26 +114,49 @@
         return _recentRoutes;
     }
 
-    private void OrderRecentMenu(ref List<E00061_Menu> FinalList, E00061_Menu Actualmenu = null){
+    private void OrderRecentMenu(ref List<E00061_Menu> FinalList, E00061_Menu Actualmenu = null)
+    {
         
-                if(Actualmenu != null){
-                    if (Actualmenu.MenuParent != null)
-                    {
-                        var Parent = Actualmenu.MenuParent;
-                        FinalList.Add(Parent);
-                        OrderRecentMenu(ref FinalList, Parent);
-                    }else
-                    {
-                        if(!(FinalList.Contains(Actualmenu)))
-                        {
-                            FinalList.Add(Actualmenu);
-                        }
-                        FinalList.Reverse();  
-                    }
-                }else
+        if(Actualmenu != null){
+            if (Actualmenu.MenuParent != null)
+            {
+                var Parent = Actualmenu.MenuParent;
+                FinalList.Add(Parent);
+                OrderRecentMenu(ref FinalList, Parent);
+            }else
+            {
+                if(!(FinalList.Contains(Actualmenu)))
                 {
-                    var FisrtMenu = FinalList.First();
-                    OrderRecentMenu(ref FinalList, FisrtMenu);
+                    FinalList.Add(Actualmenu);
                 }
+                FinalList.Reverse();  
+            }
+        }else
+        {
+            var FisrtMenu = FinalList.First();
+            OrderRecentMenu(ref FinalList, FisrtMenu);
+        }
+    }
+
+    private string GetIconClass(E00061_Menu MenuItem){
+        if(MenuItem.IconClass != null){
+            //check if contains fontawesome icon style
+            var iconSplit = MenuItem.IconClass.Split(" ");
+            if(iconSplit.Length == 1){
+                return "fa-solid " + MenuItem.IconClass; //TODO: Temporal, cambiar por preferencia de usuario
+            }
+
+            return MenuItem.IconClass;
+        }
+        return "";
+    }
+
+    private void ActionClick (MouseEventArgs Event)
+    {
+        if (Click.HasDelegate)
+        {
+            Click.InvokeAsync(Event);
+            StateHasChanged();
+        }
     }
 }
