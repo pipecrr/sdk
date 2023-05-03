@@ -271,17 +271,22 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
                 }
                 ListViewModel = JsonConvert.DeserializeObject<ListViewModel>(metadata);
+
+                var defaultFields = ListViewModel.Fields.Select(f => f.Name).ToList();
                 
                 if (ListViewModel.ExtraFields.Count > 0)
                 {   
-                    var defaultFields = ListViewModel.Fields.Select(f => f.Name).ToList();
-
                     _extraFields =  ListViewModel.ExtraFields.Select(f => f)
                     .Union(defaultFields)
                     .ToList();
 
                     _extraFields = _extraFields.Select(field => field.Replace("BaseObj.", "")).ToList();
                 }
+                else
+                {
+                    _extraFields = defaultFields.Select(field => field.Replace("BaseObj.", "")).ToList();
+                }
+
                 if(ListViewModel.Buttons != null && ListViewModel.Buttons.Count > 0){
                     var showButton = false;
                     ExtraButtons = new List<Button>();
