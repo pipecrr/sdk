@@ -1006,6 +1006,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     var propertyType = property.PropertyType;
                     if(i == propertyNameSplit.Length - 1){
                         var val = value;
+                        bool isRelation = propertyType != null && propertyType.IsClass && propertyType != typeof(string);
                         if(propertyType.IsEnum){
                             var enumType = propertyType;
                             var EnumValues = Enum.GetValues(enumType);
@@ -1020,9 +1021,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                             if(val != null && !val.ToString().Equals(value.ToString())){
                                 property.SetValue(obj, val);
                             }
-                        }else{
+                        }else if(!isRelation){
                             val = Convert.ChangeType(value, propertyType);
                             property.SetValue(obj, val);
+                        }else{
+                            continue;
                         }
                     }else{
                         var objProp = property.GetValue(obj);
