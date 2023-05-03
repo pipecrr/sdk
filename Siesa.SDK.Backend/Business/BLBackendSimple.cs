@@ -1165,20 +1165,30 @@ namespace Siesa.SDK.Business
                         var Length = splitInclude.Length;
                         if (Length > 1) 
                         {
-                            //Este alias no sería unico, entraria a revisión cuando
-                            //haya un caso donde se necesite
-                            LeftColumns.Add($"{splitInclude[Length-1]} as E{splitInclude[Length-1]}");
                             for (int i = 1; i <= Length; i++)
                             {
                                 var include = string.Join(".", splitInclude.Take(i));
-                                query = query.Include(include);
+
+                                try
+                                {
+                                    var Result = query.Include(include);
+
+                                    if(Result.Any())
+                                    {
+                                        query = Result;
+                                    }
+                                }catch(System.Exception)
+                                {
+                                }
                             }
+                            var Alias = string.Join("", splitInclude);
+                            LeftColumns.Add($"{string.Join(".",splitInclude)} as E{Alias}");
                         }else
                         {
                             LeftColumns.Add($"{x} as E{x}");
                         }
 
-                        return $"{splitInclude[0]}";
+                        return splitInclude[0];
                     }).Distinct());
 
                     query = query.Select<T>($"new ({selectedFields})");
