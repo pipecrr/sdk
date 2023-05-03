@@ -43,17 +43,21 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
                 FormViewModel = JsonConvert.DeserializeObject<FormViewModel>(metadata);
 
-                if (FormViewModel.ExtraFields.Count > 0)
-                {   
-                    var defaultFields = FormViewModel.Panels.SelectMany(panel => panel.Fields)
+                var defaultFields = FormViewModel.Panels.SelectMany(panel => panel.Fields)
                                     .Select(field => field.Name)
                                     .ToList(); 
 
+                if (FormViewModel.ExtraFields.Count > 0)
+                {   
                     _extraFields =  FormViewModel.ExtraFields.Select(f => f)
                     .Union(defaultFields)
                     .ToList();
 
                     _extraFields = _extraFields.Select(field => field.Replace("BaseObj.", "")).ToList();
+                }
+                else
+                {
+                    _extraFields = defaultFields.Select(field => field.Replace("BaseObj.", "")).ToList();
                 }
             }
             catch (System.Exception)
