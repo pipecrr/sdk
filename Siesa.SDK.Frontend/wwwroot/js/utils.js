@@ -98,6 +98,21 @@ function preloadFlex(){
     loadScript("/_content/Siesa.SDK.Frontend/vendor/dexie/dexie.js");
 }
 
+function downloadFileFromStream(fileName, contentStreamReference) {
+    contentStreamReference.arrayBuffer().then(function (arrayBuffer) {
+      var blob = new Blob([arrayBuffer], { type: 'application/octet-stream' });
+      var url = URL.createObjectURL(blob);
+      var anchorElement = document.createElement('a');
+      anchorElement.href = url;
+      anchorElement.download = fileName || '';
+      anchorElement.click();
+      anchorElement.remove();
+      URL.revokeObjectURL(url);
+    });
+  }
+  
+
+window.downloadFileFromStream = downloadFileFromStream;
 window.loadScript = loadScript;
 window.loadCss = loadCss;
 window.createCookie = createCookie;

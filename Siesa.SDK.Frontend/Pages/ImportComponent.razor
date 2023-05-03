@@ -1,0 +1,121 @@
+@page "/{BusinessName}/Import"
+@using System.Reflection
+@attribute [Authorize]
+@using Microsoft.AspNetCore.Authorization
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
+@using Siesa.SDK.Shared.Services
+@using System.IO
+@using System.Text
+
+@inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
+
+@inject IResourceManager ResourceManager
+@inject IAuthenticationService AuthenticationService
+@inject IJSRuntime JSRuntime
+
+
+<h3>servicio de importacion, puedes utilizar un archivo csv para cargar registros a una tabla</h3>
+
+<SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="DescargarDemo" Click="@DownloadDemo" />
+
+
+
+
+@code {
+    
+    [Parameter] public string SubpanelFilter { get; set; }
+    [Parameter] public Action<string> OnClickEdit { get; set; } = null;
+    [Parameter] public Action<string> OnClickDetail { get; set; } = null;
+    [Parameter] public Action<string,string> OnClickDelete { get; set; } = null;
+    [Parameter] public Action OnClickNew { get; set; } = null;
+    [Parameter] public bool AllowCreate { get; set; } = true;
+    [Parameter] public bool AllowEdit { get; set; } = true;
+    [Parameter] public bool AllowDelete { get; set; } = true;
+    [Parameter] public bool AllowDetail { get; set; } = true;
+    [Parameter] public Action<IList<dynamic>> OnSelectedRow { get; set; } = null;
+    [Parameter] public string ViewdefName { get; set; } = "related_list";
+    [Parameter] public IEnumerable<object> Data { get; set; } = null;
+    [Parameter] public bool FromEntityField { get; set; } = false;
+    [Parameter] public bool IsMultiple { get; set; } = false;
+    [Parameter] public IList<dynamic> SelectedItems { get; set; }
+    [Parameter] public dynamic businessObj { get; set; }
+    private RenderFragment RenderMain = null;
+
+    private List<string> Fields = new List<string>();
+    
+    private Stream streamFile = new MemoryStream();
+
+    protected override void OnInitialized()
+    {
+        //ViewType = ViewModels.DynamicViewType.List;
+        base.OnInitialized();  
+    }
+    protected override void SetParameters(dynamic _businessObj, string businessName)
+    {
+
+        
+    }
+    private async Task DownloadDemo()
+    {
+        Type EntityType = BusinessObj.BaseObj.GetType();
+        
+        var EntityFields = EntityType.GetProperties();
+
+        foreach (var field in EntityFields)
+        {
+
+            if(field.PropertyType.FullName.Contains("Siesa.SDK.Entities"))
+                continue;
+
+
+            var FieldName = await ResourceManager.GetResource($"{EntityType.Name}.{field.Name}", AuthenticationService.GetRoiwdCulture()); 
+
+            Fields.Add(FieldName);
+        }
+
+        ///await GetStream(Fields);
+
+        //Escribir el Archivo y descargar
+
+        using (MemoryStream memoryStream = new MemoryStream())
+        {
+            using (StreamWriter streamWriter = new StreamWriter(memoryStream, Encoding.UTF8))
+            {
+                foreach (string columna in Fields)
+                {
+                    streamWriter.Write(columna);
+                    streamWriter.Write(",");
+                }
+
+                streamWriter.WriteLine(); 
+                streamWriter.Flush();
+
+                using var streamRef = new DotNetStreamReference(stream: memoryStream);
+
+                string fileName = $"{EntityType.Name}.csv";
+
+                await JSRuntime.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+            }
+        }  
+
+
+
+    }
+
+    private async Task GetStream(List<string> Fields)
+    {
+        
+    }
+
+    
+    private RenderFragment GetRenderFragment(){
+        if(BusinessObj == null){
+            return null;
+        }
+        MethodInfo method = BusinessObj.GetType().GetMethod("Main");
+        return (RenderFragment)method.Invoke(BusinessObj, null);
+    }
+
+
+}
