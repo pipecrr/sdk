@@ -29,6 +29,10 @@ namespace Siesa.SDK.Backend.Services
             {
                 bcc = new List<string>();
             }
+            if (attachment == null)
+            {
+                attachment = new Dictionary<string, byte[]>();
+            }
 
             var request = await _BackendRouter.GetSDKBusinessModel("BLSDKEmail", _AuthenticationService).Call("SendEmail", subject, body, recipients, cc, bcc, attachment);
 
