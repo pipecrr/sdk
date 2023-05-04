@@ -10,6 +10,9 @@
 @using System.Text
 @using CsvHelper
 @using System.ComponentModel.DataAnnotations.Schema
+@using Microsoft.AspNetCore.Components.Forms
+@using  CsvHelper.Configuration
+@using Siesa.SDK.Frontend.Components.Fields
 
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
 
@@ -28,7 +31,22 @@
 
 <InputFile OnChange="@LoadFiles" />
 
-<SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Importar Inserts" Click="@Import" />
+
+@if (IsLoading)
+{
+    <SDKGrid Data="@Data" TItem="dynamic">
+        <Columns>
+            @foreach (var field in Data)
+            {
+                
+                
+                
+            }
+        </Columns>
+    </SDKGrid>
+    
+}
+
 
 
 
@@ -42,6 +60,10 @@
     private Dictionary<string, string> Fields = new Dictionary<string,string>();
 
     private Type EntityType = null;
+
+    private List<dynamic> Data = new List<dynamic>();
+
+    private bool IsLoading = false;
 
 
     protected override async Task OnInitializedAsync()
@@ -79,10 +101,11 @@
     {
         using (var stream = new MemoryStream())
         {
-            using (var csvwriter = new CsvWriter(new StreamWriter(stream, Encoding.UTF8), CultureInfo.InvariantCulture))
+            using (var CsvWriter = new CsvWriter(new StreamWriter(stream, Encoding.UTF8), CultureInfo.InvariantCulture))
             {
-                csvwriter.WriteField(Fields);
-                csvwriter.Flush();
+                List<string> Headers = Fields.Select(x => x.Value).ToList();
+                CsvWriter.WriteField(Headers);
+                CsvWriter.Flush();
                 byte[] bytes = stream.ToArray();
 
                 string fileName = $"{EntityType.Name}";
@@ -92,9 +115,34 @@
         
     }
 
-    private void LoadFiles(InputFileChangeEventArgs e)
+    private async Task LoadFiles(InputFileChangeEventArgs InputFile)
     {
+        using (var stream = new MemoryStream())
+        {
+            await InputFile.File.OpenReadStream().CopyToAsync(stream);
+            stream.Position = 0;
+            var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                HasHeaderRecord = true
+            };
+
+            using (var CsvReader = new CsvReader(new StreamReader(stream), csvConfig))
+            {
+                var records = CsvReader.GetRecords<dynamic>();
                 
+                foreach (var record in records)
+                {
+                    foreach (KeyValuePair<string, object> kvp in record)
+                    {
+                        Console.WriteLine($"{record}");
+                    }
+
+                }
+            }
+        }
+
+        IsLoading = true;
+        StateHasChanged();     
     }
 
     private RenderFragment GetRenderFragment(){
