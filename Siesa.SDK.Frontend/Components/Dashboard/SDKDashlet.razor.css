@@ -1,0 +1,15 @@
+.sdk-dashlet {
+    max-height: 300px;
+    width: 300px;
+    height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #fff;
+    box-shadow: 0 0 5px #ccc;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}

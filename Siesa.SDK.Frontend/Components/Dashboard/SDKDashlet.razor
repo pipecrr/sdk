@@ -1,0 +1,22 @@
+@using Siesa.SDK.Frontend.Components.Visualization    
+
+<div class="sdk-dashlet">
+    @Item.Title
+</div>
+
+@code {
+    [Parameter]
+    public SDKDashletModel Item { get; set; }
+
+    /*private string GetWidth()
+    {
+        return Item.Width switch
+        {
+            SDKDashletWidth.Full => "100%",
+            SDKDashletWidth.Half => "50%",
+            SDKDashletWidth.Third => "33.33%",
+            SDKDashletWidth.Quarter => "25%",
+            _ => "25%"
+        };
+    }*/
+}
