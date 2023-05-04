@@ -440,7 +440,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 {
                 }
 
-                if (!CanList)
+                if (!CanList && !FromEntityField)
                 {
                     ErrorMsg = "Custom.Generic.Unauthorized";
                     ErrorList.Add("Custom.Generic.Unauthorized");
