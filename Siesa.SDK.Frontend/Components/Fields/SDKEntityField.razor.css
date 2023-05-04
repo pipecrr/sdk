@@ -33,6 +33,7 @@
     border-top-left-radius: 0.2rem;
     border-bottom-left-radius: 0.2rem;
     border-right: transparent;
+    padding: 0px;
 }
 
 .input-badge-container ::deep .whcm_select_list.dropdown-menu.show{

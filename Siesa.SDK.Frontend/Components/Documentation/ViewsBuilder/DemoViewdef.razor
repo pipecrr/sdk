@@ -121,6 +121,18 @@
                 <p>En los botones se pueden especificar en el CustomAttributtes las opciones "sdk-disabled", "sdk-hide" y "sdk-show"</p>
 
                         <SDKTextField CssClass="text-area-demoviewdef" Value="@ButtonsCustomAttributes"/>
+                
+                <p>Para agregar CustomAttributtes en los botones por defecto es necesario agregar un boton con el Id del boton, tambien se pueden agregar las propiedades Disabled y Hidden, los Id permitidos son:</p>
+                    <ul>
+                        <li>Create</li>
+                        <li>Save</li>
+                        <li>Duplicate</li>                        
+                        <li>Edit</li>
+                        <li>List</li>
+                        <li>Delete</li>                        
+                    </ul>
+                <p>Y agregar en el CustomAtributtes las propiedades que desea modificar como se muestra anteriormente, si el id no existe, no se tendra en cuanta el boton, si se envian propiedades adicionales a los botones por defecto no las tendra en cuenta</p>
+                    <SDKTextField CssClass="text-area-demoviewdef" Value="@ButtonsDefaultCustomAttributes"/>
 
                 <p>Por defecto se usa la flex en el listar, para quitar el componente flex en el listar, se agrega "UseFlex: false" en el list.json </p>
                 <p>Tambien se puede especificar que pagine por servidor y el tamaño de la pagina, por defecto el take es 100 y la paginacion servidor en true</p>                    
@@ -326,6 +338,17 @@
                     ""Buttons"": [{
                         ""Action"": ""await MetodoBLFrontend()"",
                         ""Style"": ""secondary"",
+                        ""CustomAttributes"": {
+                            ""sdk-disabled"":""onDisabled()"",
+                            ""sdk-hide"":""onHide()"",
+                            ""sdk-show"":""onShow()""
+                            }
+                        }]";
+
+    string ButtonsDefaultCustomAttributes =@"
+                    ""Buttons"": [{
+                        ""Id"": ""Save"",
+                        ""Disabled"": ""true"",
                         ""CustomAttributes"": {
                             ""sdk-disabled"":""onDisabled()"",
                             ""sdk-hide"":""onHide()"",

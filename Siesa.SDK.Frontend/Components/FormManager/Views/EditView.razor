@@ -12,7 +12,7 @@
 }
 else if (Panels == null || Panels.Count <= 0)
 {
-    <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList"/>
+    <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList" VerifyContext="@ClickInSave"/>
 }
 else if (BusinessObj.BaseObj.Rowid != 0)
 {
@@ -29,7 +29,7 @@ else if (BusinessObj.BaseObj.Rowid != 0)
             <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" />
     }
     <CascadingValue Value="@this">        
-        <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList"/>
+        <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList" VerifyContext="@ClickInSave"/>
     <EditForm id="@FormID"
               OnValidSubmit="@HandleValidSubmit"
               OnInvalidSubmit="@HandleInvalidSubmit"
@@ -80,14 +80,19 @@ else if (BusinessObj.BaseObj.Rowid != 0)
     @if(SetTopBar && !IsSubpanel)
     {
         <PageTitle><ResourceViewer ResourceTag="Action.Edit" /> @BusinessObj</PageTitle>
-        <SetTopBar StyleName="toolbar_edition" HasExtraButtons="@(FormViewModel.Buttons != null && FormViewModel.Buttons.Count > 0 ? true: false)" BusinessObj="@BusinessObj">
+        <SetTopBar StyleName="toolbar_edition" HasExtraButtons="@HasExtraButtons" BusinessObj="@BusinessObj">
             <TopBarTitle><ResourceViewer ResourceTag="Action.Edit" /> @BusinessObj</TopBarTitle>
             <TopBarButtons>
-                <TopBarButton form="@FormID" SubmitFormOnClick="true" ResourceTag="Action.Save" IconCssClass="@GetSaveBtnIcon()" Enabled="@(!Saving)" />
-                @* <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" RenderStyleMode="SDKButtonRenderStyleMode.Text" Click="GoToList" ResourceTag="Action.Cancel" /> *@
+                @if(SaveButton != null){
+                    if(!SaveButton.Hidden){
+                        <TopBarButton form="@FormID" SubmitFormOnClick="true" ResourceTag="Action.Save" IconCssClass="@GetSaveBtnIcon()" Enabled="@(!Saving && !SaveButton.Disabled)" />
+                    }
+                }else{
+                    <TopBarButton form="@FormID" SubmitFormOnClick="true" ResourceTag="Action.Save" IconCssClass="@GetSaveBtnIcon()" Enabled="@(!Saving)" />
+                }
             </TopBarButtons>
             <TopBarExtraButtons>
-                @foreach (var btn in FormViewModel.Buttons)
+                @foreach (var btn in ExtraButtons)
                 {
                     if(!btn.Hidden){
                         <TopBarButton Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" IconCssClass="@btn.IconClass" Enabled="@(!btn.Disabled)"/>

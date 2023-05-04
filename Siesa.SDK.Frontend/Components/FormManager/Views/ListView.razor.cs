@@ -150,8 +150,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private List<Button> CustomActions { get; set; }
         private string WithActions {get; set;} = "120px";
         int count;
-        private bool HasExtraButtons { get; set; } = false;
+        private bool HasExtraButtons { get; set; }
         private List<Button> ExtraButtons { get; set; }
+        private Button CreateButton { get; set; }
         public RadzenDataGrid<object> _gridRef;
 
         public List<FieldOptions> FieldsHidden { get; set; } = new List<FieldOptions>();
@@ -272,7 +273,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 }
                 ListViewModel = JsonConvert.DeserializeObject<ListViewModel>(metadata);
 
-                var defaultFields = ListViewModel.Fields.Select(f => f.Name).ToList();
+                var defaultFields = ListViewModel.Fields.Where(f=> f.CustomComponent == null && f.Name.StartsWith("BaseObj.")).Select(f => f.Name).ToList();
                 
                 if (ListViewModel.ExtraFields.Count > 0)
                 {   
@@ -309,7 +310,21 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                 var show = await evaluateCodeButtons(button, "sdk-show");
                                 button.Hidden= !show;
                             }
-                            ExtraButtons.Add(button);
+                            if(button.Id != null){
+                                if(Enum.TryParse<enumTypeButton>(button.Id, out enumTypeButton typeButton)){
+                                    
+                                    switch (typeButton)
+                                    {
+                                        case enumTypeButton.Create:
+                                            CreateButton = button;
+                                            break;     
+                                        default:
+                                            break;
+                                    }
+                                }
+                            }else{
+                                ExtraButtons.Add(button);
+                            }
                         }
                     }
                     if(ExtraButtons.Count > 0){
@@ -1186,8 +1201,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if (!string.IsNullOrEmpty(button.Action)){
 
                 var eject = await Evaluator.EvaluateCode(button.Action, BusinessObj);
-                if (eject != null){
-                    await eject(obj);
+                MethodInfo methodInfo = (MethodInfo)(eject.GetType().GetProperty("Method").GetValue(eject));
+                if(methodInfo != null){
+                    if(methodInfo.GetCustomAttributes(typeof(AsyncStateMachineAttribute), false).Length > 0){
+                        await eject(obj);
+                    }else{
+                        eject(obj);
+                    }
                 }
             }
         }
@@ -1264,53 +1284,56 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     "sdk-show",
                     "sdk-hide",
                 }; //TODO: Enum
-                for (int i = 0; i < ListViewModel.Fields.Count; i++)
+                if(ListViewModel != null && ListViewModel.Fields != null)
                 {
-                    var field = ListViewModel.Fields[i];
-                    if (field.CustomAttributes != null)
+                    for (int i = 0; i < ListViewModel.Fields.Count; i++) //fix error null
                     {
-                        _ = Task.Run(async () =>
+                        var field = ListViewModel.Fields[i];
+                        if (field.CustomAttributes != null)
                         {
-                            bool shouldUpdate = false;
-                            foreach (var attr in field.CustomAttributes)
+                            _ = Task.Run(async () =>
                             {
-                                if(!allowAttr.Contains(attr.Key))
+                                bool shouldUpdate = false;
+                                foreach (var attr in field.CustomAttributes)
                                 {
-                                    continue;
-                                }
-                                try
-                                {
-                                    var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
-                                    switch (attr.Key)
+                                    if(!allowAttr.Contains(attr.Key))
                                     {
-                                        case "sdk-show":
-                                            if(field.Hidden != !result)
-                                            {
-                                                field.Hidden = !result;
-                                                shouldUpdate = true;
-                                            }
-                                            break;
-                                        case "sdk-hide":
-                                            if(field.Hidden != result)
-                                            {
-                                                field.Hidden = result;
-                                                shouldUpdate = true;
-                                            }
-                                            break;
-                                        default:
-                                            break;
+                                        continue;
+                                    }
+                                    try
+                                    {
+                                        var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
+                                        switch (attr.Key)
+                                        {
+                                            case "sdk-show":
+                                                if(field.Hidden != !result)
+                                                {
+                                                    field.Hidden = !result;
+                                                    shouldUpdate = true;
+                                                }
+                                                break;
+                                            case "sdk-hide":
+                                                if(field.Hidden != result)
+                                                {
+                                                    field.Hidden = result;
+                                                    shouldUpdate = true;
+                                                }
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                    }
+                                    catch (System.Exception ex)
+                                    {
+                                        Console.WriteLine($"Error: {ex.Message}");
                                     }
                                 }
-                                catch (System.Exception ex)
+                                if(shouldUpdate)
                                 {
-                                    Console.WriteLine($"Error: {ex.Message}");
+                                    _ = InvokeAsync(() => StateHasChanged());
                                 }
-                            }
-                            if(shouldUpdate)
-                            {
-                                _ = InvokeAsync(() => StateHasChanged());
-                            }
-                        });
+                            });
+                        }
                     }
                 }
 

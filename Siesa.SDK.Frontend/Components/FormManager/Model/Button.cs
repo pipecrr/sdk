@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using DevExpress.Blazor;
+﻿using System.Collections.Generic;
 using Siesa.SDK.Components.Visualization;
-using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Model
 {
@@ -25,7 +22,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
                 };
             }
         } //TODO: Encapsular SDKButtonRenderStyle
-        public string Style { get; set; } 
+        public string Style { get; set; }
         public string Action { get; set; }
 
         public string Target { get; set; } = "_self";
@@ -35,5 +32,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         public bool Disabled { get; set; }
         public bool Hidden { get; set; }
         public Dictionary<string, object> CustomAttributes { get; set; }
+        public string Id { get; set; }
     }
 }

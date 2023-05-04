@@ -44,6 +44,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 FormViewModel = JsonConvert.DeserializeObject<FormViewModel>(metadata);
 
                 var defaultFields = FormViewModel.Panels.SelectMany(panel => panel.Fields)
+                                    .Where(f=> f.CustomComponent == null && f.Name.StartsWith("BaseObj."))
                                     .Select(field => field.Name)
                                     .ToList(); 
 
