@@ -991,101 +991,6 @@ namespace Siesa.SDK.Business
             }
         }
 
-        // private Expression GetInExpression(Expression ColumNameProperty, List<int> RowidRecords)
-        // {
-        //     RowidRecords = RowidRecords.Distinct().ToList();
-
-        //     Type ColumNameType = ColumNameProperty.Type;
-        //     Expression InExpression = Expression.Equal(ColumNameProperty, Expression.Constant(RowidRecords[0], ColumNameType));
-
-        //     for (int i = 1; i < RowidRecords.Count; i++)
-        //     {
-        //         var OrValueExpression = Expression.Equal(ColumNameProperty, Expression.Constant(RowidRecords[i], ColumNameType));
-        //         InExpression = Expression.Or(InExpression, OrValueExpression);
-        //     }
-
-        //     return InExpression;
-        // }
-
-        // [SDKExposedMethod]
-        // public ActionResult<dynamic> GetDataFromU(int RowidDataVisibilityGroup, int RowidUser, List<int> RowidRecords)
-        // {
-        //     try
-        //     {
-        //         if(RowidDataVisibilityGroup <= 0 && RowidUser <= 0)
-        //             throw new Exception("Invalid parameters");
-
-        //         var _assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
-        //         var _assemblySelect = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
-
-        //         //Actualmente no hay necesidad de incluir las foraneas
-
-        //         var Property = BaseObj.GetType();
-
-        //         var Namespace = Property.Namespace;
-        //         var Name = Property.Name;
-        //         Name = Name.Replace(Name[0], 'U');
-
-        //         var DynamicEntityType = Utilities.SearchType($"{Namespace}.{Name}", true);
-
-        //         ParameterExpression pe = Expression.Parameter(DynamicEntityType, DynamicEntityType.Name);
-
-        //         using(var Context = CreateDbContext())
-        //         {
-        //             var DataFound = Context.GetType().GetMethod("Set", types: Type.EmptyTypes)
-        //                         .MakeGenericMethod(DynamicEntityType)
-        //                         .Invoke(Context, null);
-
-        //             Expression CoincidenceExpression;
-        //             Expression ColumnNameProperty;
-        //             Expression ColumnValue;
-
-        //             if(RowidDataVisibilityGroup > 0)
-        //             {
-        //                 ColumnNameProperty = Expression.Property(pe, "RowidDataVisibilityGroup");
-        //                 ColumnValue = Expression.Constant(RowidDataVisibilityGroup, typeof(int?));
-        //             }else
-        //             {
-        //                 ColumnNameProperty = Expression.Property(pe, "RowidUser");
-        //                 ColumnValue = Expression.Constant(RowidUser, typeof(int?));
-        //             }
-
-        //             CoincidenceExpression = Expression.Equal(ColumnNameProperty, ColumnValue);
-
-        //             if(RowidRecords.Any())
-        //             {
-        //                 var RowidRecordProperty = Expression.Property(pe, "RowidRecord");
-        //                 var InExpression = GetInExpression(RowidRecordProperty, RowidRecords);
-        //                 CoincidenceExpression = Expression.And(CoincidenceExpression, InExpression);
-        //             }
-
-        //             var funcExpression = typeof(Func<,>).MakeGenericType(new Type[] { DynamicEntityType, typeof(bool) });
-        //             var returnExp = Expression.Lambda(funcExpression, CoincidenceExpression, new ParameterExpression[] { pe });
-
-        //             var whereMethod = typeof(IQueryable<object>).GetExtensionMethod(_assemblySelect, "Where", new[] { typeof(IQueryable<object>), typeof(LambdaExpression) });
-
-        //             var whereMethodGeneric = whereMethod.MakeGenericMethod(DynamicEntityType);
-
-        //             DataFound = whereMethodGeneric.Invoke(DataFound, new object[] { DataFound, returnExp });
-
-        //             var dynamicListMethod = typeof(IEnumerable).GetExtensionMethod(_assemblyDynamic, "ToDynamicList", new[] { typeof(IEnumerable) });
-        //             var dynamicList = dynamicListMethod.Invoke(DataFound, new object[] { DataFound });
-
-        //             return new ActionResult<dynamic>()
-        //             {
-        //                 Success = true,
-        //                 Data = dynamicList
-        //             };
-        //         }
-        //     }
-        //     catch (Exception e)
-        //     {
-        //         return new BadRequestResult<dynamic>(){
-        //             Errors = new List<string>(){e.Message}
-        //         };
-        //     }
-        // }
-
         private string GetUTableEntity()
         {
             var dataAnnotation = typeof(T).GetCustomAttributes(typeof(SDKAuthorization), false);
@@ -1106,9 +1011,7 @@ namespace Siesa.SDK.Business
 
             //Replace the first character of the table name with the letter "u"
             if (TableName.Length > 0)
-            {
                 TableName = "U" + TableName.Substring(1);
-            }
 
             TableName = $"{typeof(T).Namespace}.{TableName}";
             return TableName;
@@ -1255,6 +1158,7 @@ namespace Siesa.SDK.Business
             return context;
         }
 
+        //To-Do : Mejorar el filtrado, actualmente sólo recibe: x == y
         private IQueryable GetUFilter(Type DynamicEntityType, dynamic authSet, string Filter)
         {
             if(string.IsNullOrEmpty(Filter))
@@ -1294,6 +1198,77 @@ namespace Siesa.SDK.Business
             authSet = whereMethodGeneric.Invoke(authSet, new object[] { authSet, returnExp });
 
             return authSet;
+        }
+
+        [SDKExposedMethod]
+        public ActionResult<dynamic> UGetByUserType(int Rowid, PermissionUserTypes UserType)
+        {
+            try
+            {
+                this._logger.LogInformation($"Get general UObject by UserType {this.GetType().Name}");
+
+                dynamic Result = null;
+                var UTableName = GetUTableEntity();
+                Type DynamicEntityType = typeof(T).Assembly.GetType(UTableName);
+
+                var RowidRecordType = DynamicEntityType.GetProperty("RowidRecord");
+
+                var pe = Expression.Parameter(DynamicEntityType, DynamicEntityType.Name);
+
+                Expression ColumnNameProperty = Expression.Property(pe, "RowidRecord");
+                Expression ColumnValue = Expression.Constant(null, typeof(int?));
+
+                //RowidRecord is null
+                Expression CoincidenceExpression = Expression.Equal(ColumnNameProperty, ColumnValue);
+
+                switch (UserType)
+                {
+                    case PermissionUserTypes.Team:
+                        ColumnNameProperty = Expression.Property(pe, "RowidDataVisibilityGroup");
+                        break;
+                    case PermissionUserTypes.User:
+                        ColumnNameProperty = Expression.Property(pe, "RowidUser");
+                        break;
+                    default:
+                        throw new ArgumentNullException("UserType not supported");
+                }
+
+                ColumnValue = Expression.Constant(Rowid, typeof(int?));
+
+                CoincidenceExpression = Expression.And(CoincidenceExpression, Expression.Equal(ColumnNameProperty, ColumnValue));
+
+                var funcExpression = typeof(Func<,>).MakeGenericType(new Type[] { DynamicEntityType, typeof(bool) });
+                var returnExp = Expression.Lambda(funcExpression, CoincidenceExpression, new ParameterExpression[] { pe });
+
+                var _assemblySelect = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
+
+                var whereMethod = typeof(IQueryable<object>).GetExtensionMethod(_assemblySelect, "Where", new[] { typeof(IQueryable<object>), typeof(LambdaExpression) });
+
+                var whereMethodGeneric = whereMethod.MakeGenericMethod(DynamicEntityType);
+
+                var _assemblyFirstOrDefault = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
+                var FirstOrDefaultMethod = typeof(IQueryable).GetExtensionMethod(_assemblyFirstOrDefault, "FirstOrDefault", new[] { typeof(IQueryable) });
+
+                using(var context = CreateDbContext())
+                {
+                    dynamic Table = context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(DynamicEntityType).Invoke(context, null);
+
+                    var DbSet = Table.AsQueryable();
+
+                    DbSet = whereMethodGeneric.Invoke(DbSet, new object[] { DbSet, returnExp });
+
+                    Result = FirstOrDefaultMethod.Invoke(DbSet, new object[] { DbSet });
+                }
+                return new ActionResult<dynamic>()
+                {
+                    Success = true,
+                    Data = Result
+                };
+            }
+            catch (Exception e)
+            {
+                return new BadRequestResult<dynamic>(){Errors = new List<string>(){e.Message}};
+            }
         }
 
     }

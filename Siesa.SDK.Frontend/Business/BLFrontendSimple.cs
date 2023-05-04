@@ -24,6 +24,7 @@ using Siesa.SDK.Shared.DTOS;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.Extensions.DependencyInjection;
+using Siesa.Global.Enums;
 
 namespace Siesa.SDK.Business
 {
@@ -524,6 +525,17 @@ namespace Siesa.SDK.Business
 
         public virtual RenderFragment Main(){
             return null;
+        }
+
+        public async Task<dynamic> GetUByUserType(int Rowid, PermissionUserTypes UserType)
+        {
+            dynamic Result = null;
+            var Request = await Backend.Call("UGetByUserType", Rowid, UserType);
+
+            if(Request.Success)
+                Result = Request.Data;
+
+            return Result;
         }
     }
 }
