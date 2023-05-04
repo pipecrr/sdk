@@ -1196,8 +1196,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if (!string.IsNullOrEmpty(button.Action)){
 
                 var eject = await Evaluator.EvaluateCode(button.Action, BusinessObj);
-                if (eject != null){
-                    await eject(obj);
+                MethodInfo methodInfo = (MethodInfo)(eject.GetType().GetProperty("Method").GetValue(eject));
+                if(methodInfo != null){
+                    if(methodInfo.GetCustomAttributes(typeof(AsyncStateMachineAttribute), false).Length > 0){
+                        await eject(obj);
+                    }else{
+                        eject(obj);
+                    }
                 }
             }
         }
