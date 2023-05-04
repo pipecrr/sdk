@@ -1262,6 +1262,9 @@ namespace Siesa.SDK.Business
 
                     if(ExtraFields.Any())
                     {
+                        if(ExtraFields.Any(x => x.Contains(".")))
+                            throw new Exception("Foreign keys attributes are not supported to this method");
+
                         ExtraFields.Add("Rowid");
                         ExtraFields.Add(ColumnName);
 
@@ -1269,9 +1272,16 @@ namespace Siesa.SDK.Business
 
                         var strSelect = string.Join(",", ExtraFields);
                         DbSet = selectMethod.Invoke(DbSet, new object[] { DbSet, $"new ({strSelect})", null });
-                    }
 
-                    Result = FirstOrDefaultMethod.Invoke(DbSet, new object[] { DbSet });
+                        var AnonymousValue = FirstOrDefaultMethod.Invoke(DbSet, new object[] { DbSet });
+
+                        var JsonAnonymousValue = JsonConvert.SerializeObject(AnonymousValue);
+
+                        Result = JsonConvert.DeserializeObject(JsonAnonymousValue, type: DynamicEntityType);
+                    }else
+                    {
+                        Result = FirstOrDefaultMethod.Invoke(DbSet, new object[] { DbSet });
+                    }
                 }
                 return new ActionResult<dynamic>()
                 {

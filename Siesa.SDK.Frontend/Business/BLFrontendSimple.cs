@@ -537,9 +537,7 @@ namespace Siesa.SDK.Business
             var Request = await Backend.Call("UGetByUserType", Rowid, UserType, ExtraFields);
 
             if(Request.Success)
-            {
                 Result = Request.Data;
-            }
 
             return Result;
         }
