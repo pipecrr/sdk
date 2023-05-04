@@ -17,9 +17,14 @@
 @inject IJSRuntime JSRuntime
 
 
-<h3>servicio de importacion, puedes utilizar un archivo csv para cargar registros a una tabla</h3>
+<h3>Descargue el demo para este BL</h3>
 
-<SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="DescargarDemo" Click="@Download" />
+<SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Descargar Demo" Click="@Download" />
+
+
+<h3>Importar Archivo CSV</h3>
+
+<SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Importar Inserts" Click="@Import" />
 
 
 
@@ -28,8 +33,40 @@
     [Parameter] public dynamic businessObj { get; set; }
     
     private RenderFragment RenderMain = null;
+    
 
-    private List<string> Fields = new List<string>();
+    private Dictionary<string, string> Fields = new Dictionery<string,string>();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetEntityFields();
+    
+
+        base.OnInitialized();  
+    }
+
+    private async Task GetEntityFields()
+    {
+        Type EntityType = BusinessObj.BaseObj.GetType();
+                
+        var _bannedTypes = new List<Type>() { typeof(byte[]) };
+
+        var EntityFields = EntityType.GetProperties().Where(p => p.PropertyType.IsClass
+                                                            && p.PropertyType.IsPrimitive
+                                                            && p.PropertyType.IsEnum
+                                                            && !_bannedTypes.Contains(p.PropertyType)
+                                                            && !p.Name != "RowVersion"
+                                                            && p.GetCustomAttribute(typeof(NotMappedAttribute)) == null
+                                                            ).Select(p => p.Name).ToArray();
+
+        foreach (var field in EntityFields)
+        {
+            var FieldName = await ResourceManager.GetResource($"{EntityType.Name}.{field.Name}", AuthenticationService.GetRoiwdCulture()); 
+
+            Fields.Add(field.Name,FieldName);
+        }
+    }
 
     private async Task Download()
     {
@@ -37,23 +74,6 @@
         {
             using (var csvwriter = new CsvWriter(new StreamWriter(stream, Encoding.UTF8), CultureInfo.InvariantCulture))
             {
-                Type EntityType = BusinessObj.BaseObj.GetType();
-        
-                var EntityFields = EntityType.GetProperties();
-
-                foreach (var field in EntityFields)
-                {
-
-                    if(field.PropertyType.FullName.Contains("Siesa.SDK.Entities"))
-                        continue;
-
-
-                    var FieldName = await ResourceManager.GetResource($"{EntityType.Name}.{field.Name}", AuthenticationService.GetRoiwdCulture()); 
-
-                    Fields.Add(FieldName);
-                    
-                }
-                //csvwriter.WriteRecords(Headers);
                 csvwriter.WriteField(Fields);
                 csvwriter.Flush();
                 byte[] bytes = stream.ToArray();
@@ -65,20 +85,6 @@
         
     }
 
-
-    protected override void OnInitialized()
-    {
-        //ViewType = ViewModels.DynamicViewType.List;
-        base.OnInitialized();  
-    }
-
-    protected override void SetParameters(dynamic _businessObj, string businessName)
-    {
-
-        
-    }
-
-    
     private RenderFragment GetRenderFragment(){
         if(BusinessObj == null){
             return null;
