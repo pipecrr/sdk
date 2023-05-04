@@ -106,8 +106,8 @@
 
 @media (max-width: 991.98px) { 
     ::deep  .rz-steps > ul li {
-        max-width: 16.6666%;
-        min-width: 16.6666%;
+        max-width: 14.2%;
+        min-width: 14.2%;
     }
     ::deep .rz-steps-title {
         font-size: 0.75rem;
@@ -115,14 +115,14 @@
 }
 @media (max-width: 767.98px) { 
     ::deep  .rz-steps > ul li {
-        max-width: 16.6666%;
-        min-width: 16.6666%;
+        max-width: 14.2%;
+        min-width: 14.2%;
     }
 }
 @media (max-width: 575.98px) { 
     ::deep  .rz-steps > ul li {
-        max-width: 16.6666%;
-        min-width: 16.6666%;
+        max-width: 14.2%;
+        min-width: 14.2%;
     }
     ::deep  .rz-steps-title {
         font-size: 0.6rem;
