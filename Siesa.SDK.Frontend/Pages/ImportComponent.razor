@@ -19,7 +19,7 @@
 
 <h3>servicio de importacion, puedes utilizar un archivo csv para cargar registros a una tabla</h3>
 
-<SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="DescargarDemo" Click="@DownloadDemo" />
+<SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="DescargarDemo" Click="@Download" />
 
 
 
@@ -29,62 +29,53 @@
     
     private RenderFragment RenderMain = null;
 
-    private List<HeadersCsv> Headers = new List<HeadersCsv>();
-    
-    private Stream streamFile = new MemoryStream();
+    private List<string> Fields = new List<string>();
 
-    protected override void OnInitialized()
+    private async Task Download()
     {
-        //ViewType = ViewModels.DynamicViewType.List;
-        base.OnInitialized();  
-    }
-    protected override void SetParameters(dynamic _businessObj, string businessName)
-    {
-
-        
-    }
-    private async Task DownloadDemo()
-    {
-        Type EntityType = BusinessObj.BaseObj.GetType();
-        
-        var EntityFields = EntityType.GetProperties();
-
-        foreach (var field in EntityFields)
-        {
-
-            if(field.PropertyType.FullName.Contains("Siesa.SDK.Entities"))
-                continue;
-
-
-            var FieldName = await ResourceManager.GetResource($"{EntityType.Name}.{field.Name}", AuthenticationService.GetRoiwdCulture()); 
-
-            Headers.Add(new HeadersCsv(){ColumnName = FieldName});
-        }
-
-
         using (var stream = new MemoryStream())
         {
             using (var csvwriter = new CsvWriter(new StreamWriter(stream, Encoding.UTF8), CultureInfo.InvariantCulture))
             {
-                csvwriter.WriteRecords(Headers);
+                Type EntityType = BusinessObj.BaseObj.GetType();
+        
+                var EntityFields = EntityType.GetProperties();
+
+                foreach (var field in EntityFields)
+                {
+
+                    if(field.PropertyType.FullName.Contains("Siesa.SDK.Entities"))
+                        continue;
+
+
+                    var FieldName = await ResourceManager.GetResource($"{EntityType.Name}.{field.Name}", AuthenticationService.GetRoiwdCulture()); 
+
+                    Fields.Add(FieldName);
+                    
+                }
+                //csvwriter.WriteRecords(Headers);
+                csvwriter.WriteField(Fields);
                 csvwriter.Flush();
                 byte[] bytes = stream.ToArray();
 
-                string fileName = $"{EntityType.Name}.csv";
+                string fileName = $"{EntityType.Name}";
                 await JSRuntime.InvokeVoidAsync("downloadFileFromStream", fileName, bytes);
             }
         }
         
     }
 
-    private async Task GetStream(List<string> Headers)
+
+    protected override void OnInitialized()
     {
-        
+        //ViewType = ViewModels.DynamicViewType.List;
+        base.OnInitialized();  
     }
 
-    public class HeadersCsv 
+    protected override void SetParameters(dynamic _businessObj, string businessName)
     {
-        public string ColumnName { get; set; }
+
+        
     }
 
     

@@ -99,7 +99,7 @@ function preloadFlex(){
 }
 
 function downloadFileFromStream(fileName, bytes) {
-    var blob = new Blob([bytes], { type: 'text/csv' });
+    var blob = new Blob([bytes], {type: "text/csv" });
     var url = URL.createObjectURL(blob);
     var anchorElement = document.createElement('a');
     anchorElement.href = url;
