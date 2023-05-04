@@ -272,7 +272,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 }
                 ListViewModel = JsonConvert.DeserializeObject<ListViewModel>(metadata);
 
-                var defaultFields = ListViewModel.Fields.Select(f => f.Name).ToList();
+                var defaultFields = ListViewModel.Fields.Where(f=> f.CustomComponent == null && f.Name.StartsWith("BaseObj.")).Select(f => f.Name).ToList();
                 
                 if (ListViewModel.ExtraFields.Count > 0)
                 {   
@@ -1264,53 +1264,56 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     "sdk-show",
                     "sdk-hide",
                 }; //TODO: Enum
-                for (int i = 0; i < ListViewModel.Fields.Count; i++)
+                if(ListViewModel != null && ListViewModel.Fields != null)
                 {
-                    var field = ListViewModel.Fields[i];
-                    if (field.CustomAttributes != null)
+                    for (int i = 0; i < ListViewModel.Fields.Count; i++) //fix error null
                     {
-                        _ = Task.Run(async () =>
+                        var field = ListViewModel.Fields[i];
+                        if (field.CustomAttributes != null)
                         {
-                            bool shouldUpdate = false;
-                            foreach (var attr in field.CustomAttributes)
+                            _ = Task.Run(async () =>
                             {
-                                if(!allowAttr.Contains(attr.Key))
+                                bool shouldUpdate = false;
+                                foreach (var attr in field.CustomAttributes)
                                 {
-                                    continue;
-                                }
-                                try
-                                {
-                                    var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
-                                    switch (attr.Key)
+                                    if(!allowAttr.Contains(attr.Key))
                                     {
-                                        case "sdk-show":
-                                            if(field.Hidden != !result)
-                                            {
-                                                field.Hidden = !result;
-                                                shouldUpdate = true;
-                                            }
-                                            break;
-                                        case "sdk-hide":
-                                            if(field.Hidden != result)
-                                            {
-                                                field.Hidden = result;
-                                                shouldUpdate = true;
-                                            }
-                                            break;
-                                        default:
-                                            break;
+                                        continue;
+                                    }
+                                    try
+                                    {
+                                        var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
+                                        switch (attr.Key)
+                                        {
+                                            case "sdk-show":
+                                                if(field.Hidden != !result)
+                                                {
+                                                    field.Hidden = !result;
+                                                    shouldUpdate = true;
+                                                }
+                                                break;
+                                            case "sdk-hide":
+                                                if(field.Hidden != result)
+                                                {
+                                                    field.Hidden = result;
+                                                    shouldUpdate = true;
+                                                }
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                    }
+                                    catch (System.Exception ex)
+                                    {
+                                        Console.WriteLine($"Error: {ex.Message}");
                                     }
                                 }
-                                catch (System.Exception ex)
+                                if(shouldUpdate)
                                 {
-                                    Console.WriteLine($"Error: {ex.Message}");
+                                    _ = InvokeAsync(() => StateHasChanged());
                                 }
-                            }
-                            if(shouldUpdate)
-                            {
-                                _ = InvokeAsync(() => StateHasChanged());
-                            }
-                        });
+                            });
+                        }
                     }
                 }
 
