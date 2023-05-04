@@ -9,6 +9,7 @@
 @using System.IO
 @using System.Text
 @using CsvHelper
+@using System.ComponentModel.DataAnnotations.Schema
 
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
 
@@ -24,6 +25,9 @@
 
 <h3>Importar Archivo CSV</h3>
 
+
+<InputFile OnChange="@LoadFiles" />
+
 <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Importar Inserts" Click="@Import" />
 
 
@@ -35,36 +39,39 @@
     private RenderFragment RenderMain = null;
     
 
-    private Dictionary<string, string> Fields = new Dictionery<string,string>();
+    private Dictionary<string, string> Fields = new Dictionary<string,string>();
+
+    private Type EntityType = null;
 
 
     protected override async Task OnInitializedAsync()
     {
         await GetEntityFields();
-    
 
         base.OnInitialized();  
     }
 
     private async Task GetEntityFields()
-    {
-        Type EntityType = BusinessObj.BaseObj.GetType();
-                
-        var _bannedTypes = new List<Type>() { typeof(byte[]) };
+    {   
+        EntityType = BusinessObj.BaseObj.GetType();
+        var EntityFields = EntityType.GetProperties();
 
-        var EntityFields = EntityType.GetProperties().Where(p => p.PropertyType.IsClass
-                                                            && p.PropertyType.IsPrimitive
-                                                            && p.PropertyType.IsEnum
-                                                            && !_bannedTypes.Contains(p.PropertyType)
-                                                            && !p.Name != "RowVersion"
-                                                            && p.GetCustomAttribute(typeof(NotMappedAttribute)) == null
-                                                            ).Select(p => p.Name).ToArray();
+        var _bannedTypes = new List<Type>() { typeof(byte[]),  typeof(string) };
 
-        foreach (var field in EntityFields)
+        var ignoreEntityFields = EntityType.GetProperties().Where(
+                                                     p => p.PropertyType.IsClass
+                                                                    && !p.PropertyType.IsPrimitive
+                                                                    && !p.PropertyType.IsEnum
+                                                                    && !_bannedTypes.Contains(p.PropertyType)
+                                                                    && p.Name != "RowVersion"
+                                                                    && p.GetCustomAttribute(typeof(NotMappedAttribute)) == null
+                                                     ).Select(p => p.Name).ToArray();
+
+        foreach (var field in EntityFields.Where(x=> !ignoreEntityFields.Contains(x.Name)).ToList())
         {
-            var FieldName = await ResourceManager.GetResource($"{EntityType.Name}.{field.Name}", AuthenticationService.GetRoiwdCulture()); 
+            var ResourceName = await ResourceManager.GetResource($"{EntityType.Name}.{field.Name}", AuthenticationService.GetRoiwdCulture()); 
 
-            Fields.Add(field.Name,FieldName);
+            Fields.Add(field.Name , ResourceName);
         }
     }
 
@@ -83,6 +90,11 @@
             }
         }
         
+    }
+
+    private void LoadFiles(InputFileChangeEventArgs e)
+    {
+                
     }
 
     private RenderFragment GetRenderFragment(){
