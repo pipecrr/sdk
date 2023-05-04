@@ -19,6 +19,7 @@ using Siesa.SDK.Shared.DTOS;
 using Siesa.SDK.Frontend.Components.FormManager.Fields;
 using Siesa.SDK.Frontend.Extension;
 using Microsoft.Extensions.Configuration;
+using Siesa.Global.Enums;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 {
@@ -106,6 +107,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         public Dictionary<string, FileField> FileFields = new Dictionary<string, FileField>();
         public SDKFileUploadDTO DataAttatchmentDetail { get; set; }
+
+        public bool ClickInSave { get; set; }
+        public bool HasExtraButtons { get; set; }
+        public List<Button> ExtraButtons { get; set; }
+        public Button SaveButton { get; set; }
         protected virtual async Task CheckPermissions()
         {
             if (FeaturePermissionService != null && !String.IsNullOrEmpty(BusinessName))
@@ -188,6 +194,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         public void Refresh(bool Reload = false){
             EvaluateDynamicAttributes(null);
+            EvaluateButtonAttributes();
             try
             {
                 StateHasChanged();
@@ -259,6 +266,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         private async Task EvaluateButtonAttributes()
         {
             if(FormViewModel.Buttons != null ){
+                ExtraButtons = new List<Button>();
                 foreach (var button in FormViewModel.Buttons){
                     if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-disabled")){
                         var disabled = await evaluateCodeButtons(button, "sdk-disabled");
@@ -272,7 +280,23 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                         var show = await evaluateCodeButtons(button, "sdk-show");
                         button.Hidden = !show;
                     }
+                    if(button.Id != null){
+                        if(Enum.TryParse<enumTypeButton>(button.Id, out enumTypeButton typeButton)){
+                            switch (typeButton)
+                            {
+                                case enumTypeButton.Save:
+                                    SaveButton = button;
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    }else{
+                        ExtraButtons.Add(button);
+                    }
                 }
+                HasExtraButtons = ExtraButtons.Count > 0;
+                _ = InvokeAsync(() => StateHasChanged());
             }
         }
         public async Task<bool> evaluateCodeButtons(Button button, string condition){
@@ -615,6 +639,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
             ErrorMsg = "";
             ErrorList.Clear();
             await SaveBusiness();
+            ClickInSave = true;
         }
         protected void HandleInvalidSubmit()
         {
@@ -627,6 +652,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
             }else{
                 ErrorList.Clear();
             }
+            ClickInSave = true;
         }
         protected void GoToList()
         {

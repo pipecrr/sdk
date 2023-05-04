@@ -150,8 +150,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private List<Button> CustomActions { get; set; }
         private string WithActions {get; set;} = "120px";
         int count;
-        private bool HasExtraButtons { get; set; } = false;
+        private bool HasExtraButtons { get; set; }
         private List<Button> ExtraButtons { get; set; }
+        private Button CreateButton { get; set; }
         public RadzenDataGrid<object> _gridRef;
 
         public List<FieldOptions> FieldsHidden { get; set; } = new List<FieldOptions>();
@@ -309,7 +310,21 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                 var show = await evaluateCodeButtons(button, "sdk-show");
                                 button.Hidden= !show;
                             }
-                            ExtraButtons.Add(button);
+                            if(button.Id != null){
+                                if(Enum.TryParse<enumTypeButton>(button.Id, out enumTypeButton typeButton)){
+                                    
+                                    switch (typeButton)
+                                    {
+                                        case enumTypeButton.Create:
+                                            CreateButton = button;
+                                            break;     
+                                        default:
+                                            break;
+                                    }
+                                }
+                            }else{
+                                ExtraButtons.Add(button);
+                            }
                         }
                     }
                     if(ExtraButtons.Count > 0){
@@ -1186,8 +1201,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if (!string.IsNullOrEmpty(button.Action)){
 
                 var eject = await Evaluator.EvaluateCode(button.Action, BusinessObj);
-                if (eject != null){
-                    await eject(obj);
+                MethodInfo methodInfo = (MethodInfo)(eject.GetType().GetProperty("Method").GetValue(eject));
+                if(methodInfo != null){
+                    if(methodInfo.GetCustomAttributes(typeof(AsyncStateMachineAttribute), false).Length > 0){
+                        await eject(obj);
+                    }else{
+                        eject(obj);
+                    }
                 }
             }
         }
