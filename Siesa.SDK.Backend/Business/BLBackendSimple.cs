@@ -1201,7 +1201,7 @@ namespace Siesa.SDK.Business
         }
 
         [SDKExposedMethod]
-        public ActionResult<dynamic> UGetByUserType(int Rowid, PermissionUserTypes UserType)
+        public ActionResult<dynamic> UGetByUserType(int Rowid, PermissionUserTypes UserType, List<string> ExtraFields)
         {
             try
             {
@@ -1221,17 +1221,23 @@ namespace Siesa.SDK.Business
                 //RowidRecord is null
                 Expression CoincidenceExpression = Expression.Equal(ColumnNameProperty, ColumnValue);
 
+                string ColumnName;
+
                 switch (UserType)
                 {
                     case PermissionUserTypes.Team:
-                        ColumnNameProperty = Expression.Property(pe, "RowidDataVisibilityGroup");
+                        ColumnName = "RowidDataVisibilityGroup";
                         break;
                     case PermissionUserTypes.User:
-                        ColumnNameProperty = Expression.Property(pe, "RowidUser");
+                        ColumnName = "RowidUser";
                         break;
                     default:
                         throw new ArgumentNullException("UserType not supported");
                 }
+
+                var _assemblyDynamicQueryable = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
+
+                ColumnNameProperty = Expression.Property(pe, ColumnName);
 
                 ColumnValue = Expression.Constant(Rowid, typeof(int?));
 
@@ -1240,14 +1246,11 @@ namespace Siesa.SDK.Business
                 var funcExpression = typeof(Func<,>).MakeGenericType(new Type[] { DynamicEntityType, typeof(bool) });
                 var returnExp = Expression.Lambda(funcExpression, CoincidenceExpression, new ParameterExpression[] { pe });
 
-                var _assemblySelect = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
-
-                var whereMethod = typeof(IQueryable<object>).GetExtensionMethod(_assemblySelect, "Where", new[] { typeof(IQueryable<object>), typeof(LambdaExpression) });
+                var whereMethod = typeof(IQueryable<object>).GetExtensionMethod(_assemblyDynamicQueryable, "Where", new[] { typeof(IQueryable<object>), typeof(LambdaExpression) });
 
                 var whereMethodGeneric = whereMethod.MakeGenericMethod(DynamicEntityType);
 
-                var _assemblyFirstOrDefault = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
-                var FirstOrDefaultMethod = typeof(IQueryable).GetExtensionMethod(_assemblyFirstOrDefault, "FirstOrDefault", new[] { typeof(IQueryable) });
+                var FirstOrDefaultMethod = typeof(IQueryable).GetExtensionMethod(_assemblyDynamicQueryable, "FirstOrDefault", new[] { typeof(IQueryable) });
 
                 using(var context = CreateDbContext())
                 {
@@ -1256,6 +1259,17 @@ namespace Siesa.SDK.Business
                     var DbSet = Table.AsQueryable();
 
                     DbSet = whereMethodGeneric.Invoke(DbSet, new object[] { DbSet, returnExp });
+
+                    if(ExtraFields.Any())
+                    {
+                        ExtraFields.Add("Rowid");
+                        ExtraFields.Add(ColumnName);
+
+                        var selectMethod = typeof(IQueryable).GetExtensionMethod(_assemblyDynamicQueryable, "Select", new[] { typeof(IQueryable), typeof(string), typeof(object[]) });
+
+                        var strSelect = string.Join(",", ExtraFields);
+                        DbSet = selectMethod.Invoke(DbSet, new object[] { DbSet, $"new ({strSelect})", null });
+                    }
 
                     Result = FirstOrDefaultMethod.Invoke(DbSet, new object[] { DbSet });
                 }

@@ -527,13 +527,19 @@ namespace Siesa.SDK.Business
             return null;
         }
 
-        public async Task<dynamic> GetUByUserType(int Rowid, PermissionUserTypes UserType)
+        public async Task<dynamic> GetUByUserType(int Rowid, PermissionUserTypes UserType, List<string> ExtraFields = null)
         {
             dynamic Result = null;
-            var Request = await Backend.Call("UGetByUserType", Rowid, UserType);
+
+            if(ExtraFields == null)
+                ExtraFields = new(){"AuthorizationType", "RestrictionType"};
+
+            var Request = await Backend.Call("UGetByUserType", Rowid, UserType, ExtraFields);
 
             if(Request.Success)
+            {
                 Result = Request.Data;
+            }
 
             return Result;
         }
