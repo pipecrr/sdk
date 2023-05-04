@@ -73,4 +73,14 @@ namespace Siesa.Global.Enums
 		EmailField = 4,
 		RadioButtonField = 5
 	}
+
+	public enum enumTypeButton
+	{
+		Create = 1,
+		Save = 2,
+		Duplicate = 3,
+		Edit = 4,
+		List = 5,
+		Delete = 6
+	}
 }
