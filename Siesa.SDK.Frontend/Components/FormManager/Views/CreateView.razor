@@ -21,7 +21,7 @@
 else if (Panels == null || Panels.Count <= 0)
 {
     @* <ResourceViewer ResourceTag="Custom.Formview.NotDefinition" /> *@
-    <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList"/>
+    <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList" VerifyContext="@ClickInSave"/>
 } else if (BusinessObj.BaseObj != null)
 {
     @if(IsSubpanel && ShowTitle){        

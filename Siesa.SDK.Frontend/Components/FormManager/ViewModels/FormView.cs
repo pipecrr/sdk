@@ -108,6 +108,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public Dictionary<string, FileField> FileFields = new Dictionary<string, FileField>();
         public SDKFileUploadDTO DataAttatchmentDetail { get; set; }
 
+        public bool ClickInSave { get; set; }
         public bool HasExtraButtons { get; set; }
         public List<Button> ExtraButtons { get; set; }
         public Button SaveButton { get; set; }
@@ -638,6 +639,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
             ErrorMsg = "";
             ErrorList.Clear();
             await SaveBusiness();
+            ClickInSave = true;
         }
         protected void HandleInvalidSubmit()
         {
@@ -650,6 +652,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
             }else{
                 ErrorList.Clear();
             }
+            ClickInSave = true;
         }
         protected void GoToList()
         {
