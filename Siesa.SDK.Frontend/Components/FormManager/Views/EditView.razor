@@ -12,7 +12,7 @@
 }
 else if (Panels == null || Panels.Count <= 0)
 {
-    <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList"/>
+    <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList" VerifyContext="@ClickInSave"/>
 }
 else if (BusinessObj.BaseObj.Rowid != 0)
 {

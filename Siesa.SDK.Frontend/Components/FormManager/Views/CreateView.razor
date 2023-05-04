@@ -38,7 +38,7 @@ else if (Panels == null || Panels.Count <= 0)
         <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" isCreateView="true"/>
     }
     <CascadingValue Value="@this">
-       <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList"/>
+       <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList" VerifyContext="@ClickInSave"/>
     <EditForm id="@FormID"
               OnValidSubmit="@HandleValidSubmit"
               OnInvalidSubmit="@HandleInvalidSubmit"
