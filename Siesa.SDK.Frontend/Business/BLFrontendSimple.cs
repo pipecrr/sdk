@@ -541,5 +541,17 @@ namespace Siesa.SDK.Business
 
             return Result;
         }
+
+        public async Task<string> ManageUData(List<UObjectDTO> Data)
+        {
+            string Result = string.Empty;
+
+            var Request = await Backend.Call("ManageUData", Data);
+
+            if(Request.Success)
+                Result = Request.Data;
+
+            return Result;
+        }
     }
 }

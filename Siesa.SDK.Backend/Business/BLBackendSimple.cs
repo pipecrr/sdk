@@ -1120,8 +1120,6 @@ namespace Siesa.SDK.Business
                 Type _typeLeftJoinExtension = typeof(LeftJoinExtension);
                 var leftJoinMethod = _typeLeftJoinExtension.GetMethod("LeftJoin");
 
-                // List<string> RightColumns = new(){"Rowid as URowid", "UserType as UserType", "AuthorizationType as AuthorizationType", "RestrictionType as RestrictionType"};
-
                 var CoincidenceResult = leftJoinMethod.Invoke(null, new object[]{query, authSet, "Rowid", "RowidRecord", LeftColumns, RightColumns});
 
                 var _assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
@@ -1295,6 +1293,31 @@ namespace Siesa.SDK.Business
             }
         }
 
+        [SDKExposedMethod]
+        public ActionResult<string> ManageUData(List<UObjectDTO> Data)
+        {
+            try
+            {
+                this._logger.LogInformation($"Manage U data {this.GetType().Name} - Create, Update, Delete");
+
+                int TotalAdded = 0;
+                int TotalUpdated = 0;
+                int TotalDelete = 0;
+
+                var UTableName = GetUTableEntity();
+                Type DynamicEntityType = typeof(T).Assembly.GetType(UTableName);
+
+                return new ActionResult<string>()
+                {
+                    Success = false,
+                    Data = $"TotalAdded: {TotalAdded}, TotalUpdated: {TotalUpdated}, TotalDelete: {TotalDelete}"
+                };
+            }
+            catch (Exception e)
+            {
+                return new BadRequestResult<string>(){Errors = new List<string>(){e.Message}};
+            }
+        }
     }
 
 }
