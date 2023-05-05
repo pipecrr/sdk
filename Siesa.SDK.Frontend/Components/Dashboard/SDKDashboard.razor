@@ -1,11 +1,12 @@
 @using Siesa.SDK.Frontend.Components.Layout
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Plk.Blazor.DragDrop
+@using Siesa.SDK.Shared.Application
 @implements IDisposable
 
 <div class="dash_back">
-    <Dropzone Items="_dashlets" Class="w-100 sdk-dashboard">
-        <SDKDashlet Item="@context" />
+    <Dropzone Items="@SDKApp.Dashlets" Class="w-100 sdk-dashboard">
+        <InternalSDKDashlet Item="@context" />
     </Dropzone>
 </div>
 
@@ -17,18 +18,6 @@
     private List<SDKDashletModel> _dashlets;
     protected override async Task OnInitializedAsync()
     {
-        var ndashlets = 4;
-        _dashlets = new List<SDKDashletModel>();
-        for(var i=0; i<ndashlets; i++)
-        {
-            _dashlets.Add(new SDKDashletModel()
-            {
-                Title = $"Dashlet {i}",
-                Description = $"Dashlet {i}",
-                Icon = "fas fa-chart-line",
-            });
-        }
-
         MainLayout.SetDefaultArea(false);
         await base.OnInitializedAsync();
     }

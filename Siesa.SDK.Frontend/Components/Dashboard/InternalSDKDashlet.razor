@@ -1,0 +1,42 @@
+@using Siesa.SDK.Frontend.Components.Visualization 
+@using Microsoft.Extensions.DependencyInjection  
+@using Microsoft.AspNetCore.Components 
+@inject IServiceProvider ServiceProvider
+<div class="sdk-dashlet">
+    @GetDashlet()?.Title
+    <DynamicComponent Type="@Item" @ref="DynamicComponentRef" />
+</div>
+
+@code {
+    [Parameter]
+    public Type Item { get; set; }
+
+    private Microsoft.AspNetCore.Components.DynamicComponent DynamicComponentRef { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+
+    private SDKDashlet GetDashlet()
+    {
+        if(DynamicComponentRef == null)
+        {
+            return null;
+        }
+
+        return DynamicComponentRef.Instance as SDKDashlet;
+    }
+
+    /*private string GetWidth()
+    {
+        return Item.Width switch
+        {
+            SDKDashletWidth.Full => "100%",
+            SDKDashletWidth.Half => "50%",
+            SDKDashletWidth.Third => "33.33%",
+            SDKDashletWidth.Quarter => "25%",
+            _ => "25%"
+        };
+    }*/
+}
