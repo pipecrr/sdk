@@ -41,6 +41,8 @@ else if (BusinessObj != null)
     [Parameter] public IList<dynamic> SelectedItems { get; set; }
     
     [Parameter] public dynamic businessObj { get; set; }
+
+    [Parameter] public bool UseFlex { get; set; } = true;
     private RenderFragment RenderMain = null;
     protected override void OnInitialized()
     {
@@ -67,6 +69,7 @@ else if (BusinessObj != null)
             new_params.Add("FromEntityField", FromEntityField);
             new_params.Add("IsMultiple", IsMultiple);
             new_params.Add("SelectedItems", SelectedItems);
+            new_params.Add("UseFlex", UseFlex);
             if (IsSubpanel)
             {
                 new_params.Add("IsSubpanel", true);

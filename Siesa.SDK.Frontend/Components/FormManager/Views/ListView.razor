@@ -20,7 +20,7 @@ else if(!string.IsNullOrEmpty(ErrorMsg) || ErrorList.Any())
 else
 {
      @if(IsSubpanel){
-        UseFlex = false;
+        //UseFlex = false;
     }
     @if(ShowSearchForm && HasSearchViewdef)
     {
@@ -361,14 +361,8 @@ else
                     <TopBarButton Click="GoToEditFlex" ResourceTag="Action.EditListFlex" IconCssClass="fa-solid fa-pen" />
                 }                
                 @if((CanCreate && AllowCreate) && !_isEditingFlex)
-                {   
-                    if(CreateButton!=null){
-                        if(!CreateButton.Hidden){
-                            <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus" Enabled="@(!CreateButton.Disabled)"/>    
-                        }
-                    }else{
-                        <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus"/>
-                    }
+                {
+                    <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus" />
                 }
             </TopBarButtons>
             <TopBarExtraButtons>
