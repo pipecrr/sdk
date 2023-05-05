@@ -13,6 +13,8 @@
 @using Microsoft.AspNetCore.Components.Forms
 @using  CsvHelper.Configuration
 @using Siesa.SDK.Frontend.Components.Fields
+@using System.Dynamic
+@using Newtonsoft.Json;
 
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
 
@@ -20,42 +22,60 @@
 @inject IAuthenticationService AuthenticationService
 @inject IJSRuntime JSRuntime
 
-
-<h3>Descargue el demo para este BL</h3>
-
-<SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Descargar Demo" Click="@Download" />
-
-
-<h3>Importar Archivo CSV</h3>
-
-
-<InputFile OnChange="@LoadFiles" />
-
-
-@if (IsLoading)
+@if (IsImportFile)
 {
-    <SDKGrid Data="@Data" TItem="dynamic">
-        <Columns>
-            @foreach (var field in Data)
-            {
+    <h3>Descargar Demo:</h3>
+
+    <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Descargar Demo" Click="@Download" />
+
+
+    <h3>Importar Archivo CSV</h3>
+
+    <InputFile OnChange="@LoadFiles" />
+
+
+    @if (IsLoadingGrid)
+    {
+        <h3> Previsualización de los primeros registros del archivo cargado:</h3>
+
+        @if (Data != null && Data.Count > 0)
+        {     
+            <SDKGrid TItem="dynamic"  Data="@Data">
+                <Columns>
                 
-                
-                
-            }
-        </Columns>
-    </SDKGrid>
-    
+                    @foreach (var propertyKey in ((System.Dynamic.ExpandoObject)Data.FirstOrDefault())?.Select(x => x.Key))
+                    {
+                        <SDKGridColumn TItem="dynamic" Property="@propertyKey" Title="@propertyKey">
+                            <Template Context="data">
+                                @if (data != null)
+                                {
+                                    @GetPropertyValue(data, propertyKey)
+                                }
+                            </Template>
+                        </SDKGridColumn>
+                    }
+                </Columns>
+            </SDKGrid>
+
+            <br />
+
+            <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Siguiente" Click="@MappaingData" />
+
+        }else
+        {
+            <p>No se encontraron registros en el Archivo </p>
+        }
+    }
+}else
+{
+    <h3>Confirme los campos e importe</h3>
+
+    <p>La siguiente tabla contiene todos los campos del módulo que se puede relacionar a los datos en el archivo de importación. Si el archivo contiene una fila de cabecera, las columnas en el archivo han sido asignadas a los campos de importación. Compruebe las asignaciones para asegurarse de que son lo que usted espera, y hacer los cambios, según sea necesario. Para ayudarte a comprobar las asignaciones, la fila 1 muestra los datos en el archivo.</p>
 }
 
 
 
-
-
 @code {
-    [Parameter] public dynamic businessObj { get; set; }
-    
-    private RenderFragment RenderMain = null;
-    
 
     private Dictionary<string, string> Fields = new Dictionary<string,string>();
 
@@ -63,9 +83,18 @@
 
     private List<dynamic> Data = new List<dynamic>();
 
-    private bool IsLoading = false;
+    private bool IsLoadingGrid = false;
 
+    private bool IsImportFile = true;
 
+    private List<dynamic> MappedData = new List<dynamic>();
+
+    private object GetPropertyValue(System.Dynamic.ExpandoObject obj, string propertyName)
+    {
+        return ((IDictionary<string, object>)obj)[propertyName];
+    }
+
+ 
     protected override async Task OnInitializedAsync()
     {
         await GetEntityFields();
@@ -93,7 +122,7 @@
         {
             var ResourceName = await ResourceManager.GetResource($"{EntityType.Name}.{field.Name}", AuthenticationService.GetRoiwdCulture()); 
 
-            Fields.Add(field.Name , ResourceName);
+            Fields.Add(ResourceName,field.Name);
         }
     }
 
@@ -103,7 +132,7 @@
         {
             using (var CsvWriter = new CsvWriter(new StreamWriter(stream, Encoding.UTF8), CultureInfo.InvariantCulture))
             {
-                List<string> Headers = Fields.Select(x => x.Value).ToList();
+                List<string> Headers = Fields.Select(x => x.Key).ToList();
                 CsvWriter.WriteField(Headers);
                 CsvWriter.Flush();
                 byte[] bytes = stream.ToArray();
@@ -117,6 +146,8 @@
 
     private async Task LoadFiles(InputFileChangeEventArgs InputFile)
     {
+        Data = new List<dynamic>();
+        IsLoadingGrid = false;
         using (var stream = new MemoryStream())
         {
             await InputFile.File.OpenReadStream().CopyToAsync(stream);
@@ -129,29 +160,43 @@
             using (var CsvReader = new CsvReader(new StreamReader(stream), csvConfig))
             {
                 var records = CsvReader.GetRecords<dynamic>();
-                
+
                 foreach (var record in records)
-                {
-                    foreach (KeyValuePair<string, object> kvp in record)
+                {                    
+                    ExpandoObject obj = new ExpandoObject();
+
+                    foreach(var prop in record) 
                     {
-                        Console.WriteLine($"{record}");
+                        var key = prop.Key;
+                        var value = prop.Value;
+                        ((IDictionary<string, object>)obj).Add(key, value);
                     }
 
+                    Data.Add(obj);
                 }
             }
         }
 
-        IsLoading = true;
-        StateHasChanged();     
+        IsLoadingGrid = true;
+        _ = InvokeAsync(() => StateHasChanged());     
     }
 
-    private RenderFragment GetRenderFragment(){
-        if(BusinessObj == null){
-            return null;
+    private async Task MappaingData()
+    {
+        foreach (var item in Data)
+        {
+            foreach(var prop in item) 
+            {     
+                if(Fields.ContainsKey(prop.Key))
+                    {
+                        var field = Fields[prop.Key];
+
+                        MappedData.Add(new { field = field});
+                    }
+            }
         }
-        MethodInfo method = BusinessObj.GetType().GetMethod("Main");
-        return (RenderFragment)method.Invoke(BusinessObj, null);
+
+        IsImportFile = false;
+        _ = InvokeAsync(() => StateHasChanged());
     }
-
-
 }
