@@ -1298,6 +1298,9 @@ namespace Siesa.SDK.Business
         {
             try
             {
+                if(!Data.Any())
+                    throw new Exception("Data is required");
+
                 this._logger.LogInformation($"Manage U data {this.GetType().Name} - Create, Update, Delete");
 
                 int TotalAdded = 0;
