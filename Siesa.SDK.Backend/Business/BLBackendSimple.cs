@@ -1330,6 +1330,26 @@ namespace Siesa.SDK.Business
 
                     if(TotalUpdated > 0)
                     {
+                        var RowidsToUpdate = DataToUpdate.Select(x => (int) x.GetType().GetProperty("Rowid").GetValue(x)).ToList();
+
+                        var InExpression = GetInExpression(RowidColumn, RowidsToUpdate);
+                        var RowsToUpdate = GetWhereExpression(DbSet, DynamicEntityType, InExpression, EntityExpression);
+                        var ListToUpdate = GetDynamicList(RowsToUpdate);
+
+                        foreach (var Item in ListToUpdate)
+                        {
+                            var ObjectUpdated = DataToUpdate.Where(x => (int) x.GetType().GetProperty("Rowid").GetValue(x) == Item.Rowid)
+                                                            .First();
+
+                            var RestrictionTypeProperty = ObjectUpdated.GetType().GetProperty("RestrictionType");
+                            var AuthorizationTypeProperty = ObjectUpdated.GetType().GetProperty("AuthorizationType");
+
+                            var NewRestrictionType = RestrictionTypeProperty.GetValue(ObjectUpdated);
+                            var NewAuthorizationType = AuthorizationTypeProperty.GetValue(ObjectUpdated);
+
+                            RestrictionTypeProperty.SetValue(Item, NewRestrictionType);
+                            AuthorizationTypeProperty.SetValue(Item, NewAuthorizationType);
+                        }
 
                     }
 
