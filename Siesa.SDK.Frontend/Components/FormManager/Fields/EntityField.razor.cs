@@ -22,9 +22,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
             string OnReadyStr = (string)FieldOpt.CustomAttributes?.Where(x => x.Key == "sdk-ready").FirstOrDefault().Value;
 
             if (!string.IsNullOrEmpty(OnReadyStr))
-            {                
-                var ejec = await Evaluator.EvaluateCode(OnReadyStr, BaseModelObj, OnReadyStr, true, useRoslyn: true); //revisar
-                OnReady = (Action<List<dynamic>>)ejec;
+            {
+                var ejec = await Evaluator.EvaluateCode(OnReadyStr, BaseModelObj);
+                if(ejec != null){
+                    OnReady = (Action<List<dynamic>>)ejec;
+                }
             }
         }
     }

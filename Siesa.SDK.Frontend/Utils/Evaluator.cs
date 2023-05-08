@@ -94,21 +94,14 @@ namespace Siesa.SDK.Frontend.Utils
             }
         }
 
-        public static async Task<object> EvaluateCode(string code, object globals, string action = "", bool createDelegate = false, bool useRoslyn = false)
+        public static async Task<object> EvaluateCode(string code, object globals, bool useRoslyn = false)
         {
             if(useRoslyn)
             {
                 object result;
                 try
                 {
-                    if(createDelegate){
-                        var script = CSharpScript.Create("",  options: ScriptOptions.Default.WithImports("System"), globalsType: globals.GetType());
-                        var scriptAction = script.ContinueWith(action);
-                        var scriptDelegate = scriptAction.CreateDelegate();
-                        result = await scriptDelegate.Invoke(globals);
-                    }else{
-                        result = await CSharpScript.EvaluateAsync(code, options: ScriptOptions.Default.WithImports("System"), globals: globals);
-                    }
+                    result = await CSharpScript.EvaluateAsync(code, options: ScriptOptions.Default.WithImports("System"), globals: globals);
                 }
                 catch (Exception ex)
                 {
