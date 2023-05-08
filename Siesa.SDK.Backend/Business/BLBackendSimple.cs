@@ -1184,16 +1184,7 @@ namespace Siesa.SDK.Business
 
             CoincidenceExpression = Expression.Equal(ColumnNameProperty, ColumnValue);
 
-            var funcExpression = typeof(Func<,>).MakeGenericType(new Type[] { DynamicEntityType, typeof(bool) });
-            var returnExp = Expression.Lambda(funcExpression, CoincidenceExpression, new ParameterExpression[] { pe });
-
-            var _assemblySelect = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
-
-            var whereMethod = typeof(IQueryable<object>).GetExtensionMethod(_assemblySelect, "Where", new[] { typeof(IQueryable<object>), typeof(LambdaExpression) });
-
-            var whereMethodGeneric = whereMethod.MakeGenericMethod(DynamicEntityType);
-
-            authSet = whereMethodGeneric.Invoke(authSet, new object[] { authSet, returnExp });
+            authSet = GetWhereExpression(authSet, DynamicEntityType, CoincidenceExpression, pe);
 
             return authSet;
         }
@@ -1211,9 +1202,9 @@ namespace Siesa.SDK.Business
 
                 var RowidRecordType = DynamicEntityType.GetProperty("RowidRecord");
 
-                var pe = Expression.Parameter(DynamicEntityType, DynamicEntityType.Name);
+                var EntityExpression = Expression.Parameter(DynamicEntityType, DynamicEntityType.Name);
 
-                Expression ColumnNameProperty = Expression.Property(pe, "RowidRecord");
+                Expression ColumnNameProperty = Expression.Property(EntityExpression, "RowidRecord");
                 Expression ColumnValue = Expression.Constant(null, typeof(int?));
 
                 //RowidRecord is null
@@ -1235,18 +1226,11 @@ namespace Siesa.SDK.Business
 
                 var _assemblyDynamicQueryable = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
 
-                ColumnNameProperty = Expression.Property(pe, ColumnName);
+                ColumnNameProperty = Expression.Property(EntityExpression, ColumnName);
 
                 ColumnValue = Expression.Constant(Rowid, typeof(int?));
 
                 CoincidenceExpression = Expression.And(CoincidenceExpression, Expression.Equal(ColumnNameProperty, ColumnValue));
-
-                var funcExpression = typeof(Func<,>).MakeGenericType(new Type[] { DynamicEntityType, typeof(bool) });
-                var returnExp = Expression.Lambda(funcExpression, CoincidenceExpression, new ParameterExpression[] { pe });
-
-                var whereMethod = typeof(IQueryable<object>).GetExtensionMethod(_assemblyDynamicQueryable, "Where", new[] { typeof(IQueryable<object>), typeof(LambdaExpression) });
-
-                var whereMethodGeneric = whereMethod.MakeGenericMethod(DynamicEntityType);
 
                 var FirstOrDefaultMethod = typeof(IQueryable).GetExtensionMethod(_assemblyDynamicQueryable, "FirstOrDefault", new[] { typeof(IQueryable) });
 
@@ -1256,9 +1240,9 @@ namespace Siesa.SDK.Business
 
                     var DbSet = Table.AsQueryable();
 
-                    DbSet = whereMethodGeneric.Invoke(DbSet, new object[] { DbSet, returnExp });
+                    DbSet = GetWhereExpression(DbSet, DynamicEntityType, CoincidenceExpression, EntityExpression);
 
-                    if(ExtraFields.Any())
+                    if(ExtraFields.Any() && GetDynamicAny(DbSet))
                     {
                         if(ExtraFields.Any(x => x.Contains(".")))
                             throw new Exception("Foreign keys attributes are not supported to this method");
@@ -1306,23 +1290,20 @@ namespace Siesa.SDK.Business
                 var UTableName = GetUTableEntity();
                 Type DynamicEntityType = typeof(T).Assembly.GetType(UTableName);
 
-                Data = Data.Select(x => new UObjectDTO{Action=x.Action, UObject=JsonConvert.DeserializeObject($"{x.UObject}", type:DynamicEntityType)}).ToList();
-
-                var DataType = Data.GetType();
-
                 var DataToAdd = Data.Where(x => x.Action == BLUserActionEnum.Create)
-                                    .Select(x => x.UObject)
+                                    .Select(x => JsonConvert.DeserializeObject($"{x.UObject}", type:DynamicEntityType))
                                     .ToList();
                 var DataToUpdate = Data.Where(x => x.Action == BLUserActionEnum.Update)
-                                    .Select(x => x.UObject.Rowid)
+                                    .Select(x => JsonConvert.DeserializeObject($"{x.UObject}", type:DynamicEntityType))
                                     .ToList();
                 var DataToDelete = Data.Where(x => x.Action == BLUserActionEnum.Delete)
-                                    .Select(x => (int) x.UObject.Rowid)
-                                    .ToList();
+                                    .Select(x => JsonConvert.DeserializeObject($"{x.UObject}", type:DynamicEntityType));
+
+                var RowidsToDelete = DataToDelete.Select(x => (int) x.GetType().GetProperty("Rowid").GetValue(x)).ToList();
 
                 int TotalAdded = DataToAdd.Count;
                 int TotalUpdated = DataToUpdate.Count;
-                int TotalDelete = DataToDelete.Count;
+                int TotalDelete = RowidsToDelete.Count;
 
                 var EntityExpression = Expression.Parameter(DynamicEntityType, DynamicEntityType.Name);
 
@@ -1341,10 +1322,15 @@ namespace Siesa.SDK.Business
 
                     if(TotalDelete > 0)
                     {
-                        var InExpression = GetInExpression(RowidColumn, DataToDelete);
+                        var InExpression = GetInExpression(RowidColumn, RowidsToDelete);
                         var RowsToDelete = GetWhereExpression(DbSet, DynamicEntityType, InExpression, EntityExpression);
                         var ListToDelete = GetDynamicList(RowsToDelete);
                         Context.RemoveRange(ListToDelete);
+                    }
+
+                    if(TotalUpdated > 0)
+                    {
+
                     }
 
                     Context.SaveChanges();
@@ -1352,7 +1338,7 @@ namespace Siesa.SDK.Business
 
                 return new ActionResult<string>()
                 {
-                    Success = false,
+                    Success = true,
                     Data = $"TotalAdded: {TotalAdded}, TotalUpdated: {TotalUpdated}, TotalDelete: {TotalDelete}"
                 };
             }
@@ -1402,6 +1388,17 @@ namespace Siesa.SDK.Business
             var DynamicList = dynamicListMethod.Invoke(Result, new object[] { Result });
 
             return DynamicList;
+        }
+
+        private bool GetDynamicAny(dynamic Data)
+        {
+            var _assemblyAny = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
+
+            var AnyMethod = typeof(IQueryable).GetExtensionMethod(_assemblyAny, "Any", new[] { typeof(IQueryable) });
+
+            bool Any = AnyMethod.Invoke(Data, new object[] {Data});
+
+            return Any;
         }
     }
 
