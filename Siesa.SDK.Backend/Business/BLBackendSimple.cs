@@ -1303,12 +1303,52 @@ namespace Siesa.SDK.Business
 
                 this._logger.LogInformation($"Manage U data {this.GetType().Name} - Create, Update, Delete");
 
-                int TotalAdded = 0;
-                int TotalUpdated = 0;
-                int TotalDelete = 0;
-
                 var UTableName = GetUTableEntity();
                 Type DynamicEntityType = typeof(T).Assembly.GetType(UTableName);
+
+                Data = Data.Select(x => new UObjectDTO{Action=x.Action, UObject=JsonConvert.DeserializeObject($"{x.UObject}", type:DynamicEntityType)}).ToList();
+
+                var DataType = Data.GetType();
+
+                var DataToAdd = Data.Where(x => x.Action == BLUserActionEnum.Create)
+                                    .Select(x => x.UObject)
+                                    .ToList();
+                var DataToUpdate = Data.Where(x => x.Action == BLUserActionEnum.Update)
+                                    .Select(x => x.UObject.Rowid)
+                                    .ToList();
+                var DataToDelete = Data.Where(x => x.Action == BLUserActionEnum.Delete)
+                                    .Select(x => (int) x.UObject.Rowid)
+                                    .ToList();
+
+                int TotalAdded = DataToAdd.Count;
+                int TotalUpdated = DataToUpdate.Count;
+                int TotalDelete = DataToDelete.Count;
+
+                var EntityExpression = Expression.Parameter(DynamicEntityType, DynamicEntityType.Name);
+
+                var RowidColumn = Expression.Property(EntityExpression, "Rowid");
+
+                using(var Context = CreateDbContext())
+                {
+                    dynamic Table = Context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(DynamicEntityType).Invoke(Context, null);
+
+                    var DbSet = Table.AsQueryable();
+
+                    if(TotalAdded > 0)
+                    {
+                        Context.AddRange(DataToAdd);
+                    }
+
+                    if(TotalDelete > 0)
+                    {
+                        var InExpression = GetInExpression(RowidColumn, DataToDelete);
+                        var RowsToDelete = GetWhereExpression(DbSet, DynamicEntityType, InExpression, EntityExpression);
+                        var ListToDelete = GetDynamicList(RowsToDelete);
+                        Context.RemoveRange(ListToDelete);
+                    }
+
+                    Context.SaveChanges();
+                }
 
                 return new ActionResult<string>()
                 {
@@ -1320,6 +1360,48 @@ namespace Siesa.SDK.Business
             {
                 return new BadRequestResult<string>(){Errors = new List<string>(){e.Message}};
             }
+        }
+
+        private Expression GetInExpression(Expression ColumNameProperty, List<int> RowidRecords)
+        {
+            RowidRecords = RowidRecords.Distinct().ToList();
+
+            Type ColumNameType = ColumNameProperty.Type;
+            Expression InExpression = Expression.Equal(ColumNameProperty, Expression.Constant(RowidRecords[0], ColumNameType));
+
+            for (int i = 1; i < RowidRecords.Count; i++)
+            {
+                var OrValueExpression = Expression.Equal(ColumNameProperty, Expression.Constant(RowidRecords[i], ColumNameType));
+                InExpression = Expression.Or(InExpression, OrValueExpression);
+            }
+
+            return InExpression;
+        }
+
+        private IQueryable GetWhereExpression(dynamic Data, Type DynamicEntityType, Expression CoincidenceExpression, ParameterExpression EntityExpression)
+        {
+            var funcExpression = typeof(Func<,>).MakeGenericType(new Type[] { DynamicEntityType, typeof(bool) });
+            var returnExp = Expression.Lambda(funcExpression, CoincidenceExpression, new ParameterExpression[] { EntityExpression });
+
+            var _assemblySelect = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
+
+            var whereMethod = typeof(IQueryable<object>).GetExtensionMethod(_assemblySelect, "Where", new[] { typeof(IQueryable<object>), typeof(LambdaExpression) });
+
+            var whereMethodGeneric = whereMethod.MakeGenericMethod(DynamicEntityType);
+
+            Data = whereMethodGeneric.Invoke(Data, new object[] { Data, returnExp });
+
+            return Data;
+        }
+
+        private dynamic GetDynamicList(dynamic Result)
+        {
+            var _assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
+                var dynamicListMethod = typeof(IEnumerable).GetExtensionMethod(_assemblyDynamic, "ToDynamicList", new[] { typeof(IEnumerable) });
+
+            var DynamicList = dynamicListMethod.Invoke(Result, new object[] { Result });
+
+            return DynamicList;
         }
     }
 
