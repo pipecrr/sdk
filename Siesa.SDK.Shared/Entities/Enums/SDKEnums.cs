@@ -8,13 +8,6 @@ namespace Siesa.Global.Enums
 		Team = 2
 	}
 
-	public enum PermissionAuthTypes
-	{
-		Query = 1,
-		Transaction = 2,
-		Query_Tx = 3
-	}
-
 	public enum PermissionRestrictionType
 	{
 		Not_Applicable = 0,
@@ -72,6 +65,12 @@ namespace Siesa.Global.Enums
 		TextField = 3,
 		EmailField = 4,
 		RadioButtonField = 5
+	}
+
+	public enum PermissionAuthTypes
+	{
+		Query = 1,
+		Query_Tx = 2
 	}
 
 	public enum enumTypeButton
