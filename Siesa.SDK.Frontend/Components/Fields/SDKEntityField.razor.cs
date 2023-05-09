@@ -17,6 +17,7 @@ using Newtonsoft.Json;
 using Siesa.SDK.Frontend.Extension;
 using Siesa.SDK.Entities;
 using Siesa.SDK.Frontend.Components.FormManager;
+using Siesa.Global.Enums;
 
 namespace Siesa.SDK.Frontend.Components.Fields
 {
@@ -450,9 +451,9 @@ namespace Siesa.SDK.Frontend.Components.Fields
             {
                 try
                 {
-                    CanCreate = FeaturePermissionService.CheckUserActionPermission(RelatedBusiness, 1, AuthenticationService);
-                    CanEdit = FeaturePermissionService.CheckUserActionPermission(RelatedBusiness, 2, AuthenticationService);
-                    CanDetail = FeaturePermissionService.CheckUserActionPermission(RelatedBusiness, 5, AuthenticationService);
+                    CanCreate = await FeaturePermissionService.CheckUserActionPermission(RelatedBusiness, enumSDKActions.Create, AuthenticationService);
+                    CanEdit = await FeaturePermissionService.CheckUserActionPermission(RelatedBusiness, enumSDKActions.Edit, AuthenticationService);
+                    CanDetail = await FeaturePermissionService.CheckUserActionPermission(RelatedBusiness, enumSDKActions.Consult, AuthenticationService);
                 }
                 catch (System.Exception)
                 {

@@ -5,7 +5,7 @@
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
 @if (ErrorMsg != null && ErrorMsg != "")
 {
-    <text>@ErrorMsg</text>
+     <ErrorsWindow GeneralErrors="@ErrorList" />
 }
 else if (BusinessObj != null)
 {

@@ -28,7 +28,7 @@ namespace Siesa.SDK.Backend.Extensions
             var dbConnections = configurationManager.GetSection("DbConnections").Get<List<SDKDbConnection>>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<ITenantProvider>( sp => ActivatorUtilities.CreateInstance<TenantProvider>(sp, dbConnections));
-            services.AddScoped<IFeaturePermissionService, FeaturePermissionService>();
+            services.AddSingleton<IFeaturePermissionService, FeaturePermissionService>();
             services.AddSingleton<IBackendRouterService, BackendRouterService>();
             services.AddScoped<EmailService>();
             services.AddSingleton<IResourceManager, ResourceManager>(sp => ActivatorUtilities.CreateInstance<ResourceManager>(sp, false));
