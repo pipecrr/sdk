@@ -24,6 +24,7 @@ using Siesa.SDK.Shared.DTOS;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.Extensions.DependencyInjection;
+using Siesa.Global.Enums;
 
 namespace Siesa.SDK.Business
 {
@@ -96,6 +97,11 @@ namespace Siesa.SDK.Business
         }
 
         public Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<BaseSDK<int>> queryFilter = null, bool includeCount = false, bool includeAttachments = true, List<string> extraFields = null)
+        {
+            return null;
+        }
+
+        public Shared.Business.LoadResult GetUData(int? skip, int? take, string filter = "", string uFilter = "", string orderBy = "", QueryFilterDelegate<BaseSDK<int>> queryFilter = null, bool includeCount = false, List<string> extraFields = null)
         {
             return null;
         }
@@ -352,6 +358,38 @@ namespace Siesa.SDK.Business
 
         }
 
+		public virtual Siesa.SDK.Shared.Business.LoadResult GetUData(int? skip, int? take, string filter = "", string uFilter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null, bool includeCount = false, List<string> extraFields = null)
+        {
+            return GetUDataAsync(skip, take, filter, orderBy, extraFields: extraFields).GetAwaiter().GetResult();
+        }
+
+        public async virtual Task<Siesa.SDK.Shared.Business.LoadResult> GetUDataAsync(int? skip, int? take, string filter = "", string uFilter = "", string orderBy = "", bool includeCount = false, List<string> extraFields = null)
+        {
+            var response = new Siesa.SDK.Shared.Business.LoadResult();
+            try
+            {
+                var result = await Backend.GetUData(skip, take, filter, uFilter, orderBy, includeCount, extraFields);
+
+                response.Data = result.Data.Select(x => JsonConvert.DeserializeObject<dynamic>(x)).ToList();
+                response.TotalCount = result.Data.Count;
+                if(includeCount){
+                    response.TotalCount = result.TotalCount;
+                }
+                response.GroupCount = result.GroupCount;
+
+                return response;
+            }
+            catch (Exception e)
+            {
+                await GetNotificacionService("Custom.Generic.Message.Error");
+                var errors = new List<string>();
+                errors.Add("Exception: " + e.Message + " " + e.StackTrace);
+                response.Errors = errors;
+                return response;
+            }
+
+        }
+
         public async virtual Task<ValidateAndSaveBusinessObjResponse> ValidateAndSaveAsync()
         {
             ValidateAndSaveBusinessObjResponse resultValidationFront = new();
@@ -487,6 +525,33 @@ namespace Siesa.SDK.Business
 
         public virtual RenderFragment Main(){
             return null;
+        }
+
+        public async Task<dynamic> GetUByUserType(int Rowid, PermissionUserTypes UserType, List<string> ExtraFields = null)
+        {
+            dynamic Result = null;
+
+            if(ExtraFields == null)
+                ExtraFields = new(){"AuthorizationType", "RestrictionType"};
+
+            var Request = await Backend.Call("UGetByUserType", Rowid, UserType, ExtraFields);
+
+            if(Request.Success)
+                Result = Request.Data;
+
+            return Result;
+        }
+
+        public async Task<string> ManageUData(List<UObjectDTO> Data)
+        {
+            string Result = string.Empty;
+
+            var Request = await Backend.Call("ManageUData", Data);
+
+            if(Request.Success)
+                Result = Request.Data;
+
+            return Result;
         }
     }
 }
