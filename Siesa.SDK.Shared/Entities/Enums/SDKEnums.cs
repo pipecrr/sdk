@@ -72,4 +72,14 @@ namespace Siesa.Global.Enums
 		Query = 1,
 		Query_Tx = 2
 	}
+
+	public enum enumTypeButton
+	{
+		Create = 1,
+		Save = 2,
+		Duplicate = 3,
+		Edit = 4,
+		List = 5,
+		Delete = 6
+	}
 }
