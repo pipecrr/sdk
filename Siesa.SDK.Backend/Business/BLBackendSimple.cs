@@ -33,6 +33,9 @@ using System.Net;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Siesa.Global.Enums;
+using Amazon.S3;
+using Amazon.S3.Model;
+using Microsoft.Extensions.Configuration;
 
 namespace Siesa.SDK.Business
 {
@@ -43,16 +46,15 @@ namespace Siesa.SDK.Business
         [JsonIgnore]
         protected IBackendRouterService _backendRouterService { get; set; }
         protected IFeaturePermissionService FeaturePermissionService { get; set; }
-
         private IServiceProvider _provider;
+        private IAmazonS3 _s3Client;
+        private IConfiguration _configuration;
         private ILogger _logger;
         protected ILogger Logger { get { return _logger; } }
-        protected dynamic _dbFactory;        
-
+        protected dynamic _dbFactory;
         private SDKContext myContext;
-
+        private bool _useS3 = false;
         protected SDKContext Context { get { return myContext; } }
-
         private IEnumerable<INavigation> _navigationProperties = null;
 
         public SDKBusinessModel GetBackend(string business_name)
@@ -63,7 +65,6 @@ namespace Siesa.SDK.Business
         public BLBackendSimple(IAuthenticationService authenticationService)
         {
             AuthenticationService = authenticationService;
-
         }
 
         public string BusinessName { get; set; }
@@ -120,9 +121,12 @@ namespace Siesa.SDK.Business
             myContext.SetProvider(_provider);
 
             AuthenticationService = (IAuthenticationService)_provider.GetService(typeof(IAuthenticationService));
-            
             _backendRouterService = _provider.GetService(typeof(IBackendRouterService)) as IBackendRouterService;
-
+            _configuration = (IConfiguration)_provider.GetService(typeof(IConfiguration));
+            _useS3 = _configuration.GetValue<bool>("AWS:UseS3");
+            if(_useS3){
+                _s3Client = (IAmazonS3)_provider.GetService(typeof(IAmazonS3)) as IAmazonS3;
+            }
         }
 
         public SDKContext CreateDbContext(bool UseLazyLoadingProxies = false)
@@ -177,6 +181,8 @@ namespace Siesa.SDK.Business
         }
 
         private IServiceProvider _provider;
+        private IAmazonS3 _s3Client;
+        private IConfiguration _configuration;
         private ILogger _logger;
         protected ILogger Logger { get { return _logger; } }
         protected dynamic _dbFactory;
@@ -192,7 +198,7 @@ namespace Siesa.SDK.Business
         private bool CanCreate { get; set; } = true;
         private bool CanEdit { get; set; } = true;
         private IEnumerable<INavigation> _navigationProperties = null;
-
+        private bool _useS3 = false;
         private List<object> unique_indexes = new List<object>();
 
         public void DetachedBaseObj()
@@ -272,8 +278,14 @@ namespace Siesa.SDK.Business
 
             AuthenticationService = (IAuthenticationService)_provider.GetService(typeof(IAuthenticationService));
 
+
             _backendRouterService = (IBackendRouterService)_provider.GetService(typeof(IBackendRouterService));
             _featurePermissionService = (IFeaturePermissionService)_provider.GetService(typeof(IFeaturePermissionService));
+            _configuration = (IConfiguration)_provider.GetService(typeof(IConfiguration));
+            _useS3 = _configuration.GetValue<bool>("AWS:UseS3");
+            if(_useS3){
+                _s3Client = (IAmazonS3)_provider.GetService(typeof(IAmazonS3));
+            }
 
         }
 
@@ -890,17 +902,20 @@ namespace Siesa.SDK.Business
 			}
             return null;
         }
-        
+
         [SDKExposedMethod]
-        public async Task<ActionResult<SDKFileUploadDTO>> SaveFile(byte[] fileBytes, string name){
+        public async Task<ActionResult<SDKFileUploadDTO>> SaveFile(byte[] fileBytes, string name, string contentType){
             MemoryStream stream = new MemoryStream(fileBytes);
-            IFormFile file = new FormFile(stream, 0, fileBytes.Length, name, name);
             var result = new SDKFileUploadDTO();
+            var untrustedFileName = name;
+            var guid = Guid.NewGuid().ToString();
+            untrustedFileName = string.Concat(guid.Substring(1,10), "_", untrustedFileName);
+            IFormFile file = new FormFile(stream, 0, fileBytes.Length, untrustedFileName, untrustedFileName);
+            if(_useS3){
+                return await SaveFileS3(file, contentType);
+            }
             IWebHostEnvironment env = _provider.GetRequiredService<IWebHostEnvironment>();
-            var untrustedFileName = file.FileName;
             try{
-                var guid = Guid.NewGuid().ToString();
-                untrustedFileName = string.Concat(guid.Substring(1,10), "_", untrustedFileName);
                 var path = Path.Combine(env.ContentRootPath,"Uploads");
                 Directory.CreateDirectory(path);
                 var filePath = Path.Combine(path, untrustedFileName);
@@ -915,17 +930,59 @@ namespace Siesa.SDK.Business
             return new ActionResult<SDKFileUploadDTO>{Success = true, Data = result};
         }
 
+        private async Task<ActionResult<SDKFileUploadDTO>> SaveFileS3(IFormFile file, string contentType){
+            var result = new SDKFileUploadDTO();
+            var name = file.FileName;
+            var bucketName = _configuration.GetValue<string>("AWS:S3BucketName");
+            PutObjectRequest request = new PutObjectRequest{
+                BucketName = bucketName,
+                Key = name,
+                InputStream = file.OpenReadStream(),
+                ContentType = contentType
+            };
+
+            var response = await _s3Client.PutObjectAsync(request);
+            if(response.HttpStatusCode == System.Net.HttpStatusCode.OK){
+                result.Url = name;
+                result.FileName = name;
+            }else{
+                return new BadRequestResult<SDKFileUploadDTO>{Success = false, Errors = new List<string> { response.HttpStatusCode.ToString() }};
+            }
+            return new ActionResult<SDKFileUploadDTO>{Success = true, Data = result};
+        }
+
         [SDKExposedMethod]
-        public async Task<ActionResult<string>> DownloadFile(string url){
+        public async Task<ActionResult<string>> DownloadFile(string url, string contentType){
+            var urlRes = "";
+            if(_useS3){
+                return await DownloadFileS3(url);
+            }
             IWebHostEnvironment env = _provider.GetRequiredService<IWebHostEnvironment>();
             var filePath = Path.Combine(url);
             var file = new FileInfo(filePath);
             if (file.Exists){
                 var fileBytes = await File.ReadAllBytesAsync(filePath);
                 var base64 = Convert.ToBase64String(fileBytes);
-                return new ActionResult<string>{Success = true, Data = base64};
+                urlRes = $"data:{contentType};base64,{base64}";
+                return new ActionResult<string>{Success = true, Data = urlRes};
             }
             return new BadRequestResult<string>{Success = false, Errors = new List<string> { "File not found" }};
+        }
+
+        private async Task<ActionResult<string>> DownloadFileS3(string url)
+        {
+            var result = "";
+            var bucketName = _configuration.GetValue<string>("AWS:S3BucketName");
+            var duration = _configuration.GetValue<int>("AWS:TimeoutDuration");
+            var request = new GetPreSignedUrlRequest
+            {
+                BucketName = bucketName,
+                Key = url,
+                Verb = HttpVerb.PUT,
+                Expires = DateTime.UtcNow.AddHours(duration),
+            };
+            string urlS3 = _s3Client.GetPreSignedURL(request);
+            return new ActionResult<string>{Success = true, Data = result};
         }
 
         [SDKExposedMethod]
@@ -936,7 +993,7 @@ namespace Siesa.SDK.Business
             var response = await BLAttatchmentDetail.Call("GetAttatchmentDetail", rowid);
             SDKFileFieldDTO SDKFileField = new SDKFileFieldDTO();
             if(response.Success){
-                var data = response.Data;                
+                var data = response.Data;
                 SDKFileField = new SDKFileFieldDTO{
                     Url = data.Url,
                     FileName = data.FileName,

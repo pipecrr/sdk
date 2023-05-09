@@ -50,9 +50,10 @@
             var base64 = Convert.ToBase64String(file);
             url = $"data:{BaseObj.FileType};base64,{base64}";
         }else{
-            var response = await backend.Call("DownloadFile",BaseObj.Url);
+            var response = await backend.Call("DownloadFile",BaseObj.Url,BaseObj.FileType);
             if(response.Success){
-                url = $"data:{BaseObj.FileType};base64,{response.Data}";
+                //url = $"data:{BaseObj.FileType};base64,{response.Data}";
+                url = response.Data;
             }
         }
         return url;

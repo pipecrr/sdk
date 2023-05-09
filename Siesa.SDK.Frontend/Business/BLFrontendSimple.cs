@@ -438,7 +438,7 @@ namespace Siesa.SDK.Business
                 file.CopyTo(ms);
                 fileBytes = ms.ToArray();
             }
-            var response = await Backend.Call("SaveFile", fileBytes, file.FileName);
+            var response = await Backend.Call("SaveFile", fileBytes, file.FileName,file.ContentType);
             if(response.Success){
                 result.Url = response.Data.Url;
                 result.FileType = file.ContentType;
@@ -461,7 +461,7 @@ namespace Siesa.SDK.Business
                 file.CopyTo(ms);
                 fileBytes = ms.ToArray();
             }
-            var response = await Backend.Call("SaveFile", fileBytes, file.FileName);
+            var response = await Backend.Call("SaveFile", fileBytes, file.FileName, file.ContentType);
             if(response.Success){
                 result.Url = response.Data.Url;
                 result.FileType = file.ContentType;
