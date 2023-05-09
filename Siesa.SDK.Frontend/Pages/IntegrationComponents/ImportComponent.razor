@@ -15,65 +15,107 @@
 @using Siesa.SDK.Frontend.Components.Fields
 @using System.Dynamic
 @using Newtonsoft.Json;
+@using System.Collections.Generic
 
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
 
 @inject IResourceManager ResourceManager
 @inject IAuthenticationService AuthenticationService
 @inject IJSRuntime JSRuntime
-
-@if (IsImportFile)
-{
-    <h3>Descargar Demo:</h3>
-
-    <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Descargar Demo" Click="@Download" />
+@inject SDKNotificationService NotificationService
 
 
-    <h3>Importar Archivo CSV</h3>
+<SDKSteps ShowStepsButtons="true" SelectedIndex="@SelectedIndex" SelectedIndexChanged="@OnChange">
+    <Steps>
+        <SDKStepsItem ResourceTag="Import_File">
 
-    <InputFile OnChange="@LoadFiles" />
+            <h5>Descargar Demo:</h5>
+
+            <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Descargar Demo" Click="@Download" />
 
 
-    @if (IsLoadingGrid)
-    {
-        <h3> Previsualización de los primeros registros del archivo cargado:</h3>
+            <h5>Importar Archivo CSV</h5>
 
-        @if (Data != null && Data.Count > 0)
-        {     
-            <SDKGrid TItem="dynamic"  Data="@Data">
-                <Columns>
-                
-                    @foreach (var propertyKey in ((System.Dynamic.ExpandoObject)Data.FirstOrDefault())?.Select(x => x.Key))
-                    {
-                        <SDKGridColumn TItem="dynamic" Property="@propertyKey" Title="@propertyKey">
+            <InputFile OnChange="@LoadFiles" />
+
+
+            @if (IsLoadingGrid)
+            {
+                <p> Previsualización de los primeros registros del archivo cargado:</p>
+
+                @if (Data != null && Data.Count > 0)
+                {     
+                    <SDKGrid TItem="dynamic"  Data="@Data" >
+                        <Columns>
+                        
+                            @foreach (var propertyKey in ((System.Dynamic.ExpandoObject)Data.FirstOrDefault())?.Select(x => x.Key))
+                            {
+                                <SDKGridColumn TItem="dynamic" Property="@propertyKey" Title="@propertyKey">
+                                    <Template Context="data">
+                                        @if (data != null)
+                                        {
+                                            @GetPropertyValue(data, propertyKey)
+                                        }
+                                    </Template>
+                                </SDKGridColumn>
+                            }
+                        </Columns>
+                    </SDKGrid>
+
+                    <br />
+
+                }else
+                {
+                    <p>No se encontraron registros en el Archivo </p>
+                }
+            }
+        </SDKStepsItem>
+        
+        <SDKStepsItem ResourceTag="SKD.Import.MappingData">
+
+            <h4>Confirme los Campos e Importe</h4>
+
+             <SDKGrid TItem="KeyValuePair<string, object>" Data="@GetFirstRow()">
+                    <Columns>
+                        <SDKGridColumn TItem="KeyValuePair<string, object>" ResourceTag="SDK.Import.Header">
                             <Template Context="data">
-                                @if (data != null)
-                                {
-                                    @GetPropertyValue(data, propertyKey)
-                                }
+
+                                    @data.Key
+                                    
                             </Template>
                         </SDKGridColumn>
-                    }
-                </Columns>
-            </SDKGrid>
+                        <SDKGridColumn TItem="KeyValuePair<string, object>" ResourceTag="SDK.Import.FieldsBD" IsActionColumn="true">
+                            <Template Context="data">
 
-            <br />
+                                <CascadingValue Value="@this" >
+                                            
+                                                <MappingData FieldFile=@data FieldsEntity="@Fields"/>
 
-            <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Siguiente" Click="@MappaingData" />
+                                </CascadingValue>
+                                
+                            </Template>
+                        </SDKGridColumn>
 
-        }else
-        {
-            <p>No se encontraron registros en el Archivo </p>
-        }
-    }
-}else
-{
-    <h3>Confirme los campos e importe</h3>
+                        
+                        <SDKGridColumn TItem="KeyValuePair<string, object>" ResourceTag="SDK.Import.FieldsBD">
+                            <Template Context="data">
+                               
+                                @data.Value
+                            </Template>
+                        </SDKGridColumn>
+                    </Columns>
+                </SDKGrid>
 
-    <p>La siguiente tabla contiene todos los campos del módulo que se puede relacionar a los datos en el archivo de importación. Si el archivo contiene una fila de cabecera, las columnas en el archivo han sido asignadas a los campos de importación. Compruebe las asignaciones para asegurarse de que son lo que usted espera, y hacer los cambios, según sea necesario. Para ayudarte a comprobar las asignaciones, la fila 1 muestra los datos en el archivo.</p>
-}
+        </SDKStepsItem>
 
+        <SDKStepsItem ResourceTag="Step 3">
 
+            <h4>RenderFragment Step3</h4>
+
+        </SDKStepsItem>
+
+    </Steps>
+</SDKSteps>
 
 @code {
 
@@ -81,26 +123,32 @@
 
     private Type EntityType = null;
 
-    private List<dynamic> Data = new List<dynamic>();
+    public List<dynamic> Data = new List<dynamic>();
+
+    public List<dynamic> DataMapped = new List<dynamic>();
 
     private bool IsLoadingGrid = false;
 
-    private bool IsImportFile = true;
-
-    private List<dynamic> MappedData = new List<dynamic>();
+    private int SelectedIndex = 0;
 
     private object GetPropertyValue(System.Dynamic.ExpandoObject obj, string propertyName)
     {
         return ((IDictionary<string, object>)obj)[propertyName];
     }
 
- 
+    private List<KeyValuePair<string, object>> GetFirstRow()
+    {
+       return ((System.Dynamic.ExpandoObject)Data.First()).ToList();
+    } 
+        
     protected override async Task OnInitializedAsync()
     {
         await GetEntityFields();
 
         base.OnInitialized();  
     }
+
+    //AllowedPageSizes 
 
     private async Task GetEntityFields()
     {   
@@ -181,22 +229,27 @@
         _ = InvokeAsync(() => StateHasChanged());     
     }
 
-    private async Task MappaingData()
-    {
-        foreach (var item in Data)
-        {
-            foreach(var prop in item) 
-            {     
-                if(Fields.ContainsKey(prop.Key))
-                    {
-                        var field = Fields[prop.Key];
+    public void OnChange(int index){
+        SelectedIndex = index;
 
-                        MappedData.Add(new { field = field});
-                    }
-            }
+        switch (index)
+        {
+            case 1:
+                if(Data == null || Data.Count == 0)
+                {
+                    SelectedIndex = 0;
+                    NotificationService.ShowError("SDK.Import.ErrorMappingData"); //No se ha cargado ningún archivo
+                }
+            break;
+            case 2:
+            NotificationService.ShowInfo("Selected Step 3");
+            break;
+
+            default:
+            break;
         }
 
-        IsImportFile = false;
-        _ = InvokeAsync(() => StateHasChanged());
+        StateHasChanged();
     }
+
 }

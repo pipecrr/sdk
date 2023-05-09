@@ -1,0 +1,39 @@
+
+<select class="select_connect" id="SelectConnect" @onchange="OnChangeSelectItem">
+
+    <option ><ResourceViewer ResourceTag="Campo no asociado"/></option> @*Recurso*@
+
+        @foreach (var field in FieldsEntity)
+        { 
+            <option value="@field.Value" selected="@(FieldFile.Key == field.Key)" >
+                @field.Value
+            </option>
+        }
+
+</select>
+
+@code
+{
+    [CascadingParameter] public ImportComponent ImportComponent { get; set; } 
+
+    [Parameter] public dynamic FieldFile { get; set; }
+
+    [Parameter] public Dictionary<string, string> FieldsEntity { get; set; } = new Dictionary<string, string>();
+
+
+    public void OnChangeSelectItem(ChangeEventArgs e)
+    {
+       FieldFile.Key = e.Value.ToString();
+
+       ImportComponent.DataMapped.Add(new{ Header = FieldFile.Key, Content = FieldFile.Value} );
+    }
+
+    protected override void OnInitialized()
+    {
+        if(FieldsEntity.Any(x=>x.Key == FieldFile.Key))
+        {
+            //ImportComponent.DataMapped.Add(new{ Header = FieldFile.Key, Content = FieldFile.Value} );
+        }
+        base.OnInitialized();
+    }
+}
