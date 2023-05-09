@@ -44,7 +44,7 @@
 
                 @if (FileData != null && FileData.Count > 0)
                 {     
-                    <SDKGrid TItem="dynamic"  Data="@FileData" >
+                    <SDKGrid TItem="dynamic"  Data="@FileData.Take(5)" PageSize="5">
                         <Columns>
                         
                             @foreach (var propertyKey in ((System.Dynamic.ExpandoObject)FileData.FirstOrDefault())?.Select(x => x.Key))
@@ -107,9 +107,24 @@
 
         </SDKStepsItem>
 
-        <SDKStepsItem ResourceTag="Step 3">
+        <SDKStepsItem ResourceTag="Custom.SDK.Import.PeviewMappingData">
 
-            <h4>RenderFragment Step3</h4>
+            <SDKGrid TItem="dynamic"  Data="@DataMapped.Take(5)" >
+                <Columns>
+                
+                    @foreach (var propertyKey in (DataMapped.FirstOrDefault())?.Select(x => x.Key))
+                    {
+                        <SDKGridColumn TItem="dynamic" Property="@propertyKey" Title="@propertyKey">
+                            <Template Context="data">
+                                @if (data != null)
+                                {
+                                    @GetValueDataMapped(data, propertyKey)
+                                }
+                            </Template>
+                        </SDKGridColumn>
+                    }
+                </Columns>
+            </SDKGrid>
 
         </SDKStepsItem>
 
@@ -124,21 +139,26 @@
 
     public List<dynamic> FileData = new List<dynamic>();
 
-    public List<dynamic> DataMapped = new List<dynamic>();
+    public List<Dictionary<string, string>> DataMapped = new List<Dictionary<string, string>>();
 
     private bool IsLoadingGrid = false;
 
     private int SelectedIndex = 0;
 
-    private object GetPropertyValue(System.Dynamic.ExpandoObject obj, string propertyName)
-    {
-        return ((IDictionary<string, object>)obj)[propertyName];
-    }
+    public Dictionary<string, string> _newKeys = new Dictionary<string, string>();
+
+    private object GetValueDataMapped(dynamic obj, string propertyName) =>  ((IDictionary<string, string>)obj)[propertyName];
+    
 
     private List<KeyValuePair<string, object>> GetFirstRow()
     {
        return ((System.Dynamic.ExpandoObject)FileData.First()).ToList();
-    } 
+    }
+
+    private object GetPropertyValue(System.Dynamic.ExpandoObject obj, string propertyName)
+    {
+        return ((IDictionary<string, object>)obj)[propertyName];
+    }
         
     protected override async Task OnInitializedAsync()
     {
@@ -228,7 +248,8 @@
         _ = InvokeAsync(() => StateHasChanged());     
     }
 
-    public void OnChangeSteps(int index){
+    public void OnChangeSteps(int index)
+    {
         SelectedIndex = index;
 
         switch (index)
@@ -237,11 +258,18 @@
                 if(FileData == null || FileData.Count == 0)
                 {
                     SelectedIndex = 0;
-                    NotificationService.ShowError("Custom.SDK.Import.ErrorMappingData"); //No se ha cargado ningún archivo
+                    NotificationService.ShowError("Custom.SDK.Import.ErrorLoadFile"); //No se ha cargado ningún archivo /--falta crar recurso
                 }
             break;
             case 2:
-            NotificationService.ShowInfo("Selected Step 3");
+                if(_newKeys == null || _newKeys.Count == 0)
+                {
+                    SelectedIndex = 0;
+                    NotificationService.ShowError("Custom.SDK.Import.ErrorMappingData"); //Configure y confirme los campos del archivo /--editar recurso
+                }else
+                {
+                    MappingData();
+                }
             break;
 
             default:
@@ -249,6 +277,24 @@
         }
 
         StateHasChanged();
+    }
+
+    private void MappingData()
+    {
+        foreach (var item in FileData)
+        {
+            var row = new Dictionary<string, string>();
+
+            foreach (var key in _newKeys)
+            {
+                if (GetPropertyValue(item, key.Value) != null)
+                    row.Add(key.Key, GetPropertyValue(item, key.Value).ToString());
+            }
+
+            DataMapped.Add(row);
+        }
+
+        string JsonObject = JsonConvert.SerializeObject(DataMapped);
     }
 
 }
