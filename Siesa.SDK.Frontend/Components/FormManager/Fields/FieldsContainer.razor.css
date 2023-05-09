@@ -12,3 +12,15 @@
 .field-detail-container > ::deep .sdk-switch-container {
     height: 1.5rem !important;
 }
+
+.field-detail-container ::deep .form-control:disabled, .field-detail-container ::deep  .form-control[readonly] {
+    background: rgb(250, 250, 250);
+    border: none;
+    padding: 0;
+}
+
+
+.field-detail-container ::deep .rz-button.rz-state-disabled, .field-detail-container ::deep .rz-state-disabled.rz-paginator-element {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

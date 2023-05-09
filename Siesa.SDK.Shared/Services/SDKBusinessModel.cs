@@ -58,9 +58,9 @@ namespace Siesa.SDK.Shared.Services
             return await Backend.DeleteBusinessObj(Name, id);
         }
 
-        public dynamic Get(Int64 id)
+        public dynamic Get(Int64 id, List<string> extraFields = null)
         {
-            return Backend.GetBusinessObj(Name, id);
+            return Backend.GetBusinessObj(Name, id, extraFields);
         }
 
         private async Task<ActionResult<dynamic>> transformCallResponse(ExposedMethodResponse grpcResult){
@@ -68,7 +68,7 @@ namespace Siesa.SDK.Shared.Services
                 return new ActionResult<dynamic>(){
                     Success = false,
                     Errors = new List<string>(){
-                        "No response from backend"
+                        "Custom.Backend.NoResponse"
                     }
                 };
             }
@@ -125,12 +125,12 @@ namespace Siesa.SDK.Shared.Services
         }
 
 
-        public async Task<Protos.LoadResult> GetData(int? skip, int? take, string filter = "", string orderBy = "")
+        public async Task<Protos.LoadResult> GetData(int? skip, int? take, string filter = "", string orderBy = "", bool includeCount = false, List<string> extraFields = null)
         {
             Protos.LoadResult result = new();
             try
             {
-                result = await Backend.GetDataBusinessObj(Name, skip, take, filter, orderBy);
+                result = await Backend.GetDataBusinessObj(Name, skip, take, filter, orderBy, includeCount, extraFields);
             }
             catch (RpcException ex)
             {
@@ -139,12 +139,13 @@ namespace Siesa.SDK.Shared.Services
             return result;
         }
 
-         public async Task<Protos.LoadResult> EntityFieldSearch(string searchText, string filters)
+        public async Task<Protos.LoadResult> EntityFieldSearch(string searchText, string filters, int? top = null, string orderBy = "",
+         List<string> extraFields = null)
         {
             Protos.LoadResult result = new();
             try
             {
-                result = await Backend.EntityFieldSearch(Name, searchText, filters);
+                result = await Backend.EntityFieldSearch(Name, searchText, filters, top, orderBy, extraFields);
             }
             catch (RpcException ex)
             {

@@ -9,7 +9,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
     public partial class CreateView : FormView
     {
         [Parameter]
-        public bool SetTopBar { get; set; } = true;        
+        public bool SetTopBar { get; set; } = true;
 
         protected override async Task OnInitializedAsync()
         {
@@ -24,6 +24,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 NotificationService.ShowError("Custom.Generic.Unauthorized");
                 ErrorMsg = "Custom.Generic.Unauthorized";
+                ErrorList.Add("Custom.Generic.Unauthorized");
                 if(!IsSubpanel){
                     // NavigationService.NavigateTo("/", replace:true);
                 }

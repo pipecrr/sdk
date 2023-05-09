@@ -57,6 +57,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         [Parameter] public string FieldName { get; set; }
         [Parameter] public bool ValidateField { get; set; } = true;
 
+        private IJSObjectReference _jsModule;
+
         public bool IsRequired { get; set; }
         public int MaxLength { get; set; }
 
@@ -68,11 +70,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         private RenderFragment? _fieldValidationTemplate;
 
         private string OnChange { get; set; }
+        private bool HasError { get; set; }
 
         [CascadingParameter] EditContext EditFormContext { get; set; }
         [CascadingParameter] FormView formView { get; set; }
 
-        public string ViewdefName { get => formView.ViewdefName; }
+        public string ViewdefName { get 
+        {
+            if(formView == null)
+            {
+                return "";
+            }
+            return formView.ViewdefName;
+        }}
 
         protected async Task Init()
         {
@@ -99,10 +109,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             }
             if (IsEncrypted)
             {
-                if (BindValue != null)
-                {
-                    BindProperty.SetValue(BindModel, null);
-                }
+                // if (BindValue != null)
+                // {
+                //     BindProperty.SetValue(BindModel, null);
+                // }
             }
 
             if(IsRequired && !ValidateField)
@@ -149,17 +159,23 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             fieldProperty.SetValue(BindModel, value);
         }
 
-        private async Task CheckUniqueValue()
+        public async Task CheckUniqueValue()
         {
             try
             {
+                if (!IsUnique || !ValidateField)
+                {
+                    return;
+                }
                 var request = await _backendRouterService.GetSDKBusinessModel(this.formView.BusinessName, _authenticationService).Call("CheckUnique", this.BindModel);
-
                 if (request.Success)
                 {
                     if (request.Data == true)
                     {
-                        _NotificationService.ShowError("Custom.Generic.UniqueIndexValidation");
+                        var existeUniqueIndexValidation = _NotificationService.Messages.Where(x => x.Summary == "Custom.Generic.UniqueIndexValidation").Any();
+                        if(!existeUniqueIndexValidation){
+                            _NotificationService.ShowError("Custom.Generic.UniqueIndexValidation");
+                        }
 
                         if(this.FieldOpt.CssClass == null)
                         {
@@ -170,17 +186,28 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                         {
                             this.FieldOpt.CssClass += " sdk-unique-invalid";
                         }
+                        var typeComp = typeComponent();
+                        var dataAutomationId = $"{typeComp}_{this.FieldOpt.Name}";
+                        await jsRuntime.InvokeVoidAsync("SetFocusToElement", dataAutomationId);
+                        if(!HasError){
+                            this.formView.CountUnicErrors += 1;
+                            HasError = true;
+                        }
                     }else{
                         if(this.FieldOpt.CssClass != null && this.FieldOpt.CssClass.Contains("sdk-unique-invalid"))
                         {
                             this.FieldOpt.CssClass = this.FieldOpt.CssClass.Replace(" sdk-unique-invalid", "");
                         }
+                        this.formView.CountUnicErrors -= 1;
+                        HasError = false;
                     }
                 }else{
                     if(this.FieldOpt.CssClass != null && this.FieldOpt.CssClass.Contains("sdk-unique-invalid"))
                     {
                         this.FieldOpt.CssClass = this.FieldOpt.CssClass.Replace(" sdk-unique-invalid", "");
                     }
+                    this.formView.CountUnicErrors -= 1;
+                    HasError = false;
                 }
                 StateHasChanged();
             }
@@ -194,6 +221,62 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             }
         }
 
+        protected override async Task OnAfterRenderAsync(bool firstRender){
+            if(firstRender || _jsModule == null){                
+                _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/js/utils.js");
+            }
+        }
+
+        private string typeComponent(){
+            string result = "";
+
+            switch(FieldOpt.FieldType.ToString()){
+                case "CharField":
+                    result = "SDKCharField";
+                    break;
+                case "EntityField":
+                    result = "SDKEntityField";
+                    break;
+                case "FileField":
+                    result = "SDKFileField";
+                    break;
+                case "SelectField":
+                    result = "SDKSelectField";
+                    break;
+                case "TextField":
+                    result = "SDKTextField";
+                    break;
+                case "DecimalField":
+                case "BigIntegerField":
+                case "IntegerField":
+                case "SmallIntegerField":
+                    result = "NumericField";
+                    break;
+                case "BooleanField":
+                    result = "SDKBooleanField";
+                    break;
+                case "DateTimeField":
+                    result = "DateTimeField";
+                    break;
+                // case "Custom":
+                //    switch(FieldOpt.CustomType.ToString())
+                //     {
+                //         case "SelectBarField":
+                //             result = "SDKSelectBar";
+                //             break;
+                //         case "RadioButtonField":
+                //             result = "SDKRadioButton";
+                //             break;
+                //         case "SwitchField":
+                //             result = "SDKSwitch";
+                //             break;
+                //     }
+                //     break;
+                
+            }
+            return  result;
+        }
+        
         public void SetValue(TProperty value)
         {
             var setValue = true;
@@ -217,11 +300,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             {
                 //MuestreError();
             }
-            if (IsUnique && ValidateField)
-            {
-                CheckUniqueValue();
-                 //Console.WriteLine($"El campo {FieldName} es único y debe revisar el valor {value}");
-            }
+            
+            CheckUniqueValue();
 
         }
 

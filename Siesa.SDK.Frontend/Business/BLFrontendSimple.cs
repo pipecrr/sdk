@@ -76,22 +76,26 @@ namespace Siesa.SDK.Business
             // Do nothing
         }
 
+        public virtual RenderFragment Main(){
+            return null;
+        }
+
         public DeleteBusinessObjResponse Delete()
         {
             return new DeleteBusinessObjResponse();
         }
 
-        public BaseSDK<int> Get(Int64 rowid)
+        public BaseSDK<int> Get(Int64 rowid, List<string> extraFields = null)
         {
             return null;
         }
 
-        public Task<BaseSDK<int>> GetAsync(Int64 rowid)
+        public Task<BaseSDK<int>> GetAsync(Int64 rowid, List<string> extraFields = null)
         {
             return null;
         }
 
-        public Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<BaseSDK<int>> queryFilter = null)
+        public Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<BaseSDK<int>> queryFilter = null, bool includeCount = false, bool includeAttachments = true, List<string> extraFields = null)
         {
             return null;
         }
@@ -100,7 +104,7 @@ namespace Siesa.SDK.Business
         {
         }
 
-        public ValidateAndSaveBusinessObjResponse ValidateAndSave()
+        public ValidateAndSaveBusinessObjResponse ValidateAndSave(bool ignorePermissions = false)
         {
             return null;
         }
@@ -200,14 +204,14 @@ namespace Siesa.SDK.Business
             InternalConstructor(authService, notiService,loggerFactory);
         }
 
-        public virtual T Get(Int64 rowid)
+        public virtual T Get(Int64 rowid, List<string> extraFields = null)
         {
             return GetAsync(rowid).GetAwaiter().GetResult();
         }
 
-        public async virtual Task<T> GetAsync(Int64 rowid)
+        public async virtual Task<T> GetAsync(Int64 rowid, List<string> extraFields = null)
         {
-            var message = await Backend.Get(rowid);
+            var message = await Backend.Get(rowid, extraFields);
             var result = JsonConvert.DeserializeObject<T>(message);
             return result;
         }
@@ -218,9 +222,9 @@ namespace Siesa.SDK.Business
             return result;
         }
 
-        public async virtual Task InitializeBusiness(Int64 rowid)
+        public async virtual Task InitializeBusiness(Int64 rowid, List<string> extraFields = null)
         {
-            BaseObj = await GetAsync(rowid);
+            BaseObj = await GetAsync(rowid, extraFields );
         }
 
         public async virtual Task GetDuplicateInfo(Int64 rowid)
@@ -252,7 +256,7 @@ namespace Siesa.SDK.Business
             return SaveAsync().GetAwaiter().GetResult();
         }
 
-        public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave()
+        public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave(bool ignorePermissions = false)
         {
             return ValidateAndSaveAsync().GetAwaiter().GetResult();
         }
@@ -276,9 +280,8 @@ namespace Siesa.SDK.Business
             }
             catch (Exception e)
             {
-            await GetNotificacionService("Custom.Generic.Message.DeleteError");
-
-            return null;
+                await GetNotificacionService("Custom.Generic.Message.DeleteError");
+                throw new Exception(e.Message);
             }
         }
 
@@ -291,19 +294,21 @@ namespace Siesa.SDK.Business
             return BaseObj.ToString();
         }
 
-        public virtual Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null)
+        public virtual Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null, bool includeCount = false, bool includeAttachments = true, List<string> extraFields = null)
         {
-            return GetDataAsync(skip, take, filter, orderBy).GetAwaiter().GetResult();
+            return GetDataAsync(skip, take, filter, orderBy, extraFields: extraFields).GetAwaiter().GetResult();
         }
 
-        public virtual Siesa.SDK.Shared.Business.LoadResult EntityFieldSearch(string searchText, string filters)
+        public virtual Siesa.SDK.Shared.Business.LoadResult EntityFieldSearch(string searchText, string filters, int? top = null, string orderBy = "", List<string> extraFields = null)
         {
-            return EntityFieldSearchAsync(searchText, filters).GetAwaiter().GetResult();
+            return EntityFieldSearchAsync(searchText, filters, top, orderBy, extraFields).GetAwaiter().GetResult();
         }
 
-        public async virtual Task<Siesa.SDK.Shared.Business.LoadResult> EntityFieldSearchAsync(string searchText, string filters)
+        public async virtual Task<Siesa.SDK.Shared.Business.LoadResult> EntityFieldSearchAsync(string searchText, string filters, int? top = null, string orderBy = "", List<string> extraFields = null)
         {
-            var result = await Backend.EntityFieldSearch(searchText, filters);
+            List<string> fields = extraFields ?? new List<string>();
+
+            var result = await Backend.EntityFieldSearch(searchText, filters, top, orderBy, fields);
             Siesa.SDK.Shared.Business.LoadResult response = new Siesa.SDK.Shared.Business.LoadResult();
             response.Data = result.Data.Select(x => JsonConvert.DeserializeObject<T>(x)).ToList();
             response.TotalCount = result.TotalCount;
@@ -311,15 +316,27 @@ namespace Siesa.SDK.Business
             return response;
         }
 
-        public async virtual Task<Siesa.SDK.Shared.Business.LoadResult> GetDataAsync(int? skip, int? take, string filter = "", string orderBy = "")
+        public async Task<List<dynamic>> GetDataWithTop(string filters = ""){
+            var result = new List<dynamic>();
+            var response = await Backend.Call("GetDataWithTop", filters);
+            if(response != null){
+                result = response.Data;
+            }
+            return result;
+        }
+
+        public async virtual Task<Siesa.SDK.Shared.Business.LoadResult> GetDataAsync(int? skip, int? take, string filter = "", string orderBy = "", bool includeCount = false, List<string> extraFields = null)
         {
             Siesa.SDK.Shared.Business.LoadResult response = new Siesa.SDK.Shared.Business.LoadResult();
             try
             {
-                var result = await Backend.GetData(skip, take, filter, orderBy);
+                var result = await Backend.GetData(skip, take, filter, orderBy, includeCount, extraFields);
 
                 response.Data = result.Data.Select(x => JsonConvert.DeserializeObject<T>(x)).ToList();
                 response.TotalCount = result.Data.Count;
+                if(includeCount){
+                    response.TotalCount = result.TotalCount;
+                }
                 response.GroupCount = result.GroupCount;
 
                 return response;
@@ -327,7 +344,9 @@ namespace Siesa.SDK.Business
             catch (Exception e)
             {
                 await GetNotificacionService("Custom.Generic.Message.Error");
-
+                var errors = new List<string>();
+                errors.Add("Exception: " + e.Message + " " + e.StackTrace);
+                response.Errors = errors;
                 return response;
             }
 
@@ -431,15 +450,43 @@ namespace Siesa.SDK.Business
             return result;
         }
 
-        public async Task<int> SaveAttachmentDetail(SDKFileUploadDTO obj){
+        [SDKApiMethod("POST")]
+        public virtual async Task<SDKFileUploadDTO> UploadSingleByte(IFormFile file){
+            var result = new SDKFileUploadDTO();
+            if (file == null){
+                throw new Exception("File is null");
+            }
+            byte[] fileBytes = null;
+            using (var ms = new MemoryStream()){
+                file.CopyTo(ms);
+                fileBytes = ms.ToArray();
+            }
+            var response = await Backend.Call("SaveFile", fileBytes, file.FileName);
+            if(response.Success){
+                result.Url = response.Data.Url;
+                result.FileType = file.ContentType;
+                result.FileName = file.FileName;
+                result.FileContent = fileBytes;
+            }else{
+                var errors = JsonConvert.DeserializeObject<List<string>> (response.Errors.ToString());
+                throw new ArgumentException(errors[0]);
+            }
+            return result;
+        }
+
+        public async Task<int> SaveAttachmentDetail(SDKFileUploadDTO obj, int rowid = 0){
             var BLAttatchmentDetail = GetBackend("BLAttachmentDetail");
-            var result = await BLAttatchmentDetail.Call("SaveAttatchmentDetail", obj);
+            var result = await BLAttatchmentDetail.Call("SaveAttatchmentDetail", obj, rowid);
             if(result.Success){
                 return result.Data;
             }else{
                 var errors = JsonConvert.DeserializeObject<List<string>> (result.Errors.ToString());
                 throw new ArgumentException(errors[0]);
             }
+        }
+
+        public virtual RenderFragment Main(){
+            return null;
         }
     }
 }

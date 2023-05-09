@@ -2,27 +2,6 @@
 //     cache: false
 // });
 
-function loadScript(url, in_head = false, callback = null) {
-    var parent = in_head ? document.head : document.body;
-    var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = url;
-
-    if (callback) {
-        script.onreadystatechange = callback;
-        script.onload = callback;
-    }
-    parent.appendChild(script);
-}
-
-function loadCss(url){
-    var link = document.createElement("link");
-    link.type = "text/css";
-    link.rel = "stylesheet";
-    link.href = url;
-    document.getElementsByTagName("head")[0].appendChild(link);
-}
-
 function ListViewInstance(dotnethelper, key){
     if(!window.dotnethelpersListView){
         var data = new Map();
@@ -31,6 +10,10 @@ function ListViewInstance(dotnethelper, key){
     }else{
         window.dotnethelpersListView.set(key, dotnethelper);
     }
+}
+
+function existMountFlex(){
+    return window.MountFlex != null;
 }
 
 function MountFlex(div_id, retries = 0)
@@ -52,17 +35,19 @@ function MountFlex(div_id, retries = 0)
     }
     //
     document.getElementById(div_id).innerHTML = "";
-
+    console.log("FlexComponent.js: Flex loading");
     let interval_flexdebug = setInterval(function () {
         if ("mountOReportsReact" in window) {
             clearInterval(interval_flexdebug);
             mountOReportsReact(div_id);
+            console.log("FlexComponent.js: Flex loaded");
         }
     }, 100);
 }
 (() => {
     window.MountFlex = MountFlex;
     window.ListViewInstance = ListViewInstance;
+    window.existMountFlex = existMountFlex;
 /*
     window.addEventListener('locationchange', function () {
         console.log("locationchange probando");

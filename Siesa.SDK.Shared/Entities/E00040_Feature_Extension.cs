@@ -16,6 +16,11 @@ namespace Siesa.SDK.Entities
 		[NotMapped]
 		[JsonIgnore]
 		public FeactureOperationsDTO OperationsInfo {get; set;}
+		public virtual ICollection<E00042_Operation> Operations {get; set;}
+		[NotMapped]
+		public List<E00040_Feature> Childs {get; set;}
+		[NotMapped]
+		public bool IsChildOfAnyFeature {get; set;}
 
 	}
 }

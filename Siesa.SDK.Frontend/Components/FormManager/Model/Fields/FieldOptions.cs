@@ -1,6 +1,8 @@
-﻿using Siesa.SDK.Entities;
+﻿using Siesa.Global.Enums;
+using Siesa.SDK.Entities;
 using Siesa.SDK.Frontend.Components.Fields;
 using Siesa.SDK.Frontend.Components.FormManager.Fields;
+using Siesa.SDK.Shared.DataAnnotations;
 using Siesa.SDK.Shared.Utilities;
 using System;
 using System.Collections.Generic;
@@ -19,6 +21,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         public string UnknownFieldType { get; set; }
 
         public bool IsNullable { get; set; }
+        public bool SensitiveData { get; set; }
     }
 
     public class CustomComponent
@@ -62,6 +65,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         public bool Hidden { get; set; } = false;
         public bool Required { get; set; } = false;
 
+        public bool SensitiveData { get; set; } = false;
+
         public int ColumnWidth { get; set; } = 0;
 
         //Para Listas
@@ -74,9 +79,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 
         //for entity fields
         public string RelatedBusiness { get; set; } = "";
-        public Dictionary<string, string> RelatedFilters { get; set; } = new Dictionary<string, string>()
-        {
+        public Dictionary<string, string> RelatedFilters { get; set; } = new Dictionary<string, string>(){
         };
+        
+        public List<List<object>> Filters { get; set; }
 
         public int MinCharsEntityField { get; set; } = 2;
         public string EntityRowidField;
@@ -102,6 +108,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             typeof(EmailField),
             typeof(RadioButtonField<>)
         };
+        private void ChangeCustomType(dynamic attribute)
+        {
+            if (string.IsNullOrEmpty(CustomType))
+            {
+                var EnumValue = attribute._customType;
+                string customType = Enum.GetName(typeof(CustomTypeField), EnumValue);
+                CustomType = customType;
+            }
+            // else if (CustomType.ToLower().Equals("default"))
+            // {
+            //     CustomType = string.Empty;
+            // }
+        }
 
         private FieldObj InitField(object modelObj)
         {
@@ -126,7 +145,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             else
             {             
                 //Split Name
-                string[] fieldPath = Name.Split('.');                
+                string[] fieldPath = Name.Split('.');
                 object currentObject = Utilities.CreateCurrentData(modelObj, fieldPath, typeof(BaseSDK<>));
                 field.ModelObj = currentObject;
                 field.Name = fieldPath[fieldPath.Length - 1];
@@ -142,6 +161,25 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 }
                 var propertyType = field.ModelObj.GetType().GetProperty(field.Name).PropertyType;
                 originalPropertyType = propertyType;
+                var customAttr = field.ModelObj.GetType().GetProperty(field.Name).GetCustomAttributes(true);
+                if (customAttr != null)
+                {
+                    foreach (var item in customAttr)
+                    {
+                        switch (item)
+                        {
+                            case SDKSensitiveData _:
+                                SensitiveData = true;
+                                break;
+                            case SDKCustomType _:
+                                ChangeCustomType(item);
+                                break;
+                            
+                            default:                        
+                                break;
+                        }
+                    }
+                }
                 //Console.WriteLine(fieldName + " , " + propertyType);
                 if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
                 {
@@ -217,7 +255,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                     field.SelectFieldType = originalPropertyType;
                 }
             }
-            if (!String.IsNullOrEmpty(CustomType))
+            if (!String.IsNullOrEmpty(CustomType) && CustomType.ToLower() != "default")
             {
                 Type fieldType = SupportedTypes.Find(x => x.Name.Split("`")[0] == CustomType);
                 if (fieldType != null)
@@ -238,6 +276,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             }
             field.FieldType = FieldType;
             field.IsNullable = IsNullable;
+            field.SensitiveData = SensitiveData;
             return field;
         }
 

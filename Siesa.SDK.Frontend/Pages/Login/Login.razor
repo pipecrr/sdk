@@ -33,21 +33,20 @@
         <div class="card_login col-12">
             <div class="row image_back">
                 <div class="info_area col-md-12 col-lg-7 p-3 p-lg-4">
-                    <div class="col-12 p-0 pb-5 mb-5 mb-md-4 d-flex justify-content-between">
+                    @* <div class="col-12 p-0 pb-5 mb-5 mb-md-4 d-flex justify-content-between">
                         <div>
-                            <img src="_content/Siesa.SDK.Frontend/assets/img/LogoSiesaBlanco.svg" height="38px"
-                                alt="logo_siesa_blanco">
+                            <img src="_content/Siesa.SDK.Frontend/assets/img/LogoSiesaBlanco.svg" height="38px" />
                         </div>
                         <div class="d-sm-block d-md-none">
                             <button class="btn btn-primary btn_ghost_def_1 btn-sm ml-2" data-toggle="modal"
                                 data-target="#infoModal"><i class="fa-solid fa-info"></i></button>
                         </div>
-                    </div>
-                    <div class="info_card d-none d-sm-none d-md-block col-12 p-3 p-md-3 p-lg-4 mt-4">
+                    </div> *@
+                    <div class="info_card d-none d-sm-none d-md-none col-12 p-3 p-md-3 p-lg-4 mt-4">
                         <h2 class="mb-md-2 mb-lg-3"><ResourceViewer ResourceTag="BLLogin.Demo.NewsTitle" RowidCulture=@RowidCulture /></h2>
                         <p class="mb-md-2 mb-lg-3"><ResourceViewer ResourceTag="BLLogin.Demo.NewsBody" RowidCulture=@RowidCulture /></p>
                         <div class="d-flex justify-content-between">
-                            <SDKButton CssClass="btn btn-primary btn_ghost_def_1 btn-sm px-4" ResourceTag="BLLogin.MoreInfo"/>
+                            <SDKButton CssClass="btn btn-primary btn_ghost_def_1 btn-sm px-4" ResourceTag="BLLogin.MoreInfo" RowidCulture=@RowidCulture />
                             <div>
                                 <button class="btn btn-primary btn_ghost_def_1 btn-sm"><i
                                         class="fa-solid fa-chevron-left"></i></button>
@@ -56,9 +55,15 @@
                             </div>
                         </div>
                     </div>
+                    <div class="title_0">
+                         <ResourceViewer ResourceTag="Custom.Project.Copy" RowidCulture=@RowidCulture />
+                    </div>
                 </div>
                 <div class="login_area col-12 col-lg-5 p-3 p-lg-3">
-                    <div class="col-12 p-0 d-flex justify-content-center justify-content-lg-end align-items-center">
+                    <div class="text-left text-md-center text-lg-left pb-5">
+                        <img src="_content/Siesa.SDK.Frontend/assets/img/siesaLogo.png" height="35px" alt="logo_siesa"> 
+                    </div>
+                    <div class="col-12 p-0 d-flex justify-content-center align-items-center">
                         <select class="select_connect" id="SelectConnect" @onchange="OnChangeConnection">
                             <option value=""><ResourceViewer ResourceTag="BLUser.Login.Message.SelectDbConnection" RowidCulture=@RowidCulture /></option>
                             @if(ConnectionList != null && ConnectionList.Count > 0)
@@ -75,7 +80,7 @@
                         <div id="lang">
                             <div class="position-relative">
                                 <button class="btn ml-2 d-flex btn_region" style="padding:0"
-                                    @onclick="() => IsOpen = !IsOpen">
+                                    @onclick="() => IsOpen = !IsOpen" data-automation-id="Button_Select_Culture">
                                     @if(selectedCulture != null)
                                     {
                                         @*fi fi-selectedCulture.CountryCode fis rounded-circle*@
@@ -93,22 +98,30 @@
                     <div class="row align-items-center py-5">
                         <div class="col-12 col-sm-12 col-md-6 col-lg-12">
                             <div class="row">
-                                <div class="col-12 p-0 d-flex justify-content-center pb-4">
-                                    <img src="@AuthenticationService.GetConnectionLogo()" height="48px"
-                                        alt="logo_siesa_color">
+                                <div class="col-12 p-0 d-flex justify-content-center pb-5 pb-md-0 pb-lg-5">
+                                    <img class="logo_company_login" src="@LogoUrl"/>
                                 </div>
-                                <div class="col-12 p-0 pb-4 pb-md-0 pb-lg-4">
+                                @* <div class="col-12 pb-3 pb-md-0 pb-lg-3">
                                     <div class="col-12 text-center title_1">
                                         <ResourceViewer ResourceTag="BLLogin.Project.Welcome" RowidCulture=@RowidCulture />
-                                    </div>
-                                    <div class="col-12 text-center title_2">
-                                        <ResourceViewer ResourceTag="BLLogin.InputYourData" RowidCulture=@RowidCulture />
-                                    </div>
+                                    </div> 
+                                    <div class="col-12 offset-sm-2 col-sm-8 offset-md-1 col-md-10 offset-lg-2 col-lg-8 px-md-3 px-lg-0 title_2 text-center text-lg-left">
 
-                                </div>
+                                        <ResourceViewer ResourceTag="BLLogin.InputYourData" RowidCulture=@RowidCulture />
+
+                                    </div> 
+                                </div> *@
                             </div>
                         </div>
                         <div class="border_left_md col-12 col-sm-12 col-md-6 col-lg-12">
+
+
+                            <div class="col-12 offset-sm-2 col-sm-8 offset-md-1 col-md-10 offset-lg-2 col-lg-8 px-md-3 px-lg-0">
+                                <div class="col-12 px-0 pb-3 title_2 text-center text-lg-left">
+                                        <ResourceViewer ResourceTag="BLLogin.InputYourData" RowidCulture=@RowidCulture />
+                                </div>
+
+                            </div>
                             @if(RecoveringPassword){
                                 <ForgotPassword _login="@this" />
                             }else{
@@ -139,7 +152,7 @@
                                             />
                                             <SDKValidationMessage For="@(() => model.Password)" />
                                         </div>
-                                        <SDKButton form="@FormID" SubmitFormOnClick="true" RenderStyle="SDKButtonRenderStyle.Primary" CssClass="btn-sm w-100 mt-2">
+                                        <SDKButton form="@FormID" SubmitFormOnClick="true" RenderStyle="SDKButtonRenderStyle.Primary" CssClass="btn-sm w-100 mt-2" Enabled="@(!loading)">
                                             @if (loading)
                                             {
                                                 <span class="spinner-border spinner-border-sm mr-1"></span>
@@ -201,18 +214,17 @@
         </div>
     </div>
 
-    <div class="login_loading @GetCssLoding()">
-        <div>
-            <div class="text-center fa-4x font_color_primary_light mb-4">
-                <i class="fas fa-spinner fa-pulse"></i>
-            </div>
-            <div class="text-center">
-                <img src="@AuthenticationService.GetConnectionLogo()" height="82px" alt="logo_siesa">
+        <div class="login_loading @GetCssLoding()">
+            <div>
+                <div class="text-center fa-4x font_color_primary_light mb-4">
+                    <i class="fas fa-spinner fa-pulse"></i>
+                </div>
+                <div class="text-center">
+                    <img src="@LogoUrl" height="82px" />
+                </div>
             </div>
         </div>
-    </div>
-
-
+        
 </div>
 
 <DxDropDown @bind-IsOpen="@IsOpen" PositionMode="DropDownPositionMode.Bottom" PositionTarget="#lang"
@@ -227,7 +239,7 @@
 @code {
     string classCulture = "";
     public string FormID { get; set; } = Guid.NewGuid().ToString();
-    private Model model = new Model();
+    private SDKLoginModelDTO model = new SDKLoginModelDTO();
     private bool init_loading = true;
     private bool loading;
     private string error;
@@ -235,6 +247,8 @@
 
     private short RowidCulture { get; set; } = 1;
     private E00021_Culture selectedCulture { get; set; }
+
+    private string LogoUrl { get; set; } = "";
     List<E00021_Culture> cultures = new List<E00021_Culture>();
 
     //List<(short,string)> DbConnections { get; set; } = new List<(short,string)>();
@@ -267,6 +281,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        LogoUrl = AuthenticationService.GetConnectionLogo();
         init_loading = true;
         // redirect to home if already logged in
         if (AuthenticationService.User != null)
@@ -274,6 +289,7 @@
             NavigationManager.NavigateTo("");
             return;
         }
+        
         cultureDefault();
         await InitLogin();        
     }
@@ -283,7 +299,7 @@
         await getDbConnections();
         await getCultures();
         getSelectedCulture();
-        //await getUserlang();
+        await getUserlang();
         init_loading = false;
         await base.OnInitializedAsync();
         await ImportJs();
@@ -370,9 +386,16 @@
             if(AuthenticationService.GetSelectedConnection() == null || AuthenticationService.GetSelectedConnection().Rowid == 0){
 
                 SelectedConnection = ConnectionList.First();
-                AuthenticationService.SetSelectedConnection(SelectedConnection);
+                _ = AuthenticationService.SetSelectedConnection(SelectedConnection);
             }else{
-                SelectedConnection = AuthenticationService.GetSelectedConnection();
+                var _selectedConnection = ConnectionList.FirstOrDefault(x => x.Rowid == AuthenticationService.GetSelectedConnection().Rowid);
+                if(_selectedConnection != null){
+                    SelectedConnection = _selectedConnection;
+
+                }else{
+                    SelectedConnection = ConnectionList.First();
+                }
+                _ = AuthenticationService.SetSelectedConnection(SelectedConnection);
             }
 
             //DbConnections = result.Data as List<(short,string)>;
@@ -433,8 +456,9 @@
            cultures = await getCulturesAsync();
 
         }
-
-        if (userlang == 0)
+        try
+        {
+            if (userlang == 0)
             {
                 var BrowserLang = await JSRuntime.InvokeAsync<string>("getBrowserLang");
                 string[] language = BrowserLang.Split('-');
@@ -444,18 +468,21 @@
             {
                 selectedCulture = cultures.FirstOrDefault(x => x.Rowid == userlang);
             }
+        }catch(Exception ex)
+        {
+        }
 
-            if (selectedCulture == null){
-                cultureDefault();
-                try {
+        if (selectedCulture == null){
+            cultureDefault();
+            try {
 
-                    await AuthenticationService.RemoveCustomRowidCulture();
-                }catch(Exception ex){
-                   
-                }
-            }else{
-                OnChangeCulture(selectedCulture.Rowid);
+                await AuthenticationService.RemoveCustomRowidCulture();
+            }catch(Exception ex){
+                
             }
+        }else{
+            OnChangeCulture(selectedCulture.Rowid);
+        }
     }
 
     private void cultureDefault(){
@@ -468,25 +495,40 @@
             };        
     }
 
-    void OnChangeConnection(ChangeEventArgs e)
+    private async Task OnChangeConnection(ChangeEventArgs e)
     {
         try
         {
-           var rowidConnection = Convert.ToInt16(e.Value.ToString());
-            SelectedConnection = ConnectionList.FirstOrDefault(x => x.Rowid == rowidConnection); 
+            var rowidConnection = Convert.ToInt16(e.Value.ToString());
+            SelectedConnection = ConnectionList.FirstOrDefault(x => x.Rowid == rowidConnection);
+
+            if(SelectedConnection != null)
+            {
+                await localStorageService.RemoveItemAsync("rowidCompanyGroup");
+                await localStorageService.RemoveItemAsync("imageCompanyGroup");
+
+                LogoUrl = AuthenticationService.GetConnectionLogo();
+            } 
+
         }
         catch (System.Exception)
         {
             
             SelectedConnection = new SDKDbConnection();
         }
-        AuthenticationService.SetSelectedConnection(SelectedConnection);
+         _ = AuthenticationService.SetSelectedConnection(SelectedConnection);
         
         StateHasChanged();
     }
 
     private async Task ImportJs()
     {
+        try
+        {
+            await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/js/utils.js");
+        }catch (Exception)
+        {
+        }
         try
         {
             await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/Pages/Login/Login.razor.js");

@@ -44,7 +44,7 @@ namespace Siesa.SDK.Shared.Utilities
                     return false;
                 }
 
-                if(!authenticationService.User.FeaturePermissions[businessName].Contains(actionRowid))
+                if(!authenticationService.User.FeaturePermissions[businessName].Contains(actionRowid) && !authenticationService.User.FeaturePermissions[businessName].Contains(-999))
                 {
                     return false;
                 }
@@ -120,6 +120,39 @@ namespace Siesa.SDK.Shared.Utilities
                 {
                     return reader.ReadToEnd();
                 }
+            }
+            catch (Exception e) {
+                return null;
+            }
+
+        }
+        public static byte[] ReadAssemblyResourceBytes(Assembly asm, string name)
+        {
+            try
+            {
+                string resourcePath = name;
+                resourcePath = asm.GetManifestResourceNames().Single(str => str.EndsWith(name));
+                using (Stream stream = asm.GetManifestResourceStream(resourcePath))
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    stream.CopyTo(memoryStream);
+                    return memoryStream.ToArray();
+                }
+
+                
+            }
+            catch (Exception e) {
+                return null;
+            }
+
+        }
+        public static List<string> GetAssemblyResources(Assembly asm, string path)
+        {
+            try
+            {
+                string fullpath = $"{asm.GetName().Name}.{path}";
+                return asm.GetManifestResourceNames().Where(str => str.StartsWith(fullpath)).ToList();
+                
             }
             catch (Exception e) {
                 return null;

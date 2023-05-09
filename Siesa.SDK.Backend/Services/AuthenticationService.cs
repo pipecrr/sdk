@@ -31,7 +31,7 @@ namespace Siesa.SDK.Backend.Services
             return _user;
         }}
 
-        public async Task SetToken(string token)
+        public async Task SetToken(string token, bool saveLocalStorage = true)
         {
             UserToken = token;
         }
@@ -41,7 +41,8 @@ namespace Siesa.SDK.Backend.Services
             throw new NotImplementedException();
         }
 
-        public Task Login(string username, string password, short rowIdDBConnection)
+        public Task Login(string username, string password, short rowIdDBConnection, 
+            bool IsUpdateSession = false,short rowIdCompanyGroup = 1)
         {
             throw new NotImplementedException();
         }
@@ -110,6 +111,24 @@ namespace Siesa.SDK.Backend.Services
         public async Task<bool> ChangePassword(int rowidUser, string NewPassword="", string ConfirmPassword=""){
              throw new NotImplementedException();
         }
+
+        public int GetSelectedSuite()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetSelectedSuite(int rowid)
+        {
+            throw new NotImplementedException();
+        }
+        public async Task RenewToken()
+        {
+            throw new NotImplementedException();
+        }
         
+        public string GetUserPhoto()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

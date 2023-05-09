@@ -34,14 +34,24 @@
                         data-placement="top" title="Atras" @onclick="@OnClick" >
                         <i class="fa-solid fa-chevron-left"></i>
                     </button>
+                }else
+                {
+                    <div class="px-4 mr-3">
+                        &nbsp;
+                    </div>
                 }
-                <h3 class="mb-0">
+                <div class="d-flex align-items-center justify-content-center icono_cabecera" style="background: #@MenuService?.SelectedSuite?.HexColor">
+                   <i class="@MenuService?.SelectedSuite?.IconClass"></i> 
+                </div>
+                <h3 class="mb-0 ml-4 pl-3 ml-sm-5 pl-sm-3 ml-md-5 pl-md-3 ml-lg-5 pl-lg-5">
+
                     @if(string.IsNullOrEmpty(Menu.CurrentText))
                     {
                         <ResourceViewer RowidResource="@Menu.RowidResource" />
                     }else{
                         @Menu.CurrentText
                     }
+
                 </h3>
             </div> 
             <div class="col-md-4 py-2 input-group input-group-sm d-flex align-items-center">
@@ -65,28 +75,127 @@
                         {
                             @if(FeaturePermissionService.CheckUserActionPermission(submenu.Feature.BusinessName, 4, AuthenticationService))
                             {
-                                <div class="col-12 col-sm-6 col-md-4 py-3">
-                                    <button @onclick="@(()=>OnClickItem(submenu))" class="whcm_panel_button w-100 p-3 font-weight-bold text-truncate">
-                                        @if(string.IsNullOrEmpty(submenu.CurrentText))
-                                        {
-                                            <ResourceViewer RowidResource="@submenu.RowidResource" />
-                                        }else{
-                                            @submenu.CurrentText
-                                        }
-                                    </button>
-                                </div>
+                                <div class="col-12 col-sm-6 col-md-6 col-lg-4 py-3">
+                                <button @onclick="@(()=>OnClickItem(submenu))" @onclick:stopPropagation="true"  class="whcm_panel_button_box w-100 text-left pt-3 h-100" >
+                                    @if(submenu.SubMenus.Count() > 0)
+                                    {
+                                        <div class="panel_button_head_icon" style="background: #@MenuService?.SelectedSuite?.HexColor" data-toggle="tooltip" data-placement="top" title="Frecuencia de contacto">
+                                            <i class="fa-solid fa-list-tree"></i>
+                                        </div>
+                                        <div class="whcm_panel_button h-100 panel_padd_3">
+                                            <a href="@submenu.CurrentURL" target="_blank"  @onclick:stopPropagation="true"  
+                                                class="panel_button_icon_style" style="color: #@MenuService?.SelectedSuite?.HexColor">
+
+                                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                            </a>
+                                            <div class="panel_button_icon_arrow">
+                                                <i class="fa-solid fa-chevron-right"></i>
+                                            </div>
+                                            <p class="font_color_text m-0 panel_head_text text-truncate">
+                                                @if(!string.IsNullOrEmpty(submenu.CurrentText))
+                                                {
+                                                    @submenu.CurrentText
+                                                }else
+                                                {
+                                                    <ResourceViewer RowidResource="@submenu.RowidResource" />   
+                                                }
+                                            </p>
+                                            <p class="font_color_text m-0">
+                                                @* @string.Join(", ", submenu.SubMenus
+                                                            .Where(x => !string.IsNullOrEmpty(x.CurrentText))
+                                                            .Select(x => x.CurrentText)) *@
+                     
+                                            </p>
+                                            <div class="panel_button_back" style="background: #@MenuService?.SelectedSuite?.HexColor"></div>
+                                        </div>
+                                    }else
+                                    {
+                                        <div class="panel_button_head text-truncate" style="background: #@MenuService?.SelectedSuite?.HexColor" data-toggle="tooltip" data-placement="top">
+                                            @if(!string.IsNullOrEmpty(submenu.CurrentText))
+                                            {
+                                                @submenu.CurrentText
+                                            }else
+                                            {
+                                                <ResourceViewer RowidResource="@submenu.RowidResource" />   
+                                            }
+                                        </div>
+                                        <div class="whcm_panel_button h-100">
+                                            <a href="@submenu.CurrentURL" target="_blank"  @onclick:stopPropagation="true"  
+                                            class="panel_button_icon_style" style="color: #@MenuService?.SelectedSuite?.HexColor">
+                                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                            </a>
+                                            <div class="panel_button_icon_arrow">
+                                                <i class="fa-solid fa-chevron-right"></i>
+                                            </div>
+                                            <p class="font_color_text m-0">
+                                                @* Texto Descriptivo *@
+                                            </p>
+                                            <div class="panel_button_back" style="background: #@MenuService?.SelectedSuite?.HexColor"></div>
+                                        </div>
+                                    }
+                                </button>
+                            </div>
                             }
                         }else
                         {
-                            <div class="col-12 col-sm-6 col-md-4 py-3">
-                                    <button @onclick="@(()=>OnClickItem(submenu))" class="whcm_panel_button w-100 p-3 font-weight-bold text-truncate">
-                                        @if(string.IsNullOrEmpty(submenu.CurrentText))
-                                        {
-                                            <ResourceViewer RowidResource="@submenu.RowidResource" />
-                                        }else{
-                                            @submenu.CurrentText
-                                        }
-                                    </button>
+                            <div class="col-12 col-sm-6 col-md-6 col-lg-4 py-3">
+                                <button @onclick="@(()=>OnClickItem(submenu))" @onclick:stopPropagation="true"  class="whcm_panel_button_box w-100 text-left pt-3 h-100" >
+                                    @if(submenu.SubMenus.Count() > 0)
+                                    {
+                                        <div class="panel_button_head_icon" style="background: #@MenuService?.SelectedSuite?.HexColor" data-toggle="tooltip" data-placement="top" title="Frecuencia de contacto">
+                                            <i class="fa-solid fa-list-tree"></i>
+                                        </div>
+                                        <div class="whcm_panel_button h-100 panel_padd_3">
+                                            <a href="@submenu.CurrentURL" target="_blank"  @onclick:stopPropagation="true"  
+                                                class="panel_button_icon_style" style="color: #@MenuService?.SelectedSuite?.HexColor">
+
+                                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                            </a>
+                                            <div class="panel_button_icon_arrow">
+                                                <i class="fa-solid fa-chevron-right"></i>
+                                            </div>
+                                            <p class="font_color_text m-0 panel_head_text text-truncate">
+                                                @if(!string.IsNullOrEmpty(submenu.CurrentText))
+                                                {
+                                                    @submenu.CurrentText
+                                                }else
+                                                {
+                                                    <ResourceViewer RowidResource="@submenu.RowidResource" />   
+                                                }
+                                            </p>
+                                            <p class="font_color_text m-0">
+                                                @* @string.Join(" , ", submenu.SubMenus
+                                                            .Where(x => !string.IsNullOrEmpty(x.CurrentText))
+                                                            .Select(x => x.CurrentText)) *@
+                                            </p>
+                                            <div class="panel_button_back" style="background: #@MenuService?.SelectedSuite?.HexColor"></div>
+                                        </div>
+                                    }else
+                                    {
+                                        <div class="panel_button_head text-truncate" style="background: #@MenuService?.SelectedSuite?.HexColor" data-toggle="tooltip" data-placement="top">
+                                            @if(!string.IsNullOrEmpty(submenu.CurrentText))
+                                            {
+                                                @submenu.CurrentText
+                                            }else
+                                            {
+                                                <ResourceViewer RowidResource="@submenu.RowidResource" />   
+                                            }
+                                        </div>
+                                        <div class="whcm_panel_button h-100">
+                                            <a href="@submenu.CurrentURL" target="_blank"  @onclick:stopPropagation="true"  
+                                            class="panel_button_icon_style" style="color: #@MenuService?.SelectedSuite?.HexColor">
+                                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                            </a>
+                                            <div class="panel_button_icon_arrow">
+                                                <i class="fa-solid fa-chevron-right"></i>
+                                            </div>
+                                            <p class="font_color_text m-0">
+                                                @* Texto descriptivo para el feature *@
+                                            </p>
+                                            <div class="panel_button_back" style="background: #@MenuService?.SelectedSuite?.HexColor"></div>
+                                        </div>
+                                    }
+                                </button>
                             </div>
                         }  
                     }
@@ -205,6 +314,6 @@
             {
                 return x.CurrentText.ToLower().Contains(SearchString.ToLower());
             }
-        });
+        }).OrderBy(x => x.Order);
     }
 }

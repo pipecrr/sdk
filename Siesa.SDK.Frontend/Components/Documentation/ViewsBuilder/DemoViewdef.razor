@@ -15,8 +15,24 @@
                 </p>
                     <SDKTextField CssClass="text-area-demoviewdef" Value="@ViewdefCreate"/>
 
+                <p>Es posible crear un único Viewdef con el nombre "default.json" para cargar las vistas de creación, edición y detalle, en caso de que exista un "create.json", "edit.json" y/o "detail.json" estos últimos tendrán prioridad sobre el "default.json", igualmente para el caso de los "related_*.json" este tendrá prioridad sobre los anteriores.</p>
+                <br/>
+
                 <p>El archivo de metadatos para una vista de lista, tiene el siguiente formato:</p>
                     <SDKTextField CssClass="text-area-demoviewdef" Value="@ViewdefList"/>
+                
+                <p>Los filtros son una lista de listas de object donde cada elemento de la lista es un or y cada propiedad del objeto es un and, los tipos de filtros soportados son:</p>
+                <ul>
+                    <li>{FieldName}__in: para filtro in, se debe enviar una lista del tipo del campo con los elementos que se van a filtrar</li>
+                    <li>{FieldName}__not_in: para filtro not in, se debe enviar una lista del tipo del campo con los elementos que se van a filtrar</li>
+                    <li>{FieldName}__contains: para filtro contains</li>
+                    <li>{FieldName}__gt: para filtro mayor que</li>
+                    <li>{FieldName}__gte: para filtro mayor o igual que</li>
+                    <li>{FieldName}__lt: para filtro menor que</li>
+                    <li>{FieldName}__lte: para filtro menor o igual que</li>
+                    <li>{FieldName}: para filtrar por un valor igual a</li>
+                </ul>
+                
 
                 <p>Tambien se da soporte para los campos de tipo control entidad, 
                     indicando el campo que se relaciona y con cual entidad hace relacion. Genera un campo de tipo
@@ -27,8 +43,8 @@
                     correspondientes al ingresar a la URL del negocio:</p>
                     <ul>
                         <li>Creación: /NombreDelNegocio/create/</li>
-                        <li>Edición: /NombreDelNegocio/edit/RowId/</li>
-                        <li>Detalle: /NombreDelNegocio/detail/RowId/</li>
+                        <li>Edición: /NombreDelNegocio/edit/{RowId}/</li>
+                        <li>Detalle: /NombreDelNegocio/detail/{RowId}/</li>
                         <li>Lista: /NombreDelNegocio/</li>
                     </ul>
 
@@ -55,6 +71,9 @@
                     <li>sdk-disabled: Determina si el campo está deshabilitado</li>
                     <li>sdk-change: Ejecuta el código cuando se cambia el valor del campo</li>
                 </ul>
+
+                <p>Expecificamente en los campos tipo archivo se puede definir el tipo de archivo que se puede subir, en la propiedad CustomAtributtes.Extensions, por defecto el componente expecifica imagenes tipo archivo</p>
+                <SDKTextField CssClass="text-area-demoviewdef" Value="@CustomAtributtesExtenxions"/>
 
                 <p>El generador de vistas tambien nos permite especificar un campo de tipo personalizado, 
                     los soportados hasta el momento son los siguientes:</p>
@@ -94,6 +113,26 @@
                 <p>En los botones se pueden especificar permisos para las acciones con el parametro ListPermission</p>
 
                         <SDKTextField CssClass="text-area-demoviewdef" Value="@ButtonsActions"/>
+                    
+                <p>En los botones se pueden especificar si estan ocultos o deshabilitados por defecto </p>
+
+                        <SDKTextField CssClass="text-area-demoviewdef" Value="@ButtonsDefault"/>                
+
+                <p>En los botones se pueden especificar en el CustomAttributtes las opciones "sdk-disabled", "sdk-hide" y "sdk-show"</p>
+
+                        <SDKTextField CssClass="text-area-demoviewdef" Value="@ButtonsCustomAttributes"/>
+                
+                <p>Para agregar CustomAttributtes en los botones por defecto es necesario agregar un boton con el Id del boton, tambien se pueden agregar las propiedades Disabled y Hidden, los Id permitidos son:</p>
+                    <ul>
+                        <li>Create</li>
+                        <li>Save</li>
+                        <li>Duplicate</li>                        
+                        <li>Edit</li>
+                        <li>List</li>
+                        <li>Delete</li>                        
+                    </ul>
+                <p>Y agregar en el CustomAtributtes las propiedades que desea modificar como se muestra anteriormente, si el id no existe, no se tendra en cuanta el boton, si se envian propiedades adicionales a los botones por defecto no las tendra en cuenta</p>
+                    <SDKTextField CssClass="text-area-demoviewdef" Value="@ButtonsDefaultCustomAttributes"/>
 
                 <p>Por defecto se usa la flex en el listar, para quitar el componente flex en el listar, se agrega "UseFlex: false" en el list.json </p>
                 <p>Tambien se puede especificar que pagine por servidor y el tamaño de la pagina, por defecto el take es 100 y la paginacion servidor en true</p>                    
@@ -101,9 +140,31 @@
 
                 <p>Por defecto el listar no muestra el linkTo si se desea agregar el LisnkTO es necesario indicarlo en el list.json</p>
                         <SDKTextField CssClass="text-area-demoviewdef" Value="@ShowLinkTo"/>
-                <p>El listar permite enviar acciones personalizadas se agregan a nivel general en el list.json</p>
+                        
+                <p>El listar permite enviar acciones personalizadas se agregan a nivel general en el list.json, en el BL el metodo "CustomAction" recibe como parametro un objeto del tipo del registro</p>
                         <SDKTextField CssClass="text-area-demoviewdef" Value="@CustomActions"/>
+                <p>Para deshabilitar u ocultar un CustomActions es posible enviar la propiedad disabled o hidden en el CustomAction, adicionalemente se puede habilitar o deshabilitar dependiendo una condicion añadiendo en los CustomAtributtes las propiedades "sdk-disabled" y "sdk-hide" para deshabilitar y/o ocultar los botones, ambos metodos reciben como parametro el objeto seleccionado y debe retornar un bool que indica si habilita o no el boton.</p>
+                        <SDKTextField CssClass="text-area-demoviewdef" Value="@CustomActionsDisabled"/>
 
+                <p>Utilizando la propiedad CustomAtributtes ahora podemos definir para un campo de tipo Booleano, 
+                    las opciones que se mostraran luego de definirlo como tipo Selectbar, enviando el tag del recurso de la siguiente manera:</p>
+                         <SDKTextField CssClass="text-area-demoviewdef" Value="@SelectbarBoolean"/>
+
+                <p>Los Viewdef soportan a traves de un nuevo objeto llamado ExtraFields(Lista de string) enviar los campos especificos que vamos a necesitar/consultar, esto aplica por ahora para las vistas "DetailView" y Listview(tanto Flex como Radzen).
+                    Si no se especifica ExtraFields, se consultaran todos los campos del objeto, si se especifica, se consultaran los campos que se envien en el ExtraFields mas los campos por defecto en el Viewdef, los Extrafields no se mostraran en el formulario pero si los tendremos disponibles en BaseObj:</p>
+                    <SDKTextField CssClass="text-area-demoviewdef" Value="@ExtraFields"/>
+                <p>
+                    Esto tambien aplica si queremos traer campos relacionados, como se ve en el ejemplo anterior,
+                    se envia el campo "BaseObj.City.State" indicando que quiero traer en este caso la ciudad y el departamente de un barrio
+                    y "BaseObj.City.State.Country", indicando que quiero ahora consultar tambien el Pais.
+
+                    Por ahora solo la <strong>Listview Flex</strong> soporta propiedades especificas del objeto relacionado por ejemplo:
+                    <ul>
+                        <li>BaseObj.City.State.Name</li>
+                        <li>BaseObj.City.State.Country.Rowid</li>
+                    </ul>
+                </p>
+                
         </div>
     </div>
 </div>
@@ -145,7 +206,13 @@
                                     100
                                     ]
                                 },
-                                ""Filters"": [],
+                                ""Filters"": [
+                                    [
+                                        {
+                                            ""Status__in"": ""GetFilter()""
+                                        }
+                                    ]
+                                ],
                                 ""Fields"": [
                                     {
                                     ""Name"": ""BaseObj.Name""
@@ -156,7 +223,11 @@
                                     {
                                     ""Name"": ""BaseObj.Status""
                                     }
-                                ]
+                                ],
+                                ""AllowEdit"": ""false"",
+                                ""AllowDelete"": ""false"",
+                                ""AllowDetail"": ""false"",
+                                ""AllowCreate"": ""false""
                             }";
 
     string ControlEntidad = @"  {
@@ -194,6 +265,13 @@
                                     ""CustomAttributes"": {
                                     ""sdk-show"": ""(int)BaseObj.PersonType == 2""}
                                 }" ;
+
+    string CustomAtributtesExtenxions = @"{
+                            ""Name"": ""BaseObj.AttachmentDetail"",
+                            ""CustomAttributes"": {                                
+                                ""Extensions"":["".jpg"", "".png"", "".jpeg""]
+                                }
+                            }";
 
     string CustomType = @"{
                             ""Name"": ""BaseObj.IsClient"", 
@@ -244,8 +322,38 @@
     string ButtonsActions=@"
                     ""Buttons"": [{
                         ""Action"": ""await MetodoBLFrontend()"",
-                        ""Style"": ""secondary""
+                        ""Style"": ""secondary"",
                         ""ListPermission"": [1,2,6]
+                        }]";
+
+    string ButtonsDefault =@"
+                    ""Buttons"": [{
+                        ""Action"": ""await MetodoBLFrontend()"",
+                        ""Style"": ""secondary"",
+                        ""Hidden"": ""true"",
+                        ""Disabled"": ""true""
+                        }]";
+
+    string ButtonsCustomAttributes =@"
+                    ""Buttons"": [{
+                        ""Action"": ""await MetodoBLFrontend()"",
+                        ""Style"": ""secondary"",
+                        ""CustomAttributes"": {
+                            ""sdk-disabled"":""onDisabled()"",
+                            ""sdk-hide"":""onHide()"",
+                            ""sdk-show"":""onShow()""
+                            }
+                        }]";
+
+    string ButtonsDefaultCustomAttributes =@"
+                    ""Buttons"": [{
+                        ""Id"": ""Save"",
+                        ""Disabled"": ""true"",
+                        ""CustomAttributes"": {
+                            ""sdk-disabled"":""onDisabled()"",
+                            ""sdk-hide"":""onHide()"",
+                            ""sdk-show"":""onShow()""
+                            }
                         }]";
 
     string ListFlex = @"
@@ -258,5 +366,54 @@
                             ""CustomActions"": [{                            
                             ""Action"": ""CustomAction"",
                             ""IconClass"": ""fa fa-plus""
-                            }]";
+                            }]
+                            
+                            ///BL
+                            public async Task CustomAction([tipo del baseObj] obj){
+                                 //Todo lo que se quiera hacer
+                            }
+                            ";
+
+    string CustomActionsDisabled = @"
+                            ""CustomActions"": [{                            
+                            ""Action"": ""CustomAction"",
+                            ""IconClass"": ""fa fa-plus"",
+                            ""Disabled"": ""true"",
+                            ""Hidden"": ""true"",
+                            ""CustomAttributes"": {
+                                ""sdk-disabled"": ""DisableCondition""
+                            }]
+
+                            ///BL
+                            public async Task<bool> DisableCondition([Tipo baseObj] obj){
+                                 var result = true; //Todo: Implement logic return result; 
+                            }
+                            ";
+
+    string SelectbarBoolean = @"
+                                    ""Name"": ""BaseObj.HasScheduledAccess"", 
+                                    ""CustomType"": ""SelectBarField"",
+                                        ""CustomAttributes"": {
+                                        ""BooleanYesResourceTag"": ""Custom.Prueba.Si"",
+                                        ""BooleanNoResourceTag"": ""Custom.Prueba.No""
+                                        }" ;
+    
+    string ExtraFields = @"
+                            ""{
+                            ""Panels"": [
+                                {
+                                ""Fields"": [
+                                ""...""
+                                ""...""
+                                ""...""
+                                ""]""
+                                ""}""
+                            ""],""
+                            ""ExtraFields"": ""[
+                            ""BaseObj.Id"",
+                            ""BaseObj.Name"",
+                            ""BaseObj.City.State"",
+                            ""BaseObj.City.State.Country""
+                            ""]""
+                            }";
 }

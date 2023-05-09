@@ -14,5 +14,6 @@ namespace Siesa.SDK.Shared.Business
         public int TotalCount { get; set; }
         public int GroupCount { get; set; }
         public object[] Summary { get; set; }
+        public List<string> Errors { get; set; }
     }
 }

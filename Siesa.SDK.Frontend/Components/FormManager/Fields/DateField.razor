@@ -17,6 +17,7 @@
         DateExpression="@(()=> _value)"
         TimeSectionVisible="@ShowTime"
         data-automation-id="@GetDataAutomationId()"
+        @onfocusout="@_OnFocusOut"
         
     />
 }
@@ -60,6 +61,11 @@
     private string GetDataAutomationId()
     {
         return $"DateField_{FieldOpt.Name}";
+    }
+
+    private async Task _OnFocusOut()
+    {
+       this.CheckUniqueValue();
     }
 
     protected override void OnInitialized()

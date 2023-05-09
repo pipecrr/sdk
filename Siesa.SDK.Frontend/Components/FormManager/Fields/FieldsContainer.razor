@@ -32,14 +32,9 @@
                             ShowRequiredSymbol="@ShowRequiredSymbol(fld)"
                             @key="@GetItemUniqueId(fld)"
                             >
-                @if(fld.ViewContext == "DetailView"){
-                    <div class="field-detail-container">
-                        <DynamicField FieldOpt="@fld" ModelObj="@ModelObj" @key="@GetItemUniqueId(fld, true)" ValidateField="@ValidateForm" />
-                    </div>
-                }else{
+                <div class="@GetCssDetail(fld)">
                     <DynamicField FieldOpt="@fld" ModelObj="@ModelObj" @key="@GetItemUniqueId(fld, true)" ValidateField="@ValidateForm" />
-                }
-                
+                </div>
             </SDKFormLayoutItem>
         }
         
@@ -104,5 +99,24 @@
         }
 
         return fld.Required;
+    }
+
+    private string GetCssDetail(FieldOptions fld)
+    {
+        var cssClasses = new List<string>();
+        if(fld.ViewContext == "DetailView" && fld.ShowLabel){
+            cssClasses.Add("field-detail-container");
+
+            if(fld.CustomType == "SelectBarField")
+            {
+                cssClasses.Add("p-0");
+            }
+        }
+
+        if(cssClasses.Count > 0){
+            return string.Join(" ", cssClasses);
+        }
+
+        return "";
     }
 }

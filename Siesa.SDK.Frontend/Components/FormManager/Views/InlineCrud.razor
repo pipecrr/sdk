@@ -7,30 +7,33 @@
 @inject IBackendRouterService BackendRouterService
 @inject SDKDialogService SDKDialogService
 
-@if(AllowCreate)
-{
-    <SDKButton BusinessName="@BusinessName" ListPermission="@ListPermission" CssClass="mb-1" RenderStyle="SDKButtonRenderStyle.Primary" Click="@(async ()=> { await OpenModalCreate(); })">
-        <ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer 
-            ResourceTag="@($"{BusinessName}.Singular")" />
-    </SDKButton>
-}
+<div class="sdk-inlinecrud-container">
+    @if(AllowCreate)
+    {
 
-<DynamicListView
-    BusinessName="@BusinessName"
-    IsSubpanel=true
-    SubpanelFilter="@Filter"
-    @key="listview_key"
-    OnClickEdit="@(async (string item_rowid)=> { await OpenModalEdit(item_rowid); })"
-    OnClickDetail="@(async (string item_rowid)=> { await OpenModalDetail(item_rowid); })"
-    OnClickDelete="@(async (string item_rowid, string object_string)=> { await OpenModalDelete(item_rowid, object_string); })" 
-    OnClickNew="@(async ()=> { await OpenModalCreate(); })"
-    AllowCreate="false"
-    AllowEdit="@AllowEdit"
-    AllowDelete="@AllowDelete"
-    AllowDetail="@AllowDetail"
-    OnSelectedRow=@OnSelectedRow
-    Data="@Data"
-    />
+        <SDKButton BusinessName="@BusinessName" ListPermission="@ListPermission" CssClass="mb-1" RenderStyle="SDKButtonRenderStyle.Primary" Click="@(async ()=> { await OpenModalCreate(); })">
+            <ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer 
+                ResourceTag="@($"{BusinessName}.Singular")" />
+        </SDKButton>
+    }
+
+    <DynamicListView
+        BusinessName="@BusinessName"
+        IsSubpanel=true
+        SubpanelFilter="@Filter"
+        @key="listview_key"
+        OnClickEdit="@(async (string item_rowid)=> { await OpenModalEdit(item_rowid); })"
+        OnClickDetail="@(async (string item_rowid)=> { await OpenModalDetail(item_rowid); })"
+        OnClickDelete="@(async (string item_rowid, string object_string)=> { await OpenModalDelete(item_rowid, object_string); })" 
+        OnClickNew="@(async ()=> { await OpenModalCreate(); })"
+        AllowCreate="false"
+        AllowEdit="@AllowEdit"
+        AllowDelete="@AllowDelete"
+        AllowDetail="@AllowDetail"
+        OnSelectedRow=@OnSelectedRow
+        Data="@Data"
+        />
+</div>
 
 
 
@@ -49,6 +52,8 @@
     
     [Parameter] public string Width { get; set; } = "600px";
 
+    [Parameter] public string Height { get; set; }
+
     private bool DefaultTitle = false;
 
     public List<int> ListPermission { get; set; } = new List<int>(){1};
@@ -59,21 +64,21 @@
     {
         bool DefaultTitle = false;
 
-        var ShowCreateDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicCreateView BusinessName="@BusinessName" IsSubpanel=true  DefaultFields="@DefaultFieldsCreate" BLNameParentAttatchment="@BLNameParentAttatchment" ShowTitle="@DefaultTitle"/>, Width, $"{BusinessName}.Singular", true, true);
+        var ShowCreateDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicCreateView BusinessName="@BusinessName" IsSubpanel=true  DefaultFields="@DefaultFieldsCreate" BLNameParentAttatchment="@BLNameParentAttatchment" ShowTitle="@DefaultTitle"/>, Width, $"{BusinessName}.Singular", true, true, Height);
         listview_key = Guid.NewGuid();
         StateHasChanged();
     }
 
     public async Task OpenModalEdit(string item_rowid)
     {
-        var ShowEditDialog = await SDKDialogService.ShowCustomDialog(ds =>@<DynamicEditView BusinessName="@BusinessName" IsSubpanel=true  BusinessObjId="@item_rowid" BLNameParentAttatchment="@BLNameParentAttatchment" ShowTitle="@DefaultTitle"/>, Width, $"{BusinessName}.Singular");
+        var ShowEditDialog = await SDKDialogService.ShowCustomDialog(ds =>@<DynamicEditView BusinessName="@BusinessName" IsSubpanel=true  BusinessObjId="@item_rowid"  DefaultFields="@DefaultFieldsCreate" BLNameParentAttatchment="@BLNameParentAttatchment" ShowTitle="@DefaultTitle"/>, Width, $"{BusinessName}.Singular", true, true, Height);
         listview_key = Guid.NewGuid();
         StateHasChanged();
     }
     
     public async Task OpenModalDetail(string item_rowid)
     {
-        var ShowDetailDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicDetailView BusinessName="@BusinessName" IsSubpanel=true  BusinessObjId="@item_rowid" BLNameParentAttatchment="@BLNameParentAttatchment" ShowTitle="@DefaultTitle"/>, Width, $"{BusinessName}.Singular");
+        var ShowDetailDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicDetailView BusinessName="@BusinessName" IsSubpanel=true  BusinessObjId="@item_rowid" BLNameParentAttatchment="@BLNameParentAttatchment" ShowTitle="@DefaultTitle" AllowDelete="@AllowDelete" />, Width, $"{BusinessName}.Singular", true, true, Height);
         listview_key = Guid.NewGuid();
         StateHasChanged();
     }

@@ -12,6 +12,7 @@ using Radzen;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Frontend.Services;
 using Siesa.SDK.Entities;
+using Siesa.Global.Enums;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -39,6 +40,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter]
         public bool ShowDeleteButton { get; set; } = true;
 
+        [Parameter]
+        public string ViewdefName { get; set; }
+
         public Boolean Loading = true;
 
         [Inject] public IJSRuntime JSRuntime { get; set; }
@@ -58,6 +62,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         public Boolean ModelLoaded = false;
         public String ErrorMsg = "";
+        public List<string> ErrorList = new List<string>();
         protected bool CanCreate;
         protected bool CanEdit;
         protected bool CanDelete;
@@ -66,6 +71,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public Boolean ContainAttachments = false;
         Relationship RelationshipAttachment = new Relationship();
         E00270_Attachment ParentAttachment = new E00270_Attachment();
+
+        private bool HasExtraButtons { get; set; }
+        private List<Button> ExtraButtons { get; set; }
+        private Button CreateButton { get; set; }
+        private Button DuplicateButton { get; set; }
+        private Button EditButton { get; set; }
+        private Button ListButton { get; set; }
+        private Button DeleteButton { get; set; }
+        private string _viewdefName;
         private void setViewContext(List<Panel> panels)
         {
             for (int i = 0; i < panels.Count; i++)
@@ -100,11 +114,26 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }            
             await CheckPermissions();
             await CreateRelationshipAttachment();
-            var metadata = BackendRouterService.GetViewdef(bName, "detail");
-            if (metadata == null || metadata == "")
+            if(String.IsNullOrEmpty(ViewdefName)){
+                _viewdefName = "detail";
+            }else{
+                _viewdefName = ViewdefName;
+            }
+            
+            var metadata = BackendRouterService.GetViewdef(bName, _viewdefName);
+            if (String.IsNullOrEmpty(metadata) && _viewdefName.Equals("related_detail"))
+            {
+                metadata = BackendRouterService.GetViewdef(bName, "detail");
+            }
+            if(String.IsNullOrEmpty(metadata))
+            {
+                metadata = BackendRouterService.GetViewdef(bName, "default");
+            }
+            if (String.IsNullOrEmpty(metadata))
             {
                 //ErrorMsg = "No hay definición para la vista de detalle";
                 ErrorMsg = "Custom.Generic.ViewdefNotFound";
+                ErrorList.Add(ErrorMsg);
             }
             else
             {
@@ -133,9 +162,71 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 }
                 ModelLoaded = true;
             }
+            await EvaluateButtonAttributes();
 
             Loading = false;
             StateHasChanged();
+        }
+
+        private async Task EvaluateButtonAttributes()
+        {
+            if(FormViewModel.Buttons != null){
+                ExtraButtons = new List<Button>();
+                foreach (var button in FormViewModel.Buttons){
+                    if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-disabled")){
+                        var disabled = await evaluateCodeButtons(button, "sdk-disabled");
+                        button.Disabled = disabled;
+                    }
+                    if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-hide")){
+                        var hidden = await evaluateCodeButtons(button, "sdk-hide");
+                        button.Hidden = hidden;
+                    }
+                    if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-show")){
+                        var show = await evaluateCodeButtons(button, "sdk-show");
+                        button.Hidden = !show;
+                    }
+                    if(button.Id != null){
+                        if(Enum.TryParse<enumTypeButton>(button.Id, out enumTypeButton typeButton)){
+                            switch (typeButton)
+                            {
+                                case enumTypeButton.Create:
+                                    CreateButton = button;
+                                    break;
+                                case enumTypeButton.Duplicate:
+                                    DuplicateButton = button;
+                                    break;
+                                case enumTypeButton.Edit:
+                                    EditButton = button;
+                                    break;
+                                case enumTypeButton.List:
+                                    ListButton = button;
+                                    break;
+                                case enumTypeButton.Delete:
+                                    DeleteButton = button;
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    }else{
+                        ExtraButtons.Add(button);
+                    }
+                    HasExtraButtons = ExtraButtons.Count > 0;
+                }
+                //_ = InvokeAsync(() => StateHasChanged());
+            }
+        }
+
+        public async Task<bool> evaluateCodeButtons(Button button, string condition){
+            bool disabled = button.Disabled;
+            var sdkDisable = button.CustomAttributes[condition];
+            if(sdkDisable != null){
+                var eject = (bool)await Evaluator.EvaluateCode((string)sdkDisable, BusinessObj); //revisar
+                if(eject != null){
+                    disabled = eject;
+                }
+            }
+            return disabled;
         }
 
         public override async Task SetParametersAsync(ParameterView parameters)
@@ -148,6 +239,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 Loading = false;
                 this.ModelLoaded = false;
                 ErrorMsg = "";
+                ErrorList = new List<string>();
                 await InitView(BusinessName);
             }
         }
@@ -188,12 +280,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private async Task DeleteBusiness()
         {
-            var result = await BusinessObj.DeleteAsync();
+            dynamic result = null;
+            try{
+                result = await BusinessObj.DeleteAsync();
+            }catch(Exception ex){
+                ErrorMsg = ex.Message;
+                ErrorList.Add(ErrorMsg);
+            }
 
             if (result != null && result.Errors.Count > 0)
             {
                 var errorMessage ="Custom.Generic.Message.DeleteError";
                 NotificationService.ShowError(errorMessage);
+                ErrorList.Add(errorMessage);
                 // ErrorMsg = "<ul>";
                 // foreach (var error in result.Errors)
                 // {
@@ -264,6 +363,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 {
                     ErrorMsg = "Custom.Generic.Unauthorized";
                     NotificationService.ShowError("Custom.Generic.Unauthorized");
+                    ErrorList.Add("Custom.Generic.Unauthorized");
                     if(!IsSubpanel){
                         // NavigationService.NavigateTo("/", replace: true);
                     }

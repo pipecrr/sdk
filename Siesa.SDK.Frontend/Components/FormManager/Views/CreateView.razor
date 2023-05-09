@@ -7,7 +7,7 @@
 @using Siesa.SDK.Frontend.Application
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Shared.Services
-@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Layout.Detail.Relationship
 @inject IResourceManager ResourceManager
 @inject IAuthenticationService AuthenticationService
 @inject SDKNotificationService Notification
@@ -18,14 +18,10 @@
 {
     <ResourceViewer ResourceTag="Custom.Generic.Loading" />
 }
-else if(!string.IsNullOrEmpty(ErrorMsg))
-{
-    <ErrorsContainer ErrorMsg="@ErrorMsg"/>
-}
 else if (Panels == null || Panels.Count <= 0)
 {
-    <ResourceViewer ResourceTag="Custom.Formview.NotDefinition" />
-        @* <label>@((MarkupString)ErrorMsg)</label> *@
+    @* <ResourceViewer ResourceTag="Custom.Formview.NotDefinition" /> *@
+    <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList" VerifyContext="@ClickInSave"/>
 } else if (BusinessObj.BaseObj != null)
 {
     @if(IsSubpanel && ShowTitle){        
@@ -33,8 +29,16 @@ else if (Panels == null || Panels.Count <= 0)
             ResourceTag="@($"{BusinessName}.Singular")" /></h5>
         <hr />
     }
+    @if(ContainAttachments){
+        <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" 
+            Parent="@BusinessObj.BaseObj" ContainAttachments="@ContainAttachments" BLNameParentAttatchment="@BusinessName"
+            BusinessObj="@BusinessObj" isCreateView="true"/>
+    }else if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
+    {
+        <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" isCreateView="true"/>
+    }
     <CascadingValue Value="@this">
-       <ErrorsContainer ErrorMsg="@ErrorMsg" EditFormContext="@EditFormContext" />
+       <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList" VerifyContext="@ClickInSave"/>
     <EditForm id="@FormID"
               OnValidSubmit="@HandleValidSubmit"
               OnInvalidSubmit="@HandleInvalidSubmit"
@@ -52,17 +56,13 @@ else if (Panels == null || Panels.Count <= 0)
                             </CascadingValue>
                         </SDKFormLayoutTabPage>
                     }
-
-
                 </DxFormLayoutTabPages>
-
             }
             else
             {
                 <CascadingValue Value="@EditFormContext">
                     <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef" DefaultColSize="@Panels[0].ColSize" ModelObj="@BusinessObj" />
                 </CascadingValue>
-
             }
         </DxFormLayout>
     </EditForm>
@@ -84,16 +84,23 @@ else if (Panels == null || Panels.Count <= 0)
     @if(SetTopBar && !IsSubpanel)
     {
         <PageTitle><ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer ResourceTag="@($"{BusinessName}.Singular")" /></PageTitle>
-        <SetTopBar StyleName="toolbar_creation" HasExtraButtons="@(FormViewModel.Buttons != null && FormViewModel.Buttons.Count > 0 ? true: false)" BusinessObj="@BusinessObj">
+        <SetTopBar StyleName="toolbar_creation" HasExtraButtons="@HasExtraButtons" BusinessObj="@BusinessObj">
             <TopBarTitle><ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer ResourceTag="@($"{BusinessName}.Singular")" /></TopBarTitle>
             <TopBarButtons>
-                <TopBarButton form="@FormID" SubmitFormOnClick="true" ResourceTag="Action.Save" IconCssClass="@GetSaveBtnIcon()" Enabled="@(!Saving)"  />
-                @* <TopBarButton Click="GoToList" ResourceTag="Action.Cancel"  IconCssClass="fa-solid fa-floppy-disk"  /> *@
+                @if(SaveButton != null){
+                    if(!SaveButton.Hidden){
+                        <TopBarButton form="@FormID" SubmitFormOnClick="true" ResourceTag="Action.Save" IconCssClass="@GetSaveBtnIcon()" Enabled="@(!Saving && !SaveButton.Disabled)"/>
+                    }
+                }else{
+                    <TopBarButton form="@FormID" SubmitFormOnClick="true" ResourceTag="Action.Save" IconCssClass="@GetSaveBtnIcon()" Enabled="@(!Saving)"  />
+                }
             </TopBarButtons>
             <TopBarExtraButtons>
-                @foreach (var btn in FormViewModel.Buttons)
+                @foreach (var btn in ExtraButtons)
                 {
-                    <TopBarButton Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" IconCssClass="@btn.IconClass" />
+                    if(!btn.Hidden){
+                        <TopBarButton Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" IconCssClass="@btn.IconClass" Enabled="@(!btn.Disabled)"/>
+                    }
                 }
             </TopBarExtraButtons>
         </SetTopBar>

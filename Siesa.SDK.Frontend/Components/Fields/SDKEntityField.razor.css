@@ -33,11 +33,15 @@
     border-top-left-radius: 0.2rem;
     border-bottom-left-radius: 0.2rem;
     border-right: transparent;
+    padding: 0px;
 }
 
 .input-badge-container ::deep .whcm_select_list.dropdown-menu.show{
     width: 100%;
     transform: translate3d(0px, 1.938rem, 0px) !important;
+    z-index: 3;
+    top: 0;
+    left: 0;
 }
 
 .input-badge-container > .dropdown ::deep > input{
@@ -47,10 +51,43 @@
     height: 1.938rem;    
 }
 
-.input-badge-container > .dropdown ::deep > input.form-control:focus{
-    box-shadow: none;
+.input-badge-container > .dropdown ::deep > input.form-control{
+    padding-right: 6rem;
 }
 
 .input-badge-container > .dropdown ::deep .whcm_select_list.dropdown-menu ul {
     padding-left: 0;
+}
+
+.sdk-entity-result{
+    overflow-y: auto;
+    max-height: 10rem;
+}
+
+.sdk_btn_group_entity_field{
+    position: absolute;
+    right: 0;
+    height: 100%;
+}
+
+.sdk_entity_field_close{
+    font-size: 0.875rem;
+    color: var(--color_text_2);   
+    padding: 0.25rem !important;
+    opacity: 1;
+}
+
+.sdk_entity_field_close > i{
+    background: transparent;
+    width: 1rem;
+    height: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    opacity: 1;
+}
+
+.sdk_entity_field_close > i:hover{
+    background: var(--color_back_2);  
 }

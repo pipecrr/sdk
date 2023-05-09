@@ -13,13 +13,13 @@
 {
     <ResourceViewer ResourceTag="Custom.Generic.Loading" />
 }
-else if(!string.IsNullOrEmpty(ErrorMsg))
+else if(!string.IsNullOrEmpty(ErrorMsg) || ErrorList.Any())
 {
-    <ErrorsContainer ErrorMsg="@ErrorMsg"/>
+    <ErrorsWindow GeneralErrors="@ErrorList"/>
 }
 else
 {
-    @if(IsSubpanel){
+     @if(IsSubpanel){
         UseFlex = false;
     }
     @if(ShowSearchForm && HasSearchViewdef)
@@ -31,7 +31,7 @@ else
                 FormID="@SearchFormID" 
                 Viewdef="search" 
                 BusinessName="@BusinessName" 
-                BusinessObj="@BusinessObj" 
+                BusinessObj="@BusinessObjNullable" 
                 SetTopBar="false" 
                 ValidateForm="false" 
                 OnSubmit="@OnClickSearch"
@@ -47,7 +47,7 @@ else
                     </div>
                 }
                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
-                    <SDKButton form="@SearchFormID" CssClass="w-100" RenderStyle="SDKButtonRenderStyle.Primary" SubmitFormOnClick="true" Click="@OnClickSearch">
+                    <SDKButton form="@SearchFormID" CssClass="w-100" RenderStyle="SDKButtonRenderStyle.Primary" SubmitFormOnClick="true">
                         @if(LoadingSearch)
                         {
                             <i class="mr-1 fas fa-spinner fa-pulse"></i>
@@ -115,16 +115,23 @@ else
             @key="needUpdate"
             >
             <EmptyTemplate>
-                <div class="sdk-empty-list">
-                    <i class="fa-solid fa-eye-slash"></i>
-                    <p><ResourceViewer ResourceTag="Custom.Generic.NoData" /></p>
+                <div class="col-12 text-center font_color_primary_dark py-4">
+                    <i class="fa-solid fa-eye-slash fa-3x"></i>
+                    <p class="pt-3 m-0"><ResourceViewer ResourceTag="Custom.Generic.NoData" /></p>
                 </div>
             </EmptyTemplate>
             <Columns>
             @if(IsMultiple){
                 <RadzenDataGridColumn TItem="object" Width="50px" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" HeaderCssClass="grid-column-action">
                     <HeaderTemplate>
-                        <SDKBooleanField Value="@(SelectedObjects != null && SelectedObjects.Count>0)" Enabled="true" ValueChanged="(value => SelectedObjects = value ? _gridRef.Data.ToList() : null)">
+                        <SDKBooleanField Value="@(SelectedObjects != null && SelectedObjects.Count>0)" Enabled="true" ValueChanged="(value => {
+                            SelectedObjects = value ? _gridRef.Data.ToList() : null;
+                            if(value){
+                                OnSelectionChanged(_gridRef.Data.ToList());
+                            }else{
+                                OnSelectionChanged(SelectedItems);
+                            }
+                            })">
                         </SDKBooleanField>                        
                     </HeaderTemplate>
                     <Template Context="data">
@@ -332,7 +339,8 @@ else
     }
 
     @if(ShowList && UseFlex){
-        <FlexComponent IsListView="true" BlNameList="@BusinessName" ViewdefName="@FinalViewdefName" ListView="@this" GuidListView="@guidListView" CanEdit="@CanEdit" CanDelete="@CanDelete" EditingFlex="@_isEditingFlex" Take="@FlexTake" ServerPagination="@ServerPaginationFlex" FilterSearch="@FilterFlex" ActionIcons=@CustomActionIcons HasSearch=@ShowSearchForm IsMultiple="@IsMultiple"></FlexComponent>
+        FilterFlex = GetFilters(_base_filter);
+        <FlexComponent IsListView="true" BlNameList="@BusinessName" ViewdefName="@FinalViewdefName" ListView="@this" GuidListView="@guidListView" CanEdit="@(CanEdit && AllowEdit)" CanDelete="@(CanDelete && AllowDelete)" CanDetail="@(CanDetail && AllowDetail)" EditingFlex="@_isEditingFlex" Take="@FlexTake" ServerPagination="@ServerPaginationFlex" FilterSearch="@FilterFlex" ActionIcons=@CustomActionIcons HasSearch=@HasSearchViewdef IsMultiple="@IsMultiple"></FlexComponent>
     }
 
     @if(SetTopBar)
@@ -343,7 +351,7 @@ else
             <TopBarButtons>
                 @if(ShowSearchForm && HasSearchViewdef && !_isEditingFlex)
                 {
-                    <TopBarButton ResourceTag="Action.AdvanceSearch" IconCssClass="fa-solid fa-magnifying-glass-plus" Click="@(()=> SetSearchFromVisibility(false))"/>
+                    <TopBarButton ResourceTag="Action.AdvanceSearch" IconCssClass="fa-solid fa-magnifying-glass" Click="@(()=> SetSearchFromVisibility(false))"/>
                 }
                 @if(_isEditingFlex){
                     <TopBarButton ResourceTag="Action.Cancel" IconCssClass="fa-solid fa-times" Click="CancelEdit"/>
@@ -352,15 +360,23 @@ else
                 @if(UseFlex && !_isEditingFlex && !_isSearchOpen){
                     <TopBarButton Click="GoToEditFlex" ResourceTag="Action.EditListFlex" IconCssClass="fa-solid fa-pen" />
                 }                
-                @if(CanCreate && !_isEditingFlex)
-                {
-                    <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus" />
+                @if((CanCreate && AllowCreate) && !_isEditingFlex)
+                {   
+                    if(CreateButton!=null){
+                        if(!CreateButton.Hidden){
+                            <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus" Enabled="@(!CreateButton.Disabled)"/>    
+                        }
+                    }else{
+                        <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus"/>
+                    }
                 }
             </TopBarButtons>
             <TopBarExtraButtons>
                 @foreach (var btn in ExtraButtons)
                 {
-                    <TopBarButton Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" IconCssClass="@btn.IconClass" />
+                    if(!btn.Hidden){
+                        <TopBarButton Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" IconCssClass="@btn.IconClass" Enabled="@(!btn.Disabled)"/>
+                    }
                 }
             </TopBarExtraButtons>
         </SetTopBar>

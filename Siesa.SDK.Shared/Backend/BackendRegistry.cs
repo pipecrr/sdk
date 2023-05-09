@@ -56,17 +56,21 @@ namespace Siesa.SDK.Shared.Backend
             var response = await client.ValidateAndSaveBusinessObjAsync(request);
             return response;
         }
-        public async Task<Protos.LoadResult> EntityFieldSearch(string business_name, string searchText, string filters)
+        public async Task<Protos.LoadResult> EntityFieldSearch(string business_name, string searchText, string filters, int? top = null, string orderBy = "", List<string> extraFields = null)
         {
             var channel = GrpcUtils.GetChannel(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
+            List<string> fields = extraFields ?? new List<string>();
             var request = new Protos.EntityFieldSearchRequest
             {
                 BusinessName = business_name,
                 SearchText = searchText,
                 Filters = filters,
                 CurrentUserToken = (AuthenticationService != null && AuthenticationService.UserToken != null ? AuthenticationService.UserToken : ""),
-                CurrentUserRowid = (AuthenticationService != null && AuthenticationService.User != null ? AuthenticationService.User.Rowid: 0)
+                CurrentUserRowid = (AuthenticationService != null && AuthenticationService.User != null ? AuthenticationService.User.Rowid: 0),
+                Top = top,
+                OrderBy = orderBy,
+                ExtraFields = {fields}
             };
             try
             {
@@ -98,20 +102,22 @@ namespace Siesa.SDK.Shared.Backend
 
         }
 
-        public async Task<dynamic> GetBusinessObj(string business_name, Int64 id)
+        public async Task<dynamic> GetBusinessObj(string business_name, Int64 id,List<string> extraFields = null)
         {
             using var channel = GrpcUtils.GetChannel(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
+            List<string> fields = extraFields ?? new List<string>();
             var request = new Protos.GetBusinessObjRequest
             {
                 Id = id,
                 BusinessName = business_name,
                 CurrentUserToken = (AuthenticationService != null && AuthenticationService.UserToken != null ? AuthenticationService.UserToken : ""),
-                CurrentUserRowid = (AuthenticationService != null && AuthenticationService.User != null ? AuthenticationService.User.Rowid: 0)
+                CurrentUserRowid = (AuthenticationService != null && AuthenticationService.User != null ? AuthenticationService.User.Rowid: 0),
+                ExtraFields = {fields}
+
             };
             var response = await client.GetBusinessObjAsync(request);
             return response.Response;
-
         }
 
         public async Task<DeleteBusinessObjResponse> DeleteBusinessObj(string business_name, Int64 id)
@@ -130,10 +136,11 @@ namespace Siesa.SDK.Shared.Backend
 
         }
 
-        public async Task<Protos.LoadResult> GetDataBusinessObj(string business_name, int? skip, int? take, string filter = "", string orderBy = "")
+        public async Task<Protos.LoadResult> GetDataBusinessObj(string business_name, int? skip, int? take, string filter = "", string orderBy = "", bool includeCount = false,  List<string> extraFields = null)
         {
             var channel = GrpcUtils.GetChannel(this.Url);
             var client = new Protos.SDK.SDKClient(channel);
+            List<string> fields = extraFields ?? new List<string>();
             var request = new Protos.GetDataBusinessObjRequest
             {
                 BusinessName = business_name,
@@ -142,7 +149,9 @@ namespace Siesa.SDK.Shared.Backend
                 Filter = filter,
                 OrderBy = orderBy,
                 CurrentUserToken = (AuthenticationService != null && AuthenticationService.UserToken != null ? AuthenticationService.UserToken : ""),
-                CurrentUserRowid = (AuthenticationService != null && AuthenticationService.User != null ? AuthenticationService.User.Rowid: 0)
+                CurrentUserRowid = (AuthenticationService != null && AuthenticationService.User != null ? AuthenticationService.User.Rowid: 0),
+                IncludeCount = includeCount,
+                ExtraFields = {fields}
             };
             try
             {

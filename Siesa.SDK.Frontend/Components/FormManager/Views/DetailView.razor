@@ -11,16 +11,16 @@
 {
     <ResourceViewer ResourceTag="Custom.Generic.Loading" />
 }
-else if(!string.IsNullOrEmpty(ErrorMsg))
-{
-    <ErrorsContainer ErrorMsg="@ErrorMsg"/>
-}
 else if (Panels == null || Panels.Count <= 0)
 {
-    <ResourceViewer ResourceTag="Custom.Formview.NotDefinition" />
+    @* <ResourceViewer ResourceTag="Custom.Formview.NotDefinition" /> *@
+    <ErrorsWindow GeneralErrors="@ErrorList"/>
 }
 else if (ModelLoaded == true)
 {
+    if(!string.IsNullOrEmpty(ErrorMsg)){
+        <ErrorsWindow GeneralErrors="@ErrorList"/>
+    }
         @if(IsSubpanel && ShowTitle){
             <h5 class="d-flex justify-content-center">@BusinessObj</h5>
             <hr />
@@ -46,16 +46,14 @@ else if (ModelLoaded == true)
             }
         </DxFormLayout>
         @if(ContainAttachments){
-            <AttachmentPanel BusinessObj="@BusinessObj" BLNameParentAttatchment="@BusinessName"/>
-        }
-        @if(!string.IsNullOrEmpty(ErrorMsg))
+            <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" 
+                Parent="@BusinessObj.BaseObj" ContainAttachments="@ContainAttachments" BLNameParentAttatchment="@BusinessName"
+                BusinessObj="@BusinessObj"/>
+        }else if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
         {
-            <label>@((MarkupString)ErrorMsg)</label>
+             <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" />
         }
-         @foreach (var rel in FormViewModel.Relationships.Where(x=>x.Enabled))
-            {
-               <RelationshipPanel Relationship="@rel" Parent="@BusinessObj.BaseObj" />
-            }
+        
     @if(IsSubpanel && ShowButtons){
         <div class="buttons-container">
             @foreach (var btn in FormViewModel.Buttons)
@@ -66,7 +64,7 @@ else if (ModelLoaded == true)
                 <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" Click="@((args) => dialogService.Close(false))" ResourceTag="Action.Close"/>
             }
             @if (ShowDeleteButton){
-                <SDKButton RenderStyle="SDKButtonRenderStyle.Danger" Click="DeleteBusiness" ResourceTag="Action.Delete" />                
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Danger" Click="DeleteBusiness" ResourceTag="Action.Delete" />
             }
         </div>
     }
@@ -78,26 +76,58 @@ else if (ModelLoaded == true)
             <TopBarButtons>
 
                 @if(CanCreate){
-                <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus"  />
+                    if(CreateButton != null){
+                        if(!CreateButton.Hidden){
+                            <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus" Enabled="@(!CreateButton.Disabled)"/>
+                        }
+                    }else{
+                        <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus"  />
+                    }
                 }
                 @if(CanCreate){
-                <TopBarButton Click="GoToDuplicate" ResourceTag="Action.Duplicate" IconCssClass="fa-solid fa-copy"  />
+                    if(DuplicateButton != null){
+                        if(!DuplicateButton.Hidden){
+                            <TopBarButton Click="GoToDuplicate" ResourceTag="Action.Duplicate" IconCssClass="fa-solid fa-copy" Enabled="@(!DuplicateButton.Disabled)"/>
+                        }
+                    }else{
+                        <TopBarButton Click="GoToDuplicate" ResourceTag="Action.Duplicate" IconCssClass="fa-solid fa-copy"  />
+                    }
                 }
                 @if(CanEdit){
-                <TopBarButton Click="GoToEdit" ResourceTag="Action.Edit"  IconCssClass="fa-solid fa-pen"  />
+                    if(EditButton != null){
+                        if(!EditButton.Hidden){
+                            <TopBarButton Click="GoToEdit" ResourceTag="Action.Edit" IconCssClass="fa-solid fa-pen" Enabled="@(!EditButton.Disabled)"/>
+                        }
+                    }else{
+                        <TopBarButton Click="GoToEdit" ResourceTag="Action.Edit" IconCssClass="fa-solid fa-pen"  />
+                    }
                 }
                 @if(CanList){
-                <TopBarButton Click="GoToList" ResourceTag="Action.List"  IconCssClass="fa-solid fa-list"  />
+                    if(ListButton != null){
+                        if(!ListButton.Hidden){
+                            <TopBarButton Click="GoToList" ResourceTag="Action.List" IconCssClass="fa-solid fa-list" Enabled="@(!ListButton.Disabled)"/>
+                        }
+                    }else{
+                        <TopBarButton Click="GoToList" ResourceTag="Action.List" IconCssClass="fa-solid fa-list"  />
+                    }
                 }
                 @if(CanDelete){
-                <TopBarButton Click="OnClickDelete" ResourceTag="Action.Delete" IconCssClass="fa-solid fa-trash-can" />
+                    if(DeleteButton != null){
+                        if(!DeleteButton.Hidden){
+                            <TopBarButton Click="OnClickDelete" ResourceTag="Action.Delete" IconCssClass="fa-solid fa-trash-can" Enabled="@(!DeleteButton.Disabled)"/>
+                        }
+                    }else{
+                        <TopBarButton Click="OnClickDelete" ResourceTag="Action.Delete" IconCssClass="fa-solid fa-trash-can"  />
+                    }                
                 }
 
             </TopBarButtons>
             <TopBarExtraButtons>
-                @foreach (var btn in FormViewModel.Buttons)
+                @foreach (var btn in ExtraButtons)
                 {
-                    <TopBarButton Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" IconCssClass="@btn.IconClass" />
+                    if(!btn.Hidden){
+                        <TopBarButton Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" IconCssClass="@btn.IconClass" Enabled="@(!btn.Disabled)"/>
+                    }
                 }
             </TopBarExtraButtons>
         </SetTopBar>
@@ -105,6 +135,7 @@ else if (ModelLoaded == true)
 }
 
 @code {
+
     public async Task OnClickDelete()
     {
         var dialog = await dialogService.OpenAsync("",

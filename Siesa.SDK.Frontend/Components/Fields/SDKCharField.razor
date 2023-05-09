@@ -1,25 +1,47 @@
 @using System.Linq.Expressions
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
+
 @inherits SDKComponent
-<DxTextBox 
-    Text="@Value" 
-    TextChanged="@ValueChanged" 
-    NullText="@Placeholder"
-    ReadOnly="@ReadOnly"
-    CssClass="@CssClass"
-    maxlength = "@MaxLength"
-    Password="@Password"
-    TextExpression="@ValueExpression"
-    autocomplete="@GetAutoComplete()"
-    data-automation-id="@GetAutomationId()"
-    ClearButtonDisplayMode="@ClearButtonDisplayMode.Get()"
-    field-name="@FieldName"
->
-@ChildContent
-</DxTextBox>
+
+@if(Password)
+{
+    <SDKPasswordField
+            Value="@Value"
+            Placeholder="@Placeholder"
+            ReadOnly="@ReadOnly"
+            CssClass="@CssClass"
+            MaxLength = "@MaxLength"
+            AllowAutoComplete="@AllowAutoComplete"
+            FieldName="@FieldName"
+            ValueChanged="@ValueChanged"
+    />
+}
+else
+{
+    <DxTextBox 
+        Text="@Value" 
+        TextChanged="@ValueChanged" 
+        NullText="@Placeholder"
+        ReadOnly="@ReadOnly"
+        CssClass="@CssClass"
+        maxlength = "@MaxLength"
+        Password="@Password"
+        TextExpression="@ValueExpression"
+        autocomplete="@GetAutoComplete()"
+        data-automation-id="@GetAutomationId()"
+        ClearButtonDisplayMode="@ClearButtonDisplayMode.Get()"
+        field-name="@FieldName"
+        @onfocusout="@_OnFocusOut"
+    >
+    @ChildContent
+    </DxTextBox>
+}
 
 @code {
     [Parameter] public string Value { get; set; }
     [Parameter] public Action<string> ValueChanged { get; set; } = (value) => {};
+    [Parameter] public Action OnFocusOut { get; set; } = () => { };
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public string Placeholder { get; set; }
     [Parameter] public bool Disabled { get; set; }
@@ -31,7 +53,6 @@
     [Parameter] public Expression<Func<string>> ValueExpression { get; set; }
     [Parameter] public SDKClearButtonDisplayMode ClearButtonDisplayMode { get; set; }
     [Parameter] public string FieldName { get; set; }
-
     [Parameter] public bool AllowAutoComplete { get; set; } = false;
     private string GetAutoComplete() {
         if (AllowAutoComplete) {
@@ -47,5 +68,11 @@
             AutomationId = FieldName;
         }
         return base.GetAutomationId();
+    }
+
+    private async Task _OnFocusOut(){
+        if(OnFocusOut != null){
+            OnFocusOut();
+        }
     }
 }

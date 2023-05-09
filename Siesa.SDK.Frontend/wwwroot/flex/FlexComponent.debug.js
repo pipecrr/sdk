@@ -2,19 +2,6 @@
 //     cache: false
 // });
 
-function loadScript(url, in_head = false, callback = null) {
-    var parent = in_head ? document.head : document.body;
-    var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = url;
-
-    if (callback) {
-        script.onreadystatechange = callback;
-        script.onload = callback;
-    }
-    parent.appendChild(script);
-}
-
 function ListViewInstance(dotnethelper, key){
     if(!window.dotnethelpersListView){
         var data = new Map();
@@ -23,6 +10,10 @@ function ListViewInstance(dotnethelper, key){
     }else{
         window.dotnethelpersListView.set(key, dotnethelper);
     }
+}
+
+function existMountFlex(){
+    return window.MountFlex != null;
 }
 
 function MountFlex(id)
@@ -46,6 +37,7 @@ function MountFlex(id)
     
     window.MountFlex = MountFlex;    
     window.ListViewInstance = ListViewInstance;
+    window.existMountFlex = existMountFlex;
 
     // window.addEventListener('locationchange', function () {
     //         setTimeout(function  () { MountFlex() }, 200);

@@ -12,6 +12,7 @@
     }, 500);
 }
 
+
 export function checkAndRenewToken(dotnethelper) {
     var timeout_seconds = 10;
     var token = localStorage.getItem('usertoken');
@@ -19,11 +20,13 @@ export function checkAndRenewToken(dotnethelper) {
         var tokenData = JSON.parse(atob(token.split('.')[1]));
         var now = new Date();
         var tokenExpiration = new Date(tokenData.exp * 1000);
-        if (now > tokenExpiration) {
+        var lastInteraction = localStorage.getItem('lastInteraction');
+        if (now > new Date(tokenExpiration - 60000 * 5) && ((now - lastInteraction) < 60000 * 2)) {
+            dotnethelper.invokeMethodAsync("RenewToken");
+            timeout_seconds = 5;
+        } else if (now > tokenExpiration) {
             dotnethelper.invokeMethodAsync("ShowLogin");
             timeout_seconds = 5;
-        }else if (now > new Date(tokenExpiration - 60000 * 5)) {
-            dotnethelper.invokeMethodAsync("RenewToken");
         }else{
             //check if exits a div with class sdk-modal-login
             var loginModal = document.querySelector('.sdk-modal-login');
@@ -172,22 +175,5 @@ window.addEventListener('beforeunload', function (e) {
 });
 
 (() => {
-    var search = window.location.search;
-    var params = search.substring(1,search.length).split('&');
-    var sdk_debug = params.find(x => x == 'sdk_debug=1');
-    //sdk_debug = true;
-    if(sdk_debug){
-        loadScript("http://127.0.0.1:3000/static/js/bundle.js");
-        loadScript("http://127.0.0.1:3000/static/js/0.chunk.js");
-        loadScript("http://127.0.0.1:3000/static/js/1.chunk.js");
-        loadScript("http://127.0.0.1:3000/static/js/main.chunk.js");
-    }else{
-        loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/2.css?v=20230213');
-        loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/main.css?v=20230213');
-
-        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/2.chunk.js?v=20230213");
-        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/main.chunk.js?v=20230213");
-        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/runtime-main.js?v=20230213");
-    }
-    loadScript("/_content/Siesa.SDK.Frontend/vendor/dexie/dexie.js");
+    preloadFlex();
 })();

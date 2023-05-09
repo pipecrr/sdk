@@ -10,3 +10,7 @@ window.addEventListener('storage', function(event){
         }
     }
 });
+
+(() => {
+    preloadFlex();
+})();

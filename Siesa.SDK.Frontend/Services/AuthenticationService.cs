@@ -31,6 +31,13 @@ namespace Siesa.SDK.Frontend.Services
 
         public string UserToken { get; private set; } = "";
 
+        private int _selectedSuite;
+
+        private short _rowIdCompanyGroup = 0;
+
+        private string _userPhoto = "";
+        private string _logoPhoto = "";
+
         private JwtUserData? _user;
         public JwtUserData User
         {
@@ -69,6 +76,10 @@ namespace Siesa.SDK.Frontend.Services
         {
             UserToken = await _localStorageService.GetItemAsync<string>("usertoken");
             CustomRowidCulture = await _localStorageService.GetItemAsync<short>("customrowidculture");
+            _selectedSuite = await _localStorageService.GetItemAsync<int>("selectedSuite");
+            //_rowIdCompanyGroup = await _localStorageService.GetItemAsync<short>("rowIdCompanyGroup");
+            _userPhoto = await _localStorageService.GetItemAsync<string>("userPhoto");
+            _logoPhoto = await _localStorageService.GetItemAsync<string>("imageCompanyGroup");
             var selectedConnection = await _localStorageService.GetItemAsync<string>("selectedConnection");
             try
             {
@@ -86,7 +97,8 @@ namespace Siesa.SDK.Frontend.Services
             //Console.WriteLine($"UserToken: {UserToken}");
         }
 
-        public async Task Login(string username, string password, short rowIdDBConnection)
+        public async Task Login(string username, string password, short rowIdDBConnection, 
+        bool IsUpdateSession = false, short rowIdCompanyGroup = 1)
         {
             var BLuser = _backendRouterService.GetSDKBusinessModel("BLUser", this);
             if (BLuser == null)
@@ -94,22 +106,41 @@ namespace Siesa.SDK.Frontend.Services
                 throw new Exception("Login Service not found");
             }
 
+            //Sacar la IP verdadera del Header**
+
             string ipAddress = _contextAccesor.HttpContext.Connection.RemoteIpAddress?.ToString();
+
             string browserName = _contextAccesor.HttpContext.Request.Headers["User-Agent"].ToString();
 
+            string sessionId = IsUpdateSession ? _contextAccesor.HttpContext.Request.Cookies["sdksession"].ToString() : "";
+
+            short LastCompanyGroupSelected = await _localStorageService.GetItemAsync<short>("rowidCompanyGroup");
+
+            if(LastCompanyGroupSelected > 0 && LastCompanyGroupSelected != rowIdCompanyGroup) 
+            {
+                rowIdCompanyGroup = LastCompanyGroupSelected;
+            }
+
+            
             var loginRequest = await BLuser.Call("SignInSession", new Dictionary<string, dynamic> {
                 {"username", username},
                 {"password", password},
                 {"rowIdDBConnection", rowIdDBConnection},
                 {"ipAddress", ipAddress},
                 {"browserName", browserName},
-                {"rowidCulture", RowidCultureChanged}
+                {"rowidCulture", RowidCultureChanged},
+                {"sessionId", sessionId},
+                {"IsUpdateSession", IsUpdateSession},
+                {"rowIdCompanyGroup", rowIdCompanyGroup}
             });
             if (loginRequest.Success)
             {
                 UserToken = loginRequest.Data.Token;
+                var sdksesion = loginRequest.Data.IdSession;
                 await _localStorageService.SetItemAsync("usertoken", UserToken);
                 await SetCookie("sdksession", loginRequest.Data.IdSession);
+                await SetCookie("selectedConnection", rowIdDBConnection.ToString());
+                await SetUserPhoto(loginRequest.Data.UserPhoto);
             }
             else
             {
@@ -124,23 +155,82 @@ namespace Siesa.SDK.Frontend.Services
             }
         }
 
+        //RenewToken method
+        public async Task RenewToken()
+        {
+            var sessionId = "";
+            
+            _contextAccesor.HttpContext.Request.Cookies.TryGetValue("sdksession", out sessionId);
+
+            var BLuser = _backendRouterService.GetSDKBusinessModel("BLUser", this);
+            if (BLuser != null)
+            {
+                var _renewToken = await BLuser.Call("RenewToken",sessionId);
+                if (_renewToken.Success)
+                {
+                    UserToken = _renewToken.Data;
+                    await _localStorageService.SetItemAsync("usertoken", UserToken);
+                }
+            }
+        }
+
         public async Task Logout()
         {
-            UserToken = "";
-            _user = null;
+            
+            try
+            {
+                var sessionId = await GetCookie("sdksession");
+
+                var BLSession = _backendRouterService.GetSDKBusinessModel("BLSession", this);
+
+                var updateSession = BLSession.Call("UpdateEndDate",sessionId);
+
+            }catch (Exception e)
+            {
+            }
+
             await _localStorageService.RemoveItemAsync("usertoken");
             await _localStorageService.RemoveItemAsync("lastInteraction");
             await _localStorageService.RemoveItemAsync("n_tabs");
             await _localStorageService.RemoveItemAsync("bd");
+            await _localStorageService.RemoveItemAsync("userPhoto");
+            //await _localStorageService.RemoveItemAsync("selectedSuite");
             await RemoveCookie("sdksession");
+            await RemoveCookie("selectedConnection");
+            UserToken = "";
+            _user = null;
 
             _navigationManager.NavigateTo("login");
+
         }
 
-        public async Task SetToken(string token)
+        public async Task SetToken(string token, bool saveLocalStorage = true)
         {
             UserToken = token;
-            await _localStorageService.SetItemAsync("usertoken", UserToken);
+            if(saveLocalStorage)
+            {
+                await _localStorageService.SetItemAsync("usertoken", UserToken);
+            }
+        }
+
+        public async Task SetUserPhoto(string _data, bool saveLocalStorage = true)
+        {
+            _userPhoto = _data;
+
+            if(saveLocalStorage)
+            {
+                await _localStorageService.SetItemAsync("userPhoto", _userPhoto);
+            }
+        }
+
+        public async Task SetConnectionLogo(string _data, bool saveLocalStorage = true)
+        {
+            _logoPhoto = _data;
+
+            if(saveLocalStorage)
+            {
+                await _localStorageService.SetItemAsync("imageCompanyGroup", _logoPhoto);
+            }
         }
 
         public async Task SetSelectedConnection(SDKDbConnection selectedConnection)
@@ -160,13 +250,57 @@ namespace Siesa.SDK.Frontend.Services
             return SelectedConnection;
         }
 
+        public async Task<string> FetchConnectionLogo(short rowidCompanyGroup = 0)
+        {
+            var respose = "";
+            if (rowidCompanyGroup > 0)
+            {
+                E00200_CompanyGroup SelectedGroup = new E00200_CompanyGroup();
+
+                var BLCompanyGroup = _backendRouterService.GetSDKBusinessModel("BLSDKCompanyGroup",this);
+
+                var companyGroup = await BLCompanyGroup.Call("GetCompanyGroupLogo",rowidCompanyGroup);
+
+                if (companyGroup.Success)
+                {
+                    SelectedGroup = companyGroup.Data;
+                    
+                    if (SelectedGroup.Logo?.FileInternalAttached != null && SelectedGroup.Logo?.FileType != null)
+                    {
+                        string ImageBase64 = Convert.ToBase64String(SelectedGroup.Logo.FileInternalAttached);
+                    
+                        respose = $"data:{SelectedGroup.Logo.FileType};base64,{ImageBase64}";
+
+                    }else
+                    {
+                        respose = "_content/Siesa.SDK.Frontend/assets/img/LogoSiesaNoSub.svg";
+                    }
+                }
+            }
+
+            return respose;
+        }
+
+        public string GetUserPhoto()
+        {
+            if (string.IsNullOrEmpty(_userPhoto))
+            {
+                _userPhoto = "_content/Siesa.SDK.Frontend/assets/img/Profile_default.png";
+            }
+
+            return _userPhoto;
+        }
+
         public string GetConnectionLogo()
         {
-            if(SelectedConnection != null && SelectedConnection.Rowid != 0 && !string.IsNullOrEmpty(SelectedConnection.LogoUrl)){
-                return SelectedConnection.LogoUrl;
+            if (string.IsNullOrEmpty(_logoPhoto))
+            {
+                _logoPhoto = "_content/Siesa.SDK.Frontend/assets/img/LogoSiesaNoSub.svg";
             }
-            return "_content/Siesa.SDK.Frontend/assets/img/login_logo_empresa.png";
+
+            return _logoPhoto;
         }
+
         public string GetConnectionStyle()
         {
                 return SelectedConnection.StyleUrl;
@@ -198,17 +332,22 @@ namespace Siesa.SDK.Frontend.Services
             if (CompanyGroup.Success)
             {
                 await this.SetToken(CompanyGroup.Data);
+                var _connectionLogo = await FetchConnectionLogo(rowid);
+                await this.SetConnectionLogo(_connectionLogo);
+                await _localStorageService.SetItemAsync("rowidCompanyGroup", rowid);
             }
-
         }
 
         public short GetRowidCompanyGroup()
         {
-            if (this.User == null)
+            short rowid = 0;
+
+            if (this.User != null)
             {
-             return 0;   
+             rowid = this.User.RowidCompanyGroup;
             }
-            return this.User.RowidCompanyGroup;
+
+            return rowid;   
         }
 
         public short GetRoiwdCulture()
@@ -236,6 +375,7 @@ namespace Siesa.SDK.Frontend.Services
             var user = new SDKJWT(_secretKey, _minutesExp).Validate(token);
             return user != null;
         }
+
 
         public async Task<bool> ForgotPasswordAsync(string email){
 
@@ -331,6 +471,23 @@ namespace Siesa.SDK.Frontend.Services
             catch (System.Exception)
             {
             }
+        }
+
+        public int GetSelectedSuite()
+        {
+            return _selectedSuite;
+        }
+
+        public void SetSelectedSuite(int rowid)
+        {
+            _ = _localStorageService.SetItemAsync("selectedSuite", rowid);
+            _selectedSuite = rowid;
+            
+        }
+
+        public Task Login(string username, string password, short rowIdDBConnection, bool IsUpdateSession = false)
+        {
+            throw new NotImplementedException();
         }
     }
 }

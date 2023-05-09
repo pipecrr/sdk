@@ -245,13 +245,18 @@ namespace Siesa.SDK.Backend.Access
                         foreach (var Property in Properties)
                         {
                             var propertyValue =  Property.GetValue(Field.Entity);
+                            var originalValue = originalEntity.GetType().GetProperty(Property.Name).GetValue(originalEntity);
                             if (propertyValue == null || (propertyValue is string && string.IsNullOrEmpty(propertyValue.ToString())))
                             {
-                                var originalValue = originalEntity.GetType().GetProperty(Property.Name).GetValue(originalEntity);
                                 if (originalValue != null)
                                 {
                                     Field.Context.Entry(Field.Entity).Property(Property.Name).CurrentValue = originalValue;
                                 }
+                                continue;
+                            }
+
+                            if(propertyValue == originalValue && Field.State != EntityState.Added)
+                            {
                                 continue;
                             }
                             var EncryptValue = SDKDataEncrypt.FieldEncrypt(propertyValue);
@@ -338,6 +343,14 @@ namespace Siesa.SDK.Backend.Access
                 modelBuilder.RemoveXMINConvention();
             }
             modelBuilder.ApplyConventions();
+
+            modelBuilder.Entity<E00220_User>().HasOne(x => x.Culture).WithMany().HasForeignKey(x => x.RowidCulture);
+            modelBuilder.Entity<E00220_User>().HasOne(x => x.UserAccountPolicy).WithMany().HasForeignKey(x => x.RowidUserAccountPolicy);
+            modelBuilder.Entity<E00220_User>().HasOne(x => x.UserSubstitute).WithMany().HasForeignKey(x => x.RowidUserSubstitute);
+            modelBuilder.Entity<E00220_User>().HasOne(x => x.UserReportTo).WithMany().HasForeignKey(x => x.RowidUserReportTo);
+            modelBuilder.Entity<E00220_User>().HasOne(x => x.AttachmentUserProfilePicture).WithMany().HasForeignKey(x => x.RowidAttachmentUserProfilePicture);
+            modelBuilder.Entity<E00220_User>().HasOne(x => x.UserCreates).WithMany().HasForeignKey(x => x.RowidUserCreates);
+            modelBuilder.Entity<E00220_User>().HasOne(x => x.UserLastUpdate).WithMany().HasForeignKey(x => x.RowidUserLastUpdate);
             base.OnModelCreating(modelBuilder);
         }
 
