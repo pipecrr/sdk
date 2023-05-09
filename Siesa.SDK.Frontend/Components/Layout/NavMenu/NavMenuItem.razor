@@ -9,6 +9,8 @@
 @inject IJSRuntime JSRuntime
 @inject IFeaturePermissionService FeaturePermissionService
 @inherits Siesa.SDK.Frontend.Components.SDKComponent
+@using Siesa.Global.Enums
+
 @if(MenuItem.SubMenus?.Count > 0){
     <a href="#" @ref="btnRef" @attributes="@menuItemAttributes" @onclick:stopPropagation="true" @onclick="()=> OnClick(MenuItem)"  @onclick:preventDefault class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
         title="@Title" data-automation-id="@GetAutomationId()">
@@ -32,7 +34,7 @@
     }else{
         @if(MenuItem.Feature != null && MenuItem.Type == MenuType.Feature && string.IsNullOrEmpty(MenuItem.Url))
         {
-            @if(FeaturePermissionService.CheckUserActionPermission(MenuItem.Feature.BusinessName, 4, AuthenticationService))
+            @if(ShowItemFeature)
             {
                 <a href="@MenuItem.CurrentURL" @attributes="@menuItemAttributes" @onmouseover="MouseOver" @onmouseout="MouseOut" @onclick:stopPropagation="true" @onclick="()=> OnClickItem(MenuItem)"  @onclick:preventDefault  class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
                     title="@Title" data-automation-id="@GetAutomationId()">
@@ -78,6 +80,7 @@
     private ElementReference btnRef;
 
     private bool ShowIconExternal { get; set; }
+    private bool ShowItemFeature { get; set; }
 
     private Dictionary<string, object> menuItemAttributes { get; set; } = new Dictionary<string, object>();
 
@@ -101,6 +104,15 @@
         return await ResourceManager.GetResource(Convert.ToInt64(MenuItem.RowidResource), AuthenticationService);
     }
 
+    private async Task ItemFeature()
+    {
+        if(MenuItem.Feature != null && MenuItem.Type == MenuType.Feature && string.IsNullOrEmpty(MenuItem.Url))
+        {
+            ShowItemFeature = await FeaturePermissionService.CheckUserActionPermission(MenuItem.Feature.BusinessName, enumSDKActions.Access, AuthenticationService);
+        }
+        StateHasChanged();
+    }
+
     protected override async Task OnInitializedAsync(){
         if(MenuItem.ResourceTag != null){
             menuItemAttributes.Add("sdk-resource-id", MenuItem.ResourceTag);
@@ -109,6 +121,7 @@
         if(MenuItem.RowidResource != null && MenuItem.RowidResource != 0){
             menuItemAttributes.Add("sdk-resource-rowid", MenuItem.RowidResource);
         }
+        _ = ItemFeature();
 
         if(String.IsNullOrEmpty(MenuItem.CurrentText))
         {
@@ -135,6 +148,7 @@
             Title = MenuItem.CurrentText;
         }
         AutomationId = Title;
+        _ = ItemFeature();
     }
 
     private void OnClickItem(E00061_Menu menuItem, bool newTab = false){
