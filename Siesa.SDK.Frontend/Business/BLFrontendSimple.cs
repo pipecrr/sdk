@@ -421,9 +421,9 @@ namespace Siesa.SDK.Business
             }
         }
 
-        public async Task<string> DowunloadFile(string url)
+        public async Task<string> DownloadFile(string url)
         {
-            var result = await Backend.Call("DowunloadFile", url);
+            var result = await Backend.Call("DownloadFile", url);
             return result.Data;
         }
 
@@ -438,7 +438,7 @@ namespace Siesa.SDK.Business
                 file.CopyTo(ms);
                 fileBytes = ms.ToArray();
             }
-            var response = await Backend.Call("SaveFile", fileBytes, file.FileName,file.ContentType);
+            var response = await Backend.Call("SaveFile", fileBytes, file.FileName, file.ContentType, false);
             if(response.Success){
                 result.Url = response.Data.Url;
                 result.FileType = file.ContentType;
@@ -461,12 +461,12 @@ namespace Siesa.SDK.Business
                 file.CopyTo(ms);
                 fileBytes = ms.ToArray();
             }
-            var response = await Backend.Call("SaveFile", fileBytes, file.FileName, file.ContentType);
+            var response = await Backend.Call("SaveFile", fileBytes, file.FileName, file.ContentType, true);
             if(response.Success){
                 result.Url = response.Data.Url;
                 result.FileType = file.ContentType;
                 result.FileName = file.FileName;
-                result.FileContent = fileBytes;
+                result.FileContent = response.Data.FileContent;
             }else{
                 var errors = JsonConvert.DeserializeObject<List<string>> (response.Errors.ToString());
                 throw new ArgumentException(errors[0]);

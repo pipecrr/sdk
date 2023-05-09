@@ -381,6 +381,7 @@ namespace Siesa.SDK.Business
             if (extraFields != null && extraFields.Count > 0)
             {
                 extraFields.Add("Rowid");
+                extraFields.Add("RowidAttachment");
 
                 var selectedFields = string.Join(",", extraFields.Select(x =>
                 {
@@ -904,7 +905,7 @@ namespace Siesa.SDK.Business
         }
 
         [SDKExposedMethod]
-        public async Task<ActionResult<SDKFileUploadDTO>> SaveFile(byte[] fileBytes, string name, string contentType){
+        public async Task<ActionResult<SDKFileUploadDTO>> SaveFile(byte[] fileBytes, string name, string contentType, bool SaveBytes = false){
             MemoryStream stream = new MemoryStream(fileBytes);
             var result = new SDKFileUploadDTO();
             var untrustedFileName = name;
@@ -923,6 +924,9 @@ namespace Siesa.SDK.Business
                 await file.CopyToAsync(fs);
                 result.Url = filePath;
                 result.FileName = untrustedFileName;
+                if(SaveBytes){
+                    result.FileContent = fileBytes;
+                }
             }
             catch (IOException ex){
                 return new BadRequestResult<SDKFileUploadDTO>{Success = false, Errors = new List<string> { ex.Message }};
@@ -934,19 +938,24 @@ namespace Siesa.SDK.Business
             var result = new SDKFileUploadDTO();
             var name = file.FileName;
             var bucketName = _configuration.GetValue<string>("AWS:S3BucketName");
-            PutObjectRequest request = new PutObjectRequest{
-                BucketName = bucketName,
-                Key = name,
-                InputStream = file.OpenReadStream(),
-                ContentType = contentType
-            };
+            if(string.IsNullOrEmpty(bucketName)){
+                return new BadRequestResult<SDKFileUploadDTO>{Success = false, Errors = new List<string> { "S3 Bucket Name not found" }};
+            }
+            try{
+                PutObjectRequest request = new PutObjectRequest{
+                    BucketName = bucketName,
+                    Key = name,
+                    InputStream = file.OpenReadStream(),
+                    ContentType = contentType
+                };
 
-            var response = await _s3Client.PutObjectAsync(request);
-            if(response.HttpStatusCode == System.Net.HttpStatusCode.OK){
+                var response = await _s3Client.PutObjectAsync(request);
                 result.Url = name;
                 result.FileName = name;
-            }else{
-                return new BadRequestResult<SDKFileUploadDTO>{Success = false, Errors = new List<string> { response.HttpStatusCode.ToString() }};
+            }catch(AmazonS3Exception ex){
+                return new BadRequestResult<SDKFileUploadDTO>{Success = false, Errors = new List<string> { ex.Message }};
+            }catch(Exception ex){
+                return new BadRequestResult<SDKFileUploadDTO>{Success = false, Errors = new List<string> { ex.Message }};
             }
             return new ActionResult<SDKFileUploadDTO>{Success = true, Data = result};
         }
@@ -971,18 +980,29 @@ namespace Siesa.SDK.Business
 
         private async Task<ActionResult<string>> DownloadFileS3(string url)
         {
-            var result = "";
             var bucketName = _configuration.GetValue<string>("AWS:S3BucketName");
+            if(string.IsNullOrEmpty(bucketName)){
+                return new BadRequestResult<string>{Success = false, Errors = new List<string> { "S3BucketName name not found" }};
+            }
             var duration = _configuration.GetValue<int>("AWS:TimeoutDuration");
-            var request = new GetPreSignedUrlRequest
-            {
-                BucketName = bucketName,
-                Key = url,
-                Verb = HttpVerb.PUT,
-                Expires = DateTime.UtcNow.AddHours(duration),
-            };
-            string urlS3 = _s3Client.GetPreSignedURL(request);
-            return new ActionResult<string>{Success = true, Data = result};
+            if(duration == 0){
+                duration = 60;
+            }
+            try
+            {            
+                var request = new GetPreSignedUrlRequest
+                {
+                    BucketName = bucketName,
+                    Key = url,
+                    Expires = DateTime.UtcNow.AddMinutes(duration)
+                };
+                var urlS3 = _s3Client.GetPreSignedURL(request);
+                return new ActionResult<string>{Success = true, Data = urlS3};
+            }catch (AmazonS3Exception ex){
+                return new BadRequestResult<string>{Success = false, Errors = new List<string> { ex.Message }};
+            }catch (Exception ex){
+                return new BadRequestResult<string>{Success = false, Errors = new List<string> { ex.Message }};
+            }
         }
 
         [SDKExposedMethod]

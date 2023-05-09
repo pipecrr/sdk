@@ -9,7 +9,7 @@
 @code{
     [Parameter] public dynamic Business { get; set; }
 
-    private SDKTypeFile SDKType = SDKTypeFile.Other;
+    private SDKTypeFile SDKType;
     private string Name = "Download";   
     
     private string Url { get; set; }
@@ -17,8 +17,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Url = await GetUrl();
-        var Type = Business.BaseObj.FileType;
+        var Type = Business.BaseObj.FileType;        
         if (Type != null){
             if(Type.Contains("pdf")){
                 SDKType = SDKTypeFile.Pdf;
@@ -38,7 +37,8 @@
             else{
                 SDKType = SDKTypeFile.Other;
             }
-        }        
+        }
+        Url = await GetUrl();
     }
 
     public async Task<string> GetUrl(){
@@ -52,7 +52,6 @@
         }else{
             var response = await backend.Call("DownloadFile",BaseObj.Url,BaseObj.FileType);
             if(response.Success){
-                //url = $"data:{BaseObj.FileType};base64,{response.Data}";
                 url = response.Data;
             }
         }

@@ -70,7 +70,7 @@
         if(useRecorder){
             var bl = BackendRouterService.GetSDKBusinessModel(Business.BLName, AuthenticationService);
             var nameAudio = DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss");
-            var response = await bl.Call("SaveFile", fileBytes, $"{nameAudio}.wav", "audio/wav");
+            var response = await bl.Call("SaveFile", fileBytes, $"{nameAudio}.wav", "audio/wav", SaveByte);
 
             var fileUploadStr = JsonConvert.SerializeObject(response);
             await sdkUpload.OnComplete(fileUploadStr, false);
