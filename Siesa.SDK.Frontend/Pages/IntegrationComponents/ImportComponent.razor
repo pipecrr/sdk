@@ -25,30 +25,29 @@
 @inject SDKNotificationService NotificationService
 
 
-<SDKSteps ShowStepsButtons="true" SelectedIndex="@SelectedIndex" SelectedIndexChanged="@OnChange">
+<SDKSteps ShowStepsButtons="true" SelectedIndex="@SelectedIndex" SelectedIndexChanged="@OnChangeSteps">
     <Steps>
-        <SDKStepsItem ResourceTag="Import_File">
-
-            <h5>Descargar Demo:</h5>
-
-            <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Descargar Demo" Click="@Download" />
+        <SDKStepsItem ResourceTag="Custom.SDK.Import.LoadFile">
 
 
-            <h5>Importar Archivo CSV</h5>
+            <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Custom.SDK.Import.DownloadTemplate" Click="@DownloadFileTemplate" />
+
+
+            <h5><ResourceViewer ResourceTag="Custom.SDK.Import.LoadFile"/></h5>
 
             <InputFile OnChange="@LoadFiles" />
 
 
             @if (IsLoadingGrid)
             {
-                <p> Previsualización de los primeros registros del archivo cargado:</p>
+                <p><ResourceViewer ResourceTag="Custom.SDK.Import.PreviewFileData"/></p>
 
-                @if (Data != null && Data.Count > 0)
+                @if (FileData != null && FileData.Count > 0)
                 {     
-                    <SDKGrid TItem="dynamic"  Data="@Data" >
+                    <SDKGrid TItem="dynamic"  Data="@FileData" >
                         <Columns>
                         
-                            @foreach (var propertyKey in ((System.Dynamic.ExpandoObject)Data.FirstOrDefault())?.Select(x => x.Key))
+                            @foreach (var propertyKey in ((System.Dynamic.ExpandoObject)FileData.FirstOrDefault())?.Select(x => x.Key))
                             {
                                 <SDKGridColumn TItem="dynamic" Property="@propertyKey" Title="@propertyKey">
                                     <Template Context="data">
@@ -71,25 +70,25 @@
             }
         </SDKStepsItem>
         
-        <SDKStepsItem ResourceTag="SKD.Import.MappingData">
+        <SDKStepsItem ResourceTag="Custom.SKD.Import.MappingData">
 
-            <h4>Confirme los Campos e Importe</h4>
+            <h5><ResourceViewer ResourceTag="Custom.SKD.Import.MappingData"/></h5>
 
              <SDKGrid TItem="KeyValuePair<string, object>" Data="@GetFirstRow()">
                     <Columns>
-                        <SDKGridColumn TItem="KeyValuePair<string, object>" ResourceTag="SDK.Import.Header">
+                        <SDKGridColumn TItem="KeyValuePair<string, object>" ResourceTag="Custom.SDK.Import.GridHeader">
                             <Template Context="data">
 
                                     @data.Key
                                     
                             </Template>
                         </SDKGridColumn>
-                        <SDKGridColumn TItem="KeyValuePair<string, object>" ResourceTag="SDK.Import.FieldsBD" IsActionColumn="true">
+                        <SDKGridColumn TItem="KeyValuePair<string, object>" ResourceTag="Custom.SDK.Import.GridFieldsEntity" IsActionColumn="true">
                             <Template Context="data">
 
                                 <CascadingValue Value="@this" >
                                             
-                                                <MappingData FieldFile=@data FieldsEntity="@Fields"/>
+                                                <MappingData FieldFile=@data FieldsEntity="@_fieldsEntity"/>
 
                                 </CascadingValue>
                                 
@@ -97,7 +96,7 @@
                         </SDKGridColumn>
 
                         
-                        <SDKGridColumn TItem="KeyValuePair<string, object>" ResourceTag="SDK.Import.FieldsBD">
+                        <SDKGridColumn TItem="KeyValuePair<string, object>" ResourceTag="Custom.SDK.Import.GridFirstRow">
                             <Template Context="data">
                                
                                 @data.Value
@@ -119,11 +118,11 @@
 
 @code {
 
-    private Dictionary<string, string> Fields = new Dictionary<string,string>();
+    private Dictionary<string, string> _fieldsEntity = new Dictionary<string,string>();
 
     private Type EntityType = null;
 
-    public List<dynamic> Data = new List<dynamic>();
+    public List<dynamic> FileData = new List<dynamic>();
 
     public List<dynamic> DataMapped = new List<dynamic>();
 
@@ -138,7 +137,7 @@
 
     private List<KeyValuePair<string, object>> GetFirstRow()
     {
-       return ((System.Dynamic.ExpandoObject)Data.First()).ToList();
+       return ((System.Dynamic.ExpandoObject)FileData.First()).ToList();
     } 
         
     protected override async Task OnInitializedAsync()
@@ -170,17 +169,17 @@
         {
             var ResourceName = await ResourceManager.GetResource($"{EntityType.Name}.{field.Name}", AuthenticationService.GetRoiwdCulture()); 
 
-            Fields.Add(ResourceName,field.Name);
+            _fieldsEntity.Add(ResourceName,field.Name);
         }
     }
 
-    private async Task Download()
+    private async Task DownloadFileTemplate()
     {
         using (var stream = new MemoryStream())
         {
             using (var CsvWriter = new CsvWriter(new StreamWriter(stream, Encoding.UTF8), CultureInfo.InvariantCulture))
             {
-                List<string> Headers = Fields.Select(x => x.Key).ToList();
+                List<string> Headers = _fieldsEntity.Select(x => x.Key).ToList();
                 CsvWriter.WriteField(Headers);
                 CsvWriter.Flush();
                 byte[] bytes = stream.ToArray();
@@ -194,7 +193,7 @@
 
     private async Task LoadFiles(InputFileChangeEventArgs InputFile)
     {
-        Data = new List<dynamic>();
+        FileData = new List<dynamic>();
         IsLoadingGrid = false;
         using (var stream = new MemoryStream())
         {
@@ -220,7 +219,7 @@
                         ((IDictionary<string, object>)obj).Add(key, value);
                     }
 
-                    Data.Add(obj);
+                    FileData.Add(obj);
                 }
             }
         }
@@ -229,16 +228,16 @@
         _ = InvokeAsync(() => StateHasChanged());     
     }
 
-    public void OnChange(int index){
+    public void OnChangeSteps(int index){
         SelectedIndex = index;
 
         switch (index)
         {
             case 1:
-                if(Data == null || Data.Count == 0)
+                if(FileData == null || FileData.Count == 0)
                 {
                     SelectedIndex = 0;
-                    NotificationService.ShowError("SDK.Import.ErrorMappingData"); //No se ha cargado ningún archivo
+                    NotificationService.ShowError("Custom.SDK.Import.ErrorMappingData"); //No se ha cargado ningún archivo
                 }
             break;
             case 2:

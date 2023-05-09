@@ -1,7 +1,7 @@
 
 <select class="select_connect" id="SelectConnect" @onchange="OnChangeSelectItem">
 
-    <option ><ResourceViewer ResourceTag="Campo no asociado"/></option> @*Recurso*@
+    <option ><ResourceViewer ResourceTag="Custom.SDK.Import.FieldNotAsociate"/></option>
 
         @foreach (var field in FieldsEntity)
         { 
@@ -23,7 +23,7 @@
 
     public void OnChangeSelectItem(ChangeEventArgs e)
     {
-       FieldFile.Key = e.Value.ToString();
+       //FieldFile.Key = e.Value.ToString();
 
        ImportComponent.DataMapped.Add(new{ Header = FieldFile.Key, Content = FieldFile.Value} );
     }
