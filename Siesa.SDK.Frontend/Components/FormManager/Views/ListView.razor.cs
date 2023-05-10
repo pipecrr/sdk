@@ -1018,6 +1018,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
         }
 
+        private void GoToImport()
+        {
+            NavManager.NavigateTo($"{BusinessName}/Import/");
+        }
+
         private void GoToDetail(Int64 id)
         {
             if (OnClickDetail != null)
