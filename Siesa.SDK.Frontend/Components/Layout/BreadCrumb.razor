@@ -110,6 +110,7 @@
 
     private void OnMenuLoaded(object sender, EventArgs e)
     {
+        SetBreadCrum(NavigationManager.Uri);
         StateHasChanged();
     }
 

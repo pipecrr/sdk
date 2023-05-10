@@ -21,6 +21,9 @@ namespace Siesa.SDK.Entities
 		public List<E00040_Feature> Childs {get; set;}
 		[NotMapped]
 		public bool IsChildOfAnyFeature {get; set;}
+		[NotMapped]
+        [JsonIgnore]
+        public virtual bool? Show {get; set;}
 
 	}
 }
