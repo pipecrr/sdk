@@ -11,7 +11,7 @@
 
 @if (ErrorMsg != null && ErrorMsg != "")
 {
-    <text>@ErrorMsg</text>
+     <ErrorsWindow GeneralErrors="@ErrorList" />
 }
 else if (BusinessObj != null)
 {

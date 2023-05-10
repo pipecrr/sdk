@@ -17,6 +17,7 @@ using Newtonsoft.Json;
 using Siesa.SDK.Frontend.Extension;
 using Siesa.SDK.Entities;
 using Siesa.SDK.Frontend.Components.FormManager;
+using Siesa.Global.Enums;
 
 namespace Siesa.SDK.Frontend.Components.Fields
 {
@@ -123,24 +124,37 @@ namespace Siesa.SDK.Frontend.Components.Fields
         }
 
         public override async Task SetParametersAsync(ParameterView parameters){
-            if (parameters.TryGetValue<dynamic>("BaseObj", out dynamic baseObjNew) && !IsMultiple){
+            if (parameters.TryGetValue<dynamic>("BaseObj", out dynamic baseObjNew)){
                 if(BaseObj != null && baseObjNew != null){
                     BindProperty = BaseObj.GetType().GetProperty(FieldName);
                     dynamic baseObjNewRelated = baseObjNew.GetType().GetProperty(FieldName).GetValue(baseObjNew);
-                    var rowidNew = baseObjNewRelated != null ? baseObjNewRelated.GetType().GetProperty("Rowid").GetValue(baseObjNewRelated) : 0;
-                    if(baseObjNewRelated != null && rowidNew != rowidLastValue){
-                        CacheLoadResult = null;
-                        LastSearchString = null;
-                        Value = "";
-                        ItemsSelected.Clear();
-                        CacheData.Clear();
-                        CacheDataObjcts.Clear();
-                        HasValue = false;
-                        SetVal(BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj));
+                    if(!IsMultiple){
+                        var rowidNew = baseObjNewRelated != null ? baseObjNewRelated.GetType().GetProperty("Rowid").GetValue(baseObjNewRelated) : 0;
+                        if(baseObjNewRelated != null && rowidNew != rowidLastValue){
+                            CacheLoadResult = null;
+                            LastSearchString = null;
+                            Value = "";
+                            ItemsSelected.Clear();
+                            CacheData.Clear();
+                            CacheDataObjcts.Clear();
+                            HasValue = false;
+                            SetVal(BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj));
+                        }
+                        BaseObj = baseObjNew;
+                        RelBusinessObj.GetType().GetProperty("BaseObj").SetValue(RelBusinessObj, baseObjNewRelated);
+                        rowidLastValue = rowidNew;
+                    }else{
+                        if(baseObjNewRelated == null || baseObjNewRelated.Count == 0){
+                            CacheLoadResult = null;
+                            LastSearchString = null;
+                            Value = "";
+                            ItemsSelected.Clear();
+                            CacheData.Clear();
+                            CacheDataObjcts.Clear();
+                            HasValue = false;
+                            SetVal(null);
+                        }
                     }
-                    BaseObj = baseObjNew;
-                    RelBusinessObj.GetType().GetProperty("BaseObj").SetValue(RelBusinessObj, baseObjNewRelated);
-                    rowidLastValue = rowidNew;
                 }
             }
             
@@ -173,6 +187,11 @@ namespace Siesa.SDK.Frontend.Components.Fields
                     SetValue(item);
                 }else{
                     BindProperty.SetValue(BaseObj, item);
+                }
+                if(IsMultiple){
+                    BadgeByData.Clear();
+                    Values.Clear();
+                    placeholder = "";
                 }
                 return;
             }
@@ -432,9 +451,9 @@ namespace Siesa.SDK.Frontend.Components.Fields
             {
                 try
                 {
-                    CanCreate = FeaturePermissionService.CheckUserActionPermission(RelatedBusiness, 1, AuthenticationService);
-                    CanEdit = FeaturePermissionService.CheckUserActionPermission(RelatedBusiness, 2, AuthenticationService);
-                    CanDetail = FeaturePermissionService.CheckUserActionPermission(RelatedBusiness, 5, AuthenticationService);
+                    CanCreate = await FeaturePermissionService.CheckUserActionPermission(RelatedBusiness, enumSDKActions.Create, AuthenticationService);
+                    CanEdit = await FeaturePermissionService.CheckUserActionPermission(RelatedBusiness, enumSDKActions.Edit, AuthenticationService);
+                    CanDetail = await FeaturePermissionService.CheckUserActionPermission(RelatedBusiness, enumSDKActions.Consult, AuthenticationService);
                 }
                 catch (System.Exception)
                 {
