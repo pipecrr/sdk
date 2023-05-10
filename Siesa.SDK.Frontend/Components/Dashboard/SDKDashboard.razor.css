@@ -70,3 +70,17 @@
     user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
 }
+
+.whcm_head_profile{
+    /* padding-left: 6.875rem !important; */
+    padding-top: 1rem !important;
+    padding-bottom: 1rem;
+}
+
+
+@media (max-width: 575.98px){
+    .whcm_head_profile{
+        padding-left: 1rem !important;
+        padding-top: 0rem !important;
+    }
+}

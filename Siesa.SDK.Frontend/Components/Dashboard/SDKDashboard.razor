@@ -2,7 +2,17 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Plk.Blazor.DragDrop
 @using Siesa.SDK.Shared.Application
+@using Siesa.SDK.Frontend.Components.Dashboard.UserComponent
+
 @implements IDisposable
+
+<div class="row whcm_row">
+    <div class="col-12 whcm_head_profile">
+
+            <UserDashboard/>
+
+    </div>
+</div>
 
 <div class="dash_back">
     <Dropzone Items="@SDKApp.Dashlets" Class="w-100 sdk-dashboard">
