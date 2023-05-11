@@ -453,7 +453,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 {
                     CanCreate = await FeaturePermissionService.CheckUserActionPermission(RelatedBusiness, enumSDKActions.Create, AuthenticationService);
                     CanEdit = await FeaturePermissionService.CheckUserActionPermission(RelatedBusiness, enumSDKActions.Edit, AuthenticationService);
-                    CanDetail = await FeaturePermissionService.CheckUserActionPermission(RelatedBusiness, enumSDKActions.Consult, AuthenticationService);
+                    CanDetail = await FeaturePermissionService.CheckUserActionPermission(RelatedBusiness, enumSDKActions.Detail, AuthenticationService);
                 }
                 catch (System.Exception)
                 {
