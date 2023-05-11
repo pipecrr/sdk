@@ -1,8 +1,13 @@
 ::deep .sdk-dashboard{
-    display: inline-flex;
+    display: flex;
     flex-wrap: wrap;
     gap: 5px;
-}
+} 
+
+::deep .plk-dd-draggable
+{
+    width: calc(50% - 8px);
+}     
 
 /*add this to avoid flickering*/
 ::deep .plk-dd-inprogess > * {
@@ -76,7 +81,14 @@
     padding-top: 1rem !important;
     padding-bottom: 1rem;
 }
+@media (max-width: 991.98px){
 
+    ::deep .plk-dd-draggable
+    {
+        width: 100%;
+    }     
+
+}
 
 @media (max-width: 575.98px){
     .whcm_head_profile{

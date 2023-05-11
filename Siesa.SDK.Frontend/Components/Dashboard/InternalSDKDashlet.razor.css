@@ -1,17 +1,12 @@
 .sdk-dashlet {
-    overflow-y: auto;
-    overflow-x: hidden;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    background-color: #fff;
-    box-shadow: 0 0 5px #ccc;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 500px;
-    height: 500px;
+    /* padding: 1rem; */
+    height: 100%;
+    background: var(--color_light);
+    border-radius: var(--border_radius_standar_max);
+    box-shadow: var(--shadow_standar_min);
+    border: 1px solid var(--color_light);
 }
+
 
 .whcm_multi_panel_full{
     flex-wrap: nowrap;

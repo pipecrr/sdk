@@ -3,23 +3,22 @@
 @using Microsoft.AspNetCore.Components 
 @inject IServiceProvider ServiceProvider
 
-<div class="row whcm_row">
-    <div class="d-flex w-100 whcm_multi_panel_full">
-        <div class="whcm_home_recent  col-12 col-sm-6 col-md-6 col-lg-6 py-3">
-            <div class="sdk-dashlet">
-                <ErrorBoundary @ref="errorBoundary">
-                    <ChildContent>
-                        @GetDashlet()?.Title
-                        <DynamicComponent Type="@Item" @ref="DynamicComponentRef" />
-                    </ChildContent> 
-                    <ErrorContent Context="Exception" >
-                        <p>ocurrio un error</p>
-                    </ErrorContent>
-                </ErrorBoundary>
-            </div>
+
+    <div class="col py-3 h-100">
+        <div class="sdk-dashlet">
+            <ErrorBoundary @ref="errorBoundary">
+                <ChildContent>
+                    @GetDashlet()?.Title
+                    <DynamicComponent Type="@Item" @ref="DynamicComponentRef" />
+                </ChildContent> 
+                <ErrorContent Context="Exception" >
+                    <p>ocurrio un error</p>
+                </ErrorContent>
+            </ErrorBoundary>
         </div>
     </div>
-</div>
+
+
 
 @code {
     [Parameter]
