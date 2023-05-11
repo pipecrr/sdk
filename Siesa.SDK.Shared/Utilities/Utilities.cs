@@ -166,8 +166,20 @@ namespace Siesa.SDK.Shared.Utilities
             for (int i = 0; i < (fieldPath.Length - 1); i++)
             {
                 var tmpType = currentData.GetType();
-                var tmpProperty = tmpType.GetProperty(fieldPath[i]);
+                var propertyName = fieldPath[i];
+                var propertyIndex = -1;
+                if (propertyName.Contains("["))
+                {
+                    var index = propertyName.IndexOf("[");
+                    propertyIndex = int.Parse(propertyName.Substring(index + 1, propertyName.Length - index - 2));
+                    propertyName = propertyName.Substring(0, index);
+                }
+                var tmpProperty = tmpType.GetProperty(propertyName);
                 var tmpValue = tmpProperty.GetValue(currentData, null);
+                if(propertyIndex > -1)
+                {
+                    tmpValue = ((System.Collections.IList)tmpValue)[propertyIndex];
+                }
                 var isEntity = Utilities.IsAssignableToGenericType(tmpProperty.PropertyType, typeBaseSDK);
                 if (tmpValue == null && isEntity)
                 {
