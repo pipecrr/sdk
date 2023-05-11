@@ -25,6 +25,8 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.Extensions.DependencyInjection;
 using Siesa.Global.Enums;
+using System.Reflection;
+using System.Reflection.Emit;
 
 namespace Siesa.SDK.Business
 {
@@ -46,6 +48,7 @@ namespace Siesa.SDK.Business
         [JsonIgnore]
         public List<FieldOptions> ListViewFields = new List<FieldOptions>();
         public BaseSDK<int> BaseObj { get; set; }
+        public List<DynamicEntityDTO> DynamicEntities { get; set; }
 
         [JsonIgnore]
         protected IAuthenticationService AuthenticationService { get; set; }
@@ -134,6 +137,7 @@ namespace Siesa.SDK.Business
         public List<FieldOptions> ListViewFields = new List<FieldOptions>();
         [ValidateComplexType]
         public T BaseObj { get; set; }
+        public List<DynamicEntityDTO> DynamicEntities { get; set; }
 
         public List<string> RelFieldsToSave { get; set; } = new List<string>();
 
@@ -230,9 +234,104 @@ namespace Siesa.SDK.Business
 
         public async virtual Task InitializeBusiness(Int64 rowid, List<string> extraFields = null)
         {
+            var requestGroups = await Backend.Call("GetGroupsDynamicEntity", BusinessName);
+            if(requestGroups.Success && requestGroups.Data != null){
+                DynamicEntities = await CreateDynamicEntities(requestGroups.Data);
+            }
+
             BaseObj = await GetAsync(rowid, extraFields );
         }
 
+        private async Task<List<DynamicEntityDTO>> CreateDynamicEntities(dynamic data)
+        {
+            List<DynamicEntityDTO> result = new List<DynamicEntityDTO>();
+            foreach(var item in data){
+                DynamicEntityDTO entity = new DynamicEntityDTO();
+                entity.Rowid = item.Rowid;
+                entity.Name = item.Tag;
+                entity.Id = item.Id;
+                var requestColumns = await Backend.Call("GetColumnsDynamicEntity", item.Rowid);
+                if(requestColumns.Success && requestColumns.Data != null){
+                    Type baseObjType = CreateDynamicObject(item.Id, requestColumns.Data);
+                    var DynamicBaseObj = Activator.CreateInstance(baseObjType);
+                    entity.DynamicObject = DynamicBaseObj;
+                }
+                result.Add(entity);
+            }
+
+            return result;
+        }
+
+        private Type CreateDynamicObject(string id, dynamic fields)
+        {
+            // Crea una nueva assembly dinámica.
+            AssemblyName assemblyName = new AssemblyName("DynamicEntityAssembly");
+            AssemblyBuilder assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
+
+            // Crea un nuevo módulo dinámico en la assembly.
+            ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("DynamicEntityModule");
+
+            // Crea un nuevo tipo con propiedades nulas.
+            TypeBuilder typeBuilder = moduleBuilder.DefineType(id, TypeAttributes.Public | TypeAttributes.Public | TypeAttributes.Class | TypeAttributes.Sealed, typeof(object));
+            foreach(var field in fields){
+                
+                Type type = GetTypesColumn(field.DataType);
+                var name = field.Tag;
+                typeBuilder.DefineField(name, type, FieldAttributes.Public);
+                
+                // Crea un campo privado para cada propiedad del tipo original.
+                FieldBuilder fieldBuilder = typeBuilder.DefineField($"_{name}", type, FieldAttributes.Private);
+
+                // Crea una propiedad pública 
+                PropertyBuilder propertyBuilder = typeBuilder.DefineProperty(name, PropertyAttributes.None, type, new Type[] { type });
+
+                // Define el método get.
+                MethodBuilder getMethodBuilder = typeBuilder.DefineMethod("get_" + name, MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, type, Type.EmptyTypes);
+
+                // Crea el cuerpo del método.
+                ILGenerator getIL = getMethodBuilder.GetILGenerator();
+                getIL.Emit(OpCodes.Ldarg_0);
+                getIL.Emit(OpCodes.Ldfld, fieldBuilder);
+                getIL.Emit(OpCodes.Ret);
+                propertyBuilder.SetGetMethod(getMethodBuilder);
+
+                // Define el método set.
+                MethodBuilder setMethodBuilder = typeBuilder.DefineMethod("set_" + fieldBuilder, MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, null, new Type[] { type });
+
+                // Crea el cuerpo del método.
+                ILGenerator setIL = setMethodBuilder.GetILGenerator();
+                setIL.Emit(OpCodes.Ldarg_0);
+                setIL.Emit(OpCodes.Ldarg_1);
+                setIL.Emit(OpCodes.Stfld, fieldBuilder);
+                setIL.Emit(OpCodes.Ret);
+                propertyBuilder.SetSetMethod(setMethodBuilder);
+            }
+
+            // Crea el constructor.
+            ConstructorBuilder constructorBuilder = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, Type.EmptyTypes);
+            ILGenerator constructorIL = constructorBuilder.GetILGenerator();
+            constructorIL.Emit(OpCodes.Ldarg_0);
+            constructorIL.Emit(OpCodes.Call, typeof(object).GetConstructor(Type.EmptyTypes));
+            constructorIL.Emit(OpCodes.Ret);
+
+            Type generetedType = typeBuilder.CreateType();
+
+            return generetedType;
+        }
+
+        private Type GetTypesColumn(dynamic dataType)
+        {
+            switch(dataType){
+                case 0:
+                    return typeof(string);
+                case 1:
+                    return typeof(Decimal);
+                case 2:
+                    return typeof(DateTime);
+                default:
+                    return typeof(string);
+            }
+        }
         public async virtual Task GetDuplicateInfo(Int64 rowid)
         {
             BaseObj = await GetAsync(rowid);

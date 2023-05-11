@@ -72,6 +72,7 @@ namespace Siesa.SDK.Business
 
         public string BusinessName { get; set; }
         public BaseSDK<int> BaseObj { get; set; }
+        public List<DynamicEntityDTO> DynamicEntities { get; set; }
 
         public DeleteBusinessObjResponse Delete()
         {
@@ -193,7 +194,7 @@ namespace Siesa.SDK.Business
 
         public string BusinessName { get; set; }
         public T BaseObj { get; set; }
-
+        public List<DynamicEntityDTO> DynamicEntities { get; set; }
         private string[] _relatedProperties = null;
         private string[] _relatedAttachmentsType = null;
         protected SDKContext ContextMetadata;
