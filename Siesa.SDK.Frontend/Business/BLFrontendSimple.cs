@@ -238,7 +238,7 @@ namespace Siesa.SDK.Business
             if(requestGroups.Success && requestGroups.Data != null){
                 DynamicEntities = await CreateDynamicEntities(requestGroups.Data);
             }
-
+            
             BaseObj = await GetAsync(rowid, extraFields );
         }
 
@@ -252,9 +252,11 @@ namespace Siesa.SDK.Business
                 entity.Id = item.Id;
                 var requestColumns = await Backend.Call("GetColumnsDynamicEntity", item.Rowid);
                 if(requestColumns.Success && requestColumns.Data != null){
-                    Type baseObjType = CreateDynamicObject(item.Id, requestColumns.Data);
+                    Dictionary<string, int> fields = new Dictionary<string, int>();
+                    Type baseObjType = CreateDynamicObject(item.Id, requestColumns.Data, fields);
                     var DynamicBaseObj = Activator.CreateInstance(baseObjType);
                     entity.DynamicObject = DynamicBaseObj;
+                    entity.Fields = fields;
                 }
                 result.Add(entity);
             }
@@ -262,7 +264,7 @@ namespace Siesa.SDK.Business
             return result;
         }
 
-        private Type CreateDynamicObject(string id, dynamic fields)
+        private Type CreateDynamicObject(string id, dynamic fields, Dictionary<string, int> fieldsDictionary)
         {
             // Crea una nueva assembly dinámica.
             AssemblyName assemblyName = new AssemblyName("DynamicEntityAssembly");
@@ -277,6 +279,7 @@ namespace Siesa.SDK.Business
                 
                 Type type = GetTypesColumn(field.DataType);
                 var name = field.Tag;
+                fieldsDictionary.Add(name, field.Rowid);
                 typeBuilder.DefineField(name, type, FieldAttributes.Public);
                 
                 // Crea un campo privado para cada propiedad del tipo original.
@@ -319,14 +322,14 @@ namespace Siesa.SDK.Business
             return generetedType;
         }
 
-        private Type GetTypesColumn(dynamic dataType)
+        private Type GetTypesColumn(enumDynamicEntityDataType dataType)
         {
             switch(dataType){
-                case 0:
+                case enumDynamicEntityDataType.Text:
                     return typeof(string);
-                case 1:
+                case enumDynamicEntityDataType.Number:
                     return typeof(Decimal);
-                case 2:
+                case enumDynamicEntityDataType.Date:
                     return typeof(DateTime);
                 default:
                     return typeof(string);

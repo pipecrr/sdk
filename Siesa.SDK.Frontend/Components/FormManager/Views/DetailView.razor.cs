@@ -148,8 +148,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     //Soporte a viewdefs anteriores
                     var panels = JsonConvert.DeserializeObject<List<Panel>>(metadata);
                     FormViewModel.Panels = panels;
+                }                
+                if(BusinessObj.GetType().GetProperty("DynamicEntities") != null && BusinessObj.DynamicEntities != null){
+                    AddPanels(FormViewModel.Panels);
                 }
-                //AddPanel(FormViewModel.Panels, BusinessObj);
+
                 setViewContext(Panels);
                 if (FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
                 {
@@ -171,104 +174,23 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             StateHasChanged();
         }
 
-        // private async Task AddPanel(dynamic data, SDKBusinessModel bl)
-        // {
-        //     if(AuxPanels == null){
-        //         AuxPanels = new List<Panel>();
-        //     }            
-        //     foreach(var item in data){
-        //         var panel = new Panel();
-        //         panel.Name = item.Id;
-        //         panel.ResourceTag = item.Tag;
-        //         var requestColumns = await bl.Call("GetColumnsDynamicEntity", item.Rowid);
-        //         if(requestColumns.Success && requestColumns.Data != null){
-        //             List<FieldOptions> fields = new List<FieldOptions>();
-        //             foreach(var column in requestColumns.Data){
-        //                 var field = new FieldOptions();
-        //                 field.Name = column.Id;
-        //                 field.FieldType = GetTypesField(column.DataType);
-        //                 field.ResourceTag = column.Tag;
-        //                 field.ViewContext = "DetailView";
-        //                 fields.Add(field);
-        //             }
-        //             panel.Fields = fields;
-        //         }
-        //         Type baseObjType = CreateDynamicObject(BusinessObj.BaseObj.GetType().Name, panel.Fields);
-        //         var DynamicBaseObj = Activator.CreateInstance(baseObjType);
-
-        //         //panel.DynamicBusinessObj = DynamicBaseObj;
-
-        //         AuxPanels.Add(panel);
-        //     }
-        // }
-
-        private Type CreateDynamicObject(string id, List<FieldOptions> fields)
-        {
-            // Crea una nueva assembly dinámica.
-            AssemblyName assemblyName = new AssemblyName("DynamicEntityAssembly");
-            AssemblyBuilder assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
-
-            // Crea un nuevo módulo dinámico en la assembly.
-            ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("DynamicEntityModule");
-
-            // Crea un nuevo tipo con propiedades nulas.
-            TypeBuilder typeBuilder = moduleBuilder.DefineType(id, TypeAttributes.Public | TypeAttributes.Public | TypeAttributes.Class | TypeAttributes.Sealed, typeof(object));
-            foreach(var field in fields){
-
-                Type type = GetTypeTypesField(field.FieldType);
-                typeBuilder.DefineField(field.Name, type, FieldAttributes.Public);
-                
-                // Crea un campo privado para cada propiedad del tipo original.
-                FieldBuilder fieldBuilder = typeBuilder.DefineField($"_{field.Name}", type, FieldAttributes.Private);
-
-                // Crea una propiedad pública 
-                PropertyBuilder propertyBuilder = typeBuilder.DefineProperty(field.Name, PropertyAttributes.None, type, new Type[] { type });
-
-                // Define el método get.
-                MethodBuilder getMethodBuilder = typeBuilder.DefineMethod("get_" + field.Name, MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, type, Type.EmptyTypes);
-
-                // Crea el cuerpo del método.
-                ILGenerator getIL = getMethodBuilder.GetILGenerator();
-                getIL.Emit(OpCodes.Ldarg_0);
-                getIL.Emit(OpCodes.Ldfld, fieldBuilder);
-                getIL.Emit(OpCodes.Ret);
-                propertyBuilder.SetGetMethod(getMethodBuilder);
-
-                // Define el método set.
-                MethodBuilder setMethodBuilder = typeBuilder.DefineMethod("set_" + fieldBuilder, MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, null, new Type[] { type });
-
-                // Crea el cuerpo del método.
-                ILGenerator setIL = setMethodBuilder.GetILGenerator();
-                setIL.Emit(OpCodes.Ldarg_0);
-                setIL.Emit(OpCodes.Ldarg_1);
-                setIL.Emit(OpCodes.Stfld, fieldBuilder);
-                setIL.Emit(OpCodes.Ret);
-                propertyBuilder.SetSetMethod(setMethodBuilder);
-            }
-
-            // Crea el constructor.
-            ConstructorBuilder constructorBuilder = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, Type.EmptyTypes);
-            ILGenerator constructorIL = constructorBuilder.GetILGenerator();
-            constructorIL.Emit(OpCodes.Ldarg_0);
-            constructorIL.Emit(OpCodes.Call, typeof(object).GetConstructor(Type.EmptyTypes));
-            constructorIL.Emit(OpCodes.Ret);
-
-            Type generetedType = typeBuilder.CreateType();
-
-            return generetedType;
-        }
-
-        private Type GetTypeTypesField(FieldTypes fieldType)
-        {
-            switch(fieldType){
-                case FieldTypes.CharField:
-                    return typeof(string);
-                case FieldTypes.DecimalField:
-                    return typeof(decimal);
-                case FieldTypes.DateTimeField:
-                    return typeof(DateTime);
-                default:
-                    return typeof(string);
+        private void AddPanels(List<Panel> panels){
+            
+            foreach(var item in BusinessObj.DynamicEntities){
+                var index = BusinessObj.DynamicEntities.IndexOf(item);
+                var panel = new Panel();
+                panel.ResourceTag = item.Name;
+                var fields = new List<FieldOptions>();
+                foreach(var property in item.DynamicObject.GetType().GetProperties()){
+                    var field = new FieldOptions();
+                    var name = $"DynamicEntities[{index}].DynamicObject.{property.Name}";
+                    field.Name = name;
+                    field.ResourceTag = property.Name;
+                    field.ViewContext = "DetailView";
+                    fields.Add(field);
+                }
+                panel.Fields = fields;
+                panels.Add(panel);
             }
         }
 
