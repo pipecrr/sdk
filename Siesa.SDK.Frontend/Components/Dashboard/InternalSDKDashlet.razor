@@ -1,6 +1,10 @@
 @using Siesa.SDK.Frontend.Components.Visualization 
 @using Microsoft.Extensions.DependencyInjection  
 @using Microsoft.AspNetCore.Components 
+@using Siesa.SDK.Frontend.Components.Layout
+@using Siesa.SDK.Shared.Services
+
+@inject IAuthenticationService AuthenticationService
 @inject IServiceProvider ServiceProvider
 
 
@@ -12,7 +16,13 @@
                     <DynamicComponent Type="@Item" @ref="DynamicComponentRef" />
                 </ChildContent> 
                 <ErrorContent Context="Exception" >
-                    <p>ocurrio un error</p>
+                    <div class="col-12 text-center font_color_primary_dark py-5">
+                        <i class="fa-solid fa-triangle-exclamation fa-3x"></i>
+                        <p class="mt-3">
+                            <ResourceViewer ResourceTag="Custom.Generic.Message.Error" 
+                            RowidCulture=@AuthenticationService.GetRoiwdCulture()/>
+                        </p>
+                    </div>
                 </ErrorContent>
             </ErrorBoundary>
         </div>
