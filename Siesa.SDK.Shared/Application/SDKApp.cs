@@ -34,7 +34,9 @@ namespace Siesa.SDK.Shared.Application
         {
            //search for components with fullname match this regex "BL*.Dashlets."
             var pattern = @".*\.BL.*\.Dashlets\..*";
-            var dashlets = frontAssembly.GetTypes().Where(t => System.Text.RegularExpressions.Regex.IsMatch(t.FullName, pattern));
+            var dashlets = frontAssembly.GetTypes()
+            .Where(t => System.Text.RegularExpressions.Regex.IsMatch(t.FullName, pattern)
+            && t.GetCustomAttributes(typeof(DataAnnotations.SDKDashlet), false).Length > 0);
             if (dashlets != null)
             {
                 Dashlets.AddRange(dashlets);

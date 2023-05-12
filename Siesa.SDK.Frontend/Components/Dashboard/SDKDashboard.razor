@@ -5,10 +5,10 @@
 @using Siesa.SDK.Shared.Application
 @using Siesa.SDK.Frontend.Components.Dashboard.UserComponent
 @using Siesa.SDK.Frontend.Services
+@using Siesa.SDK.Shared.DataAnnotations
 
 @inject Blazored.LocalStorage.ILocalStorageService localStorageService
 @inject SDKDialogService DialogService
-@inject SDKNotificationService NotificationService
 
 @implements IDisposable
 
@@ -56,19 +56,14 @@
 
     private async Task AddSelectedDashlets(Type dashlet)
     {
-        if(!_dashlets.Contains(dashlet))
-        {
-            _dashlets.Add(dashlet);
+        
+        _dashlets.Add(dashlet);
 
-            DashletLocalStorage.Add(dashlet.FullName);
+        DashletLocalStorage.Add(dashlet.FullName);
 
-           _ = localStorageService.SetItemAsync("ListDashlets", DashletLocalStorage); 
+        _ = localStorageService.SetItemAsync("ListDashlets", DashletLocalStorage); 
 
-        }else
-        {
-            NotificationService.ShowError("Custom.DashletExist");
-        }
-
+      
       _ = InvokeAsync(()=> StateHasChanged());
 
     }
@@ -77,17 +72,10 @@
     {
         var ModalDashlets = await DialogService.ShowCustomDialog
         (ds=>@<div class="">
-                    <ul>
                         @foreach (var dashlet in SDKApp.Dashlets)
                         {
-                            <li @onclick="() => AddSelectedDashlets(dashlet)">
-                                <SDKButton  ResourceTag="@dashlet.Name"
-                                    RenderStyleMode="SDKButtonRenderStyleMode.Text"
-                                    RenderStyle="SDKButtonRenderStyle.Secondary"/>
-                              
-                            </li>
+                            <PreviewDashlets DashletType="@dashlet" Click="@(() => AddSelectedDashlets(dashlet))" />
                         }
-                    </ul>
             </div>, title: "Custom.DashletTitle");
     }
 
@@ -126,6 +114,8 @@
 
         _ = InvokeAsync(() => StateHasChanged());
     }
+
+    
 
     
 } 
