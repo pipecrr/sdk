@@ -785,9 +785,10 @@ input#collapse_open:checked~.collapse_open_btn>.nav_btn_standar_text {
     overflow: unset;
 }
 
-.sdk_home_content {
-    padding-top: calc(48px + 1.5rem);
-    padding-bottom: calc(32px + 2rem);
+.sdk_home_content 
+{ 
+    padding-top: calc(48px + 1.5rem); 
+    padding-bottom: calc(32px + 7rem); 
 }
 
 .area2 {
