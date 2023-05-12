@@ -480,7 +480,7 @@ namespace Siesa.SDK.Business
 
                 var contextSet = Context.GetType().GetMethod("Set", types: Type.EmptyTypes);
 
-                var dynamicEntitiesToSave = new List<object>(); // Lista temporal para almacenar los registros dinámicos
+                var dynamicEntitiesToSave = new List<object>();
 
                 foreach (DynamicEntityDTO dynamicEntityDTO in DynamicEntities)
                 {
@@ -509,7 +509,7 @@ namespace Siesa.SDK.Business
                             dynamicEntity.GetType().GetProperty("NumericData").SetValue(dynamicEntity, value.ToObject<decimal>());
                         }
 
-                        dynamicEntitiesToSave.Add(dynamicEntity); // Agregar el registro dinámico a la lista temporal
+                        dynamicEntitiesToSave.Add(dynamicEntity); 
                     }
                 }
 
@@ -1076,6 +1076,37 @@ namespace Siesa.SDK.Business
                 return new ActionResult<T>
                 {
                     Data = null
+                };
+            }
+        }
+
+        [SDKExposedMethod]
+        public async Task<ActionResult<dynamic>> GetDynamicEntitiesData(Int64 rowid)
+        {
+            using (SDKContext Context = CreateDbContext())
+            {
+                var nameEntity = typeof(T).Name;
+                var nameDynamicEntity = nameEntity.Replace(nameEntity[0].ToString(), "D");
+                var nameSpaceEntity = typeof(T).Namespace;
+                var dynamicEntityType = Utilities.SearchType(nameSpaceEntity + "." + nameDynamicEntity, true);
+
+                Assembly _assemblySelect = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
+                var contextSet = Context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(dynamicEntityType).Invoke(Context, null);
+                //include
+                Assembly _assemblyInclude = typeof(Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions).Assembly;
+                var includeMethod = typeof(IQueryable<object>).GetExtensionMethod(_assemblyInclude, "Include", new[] { typeof(IQueryable<object>), typeof(string) });
+                var includeMethodGeneric = includeMethod.MakeGenericMethod(dynamicEntityType);
+                contextSet = includeMethodGeneric.Invoke(contextSet, new object[] { contextSet,"EntityColumn" });
+                //where
+                var whereMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "Where", new[] { typeof(IQueryable), typeof(string), typeof(object[])});
+                contextSet = whereMethod.Invoke(null, new object[] { contextSet, "RowidRecord == @0", new object[] { rowid }});
+                Assembly _assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
+                var dynamicListMethod = typeof(IEnumerable).GetExtensionMethod(_assemblyDynamic, "ToDynamicList", new[] { typeof(IEnumerable) });
+                var dynamicList = dynamicListMethod.Invoke(contextSet, new object[] { contextSet });
+
+                return new ActionResult<dynamic>
+                {
+                    Data = dynamicList
                 };
             }
         }

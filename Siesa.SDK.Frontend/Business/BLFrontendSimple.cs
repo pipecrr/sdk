@@ -234,12 +234,51 @@ namespace Siesa.SDK.Business
 
         public async virtual Task InitializeBusiness(Int64 rowid, List<string> extraFields = null)
         {
+            BaseObj = await GetAsync(rowid, extraFields );
             var requestGroups = await Backend.Call("GetGroupsDynamicEntity", BusinessName);
             if(requestGroups.Success && requestGroups.Data != null){
                 DynamicEntities = await CreateDynamicEntities(requestGroups.Data);
+                await GetDynamicEmntitiesData(rowid);
             }
-            
-            BaseObj = await GetAsync(rowid, extraFields );
+        }
+
+        private async Task GetDynamicEmntitiesData(Int64 rowid)
+        {
+            var request = await Backend.Call("GetDynamicEntitiesData", rowid);
+            if(request.Success && request.Data != null){
+                SetValueDynamicEntity(request.Data);
+            }
+        }
+
+        private void SetValueDynamicEntity(dynamic dynamicList)
+        {
+            foreach (var item in (IEnumerable<dynamic>)dynamicList)
+            {
+                var rowidGroup = Convert.ChangeType(item.EntityColumn.RowidDynamicEntity, typeof(Int64));
+                var entity = DynamicEntities.FirstOrDefault(x => x.Rowid == rowidGroup);
+                var indexEntity = DynamicEntities.IndexOf(entity);
+                var columnName = item.EntityColumn.Tag.ToString();
+                var type = Convert.ChangeType(item.EntityColumn.DataType, typeof(enumDynamicEntityDataType));
+                dynamic DynamicObject = entity.DynamicObject;
+                switch (type)
+                {
+                    case enumDynamicEntityDataType.Text:
+                        var valueText = item.TextData.ToString();
+                        DynamicObject.GetType().GetProperty(columnName).SetValue(DynamicObject, valueText);
+                        break;
+                    case enumDynamicEntityDataType.Number:
+                        var valueNumeric = Convert.ChangeType(item.NumericData, typeof(decimal));
+                        DynamicObject.GetType().GetProperty(columnName).SetValue(DynamicObject, valueNumeric);
+                        break;
+                    case enumDynamicEntityDataType.Date:
+                        var valueDate = Convert.ChangeType(item.DateData, typeof(DateTime));
+                        DynamicObject.GetType().GetProperty(columnName).SetValue(DynamicObject, valueDate);
+                        break;
+                    default:
+                        break;
+                }
+                DynamicEntities[indexEntity].DynamicObject = DynamicObject;
+            }
         }
 
         private async Task<List<DynamicEntityDTO>> CreateDynamicEntities(dynamic data)
