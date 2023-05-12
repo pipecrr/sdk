@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components;
 
-namespace Siesa.SDK.Frontend.Components.Dashboard {
+namespace Siesa.SDK.Frontend.Components.Dashboard 
+{
     public enum SDKDashletWidth {
         Unknown,
         Full,

@@ -6,9 +6,10 @@
 @using Siesa.SDK.Frontend.Components.Dashboard.UserComponent.SuiteControl
 @using Siesa.SDK.Entities
 @using Microsoft.Extensions.DependencyInjection
+@using Siesa.SDK.Frontend.Components.Dashboard 
 @inject IServiceProvider ServiceProvider
 
-
+@inject SDKDialogService DialogService
 @inject IBackendRouterService BackendRouterService
 @inject IAuthenticationService AuthenticationService
 
@@ -35,7 +36,8 @@
             <i class="fa-solid fa-gear"></i>
         </SDKButton>
 
-         <SDKButton ResourceTag="SDK.DashBoard.Dashlets" CssClass="btn btn-sm layout_btn_standar-sm" RenderStyle="SDKButtonRenderStyle.None"> 
+         <SDKButton ResourceTag="SDK.DashBoard.Dashlets" CssClass="btn btn-sm layout_btn_standar-sm" 
+         RenderStyle="SDKButtonRenderStyle.None" Click="@ActionClick"> 
             <i class="fa-solid fa-cubes"></i>
         </SDKButton>
     </div>
@@ -62,7 +64,9 @@
 </div>
 
 
-@code{
+@code
+{
+    [Parameter] public EventCallback<MouseEventArgs> Click { get; set; }
 
     private string NotificationAmount;
     private string CompanyImg {get; set;}
@@ -85,6 +89,15 @@
         await SetCompanyImg();
         await GetCompany();
         await base.OnInitializedAsync();
+    }
+
+    private void ActionClick (MouseEventArgs Event)
+    {
+        if (Click.HasDelegate)
+        {
+            Click.InvokeAsync(Event);
+            StateHasChanged();
+        }
     }
 
     private async Task onClickCamera(){
