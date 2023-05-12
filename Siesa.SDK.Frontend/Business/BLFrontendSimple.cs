@@ -235,10 +235,17 @@ namespace Siesa.SDK.Business
         public async virtual Task InitializeBusiness(Int64 rowid, List<string> extraFields = null)
         {
             BaseObj = await GetAsync(rowid, extraFields );
+            await InstanceDynamicEntities(BusinessName, rowid);
+        }
+
+        public async Task InstanceDynamicEntities(string businessName, Int64 rowid = 0)
+        {
             var requestGroups = await Backend.Call("GetGroupsDynamicEntity", BusinessName);
             if(requestGroups.Success && requestGroups.Data != null){
                 DynamicEntities = await CreateDynamicEntities(requestGroups.Data);
-                await GetDynamicEmntitiesData(rowid);
+                if(rowid > 0){
+                    await GetDynamicEmntitiesData(rowid);
+                }
             }
         }
 
@@ -313,16 +320,15 @@ namespace Siesa.SDK.Business
             ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("DynamicEntityModule");
 
             // Crea un nuevo tipo con propiedades nulas.
-            TypeBuilder typeBuilder = moduleBuilder.DefineType(id, TypeAttributes.Public | TypeAttributes.Public | TypeAttributes.Class | TypeAttributes.Sealed, typeof(object));
+            TypeBuilder typeBuilder = moduleBuilder.DefineType(id, TypeAttributes.Public | TypeAttributes.Class, typeof(object));
             foreach(var field in fields){
                 
                 Type type = GetTypesColumn(field.DataType);
                 var name = field.Tag;
                 fieldsDictionary.Add(name, field.Rowid);
-                typeBuilder.DefineField(name, type, FieldAttributes.Public);
                 
                 // Crea un campo privado para cada propiedad del tipo original.
-                FieldBuilder fieldBuilder = typeBuilder.DefineField($"_{name}", type, FieldAttributes.Private);
+                FieldBuilder fieldBuilder = typeBuilder.DefineField(name, type, FieldAttributes.Public);
 
                 // Crea una propiedad pública 
                 PropertyBuilder propertyBuilder = typeBuilder.DefineProperty(name, PropertyAttributes.None, type, new Type[] { type });
@@ -338,7 +344,7 @@ namespace Siesa.SDK.Business
                 propertyBuilder.SetGetMethod(getMethodBuilder);
 
                 // Define el método set.
-                MethodBuilder setMethodBuilder = typeBuilder.DefineMethod("set_" + fieldBuilder, MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, null, new Type[] { type });
+                MethodBuilder setMethodBuilder = typeBuilder.DefineMethod("set_" + name, MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, null, new Type[] { type });
 
                 // Crea el cuerpo del método.
                 ILGenerator setIL = setMethodBuilder.GetILGenerator();
@@ -347,6 +353,12 @@ namespace Siesa.SDK.Business
                 setIL.Emit(OpCodes.Stfld, fieldBuilder);
                 setIL.Emit(OpCodes.Ret);
                 propertyBuilder.SetSetMethod(setMethodBuilder);
+
+                if(!field.IsOptional){
+                    ConstructorInfo requiredAttributeConstructor = typeof(SDKRequired).GetConstructor(Type.EmptyTypes);
+                    CustomAttributeBuilder requiredAttributeBuilder = new CustomAttributeBuilder(requiredAttributeConstructor, new object[] { });
+                    propertyBuilder.SetCustomAttribute(requiredAttributeBuilder);
+                }
             }
 
             // Crea el constructor.

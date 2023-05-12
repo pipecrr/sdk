@@ -113,6 +113,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public bool HasExtraButtons { get; set; }
         public List<Button> ExtraButtons { get; set; }
         public Button SaveButton { get; set; }
+        public bool isOnePanel { get; set; }
         protected virtual async Task CheckPermissions()
         {
             if (FeaturePermissionService != null && !String.IsNullOrEmpty(BusinessName))
@@ -235,6 +236,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     FormViewModel.Panels = panels;
                 }
                 if(BusinessObj.GetType().GetProperty("DynamicEntities") != null && BusinessObj.DynamicEntities != null){
+                    FormViewModel.Panels[0].ResourceTag = "Custom.General.DefaultPanel";
                     AddPanels(FormViewModel.Panels);
                 }
             }

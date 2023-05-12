@@ -450,7 +450,7 @@ namespace Siesa.SDK.Business
                 result.Rowid = Save();
                 if (DynamicEntities != null && DynamicEntities.Count > 0)
                 {
-                    //SaveDynamicEntity(result.Rowid);
+                    SaveDynamicEntity(result.Rowid);
                 }
             }
             catch (DbUpdateException exception)
@@ -469,7 +469,7 @@ namespace Siesa.SDK.Business
             return result;
         }
 
-        private void SaveDynamicEntity(Int64 rowid)
+        protected virtual void SaveDynamicEntity(Int64 rowid)
         {
             using (SDKContext Context = CreateDbContext())
             {
@@ -478,16 +478,16 @@ namespace Siesa.SDK.Business
                 var nameSpaceEntity = typeof(T).Namespace;
                 var dynamicEntityType = Utilities.SearchType(nameSpaceEntity + "." + nameDynamicEntity, true);
 
-                var contextSet = Context.GetType().GetMethod("Set", types: Type.EmptyTypes);
+                var dynamicEntitiesType = typeof(List<>).MakeGenericType(new Type[] { dynamicEntityType });
+                dynamic dynamicEntitiesToSave = Activator.CreateInstance(dynamicEntitiesType);
 
-                var dynamicEntitiesToSave = new List<object>();
-
+                var methodAdd = dynamicEntitiesType.GetMethod("Add");
                 foreach (DynamicEntityDTO dynamicEntityDTO in DynamicEntities)
                 {
                     var rowidGroup = dynamicEntityDTO.Rowid;
                     Dictionary<string, int> fields = dynamicEntityDTO.Fields;
                     var dynamicObject = JObject.Parse(dynamicEntityDTO.DynamicObject.ToString());
-                    foreach (var prop in dynamicObject.Properties())
+                    foreach (var prop in dynamicObject)
                     {
                         var dynamicEntity = Activator.CreateInstance(dynamicEntityType);
                         dynamicEntity.GetType().GetProperty("RowidRecord").SetValue(dynamicEntity, rowidGroup);
@@ -508,14 +508,13 @@ namespace Siesa.SDK.Business
                         {
                             dynamicEntity.GetType().GetProperty("NumericData").SetValue(dynamicEntity, value.ToObject<decimal>());
                         }
-
-                        dynamicEntitiesToSave.Add(dynamicEntity); 
+                        methodAdd.Invoke(dynamicEntitiesToSave, new object[] { dynamicEntity });
                     }
                 }
+                var contextSet = Context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(dynamicEntityType).Invoke(Context, null);
 
-                // Agregar la lista de registros dinámicos al contexto y guardar los cambios
-                var dbSet = contextSet.Invoke(Context, null);
-                dbSet.GetType().GetMethod("AddRange").Invoke(dbSet, new object[] { dynamicEntitiesToSave });
+                var addRangeMethod = contextSet.GetType().GetMethod("AddRange", types: new Type[] { typeof(IEnumerable<>).MakeGenericType(dynamicEntityType) });
+                addRangeMethod.Invoke(contextSet, new object[] { dynamicEntitiesToSave });
 
                 Context.SaveChanges();
             }
