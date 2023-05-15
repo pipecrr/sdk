@@ -150,6 +150,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     FormViewModel.Panels = panels;
                 }                
                 if(BusinessObj.GetType().GetProperty("DynamicEntities") != null && BusinessObj.DynamicEntities != null){
+                    FormViewModel.Panels[0].ResourceTag = "Custom.General.DefaultPanel";
                     AddPanels(FormViewModel.Panels);
                 }
 
