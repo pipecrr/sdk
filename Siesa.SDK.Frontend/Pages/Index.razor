@@ -2,9 +2,6 @@
 @attribute [Authorize]
 @using Siesa.SDK.Shared.Application
 @using Siesa.SDK.Frontend.Components.Dashboard
-@if(true) 
-{
-    <SDKDashboard />
-}else{
-    <DynamicComponent Type="@SDKApp.GetIndexComponent()" />
-}
+
+
+<SDKDashboard />
