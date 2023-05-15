@@ -19,6 +19,7 @@ using Siesa.SDK.Shared.Criptography;
 using Siesa.SDK.Shared.DataAnnotations;
 using Microsoft.Extensions.Configuration;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace Siesa.SDK.Backend.Access
 {
@@ -170,7 +171,7 @@ namespace Siesa.SDK.Backend.Access
         {
             return InternalSaveChanges(true);
         }
-
+        
         internal int InternalSaveChanges(bool ValidateUser = true)
         {
             JwtUserData CurrentUser = null;

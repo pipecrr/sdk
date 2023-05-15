@@ -245,6 +245,10 @@ namespace Siesa.SDK.Backend.Access
             get { return query.ElementType; }
         }
 
+        public override void AddRange(IEnumerable<TEntity> entities){
+            var x = "";
+        }
+
         public override EntityEntry<TEntity> Remove(TEntity entity)
         {
             if (entity == null)

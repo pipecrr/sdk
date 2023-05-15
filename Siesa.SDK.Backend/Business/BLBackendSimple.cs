@@ -485,15 +485,30 @@ namespace Siesa.SDK.Business
                 foreach (DynamicEntityDTO dynamicEntityDTO in DynamicEntities)
                 {
                     var rowidGroup = dynamicEntityDTO.Rowid;
-                    Dictionary<string, int> fields = dynamicEntityDTO.Fields;
+                    Dictionary<string, DynamicEntityFieldsDTO> fields = dynamicEntityDTO.Fields;
                     var dynamicObject = JObject.Parse(dynamicEntityDTO.DynamicObject.ToString());
                     foreach (var prop in dynamicObject)
                     {
                         var dynamicEntity = Activator.CreateInstance(dynamicEntityType);
                         dynamicEntity.GetType().GetProperty("RowidRecord").SetValue(dynamicEntity, rowidGroup);
-                        if (fields.TryGetValue(prop.Name, out int field))
+                        if (fields.TryGetValue(prop.Name, out DynamicEntityFieldsDTO field))
                         {
-                            dynamicEntity.GetType().GetProperty("RowidEntityColumn").SetValue(dynamicEntity, field);
+                            //dynamicEntity.GetType().GetProperty("RowidEntityColumn").SetValue(dynamicEntity, field);
+                            dynamicEntity.GetType().GetProperty("Rowid").SetValue(dynamicEntity, field.Rowid);
+                            dynamicEntity.GetType().GetProperty("RowVersion").SetValue(dynamicEntity, field.RowVersion);
+                            dynamicEntity.GetType().GetProperty("CreationDate").SetValue(dynamicEntity, field.CreationDate);
+                            dynamicEntity.GetType().GetProperty("LastUpdateDate").SetValue(dynamicEntity, field.LastUpdateDate);
+                            dynamicEntity.GetType().GetProperty("Source").SetValue(dynamicEntity, field.Source);
+                            dynamicEntity.GetType().GetProperty("RowidUserCreates").SetValue(dynamicEntity, field.RowidUserCreates);
+                            dynamicEntity.GetType().GetProperty("RowidUserLastUpdate").SetValue(dynamicEntity, field.RowidUserLastUpdate);
+                            dynamicEntity.GetType().GetProperty("RowidSession").SetValue(dynamicEntity, field.RowidSession);
+                            dynamicEntity.GetType().GetProperty("RowidRecord").SetValue(dynamicEntity, field.RowidRecord);
+                            dynamicEntity.GetType().GetProperty("RowidEntityColumn").SetValue(dynamicEntity, field.RowidEntityColumn);
+                            dynamicEntity.GetType().GetProperty("RowData").SetValue(dynamicEntity, field.RowData);
+                            dynamicEntity.GetType().GetProperty("RowidInternalEntityData").SetValue(dynamicEntity, field.RowidInternalEntityData);
+                            dynamicEntity.GetType().GetProperty("RowidGenericEntityData").SetValue(dynamicEntity, field.RowidGenericEntityData);
+
+
                         }
                         var value = prop.Value;
                         if (value.Type == JTokenType.Date)
@@ -511,10 +526,10 @@ namespace Siesa.SDK.Business
                         methodAdd.Invoke(dynamicEntitiesToSave, new object[] { dynamicEntity });
                     }
                 }
-                var contextSet = Context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(dynamicEntityType).Invoke(Context, null);
+                /*var contextSet = Context.GetType().GetMethod("AllSet", types: Type.EmptyTypes).MakeGenericMethod(dynamicEntityType).Invoke(Context, null);
 
                 var addRangeMethod = contextSet.GetType().GetMethod("AddRange", types: new Type[] { typeof(IEnumerable<>).MakeGenericType(dynamicEntityType) });
-                addRangeMethod.Invoke(contextSet, new object[] { dynamicEntitiesToSave });
+                addRangeMethod.Invoke(contextSet, new object[] { dynamicEntitiesToSave });*/
 
                 Context.SaveChanges();
             }

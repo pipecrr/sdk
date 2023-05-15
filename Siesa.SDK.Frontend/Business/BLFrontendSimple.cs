@@ -49,6 +49,7 @@ namespace Siesa.SDK.Business
         public List<FieldOptions> ListViewFields = new List<FieldOptions>();
         public BaseSDK<int> BaseObj { get; set; }
         public List<DynamicEntityDTO> DynamicEntities { get; set; }
+        //public Type DynamicEntityType { get; set; }
 
         [JsonIgnore]
         protected IAuthenticationService AuthenticationService { get; set; }
@@ -138,6 +139,7 @@ namespace Siesa.SDK.Business
         [ValidateComplexType]
         public T BaseObj { get; set; }
         public List<DynamicEntityDTO> DynamicEntities { get; set; }
+        //public Type DynamicEntityType { get; set; }
 
         public List<string> RelFieldsToSave { get; set; } = new List<string>();
 
@@ -242,7 +244,7 @@ namespace Siesa.SDK.Business
         {
             var requestGroups = await Backend.Call("GetGroupsDynamicEntity", BusinessName);
             if(requestGroups.Success && requestGroups.Data != null){
-                DynamicEntities = await CreateDynamicEntities(requestGroups.Data);
+                DynamicEntities = await CreateDynamicEntities(requestGroups.Data, rowid);
                 if(rowid > 0){
                     await GetDynamicEmntitiesData(rowid);
                 }
@@ -284,12 +286,32 @@ namespace Siesa.SDK.Business
                     default:
                         break;
                 }
+                
+                DynamicEntityFieldsDTO field = new DynamicEntityFieldsDTO();
+                if(DynamicEntities[indexEntity].Fields.TryGetValue(columnName, out field)){
+                    field.Rowid = item.Rowid;
+                    field.RowVersion = item.RowVersion;
+                    field.CreationDate = item.CreationDate;
+                    field.Source = item.Source;
+                    field.RowidUserCreates = item.RowidUserCreates;
+                    field.RowidUserLastUpdate = item.RowidUserLastUpdate;
+                    field.RowidSession = item.RowidSession;
+                    field.RowidRecord = item.RowidRecord;
+                    field.RowData = item.RowData;
+
+                    DynamicEntities[indexEntity].Fields[columnName] = field;
+                };
+                
                 DynamicEntities[indexEntity].DynamicObject = DynamicObject;
             }
         }
 
-        private async Task<List<DynamicEntityDTO>> CreateDynamicEntities(dynamic data)
-        {
+        private async Task<List<DynamicEntityDTO>> CreateDynamicEntities(dynamic data, Int64 rowid = 0)
+        {   
+            var nameSpaceEntity = this.GetType().Namespace;
+            var nameDynamicEntity = this.GetType().Name;
+            var dynamicEntityType = Utilities.SearchType(nameSpaceEntity + "." + nameDynamicEntity, true);
+            
             List<DynamicEntityDTO> result = new List<DynamicEntityDTO>();
             foreach(var item in data){
                 DynamicEntityDTO entity = new DynamicEntityDTO();
@@ -298,8 +320,8 @@ namespace Siesa.SDK.Business
                 entity.Id = item.Id;
                 var requestColumns = await Backend.Call("GetColumnsDynamicEntity", item.Rowid);
                 if(requestColumns.Success && requestColumns.Data != null){
-                    Dictionary<string, int> fields = new Dictionary<string, int>();
-                    Type baseObjType = CreateDynamicObject(item.Id, requestColumns.Data, fields);
+                    Dictionary<string, DynamicEntityFieldsDTO> fields = new Dictionary<string, DynamicEntityFieldsDTO>();
+                    Type baseObjType = CreateDynamicObject(item.Id, requestColumns.Data, fields, rowid);
                     var DynamicBaseObj = Activator.CreateInstance(baseObjType);
                     entity.DynamicObject = DynamicBaseObj;
                     entity.Fields = fields;
@@ -310,7 +332,7 @@ namespace Siesa.SDK.Business
             return result;
         }
 
-        private Type CreateDynamicObject(string id, dynamic fields, Dictionary<string, int> fieldsDictionary)
+        private Type CreateDynamicObject(string id, dynamic fields, Dictionary<string, DynamicEntityFieldsDTO> fieldsDictionary, Int64 rowidRecord = 0)
         {
             // Crea una nueva assembly dinámica.
             AssemblyName assemblyName = new AssemblyName("DynamicEntityAssembly");
@@ -325,7 +347,13 @@ namespace Siesa.SDK.Business
                 
                 Type type = GetTypesColumn(field.DataType);
                 var name = field.Tag;
-                fieldsDictionary.Add(name, field.Rowid);
+                DynamicEntityFieldsDTO fieldDic = new DynamicEntityFieldsDTO();
+                fieldDic.RowidEntityColumn = field.Rowid;
+                fieldDic.RowidRecord = rowidRecord;                
+
+                fieldsDictionary.Add(name, fieldDic);
+
+                //fieldsDictionary.Add(name, field.Rowid);
                 
                 // Crea un campo privado para cada propiedad del tipo original.
                 FieldBuilder fieldBuilder = typeBuilder.DefineField(name, type, FieldAttributes.Public);
