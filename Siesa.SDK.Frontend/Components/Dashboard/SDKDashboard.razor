@@ -80,13 +80,16 @@
     
     private void GetDefaultDashlets()
     {
-        if (SDKApp.Dashlets != null && SDKApp.Dashlets.Count >= 2)
+        if (SDKApp.Dashlets != null)
         {     
             var n_default = 2;
             
             for (int i = 0; i < n_default; i++)
             {
-                _dashlets.Add(SDKApp.Dashlets[i]);
+                if (SDKApp.Dashlets.Count > i)
+                {
+                    _dashlets.Add(SDKApp.Dashlets[i]);
+                }
             }
         }
 
