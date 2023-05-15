@@ -1,0 +1,77 @@
+:root {
+    --color_nomina: #13849E;
+    --color_estructuración: #20CAE1;
+    --color_gest_personal: #19C8B6;
+    --color_admin_espacios: #90CC34;
+    --color_mantenimiento: #662D8D;
+    --color_prog_personal: #1031A3;
+    --color_sg_sst: #011865;
+    --color_op_personal: #5A5A5A;
+    --animate_faster: all 0.2s ease;
+}
+
+.suite_bg_op_personal{
+    background-color: var(--color_op_personal);
+}
+.suite_font_color_op_personal{
+    color: var(--color_op_personal);
+}
+::deep .btn_suite_control{
+    min-width: 28px;
+    min-height: 28px;
+    max-width: 28px;
+    max-height: 28px;
+    padding: 0 !important;
+    line-height: 0 !important;
+}
+
+::deep .btn_suite_control:hover{
+    min-width: 28px;
+    min-height: 28px;
+    max-width: 28px;
+    max-height: 28px;
+}
+
+::deep .suite_option{
+    position: relative;
+    min-height: 3rem;
+    max-height: 3rem;
+    min-width: 3rem;
+    max-width: 3rem;
+    margin: 0.5rem 0.8rem 0 0.8rem;
+    line-height: 1;
+    border: none;
+    border-radius: var(--border_radius_standar);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--color_light);
+    transform: translateY(0);
+    transition: all 0.2s ease;
+    outline: none;
+}
+::deep .suite_option:hover, ::deep .suite_option:focus {
+    transform: translateY(-.25rem);
+    transition: all 0.2s ease;
+}
+::deep .suite_option:hover > .suite_option_base, ::deep .suite_option:focus > .suite_option_base{
+    bottom: -0.5rem;
+    transition: all 0.2s ease;
+}
+::deep .suite_option_base{
+    width: 2rem;
+    height: 0.25rem;
+    position: absolute;
+    bottom: 0.25rem;
+    border-radius: var(--border_radius_standar);
+    transition: all 0.2s ease;
+    outline: none;
+}
+.suite_option_content{
+    max-width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
