@@ -883,6 +883,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
         }
 
+        private void GoToImport()
+        {
+            NavManager.NavigateTo($"{BusinessName}/Import/");
+        }
+
         private void GoToDetail(Int64 id)
         {
             if (OnClickDetail != null)
@@ -894,7 +899,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 NavManager.NavigateTo($"{BusinessName}/detail/{id}/");
             }
         }
-        
+        [JSInvokable]
+        public async Task EditFromReact(Int64 id)
+        {
+            GoToEdit(id);
+        }
+
+        [JSInvokable]
+        public async Task DetailFromReact(Int64 id)
+        {
+            GoToDetail(id);
+        }
+
         [JSInvokable]
         public async Task<bool> DeleteFromReact(Int64 id, string object_string)
         {

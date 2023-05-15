@@ -1,0 +1,338 @@
+@page "/{BusinessName}/Import"
+@using System.Reflection
+@attribute [Authorize]
+@using Microsoft.AspNetCore.Authorization
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
+@using Siesa.SDK.Shared.Services
+@using System.Globalization
+@using System.IO
+@using System.Text
+@using CsvHelper
+@using System.ComponentModel.DataAnnotations.Schema
+@using Microsoft.AspNetCore.Components.Forms
+@using  CsvHelper.Configuration
+@using System.Dynamic
+@using Newtonsoft.Json;
+@using System.Collections.Generic
+@using Siesa.SDK.Frontend.Components.Fields
+
+@inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
+
+@inject IResourceManager ResourceManager
+@inject IAuthenticationService AuthenticationService
+@inject IJSRuntime JSRuntime
+@inject SDKNotificationService NotificationService
+
+
+<SDKSteps ShowStepsButtons="true" SelectedIndex="@SelectedIndex" SelectedIndexChanged="@OnChangeSteps">
+    <Steps>
+        <SDKStepsItem ResourceTag="Custom.SDK.Import.LoadFile">
+
+
+            <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Custom.SDK.Import.DownloadTemplate" Click="@DownloadFileTemplate" />
+
+
+            <h5><ResourceViewer ResourceTag="Custom.SDK.Import.LoadFile"/></h5>
+
+            <InputFile OnChange="@LoadFiles" />
+
+
+            @if (IsLoadingGrid)
+            {
+                <p><ResourceViewer ResourceTag="Custom.SDK.Import.PreviewFileData"/></p>
+
+                @if (FileData != null && FileData.Count > 0)
+                {     
+                    <SDKGrid TItem="dynamic"  Data="@FileData.Take(5)" AllowColumnResize="true" >
+                        <Columns>
+                        
+                            @foreach (var propertyKey in ((System.Dynamic.ExpandoObject)FileData.FirstOrDefault())?.Select(x => x.Key))
+                            {
+                                @if(((System.Dynamic.ExpandoObject)FileData.FirstOrDefault())?.Select(x => x.Key).Count() > 5)
+                                {
+                                     <SDKGridColumn TItem="dynamic" Property="@propertyKey" Title="@propertyKey" Width="300px">
+                                        <Template Context="data">
+                                            @if (data != null)
+                                            {
+                                                @GetPropertyValue(data, propertyKey)
+                                            }
+                                        </Template>
+                                    </SDKGridColumn>
+                                }
+                                else
+                                {
+                                   
+                                    <SDKGridColumn TItem="dynamic" Property="@propertyKey" Title="@propertyKey">
+                                        <Template Context="data">
+                                            @if (data != null)
+                                            {
+                                                @GetPropertyValue(data, propertyKey)
+                                            }
+                                        </Template>
+                                    </SDKGridColumn>
+
+                                }
+                            }
+                        </Columns>
+                    </SDKGrid>
+
+                    <br />
+
+                }else
+                {
+                    <p>No se encontraron registros en el Archivo </p>
+                }
+            }
+        </SDKStepsItem>
+        
+        <SDKStepsItem ResourceTag="Custom.SKD.Import.MappingData" Disabled="@(!IsLoadingGrid)">
+
+            <h5><ResourceViewer ResourceTag="Custom.SKD.Import.MappingData"/></h5>
+
+             <SDKGrid TItem="KeyValuePair<string, object>" Data="@GetFirstRow()" AllowColumnResize="true">
+                    <Columns>
+                        <SDKGridColumn TItem="KeyValuePair<string, object>" ResourceTag="Custom.SDK.Import.GridHeader">
+                            <Template Context="data">
+
+                                    @data.Key
+                                    
+                            </Template>
+                        </SDKGridColumn>
+                        <SDKGridColumn TItem="KeyValuePair<string, object>" ResourceTag="Custom.SDK.Import.GridFieldsEntity" IsActionColumn="true">
+                            <Template Context="data">
+
+                                <CascadingValue Value="@this" >
+                                            
+                                                <MappingData FieldFile=@data FieldsEntity="@_fieldsEntity"/>
+
+                                </CascadingValue>
+                                
+                            </Template>
+                        </SDKGridColumn>
+
+                        
+                        <SDKGridColumn TItem="KeyValuePair<string, object>" ResourceTag="Custom.SDK.Import.GridFirstRow">
+                            <Template Context="data">
+                               
+                                @data.Value
+                            </Template>
+                        </SDKGridColumn>
+                    </Columns>
+                </SDKGrid>
+
+        </SDKStepsItem>
+
+        <SDKStepsItem ResourceTag="Custom.SDK.Import.PeviewMappingData" Disabled="@(!IsLoadingGrid)">
+
+            <SDKGrid TItem="dynamic"  Data="@DataMapped.Take(5)" AllowColumnResize="true">
+                <Columns>
+                
+                    @foreach (var propertyKey in (DataMapped.FirstOrDefault())?.Select(x => x.Key))
+                    {
+                        @if((DataMapped.FirstOrDefault())?.Select(x => x.Key).Count() > 5)
+                        {
+                             <SDKGridColumn TItem="dynamic" Property="@propertyKey" Title="@propertyKey" Width="300px">
+                                <Template Context="data">
+                                    
+                                    @GetValueDataMapped(data, propertyKey)
+
+                                </Template>
+                            </SDKGridColumn>
+                        }
+                        else
+                        {
+                           
+                            <SDKGridColumn TItem="dynamic" Property="@propertyKey" Title="@propertyKey">
+                                <Template Context="data">
+                                    
+                                    @GetValueDataMapped(data, propertyKey)
+
+                                </Template>
+                            </SDKGridColumn>
+
+                        }
+                    }
+                </Columns>
+            </SDKGrid>
+
+            <SDKTextField Value="@JsonObject"  ReadOnly="true"/>
+
+        </SDKStepsItem>
+
+    </Steps>
+</SDKSteps>
+
+@code {
+
+    private Dictionary<string, string> _fieldsEntity = new Dictionary<string,string>();
+
+    private Type EntityType = null;
+    private string JsonObject = "";
+
+    public List<dynamic> FileData = new List<dynamic>();
+
+    public List<Dictionary<string, string>> DataMapped = new List<Dictionary<string, string>>();
+
+    private bool IsLoadingGrid = false;
+
+    private int SelectedIndex = 0;
+
+    public Dictionary<string, string> _newKeys = new Dictionary<string, string>();
+
+    private object GetValueDataMapped(dynamic obj, string propertyName) =>  ((IDictionary<string, string>)obj)[propertyName];
+
+    private List<KeyValuePair<string, object>> GetFirstRow()
+    {
+       return ((System.Dynamic.ExpandoObject)FileData.First()).ToList();
+    }
+
+    private object GetPropertyValue(System.Dynamic.ExpandoObject obj, string propertyName)
+    {
+        return ((IDictionary<string, object>)obj)[propertyName];
+    }
+        
+    protected override async Task OnInitializedAsync()
+    {
+        await GetEntityFields();
+
+        base.OnInitialized();  
+    }
+
+    private async Task GetEntityFields()
+    {   
+        EntityType = BusinessObj.BaseObj.GetType();
+        var EntityFields = EntityType.GetProperties();
+
+        var _bannedTypes = new List<Type>() { typeof(byte[]),  typeof(string) };
+
+        var ignoreEntityFields = EntityFields.Where(
+                                                     p => (p.PropertyType.IsClass
+                                                            && !p.PropertyType.IsPrimitive
+                                                            && !p.PropertyType.IsEnum
+                                                            && !_bannedTypes.Contains(p.PropertyType)
+                                                            && p.Name != "RowVersion"
+                                                            && p.GetCustomAttribute(typeof(NotMappedAttribute)) == null)
+                                                            
+                                                            ||(p.PropertyType == typeof(byte[]) 
+                                                            || p.PropertyType == typeof(uint)
+                                                            || (p.DeclaringType.ToString().Split('`')[0] == "Siesa.SDK.Entities.BaseAudit"))
+                                                     ).Select(p => p.Name).ToList();
+                                            
+        foreach (var field in EntityFields.Where(x=> !ignoreEntityFields.Contains(x.Name)).ToList())
+        {
+            var ResourceName = await ResourceManager.GetResource($"{EntityType.Name}.{field.Name}", AuthenticationService.GetRoiwdCulture()); 
+
+            _fieldsEntity.Add(ResourceName,field.Name);
+        }
+    }
+
+    private async Task DownloadFileTemplate()
+    {
+        using (var stream = new MemoryStream())
+        {
+            using (var CsvWriter = new CsvWriter(new StreamWriter(stream, Encoding.UTF8), CultureInfo.InvariantCulture))
+            {
+                List<string> Headers = _fieldsEntity.Select(x => x.Key).ToList();
+                CsvWriter.WriteField(Headers);
+                CsvWriter.Flush();
+                byte[] bytes = stream.ToArray();
+
+                string fileName = $"{EntityType.Name}";
+                await JSRuntime.InvokeVoidAsync("downloadFileFromStream", fileName, bytes);
+            }
+        }
+        
+    }
+
+    private async Task LoadFiles(InputFileChangeEventArgs InputFile)
+    {
+        FileData = new List<dynamic>();
+        IsLoadingGrid = false;
+        using (var stream = new MemoryStream())
+        {
+            await InputFile.File.OpenReadStream().CopyToAsync(stream);
+            stream.Position = 0;
+            var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                HasHeaderRecord = true,
+                DetectDelimiter = true,
+            };
+
+            using (var CsvReader = new CsvReader(new StreamReader(stream), csvConfig))
+            {
+                var records = CsvReader.GetRecords<dynamic>();
+
+                foreach (var record in records)
+                {                    
+                    ExpandoObject obj = new ExpandoObject();
+
+                    foreach(var prop in record) 
+                    {
+                        var key = prop.Key;
+                        var value = prop.Value;
+                        ((IDictionary<string, object>)obj).Add(key, value);
+                    }
+
+                    FileData.Add(obj);
+                }
+            }
+        }
+
+        IsLoadingGrid = true;
+
+        _ = InvokeAsync(() => StateHasChanged());     
+    }
+
+    public void OnChangeSteps(int index)
+    {
+        SelectedIndex = index;
+
+        switch (index)
+        {
+            case 1:
+                if(FileData == null || FileData.Count == 0)
+                {
+                    SelectedIndex = 0;
+                    NotificationService.ShowError("Custom.SDK.Import.ErrorLoadFile"); 
+                }
+            break;
+            case 2:
+                if(_newKeys == null || _newKeys.Count == 0)
+                {
+                    SelectedIndex = 0;
+                    NotificationService.ShowError("Custom.SDK.Import.ErrorMappingData"); 
+                }else
+                {
+                    MappingData();
+                }
+            break;
+
+            default:
+            break;
+        }
+
+        StateHasChanged();
+    }
+
+    private void MappingData()
+    {
+        foreach (var item in FileData)
+        {
+            var row = new Dictionary<string, string>();
+
+            foreach (var key in _newKeys)
+            {
+                if (GetPropertyValue(item, key.Value) != null)
+                    row.Add(key.Key, GetPropertyValue(item, key.Value).ToString());
+            }
+
+            DataMapped.Add(row);
+        }
+
+        JsonObject = JsonConvert.SerializeObject(DataMapped, Formatting.None);
+
+        StateHasChanged();
+    }
+
+}
