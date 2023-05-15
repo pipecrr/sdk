@@ -1,0 +1,55 @@
+@using Siesa.SDK.Entities
+@using Siesa.SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Shared.Services
+@using SDK.Frontend.Application
+@using Siesa.SDK.Frontend.Services
+
+@inject IResourceManager ResourceManager
+@inject IAuthenticationService AuthenticationService
+@inject MenuService MenuService
+@implements IDisposable
+
+<div class="col-12 pr-3 pr-md-0">
+    <hr class="w-100 mt-3 mb-0">
+        <div class="d-flex justify-content-center flex-wrap w-100">
+            <div class="d-flex justify-content-center align-items-center mt-3">
+                <SDKButton IconCssClass="fa-solid fa-chevron-left" RenderStyle="SDKButtonRenderStyle.Secondary" CssClass="btn_suite_control ml-3 mt-2" />
+                    <div class="suite_option_content">
+                        @if(MenuService.Suites != null)
+                        {
+                            @foreach (var item in MenuService.Suites.OrderBy(x => x.Order).ToList())
+                            {
+                                <SuiteItem Suite=item />
+                            } 
+                        }
+                    </div>
+               <SDKButton IconCssClass="fa-solid fa-chevron-right" RenderStyle="SDKButtonRenderStyle.Secondary" CssClass="btn_suite_control mr-3 mt-2" />
+            </div>
+        </div>
+    </div>
+
+
+@code {
+    protected override void OnInitialized()
+    {
+        MenuService.MenuLoaded += OnMenuLoaded;
+
+        base.OnInitialized();
+    }
+
+    private void OnMenuLoaded(object sender, EventArgs e)
+    {
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+
+        if (MenuService != null)
+        {
+            MenuService.MenuLoaded -= OnMenuLoaded;
+        }
+    }
+
+}

@@ -1,0 +1,42 @@
+@using Microsoft.AspNetCore.Components 
+@using Siesa.SDK.Shared.DataAnnotations
+@using Siesa.SDK.Frontend.Components.Layout
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
+
+@if (Dashlet.PreviewComponentType != null)
+{
+    <DynamicComponent Type="@Dashlet.PreviewComponentType" />   
+}
+
+<SDKButton  ResourceTag="@Dashlet.ResourceTag"
+RenderStyleMode="SDKButtonRenderStyleMode.Text"
+RenderStyle="SDKButtonRenderStyle.Secondary" Click="@(() => Click?.Invoke())" />
+
+@* <ResourceViewer ResourceTag="@Dashlet.ResourceTag" /> *@
+
+
+@code {
+    [Parameter]
+    public Type DashletType { get; set; }
+
+    [Parameter]
+    public Action Click { get; set; }
+
+    private SDKDashlet Dashlet { get; set; }
+
+    private SDKDashlet GetDashlet(Type dashlet)
+    {
+        var dashletInstance = dashlet.GetCustomAttributes(typeof(SDKDashlet), false).FirstOrDefault() as SDKDashlet;
+
+        return dashletInstance;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Dashlet = GetDashlet(DashletType);
+
+        await base.OnInitializedAsync();
+    }
+
+}

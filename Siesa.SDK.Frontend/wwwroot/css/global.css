@@ -387,7 +387,7 @@ body {
     color: var(--color_primary);
     display: flex;
     justify-content: center;
-    transition-duration: .2s;
+    transition-duration: .2s; 
 }
 
 .nav_btn_standar_text {
@@ -430,7 +430,7 @@ body {
     transition-duration: .2s;
 }
 
-input#collapse_open:checked~.collapse_open_btn>.nav_btn_standar_icon {
+input#collapse_open:checked~.collapse_open_btn>.open_nav_btn{
     transform: rotate(180deg);
     transition-duration: .25s;
 }
@@ -785,9 +785,10 @@ input#collapse_open:checked~.collapse_open_btn>.nav_btn_standar_text {
     overflow: unset;
 }
 
-.sdk_home_content {
-    padding-top: calc(48px + 1.5rem);
-    padding-bottom: calc(32px + 2rem);
+.sdk_home_content 
+{ 
+    padding-top: calc(48px + 1.5rem); 
+    padding-bottom: calc(32px + 7rem); 
 }
 
 .area2 {
