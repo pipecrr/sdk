@@ -61,10 +61,11 @@
 
         DashletLocalStorage.Add(dashlet.FullName);
 
-        _ = localStorageService.SetItemAsync("ListDashlets", DashletLocalStorage); 
+        _ = localStorageService.SetItemAsync("ListDashlets", DashletLocalStorage);
 
+        DialogService.Close(true);
       
-      _ = InvokeAsync(()=> StateHasChanged());
+        _ = InvokeAsync(()=> StateHasChanged());
 
     }
 
@@ -82,7 +83,7 @@
     
     private void GetDefaultDashlets()
     {
-        if (SDKApp.Dashlets != null && SDKApp.Dashlets.Count > 2)
+        if (SDKApp.Dashlets != null && SDKApp.Dashlets.Count >= 2)
         {     
             var n_default = 2;
             
