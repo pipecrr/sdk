@@ -1,0 +1,14 @@
+@using Microsoft.AspNetCore.Components.Forms
+@using Siesa.SDK.Frontend.Components
+@using Siesa.SDK.Frontend.Components.Visualization
+
+@inherits SDKComponent
+
+<SDKCard>
+    <InputFile OnChange="@OnInputFile" multiple="@IsMultiple" />
+</SDKCard>
+
+@code {
+    [Parameter] public Action<InputFileChangeEventArgs> OnInputFile {get; set;}
+    [Parameter] public bool IsMultiple {get; set;}
+}
