@@ -2,7 +2,7 @@ using System;
 
 namespace Siesa.SDK.Shared.DTOS
 {
-    public class DynamicEntityFieldsDTO
+    public class DynamicEntityFieldsDTO<U>
     {
         public int Rowid { get; set; }
         public byte[] RowVersion { get; set; }
@@ -12,7 +12,7 @@ namespace Siesa.SDK.Shared.DTOS
         public int RowidUserCreates { get; set; }
         public int RowidUserLastUpdate { get; set; }
         public int? RowidSession { get; set; }
-        public Int64 RowidRecord { get; set; }
+        public U RowidRecord { get; set; }
         public int RowidEntityColumn { get; set; }
         public short RowData { get; set; }
         public string TextData { get; set; }
