@@ -380,6 +380,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         }
                         HasCustomActions = true;
                     }
+                }else{
+                    CustomActionIcons = new List<dynamic>();
+                    HasCustomActions = false;
                 }
                 foreach (var field in ListViewModel.Fields)
                 {
