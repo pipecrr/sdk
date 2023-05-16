@@ -33,6 +33,13 @@ using System.Net;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Siesa.Global.Enums;
+using Siesa.SDK.Shared.Utilities;
+using System.Collections;
+using Siesa.SDK.Backend.LinqHelper.DynamicLinqHelper;
+using Microsoft.EntityFrameworkCore.Query.Internal;
+using Amazon.S3;
+using Amazon.S3.Model;
+using Microsoft.Extensions.Configuration;
 
 namespace Siesa.SDK.Business
 {
@@ -43,16 +50,15 @@ namespace Siesa.SDK.Business
         [JsonIgnore]
         protected IBackendRouterService _backendRouterService { get; set; }
         protected IFeaturePermissionService FeaturePermissionService { get; set; }
-
         private IServiceProvider _provider;
+        private IAmazonS3 _s3Client;
+        private IConfiguration _configuration;
         private ILogger _logger;
         protected ILogger Logger { get { return _logger; } }
-        protected dynamic _dbFactory;        
-
+        protected dynamic _dbFactory;
         private SDKContext myContext;
-
+        private bool _useS3 = false;
         protected SDKContext Context { get { return myContext; } }
-
         private IEnumerable<INavigation> _navigationProperties = null;
 
         public SDKBusinessModel GetBackend(string business_name)
@@ -63,7 +69,6 @@ namespace Siesa.SDK.Business
         public BLBackendSimple(IAuthenticationService authenticationService)
         {
             AuthenticationService = authenticationService;
-
         }
 
         public string BusinessName { get; set; }
@@ -85,6 +90,11 @@ namespace Siesa.SDK.Business
         }
 
         public Shared.Business.LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<BaseSDK<int>> queryFilter = null, bool includeCount = false, bool includeAttachments = true, List<string> extraFields = null)
+        {
+            return null;
+        }
+
+        public Shared.Business.LoadResult GetUData(int? skip, int? take, string filter = "", string uFilter = "", string orderBy = "", QueryFilterDelegate<BaseSDK<int>> queryFilter = null, bool includeCount = false, List<string> selectFields = null)
         {
             return null;
         }
@@ -120,9 +130,12 @@ namespace Siesa.SDK.Business
             myContext.SetProvider(_provider);
 
             AuthenticationService = (IAuthenticationService)_provider.GetService(typeof(IAuthenticationService));
-            
             _backendRouterService = _provider.GetService(typeof(IBackendRouterService)) as IBackendRouterService;
-
+            _configuration = (IConfiguration)_provider.GetService(typeof(IConfiguration));
+            _useS3 = _configuration.GetValue<bool>("AWS:UseS3");
+            if(_useS3){
+                _s3Client = (IAmazonS3)_provider.GetService(typeof(IAmazonS3)) as IAmazonS3;
+            }
         }
 
         public SDKContext CreateDbContext(bool UseLazyLoadingProxies = false)
@@ -177,6 +190,8 @@ namespace Siesa.SDK.Business
         }
 
         private IServiceProvider _provider;
+        private IAmazonS3 _s3Client;
+        private IConfiguration _configuration;
         private ILogger _logger;
         protected ILogger Logger { get { return _logger; } }
         protected dynamic _dbFactory;
@@ -192,7 +207,7 @@ namespace Siesa.SDK.Business
         private bool CanCreate { get; set; } = true;
         private bool CanEdit { get; set; } = true;
         private IEnumerable<INavigation> _navigationProperties = null;
-
+        private bool _useS3 = false;
         private List<object> unique_indexes = new List<object>();
 
         public void DetachedBaseObj()
@@ -272,8 +287,14 @@ namespace Siesa.SDK.Business
 
             AuthenticationService = (IAuthenticationService)_provider.GetService(typeof(IAuthenticationService));
 
+
             _backendRouterService = (IBackendRouterService)_provider.GetService(typeof(IBackendRouterService));
             _featurePermissionService = (IFeaturePermissionService)_provider.GetService(typeof(IFeaturePermissionService));
+            _configuration = (IConfiguration)_provider.GetService(typeof(IConfiguration));
+            _useS3 = _configuration.GetValue<bool>("AWS:UseS3");
+            if(_useS3){
+                _s3Client = (IAmazonS3)_provider.GetService(typeof(IAmazonS3));
+            }
 
         }
 
@@ -369,6 +390,7 @@ namespace Siesa.SDK.Business
             if (extraFields != null && extraFields.Count > 0)
             {
                 extraFields.Add("Rowid");
+                extraFields.Add("RowidAttachment");
 
                 var selectedFields = string.Join(",", extraFields.Select(x =>
                 {
@@ -641,7 +663,7 @@ namespace Siesa.SDK.Business
             return query;
         }
 
-        public virtual Siesa.SDK.Shared.Business.LoadResult EntityFieldSearch(string searchText, string prefilters = "", int? top = null, string orderBy = "")
+        public virtual Siesa.SDK.Shared.Business.LoadResult EntityFieldSearch(string searchText, string prefilters = "", int? top = null, string orderBy = "", List<string> extraFields = null)
         {
             this._logger.LogInformation($"Field Search {this.GetType().Name}");
             var string_fields = BaseObj.GetType().GetProperties().Where(p => p.PropertyType == typeof(string) && p.GetCustomAttributes().Where(x => x.GetType() == typeof(NotMappedAttribute)).Count() == 0).Select(p => p.Name).ToArray();
@@ -663,7 +685,7 @@ namespace Siesa.SDK.Business
             if (top.HasValue){
                 take = top.Value;
             }
-            return this.GetData(0, take, filter, orderBy, filterDelegate, includeAttachments: false);
+            return this.GetData(0, take, filter, orderBy, filterDelegate, includeAttachments: false, extraFields: extraFields);
         }
 
         [SDKExposedMethod]
@@ -696,12 +718,13 @@ namespace Siesa.SDK.Business
             {
                 context.SetProvider(_provider);
                 var query = context.Set<T>().AsQueryable();
+                string selectedFields = "";
 
                 if(extraFields != null && extraFields.Count > 0)
                 {
                     extraFields.Add("Rowid");
 
-                    var selectedFields = string.Join(",", extraFields.Select(x =>
+                    selectedFields = string.Join(",", extraFields.Select(x =>
                     {
                         var splitInclude = x.Split('.');
                         if (splitInclude.Length > 1) 
@@ -715,8 +738,7 @@ namespace Siesa.SDK.Business
                         return splitInclude[0];
                     }).Distinct());
 
-                    query = query.Select<T>($"new ({selectedFields})");
-
+                    //query = query.Select<T>($"new ({selectedFields})");
                 }
                 else
                 {
@@ -763,6 +785,11 @@ namespace Siesa.SDK.Business
                 }
                 //total data
                 result.TotalCount = total;
+
+                //select data
+                if(!string.IsNullOrEmpty(selectedFields))
+                    query = query.Select<T>($"new ({selectedFields})");
+                    
                 //data
                 result.Data = query.ToList();
             }
@@ -885,17 +912,20 @@ namespace Siesa.SDK.Business
 			}
             return null;
         }
-        
+
         [SDKExposedMethod]
-        public async Task<ActionResult<SDKFileUploadDTO>> SaveFile(byte[] fileBytes, string name){
+        public async Task<ActionResult<SDKFileUploadDTO>> SaveFile(byte[] fileBytes, string name, string contentType, bool SaveBytes = false){
             MemoryStream stream = new MemoryStream(fileBytes);
-            IFormFile file = new FormFile(stream, 0, fileBytes.Length, name, name);
             var result = new SDKFileUploadDTO();
+            var untrustedFileName = name;
+            var guid = Guid.NewGuid().ToString();
+            untrustedFileName = string.Concat(guid.Substring(1,10), "_", untrustedFileName);
+            IFormFile file = new FormFile(stream, 0, fileBytes.Length, untrustedFileName, untrustedFileName);
+            if(_useS3){
+                return await SaveFileS3(file, contentType);
+            }
             IWebHostEnvironment env = _provider.GetRequiredService<IWebHostEnvironment>();
-            var untrustedFileName = file.FileName;
             try{
-                var guid = Guid.NewGuid().ToString();
-                untrustedFileName = string.Concat(guid.Substring(1,10), "_", untrustedFileName);
                 var path = Path.Combine(env.ContentRootPath,"Uploads");
                 Directory.CreateDirectory(path);
                 var filePath = Path.Combine(path, untrustedFileName);
@@ -903,6 +933,9 @@ namespace Siesa.SDK.Business
                 await file.CopyToAsync(fs);
                 result.Url = filePath;
                 result.FileName = untrustedFileName;
+                if(SaveBytes){
+                    result.FileContent = fileBytes;
+                }
             }
             catch (IOException ex){
                 return new BadRequestResult<SDKFileUploadDTO>{Success = false, Errors = new List<string> { ex.Message }};
@@ -910,17 +943,75 @@ namespace Siesa.SDK.Business
             return new ActionResult<SDKFileUploadDTO>{Success = true, Data = result};
         }
 
+        private async Task<ActionResult<SDKFileUploadDTO>> SaveFileS3(IFormFile file, string contentType){
+            var result = new SDKFileUploadDTO();
+            var name = file.FileName;
+            var bucketName = _configuration.GetValue<string>("AWS:S3BucketName");
+            if(string.IsNullOrEmpty(bucketName)){
+                return new BadRequestResult<SDKFileUploadDTO>{Success = false, Errors = new List<string> { "S3 Bucket Name not found" }};
+            }
+            try{
+                PutObjectRequest request = new PutObjectRequest{
+                    BucketName = bucketName,
+                    Key = name,
+                    InputStream = file.OpenReadStream(),
+                    ContentType = contentType
+                };
+
+                var response = await _s3Client.PutObjectAsync(request);
+                result.Url = name;
+                result.FileName = name;
+            }catch(AmazonS3Exception ex){
+                return new BadRequestResult<SDKFileUploadDTO>{Success = false, Errors = new List<string> { ex.Message }};
+            }catch(Exception ex){
+                return new BadRequestResult<SDKFileUploadDTO>{Success = false, Errors = new List<string> { ex.Message }};
+            }
+            return new ActionResult<SDKFileUploadDTO>{Success = true, Data = result};
+        }
+
         [SDKExposedMethod]
-        public async Task<ActionResult<string>> DownloadFile(string url){
+        public async Task<ActionResult<string>> DownloadFile(string url, string contentType){
+            var urlRes = "";
+            if(_useS3){
+                return await DownloadFileS3(url);
+            }
             IWebHostEnvironment env = _provider.GetRequiredService<IWebHostEnvironment>();
             var filePath = Path.Combine(url);
             var file = new FileInfo(filePath);
             if (file.Exists){
                 var fileBytes = await File.ReadAllBytesAsync(filePath);
                 var base64 = Convert.ToBase64String(fileBytes);
-                return new ActionResult<string>{Success = true, Data = base64};
+                urlRes = $"data:{contentType};base64,{base64}";
+                return new ActionResult<string>{Success = true, Data = urlRes};
             }
             return new BadRequestResult<string>{Success = false, Errors = new List<string> { "File not found" }};
+        }
+
+        private async Task<ActionResult<string>> DownloadFileS3(string url)
+        {
+            var bucketName = _configuration.GetValue<string>("AWS:S3BucketName");
+            if(string.IsNullOrEmpty(bucketName)){
+                return new BadRequestResult<string>{Success = false, Errors = new List<string> { "S3BucketName name not found" }};
+            }
+            var duration = _configuration.GetValue<int>("AWS:TimeoutDuration");
+            if(duration == 0){
+                duration = 60;
+            }
+            try
+            {            
+                var request = new GetPreSignedUrlRequest
+                {
+                    BucketName = bucketName,
+                    Key = url,
+                    Expires = DateTime.UtcNow.AddMinutes(duration)
+                };
+                var urlS3 = _s3Client.GetPreSignedURL(request);
+                return new ActionResult<string>{Success = true, Data = urlS3};
+            }catch (AmazonS3Exception ex){
+                return new BadRequestResult<string>{Success = false, Errors = new List<string> { ex.Message }};
+            }catch (Exception ex){
+                return new BadRequestResult<string>{Success = false, Errors = new List<string> { ex.Message }};
+            }
         }
 
         [SDKExposedMethod]
@@ -931,7 +1022,7 @@ namespace Siesa.SDK.Business
             var response = await BLAttatchmentDetail.Call("GetAttatchmentDetail", rowid);
             SDKFileFieldDTO SDKFileField = new SDKFileFieldDTO();
             if(response.Success){
-                var data = response.Data;                
+                var data = response.Data;
                 SDKFileField = new SDKFileFieldDTO{
                     Url = data.Url,
                     FileName = data.FileName,
@@ -975,6 +1066,436 @@ namespace Siesa.SDK.Business
                     Data = null
                 };
             }
+        }
+
+        private string GetUTableEntity()
+        {
+            var dataAnnotation = typeof(T).GetCustomAttributes(typeof(SDKAuthorization), false);
+
+            string TableName = "";
+
+            if (dataAnnotation.Length > 0)
+            {
+                //Get the table name
+                TableName = ((SDKAuthorization)dataAnnotation[0]).TableName;
+
+                if(!string.IsNullOrEmpty(TableName))
+                    return TableName;
+            }
+
+            //Get table name from the context
+            TableName = typeof(T).Name;
+
+            //Replace the first character of the table name with the letter "u"
+            if (TableName.Length > 0)
+                TableName = "U" + TableName.Substring(1);
+
+            TableName = $"{typeof(T).Namespace}.{TableName}";
+            return TableName;
+        }
+
+        public virtual Siesa.SDK.Shared.Business.LoadResult GetUData(int? skip, int? take, string filter = "", string uFilter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null, bool includeCount = false, List<string> selectFields = null)
+        {
+            this._logger.LogInformation($"Get UData {this.GetType().Name}");
+
+            var result = new Siesa.SDK.Shared.Business.LoadResult();
+            using (SDKContext context = CreateDbContext())
+            {
+                context.SetProvider(_provider);
+                var query = context.Set<T>().AsQueryable();
+
+                if (!string.IsNullOrEmpty(filter))
+                {
+                    query = query.Where(filter);
+                }
+
+                if (!string.IsNullOrEmpty(orderBy))
+                {
+                    query = query.OrderBy(orderBy);
+                }
+                else
+                {
+                    query = query.OrderBy("Rowid");
+                }
+
+                var total = 0;
+                if(includeCount){
+                    total = query.Select("Rowid").Count();
+                }
+
+                if (skip.HasValue)
+                {
+                    query = query.Skip(skip.Value);
+                }
+                if (take.HasValue)
+                {
+                    query = query.Take(take.Value);
+                }
+
+                List<string> LeftColumns = new(){"Rowid as ERowid", "Id as Id", "Name as Name", "Status as Status", "IsPrivate as IsPrivate"};
+
+                if(selectFields != null && selectFields.Count > 0)
+                {
+                    LeftColumns.Clear();
+                    selectFields.Add("Rowid");
+
+                    var selectedFields = string.Join(",", selectFields.Select(x =>
+                    {
+                        var splitInclude = x.Split('.');
+                        var Length = splitInclude.Length;
+                        if (Length > 1) 
+                        {
+                            for (int i = 1; i <= Length; i++)
+                            {
+                                var include = string.Join(".", splitInclude.Take(i));
+
+                                try
+                                {
+                                    var Result = query.Include(include);
+
+                                    if(Result.Any())
+                                    {
+                                        query = Result;
+                                    }
+                                }catch(System.Exception)
+                                {
+                                }
+                            }
+                            var Alias = string.Join("", splitInclude);
+                            LeftColumns.Add($"{string.Join(".",splitInclude)} as E{Alias}");
+                        }else
+                        {
+                            LeftColumns.Add($"{x} as E{x}");
+                        }
+
+                        return splitInclude[0];
+                    }).Distinct());
+
+                    query = query.Select<T>($"new ({selectedFields})");
+
+                }
+
+                List<string> UExtraFields = new(){
+                    "Rowid", "UserType", "AuthorizationType", "RestrictionType"
+                };
+
+                var UTableName = GetUTableEntity();
+                Type DynamicEntityType = typeof(T).Assembly.GetType(UTableName);
+                var RowidRecordType = DynamicEntityType.GetProperty("RowidRecord");
+
+                dynamic TableProxy = context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(DynamicEntityType).Invoke(context, null);
+
+                var authSet = TableProxy.AsQueryable();
+                List<string> RightColumns = new();
+
+                authSet = GetUFilter(DynamicEntityType, authSet, uFilter);
+                authSet = GetUSelect(authSet, UExtraFields, RightColumns, DynamicEntityType);
+
+                Dictionary<string, Type> virtualColumnsNameType = new ();
+                virtualColumnsNameType.Add("RowidRecord", RowidRecordType.PropertyType);
+
+                Type _typeLeftJoinExtension = typeof(LeftJoinExtension);
+                var leftJoinMethod = _typeLeftJoinExtension.GetMethod("LeftJoin");
+
+                var CoincidenceResult = leftJoinMethod.Invoke(null, new object[]{query, authSet, "Rowid", "RowidRecord", LeftColumns, RightColumns});
+
+                var _assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
+                var dynamicListMethod = typeof(IEnumerable).GetExtensionMethod(_assemblyDynamic, "ToDynamicList", new[] { typeof(IEnumerable) });
+
+                var dynamicLeftList = dynamicListMethod.Invoke(CoincidenceResult, new object[] { CoincidenceResult });
+
+                //total data
+                result.TotalCount = total;
+                //data
+                result.Data = (IEnumerable<dynamic>) dynamicLeftList;
+            }
+            return result;
+        }
+
+        private IQueryable GetUSelect(dynamic context, List<string> ExtraFields, List<string> RightColumns, Type TypeToReturn)
+        {
+            //Actualmente no hay necesidad de incluir foraneas
+            string strSelect = string.Join(",", ExtraFields.Select(x => {
+                RightColumns.Add($"{x} as U{x}");
+                return x;
+            }));
+
+            // var t = typeof(EntityQueryable<>);
+            // Type[] tArg = {TypeToReturn};
+            // var GenericType = t.MakeGenericType(tArg);
+
+            // var _assemblySelect = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
+
+            // var selectMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "Select", new[] { typeof(IQueryable), typeof(string), typeof(object[]) });
+
+            // context = selectMethod.Invoke(context, new object[] { context, $"new ({strSelect})", null });
+
+            return context;
+        }
+
+        //To-Do : Mejorar el filtrado, actualmente sólo recibe: x == y
+        private IQueryable GetUFilter(Type DynamicEntityType, dynamic authSet, string Filter)
+        {
+            if(string.IsNullOrEmpty(Filter))
+                return authSet;
+
+            var FilterSplit = Filter.Split("==").Select(x => x.Trim()).ToArray();
+
+            var pe = Expression.Parameter(DynamicEntityType, DynamicEntityType.Name);
+
+            Expression CoincidenceExpression;
+            Expression ColumnNameProperty;
+            Expression ColumnValue;
+
+            ColumnNameProperty = Expression.Property(pe, FilterSplit[0]);
+
+            if(DynamicEntityType.GetProperty(FilterSplit[0]).PropertyType.GenericTypeArguments[0] == typeof(Int16))
+            {
+                var Value = Int16.Parse(FilterSplit[1]);
+                ColumnValue = Expression.Constant(Value, typeof(Int16?));
+            }else
+            {
+                var Value = Int32.Parse(FilterSplit[1]);
+                ColumnValue = Expression.Constant(Value, typeof(int?));
+            }
+
+            CoincidenceExpression = Expression.Equal(ColumnNameProperty, ColumnValue);
+
+            authSet = GetWhereExpression(authSet, DynamicEntityType, CoincidenceExpression, pe);
+
+            return authSet;
+        }
+
+        [SDKExposedMethod]
+        public ActionResult<dynamic> UGetByUserType(int Rowid, PermissionUserTypes UserType, List<string> ExtraFields)
+        {
+            try
+            {
+                this._logger.LogInformation($"Get general UObject by UserType {this.GetType().Name}");
+
+                dynamic Result = null;
+                var UTableName = GetUTableEntity();
+                Type DynamicEntityType = typeof(T).Assembly.GetType(UTableName);
+
+                var RowidRecordType = DynamicEntityType.GetProperty("RowidRecord");
+
+                var EntityExpression = Expression.Parameter(DynamicEntityType, DynamicEntityType.Name);
+
+                Expression ColumnNameProperty = Expression.Property(EntityExpression, "RowidRecord");
+                Expression ColumnValue = Expression.Constant(null, typeof(int?));
+
+                //RowidRecord is null
+                Expression CoincidenceExpression = Expression.Equal(ColumnNameProperty, ColumnValue);
+
+                string ColumnName;
+
+                switch (UserType)
+                {
+                    case PermissionUserTypes.Team:
+                        ColumnName = "RowidDataVisibilityGroup";
+                        break;
+                    case PermissionUserTypes.User:
+                        ColumnName = "RowidUser";
+                        break;
+                    default:
+                        throw new ArgumentNullException("UserType not supported");
+                }
+
+                var _assemblyDynamicQueryable = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
+
+                ColumnNameProperty = Expression.Property(EntityExpression, ColumnName);
+
+                ColumnValue = Expression.Constant(Rowid, typeof(int?));
+
+                CoincidenceExpression = Expression.And(CoincidenceExpression, Expression.Equal(ColumnNameProperty, ColumnValue));
+
+                var FirstOrDefaultMethod = typeof(IQueryable).GetExtensionMethod(_assemblyDynamicQueryable, "FirstOrDefault", new[] { typeof(IQueryable) });
+
+                using(var context = CreateDbContext())
+                {
+                    dynamic Table = context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(DynamicEntityType).Invoke(context, null);
+
+                    var DbSet = Table.AsQueryable();
+
+                    DbSet = GetWhereExpression(DbSet, DynamicEntityType, CoincidenceExpression, EntityExpression);
+
+                    if(ExtraFields.Any() && GetDynamicAny(DbSet))
+                    {
+                        if(ExtraFields.Any(x => x.Contains(".")))
+                            throw new Exception("Foreign keys attributes are not supported to this method");
+
+                        ExtraFields.Add("Rowid");
+                        ExtraFields.Add(ColumnName);
+
+                        var selectMethod = typeof(IQueryable).GetExtensionMethod(_assemblyDynamicQueryable, "Select", new[] { typeof(IQueryable), typeof(string), typeof(object[]) });
+
+                        var strSelect = string.Join(",", ExtraFields);
+                        DbSet = selectMethod.Invoke(DbSet, new object[] { DbSet, $"new ({strSelect})", null });
+
+                        var AnonymousValue = FirstOrDefaultMethod.Invoke(DbSet, new object[] { DbSet });
+
+                        var JsonAnonymousValue = JsonConvert.SerializeObject(AnonymousValue);
+
+                        Result = JsonConvert.DeserializeObject(JsonAnonymousValue, type: DynamicEntityType);
+                    }else
+                    {
+                        Result = FirstOrDefaultMethod.Invoke(DbSet, new object[] { DbSet });
+                    }
+                }
+                return new ActionResult<dynamic>()
+                {
+                    Success = true,
+                    Data = Result
+                };
+            }
+            catch (Exception e)
+            {
+                return new BadRequestResult<dynamic>(){Errors = new List<string>(){e.Message}};
+            }
+        }
+
+        [SDKExposedMethod]
+        public ActionResult<string> ManageUData(List<UObjectDTO> Data)
+        {
+            try
+            {
+                if(!Data.Any())
+                    throw new Exception("Data is required");
+
+                this._logger.LogInformation($"Manage U data {this.GetType().Name} - Create, Update, Delete");
+
+                var UTableName = GetUTableEntity();
+                Type DynamicEntityType = typeof(T).Assembly.GetType(UTableName);
+
+                var DataToAdd = Data.Where(x => x.Action == BLUserActionEnum.Create)
+                                    .Select(x => JsonConvert.DeserializeObject($"{x.UObject}", type:DynamicEntityType))
+                                    .ToList();
+                var DataToUpdate = Data.Where(x => x.Action == BLUserActionEnum.Update)
+                                    .Select(x => JsonConvert.DeserializeObject($"{x.UObject}", type:DynamicEntityType))
+                                    .ToList();
+                var DataToDelete = Data.Where(x => x.Action == BLUserActionEnum.Delete)
+                                    .Select(x => JsonConvert.DeserializeObject($"{x.UObject}", type:DynamicEntityType));
+
+                var RowidsToDelete = DataToDelete.Select(x => (int) x.GetType().GetProperty("Rowid").GetValue(x)).ToList();
+
+                int TotalAdded = DataToAdd.Count;
+                int TotalUpdated = DataToUpdate.Count;
+                int TotalDelete = RowidsToDelete.Count;
+
+                var EntityExpression = Expression.Parameter(DynamicEntityType, DynamicEntityType.Name);
+
+                var RowidColumn = Expression.Property(EntityExpression, "Rowid");
+
+                using(var Context = CreateDbContext())
+                {
+                    dynamic Table = Context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(DynamicEntityType).Invoke(Context, null);
+
+                    var DbSet = Table.AsQueryable();
+
+                    if(TotalAdded > 0)
+                    {
+                        Context.AddRange(DataToAdd);
+                    }
+
+                    if(TotalDelete > 0)
+                    {
+                        var InExpression = GetInExpression(RowidColumn, RowidsToDelete);
+                        var RowsToDelete = GetWhereExpression(DbSet, DynamicEntityType, InExpression, EntityExpression);
+                        var ListToDelete = GetDynamicList(RowsToDelete);
+                        Context.RemoveRange(ListToDelete);
+                    }
+
+                    if(TotalUpdated > 0)
+                    {
+                        var RowidsToUpdate = DataToUpdate.Select(x => (int) x.GetType().GetProperty("Rowid").GetValue(x)).ToList();
+
+                        var InExpression = GetInExpression(RowidColumn, RowidsToUpdate);
+                        var RowsToUpdate = GetWhereExpression(DbSet, DynamicEntityType, InExpression, EntityExpression);
+                        var ListToUpdate = GetDynamicList(RowsToUpdate);
+
+                        foreach (var Item in ListToUpdate)
+                        {
+                            var ObjectUpdated = DataToUpdate.Where(x => (int) x.GetType().GetProperty("Rowid").GetValue(x) == Item.Rowid)
+                                                            .First();
+
+                            var RestrictionTypeProperty = ObjectUpdated.GetType().GetProperty("RestrictionType");
+                            var AuthorizationTypeProperty = ObjectUpdated.GetType().GetProperty("AuthorizationType");
+
+                            var NewRestrictionType = RestrictionTypeProperty.GetValue(ObjectUpdated);
+                            var NewAuthorizationType = AuthorizationTypeProperty.GetValue(ObjectUpdated);
+
+                            RestrictionTypeProperty.SetValue(Item, NewRestrictionType);
+                            AuthorizationTypeProperty.SetValue(Item, NewAuthorizationType);
+                        }
+
+                    }
+
+                    Context.SaveChanges();
+                }
+
+                return new ActionResult<string>()
+                {
+                    Success = true,
+                    Data = $"TotalAdded: {TotalAdded}, TotalUpdated: {TotalUpdated}, TotalDelete: {TotalDelete}"
+                };
+            }
+            catch (Exception e)
+            {
+                return new BadRequestResult<string>(){Errors = new List<string>(){e.Message}};
+            }
+        }
+
+        private Expression GetInExpression(Expression ColumNameProperty, List<int> RowidRecords)
+        {
+            RowidRecords = RowidRecords.Distinct().ToList();
+
+            Type ColumNameType = ColumNameProperty.Type;
+            Expression InExpression = Expression.Equal(ColumNameProperty, Expression.Constant(RowidRecords[0], ColumNameType));
+
+            for (int i = 1; i < RowidRecords.Count; i++)
+            {
+                var OrValueExpression = Expression.Equal(ColumNameProperty, Expression.Constant(RowidRecords[i], ColumNameType));
+                InExpression = Expression.Or(InExpression, OrValueExpression);
+            }
+
+            return InExpression;
+        }
+
+        private IQueryable GetWhereExpression(dynamic Data, Type DynamicEntityType, Expression CoincidenceExpression, ParameterExpression EntityExpression)
+        {
+            var funcExpression = typeof(Func<,>).MakeGenericType(new Type[] { DynamicEntityType, typeof(bool) });
+            var returnExp = Expression.Lambda(funcExpression, CoincidenceExpression, new ParameterExpression[] { EntityExpression });
+
+            var _assemblySelect = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
+
+            var whereMethod = typeof(IQueryable<object>).GetExtensionMethod(_assemblySelect, "Where", new[] { typeof(IQueryable<object>), typeof(LambdaExpression) });
+
+            var whereMethodGeneric = whereMethod.MakeGenericMethod(DynamicEntityType);
+
+            Data = whereMethodGeneric.Invoke(Data, new object[] { Data, returnExp });
+
+            return Data;
+        }
+
+        private dynamic GetDynamicList(dynamic Result)
+        {
+            var _assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
+                var dynamicListMethod = typeof(IEnumerable).GetExtensionMethod(_assemblyDynamic, "ToDynamicList", new[] { typeof(IEnumerable) });
+
+            var DynamicList = dynamicListMethod.Invoke(Result, new object[] { Result });
+
+            return DynamicList;
+        }
+
+        private bool GetDynamicAny(dynamic Data)
+        {
+            var _assemblyAny = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
+
+            var AnyMethod = typeof(IQueryable).GetExtensionMethod(_assemblyAny, "Any", new[] { typeof(IQueryable) });
+
+            bool Any = AnyMethod.Invoke(Data, new object[] {Data});
+
+            return Any;
         }
     }
 

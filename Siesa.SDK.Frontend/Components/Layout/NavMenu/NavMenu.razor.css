@@ -72,7 +72,7 @@ input#collapse_open {
 
 input#menu:checked~.collapse_open_btn {
     display: flex;
-    min-height: 36px;
+    /* min-height: 36px; */
 }
 
 input#menu:checked~.menu_content {
@@ -80,7 +80,7 @@ input#menu:checked~.menu_content {
     max-height: 100vh;
     background: var(--color_light);
     box-shadow: var(--shadow_standar);
-    border-bottom-right-radius: 1.5rem;
+    /* border-bottom-right-radius: 1.5rem; */
     transition-duration: .25s;
 }
 
@@ -99,43 +99,31 @@ input#menu:checked~ ::deep .nav_dx_menu {
 }
 
 .collapse_open_btn {
-    border-radius: var(--border_radius_standar);
+    border-radius: 50%;
+    box-shadow: 0px 0px 3px rgb(0 0 0 / 55%);
+    color: var(--color_light);
+    font-size: 11px;
+    line-height: 1;
+    min-width: 18px !important;
+    width: 18px !important;
+    min-height: 18px !important;
+    height: 18px !important;
     position: fixed;
-    left: 0;
-    bottom: 52px;
+    left: 40px;
+    top: 15px;
     z-index: 11;
     min-height: 0px;
-    width: 36px;
+    width: 16px;
     overflow: hidden;
     display: none;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
     cursor: pointer;
-    margin: 0 6px;
+    margin: 0;
     transition-duration: .25s;
 }
 
-.collapse_open_btn::before {
-    content: "";
-    width: 10%;
-    height: 36px;
-    position: absolute;
-    z-index: -1;
-    top: 0;
-    left: 0;
-    opacity: 0;
-    box-shadow: var(--shadow_standar);
-    background: var(--color_button_back);
-    transition-duration: .2s;
-}
-
-.collapse_open_btn:hover::before {
-    width: 100%;
-    opacity: 1;
-    transition-duration: .2s;
-}
-
-.nav_profile_btn {
+.nav_profile_btn{
     width: 100%;
     height: 36px;
     position: relative;
@@ -149,11 +137,12 @@ input#menu:checked~ ::deep .nav_dx_menu {
     background: transparent;
     height: 36px;
     border-bottom-right-radius: 24px !important;
+    margin-top: 2px;
 }
 
 .nav_profile_btn::before {
     content: "";
-    border-radius: 4px 4px 24px 4px;
+    border-radius: var(--border_radius_standar);
     width: 10%;
     height: 36px;
     position: absolute;
@@ -169,7 +158,7 @@ input#menu:checked~ ::deep .nav_dx_menu {
 .nav_profile_photo {
     height: 36px;
     box-shadow: var(--shadow_standar);
-    border-radius: 4px 4px 24px 4px;
+    border-radius: var(--border_radius_standar);
     overflow: hidden;
     position: relative;
     display: flex;
@@ -185,7 +174,7 @@ input#menu:checked~ ::deep .nav_dx_menu {
 
 .nav_profile_photo::before {
     content: "";
-    border-radius: 4px 4px 24px 4px;
+    border-radius: var(--border_radius_standar);
     width: 36px;
     height: 36px;
     position: absolute;
@@ -227,15 +216,20 @@ input#collapse_open:checked~ ::deep .nav_dx_menu {
 
 
 input#collapse_open:checked~.collapse_open_btn {
-    width: calc(240px - 0.75rem);
+    /* width: calc(240px - 0.75rem); */
     transition-duration: .25s;
 }
 
 .nav_logo {
-    padding-left: 57px;
+    padding-left: 65px;
     margin-bottom: 13px;
     max-width: 0;
     display: block;
+}
+
+.nav_logo > img{
+    max-height: 32px;
+    object-fit: contain;
 }
 
 ::deep .sdk_search{
@@ -305,7 +299,7 @@ input#collapse_open:checked~.collapse_open_btn {
     position: absolute;
     opacity: 1;
     z-index: -1;
-    border-radius: var(--border_radius_standar);
+    border-radius: 0;
     box-shadow: var(--shadow_standar);
     color: var(--color_light);
     transition: all .2s ease;
@@ -326,22 +320,7 @@ input#collapse_open:checked~.collapse_open_btn {
 .back_suite_general{
     background: conic-gradient(#5EB9AF 45deg, #71C771 100deg, #979A67 140deg, #CE5858 170deg, #CE5858 200deg, #BB7AB9 230deg, #8968BE 260deg, #6375C3 290deg, #6099B9 320deg, #5FABB3 350deg);
 }
-.nav_profile_btn{
-    width: 100%;
-    height: 36px;
-    position: relative;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    cursor: pointer;
-    padding: 0;
-    border: none;
-    outline: none !important;
-    background: transparent;
-    height: 36px;
-    border-bottom-right-radius: 24px !important;
-    margin-top: 44px;
-}
+
 .nav_btn_standar_suite:hover > .back_suite{
     min-width: 100%;
     max-width: 100%;

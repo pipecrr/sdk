@@ -76,26 +76,58 @@ else if (ModelLoaded == true)
             <TopBarButtons>
 
                 @if(CanCreate){
-                <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus"  />
+                    if(CreateButton != null){
+                        if(!CreateButton.Hidden){
+                            <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus" Enabled="@(!CreateButton.Disabled)"/>
+                        }
+                    }else{
+                        <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus"  />
+                    }
                 }
                 @if(CanCreate){
-                <TopBarButton Click="GoToDuplicate" ResourceTag="Action.Duplicate" IconCssClass="fa-solid fa-copy"  />
+                    if(DuplicateButton != null){
+                        if(!DuplicateButton.Hidden){
+                            <TopBarButton Click="GoToDuplicate" ResourceTag="Action.Duplicate" IconCssClass="fa-solid fa-copy" Enabled="@(!DuplicateButton.Disabled)"/>
+                        }
+                    }else{
+                        <TopBarButton Click="GoToDuplicate" ResourceTag="Action.Duplicate" IconCssClass="fa-solid fa-copy"  />
+                    }
                 }
                 @if(CanEdit){
-                <TopBarButton Click="GoToEdit" ResourceTag="Action.Edit"  IconCssClass="fa-solid fa-pen"  />
+                    if(EditButton != null){
+                        if(!EditButton.Hidden){
+                            <TopBarButton Click="GoToEdit" ResourceTag="Action.Edit" IconCssClass="fa-solid fa-pen" Enabled="@(!EditButton.Disabled)"/>
+                        }
+                    }else{
+                        <TopBarButton Click="GoToEdit" ResourceTag="Action.Edit" IconCssClass="fa-solid fa-pen"  />
+                    }
                 }
                 @if(CanList){
-                <TopBarButton Click="GoToList" ResourceTag="Action.List"  IconCssClass="fa-solid fa-list"  />
+                    if(ListButton != null){
+                        if(!ListButton.Hidden){
+                            <TopBarButton Click="GoToList" ResourceTag="Action.List" IconCssClass="fa-solid fa-list" Enabled="@(!ListButton.Disabled)"/>
+                        }
+                    }else{
+                        <TopBarButton Click="GoToList" ResourceTag="Action.List" IconCssClass="fa-solid fa-list"  />
+                    }
                 }
                 @if(CanDelete){
-                <TopBarButton Click="OnClickDelete" ResourceTag="Action.Delete" IconCssClass="fa-solid fa-trash-can" />
+                    if(DeleteButton != null){
+                        if(!DeleteButton.Hidden){
+                            <TopBarButton Click="OnClickDelete" ResourceTag="Action.Delete" IconCssClass="fa-solid fa-trash-can" Enabled="@(!DeleteButton.Disabled)"/>
+                        }
+                    }else{
+                        <TopBarButton Click="OnClickDelete" ResourceTag="Action.Delete" IconCssClass="fa-solid fa-trash-can"  />
+                    }                
                 }
 
             </TopBarButtons>
             <TopBarExtraButtons>
-                @foreach (var btn in FormViewModel.Buttons)
+                @foreach (var btn in ExtraButtons)
                 {
-                    <TopBarButton Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" IconCssClass="@btn.IconClass" />
+                    if(!btn.Hidden){
+                        <TopBarButton Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" IconCssClass="@btn.IconClass" Enabled="@(!btn.Disabled)"/>
+                    }
                 }
             </TopBarExtraButtons>
         </SetTopBar>

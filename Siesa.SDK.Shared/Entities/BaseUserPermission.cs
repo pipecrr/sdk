@@ -8,7 +8,7 @@ using Siesa.SDK.Shared.DataAnnotations;
 namespace Siesa.SDK.Entities
 {
 
-	public abstract partial class BaseUserPermission<T, U> : BaseAudit<int>
+	public abstract partial class BaseUserPermission<T, U> : BaseAudit<int> where U : struct
 	{
 		[Key]
 		[SDKRequired]
@@ -33,7 +33,7 @@ namespace Siesa.SDK.Entities
 		public virtual int? RowidUser { get; set; }
 
 
-		public virtual T Record { get; set; }
+		public virtual T? Record { get; set; }
 
 
 

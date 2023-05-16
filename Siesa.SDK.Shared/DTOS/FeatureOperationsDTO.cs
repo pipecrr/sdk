@@ -21,6 +21,7 @@ namespace Siesa.SDK.Shared.DTOS
         public bool Status {get; set;}
         public string IconCss {get; set;}
         public string HexColor {get; set;}
+        public short? Priority {get; set;}
     }
 
     public class OperationDescription

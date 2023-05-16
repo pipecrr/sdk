@@ -12,6 +12,7 @@ using Radzen;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Frontend.Services;
 using Siesa.SDK.Entities;
+using Siesa.Global.Enums;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -71,6 +72,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         Relationship RelationshipAttachment = new Relationship();
         E00270_Attachment ParentAttachment = new E00270_Attachment();
 
+        private bool HasExtraButtons { get; set; }
+        private List<Button> ExtraButtons { get; set; }
+        private Button CreateButton { get; set; }
+        private Button DuplicateButton { get; set; }
+        private Button EditButton { get; set; }
+        private Button ListButton { get; set; }
+        private Button DeleteButton { get; set; }
         private string _viewdefName;
         private void setViewContext(List<Panel> panels)
         {
@@ -148,15 +156,77 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         {
                             relationship.ResourceTag = $"{BusinessName}.Relationship.{relationship.Name}";
                         }
-                        var canListRel = FeaturePermissionService.CheckUserActionPermission(relationship.RelatedBusiness, 4, AuthenticationService);
+                        var canListRel = await FeaturePermissionService.CheckUserActionPermission(relationship.RelatedBusiness, enumSDKActions.Detail, AuthenticationService);
                         relationship.Enabled = canListRel;
                     }
                 }
                 ModelLoaded = true;
             }
+            await EvaluateButtonAttributes();
 
             Loading = false;
             StateHasChanged();
+        }
+
+        private async Task EvaluateButtonAttributes()
+        {
+            if(FormViewModel.Buttons != null){
+                ExtraButtons = new List<Button>();
+                foreach (var button in FormViewModel.Buttons){
+                    if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-disabled")){
+                        var disabled = await evaluateCodeButtons(button, "sdk-disabled");
+                        button.Disabled = disabled;
+                    }
+                    if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-hide")){
+                        var hidden = await evaluateCodeButtons(button, "sdk-hide");
+                        button.Hidden = hidden;
+                    }
+                    if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-show")){
+                        var show = await evaluateCodeButtons(button, "sdk-show");
+                        button.Hidden = !show;
+                    }
+                    if(button.Id != null){
+                        if(Enum.TryParse<enumTypeButton>(button.Id, out enumTypeButton typeButton)){
+                            switch (typeButton)
+                            {
+                                case enumTypeButton.Create:
+                                    CreateButton = button;
+                                    break;
+                                case enumTypeButton.Duplicate:
+                                    DuplicateButton = button;
+                                    break;
+                                case enumTypeButton.Edit:
+                                    EditButton = button;
+                                    break;
+                                case enumTypeButton.List:
+                                    ListButton = button;
+                                    break;
+                                case enumTypeButton.Delete:
+                                    DeleteButton = button;
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    }else{
+                        ExtraButtons.Add(button);
+                    }
+                    HasExtraButtons = ExtraButtons.Count > 0;
+                }
+                //_ = InvokeAsync(() => StateHasChanged());
+            }
+        }
+
+        public async Task<bool> evaluateCodeButtons(Button button, string condition){
+            bool disabled = button.Disabled;
+            var sdkDisable = button.CustomAttributes[condition];
+            if(sdkDisable != null){
+                var eject = (bool)await Evaluator.EvaluateCode((string)sdkDisable, BusinessObj); //revisar
+                if(eject != null){
+                    disabled = eject;
+                }
+            }
+            return disabled;
         }
 
         public override async Task SetParametersAsync(ParameterView parameters)
@@ -279,11 +349,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 try
                 {
-                    CanList = FeaturePermissionService.CheckUserActionPermission(BusinessName, 4, AuthenticationService);
-                    CanCreate = FeaturePermissionService.CheckUserActionPermission(BusinessName, 1, AuthenticationService);
-                    CanEdit = FeaturePermissionService.CheckUserActionPermission(BusinessName, 2, AuthenticationService);
-                    CanDelete = FeaturePermissionService.CheckUserActionPermission(BusinessName, 3, AuthenticationService);
-                    CanDetail = FeaturePermissionService.CheckUserActionPermission(BusinessName, 5, AuthenticationService);
+                    CanList = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
+                    CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Create, AuthenticationService);
+                    CanEdit = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Edit, AuthenticationService);
+                    CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Delete, AuthenticationService);
+                    CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
                 }
                 catch (System.Exception)
                 {

@@ -20,7 +20,7 @@ else if(!string.IsNullOrEmpty(ErrorMsg) || ErrorList.Any())
 else
 {
      @if(IsSubpanel){
-        UseFlex = false;
+        //UseFlex = false;
     }
     @if(ShowSearchForm && HasSearchViewdef)
     {
@@ -47,7 +47,7 @@ else
                     </div>
                 }
                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
-                    <SDKButton form="@SearchFormID" CssClass="w-100" RenderStyle="SDKButtonRenderStyle.Primary" SubmitFormOnClick="true" Click="@OnClickSearch">
+                    <SDKButton form="@SearchFormID" CssClass="w-100" RenderStyle="SDKButtonRenderStyle.Primary" SubmitFormOnClick="true">
                         @if(LoadingSearch)
                         {
                             <i class="mr-1 fas fa-spinner fa-pulse"></i>
@@ -349,6 +349,10 @@ else
         <SetTopBar HasExtraButtons="@HasExtraButtons" BusinessObj="@BusinessObj">
             <TopBarTitle><ResourceViewer ResourceTag="@($"{BusinessName}.Plural")" /></TopBarTitle>
             <TopBarButtons>
+                @*Boton para ir a la vista de importa, validar creacion ResoruceTag*@
+
+                <TopBarButton Click="GoToImport" ResourceTag="Action.Import" IconCssClass="fa-solid fa-file-import"/>
+
                 @if(ShowSearchForm && HasSearchViewdef && !_isEditingFlex)
                 {
                     <TopBarButton ResourceTag="Action.AdvanceSearch" IconCssClass="fa-solid fa-magnifying-glass" Click="@(()=> SetSearchFromVisibility(false))"/>
@@ -361,14 +365,22 @@ else
                     <TopBarButton Click="GoToEditFlex" ResourceTag="Action.EditListFlex" IconCssClass="fa-solid fa-pen" />
                 }                
                 @if((CanCreate && AllowCreate) && !_isEditingFlex)
-                {
-                    <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus" />
+                {   
+                    if(CreateButton!=null){
+                        if(!CreateButton.Hidden){
+                            <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus" Enabled="@(!CreateButton.Disabled)"/>    
+                        }
+                    }else{
+                        <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus"/>
+                    }
                 }
             </TopBarButtons>
             <TopBarExtraButtons>
                 @foreach (var btn in ExtraButtons)
                 {
-                    <TopBarButton Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" IconCssClass="@btn.IconClass" />
+                    if(!btn.Hidden){
+                        <TopBarButton Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" IconCssClass="@btn.IconClass" Enabled="@(!btn.Disabled)"/>
+                    }
                 }
             </TopBarExtraButtons>
         </SetTopBar>

@@ -13,6 +13,7 @@ namespace Siesa.SDK.Shared.Application
         //TODO: Solución temporal
         private static Type _indexComponent;
         public static List<System.Reflection.Assembly> AsembliesReg { get; set; }
+        public static List<Type> Dashlets { get; set; }
         static SDKApp()
         {
             AsembliesReg = new List<System.Reflection.Assembly>();
@@ -21,10 +22,26 @@ namespace Siesa.SDK.Shared.Application
                 Formatting = Formatting.Indented,
                 ContractResolver = new SDKContractResolver()
             };
+            Dashlets = new List<Type>();
         }
         public static void AddAssembly(System.Reflection.Assembly configuration)
         {
             AsembliesReg.Add(configuration);
+            RegisterDashletsAssembly(configuration);
+        }
+
+        private static void RegisterDashletsAssembly(System.Reflection.Assembly frontAssembly)
+        {
+           //search for components with fullname match this regex "BL*.Dashlets."
+            var pattern = @".*\.Dashlets\.BL.*\..*";
+            var dashlets = frontAssembly.GetTypes()
+            .Where(t => System.Text.RegularExpressions.Regex.IsMatch(t.FullName, pattern)
+            && t.GetCustomAttributes(typeof(DataAnnotations.SDKDashlet), false).Length > 0);
+            if (dashlets != null)
+            {
+                Dashlets.AddRange(dashlets);
+            }
+            
         }
         public static void SetServiceProvider(IServiceProvider serviceProvider)
         {

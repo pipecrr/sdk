@@ -15,6 +15,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
     public partial class DynamicDetailView : DynamicBaseViewModel
     {
+        [Parameter] 
+        public bool AllowDelete { get; set; } = true;
+        
         [Inject]
         public IBackendRouterService BackendRouterService { get; set; }
         private FormViewModel FormViewModel { get; set; } = new FormViewModel();
@@ -40,17 +43,22 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
                 FormViewModel = JsonConvert.DeserializeObject<FormViewModel>(metadata);
 
-                if (FormViewModel.ExtraFields.Count > 0)
-                {   
-                    var defaultFields = FormViewModel.Panels.SelectMany(panel => panel.Fields)
+                var defaultFields = FormViewModel.Panels.SelectMany(panel => panel.Fields)
+                                    .Where(f=> f.CustomComponent == null && f.Name.StartsWith("BaseObj."))
                                     .Select(field => field.Name)
                                     .ToList(); 
 
+                if (FormViewModel.ExtraFields.Count > 0)
+                {   
                     _extraFields =  FormViewModel.ExtraFields.Select(f => f)
                     .Union(defaultFields)
                     .ToList();
 
                     _extraFields = _extraFields.Select(field => field.Replace("BaseObj.", "")).ToList();
+                }
+                else
+                {
+                    _extraFields = defaultFields.Select(field => field.Replace("BaseObj.", "")).ToList();
                 }
             }
             catch (System.Exception)
@@ -73,14 +81,23 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
         }
 
-        protected override void SetParameters(dynamic businessObj, string businessName){
+        protected override void SetParameters(dynamic businessObj, string businessName)
+        {
+
+            
             parameters.Clear();
             parameters.Add("BusinessObj", businessObj);
             parameters.Add("BusinessName", businessName);
             parameters.Add("IsSubpanel", IsSubpanel);
             parameters.Add("ShowTitle", ShowTitle);
             parameters.Add("ShowButtons", ShowButtons);
+
+            if(!AllowDelete && IsSubpanel)
+            {
+                ShowDeleteButton = AllowDelete;
+            }
             parameters.Add("ShowDeleteButton", ShowDeleteButton);
+
             if (IsSubpanel)
             {
                 parameters.Add("SetTopBar", false);

@@ -11,7 +11,7 @@
 
 @if (ErrorMsg != null && ErrorMsg != "")
 {
-    <text>@ErrorMsg</text>
+     <ErrorsWindow GeneralErrors="@ErrorList" />
 }
 else if (BusinessObj != null)
 {
@@ -48,7 +48,7 @@ else if (BusinessObj != null)
         }
 
         var externalView = method.GetCustomAttributes(typeof(SDKExternalView), false).FirstOrDefault() as SDKExternalView;
-        if (externalView == null && AuthenticationService.User == null)
+        if (externalView == null && (AuthenticationService.User == null || !CanAccess))
         {
             RedirectToLogin();
             return null;
@@ -74,6 +74,11 @@ else if (BusinessObj != null)
     {
          MainLayout?.SetEmptyLayout(false);
          MainLayout?.SetDefaultArea(true);
+    }
+
+    protected override async Task InitGenericView(string bName=null, bool disableAccessValidation = false)
+    {
+        await base.InitGenericView(bName, true);
     }
 
     protected override void OnInitialized()

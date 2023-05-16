@@ -87,17 +87,30 @@ function preloadFlex(){
         loadScript("http://127.0.0.1:3000/static/js/1.chunk.js");
         loadScript("http://127.0.0.1:3000/static/js/main.chunk.js");
     }else{
-        loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/2.css?v=20230414');
-        loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/main.css?v=20230414');
+        loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/2.css?v=20230512');
+        loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/main.css?v=20230512');
 
-        loadScript('/_content/Siesa.SDK.Frontend/flex/FlexComponent.js?v=20230414');
-        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/2.chunk.js?v=20230414");
-        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/main.chunk.js?v=20230414");
-        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/runtime-main.js?v=20230414");
+        loadScript('/_content/Siesa.SDK.Frontend/flex/FlexComponent.js?v=20230512');
+        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/2.chunk.js?v=20230512");
+        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/main.chunk.js?v=20230512");
+        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/runtime-main.js?v=20230512");
     }
     loadScript("/_content/Siesa.SDK.Frontend/vendor/dexie/dexie.js");
 }
 
+function downloadFileFromStream(fileName, bytes) {
+    var blob = new Blob([bytes], {type: "text/csv" });
+    var url = URL.createObjectURL(blob);
+    var anchorElement = document.createElement('a');
+    anchorElement.href = url;
+    anchorElement.download = fileName || '';
+    anchorElement.click();
+    anchorElement.remove();
+    URL.revokeObjectURL(url);
+  }
+  
+
+window.downloadFileFromStream = downloadFileFromStream;
 window.loadScript = loadScript;
 window.loadCss = loadCss;
 window.createCookie = createCookie;

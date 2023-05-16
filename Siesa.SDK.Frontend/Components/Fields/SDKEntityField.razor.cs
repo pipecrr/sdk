@@ -17,6 +17,7 @@ using Newtonsoft.Json;
 using Siesa.SDK.Frontend.Extension;
 using Siesa.SDK.Entities;
 using Siesa.SDK.Frontend.Components.FormManager;
+using Siesa.Global.Enums;
 
 namespace Siesa.SDK.Frontend.Components.Fields
 {
@@ -38,9 +39,9 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
         [Parameter] public Action<object> SetValue { get; set; }
         [Parameter] public Action OnChange { get; set; }
+        [Parameter] public Action<List<dynamic>> OnReady { get; set; }
         [Parameter] public bool IsMultiple { get; set; } = false;
         [Parameter] public bool Disabled { get; set; }
-
         [Parameter] public List<List<object>> Filters { get; set; }
         public dynamic RelBusinessObj { get; set; }
         private string Value = "";
@@ -48,12 +49,14 @@ namespace Siesa.SDK.Frontend.Components.Fields
         private List<string> Values = new List<string>() {};
         private IList<dynamic> ItemsSelected = new List<dynamic>() {};
         private Dictionary<int, object> CacheData = new Dictionary<int, object>();
+        private IList<dynamic> CacheDataObjcts = new List<dynamic>();
         SDKBusinessModel relBusinessModel = null;
         private LoadResult CacheLoadResult;
-        private string LastSearchString;
+        private string? LastSearchString;
         private CancellationTokenSource cancellationTokenSource;
         private int MinMillisecondsBetweenSearch = 200;
         private int RowidCulture = 1;
+        private bool HasValue = false;
         public PropertyInfo BindProperty { get; set; }
         public Type typeProperty { get; set; }
         public string orderBy { get; set; } = "Rowid";
@@ -67,7 +70,6 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
         private string badgeContainerClass = "badge-container d-none";
         private string placeholder = "";
-
         private long lastRefresh;
 
         private Dictionary<string, dynamic> BadgeByData = new Dictionary<string, dynamic>();
@@ -75,6 +77,18 @@ namespace Siesa.SDK.Frontend.Components.Fields
         {
             base.OnInitializedAsync();
             await InitView();
+            await LoadData("", null);
+            if(RelatedParams != null && RelatedParams.AutoValueInUnique){
+                if(CacheData != null && CacheData.Count == 1){
+                    var item = CacheData.First().Value;
+                    Value = item.ToString();
+                    SetVal(item);
+                    HasValue = true;
+                }
+            }
+            if(OnReady != null){
+                OnReady(CacheDataObjcts.ToList());
+            }
             StateHasChanged();
         }
 
@@ -99,7 +113,6 @@ namespace Siesa.SDK.Frontend.Components.Fields
             if(RelatedParams != null){
                 FieldTemplate = RelatedParams.FieldTemplate;
             }
-            await LoadData("", null);
             BindProperty = BaseObj.GetType().GetProperty(FieldName);
             typeProperty = BindProperty.PropertyType;
             if (Utilities.IsAssignableToGenericType(typeProperty, typeof(BaseMaster<,>))){
@@ -111,32 +124,52 @@ namespace Siesa.SDK.Frontend.Components.Fields
         }
 
         public override async Task SetParametersAsync(ParameterView parameters){
-            if (parameters.TryGetValue<dynamic>("BaseObj", out dynamic baseObjNew) && !IsMultiple){
+            if (parameters.TryGetValue<dynamic>("BaseObj", out dynamic baseObjNew)){
                 if(BaseObj != null && baseObjNew != null){
                     BindProperty = BaseObj.GetType().GetProperty(FieldName);
                     dynamic baseObjNewRelated = baseObjNew.GetType().GetProperty(FieldName).GetValue(baseObjNew);
-                    var rowidNew = baseObjNewRelated != null ? baseObjNewRelated.GetType().GetProperty("Rowid").GetValue(baseObjNewRelated) : 0;
-                    if(baseObjNewRelated != null && rowidNew != rowidLastValue){
-                        SetVal(BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj));
+                    if(!IsMultiple){
+                        var rowidNew = baseObjNewRelated != null ? baseObjNewRelated.GetType().GetProperty("Rowid").GetValue(baseObjNewRelated) : 0;
+                        if(baseObjNewRelated != null && rowidNew != rowidLastValue){
+                            CacheLoadResult = null;
+                            LastSearchString = null;
+                            Value = "";
+                            ItemsSelected.Clear();
+                            CacheData.Clear();
+                            CacheDataObjcts.Clear();
+                            HasValue = false;
+                            SetVal(BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj));
+                        }
+                        BaseObj = baseObjNew;
+                        RelBusinessObj.GetType().GetProperty("BaseObj").SetValue(RelBusinessObj, baseObjNewRelated);
+                        rowidLastValue = rowidNew;
+                    }else{
+                        if(baseObjNewRelated == null || baseObjNewRelated.Count == 0){
+                            CacheLoadResult = null;
+                            LastSearchString = null;
+                            Value = "";
+                            ItemsSelected.Clear();
+                            CacheData.Clear();
+                            CacheDataObjcts.Clear();
+                            HasValue = false;
+                            SetVal(null);
+                        }
                     }
-                    BaseObj = baseObjNew;
-                    RelBusinessObj.GetType().GetProperty("BaseObj").SetValue(RelBusinessObj, baseObjNewRelated);
-                    rowidLastValue = rowidNew;
                 }
             }
             
             await base.SetParametersAsync(parameters);
         }
-        
-        protected override async Task OnParametersSetAsync(){
-            await base.OnParametersSetAsync();
-            var currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-            if((currentTime - lastRefresh) > 1000)
-            {
-                lastRefresh = currentTime;
-                await LoadData("", null, true);
-            }
-        }
+
+        // protected override async Task OnParametersSetAsync(){
+        //     await base.OnParametersSetAsync();
+        //     var currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+        //     if((currentTime - lastRefresh) > 1000)
+        //     {
+        //         lastRefresh = currentTime;
+        //         //await LoadData("", null, true);
+        //     }
+        // }
 
         private async Task OnSelectItem(dynamic item){
             SetVal(item);
@@ -150,6 +183,16 @@ namespace Siesa.SDK.Frontend.Components.Fields
         private async Task SetVal(dynamic item, bool existItem = false)
         {
             if(item == null){
+                if(SetValue != null){
+                    SetValue(item);
+                }else{
+                    BindProperty.SetValue(BaseObj, item);
+                }
+                if(IsMultiple){
+                    BadgeByData.Clear();
+                    Values.Clear();
+                    placeholder = "";
+                }
                 return;
             }
             if(SetValue != null){
@@ -206,9 +249,11 @@ namespace Siesa.SDK.Frontend.Components.Fields
             }else{
                 Values.Clear();
                 ItemsSelected.Clear();
+                HasValue = false;
                 if(Value != ""){
                     Values.Add(Value);
                     ItemsSelected.Add(item);
+                    HasValue = true;
                 }
             }
             rowidLastValue = item.Rowid;
@@ -219,6 +264,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
             if(string.IsNullOrEmpty(Value) && !IsMultiple){
                 ItemsSelected.Clear();
                 Values.Clear();
+                HasValue = false;
             }
             if (cancellationTokenSource != null)
             {
@@ -306,7 +352,10 @@ namespace Siesa.SDK.Frontend.Components.Fields
             if (searchText.Length > MinCharsEntityField || CacheLoadResult == null)
             {
                 var filters = await GetFilters();
-                var result = await RelBusinessObj.EntityFieldSearchAsync(searchText, filters, 10, orderBy);
+
+                var extraFields = RelatedParams?.ExtraFields ?? new List<string>();
+
+                var result = await RelBusinessObj.EntityFieldSearchAsync(searchText, filters, 10, orderBy, extraFields);
                 var response = new LoadResult
                 {
                     data = result.Data,
@@ -314,9 +363,12 @@ namespace Siesa.SDK.Frontend.Components.Fields
                     groupCount = result.GroupCount
                 };
                 CacheData.Clear();
+                CacheDataObjcts.Clear();
                 foreach (var item in result.Data){
                     CacheData.Add(item.Rowid, item);
+                    CacheDataObjcts.Add(item);
                 }
+                response.totalCount = CacheData.Count;
                 CacheLoadResult = response;
                 return response;
             }
@@ -399,9 +451,9 @@ namespace Siesa.SDK.Frontend.Components.Fields
             {
                 try
                 {
-                    CanCreate = FeaturePermissionService.CheckUserActionPermission(RelatedBusiness, 1, AuthenticationService);
-                    CanEdit = FeaturePermissionService.CheckUserActionPermission(RelatedBusiness, 2, AuthenticationService);
-                    CanDetail = FeaturePermissionService.CheckUserActionPermission(RelatedBusiness, 5, AuthenticationService);
+                    CanCreate = await FeaturePermissionService.CheckUserActionPermission(RelatedBusiness, enumSDKActions.Create, AuthenticationService);
+                    CanEdit = await FeaturePermissionService.CheckUserActionPermission(RelatedBusiness, enumSDKActions.Edit, AuthenticationService);
+                    CanDetail = await FeaturePermissionService.CheckUserActionPermission(RelatedBusiness, enumSDKActions.Detail, AuthenticationService);
                 }
                 catch (System.Exception)
                 {
@@ -418,7 +470,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 if(OnChange != null){
                     OnChange();
                 }
-                await LoadData("", null, true);
+                //await LoadData("", null, true);
             }
         }
         
@@ -430,11 +482,12 @@ namespace Siesa.SDK.Frontend.Components.Fields
                     SDKDialogService.Close(true);
                 }else{
                     ItemsSelected = items;
+                    HasValue = true;
                 }
                 if(OnChange != null){
                     OnChange();
                 }
-                LoadData("", null);
+                //LoadData("", null);
             }
         }
         public async Task SelectValues(){
@@ -450,36 +503,31 @@ namespace Siesa.SDK.Frontend.Components.Fields
         }
 
         public async Task SDKDropDown(){
-            //wait 200ms
-            await Task.Delay(200);
+            var search = "";
+            if(!IsMultiple){
+                if(ItemsSelected.Count == 0 || !ItemsSelected[0].ToString().Equals(Value)){
+                    search = Value;
+                }else{
+                    search = "";
+                }
+            }else{
+                search = Value;
+            }
+            var currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            if((currentTime - lastRefresh) > 1000)
+            {
+                lastRefresh = currentTime;
+                var force = false;
+                if(search.Equals("")){
+                    force = true;
+                }
+                await LoadData(search, null, force);
+            }
+            await Task.Delay(100);
             var elementInstance = await JsRuntime.InvokeAsync<IJSObjectReference>("$", $"#{idInput}[aria-expanded=false]");
             await elementInstance.InvokeVoidAsync("dropdown","show");
+            StateHasChanged();
         }
-
-        // public async Task<string> GetStringFilters(){
-        //     //Deprecated
-        //     var filters = await GetFilters();
-        //     var filtersSearch = "";
-        //     if(Value != null && Value != "" && ItemsSelected.Count == 0){
-        //         var properties = RelBusinessObj.BaseObj.GetType().GetProperties();
-        //         foreach (var property in properties){
-        //             if(property.PropertyType == typeof(string)){
-        //                 if(!string.IsNullOrEmpty(filtersSearch)){
-        //                     filtersSearch += " || ";
-        //                 }
-        //                 filtersSearch += $"({property.Name} == null ? \"\" : {property.Name}).ToLower().Contains(\"{Value}\".ToLower())";
-        //             }
-        //         }
-        //     }
-        //     if(!string.IsNullOrEmpty(filtersSearch)){
-        //         if(!string.IsNullOrEmpty(filters)){
-        //             filters += " && ";
-        //         }
-        //         filters += $"({filtersSearch})";
-        //     }
-        //     return filters;
-        // }
-
         public async Task closeItem(string item){
             Values.Remove(item);
             dynamic itemSelected = ItemsSelected.FirstOrDefault(x => x.ToString() == item);
@@ -538,6 +586,18 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 }
             }
 
+        }
+
+        public async Task Clean(){
+            ItemsSelected.Clear();
+            Values.Clear();
+            Value = "";
+            HasValue = false;
+            SetVal(null);
+            if(OnChange != null){
+                OnChange();
+            }
+            StateHasChanged();
         }
     }
 }

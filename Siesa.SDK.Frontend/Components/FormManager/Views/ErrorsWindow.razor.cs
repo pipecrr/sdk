@@ -15,6 +15,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter] public EditContext EditFormContext { get; set; }
         [Parameter] public List<string> GeneralErrors { get; set; }
         [Parameter] public List<string> ErrorMsg { get; set; }
+        [Parameter] public bool VerifyContext { get; set; }
         private bool _detailVisible = false;
         private int _errorCount = 0;
         private string ClassError = "sdk_error_log_box_sup";
@@ -26,7 +27,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             _errorCount = 0;
             _generalErrors = new List<string>();
             _errors = new List<SDKErrorsWindowDTO>();
-            if (EditFormContext != null && EditFormContext.GetValidationMessages().Count() > 0){
+            if (EditFormContext != null && EditFormContext.GetValidationMessages().Count() > 0 && VerifyContext){
                 var groupErrors = EditFormContext.GetValidationMessages().GroupBy(x => {
                     var errorsSplit = x.Split("//");
                     if(errorsSplit.Count() > 1){

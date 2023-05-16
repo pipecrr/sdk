@@ -7,6 +7,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Siesa.SDK.Shared.Services;
 using System.Collections.Generic;
 using Siesa.SDK.Shared.Utilities;
+using Siesa.Global.Enums;
+using System.Reflection;
+using Siesa.SDK.Shared.DataAnnotations;
+using System.Linq;
 namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 {
     public abstract class DynamicBaseViewModel: ComponentBase
@@ -44,6 +48,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Inject]
         private IBackendRouterService BackendRouterService {get; set;}
 
+        [Inject] 
+        public IFeaturePermissionService FeaturePermissionService { get; set; }
+
         //[Inject]
         //public SGFState SGFState { get; set; }
 
@@ -64,7 +71,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         public DynamicViewType ViewType { get; set; }
 
-        protected void InitGenericView(string bName=null)
+        protected bool CanAccess { get; set; }
+        
+        protected virtual async Task InitGenericView(string bName=null, bool disableAccessValidation = false)
         {
             SDKBusinessModel businessModel;
             if (bName == null) {
@@ -73,18 +82,25 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             businessModel = BackendRouterService.GetSDKBusinessModel(bName, AuthenticationService);
             if (businessModel != null)
             {
-                try
+                CanAccess = await FeaturePermissionService.CheckUserActionPermission(bName, enumSDKActions.Access, AuthenticationService);
+                if(!CanAccess && !disableAccessValidation)
                 {
-                    businessType = Utilities.SearchType(businessModel.Namespace + "." + businessModel.Name); 
-                    BusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider, businessType);
-                    BusinessModel = businessModel;
-                    BusinessObj.BusinessName = bName;
-                }
-                catch (System.Exception e)
-                {
-                    Console.WriteLine("Error BaseViewModel" + e.ToString());
-                    ErrorMsg = e.ToString();
-                    ErrorList.Add("Exception: "+e.ToString());
+                    this.ErrorMsg = "Custom.Generic.Unauthorized";
+                    ErrorList.Add("Custom.Generic.Unauthorized");
+                }else{
+                    try
+                    {
+                        businessType = Utilities.SearchType(businessModel.Namespace + "." + businessModel.Name); 
+                        BusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider, businessType);
+                        BusinessModel = businessModel;
+                        BusinessObj.BusinessName = bName;
+                    }
+                    catch (System.Exception e)
+                    {
+                        Console.WriteLine("Error BaseViewModel" + e.ToString());
+                        ErrorMsg = e.ToString();
+                        ErrorList.Add("Exception: "+e.ToString());
+                    }
                 }
             }
             else
@@ -144,7 +160,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                         ErrorMsg = "";
                         ErrorList = new List<string>();
 
-                        InitGenericView(value);
+                        await InitGenericView(value);
                     }
 
                 }
