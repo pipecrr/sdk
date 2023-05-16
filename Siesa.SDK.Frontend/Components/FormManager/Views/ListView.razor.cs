@@ -430,11 +430,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 try
                 {
-                    CanList = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Consult, AuthenticationService);
+                    CanList = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
                     CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Create, AuthenticationService);
                     CanEdit = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Edit, AuthenticationService);
                     CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Delete, AuthenticationService);
-                    CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Consult, AuthenticationService);
+                    CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
                 }
                 catch (System.Exception)
                 {
@@ -883,6 +883,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
         }
 
+        private void GoToImport()
+        {
+            NavManager.NavigateTo($"{BusinessName}/Import/");
+        }
+
         private void GoToDetail(Int64 id)
         {
             if (OnClickDetail != null)
@@ -894,7 +899,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 NavManager.NavigateTo($"{BusinessName}/detail/{id}/");
             }
         }
-        
+        [JSInvokable]
+        public async Task EditFromReact(Int64 id)
+        {
+            GoToEdit(id);
+        }
+
+        [JSInvokable]
+        public async Task DetailFromReact(Int64 id)
+        {
+            GoToDetail(id);
+        }
+
         [JSInvokable]
         public async Task<bool> DeleteFromReact(Int64 id, string object_string)
         {

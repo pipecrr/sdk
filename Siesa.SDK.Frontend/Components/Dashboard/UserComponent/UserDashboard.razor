@@ -1,0 +1,147 @@
+@using Siesa.SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Shared.DTOS
+@using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Frontend.Components.Dashboard.UserComponent.SuiteControl
+@using Siesa.SDK.Entities
+@using Microsoft.Extensions.DependencyInjection
+@using Siesa.SDK.Frontend.Components.Dashboard 
+@inject IServiceProvider ServiceProvider
+
+@inject SDKDialogService DialogService
+@inject IBackendRouterService BackendRouterService
+@inject IAuthenticationService AuthenticationService
+
+<div class="whcm_panel_glass whcm_head_panel m-0" style="min-height:225px;">
+    <div class="sdk_head_cut_box"></div>
+    <div class="whcm_user_photo_box">
+
+        <div class="whcm_user_photo">
+           
+            <img src="@ProfileImageData" alt="imagen perfil" style="max-width: 100%;">
+     
+        </div>
+</div>
+  
+
+    <div class="head_panel_btn">
+        <SDKButton  CssClass="btn btn-sm layout_btn_standar-sm" RenderStyle="SDKButtonRenderStyle.None"> 
+            <i class="fa-solid fa-bell"></i>
+            @if(NotificationAmount != "0" && NotificationAmount != null){
+                <SDKBadge Style="SDKBadgeStyle.Primary" Value="@NotificationAmount" IsPill="true" />
+            }    
+        </SDKButton>
+        <SDKButton  CssClass="btn btn-sm layout_btn_standar-sm" RenderStyle="SDKButtonRenderStyle.None"> 
+            <i class="fa-solid fa-gear"></i>
+        </SDKButton>
+
+         <SDKButton ResourceTag="SDK.DashBoard.Dashlets" CssClass="btn btn-sm layout_btn_standar-sm" 
+         RenderStyle="SDKButtonRenderStyle.None" Click="@ActionClick"> 
+            <i class="fa-solid fa-cubes"></i>
+        </SDKButton>
+    </div>
+
+
+    <div class="col px-sm-0 px-md-3">
+        <div class="row">
+            <div class="whcm_panel_company col-12 col-md-12 col-lg-4">
+                <img class="" src="@CompanyImg" alt="Logo compañia">
+                <label class="text-center d-block pt-3 mb-0 font_color_primary_dark">
+                    @CompanyName
+                </label>
+            </div>
+            <div class="whcm_panel_user whcm_panel_user_home px-3 col-12 col-md-12 col-lg-8">
+                <p class="font_color_primary_dark mb-0"><ResourceViewer ResourceTag="BLMainDashBoard.Dashboard.Welcome" /> </p>
+                <p class="font_color_primary mb-0">
+                    @UserName
+                </p>
+            </div>
+            <SuiteComponent/>
+        </div>
+    </div>
+
+</div>
+
+
+@code
+{
+    [Parameter] public EventCallback<MouseEventArgs> Click { get; set; }
+
+    private string NotificationAmount;
+    private string CompanyImg {get; set;}
+    private dynamic Business {get; set;}
+
+
+    private SDKUpload sdkuploadRef {get; set;}
+    public List<string> FileExtensions = new(){
+            ".jpg", ".png", ".jpeg"
+        };
+    private string UserName {get; set;}
+    private string ProfileImageData {get; set;}
+    private string CompanyName {get; set;}
+
+    protected override async Task OnInitializedAsync()
+    {
+        
+        UserName = AuthenticationService.User.Name;
+        ProfileImageData = AuthenticationService.GetUserPhoto();
+        await SetCompanyImg();
+        await GetCompany();
+        await base.OnInitializedAsync();
+    }
+
+    private void ActionClick (MouseEventArgs Event)
+    {
+        if (Click.HasDelegate)
+        {
+            Click.InvokeAsync(Event);
+            StateHasChanged();
+        }
+    }
+
+    private async Task onClickCamera(){
+        await sdkuploadRef.OpenFileSelector();
+    }
+
+    private async Task GetCompany(){
+        var rowid = AuthenticationService.User.RowidCompanyGroup;
+
+        var companyBL = BackendRouterService.GetSDKBusinessModel("BLCompanyGroup", AuthenticationService);
+
+        if(companyBL is null)
+        {
+            return;
+        }
+
+        var Request = await companyBL.Call("GetCompanyGroup", rowid);
+
+        if(Request.Success){
+            var CompanyGroup = Request.Data;
+            CompanyName = CompanyGroup.Name;
+        }
+
+    }
+
+    public void SetNotificationAmount(int Number){
+        if (Number > 10){
+            NotificationAmount = "9+";
+        }
+        NotificationAmount = Number.ToString();
+        StateHasChanged();
+    }
+
+    public void OnComplete(SDKUploadCompleteEventArgsDTO args){
+
+    }
+
+    public void OnError(SDKUploadErrorEventArgsDTO args){
+
+    }
+
+    public async Task SetCompanyImg()
+    {
+        CompanyImg = AuthenticationService.GetConnectionLogo();
+    }
+	
+}

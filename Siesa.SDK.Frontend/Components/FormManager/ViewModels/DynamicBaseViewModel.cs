@@ -8,7 +8,9 @@ using Siesa.SDK.Shared.Services;
 using System.Collections.Generic;
 using Siesa.SDK.Shared.Utilities;
 using Siesa.Global.Enums;
-
+using System.Reflection;
+using Siesa.SDK.Shared.DataAnnotations;
+using System.Linq;
 namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 {
     public abstract class DynamicBaseViewModel: ComponentBase
@@ -69,7 +71,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         public DynamicViewType ViewType { get; set; }
 
-        protected async Task InitGenericView(string bName=null)
+        protected bool CanAccess { get; set; }
+        
+        protected virtual async Task InitGenericView(string bName=null, bool disableAccessValidation = false)
         {
             SDKBusinessModel businessModel;
             if (bName == null) {
@@ -78,8 +82,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             businessModel = BackendRouterService.GetSDKBusinessModel(bName, AuthenticationService);
             if (businessModel != null)
             {
-                bool canAccess = await FeaturePermissionService.CheckUserActionPermission(bName, enumSDKActions.Access, AuthenticationService);
-                if(!canAccess)
+                CanAccess = await FeaturePermissionService.CheckUserActionPermission(bName, enumSDKActions.Access, AuthenticationService);
+                if(!CanAccess && !disableAccessValidation)
                 {
                     this.ErrorMsg = "Custom.Generic.Unauthorized";
                     ErrorList.Add("Custom.Generic.Unauthorized");
