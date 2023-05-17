@@ -61,6 +61,8 @@ namespace Siesa.SDK.Business
         protected SDKContext Context { get { return myContext; } }
         private IEnumerable<INavigation> _navigationProperties = null;
 
+        private bool _containAttachments;
+
         public SDKBusinessModel GetBackend(string business_name)
         {
             return BackendRouterService.Instance.GetSDKBusinessModel(business_name, AuthenticationService);
@@ -69,6 +71,9 @@ namespace Siesa.SDK.Business
         public BLBackendSimple(IAuthenticationService authenticationService)
         {
             AuthenticationService = authenticationService;
+            if(BaseObj.GetType().GetProperty("RowidAttachment") != null){
+                _containAttachments = true;
+            }
         }
 
         public string BusinessName { get; set; }
@@ -210,6 +215,8 @@ namespace Siesa.SDK.Business
         private bool _useS3 = false;
         private List<object> unique_indexes = new List<object>();
 
+        private bool _containAttachments;
+
         public void DetachedBaseObj()
         {
             //TODO: Complete
@@ -237,6 +244,10 @@ namespace Siesa.SDK.Business
                 ).Select(x =>
                     x.GetType().GetProperty("PropertyNames").GetValue(x, null)
                 ).ToList();
+                
+            if(BaseObj.GetType().GetProperty("RowidAttachment") != null){
+                _containAttachments = true;
+            }
 
         }
 
@@ -390,7 +401,10 @@ namespace Siesa.SDK.Business
             if (extraFields != null && extraFields.Count > 0)
             {
                 extraFields.Add("Rowid");
-                extraFields.Add("RowidAttachment");
+                if(_containAttachments)
+                {
+                    extraFields.Add("RowidAttachment");
+                }
 
                 var selectedFields = string.Join(",", extraFields.Select(x =>
                 {
