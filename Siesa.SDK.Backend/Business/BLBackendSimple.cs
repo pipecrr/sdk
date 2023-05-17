@@ -512,7 +512,7 @@ namespace Siesa.SDK.Business
                         if (fields.ContainsKey(prop.Name))
                         {
                             dynamic field = fields[prop.Name];
-                            dynamicEntity.GetType().GetProperty("Rowid").SetValue(dynamicEntity, Convert.ChangeType(rowidGroup, typeof(Int32)));
+                            dynamicEntity.GetType().GetProperty("Rowid").SetValue(dynamicEntity, Convert.ChangeType(field.Rowid, dynamicEntityType.GetProperty("Rowid").PropertyType));
                             dynamicEntity.GetType().GetProperty("RowVersion").SetValue(dynamicEntity, Convert.ChangeType(field.RowVersion, typeof(byte[])));
                             dynamicEntity.GetType().GetProperty("CreationDate").SetValue(dynamicEntity, Convert.ChangeType(field.CreationDate, typeof(DateTime)));
                             dynamicEntity.GetType().GetProperty("LastUpdateDate").SetValue(dynamicEntity, Convert.ChangeType(field.LastUpdateDate, typeof(DateTime?)));
@@ -556,12 +556,14 @@ namespace Siesa.SDK.Business
                         AddRangeMethod.Invoke(Context, new object[] { dynamicEntitiesToInsert });
                     }
                     if(existUpdate){
-                        var BulkUpdateMethod = typeof(DbContextExtensions).GetMethod("BulkUpdate", new Type[] { Context.GetType(), typeof(Type), typeof(IEnumerable<>).MakeGenericType(dynamicEntityType) });
-
-                        BulkUpdateMethod.Invoke(Context, new object[] { Context, dynamicEntityType, (IEnumerable)dynamicEntitiesToUpdate });
+                        Assembly assembly = typeof(DbContextExtensions).Assembly;
+                        
+                        var BulkUpdateMethod = typeof(DbContext).GetExtensionMethod(assembly, "BulkUpdate", new Type[] { typeof(DbContext), typeof(IEnumerable<>).MakeGenericType(dynamicEntityType)}, true);
+                        var BulkUpdateMethodGeneric = BulkUpdateMethod.MakeGenericMethod(dynamicEntityType);
+                        BulkUpdateMethodGeneric.Invoke(Context, new object[] { Context, dynamicEntitiesToUpdate });
                     }
                 }catch(Exception ex){
-                    Console.WriteLine(ex.Message);
+                    Console.WriteLine("BulkUpdate "+ex.Message);
                 }
 
 
