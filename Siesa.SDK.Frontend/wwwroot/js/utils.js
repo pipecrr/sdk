@@ -108,6 +108,12 @@ function downloadFileFromStream(fileName, bytes) {
     anchorElement.remove();
     URL.revokeObjectURL(url);
   }
+
+  function previewImage (inputElem, imgElem)  {
+    const url = URL.createObjectURL(inputElem.files[0]);
+    imgElem.addEventListener('load', () => URL.revokeObjectURL(url), { once: true });
+    imgElem.src = url;
+  }
   
 
 window.downloadFileFromStream = downloadFileFromStream;
@@ -118,3 +124,4 @@ window.readCookie = readCookie;
 window.deleteCookie = deleteCookie;
 window.SetFocusToElement = SetFocusToElement;
 window.preloadFlex = preloadFlex;
+window.previewImage = previewImage;

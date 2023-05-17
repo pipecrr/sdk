@@ -1,0 +1,67 @@
+/* .sdk-inputfile
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    width: 300px;
+    height: 300px;
+} */
+
+
+.file-upload-container {
+    width: 600px;
+    height: 600px;
+    border: 2px dashed #999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  
+  .file-input {
+    opacity: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    font-size: 0;
+  }
+  
+  
+  .file-upload-icon {
+    font-size: 40px;
+  }
+
+
+  .file-input::-webkit-file-upload-button {
+    visibility: hidden;
+  }
+  
+  .file-input::before {
+    content: '';
+    display: inline-block;
+    background: #fff;
+    border: 1px solid #999999;
+    padding: 6px 12px;
+    border-radius: 4px;
+    outline: none;
+    white-space: nowrap;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+    margin-right: 8px;
+  }
+  
+  /* .file-input::before {
+    content: 'Seleccionar archivo';
+  } */
+
+
+  .input-container {
+    opacity: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  }
