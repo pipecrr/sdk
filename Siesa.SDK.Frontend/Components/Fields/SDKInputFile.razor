@@ -5,11 +5,17 @@
 @using Microsoft.Extensions.DependencyInjection
 @using Siesa.SDK.Shared.Services
 @using Siesa.SDK.Shared.Utilities
+@using Microsoft.AspNetCore.Http
+@using System.IO
+
+
 
 @inherits SDKComponent
 
 @inject IJSRuntime JSRuntime
 @inject IBackendRouterService BackendRouterService
+@inject IAuthenticationService AuthenticationService
+@inject IServiceProvider ServiceProvider
 
 <div class="file-upload-container">
 
@@ -55,7 +61,11 @@
 
     [Parameter] public string BusinessName {get; set;}
 
-    private dynamic BusinessObj;
+    [Parameter] public int RowidAttachmentDetail {get; set;}
+
+    [Parameter] public int RowidAttachmentRelationship {get; set;}
+
+    private dynamic BusinessObj = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -66,8 +76,7 @@
     {
         base.OnParametersSet();
     }
-
-
+    
     private async Task GetPreviewFile()
     {
         if(_refinputFile != null)
@@ -90,17 +99,56 @@
 
     public async Task SDKUploadFile()
     {
-            IServiceProvider ServiceProvider = SDKApp.GetServiceProvider();
+       await  IntanceBusinessObj();
 
-            if (ServiceProvider != null)
+       dynamic SaveFile = null;
+
+        if(BusinessObj != null)
+        {
+            var FormFile = await ConvertToIFormFile(InputFile?.File);
+            var FileUploadDTO = await BusinessObj.UploadSingle(FormFile);
+            if(FileUploadDTO != null)
             {
-                var businessModel = BackendRouterService.GetSDKBusinessModel(BusinessName, null);
-                if (businessModel != null)
+                FileUploadDTO.RowidAttachment = RowidAttachmentRelationship;
+
+                if(RowidAttachmentDetail > 0)
                 {
-                    BusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider,
-                    Utilities.SearchType($"{businessModel.Namespace}.{businessModel.Name}", true));
+                    SaveFile = await BusinessObj.SaveAttachmentDetail(FileUploadDTO, RowidAttachmentDetail);
+                }else
+                {
+                    SaveFile = await BusinessObj.SaveAttachmentDetail(FileUploadDTO);
                 }
             }
+        }
+        
+    }
+
+    private static async Task<IFormFile> ConvertToIFormFile(IBrowserFile browserFile)
+    {
+        var ms = new MemoryStream();
+        await browserFile.OpenReadStream().CopyToAsync(ms);
+
+        var file = new FormFile(ms, 0, ms.Length, null, browserFile.Name)
+        {
+            Headers = new HeaderDictionary(),
+            ContentType = (browserFile.ContentType == "" ? "application/octet-stream": browserFile.ContentType)
+        };
+
+        return file;
+    }
+    
+
+    private async Task IntanceBusinessObj()
+    {
+        if (ServiceProvider != null)
+        {
+            var businessModel = BackendRouterService.GetSDKBusinessModel(BusinessName, null);
+            if (businessModel != null)
+            {
+                BusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider,
+                Utilities.SearchType($"{businessModel.Namespace}.{businessModel.Name}", true));
+            }
+        }
     }
 
 
