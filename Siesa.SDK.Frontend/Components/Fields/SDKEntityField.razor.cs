@@ -375,7 +375,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
                     return response;
                 }catch(Exception ex){
                     HasError = true;
-                    ErrorMessage = await UtilsManager.GetResource("Custom.General.Error.Resources");
+                    ErrorMessage = await UtilsManager.GetResource("Custom.General.SDKEntity.Error.GetData");
                     
                 }
                 return CacheLoadResult;
