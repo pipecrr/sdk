@@ -1,30 +1,38 @@
 @using Microsoft.AspNetCore.Components.Forms
 @using Siesa.SDK.Frontend.Components
 @using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Shared.Application
+@using Microsoft.Extensions.DependencyInjection
+@using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Shared.Utilities
 
 @inherits SDKComponent
 
 @inject IJSRuntime JSRuntime
+@inject IBackendRouterService BackendRouterService
 
 <div class="file-upload-container">
 
     <div class="input-container">
-        <InputFile OnChange="@_OnChange" multiple="@IsMultiple" style="width: 600px; height: 600px; " accept="@FilterType" @ref="_refinputFile"/>
+        <InputFile OnChange="@_OnChange" multiple="@IsMultiple" style="width: 300px; height: 200px; " accept="@FilterType" @ref="_refinputFile"/>
     </div>
         
-            @if (InputFile != null)
+            @* @if (InputFile != null)
             {
                 @if (InputFile.File.ContentType.StartsWith("image"))
                 {
-                    <img @ref="previewImageElem" width="200" height="100" />
+                   
                 }
                 else
                 {
                     <i class="fa-light fa-file-pdf"></i>
                 }
             
-            }
+            } *@
 
+            <img @ref="previewImageElem" width="200" height="100" />
+
+            
 
         <div class="file-upload-icon">
             <i class="fa-duotone fa-arrow-up-from-bracket"></i>
@@ -44,6 +52,10 @@
     [Parameter] public string FilterType {get; set;} = "image/*";
 
     [Parameter] public string CssClass {get; set;}
+
+    [Parameter] public string BusinessName {get; set;}
+
+    private dynamic BusinessObj;
 
     protected override async Task OnInitializedAsync()
     {
@@ -74,6 +86,21 @@
             await GetPreviewFile();
             OnInputFile?.Invoke(_InputFile);
         }
+    }
+
+    public async Task SDKUploadFile()
+    {
+            IServiceProvider ServiceProvider = SDKApp.GetServiceProvider();
+
+            if (ServiceProvider != null)
+            {
+                var businessModel = BackendRouterService.GetSDKBusinessModel(BusinessName, null);
+                if (businessModel != null)
+                {
+                    BusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider,
+                    Utilities.SearchType($"{businessModel.Namespace}.{businessModel.Name}", true));
+                }
+            }
     }
 
 
