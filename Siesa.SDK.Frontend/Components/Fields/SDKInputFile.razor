@@ -23,18 +23,6 @@
         <InputFile OnChange="@_OnChange" multiple="@IsMultiple" style="width: 300px; height: 200px; " accept="@FilterType" @ref="_refinputFile"/>
     </div>
         
-            @* @if (InputFile != null)
-            {
-                @if (InputFile.File.ContentType.StartsWith("image"))
-                {
-                   
-                }
-                else
-                {
-                    <i class="fa-light fa-file-pdf"></i>
-                }
-            
-            } *@
 
             <img @ref="previewImageElem" width="200" height="100" />
 
@@ -76,7 +64,7 @@
     {
         base.OnParametersSet();
     }
-    
+
     private async Task GetPreviewFile()
     {
         if(_refinputFile != null)
@@ -99,29 +87,37 @@
 
     public async Task SDKUploadFile()
     {
-       await  IntanceBusinessObj();
+        await IntanceBusinessObj();
 
-       dynamic SaveFile = null;
-
-        if(BusinessObj != null)
+        if (BusinessObj == null)
         {
-            var FormFile = await ConvertToIFormFile(InputFile?.File);
-            var FileUploadDTO = await BusinessObj.UploadSingle(FormFile);
-            if(FileUploadDTO != null)
-            {
-                FileUploadDTO.RowidAttachment = RowidAttachmentRelationship;
+            return;
+        }
 
-                if(RowidAttachmentDetail > 0)
+        var files = IsMultiple ? InputFile.GetMultipleFiles() : new[] { InputFile.File };
+
+        foreach (var itemFile in files)
+        {
+            var formFile = await ConvertToIFormFile(itemFile);
+            var fileUploadDTO = await BusinessObj.UploadSingle(formFile);
+
+            if (fileUploadDTO != null)
+            {
+                fileUploadDTO.RowidAttachment = RowidAttachmentRelationship;
+                dynamic saveFile;
+
+                if (RowidAttachmentDetail > 0)
                 {
-                    SaveFile = await BusinessObj.SaveAttachmentDetail(FileUploadDTO, RowidAttachmentDetail);
-                }else
+                    saveFile = await BusinessObj.SaveAttachmentDetail(fileUploadDTO, RowidAttachmentDetail);
+                }
+                else
                 {
-                    SaveFile = await BusinessObj.SaveAttachmentDetail(FileUploadDTO);
+                    saveFile = await BusinessObj.SaveAttachmentDetail(fileUploadDTO);
                 }
             }
         }
-        
     }
+
 
     private static async Task<IFormFile> ConvertToIFormFile(IBrowserFile browserFile)
     {
