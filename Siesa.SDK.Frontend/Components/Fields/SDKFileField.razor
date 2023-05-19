@@ -104,7 +104,7 @@
                     RowidAttachmentDetail = n;
                     var response = await Business.Backend.Call("DownloadFileByRowid", RowidAttachmentDetail);
                     if(response.Success){
-                        UrlFile = $"data:{response.Data.FileType};base64, {response.Data.FileBase64}";
+                        UrlFile = response.Data.Url;
                         TypeFile = response.Data.FileType.Contains("image") ? SDKTypeFile.Image : SDKTypeFile.Other;
                         HasValue = true;
                     }

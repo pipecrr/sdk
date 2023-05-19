@@ -962,7 +962,7 @@ namespace Siesa.SDK.Business
             var name = file.FileName;
             var bucketName = _configuration.GetValue<string>("AWS:S3BucketName");
             if(string.IsNullOrEmpty(bucketName)){
-                return new BadRequestResult<SDKFileUploadDTO>{Success = false, Errors = new List<string> { "S3 Bucket Name not found" }};
+                return new BadRequestResult<SDKFileUploadDTO>{Success = false, Errors = new List<string> { "Custom.S3.BucketName.NotFound" }};
             }
             try{
                 PutObjectRequest request = new PutObjectRequest{
@@ -998,14 +998,14 @@ namespace Siesa.SDK.Business
                 urlRes = $"data:{contentType};base64,{base64}";
                 return new ActionResult<string>{Success = true, Data = urlRes};
             }
-            return new BadRequestResult<string>{Success = false, Errors = new List<string> { "File not found" }};
+            return new BadRequestResult<string>{Success = false, Errors = new List<string> { "Custom.Attatchment.FileNotFound" }};
         }
 
         private async Task<ActionResult<string>> DownloadFileS3(string url)
         {
             var bucketName = _configuration.GetValue<string>("AWS:S3BucketName");
             if(string.IsNullOrEmpty(bucketName)){
-                return new BadRequestResult<string>{Success = false, Errors = new List<string> { "S3BucketName name not found" }};
+                return new BadRequestResult<string>{Success = false, Errors = new List<string> { "Custom.S3.BucketName.NotFound" }};
             }
             var duration = _configuration.GetValue<int>("AWS:TimeoutDuration");
             if(duration == 0){
@@ -1040,11 +1040,27 @@ namespace Siesa.SDK.Business
                 SDKFileField = new SDKFileFieldDTO{
                     Url = data.Url,
                     FileName = data.FileName,
-                    FileType = data.FileType
+                    FileType = data.FileType,
+                    FileByte = data.FileByte
                 };
             }else{
                 var errors = JsonConvert.DeserializeObject<List<string>> (response.Errors.ToString());
                 throw new ArgumentException(errors[0]);
+            }
+            if(_useS3){
+                var downloadS3 = await DownloadFileS3(SDKFileField.Url);
+                if(downloadS3.Success){
+                    SDKFileField.Url = downloadS3.Data;
+                    return new ActionResult<SDKFileFieldDTO>{Success = true, Data = SDKFileField};
+                }else{
+                    return new BadRequestResult<SDKFileFieldDTO>{Success = false, Errors = downloadS3.Errors};
+                }
+            }
+            if(SDKFileField.FileByte != null){
+                var base64 = Convert.ToBase64String(SDKFileField.FileByte);
+                SDKFileField.FileBase64 = base64;
+                SDKFileField.Url = $"data:{SDKFileField.FileType};base64,{base64}";
+                return new ActionResult<SDKFileFieldDTO>{Success = true, Data = SDKFileField};
             }
             IWebHostEnvironment env = _provider.GetRequiredService<IWebHostEnvironment>();
             var filePath = Path.Combine(SDKFileField.Url);
@@ -1053,9 +1069,10 @@ namespace Siesa.SDK.Business
                 var fileBytes = await File.ReadAllBytesAsync(filePath);
                 var base64 = Convert.ToBase64String(fileBytes);
                 SDKFileField.FileBase64 = base64;
+                SDKFileField.Url = $"data:{SDKFileField.FileType};base64,{base64}";
                 return new ActionResult<SDKFileFieldDTO>{Success = true, Data = SDKFileField};
             }
-            return new BadRequestResult<SDKFileFieldDTO>{Success = false, Errors = new List<string> { "File not found" }};
+            return new BadRequestResult<SDKFileFieldDTO>{Success = false, Errors = new List<string> { "Custom.Attatchment.FileNotFound" }};
         }
         
         [SDKExposedMethod]
