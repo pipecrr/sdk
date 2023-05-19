@@ -48,8 +48,7 @@ namespace Siesa.SDK.Business
         public List<Panel> Panels = new List<Panel>();
         [JsonIgnore]
         public List<FieldOptions> ListViewFields = new List<FieldOptions>();
-        public BaseSDK<int> BaseObj { get; set; }
-        //public List<DynamicEntityDTO> DynamicEntities { get; set; }
+        public BaseSDK<int> BaseObj { get; set; }        
         public List<dynamic> DynamicEntities { get; set; }        
         public Type DynamicEntityType { get; set; }
 
@@ -140,9 +139,7 @@ namespace Siesa.SDK.Business
         public List<FieldOptions> ListViewFields = new List<FieldOptions>();
         [ValidateComplexType]
         public T BaseObj { get; set; }
-        public List<dynamic> DynamicEntities { get; set; }
-        //public Type DynamicEntityType { get; set; }
-
+        public List<dynamic> DynamicEntities { get; set; }        
         public List<string> RelFieldsToSave { get; set; } = new List<string>();
 
         public async Task Refresh(bool Reload = false) {
@@ -400,7 +397,7 @@ namespace Siesa.SDK.Business
                 setIL.Emit(OpCodes.Ret);
                 propertyBuilder.SetSetMethod(setMethodBuilder);
 
-                if(!field.IsOptional){
+                if(/*!field.IsOptional*/false){//TODO: Verificar si es requerido
                     ConstructorInfo requiredAttributeConstructor = typeof(SDKRequired).GetConstructor(Type.EmptyTypes);
                     CustomAttributeBuilder requiredAttributeBuilder = new CustomAttributeBuilder(requiredAttributeConstructor, new object[] { });
                     propertyBuilder.SetCustomAttribute(requiredAttributeBuilder);

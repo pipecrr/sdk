@@ -522,7 +522,8 @@ namespace Siesa.SDK.Business
                     foreach (var prop in dynamicObject)
                     {
                         dynamic dynamicEntity = Activator.CreateInstance(dynamicEntityType);
-                        SetValuesDynamicEntity(dynamicEntity, dynamicObject, prop, fields, dynamicEntityType, rowidGroup);
+                        dynamicEntity.GetType().GetProperty("RowidRecord").SetValue(dynamicEntity, Convert.ChangeType(rowidGroup, typeof(Int32)));
+                        SetValuesDynamicEntity(dynamicEntity, dynamicObject, prop, fields, dynamicEntityType, rowid);
                         
                         if(dynamicEntity.Rowid == 0){
                             methodAdd.Invoke(dynamicEntitiesToInsert, new object[] { dynamicEntity });
@@ -541,21 +542,33 @@ namespace Siesa.SDK.Business
                         var BulkUpdateMethodGeneric = BulkUpdateMethod.MakeGenericMethod(dynamicEntityType);
                         BulkUpdateMethodGeneric.Invoke(Context, new object[] { Context, dynamicEntitiesToUpdate });
                     }
+                    if(existInsert){
+                        var AddRangeMethod = typeof(DbContext).GetMethod("AddRange", new Type[] { typeof(IEnumerable<>).MakeGenericType(dynamicEntityType) });
+                        AddRangeMethod.Invoke(Context, new object[] { dynamicEntitiesToInsert });
+                    }
                 }catch(Exception ex){
-                    Console.WriteLine("BulkUpdate "+ex.Message);
-                }
-                if(existInsert){
-                    var AddRangeMethod = typeof(DbContext).GetMethod("AddRange", new Type[] { typeof(IEnumerable<>).MakeGenericType(dynamicEntityType) });
-                    AddRangeMethod.Invoke(Context, new object[] { dynamicEntitiesToInsert });
+                    throw new Exception("Error updating or inserting aditional fields", ex);
                 }
 
                 Context.SaveChanges();
             }
         }
 
-        private void SetValuesDynamicEntity(dynamic dynamicEntity, dynamic dynamicObject, dynamic prop, dynamic fields, Type dynamicEntityType, dynamic rowidGroup)
-        {
-            dynamicEntity.GetType().GetProperty("RowidRecord").SetValue(dynamicEntity, Convert.ChangeType(rowidGroup, typeof(Int32)));
+        private void SetValuesDynamicEntity(dynamic dynamicEntity, dynamic dynamicObject, dynamic prop, dynamic fields, Type dynamicEntityType, dynamic rowidRecord)
+        {   
+            var value = prop.Value;
+            if (value.Type == JTokenType.Date)
+            {
+                dynamicEntity.GetType().GetProperty("DateData").SetValue(dynamicEntity, value.ToObject<DateTime>());
+            }
+            else if (value.Type == JTokenType.String)
+            {
+                dynamicEntity.GetType().GetProperty("TextData").SetValue(dynamicEntity, value.ToObject<string>());
+            }
+            else if (value.Type == JTokenType.Float || value.Type == JTokenType.Integer)
+            {
+                dynamicEntity.GetType().GetProperty("NumericData").SetValue(dynamicEntity, value.ToObject<decimal>());
+            }
             if (fields.ContainsKey(prop.Name))
             {
                 dynamic field = fields[prop.Name];
@@ -567,7 +580,7 @@ namespace Siesa.SDK.Business
                 dynamicEntity.GetType().GetProperty("RowidUserCreates").SetValue(dynamicEntity, Convert.ChangeType(field.RowidUserCreates, typeof(Int32)));
                 dynamicEntity.GetType().GetProperty("RowidUserLastUpdate").SetValue(dynamicEntity, Convert.ChangeType(field.RowidUserLastUpdate, typeof(Int32)));
                 dynamicEntity.GetType().GetProperty("RowidSession").SetValue(dynamicEntity, Convert.ChangeType(field.RowidSession, typeof(Int32?)));
-                dynamicEntity.GetType().GetProperty("RowidRecord").SetValue(dynamicEntity, Convert.ChangeType(field.RowidRecord, BaseObj.GetRowidType()));
+                dynamicEntity.GetType().GetProperty("RowidRecord").SetValue(dynamicEntity, Convert.ChangeType(rowidRecord, BaseObj.GetRowidType()));
                 dynamicEntity.GetType().GetProperty("RowidEntityColumn").SetValue(dynamicEntity, Convert.ChangeType(field.RowidEntityColumn, typeof(Int32)));
                 dynamicEntity.GetType().GetProperty("RowData").SetValue(dynamicEntity, Convert.ChangeType(field.RowData, typeof(short)));
                 dynamicEntity.GetType().GetProperty("RowidInternalEntityData").SetValue(dynamicEntity, Convert.ChangeType(field.RowidInternalEntityData, typeof(Int32?)));
@@ -792,12 +805,10 @@ namespace Siesa.SDK.Business
                             var BulkDeleteMethod = typeof(DbContext).GetExtensionMethod(assemblyContextExtension, "BulkDelete", new Type[] { typeof(DbContext), typeof(Type), typeof(IEnumerable<object>)});
                             BulkDeleteMethod.Invoke(Context, new object[] { Context, dynamicEntityType, dynamicEntitiesToDelete });
                         }
-                        
                     }catch(Exception e){
-                        Console.WriteLine("BulkDelete "+ e.Message);
+                        throw new Exception($"Error deleting aditional fields {nameDynamicEntity} {e.Message}");
                     }
 
-                    Context.SaveChanges();
                 }
             }
         }
