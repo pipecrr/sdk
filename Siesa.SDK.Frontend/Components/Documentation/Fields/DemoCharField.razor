@@ -53,6 +53,7 @@
                     <SDKCharField @bind-Value="@TextValue4"
                         Placeholder="Password"
                         Password="true" 
+                        Disabled="@_disabled"
                        />
                         <p>@TextValue4</p>
             </SDKCard>
@@ -62,7 +63,8 @@
                 <h3>Value Changed</h3>
                 <SDKCharField Value="@valueChange" 
                         Placeholder="Value Change"
-                        ValueChanged="((value) => Onchange(value))" />
+                        ValueChanged="((value) => Onchange(value))" 
+                        />
             </SDKCard>
         </div>
     </div>
@@ -74,6 +76,8 @@
    public string TextValue3 { get; set; }
    public string TextValue4 { get; set; }
    public string TextValue5 { get; set; }
+
+   public bool _disabled { get; set; } = true;
 
    string valueChange;
 

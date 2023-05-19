@@ -2,6 +2,7 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Components.Visualization
 @using Siesa.SDK.Frontend.Services
+@using System.Reflection
 @inject DialogService DialogService
 @inject IAuthenticationService AuthenticationService
 @inject IBackendRouterService BackendRouterService
@@ -95,10 +96,53 @@
         StateHasChanged();
     }
 
-    protected override void OnParametersSet()
+    /*protected override void OnParametersSet()
     {
         base.OnParametersSet();
         listview_key = Guid.NewGuid();
         StateHasChanged();     
+    }*/
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        bool shouldRestart = validateChanged(parameters);
+        await base.SetParametersAsync(parameters);
+        if(shouldRestart){
+            listview_key = Guid.NewGuid();
+            StateHasChanged();
+        }
+    }        
+    private bool validateChanged(ParameterView parameters)
+    {
+        var type = this.GetType();
+        var properties = type.GetProperties();
+        var result = false;
+
+        foreach (var property in properties){
+            var HasCustomAttributes = property.GetCustomAttributes().Count() > 0;
+            if(!HasCustomAttributes){
+                continue;
+            }
+            var dataAnnotationProperty = property.GetCustomAttributes().First().GetType();
+            var parameterType = typeof(ParameterAttribute);
+            if(dataAnnotationProperty == parameterType){
+                try{
+                    if (parameters.TryGetValue<string>(property.Name, out var value)){
+                        var valueProperty = property.GetValue(this, null);
+                        if(property.PropertyType == typeof(String)){
+                            if (value != null && !value.Equals(valueProperty)){
+                                result = true;
+                                break;
+                            }
+                        }else{
+                            if (value != null && value != valueProperty){
+                                result = true;
+                                break;
+                            }
+                        }
+                    }
+                }catch (Exception e){}
+            }
+        }
+        return result;
     }
 }
