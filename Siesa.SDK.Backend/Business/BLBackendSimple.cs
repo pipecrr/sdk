@@ -508,38 +508,8 @@ namespace Siesa.SDK.Business
                     foreach (var prop in dynamicObject)
                     {
                         dynamic dynamicEntity = Activator.CreateInstance(dynamicEntityType);
-                        dynamicEntity.GetType().GetProperty("RowidRecord").SetValue(dynamicEntity, Convert.ChangeType(rowidGroup, typeof(Int32)));
-                        if (fields.ContainsKey(prop.Name))
-                        {
-                            dynamic field = fields[prop.Name];
-                            dynamicEntity.GetType().GetProperty("Rowid").SetValue(dynamicEntity, Convert.ChangeType(field.Rowid, dynamicEntityType.GetProperty("Rowid").PropertyType));
-                            dynamicEntity.GetType().GetProperty("RowVersion").SetValue(dynamicEntity, Convert.ChangeType(field.RowVersion, typeof(byte[])));
-                            dynamicEntity.GetType().GetProperty("CreationDate").SetValue(dynamicEntity, Convert.ChangeType(field.CreationDate, typeof(DateTime)));
-                            dynamicEntity.GetType().GetProperty("LastUpdateDate").SetValue(dynamicEntity, Convert.ChangeType(field.LastUpdateDate, typeof(DateTime?)));
-                            dynamicEntity.GetType().GetProperty("Source").SetValue(dynamicEntity, Convert.ChangeType(field.Source, dynamicEntityType.GetProperty("Source").PropertyType));
-                            dynamicEntity.GetType().GetProperty("RowidUserCreates").SetValue(dynamicEntity, Convert.ChangeType(field.RowidUserCreates, typeof(Int32)));
-                            dynamicEntity.GetType().GetProperty("RowidUserLastUpdate").SetValue(dynamicEntity, Convert.ChangeType(field.RowidUserLastUpdate, typeof(Int32)));
-                            dynamicEntity.GetType().GetProperty("RowidSession").SetValue(dynamicEntity, Convert.ChangeType(field.RowidSession, typeof(Int32?)));
-                            dynamicEntity.GetType().GetProperty("RowidRecord").SetValue(dynamicEntity, Convert.ChangeType(field.RowidRecord, BaseObj.GetRowidType()));
-                            dynamicEntity.GetType().GetProperty("RowidEntityColumn").SetValue(dynamicEntity, Convert.ChangeType(field.RowidEntityColumn, typeof(Int32)));
-                            dynamicEntity.GetType().GetProperty("RowData").SetValue(dynamicEntity, Convert.ChangeType(field.RowData, typeof(short)));
-                            dynamicEntity.GetType().GetProperty("RowidInternalEntityData").SetValue(dynamicEntity, Convert.ChangeType(field.RowidInternalEntityData, typeof(Int32?)));
-                            dynamicEntity.GetType().GetProperty("RowidGenericEntityData").SetValue(dynamicEntity, Convert.ChangeType(field.RowidGenericEntityData, typeof(Int32?)));
-                        }
-                        var value = prop.Value;
-                        if (value.Type == JTokenType.Date)
-                        {
-                            dynamicEntity.GetType().GetProperty("DateData").SetValue(dynamicEntity, value.ToObject<DateTime>());
-                        }
-                        else if (value.Type == JTokenType.String)
-                        {
-                            dynamicEntity.GetType().GetProperty("TextData").SetValue(dynamicEntity, value.ToObject<string>());
-                        }
-                        else if (value.Type == JTokenType.Float || value.Type == JTokenType.Integer)
-                        {
-                            dynamicEntity.GetType().GetProperty("NumericData").SetValue(dynamicEntity, value.ToObject<decimal>());
-                        }
-
+                        SetValuesDynamicEntity(dynamicEntity, dynamicObject, prop, fields, dynamicEntityType, rowidGroup);
+                        
                         if(dynamicEntity.Rowid == 0){
                             methodAdd.Invoke(dynamicEntitiesToInsert, new object[] { dynamicEntity });
                             existInsert = true;
@@ -551,13 +521,8 @@ namespace Siesa.SDK.Business
                 }
 
                 try{
-                    if(existInsert){
-                        var AddRangeMethod = typeof(DbContext).GetMethod("AddRange", new Type[] { typeof(IEnumerable<>).MakeGenericType(dynamicEntityType) });
-                        AddRangeMethod.Invoke(Context, new object[] { dynamicEntitiesToInsert });
-                    }
                     if(existUpdate){
                         Assembly assembly = typeof(DbContextExtensions).Assembly;
-                        
                         var BulkUpdateMethod = typeof(DbContext).GetExtensionMethod(assembly, "BulkUpdate", new Type[] { typeof(DbContext), typeof(IEnumerable<>).MakeGenericType(dynamicEntityType)}, true);
                         var BulkUpdateMethodGeneric = BulkUpdateMethod.MakeGenericMethod(dynamicEntityType);
                         BulkUpdateMethodGeneric.Invoke(Context, new object[] { Context, dynamicEntitiesToUpdate });
@@ -565,12 +530,50 @@ namespace Siesa.SDK.Business
                 }catch(Exception ex){
                     Console.WriteLine("BulkUpdate "+ex.Message);
                 }
-
+                if(existInsert){
+                    var AddRangeMethod = typeof(DbContext).GetMethod("AddRange", new Type[] { typeof(IEnumerable<>).MakeGenericType(dynamicEntityType) });
+                    AddRangeMethod.Invoke(Context, new object[] { dynamicEntitiesToInsert });
+                }
 
                 Context.SaveChanges();
             }
         }
 
+        private void SetValuesDynamicEntity(dynamic dynamicEntity, dynamic dynamicObject, dynamic prop, dynamic fields, Type dynamicEntityType, dynamic rowidGroup)
+        {
+            dynamicEntity.GetType().GetProperty("RowidRecord").SetValue(dynamicEntity, Convert.ChangeType(rowidGroup, typeof(Int32)));
+            if (fields.ContainsKey(prop.Name))
+            {
+                dynamic field = fields[prop.Name];
+                dynamicEntity.GetType().GetProperty("Rowid").SetValue(dynamicEntity, Convert.ChangeType(field.Rowid, dynamicEntityType.GetProperty("Rowid").PropertyType));
+                dynamicEntity.GetType().GetProperty("RowVersion").SetValue(dynamicEntity, Convert.ChangeType(field.RowVersion, typeof(byte[])));
+                dynamicEntity.GetType().GetProperty("CreationDate").SetValue(dynamicEntity, Convert.ChangeType(field.CreationDate, typeof(DateTime)));
+                dynamicEntity.GetType().GetProperty("LastUpdateDate").SetValue(dynamicEntity, Convert.ChangeType(field.LastUpdateDate, typeof(DateTime?)));
+                dynamicEntity.GetType().GetProperty("Source").SetValue(dynamicEntity, Convert.ChangeType(field.Source, dynamicEntityType.GetProperty("Source").PropertyType));
+                dynamicEntity.GetType().GetProperty("RowidUserCreates").SetValue(dynamicEntity, Convert.ChangeType(field.RowidUserCreates, typeof(Int32)));
+                dynamicEntity.GetType().GetProperty("RowidUserLastUpdate").SetValue(dynamicEntity, Convert.ChangeType(field.RowidUserLastUpdate, typeof(Int32)));
+                dynamicEntity.GetType().GetProperty("RowidSession").SetValue(dynamicEntity, Convert.ChangeType(field.RowidSession, typeof(Int32?)));
+                dynamicEntity.GetType().GetProperty("RowidRecord").SetValue(dynamicEntity, Convert.ChangeType(field.RowidRecord, BaseObj.GetRowidType()));
+                dynamicEntity.GetType().GetProperty("RowidEntityColumn").SetValue(dynamicEntity, Convert.ChangeType(field.RowidEntityColumn, typeof(Int32)));
+                dynamicEntity.GetType().GetProperty("RowData").SetValue(dynamicEntity, Convert.ChangeType(field.RowData, typeof(short)));
+                dynamicEntity.GetType().GetProperty("RowidInternalEntityData").SetValue(dynamicEntity, Convert.ChangeType(field.RowidInternalEntityData, typeof(Int32?)));
+                dynamicEntity.GetType().GetProperty("RowidGenericEntityData").SetValue(dynamicEntity, Convert.ChangeType(field.RowidGenericEntityData, typeof(Int32?)));
+            }
+            var value = prop.Value;
+            if (value.Type == JTokenType.Date)
+            {
+                dynamicEntity.GetType().GetProperty("DateData").SetValue(dynamicEntity, value.ToObject<DateTime>());
+            }
+            else if (value.Type == JTokenType.String)
+            {
+                dynamicEntity.GetType().GetProperty("TextData").SetValue(dynamicEntity, value.ToObject<string>());
+            }
+            else if (value.Type == JTokenType.Float || value.Type == JTokenType.Integer)
+            {
+                dynamicEntity.GetType().GetProperty("NumericData").SetValue(dynamicEntity, value.ToObject<decimal>());
+            }
+
+        }
         private void AddExceptionToResult(DbUpdateException exception, ValidateAndSaveBusinessObjResponse result)
         {
             var message = BackendExceptionManager.ExceptionToString(exception, ContextMetadata);
@@ -720,6 +723,7 @@ namespace Siesa.SDK.Business
 
         public virtual DeleteBusinessObjResponse Delete()
         {
+            DeleteDynamicEntity();
             this._logger.LogInformation($"Detele {this.GetType().Name}");
             var response = new DeleteBusinessObjResponse();
 
@@ -748,6 +752,40 @@ namespace Siesa.SDK.Business
             }
 
             return response;
+        }
+
+        protected virtual void DeleteDynamicEntity(){
+            using (SDKContext Context = CreateDbContext())
+            {
+                var nameSpaceEntity = typeof(T).Namespace;
+                var nameDynamicEntity = "D"+typeof(T).Name.Substring(1);
+                var dynamicEntityType = Utilities.SearchType(nameSpaceEntity + "." + nameDynamicEntity, true);
+
+                if(dynamicEntityType != null){
+                    try{
+                        var dynamicContextSet = Context.GetType().GetMethod("AllSet", types: Type.EmptyTypes).MakeGenericMethod(dynamicEntityType).Invoke(Context, null);
+                        var rowid = BaseObj.GetRowid();
+                        Assembly assemblyWhere = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
+                        var whereMethod = typeof(IQueryable).GetExtensionMethod(assemblyWhere, "Where", new[] { typeof(IQueryable), typeof(string), typeof(object[])});
+                        dynamicContextSet = whereMethod.Invoke(dynamicContextSet, new object[] { dynamicContextSet, "RowidRecord = @0", new object[] { rowid } });
+
+                        Assembly assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
+                        var dynamicListMethod = typeof(IEnumerable).GetExtensionMethod(assemblyDynamic, "ToDynamicList", new[] { typeof(IEnumerable) });
+                        dynamic dynamicEntitiesToDelete = dynamicListMethod.Invoke(dynamicContextSet, new object[] { dynamicContextSet });
+                        
+                        if(dynamicEntitiesToDelete.Count > 0){
+                            Assembly assemblyContextExtension = typeof(DbContextExtensions).Assembly;
+                            var BulkDeleteMethod = typeof(DbContext).GetExtensionMethod(assemblyContextExtension, "BulkDelete", new Type[] { typeof(DbContext), typeof(Type), typeof(IEnumerable<object>)});
+                            BulkDeleteMethod.Invoke(Context, new object[] { Context, dynamicEntityType, dynamicEntitiesToDelete });
+                        }
+                        
+                    }catch(Exception e){
+                        Console.WriteLine("BulkDelete "+ e.Message);
+                    }
+
+                    Context.SaveChanges();
+                }
+            }
         }
 
         public virtual IQueryable<T> EntityFieldFilters(IQueryable<T> query)
