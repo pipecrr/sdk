@@ -294,27 +294,30 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 return;
             }
             
-            if (!e.Key.Equals("Escape"))
+            if (!e.Key.Equals("Escape") && !e.Key.Equals("Enter") && !e.Key.Equals("Tab"))
             {
                 SDKDropDown();
             }
 
-            if (e.Key == "Enter")
+            if (e.Key.Equals("Enter") && !IsMultiple)
             {
-                if (CacheLoadResult != null && CacheLoadResult.data != null)
+                if (CacheDataObjcts != null && CacheDataObjcts.Count > 0)
                 {
-                    var results = CacheLoadResult.data as IEnumerable<dynamic>;
-
-                    if (results.Count() > 0)
-                    {
-                        SetVal(results.First());
-                        //LoadData("", null,true);
+                    SetVal(CacheDataObjcts.First());
+                    BlurElement();
+                    if(OnChange != null){
+                        OnChange();
                     }
                 }
                 StateHasChanged();
             }
         }
-        
+
+        private async Task BlurElement(){
+            var elementInstance = await JsRuntime.InvokeAsync<IJSObjectReference>("$", $"#{idInput}");
+            await elementInstance.InvokeVoidAsync("dropdown","hide");
+        }
+
         private string GetParamValue(string field, object item){
             var param = "";
             var property = item.GetType().GetProperty(field);
