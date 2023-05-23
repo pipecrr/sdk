@@ -71,9 +71,6 @@ namespace Siesa.SDK.Business
         public BLBackendSimple(IAuthenticationService authenticationService)
         {
             AuthenticationService = authenticationService;
-            if(BaseObj.GetType().GetProperty("RowidAttachment") != null){
-                _containAttachments = true;
-            }
         }
 
         public string BusinessName { get; set; }
