@@ -23,10 +23,7 @@
                 <ul>
                     @if(CacheData.Count()>0){
                         foreach (var item in CacheData)
-                        {   
-                            if(IsMultiple && Values.Contains(item.Value.ToString())){
-                                continue;
-                            }
+                        {
                             <li class="d-flex justify-content-between dropdown-item" data-automation-id="@GetAutomationIdItem(item)" @onclick="@(()=> { OnSelectItem(item.Value); })">
                                 <div class="d-flex align-items-center">
                                     @if(FieldTemplate == 2){

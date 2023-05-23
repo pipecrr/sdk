@@ -299,12 +299,16 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 SDKDropDown();
             }
 
-            if (e.Key.Equals("Enter") && !IsMultiple)
+            if (e.Key.Equals("Enter"))
             {
                 if (CacheDataObjcts != null && CacheDataObjcts.Count > 0)
                 {
                     SetVal(CacheDataObjcts.First());
-                    BlurElement();
+                    if(IsMultiple){
+                        LoadData("", null, true);
+                    }else{
+                        BlurElement();
+                    }
                     if(OnChange != null){
                         OnChange();
                     }
@@ -445,6 +449,17 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 }
             }
 
+            if(IsMultiple && ItemsSelected != null && ItemsSelected.Count > 0){
+                foreach (dynamic item in ItemsSelected)
+                {
+                    if (!string.IsNullOrEmpty(filters))
+                    {
+                        filters += " && ";
+                    }
+                    filters += $"(Rowid != {item.Rowid})";
+                }
+            }
+
             return filters;
         }
 
@@ -550,6 +565,9 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 }else{
                     placeholder = "";
                 }
+            }
+            if(OnChange != null){
+                OnChange();
             }
             StateHasChanged();
         }
