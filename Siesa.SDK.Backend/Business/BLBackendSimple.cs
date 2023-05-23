@@ -397,30 +397,42 @@ namespace Siesa.SDK.Business
         using (SDKContext context = CreateDbContext())
         {
             var query = context.Set<T>().AsQueryable();
-
+            var selectedFields = "";
+            bool hasRelated = false;
+            bool hasExtraFields = false;
+            List<string> inlcudesAdd = new List<string>();
             if (extraFields != null && extraFields.Count > 0)
             {
+                hasExtraFields = true;
                 extraFields.Add("Rowid");
                 if(_containAttachments)
                 {
                     extraFields.Add("RowidAttachment");
                 }
 
-                var selectedFields = string.Join(",", extraFields.Select(x =>
+                selectedFields = string.Join(",", extraFields.Select(x =>
                 {
-                    var splitInclude = x.Split('.');
-                    if (splitInclude.Length > 1) 
+                    dynamic splitInclude = x.Split('.');
+                    if (splitInclude.Length > 1)
                     {
-                        for (int i = 1; i <= splitInclude.Length; i++)
+                        hasRelated = true;
+                        List<string> inlcudes = new List<string>();
+                        for (int i = 0; i < splitInclude.Length-1; i++)
                         {
-                            var include = string.Join(".", splitInclude.Take(i));
-                            query = query.Include(include);
+                            inlcudes.Add(splitInclude[i]);
                         }
+                        string include = string.Join(".", inlcudes);
+                        if(!inlcudesAdd.Contains(include)){
+                            inlcudesAdd.Add(include);
+                            query = query.Include(include);
+
+                        }
+
                     }
-                    return splitInclude[0];
+                    return x+" as "+x.Replace(".","_");
                 }).Distinct());
 
-                query = query.Select<T>($"new ({selectedFields})");
+                //query = query.Select<T>($"new ({selectedFields})");
 
             }
             else
@@ -432,10 +444,77 @@ namespace Siesa.SDK.Business
             }
 
             query = query.Where("Rowid == @0", ConvertToRowidType(rowid));
+            if(hasRelated){
+                var dynamicQuery = query.Select($"new ({selectedFields})");
+                dynamic dynamicObj = dynamicQuery.FirstOrDefault();
 
-            return query.FirstOrDefault();
+                dynamic result = (T)CreateDynamicObject(typeof(T), dynamicObj);
+ 
+                return result;
+            }else{
+                if(hasExtraFields){
+                    query = query.Select<T>($"new ({selectedFields})");
+                }
+                return query.FirstOrDefault();
+            }
+
         }
     }
+
+        private T CreateDynamicObject(Type type, dynamic dynamicObj)
+        {
+            dynamic result = Activator.CreateInstance(type);
+            foreach (var property in dynamicObj.GetType().GetProperties()){
+                var propertyName = property.Name;
+                var splitProperty = propertyName.Split('_');
+                if(splitProperty.Length > 1){
+                    var auxType = result;
+                    for (int i = 0; i < splitProperty.Length; i++){
+                        propertyName = splitProperty[i];
+                        if(i == splitProperty.Length-1){
+                            auxType.GetType().GetProperty(propertyName).SetValue(auxType, property.GetValue(dynamicObj, null));
+                        }else{
+                            dynamic InstanceDynamicProp = auxType.GetType().GetProperty(propertyName).GetValue(auxType, null);
+                            if(InstanceDynamicProp == null){
+                                InstanceDynamicProp = Activator.CreateInstance(auxType.GetType().GetProperty(propertyName).PropertyType);
+                            }
+                            auxType.GetType().GetProperty(propertyName).SetValue(auxType, InstanceDynamicProp);
+                            auxType = InstanceDynamicProp;
+                        }
+                    }
+                }else{
+                    bool existProperty = type.GetProperty(propertyName) != null;
+                    if(existProperty){
+                        var propertyValue = property.GetValue(dynamicObj, null);
+                        type.GetProperty(propertyName).SetValue(result, propertyValue);
+                    }
+                }
+            }
+            return (T)result;
+        }
+
+        private void getPrueba(long rowid)
+{
+            using (SDKContext context = CreateDbContext())
+            {
+                try
+                {
+                    var contextSet = context.Set<T>().AsQueryable();
+                    contextSet = contextSet.Include("City");
+                    contextSet = contextSet.Include("City.State");
+                    contextSet = contextSet.Where("Rowid == @0", ConvertToRowidType(rowid));
+                    var dynamicQuery = contextSet.Select("new (Id as Id,Name as Name, Rowid as Rowid)");
+
+                    var resultList = dynamicQuery.ToDynamicList();
+                    var c = "";
+                }
+                catch (Exception e)
+                {
+                    // Manejo de excepciones
+                    
+                }
+            }
+        }
 
         public virtual void AfterValidateAndSave(ref ValidateAndSaveBusinessObjResponse result){
             //Do nothing
