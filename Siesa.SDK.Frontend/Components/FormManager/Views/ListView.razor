@@ -351,7 +351,11 @@ else
             <TopBarButtons>
                 @*Boton para ir a la vista de importa, validar creacion ResoruceTag*@
 
-                <TopBarButton Click="GoToImport" ResourceTag="Action.Import" IconCssClass="fa-solid fa-file-import"/>
+                @if (CanImport)
+                {
+                    <TopBarButton Click="GoToImport" ResourceTag="Action.Import" IconCssClass="fa-solid fa-file-import"/>
+                }
+
 
                 @if(ShowSearchForm && HasSearchViewdef && !_isEditingFlex)
                 {

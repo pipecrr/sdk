@@ -173,6 +173,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private bool CanDelete;
         private bool CanDetail;
         private bool CanList;
+        private bool CanImport;
         private string defaultStyleSearchForm = "search_back position-relative";
         private string StyleSearchForm { get; set; } = "search_back position-relative";
         private Radzen.DataGridSelectionMode SelectionMode { get; set; } = Radzen.DataGridSelectionMode.Single;
@@ -438,6 +439,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     CanEdit = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Edit, AuthenticationService);
                     CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Delete, AuthenticationService);
                     CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
+                    CanImport = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Import, AuthenticationService);
                 }
                 catch (System.Exception)
                 {
