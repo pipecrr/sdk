@@ -120,19 +120,4 @@ else if (BusinessObj != null)
         MethodInfo method = BusinessObj.GetType().GetMethod("Main");
         return (RenderFragment)method.Invoke(BusinessObj, null);
     }
-
-   /* private async Task _initGenericView()
-    {
-        if(IsSubpanel && !String.IsNullOrEmpty(BLNameParentAttatchment) && BusinessName.Contains("Attachment"))
-        {
-            CanAccess = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.AccessAttachment, AuthenticationService);
-            await base.InitGenericView(BusinessName, true);
-        }
-    }*/
-
-    /*protected override async Task InitGenericView(string bName = null, bool disableAccessValidation = false)
-    {
-        await base.InitGenericView(bName, true);
-    }*/
-
 }

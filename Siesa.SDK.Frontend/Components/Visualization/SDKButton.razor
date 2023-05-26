@@ -53,7 +53,6 @@
     [Parameter] public List<int> ListPermission { get; set; }
     [Parameter] public string BusinessName { get; set; } 
 
-    [Parameter] public string BLNameParentAttatchment { get; set; }   
     private bool HasPermission = true;
     private string Text { get; set; }
 
@@ -89,16 +88,9 @@
         if(ListPermission != null && ListPermission.Count > 0)
         {
             HasPermission = false;
-
-            if(!string.IsNullOrEmpty(BusinessName) && BusinessName.Contains("Attachment") && !string.IsNullOrEmpty(BLNameParentAttatchment))
-            {
-                HasPermission = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.UploadAttachment, AuthenticationService);
-                
-            }else
-            {
-                
-                HasPermission = FeaturePermissionService.CheckUserActionPermissions(BusinessName, ListPermission, AuthenticationService);
-            }
+      
+            HasPermission = FeaturePermissionService.CheckUserActionPermissions(BusinessName, ListPermission, AuthenticationService);
+            
         }
         if(IsActionButton || (string.IsNullOrEmpty(ResourceTag) && (!RowidResource.HasValue || RowidResource == 0)))
         {

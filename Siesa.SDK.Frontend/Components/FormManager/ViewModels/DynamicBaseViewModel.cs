@@ -72,6 +72,25 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public DynamicViewType ViewType { get; set; }
 
         protected bool CanAccess { get; set; }
+
+
+        protected virtual async Task CheckAccessPermission()
+        {
+            if(!BusinessName.Contains("Attachment"))
+            {
+                CanAccess = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Access, AuthenticationService);
+            }else
+            {
+                CanAccess = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.AccessAttachment, AuthenticationService);
+            }
+
+            if(!CanAccess)
+            {
+                this.ErrorMsg = "Custom.Generic.Unauthorized";
+                ErrorList.Add("Custom.Generic.Unauthorized");
+            }
+            StateHasChanged();
+        }
         
         protected virtual async Task InitGenericView(string bName=null, bool disableAccessValidation = false)
         {
@@ -82,32 +101,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             businessModel = BackendRouterService.GetSDKBusinessModel(bName, AuthenticationService);
             if (businessModel != null)
             {   
-                if(!bName.Contains("Attachment"))
+                
+                try
                 {
-                    CanAccess = await FeaturePermissionService.CheckUserActionPermission(bName, enumSDKActions.Access, AuthenticationService);
-                }else
-                {
-                    CanAccess = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.AccessAttachment, AuthenticationService);
+                    businessType = Utilities.SearchType(businessModel.Namespace + "." + businessModel.Name); 
+                    BusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider, businessType);
+                    BusinessModel = businessModel;
+                    BusinessObj.BusinessName = bName;
                 }
-
-                if(!CanAccess && !disableAccessValidation)
+                catch (System.Exception e)
                 {
-                    this.ErrorMsg = "Custom.Generic.Unauthorized";
-                    ErrorList.Add("Custom.Generic.Unauthorized");
-                }else{
-                    try
-                    {
-                        businessType = Utilities.SearchType(businessModel.Namespace + "." + businessModel.Name); 
-                        BusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider, businessType);
-                        BusinessModel = businessModel;
-                        BusinessObj.BusinessName = bName;
-                    }
-                    catch (System.Exception e)
-                    {
-                        Console.WriteLine("Error BaseViewModel" + e.ToString());
-                        ErrorMsg = e.ToString();
-                        ErrorList.Add("Exception: "+e.ToString());
-                    }
+                    Console.WriteLine("Error BaseViewModel" + e.ToString());
+                    ErrorMsg = e.ToString();
+                    ErrorList.Add("Exception: "+e.ToString());
                 }
             }
             else
@@ -118,9 +124,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             StateHasChanged();
         }
 
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
-            base.OnInitialized();
+            await CheckAccessPermission();
+
+            await base.OnInitializedAsync();
+
             SetParameters(BusinessObj, BusinessName);
             if(BusinessObj != null){
                 long rowid;
@@ -167,7 +176,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                         ErrorMsg = "";
                         ErrorList = new List<string>();
 
-                        await base.SetParametersAsync(parameters);
+                        //await base.SetParametersAsync(parameters);
 
                         await InitGenericView(value);
                     }

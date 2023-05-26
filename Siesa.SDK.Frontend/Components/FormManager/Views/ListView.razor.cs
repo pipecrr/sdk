@@ -438,7 +438,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if (FeaturePermissionService != null && !string.IsNullOrEmpty(BusinessName))
             {
                
-               if(IsSubpanel && BusinessName.Contains("Attachment"))
+               if(IsSubpanel && BusinessName.Equals("BLAttachmentDetail"))
                {
                     try
                     {
@@ -466,7 +466,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     }
                }
 
-                if (!CanAccess && !FromEntityField && !(IsSubpanel && BusinessName.Contains("Attachment")))
+                if (!CanAccess && !FromEntityField && !(IsSubpanel && BusinessName.Equals("BLAttachmentDetail")))
                 {
                     ErrorMsg = "Custom.Generic.Unauthorized";
                     ErrorList.Add("Custom.Generic.Unauthorized");

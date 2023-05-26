@@ -350,7 +350,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         {
             if (FeaturePermissionService != null && !string.IsNullOrEmpty(BusinessName))
             {
-                if(IsSubpanel && BusinessName.Contains("Attachment"))
+                if(IsSubpanel && BusinessName.Equals("BLAttachmentDetail"))
                 {
                     try
                     {

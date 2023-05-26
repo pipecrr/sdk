@@ -23,7 +23,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         protected override async Task CheckPermissions()
         {
-            if(IsSubpanel && BusinessName.Contains("Attachment"))
+            if(IsSubpanel && BusinessName.Equals("BLAttachmentDetail"))
             {
                 try
                 {
