@@ -12,7 +12,7 @@
     @if(AllowCreate)
     {
 
-        <SDKButton BusinessName="@BusinessName" ListPermission="@ListPermission" CssClass="mb-1" RenderStyle="SDKButtonRenderStyle.Primary" Click="@(async ()=> { await OpenModalCreate(); })">
+        <SDKButton BusinessName="@BusinessName"  BLNameParentAttatchment="@BLNameParentAttatchment" ListPermission="@ListPermission" CssClass="mb-1" RenderStyle="SDKButtonRenderStyle.Primary" Click="@(async ()=> { await OpenModalCreate(); })">
             <ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer 
                 ResourceTag="@($"{BusinessName}.Singular")" />
         </SDKButton>
@@ -33,6 +33,7 @@
         AllowDetail="@AllowDetail"
         OnSelectedRow=@OnSelectedRow
         Data="@Data"
+        BLNameParentAttatchment="@BLNameParentAttatchment"
         />
 </div>
 

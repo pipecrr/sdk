@@ -1,5 +1,6 @@
 ﻿@page "/{BusinessName}/"
 @using System.Reflection
+@using Siesa.Global.Enums
 @attribute [Authorize]
 @using Microsoft.AspNetCore.Authorization
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
@@ -43,12 +44,17 @@ else if (BusinessObj != null)
     [Parameter] public dynamic businessObj { get; set; }
 
     [Parameter] public bool UseFlex { get; set; } = true;
+
     private RenderFragment RenderMain = null;
-    protected override void OnInitialized()
+
+    protected override async Task OnInitializedAsync()
     {
         ViewType = ViewModels.DynamicViewType.List;
-        base.OnInitialized();
+        await base.OnInitializedAsync();
+        
+
     }
+
     protected override void SetParameters(dynamic _businessObj, string businessName){
 
         RenderMain = GetRenderFragment();
@@ -72,6 +78,7 @@ else if (BusinessObj != null)
             new_params.Add("UseFlex", UseFlex);
             if (IsSubpanel)
             {
+                new_params.Add("BLNameParentAttatchment", BLNameParentAttatchment);
                 new_params.Add("IsSubpanel", true);
                 new_params.Add("SetTopBar", false);
                 if(!String.IsNullOrEmpty(SubpanelFilter))
@@ -113,5 +120,19 @@ else if (BusinessObj != null)
         MethodInfo method = BusinessObj.GetType().GetMethod("Main");
         return (RenderFragment)method.Invoke(BusinessObj, null);
     }
+
+   /* private async Task _initGenericView()
+    {
+        if(IsSubpanel && !String.IsNullOrEmpty(BLNameParentAttatchment) && BusinessName.Contains("Attachment"))
+        {
+            CanAccess = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.AccessAttachment, AuthenticationService);
+            await base.InitGenericView(BusinessName, true);
+        }
+    }*/
+
+    /*protected override async Task InitGenericView(string bName = null, bool disableAccessValidation = false)
+    {
+        await base.InitGenericView(bName, true);
+    }*/
 
 }

@@ -43,7 +43,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public IServiceProvider ServiceProvider { get; set; }
 
         [Inject]
-        private IAuthenticationService AuthenticationService {get; set;}
+        public IAuthenticationService AuthenticationService {get; set;}
 
         [Inject]
         private IBackendRouterService BackendRouterService {get; set;}
@@ -81,8 +81,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             }
             businessModel = BackendRouterService.GetSDKBusinessModel(bName, AuthenticationService);
             if (businessModel != null)
-            {
-                CanAccess = await FeaturePermissionService.CheckUserActionPermission(bName, enumSDKActions.Access, AuthenticationService);
+            {   
+                if(!bName.Contains("Attachment"))
+                {
+                    CanAccess = await FeaturePermissionService.CheckUserActionPermission(bName, enumSDKActions.Access, AuthenticationService);
+                }else
+                {
+                    CanAccess = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.AccessAttachment, AuthenticationService);
+                }
+
                 if(!CanAccess && !disableAccessValidation)
                 {
                     this.ErrorMsg = "Custom.Generic.Unauthorized";
@@ -159,6 +166,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                         BusinessModel = null;
                         ErrorMsg = "";
                         ErrorList = new List<string>();
+
+                        await base.SetParametersAsync(parameters);
 
                         await InitGenericView(value);
                     }

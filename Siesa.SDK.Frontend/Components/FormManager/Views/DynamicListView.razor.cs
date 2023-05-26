@@ -7,5 +7,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
     public partial class DynamicListView : DynamicBaseViewModel
     {
+        
     }
 }

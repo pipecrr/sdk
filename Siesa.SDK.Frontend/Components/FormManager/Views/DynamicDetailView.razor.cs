@@ -102,6 +102,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 parameters.Add("SetTopBar", false);
                 parameters.Add("ViewdefName", "related_detail");
+                parameters.Add("BLNameParentAttatchment", BLNameParentAttatchment);
             }
         }
 

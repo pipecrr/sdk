@@ -103,7 +103,7 @@ else if (ModelLoaded == true)
                         <TopBarButton Click="GoToEdit" ResourceTag="Action.Edit" IconCssClass="fa-solid fa-pen"  />
                     }
                 }
-                @if(CanList){
+                @if(CanAcess){
                     if(ListButton != null){
                         if(!ListButton.Hidden){
                             <TopBarButton Click="GoToList" ResourceTag="Action.List" IconCssClass="fa-solid fa-list" Enabled="@(!ListButton.Disabled)"/>

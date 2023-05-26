@@ -2,6 +2,7 @@
 @using Siesa.SDK.Frontend.Application
 @using Siesa.SDK.Shared.Services
 @using Microsoft.JSInterop
+@using Siesa.Global.Enums
 @using Microsoft.AspNetCore.Components
 @inject IResourceManager ResourceManager
 @inject IAuthenticationService AuthenticationService
@@ -50,7 +51,9 @@
     [Parameter] public bool SubmitFormOnClick { get; set; } =  false;
 
     [Parameter] public List<int> ListPermission { get; set; }
-    [Parameter] public string BusinessName { get; set; }    
+    [Parameter] public string BusinessName { get; set; } 
+
+    [Parameter] public string BLNameParentAttatchment { get; set; }   
     private bool HasPermission = true;
     private string Text { get; set; }
 
@@ -82,9 +85,18 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if(ListPermission != null && ListPermission.Count > 0){
-            if(!string.IsNullOrEmpty(BusinessName)){
-                HasPermission = false;
+        
+        if(ListPermission != null && ListPermission.Count > 0)
+        {
+            HasPermission = false;
+
+            if(!string.IsNullOrEmpty(BusinessName) && BusinessName.Contains("Attachment") && !string.IsNullOrEmpty(BLNameParentAttatchment))
+            {
+                HasPermission = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.UploadAttachment, AuthenticationService);
+                
+            }else
+            {
+                
                 HasPermission = FeaturePermissionService.CheckUserActionPermissions(BusinessName, ListPermission, AuthenticationService);
             }
         }

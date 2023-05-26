@@ -72,6 +72,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter]
         public bool FromEntityField {get; set;} = false;
 
+        [Parameter]
+        public string BLNameParentAttatchment { get; set; }
+
         [Inject]
         public ILocalStorageService localStorageService { get; set; }
 
@@ -168,11 +171,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private List<string> _extraFields = new List<string>();
 
+
+
         private bool CanCreate;
         private bool CanEdit;
         private bool CanDelete;
         private bool CanDetail;
-        private bool CanList;
+        private bool CanAccess;
         private bool CanImport;
         private string defaultStyleSearchForm = "search_back position-relative";
         private string StyleSearchForm { get; set; } = "search_back position-relative";
@@ -432,20 +437,36 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         {
             if (FeaturePermissionService != null && !string.IsNullOrEmpty(BusinessName))
             {
-                try
-                {
-                    CanList = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
-                    CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Create, AuthenticationService);
-                    CanEdit = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Edit, AuthenticationService);
-                    CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Delete, AuthenticationService);
-                    CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
-                    CanImport = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Import, AuthenticationService);
-                }
-                catch (System.Exception)
-                {
-                }
+               
+               if(IsSubpanel && BusinessName.Contains("Attachment"))
+               {
+                    try
+                    {
+                        CanAccess = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.AccessAttachment, AuthenticationService);
+                        CanCreate = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.UploadAttachment, AuthenticationService);
+                        CanDelete = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.DeleteAttachment, AuthenticationService);
+                        CanDetail = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.DownloadAttachment, AuthenticationService);
+                    }
+                    catch (System.Exception)
+                    {
+                    }
+               }else
+               {
+                    try
+                    {
+                        CanAccess = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Access, AuthenticationService);
+                        CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Create, AuthenticationService);
+                        CanEdit = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Edit, AuthenticationService);
+                        CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Delete, AuthenticationService);
+                        CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
+                        CanImport = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Import, AuthenticationService);
+                    }
+                    catch (System.Exception)
+                    {
+                    }
+               }
 
-                if (!CanList && !FromEntityField)
+                if (!CanAccess && !FromEntityField && !(IsSubpanel && BusinessName.Contains("Attachment")))
                 {
                     ErrorMsg = "Custom.Generic.Unauthorized";
                     ErrorList.Add("Custom.Generic.Unauthorized");
