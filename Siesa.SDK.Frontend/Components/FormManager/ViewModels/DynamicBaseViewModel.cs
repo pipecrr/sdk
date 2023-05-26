@@ -74,20 +74,23 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         protected bool CanAccess { get; set; }
 
 
-        protected virtual async Task CheckAccessPermission()
+        protected virtual async Task CheckAccessPermission(bool disableAccessValidation = false)
         {
-            if(!BusinessName.Contains("Attachment"))
+            if(!disableAccessValidation)
             {
-                CanAccess = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Access, AuthenticationService);
-            }else
-            {
-                CanAccess = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.AccessAttachment, AuthenticationService);
-            }
+                if(!BusinessName.Contains("Attachment"))
+                {
+                    CanAccess = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Access, AuthenticationService);
+                }else
+                {
+                    CanAccess = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.AccessAttachment, AuthenticationService);
+                }
 
-            if(!CanAccess)
-            {
-                this.ErrorMsg = "Custom.Generic.Unauthorized";
-                ErrorList.Add("Custom.Generic.Unauthorized");
+                if(!CanAccess)
+                {
+                    this.ErrorMsg = "Custom.Generic.Unauthorized";
+                    ErrorList.Add("Custom.Generic.Unauthorized");
+                }
             }
             StateHasChanged();
         }
@@ -101,7 +104,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             businessModel = BackendRouterService.GetSDKBusinessModel(bName, AuthenticationService);
             if (businessModel != null)
             {   
-                
                 try
                 {
                     businessType = Utilities.SearchType(businessModel.Namespace + "." + businessModel.Name); 

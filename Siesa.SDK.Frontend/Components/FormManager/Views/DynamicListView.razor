@@ -45,6 +45,8 @@ else if (BusinessObj != null)
 
     [Parameter] public bool UseFlex { get; set; } = true;
 
+    [Parameter] public bool IsEntityField {get; set;} 
+
     private RenderFragment RenderMain = null;
 
     protected override async Task OnInitializedAsync()
@@ -119,5 +121,13 @@ else if (BusinessObj != null)
         }
         MethodInfo method = BusinessObj.GetType().GetMethod("Main");
         return (RenderFragment)method.Invoke(BusinessObj, null);
+    }
+
+    protected override  async Task CheckAccessPermission(bool disableAccessValidation = false)
+    {
+        if(IsEntityField)
+        {
+            await base.CheckAccessPermission(true);
+        }
     }
 }

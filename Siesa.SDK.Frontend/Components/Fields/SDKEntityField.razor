@@ -104,7 +104,7 @@
     
     public async Task OpenModalList(){
         var filters = await GetFilters();
-        var listDialog = await SDKDialogService.ShowCustomDialog(ds => @<div><DynamicListView BusinessName="@RelatedBusiness" IsSubpanel=true  ShowTitle="false" OnSelectedRow="OnSelectedRow" SubpanelFilter="@filters" FromEntityField=true IsMultiple="@IsMultiple" SelectedItems="@ItemsSelected" businessObj="@RelBusinessObj"/>@if(IsMultiple){<div class="float-right pt-2"><SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Custom.EntityField.SelectButton" Click="@(() => SelectValues())"/></div>}
+        var listDialog = await SDKDialogService.ShowCustomDialog(ds => @<div><DynamicListView BusinessName="@RelatedBusiness" IsSubpanel=true  ShowTitle="false" OnSelectedRow="OnSelectedRow" SubpanelFilter="@filters" FromEntityField=true IsMultiple="@IsMultiple" SelectedItems="@ItemsSelected" businessObj="@RelBusinessObj" IsEntityField=true/>@if(IsMultiple){<div class="float-right pt-2"><SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Custom.EntityField.SelectButton" Click="@(() => SelectValues())"/></div>}
         </div>, width: "90%", title:$"{RelatedBusiness}.Singular");
         if(listDialog != null && listDialog){
             StateHasChanged();
