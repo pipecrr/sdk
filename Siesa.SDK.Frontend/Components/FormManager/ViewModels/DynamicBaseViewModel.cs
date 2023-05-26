@@ -128,8 +128,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         protected override async Task OnInitializedAsync()
         {
-            await CheckAccessPermission();
-
+            if(!string.IsNullOrEmpty(BusinessName))
+            {
+                await CheckAccessPermission();
+            } 
+            
             await base.OnInitializedAsync();
 
             SetParameters(BusinessObj, BusinessName);
