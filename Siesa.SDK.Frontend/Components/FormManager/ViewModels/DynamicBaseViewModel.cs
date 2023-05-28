@@ -128,7 +128,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         protected override async Task OnInitializedAsync()
         {
-            if(!string.IsNullOrEmpty(BusinessName))
+            if(!string.IsNullOrEmpty(BusinessName)) //TODO: Check if this is necessary
             {
                 await CheckAccessPermission();
             } 
