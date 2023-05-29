@@ -12,13 +12,15 @@
 
 
 <div class="row">
-    <div class="container-foto-perfil d-flex flex-row justify-content-center col-12 col-sm-12 col-md-4 col-lg-3">
+    <div
+        class="container-foto-perfil d-flex align-items-center justify-content-center col-12 col-sm-12 col-md-4 col-lg-3">
+
         <div class="whcm_user_photo_box">
-            <div class="whcm_user_photo" b-n0rbg4l243="">
-                <img src="assets/img/profile-pic.png" alt="imagen perfil" style="max-width: 100%;">
+            <div class="whcm_user_photo">
+                <img src="@ProfileImageData" alt="imagen perfil" style="max-width: 100%;">
             </div>
             <button class="whcm_upload_photo btn btn-primary btn_primary_def_1 btn-sm" data-toggle="tooltip"
-                data-placement="top" title="" data-original-title="Cambiar Foto">
+                data-placement="top" title="" data-original-title="Preferencias_Usuario">
                 <i class="fa-solid fa-camera"></i>
             </button>
         </div>
@@ -32,50 +34,52 @@
                 @if (_IsEdit)
                 {
                     <button class="btn btn-sm layout_btn_negative-sm mb-1" data-toggle="tooltip" data-placement="top"
-                    title="Editar" @onclick="@(()=> ChangeViewType())">
-                    <i class="fa-solid fa-circle-check"></i>
+                        title="Editar" @onclick="@(()=> ChangeViewType())">
+                        <i class="fa-solid fa-circle-check"></i>
                     </button>
 
                     <button class="btn btn-sm layout_btn_negative-sm mb-1" data-toggle="tooltip" data-placement="top"
-                    title="Editar" @onclick="@(()=> ChangeViewType())">
-                    <i class="fa-solid fa-ban"></i>
-                    </button>    
-                }else
+                        title="Editar" @onclick="@(()=> ChangeViewType())">
+                        <i class="fa-solid fa-ban"></i>
+                    </button>
+                }
+                else
                 {
                     <button class="btn btn-sm layout_btn_negative-sm mb-1" data-toggle="tooltip" data-placement="top"
-                    title="Editar" @onclick="@(()=> ChangeViewType())">
-                    <i class="fa-solid fa-pen"></i>
-                        </button>
+                        title="Editar" @onclick="@(()=> ChangeViewType())">
+                        <i class="fa-solid fa-pen"></i>
+                    </button>
                 }
-                
+
             </div>
             <div class="col pt-2">
                 <div class="row">
-                    <div class="col-12">
-                        <h6>
-                            <ResourceViewer ResourceTag="Custom.SDK.UserPreference.UserData"/>
-                        </h6>
-                    </div>
 
-                    <FreeForm Viewdef="user_preferences" BusinessName="BLUser" BusinessObj="@BLUser" Title="Prueba_FreeForm" ViewContext="@DynamicViewType" /> 
+                    <h6 class="col-12 font-weight-bold">
+                        <ResourceViewer ResourceTag="Custom.SDK.UserPreference.UserData" />
+                    </h6>
+
+
+                    <FreeForm Viewdef="user_preferences" BusinessName="BLUser" BusinessObj="@BLUser"
+                        Title="Prueba_FreeForm" ViewContext="@DynamicViewType" />
 
                     @* <div class="col-12 col-sm-6">
-                        <label class="col-form-label col-form-label-sm font-weight-bold">Nombre
-                            de usuario</label>
-                        <p class="font_size_087">pperezgarzon17</p>
+                    <label class="col-form-label col-form-label-sm font-weight-bold">Nombre
+                    de usuario</label>
+                    <p class="font_size_087">pperezgarzon17</p>
                     </div>
                     <div class="col-12 col-sm-6">
-                        <label class="col-form-label col-form-label-sm font-weight-bold">Contraseña</label>
-                        <p class="font_size_087">**********</p>
+                    <label class="col-form-label col-form-label-sm font-weight-bold">Contraseña</label>
+                    <p class="font_size_087">**********</p>
                     </div>
                     <div class="col-12 col-sm-6">
-                        <label class="col-form-label col-form-label-sm font-weight-bold">Correo</label>
-                        <p class="font_size_087">pperez@gmail.com</p>
+                    <label class="col-form-label col-form-label-sm font-weight-bold">Correo</label>
+                    <p class="font_size_087">pperez@gmail.com</p>
                     </div>
                     <div class="col-12 col-sm-6">
-                        <label class="col-form-label col-form-label-sm font-weight-bold">Cultura</label>
-                        <p class="font_size_087"><img src="assets/img/usa-flag.png"
-                                style="max-width: 21px; margin-right: 6px;">English</p>
+                    <label class="col-form-label col-form-label-sm font-weight-bold">Cultura</label>
+                    <p class="font_size_087"><img src="assets/img/usa-flag.png"
+                    style="max-width: 21px; margin-right: 6px;">English</p>
                     </div> *@
 
                     @* <DynamicEditView BusinessName="BLUser" BusinessObjId="1" IsSubpanel="true" ShowTitle="false"/> *@
@@ -92,17 +96,17 @@
     <div class="col-12 col-sm-12 mb-sm-3  col-md-12 col-lg-4 mb-lg-0 custom-border custom-border-2">
 
 
-        <div class="col-12 p-0">
-            <h6 class="siesa-color-title mb-3">
-                <ResourceViewer ResourceTag="Custom.SDK.UserPreference.Themes"/>
-                </h6>
-        </div>
+
+        <h6 class="col-12 font-weight-bold font_color_primary p-0 form-group">
+            <ResourceViewer ResourceTag="Custom.SDK.UserPreference.Themes" />
+        </h6>
+
 
 
         <div class="col px-0 mb-3">
 
             <label class="col-12 font-weight-bold p-0">
-                <ResourceViewer ResourceTag="Custom.SDK.UserPreference.MainThemes"/>
+                <ResourceViewer ResourceTag="Custom.SDK.UserPreference.MainThemes" />
             </label>
 
             <div id="carouselExampleControls" class="carousel slide" data-interval="false">
@@ -312,16 +316,15 @@
         <div class="alert alert-info d-flex align-items-center font_size_087" role="alert">
             <i class="fa-solid fa-circle-info mr-2"></i>
 
-            <ResourceViewer ResourceTag="Custom.SDK.UserPreference.Notifi"/>
+            <ResourceViewer ResourceTag="Custom.SDK.UserPreference.Notifi" />
         </div>
 
 
     </div>
 
     <div class="col-12 col-sm-12 mb-sm-3  col-md-12 col-lg-4 mb-lg-0 custom-border custom-border-2">
-        <div class="col-12 p-0">
-            <h6 class="siesa-color-title mb-3">Estilo de Ícono</h6>
-        </div>
+
+        <h6 class="col-12 font-weight-bold font_color_primary p-0 form-group">Estilo de Ícono</h6>
         <div class="row">
             <div class="col-12 col-sm-12">
                 <div class="row">
@@ -401,9 +404,9 @@
     </div>
 
     <div class="col-12 col-sm-12 col-md-12 col-lg-4">
-        <div class="col-12 p-0">
-            <h6 class="siesa-color-title mb-3">Barra de Herramientas</h6>
-        </div>
+
+        <h6 class="col-12 font-weight-bold font_color_primary p-0 form-group">Barra de Herramientas</h6>
+
         <div class="row">
 
             <div class="col-12 mb-3">
@@ -463,9 +466,10 @@
 
 @code
 {
+    private string ProfileImageData { get; set; }
     private bool _IsEdit = false;
     public DynamicViewType DynamicViewType { get; set; } = DynamicViewType.Detail;
-    public dynamic BLUser { get; set; } 
+    public dynamic BLUser { get; set; }
 
     private void ChangeViewType()
     {
@@ -473,13 +477,13 @@
 
         if (_IsEdit)
         {
-            DynamicViewType =  DynamicViewType.Edit;
+            DynamicViewType = DynamicViewType.Edit;
         }
         else
         {
             DynamicViewType = DynamicViewType.Detail;
-        }  
-        
+        }
+
         StateHasChanged();
     }
 
@@ -489,7 +493,10 @@
         BLUser = ActivatorUtilities.CreateInstance(ServiceProvider, blType);
         await BLUser.InitializeBusiness(AuthenticationService.User.Rowid);
         BLUser.BusinessName = "BLUser";
-        await base.OnInitializedAsync(); 
+
+        ProfileImageData = AuthenticationService.GetUserPhoto();
+
+        await base.OnInitializedAsync();
     }
 
 }

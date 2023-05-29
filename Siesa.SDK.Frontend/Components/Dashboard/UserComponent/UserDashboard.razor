@@ -6,7 +6,7 @@
 @using Siesa.SDK.Frontend.Components.Dashboard.UserComponent.SuiteControl
 @using Siesa.SDK.Entities
 @using Microsoft.Extensions.DependencyInjection
-@using Siesa.SDK.Frontend.Components.Dashboard 
+@using Siesa.SDK.Frontend.Components.Dashboard
 @using Siesa.SDK.Frontend.Components
 @inject IServiceProvider ServiceProvider
 
@@ -19,28 +19,31 @@
     <div class="whcm_user_photo_box">
 
         <div class="whcm_user_photo">
-            <img src="@ProfileImageData" alt="imagen perfil" style="max-width: 100%;" @onclick="@(()=> OpenModalPreferences())">
+            <img src="@ProfileImageData" alt="imagen perfil" style="max-width: 100%;"
+                @onclick="@(()=> OpenModalPreferences())">
         </div>
         <button class="whcm_upload_photo btn btn-primary btn_primary_def_1 btn-sm" data-toggle="tooltip"
-            data-placement="top" title="" data-original-title="Preferencias_Usuario" @onclick="@(()=> OpenModalPreferences())">
+            data-placement="top" title="" data-original-title="Preferencias_Usuario"
+            @onclick="@(()=> OpenModalPreferences())">
             <i class="fa-solid fa-gear"></i>
         </button>
-</div>
-  
+    </div>
+
 
     <div class="head_panel_btn">
-        <SDKButton  CssClass="btn btn-sm layout_btn_standar-sm" RenderStyle="SDKButtonRenderStyle.None"> 
+        <SDKButton CssClass="btn btn-sm layout_btn_standar-sm" RenderStyle="SDKButtonRenderStyle.None">
             <i class="fa-solid fa-bell"></i>
-            @if(NotificationAmount != "0" && NotificationAmount != null){
+            @if (NotificationAmount != "0" && NotificationAmount != null)
+            {
                 <SDKBadge Style="SDKBadgeStyle.Primary" Value="@NotificationAmount" IsPill="true" />
-            }    
+            }
         </SDKButton>
-        @* <SDKButton  CssClass="btn btn-sm layout_btn_standar-sm" RenderStyle="SDKButtonRenderStyle.None"> 
-            <i class="fa-solid fa-gear"></i>
+        @* <SDKButton CssClass="btn btn-sm layout_btn_standar-sm" RenderStyle="SDKButtonRenderStyle.None">
+        <i class="fa-solid fa-gear"></i>
         </SDKButton> *@
 
-         <SDKButton ResourceTag="SDK.DashBoard.Dashlets" CssClass="btn btn-sm layout_btn_standar-sm" 
-         RenderStyle="SDKButtonRenderStyle.None" Click="@ActionClick"> 
+        <SDKButton ResourceTag="SDK.DashBoard.Dashlets" CssClass="btn btn-sm layout_btn_standar-sm"
+            RenderStyle="SDKButtonRenderStyle.None" Click="@ActionClick">
             <i class="fa-solid fa-cubes"></i>
         </SDKButton>
     </div>
@@ -55,12 +58,14 @@
                 </label>
             </div>
             <div class="whcm_panel_user whcm_panel_user_home px-3 col-12 col-md-12 col-lg-8">
-                <p class="font_color_primary_dark mb-0"><ResourceViewer ResourceTag="BLMainDashBoard.Dashboard.Welcome" /> </p>
+                <p class="font_color_primary_dark mb-0">
+                    <ResourceViewer ResourceTag="BLMainDashBoard.Dashboard.Welcome" />
+                </p>
                 <p class="font_color_primary mb-0">
                     @UserName
                 </p>
             </div>
-            <SuiteComponent/>
+            <SuiteComponent />
         </div>
     </div>
 
@@ -72,21 +77,21 @@
     [Parameter] public EventCallback<MouseEventArgs> Click { get; set; }
 
     private string NotificationAmount;
-    private string CompanyImg {get; set;}
-    private dynamic Business {get; set;}
+    private string CompanyImg { get; set; }
+    private dynamic Business { get; set; }
 
 
-    private SDKUpload sdkuploadRef {get; set;}
+    private SDKUpload sdkuploadRef { get; set; }
     public List<string> FileExtensions = new(){
-            ".jpg", ".png", ".jpeg"
-        };
-    private string UserName {get; set;}
-    private string ProfileImageData {get; set;}
-    private string CompanyName {get; set;}
+".jpg", ".png", ".jpeg"
+            };
+    private string UserName { get; set; }
+    private string ProfileImageData { get; set; }
+    private string CompanyName { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        
+
         UserName = AuthenticationService.User.Name;
         ProfileImageData = AuthenticationService.GetUserPhoto();
         await SetCompanyImg();
@@ -94,7 +99,7 @@
         await base.OnInitializedAsync();
     }
 
-    private void ActionClick (MouseEventArgs Event)
+    private void ActionClick(MouseEventArgs Event)
     {
         if (Click.HasDelegate)
         {
@@ -103,42 +108,49 @@
         }
     }
 
-    private async Task onClickCamera(){
+    private async Task onClickCamera()
+    {
         await sdkuploadRef.OpenFileSelector();
     }
 
-    private async Task GetCompany(){
+    private async Task GetCompany()
+    {
         var rowid = AuthenticationService.User.RowidCompanyGroup;
 
         var companyBL = BackendRouterService.GetSDKBusinessModel("BLCompanyGroup", AuthenticationService);
 
-        if(companyBL is null)
+        if (companyBL is null)
         {
             return;
         }
 
         var Request = await companyBL.Call("GetCompanyGroup", rowid);
 
-        if(Request.Success){
+        if (Request.Success)
+        {
             var CompanyGroup = Request.Data;
             CompanyName = CompanyGroup.Name;
         }
 
     }
 
-    public void SetNotificationAmount(int Number){
-        if (Number > 10){
+    public void SetNotificationAmount(int Number)
+    {
+        if (Number > 10)
+        {
             NotificationAmount = "9+";
         }
         NotificationAmount = Number.ToString();
         StateHasChanged();
     }
 
-    public void OnComplete(SDKUploadCompleteEventArgsDTO args){
+    public void OnComplete(SDKUploadCompleteEventArgsDTO args)
+    {
 
     }
 
-    public void OnError(SDKUploadErrorEventArgsDTO args){
+    public void OnError(SDKUploadErrorEventArgsDTO args)
+    {
 
     }
 
@@ -152,5 +164,5 @@
         var modal = DialogService.ShowCustomDialog(ds => @<UserPreferences />, title: "Custom.SDK.UserPreference", standardWidth: SDKModalWidth.Large);
 
     }
-	
+
 }
