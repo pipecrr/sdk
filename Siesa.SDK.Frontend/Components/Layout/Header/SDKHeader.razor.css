@@ -2,7 +2,7 @@
 .sdk_header{
     height: 48px;
     width: 100%;
-    background: var(--color_primary);
+    background: var(--color_primary_header);
     box-shadow: var(--shadow_standar);
     position: fixed !important;
     z-index: 3;
@@ -115,7 +115,7 @@
     min-width: 268px;
     max-width: 268px;
     border-radius: var(--border_radius_standar);
-    background-color: var(--color_light);
+    background-color: var(--color_panel_back);
     position: absolute;
     top: 42px;
     right: -2px;
@@ -132,7 +132,7 @@
     right: 15px;
     border-top: 0px solid transparent;
     border-right: 9px solid transparent;
-    border-bottom: 9px solid white;
+    border-bottom: 9px solid var(--color_panel_back);
     border-left: 9px solid transparent;
 }
 .connect_select_search {
@@ -142,6 +142,7 @@
     width: calc(100% - 2rem);
     border: none;
     border-radius: var(--border_radius_standar);
+    outline: none !important;
     /* background: none; */
 }
 .connect_select_search>div>button {
@@ -155,6 +156,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    outline: none !important;
 }
 .whcm_logo_compania{
     max-height: 32px;
