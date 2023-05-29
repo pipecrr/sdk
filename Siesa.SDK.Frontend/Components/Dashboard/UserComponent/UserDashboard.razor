@@ -7,6 +7,7 @@
 @using Siesa.SDK.Entities
 @using Microsoft.Extensions.DependencyInjection
 @using Siesa.SDK.Frontend.Components.Dashboard 
+@using Siesa.SDK.Frontend.Components
 @inject IServiceProvider ServiceProvider
 
 @inject SDKDialogService DialogService
@@ -18,10 +19,12 @@
     <div class="whcm_user_photo_box">
 
         <div class="whcm_user_photo">
-           
-            <img src="@ProfileImageData" alt="imagen perfil" style="max-width: 100%;">
-     
+            <img src="@ProfileImageData" alt="imagen perfil" style="max-width: 100%;" @onclick="@(()=> OpenModalPreferences())">
         </div>
+        <button class="whcm_upload_photo btn btn-primary btn_primary_def_1 btn-sm" data-toggle="tooltip"
+            data-placement="top" title="" data-original-title="Preferencias_Usuario" @onclick="@(()=> OpenModalPreferences())">
+            <i class="fa-solid fa-gear"></i>
+        </button>
 </div>
   
 
@@ -32,9 +35,9 @@
                 <SDKBadge Style="SDKBadgeStyle.Primary" Value="@NotificationAmount" IsPill="true" />
             }    
         </SDKButton>
-        <SDKButton  CssClass="btn btn-sm layout_btn_standar-sm" RenderStyle="SDKButtonRenderStyle.None"> 
+        @* <SDKButton  CssClass="btn btn-sm layout_btn_standar-sm" RenderStyle="SDKButtonRenderStyle.None"> 
             <i class="fa-solid fa-gear"></i>
-        </SDKButton>
+        </SDKButton> *@
 
          <SDKButton ResourceTag="SDK.DashBoard.Dashlets" CssClass="btn btn-sm layout_btn_standar-sm" 
          RenderStyle="SDKButtonRenderStyle.None" Click="@ActionClick"> 
@@ -142,6 +145,12 @@
     public async Task SetCompanyImg()
     {
         CompanyImg = AuthenticationService.GetConnectionLogo();
+    }
+
+    private void OpenModalPreferences()
+    {
+        var modal = DialogService.ShowCustomDialog(ds => @<UserPreferences />, title: "Custom.SDK.UserPreference", standardWidth: SDKModalWidth.Large);
+
     }
 	
 }

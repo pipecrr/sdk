@@ -6,12 +6,14 @@
 @using Siesa.SDK.Frontend.Components.Layout.Menu
 @using Siesa.SDK.Shared.Services
 @using Siesa.Global.Enums
+@using Siesa.SDK.Frontend.Components.Dashboard.UserComponent
 @inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavigationManager
 @using Siesa.SDK.Frontend.Services
 @inject MenuService MenuService
 @inject UtilsManager UtilManager
 @inject SDKNotificationService NotificationService
+@inject SDKDialogService DialogService
 
 <input type="checkbox" name="" checked id="menu">
     <label class="sdk_nav_head" for="menu">
@@ -68,7 +70,7 @@
             </a>
             @if (AuthenticationService.User != null)
             {
-                <div class="nav_profile_btn" @onclick="@(()=> ShowProfileMenu())" data-automation-id="Button_ShowProfileMenu">
+                <div class="nav_profile_btn" @onclick="@(()=> OpenModalPreferences())" data-automation-id="Button_ShowProfileMenu">
                     <div class="nav_btn_standar_icon nav_profile_photo">
                         <img src="@UserPhoto" height="36px" alt="imagen perfil">
                     </div>
@@ -185,6 +187,13 @@
         SelectedMenu = ProfileMenu;
         StateHasChanged();
     }
+    private void OpenModalPreferences()
+    {
+        var modal = DialogService.ShowCustomDialog(ds => 
+        @<UserPreferences />, title: "Preferencias de usuario", standardWidth: SDKModalWidth.Large);
+
+    }
+	
 
     private async Task SetSuite(E00061_Menu _tempMenu)
     {
