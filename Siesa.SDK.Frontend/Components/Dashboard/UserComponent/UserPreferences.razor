@@ -345,7 +345,7 @@
 
         await base.OnInitializedAsync();
     }
-
+    
     private async Task SaveUserPreferences()
     {
         var BL = BackendRouterService.GetSDKBusinessModel("BLUser",AuthenticationService);
@@ -355,7 +355,7 @@
         if (result.Success)
         {
             Console.WriteLine("Success Save Changes");
-            DialogService.Close(true)
+            DialogService.Close(true);
         }
 
     }

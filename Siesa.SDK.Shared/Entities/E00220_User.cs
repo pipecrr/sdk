@@ -35,6 +35,7 @@ namespace Siesa.SDK.Entities
 		[SDKStringLength(1024)]
 		public string Path { get; set; }
 
+		[SDKSensitiveData]
 		[SDKDataEncrypt]
 		[SDKStringLength(128)]
 		public string? Password { get; set; }
