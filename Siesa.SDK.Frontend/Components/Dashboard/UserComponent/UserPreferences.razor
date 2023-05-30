@@ -4,11 +4,14 @@
 @using Siesa.SDK.Frontend.Components.FormManager
 @using Siesa.SDK.Shared.Utilities
 @using Microsoft.Extensions.DependencyInjection
-@using Siesa.SDK.Frontend.Components.FormManager.Views
+@using Siesa.SDK.Shared.DTOS
 @using Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
 @inject IServiceProvider ServiceProvider
 @inject IAuthenticationService AuthenticationService
+@inject IBackendRouterService BackendRouterService
+@inject SDKDialogService DialogService
+
 
 
 <div class="row">
@@ -59,31 +62,8 @@
                         <ResourceViewer ResourceTag="Custom.SDK.UserPreference.UserData" />
                     </h6>
 
-
                     <FreeForm Viewdef="user_preferences" BusinessName="BLUser" BusinessObj="@BLUser"
-                        Title="Prueba_FreeForm" ViewContext="@DynamicViewType" />
-
-                    @* <div class="col-12 col-sm-6">
-                    <label class="col-form-label col-form-label-sm font-weight-bold">Nombre
-                    de usuario</label>
-                    <p class="font_size_087">pperezgarzon17</p>
-                    </div>
-                    <div class="col-12 col-sm-6">
-                    <label class="col-form-label col-form-label-sm font-weight-bold">Contraseña</label>
-                    <p class="font_size_087">**********</p>
-                    </div>
-                    <div class="col-12 col-sm-6">
-                    <label class="col-form-label col-form-label-sm font-weight-bold">Correo</label>
-                    <p class="font_size_087">pperez@gmail.com</p>
-                    </div>
-                    <div class="col-12 col-sm-6">
-                    <label class="col-form-label col-form-label-sm font-weight-bold">Cultura</label>
-                    <p class="font_size_087"><img src="assets/img/usa-flag.png"
-                    style="max-width: 21px; margin-right: 6px;">English</p>
-                    </div> *@
-
-                    @* <DynamicEditView BusinessName="BLUser" BusinessObjId="1" IsSubpanel="true" ShowTitle="false"/> *@
-
+                        ViewContext="@DynamicViewType" />
 
                 </div>
             </div>
@@ -93,312 +73,137 @@
 <hr>
 
 <div class="row">
+        <div class="col-12 col-sm-12 mb-sm-3  col-md-12 col-lg-4 mb-lg-0 custom-border custom-border-2">
+            <h6 class="col-12 font-weight-bold font_color_primary p-0 form-group">
+                <ResourceViewer ResourceTag="Custom.SDK.UserPreference.Themes" />
+            </h6>
+
+            <div class="col px-0 mb-3">
+                <label class="col-12 font-weight-bold p-0">
+                    <ResourceViewer ResourceTag="Custom.SDK.UserPreference.MainThemes" />
+                </label>
+
+                <div id="carouselExampleControls" class="carousel slide" data-interval="false">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <div class="row px-4" alt="First slide">
+                                @if (_userPreferences != null && _userPreferences.ThemeColor != null)
+                                { 
+                                    @foreach (var theme in _userPreferences.ThemeColor)
+                                    {
+                                        <div class="col-4 ">
+                                            <div class="sdk_card p-2 mb-2">
+                                                <div class="d-flex justify-content-between">
+                                                    <div class="col-12 pl-0 pr-0">
+                                                        <div
+                                                            style="background-color:@theme.Value; border-radius: 4px; height: 20px;">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <input class="mr-2" type="radio" name="ThemeColor" value="@theme.Value">
+                                                <label class="mb-0"  style="font-size: 14px;">@theme.Key</label>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <a class="carousel-control-prev" href="#carouselExampleControls" role="butto" style="opacity: 1;width: auto;"
+                        data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true">
+                            <i class="fa-solid fa-chevron-left" style="color:#1079FD"></i>
+                        </span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExampleControls" role="button" style="opacity: 1;width: auto;"
+                        data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true">
+                            <i class="fa-solid fa-chevron-right" style="color:#1079FD;"></i>
+                        </span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+             </div>
+             
+            <div class="col px-0 mb-3">
+                <label class="col-12 font-weight-bold p-0">
+                    <ResourceViewer ResourceTag="Custom.SDK.UserPreference.ComplementaryColor" />
+                </label>
+
+                <div class="row">
+                    @if (_userPreferences != null && _userPreferences.ComplementaryColors != null)
+                    {
+                        @foreach (var item in _userPreferences.ComplementaryColors)
+                        {   
+                            <div class="col-4 ">
+                                    <div class="sdk_card p-2 mb-2">
+                                        <div class="d-flex justify-content-between">
+
+                                            <div class="col-6 pl-0 pr-1">
+                                                <div
+                                                    style="background-color:@item.PrimaryColor; border-radius: 4px; height: 20px;">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-6 pr-0 pl-1">
+                                                <div
+                                                    style="background-color:@item.SecundaryColor; border-radius: 4px; height: 20px;">
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="d-flex align-items-center">
+                                        <input class="mr-2" type="radio" name="ComplementartColor" value="@item.ColorName">
+                                        <label class="mb-0" style="font-size: 14px;">@item.ColorName</label>
+                                    </div>
+
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="alert alert-info d-flex align-items-center font_size_087" role="alert">
+                <i class="fa-solid fa-circle-info mr-2"></i>
+                 <ResourceViewer ResourceTag="Custom.SDK.UserPreference.Notifi" />
+            </div>
+        </div>
+             
+
     <div class="col-12 col-sm-12 mb-sm-3  col-md-12 col-lg-4 mb-lg-0 custom-border custom-border-2">
-
-
 
         <h6 class="col-12 font-weight-bold font_color_primary p-0 form-group">
-            <ResourceViewer ResourceTag="Custom.SDK.UserPreference.Themes" />
+        <ResourceViewer ResourceTag="Custom.SDK.UserPreference.IconStyle" />
         </h6>
-
-
-
-        <div class="col px-0 mb-3">
-
-            <label class="col-12 font-weight-bold p-0">
-                <ResourceViewer ResourceTag="Custom.SDK.UserPreference.MainThemes" />
-            </label>
-
-            <div id="carouselExampleControls" class="carousel slide" data-interval="false">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <div class="row px-4" alt="First slide">
-                            <div class="col-4 ">
-
-                                <div class="sdk_card p-2 mb-2">
-                                    <div class="d-flex justify-content-between">
-
-                                        <div class="col-12 pl-0 pr-0">
-                                            <div style="background-color:#1079FD; border-radius: 4px; height: 20px;">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <div class="d-flex align-items-center">
-                                    <input class="mr-2" type="radio" id="azul-siesa" value="Azul Siesa">
-                                    <label class="mb-0" for="azul-siesa" style="font-size: 14px;">Azul Siesa</label>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div class="row px-4" alt="Second slide">
-                            <div class="col-4 ">
-
-                                <div class="sdk_card p-2 mb-2">
-                                    <div class="d-flex justify-content-between">
-
-                                        <div class="col-12 pl-0 pr-0">
-                                            <div style="background-color:#C45824; border-radius: 4px; height: 20px;">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <div class="d-flex align-items-center">
-                                    <input class="mr-2" type="radio" id="terracota" value="Terracota">
-                                    <label class="mb-0" for="terracota" style="font-size: 14px;">Terracota</label>
-                                </div>
-
-                            </div>
-
-                            <div class="col-4 ">
-
-                                <div class="sdk_card p-2 mb-2">
-                                    <div class="d-flex justify-content-between">
-
-                                        <div class="col-12 pl-0 pr-0">
-                                            <div style="background-color:#9B111E; border-radius: 4px; height: 20px;">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <div class="d-flex align-items-center">
-                                    <input class="mr-2" type="radio" id="rubi" value="Rubí">
-                                    <label class="mb-0" for="rubi" style="font-size: 14px;">Rubí</label>
-                                </div>
-
-                            </div>
-
-                            <div class="col-4 ">
-
-                                <div class="sdk_card p-2 mb-2">
-                                    <div class="d-flex justify-content-between">
-
-                                        <div class="col-12 pl-0 pr-0">
-                                            <div style="background-color:#4C2882; border-radius: 4px; height: 20px;">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <div class="d-flex align-items-center">
-                                    <input class="mr-2" type="radio" id="violeta" value="Violeta">
-                                    <label class="mb-0" for="violeta" style="font-size: 14px;">Violeta</label>
-                                </div>
-
-                            </div>
-
-
-
-
-                        </div>
-                    </div>
-
-                </div>
-                <a class="carousel-control-prev" href="#carouselExampleControls" role="butto"
-                    style="opacity: 1;width: auto;" data-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true">
-                        <i class="fa-solid fa-chevron-left" style="color:#1079FD"></i>
-                    </span>
-                    <span class="sr-only">Previous</span>
-                </a>
-                <a class="carousel-control-next" href="#carouselExampleControls" role="button"
-                    style="opacity: 1;width: auto;" data-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true">
-                        <i class="fa-solid fa-chevron-right" style="color:#1079FD;"></i>
-                    </span>
-                    <span class="sr-only">Next</span>
-                </a>
-            </div>
-
-
-        </div>
-
-
-        <div class="col px-0 mb-3">
-
-            <label class="col-12 font-weight-bold p-0">Color complementario (opcional)</label>
-
-            <div class="row">
-                <div class="col-4 ">
-
-                    <div class="sdk_card p-2 mb-2">
-                        <div class="d-flex justify-content-between">
-
-                            <div class="col-6 pl-0 pr-1">
-                                <div style="background-color:#1079FD; border-radius: 4px; height: 20px;">
-                                </div>
-                            </div>
-
-                            <div class="col-6 pr-0 pl-1">
-                                <div style="background-color: rgba(0, 26, 174, 0.4); border-radius: 4px; height: 20px;">
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="d-flex align-items-center">
-                        <input class="mr-2" type="radio" id="untono" value="1 Tono">
-                        <label class="mb-0" for="untono" style="font-size: 14px;">1 Tono</label>
-                    </div>
-
-                </div>
-
-                <div class="col-4 ">
-
-                    <div class="sdk_card p-2 mb-2">
-                        <div class="d-flex justify-content-between">
-
-                            <div class="col-6 pl-0 pr-1">
-                                <div style="background-color:#1079FD; border-radius: 4px; height: 20px;">
-                                </div>
-                            </div>
-
-                            <div class="col-6 pr-0 pl-1">
-                                <div style="background-color: #00AE3C; border-radius: 4px; height: 20px;">
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="d-flex align-items-center">
-                        <input class="mr-2" type="radio" id="+verde" value="+Verde">
-                        <label class="mb-0" for="+verde" style="font-size: 14px;">+Verde</label>
-                    </div>
-
-                </div>
-
-                <div class="col-4 ">
-
-                    <div class="sdk_card p-2 mb-2">
-                        <div class="d-flex justify-content-between">
-
-                            <div class="col-6 pl-0 pr-1">
-                                <div style="background-color:#1079FD; border-radius: 4px; height: 20px;">
-                                </div>
-                            </div>
-
-                            <div class="col-6 pr-0 pl-1">
-                                <div style="background-color:#FF8E2C; border-radius: 4px; height: 20px;">
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="d-flex align-items-center">
-                        <input class="mr-2" type="radio" id="+naranja" value="+Naranja">
-                        <label class="mb-0" for="+naranja" style="font-size: 14px;">+Naranja</label>
-                    </div>
-
-                </div>
-
-
-            </div>
-
-
-
-        </div>
-
-        <div class="alert alert-info d-flex align-items-center font_size_087" role="alert">
-            <i class="fa-solid fa-circle-info mr-2"></i>
-
-            <ResourceViewer ResourceTag="Custom.SDK.UserPreference.Notifi" />
-        </div>
-
-
-    </div>
-
-    <div class="col-12 col-sm-12 mb-sm-3  col-md-12 col-lg-4 mb-lg-0 custom-border custom-border-2">
-
-        <h6 class="col-12 font-weight-bold font_color_primary p-0 form-group">Estilo de Ícono</h6>
         <div class="row">
             <div class="col-12 col-sm-12">
                 <div class="row">
-                    <div class="col-4 mb-3">
+                    @if (_userPreferences != null && _userPreferences.IconStyle != null)
+                    {    
+                        @foreach (var icon in _userPreferences.IconStyle)
+                        {    
+                            <div class="col-4 mb-3">
+                                <div class="sdk_card d-flex justify-content-center rounded p-4 mb-2">
+                                    <i class="@icon.Value" style="color:#1079FD;"></i>
+                                </div>
 
-                        <div class="sdk_card d-flex justify-content-center rounded p-4 mb-2">
-                            <i class="fa-solid fa-user fa-2x" style="color:#1079FD;"></i>
-                        </div>
-
-                        <div class="d-flex align-items-center">
-                            <input class="mr-2" type="radio" id="solid" value="Sólido">
-                            <label class="mb-0" for="solid" style="font-size: 14px;">Sólido</label>
-                        </div>
-
-                    </div>
-
-                    <div class="col-4 mb-3">
-
-                        <div class="sdk_card d-flex justify-content-center rounded p-4 mb-2">
-                            <i class="fa-regular fa-user fa-2x" style="color:#1079FD;"></i>
-                        </div>
-
-                        <div class="d-flex align-items-center">
-                            <input class="mr-2" type="radio" id="medio" value="Medio">
-                            <label class="mb-0" for="medio" style="font-size: 14px;">Medio</label>
-                        </div>
-
-                    </div>
-
-                    <div class="col-4 mb-3">
-
-                        <div class="sdk_card d-flex justify-content-center rounded p-4 mb-2">
-                            <i class="fa-light fa-user fa-2x" style="color:#1079FD;"></i>
-                        </div>
-
-                        <div class="d-flex align-items-center">
-                            <input class="mr-2" type="radio" id="ligero" value="Ligero">
-                            <label class="mb-0" for="ligero" style="font-size: 14px;">Ligero</label>
-                        </div>
-
-                    </div>
-
-                    <div class="col-4 mb-3">
-
-                        <div class="sdk_card d-flex justify-content-center rounded p-4 mb-2">
-                            <i class="fa-thin fa-user fa-2x" style="color:#1079FD;"></i>
-                        </div>
-
-                        <div class="d-flex align-items-center">
-                            <input class="mr-2" type="radio" id="delgado" value="Delgado">
-                            <label class="mb-0" for="delgado" style="font-size: 14px;">Delgado</label>
-                        </div>
-
-                    </div>
-
-                    <div class="col-4">
-
-                        <div class="sdk_card d-flex justify-content-center rounded p-4 mb-2">
-                            <i class="fa-duotone fa-user fa-2x" style="color:#1079FD;"></i>
-                        </div>
-
-                        <div class="d-flex align-items-center">
-                            <input class="mr-2" type="radio" id="duotono" value="Duotono">
-                            <label class="mb-0" for="duotono" style="font-size: 14px;">Duotono</label>
-                        </div>
-
-                    </div>
-
+                                <div class="d-flex align-items-center">
+                                    <input class="mr-2" type="radio" name="IconStyle"  value="@icon.Value">
+                                    <label class="mb-0"  style="font-size: 14px;">@icon.Key</label>
+                                </div>
+                            </div>
+                        }
+                    }
                 </div>
 
-
             </div>
-
-
 
         </div>
     </div>
@@ -450,16 +255,21 @@
     </div>
 </div>
 
+
+
 <div class="row modal-footer pb-0">
-    <button class="btn btn-primary btn_secondary_def_1 btn-sm px-3  ">Descartar
-        cambios</button>
+    <button class="btn btn-primary btn_secondary_def_1 btn-sm px-3" @onclick="@(async () => await InitView())">
+      <ResourceViewer ResourceTag="Custom.SDK.UserPreference.DiscardChanges" />
+    </button>
 
 
-    <button class="btn btn-primary btn_secondary_cancel btn-sm px-3 ">Salir</button>
+    <button class="btn btn-primary btn_secondary_cancel btn-sm px-3" @onclick="@(()=> DialogService.Close(false))" >
+        <ResourceViewer ResourceTag="Custom.SDK.UserPreference.Out" />
+    </button>
 
-
-
-    <button class="btn btn-primary btn_primary_def_1 btn-sm px-3">Guardar</button>
+    <button class="btn btn-primary btn_primary_def_1 btn-sm px-3" @onclick="@(async () => await SaveUserPreferences())">
+        <ResourceViewer ResourceTag="Action.Save" />
+    </button>
 
 
 </div>
@@ -470,6 +280,8 @@
     private bool _IsEdit = false;
     public DynamicViewType DynamicViewType { get; set; } = DynamicViewType.Detail;
     public dynamic BLUser { get; set; }
+
+    private UserPreferencesDTO _userPreferences { get; set; }
 
     private void ChangeViewType()
     {
@@ -487,19 +299,64 @@
         StateHasChanged();
     }
 
-    protected override async Task OnInitializedAsync()
+    private async Task InitView()
     {
         var blType = Utilities.SearchType("Siesa.MasterBackend.Business.BLUser");
+
         BLUser = ActivatorUtilities.CreateInstance(ServiceProvider, blType);
+
         await BLUser.InitializeBusiness(AuthenticationService.User.Rowid);
+
         BLUser.BusinessName = "BLUser";
 
         ProfileImageData = AuthenticationService.GetUserPhoto();
 
+        //TODO: _userPreferences 
+
+        _userPreferences = new UserPreferencesDTO() 
+        {
+            ThemeColor = new Dictionary<string, string>() 
+            {
+                { "Azul Siesa", "#1079FD" },
+                { "Naranja", "#00AE3C" },
+                { "Verde", "#FF8E2C" },
+            },
+            IconStyle = new Dictionary<string, string>() 
+            {
+                { "Solid", "fa-solid fa-user fa-2x" },
+                { "Regular", "fa-regular fa-user fa-2x" },
+                { "Light", "fa-light fa-user fa-2x" },
+                { "Duotone", "fa-duotone fa-user fa-2x" },
+            },
+            ComplementaryColors = new List<ComplementaryColor>()
+            {
+                new ComplementaryColor() { ColorName = "Tono1", PrimaryColor = "#9B111E", SecundaryColor="#4C2882"  },
+                new ComplementaryColor() { ColorName = "Tono2", PrimaryColor = "#4C2882", SecundaryColor="#9B111E" }
+            }
+            
+        };
+
+        StateHasChanged();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await InitView();
+
         await base.OnInitializedAsync();
     }
 
+    private async Task SaveUserPreferences()
+    {
+        var BL = BackendRouterService.GetSDKBusinessModel("BLUser",AuthenticationService);
+
+        var result = await BL.Call("SaveUserPreferences", BLUser.BaseObj );
+
+        if (result.Success)
+        {
+            Console.WriteLine("Success Save Changes");
+            DialogService.Close(true)
+        }
+
+    }
 }
-
-
-
