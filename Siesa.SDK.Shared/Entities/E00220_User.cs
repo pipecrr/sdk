@@ -127,6 +127,12 @@ namespace Siesa.SDK.Entities
 		[SDKStringLength(50)]
 		public string? ThemeSecondaryColor { get; set; }
 
+		[SDKRequired]
+		public enumThemeIconStyle ThemeIconStyle { get; set; } = enumThemeIconStyle.Solid;
+
+		[SDKRequired]
+		public enumThemeTopbarStyle ThemeTopbarStyle { get; set; } = enumThemeTopbarStyle.OneColor;
+
 
 		[SDKCheckRelationship]
 		[SDKRequired]
