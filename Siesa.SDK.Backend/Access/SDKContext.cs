@@ -25,6 +25,8 @@ namespace Siesa.SDK.Backend.Access
 {
     public class SDKContext : DbContext
     {
+	public DbSet<E00500_IntegrationLog>? E00500_IntegrationLog { get; set; }
+
 	public DbSet<E00231_FlexDelta>? E00231_FlexDelta { get; set; }
 
 	public DbSet<E00222_UserAccessSchedulingJournal>? E00222_UserAccessSchedulingJournal { get; set; }

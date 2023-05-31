@@ -1,0 +1,149 @@
+@using Microsoft.AspNetCore.Components.Forms
+@using Siesa.SDK.Frontend.Components
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Shared.Application
+@using Microsoft.Extensions.DependencyInjection
+@using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Shared.Utilities
+@using Microsoft.AspNetCore.Http
+@using System.IO
+
+
+
+@inherits SDKComponent
+
+@inject IJSRuntime JSRuntime
+@inject IBackendRouterService BackendRouterService
+@inject IAuthenticationService AuthenticationService
+@inject IServiceProvider ServiceProvider
+
+<div class="file-upload-container">
+
+    <div class="input-container">
+        <InputFile OnChange="@_OnChange" multiple="@IsMultiple" style="width: 300px; height: 200px; " accept="@FilterType" @ref="_refinputFile"/>
+    </div>
+        
+
+        <img @ref="previewImageElem" width="200" height="100" />
+
+        <div class="file-upload-icon">
+            <i class="fa-duotone fa-arrow-up-from-bracket"></i>
+        </div>
+
+</div>
+
+@code {
+
+    public InputFile? _refinputFile;
+    private ElementReference previewImageElem;
+
+    private InputFileChangeEventArgs InputFile;
+    [Parameter] public Action<InputFileChangeEventArgs> OnInputFile {get; set;}
+    [Parameter] public bool IsMultiple {get; set;}
+
+    [Parameter] public string FilterType {get; set;} = "image/*";
+
+    [Parameter] public string CssClass {get; set;}
+
+    [Parameter] public string BusinessName {get; set;}
+
+    [Parameter] public int RowidAttachmentDetail {get; set;}
+
+    [Parameter] public int RowidAttachmentRelationship {get; set;}
+
+    private dynamic BusinessObj = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitialized();  
+    }
+    
+    protected override async Task OnParametersSetAsync()
+    {
+        base.OnParametersSet();
+    }
+
+    private async Task GetPreviewFile()
+    {
+        if(_refinputFile != null)
+        {
+            await JSRuntime.InvokeVoidAsync("previewImage", _refinputFile!.Element, previewImageElem);
+        }
+        StateHasChanged();
+    }
+
+    private async Task _OnChange(InputFileChangeEventArgs _InputFile)
+    {
+        if(_InputFile != null)
+        {
+            InputFile = _InputFile;
+
+            await GetPreviewFile();
+            OnInputFile?.Invoke(_InputFile);
+        }
+    }
+
+    public async Task SDKUploadFile()
+    {
+        await IntanceBusinessObj();
+
+        if (BusinessObj == null)
+        {
+            return;
+        }
+
+        var files = IsMultiple ? InputFile.GetMultipleFiles() : new[] { InputFile.File };
+
+        foreach (var itemFile in files)
+        {
+            var formFile = await ConvertToIFormFile(itemFile);
+            var fileUploadDTO = await BusinessObj.UploadSingle(formFile);
+
+            if (fileUploadDTO != null)
+            {
+                fileUploadDTO.RowidAttachment = RowidAttachmentRelationship;
+                dynamic saveFile;
+
+                if (RowidAttachmentDetail > 0)
+                {
+                    saveFile = await BusinessObj.SaveAttachmentDetail(fileUploadDTO, RowidAttachmentDetail);
+                }
+                else
+                {
+                    saveFile = await BusinessObj.SaveAttachmentDetail(fileUploadDTO);
+                }
+            }
+        }
+    }
+
+
+    private static async Task<IFormFile> ConvertToIFormFile(IBrowserFile browserFile)
+    {
+        var ms = new MemoryStream();
+        await browserFile.OpenReadStream().CopyToAsync(ms);
+
+        var file = new FormFile(ms, 0, ms.Length, null, browserFile.Name)
+        {
+            Headers = new HeaderDictionary(),
+            ContentType = (browserFile.ContentType == "" ? "application/octet-stream": browserFile.ContentType)
+        };
+
+        return file;
+    }
+    
+
+    private async Task IntanceBusinessObj()
+    {
+        if (ServiceProvider != null)
+        {
+            var businessModel = BackendRouterService.GetSDKBusinessModel(BusinessName, null);
+            if (businessModel != null)
+            {
+                BusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider,
+                Utilities.SearchType($"{businessModel.Namespace}.{businessModel.Name}", true));
+            }
+        }
+    }
+
+
+}

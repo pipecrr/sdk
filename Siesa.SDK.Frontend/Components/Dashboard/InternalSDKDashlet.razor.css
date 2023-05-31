@@ -32,8 +32,8 @@
     transition: var(--animate_faster);
 }
 .whcm_home_recent > ::deep .whcm_panel_glass{
-    background: var(--color_light );
-    border-color: var(--color_light );
+    background: var(--color_panel_back);
+    border-color: var(--color_panel_back);
 } 
 
 
