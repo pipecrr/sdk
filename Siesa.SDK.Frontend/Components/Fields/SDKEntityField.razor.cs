@@ -102,8 +102,8 @@ namespace Siesa.SDK.Frontend.Components.Fields
             {
                 if(currentValueObj.GetType().GetProperty("Rowid").GetValue(currentValueObj) != 0)
                 {
-                    //Value = currentValueObj.ToString();
-                    SetVal(currentValueObj);
+                    Value = currentValueObj.ToString();
+                    //SetVal(currentValueObj); //TODO: Probar todos los casos
                 }
             }
             relBusinessModel = BackendRouterService.GetSDKBusinessModel(RelatedBusiness, null);
