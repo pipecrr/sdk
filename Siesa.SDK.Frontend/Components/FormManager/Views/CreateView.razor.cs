@@ -14,6 +14,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         protected override async Task OnInitializedAsync()
         {
             DefaultViewdefName = String.IsNullOrEmpty(DefaultViewdefName) ? "create" : DefaultViewdefName;
+            await BusinessObj.InstanceDynamicEntities(BusinessName);
             await base.OnInitializedAsync();
         }
 
