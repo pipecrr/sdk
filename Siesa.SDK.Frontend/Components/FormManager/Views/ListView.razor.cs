@@ -920,7 +920,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if (OnClickDelete != null){
                 OnClickDelete(id.ToString(), object_string);
             }
-            if (UseFlex)
+            if (UseFlex && !IsSubpanel)
             {
                 var confirm = await ConfirmDelete();
                 SDKGlobalLoaderService.Show();
