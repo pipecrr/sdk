@@ -121,6 +121,12 @@ namespace Siesa.SDK.Entities
 		[ForeignKey("AttachmentUserProfilePicture")]
 		public int? RowidAttachmentUserProfilePicture { get; set; }
 
+		[SDKStringLength(50)]
+		public string? Theme { get; set; }
+
+		[SDKStringLength(50)]
+		public string? ThemeSecondaryColor { get; set; }
+
 
 		[SDKCheckRelationship]
 		[SDKRequired]
