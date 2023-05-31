@@ -78,7 +78,7 @@ input#menu:checked~.collapse_open_btn {
 input#menu:checked~.menu_content {
     min-height: 100vh;
     max-height: 100vh;
-    background: var(--color_light);
+    background: var(--color_light_nav);
     box-shadow: var(--shadow_standar);
     /* border-bottom-right-radius: 1.5rem; */
     transition-duration: .25s;
@@ -237,16 +237,17 @@ input#collapse_open:checked~.collapse_open_btn {
 }
 
 ::deep .sdk_search > input{
-    border: 1px solid #ced4da !important;
-    color: #495057 !important;
+    border: transparent !important;
+    background: #ffffff4d !important;
+    color: white !important;
 }
 
 ::deep .sdk_search input::placeholder{
-    color: #6c757d !important;
+    color: #ffffff80 !important;
 }
 
 ::deep .sdk_search i{
-    color: #495057 !important;
+    color: #ffffff80 !important;
     opacity: 1 !important;
     font-size: .875rem !important;
 }
