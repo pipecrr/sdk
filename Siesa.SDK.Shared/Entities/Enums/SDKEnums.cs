@@ -91,4 +91,10 @@ namespace Siesa.Global.Enums
 		Duotone = 3,
 		Thin = 4
 	}
+
+	public enum enumThemeTopbarStyle
+	{
+		OneColor = 0,
+		MultiColor = 1
+	}
 }
