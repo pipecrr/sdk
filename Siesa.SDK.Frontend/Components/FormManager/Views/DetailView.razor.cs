@@ -152,7 +152,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     var panels = JsonConvert.DeserializeObject<List<Panel>>(metadata);
                     FormViewModel.Panels = panels;
                 }                
-                if(BusinessObj.GetType().GetProperty("DynamicEntities") != null && BusinessObj.DynamicEntities != null){
+                if(BusinessObj.GetType().GetProperty("DynamicEntities") != null && BusinessObj.DynamicEntities != null && BusinessObj.DynamicEntities.Count > 0){
                     FormViewModel.Panels[0].ResourceTag = "Custom.General.DefaultPanel";
                     AddPanels(FormViewModel.Panels);
                 }

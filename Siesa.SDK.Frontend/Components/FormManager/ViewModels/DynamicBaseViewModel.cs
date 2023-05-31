@@ -78,7 +78,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         {
             if(!disableAccessValidation)
             {
-                if(!BusinessName.Contains("Attachment"))
+                if(!BusinessName.Equals("BLAttachmentDetail"))
                 {
                     CanAccess = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Access, AuthenticationService);
                 }else
@@ -91,7 +91,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     this.ErrorMsg = "Custom.Generic.Unauthorized";
                     ErrorList.Add("Custom.Generic.Unauthorized");
                 }
+            }else{
+                CanAccess = true;
             }
+
             StateHasChanged();
         }
         
