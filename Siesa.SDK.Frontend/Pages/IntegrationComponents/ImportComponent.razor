@@ -13,14 +13,16 @@
 @using Microsoft.AspNetCore.Components.Forms
 @using  CsvHelper.Configuration
 @using System.Dynamic
-@using Newtonsoft.Json;
+@using Newtonsoft.Json
 @using System.Collections.Generic
 @using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Shared.DTOS
 
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
 
 @inject IResourceManager ResourceManager
 @inject IAuthenticationService AuthenticationService
+@inject IBackendRouterService BackendRouterService
 @inject IJSRuntime JSRuntime
 @inject SDKNotificationService NotificationService
 
@@ -156,6 +158,8 @@
                 </Columns>
             </SDKGrid>
 
+            <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Custom.SDK.Import.ImportData" Click="@ImportData" />
+
             <SDKTextField Value="@JsonObject"  ReadOnly="true"/>
 
         </SDKStepsItem>
@@ -172,7 +176,7 @@
 
     public List<dynamic> FileData = new List<dynamic>();
 
-    public List<Dictionary<string, string>> DataMapped = new List<Dictionary<string, string>>();
+    public List<Dictionary<string, object>> DataMapped = new List<Dictionary<string, object>>();
 
     private bool IsLoadingGrid = false;
 
@@ -180,7 +184,7 @@
 
     public Dictionary<string, string> _newKeys = new Dictionary<string, string>();
 
-    private object GetValueDataMapped(dynamic obj, string propertyName) =>  ((IDictionary<string, string>)obj)[propertyName];
+    private object GetValueDataMapped(dynamic obj, string propertyName) =>  ((IDictionary<string, object>)obj)[propertyName];
 
     private List<KeyValuePair<string, object>> GetFirstRow()
     {
@@ -224,6 +228,23 @@
             var ResourceName = await ResourceManager.GetResource($"{EntityType.Name}.{field.Name}", AuthenticationService.GetRoiwdCulture()); 
 
             _fieldsEntity.Add(ResourceName,field.Name);
+        }
+    }
+
+    private async Task ImportData()
+    {
+        SDKRequestImportDataDTO importDataDTO = new SDKRequestImportDataDTO();
+        importDataDTO.BusinessName = BusinessName;
+        importDataDTO.Data = DataMapped;
+        var bl = BackendRouterService.GetSDKBusinessModel("BLIntegrarionService", AuthenticationService);
+        var result = await bl.Call("ImportData", importDataDTO);
+        
+        if(result.Success)
+        {
+            NotificationService.ShowSuccess("Custom.SDK.Import.SuccessImportData");
+        }else
+        {
+            NotificationService.ShowError("Custom.SDK.Import.ErrorImportData");
         }
     }
 
@@ -319,12 +340,12 @@
     {
         foreach (var item in FileData)
         {
-            var row = new Dictionary<string, string>();
+            var row = new Dictionary<string, object>();
 
             foreach (var key in _newKeys)
             {
                 if (GetPropertyValue(item, key.Value) != null)
-                    row.Add(key.Key, GetPropertyValue(item, key.Value).ToString());
+                    row.Add(key.Key, GetPropertyValue(item, key.Value));
             }
 
             DataMapped.Add(row);

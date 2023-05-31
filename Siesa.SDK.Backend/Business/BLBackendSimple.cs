@@ -40,6 +40,7 @@ using Microsoft.EntityFrameworkCore.Query.Internal;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json.Linq;
 
 namespace Siesa.SDK.Business
 {
@@ -1508,6 +1509,56 @@ namespace Siesa.SDK.Business
 
             return Any;
         }
+
+        [SDKExposedMethod]
+        public async Task<ActionResult<string>> ImportData(string dataStr){
+            JArray dataList = JArray.Parse(dataStr);
+            List<T> data = new List<T>();
+            foreach (var item in dataList){
+                var obj = CreateDynamicObjectFromJson(typeof(T), item.ToString());
+                data.Add(obj);
+            }
+            return new ActionResult<string>{Success = true, Data = "Imported"};
+        }
+
+        private T CreateDynamicObjectFromJson(Type type, string json)
+        {
+            dynamic dynamicObj = JsonConvert.DeserializeObject(json);
+            return CreateDynamicObject(type, dynamicObj);
+        }
+
+        private T CreateDynamicObject(Type type, dynamic dynamicObj)
+        {
+            dynamic result = Activator.CreateInstance(type);
+            foreach (var property in dynamicObj.GetType().GetProperties()){
+                var propertyName = property.Name;
+                var splitProperty = propertyName.Split('_');
+                if(splitProperty.Length > 1){
+                    var auxType = result;
+                    for (int i = 0; i < splitProperty.Length; i++){
+                        propertyName = splitProperty[i];
+                        if(i == splitProperty.Length-1){
+                            auxType.GetType().GetProperty(propertyName).SetValue(auxType, property.GetValue(dynamicObj, null));
+                        }else{
+                            dynamic InstanceDynamicProp = auxType.GetType().GetProperty(propertyName).GetValue(auxType, null);
+                            if(InstanceDynamicProp == null){
+                                InstanceDynamicProp = Activator.CreateInstance(auxType.GetType().GetProperty(propertyName).PropertyType);
+                            }
+                            auxType.GetType().GetProperty(propertyName).SetValue(auxType, InstanceDynamicProp);
+                            auxType = InstanceDynamicProp;
+                        }
+                    }
+                }else{
+                    bool existProperty = type.GetProperty(propertyName) != null;
+                    if(existProperty){
+                        var propertyValue = property.GetValue(dynamicObj, null);
+                        type.GetProperty(propertyName).SetValue(result, propertyValue);
+                    }
+                }
+            }
+            return (T)result;
+        }
+
     }
 
 }
