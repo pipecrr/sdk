@@ -392,45 +392,45 @@ namespace Siesa.SDK.Business
             }
         }
 
-    public virtual T Get(Int64 rowid, List<string> extraFields = null)
-    {
-        using (SDKContext context = CreateDbContext())
+        public virtual T Get(Int64 rowid, List<string> extraFields = null)
         {
-            var query = context.Set<T>().AsQueryable();
-            var selectedFields = "";
-            bool hasRelated = false;
-            bool hasExtraFields = false;
-            List<string> inlcudesAdd = new List<string>();
-            if (extraFields != null && extraFields.Count > 0)
+            using (SDKContext context = CreateDbContext())
             {
-                hasExtraFields = true;
-                CreateQueryExtraFields(query, inlcudesAdd, extraFields, ref selectedFields, ref hasRelated, _containAttachments);
-            }
-            else
-            {
-                foreach (var relatedProperty in _relatedProperties)
+                var query = context.Set<T>().AsQueryable();
+                var selectedFields = "";
+                bool hasRelated = false;
+                bool hasExtraFields = false;
+                List<string> inlcudesAdd = new List<string>();
+                if (extraFields != null && extraFields.Count > 0)
                 {
-                    query = query.Include(relatedProperty);
+                    hasExtraFields = true;
+                    CreateQueryExtraFields(query, inlcudesAdd, extraFields, ref selectedFields, ref hasRelated, _containAttachments);
                 }
-            }
-
-            query = query.Where("Rowid == @0", ConvertToRowidType(rowid));
-            if(hasRelated){
-                var dynamicQuery = query.Select($"new ({selectedFields})");
-                dynamic dynamicObj = dynamicQuery.FirstOrDefault();
-
-                dynamic result = (T)CreateDynamicObject(typeof(T), dynamicObj);
- 
-                return result;
-            }else{
-                if(hasExtraFields){
-                    query = query.Select<T>($"new ({selectedFields})");
+                else
+                {
+                    foreach (var relatedProperty in _relatedProperties)
+                    {
+                        query = query.Include(relatedProperty);
+                    }
                 }
-                return query.FirstOrDefault();
-            }
 
+                query = query.Where("Rowid == @0", ConvertToRowidType(rowid));
+                if(hasRelated){
+                    var dynamicQuery = query.Select($"new ({selectedFields})");
+                    dynamic dynamicObj = dynamicQuery.FirstOrDefault();
+
+                    dynamic result = (T)CreateDynamicObject(typeof(T), dynamicObj);
+    
+                    return result;
+                }else{
+                    if(hasExtraFields){
+                        query = query.Select<T>($"new ({selectedFields})");
+                    }
+                    return query.FirstOrDefault();
+                }
+
+            }
         }
-    }
 
         private T CreateDynamicObject(Type type, dynamic dynamicObj)
         {
@@ -462,29 +462,6 @@ namespace Siesa.SDK.Business
                 }
             }
             return (T)result;
-        }
-
-        private void getPrueba(long rowid)
-{
-            using (SDKContext context = CreateDbContext())
-            {
-                try
-                {
-                    var contextSet = context.Set<T>().AsQueryable();
-                    contextSet = contextSet.Include("City");
-                    contextSet = contextSet.Include("City.State");
-                    contextSet = contextSet.Where("Rowid == @0", ConvertToRowidType(rowid));
-                    var dynamicQuery = contextSet.Select("new (Id as Id,Name as Name, Rowid as Rowid)");
-
-                    var resultList = dynamicQuery.ToDynamicList();
-                    var c = "";
-                }
-                catch (Exception e)
-                {
-                    // Manejo de excepciones
-                    
-                }
-            }
         }
 
         public virtual void AfterValidateAndSave(ref ValidateAndSaveBusinessObjResponse result){
