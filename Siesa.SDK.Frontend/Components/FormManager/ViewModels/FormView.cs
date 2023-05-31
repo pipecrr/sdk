@@ -20,6 +20,7 @@ using Siesa.SDK.Frontend.Components.FormManager.Fields;
 using Siesa.SDK.Frontend.Extension;
 using Microsoft.Extensions.Configuration;
 using Siesa.Global.Enums;
+using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 {
@@ -112,6 +113,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public bool HasExtraButtons { get; set; }
         public List<Button> ExtraButtons { get; set; }
         public Button SaveButton { get; set; }
+        public bool isOnePanel { get; set; }
         protected virtual async Task CheckPermissions()
         {
             if (FeaturePermissionService != null && !String.IsNullOrEmpty(BusinessName))
@@ -233,6 +235,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     var panels = JsonConvert.DeserializeObject<List<Panel>>(metadata);
                     FormViewModel.Panels = panels;
                 }
+                if(BusinessObj.GetType().GetProperty("DynamicEntities") != null && BusinessObj.DynamicEntities != null){
+                    FormViewModel.Panels[0].ResourceTag = "Custom.General.DefaultPanel";
+                    AddPanels(FormViewModel.Panels);
+                }
             }
             try
             {
@@ -262,7 +268,24 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             BusinessObj.ParentComponent = this;
             StateHasChanged();
         }
-
+        private void AddPanels(List<Panel> panels){
+            
+            foreach(var item in BusinessObj.DynamicEntities){
+                var index = BusinessObj.DynamicEntities.IndexOf(item);
+                var panel = new Panel();
+                panel.ResourceTag = item.Name;
+                var fields = new List<FieldOptions>();
+                foreach(var property in item.DynamicObject.GetType().GetProperties()){
+                    var field = new FieldOptions();
+                    var name = $"DynamicEntities[{index}].DynamicObject.{property.Name}";
+                    field.Name = name;
+                    field.ResourceTag = property.Name;
+                    fields.Add(field);
+                }                
+                panel.Fields = fields;
+                panels.Add(panel);
+            }
+        }
         private async Task EvaluateButtonAttributes()
         {
             if(FormViewModel.Buttons != null ){

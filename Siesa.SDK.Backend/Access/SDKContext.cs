@@ -19,11 +19,14 @@ using Siesa.SDK.Shared.Criptography;
 using Siesa.SDK.Shared.DataAnnotations;
 using Microsoft.Extensions.Configuration;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace Siesa.SDK.Backend.Access
 {
     public class SDKContext : DbContext
     {
+	public DbSet<E00500_IntegrationLog>? E00500_IntegrationLog { get; set; }
+
 	public DbSet<E00231_FlexDelta>? E00231_FlexDelta { get; set; }
 
 	public DbSet<E00222_UserAccessSchedulingJournal>? E00222_UserAccessSchedulingJournal { get; set; }
@@ -170,7 +173,7 @@ namespace Siesa.SDK.Backend.Access
         {
             return InternalSaveChanges(true);
         }
-
+        
         internal int InternalSaveChanges(bool ValidateUser = true)
         {
             JwtUserData CurrentUser = null;

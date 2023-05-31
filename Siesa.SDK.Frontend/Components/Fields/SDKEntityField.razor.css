@@ -16,6 +16,10 @@
     text-decoration: none;
     background-color: var(--color_back_2)
 }
+.error-item{
+    color: var(--color_validacion_error);
+    text-decoration: none;
+}
 .badge-container input{
     outline: none;
     border: 0;

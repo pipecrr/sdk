@@ -943,7 +943,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if (OnClickDelete != null){
                 OnClickDelete(id.ToString(), object_string);
             }
-            if (UseFlex)
+            if (UseFlex && !IsSubpanel)
             {
                 var confirm = await ConfirmDelete();
                 SDKGlobalLoaderService.Show();
@@ -981,8 +981,21 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if(string.IsNullOrEmpty(item)){
                 return;
             }
-            IList<object> objects = JsonConvert.DeserializeObject<IList<object>>(item);
-            OnSelectionChanged(objects);
+            List<dynamic> objects = JsonConvert.DeserializeObject<List<dynamic>>(item);
+            IList<dynamic> list = new List<dynamic>();
+            foreach (var dynamicObj in objects)
+            {
+                dynamic obj = Activator.CreateInstance(BusinessObj.BaseObj.GetType());
+                foreach(var prop in dynamicObj){
+                    var propertyName = prop.Name;
+                    if(propertyName.Equals("rowid")){
+                        propertyName = "Rowid";
+                    }
+                    await SetValueObj(obj, propertyName, prop.Value);
+                }
+                list.Add(obj);
+            }
+            OnSelectionChanged(list);
         }
 
         [JSInvokable]

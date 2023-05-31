@@ -56,6 +56,14 @@
                                 }
                             </li>
                         }
+                    }else if(HasError){
+                        <li class="d-flex justify-content-between error-item" data-automation-id="@GetAutomationIdItem(ErrorMessage)">
+                            <div class="d-flex align-items-center">
+                                <div class="ml-1">
+                                    <p class="font_size_087 m-0 font-weight-bold"><span>@ErrorMessage</span></p>
+                                </div>
+                            </div>
+                        </li>
                     }
                 </ul>
             </div>
@@ -76,6 +84,9 @@
 {
     private string GetAutomationIdItem(dynamic item)
     {
+        if(HasError){
+            return $"{GetAutomationId()}_Error";
+        }
         return $"{GetAutomationId()}_{item.Value.Rowid}";
     }
     public async Task OpenModalCreate()
