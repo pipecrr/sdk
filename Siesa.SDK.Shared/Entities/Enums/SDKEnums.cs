@@ -82,4 +82,13 @@ namespace Siesa.Global.Enums
 		List = 5,
 		Delete = 6
 	}
+
+	public enum enumThemeIconStyle
+	{
+		Solid = 0,
+		Regular = 1,
+		Light = 2,
+		Duotone = 3,
+		Thin = 4
+	}
 }
