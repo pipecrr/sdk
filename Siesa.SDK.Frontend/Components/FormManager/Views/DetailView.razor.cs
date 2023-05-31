@@ -47,6 +47,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter]
         public string ViewdefName { get; set; }
 
+        [Parameter]
+        public string BLNameParentAttatchment { get; set; }
+
         public Boolean Loading = true;
 
         [Inject] public IJSRuntime JSRuntime { get; set; }
@@ -70,7 +73,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         protected bool CanEdit;
         protected bool CanDelete;
         protected bool CanDetail;
-        protected bool CanList;
+        protected bool CanAcess;
         public Boolean ContainAttachments = false;
         Relationship RelationshipAttachment = new Relationship();
         E00270_Attachment ParentAttachment = new E00270_Attachment();
@@ -149,7 +152,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     var panels = JsonConvert.DeserializeObject<List<Panel>>(metadata);
                     FormViewModel.Panels = panels;
                 }                
-                if(BusinessObj.GetType().GetProperty("DynamicEntities") != null && BusinessObj.DynamicEntities != null){
+                if(BusinessObj.GetType().GetProperty("DynamicEntities") != null && BusinessObj.DynamicEntities != null && BusinessObj.DynamicEntities.Count > 0){
                     FormViewModel.Panels[0].ResourceTag = "Custom.General.DefaultPanel";
                     AddPanels(FormViewModel.Panels);
                 }
@@ -388,16 +391,31 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         {
             if (FeaturePermissionService != null && !string.IsNullOrEmpty(BusinessName))
             {
-                try
+                if(IsSubpanel && BusinessName.Equals("BLAttachmentDetail"))
                 {
-                    CanList = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
-                    CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Create, AuthenticationService);
-                    CanEdit = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Edit, AuthenticationService);
-                    CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Delete, AuthenticationService);
-                    CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
-                }
-                catch (System.Exception)
+                    try
+                    {
+                        CanAcess = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.AccessAttachment, AuthenticationService);
+                        CanCreate = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.UploadAttachment, AuthenticationService);
+                        CanDelete = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.DeleteAttachment, AuthenticationService);
+                        CanDetail = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.DownloadAttachment, AuthenticationService);
+                    }
+                    catch (System.Exception)
+                    {
+                    }
+                }else
                 {
+                    try
+                    {
+                        CanAcess = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
+                        CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Create, AuthenticationService);
+                        CanEdit = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Edit, AuthenticationService);
+                        CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Delete, AuthenticationService);
+                        CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
+                    }
+                    catch (System.Exception)
+                    {
+                    }
                 }
 
                 if (!CanDetail)

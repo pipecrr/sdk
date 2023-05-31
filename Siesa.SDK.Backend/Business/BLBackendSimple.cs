@@ -42,6 +42,7 @@ using Amazon.S3.Model;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
 
+using Siesa.Global.Enums;
 
 namespace Siesa.SDK.Business
 {
@@ -211,6 +212,8 @@ namespace Siesa.SDK.Business
         protected SDKContext ContextMetadata;
         public List<string> RelFieldsToSave { get; set; } = new List<string>();
         private bool CanCreate { get; set; } = true;
+        private bool CanUploadAttachment { get; set; } = true;
+        private bool CanDownloadAttachment { get; set; } = true;
         private bool CanEdit { get; set; } = true;
         private IEnumerable<INavigation> _navigationProperties = null;
         private bool _useS3 = false;
@@ -610,7 +613,6 @@ namespace Siesa.SDK.Business
                 dynamicEntity.GetType().GetProperty("RowidInternalEntityData").SetValue(dynamicEntity, Convert.ChangeType(field.RowidInternalEntityData, typeof(Int32?)));
                 dynamicEntity.GetType().GetProperty("RowidGenericEntityData").SetValue(dynamicEntity, Convert.ChangeType(field.RowidGenericEntityData, typeof(Int32?)));
             }
-            var value = prop.Value;
             if (value.Type == JTokenType.Date)
             {
                 dynamicEntity.GetType().GetProperty("DateData").SetValue(dynamicEntity, value.ToObject<DateTime>());
@@ -1144,7 +1146,13 @@ namespace Siesa.SDK.Business
         }
 
         [SDKExposedMethod]
-        public async Task<ActionResult<SDKFileUploadDTO>> SaveFile(byte[] fileBytes, string name, string contentType, bool SaveBytes = false){
+        public async Task<ActionResult<SDKFileUploadDTO>> SaveFile(byte[] fileBytes, string name, string contentType, bool SaveBytes = false)
+        {
+            CanUploadAttachment = await _featurePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.UploadAttachment ,AuthenticationService);
+
+            if(!CanUploadAttachment)
+                return new BadRequestResult<SDKFileUploadDTO>{Success = false, Errors = new List<string> { "You don't have permission to upload attachment" }};
+
             MemoryStream stream = new MemoryStream(fileBytes);
             var result = new SDKFileUploadDTO();
             var untrustedFileName = name;
@@ -1200,7 +1208,13 @@ namespace Siesa.SDK.Business
         }
 
         [SDKExposedMethod]
-        public async Task<ActionResult<string>> DownloadFile(string url, string contentType){
+        public async Task<ActionResult<string>> DownloadFile(string url, string contentType)
+        {
+            CanDownloadAttachment = await _featurePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.DownloadAttachment ,AuthenticationService);
+
+            if(!CanDownloadAttachment)
+                return new BadRequestResult<string>{Success = false, Errors = new List<string> { "You don't have permission to download attachment" }};
+            
             var urlRes = "";
             if(_useS3)
         {

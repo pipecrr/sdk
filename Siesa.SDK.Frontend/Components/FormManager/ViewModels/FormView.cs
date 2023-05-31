@@ -103,7 +103,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         protected bool CanEdit;
         protected bool CanDelete;
         protected bool CanDetail;
-        protected bool CanList;
+        protected bool CanAcess;
         public bool FormHasErrors = false;
 
         public Dictionary<string, FileField> FileFields = new Dictionary<string, FileField>();
@@ -120,7 +120,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             {
                 try
                 {
-                    CanList = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
+                    CanAcess = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
                     CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Create, AuthenticationService);
                     CanEdit = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Edit, AuthenticationService);
                     CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Delete, AuthenticationService);
@@ -235,7 +235,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     var panels = JsonConvert.DeserializeObject<List<Panel>>(metadata);
                     FormViewModel.Panels = panels;
                 }
-                if(BusinessObj.GetType().GetProperty("DynamicEntities") != null && BusinessObj.DynamicEntities != null){
+                if(BusinessObj.GetType().GetProperty("DynamicEntities") != null && BusinessObj.DynamicEntities != null && BusinessObj.DynamicEntities.Count > 0){
                     FormViewModel.Panels[0].ResourceTag = "Custom.General.DefaultPanel";
                     AddPanels(FormViewModel.Panels);
                 }

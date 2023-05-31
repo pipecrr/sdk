@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
+using Siesa.Global.Enums;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -10,6 +11,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
     {
         [Parameter]
         public bool SetTopBar { get; set; } = true;
+
+        [Parameter]
+        public string BLNameParentAttatchment { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -20,7 +24,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         protected override async Task CheckPermissions()
         {
-            await base.CheckPermissions();
+            if(IsSubpanel && BusinessName.Equals("BLAttachmentDetail"))
+            {
+                try
+                {
+                    CanCreate = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.UploadAttachment, AuthenticationService);
+                }
+                catch (System.Exception)
+                {
+                }
+            }else
+            {
+                await base.CheckPermissions();
+            }
             if(!CanCreate)
             {
                 NotificationService.ShowError("Custom.Generic.Unauthorized");

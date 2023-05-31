@@ -76,6 +76,11 @@ else if (BusinessObj != null)
          MainLayout?.SetDefaultArea(true);
     }
 
+    protected override async Task CheckAccessPermission(bool disableAccessValidation = false)
+    {
+        await base.CheckAccessPermission(true);
+    }
+
     protected override async Task InitGenericView(string bName=null, bool disableAccessValidation = false)
     {
         await base.InitGenericView(bName, true);
