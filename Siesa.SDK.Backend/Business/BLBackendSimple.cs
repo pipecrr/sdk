@@ -71,9 +71,6 @@ namespace Siesa.SDK.Business
         public BLBackendSimple(IAuthenticationService authenticationService)
         {
             AuthenticationService = authenticationService;
-            if(BaseObj.GetType().GetProperty("RowidAttachment") != null){
-                _containAttachments = true;
-            }
         }
 
         public string BusinessName { get; set; }
@@ -392,50 +389,77 @@ namespace Siesa.SDK.Business
             }
         }
 
-    public virtual T Get(Int64 rowid, List<string> extraFields = null)
-    {
-        using (SDKContext context = CreateDbContext())
+        public virtual T Get(Int64 rowid, List<string> extraFields = null)
         {
-            var query = context.Set<T>().AsQueryable();
-
-            if (extraFields != null && extraFields.Count > 0)
+            using (SDKContext context = CreateDbContext())
             {
-                extraFields.Add("Rowid");
-                if(_containAttachments)
+                var query = context.Set<T>().AsQueryable();
+                var selectedFields = "";
+                bool hasRelated = false;
+                bool hasExtraFields = false;
+                List<string> inlcudesAdd = new List<string>();
+                if (extraFields != null && extraFields.Count > 0)
                 {
-                    extraFields.Add("RowidAttachment");
+                    hasExtraFields = true;
+                    CreateQueryExtraFields(query, inlcudesAdd, extraFields, ref selectedFields, ref hasRelated, _containAttachments);
+                }
+                else
+                {
+                    foreach (var relatedProperty in _relatedProperties)
+                    {
+                        query = query.Include(relatedProperty);
+                    }
                 }
 
-                var selectedFields = string.Join(",", extraFields.Select(x =>
-                {
-                    var splitInclude = x.Split('.');
-                    if (splitInclude.Length > 1) 
-                    {
-                        for (int i = 1; i <= splitInclude.Length; i++)
-                        {
-                            var include = string.Join(".", splitInclude.Take(i));
-                            query = query.Include(include);
+                query = query.Where("Rowid == @0", ConvertToRowidType(rowid));
+                if(hasRelated){
+                    var dynamicQuery = query.Select($"new ({selectedFields})");
+                    dynamic dynamicObj = dynamicQuery.FirstOrDefault();
+
+                    dynamic result = (T)CreateDynamicObject(typeof(T), dynamicObj);
+    
+                    return result;
+                }else{
+                    if(hasExtraFields){
+                        query = query.Select<T>($"new ({selectedFields})");
+                    }
+                    return query.FirstOrDefault();
+                }
+
+            }
+        }
+
+        private T CreateDynamicObject(Type type, dynamic dynamicObj)
+        {
+            dynamic result = Activator.CreateInstance(type);
+            foreach (var property in dynamicObj.GetType().GetProperties()){
+                var propertyName = property.Name;
+                var splitProperty = propertyName.Split('_');
+                if(splitProperty.Length > 1){
+                    var auxType = result;
+                    for (int i = 0; i < splitProperty.Length; i++){
+                        propertyName = splitProperty[i];
+                        if(i == splitProperty.Length-1){
+                            auxType.GetType().GetProperty(propertyName).SetValue(auxType, property.GetValue(dynamicObj, null));
+                        }else{
+                            dynamic InstanceDynamicProp = auxType.GetType().GetProperty(propertyName).GetValue(auxType, null);
+                            if(InstanceDynamicProp == null){
+                                InstanceDynamicProp = Activator.CreateInstance(auxType.GetType().GetProperty(propertyName).PropertyType);
+                            }
+                            auxType.GetType().GetProperty(propertyName).SetValue(auxType, InstanceDynamicProp);
+                            auxType = InstanceDynamicProp;
                         }
                     }
-                    return splitInclude[0];
-                }).Distinct());
-
-                query = query.Select<T>($"new ({selectedFields})");
-
-            }
-            else
-            {
-                foreach (var relatedProperty in _relatedProperties)
-                {
-                    query = query.Include(relatedProperty);
+                }else{
+                    bool existProperty = type.GetProperty(propertyName) != null;
+                    if(existProperty){
+                        var propertyValue = property.GetValue(dynamicObj, null);
+                        type.GetProperty(propertyName).SetValue(result, propertyValue);
+                    }
                 }
             }
-
-            query = query.Where("Rowid == @0", ConvertToRowidType(rowid));
-
-            return query.FirstOrDefault();
+            return (T)result;
         }
-    }
 
         public virtual void AfterValidateAndSave(ref ValidateAndSaveBusinessObjResponse result){
             //Do nothing
@@ -732,27 +756,14 @@ namespace Siesa.SDK.Business
             {
                 context.SetProvider(_provider);
                 var query = context.Set<T>().AsQueryable();
-                string selectedFields = "";
-
-                if(extraFields != null && extraFields.Count > 0)
+                var selectedFields = "";
+                bool hasRelated = false;
+                bool hasExtraFields = false;
+                List<string> inlcudesAdd = new List<string>();
+                if (extraFields != null && extraFields.Count > 0)
                 {
-                    extraFields.Add("Rowid");
-
-                    selectedFields = string.Join(",", extraFields.Select(x =>
-                    {
-                        var splitInclude = x.Split('.');
-                        if (splitInclude.Length > 1) 
-                        {
-                            for (int i = 1; i <= splitInclude.Length; i++)
-                            {
-                                var include = string.Join(".", splitInclude.Take(i));
-                                query = query.Include(include);
-                            }
-                        }
-                        return splitInclude[0];
-                    }).Distinct());
-
-                    //query = query.Select<T>($"new ({selectedFields})");
+                    hasExtraFields = true;
+                    CreateQueryExtraFields(query, inlcudesAdd, extraFields, ref selectedFields, ref hasRelated);
                 }
                 else
                 {
@@ -799,15 +810,57 @@ namespace Siesa.SDK.Business
                 }
                 //total data
                 result.TotalCount = total;
-
-                //select data
-                if(!string.IsNullOrEmpty(selectedFields))
-                    query = query.Select<T>($"new ({selectedFields})");
-                    
-                //data
-                result.Data = query.ToList();
+                
+                if(hasRelated){
+                    var dynamicQuery = query.Select($"new ({selectedFields})");
+                    dynamic dynamicList = dynamicQuery.ToDynamicList();
+                    dynamic listEntities = new List<T>();
+                    foreach (var dynamicObj in dynamicList)
+                    {
+                        dynamic entity = (T)CreateDynamicObject(typeof(T), dynamicObj);
+                        listEntities.Add(entity);
+                    }
+    
+                    result.Data = listEntities;
+                }else{
+                    if(hasExtraFields){
+                        query = query.Select<T>($"new ({selectedFields})");
+                    }
+                    result.Data = query.ToList();
+                }
             }
             return result;
+        }
+
+        private void CreateQueryExtraFields(IQueryable<T> query, List<string> inlcudesAdd, List<string> extraFields, ref string selectedFields, ref bool hasRelated, bool containAttachments = false)
+        {
+            bool hasRelatedTmp = false;
+            extraFields.Add("Rowid");
+            if(containAttachments)
+            {
+                extraFields.Add("RowidAttachment");
+            }
+            selectedFields = string.Join(",", extraFields.Select(x =>
+            {
+                dynamic splitInclude = x.Split('.');
+                if (splitInclude.Length > 1)
+                {
+                    hasRelatedTmp = true;
+                    List<string> inlcudes = new List<string>();
+                    for (int i = 0; i < splitInclude.Length-1; i++)
+                    {
+                        inlcudes.Add(splitInclude[i]);
+                    }
+                    string include = string.Join(".", inlcudes);
+                    if(!inlcudesAdd.Contains(include)){
+                        inlcudesAdd.Add(include);
+                        query = query.Include(include);
+
+                    }
+                }
+                return x+" as "+x.Replace(".","_");
+            }).Distinct());
+            hasRelated = hasRelatedTmp;
         }
 
         public Task<T> GetAsync(Int64 rowid,List<string> extraFields = null)
@@ -962,7 +1015,7 @@ namespace Siesa.SDK.Business
             var name = file.FileName;
             var bucketName = _configuration.GetValue<string>("AWS:S3BucketName");
             if(string.IsNullOrEmpty(bucketName)){
-                return new BadRequestResult<SDKFileUploadDTO>{Success = false, Errors = new List<string> { "S3 Bucket Name not found" }};
+                return new BadRequestResult<SDKFileUploadDTO>{Success = false, Errors = new List<string> { "Custom.S3.BucketName.NotFound" }};
             }
             try{
                 PutObjectRequest request = new PutObjectRequest{
@@ -998,14 +1051,14 @@ namespace Siesa.SDK.Business
                 urlRes = $"data:{contentType};base64,{base64}";
                 return new ActionResult<string>{Success = true, Data = urlRes};
             }
-            return new BadRequestResult<string>{Success = false, Errors = new List<string> { "File not found" }};
+            return new BadRequestResult<string>{Success = false, Errors = new List<string> { "Custom.Attatchment.FileNotFound" }};
         }
 
         private async Task<ActionResult<string>> DownloadFileS3(string url)
         {
             var bucketName = _configuration.GetValue<string>("AWS:S3BucketName");
             if(string.IsNullOrEmpty(bucketName)){
-                return new BadRequestResult<string>{Success = false, Errors = new List<string> { "S3BucketName name not found" }};
+                return new BadRequestResult<string>{Success = false, Errors = new List<string> { "Custom.S3.BucketName.NotFound" }};
             }
             var duration = _configuration.GetValue<int>("AWS:TimeoutDuration");
             if(duration == 0){
@@ -1040,11 +1093,27 @@ namespace Siesa.SDK.Business
                 SDKFileField = new SDKFileFieldDTO{
                     Url = data.Url,
                     FileName = data.FileName,
-                    FileType = data.FileType
+                    FileType = data.FileType,
+                    FileByte = data.FileByte
                 };
             }else{
                 var errors = JsonConvert.DeserializeObject<List<string>> (response.Errors.ToString());
                 throw new ArgumentException(errors[0]);
+            }
+            if(_useS3){
+                var downloadS3 = await DownloadFileS3(SDKFileField.Url);
+                if(downloadS3.Success){
+                    SDKFileField.Url = downloadS3.Data;
+                    return new ActionResult<SDKFileFieldDTO>{Success = true, Data = SDKFileField};
+                }else{
+                    return new BadRequestResult<SDKFileFieldDTO>{Success = false, Errors = downloadS3.Errors};
+                }
+            }
+            if(SDKFileField.FileByte != null){
+                var base64 = Convert.ToBase64String(SDKFileField.FileByte);
+                SDKFileField.FileBase64 = base64;
+                SDKFileField.Url = $"data:{SDKFileField.FileType};base64,{base64}";
+                return new ActionResult<SDKFileFieldDTO>{Success = true, Data = SDKFileField};
             }
             IWebHostEnvironment env = _provider.GetRequiredService<IWebHostEnvironment>();
             var filePath = Path.Combine(SDKFileField.Url);
@@ -1053,9 +1122,10 @@ namespace Siesa.SDK.Business
                 var fileBytes = await File.ReadAllBytesAsync(filePath);
                 var base64 = Convert.ToBase64String(fileBytes);
                 SDKFileField.FileBase64 = base64;
+                SDKFileField.Url = $"data:{SDKFileField.FileType};base64,{base64}";
                 return new ActionResult<SDKFileFieldDTO>{Success = true, Data = SDKFileField};
             }
-            return new BadRequestResult<SDKFileFieldDTO>{Success = false, Errors = new List<string> { "File not found" }};
+            return new BadRequestResult<SDKFileFieldDTO>{Success = false, Errors = new List<string> { "Custom.Attatchment.FileNotFound" }};
         }
         
         [SDKExposedMethod]

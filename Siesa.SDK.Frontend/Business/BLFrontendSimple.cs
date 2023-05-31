@@ -459,9 +459,9 @@ namespace Siesa.SDK.Business
             }
         }
 
-        public async Task<string> DownloadFile(string url)
+        public async Task<string> DownloadFile(string url, string contentType)
         {
-            var result = await Backend.Call("DownloadFile", url);
+            var result = await Backend.Call("DownloadFile", url, contentType);
             return result.Data;
         }
 
