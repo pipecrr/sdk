@@ -82,4 +82,5 @@ namespace Siesa.Global.Enums
 		List = 5,
 		Delete = 6
 	}
+
 }

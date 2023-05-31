@@ -6,6 +6,7 @@
 @using Microsoft.Extensions.DependencyInjection
 @using Siesa.SDK.Shared.DTOS
 @using Siesa.SDK.Frontend.Components.FormManager.ViewModels
+@using Siesa.Global.Enums
 
 @inject IServiceProvider ServiceProvider
 @inject IAuthenticationService AuthenticationService
@@ -103,7 +104,10 @@
                                             </div>
                                             <div class="d-flex align-items-center">
                                                 <input class="mr-2" type="radio" name="ThemeColor" value="@theme.Value">
-                                                <label class="mb-0"  style="font-size: 14px;">@theme.Key</label>
+
+                                                @*<label class="mb-0"  style="font-size: 14px;">@theme.Key</label>*@
+
+                                                <ResourceViewer ResourceTag=@theme.Key />
                                             </div>
                                         </div>
                                     }
@@ -185,18 +189,20 @@
         <div class="row">
             <div class="col-12 col-sm-12">
                 <div class="row">
-                    @if (_userPreferences != null && _userPreferences.IconStyle != null)
+                    @if (_userPreferences != null && _userPreferences.IconsStyles != null)
                     {    
-                        @foreach (var icon in _userPreferences.IconStyle)
+                        @foreach (var icon in _userPreferences.IconsStyles)
                         {    
                             <div class="col-4 mb-3">
                                 <div class="sdk_card d-flex justify-content-center rounded p-4 mb-2">
-                                    <i class="@icon.Value" style="color:#1079FD;"></i>
+                                    <i class="@icon fa-user fa-2x" style="color:#1079FD;"></i>
                                 </div>
 
                                 <div class="d-flex align-items-center">
-                                    <input class="mr-2" type="radio" name="IconStyle"  value="@icon.Value">
-                                    <label class="mb-0"  style="font-size: 14px;">@icon.Key</label>
+                                    <input class="mr-2" type="radio" name="IconsStyles"  value="@icon">
+                                    <label class="mb-0"  style="font-size: 14px;">
+                                        @GetLabelIcon(icon)
+                                    </label>
                                 </div>
                             </div>
                         }
@@ -283,6 +289,10 @@
 
     private UserPreferencesDTO _userPreferences { get; set; }
 
+    private string _selectedIconStyle { get; set; }
+
+    private string _selectedThemeStyle { get; set; }
+
     private void ChangeViewType()
     {
         _IsEdit = !_IsEdit;
@@ -317,21 +327,21 @@
         {
             ThemeColor = new Dictionary<string, string>() 
             {
-                { "Azul Siesa", "#1079FD" },
-                { "Naranja", "#00AE3C" },
-                { "Verde", "#FF8E2C" },
+                { "Custom.SDK.Theme.Blue", "#1079FD" },
+                { "Custom.SDK.Theme.Orange", "#00AE3C" },
+                { "Custom.SDK.Theme.Green", "#FF8E2C" },
             },
-            IconStyle = new Dictionary<string, string>() 
+            IconsStyles = new List<string>() 
             {
-                { "Solid", "fa-solid fa-user fa-2x" },
-                { "Regular", "fa-regular fa-user fa-2x" },
-                { "Light", "fa-light fa-user fa-2x" },
-                { "Duotone", "fa-duotone fa-user fa-2x" },
+                { enumSDKIconStyle.Solid },
+                { enumSDKIconStyle.Regular },
+                { enumSDKIconStyle.Light },
+                { enumSDKIconStyle.Duotone },
             },
             ComplementaryColors = new List<ComplementaryColor>()
             {
-                new ComplementaryColor() { ColorName = "Tono1", PrimaryColor = "#9B111E", SecundaryColor="#4C2882"  },
-                new ComplementaryColor() { ColorName = "Tono2", PrimaryColor = "#4C2882", SecundaryColor="#9B111E" }
+                new ComplementaryColor() { ColorName = "Tono1", PrimaryColor = "#1079FD", SecundaryColor="#661079FD"  },
+                new ComplementaryColor() { ColorName = "Tono2", PrimaryColor = "#9B111E", SecundaryColor="#669B111E" } 
             }
             
         };
@@ -358,5 +368,22 @@
             DialogService.Close(true);
         }
 
+    }
+
+    private string GetLabelIcon(string iconStyle)
+    {
+        switch (iconStyle)
+        {
+            case "fa-solid":
+                return "Solid";
+            case "fa-regular":
+                return "Regular";
+            case "fa-light":   
+                return "Light";
+            case "fa-duotone":
+                return "Duotone";
+            default:
+                return "Solid";
+        }
     }
 }
