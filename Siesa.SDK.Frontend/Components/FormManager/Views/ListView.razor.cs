@@ -466,7 +466,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     }
                }
 
-                if (!CanAccess && !FromEntityField && !(IsSubpanel && BusinessName.Equals("BLAttachmentDetail")))
+                if (!CanAccess && !FromEntityField)
                 {
                     ErrorMsg = "Custom.Generic.Unauthorized";
                     ErrorList.Add("Custom.Generic.Unauthorized");
