@@ -83,4 +83,26 @@ namespace Siesa.Global.Enums
 		Delete = 6
 	}
 
+	public enum enumThemeIconStyle
+	{
+		Solid = 0,
+		Regular = 1,
+		Light = 2,
+		Duotone = 3,
+		Thin = 4
+	}
+
+	public enum enumThemeTopbarStyle
+	{
+		OneColor = 0,
+		MultiColor = 1
+	}
+
+	public enum enumSDKIntegrationStatus
+	{
+		Queued = 0,
+		Processing = 1,
+		Success = 2,
+		Failed = 3
+	}
 }
