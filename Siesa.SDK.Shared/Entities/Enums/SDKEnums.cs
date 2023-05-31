@@ -97,4 +97,12 @@ namespace Siesa.Global.Enums
 		OneColor = 0,
 		MultiColor = 1
 	}
+
+	public enum enumSDKIntegrationStatus
+	{
+		Queued = 0,
+		Processing = 1,
+		Success = 2,
+		Failed = 3
+	}
 }
