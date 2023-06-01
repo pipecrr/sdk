@@ -8,9 +8,11 @@ namespace Siesa.SDK.Shared.DTOS
     {
         public Dictionary<string, string> ThemeColor { get; set; } //Key = ThemeName, Value = ThemeColor
 
-        public List<string> IconsStyles { get; set; } //Enum of Icons Styles enumSDKIconStyle
+        public List<enumThemeIconStyle> IconsStyles { get; set; } //Enum of Icons Styles enumSDKIconStyle
 
         public List<ComplementaryColor> ComplementaryColors { get; set; }
+
+        //public List<enumThemeTopbarStyle> TopbarStyles { get; set; } //Enum of Topbar Styles enumSDKTopbarStyle
 
     }
 
