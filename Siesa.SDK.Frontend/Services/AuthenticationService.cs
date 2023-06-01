@@ -38,6 +38,15 @@ namespace Siesa.SDK.Frontend.Services
         private string _userPhoto = "";
         private string _logoPhoto = "";
 
+        
+        public enumThemeIconStyle _selectedIconStyle { get; set; }
+
+        public string _selectedColorComplementary { get; set; }
+
+        public string _selectedThemeStyle { get; set; } 
+
+        public enumThemeTopbarStyle _selectedTopbarStyle { get; set; }
+
         private JwtUserData? _user;
         public JwtUserData User
         {
