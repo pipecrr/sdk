@@ -241,7 +241,10 @@
         
         if(result.Success)
         {
-            NotificationService.ShowSuccess("Custom.SDK.Import.SuccessImportData");
+            SDKResponseImportDTO response = (SDKResponseImportDTO)result.Data;
+            NotificationService.ShowSuccess(response.Message);
+            JsonObject = JsonConvert.SerializeObject(response.Guid, Formatting.None);   
+            StateHasChanged();
         }else
         {
             NotificationService.ShowError("Custom.SDK.Import.ErrorImportData");
@@ -351,7 +354,7 @@
             DataMapped.Add(row);
         }
 
-        JsonObject = JsonConvert.SerializeObject(DataMapped, Formatting.None);
+        //JsonObject = JsonConvert.SerializeObject(DataMapped, Formatting.None);
 
         StateHasChanged();
     }

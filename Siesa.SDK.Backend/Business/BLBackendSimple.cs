@@ -1511,49 +1511,50 @@ namespace Siesa.SDK.Business
         }
 
         [SDKExposedMethod]
-        public async Task<ActionResult<string>> ImportData(string dataStr){
+        public async Task<ActionResult<SDKResultImportDataDTO>> ImportData(string dataStr){
             JArray dataList = JArray.Parse(dataStr);
             List<T> data = new List<T>();
+            List<dynamic> SuccessData = new List<dynamic>();
+            List<dynamic> ErrorData = new List<dynamic>();
             foreach (var item in dataList){
-                var obj = CreateDynamicObjectFromJson(typeof(T), item.ToString());
-                data.Add(obj);
+                JObject itemObj = (JObject)item;
+                dynamic result = (T)CreateDynamicObjectFromJson(typeof(T), itemObj);
+                BaseObj = result;
+                var resultValidate = ValidateAndSave();
+                if(resultValidate.Errors.Count > 0){
+                    itemObj.Add("Errors", JToken.FromObject(resultValidate.Errors));
+                    ErrorData.Add(itemObj);
+                }else{
+                    SuccessData.Add(BaseObj.GetRowid());
+                }
             }
-            return new ActionResult<string>{Success = true, Data = "Imported"};
-        }
+            SDKResultImportDataDTO resultImport = new SDKResultImportDataDTO();
+            resultImport.Success = SuccessData;
+            resultImport.Errors = ErrorData;
 
-        private T CreateDynamicObjectFromJson(Type type, string json)
-        {
-            dynamic dynamicObj = JsonConvert.DeserializeObject(json);
-            return CreateDynamicObject(type, dynamicObj);
+            return new ActionResult<SDKResultImportDataDTO>{Success = true, Data = resultImport};
         }
-
-        private T CreateDynamicObject(Type type, dynamic dynamicObj)
+        private T CreateDynamicObjectFromJson(Type type, dynamic dynamicObj)
         {
             dynamic result = Activator.CreateInstance(type);
-            foreach (var property in dynamicObj.GetType().GetProperties()){
+            
+            foreach (var property in dynamicObj.Properties()){
                 var propertyName = property.Name;
-                var splitProperty = propertyName.Split('_');
-                if(splitProperty.Length > 1){
-                    var auxType = result;
-                    for (int i = 0; i < splitProperty.Length; i++){
-                        propertyName = splitProperty[i];
-                        if(i == splitProperty.Length-1){
-                            auxType.GetType().GetProperty(propertyName).SetValue(auxType, property.GetValue(dynamicObj, null));
+                var propertyEntity = type.GetProperty(propertyName);
+                if(propertyEntity != null){
+                    var value = property.Value;
+                    //TODO : Revisar diferentes tipos de datos
+                    if(propertyEntity.PropertyType == typeof(bool)){
+                        //TODO : Revisar bool
+                        if(property.Value == 1){
+                            value = true;
                         }else{
-                            dynamic InstanceDynamicProp = auxType.GetType().GetProperty(propertyName).GetValue(auxType, null);
-                            if(InstanceDynamicProp == null){
-                                InstanceDynamicProp = Activator.CreateInstance(auxType.GetType().GetProperty(propertyName).PropertyType);
-                            }
-                            auxType.GetType().GetProperty(propertyName).SetValue(auxType, InstanceDynamicProp);
-                            auxType = InstanceDynamicProp;
+                            value = false;
                         }
+                    }else{
+                        value = Convert.ChangeType(property.Value, propertyEntity.PropertyType);
                     }
-                }else{
-                    bool existProperty = type.GetProperty(propertyName) != null;
-                    if(existProperty){
-                        var propertyValue = property.GetValue(dynamicObj, null);
-                        type.GetProperty(propertyName).SetValue(result, propertyValue);
-                    }
+                    type.GetProperty(propertyName).SetValue(result, value);
                 }
             }
             return (T)result;
