@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Siesa.Global.Enums;
 
 
+
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
@@ -32,6 +33,14 @@ namespace Siesa.SDK.Entities
 
 		public string? Result { get; set; }
 
+		[ForeignKey("Feature")]
+		[SDKRequired]
+		public int RowidFeature { get; set; }
+
+
+		[SDKCheckRelationship]
+		[SDKRequired]
+		public virtual E00040_Feature Feature { get; set; }
 
 	}
 }

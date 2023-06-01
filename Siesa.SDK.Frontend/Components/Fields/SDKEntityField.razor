@@ -56,6 +56,14 @@
                                 }
                             </li>
                         }
+                    }else if(HasError){
+                        <li class="d-flex justify-content-between error-item" data-automation-id="@GetAutomationIdItem(ErrorMessage)">
+                            <div class="d-flex align-items-center">
+                                <div class="ml-1">
+                                    <p class="font_size_087 m-0 font-weight-bold"><span>@ErrorMessage</span></p>
+                                </div>
+                            </div>
+                        </li>
                     }
                 </ul>
             </div>
@@ -76,6 +84,9 @@
 {
     private string GetAutomationIdItem(dynamic item)
     {
+        if(HasError){
+            return $"{GetAutomationId()}_Error";
+        }
         return $"{GetAutomationId()}_{item.Value.Rowid}";
     }
     public async Task OpenModalCreate()
@@ -104,7 +115,7 @@
     
     public async Task OpenModalList(){
         var filters = await GetFilters();
-        var listDialog = await SDKDialogService.ShowCustomDialog(ds => @<div><DynamicListView BusinessName="@RelatedBusiness" IsSubpanel=true  ShowTitle="false" OnSelectedRow="OnSelectedRow" SubpanelFilter="@filters" FromEntityField=true IsMultiple="@IsMultiple" SelectedItems="@ItemsSelected" businessObj="@RelBusinessObj"/>@if(IsMultiple){<div class="float-right pt-2"><SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Custom.EntityField.SelectButton" Click="@(() => SelectValues())"/></div>}
+        var listDialog = await SDKDialogService.ShowCustomDialog(ds => @<div><DynamicListView BusinessName="@RelatedBusiness" IsSubpanel=true  ShowTitle="false" OnSelectedRow="OnSelectedRow" SubpanelFilter="@filters" FromEntityField=true IsMultiple="@IsMultiple" SelectedItems="@ItemsSelected" businessObj="@RelBusinessObj" IsEntityField=true/>@if(IsMultiple){<div class="float-right pt-2"><SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Custom.EntityField.SelectButton" Click="@(() => SelectValues())"/></div>}
         </div>, width: "90%", title:$"{RelatedBusiness}.Singular");
         if(listDialog != null && listDialog){
             StateHasChanged();

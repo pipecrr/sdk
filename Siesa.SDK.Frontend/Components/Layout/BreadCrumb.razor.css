@@ -21,11 +21,16 @@
     font-size: 0.75rem;
     color: var(--color_text_2) !important;
     opacity: 1 !important;
+    outline: none !important;
 }
 .breadcrumb .active{
     text-align: left;
     font-size: 0.75rem;
     font-weight: 700;
+}
+.breadcrumb-item+.breadcrumb-item::before{
+    color: var(--color_text_2) !important;
+    outline: none !important;
 }
 .estado{
     padding-left: 6px;

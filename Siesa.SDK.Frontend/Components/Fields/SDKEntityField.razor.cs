@@ -36,7 +36,6 @@ namespace Siesa.SDK.Frontend.Components.Fields
         [Parameter] public int MinCharsEntityField { get; set; } = 2;
         [Parameter] public Dictionary<string, string> RelatedFilters { get; set; } = new Dictionary<string, string>();
         [Parameter] public RelatedParams RelatedParams { get; set; }
-
         [Parameter] public Action<object> SetValue { get; set; }
         [Parameter] public Action OnChange { get; set; }
         [Parameter] public Action<List<dynamic>> OnReady { get; set; }
@@ -71,6 +70,8 @@ namespace Siesa.SDK.Frontend.Components.Fields
         private string badgeContainerClass = "badge-container d-none";
         private string placeholder = "";
         private long lastRefresh;
+        public bool HasError = false;
+        public string ErrorMessage = "";
 
         private Dictionary<string, dynamic> BadgeByData = new Dictionary<string, dynamic>();
         protected override async Task OnInitializedAsync()
@@ -102,6 +103,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 if(currentValueObj.GetType().GetProperty("Rowid").GetValue(currentValueObj) != 0)
                 {
                     Value = currentValueObj.ToString();
+                    //SetVal(currentValueObj); //TODO: Probar todos los casos
                 }
             }
             relBusinessModel = BackendRouterService.GetSDKBusinessModel(RelatedBusiness, null);
@@ -354,23 +356,29 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 var filters = await GetFilters();
 
                 var extraFields = RelatedParams?.ExtraFields ?? new List<string>();
-
-                var result = await RelBusinessObj.EntityFieldSearchAsync(searchText, filters, 10, orderBy, extraFields);
-                var response = new LoadResult
-                {
-                    data = result.Data,
-                    totalCount = result.TotalCount,
-                    groupCount = result.GroupCount
-                };
-                CacheData.Clear();
-                CacheDataObjcts.Clear();
-                foreach (var item in result.Data){
-                    CacheData.Add(item.Rowid, item);
-                    CacheDataObjcts.Add(item);
+                try{
+                    var result = await RelBusinessObj.EntityFieldSearchAsync(searchText, filters, 10, orderBy, extraFields);
+                    var response = new LoadResult
+                    {
+                        data = result.Data,
+                        totalCount = result.TotalCount,
+                        groupCount = result.GroupCount
+                    };
+                    CacheData.Clear();
+                    CacheDataObjcts.Clear();
+                    foreach (var item in result.Data){
+                        CacheData.Add(item.Rowid, item);
+                        CacheDataObjcts.Add(item);
+                    }
+                    response.totalCount = CacheData.Count;
+                    CacheLoadResult = response;
+                    return response;
+                }catch(Exception ex){
+                    HasError = true;
+                    ErrorMessage = await UtilsManager.GetResource("Custom.General.SDKEntity.Error.GetData");
+                    
                 }
-                response.totalCount = CacheData.Count;
-                CacheLoadResult = response;
-                return response;
+                return CacheLoadResult;
             }
             else
             {

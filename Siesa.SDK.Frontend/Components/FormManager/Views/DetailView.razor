@@ -48,10 +48,11 @@ else if (ModelLoaded == true)
         @if(ContainAttachments){
             <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" 
                 Parent="@BusinessObj.BaseObj" ContainAttachments="@ContainAttachments" BLNameParentAttatchment="@BusinessName"
-                BusinessObj="@BusinessObj"/>
+                BusinessObj="@BusinessObj" BusinessName="@BusinessName"/>
         }else if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
         {
-             <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" />
+             <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" 
+                BusinessName="@BusinessName"/>
         }
         
     @if(IsSubpanel && ShowButtons){
@@ -102,7 +103,7 @@ else if (ModelLoaded == true)
                         <TopBarButton Click="GoToEdit" ResourceTag="Action.Edit" IconCssClass="fa-solid fa-pen"  />
                     }
                 }
-                @if(CanList){
+                @if(CanAcess){
                     if(ListButton != null){
                         if(!ListButton.Hidden){
                             <TopBarButton Click="GoToList" ResourceTag="Action.List" IconCssClass="fa-solid fa-list" Enabled="@(!ListButton.Disabled)"/>
