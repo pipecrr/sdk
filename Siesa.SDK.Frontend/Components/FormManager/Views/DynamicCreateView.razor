@@ -65,6 +65,7 @@ else if (BusinessObj != null)
         parameters.Add("OnCancel", OnCancel);
         if (IsSubpanel)
         {
+            parameters.Add("BLNameParentAttatchment", BLNameParentAttatchment);
             parameters.Add("SetTopBar", false);
             parameters.Add("ViewdefName", "related_create");
             if(DefaultFields != null)

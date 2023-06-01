@@ -10,7 +10,8 @@
 
     public List<SDKTab> Tabs { get; set; } = new List<SDKTab>();
 
-    public int ActiveTabIndex;
+
+    [Parameter] public int ActiveTabIndex {get; set;}
     void OnActiveTabIndexChanged(int index)
     {
         ActiveTabIndex = index;
