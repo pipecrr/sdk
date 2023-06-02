@@ -1,6 +1,6 @@
 ﻿.whcm_toolbar{
     width: calc(100% - 2rem) !important;
-    background: var(--color_light);
+    background: var(--color_toolbar_back);
     border-radius: var(--border_radius_standar_max);
     box-shadow: var(--shadow_standar);
     display: flex;
@@ -69,7 +69,8 @@
     max-width: 100%;
     text-overflow: ellipsis;
     overflow: hidden;
-    white-space: nowrap;    
+    white-space: nowrap; 
+    color: var(--color_text);   
 }
 
 @media (max-width: 767.98px) { 

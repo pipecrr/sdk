@@ -351,19 +351,23 @@ else
             <TopBarButtons>
                 @*Boton para ir a la vista de importa, validar creacion ResoruceTag*@
 
-                <TopBarButton Click="GoToImport" ResourceTag="Action.Import" IconCssClass="fa-solid fa-file-import"/>
+                @if (CanImport)
+                {
+                    <TopBarButton Click="GoToImport" ResourceTag="Action.Import" IconCssClass="fa-solid fa-file-import"/>
+                }
+
 
                 @if(ShowSearchForm && HasSearchViewdef && !_isEditingFlex)
                 {
                     <TopBarButton ResourceTag="Action.AdvanceSearch" IconCssClass="fa-solid fa-magnifying-glass" Click="@(()=> SetSearchFromVisibility(false))"/>
                 }
-                @if(_isEditingFlex){
+                @*if(_isEditingFlex){
                     <TopBarButton ResourceTag="Action.Cancel" IconCssClass="fa-solid fa-times" Click="CancelEdit"/>
                     <TopBarButton ResourceTag="Action.Flex.SaveAndClose" IconCssClass="fa-solid fa-floppy-disk" Click="SaveAndCloseList" />
                 }
                 @if(UseFlex && !_isEditingFlex && !_isSearchOpen){
                     <TopBarButton Click="GoToEditFlex" ResourceTag="Action.EditListFlex" IconCssClass="fa-solid fa-pen" />
-                }                
+                } *@
                 @if((CanCreate && AllowCreate) && !_isEditingFlex)
                 {   
                     if(CreateButton!=null){

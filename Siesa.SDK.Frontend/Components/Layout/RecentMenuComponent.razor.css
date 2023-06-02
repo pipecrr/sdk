@@ -73,7 +73,7 @@
 }
 .rectangle_borders::before {
     content: '';
-    background: linear-gradient(108deg, var(--color_border) 57%, var(--color_light) 57%);
+    background: linear-gradient(108deg, var(--color_border) 57%, var(--color_back) 57%);
     width: 8px;
     height: 24px;
     position: absolute;
@@ -84,7 +84,7 @@
 
 .rectangle_borders::after {
     content: '';
-    background: linear-gradient(108deg, var(--color_light) 45%, var(--color_border) 45%);
+    background: linear-gradient(108deg, var(--color_back) 45%, var(--color_border) 45%);
     width: 8px;
     height: 24px;
     position: absolute;

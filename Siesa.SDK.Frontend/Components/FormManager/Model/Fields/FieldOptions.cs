@@ -69,6 +69,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 
         public int ColumnWidth { get; set; } = 0;
 
+        public int RowidEntityColumn { get; set; } = 0;
+
         //Para Listas
         public IEnumerable<object> Options { get; set; }
 

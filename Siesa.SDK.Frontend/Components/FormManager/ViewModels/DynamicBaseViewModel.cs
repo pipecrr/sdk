@@ -43,7 +43,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public IServiceProvider ServiceProvider { get; set; }
 
         [Inject]
-        private IAuthenticationService AuthenticationService {get; set;}
+        public IAuthenticationService AuthenticationService {get; set;}
 
         [Inject]
         private IBackendRouterService BackendRouterService {get; set;}
@@ -72,8 +72,28 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public DynamicViewType ViewType { get; set; }
 
         protected bool CanAccess { get; set; }
+
+
+        protected virtual async Task CheckAccessPermission(bool disableAccessValidation = false)
+        {
+            if(!BusinessName.Equals("BLAttachmentDetail"))
+            {
+                CanAccess = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Access, AuthenticationService);
+            }else
+            {
+                CanAccess = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.AccessAttachment, AuthenticationService);
+            }
+
+            if(!disableAccessValidation && !CanAccess)
+            {
+                this.ErrorMsg = "Custom.Generic.Unauthorized";
+                ErrorList.Add("Custom.Generic.Unauthorized");
+            }
+
+            StateHasChanged();
+        }
         
-        protected virtual async Task InitGenericView(string bName=null, bool disableAccessValidation = false)
+        protected virtual async Task InitGenericView(string bName=null)
         {
             SDKBusinessModel businessModel;
             if (bName == null) {
@@ -81,26 +101,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             }
             businessModel = BackendRouterService.GetSDKBusinessModel(bName, AuthenticationService);
             if (businessModel != null)
-            {
-                CanAccess = await FeaturePermissionService.CheckUserActionPermission(bName, enumSDKActions.Access, AuthenticationService);
-                if(!CanAccess && !disableAccessValidation)
+            {   
+                try
                 {
-                    this.ErrorMsg = "Custom.Generic.Unauthorized";
-                    ErrorList.Add("Custom.Generic.Unauthorized");
-                }else{
-                    try
-                    {
-                        businessType = Utilities.SearchType(businessModel.Namespace + "." + businessModel.Name); 
-                        BusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider, businessType);
-                        BusinessModel = businessModel;
-                        BusinessObj.BusinessName = bName;
-                    }
-                    catch (System.Exception e)
-                    {
-                        Console.WriteLine("Error BaseViewModel" + e.ToString());
-                        ErrorMsg = e.ToString();
-                        ErrorList.Add("Exception: "+e.ToString());
-                    }
+                    businessType = Utilities.SearchType(businessModel.Namespace + "." + businessModel.Name); 
+                    BusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider, businessType);
+                    BusinessModel = businessModel;
+                    BusinessObj.BusinessName = bName;
+                }
+                catch (System.Exception e)
+                {
+                    Console.WriteLine("Error BaseViewModel" + e.ToString());
+                    ErrorMsg = e.ToString();
+                    ErrorList.Add("Exception: "+e.ToString());
                 }
             }
             else
@@ -111,9 +124,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             StateHasChanged();
         }
 
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
-            base.OnInitialized();
+            if(!string.IsNullOrEmpty(BusinessName)) //TODO: Check if this is necessary
+            {
+                await CheckAccessPermission();
+            } 
+            
+            await base.OnInitializedAsync();
+
             SetParameters(BusinessObj, BusinessName);
             if(BusinessObj != null){
                 long rowid;
@@ -159,6 +178,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                         BusinessModel = null;
                         ErrorMsg = "";
                         ErrorList = new List<string>();
+
+                        //await base.SetParametersAsync(parameters);
 
                         await InitGenericView(value);
                     }
