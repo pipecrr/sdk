@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.JSInterop;
+using Siesa.Global.Enums;
 
 namespace Siesa.SDK.Frontend.Services
 {
@@ -39,13 +40,7 @@ namespace Siesa.SDK.Frontend.Services
         private string _logoPhoto = "";
 
         
-        public enumThemeIconStyle _selectedIconStyle { get; set; }
-
-        public string _selectedColorComplementary { get; set; }
-
-        public string _selectedThemeStyle { get; set; } 
-
-        public enumThemeTopbarStyle _selectedTopbarStyle { get; set; }
+        public UserPreferencesDTO UserPreferences { get; set; } = new UserPreferencesDTO();
 
         private JwtUserData? _user;
         public JwtUserData User
@@ -150,6 +145,7 @@ namespace Siesa.SDK.Frontend.Services
                 await SetCookie("sdksession", loginRequest.Data.IdSession);
                 await SetCookie("selectedConnection", rowIdDBConnection.ToString());
                 await SetUserPhoto(loginRequest.Data.UserPhoto);
+                SetPreferencesUser(loginRequest.Data.UserPreferences);
             }
             else
             {
@@ -493,10 +489,13 @@ namespace Siesa.SDK.Frontend.Services
             _selectedSuite = rowid;
             
         }
-
         public Task Login(string username, string password, short rowIdDBConnection, bool IsUpdateSession = false)
         {
             throw new NotImplementedException();
+        }
+        public void SetPreferencesUser(UserPreferencesDTO _userPreferencesDTO)
+        {
+            UserPreferences = _userPreferencesDTO;
         }
     }
 }

@@ -130,5 +130,10 @@ namespace Siesa.SDK.Backend.Services
         {
             throw new NotImplementedException();
         }
+
+        public void SetPreferencesUser(UserPreferencesDTO preferences)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

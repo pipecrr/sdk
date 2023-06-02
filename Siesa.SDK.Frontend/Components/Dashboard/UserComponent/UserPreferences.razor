@@ -87,9 +87,9 @@
                     <div class="carousel-inner">
                         <div class="carousel-item active">
                             <div class="row px-4" alt="First slide">
-                                @if (_userPreferences != null && _userPreferences.ThemeColor != null)
+                                @if (ThemeColor != null)
                                 { 
-                                    @foreach (var theme in _userPreferences.ThemeColor)
+                                    @foreach (var theme in ThemeColor)
                                     {
                                         <div class="col-4 ">
                                             <div class="sdk_card p-2 mb-2">
@@ -138,9 +138,9 @@
                 </label>
 
                 <div class="row">
-                    @if (_userPreferences != null && _userPreferences.ComplementaryColors != null)
+                    @if (ComplementaryColors != null)
                     {
-                        @foreach (var item in _userPreferences.ComplementaryColors)
+                        @foreach (var item in ComplementaryColors)
                         {   
                             <div class="col-4 ">
                                     <div class="sdk_card p-2 mb-2">
@@ -189,9 +189,9 @@
         <div class="row">
             <div class="col-12 col-sm-12">
                 <div class="row">
-                    @if (_userPreferences != null && _userPreferences.IconsStyles != null)
+                    @if (IconsStyles != null)
                     {    
-                        @foreach (var icon in _userPreferences.IconsStyles)
+                        @foreach (var icon in IconsStyles)
                         {    
                             <div class="col-4 mb-3">
                                 <div class="sdk_card d-flex justify-content-center rounded p-4 mb-2">
@@ -291,19 +291,25 @@
     public DynamicViewType DynamicViewType { get; set; } = DynamicViewType.Detail;
     public dynamic BLUser { get; set; }
 
-    private UserPreferencesDTO _userPreferences { get; set; }
+    public Dictionary<string, string> ThemeColor { get; set; } //Temporal
+
+    public List<enumThemeIconStyle> IconsStyles { get; set; } //Temporal
+    public List<ComplementaryColor> ComplementaryColors { get; set; } //Temporal
 
     private enumThemeIconStyle _selectedIconStyle { get; set; }
 
     private string _selectedColorComplementary { get; set; }
 
-    private string _selectedThemeStyle { get; set; } 
+    private string _selectedThemeStyle { get; set; }
+
+    private UserPreferencesDTO _userPreferences { get; set; } = new UserPreferencesDTO();
 
     private enumThemeTopbarStyle _selectedTopbarStyle { get; set; }
 
     private enumThemeTopbarStyle _OneColor { get; set; } = enumThemeTopbarStyle.OneColor;
 
     private enumThemeTopbarStyle _MultiColor { get; set; } = enumThemeTopbarStyle.MultiColor;
+
 
     private string TitlePreferences { get; set; }
     private string EditUser { get; set; }
@@ -349,34 +355,35 @@
         _selectedIconStyle = BLUser.BaseObj.ThemeIconStyle;
         _selectedColorComplementary =  BLUser.BaseObj.ThemeSecondaryColor;
         _selectedTopbarStyle = BLUser.BaseObj.ThemeTopbarStyle;
-        //TODO: _userPreferences 
 
-        _userPreferences = new UserPreferencesDTO() 
+        ThemeColor = new Dictionary<string, string>() 
         {
-            ThemeColor = new Dictionary<string, string>() 
-            {
-                { "Custom.SDK.Theme.Blue", "#1079FD" },
-                { "Custom.SDK.Theme.Orange", "#00AE3C" },
-                { "Custom.SDK.Theme.Green", "#FF8E2C" },
-            },
-            IconsStyles = new List<enumThemeIconStyle>() 
-            {
-                { enumThemeIconStyle.Solid },
-                { enumThemeIconStyle.Regular },
-                { enumThemeIconStyle.Light },
-                { enumThemeIconStyle.Duotone },
-                { enumThemeIconStyle.Thin }
-            },
-            ComplementaryColors = new List<ComplementaryColor>()
-            {
-                new ComplementaryColor() { ColorName = "Tono1", PrimaryColor = "#1079FD", SecundaryColor="#661079FD"  },
-                new ComplementaryColor() { ColorName = "Tono2", PrimaryColor = "#9B111E", SecundaryColor="#669B111E" } 
-            },
-            
+            { "Custom.SDK.Theme.Blue", "#1079FD" },
+            { "Custom.SDK.Theme.Orange", "#00AE3C" },
+            { "Custom.SDK.Theme.Green", "#FF8E2C" },
+        };
+
+        IconsStyles = new List<enumThemeIconStyle>() 
+        {
+            { enumThemeIconStyle.Solid },
+            { enumThemeIconStyle.Regular },
+            { enumThemeIconStyle.Light },
+            { enumThemeIconStyle.Duotone },
+            { enumThemeIconStyle.Thin }
+        };
+
+        ComplementaryColors = new List<ComplementaryColor>()
+        {
+            new ComplementaryColor() { ColorName = "Tono1", PrimaryColor = "#1079FD", SecundaryColor="#661079FD"  },
+            new ComplementaryColor() { ColorName = "Tono2", PrimaryColor = "#9B111E", SecundaryColor="#669B111E" } 
         };
 
         StateHasChanged();
+
+            
     }
+
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -405,7 +412,14 @@
         if (result.Success)
         {
             Console.WriteLine("Success Save Changes");
-            AuthenticationService.SetUserPreferences(BLUser.BaseObj);
+
+            _userPreferences.ThemeColor = _selectedThemeStyle;
+            _userPreferences.IconsStyles = _selectedIconStyle;
+            _userPreferences.ComplementaryColors = _selectedColorComplementary;
+            _userPreferences.TopbarStyles = _selectedTopbarStyle;
+            
+            AuthenticationService.SetPreferencesUser(_userPreferences);
+
             DialogService.Close(true);
         }
 
@@ -574,6 +588,13 @@
         {
             return false;
         }
+    }
+
+    public class ComplementaryColor //Temporal
+    {
+        public string ColorName { get; set; }
+        public string PrimaryColor { get; set; }
+        public string SecundaryColor { get; set; }
     }
 
 }
