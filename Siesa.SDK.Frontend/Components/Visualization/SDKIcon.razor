@@ -6,7 +6,7 @@
 @inject IAuthenticationService AuthenticationService
 
 
-<i class="@GetIconClass()" style="@Style"> </i> 
+<i class="@GetIconClass()" style="@Style" @onclick="@OnClick" > </i> 
 
 
 
@@ -22,6 +22,11 @@
     [Parameter]
     public string CssClass { get; set; } ="";
 
+    [Parameter]
+    public string IconSize { get; set; } = "";
+
+    [Parameter]
+    public Action OnClick { get; set; }
 
     private string GetIconClass()
     {
@@ -62,7 +67,7 @@
             }
         }
 
-        return $"{StyleIcon} {Name} {CssClass}";
+        return $"{StyleIcon} {Name} {IconSize} {CssClass}";
     }
 
     protected override void OnParametersSet()
