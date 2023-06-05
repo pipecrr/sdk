@@ -8,7 +8,7 @@ namespace Siesa.SDK.Shared.DTOS
     {
         public string ThemeColor { get; set; } //Key = ThemeName, Value = ThemeColor
 
-        public enumThemeIconStyle IconsStyles { get; set; } //Enum of Icons Styles enumSDKIconStyle
+        public enumThemeIconStyle IconsStyles { get; set; } = enumThemeIconStyle.Solid; //Enum of Icons Styles enumSDKIconStyle
 
         public string ComplementaryColors { get; set; }
 

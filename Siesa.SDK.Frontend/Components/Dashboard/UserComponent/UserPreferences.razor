@@ -8,12 +8,15 @@
 @using Siesa.SDK.Frontend.Components.FormManager.ViewModels
 @using Siesa.Global.Enums 
 @using Siesa.SDK.Frontend.Components.FormManager.Model
+@using Siesa.SDK.Frontend.Components.Visualization
+
 
 @inject IServiceProvider ServiceProvider
 @inject IAuthenticationService AuthenticationService
 @inject IBackendRouterService BackendRouterService
 @inject SDKDialogService DialogService
 @inject UtilsManager UtilManager
+@inject NavigationService NavigationService
 
 
 <div class="row">
@@ -25,7 +28,10 @@
                 <img src="@ProfileImageData" alt="imagen perfil" style="max-width: 100%;">
             </div>
             <button class="whcm_upload_photo btn btn-primary btn_primary_def_1 btn-sm" >
-                <i class="fa-solid fa-camera"></i>
+
+                <SDKIcon Name="fa-camera"></SDKIcon>
+
+                @* <SDKIcon Name="fa-camera"/> *@
             </button>
         </div>
     </div>
@@ -38,19 +44,19 @@
                 {
                     <button class="btn btn-sm layout_btn_negative-sm mb-1" data-toggle="tooltip" data-placement="top"
                         title="Editar" @onclick="@(()=> ChangeViewType())">
-                        <i class="fa-solid fa-circle-check"></i>
+                        <SDKIcon Name="fa-circle-check"/>
                     </button>
 
                     <button class="btn btn-sm layout_btn_negative-sm mb-1" data-toggle="tooltip" data-placement="top"
                         title="Editar" @onclick="@(()=> ChangeViewType())">
-                        <i class="fa-solid fa-ban"></i>
+                        <SDKIcon Name="fa-ban"/>
                     </button>
                 }
                 else
                 {
                     <button class="btn btn-sm layout_btn_negative-sm mb-1" data-toggle="tooltip" data-placement="top"
                         title="@EditUser" @onclick="@(()=> ChangeViewType())">
-                        <i class="fa-solid fa-pen"></i>
+                        <SDKIcon Name="fa-pen"/>
                     </button>
                 }
 
@@ -120,13 +126,13 @@
                     <a class="carousel-control-prev" href="#carouselExampleControls" role="butto" style="opacity: 1;width: auto;"
                         data-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true">
-                            <i class="fa-solid fa-chevron-left" style="color:#1079FD"></i>
+                            <SDKIcon Name="fa-chevron-left" Style="color:#1079FD"/>
                         </span>
                     </a>
                     <a class="carousel-control-next" href="#carouselExampleControls" role="button" style="opacity: 1;width: auto;"
                         data-slide="next">
                         <span class="carousel-control-next-icon" aria-hidden="true">
-                            <i class="fa-solid fa-chevron-right" style="color:#1079FD;"></i>
+                            <SDKIcon Name="fa-chevron-right" Style="color:#1079FD;"/>
                         </span>
                     </a>
                 </div>
@@ -175,7 +181,7 @@
             </div>
 
             <div class="alert alert-info d-flex align-items-center font_size_087" role="alert">
-                <i class="fa-solid fa-circle-info mr-2"></i>
+                <SDKIcon Name="fa-circle-info mr-2"/>
                  <ResourceViewer ResourceTag="Custom.SDK.UserPreference.Notifi" />
             </div>
         </div>
@@ -398,8 +404,6 @@
     
     private async Task SaveUserPreferences()
     {
- 
-
         BLUser.BaseObj.Theme = _selectedThemeStyle;
         BLUser.BaseObj.ThemeIconStyle = _selectedIconStyle;
         BLUser.BaseObj.ThemeSecondaryColor = _selectedColorComplementary;
@@ -421,6 +425,10 @@
             AuthenticationService.SetPreferencesUser(_userPreferences);
 
             DialogService.Close(true);
+
+            NavigationService.NavigateTo("/", forceLoad: true,replace: true);
+            
+            return;
         }
 
     }

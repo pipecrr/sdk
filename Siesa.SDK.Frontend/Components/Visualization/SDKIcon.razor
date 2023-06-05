@@ -1,0 +1,77 @@
+@inherits SDKComponent
+
+@using Siesa.SDK.Shared.Services
+@using Siesa.Global.Enums
+
+@inject IAuthenticationService AuthenticationService
+
+
+<i class="@GetIconClass()" style="@Style"> </i> 
+
+
+
+@code
+{
+
+    [Parameter]
+    public string Name { get; set; }
+
+    [Parameter]
+    public string Style { get; set; } = "";
+
+    [Parameter]
+    public string CssClass { get; set; } ="";
+
+
+    private string GetIconClass()
+    {
+
+        string StyleIcon ="";
+
+        var NameSplit = Name != null ? Name.Split(" ") : null;
+
+        if (NameSplit != null && NameSplit.Length > 1)
+        {
+            Name = NameSplit[1];
+        }
+
+        var UserPreferences = AuthenticationService?.GetPreferencesUser();
+
+        if(UserPreferences != null)
+        {
+            switch (UserPreferences.IconsStyles)
+            {
+                case enumThemeIconStyle.Solid:
+                    StyleIcon = "fa-solid";
+                        break;
+                case enumThemeIconStyle.Regular:
+                    StyleIcon = "fa-regular";
+                        break;
+                case enumThemeIconStyle.Light:
+                    StyleIcon = "fa-light";
+                        break;
+                case enumThemeIconStyle.Duotone:
+                    StyleIcon = "fa-duotone";
+                        break;
+                case enumThemeIconStyle.Thin:
+                    StyleIcon = "fa-thin";
+                        break;
+                default:
+                    StyleIcon = "fa-solid";
+                        break;
+            }
+        }
+
+        return $"{StyleIcon} {Name} {CssClass}";
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        GetIconClass();
+
+        
+    }
+
+}

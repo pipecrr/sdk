@@ -2,7 +2,7 @@
     if(IsAvatar){
         @if(string.IsNullOrEmpty(Url)){
             <div class="sdk-image-viewer-avatar mb-2">
-                <i class="fa-solid fa-image"></i>
+                <SDKIcon Name="fa-image"/>
             </div>
         }else{
             <div class="sdk-image-viewer-avatar mb-2">
@@ -12,7 +12,7 @@
     }else{
         @if(string.IsNullOrEmpty(Url)){
             <div class="sdk-image-viewer-icon mb-2 d-flex justify-content-center align-items-center" style="@style">
-                <i class="fa-solid fa-image"></i>
+                <SDKIcon Name="fa-image"/>
             </div>
         }else{
             <div class="sdk-image-viewer mb-2" style="@style" >
@@ -23,7 +23,7 @@
 }else{
    <div class="text-center">
         <p>@GetName()</p>
-        <a href="@Url" target="_blank"><i class="fa-solid fa-file-arrow-down"></i></a>
+        <a href="@Url" target="_blank"><SDKIcon Name="fa-file-arrow-down"/></a>
     </div>
 }
 

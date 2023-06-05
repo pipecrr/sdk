@@ -85,6 +85,8 @@ namespace Siesa.SDK.Frontend.Services
             _userPhoto = await _localStorageService.GetItemAsync<string>("userPhoto");
             _logoPhoto = await _localStorageService.GetItemAsync<string>("imageCompanyGroup");
             var selectedConnection = await _localStorageService.GetItemAsync<string>("selectedConnection");
+            UserPreferences = await _localStorageService.GetItemAsync<UserPreferencesDTO>("userPreferences");
+
             try
             {
                 SelectedConnection = JsonConvert.DeserializeObject<SDKDbConnection>(selectedConnection);
@@ -145,7 +147,7 @@ namespace Siesa.SDK.Frontend.Services
                 await SetCookie("sdksession", loginRequest.Data.IdSession);
                 await SetCookie("selectedConnection", rowIdDBConnection.ToString());
                 await SetUserPhoto(loginRequest.Data.UserPhoto);
-                SetPreferencesUser(loginRequest.Data.UserPreferences);
+                await SetPreferencesUser(loginRequest.Data.UserPreferences);
             }
             else
             {
@@ -199,6 +201,7 @@ namespace Siesa.SDK.Frontend.Services
             await _localStorageService.RemoveItemAsync("n_tabs");
             await _localStorageService.RemoveItemAsync("bd");
             await _localStorageService.RemoveItemAsync("userPhoto");
+            await _localStorageService.RemoveItemAsync("userPreferences");
             //await _localStorageService.RemoveItemAsync("selectedSuite");
             await RemoveCookie("sdksession");
             await RemoveCookie("selectedConnection");
@@ -493,9 +496,20 @@ namespace Siesa.SDK.Frontend.Services
         {
             throw new NotImplementedException();
         }
-        public void SetPreferencesUser(UserPreferencesDTO _userPreferencesDTO)
+        public async Task SetPreferencesUser(UserPreferencesDTO _userPreferencesDTO)
         {
+            await _localStorageService.SetItemAsync("userPreferences", _userPreferencesDTO);
             UserPreferences = _userPreferencesDTO;
+        }
+
+        public UserPreferencesDTO GetPreferencesUser()
+        {
+            if (UserPreferences == null)
+            {
+                UserPreferences = new UserPreferencesDTO();
+            }
+            
+            return UserPreferences;
         }
     }
 }
