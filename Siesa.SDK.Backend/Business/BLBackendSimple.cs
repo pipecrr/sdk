@@ -319,6 +319,10 @@ namespace Siesa.SDK.Business
                 _s3Client = (IAmazonS3)_provider.GetService(typeof(IAmazonS3));
             }
 
+            if(string.IsNullOrEmpty(BusinessName))
+            {
+                BusinessName = this.GetType().Name;
+            }
         }
 
         [SDKExposedMethod]
