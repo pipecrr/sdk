@@ -153,6 +153,16 @@
                 },Icon ="fa-solid fa-note-sticky"
             },
 
+            new ComponentCategory()
+            {
+                Name= "SDKServices", Components = {
+                    new ComponentDemo{ComponentName="EmailService", ComponentFragment = @<DemoSDKServices />},
+                    new ComponentDemo{ComponentName="SDKNotificationService", ComponentFragment = @<DemoSDKServices />},
+                    new ComponentDemo{ComponentName="IFeaturePermissionService", ComponentFragment = @<DemoSDKServices />},
+                    
+                },
+            }
+
         };
     }
 
