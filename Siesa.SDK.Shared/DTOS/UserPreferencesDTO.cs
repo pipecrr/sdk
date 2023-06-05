@@ -6,13 +6,12 @@ namespace Siesa.SDK.Shared.DTOS
 {
     public class UserPreferencesDTO
     {
-        public string ThemeColor { get; set; } //Key = ThemeName, Value = ThemeColor
-
-        public enumThemeIconStyle IconsStyles { get; set; } = enumThemeIconStyle.Solid; //Enum of Icons Styles enumSDKIconStyle
+        public string ThemeColor { get; set; }
+        public enumThemeIconStyle IconsStyles { get; set; } = enumThemeIconStyle.Solid; 
 
         public string ComplementaryColors { get; set; }
 
-        public enumThemeTopbarStyle TopbarStyles { get; set; } //Enum of Topbar Styles enumSDKTopbarStyle
+        public enumThemeTopbarStyle TopbarStyles { get; set; } 
 
     }
 
