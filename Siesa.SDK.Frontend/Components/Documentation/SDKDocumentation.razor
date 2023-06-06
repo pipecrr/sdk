@@ -11,6 +11,7 @@
 @using Siesa.SDK.Frontend.Components.Documentation.Layout
 @using Siesa.SDK.Frontend.Components.Documentation.ViewsBuilder
 @using Siesa.SDK.Frontend.Components.Documentation.DataAnnotations
+@using Siesa.SDK.Frontend.Components.Documentation.SDKServices
 @inject IJSRuntime JSRuntime
 
 
@@ -156,11 +157,12 @@
             new ComponentCategory()
             {
                 Name= "SDKServices", Components = {
-                    new ComponentDemo{ComponentName="EmailService", ComponentFragment = @<DemoSDKServices />},
-                    new ComponentDemo{ComponentName="SDKNotificationService", ComponentFragment = @<DemoSDKServices />},
-                    new ComponentDemo{ComponentName="IFeaturePermissionService", ComponentFragment = @<DemoSDKServices />},
+                    new ComponentDemo{ComponentName="EmailService", ComponentFragment = @<DemoEmailServices />}
+                    //new ComponentDemo{ComponentName="SDKNotificationService", ComponentFragment = @<DemoSDKServices />},
+                    //new ComponentDemo{ComponentName="IFeaturePermissionService", ComponentFragment = @<DemoSDKServices />},.
+                    //GlobalLoader
                     
-                },
+                },Icon ="fa-solid fa-code-compare"
             }
 
         };
