@@ -1,0 +1,70 @@
+@using Siesa.SDK.Shared.Services
+@using System.Reflection;
+@using System.Text;
+@using Siesa.SDK.Shared.Utilities;
+@using System.IO;
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Services
+
+
+@inject IBackendRouterService BackendRouterService
+@inject IAuthenticationService AuthenticationService
+@inject SDKNotificationService Notification
+
+@layout EmptyLayout
+
+
+<div class="container-fluid">
+    <div class="container-fluid">
+            <h2>FeacturePermissionService</h2> 
+    </div>
+    <div class="row px-3"> 
+        <div class="col-12">
+            <SDKCard >
+                <h3>Demo FeacturePermissionService</h3>
+                <p>Este servicio ofrecido por el SDK se utiliza para validar los permisos del usuario sobre accines.</p>
+                <p>Para utilizarlo se debe inyectar el servicio, no sin antes importar el respectivo using asi:
+                    using Siesa.SDK.Shared.Services;
+                    inject IFeacturePermissionService FeacturePermissionService
+                </p>
+                <p>Luego de eso podremos hacer uso de los metodos que nos provee la interfaz para calcular los permisos del usuario, al final es el mismo metodo y lo que cambia es la firma, a continuacion los vemos:</p>
+                <ul>
+                    <li>CheckUserActionPermission(string businessName, int actionRowid, IAuthenticationService authenticationService),
+                        En este caso los parametros son el nombre del BL, el rowid de la accion y el AuthenticationService(servicio de autenticacion de usuario)
+                    </li>
+                    <li>CheckUserActionPermissions(string businessName, List(int) permissions, IAuthenticationService authenticationService)
+                        En este caso solo cambia el segundo parametro, el cual ya no es directamente el rowid de la accion, sino una lista de los rowid de las acciones que se quieren validar.
+                    </li>
+                    <li>CheckUserActionPermission(string businessName, string actionName, IAuthenticationService authenticationService)
+                    Nuvamente cambia solo el segundo parametro, en este caso nos sirve si no conocemos el rowid de la accion, pero si el nombre de la accion(Metodo Async).
+                    </li>
+                    <li>
+                        CheckUserActionPermissions(string businessName, List(string) actions, IAuthenticationService authenticationService);
+                        En este caso cambia el segundo parametro, el cual es una lista de los nombres de las acciones que se quieren validar(Metodo Async).
+                    </li>
+                    <li>GetActionRowid(string actionName)
+                        Por ultimo tambien tenemos disponible una utilidad que a partir del nomber de la accion nos devuelve el rowid de la misma(Metodo Async).
+                    </li>
+                </ul>
+
+                <p>Pensando en que sea mas facil la implementacion de dicho servicio, el SDK provee un Enum el cual podemos usar para definir las acciones: </p>
+
+                <SDKFileViewer type="SDKTypeFile.Image" url="_content/Siesa.SDK.Frontend/images/SDKEnumActions.png" />
+
+                <p>Veamos un ejemplo de como se puede utilizar el servicio:</p>
+
+                <SDKFileViewer type="SDKTypeFile.Image" url="_content/Siesa.SDK.Frontend/images/DemoFeacturePermission.png" />
+
+            </SDKCard>
+        </div>
+     </div>
+</div>
+
+    
+
+@code 
+{
+
+}
+
