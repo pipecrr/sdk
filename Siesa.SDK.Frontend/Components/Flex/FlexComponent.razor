@@ -85,7 +85,7 @@
 
     [Parameter]
     public int FlexRowId {get;set;} = 0;
-    private enumThemeIconStyle IconsStyles {get;set;} = enumThemeIconStyle.Solid;
+    //private enumThemeIconStyle IconsStyles {get;set;} = enumThemeIconStyle.Solid;
 
     private string _guid ="";
     private bool _isDebug = false;
@@ -215,6 +215,14 @@
 
     private string GetStyle(){
         string style = "";
+        enumThemeIconStyle IconsStyles = enumThemeIconStyle.Solid;
+        var UserPreferences = AuthenticationService?.GetPreferencesUser();
+
+        if(UserPreferences != null)
+        {
+            IconsStyles = UserPreferences.IconsStyles;
+        }
+        
         switch(IconsStyles){
             case enumThemeIconStyle.Solid:
                 style = "fa-solid";
