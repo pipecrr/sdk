@@ -242,7 +242,7 @@ namespace Siesa.SDK.Business
         public async Task InstanceDynamicEntities(string businessName, Int64 rowid = 0)
         {
             var requestGroups = await Backend.Call("GetGroupsDynamicEntity", BusinessName);
-            if(requestGroups.Success && requestGroups.Data != null){
+            if(requestGroups.Success && requestGroups.Data != null && requestGroups.Data.Count > 0){
                 DynamicEntities = await CreateDynamicEntities(requestGroups.Data, rowid);
                 if(rowid > 0){
                     await GetDynamicEmntitiesData(rowid);
