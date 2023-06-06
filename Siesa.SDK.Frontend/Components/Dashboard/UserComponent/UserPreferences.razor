@@ -7,25 +7,33 @@
 @using Siesa.SDK.Shared.DTOS
 @using Siesa.SDK.Frontend.Components.FormManager.ViewModels
 @using Siesa.Global.Enums 
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.Visualization
+@using System.IO
+@using Microsoft.AspNetCore.Http
 
 @inject IServiceProvider ServiceProvider
 @inject IAuthenticationService AuthenticationService
 @inject IBackendRouterService BackendRouterService
 @inject SDKDialogService DialogService
+@inject IJSRuntime jsRuntime
 
-
-
+@if(ErrorList.Count > 0){
+    <ErrorsWindow GeneralErrors="@ErrorList" />
+}
 <div class="row">
     <div
         class="container-foto-perfil d-flex align-items-center justify-content-center col-12 col-sm-12 col-md-4 col-lg-3">
 
         <div class="whcm_user_photo_box">
+            <SDKInputFile IsMultiple="false" FilterType="image/*" SaveBytes="true" RowidAttachmentDetail="@_rowidAttachmentDetail"
+                 BusinessName="BLUser"  OnInputFile="@OnInputFile" @ref="@_refinputFile"/>
             <div class="whcm_user_photo">
                 <img src="@ProfileImageData" alt="imagen perfil" style="max-width: 100%;">
             </div>
             <button class="whcm_upload_photo btn btn-primary btn_primary_def_1 btn-sm" data-toggle="tooltip"
-                data-placement="top" title="" data-original-title="Preferencias_Usuario">
-                <i class="fa-solid fa-camera"></i>
+                data-placement="top" title="" data-original-title="Preferencias_Usuario" onclick="@(async () => PickComponent())">
+                <i class="fa-solid fa-camera"></i>                
             </button>
         </div>
 
@@ -289,7 +297,12 @@
 
 @code
 {
+    private SDKInputFile? _refinputFile;
+    private int _rowidAttachmentDetail {get; set;}
+    private IJSObjectReference _jsModule;
     private string ProfileImageData { get; set; }
+    private bool HasFile { get; set; } = false;
+    private List<string> ErrorList { get; set; } = new List<string>();
     private bool _IsEdit = false;
     public DynamicViewType DynamicViewType { get; set; } = DynamicViewType.Detail;
     public dynamic BLUser { get; set; }
@@ -342,6 +355,7 @@
         _selectedIconStyle = BLUser.BaseObj.ThemeIconStyle;
         _selectedColorComplementary =  BLUser.BaseObj.ThemeSecondaryColor;
         _selectedTopbarStyle = BLUser.BaseObj.ThemeTopbarStyle;
+        _rowidAttachmentDetail = BLUser.BaseObj.RowidAttachmentUserProfilePicture;
         //TODO: _userPreferences 
 
         _userPreferences = new UserPreferencesDTO() 
@@ -380,12 +394,24 @@
     
     private async Task SaveUserPreferences()
     {
- 
-
+        ErrorList.Clear();
         BLUser.BaseObj.Theme = _selectedThemeStyle;
         BLUser.BaseObj.ThemeIconStyle = _selectedIconStyle;
         BLUser.BaseObj.ThemeSecondaryColor = _selectedColorComplementary;
         BLUser.BaseObj.ThemeTopbarStyle = _selectedTopbarStyle;
+
+        if(HasFile)
+        {
+            try{
+                await _refinputFile.SDKUploadFile();
+                BLUser.BaseObj.RowidAttachmentUserProfilePicture = _refinputFile.RowidAttachmentDetail;
+            }catch(Exception ex)
+            {
+                ErrorList.Add(ex.Message);
+                StateHasChanged();
+                return;
+            }
+        }
 
         var BL = BackendRouterService.GetSDKBusinessModel("BLUser",AuthenticationService);
 
@@ -394,6 +420,7 @@
         if (result.Success)
         {
             Console.WriteLine("Success Save Changes");
+            AuthenticationService.SetUserPhoto(ProfileImageData);
             DialogService.Close(true);
         }
 
@@ -561,6 +588,51 @@
         else
         {
             return false;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender || _jsModule == null)
+        {
+            _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/Components/Dashboard/UserComponent/UserPreferences.razor.js");
+        }
+    }
+
+    public void OnInputFile(InputFileChangeEventArgs FileInput)
+    {
+        ProcessImg(FileInput.File);
+    }
+    public async Task PickComponent()
+    {
+        await _jsModule.InvokeVoidAsync("clickInput", _refinputFile._refinputFile.Element);
+    }
+    private async Task ProcessImg(IBrowserFile browserFile)
+    {
+        var ms = new MemoryStream();
+        if(browserFile.Size > 3000000){
+            ErrorList.Add("La imagen no puede superar los 3MB");
+            return;
+        }        
+
+        await browserFile.OpenReadStream(maxAllowedSize: 3000000).CopyToAsync(ms);
+
+        var file = new FormFile(ms, 0, ms.Length, null, browserFile.Name)
+        {
+            Headers = new HeaderDictionary(),
+            ContentType = (browserFile.ContentType == "" ? "application/octet-stream": browserFile.ContentType)
+        };
+
+        if(file != null)
+        {
+            ProfileImageData = $"data:{file.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}";
+            HasFile = true;
+            StateHasChanged();
+        }
+        else
+        {
+            HasFile = false;
+            Console.WriteLine("Error al cargar la imagen");
         }
     }
 

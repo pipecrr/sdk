@@ -62,6 +62,7 @@ namespace Siesa.SDK.Shared.Services
         Task<bool> ChangePassword(int rowidUser, string NewPassword, string ConfirmPassword);
         Task RenewToken();
         string GetUserPhoto();
+        Task SetUserPhoto(string data, bool saveLocalStorage = true);
     }
 
     

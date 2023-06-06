@@ -20,11 +20,11 @@
 
         <div class="whcm_user_photo">
             <img src="@ProfileImageData" alt="imagen perfil" style="max-width: 100%;"
-                @onclick="@(()=> OpenModalPreferences())">
+                @onclick="@(async ()=> OpenModalPreferences())">
         </div>
         <button class="whcm_upload_photo btn btn-primary btn_primary_def_1 btn-sm" data-toggle="tooltip"
             data-placement="top" title="" data-original-title="Preferencias_Usuario"
-            @onclick="@(()=> OpenModalPreferences())">
+            @onclick="@(async ()=> OpenModalPreferences())">
             <i class="fa-solid fa-gear"></i>
         </button>
     </div>
@@ -159,10 +159,14 @@
         CompanyImg = AuthenticationService.GetConnectionLogo();
     }
 
-    private void OpenModalPreferences()
+    private async Task OpenModalPreferences()
     {
-        var modal = DialogService.ShowCustomDialog(ds => @<UserPreferences />, title: "Custom.SDK.UserPreference", standardWidth: SDKModalWidth.Large);
-
+        var modal = await DialogService.ShowCustomDialog(ds => @<UserPreferences />, title: "Custom.SDK.UserPreference", standardWidth: SDKModalWidth.Large);
+        
+        if(modal){
+            ProfileImageData = AuthenticationService.GetUserPhoto();
+            StateHasChanged();
+        }
     }
 
 }

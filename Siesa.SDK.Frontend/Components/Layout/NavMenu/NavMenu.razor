@@ -70,7 +70,7 @@
             </a>
             @if (AuthenticationService.User != null)
             {
-                <div class="nav_profile_btn" @onclick="@(()=> OpenModalPreferences())" data-automation-id="Button_ShowProfileMenu">
+                <div class="nav_profile_btn" @onclick="@(async ()=> OpenModalPreferences())" data-automation-id="Button_ShowProfileMenu">
                     <div class="nav_btn_standar_icon nav_profile_photo">
                         <img src="@UserPhoto" height="36px" alt="imagen perfil">
                     </div>
@@ -187,11 +187,15 @@
         SelectedMenu = ProfileMenu;
         StateHasChanged();
     }
-    private void OpenModalPreferences()
+    private async Task OpenModalPreferences()
     {
-        var modal = DialogService.ShowCustomDialog(ds => 
+        var modal = await DialogService.ShowCustomDialog(ds => 
         @<UserPreferences />, title: "Preferencias de usuario", standardWidth: SDKModalWidth.Large);
 
+        if(modal){
+            UserPhoto = AuthenticationService.GetUserPhoto();
+            StateHasChanged();
+        }
     }
 	
 
