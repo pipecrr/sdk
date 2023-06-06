@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.JSInterop;
+using Siesa.Global.Enums;
 
 namespace Siesa.SDK.Frontend.Services
 {
@@ -37,6 +38,9 @@ namespace Siesa.SDK.Frontend.Services
 
         private string _userPhoto = "";
         private string _logoPhoto = "";
+
+        
+        public UserPreferencesDTO UserPreferences { get; set; } = new UserPreferencesDTO();
 
         private JwtUserData? _user;
         public JwtUserData User
@@ -81,6 +85,8 @@ namespace Siesa.SDK.Frontend.Services
             _userPhoto = await _localStorageService.GetItemAsync<string>("userPhoto");
             _logoPhoto = await _localStorageService.GetItemAsync<string>("imageCompanyGroup");
             var selectedConnection = await _localStorageService.GetItemAsync<string>("selectedConnection");
+            UserPreferences = await _localStorageService.GetItemAsync<UserPreferencesDTO>("userPreferences");
+
             try
             {
                 SelectedConnection = JsonConvert.DeserializeObject<SDKDbConnection>(selectedConnection);
@@ -141,6 +147,7 @@ namespace Siesa.SDK.Frontend.Services
                 await SetCookie("sdksession", loginRequest.Data.IdSession);
                 await SetCookie("selectedConnection", rowIdDBConnection.ToString());
                 await SetUserPhoto(loginRequest.Data.UserPhoto);
+                await SetPreferencesUser(loginRequest.Data.UserPreferences);
             }
             else
             {
@@ -194,6 +201,7 @@ namespace Siesa.SDK.Frontend.Services
             await _localStorageService.RemoveItemAsync("n_tabs");
             await _localStorageService.RemoveItemAsync("bd");
             await _localStorageService.RemoveItemAsync("userPhoto");
+            await _localStorageService.RemoveItemAsync("userPreferences");
             //await _localStorageService.RemoveItemAsync("selectedSuite");
             await RemoveCookie("sdksession");
             await RemoveCookie("selectedConnection");
@@ -484,10 +492,24 @@ namespace Siesa.SDK.Frontend.Services
             _selectedSuite = rowid;
             
         }
-
         public Task Login(string username, string password, short rowIdDBConnection, bool IsUpdateSession = false)
         {
             throw new NotImplementedException();
+        }
+        public async Task SetPreferencesUser(UserPreferencesDTO _userPreferencesDTO)
+        {
+            await _localStorageService.SetItemAsync("userPreferences", _userPreferencesDTO);
+            UserPreferences = _userPreferencesDTO;
+        }
+
+        public UserPreferencesDTO GetPreferencesUser()
+        {
+            if (UserPreferences == null)
+            {
+                UserPreferences = new UserPreferencesDTO();
+            }
+            
+            return UserPreferences;
         }
     }
 }

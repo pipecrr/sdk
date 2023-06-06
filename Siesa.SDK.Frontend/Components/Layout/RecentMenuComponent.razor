@@ -16,7 +16,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div class="position-relative pr-3">
                     <div class="d-flex justify-content-center align-items-center whcm_dot font_color_primary">
-                        <i class="@GetIconClass(recentMenu.Value.First())"></i>
+                        <SDKIcon Name="@GetIconClass(recentMenu.Value.First())"></SDKIcon>
                     </div>
                     <div class="d-flex justify-content-start align-items-end flex-wrap margenes_box pl-4 pt-1">
                         @foreach (var menu in recentMenu.Value)
@@ -39,7 +39,7 @@
                 </div>
                 <div class="p-2 border-left">
                     <a class="font_color_text" href="@recentMenu.Value.Last().CurrentURL" target="_blank"  @onclick="@ActionClick" @onclick:stopPropagation="true">
-                        <i class="fa-solid fa-arrow-up-right-from-square pointer"></i>
+                        <SDKIcon Name="fa-arrow-up-right-from-square" CssClass="pointer"/>
                     </a>
                 </div>
             </div>
@@ -135,12 +135,13 @@
         }
     }
 
-    private string GetIconClass(E00061_Menu MenuItem){
+    private string GetIconClass(E00061_Menu MenuItem)
+    {
         if(MenuItem.IconClass != null){
-            //check if contains fontawesome icon style
             var iconSplit = MenuItem.IconClass.Split(" ");
-            if(iconSplit.Length == 1){
-                return "fa-duotone " + MenuItem.IconClass; //TODO: Temporal, cambiar por preferencia de usuario
+            if(iconSplit.Length == 1)
+            {
+                return MenuItem.IconClass; 
             }
 
             return MenuItem.IconClass;

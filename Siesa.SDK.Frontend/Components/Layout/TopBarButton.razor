@@ -1,6 +1,8 @@
 @using SDK.Components.Visualization
 @using Siesa.SDK.Frontend.Application
 @using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Frontend.Components.Visualization
+
 @inject IResourceManager ResourceManager
 @inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavigationManager
@@ -10,12 +12,12 @@
 {
     <button class="btn btn-sm layout_btn_standar-sm ml-1" data-toggle="tooltip" disabled="@(!Enabled)"
         data-placement="top" title="@Text" form="@form" type="submit" data-automation-id="@GetAutomationId()">
-        <i class="@IconCssClass"></i>
+        <SDKIcon Name="@IconCssClass"></SDKIcon>
     </button>
 }else{
     <button class="btn btn-sm layout_btn_standar-sm ml-1" data-toggle="tooltip" disabled="@(!Enabled)"
         data-placement="top" title="@Text" form="@form" @onclick="@OnClick" data-automation-id="@GetAutomationId()" @onclick:preventDefault>
-        <i class="@IconCssClass"></i>
+        <SDKIcon Name="@IconCssClass"></SDKIcon>
     </button>
 }
 
