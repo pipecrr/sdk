@@ -1,4 +1,6 @@
 using Siesa.SDK.Shared.Criptography;
+using System.Collections.Generic;
+using Siesa.SDK.Shared.Services;
 
 namespace Siesa.SDK.Frontend.Criptography
 {
@@ -8,7 +10,7 @@ namespace Siesa.SDK.Frontend.Criptography
         {
         }
         
-        public string Generate<T>(T obj, long min)
+        public string Generate<T>(T obj, long min, Dictionary<string, List<int>>? featurePermissions = null, List<SessionRol> roles = null,  short rowIdDBConnection = 0, short rowidcompanygroup =0)
         {
             throw new System.NotImplementedException();
         }
