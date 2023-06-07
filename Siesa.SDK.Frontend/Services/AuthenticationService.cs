@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.JSInterop;
+using Siesa.SDK.Frontend.Criptography;
 
 namespace Siesa.SDK.Frontend.Services
 {
@@ -23,6 +24,7 @@ namespace Siesa.SDK.Frontend.Services
         private IJSRuntime _jsRuntime;
         private string _secretKey;
         private int _minutesExp;
+        private ISDKJWT _sdkJWT;
 
         private short CustomRowidCulture = 0;
         public short RowidCultureChanged { get; set; } = 0;
@@ -49,7 +51,14 @@ namespace Siesa.SDK.Frontend.Services
                 }
                 if (_user == null)
                 {
-                    _user = new SDKJWT(_secretKey, _minutesExp).Validate(UserToken);
+                    try
+                    {
+                        _user = _sdkJWT.Validate<JwtUserData>(UserToken);
+                    }
+                    catch (System.Exception)
+                    {
+                        _user = null;
+                    }
                 }
                 return _user;
             }
@@ -60,7 +69,8 @@ namespace Siesa.SDK.Frontend.Services
             ILocalStorageService localStorageService,
             IBackendRouterService BackendRouterService,
             IHttpContextAccessor ContextAccessor,
-            IJSRuntime jsRuntime
+            IJSRuntime jsRuntime,
+            ISDKJWT sdkJWT
         )
         {
             _navigationManager = navigationManager;
@@ -70,6 +80,7 @@ namespace Siesa.SDK.Frontend.Services
             _minutesExp = 120; //TODO: get from config
             _secretKey = "testsecretKeyabc$"; //TODO: get from config
             _jsRuntime = jsRuntime;
+            _sdkJWT = sdkJWT;
         }
 
         public async Task Initialize()
@@ -371,9 +382,18 @@ namespace Siesa.SDK.Frontend.Services
 
         public async Task<bool> IsValidToken()
         {
-            var token = await _localStorageService.GetItemAsync<string>("usertoken");
-            var user = new SDKJWT(_secretKey, _minutesExp).Validate(token);
-            return user != null;
+            try
+            {
+                var token = await _localStorageService.GetItemAsync<string>("usertoken");
+                var user =   _sdkJWT.Validate<JwtUserData>(token);
+                //var user = new SDKJWT(_secretKey, _minutesExp).Validate(token);
+                return user != null;
+            }
+            catch (System.Exception)
+            {
+
+                return false;
+            }
         }
 
 

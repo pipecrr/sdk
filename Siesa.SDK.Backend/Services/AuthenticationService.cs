@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Shared.DTOS;
+using Siesa.SDK.Backend.Criptography;
 
 namespace Siesa.SDK.Backend.Services
 {
@@ -14,9 +15,11 @@ namespace Siesa.SDK.Backend.Services
         private string _secretKey;
         private int _minutesExp;
         public short RowidCultureChanged { get; set; } = 0;
-        public AuthenticationService(){
+        private ISDKJWT _sdkJWT;
+        public AuthenticationService(ISDKJWT sdkJWT){
             _minutesExp = 120; //TODO: get from config
             _secretKey = "testsecretKeyabc$"; //TODO: get from config
+            _sdkJWT = sdkJWT;
         }
 
         private JwtUserData? _user;
@@ -26,7 +29,16 @@ namespace Siesa.SDK.Backend.Services
                 return null;
             }
             if(_user == null){
-                _user = new SDKJWT(_secretKey, _minutesExp).Validate(UserToken);
+                try
+                {
+                     _user = _sdkJWT.Validate<JwtUserData>(UserToken);
+
+                }catch (System.Exception)
+                {
+                        
+                     _user = null;
+                }
+              
             }
             return _user;
         }}
@@ -99,8 +111,10 @@ namespace Siesa.SDK.Backend.Services
 
         public async Task<bool> IsValidToken()
         {
-            var user = new SDKJWT(_secretKey, _minutesExp).Validate(UserToken);
+            var user = _sdkJWT.Validate<JwtUserData>(UserToken);
             return user != null;
+            // var user = new SDKJWT(_secretKey, _minutesExp).Validate(UserToken);
+            // return user != null;
         }
         public async Task<bool> ForgotPasswordAsync(string email){
              throw new NotImplementedException();
