@@ -7,17 +7,20 @@
 @inject IFeaturePermissionService FeaturePermissionService
 @inherits Siesa.SDK.Frontend.Components.SDKComponent
 
-@if(!String.IsNullOrEmpty(form) && SubmitFormOnClick)
+@if(HasPermission)
 {
-    <button class="btn btn-sm layout_btn_standar-sm ml-1" data-toggle="tooltip" disabled="@(!Enabled)"
-        data-placement="top" title="@Text" form="@form" type="submit" data-automation-id="@GetAutomationId()">
-        <i class="@IconCssClass"></i>
-    </button>
-}else{
-    <button class="btn btn-sm layout_btn_standar-sm ml-1" data-toggle="tooltip" disabled="@(!Enabled)"
-        data-placement="top" title="@Text" form="@form" @onclick="@OnClick" data-automation-id="@GetAutomationId()" @onclick:preventDefault>
-        <i class="@IconCssClass"></i>
-    </button>
+    @if(!String.IsNullOrEmpty(form) && SubmitFormOnClick)
+    {
+        <button class="btn btn-sm layout_btn_standar-sm ml-1" data-toggle="tooltip" disabled="@(!Enabled)"
+            data-placement="top" title="@Text" form="@form" type="submit" data-automation-id="@GetAutomationId()">
+            <i class="@IconCssClass"></i>
+        </button>
+    }else{
+        <button class="btn btn-sm layout_btn_standar-sm ml-1" data-toggle="tooltip" disabled="@(!Enabled)"
+            data-placement="top" title="@Text" form="@form" @onclick="@OnClick" data-automation-id="@GetAutomationId()" @onclick:preventDefault>
+            <i class="@IconCssClass"></i>
+        </button>
+    }
 }
 
 
