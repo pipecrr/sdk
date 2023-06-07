@@ -1243,7 +1243,11 @@ namespace Siesa.SDK.Business
             return new BadRequestResult<string>{Success = false, Errors = new List<string> { "Custom.Attatchment.FileNotFound" }};
         }
 
-        private async Task<ActionResult<string>> DownloadFileS3(string url)
+        public bool GetUses3(){
+            return _useS3;
+        }
+
+        public async Task<ActionResult<string>> DownloadFileS3(string url)
         {
             var bucketName = _configuration.GetValue<string>("AWS:S3BucketName");
             if(string.IsNullOrEmpty(bucketName)){
