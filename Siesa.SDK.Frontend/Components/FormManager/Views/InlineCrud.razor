@@ -73,7 +73,7 @@
 
     private int _rowidPermission ;
 
-    public List<int> ListPermission { get; set; } = new List<int>();
+    public List<string> ListPermission { get; set; } = new List<string>();
     
     Guid listview_key = Guid.NewGuid();
 
@@ -88,13 +88,11 @@
     {
         if (!string.IsNullOrEmpty(BusinessName) && BusinessName.Equals("BLAttachmentDetail"))
         {
-            _rowidPermission = await FeaturePermissionService.GetActionRowid(enumSDKActions.UploadAttachment);
+            ListPermission.Add(enumSDKActions.UploadAttachment);
         }else
         {
-            _rowidPermission = await FeaturePermissionService.GetActionRowid(enumSDKActions.Create);
+            ListPermission.Add(enumSDKActions.Create);
         }
-
-        ListPermission.Add(_rowidPermission);
     }
 
     public async Task OpenModalCreate()
