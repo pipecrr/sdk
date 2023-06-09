@@ -1,0 +1,56 @@
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Application
+@using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Frontend.Services
+@inject IServiceProvider ServiceProvider
+@inject SDKDialogService SDKDialogService
+
+<div>
+    <div class="sdk_aditional_fields_titleBar">
+        <div class="sdk_aditional_fields_title">
+            <ResourceViewer ResourceTag="@Title"/>
+        </div>
+        <div class="sdk_aditional_fields_close">
+            <i class="fa-light fa-xmark" onclick="@Close"></i>
+        </div>
+    </div>
+    @if(Page == 0){
+        <GroupAditionalFields DynamicEntity="@DynamicEntity" SizeField="@SizeField"/>
+    }else{
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-3">
+            <div class="sdk_card d-flex flex-row">
+                <div class="sdk_button_box_2 p-1"></div>
+                <div class="col pt-2">
+                    <div class="row">
+                        <h6 class="col-12 font-weight-bold">
+                            <ResourceViewer ResourceTag="@DynamicEntity.Tag"/>
+                        </h6>
+                    </div>
+                    @foreach (var item in DynamicEntityColumns)
+                    {
+                        var index = DynamicEntityColumns.IndexOf(item);
+                        bool showAddButton = index == DynamicEntityColumns.Count - 1;
+                        <FieldsAditionalFields DynamicEntityColumn="@item" Index="index" OnDeleteField="@DeleteButton" OnAddField="@AddButton" ShowAddButton="@showAddButton"/>
+                        <h6>&nbsp;</h6>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+    <div class="sdk_aditional_fields_footerBar">
+        <div class="sdk_aditional_fields_footer">
+            @if(Page == 0){
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" ResourceTag="Cancelar" Click="@Close" CssClass="m-1"/>
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Siguiente" Click="@Next"  CssClass="m-1"/>
+            }else{
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" ResourceTag="Atras" Click="@Back" CssClass="m-1"/>
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Guardar" Click="@(()=> Save())"  CssClass="m-1"/>
+            }
+        </div>
+    </div>
+</div>
+
+@code{    
+}

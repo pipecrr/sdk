@@ -1852,6 +1852,29 @@ namespace Siesa.SDK.Business
                 }
             }
         }
+
+        [SDKExposedMethod]
+        public async Task<ActionResult<int>> SaveGroupsDynamicEntity(E00250_DynamicEntity dynamicEntity)
+        {
+            using (SDKContext context = CreateDbContext())
+            {
+                var resource = context.Set<E00250_DynamicEntity>().Where(x => x.Rowid == dynamicEntity.Rowid).FirstOrDefault();
+                if (resource != null)
+                {
+                    resource.Tag = dynamicEntity.Tag;
+                    resource.Id = dynamicEntity.Id;
+                    context.SaveChanges();
+                    return new ActionResult<int>() { Data = resource.Rowid };
+                }
+                else
+                {
+                    context.Add(dynamicEntity);
+                    context.SaveChanges();
+                    return new ActionResult<int>() { Data = dynamicEntity.Rowid };
+                }
+            }
+
+        }
     }
 
 }
