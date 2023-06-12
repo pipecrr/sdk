@@ -63,17 +63,3 @@
         <SDKRadioButton ItemType="int" @bind-Value="@Type" Data="@DataVisualizationType"/>
     </SDKFormLayoutItem>
  </SDKFormLayout>
-
-@code{
-    @* public int WidthValue { get; set; } = 12;
-    string Name {get; set;} = "Name"; *@
-    /*<FreeForm Viewdef="create" BusinessName="BLDynamicEntity" BusinessObj="@BL" Title="Demo FreeForm"/>
-    public dynamic BL { get; set; }
-    protected override void OnInitialized()
-    {
-        var blType = Utilities.SearchType("Siesa.MasterBackend.Business.BLDynamicEntity");
-        BL = ActivatorUtilities.CreateInstance(ServiceProvider, blType);
-        BL.BusinessName = "BLDynamicEntity";
-        base.OnInitialized();
-    }*/
-}

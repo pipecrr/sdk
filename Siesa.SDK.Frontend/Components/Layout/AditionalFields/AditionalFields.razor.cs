@@ -15,7 +15,7 @@ namespace Siesa.SDK.Frontend.Components.Layout.AditionalFields
         private E00250_DynamicEntity DynamicEntity = new E00250_DynamicEntity();
         private List<E00251_DynamicEntityColumn> DynamicEntityColumns = new List<E00251_DynamicEntityColumn>();
         private int SizeField = 0; 
-        
+        private int TypeGroupDynamicEntity = 1;
         protected override async Task OnInitializedAsync(){
             E00251_DynamicEntityColumn DynamicEntityColumn = new E00251_DynamicEntityColumn();
             DynamicEntityColumns.Add(DynamicEntityColumn);
@@ -40,12 +40,28 @@ namespace Siesa.SDK.Frontend.Components.Layout.AditionalFields
         public async Task Save(){
             var BlFeacture = BackendRouterService.GetSDKBusinessModel("BLFeature", AuthenticationService);
             var resultFeature = await BlFeacture.Call("GetFeatureRowid", Business.BusinessName);
-             if(resultFeature.Success){
+            if(resultFeature.Success){
                 var RowidFeature = resultFeature.Data;
                 DynamicEntity.RowidFeature = RowidFeature;
-             }
+            }
+            if(TypeGroupDynamicEntity == 1){
+                DynamicEntity.IsMultiRecord = false;
+            }else{
+                DynamicEntity.IsMultiRecord = true;
+            }
 
-            await Business.SaveGroupsDynamicEntity(DynamicEntity);
+            DynamicEntity.Id = $"ED_{DynamicEntity.Tag}";
+
+            var responseGroupsDynamicEntity = await Business.Backend.Call("SaveGroupsDynamicEntity", DynamicEntity);
+            if(responseGroupsDynamicEntity.Success){
+                var RowidGroupsDynamicEntity = responseGroupsDynamicEntity.Data;
+                foreach(var DynamicEntityColumn in DynamicEntityColumns){
+                    DynamicEntityColumn.RowidDynamicEntity = RowidGroupsDynamicEntity;
+                    DynamicEntityColumn.Id = $"CED_{DynamicEntityColumn.Tag}";
+                    
+                    var responseGroupsDynamicEntityColumn = await Business.Backend.Call("SaveDynamicEntityColumn", DynamicEntityColumn);
+                }
+            }
             SDKDialogService.Close();
         }
 

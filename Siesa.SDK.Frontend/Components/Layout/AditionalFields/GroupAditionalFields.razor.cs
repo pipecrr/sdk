@@ -8,7 +8,7 @@ namespace Siesa.SDK.Frontend.Components.Layout.AditionalFields
     public partial class GroupAditionalFields{
         [Parameter] public E00250_DynamicEntity DynamicEntity { get; set; } = new E00250_DynamicEntity();
         [Parameter] public int SizeField { get; set; }
-        private int Type { get; set; }
+        [Parameter] public int Type { get; set; }
         List<SelectBarItemWrap<int>> DataVisualizationType = new List<SelectBarItemWrap<int>>()
         {
             new SelectBarItemWrap<int>() {Key=1, Name="Formulario"},

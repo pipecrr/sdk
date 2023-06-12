@@ -1854,24 +1854,73 @@ namespace Siesa.SDK.Business
         }
 
         [SDKExposedMethod]
+        public async Task<ActionResult<int>> SaveDynamicEntityColumn(E00251_DynamicEntityColumn dynamicEntityColumn)
+        {
+            try{                
+                using(SDKContext context = CreateDbContext()){
+                    var entityColumn = context.Set<E00251_DynamicEntityColumn>().Where(x => x.Rowid == dynamicEntityColumn.Rowid).FirstOrDefault();
+                    if(entityColumn != null){
+                        /*resource.RowidDynamicEntity = dynamicEntityColumn.RowidDynamicEntity;
+                        resource.Id = dynamicEntityColumn.Id;
+                        resource.Tag = dynamicEntityColumn.Tag;
+                        resource.Order = dynamicEntityColumn.Order;
+                        resource.IsOptional = dynamicEntityColumn.IsOptional;
+                        resource.IsDisable = dynamicEntityColumn.IsDisable;
+                        resource.IsLocked = dynamicEntityColumn.IsLocked;
+                        resource.Size = dynamicEntityColumn.Size;
+                        resource.Decimal = dynamicEntityColumn.Decimal;
+                        resource.DefaultValueText = dynamicEntityColumn.DefaultValueText;
+                        resource.IsInternal = dynamicEntityColumn.IsInternal;
+                        resource.IsMultiRecord = dynamicEntityColumn.IsMultiRecord;
+                        resource.RowidFeature = dynamicEntityColumn.RowidFeature;*/
+                        context.Entry(entityColumn).CurrentValues.SetValues(dynamicEntityColumn);                        
+                        context.SaveChanges();
+                        return new ActionResult<int>() { Success = true, Data = dynamicEntityColumn.Rowid };
+                    }else{
+                        context.Add(dynamicEntityColumn);
+                        context.SaveChanges();
+                        return new ActionResult<int>() { Success = true, Data = dynamicEntityColumn.Rowid };
+                    }
+                }
+
+            }catch (Exception e){
+                return new BadRequestResult<int>() { Success = false, Errors = new List<string>() { e.Message } };
+            }
+        }
+
+        [SDKExposedMethod]
         public async Task<ActionResult<int>> SaveGroupsDynamicEntity(E00250_DynamicEntity dynamicEntity)
         {
-            using (SDKContext context = CreateDbContext())
-            {
-                var resource = context.Set<E00250_DynamicEntity>().Where(x => x.Rowid == dynamicEntity.Rowid).FirstOrDefault();
-                if (resource != null)
+            try{
+                using (SDKContext context = CreateDbContext())
                 {
-                    resource.Tag = dynamicEntity.Tag;
-                    resource.Id = dynamicEntity.Id;
-                    context.SaveChanges();
-                    return new ActionResult<int>() { Data = resource.Rowid };
+                    var resource = context.Set<E00250_DynamicEntity>().Where(x => x.Rowid == dynamicEntity.Rowid).FirstOrDefault();
+                    if (resource != null)
+                    {
+                        resource.Tag = dynamicEntity.Tag;
+                        resource.Id = dynamicEntity.Id;
+                        resource.Order = dynamicEntity.Order;
+                        resource.RowidFeature = dynamicEntity.RowidFeature;
+                        resource.IsInternal = dynamicEntity.IsInternal;
+                        resource.IsMultiRecord = dynamicEntity.IsMultiRecord;
+                        resource.IsOptional = dynamicEntity.IsOptional;
+                        resource.IsDisable = dynamicEntity.IsDisable;
+                        resource.IsLocked = dynamicEntity.IsLocked;
+                        context.SaveChanges();
+                        return new ActionResult<int>() { Success=true, Data = resource.Rowid };
+                    }
+                    else
+                    {
+                        var LastRowid = context.Set<E00250_DynamicEntity>().OrderByDescending(x => x.Rowid).FirstOrDefault().Rowid;
+                        dynamicEntity.Rowid = LastRowid + 1;
+                        dynamicEntity.RowidCompanyGroup = AuthenticationService.User.RowidCompanyGroup;
+                        context.Add(dynamicEntity);
+                        context.SaveChanges();
+                        return new ActionResult<int>() { Success = true, Data = dynamicEntity.Rowid };
+                    }
                 }
-                else
-                {
-                    context.Add(dynamicEntity);
-                    context.SaveChanges();
-                    return new ActionResult<int>() { Data = dynamicEntity.Rowid };
-                }
+            }catch(Exception e){
+                return new BadRequestResult<int>() { Success = false, Errors = new List<string>() { e.Message } };
             }
 
         }
