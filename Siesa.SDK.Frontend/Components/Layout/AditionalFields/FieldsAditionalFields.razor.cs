@@ -2,30 +2,50 @@ using System;
 using Microsoft.AspNetCore.Components;
 using System.Collections.Generic;
 using Siesa.SDK.Entities;
-
+using Siesa.SDK.Shared.Services;
+using System.Threading.Tasks;
+using Siesa.Global.Enums;
 namespace Siesa.SDK.Frontend.Components.Layout.AditionalFields
 {
     public partial class FieldsAditionalFields{
+        [Inject] public IResourceManager ResourceManager {get; set;}
+        [Inject] public IAuthenticationService AuthenticationService { get; set; }
         [Parameter] public E00251_DynamicEntityColumn DynamicEntityColumn { get; set; } = new E00251_DynamicEntityColumn();
         [Parameter] public Action<int> OnDeleteField { get; set; }
         [Parameter] public Action OnAddField { get; set; }
         [Parameter] public int Index { get; set; }
         [Parameter] public bool ShowAddButton { get; set; }
-        private int Type { get; set; }
+        [Parameter] public Action OnChangeTag { get; set; }
+        private int Type { get; set; } = 1;
         private int TypeVisualization { get; set; }
-        List<SelectBarItemWrap<int>> DataType = new List<SelectBarItemWrap<int>>()
-        {
-            new SelectBarItemWrap<int>() {Key=1, Name="Numerico"},
-            new SelectBarItemWrap<int>() {Key=2, Name="Decimal"},
-            new SelectBarItemWrap<int>() {Key=2, Name="Fecha"},
-            new SelectBarItemWrap<int>() {Key=3, Name="Texto"},
-            new SelectBarItemWrap<int>() {Key=2, Name="Entidad"}
-        };
-        List<SelectBarItemWrap<int>> DataTypeVisualization = new List<SelectBarItemWrap<int>>()
-        {
-            new SelectBarItemWrap<int>() {Key=1, Name="Default"},
-            new SelectBarItemWrap<int>() {Key=2, Name="Boton-group"}
-        };
+        private bool ReadOnlyMinMax = false;
+        List<SelectBarItemWrap<int>> DataType = new List<SelectBarItemWrap<int>>();
+        
+        List<SelectBarItemWrap<int>> DataTypeVisualization = new List<SelectBarItemWrap<int>>();
+
+        protected override async Task OnInitializedAsync()
+        {   
+            DynamicEntityColumn.DataType = enumDynamicEntityDataType.Number;
+            var TextNumeric = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioNumeric", AuthenticationService);
+            var TextDecimal = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioDecimal", AuthenticationService);
+            var TextDate = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioDate", AuthenticationService);
+            var TextText = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioText", AuthenticationService);
+            //var TextEntity = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioEntity", AuthenticationService);
+
+            DataType.Add(new SelectBarItemWrap<int>() {Key=1, Name=TextNumeric});
+            DataType.Add(new SelectBarItemWrap<int>() {Key=2, Name=TextDecimal});
+            DataType.Add(new SelectBarItemWrap<int>() {Key=3, Name=TextDate});
+            DataType.Add(new SelectBarItemWrap<int>() {Key=4, Name=TextText});
+            //DataType.Add(new SelectBarItemWrap<int>() {Key=5, Name=TextEntity});
+
+            var TextDefault = await ResourceManager.GetResource("Custom.Fields.AditionalFields.TypeVisualization.RadioDefault", AuthenticationService);
+            var TextButtonGroup = await ResourceManager.GetResource("Custom.Fields.AditionalFields.TypeVisualization.RadioButtonGroup", AuthenticationService);
+
+            DataTypeVisualization.Add(new SelectBarItemWrap<int>() {Key=1, Name=TextDefault});
+            DataTypeVisualization.Add(new SelectBarItemWrap<int>() {Key=2, Name=TextButtonGroup});
+
+            base.OnInitialized();            
+        }
 
         public void DeleteField(){            
             if(OnDeleteField != null)
@@ -35,6 +55,38 @@ namespace Siesa.SDK.Frontend.Components.Layout.AditionalFields
         public void AddField(){
             if(OnAddField != null)
                 OnAddField();            
+        }
+
+        public int Onchange(int item){
+            Type = item;
+            ReadOnlyMinMax = true;
+            switch (Type){
+                case 1:
+                case 2:
+                    DynamicEntityColumn.DataType = enumDynamicEntityDataType.Number;
+                    ReadOnlyMinMax = false;
+                    break;
+                case 3:
+                    DynamicEntityColumn.DataType = enumDynamicEntityDataType.Date;
+                    break;
+                case 4:
+                    DynamicEntityColumn.DataType = enumDynamicEntityDataType.Text;
+                    break;
+                default:
+                    DynamicEntityColumn.DataType = enumDynamicEntityDataType.Text;
+                    break;
+            }
+
+            return item;
+        }
+
+        public string OnchangeTag(string value){
+            DynamicEntityColumn.Tag = value;
+            if(OnChangeTag != null){
+                OnChangeTag();
+            }
+
+            return value;            
         }
     }
 

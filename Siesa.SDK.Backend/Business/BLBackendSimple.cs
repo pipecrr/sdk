@@ -1877,6 +1877,8 @@ namespace Siesa.SDK.Business
                         context.SaveChanges();
                         return new ActionResult<int>() { Success = true, Data = dynamicEntityColumn.Rowid };
                     }else{
+                        var LastRowid = context.Set<E00251_DynamicEntityColumn>().OrderByDescending(x => x.Rowid).FirstOrDefault().Rowid;
+                        dynamicEntityColumn.Rowid = LastRowid + 1;
                         context.Add(dynamicEntityColumn);
                         context.SaveChanges();
                         return new ActionResult<int>() { Success = true, Data = dynamicEntityColumn.Rowid };

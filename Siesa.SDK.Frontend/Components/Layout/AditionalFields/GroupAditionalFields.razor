@@ -15,8 +15,8 @@
         ColSizeSm="12"
         ColSizeXs="12">
         <div class="mb-3">
-            <h6><ResourceViewer ResourceTag="Custom.Group.AditionalFields.TagDescription"/></h6>
-            <SDKCharField @bind-Value="@DynamicEntity.Tag"/>
+            <h6><ResourceViewer ResourceTag="Custom.Group.AditionalFields.TagDescription"/><span style="color:red">*</span></h6>
+            <SDKCharField Value="@DynamicEntity.Tag" ValueChanged="((value) => OnchangeTag(value))" />
         </div>
         <hr class="m-0 sdk_separator">
     </SDKFormLayoutItem>
@@ -50,16 +50,16 @@
         ColSizeXl="12"
         ColSizeSm="12"
         ColSizeXs="12">
-        <h6>Defina el tamaño del dato.</h6>
+        <h6><ResourceViewer ResourceTag="Custom.Group.AditionalFields.SizeDescription"/></h6>
         <SDKIntegerField @bind-Value="@SizeField"/>
     </SDKFormLayoutItem>
-    <SDKFormLayoutItem ResourceTag="Tipo de visualizacion"
+    <SDKFormLayoutItem ResourceTag="Custom.Group.AditionalFields.VisualizationTypeName"
         ColSizeMd="12"
         ColSizeLg="12"
         ColSizeXl="12"
         ColSizeSm="12"
         ColSizeXs="12">
-        <h6><ResourceViewer ResourceTag="Custom.Group.AditionalFields.SizeDescription"/></h6>
+        <h6><ResourceViewer ResourceTag="Custom.Group.AditionalFields.VisualizationTypeDescription"/></h6>
         <SDKRadioButton ItemType="int" @bind-Value="@Type" Data="@DataVisualizationType"/>
     </SDKFormLayoutItem>
  </SDKFormLayout>

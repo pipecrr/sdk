@@ -10,19 +10,22 @@ namespace Siesa.SDK.Frontend.Components.Layout.AditionalFields
         [Parameter] public dynamic Business { get; set; }
         [Inject] public IBackendRouterService BackendRouterService { get; set; }
         [Inject] public IAuthenticationService AuthenticationService { get; set; }
+        [Parameter] public E00250_DynamicEntity DynamicEntity { get; set; } = new E00250_DynamicEntity();
         private string Title = "Custom.Group.AditionalFields.Title";
         private int Page = 0;        
-        private E00250_DynamicEntity DynamicEntity = new E00250_DynamicEntity();
         private List<E00251_DynamicEntityColumn> DynamicEntityColumns = new List<E00251_DynamicEntityColumn>();
         private int SizeField = 0; 
         private int TypeGroupDynamicEntity = 1;
+        private bool EnableButtonNext = false;
+        private bool EnableButtonSave = false;
         protected override async Task OnInitializedAsync(){
             E00251_DynamicEntityColumn DynamicEntityColumn = new E00251_DynamicEntityColumn();
             DynamicEntityColumns.Add(DynamicEntityColumn);
             base.OnInitialized();
         }
+        
         public void Close(){
-            SDKDialogService.Close();
+            SDKDialogService.Close(false);
         }
 
         public void Next(){
@@ -62,17 +65,38 @@ namespace Siesa.SDK.Frontend.Components.Layout.AditionalFields
                     var responseGroupsDynamicEntityColumn = await Business.Backend.Call("SaveDynamicEntityColumn", DynamicEntityColumn);
                 }
             }
-            SDKDialogService.Close();
+            SDKDialogService.Close(true);
         }
 
         public void DeleteButton(int index){
             DynamicEntityColumns.RemoveAt(index);
-            StateHasChanged();
+            OnChangeTagField();
         }
-
         public void AddButton(){
             E00251_DynamicEntityColumn DynamicEntityColumn = new E00251_DynamicEntityColumn();
             DynamicEntityColumns.Add(DynamicEntityColumn);
+            EnableButtonSave = false;
+            StateHasChanged();
+        }
+
+        public void OnChangeTag(){
+            if(string.IsNullOrEmpty(DynamicEntity.Tag)){
+                EnableButtonNext = false;
+            }else{
+                EnableButtonNext = true;
+            }
+            StateHasChanged();
+        }
+
+        public void OnChangeTagField(){
+            foreach(var DynamicEntityColumn in DynamicEntityColumns){
+                if(string.IsNullOrEmpty(DynamicEntityColumn.Tag)){
+                    EnableButtonSave = false;
+                    break;
+                }else{
+                    EnableButtonSave = true;
+                }
+            }
             StateHasChanged();
         }
     }
