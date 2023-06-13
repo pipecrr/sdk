@@ -4,19 +4,23 @@
 @inject IResourceManager ResourceManager
 @inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavigationManager
+@inject IFeaturePermissionService FeaturePermissionService
 @inherits Siesa.SDK.Frontend.Components.SDKComponent
 
-@if(!String.IsNullOrEmpty(form) && SubmitFormOnClick)
+@if(HasPermission)
 {
-    <button class="btn btn-sm layout_btn_standar-sm ml-1" data-toggle="tooltip" disabled="@(!Enabled)"
-        data-placement="top" title="@Text" form="@form" type="submit" data-automation-id="@GetAutomationId()">
-        <i class="@IconCssClass"></i>
-    </button>
-}else{
-    <button class="btn btn-sm layout_btn_standar-sm ml-1" data-toggle="tooltip" disabled="@(!Enabled)"
-        data-placement="top" title="@Text" form="@form" @onclick="@OnClick" data-automation-id="@GetAutomationId()" @onclick:preventDefault>
-        <i class="@IconCssClass"></i>
-    </button>
+    @if(!String.IsNullOrEmpty(form) && SubmitFormOnClick)
+    {
+        <button class="btn btn-sm layout_btn_standar-sm ml-1" data-toggle="tooltip" disabled="@(!Enabled)"
+            data-placement="top" title="@Text" form="@form" type="submit" data-automation-id="@GetAutomationId()">
+            <i class="@IconCssClass"></i>
+        </button>
+    }else{
+        <button class="btn btn-sm layout_btn_standar-sm ml-1" data-toggle="tooltip" disabled="@(!Enabled)"
+            data-placement="top" title="@Text" form="@form" @onclick="@OnClick" data-automation-id="@GetAutomationId()" @onclick:preventDefault>
+            <i class="@IconCssClass"></i>
+        </button>
+    }
 }
 
 
@@ -32,7 +36,12 @@
 
     [Parameter] public bool Enabled { get; set; } = true;
 
+    [Parameter] public List<string> ListPermission { get; set; }
+    [Parameter] public string BusinessName { get; set; } 
+
     private string Text { get; set; }
+
+    private bool HasPermission = true;
 
     [Parameter] public string NavigateUrl { get; set; }
     [CascadingParameter]
@@ -40,6 +49,12 @@
 
     protected override async Task OnInitializedAsync()
     {
+        if(ListPermission != null && ListPermission.Count > 0)
+        {
+            HasPermission = false;
+      
+            HasPermission = await FeaturePermissionService.CheckUserActionPermissions(BusinessName, ListPermission, AuthenticationService);
+        }
         Text = ResourceTag;
         await base.OnInitializedAsync();
         Text = await GetText();
