@@ -1,21 +1,31 @@
 image: mcr.microsoft.com/dotnet/sdk:6.0
-#force
-stages:
-    - build
-    - test
-    - deploy
 
 variables:
   PACKAGE_REGISTRY_URL: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/nuget/index.json"
+  OBJECTS_DIRECTORY: 'obj'
+  NUGET_PACKAGES_DIRECTORY: '.nuget'
+  SOURCE_CODE_PATH: '*/*/'
+
+
+cache:
+  key: "$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
+  paths:
+    - '$SOURCE_CODE_PATH$OBJECTS_DIRECTORY/project.assets.json'
+    - '$SOURCE_CODE_PATH$OBJECTS_DIRECTORY/*.csproj.nuget.*'
+    - '$NUGET_PACKAGES_DIRECTORY'
+  policy: pull-push
+
+before_script:
+  - dotnet nuget add source $PACKAGE_REGISTRY_URL --name gitlab --username gitlab-ci-token --password $CI_JOB_TOKEN --store-password-in-clear-text
+  - 'dotnet restore --packages $NUGET_PACKAGES_DIRECTORY'
+
 
 build_dev:
     stage: build
     only: 
       - develop
     script:
-      - dotnet nuget add source $PACKAGE_REGISTRY_URL --name gitlab --username gitlab-ci-token --password $CI_JOB_TOKEN --store-password-in-clear-text
-      - dotnet restore
-      - dotnet pack -c Release -o nuget --version-suffix "dev"
+      - dotnet pack -c Release -o nuget --version-suffix "dev" --no-restore
     tags:
       - docker
     artifacts:
@@ -27,9 +37,7 @@ build:
     only: 
       - docker-labs
     script:
-      - dotnet nuget add source $PACKAGE_REGISTRY_URL --name gitlab --username gitlab-ci-token --password $CI_JOB_TOKEN --store-password-in-clear-text
-      - dotnet restore
-      - dotnet pack -c Release -o nuget --version-suffix "$(date +%Y%m%d)"
+      - dotnet pack -c Release -o nuget --version-suffix "$(date +%Y%m%d)" --no-restore
     tags:
       - docker
     artifacts:
@@ -38,16 +46,12 @@ build:
 
 test:
     stage: test
-    only: 
-      - develop
-      - docker-labs
     tags:
       - docker
     script:
-      - echo "Tests are not implemented yet"
+      - dotnet test --no-restore
 
 sonarqube-check:
-  #image: mcr.microsoft.com/dotnet/core/sdk:latest
   variables:
     SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
     GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
@@ -60,9 +64,8 @@ sonarqube-check:
       - "apt-get install --yes openjdk-11-jre"
       - "dotnet tool install --global dotnet-sonarscanner"
       - "export PATH=\"$PATH:$HOME/.dotnet/tools\""
-      - dotnet nuget add source $PACKAGE_REGISTRY_URL --name gitlab --username gitlab-ci-token --password $CI_JOB_TOKEN --store-password-in-clear-text
       - "dotnet sonarscanner begin /k:\"conversion_sdk_sdk_AYi1uSWfpjAXkz-m0Amt\" /d:sonar.login=\"$SONAR_TOKEN\" /d:\"sonar.host.url=$SONAR_HOST_URL\" "
-      - "dotnet build"
+      - "dotnet build --no-restore"
       - "dotnet sonarscanner end /d:sonar.login=\"$SONAR_TOKEN\""
   allow_failure: true
   only:
@@ -79,5 +82,4 @@ deploy:
     tags:
       - docker
     script:
-      - dotnet nuget add source $PACKAGE_REGISTRY_URL --name gitlab --username gitlab-ci-token --password $CI_JOB_TOKEN --store-password-in-clear-text
       - dotnet nuget push "nuget/*.nupkg" --source gitlab
