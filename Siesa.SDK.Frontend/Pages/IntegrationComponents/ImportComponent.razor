@@ -251,6 +251,7 @@
         SDKRequestImportDataDTO importDataDTO = new SDKRequestImportDataDTO();
         importDataDTO.BusinessName = BusinessName;
         importDataDTO.Data = DataMapped;
+        //importDataDTO.UrlResponse = "https://en77cb5mgajpj.x.pipedream.net";
         var bl = BackendRouterService.GetSDKBusinessModel("BLIntegrationService", AuthenticationService);
         var result = await bl.Call("BulkImportData", importDataDTO);        
         if(result.Success)
