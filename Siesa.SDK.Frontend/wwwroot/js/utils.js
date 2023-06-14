@@ -79,7 +79,7 @@ function preloadFlex(){
     var search = window.location.search;
     var params = search.substring(1,search.length).split('&');
     var sdk_debug = params.find(x => x == 'sdk_debug=1');
-    sdk_debug = true;
+    //sdk_debug = true;
     if(sdk_debug){
         loadScript('/_content/Siesa.SDK.Frontend/flex/FlexComponent.debug.js');
         loadScript("http://127.0.0.1:3000/static/js/bundle.js");
