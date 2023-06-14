@@ -64,10 +64,7 @@ generate_release:
       - git config --global user.email "gitlab@siesa.com"
       - git config --global user.name "GitLab Runner"
       - git commit -m "Release $(date +%Y%m%d)"
-      - git push --set-upstream origin release_$(date +%Y%m%d)
-      # Create a tag for the release
-      - git tag -a $(date +%Y%m%d) -m "Release $(date +%Y%m%d)"
-      - git push origin $(date +%Y%m%d)
+      - git push --set-upstream https://${GITLAB_RELEASE_CREDS}@${CI_REPOSITORY_URL#*@} release_$(date +%Y%m%d)
     tags:
       - docker
     artifacts:
