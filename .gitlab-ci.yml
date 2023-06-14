@@ -33,7 +33,7 @@ build_dev:
 build_release:
     stage: build
     only: 
-      - release_*
+      - /^release_.*$/
     script:
       - dotnet pack -c Release -o nuget --no-restore
     tags:
@@ -44,6 +44,8 @@ build_release:
 
 generate_release:
     stage: deploy
+    before_script:
+      - ''
     only: 
       - main
     script:
@@ -75,7 +77,7 @@ test:
     stage: test
     only: 
       - develop
-      - release_*
+      - /^release_.*$/
       - merge_requests
     tags:
       - docker
@@ -101,15 +103,15 @@ sonarqube-check:
   allow_failure: true
   only:
     - merge_requests
-    - main
-    - develop
+    # - main
+    # - develop
 
 
 deploy:
     stage: deploy
     only: 
       - develop
-      - release_*
+      - /^release_.*$/
     tags:
       - docker
     script:
