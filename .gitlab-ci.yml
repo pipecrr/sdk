@@ -47,6 +47,14 @@ generate_release:
     only: 
       - main
     script:
+      # Delete the release branch if it already exists in the local repository
+      - git branch | grep release_$(date +%Y%m%d) && git branch -D release_$(date +%Y%m%d)
+      # Check if the release branch already exists in the remote repository
+      - git fetch --all
+      - git checkout main
+      - git pull
+      - git branch -r | grep release_$(date +%Y%m%d) || echo "Branch release_$(date +%Y%m%d) does not exist"
+      - git branch -r | grep release_$(date +%Y%m%d) && echo "Branch release_$(date +%Y%m%d) already exists" && exit 1
       # Create a branch for the release
       - git checkout -b release_$(date +%Y%m%d)
       # add the version suffix in all csproj files recursively with the current date
