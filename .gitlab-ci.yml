@@ -65,6 +65,10 @@ generate_release:
 
 test:
     stage: test
+    only: 
+      - develop
+      - release_*
+      - merge_requests
     tags:
       - docker
     script:
