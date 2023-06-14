@@ -76,29 +76,24 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         protected virtual async Task CheckAccessPermission(bool disableAccessValidation = false)
         {
-            if(!disableAccessValidation)
+            if(!BusinessName.Equals("BLAttachmentDetail"))
             {
-                if(!BusinessName.Equals("BLAttachmentDetail"))
-                {
-                    CanAccess = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Access, AuthenticationService);
-                }else
-                {
-                    CanAccess = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.AccessAttachment, AuthenticationService);
-                }
+                CanAccess = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Access, AuthenticationService);
+            }else
+            {
+                CanAccess = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.AccessAttachment, AuthenticationService);
+            }
 
-                if(!CanAccess)
-                {
-                    this.ErrorMsg = "Custom.Generic.Unauthorized";
-                    ErrorList.Add("Custom.Generic.Unauthorized");
-                }
-            }else{
-                CanAccess = true;
+            if(!disableAccessValidation && !CanAccess)
+            {
+                this.ErrorMsg = "Custom.Generic.Unauthorized";
+                ErrorList.Add("Custom.Generic.Unauthorized");
             }
 
             StateHasChanged();
         }
         
-        protected virtual async Task InitGenericView(string bName=null, bool disableAccessValidation = false)
+        protected virtual async Task InitGenericView(string bName=null)
         {
             SDKBusinessModel businessModel;
             if (bName == null) {

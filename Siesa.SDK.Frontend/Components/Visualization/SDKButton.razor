@@ -50,7 +50,7 @@
 
     [Parameter] public bool SubmitFormOnClick { get; set; } =  false;
 
-    [Parameter] public List<int> ListPermission { get; set; }
+    [Parameter] public List<string> ListPermission { get; set; }
     [Parameter] public string BusinessName { get; set; } 
 
     private bool HasPermission = true;
@@ -89,7 +89,7 @@
         {
             HasPermission = false;
       
-            HasPermission = FeaturePermissionService.CheckUserActionPermissions(BusinessName, ListPermission, AuthenticationService);
+            HasPermission = await FeaturePermissionService.CheckUserActionPermissions(BusinessName, ListPermission, AuthenticationService);
             
         }
         if(IsActionButton || (string.IsNullOrEmpty(ResourceTag) && (!RowidResource.HasValue || RowidResource == 0)))

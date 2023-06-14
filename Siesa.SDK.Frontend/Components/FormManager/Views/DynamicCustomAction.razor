@@ -48,10 +48,13 @@ else if (BusinessObj != null)
         }
 
         var externalView = method.GetCustomAttributes(typeof(SDKExternalView), false).FirstOrDefault() as SDKExternalView;
-        if (externalView == null && (AuthenticationService.User == null || !CanAccess))
+        if (externalView == null)
         {
-            RedirectToLogin();
-            return null;
+            if(AuthenticationService.User == null || !CanAccess)
+            {
+                RedirectToLogin();
+                return null;
+            }
         }
         
         //MainLayout?.SetEmptyLayout(externalView.isEmptyLayout);
@@ -79,11 +82,6 @@ else if (BusinessObj != null)
     protected override async Task CheckAccessPermission(bool disableAccessValidation = false)
     {
         await base.CheckAccessPermission(true);
-    }
-
-    protected override async Task InitGenericView(string bName=null, bool disableAccessValidation = false)
-    {
-        await base.InitGenericView(bName, true);
     }
 
     protected override void OnInitialized()

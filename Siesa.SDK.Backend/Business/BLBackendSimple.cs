@@ -143,6 +143,11 @@ namespace Siesa.SDK.Business
             if(_useS3){
                 _s3Client = (IAmazonS3)_provider.GetService(typeof(IAmazonS3)) as IAmazonS3;
             }
+
+            if(string.IsNullOrEmpty(BusinessName))
+            {
+                BusinessName = this.GetType().Name;
+            }
         }
 
         public SDKContext CreateDbContext(bool UseLazyLoadingProxies = false)
@@ -314,6 +319,10 @@ namespace Siesa.SDK.Business
                 _s3Client = (IAmazonS3)_provider.GetService(typeof(IAmazonS3));
             }
 
+            if(string.IsNullOrEmpty(BusinessName))
+            {
+                BusinessName = this.GetType().Name;
+            }
         }
 
         [SDKExposedMethod]
