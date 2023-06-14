@@ -1854,14 +1854,13 @@ namespace Siesa.SDK.Business
         }
         
         [SDKExposedMethod]
-        public async Task<ActionResult<SDKResultImportDataDTO>> ImportData(string dataStr){
+        public ActionResult<SDKResultImportDataDTO> ImportData(string dataStr){
             JArray dataList = JArray.Parse(dataStr);
-            List<T> data = new List<T>();
             List<dynamic> SuccessData = new List<dynamic>();
             List<dynamic> ErrorData = new List<dynamic>();
             foreach (var item in dataList){
                 JObject itemObj = (JObject)item;
-                dynamic result = (T)CreateDynamicObjectFromJson(typeof(T), itemObj);
+                dynamic result = CreateDynamicObjectFromJson(typeof(T), itemObj);
                 BaseObj = result;
                 var resultValidate = ValidateAndSave();
                 if(resultValidate.Errors.Count > 0){
@@ -1877,7 +1876,7 @@ namespace Siesa.SDK.Business
 
             return new ActionResult<SDKResultImportDataDTO>{Success = true, Data = resultImport};
         }
-        private T CreateDynamicObjectFromJson(Type type, dynamic dynamicObj)
+        private static T CreateDynamicObjectFromJson(Type type, dynamic dynamicObj)
         {
             dynamic result = Activator.CreateInstance(type);
             
@@ -1885,10 +1884,9 @@ namespace Siesa.SDK.Business
                 var propertyName = property.Name;
                 var propertyEntity = type.GetProperty(propertyName);
                 if(propertyEntity != null){
-                    var value = property.Value;
+                    dynamic value;
                     //TODO : Revisar diferentes tipos de datos
-                    if(propertyEntity.PropertyType == typeof(bool)){
-                        //TODO : Revisar bool
+                    if(propertyEntity.PropertyType == typeof(bool)){                        
                         if(property.Value == 1){
                             value = true;
                         }else{
