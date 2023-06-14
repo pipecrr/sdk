@@ -52,6 +52,9 @@ generate_release:
       # add the version suffix in all csproj files recursively with the current date
       - find . -name "*.csproj" -exec sed -i "s/<VersionSuffix>.*<\/VersionSuffix>/<VersionSuffix>$(date +%Y%m%d)<\/VersionSuffix>/g" {} \;
       - git add .
+      # Config git user
+      - git config --global user.email "gitlab@siesa.com"
+      - git config --global user.name "GitLab Runner"
       - git commit -m "Release $(date +%Y%m%d)"
       - git push --set-upstream origin release_$(date +%Y%m%d)
       # Create a tag for the release
