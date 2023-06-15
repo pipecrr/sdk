@@ -72,21 +72,21 @@ else if (Panels == null || Panels.Count <= 0)
                 <div class="w-100">
                     <SDKCollapse>
                         <Items>
-                                @foreach (var panel in PanelsCollapsable)
-                                {
-                                    <SDKCollapseItem Text="@panel.ResourceTag">
-                                        <div class="row">
-                                            <CascadingValue Value="@EditFormContext">
-                                                <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
-                                            </CascadingValue>
+                            @foreach (var panel in PanelsCollapsable)
+                            {
+                                <SDKCollapseItem Text="@panel.ResourceTag">
+                                    <div class="row">
+                                        <CascadingValue Value="@EditFormContext">
+                                            <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                                        </CascadingValue>
+                                    </div>
+                                        <div class="buttons-aditional-fiels mb-2">
+                                            <SDKButton RenderStyleMode="SDKButtonRenderStyleMode.Outline" RenderStyle="SDKButtonRenderStyle.Danger" ResourceTag="Borrar" Click="@(()=>ConfirmDelete(panel.RowidGroupDynamicEntity))"/>
+                                            <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Editar campos" Click="@(()=>ClickInEdit(panel.RowidGroupDynamicEntity))"/>
+                                            <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Agregar campos" Click="@(()=>ClickInAdd(panel.RowidGroupDynamicEntity))"/>
                                         </div>
-                                            <div class="buttons-aditional-fiels mb-2">
-                                                <SDKButton RenderStyleMode="SDKButtonRenderStyleMode.Outline" RenderStyle="SDKButtonRenderStyle.Danger" ResourceTag="Borrar" Click="@(()=>ConfirmDelete(panel.RowidGroupDynamicEntity))"/>
-                                                <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Editar campos" Click="@(()=>ClickInEdit(panel.RowidGroupDynamicEntity))"/>
-                                                <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Agregar campos" Click="@(()=>ClickInAdd(panel.RowidGroupDynamicEntity))"/>
-                                            </div>
-                                    </SDKCollapseItem>
-                                }
+                                </SDKCollapseItem>
+                            }
                         </Items>
                     </SDKCollapse>
                 </div>

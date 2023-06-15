@@ -4,7 +4,12 @@
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
 @using Siesa.SDK.Entities;
 @using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Shared.Services
 @using Siesa.SDK.Frontend.Components.Layout.Detail.Relationship
+@using Siesa.SDK.Frontend.Components.Layout.AditionalFields
+@inject SDKDialogService SDKDialogService
+@inject NavigationManager NavigationManager
+@inject NavigationService NavigationService
 
 @if (Loading == true)
 {
@@ -58,6 +63,29 @@ else if (BusinessObj.BaseObj.Rowid != 0)
                     <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef" ModelObj="@BusinessObj" DefaultColSize="@Panels[0].ColSize" />
                 </CascadingValue>
 
+            }
+            @if(PanelsCollapsable.Count>0){
+                <div class="w-100">
+                    <SDKCollapse>
+                        <Items>
+                            @foreach (var panel in PanelsCollapsable)
+                            {
+                                <SDKCollapseItem Text="@panel.ResourceTag">
+                                    <div class="row">
+                                        <CascadingValue Value="@EditFormContext">
+                                            <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                                        </CascadingValue>
+                                    </div>
+                                        <div class="buttons-aditional-fiels mb-2">
+                                            <SDKButton RenderStyleMode="SDKButtonRenderStyleMode.Outline" RenderStyle="SDKButtonRenderStyle.Danger" ResourceTag="Borrar" Click="@(()=>ConfirmDelete(panel.RowidGroupDynamicEntity))"/>
+                                            <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Editar campos" Click="@(()=>ClickInEdit(panel.RowidGroupDynamicEntity))"/>
+                                            <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Agregar campos" Click="@(()=>ClickInAdd(panel.RowidGroupDynamicEntity))"/>
+                                        </div>
+                                </SDKCollapseItem>
+                            }
+                        </Items>
+                    </SDKCollapse>
+                </div>
             }
         </DxFormLayout>
         @* <ValidationSummary /> *@        
@@ -128,6 +156,58 @@ else if (BusinessObj.BaseObj.Rowid != 0)
                     }
                  }
              }
+        }
+    }
+    public async Task ConfirmDelete(int Rowid)
+    {
+        var confirmDelete = await SDKDialogService.ShowConfirmDialog(@<div class="col-12 p-0"><ResourceViewer ResourceTag="Esta seguro que desea eliminar los campos adicionales?"/></div>);
+        if(confirmDelete != null && confirmDelete == true){
+            bool deleteGroup = await DeleteGroup(Rowid);
+            if(deleteGroup){
+                var currentUrl = NavigationManager.Uri;
+                NavigationService.NavigateTo(currentUrl, true);
+            }
+                
+        }
+    }
+
+    public async Task ClickInAdd(int Rowid)
+    {   
+        var responseDynamicEntity = await BusinessObj.Backend.Call("GetDynamicEntity", Rowid);
+        if(responseDynamicEntity != null && responseDynamicEntity.Success){
+            dynamic dynamicEntity = responseDynamicEntity.Data;
+            var modal = await SDKDialogService.ShowCustomDialog(ds =>@<AditionalFields Business="@BusinessObj" IsCreate="true" DynamicEntity="dynamicEntity"/>,
+                    ShowTitle: false,
+                    standardWidth: SDKModalWidth.Large,
+                    CssClass: "aditional_fields_padding_0"
+                );
+            if(modal != null && modal == true){
+                await ModalConfirmMessage(modal);
+            }
+        }
+    }
+
+    public async Task ClickInEdit(int Rowid)
+    {
+        var responseDynamicEntity = await BusinessObj.Backend.Call("GetDynamicEntity", Rowid);
+        if(responseDynamicEntity != null && responseDynamicEntity.Success){
+            dynamic dynamicEntity = responseDynamicEntity.Data;
+            var modal = await SDKDialogService.ShowCustomDialog(ds =>@<AditionalFields Business="@BusinessObj" IsEdit="true" DynamicEntity="dynamicEntity"/>,
+                    ShowTitle: false,
+                    standardWidth: SDKModalWidth.Large,
+                    CssClass: "aditional_fields_padding_0"
+                );
+            if(modal != null && modal == true){
+                await ModalConfirmMessage(modal);
+            }
+        }
+    }
+
+    public async Task ModalConfirmMessage(bool response){
+        var confirm = await SDKDialogService.ShowConfirmDialog(@<div class="col-12 p-0"><ResourceViewer ResourceTag="Custom.AditionalFields.ConfirmMessage"/></div>);
+        if(confirm != null && confirm == true){
+            var currentUrl = NavigationManager.Uri;
+            NavigationService.NavigateTo(currentUrl, true);
         }
     }
 }
