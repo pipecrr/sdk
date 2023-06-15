@@ -12,7 +12,7 @@
 
 <button @onclick="@(async () => await OnClickSuite(@Suite))" data-automation-id="@Title"  @onclick:preventDefault class="suite_option" data-toggle="tooltip" data-placement="top" style="background-color: #@Suite.HexColor;" title="@Title" >
     <div class="h4 m-0">
-        <i class="@Suite.IconClass"></i>
+        <SDKIcon Name="@Suite.IconClass" ></SDKIcon>
     </div>
     <div class="suite_option_base" style="background-color: #@Suite.HexColor;"></div> 
 </button>
@@ -33,7 +33,6 @@
         if (lastsuite != Suite.Rowid){
             await MenuService.SetSelectedSuite(Suite.Rowid);
         }
-
     }
     private async Task<string> GetTitle(){
         return await ResourceManager.GetResource(Convert.ToInt64(Suite.RowidResource), AuthenticationService);

@@ -130,5 +130,18 @@ namespace Siesa.SDK.Backend.Services
         {
             throw new NotImplementedException();
         }
+
+        public async Task SetPreferencesUser(UserPreferencesDTO preferences)
+        {
+            throw new NotImplementedException();
+        }
+        public UserPreferencesDTO GetPreferencesUser()
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task SetUserPhoto(string _data, bool saveLocalStorage = true){
+            throw new NotImplementedException();
+        }
     }
 }

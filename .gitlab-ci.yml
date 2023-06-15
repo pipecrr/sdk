@@ -1,35 +1,72 @@
 image: mcr.microsoft.com/dotnet/sdk:6.0
 
-stages:
-    - build
-    - test
-    - deploy
-
 variables:
   PACKAGE_REGISTRY_URL: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/nuget/index.json"
+  OBJECTS_DIRECTORY: 'obj'
+  NUGET_PACKAGES_DIRECTORY: '.nuget'
+  SOURCE_CODE_PATH: '*/*/'
+
+cache:
+  key: "$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
+  paths:
+    - '$SOURCE_CODE_PATH$OBJECTS_DIRECTORY/project.assets.json'
+    - '$SOURCE_CODE_PATH$OBJECTS_DIRECTORY/*.csproj.nuget.*'
+    - '$NUGET_PACKAGES_DIRECTORY'
+  policy: pull-push
+
+before_script:
+  - dotnet nuget add source $PACKAGE_REGISTRY_URL --name gitlab --username gitlab-ci-token --password $CI_JOB_TOKEN --store-password-in-clear-text
+  - 'dotnet restore --packages $NUGET_PACKAGES_DIRECTORY'
 
 build_dev:
     stage: build
     only: 
       - develop
     script:
-      - dotnet nuget add source $PACKAGE_REGISTRY_URL --name gitlab --username gitlab-ci-token --password $CI_JOB_TOKEN --store-password-in-clear-text
-      - dotnet restore
-      - dotnet pack -c Release -o nuget --version-suffix "dev"
+      - dotnet pack -c Release -o nuget --version-suffix "dev" --no-restore
     tags:
       - docker
     artifacts:
         paths:
           - nuget/
 
-build:
+build_release:
     stage: build
     only: 
-      - docker-labs
+      - /^release_.*$/
     script:
-      - dotnet nuget add source $PACKAGE_REGISTRY_URL --name gitlab --username gitlab-ci-token --password $CI_JOB_TOKEN --store-password-in-clear-text
-      - dotnet restore
-      - dotnet pack -c Release -o nuget --version-suffix "$(date +%Y%m%d)"
+      - dotnet pack -c Release -o nuget --no-restore
+    tags:
+      - docker
+    artifacts:
+        paths:
+          - nuget/  
+
+generate_release:
+    stage: deploy
+    before_script:
+      - ''
+    only: 
+      - main
+    script:
+      # Delete the release branch if it already exists in the local repository
+      - git branch | grep release_$(date +%Y%m%d) && git branch -D release_$(date +%Y%m%d)
+      # Check if the release branch already exists in the remote repository
+      - git fetch --all
+      - git checkout main
+      - git pull
+      - git branch -r | grep release_$(date +%Y%m%d) || echo "Branch release_$(date +%Y%m%d) does not exist"
+      - git branch -r | grep release_$(date +%Y%m%d) && echo "Branch release_$(date +%Y%m%d) already exists" && exit 1
+      # Create a branch for the release
+      - git checkout -b release_$(date +%Y%m%d)
+      # add the version suffix in all csproj files recursively with the current date
+      - find . -name "*.csproj" -exec sed -i "s/<VersionSuffix>.*<\/VersionSuffix>/<VersionSuffix>$(date +%Y%m%d)<\/VersionSuffix>/g" {} \;
+      - git add .
+      # Config git user
+      - git config --global user.email "gitlab@siesa.com"
+      - git config --global user.name "GitLab Runner"
+      - git commit -m "Release $(date +%Y%m%d)"
+      - git push --set-upstream https://${GITLAB_RELEASE_CREDS}@${CI_REPOSITORY_URL#*@} release_$(date +%Y%m%d)
     tags:
       - docker
     artifacts:
@@ -40,43 +77,42 @@ test:
     stage: test
     only: 
       - develop
-      - docker-labs
-    tags:
-      - docker
-    script:
-      - echo "Tests are not implemented yet"
-
-sonar:
-    variables:
-      SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
-      GIT_DEPTH: "0"
-    cache:
-      key: "${CI_JOB_NAME}"
-      paths:
-        - .sonar/cache
-    stage: test
-    only:
+      - /^release_.*$/
       - merge_requests
     tags:
       - docker
-    script: 
+    script:
+      - dotnet test --no-restore
+
+sonarqube-check:
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
+    GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
+  script: 
       - "apt-get update"
       - "apt-get install --yes openjdk-11-jre"
       - "dotnet tool install --global dotnet-sonarscanner"
       - "export PATH=\"$PATH:$HOME/.dotnet/tools\""
-      - dotnet nuget add source https://nuget.devexpress.com/api -n DXFeed -u DevExpress -p $DX_NUGET_TOKEN --store-password-in-clear-text
-      - "dotnet sonarscanner begin /k:\"$SONAR_KEY\" /d:sonar.login=\"$SONAR_TOKEN\" /d:\"sonar.host.url=$SONAR_URL\" "
-      - "dotnet build"
+      - "dotnet sonarscanner begin /k:\"conversion_sdk_sdk_AYi1uSWfpjAXkz-m0Amt\" /d:sonar.login=\"$SONAR_TOKEN\" /d:\"sonar.host.url=$SONAR_HOST_URL\" "
+      - "dotnet build --no-restore"
       - "dotnet sonarscanner end /d:sonar.login=\"$SONAR_TOKEN\""
-    allow_failure: true
+  allow_failure: true
+  only:
+    - merge_requests
+    # - main
+    # - develop
+
 
 deploy:
     stage: deploy
     only: 
       - develop
-      - docker-labs
+      - /^release_.*$/
     tags:
       - docker
     script:
-      - dotnet nuget add source $PACKAGE_REGISTRY_URL --name gitlab --username gitlab-ci-token --password $CI_JOB_TOKEN --store-password-in-clear-text
       - dotnet nuget push "nuget/*.nupkg" --source gitlab

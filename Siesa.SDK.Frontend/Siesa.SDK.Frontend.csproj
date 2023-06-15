@@ -6,6 +6,7 @@
 		<AnalysisMode>All</AnalysisMode>
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   		<DisableGclm>true</DisableGclm>
+		<VersionSuffix>dev</VersionSuffix>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

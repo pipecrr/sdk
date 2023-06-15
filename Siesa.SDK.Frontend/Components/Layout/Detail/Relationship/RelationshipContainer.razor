@@ -13,7 +13,7 @@
     <button class="whcm_data_related_btn" @onclick="() => _isOpen = !_isOpen ">
         <p>
             <ResourceViewer ResourceTag="Custom.SDK.RelationshipPanel" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
-            <i class="fa-solid fa-folder-tree"></i>
+            <SDKIcon Name="fa-folder-tree"/>
         </p>
     </button>
     <div class="whcm_data_related_content p-3">
@@ -53,10 +53,10 @@
                     </h6>
                     <div class="d-flex">
                         <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => _openModal = !_openModal">
-                            <i class="fa-solid fa-chevron-right"></i>
+                            <SDKIcon Name="fa-chevron-right"/>
                         </button>
                         <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => CloseRelationshipPanel()">
-                            <i class="fa-solid fa-xmark"></i>
+                            <SDKIcon Name="fa-xmark"/>
                         </button>
                     </div>
                 </div>

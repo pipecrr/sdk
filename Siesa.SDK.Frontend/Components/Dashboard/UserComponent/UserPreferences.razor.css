@@ -23,7 +23,9 @@
 }
 
 
-
+.whcm_user_photo_box ::deep .file-upload-container{
+    display: none;
+}
 
 /*ESTILO DE ÍCONO*/
 
