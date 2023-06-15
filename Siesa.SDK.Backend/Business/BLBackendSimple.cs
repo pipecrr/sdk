@@ -490,7 +490,7 @@ namespace Siesa.SDK.Business
             ValidateAndSaveBusinessObjResponse result = new();
             if (!ignorePermissions)
             {
-                if (_featurePermissionService != null && !string.IsNullOrEmpty(BusinessName))
+                if (_featurePermissionService != null && !string.IsNullOrEmpty(BusinessName) && !BusinessName.Equals("BLAttachmentDetail"))
                 {
                     CanCreate = _featurePermissionService.CheckUserActionPermission(BusinessName, 1, AuthenticationService);
                     CanEdit = _featurePermissionService.CheckUserActionPermission(BusinessName, 2, AuthenticationService);
@@ -1173,14 +1173,16 @@ namespace Siesa.SDK.Business
             }
             IWebHostEnvironment env = _provider.GetRequiredService<IWebHostEnvironment>();
             try{
-                var path = Path.Combine(env.ContentRootPath,"Uploads");
-                Directory.CreateDirectory(path);
-                var filePath = Path.Combine(path, untrustedFileName);
-                await using FileStream fs = new(filePath, FileMode.Create);
-                await file.CopyToAsync(fs);
-                result.Url = filePath;
                 result.FileName = untrustedFileName;
-                if(SaveBytes){
+                if(!SaveBytes){
+                    var path = Path.Combine(env.ContentRootPath,"Uploads");
+                    Directory.CreateDirectory(path);
+                    var filePath = Path.Combine(path, untrustedFileName);
+                    await using FileStream fs = new(filePath, FileMode.Create);
+                    await file.CopyToAsync(fs);
+                    result.Url = filePath;
+                }else{
+                    result.Url = untrustedFileName;
                     result.FileContent = fileBytes;
                 }
             }
@@ -1243,7 +1245,11 @@ namespace Siesa.SDK.Business
             return new BadRequestResult<string>{Success = false, Errors = new List<string> { "Custom.Attatchment.FileNotFound" }};
         }
 
-        private async Task<ActionResult<string>> DownloadFileS3(string url)
+        public bool GetUses3(){
+            return _useS3;
+        }
+
+        public async Task<ActionResult<string>> DownloadFileS3(string url)
         {
             var bucketName = _configuration.GetValue<string>("AWS:S3BucketName");
             if(string.IsNullOrEmpty(bucketName)){

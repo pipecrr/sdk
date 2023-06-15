@@ -710,7 +710,7 @@ namespace Siesa.SDK.Business
 
         public async Task<int> SaveAttachmentDetail(SDKFileUploadDTO obj, int rowid = 0){
             var BLAttatchmentDetail = GetBackend("BLAttachmentDetail");
-            var result = await BLAttatchmentDetail.Call("SaveAttatchmentDetail", obj, rowid);
+            var result = await BLAttatchmentDetail.Call("SaveAttachmentDetail", obj, rowid);
             if(result.Success){
                 return result.Data;
             }else{
