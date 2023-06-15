@@ -1,3 +1,5 @@
+@using Siesa.SDK.Frontend.Components.Visualization
+
 @inherits SDKComponent
 @if(string.IsNullOrEmpty(IconCssClass))
 {
@@ -8,7 +10,7 @@
     <RadzenStepsItem Text="@Text" Disabled="@Disabled">
         <Template>
             <div class="sdk-steps-icon-container" data-automation-id="SDKStepsItem_@Text">
-                <span class="rz-steps-number sdk-steps-icon"><i class="@IconCssClass"></i></span>
+                <span class="rz-steps-number sdk-steps-icon"><SDKIcon Name="@IconCssClass"></SDKIcon></span>
                 <span class="rz-steps-title">@Text</span>
             </div>
         </Template>
