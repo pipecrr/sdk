@@ -1923,9 +1923,9 @@ namespace Siesa.SDK.Business
                     {
                         var LastEntity = context.Set<E00250_DynamicEntity>().OrderByDescending(x => x.Rowid).FirstOrDefault();
                         if(LastEntity == null){
-                            dynamicEntityColumn.Rowid = 1;
+                            dynamicEntity.Rowid = 1;
                         }else{
-                            dynamicEntityColumn.Rowid = LastEntity.Rowid + 1;
+                            dynamicEntity.Rowid = LastEntity.Rowid + 1;
                         }
                         dynamicEntity.RowidCompanyGroup = AuthenticationService.User.RowidCompanyGroup;
                         context.Add(dynamicEntity);
