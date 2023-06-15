@@ -49,7 +49,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         protected FormViewModel FormViewModel { get; set; } = new FormViewModel();
 
         public List<Panel> Panels {get { return FormViewModel.Panels; } }
-        public List<Panel> PanelsCollapsable { get; set; } = new List<Panel>();
+        public List<Panel> PanelsCollapsable = new List<Panel>();
 
         public Boolean Loading = true;
         public bool Saving = false;

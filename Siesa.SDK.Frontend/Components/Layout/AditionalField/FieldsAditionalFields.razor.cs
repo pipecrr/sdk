@@ -5,7 +5,7 @@ using Siesa.SDK.Entities;
 using Siesa.SDK.Shared.Services;
 using System.Threading.Tasks;
 using Siesa.Global.Enums;
-namespace Siesa.SDK.Frontend.Components.Layout.AditionalFields
+namespace Siesa.SDK.Frontend.Components.Layout.AditionalField
 {
     public partial class FieldsAditionalFields{
         [Inject] public IResourceManager ResourceManager {get; set;}
@@ -17,8 +17,7 @@ namespace Siesa.SDK.Frontend.Components.Layout.AditionalFields
         [Parameter] public bool ShowAddButton { get; set; }
         [Parameter] public Action OnChangeTag { get; set; }
         private int Type { get; set; } = 1;
-        private int TypeVisualization { get; set; }
-        private bool ReadOnlyMinMax = false;
+        private bool ReadOnlyMinMax;
         List<SelectBarItemWrap<int>> DataType = new List<SelectBarItemWrap<int>>();
         
         List<SelectBarItemWrap<int>> DataTypeVisualization = new List<SelectBarItemWrap<int>>();
@@ -36,13 +35,11 @@ namespace Siesa.SDK.Frontend.Components.Layout.AditionalFields
             var TextDecimal = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioDecimal", AuthenticationService);
             var TextDate = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioDate", AuthenticationService);
             var TextText = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioText", AuthenticationService);
-            //var TextEntity = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioEntity", AuthenticationService);
 
             DataType.Add(new SelectBarItemWrap<int>() {Key=1, Name=TextNumeric});
             DataType.Add(new SelectBarItemWrap<int>() {Key=2, Name=TextDecimal});
             DataType.Add(new SelectBarItemWrap<int>() {Key=3, Name=TextDate});
             DataType.Add(new SelectBarItemWrap<int>() {Key=4, Name=TextText});
-            //DataType.Add(new SelectBarItemWrap<int>() {Key=5, Name=TextEntity});
 
             var TextDefault = await ResourceManager.GetResource("Custom.Fields.AditionalFields.TypeVisualization.RadioDefault", AuthenticationService);
             var TextButtonGroup = await ResourceManager.GetResource("Custom.Fields.AditionalFields.TypeVisualization.RadioButtonGroup", AuthenticationService);
@@ -103,7 +100,7 @@ namespace Siesa.SDK.Frontend.Components.Layout.AditionalFields
             return item;
         }
 
-        public string OnchangeTag(string value){
+        private string _OnChangeTag(string value){
             DynamicEntityColumn.Tag = value;
             if(OnChangeTag != null){
                 OnChangeTag();

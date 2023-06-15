@@ -1814,7 +1814,7 @@ namespace Siesa.SDK.Business
         }
 
         [SDKExposedMethod]
-        public async Task<ActionResult<E00250_DynamicEntity>> GetDynamicEntity(int rowid){
+        public ActionResult<E00250_DynamicEntity> GetDynamicEntity(int rowid){
             using (SDKContext context = CreateDbContext())
             {
                 var resource = context.Set<E00250_DynamicEntity>().Where(x => x.Rowid == rowid).FirstOrDefault();
@@ -1870,7 +1870,7 @@ namespace Siesa.SDK.Business
         }
 
         [SDKExposedMethod]
-        public async Task<ActionResult<int>> SaveDynamicEntityColumn(E00251_DynamicEntityColumn dynamicEntityColumn)
+        public ActionResult<int> SaveDynamicEntityColumn(E00251_DynamicEntityColumn dynamicEntityColumn)
         {
             try{                
                 using(SDKContext context = CreateDbContext()){
@@ -1880,8 +1880,13 @@ namespace Siesa.SDK.Business
                         context.SaveChanges();
                         return new ActionResult<int>() { Success = true, Data = dynamicEntityColumn.Rowid };
                     }else{
-                        var LastRowid = context.Set<E00251_DynamicEntityColumn>().OrderByDescending(x => x.Rowid).FirstOrDefault().Rowid;
-                        dynamicEntityColumn.Rowid = LastRowid + 1;
+                        var LastEntity = context.Set<E00251_DynamicEntityColumn>().OrderByDescending(x => x.Rowid).FirstOrDefault();
+                        if(LastEntity == null){
+                            dynamicEntityColumn.Rowid = 1;
+                        }else{
+                            dynamicEntityColumn.Rowid = LastEntity.Rowid + 1;
+                        }
+
                         context.Add(dynamicEntityColumn);
                         context.SaveChanges();
                         return new ActionResult<int>() { Success = true, Data = dynamicEntityColumn.Rowid };
@@ -1894,7 +1899,7 @@ namespace Siesa.SDK.Business
         }
 
         [SDKExposedMethod]
-        public async Task<ActionResult<int>> SaveGroupsDynamicEntity(E00250_DynamicEntity dynamicEntity)
+        public ActionResult<int> SaveGroupsDynamicEntity(E00250_DynamicEntity dynamicEntity)
         {
             try{
                 using (SDKContext context = CreateDbContext())
@@ -1916,8 +1921,12 @@ namespace Siesa.SDK.Business
                     }
                     else
                     {
-                        var LastRowid = context.Set<E00250_DynamicEntity>().OrderByDescending(x => x.Rowid).FirstOrDefault().Rowid;
-                        dynamicEntity.Rowid = LastRowid + 1;
+                        var LastEntity = context.Set<E00250_DynamicEntity>().OrderByDescending(x => x.Rowid).FirstOrDefault();
+                        if(LastEntity == null){
+                            dynamicEntityColumn.Rowid = 1;
+                        }else{
+                            dynamicEntityColumn.Rowid = LastEntity.Rowid + 1;
+                        }
                         dynamicEntity.RowidCompanyGroup = AuthenticationService.User.RowidCompanyGroup;
                         context.Add(dynamicEntity);
                         context.SaveChanges();
@@ -1931,7 +1940,7 @@ namespace Siesa.SDK.Business
         }
 
         [SDKExposedMethod]
-        public async Task<ActionResult<int>> DeleteGroupDynamicEntity(int rowid){
+        public ActionResult<int> DeleteGroupDynamicEntity(int rowid){
             try{
                 using (SDKContext context = CreateDbContext())
                 {

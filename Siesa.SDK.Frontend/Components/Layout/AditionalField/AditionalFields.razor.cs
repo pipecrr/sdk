@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Frontend.Services;
 
-namespace Siesa.SDK.Frontend.Components.Layout.AditionalFields
+namespace Siesa.SDK.Frontend.Components.Layout.AditionalField
 {
     public partial class AditionalFields{
         [Inject] public IBackendRouterService BackendRouterService { get; set; }
@@ -16,9 +16,9 @@ namespace Siesa.SDK.Frontend.Components.Layout.AditionalFields
         [Parameter] public bool IsEdit { get; set; }
         [Parameter] public bool IsCreate { get; set; }
         private string Title = "Custom.Group.AditionalFields.Title";
-        private int Page = 0;        
+        private int Page;
         private List<E00251_DynamicEntityColumn> DynamicEntityColumns = new List<E00251_DynamicEntityColumn>();
-        private int SizeField = 0; 
+        private int SizeField;
         private int TypeGroupDynamicEntity = 1;
         private bool EnableButtonNext;
         private bool EnableButtonSave;
@@ -81,7 +81,7 @@ namespace Siesa.SDK.Frontend.Components.Layout.AditionalFields
                 DynamicEntityColumn.RowidDynamicEntity = RowidGroupsDynamicEntity;
                 DynamicEntityColumn.Id = $"CED_{DynamicEntityColumn.Tag}";
                 
-                var responseGroupsDynamicEntityColumn = await Business.Backend.Call("SaveDynamicEntityColumn", DynamicEntityColumn);
+                await Business.Backend.Call("SaveDynamicEntityColumn", DynamicEntityColumn);                
             }
 
             GlobalLoaderService.Hide();

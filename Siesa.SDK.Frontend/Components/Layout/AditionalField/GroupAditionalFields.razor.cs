@@ -5,7 +5,7 @@ using Siesa.SDK.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Siesa.SDK.Shared.Services;
 using System.Threading.Tasks;
-namespace Siesa.SDK.Frontend.Components.Layout.AditionalFields
+namespace Siesa.SDK.Frontend.Components.Layout.AditionalField
 {
     public partial class GroupAditionalFields{
         [Inject] public IResourceManager ResourceManager {get; set;}
@@ -28,7 +28,7 @@ namespace Siesa.SDK.Frontend.Components.Layout.AditionalFields
             await base.OnInitializedAsync();
         }
 
-        public string OnchangeTag(string value){
+        private string _OnChangeTag(string value){
             DynamicEntity.Tag = value;
             if(string.IsNullOrEmpty(DynamicEntity.Tag)){
                 EnableButtonNext = false;

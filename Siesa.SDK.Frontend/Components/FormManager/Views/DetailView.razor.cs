@@ -65,7 +65,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Inject] public SDKNotificationService NotificationService { get; set; }        
         protected FormViewModel FormViewModel { get; set; } = new FormViewModel();
         protected List<Panel> Panels { get { return FormViewModel.Panels; } }
-        public List<Panel> PanelsCollapsable { get; set; } = new List<Panel>();
+        public List<Panel> PanelsCollapsable = new List<Panel>();
         public Boolean ModelLoaded = false;
         public String ErrorMsg = "";
         public List<string> ErrorList = new List<string>();
