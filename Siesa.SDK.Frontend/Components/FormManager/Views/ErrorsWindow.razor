@@ -42,17 +42,19 @@
                             <tbody>
                                 @foreach (var item in _errors){
                                     <tr>
-                                        <td class="align-middle">@item.Field</td>
+                                        <td class="align-middle">
+                                            <ResourceViewer ResourceTag= "@item.Field"/>
+                                        </td>
                                         <td>
                                             <ul class="ul_list_error">
                                                 @foreach (var error in item.Errors){
-                                                    <li>@error</li>
+                                                    <ResourceViewer ResourceTag= "@error.Key" FormatString="@error.Value"/>
                                                 }
                                             </ul>
                                         </td>
                                     </tr>
                                     
-                                }                            
+                                }
                             </tbody>
                         </table>
                     }
@@ -70,7 +72,7 @@
                                     <td>
                                         <ul class="ul_list_error">
                                             @foreach (var error in _generalErrors){
-                                                <li>@error</li>
+                                                <ResourceViewer ResourceTag= "@error"/>
                                             }
                                         </ul>
                                     </td>
