@@ -15,6 +15,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
         public dynamic BaseModelObj { get; set; }
         public string RelatedBusiness { get; set; }
         public Action<List<dynamic>> OnReady { get; set; }
+        private Dictionary<string, string> _relatedFilters = new Dictionary<string, string>();
 
         protected override async Task OnInitializedAsync()
         {
@@ -26,6 +27,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
                 var ejec = await Evaluator.EvaluateCode(OnReadyStr, BaseModelObj);
                 if(ejec != null){
                     OnReady = (Action<List<dynamic>>)ejec;
+                }
+            }
+            if(FieldOpt.RelatedFilters != null){
+                foreach(var filter in FieldOpt.RelatedFilters){
+                    var dynamicValue = await Evaluator.EvaluateCode(filter.Value, BaseModelObj);
+                    _relatedFilters.Add(filter.Key, dynamicValue.ToString());
                 }
             }
         }

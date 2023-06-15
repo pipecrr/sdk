@@ -7,14 +7,14 @@ namespace Siesa.SDK.Shared.DataAnnotations
     public class SDKExposedMethod : Attribute
     {
 
-        public int[] Permissions { get; set; }
-        public SDKExposedMethod(int[] Permissions)
+        public string[] Permissions { get; set; }
+        public SDKExposedMethod(string[] Permissions)
         {
             this.Permissions = Permissions;
         }
         public SDKExposedMethod()
         {
-            Permissions = new int[] {};
+            Permissions = new string[] {};
         }
     }
 }
