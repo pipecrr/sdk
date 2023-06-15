@@ -51,13 +51,6 @@ namespace Siesa.Global.Enums
 		Consult = 5
 	}
 
-	public enum enumDynamicEntityDataType
-	{
-		Text = 0,
-		Number = 1,
-		Date = 2
-	}
-
 	public enum CustomTypeField
 	{
 		SwitchField = 1,
@@ -104,5 +97,14 @@ namespace Siesa.Global.Enums
 		Processing = 1,
 		Success = 2,
 		Failed = 3
+	}
+
+	public enum enumDynamicEntityDataType
+	{
+		Text = 0,
+		Number = 1,
+		Date = 2,
+		Time = 3,
+		Boolean = 4
 	}
 }
