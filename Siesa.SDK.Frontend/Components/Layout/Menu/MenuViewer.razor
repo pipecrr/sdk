@@ -30,7 +30,7 @@
                 {
                     <button class="btn btn-sm layout_btn_standar-sm mr-3" data-toggle="tooltip"
                         data-placement="top" title="Atras" @onclick="@OnClick" >
-                        <i class="fa-solid fa-chevron-left"></i>
+                        <SDKIcon Name="fa-chevron-left"/>
                     </button>
                 }else
                 {
@@ -39,7 +39,7 @@
                     </div>
                 }
                 <div class="d-flex align-items-center justify-content-center icono_cabecera" style="background: #@MenuService?.SelectedSuite?.HexColor">
-                   <i class="@MenuService?.SelectedSuite?.IconClass"></i> 
+                   <SDKIcon Name="@GetIconSuite()"></SDKIcon> 
                 </div>
                 <h3 class="mb-0 ml-4 pl-3 ml-sm-5 pl-sm-3 ml-md-5 pl-md-3 ml-lg-5 pl-lg-5">
 
@@ -56,7 +56,7 @@
                 <input type="search" class="form-control" placeholder="Búsqueda" @bind="SearchString" @bind:event="oninput" />
                 <div class="input-group-append">
                     <span class="input-group-text">&nbsp;
-                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <SDKIcon Name="fa-magnifying-glass"/>
                     </span>
                     </div>
             </div>    
@@ -184,5 +184,17 @@
                 return x.CurrentText.ToLower().Contains(SearchString.ToLower());
             }
         }).OrderBy(x => x.Order);
+    }
+
+    public string GetIconSuite()
+    {
+        string IconSuite = "";
+
+        if (MenuService?.SelectedSuite != null)
+        {
+            IconSuite = MenuService.SelectedSuite.IconClass;
+        }
+
+        return IconSuite;
     }
 }

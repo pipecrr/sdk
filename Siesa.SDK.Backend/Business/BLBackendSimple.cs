@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -490,7 +490,7 @@ namespace Siesa.SDK.Business
             ValidateAndSaveBusinessObjResponse result = new();
             if (!ignorePermissions)
             {
-                if (_featurePermissionService != null && !string.IsNullOrEmpty(BusinessName))
+                if (_featurePermissionService != null && !string.IsNullOrEmpty(BusinessName) && !BusinessName.Equals("BLAttachmentDetail"))
                 {
                     CanCreate = _featurePermissionService.CheckUserActionPermission(BusinessName, 1, AuthenticationService);
                     CanEdit = _featurePermissionService.CheckUserActionPermission(BusinessName, 2, AuthenticationService);
@@ -1173,14 +1173,16 @@ namespace Siesa.SDK.Business
             }
             IWebHostEnvironment env = _provider.GetRequiredService<IWebHostEnvironment>();
             try{
-                var path = Path.Combine(env.ContentRootPath,"Uploads");
-                Directory.CreateDirectory(path);
-                var filePath = Path.Combine(path, untrustedFileName);
-                await using FileStream fs = new(filePath, FileMode.Create);
-                await file.CopyToAsync(fs);
-                result.Url = filePath;
                 result.FileName = untrustedFileName;
-                if(SaveBytes){
+                if(!SaveBytes){
+                    var path = Path.Combine(env.ContentRootPath,"Uploads");
+                    Directory.CreateDirectory(path);
+                    var filePath = Path.Combine(path, untrustedFileName);
+                    await using FileStream fs = new(filePath, FileMode.Create);
+                    await file.CopyToAsync(fs);
+                    result.Url = filePath;
+                }else{
+                    result.Url = untrustedFileName;
                     result.FileContent = fileBytes;
                 }
             }
@@ -1243,7 +1245,11 @@ namespace Siesa.SDK.Business
             return new BadRequestResult<string>{Success = false, Errors = new List<string> { "Custom.Attatchment.FileNotFound" }};
         }
 
-        private async Task<ActionResult<string>> DownloadFileS3(string url)
+        public bool GetUses3(){
+            return _useS3;
+        }
+
+        public async Task<ActionResult<string>> DownloadFileS3(string url)
         {
             var bucketName = _configuration.GetValue<string>("AWS:S3BucketName");
             if(string.IsNullOrEmpty(bucketName)){
@@ -1965,6 +1971,55 @@ namespace Siesa.SDK.Business
                 return new BadRequestResult<int>() { Success = false, Errors = new List<string>() { e.Message } };
             }
         }
+        
+        [SDKExposedMethod]
+        public ActionResult<SDKResultImportDataDTO> ImportData(string dataStr){
+            JArray dataList = JArray.Parse(dataStr);
+            List<dynamic> SuccessData = new List<dynamic>();
+            List<dynamic> ErrorData = new List<dynamic>();
+            foreach (var item in dataList){
+                JObject itemObj = (JObject)item;
+                dynamic result = CreateDynamicObjectFromJson(typeof(T), itemObj);
+                BaseObj = result;
+                var resultValidate = ValidateAndSave();
+                if(resultValidate.Errors.Count > 0){
+                    itemObj.Add("Errors", JToken.FromObject(resultValidate.Errors));
+                    ErrorData.Add(itemObj);
+                }else{
+                    SuccessData.Add(BaseObj.GetRowid());
+                }
+            }
+            SDKResultImportDataDTO resultImport = new SDKResultImportDataDTO();
+            resultImport.Success = SuccessData;
+            resultImport.Errors = ErrorData;
+
+            return new ActionResult<SDKResultImportDataDTO>{Success = true, Data = resultImport};
+        }
+        private static T CreateDynamicObjectFromJson(Type type, dynamic dynamicObj)
+        {
+            dynamic result = Activator.CreateInstance(type);
+            
+            foreach (var property in dynamicObj.Properties()){
+                var propertyName = property.Name;
+                var propertyEntity = type.GetProperty(propertyName);
+                if(propertyEntity != null){
+                    dynamic value;
+                    //TODO : Revisar diferentes tipos de datos
+                    if(propertyEntity.PropertyType == typeof(bool)){                        
+                        if(property.Value == 1){
+                            value = true;
+                        }else{
+                            value = false;
+                        }
+                    }else{
+                        value = Convert.ChangeType(property.Value, propertyEntity.PropertyType);
+                    }
+                    type.GetProperty(propertyName).SetValue(result, value);
+                }
+            }
+            return (T)result;
+        }
+
     }
 
 }

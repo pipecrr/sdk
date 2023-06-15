@@ -541,8 +541,13 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
                 }
             }
             if(DataAttatchmentDetail != null){
-                var result = await BusinessObj.SaveAttachmentDetail(DataAttatchmentDetail, rowid);
-                return result;
+                try{
+                    var result = await BusinessObj.SaveAttachmentDetail(DataAttatchmentDetail, rowid);
+                    return result;
+                }catch(Exception ex){
+                    SavingFile = false;
+                    return rowid;
+                }
             }
             return 0;
         }

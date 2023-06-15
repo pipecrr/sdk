@@ -7,8 +7,7 @@
 @using Siesa.SDK.Shared.Utilities
 @using Microsoft.AspNetCore.Http
 @using System.IO
-
-
+@using Siesa.SDK.Shared.DTOS
 
 @inherits SDKComponent
 
@@ -27,14 +26,14 @@
         <img @ref="previewImageElem" width="200" height="100" />
 
         <div class="file-upload-icon">
-            <i class="fa-duotone fa-arrow-up-from-bracket"></i>
+            <SDKIcon Name="fa-arrow-up-from-bracket"></SDKIcon>
         </div>
 
 </div>
 
 @code {
 
-    public InputFile? _refinputFile;
+     public InputFile? _refinputFile;
     private ElementReference previewImageElem;
 
     private InputFileChangeEventArgs InputFile;
@@ -50,6 +49,8 @@
     [Parameter] public int RowidAttachmentDetail {get; set;}
 
     [Parameter] public int RowidAttachmentRelationship {get; set;}
+    [Parameter] public bool SaveBytes {get; set;} = false;
+    [Parameter] public int MaxSize {get; set;} = 3000000;
 
     private dynamic BusinessObj = null;
 
@@ -97,7 +98,13 @@
         foreach (var itemFile in files)
         {
             var formFile = await ConvertToIFormFile(itemFile);
-            var fileUploadDTO = await BusinessObj.UploadSingle(formFile);
+            var fileUploadDTO = new SDKFileUploadDTO();
+
+            if(SaveBytes){
+                fileUploadDTO = await BusinessObj.UploadSingleByte(formFile);
+            }else{
+                fileUploadDTO = await BusinessObj.UploadSingle(formFile);
+            }
 
             if (fileUploadDTO != null)
             {
@@ -111,17 +118,21 @@
                 else
                 {
                     saveFile = await BusinessObj.SaveAttachmentDetail(fileUploadDTO);
+                    RowidAttachmentDetail = saveFile;
                 }
             }
         }
     }
 
-
-    private static async Task<IFormFile> ConvertToIFormFile(IBrowserFile browserFile)
+    private async Task<IFormFile> ConvertToIFormFile(IBrowserFile browserFile)
     {
         var ms = new MemoryStream();
-        await browserFile.OpenReadStream().CopyToAsync(ms);
+        if(browserFile.Size > MaxSize){
+            throw new Exception("El archivo es demasiado grande");
+        }
 
+        await browserFile.OpenReadStream(maxAllowedSize: MaxSize).CopyToAsync(ms);
+        
         var file = new FormFile(ms, 0, ms.Length, null, browserFile.Name)
         {
             Headers = new HeaderDictionary(),
@@ -144,6 +155,4 @@
             }
         }
     }
-
-
 }
