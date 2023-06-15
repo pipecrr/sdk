@@ -5,7 +5,12 @@
 
         @foreach (var field in FieldsEntity)
         { 
-            <option value="@field.Value" selected="@(FieldFile.Key == field.Key)" >
+            bool selectedValue = false;
+            if(ImportComponent._newKeys.ContainsKey(FieldFile.Key.ToString()))
+            {
+                selectedValue = ImportComponent._newKeys[FieldFile.Key.ToString()] == field.Value;
+            }
+            <option value="@field.Value" selected="@selectedValue" >
                 @field.Key
             </option>
         }
@@ -23,9 +28,11 @@
 
     public void OnChangeSelectItem(ChangeEventArgs e)
     {
-        if(!ImportComponent._newKeys.ContainsKey(e.Value.ToString()))
+        if(!ImportComponent._newKeys.ContainsKey(FieldFile.Key.ToString()))
         {
-            ImportComponent._newKeys.Add(e.Value.ToString(), FieldFile.Key.ToString());
+            ImportComponent._newKeys.Add(FieldFile.Key.ToString(), e.Value.ToString());
+        }else{
+            ImportComponent._newKeys[FieldFile.Key.ToString()] = e.Value.ToString();
         }
     }
     protected override void OnInitialized()
@@ -34,9 +41,9 @@
         {
             string newKey = FieldsEntity.Where(x=>x.Key == FieldFile.Key).Select(x=>x.Value).FirstOrDefault();
 
-            if(!ImportComponent._newKeys.ContainsKey(newKey))
+            if(!ImportComponent._newKeys.ContainsKey(FieldFile.Key))
             {
-                ImportComponent._newKeys.Add(newKey, FieldFile.Key);
+                ImportComponent._newKeys.Add(FieldFile.Key, newKey);
             }
 
         }

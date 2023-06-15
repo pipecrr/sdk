@@ -1858,6 +1858,55 @@ namespace Siesa.SDK.Business
                 }
             }
         }
+        
+        [SDKExposedMethod]
+        public ActionResult<SDKResultImportDataDTO> ImportData(string dataStr){
+            JArray dataList = JArray.Parse(dataStr);
+            List<dynamic> SuccessData = new List<dynamic>();
+            List<dynamic> ErrorData = new List<dynamic>();
+            foreach (var item in dataList){
+                JObject itemObj = (JObject)item;
+                dynamic result = CreateDynamicObjectFromJson(typeof(T), itemObj);
+                BaseObj = result;
+                var resultValidate = ValidateAndSave();
+                if(resultValidate.Errors.Count > 0){
+                    itemObj.Add("Errors", JToken.FromObject(resultValidate.Errors));
+                    ErrorData.Add(itemObj);
+                }else{
+                    SuccessData.Add(BaseObj.GetRowid());
+                }
+            }
+            SDKResultImportDataDTO resultImport = new SDKResultImportDataDTO();
+            resultImport.Success = SuccessData;
+            resultImport.Errors = ErrorData;
+
+            return new ActionResult<SDKResultImportDataDTO>{Success = true, Data = resultImport};
+        }
+        private static T CreateDynamicObjectFromJson(Type type, dynamic dynamicObj)
+        {
+            dynamic result = Activator.CreateInstance(type);
+            
+            foreach (var property in dynamicObj.Properties()){
+                var propertyName = property.Name;
+                var propertyEntity = type.GetProperty(propertyName);
+                if(propertyEntity != null){
+                    dynamic value;
+                    //TODO : Revisar diferentes tipos de datos
+                    if(propertyEntity.PropertyType == typeof(bool)){                        
+                        if(property.Value == 1){
+                            value = true;
+                        }else{
+                            value = false;
+                        }
+                    }else{
+                        value = Convert.ChangeType(property.Value, propertyEntity.PropertyType);
+                    }
+                    type.GetProperty(propertyName).SetValue(result, value);
+                }
+            }
+            return (T)result;
+        }
+
     }
 
 }
