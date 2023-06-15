@@ -1023,6 +1023,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             Button button = CustomActions[(int)index];
             bool res = false;
             if(button != null){
+                var data = JsonConvert.DeserializeObject<dynamic>(dataStr);
                 dynamic hideCondition = null;
                 if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-hide")){
                     var sdkHide = button.CustomAttributes["sdk-hide"];

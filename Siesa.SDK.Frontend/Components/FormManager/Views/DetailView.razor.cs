@@ -196,6 +196,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     colSize.Add("SM", 4);
                     colSize.Add("XS", 4);
                     field.ColSize = colSize;
+                    field.ViewContext = "DetailView";
                     fields.Add(field);
                 }                
                 panel.Fields = fields;
