@@ -65,7 +65,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Inject] public SDKNotificationService NotificationService { get; set; }        
         protected FormViewModel FormViewModel { get; set; } = new FormViewModel();
         protected List<Panel> Panels { get { return FormViewModel.Panels; } }
-        public List<Panel> AuxPanels { get; set; } = new List<Panel>();
+        public List<Panel> PanelsCollapsable = new List<Panel>();
         public Boolean ModelLoaded = false;
         public String ErrorMsg = "";
         public List<string> ErrorList = new List<string>();
@@ -153,8 +153,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     FormViewModel.Panels = panels;
                 }                
                 if(BusinessObj.GetType().GetProperty("DynamicEntities") != null && BusinessObj.DynamicEntities != null && BusinessObj.DynamicEntities.Count > 0){
-                    FormViewModel.Panels[0].ResourceTag = "Custom.General.DefaultPanel";
-                    AddPanels(FormViewModel.Panels);
+                    AddPanels(PanelsCollapsable);
                 }
 
                 setViewContext(Panels);
@@ -185,16 +184,33 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 var panel = new Panel();
                 panel.ResourceTag = item.Name;
                 var fields = new List<FieldOptions>();
+                int rowidGroup = item.Rowid;
+                panel.RowidGroupDynamicEntity = rowidGroup;
                 foreach(var property in item.DynamicObject.GetType().GetProperties()){
                     var field = new FieldOptions();
                     var name = $"DynamicEntities[{index}].DynamicObject.{property.Name}";
                     field.Name = name;
                     field.ResourceTag = property.Name;
+                    Dictionary<string, int> colSize = new Dictionary<string, int>();
+                    colSize.Add("MD", 4);
+                    colSize.Add("SM", 4);
+                    colSize.Add("XS", 4);
+                    field.ColSize = colSize;
                     field.ViewContext = "DetailView";
                     fields.Add(field);
-                }
+                }                
                 panel.Fields = fields;
                 panels.Add(panel);
+            }
+        }
+        public async Task<bool> DeleteGroup(int rowid)
+        {
+            var response = await BusinessObj.Backend.Call("DeleteGroupDynamicEntity", rowid);
+            if(response.Success){
+                return true;
+            }
+            else{
+                return false;
             }
         }
 
