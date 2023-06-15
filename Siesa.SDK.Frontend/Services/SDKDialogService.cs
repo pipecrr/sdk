@@ -51,7 +51,7 @@ namespace Siesa.SDK.Frontend.Services
             new SDKDialogOption(){ShowTitle=false, Style=$"min-width:300px; width:{_width};", CssClass="whcm_modal_relacion"});
          }
 
-         public async Task<dynamic> ShowCustomDialog (RenderFragment<DialogService> childContent,string width="600px", string title="",bool ShowTitle=true , bool showClose=true, string height="", string ResourceTag="", SDKModalWidth standardWidth=SDKModalWidth.Undefined)
+         public async Task<dynamic> ShowCustomDialog (RenderFragment<DialogService> childContent,string width="600px", string title="",bool ShowTitle=true , bool showClose=true, string height="", string ResourceTag="", SDKModalWidth standardWidth=SDKModalWidth.Undefined, string CssClass="")
          {
             if(!string.IsNullOrEmpty(ResourceTag)){
                 title = await UtilsManager.GetResource(ResourceTag);
@@ -76,7 +76,7 @@ namespace Siesa.SDK.Frontend.Services
                 Style=style,
                 ShowClose = showClose,
                 Resizable = true,
-                CssClass="whcm_modal_relacion"
+                CssClass=$"whcm_modal_relacion {CssClass}"
             };
            return await ds.OpenAsync(TitleTag, childContent,customDialogOption);
          }

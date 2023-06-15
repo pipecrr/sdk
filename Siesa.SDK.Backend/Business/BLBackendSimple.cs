@@ -1814,6 +1814,22 @@ namespace Siesa.SDK.Business
         }
 
         [SDKExposedMethod]
+        public ActionResult<E00250_DynamicEntity> GetDynamicEntity(int rowid){
+            using (SDKContext context = CreateDbContext())
+            {
+                var resource = context.Set<E00250_DynamicEntity>().Where(x => x.Rowid == rowid).FirstOrDefault();
+                if (resource != null)
+                {
+                    return new ActionResult<E00250_DynamicEntity>() { Data = resource };
+                }
+                else
+                {
+                    return new NotFoundResult<E00250_DynamicEntity>();
+                }
+            }
+        }
+
+        [SDKExposedMethod]
         public async Task<ActionResult<List<E00250_DynamicEntity>>> GetGroupsDynamicEntity(string blName)
         {
             using (SDKContext context = CreateDbContext())
@@ -1850,6 +1866,103 @@ namespace Siesa.SDK.Business
                 {
                     return new NotFoundResult<List<E00251_DynamicEntityColumn>>();
                 }
+            }
+        }
+
+        [SDKExposedMethod]
+        public ActionResult<int> SaveDynamicEntityColumn(E00251_DynamicEntityColumn dynamicEntityColumn)
+        {
+            try{                
+                using(SDKContext context = CreateDbContext()){
+                    var entityColumn = context.Set<E00251_DynamicEntityColumn>().Where(x => x.Rowid == dynamicEntityColumn.Rowid).FirstOrDefault();
+                    if(entityColumn != null){                        
+                        context.Entry(entityColumn).CurrentValues.SetValues(dynamicEntityColumn);                        
+                        context.SaveChanges();
+                        return new ActionResult<int>() { Success = true, Data = dynamicEntityColumn.Rowid };
+                    }else{
+                        var LastEntity = context.Set<E00251_DynamicEntityColumn>().OrderByDescending(x => x.Rowid).FirstOrDefault();
+                        if(LastEntity == null){
+                            dynamicEntityColumn.Rowid = 1;
+                        }else{
+                            dynamicEntityColumn.Rowid = LastEntity.Rowid + 1;
+                        }
+
+                        context.Add(dynamicEntityColumn);
+                        context.SaveChanges();
+                        return new ActionResult<int>() { Success = true, Data = dynamicEntityColumn.Rowid };
+                    }
+                }
+
+            }catch (Exception e){
+                return new BadRequestResult<int>() { Success = false, Errors = new List<string>() { e.Message } };
+            }
+        }
+
+        [SDKExposedMethod]
+        public ActionResult<int> SaveGroupsDynamicEntity(E00250_DynamicEntity dynamicEntity)
+        {
+            try{
+                using (SDKContext context = CreateDbContext())
+                {
+                    var resource = context.Set<E00250_DynamicEntity>().Where(x => x.Rowid == dynamicEntity.Rowid).FirstOrDefault();
+                    if (resource != null)
+                    {
+                        resource.Tag = dynamicEntity.Tag;
+                        resource.Id = dynamicEntity.Id;
+                        resource.Order = dynamicEntity.Order;
+                        resource.RowidFeature = dynamicEntity.RowidFeature;
+                        resource.IsInternal = dynamicEntity.IsInternal;
+                        resource.IsMultiRecord = dynamicEntity.IsMultiRecord;
+                        resource.IsOptional = dynamicEntity.IsOptional;
+                        resource.IsDisable = dynamicEntity.IsDisable;
+                        resource.IsLocked = dynamicEntity.IsLocked;
+                        context.SaveChanges();
+                        return new ActionResult<int>() { Success=true, Data = resource.Rowid };
+                    }
+                    else
+                    {
+                        var LastEntity = context.Set<E00250_DynamicEntity>().OrderByDescending(x => x.Rowid).FirstOrDefault();
+                        if(LastEntity == null){
+                            dynamicEntity.Rowid = 1;
+                        }else{
+                            dynamicEntity.Rowid = LastEntity.Rowid + 1;
+                        }
+                        dynamicEntity.RowidCompanyGroup = AuthenticationService.User.RowidCompanyGroup;
+                        context.Add(dynamicEntity);
+                        context.SaveChanges();
+                        return new ActionResult<int>() { Success = true, Data = dynamicEntity.Rowid };
+                    }
+                }
+            }catch(Exception e){
+                return new BadRequestResult<int>() { Success = false, Errors = new List<string>() { e.Message } };
+            }
+
+        }
+
+        [SDKExposedMethod]
+        public ActionResult<int> DeleteGroupDynamicEntity(int rowid){
+            try{
+                using (SDKContext context = CreateDbContext())
+                {
+                    var columns = context.Set<E00251_DynamicEntityColumn>().Where(x => x.RowidDynamicEntity == rowid).ToList();
+                    if(columns != null){
+                        context.RemoveRange(columns);
+                        context.SaveChanges();
+                    }
+                    var resource = context.Set<E00250_DynamicEntity>().Where(x => x.Rowid == rowid).FirstOrDefault();
+                    if (resource != null)
+                    {
+                        context.Remove(resource);
+                        context.SaveChanges();
+                        return new ActionResult<int>() { Success = true, Data = rowid };
+                    }
+                    else
+                    {
+                        return new NotFoundResult<int>();
+                    }
+                }
+            }catch(Exception e){
+                return new BadRequestResult<int>() { Success = false, Errors = new List<string>() { e.Message } };
             }
         }
     }
