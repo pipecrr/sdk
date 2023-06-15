@@ -558,7 +558,7 @@ namespace Siesa.SDK.Business
                     foreach (var prop in dynamicObject)
                     {
                         dynamic dynamicEntity = Activator.CreateInstance(dynamicEntityType);
-                        dynamicEntity.GetType().GetProperty("RowidRecord").SetValue(dynamicEntity, Convert.ChangeType(rowidGroup, typeof(Int32)));
+                        dynamicEntity.GetType().GetProperty("RowidRecord").SetValue(dynamicEntity, Convert.ChangeType(rowidGroup, dynamicEntity.GetType().GetProperty("RowidRecord").PropertyType));
                         SetValuesDynamicEntity(dynamicEntity, dynamicObject, prop, fields, dynamicEntityType, rowid);
                         
                         if(dynamicEntity.Rowid == 0){
