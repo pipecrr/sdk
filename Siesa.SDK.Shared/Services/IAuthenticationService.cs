@@ -39,6 +39,7 @@ namespace Siesa.SDK.Shared.Services
         string UserToken { get; }
         JwtUserData User { get; }
         short RowidCultureChanged { get; set; }
+
         Task Initialize();
         Task Login(string username, string password, short rowIdDBConnection,
                      bool IsUpdateSession = false, short rowIdCompanyGroup = 1);
@@ -63,6 +64,8 @@ namespace Siesa.SDK.Shared.Services
         Task RenewToken();
         string GetUserPhoto();
         Task SetUserPhoto(string data, bool saveLocalStorage = true);
+        Task SetPreferencesUser(UserPreferencesDTO preferences);
+        UserPreferencesDTO GetPreferencesUser();
     }
 
     

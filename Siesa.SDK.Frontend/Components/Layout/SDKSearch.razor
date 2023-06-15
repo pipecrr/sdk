@@ -10,7 +10,7 @@
     <input autocomplete="off" type="search" class="form-control form-control-sm pr-4" id="busqueda" placeholder="@placeholder"
         @bind-value:event="onchange" @oninput="@((ChangeEventArgs __e) => OnChangeSearch(__e?.Value?.ToString()))"
         @bind-value="searchString"  data-automation-id="@GetAutomationId()">
-    <i class="fa-solid fa-magnifying-glass"></i>
+    <SDKIcon Name="fa-magnifying-glass"/>
 </div>
 @if (SearchEnabled && LastSearch.Count > 0)
 {
