@@ -25,7 +25,13 @@ namespace Siesa.SDK.Frontend.Components.Layout.AditionalFields
 
         protected override async Task OnInitializedAsync()
         {   
-            DynamicEntityColumn.DataType = enumDynamicEntityDataType.Number;
+            if(DynamicEntityColumn.Rowid !=0 && DynamicEntityColumn.DataType != enumDynamicEntityDataType.Number){
+                ReadOnlyMinMax = true;
+            }else{
+                ReadOnlyMinMax = false;
+                DynamicEntityColumn.DataType = enumDynamicEntityDataType.Number;
+            }
+            SetType();
             var TextNumeric = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioNumeric", AuthenticationService);
             var TextDecimal = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioDecimal", AuthenticationService);
             var TextDate = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioDate", AuthenticationService);
@@ -45,6 +51,23 @@ namespace Siesa.SDK.Frontend.Components.Layout.AditionalFields
             DataTypeVisualization.Add(new SelectBarItemWrap<int>() {Key=2, Name=TextButtonGroup});
 
             base.OnInitialized();            
+        }
+
+        public void SetType(){
+            switch (DynamicEntityColumn.DataType){
+                case enumDynamicEntityDataType.Number:
+                    Type = 1;
+                    break;
+                case enumDynamicEntityDataType.Date:
+                    Type = 3;
+                    break;
+                case enumDynamicEntityDataType.Text:
+                    Type = 4;
+                    break;
+                default:
+                    Type = 4;
+                    break;
+            }
         }
 
         public void DeleteField(){            

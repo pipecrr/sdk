@@ -16,7 +16,7 @@
             <i class="fa-light fa-xmark" onclick="@Close"></i>
         </div>
     </div>
-    @if(Page == 0){
+    @if(Page == 0 && !IsEdit && !IsCreate){
         <GroupAditionalFields DynamicEntity="@DynamicEntity" SizeField="@SizeField" Type="@TypeGroupDynamicEntity" EnableButtonNext="@EnableButtonNext" OnChangeTag="@OnChangeTag"/>
     }else{
         <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-3">
@@ -32,6 +32,9 @@
                     {
                         var index = DynamicEntityColumns.IndexOf(item);
                         bool showAddButton = index == DynamicEntityColumns.Count - 1;
+                        if(IsEdit){
+                            showAddButton = false;
+                        }
                         <FieldsAditionalFields DynamicEntityColumn="@item" Index="index" OnDeleteField="@DeleteButton" OnAddField="@AddButton" ShowAddButton="@showAddButton" OnChangeTag="@OnChangeTagField"/>
                         <h6>&nbsp;</h6>
                     }
@@ -41,11 +44,15 @@
     }
     <div class="sdk_aditional_fields_footerBar">
         <div class="sdk_aditional_fields_footer">
-            @if(Page == 0){
+            @if(Page == 0 && !IsEdit && !IsCreate){
                 <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" ResourceTag="Cancelar" Click="@Close" CssClass="m-1"/>
                 <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Siguiente" Click="@Next"  CssClass="m-1" Enabled="@EnableButtonNext"/>
             }else{
-                <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" ResourceTag="Atras" Click="@Back" CssClass="m-1"/>
+                if(!IsEdit && !IsCreate){
+                    <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" ResourceTag="Atras" Click="@Back" CssClass="m-1"/>
+                }else{
+                    <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" ResourceTag="Cancelar" Click="@Close" CssClass="m-1"/>
+                }
                 <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Guardar" Click="@(()=> Save())"  CssClass="m-1" Enabled="@EnableButtonSave"/>
             }
         </div>

@@ -1814,6 +1814,22 @@ namespace Siesa.SDK.Business
         }
 
         [SDKExposedMethod]
+        public async Task<ActionResult<E00250_DynamicEntity>> GetDynamicEntity(int rowid){
+            using (SDKContext context = CreateDbContext())
+            {
+                var resource = context.Set<E00250_DynamicEntity>().Where(x => x.Rowid == rowid).FirstOrDefault();
+                if (resource != null)
+                {
+                    return new ActionResult<E00250_DynamicEntity>() { Data = resource };
+                }
+                else
+                {
+                    return new NotFoundResult<E00250_DynamicEntity>();
+                }
+            }
+        }
+
+        [SDKExposedMethod]
         public async Task<ActionResult<List<E00250_DynamicEntity>>> GetGroupsDynamicEntity(string blName)
         {
             using (SDKContext context = CreateDbContext())
@@ -1859,20 +1875,7 @@ namespace Siesa.SDK.Business
             try{                
                 using(SDKContext context = CreateDbContext()){
                     var entityColumn = context.Set<E00251_DynamicEntityColumn>().Where(x => x.Rowid == dynamicEntityColumn.Rowid).FirstOrDefault();
-                    if(entityColumn != null){
-                        /*resource.RowidDynamicEntity = dynamicEntityColumn.RowidDynamicEntity;
-                        resource.Id = dynamicEntityColumn.Id;
-                        resource.Tag = dynamicEntityColumn.Tag;
-                        resource.Order = dynamicEntityColumn.Order;
-                        resource.IsOptional = dynamicEntityColumn.IsOptional;
-                        resource.IsDisable = dynamicEntityColumn.IsDisable;
-                        resource.IsLocked = dynamicEntityColumn.IsLocked;
-                        resource.Size = dynamicEntityColumn.Size;
-                        resource.Decimal = dynamicEntityColumn.Decimal;
-                        resource.DefaultValueText = dynamicEntityColumn.DefaultValueText;
-                        resource.IsInternal = dynamicEntityColumn.IsInternal;
-                        resource.IsMultiRecord = dynamicEntityColumn.IsMultiRecord;
-                        resource.RowidFeature = dynamicEntityColumn.RowidFeature;*/
+                    if(entityColumn != null){                        
                         context.Entry(entityColumn).CurrentValues.SetValues(dynamicEntityColumn);                        
                         context.SaveChanges();
                         return new ActionResult<int>() { Success = true, Data = dynamicEntityColumn.Rowid };
@@ -1925,6 +1928,33 @@ namespace Siesa.SDK.Business
                 return new BadRequestResult<int>() { Success = false, Errors = new List<string>() { e.Message } };
             }
 
+        }
+
+        [SDKExposedMethod]
+        public async Task<ActionResult<int>> DeleteGroupDynamicEntity(int rowid){
+            try{
+                using (SDKContext context = CreateDbContext())
+                {
+                    var columns = context.Set<E00251_DynamicEntityColumn>().Where(x => x.RowidDynamicEntity == rowid).ToList();
+                    if(columns != null){
+                        context.RemoveRange(columns);
+                        context.SaveChanges();
+                    }
+                    var resource = context.Set<E00250_DynamicEntity>().Where(x => x.Rowid == rowid).FirstOrDefault();
+                    if (resource != null)
+                    {
+                        context.Remove(resource);
+                        context.SaveChanges();
+                        return new ActionResult<int>() { Success = true, Data = rowid };
+                    }
+                    else
+                    {
+                        return new NotFoundResult<int>();
+                    }
+                }
+            }catch(Exception e){
+                return new BadRequestResult<int>() { Success = false, Errors = new List<string>() { e.Message } };
+            }
         }
     }
 
