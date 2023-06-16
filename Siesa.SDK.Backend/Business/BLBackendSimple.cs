@@ -542,10 +542,6 @@ namespace Siesa.SDK.Business
             return result;
         }
 
-        private void DeleteDynamicEntities(List<Int64> rowidsEnityColumn, SDKContext context){
-            
-        }
-
         protected virtual void SaveDynamicEntity(Int64 rowid)
         {
             using (SDKContext Context = CreateDbContext())
