@@ -485,6 +485,14 @@ namespace Siesa.SDK.Business
         {
             //Do nothing
         }
+        public virtual void AfterDelete(ref DeleteBusinessObjResponse result)
+        {
+            //Do nothing
+        }
+        public virtual void BeforeDelete(ref ValidateAndSaveBusinessObjResponse result, long rowid)
+        {
+            //Do nothing
+        }
         public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave(bool ignorePermissions = false)
         {
             ValidateAndSaveBusinessObjResponse result = new();
@@ -534,6 +542,10 @@ namespace Siesa.SDK.Business
             return result;
         }
 
+        private void DeleteDynamicEntities(List<Int64> rowidsEnityColumn, SDKContext context){
+            
+        }
+
         protected virtual void SaveDynamicEntity(Int64 rowid)
         {
             using (SDKContext Context = CreateDbContext())
@@ -574,9 +586,8 @@ namespace Siesa.SDK.Business
                 try{
                     if(existUpdate){
                         Assembly assembly = typeof(DbContextExtensions).Assembly;
-                        var BulkUpdateMethod = typeof(DbContext).GetExtensionMethod(assembly, "BulkUpdate", new Type[] { typeof(DbContext), typeof(IEnumerable<>).MakeGenericType(dynamicEntityType)}, true);
-                        var BulkUpdateMethodGeneric = BulkUpdateMethod.MakeGenericMethod(dynamicEntityType);
-                        BulkUpdateMethodGeneric.Invoke(Context, new object[] { Context, dynamicEntitiesToUpdate });
+                        var updateRangeMethod = typeof(DbContext).GetMethod("UpdateRange", new Type[] { typeof(IEnumerable<>).MakeGenericType(dynamicEntityType) });
+                        updateRangeMethod.Invoke(Context, new object[] { dynamicEntitiesToUpdate });
                     }
                     if(existInsert){
                         var AddRangeMethod = typeof(DbContext).GetMethod("AddRange", new Type[] { typeof(IEnumerable<>).MakeGenericType(dynamicEntityType) });
@@ -785,7 +796,6 @@ namespace Siesa.SDK.Business
 
         public virtual DeleteBusinessObjResponse Delete()
         {
-            DeleteDynamicEntity();
             this._logger.LogInformation($"Detele {this.GetType().Name}");
             var response = new DeleteBusinessObjResponse();
 
@@ -793,7 +803,7 @@ namespace Siesa.SDK.Business
             try
             {
                 ValidateBussines(ref result, BLUserActionEnum.Delete);
-
+                BeforeDelete(ref result, BaseObj.GetRowid());
                 if (result.Errors.Count > 0)
                 {
                     response.Errors.AddRange(result.Errors);
@@ -801,6 +811,9 @@ namespace Siesa.SDK.Business
                 }
                 using (SDKContext context = CreateDbContext())
                 {
+                    if (DynamicEntities != null && DynamicEntities.Count > 0){
+                        DeleteDynamicEntity(context);
+                    }
                     DisableRelatedProperties(BaseObj, _navigationProperties);
                     context.SetProvider(_provider);
                     context.Set<T>().Remove(BaseObj);
@@ -812,39 +825,40 @@ namespace Siesa.SDK.Business
                 this._logger.LogError(e, $"Error deleting {this.GetType().Name}");
                 response.Errors.Add(new OperationError() { Message = e.Message });
             }
-
+            AfterDelete(ref response);
             return response;
         }
 
-        protected virtual void DeleteDynamicEntity(){
-            using (SDKContext Context = CreateDbContext())
-            {
-                var nameSpaceEntity = typeof(T).Namespace;
-                var nameDynamicEntity = "D"+typeof(T).Name.Substring(1);
-                var dynamicEntityType = Utilities.SearchType(nameSpaceEntity + "." + nameDynamicEntity, true);
+        protected virtual void DeleteDynamicEntity(SDKContext Context, List<int> rowidsEnityColumn = null){
+            var nameSpaceEntity = typeof(T).Namespace;
+            var nameDynamicEntity = "D"+typeof(T).Name.Substring(1);
+            var dynamicEntityType = Utilities.SearchType(nameSpaceEntity + "." + nameDynamicEntity, true);
 
-                if(dynamicEntityType != null){
-                    try{
-                        var dynamicContextSet = Context.GetType().GetMethod("AllSet", types: Type.EmptyTypes).MakeGenericMethod(dynamicEntityType).Invoke(Context, null);
-                        var rowid = BaseObj.GetRowid();
-                        Assembly assemblyWhere = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
-                        var whereMethod = typeof(IQueryable).GetExtensionMethod(assemblyWhere, "Where", new[] { typeof(IQueryable), typeof(string), typeof(object[])});
+            if(dynamicEntityType != null){
+                try{
+                    var dynamicContextSet = Context.GetType().GetMethod("AllSet", types: Type.EmptyTypes).MakeGenericMethod(dynamicEntityType).Invoke(Context, null);
+                    var rowid = BaseObj.GetRowid();
+                    Assembly assemblyWhere = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
+                    var whereMethod = typeof(IQueryable).GetExtensionMethod(assemblyWhere, "Where", new[] { typeof(IQueryable), typeof(string), typeof(object[])});
+
+                    if(rowidsEnityColumn != null){
+                        dynamicContextSet = whereMethod.Invoke(dynamicContextSet, new object[] { dynamicContextSet, "RowidEntityColumn in @0", new object[] { rowidsEnityColumn } });
+                    }else{
                         dynamicContextSet = whereMethod.Invoke(dynamicContextSet, new object[] { dynamicContextSet, "RowidRecord = @0", new object[] { rowid } });
-
-                        Assembly assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
-                        var dynamicListMethod = typeof(IEnumerable).GetExtensionMethod(assemblyDynamic, "ToDynamicList", new[] { typeof(IEnumerable) });
-                        dynamic dynamicEntitiesToDelete = dynamicListMethod.Invoke(dynamicContextSet, new object[] { dynamicContextSet });
-                        
-                        if(dynamicEntitiesToDelete.Count > 0){
-                            Assembly assemblyContextExtension = typeof(DbContextExtensions).Assembly;
-                            var BulkDeleteMethod = typeof(DbContext).GetExtensionMethod(assemblyContextExtension, "BulkDelete", new Type[] { typeof(DbContext), typeof(Type), typeof(IEnumerable<object>)});
-                            BulkDeleteMethod.Invoke(Context, new object[] { Context, dynamicEntityType, dynamicEntitiesToDelete });
-                        }
-                    }catch(Exception e){
-                        throw new Exception($"Error deleting aditional fields {nameDynamicEntity} {e.Message}");
                     }
 
+                    Assembly assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
+                    var dynamicListMethod = typeof(IEnumerable).GetExtensionMethod(assemblyDynamic, "ToDynamicList", new[] { typeof(IEnumerable) });
+                    dynamic dynamicEntitiesToDelete = dynamicListMethod.Invoke(dynamicContextSet, new object[] { dynamicContextSet });
+                    
+                    if(dynamicEntitiesToDelete.Count > 0){
+                        var DeleteRangeMethod = typeof(DbContext).GetMethod("RemoveRange", new Type[] { typeof(IEnumerable<>).MakeGenericType(dynamicEntityType) });
+                        DeleteRangeMethod.Invoke(Context, new object[] { dynamicEntitiesToDelete });
+                    }
+                }catch(Exception e){
+                    throw new Exception($"Error deleting aditional fields {nameDynamicEntity} {e.Message}");
                 }
+
             }
         }
 
@@ -1953,7 +1967,8 @@ namespace Siesa.SDK.Business
                     var columns = context.Set<E00251_DynamicEntityColumn>().Where(x => x.RowidDynamicEntity == rowid).ToList();
                     if(columns != null){
                         context.RemoveRange(columns);
-                        context.SaveChanges();
+                        List<int> rowidsEnityColumn = columns.Select(x => x.Rowid).ToList();
+                        DeleteDynamicEntity(context, rowidsEnityColumn);
                     }
                     var resource = context.Set<E00250_DynamicEntity>().Where(x => x.Rowid == rowid).FirstOrDefault();
                     if (resource != null)
