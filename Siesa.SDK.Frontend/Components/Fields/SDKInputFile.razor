@@ -17,19 +17,24 @@
 @inject IServiceProvider ServiceProvider
 
 <div class="file-upload-container">
-
     <div class="input-container">
         <InputFile OnChange="@_OnChange" multiple="@IsMultiple" style="width: 300px; height: 200px; " accept="@FilterType" @ref="_refinputFile"/>
     </div>
-        
-
-        <img @ref="previewImageElem" width="200" height="100" />
-
-        <div class="file-upload-icon">
-            <SDKIcon Name="fa-arrow-up-from-bracket"></SDKIcon>
-        </div>
-
+    <img @ref="previewImageElem" width="200" height="100" />
+    <div class="file-upload-icon">
+        <SDKIcon Name="fa-arrow-up-from-bracket" OnClick="@ClickIcon"></SDKIcon>
+    </div>
 </div>
+@if(IsMultiple){
+    <div class="container">
+        <div class="row">
+            @foreach (var url in _PreviewFiles)
+            {
+                <img class="@_col sdk-preview-multi" src="@url" >
+            }
+        </div>
+    </div>
+}
 
 @code {
 
@@ -47,10 +52,12 @@
     [Parameter] public string BusinessName {get; set;}
 
     [Parameter] public int RowidAttachmentDetail {get; set;}
-
     [Parameter] public int RowidAttachmentRelationship {get; set;}
     [Parameter] public bool SaveBytes {get; set;} = false;
     [Parameter] public int MaxSize {get; set;} = 3000000;
+    private string _col = "col-12";
+    private List<IBrowserFile> _FilesSelected = new List<IBrowserFile>();
+    private List<string> _PreviewFiles = new List<string>();
 
     private dynamic BusinessObj = null;
 
@@ -72,14 +79,41 @@
         }
         StateHasChanged();
     }
+    private void ClickIcon()
+    {
+        JSRuntime.InvokeVoidAsync("clickInputFile", _refinputFile.Element);
+    }
+    private async Task GetPreviewFiles()
+    {
+        if(_refinputFile != null)
+        {
+            _PreviewFiles = await JSRuntime.InvokeAsync<List<string>>("getUrlsImage", _refinputFile!.Element);
+        }
+        StateHasChanged();
+    }
 
     private async Task _OnChange(InputFileChangeEventArgs _InputFile)
     {
         if(_InputFile != null)
         {
             InputFile = _InputFile;
-
-            await GetPreviewFile();
+            if(IsMultiple){
+                var files = InputFile.GetMultipleFiles();
+                foreach (var itemFile in files)
+                {
+                    _FilesSelected.Add(itemFile);
+                }
+                await GetPreviewFiles();
+                if(_FilesSelected.Count == 2){
+                    _col = "col-6";
+                }else if(_FilesSelected.Count >= 3){
+                    _col = "col-4";
+                }else{
+                    _col = "col-12";
+                }
+            }else{
+                await GetPreviewFile();
+            }
             OnInputFile?.Invoke(_InputFile);
         }
     }
@@ -118,7 +152,9 @@
                 else
                 {
                     saveFile = await BusinessObj.SaveAttachmentDetail(fileUploadDTO);
-                    RowidAttachmentDetail = saveFile;
+                    if(!IsMultiple){
+                        RowidAttachmentDetail = saveFile;
+                    }
                 }
             }
         }

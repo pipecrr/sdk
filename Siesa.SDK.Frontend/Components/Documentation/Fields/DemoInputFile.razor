@@ -19,6 +19,14 @@
 
             <button @onclick="@(()=> UploadFile())">Upload File</button>
         </div>
+        <div class="col-md-6 p-3">
+            <SDKCard > 
+                <SDKInputFile IsMultiple="true" FilterType="image/*, .pdf"
+                 BusinessName="BLCity"  OnInputFile="@OnInputFile" @ref="@_refinputFileMulti"/>
+            </SDKCard>
+
+            <button @onclick="@(()=> UploadFileMulti())">Upload File</button>
+        </div>
     </div>
 </div>
 
@@ -26,6 +34,7 @@
 @code
 {
     public SDKInputFile? _refinputFile;
+    public SDKInputFile? _refinputFileMulti;
 
     public void OnInputFile(InputFileChangeEventArgs FileInput)
     {
@@ -35,6 +44,11 @@
     public void UploadFile()
     {
         _refinputFile.SDKUploadFile();
+    }
+
+    public void UploadFileMulti()
+    {
+        _refinputFileMulti.SDKUploadFile();
     }
 
 }
