@@ -481,22 +481,32 @@ namespace Siesa.SDK.Business
             return (T)result;
         }
 
+        //utilizado despues de que ya se guardo el objeto.
+        //comentado para luego utilizar docfx
         public virtual void AfterValidateAndSave(ref ValidateAndSaveBusinessObjResponse result)
         {
             //Do nothing
         }
+        //utilizado despues que se guarda el objeto en la base de datos con la posibilidad de hacer rollback en caso de error.
+        //comentado para luego utilizar docfx
         public virtual void AfterSave(ref ValidateAndSaveBusinessObjResponse result, SDKContext context)
         {
             //Do nothing
         }
+        //utilizado antes de guardar el objeto en la base de datos con la posibilidad de hacer rollback en caso de error.
+        //comentado para luego utilizar docfx
         public virtual void BeforeSave(ref ValidateAndSaveBusinessObjResponse result, SDKContext context)
         {
             //Do nothing
         }
+        //utilizado despues de eliminar el objeto, con la posibilidad de hacer rollback en caso de error.
+        //comentado para luego utilizar docfx
         public virtual void AfterDelete(ref ValidateAndSaveBusinessObjResponse result, SDKContext context)
         {
             //Do nothing
         }
+        //utilizado antes de eliminar el objeto, con la posibilidad de hacer rollback en caso de error.
+        //comentado para luego utilizar docfx
         public virtual void BeforeDelete(ref ValidateAndSaveBusinessObjResponse result, SDKContext context)
         {
             //Do nothing
