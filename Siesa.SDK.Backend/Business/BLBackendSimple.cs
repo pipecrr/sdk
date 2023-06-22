@@ -485,6 +485,14 @@ namespace Siesa.SDK.Business
         {
             //Do nothing
         }
+        public virtual void AfterSave(ref ValidateAndSaveBusinessObjResponse result, SDKContext context)
+        {
+            //Do nothing
+        }
+        public virtual void BeforeSave(ref ValidateAndSaveBusinessObjResponse result, SDKContext context)
+        {
+            //Do nothing
+        }
         public virtual void AfterDelete(ref ValidateAndSaveBusinessObjResponse result, SDKContext context)
         {
             //Do nothing
@@ -520,12 +528,21 @@ namespace Siesa.SDK.Business
                     return result;
                 }
                 using(SDKContext context = CreateDbContext()){
-                    result.Rowid = Save(context);
-                    if (DynamicEntities != null && DynamicEntities.Count > 0)
-                    {
-                        SaveDynamicEntity(result.Rowid, context);
+                    try{
+                        context.BeginTransaction();
+                        BeforeSave(ref result, context);
+                        result.Rowid = Save(context);
+                        if (DynamicEntities != null && DynamicEntities.Count > 0)
+                        {
+                            SaveDynamicEntity(result.Rowid, context);
+                        }
+                        AfterSave(ref result, context);
+                        context.Commit();
+                        AfterValidateAndSave(ref result);
+                    }catch(Exception ex){
+                        context.Rollback();
+                        result.Errors.Add(new OperationError() { Message = ex.Message });
                     }
-                    AfterValidateAndSave(ref result);
                 }
             }
             catch (DbUpdateException exception)
