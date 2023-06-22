@@ -105,6 +105,8 @@ namespace Siesa.Global.Enums
 		Number = 1,
 		Date = 2,
 		Time = 3,
-		Boolean = 4
+		Boolean = 4,
+		GenericEntity = 5,
+		InternalEntity = 6
 	}
 }
