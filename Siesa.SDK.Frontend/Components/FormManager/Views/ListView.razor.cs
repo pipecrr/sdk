@@ -1034,7 +1034,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 }
                 if(hideCondition != null){
                     res = await EvaluateCondition(data, hideCondition);
-                    res = res && !deny;
+                    if(deny){
+                        res = !res;
+                    }
                 }
             }
             return res;
