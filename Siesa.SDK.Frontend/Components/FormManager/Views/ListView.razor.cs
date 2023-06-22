@@ -1022,6 +1022,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public async Task<bool> HideActionFromReact(string dataStr, Int64 index){
             Button button = CustomActions[(int)index];
             bool res = false;
+            bool deny = false;
             if(button != null){
                 var data = JsonConvert.DeserializeObject<dynamic>(dataStr);
                 dynamic hideCondition = null;
@@ -1030,9 +1031,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     if(sdkHide != null){
                         hideCondition = sdkHide;
                     }
+                }else if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-show")){
+                    var sdkShow = button.CustomAttributes["sdk-show"];
+                    if(sdkShow != null){
+                        hideCondition = sdkShow;
+                    }
+                    deny = true;
                 }
                 if(hideCondition != null){
                     res = await EvaluateCondition(data, hideCondition);
+                    if(deny){
+                        res = !res;
+                    }
                 }
             }
             return res;
