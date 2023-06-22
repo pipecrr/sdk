@@ -60,6 +60,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 {
                     _extraFields = defaultFields.Select(field => field.Replace("BaseObj.", "")).ToList();
                 }
+                
+                var BaseObj = BusinessObj.BaseObj;                
+                foreach (string field in _extraFields){
+                    var property = BaseObj.GetType().GetProperty(field);
+                    if(property != null){
+                        if(BaseObj.GetType().GetProperty(field).PropertyType.IsClass && BaseObj.GetType().GetProperty(field).PropertyType != typeof(string)){
+                            var RowidNameField = "Rowid"+field;
+                            if(!_extraFields.Contains(RowidNameField)){
+                                _extraFields.Add(RowidNameField);
+                            }
+                        }
+                    }
+                }
             }
             catch (System.Exception)
             {
