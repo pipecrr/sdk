@@ -350,9 +350,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
             if (result != null && result.Errors.Count > 0)
             {
-                var errorMessage ="Custom.Generic.Message.DeleteError";
-                NotificationService.ShowError(errorMessage);
-                ErrorList.Add(errorMessage);
+                foreach(var error in result.Errors){
+                    NotificationService.ShowError(error.Message);
+                    ErrorList.Add(error.Message);
+                }
                 // ErrorMsg = "<ul>";
                 // foreach (var error in result.Errors)
                 // {

@@ -810,7 +810,7 @@ namespace Siesa.SDK.Business
             catch (Exception e)
             {
                 this._logger.LogError(e, $"Error deleting {this.GetType().Name}");
-                response.Errors.Add(new OperationError() { Message = e.Message });
+                response.Errors.Add(new OperationError() { Message = "Custom.Generic.Message.DeleteError" });
             }
 
             return response;
