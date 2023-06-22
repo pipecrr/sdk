@@ -32,7 +32,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 if (IsSubpanel)
                 {
                     _viewdefName = "related_detail";
-                }     
+                }
 
                 var metadata = BackendRouterService.GetViewdef(bName, _viewdefName);
 
@@ -48,34 +48,30 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                     .Select(field => field.Name)
                                     .ToList(); 
 
-                if (FormViewModel.ExtraFields.Count > 0)
-                {   
+                if (FormViewModel.ExtraFields.Count > 0){
                     _extraFields =  FormViewModel.ExtraFields.Select(f => f)
                     .Union(defaultFields)
                     .ToList();
 
                     _extraFields = _extraFields.Select(field => field.Replace("BaseObj.", "")).ToList();
-                }
-                else
-                {
+                }else{
                     _extraFields = defaultFields.Select(field => field.Replace("BaseObj.", "")).ToList();
                 }
                 
                 var BaseObj = BusinessObj.BaseObj;                
                 foreach (string field in _extraFields){
                     var property = BaseObj.GetType().GetProperty(field);
-                    if(property != null){
-                        if(BaseObj.GetType().GetProperty(field).PropertyType.IsClass && BaseObj.GetType().GetProperty(field).PropertyType != typeof(string)){
-                            var RowidNameField = "Rowid"+field;
-                            if(!_extraFields.Contains(RowidNameField)){
-                                _extraFields.Add(RowidNameField);
-                            }
+                    if(property != null && BaseObj.GetType().GetProperty(field).PropertyType.IsClass && BaseObj.GetType().GetProperty(field).PropertyType != typeof(string)){
+                        var RowidNameField = "Rowid"+field;
+                        if(!_extraFields.Contains(RowidNameField)){
+                            _extraFields.Add(RowidNameField);
                         }
                     }
                 }
             }
-            catch (System.Exception)
+            catch (System.Exception e)
             {
+                ErrorList.Add("Exception: "+e.ToString());
             }
         }
 
