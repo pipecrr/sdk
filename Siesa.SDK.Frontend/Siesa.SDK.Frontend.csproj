@@ -47,7 +47,6 @@
 		<PackageReference Include="GrapeCity.ActiveReports.Aspnetcore.Viewer" Version="16.3.2" />
 		<PackageReference Include="GrapeCity.ActiveReports.Blazor.Viewer" Version="16.3.2" />
 		<PackageReference Include="Grpc.Net.Client" Version="2.40.0" />
-		<PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.8" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.2" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.DataAnnotations.Validation" Version="3.2.0-rc1.20223.4" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.1" />
