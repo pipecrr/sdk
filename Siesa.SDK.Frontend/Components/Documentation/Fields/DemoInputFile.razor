@@ -22,7 +22,7 @@
         <div class="col-md-6 p-3">
             <SDKCard > 
                 <SDKInputFile IsMultiple="true" FilterType="image/*, .pdf"
-                 BusinessName="BLCity"  OnInputFile="@OnInputFile" @ref="@_refinputFileMulti"/>
+                 BusinessName="BLCity"  OnInputFile="@OnInputFile" @ref="@_refinputFileMulti" RowidAttachmentRelationship="1"/>
             </SDKCard>
 
             <button @onclick="@(()=> UploadFileMulti())">Upload File</button>
