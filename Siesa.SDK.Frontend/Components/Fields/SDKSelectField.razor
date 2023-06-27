@@ -1,28 +1,17 @@
 @typeparam ItemType
 @inherits SDKComponent
-<RadzenDropDown 
-    ReadOnly="@ReadOnly"
-    Data="@Options"
-    TValue="ItemType"
-    TextProperty="@TextProperty"
-    ValueProperty="@ValueProperty"
-    Value="@Value" 
-    ValueChanged="@ValueChanged" 
-    ValueExpression="@ValueExpression"
-    data-automation-id="@GetAutomationId()"
-    field-name="@FieldName"
-    @onfocusout="@_OnFocusOut"
-/>
-@* <DxComboBox  
-
-    NullText="@Placeholder"
-    CssClass="@CssClass"
-    
-    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
-
-    FilteringMode="DataGridFilteringMode.Contains"
-    onkeydown="@onKeyDown"
-    @ref="_refField"
->
-@ChildContent
-</DxComboBox> *@
+<div class="sdk-dropdown-container">
+    <RadzenDropDown 
+        Disabled="@ReadOnly"
+        Data="@Options"
+        TValue="ItemType"
+        TextProperty="@TextProperty"
+        ValueProperty="@ValueProperty"
+        Value="@Value" 
+        ValueChanged="@ValueChanged" 
+        ValueExpression="@ValueExpression"
+        data-automation-id="@GetAutomationId()"
+        field-name="@FieldName"
+        @onfocusout="@_OnFocusOut"
+    />
+</div>
