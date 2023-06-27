@@ -13,6 +13,7 @@
     <div class="row px-3"> 
         <div class="col-md-6 p-3">
             <SDKCard > 
+                <p>Sinlge</p>
                 <SDKInputFile IsMultiple="false" FilterType="image/*, .pdf"
                  BusinessName="BLCity"  OnInputFile="@OnInputFile" @ref="@_refinputFile"/>
             </SDKCard>
@@ -20,7 +21,9 @@
             <button @onclick="@(()=> UploadFile())">Upload File</button>
         </div>
         <div class="col-md-6 p-3">
-            <SDKCard > 
+            <SDKCard >
+                <p>Multiple</p>
+                <p>Para el inputFile Con IsMultiple en true es necesario agragar el RowidAttachmentRelationship</p>
                 <SDKInputFile IsMultiple="true" FilterType="image/*, .pdf"
                  BusinessName="BLCity"  OnInputFile="@OnInputFile" @ref="@_refinputFileMulti" RowidAttachmentRelationship="1"/>
             </SDKCard>
