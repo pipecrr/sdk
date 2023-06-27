@@ -45,15 +45,15 @@
     <div class="sdk_aditional_fields_footerBar">
         <div class="sdk_aditional_fields_footer">
             @if(Page == 0 && !IsEdit && !IsCreate){
-                <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" ResourceTag="Cancelar" Click="@Close" CssClass="m-1"/>
-                <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Siguiente" Click="@Next"  CssClass="m-1" Enabled="@EnableButtonNext"/>
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" ResourceTag="Custom.AditionalFields.Button.Cancel" Click="@Close" CssClass="m-1"/>
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Custom.AditionalFields.Button.Next" Click="@Next"  CssClass="m-1" Enabled="@EnableButtonNext"/>
             }else{
                 if(!IsEdit && !IsCreate){
-                    <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" ResourceTag="Atras" Click="@Back" CssClass="m-1"/>
+                    <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" ResourceTag="Custom.AditionalFields.Button.Back" Click="@Back" CssClass="m-1"/>
                 }else{
-                    <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" ResourceTag="Cancelar" Click="@Close" CssClass="m-1"/>
+                    <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" ResourceTag="Custom.AditionalFields.Button.Cancel" Click="@Close" CssClass="m-1"/>
                 }
-                <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Guardar" Click="@(()=> Save())"  CssClass="m-1" Enabled="@EnableButtonSave"/>
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Custom.AditionalFields.Button.Save" Click="@(()=> Save())"  CssClass="m-1" Enabled="@EnableButtonSave"/>
             }
         </div>
     </div>

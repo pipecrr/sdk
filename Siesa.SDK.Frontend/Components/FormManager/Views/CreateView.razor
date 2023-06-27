@@ -82,8 +82,8 @@ else if (Panels == null || Panels.Count <= 0)
                                     </div>
                                         <div class="buttons-aditional-fiels mb-2">
                                             <SDKButton RenderStyleMode="SDKButtonRenderStyleMode.Outline" RenderStyle="SDKButtonRenderStyle.Danger" ResourceTag="Borrar" Click="@(()=>ConfirmDelete(panel.RowidGroupDynamicEntity))"/>
-                                            <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Editar campos" Click="@(()=>ClickInEdit(panel.RowidGroupDynamicEntity))"/>
-                                            <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Agregar campos" Click="@(()=>ClickInAdd(panel.RowidGroupDynamicEntity))"/>
+                                            <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Custom.Panel.AditionalFields.Button.EditFields" Click="@(()=>ClickInEdit(panel.RowidGroupDynamicEntity))"/>
+                                            <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Custom.Panel.AditionalFields.Button.AddFields" Click="@(()=>ClickInAdd(panel.RowidGroupDynamicEntity))"/>
                                         </div>
                                 </SDKCollapseItem>
                             }
@@ -165,7 +165,7 @@ else if (Panels == null || Panels.Count <= 0)
 
     public async Task ConfirmDelete(int Rowid)
     {
-        var confirmDelete = await SDKDialogService.ShowConfirmDialog(@<div class="col-12 p-0"><ResourceViewer ResourceTag="Esta seguro que desea eliminar los campos adicionales?"/></div>);
+        var confirmDelete = await SDKDialogService.ShowConfirmDialog(@<div class="col-12 p-0"><ResourceViewer ResourceTag="Custom.Panel.AditionalFields.Message.ConfirmDelete"/></div>);
         if(confirmDelete != null && confirmDelete == true){
             bool deleteGroup = await DeleteGroup(Rowid);
             if(deleteGroup){
@@ -209,7 +209,7 @@ else if (Panels == null || Panels.Count <= 0)
     }
 
     public async Task ModalConfirmMessage(bool response){
-        var confirm = await SDKDialogService.ShowConfirmDialog(@<div class="col-12 p-0"><ResourceViewer ResourceTag="Custom.AditionalFields.ConfirmMessage"/></div>);
+        var confirm = await SDKDialogService.ShowConfirmDialog(@<div class="col-12 p-0"><ResourceViewer ResourceTag="Custom.Panel.AditionalFields.Message.ConfirmMessage"/></div>);
         if(confirm != null && confirm == true){
             var currentUrl = NavigationManager.Uri;
             NavigationService.NavigateTo(currentUrl, true);

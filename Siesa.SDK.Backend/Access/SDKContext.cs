@@ -173,6 +173,36 @@ namespace Siesa.SDK.Backend.Access
         {
             return InternalSaveChanges(true);
         }
+
+        public void BeginTransaction()
+        {
+            this.Database.BeginTransaction();
+        }
+
+        public void Commit()
+        {
+            this.Database.CommitTransaction();
+        }
+
+        public void Rollback()
+        {
+            this.Database.RollbackTransaction();
+        }
+
+        public async Task BeginTransactionAsync()
+        {
+            await this.Database.BeginTransactionAsync();
+        }
+
+        public async Task CommitAsync()
+        {
+            await this.Database.CommitTransactionAsync();
+        }
+
+        public async Task RollbackAsync()
+        {
+            await this.Database.RollbackTransactionAsync();
+        }
         
         internal int InternalSaveChanges(bool ValidateUser = true)
         {
