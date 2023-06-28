@@ -50,7 +50,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         public List<Panel> Panels {get { return FormViewModel.Panels; } }
         public List<Panel> PanelsCollapsable = new List<Panel>();
-        public bool ShowAditionalFields;
+        public bool ShowAditionalFields { get; set; }
 
         public Boolean Loading = true;
         public bool Saving = false;
