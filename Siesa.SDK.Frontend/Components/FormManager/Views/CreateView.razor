@@ -36,10 +36,10 @@ else if (Panels == null || Panels.Count <= 0)
     @if(ContainAttachments){
         <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" 
             Parent="@BusinessObj.BaseObj" ContainAttachments="@ContainAttachments" BLNameParentAttatchment="@BusinessName"
-            BusinessObj="@BusinessObj" isCreateView="true"/>
+            BusinessObj="@BusinessObj" isCreateView="true" ShowAditionalFields="@ShowAditionalFields"/>
     }else if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
     {
-        <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" isCreateView="true"/>
+        <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" isCreateView="true" ShowAditionalFields="@ShowAditionalFields"/>
     }
     <CascadingValue Value="@this">
        <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList" VerifyContext="@ClickInSave"/>

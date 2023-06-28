@@ -50,6 +50,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         public List<Panel> Panels {get { return FormViewModel.Panels; } }
         public List<Panel> PanelsCollapsable = new List<Panel>();
+        public bool ShowAditionalFields;
 
         public Boolean Loading = true;
         public bool Saving = false;
@@ -237,6 +238,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     FormViewModel.Panels = panels;
                 }
                 if(BusinessObj.GetType().GetProperty("DynamicEntities") != null && BusinessObj.DynamicEntities != null && BusinessObj.DynamicEntities.Count > 0){
+                    ShowAditionalFields = true;
                     AddPanels(PanelsCollapsable);
                 }
             }
