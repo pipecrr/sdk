@@ -32,6 +32,9 @@ namespace Siesa.SDK.Entities
 		[SDKRequired]
 		public int RowidExternalUser { get; set; }
 
+		[SDKRequired]
+		public long RowidMainRecord { get; set; }
+
 
 		[SDKCheckRelationship]
 		[SDKRequired]
