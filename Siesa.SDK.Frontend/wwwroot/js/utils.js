@@ -114,6 +114,19 @@ function downloadFileFromStream(fileName, bytes) {
     imgElem.addEventListener('load', () => URL.revokeObjectURL(url), { once: true });
     imgElem.src = url;
   }
+
+  function getUrlsImage (inputElem){
+    let files = inputElem.files;
+    var urls = [];
+    for (var i = 0; i < files.length; i++) {
+        urls.push(URL.createObjectURL(files[i]));
+    }
+    return urls;
+  }
+
+  function clickInputFile (element) {
+    element.click();
+  }
   
 
 window.downloadFileFromStream = downloadFileFromStream;
@@ -125,3 +138,5 @@ window.deleteCookie = deleteCookie;
 window.SetFocusToElement = SetFocusToElement;
 window.preloadFlex = preloadFlex;
 window.previewImage = previewImage;
+window.getUrlsImage = getUrlsImage;
+window.clickInputFile = clickInputFile;
