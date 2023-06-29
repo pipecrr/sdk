@@ -31,18 +31,23 @@ namespace Siesa.SDK.Frontend.Services
         private SDKDbConnection SelectedConnection = new SDKDbConnection();
 
         public string UserToken { get; private set; } = "";
+        public string PortalUserToken { get; private set; } = "";
 
         private int _selectedSuite;
 
         private short _rowIdCompanyGroup = 0;
 
         private string _userPhoto = "";
+        private string _portalUserPhoto = "";
         private string _logoPhoto = "";
+        private string _portalLogoPhoto = "";
 
         
         public UserPreferencesDTO UserPreferences { get; set; } = new UserPreferencesDTO();
+        public UserPreferencesDTO PortalUserPreferences { get; set; } = new UserPreferencesDTO();
 
         private JwtUserData? _user;
+        private JwtUserData? _portalUser;
         public JwtUserData User
         {
             get
@@ -56,6 +61,22 @@ namespace Siesa.SDK.Frontend.Services
                     _user = new SDKJWT(_secretKey, _minutesExp).Validate(UserToken);
                 }
                 return _user;
+            }
+        }
+
+        public JwtUserData PortalUser
+        {
+            get
+            {
+                if (PortalUserToken == "")
+                {
+                    return null;
+                }
+                if (_portalUser == null)
+                {
+                    _portalUser = new SDKJWT(_secretKey, _minutesExp).Validate(PortalUserToken);
+                }
+                return _portalUser;
             }
         }
 
@@ -162,6 +183,51 @@ namespace Siesa.SDK.Frontend.Services
             }
         }
 
+        public async Task LoginPortal(string username, string password, short rowIdDBConnection, 
+        bool IsUpdateSession = false, short rowIdCompanyGroup = 1)
+        {
+            var BLPortalUser = _backendRouterService.GetSDKBusinessModel("BLPortalUser", this);
+            if (BLPortalUser == null)
+            {
+                throw new Exception("Login Service not found");
+            }
+
+            short LastCompanyGroupSelected = await _localStorageService.GetItemAsync<short>("rowidCompanyGroup");
+
+            if(LastCompanyGroupSelected > 0 && LastCompanyGroupSelected != rowIdCompanyGroup) 
+            {
+                rowIdCompanyGroup = LastCompanyGroupSelected;
+            }
+            
+            var loginRequest = await BLPortalUser.Call("SignInSessionPortal", new Dictionary<string, dynamic> {
+                {"username", username},
+                {"password", password},
+                {"rowIdDBConnection", rowIdDBConnection},
+                {"rowidCulture", RowidCultureChanged},
+                {"rowIdCompanyGroup", rowIdCompanyGroup}
+            });
+            if (loginRequest.Success)
+            {
+                PortalUserToken = loginRequest.Data.Token;
+                await _localStorageService.SetItemAsync("portalusertoken", PortalUserToken);
+                await SetCookie("selectedConnection", rowIdDBConnection.ToString());
+                await SetPortalUserPhoto(loginRequest.Data.UserPhoto);
+                await SetPreferencesPortalUser(loginRequest.Data.UserPreferences);
+            }
+            else
+            {
+                if (loginRequest.Errors != null && loginRequest.Errors.Count > 0)
+                {
+                    throw new Exception(loginRequest.Errors.FirstOrDefault());
+                }
+                else
+                {
+                    throw new Exception("Login failed");
+                }
+            }
+
+        }
+
         //RenewToken method
         public async Task RenewToken()
         {
@@ -212,12 +278,33 @@ namespace Siesa.SDK.Frontend.Services
 
         }
 
+        public async Task LogoutPortal()
+        {
+            await _localStorageService.RemoveItemAsync("portalusertoken");
+            await _localStorageService.RemoveItemAsync("portaluserPhoto");
+            await _localStorageService.RemoveItemAsync("portaluserPreferences");
+            await RemoveCookie("selectedConnection");
+            PortalUserToken = "";
+            _portalUser = null;
+
+            _navigationManager.NavigateTo("login");
+        }
+
         public async Task SetToken(string token, bool saveLocalStorage = true)
         {
             UserToken = token;
             if(saveLocalStorage)
             {
                 await _localStorageService.SetItemAsync("usertoken", UserToken);
+            }
+        }
+
+        public async Task SetTokenPortal(string token, bool saveLocalStorage = true)
+        {
+            PortalUserToken = token;
+            if(saveLocalStorage)
+            {
+                await _localStorageService.SetItemAsync("portalusertoken", PortalUserToken);
             }
         }
 
@@ -228,6 +315,16 @@ namespace Siesa.SDK.Frontend.Services
             if(saveLocalStorage)
             {
                 await _localStorageService.SetItemAsync("userPhoto", _userPhoto);
+            }
+        }
+
+        public async Task SetPortalUserPhoto(string _data, bool saveLocalStorage = true)
+        {
+            _portalUserPhoto = _data;
+
+            if(saveLocalStorage)
+            {
+                await _localStorageService.SetItemAsync("portaluserPhoto", _portalUserPhoto);
             }
         }
 
@@ -500,6 +597,11 @@ namespace Siesa.SDK.Frontend.Services
         {
             await _localStorageService.SetItemAsync("userPreferences", _userPreferencesDTO);
             UserPreferences = _userPreferencesDTO;
+        }
+        public async Task SetPreferencesPortalUser(UserPreferencesDTO _userPreferencesDTO)
+        {
+            await _localStorageService.SetItemAsync("portalUserPreferences", _userPreferencesDTO);
+            PortalUserPreferences = _userPreferencesDTO;
         }
 
         public UserPreferencesDTO GetPreferencesUser()

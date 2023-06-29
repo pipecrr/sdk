@@ -30,17 +30,9 @@
                         <img src="@LogoUrl" height="35px" alt="logo_siesa">
                     </div>
                     <div class="col-12 p-0 d-flex justify-content-center align-items-center">
-                        @* <select class="select_connect" id="SelectConnect" @onchange="OnChangeConnection">
-                            <option value=""><ResourceViewer ResourceTag="BLUser.Login.Message.SelectDbConnection" RowidCulture=@RowidCulture /></option>
-                             @if(ConnectionList != null && ConnectionList.Count > 0)
-                            {
-                                @foreach(var db in ConnectionList)
-                                {
-                                    <option value="@db.Rowid" selected="@(db.Rowid == SelectedConnection.Rowid)" >@db.Name</option>
-                                }
-                            }
-                        </select> *@
-                    
+                        <select class="select_connect" id="SelectConnect">
+                            <option value="@SelectedConnection.Rowid" selected="@(true)" >@SelectedConnection.Name</option>
+                        </select>
 
                         <i class="ml-2 fa-solid fa-globe"></i>
                         <div id="lang">
@@ -74,7 +66,7 @@
 
                             </div>
                             @if(RecoveringPassword){
-                                <ForgotPassword _login="@this" />
+                                @* <ForgotPassword _login="@this" /> *@
                             }else{
                                 <div
                                     class="col-12 offset-sm-2 col-sm-8 offset-md-1 col-md-10 offset-lg-2 col-lg-8 px-md-3 px-lg-0">

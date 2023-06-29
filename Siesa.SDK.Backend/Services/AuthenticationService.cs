@@ -11,6 +11,7 @@ namespace Siesa.SDK.Backend.Services
     public class AuthenticationService : IAuthenticationService
     {
         public string UserToken { get; set; } = "";
+        public string PortalUserToken { get; set; } = "";
         private string _secretKey;
         private int _minutesExp;
         public short RowidCultureChanged { get; set; } = 0;
@@ -31,9 +32,22 @@ namespace Siesa.SDK.Backend.Services
             return _user;
         }}
 
+        public JwtUserData PortalUser {
+            get {
+                if(PortalUserToken == ""){
+                    return null;
+                }
+                return new SDKJWT(_secretKey, _minutesExp).Validate(PortalUserToken);
+            }
+        }
+
         public async Task SetToken(string token, bool saveLocalStorage = true)
         {
             UserToken = token;
+        }
+        public async Task SetTokenPortal(string token, bool saveLocalStorage = true)
+        {
+            PortalUserToken = token;
         }
 
         public Task Initialize()
@@ -47,11 +61,20 @@ namespace Siesa.SDK.Backend.Services
             throw new NotImplementedException();
         }
 
-        public Task Logout()
+        public Task LoginPortal(string username, string password, short rowIdDBConnection, 
+            bool IsUpdateSession = false,short rowIdCompanyGroup = 1)
         {
             throw new NotImplementedException();
         }
 
+        public Task Logout()
+        {
+            throw new NotImplementedException();
+        }
+        public Task LogoutPortal()
+        {
+            throw new NotImplementedException();
+        }
         public Task SetCustomRowidCulture(short rowid)
         {
             throw new NotImplementedException();

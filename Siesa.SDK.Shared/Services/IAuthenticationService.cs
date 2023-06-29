@@ -37,14 +37,20 @@ namespace Siesa.SDK.Shared.Services
     public interface IAuthenticationService
     {
         string UserToken { get; }
+        string PortalUserToken { get; }
         JwtUserData User { get; }
+        JwtUserData PortalUser { get; }
         short RowidCultureChanged { get; set; }
 
         Task Initialize();
         Task Login(string username, string password, short rowIdDBConnection,
                      bool IsUpdateSession = false, short rowIdCompanyGroup = 1);
+        Task LoginPortal(string username, string password, short rowIdDBConnection,
+                     bool IsUpdateSession = false, short rowIdCompanyGroup = 1);
         Task Logout();
+        Task LogoutPortal();
         public Task SetToken(string token, bool saveLocalStorage = true);
+        public Task SetTokenPortal(string token, bool saveLocalStorage = true);
         Task SetCustomRowidCulture(short rowid);
         short GetRoiwdCulture();
         Task SetRowidCompanyGroup(short rowid);
