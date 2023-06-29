@@ -24,6 +24,8 @@ namespace Siesa.SDK.Backend.Access
 {
     public class SDKContext : DbContext
     {
+	public DbSet<E00515_PortalType>? E00515_PortalType { get; set; }
+
 	public DbSet<E00510_ExternalUser>? E00510_ExternalUser { get; set; }
 
 	public DbSet<E00500_IntegrationLog>? E00500_IntegrationLog { get; set; }
