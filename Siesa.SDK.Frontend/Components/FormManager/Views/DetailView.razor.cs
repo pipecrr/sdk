@@ -113,10 +113,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private void EvaluateDynamicAttributes()
         {
-            string code = "";
             foreach (var item in Panels.Select((value, i) => (value, i)))
             {
-                var panel_index = item.i;
                 var panel = item.value;
                 if (panel.Fields == null)
                 {
@@ -125,14 +123,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
                 foreach (var fieldItem in panel.Fields.Select((value, i) => (value, i)))
                 {
-                    var field_index = fieldItem.i;
                     var field = fieldItem.value;
                     if(field.CustomAttributes == null)
                     {
                         continue;
                     }
 
-                    var fieldCustomAttr = field.CustomAttributes.Where(x => x.Key.StartsWith("sdk-") && x.Key != "sdk-change");
+                    var fieldCustomAttr = field.CustomAttributes.Where(x => x.Key.StartsWith("sdk-", StringComparison.OrdinalIgnoreCase) && x.Key != "sdk-change");
 
                         
                     List<string> allowAttr = new List<string>(){

@@ -96,7 +96,7 @@ namespace Siesa.SDK.Frontend.Utils
                 {
                     return guid;
                 }
-                else if (singleProperty.StartsWith("'", StringComparison.OrdinalIgnoreCase) && singleProperty.EndsWith("'"))
+                else if (singleProperty.StartsWith("'", StringComparison.OrdinalIgnoreCase) && singleProperty.EndsWith("'", StringComparison.OrdinalIgnoreCase))
                 {
                     return singleProperty.Substring(1, singleProperty.Length - 2).ToCharArray()[0];
                 }
