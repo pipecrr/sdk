@@ -87,13 +87,13 @@ function preloadFlex(){
         loadScript("http://127.0.0.1:3000/static/js/1.chunk.js");
         loadScript("http://127.0.0.1:3000/static/js/main.chunk.js");
     }else{
-        loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/2.css?v=20230614');
-        loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/main.css?v=20230614');
+        loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/2.css?v=20230622');
+        loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/main.css?v=20230622');
 
-        loadScript('/_content/Siesa.SDK.Frontend/flex/FlexComponent.js?v=20230614');
-        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/2.chunk.js?v=20230614");
-        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/main.chunk.js?v=20230614");
-        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/runtime-main.js?v=20230614");
+        loadScript('/_content/Siesa.SDK.Frontend/flex/FlexComponent.js?v=20230622');
+        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/2.chunk.js?v=20230622");
+        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/main.chunk.js?v=20230622");
+        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/runtime-main.js?v=20230622");
     }
     loadScript("/_content/Siesa.SDK.Frontend/vendor/dexie/dexie.js");
 }
@@ -114,6 +114,19 @@ function downloadFileFromStream(fileName, bytes) {
     imgElem.addEventListener('load', () => URL.revokeObjectURL(url), { once: true });
     imgElem.src = url;
   }
+
+  function getUrlsImage (inputElem){
+    let files = inputElem.files;
+    var urls = [];
+    for (var i = 0; i < files.length; i++) {
+        urls.push(URL.createObjectURL(files[i]));
+    }
+    return urls;
+  }
+
+  function clickInputFile (element) {
+    element.click();
+  }
   
 
 window.downloadFileFromStream = downloadFileFromStream;
@@ -125,3 +138,5 @@ window.deleteCookie = deleteCookie;
 window.SetFocusToElement = SetFocusToElement;
 window.preloadFlex = preloadFlex;
 window.previewImage = previewImage;
+window.getUrlsImage = getUrlsImage;
+window.clickInputFile = clickInputFile;

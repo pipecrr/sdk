@@ -87,7 +87,14 @@ namespace Siesa.SDK.Backend.Services
 
         public short GetRoiwdCulture()
         {
-            throw new NotImplementedException();
+            if (User != null)
+            {
+                return User.RowidCulture;
+            }
+            else
+            {
+                return 0;
+            }
         }
 
         public Task SetRowidCompanyGroup(short rowid)

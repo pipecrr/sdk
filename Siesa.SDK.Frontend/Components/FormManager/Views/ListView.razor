@@ -158,24 +158,24 @@ else
                     <Template Context="data">
                         <div class="action-buttons d-flex justify-content-center">
                             @if(CanEdit && AllowEdit){
-                                <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToEdit(((IBaseSDK)data).GetRowid())"><i
-                                class="fa-pen"></i></button>
+                                <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToEdit(((IBaseSDK)data).GetRowid())">
+                                    <SDKIcon Name="fa-pen"/></button>
                             }
                             @if(!ShowLinkTo && AllowDetail){
-                                <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToDetail(((IBaseSDK)data).GetRowid())"><i
-                                class="fa-eye"></i></button>
+                                <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToDetail(((IBaseSDK)data).GetRowid())">
+                                    <SDKIcon Name="fa-eye"/></button>
                             }
                             
                             @if(CanDelete && IsSubpanel && AllowDelete){
-                                <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToDelete(((IBaseSDK)data).GetRowid(), data.ToString())"><i
-                                class="fa-trash-can"></i></button>
+                                <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToDelete(((IBaseSDK)data).GetRowid(), data.ToString())">
+                                    <SDKIcon Name="fa-trash-can"/></button>
 
                             }
                             @if(HasCustomActions){
                                 @foreach (var action in CustomActions)
                                 {
-                                    <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="async () => await OnClickCustomAction(action, ((IBaseSDK)data))"><i
-                                    class="@action.IconClass"></i></button>
+                                    <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="async () => await OnClickCustomAction(action, ((IBaseSDK)data))">
+                                        <SDKIcon Name="@action.IconClass"/></button>
                                 }
                             }
                             @* <button class="btn btn-link grid-btn-link"

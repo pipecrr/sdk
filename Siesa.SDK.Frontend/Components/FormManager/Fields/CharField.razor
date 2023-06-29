@@ -24,7 +24,7 @@
                 builder.OpenComponent(0, typeof(SDKCharField));
                 builder.AddAttribute(1, "ValueExpression", lambda);
                 builder.AddAttribute(2, "Value", (string)BindValue);
-                builder.AddAttribute(3, "ValueChanged", new Action<string>(value => SetValue(value)));
+                builder.AddAttribute(3, "ValueChanged", new Action<string>(value => SetValue(value?.Trim())));
                 builder.AddAttribute(4, "Placeholder", FieldOpt.Placeholder);
                 builder.AddAttribute(5, "CssClass", (IsRequired && (BindValue == null || BindValue.Length == 0) ? "invalid" : "") + FieldOpt.CssClass);
                 builder.AddAttribute(6, "ReadOnly", FieldOpt.Disabled);

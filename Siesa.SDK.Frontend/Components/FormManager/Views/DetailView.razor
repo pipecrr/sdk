@@ -22,7 +22,7 @@ else if (Panels == null || Panels.Count <= 0)
 }
 else if (ModelLoaded == true)
 {
-    if(!string.IsNullOrEmpty(ErrorMsg)){
+    if(!string.IsNullOrEmpty(ErrorMsg) || ErrorList.Count > 0){
         <ErrorsWindow GeneralErrors="@ErrorList"/>
     }
         @if(IsSubpanel && ShowTitle){
