@@ -280,14 +280,17 @@ namespace Siesa.SDK.Frontend.Services
 
         public async Task LogoutPortal()
         {
+            SDKDbConnection _selectedConnection = GetSelectedConnection();
+            var RowIdDBConnection = _selectedConnection != null _selectedConnection.Rowid : 0;
+
             await _localStorageService.RemoveItemAsync("portalusertoken");
             await _localStorageService.RemoveItemAsync("portaluserPhoto");
-            await _localStorageService.RemoveItemAsync("portaluserPreferences");
+            await _localStorageService.RemoveItemAsync("portalUserPreferences");
             await RemoveCookie("selectedConnection");
             PortalUserToken = "";
             _portalUser = null;
 
-            _navigationManager.NavigateTo("login");
+            _navigationManager.NavigateTo($"Portal/{RowIdDBConnection}/BLPortalPrb");
         }
 
         public async Task SetToken(string token, bool saveLocalStorage = true)
