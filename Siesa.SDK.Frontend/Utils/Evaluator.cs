@@ -96,7 +96,7 @@ namespace Siesa.SDK.Frontend.Utils
                 {
                     return guid;
                 }
-                else if (singleProperty.StartsWith("'") && singleProperty.EndsWith("'"))
+                else if (singleProperty.StartsWith("'", StringComparison.OrdinalIgnoreCase) && singleProperty.EndsWith("'"))
                 {
                     return singleProperty.Substring(1, singleProperty.Length - 2).ToCharArray()[0];
                 }
@@ -108,7 +108,7 @@ namespace Siesa.SDK.Frontend.Utils
                         var json = Newtonsoft.Json.JsonConvert.DeserializeObject(singleProperty);
                         return json;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         //ignore
                     }
@@ -130,10 +130,14 @@ namespace Siesa.SDK.Frontend.Utils
 
         public static async Task<object> EvaluateCode(string code, object globals, bool useRoslyn = false)
         {
+            if(string.IsNullOrEmpty(code))
+            {
+                return null;
+            }
             if (useRoslyn)
             {
                 object result;
-                var isNegated = code.Trim().StartsWith("!");
+                var isNegated = code.Trim().StartsWith("!", StringComparison.OrdinalIgnoreCase);
                 if (isNegated)
                 {
                     code = code.Substring(1);
@@ -168,7 +172,7 @@ namespace Siesa.SDK.Frontend.Utils
             else
             {
                 // check if code starts with "await"
-                var asyncCode = code.Trim().StartsWith("await ");
+                var asyncCode = code.Trim().StartsWith("await ", StringComparison.OrdinalIgnoreCase);
                 if (asyncCode)
                 {
                     code = code.Substring(6);
@@ -184,7 +188,6 @@ namespace Siesa.SDK.Frontend.Utils
                     throw new ArgumentException($"Invalid code format: '{code}'.");
                 }
                 var isNegated = match.Groups[1].Value == "!";
-                var regexIndex = isNegated ? 1 : 0;
                 var methodName = match.Groups[2].Value;
                 var arguments = match.Groups[3].Value.Split(',').Select(arg => arg.Trim()).ToArray();
                 var singleProperty = match.Groups[5].Value.Trim();
@@ -220,7 +223,7 @@ namespace Siesa.SDK.Frontend.Utils
                         {
                             argumentValue = Convert.ChangeType(argumentValue, parameterType);
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             //ignore
                         }
