@@ -24,7 +24,7 @@ namespace Siesa.SDK.Entities
 		public override int Rowid { get; set; }
 
 		[SDKRequired]
-		[SDKStringLength(10)]
+		[SDKStringLength(100)]
 		public string Email { get; set; }
 
 		[SDKRequired]
