@@ -61,7 +61,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 var BaseObj = BusinessObj.BaseObj;                
                 foreach (string field in _extraFields){
                     var property = BaseObj.GetType().GetProperty(field);
-                    if(property != null && BaseObj.GetType().GetProperty(field).PropertyType.IsClass && BaseObj.GetType().GetProperty(field).PropertyType != typeof(string)){
+                    if(property != null && property.PropertyType.IsClass && !property.PropertyType.IsPrimitive && !property.PropertyType.IsEnum && property.PropertyType != typeof(string) && property.PropertyType != typeof(byte[])){
                         var RowidNameField = "Rowid"+field;
                         if(!_extraFields.Contains(RowidNameField)){
                             _extraFields.Add(RowidNameField);
