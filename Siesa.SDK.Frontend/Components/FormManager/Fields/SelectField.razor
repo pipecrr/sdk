@@ -63,7 +63,7 @@
                 var SelectAllName = await ResourceManager.GetResource("Custom.Enum.SelectAll", AuthenticationService);
                 Options = Options.Append(new SDKEnumWrapper<TItem>
                 {
-                    Type = (TItem)Enum.Parse(enumType, (enumValues.Select(x => x.Key).Last() + 1).ToString()),
+                    Type = (TItem)Enum.Parse(enumType, (enumValues.Select(x => x.Key).Max() + 1).ToString()),
                     DisplayText = SelectAllName
                 });
                 BindValue = Options.Select(x => x.Type).First();
