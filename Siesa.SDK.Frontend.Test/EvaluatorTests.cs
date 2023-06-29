@@ -391,6 +391,9 @@ namespace Siesa.SDK.Frontend.Tests
             testCases.Add("MyAsyncMethod", globals.MyAsyncMethod);
             testCases.Add("MyVoidMethod", globals.MyVoidMethod);
             testCases.Add("Parent.MyBoolProperty", globals.Parent.MyBoolProperty);
+            testCases.Add("!MyBoolProperty", !globals.MyBoolProperty);
+            testCases.Add("!MyDynamicMethod(true)", false);
+            testCases.Add("!MyDynamicMethod(false)", true);
 
 
             foreach (var testCase in testCases)
