@@ -1105,14 +1105,14 @@ input#collapse_open:checked~.collapse_open_btn>.nav_btn_standar_text {
     }
 
     .area2 {
-        padding-top: 4rem;
+        padding-top: 4.5rem;
     }
 
     .whcm_company_select {
         right: 50% !important;
         transform: translateX(50%);
         max-width: 300px;
-        top: 1.3rem !important;
+        top: 1.8rem !important;
     }
 
     .menu_content>.nav_section_1>.nav_btn_standar>.nav_btn_standar_text {
