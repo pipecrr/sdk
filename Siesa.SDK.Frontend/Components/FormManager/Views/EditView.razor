@@ -28,10 +28,10 @@ else if (BusinessObj.BaseObj.Rowid != 0)
     @if(ContainAttachments){
         <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" 
             Parent="@BusinessObj.BaseObj" ContainAttachments="@ContainAttachments" BLNameParentAttatchment="@BusinessName"
-            BusinessObj="@BusinessObj"/>
+            BusinessObj="@BusinessObj" ShowAditionalFields="@ShowAditionalFields"/>
     }else if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
     {
-            <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" />
+            <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" ShowAditionalFields="@ShowAditionalFields"/>
     }
     <CascadingValue Value="@this">        
         <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList" VerifyContext="@ClickInSave"/>
