@@ -2,17 +2,18 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Frontend.Components.Layout
 @using Siesa.SDK.Entities
-@inject SDKDialogService SDKDialogService
-@inject DialogService DialogService
+@using Siesa.Global.Enums
 @inject IAuthenticationService AuthenticationService
 @inject IBackendRouterService BackendRouterService
+@inject SDKNotificationService SDKNotificationService
+@inject IFeaturePermissionService FeaturePermissionService
 
 <div class="@CssClassRelationship col-12 p-0">
 
     <button class="whcm_data_related_btn" @onclick="() => _isOpen = !_isOpen ">
         <p>
             <ResourceViewer ResourceTag="Custom.SDK.RelationshipPanel" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
-            <i class="fa-solid fa-folder-tree"></i>
+            <SDKIcon Name="fa-folder-tree"/>
         </p>
     </button>
     <div class="whcm_data_related_content p-3">
@@ -24,7 +25,7 @@
         </div>
         <div class="whcm_row panel_box_data">
             <div class="col-12">
-                @if (_containAttachments)
+                @if (_containAttachments && _accessAttachment)
                 {
                     <button class="nav_btn_standar index_btn_related my-1" @onclick="async ()=>await OpenModal(RelationshipAttatchment)" >
                         <div class="nav_btn_standar_text">
@@ -52,10 +53,10 @@
                     </h6>
                     <div class="d-flex">
                         <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => _openModal = !_openModal">
-                            <i class="fa-solid fa-chevron-right"></i>
+                            <SDKIcon Name="fa-chevron-right"/>
                         </button>
                         <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => CloseRelationshipPanel()">
-                            <i class="fa-solid fa-xmark"></i>
+                            <SDKIcon Name="fa-xmark"/>
                         </button>
                     </div>
                 </div>
@@ -94,6 +95,9 @@
     [Parameter] public string Height { get; set; }
 
     [Parameter] public dynamic BusinessObj { get; set; }
+    [Parameter] public string BusinessName { get; set; }
+
+    [Parameter] public bool isCreateView { get; set; } = false;
     private Relationship SelectedRelationship { get; set; }
     private Relationship RelationshipAttatchment { get; set; }
     public dynamic ParentAttachment { get; set; }
@@ -111,6 +115,8 @@
     private bool _openModal  = false;
 
     private dynamic _parent;
+
+    private bool _accessAttachment;
 
     private string CssClassRelationship { 
         get 
@@ -143,8 +149,28 @@ RelationshipAttatchment = new Relationship(){
             ResourceTag = "BLAttachmentDetail.Plural"
             };
 */
+
+    private async Task CheckPermissions()
+    {
+        if (FeaturePermissionService != null && !string.IsNullOrEmpty(BusinessName))
+        {
+            try
+            {
+                _accessAttachment = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.AccessAttachment, AuthenticationService);
+            }
+            catch (System.Exception)
+            {
+            }
+        }
+    }
     private async Task OpenModal(Relationship relationship)
     {
+        if(Parent.Rowid == 0 && isCreateView)
+        {
+           _ = SDKNotificationService.ShowError("Custom.RelationshipContainer.Error",new object[] {$"{BusinessObj.BusinessName}.Singular"} , culture: AuthenticationService.GetRoiwdCulture());
+           _isOpen = false;
+            return;
+        }
         SelectedRelationship = relationship;
 
         _parent = Parent;
@@ -262,7 +288,7 @@ RelationshipAttatchment = new Relationship(){
         }
     }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         if (ContainAttachments)
         {
@@ -279,6 +305,8 @@ RelationshipAttatchment = new Relationship(){
 
             _containAttachments = true;
         }
+
+        await CheckPermissions();
 
         base.OnInitialized();
         SetParameters();

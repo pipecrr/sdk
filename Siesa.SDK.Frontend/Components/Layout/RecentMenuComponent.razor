@@ -1,0 +1,160 @@
+@using Siesa.SDK.Entities
+@using Siesa.SDK.Frontend.Services
+@using Siesa.SDK.Shared.Services
+@using System
+@using Siesa.Global.Enums
+@inject IBackendRouterService BackendRouterService
+@inject IAuthenticationService AuthenticationService
+@inject UtilsManager UtilManager
+
+
+@if(_loadingRecentMenu)
+{    
+    @foreach (var recentMenu in RecentRoutes)
+    {
+        <a class="sdk_recent_box py-2 px-0" href="@recentMenu.Value.Last().CurrentURL" @onclick="@ActionClick" @onclick:stopPropagation="true">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="position-relative pr-3">
+                    <div class="d-flex justify-content-center align-items-center whcm_dot font_color_primary">
+                        <SDKIcon Name="@GetIconClass(recentMenu.Value.First())"></SDKIcon>
+                    </div>
+                    <div class="d-flex justify-content-start align-items-end flex-wrap margenes_box pl-4 pt-1">
+                        @foreach (var menu in recentMenu.Value)
+                        {
+                            if(menu.Type == MenuType.Separator )
+                            {
+                                continue;
+                            }
+                            <div class="@((menu == recentMenu.Value.Last()) ? "rectangle_borders_active" : "rectangle_borders") d-flex align-items-center">
+                                @if((menu == recentMenu.Value.Last()) && (menu.Feature != null))
+                                {
+                                    <p class="font_size_075 p-0 m-0"> <ResourceViewer RowidResource="@menu.Feature.RowidResource" /></p>
+                                }else
+                                {
+                                    <p class="font_size_075 p-0 m-0"> <ResourceViewer RowidResource="@menu.RowidResource" /></p>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="p-2 border-left">
+                    <a class="font_color_text" href="@recentMenu.Value.Last().CurrentURL" target="_blank"  @onclick="@ActionClick" @onclick:stopPropagation="true">
+                        <SDKIcon Name="fa-arrow-up-right-from-square" CssClass="pointer"/>
+                    </a>
+                </div>
+            </div>
+        </a>
+    }
+}
+            
+
+@code
+{
+    
+    private Dictionary<int, List<E00061_Menu>> RecentRoutes {get; set;} = new Dictionary<int, List<E00061_Menu>>();
+
+    private string TooltipRecentMenu { get; set; } = "";
+
+    private bool _loadingRecentMenu { get; set; } = false;
+
+
+    [Parameter] public EventCallback<MouseEventArgs> Click { get; set; }
+    
+
+    protected override async Task OnInitializedAsync()
+    {
+        RecentRoutes = await GetRecentMenus();
+        _loadingRecentMenu = true;
+        StateHasChanged();
+        base.OnInitialized();        
+        TooltipRecentMenu = await UtilManager.GetResource("Custom.SDKBreadcrumb.ButtonRecents.Tooltip");
+    }
+
+    private async Task<Dictionary<int, List<E00061_Menu>>> GetRecentMenus()
+    {
+        var _recentRoutes  = new Dictionary<int, List<E00061_Menu>>();
+        try
+        {
+            var BLRecentMenu = BackendRouterService.GetSDKBusinessModel("BLRecentMenu", AuthenticationService);
+            if(BLRecentMenu != null)
+            {
+                var result = await BLRecentMenu.Call("GetRecentMenus");
+
+                if(result.Success)
+                {
+                var RecentMenus = result.Data;
+                    
+                    foreach (var Recent in RecentMenus)
+                    {
+                        List<E00061_Menu> auxRecentMenu = new List<E00061_Menu>();
+                        auxRecentMenu.Add(Recent.Menu);
+                        OrderRecentMenu(ref auxRecentMenu);
+
+                        if(auxRecentMenu.Any())
+                        {
+                            var Rowid = auxRecentMenu.Last().Rowid;
+
+                            if(!(_recentRoutes.ContainsKey(Rowid)))
+                            {
+                                _recentRoutes.Add(Rowid, auxRecentMenu);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+
+        return _recentRoutes;
+    }
+
+    private void OrderRecentMenu(ref List<E00061_Menu> FinalList, E00061_Menu Actualmenu = null)
+    {
+        
+        if(Actualmenu != null){
+            if (Actualmenu.MenuParent != null)
+            {
+                var Parent = Actualmenu.MenuParent;
+                FinalList.Add(Parent);
+                OrderRecentMenu(ref FinalList, Parent);
+            }else
+            {
+                if(!(FinalList.Contains(Actualmenu)))
+                {
+                    FinalList.Add(Actualmenu);
+                }
+                FinalList.Reverse();  
+            }
+        }else
+        {
+            var FisrtMenu = FinalList.First();
+            OrderRecentMenu(ref FinalList, FisrtMenu);
+        }
+    }
+
+    private string GetIconClass(E00061_Menu MenuItem)
+    {
+        if(MenuItem.IconClass != null){
+            var iconSplit = MenuItem.IconClass.Split(" ");
+            if(iconSplit.Length == 1)
+            {
+                return MenuItem.IconClass; 
+            }
+
+            return MenuItem.IconClass;
+        }
+        return "";
+    }
+
+    private void ActionClick (MouseEventArgs Event)
+    {
+        if (Click.HasDelegate)
+        {
+            Click.InvokeAsync(Event);
+            StateHasChanged();
+        }
+    }
+}

@@ -64,7 +64,14 @@ namespace Siesa.SDK.Backend.Services
 
         public short GetRoiwdCulture()
         {
-            throw new NotImplementedException();
+            if (User != null)
+            {
+                return User.RowidCulture;
+            }
+            else
+            {
+                return 0;
+            }
         }
 
         public Task SetRowidCompanyGroup(short rowid)
@@ -123,6 +130,24 @@ namespace Siesa.SDK.Backend.Services
         }
         public async Task RenewToken()
         {
+            throw new NotImplementedException();
+        }
+        
+        public string GetUserPhoto()
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task SetPreferencesUser(UserPreferencesDTO preferences)
+        {
+            throw new NotImplementedException();
+        }
+        public UserPreferencesDTO GetPreferencesUser()
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task SetUserPhoto(string _data, bool saveLocalStorage = true){
             throw new NotImplementedException();
         }
     }

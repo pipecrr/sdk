@@ -1,0 +1,119 @@
+/*Estilos Boton Recientes*/
+.sdk_recent_box
+{
+    display: block;
+    width: 100%;
+    clear: both;
+    color: var(--color_text);
+    text-align: inherit;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+    text-decoration: none;
+}
+.sdk_recent_box:hover
+{
+    background-color: var(--color_back_2);
+}
+.whcm_recent_list{
+    max-height: 400px;
+    overflow-y: scroll;
+    scrollbar-width: thin;
+    padding: 0rem 0.65rem 1rem 1rem;
+}
+.whcm_dot {
+    height: 2rem;
+    width: 2rem;
+    min-height: 2rem;
+    min-width: 2rem;
+    max-height: 2rem;
+    max-width: 2rem;
+    border: 1px solid var(--color_border);
+    border-radius: 50%;
+    background-color: var(--color_back);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+.font_size_075{
+    font-size: 12px;
+}
+.rectangle_borders{
+    min-height: 24px;
+    position: relative;    
+    border-top: 1px solid var(--color_border);
+    border-bottom: 1px solid var(--color_border);
+    border-radius: 0px;           
+    z-index: 1;
+    padding: 2px 6px 2px 18px;
+    background-color: var(--color_back);   
+    margin-bottom: -1px; 
+}
+.rectangle_borders_active{
+    min-height: 24px;
+    position: relative;
+    border: 1px solid var(--color_primary);
+    border-radius: 0px;          
+    padding: 2px 6px 2px 12px;
+    background: var(--color_primary);
+    color: var(--color_light);
+    margin-bottom: -1px; 
+}
+.rectangle_borders:first-child::before{
+    content: '';
+    background: transparent;
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    left: -12px;
+    border: 1px solid transparent;
+    border-radius: 0% 50% 50% 0%;
+    border-left: none;
+}
+.rectangle_borders::before {
+    content: '';
+    background: linear-gradient(108deg, var(--color_border) 57%, var(--color_back) 57%);
+    width: 8px;
+    height: 24px;
+    position: absolute;
+    left: -2px;
+    border-bottom: 1px solid var(--color_border);
+    clip-path: polygon(93% 0, 100% 0, 100% 100%, 0 100%, 0 93%);
+}
+
+.rectangle_borders::after {
+    content: '';
+    background: linear-gradient(108deg, var(--color_back) 45%, var(--color_border) 45%);
+    width: 8px;
+    height: 24px;
+    position: absolute;
+    right: -7px;
+    border-top: 1px solid var(--color_border);
+    border-radius: 0%;
+    clip-path: polygon(100% 8%, 100% 0, 0 0, 0 100%, 8% 100%);
+}
+
+.rectangle_borders_active::before {
+    content: '';
+    background: var(--color_primary);
+    width: 8px;
+    height: 24px;
+    position: absolute;
+    left: -8px;
+    border-radius: 0%;
+    clip-path: polygon(100% 0, 0% 100%, 100% 100%);
+}
+
+.rectangle_borders_active::after {
+    content: '';
+    background: var(--color_primary);
+    width: 8px;
+    height: 24px;
+    position: absolute;
+    right: -8px;
+    border-radius: 0%;
+    clip-path: polygon(100% 0, 0% 110%, 0 0);
+}
+
+/*Fin Estilos Boton recientes*/

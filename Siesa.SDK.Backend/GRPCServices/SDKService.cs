@@ -131,7 +131,25 @@ namespace Siesa.SDK.GRPCServices
             dynamic businessObj = ActivatorUtilities.CreateInstance(_provider,businessType);
             businessObj.SetProvider(_provider);
 
-            var result = businessObj.GetData(request.Skip, request.Take, request.Filter, request.OrderBy, null, request.IncludeCount);
+            var result = businessObj.GetData(request.Skip, request.Take, request.Filter, request.OrderBy, null, 
+                                            request.IncludeCount, extraFields: request.ExtraFields.ToList());
+            var response = new Protos.LoadResult();
+            response.TotalCount = result.TotalCount;
+            response.GroupCount = result.GroupCount;
+            response.Data.AddRange(((IEnumerable<object>)result.Data).Select(x => Newtonsoft.Json.JsonConvert.SerializeObject(x, Newtonsoft.Json.Formatting.None, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore })));
+            return Task.FromResult(response);
+        }
+
+        public override Task<Protos.LoadResult> GetUDataBusinessObj(Protos.GetUDataRequest request, ServerCallContext context)
+        {
+            SetCurrentUser(request.CurrentUserToken);
+            BusinessModel businessRegistry = _backendRouterService.GetBackend(request.BusinessName);
+            var businessType = FindType(businessRegistry.Namespace + "." + businessRegistry.Name);
+            dynamic businessObj = ActivatorUtilities.CreateInstance(_provider,businessType);
+            businessObj.SetProvider(_provider);
+
+            var result = businessObj.GetUData(request.Skip, request.Take, request.Filter, request.UFilter, request.OrderBy, null, request.IncludeCount, selectFields: request.SelectFields.ToList());
+
             var response = new Protos.LoadResult();
             response.TotalCount = result.TotalCount;
             response.GroupCount = result.GroupCount;
@@ -147,7 +165,8 @@ namespace Siesa.SDK.GRPCServices
             dynamic businessObj = ActivatorUtilities.CreateInstance(_provider,businessType);
             businessObj.SetProvider(_provider);
 
-            var result = businessObj.EntityFieldSearch(request.SearchText, request.Filters, request.Top, request.OrderBy);
+            var result = businessObj.EntityFieldSearch(request.SearchText, request.Filters, request.Top, request.OrderBy, 
+            request.ExtraFields.ToList());
             var response = new Protos.LoadResult();
             response.TotalCount = result.TotalCount;
             response.GroupCount = result.GroupCount;
@@ -243,9 +262,9 @@ namespace Siesa.SDK.GRPCServices
                     var hasPermission = true;
                     if(_featurePermissionService != null){
                         try{
-                            List<int> permissions = exposedMethod.Permissions.ToList();
-                            hasPermission = _featurePermissionService.CheckUserActionPermissions(request.BusinessName,
-                                permissions, _authenticationService);
+                            List<string> permissions = exposedMethod.Permissions.ToList();
+                            hasPermission =  _featurePermissionService.CheckUserActionPermissions(request.BusinessName,
+                                permissions, _authenticationService).GetAwaiter().GetResult();
                             if(!hasPermission){
                                 response.Success = false;
                                 response.Errors.Add("Custom.Generic.Unauthorized");

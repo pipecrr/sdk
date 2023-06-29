@@ -2,45 +2,43 @@
 .sdk_header{
     height: 48px;
     width: 100%;
-    background: var(--color_primary_dark);
+    background: var(--color_primary_header);
     box-shadow: var(--shadow_standar);
     position: fixed !important;
     z-index: 3;
     display: flex;
     align-items: center;
     padding: .5rem 0.875rem;
-    border-bottom-left-radius: 1.5rem;
-    border-bottom-right-radius: 1.5rem;
 }
 .header_circles_box{
     height: 48px;
-    width: 550px;
+    width: 690px;
     overflow: hidden;
     position: absolute;
-    left: -152px;
+    left: -240px;
     display: flex;
     justify-content: center;
     align-items: center;
-    border-bottom-left-radius: 1.5rem;
 }
 .header_circles_box_1, .header_circles_box_2, .header_circles_box_3, .header_circles_box_4{
     background-color: white;
-    border-radius: 50%;
+    border-radius: 0%;
     position: absolute;
+    transform: rotate(45deg) translateY(-48px);
 }
 .header_circles_box_1{
-    width: 550px;
-    height: 550px;
+    width: 450px;
+    height: 450px;
     opacity: .1;
 }
 .header_circles_box_2{
-    width: 400px;
-    height: 400px;
+    width: 355px;
+    height: 355px;
     opacity: .2;
 }
 .header_circles_box_3{
-    width: 300px;
-    height: 300px;
+    width: 280px;
+    height: 280px;
     opacity: .5;
 }
 .header_circles_box_4{
@@ -48,12 +46,57 @@
     height: 250px;
     opacity: 1;
 }
+.header_circles_box_logo {
+    position: absolute;
+    right: -335px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    height: 48px;
+    width: 600px;
+}
+
+.header_circles_box_logo>.header_circles_box_1,
+.header_circles_box_logo>.header_circles_box_2,
+.header_circles_box_logo>.header_circles_box_3,
+.header_circles_box_logo>.header_circles_box_4 {
+    background-color: white;
+    border-radius: 0%;
+    position: absolute;
+    transform: rotate(45deg) translateY(48px);
+}
+
+.header_circles_box_logo>.header_circles_box_1 {
+    width: 264px;
+    height: 264px;
+    opacity: .1;
+}
+
+.header_circles_box_logo>.header_circles_box_2 {
+    width: 252px;
+    height: 252px;
+    opacity: .2;
+}
+
+.header_circles_box_logo>.header_circles_box_3 {
+    width: 246px;
+    height: 246px;
+    opacity: .5;
+}
+
+.header_circles_box_logo>.header_circles_box_4 {
+    width: 240px;
+    height: 240px;
+    opacity: 1;
+}
+
 .sdk_version{
     font-size: .75rem;
     color: white;
     text-align: right;
     border-left: 1px solid white;
-    border-right: 1px solid white;
+    border-right: none;
     line-height: 1.2;
 }
 .sdk_conection>div>.btn_connect{
@@ -72,7 +115,7 @@
     min-width: 268px;
     max-width: 268px;
     border-radius: var(--border_radius_standar);
-    background-color: var(--color_light);
+    background-color: var(--color_panel_back);
     position: absolute;
     top: 42px;
     right: -2px;
@@ -89,7 +132,7 @@
     right: 15px;
     border-top: 0px solid transparent;
     border-right: 9px solid transparent;
-    border-bottom: 9px solid white;
+    border-bottom: 9px solid var(--color_panel_back);
     border-left: 9px solid transparent;
 }
 .connect_select_search {
@@ -99,6 +142,7 @@
     width: calc(100% - 2rem);
     border: none;
     border-radius: var(--border_radius_standar);
+    outline: none !important;
     /* background: none; */
 }
 .connect_select_search>div>button {
@@ -112,15 +156,20 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    outline: none !important;
 }
 .whcm_logo_compania{
-    max-height: 30px;
+    max-height: 32px;
     max-width: 100%;
+    object-fit: contain;
 }
 .whcm_logo_head{
     max-height: 30px;
-    max-width: 100%;
+    max-width: 105px;
+    object-fit: contain;
 }
+
+
 
 @media (max-width: 1199.98px) {
     .header_circles_box_1{
@@ -132,6 +181,19 @@
 }
 
 @media (max-width: 991.98px) { 
+    .header_circles_box {
+        left: -250px;
+    }
+    
+    .header_circles_box_logo {
+        right: -355px;
+    }
+    
+    .whcm_panel_user_home {
+        border: none !important;
+        text-align: center;
+        padding-top: 1rem;
+    }
     .header_circles_box_2{
         opacity: .05;
     }
@@ -180,14 +242,28 @@
         background-color: var(--color_light);
         box-shadow: var(--shadow_standar);
     }
+    .header_circles_box {
+        left: -270px;
+    }
+    
+    .whcm_logo_compania {
+        max-width: 160px;
+    }
+    
+    .header_circles_box_logo {
+        display: none;
+    }
+    
+    .whcm_panel_company {
+        padding-top: 1rem;
+    }
 }
 
 @media (max-width: 575.98px) {
     .whcm_logo_compania{
-        max-height: 25px;
-        max-width: 100%;
+        max-width: 125px;
     }
     .header_circles_box{
-        left: -198px;
+        left: -320px;
     }
  }

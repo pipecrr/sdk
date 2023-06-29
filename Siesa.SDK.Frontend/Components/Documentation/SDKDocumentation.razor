@@ -11,6 +11,8 @@
 @using Siesa.SDK.Frontend.Components.Documentation.Layout
 @using Siesa.SDK.Frontend.Components.Documentation.ViewsBuilder
 @using Siesa.SDK.Frontend.Components.Documentation.DataAnnotations
+@using Siesa.SDK.Frontend.Components.Documentation.SDKServices
+
 @inject IJSRuntime JSRuntime
 
 
@@ -89,7 +91,9 @@
                     new ComponentDemo{ComponentName="SDKGrid",ComponentFragment = @<DemoGrid />},
                     new ComponentDemo{ComponentName="SDKRecorder",ComponentFragment = @<DemoRecorder />},
                     new ComponentDemo{ComponentName="SDKRadioButton",ComponentFragment = @<DemoRadioButton />},
-                    new ComponentDemo{ComponentName="SDKEntityField",ComponentFragment = @<DemoEntityField />}
+                    new ComponentDemo{ComponentName="SDKEntityField",ComponentFragment = @<DemoEntityField />},
+                    new ComponentDemo{ComponentName="SDKInputFile",ComponentFragment = @<DemoInputFile />}
+
                 }, Icon ="fa-solid fa-cubes"
             },
              new ComponentCategory() {
@@ -125,6 +129,9 @@
                     new ComponentDemo{ComponentName="SDKImageViewer", ComponentFragment = @<DemoImageViewer />},
                     new ComponentDemo{ComponentName="SDKGlobalLoader", ComponentFragment = @<DemoGlobalLoader />},
                     new ComponentDemo{ComponentName="SDKPieChart", ComponentFragment = @<DemoPieChart />},
+                    new ComponentDemo{ComponentName="SDKRangeSlider", ComponentFragment = @<DemoRangeSlider />},
+                    new ComponentDemo{ComponentName="ResourceViewer", ComponentFragment = @<DemoResourceViewer />},
+                    new ComponentDemo{ComponentName="SDKIcon", ComponentFragment = @<DemoIcon />}
                 },Icon ="fa-solid fa-cube" 
             },
             new ComponentCategory() {
@@ -149,6 +156,17 @@
                     new ComponentDemo{ComponentName="SDKSensitiveData", ComponentFragment = @<DemoSDKSensitiveData />}
                 },Icon ="fa-solid fa-note-sticky"
             },
+
+            new ComponentCategory()
+            {
+                Name= "SDKServices", Components = {
+                    new ComponentDemo{ComponentName="EmailService", ComponentFragment = @<DemoEmailServices />},
+                    new ComponentDemo{ComponentName="SDKNotificationService", ComponentFragment = @<DemoNotificationservices />},
+                    new ComponentDemo{ComponentName="FeaturePermissionService", ComponentFragment = @<DemoFeaturePermission/>},
+                    new ComponentDemo{ComponentName="ResourceManager", ComponentFragment = @<DemoResourceManager/>},
+                    new ComponentDemo{ComponentName="AuthenticationService", ComponentFragment = @<DemoAuthenticationService/>},
+                },Icon ="fa-solid fa-code-compare"
+            }
 
         };
     }

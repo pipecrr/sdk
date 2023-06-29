@@ -1,5 +1,6 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Components.Visualization
+@using Siesa.Global.Enums
 @inject SDKNotificationService SDKNotificationService
 
 @layout EmptyLayout
@@ -85,10 +86,10 @@
     await SDKNotificationService.ShowSuccess("Confirmado");
     await SDKNotificationService.ShowError("Cancelado");
     }
-    public List<int> HasPermission(){
-        return new List<int>(){1,2};
+    public List<string> HasPermission(){
+        return new List<string>(){enumSDKActions.Create, enumSDKActions.Delete};
     }
-    public List<int> DontHaspermission(){
-        return new List<int>(){1,2,6};
+    public List<string> DontHaspermission(){
+        return new List<string>(){ enumSDKActions.AccessAttachment,  enumSDKActions.DownloadAttachment};
     }
 }

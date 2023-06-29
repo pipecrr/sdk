@@ -12,6 +12,11 @@ using Radzen;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Frontend.Services;
 using Siesa.SDK.Entities;
+using Siesa.Global.Enums;
+using Siesa.SDK.Frontend.Components.FormManager.Fields;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.Linq;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -42,6 +47,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter]
         public string ViewdefName { get; set; }
 
+        [Parameter]
+        public string BLNameParentAttatchment { get; set; }
+
         public Boolean Loading = true;
 
         [Inject] public IJSRuntime JSRuntime { get; set; }
@@ -54,22 +62,29 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Inject] public IFeaturePermissionService FeaturePermissionService { get; set; }
         [Inject] public IAuthenticationService AuthenticationService { get; set; }
 
-        [Inject] public SDKNotificationService NotificationService { get; set; }
-
+        [Inject] public SDKNotificationService NotificationService { get; set; }        
         protected FormViewModel FormViewModel { get; set; } = new FormViewModel();
         protected List<Panel> Panels { get { return FormViewModel.Panels; } }
-
+        public List<Panel> PanelsCollapsable = new List<Panel>();
         public Boolean ModelLoaded = false;
         public String ErrorMsg = "";
+        public List<string> ErrorList = new List<string>();
         protected bool CanCreate;
         protected bool CanEdit;
         protected bool CanDelete;
         protected bool CanDetail;
-        protected bool CanList;
+        protected bool CanAcess;
         public Boolean ContainAttachments = false;
         Relationship RelationshipAttachment = new Relationship();
         E00270_Attachment ParentAttachment = new E00270_Attachment();
 
+        private bool HasExtraButtons { get; set; }
+        private List<Button> ExtraButtons { get; set; }
+        private Button CreateButton { get; set; }
+        private Button DuplicateButton { get; set; }
+        private Button EditButton { get; set; }
+        private Button ListButton { get; set; }
+        private Button DeleteButton { get; set; }
         private string _viewdefName;
         private void setViewContext(List<Panel> panels)
         {
@@ -102,15 +117,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if (bName == null)
             {
                 bName = BusinessName;
-            }            
+            }
             await CheckPermissions();
             await CreateRelationshipAttachment();
             if(String.IsNullOrEmpty(ViewdefName)){
                 _viewdefName = "detail";
             }else{
                 _viewdefName = ViewdefName;
-            }
-            
+            }            
             var metadata = BackendRouterService.GetViewdef(bName, _viewdefName);
             if (String.IsNullOrEmpty(metadata) && _viewdefName.Equals("related_detail"))
             {
@@ -124,6 +138,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 //ErrorMsg = "No hay definición para la vista de detalle";
                 ErrorMsg = "Custom.Generic.ViewdefNotFound";
+                ErrorList.Add(ErrorMsg);
             }
             else
             {
@@ -136,7 +151,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     //Soporte a viewdefs anteriores
                     var panels = JsonConvert.DeserializeObject<List<Panel>>(metadata);
                     FormViewModel.Panels = panels;
+                }                
+                if(BusinessObj.GetType().GetProperty("DynamicEntities") != null && BusinessObj.DynamicEntities != null && BusinessObj.DynamicEntities.Count > 0){
+                    AddPanels(PanelsCollapsable);
                 }
+
                 setViewContext(Panels);
                 if (FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
                 {
@@ -146,15 +165,128 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         {
                             relationship.ResourceTag = $"{BusinessName}.Relationship.{relationship.Name}";
                         }
-                        var canListRel = FeaturePermissionService.CheckUserActionPermission(relationship.RelatedBusiness, 4, AuthenticationService);
+                        var canListRel = await FeaturePermissionService.CheckUserActionPermission(relationship.RelatedBusiness, enumSDKActions.Detail, AuthenticationService);
                         relationship.Enabled = canListRel;
                     }
                 }
                 ModelLoaded = true;
             }
-
+            await EvaluateButtonAttributes();
+           
             Loading = false;
             StateHasChanged();
+        }
+
+        private void AddPanels(List<Panel> panels){
+            
+            foreach(var item in BusinessObj.DynamicEntities){
+                var index = BusinessObj.DynamicEntities.IndexOf(item);
+                var panel = new Panel();
+                panel.ResourceTag = item.Name;
+                var fields = new List<FieldOptions>();
+                int rowidGroup = item.Rowid;
+                panel.RowidGroupDynamicEntity = rowidGroup;
+                foreach(var property in item.DynamicObject.GetType().GetProperties()){
+                    var field = new FieldOptions();
+                    var name = $"DynamicEntities[{index}].DynamicObject.{property.Name}";
+                    field.Name = name;
+                    field.ResourceTag = property.Name;
+                    Dictionary<string, int> colSize = new Dictionary<string, int>();
+                    colSize.Add("MD", 4);
+                    colSize.Add("SM", 4);
+                    colSize.Add("XS", 4);
+                    field.ColSize = colSize;
+                    field.ViewContext = "DetailView";
+                    fields.Add(field);
+                }                
+                panel.Fields = fields;
+                panels.Add(panel);
+            }
+        }
+        public async Task<bool> DeleteGroup(int rowid)
+        {
+            var response = await BusinessObj.Backend.Call("DeleteGroupDynamicEntity", rowid);
+            if(response.Success){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+
+        private FieldTypes GetTypesField(dynamic dataType)
+        {
+            switch(dataType){
+                case 0:
+                    return FieldTypes.CharField;
+                case 1:
+                    return FieldTypes.DecimalField;
+                case 2:
+                    return FieldTypes.DateTimeField;
+                default:
+                    return FieldTypes.CharField;
+            }
+        }
+
+        private async Task EvaluateButtonAttributes()
+        {
+            if(FormViewModel.Buttons != null){
+                ExtraButtons = new List<Button>();
+                foreach (var button in FormViewModel.Buttons){
+                    if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-disabled")){
+                        var disabled = await evaluateCodeButtons(button, "sdk-disabled");
+                        button.Disabled = disabled;
+                    }
+                    if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-hide")){
+                        var hidden = await evaluateCodeButtons(button, "sdk-hide");
+                        button.Hidden = hidden;
+                    }
+                    if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-show")){
+                        var show = await evaluateCodeButtons(button, "sdk-show");
+                        button.Hidden = !show;
+                    }
+                    if(button.Id != null){
+                        if(Enum.TryParse<enumTypeButton>(button.Id, out enumTypeButton typeButton)){
+                            switch (typeButton)
+                            {
+                                case enumTypeButton.Create:
+                                    CreateButton = button;
+                                    break;
+                                case enumTypeButton.Duplicate:
+                                    DuplicateButton = button;
+                                    break;
+                                case enumTypeButton.Edit:
+                                    EditButton = button;
+                                    break;
+                                case enumTypeButton.List:
+                                    ListButton = button;
+                                    break;
+                                case enumTypeButton.Delete:
+                                    DeleteButton = button;
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    }else{
+                        ExtraButtons.Add(button);
+                    }
+                    HasExtraButtons = ExtraButtons.Count > 0;
+                }
+                //_ = InvokeAsync(() => StateHasChanged());
+            }
+        }
+
+        public async Task<bool> evaluateCodeButtons(Button button, string condition){
+            bool disabled = button.Disabled;
+            var sdkDisable = button.CustomAttributes[condition];
+            if(sdkDisable != null){
+                var eject = (bool)await Evaluator.EvaluateCode((string)sdkDisable, BusinessObj); //revisar
+                if(eject != null){
+                    disabled = eject;
+                }
+            }
+            return disabled;
         }
 
         public override async Task SetParametersAsync(ParameterView parameters)
@@ -167,6 +299,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 Loading = false;
                 this.ModelLoaded = false;
                 ErrorMsg = "";
+                ErrorList = new List<string>();
                 await InitView(BusinessName);
             }
         }
@@ -207,12 +340,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private async Task DeleteBusiness()
         {
-            var result = await BusinessObj.DeleteAsync();
+            dynamic result = null;
+            try{
+                result = await BusinessObj.DeleteAsync();
+            }catch(Exception ex){
+                ErrorMsg = ex.Message;
+                ErrorList.Add(ErrorMsg);
+            }
 
             if (result != null && result.Errors.Count > 0)
             {
                 var errorMessage ="Custom.Generic.Message.DeleteError";
                 NotificationService.ShowError(errorMessage);
+                ErrorList.Add(errorMessage);
                 // ErrorMsg = "<ul>";
                 // foreach (var error in result.Errors)
                 // {
@@ -267,22 +407,38 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         {
             if (FeaturePermissionService != null && !string.IsNullOrEmpty(BusinessName))
             {
-                try
+                if(IsSubpanel && BusinessName.Equals("BLAttachmentDetail"))
                 {
-                    CanList = FeaturePermissionService.CheckUserActionPermission(BusinessName, 4, AuthenticationService);
-                    CanCreate = FeaturePermissionService.CheckUserActionPermission(BusinessName, 1, AuthenticationService);
-                    CanEdit = FeaturePermissionService.CheckUserActionPermission(BusinessName, 2, AuthenticationService);
-                    CanDelete = FeaturePermissionService.CheckUserActionPermission(BusinessName, 3, AuthenticationService);
-                    CanDetail = FeaturePermissionService.CheckUserActionPermission(BusinessName, 5, AuthenticationService);
-                }
-                catch (System.Exception)
+                    try
+                    {
+                        CanAcess = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.AccessAttachment, AuthenticationService);
+                        CanCreate = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.UploadAttachment, AuthenticationService);
+                        CanDelete = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.DeleteAttachment, AuthenticationService);
+                        CanDetail = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.DownloadAttachment, AuthenticationService);
+                    }
+                    catch (System.Exception)
+                    {
+                    }
+                }else
                 {
+                    try
+                    {
+                        CanAcess = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
+                        CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Create, AuthenticationService);
+                        CanEdit = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Edit, AuthenticationService);
+                        CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Delete, AuthenticationService);
+                        CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
+                    }
+                    catch (System.Exception)
+                    {
+                    }
                 }
 
                 if (!CanDetail)
                 {
                     ErrorMsg = "Custom.Generic.Unauthorized";
                     NotificationService.ShowError("Custom.Generic.Unauthorized");
+                    ErrorList.Add("Custom.Generic.Unauthorized");
                     if(!IsSubpanel){
                         // NavigationService.NavigateTo("/", replace: true);
                     }

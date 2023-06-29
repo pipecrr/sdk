@@ -1,8 +1,8 @@
-﻿
-@using Siesa.SDK.Frontend.Components.Fields
+﻿@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.FormManager.ViewModels
 @if (FieldOpt.ViewContext == "DetailView" && SensitiveData)
 {
-     <p>SensitveData</p>
+     <p>***</p>
 }
 else
 {
@@ -224,7 +224,10 @@ else
             }
             else
             {
-                <EntityField BaseModelObj="@ModelObj" BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" ValidateField="@ValidateField"  />
+                if(FieldOpt.RelatedParams != null && (!formView.ToString().Contains("CreateView"))){
+                    FieldOpt.RelatedParams.AutoValueInUnique = false;
+                }
+                <EntityField BaseModelObj="@ModelObj" BindModel="@fieldModelObj" FieldOpt="@FieldOpt" FieldName="@fieldName" ValidateField="@ValidateField"/>
             } 
             break;
         case FieldTypes.FileField:

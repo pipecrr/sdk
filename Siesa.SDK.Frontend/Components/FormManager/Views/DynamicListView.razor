@@ -1,11 +1,12 @@
 ﻿@page "/{BusinessName}/"
 @using System.Reflection
+@using Siesa.Global.Enums
 @attribute [Authorize]
 @using Microsoft.AspNetCore.Authorization
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
 @if (ErrorMsg != null && ErrorMsg != "")
 {
-    <text>@ErrorMsg</text>
+     <ErrorsWindow GeneralErrors="@ErrorList" />
 }
 else if (BusinessObj != null)
 {
@@ -41,12 +42,21 @@ else if (BusinessObj != null)
     [Parameter] public IList<dynamic> SelectedItems { get; set; }
     
     [Parameter] public dynamic businessObj { get; set; }
+
+    [Parameter] public bool UseFlex { get; set; } = true;
+
+    [Parameter] public bool IsEntityField {get; set;} 
+
     private RenderFragment RenderMain = null;
-    protected override void OnInitialized()
+
+    protected override async Task OnInitializedAsync()
     {
         ViewType = ViewModels.DynamicViewType.List;
-        base.OnInitialized();
+        await base.OnInitializedAsync();
+        
+
     }
+
     protected override void SetParameters(dynamic _businessObj, string businessName){
 
         RenderMain = GetRenderFragment();
@@ -67,8 +77,10 @@ else if (BusinessObj != null)
             new_params.Add("FromEntityField", FromEntityField);
             new_params.Add("IsMultiple", IsMultiple);
             new_params.Add("SelectedItems", SelectedItems);
+            new_params.Add("UseFlex", UseFlex);
             if (IsSubpanel)
             {
+                new_params.Add("BLNameParentAttatchment", BLNameParentAttatchment);
                 new_params.Add("IsSubpanel", true);
                 new_params.Add("SetTopBar", false);
                 if(!String.IsNullOrEmpty(SubpanelFilter))
@@ -111,4 +123,11 @@ else if (BusinessObj != null)
         return (RenderFragment)method.Invoke(BusinessObj, null);
     }
 
+    protected override  async Task CheckAccessPermission(bool disableAccessValidation = false)
+    {
+        if(IsEntityField)
+        {
+            await base.CheckAccessPermission(true);
+        }
+    }
 }

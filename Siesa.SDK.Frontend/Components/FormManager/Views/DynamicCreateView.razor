@@ -5,7 +5,7 @@
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
 @if (ErrorMsg != null && ErrorMsg != "")
 {
-    <text>@ErrorMsg</text>
+    <ErrorsWindow GeneralErrors="@ErrorList" />
 }
 else if (BusinessObj == null)
 {
@@ -65,6 +65,7 @@ else if (BusinessObj != null)
         parameters.Add("OnCancel", OnCancel);
         if (IsSubpanel)
         {
+            parameters.Add("BLNameParentAttatchment", BLNameParentAttatchment);
             parameters.Add("SetTopBar", false);
             parameters.Add("ViewdefName", "related_create");
             if(DefaultFields != null)

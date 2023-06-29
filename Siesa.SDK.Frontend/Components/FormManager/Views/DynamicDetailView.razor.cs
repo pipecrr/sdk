@@ -15,6 +15,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
     public partial class DynamicDetailView : DynamicBaseViewModel
     {
+        [Parameter] 
+        public bool AllowDelete { get; set; } = true;
+        
         [Inject]
         public IBackendRouterService BackendRouterService { get; set; }
         private FormViewModel FormViewModel { get; set; } = new FormViewModel();
@@ -40,17 +43,22 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
                 FormViewModel = JsonConvert.DeserializeObject<FormViewModel>(metadata);
 
-                if (FormViewModel.ExtraFields.Count > 0)
-                {   
-                    var defaultFields = FormViewModel.Panels.SelectMany(panel => panel.Fields)
+                var defaultFields = FormViewModel.Panels.SelectMany(panel => panel.Fields)
+                                    .Where(f=> f.CustomComponent == null && f.Name.StartsWith("BaseObj."))
                                     .Select(field => field.Name)
                                     .ToList(); 
 
-                    _extraFields =  FormViewModel.ExtraFields.Select(f => f.Name)                        
+                if (FormViewModel.ExtraFields.Count > 0)
+                {   
+                    _extraFields =  FormViewModel.ExtraFields.Select(f => f)
                     .Union(defaultFields)
                     .ToList();
 
                     _extraFields = _extraFields.Select(field => field.Replace("BaseObj.", "")).ToList();
+                }
+                else
+                {
+                    _extraFields = defaultFields.Select(field => field.Replace("BaseObj.", "")).ToList();
                 }
             }
             catch (System.Exception)
@@ -69,21 +77,32 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 Console.WriteLine("Error DetailViewModel", e.ToString());
                 ErrorMsg = e.ToString();
+                ErrorList.Add("Exception: "+e.ToString());
             }
         }
 
-        protected override void SetParameters(dynamic businessObj, string businessName){
+        protected override void SetParameters(dynamic businessObj, string businessName)
+        {
+
+            
             parameters.Clear();
             parameters.Add("BusinessObj", businessObj);
             parameters.Add("BusinessName", businessName);
             parameters.Add("IsSubpanel", IsSubpanel);
             parameters.Add("ShowTitle", ShowTitle);
             parameters.Add("ShowButtons", ShowButtons);
+
+            if(!AllowDelete && IsSubpanel)
+            {
+                ShowDeleteButton = AllowDelete;
+            }
             parameters.Add("ShowDeleteButton", ShowDeleteButton);
+
             if (IsSubpanel)
             {
                 parameters.Add("SetTopBar", false);
                 parameters.Add("ViewdefName", "related_detail");
+                parameters.Add("BLNameParentAttatchment", BLNameParentAttatchment);
             }
         }
 
@@ -97,6 +116,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             await base.SetParametersAsync(parameters);
             if(BusinessObjId !=null && (changeBusinessObjId || changeBusinessName)){
                 ErrorMsg = "";
+                ErrorList = new List<string>();
                 await InitDetail(Convert.ToInt64(BusinessObjId));
                 StateHasChanged();
             }

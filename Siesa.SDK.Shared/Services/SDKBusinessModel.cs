@@ -68,7 +68,7 @@ namespace Siesa.SDK.Shared.Services
                 return new ActionResult<dynamic>(){
                     Success = false,
                     Errors = new List<string>(){
-                        "No response from backend"
+                        "Custom.Backend.NoResponse"
                     }
                 };
             }
@@ -125,12 +125,28 @@ namespace Siesa.SDK.Shared.Services
         }
 
 
-        public async Task<Protos.LoadResult> GetData(int? skip, int? take, string filter = "", string orderBy = "", bool includeCount = false)
+        public async Task<Protos.LoadResult> GetData(int? skip, int? take, string filter = "", string orderBy = "", bool includeCount = false, List<string> extraFields = null)
         {
             Protos.LoadResult result = new();
             try
             {
-                result = await Backend.GetDataBusinessObj(Name, skip, take, filter, orderBy, includeCount);
+                result = await Backend.GetDataBusinessObj(Name, skip, take, filter, orderBy, includeCount, extraFields);
+            }
+            catch (RpcException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return result;
+        }
+        /*
+        List<string> selectFields, int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null, bool includeCount = false
+        */
+        public async Task<Protos.LoadResult> GetUData(int? skip, int? take, string filter = "", string uFilter = "", string orderBy = "", bool includeCount = false, List<string> extraFields = null)
+        {
+            Protos.LoadResult result = new();
+            try
+            {
+                result = await Backend.GetUData(Name, skip, take, filter, uFilter, orderBy, includeCount, extraFields);
             }
             catch (RpcException ex)
             {
@@ -139,12 +155,13 @@ namespace Siesa.SDK.Shared.Services
             return result;
         }
 
-         public async Task<Protos.LoadResult> EntityFieldSearch(string searchText, string filters, int? top = null, string orderBy = "")
+        public async Task<Protos.LoadResult> EntityFieldSearch(string searchText, string filters, int? top = null, string orderBy = "",
+         List<string> extraFields = null)
         {
             Protos.LoadResult result = new();
             try
             {
-                result = await Backend.EntityFieldSearch(Name, searchText, filters, top, orderBy);
+                result = await Backend.EntityFieldSearch(Name, searchText, filters, top, orderBy, extraFields);
             }
             catch (RpcException ex)
             {

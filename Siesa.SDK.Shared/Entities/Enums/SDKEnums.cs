@@ -8,13 +8,6 @@ namespace Siesa.Global.Enums
 		Team = 2
 	}
 
-	public enum PermissionAuthTypes
-	{
-		Query = 1,
-		Transaction = 2,
-		Query_Tx = 3
-	}
-
 	public enum PermissionRestrictionType
 	{
 		Not_Applicable = 0,
@@ -72,5 +65,44 @@ namespace Siesa.Global.Enums
 		TextField = 3,
 		EmailField = 4,
 		RadioButtonField = 5
+	}
+
+	public enum PermissionAuthTypes
+	{
+		Query = 1,
+		Query_Tx = 2
+	}
+
+	public enum enumTypeButton
+	{
+		Create = 1,
+		Save = 2,
+		Duplicate = 3,
+		Edit = 4,
+		List = 5,
+		Delete = 6
+	}
+
+	public enum enumThemeIconStyle
+	{
+		Solid = 0,
+		Regular = 1,
+		Light = 2,
+		Duotone = 3,
+		Thin = 4
+	}
+
+	public enum enumThemeTopbarStyle
+	{
+		OneColor = 0,
+		MultiColor = 1
+	}
+
+	public enum enumSDKIntegrationStatus
+	{
+		Queued = 0,
+		Processing = 1,
+		Success = 2,
+		Failed = 3
 	}
 }

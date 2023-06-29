@@ -42,7 +42,7 @@
         var ShowConfirmDialog = await SDKDialogService.ShowConfirmDialog
         (@<div>
                 <h4>Hola Mundo</h4>
-                <i class="fa-solid fa-circle-exclamation"></i>
+                <SDKIcon Name="fa-circle-exclamation"/>
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et tempora unde tempore commodi odio explicabo sequi consectetur dolor voluptatibus, suscipit voluptatum dolorem ratione? Nulla quo neque quae, asperiores odio expedita?</p>
             </div> ,"300px");
         
@@ -61,7 +61,7 @@
             <div>
                 <div>
                     <h4>Hola Mundo</h4>
-                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <SDKIcon Name="fa-circle-exclamation"/>
                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et tempora unde tempore commodi odio explicabo sequi consectetur dolor voluptatibus, suscipit voluptatum dolorem ratione? Nulla quo neque quae, asperiores odio expedita?</p>
                 </div>
                 <div>
@@ -103,7 +103,7 @@
             <div>
                 <div>
                     <h4>Hola Mundo</h4>
-                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <SDKIcon Name="fa-circle-exclamation"/>
                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et tempora unde tempore commodi odio explicabo sequi consectetur dolor voluptatibus, suscipit voluptatum dolorem ratione? Nulla quo neque quae, asperiores odio expedita?</p>
                 </div>
                 <div>

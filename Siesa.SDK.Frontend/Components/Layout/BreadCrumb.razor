@@ -4,15 +4,41 @@
 @using Siesa.SDK.Shared.Services
 @using System
 @using Siesa.Global.Enums
+@using Siesa.SDK.Frontend.Components.Layout
 @inject ILayoutService LayoutService
 @inject NavigationManager NavigationManager
 @inject MenuService MenuService
 @inject IBackendRouterService BackendRouterService
 @inject IAuthenticationService AuthenticationService
+@inject UtilsManager UtilManager
 
 
 <div class="col-12 area1 pb-3 px-0">
-    <nav class="" aria-label="breadcrumb">
+@if(breadcrumb != null && breadcrumb.Count > 0)
+{
+    <div class="position-absolute">
+        <button class="btn btn-sm layout_btn_standar-sm" type="button" title="@TooltipRecentMenu"
+         @onclick="@RecentMenuClick" @onclick:preventDefault >
+            <SDKIcon Name="fa-clock-rotate-left"/>
+        </button>
+        @if(IsOpenRecentMenu)
+        {
+            <div class="whcm_recent_box">
+                <div class="pt-3 pl-3 pr-3 pb-0 text-center">
+                    <h6 class="font-weight-bold m-0 border-bottom pb-3">
+                        <span>
+                            <ResourceViewer ResourceTag="Custom.SDKBreadcrumb.ButtonRecents" RowidCulture=@AuthenticationService.GetRoiwdCulture()/>
+                        </span>
+                    </h6>
+                </div>
+                <div class="whcm_recent_list">
+                    <RecentMenuComponent Click="@RecentMenuClick"/>
+                </div>
+            </div>
+        }
+    </div>
+}
+    <nav class="pl-4 ml-3" aria-label="breadcrumb">
         @if(breadcrumb != null && breadcrumb.Count > 0)
         {
             <ol class="breadcrumb p-0">
@@ -66,17 +92,32 @@
     private E00061_Menu _selectedMenu;
     private List<E00061_Menu> breadcrumb = new List<E00061_Menu>();
 
-    protected override void OnInitialized()
+    private string TooltipRecentMenu { get; set; } = "";
+
+    private bool IsOpenRecentMenu { get; set; } = false;
+    
+
+    protected override async Task OnInitializedAsync()
     {
         LayoutService.PropertyChanged += LayoutService_PropertyChanged;
         NavigationManager.LocationChanged += OnLocationChanged;
         MenuService.MenuLoaded += OnMenuLoaded;
         //SetBreadCrum(NavigationManager.Uri);
         base.OnInitialized();
+
+        TooltipRecentMenu = await UtilManager.GetResource("Custom.SDKBreadcrumb.ButtonRecents.Tooltip");
     }
 
     private void OnMenuLoaded(object sender, EventArgs e)
     {
+        SetBreadCrum(NavigationManager.Uri);
+        StateHasChanged();
+    }
+
+    private void RecentMenuClick()
+    {
+        IsOpenRecentMenu = !IsOpenRecentMenu;
+        
         StateHasChanged();
     }
 

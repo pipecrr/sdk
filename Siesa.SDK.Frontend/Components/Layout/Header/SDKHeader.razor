@@ -22,9 +22,15 @@
         <div class="header_circles_box_4">
         </div>
     </div>
+    <div class="header_circles_box_logo"> 
+        <div class="header_circles_box_1"></div> 
+        <div class="header_circles_box_2"> </div>
+        <div class="header_circles_box_3"> </div>
+        <div class="header_circles_box_4"> </div>
+    </div>
     <div class="col-xl-5 col-lg-4 col-md-4 col-sm-5 col-5 sdk_company_logo">
          <a class="nav_logo" href="/">
-            <img class="whcm_logo_compania" src="@AuthenticationService.GetConnectionLogo()" height="30px"
+            <img class="ml-2 whcm_logo_compania" src="@LogoUrl" height="30px"
                 alt="Logo compania">
         </a>
     </div>
@@ -45,7 +51,7 @@
                         </p>
                     </div>
                     <div class="pl-2 pl-xl-3">
-                        <i class="fa-solid fa-chevron-down"></i>
+                        <SDKIcon Name="fa-chevron-down"/>
                     </div>
                 </button>
                 @if (ConnectEnabled)
@@ -70,7 +76,7 @@
                                             }
                                         </select>
                                         <button>
-                                            <i class="fa-solid fa-magnifying-glass"></i>
+                                            <SDKIcon Name="fa-magnifying-glass"/>
                                         </button>
                                     </div>
                                 </div>
@@ -97,9 +103,9 @@
                     <ResourceViewer ResourceTag="Custom.Project.Version" />
                 </p>
             </div>
-            <div class="sdk_logo pl-3">
-                <img class="whcm_logo_head d-none d-md-block" src="_content/Siesa.SDK.Frontend/assets/img/LogoSiesaEnterpriseBlanco.svg" alt="Logo siesa Enterprise 2.0">
-                    <img class="whcm_logo_head d-block d-md-none" src="_content/Siesa.SDK.Frontend/assets/img/LogoSiesaEnterpriseGris.svg" alt="Logo siesa Enterprise 2.0">
+            <div class="sdk_logo pl-0 pl-md-5 pl-lg-4">
+                <img class="whcm_logo_head d-none d-md-block" src="_content/Siesa.SDK.Frontend/assets/img/siesaLogo.png" alt="Logo siesa Enterprise 2.0">
+                    <img class="whcm_logo_head d-block d-md-none" src="_content/Siesa.SDK.Frontend/assets/img/siesaLogo.png" alt="Logo siesa Enterprise 2.0">
             </div>
         </div>
 
@@ -115,6 +121,8 @@
     private E00200_CompanyGroup SelectedGroup { get; set; } = new E00200_CompanyGroup();
 
     private bool loading = false;
+    
+    private string LogoUrl { get; set; } = "";
 
     private SDKDbConnection _connection { get; set; } = new SDKDbConnection();
 
@@ -122,6 +130,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        LogoUrl = AuthenticationService.GetConnectionLogo();
         var BL = BackendRouterService.GetSDKBusinessModel("BLSDKCompanyGroup",AuthenticationService);
         
         var DataCompanyGroup = await BL.GetData(null, null);
@@ -134,9 +143,7 @@
             SelectedGroup = CompanyGroups.First();
             AuthenticationService.SetRowidCompanyGroup(SelectedGroup.Rowid);
         }
-
-        base.OnInitializedAsync(); 
-
+        await base.OnInitializedAsync(); 
     }
 
     public async  Task SetCompanyGroup()

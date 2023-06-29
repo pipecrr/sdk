@@ -113,6 +113,26 @@
                 <p>En los botones se pueden especificar permisos para las acciones con el parametro ListPermission</p>
 
                         <SDKTextField CssClass="text-area-demoviewdef" Value="@ButtonsActions"/>
+                    
+                <p>En los botones se pueden especificar si estan ocultos o deshabilitados por defecto </p>
+
+                        <SDKTextField CssClass="text-area-demoviewdef" Value="@ButtonsDefault"/>                
+
+                <p>En los botones se pueden especificar en el CustomAttributtes las opciones "sdk-disabled", "sdk-hide" y "sdk-show"</p>
+
+                        <SDKTextField CssClass="text-area-demoviewdef" Value="@ButtonsCustomAttributes"/>
+                
+                <p>Para agregar CustomAttributtes en los botones por defecto es necesario agregar un boton con el Id del boton, tambien se pueden agregar las propiedades Disabled y Hidden, los Id permitidos son:</p>
+                    <ul>
+                        <li>Create</li>
+                        <li>Save</li>
+                        <li>Duplicate</li>                        
+                        <li>Edit</li>
+                        <li>List</li>
+                        <li>Delete</li>                        
+                    </ul>
+                <p>Y agregar en el CustomAtributtes las propiedades que desea modificar como se muestra anteriormente, si el id no existe, no se tendra en cuanta el boton, si se envian propiedades adicionales a los botones por defecto no las tendra en cuenta</p>
+                    <SDKTextField CssClass="text-area-demoviewdef" Value="@ButtonsDefaultCustomAttributes"/>
 
                 <p>Por defecto se usa la flex en el listar, para quitar el componente flex en el listar, se agrega "UseFlex: false" en el list.json </p>
                 <p>Tambien se puede especificar que pagine por servidor y el tamaño de la pagina, por defecto el take es 100 y la paginacion servidor en true</p>                    
@@ -123,18 +143,25 @@
                         
                 <p>El listar permite enviar acciones personalizadas se agregan a nivel general en el list.json, en el BL el metodo "CustomAction" recibe como parametro un objeto del tipo del registro</p>
                         <SDKTextField CssClass="text-area-demoviewdef" Value="@CustomActions"/>
+                <p>Para deshabilitar u ocultar un CustomActions es posible enviar la propiedad disabled o hidden en el CustomAction, adicionalemente se puede habilitar o deshabilitar dependiendo una condicion añadiendo en los CustomAtributtes las propiedades "sdk-disabled", "sdk-show" y "sdk-hide" para deshabilitar y/o ocultar los botones, ambos metodos reciben como parametro el objeto seleccionado y debe retornar un bool que indica si habilita o no el boton.</p>
+                        <SDKTextField CssClass="text-area-demoviewdef" Value="@CustomActionsDisabled"/>
 
                 <p>Utilizando la propiedad CustomAtributtes ahora podemos definir para un campo de tipo Booleano, 
                     las opciones que se mostraran luego de definirlo como tipo Selectbar, enviando el tag del recurso de la siguiente manera:</p>
                          <SDKTextField CssClass="text-area-demoviewdef" Value="@SelectbarBoolean"/>
 
-                <p>Los Viewdef soportan a traves de un nuevo objeto llamado ExtraFields enviar los campos especificos que vamos a necesitar/consultar(Esto aplica por ahora para las vistas "DetailView").
-                    Si no se especifica ExtraFields, se consultaran todos los campos del objeto, si se especifica, se consultaran solo los campos que se envien en el ExtraFields:</p>
+                <p>Los Viewdef soportan a traves de un nuevo objeto llamado ExtraFields(Lista de string) enviar los campos especificos que vamos a necesitar/consultar, esto aplica por ahora para las vistas "DetailView" y Listview(tanto Flex como Radzen).
+                    Si no se especifica ExtraFields, se consultaran todos los campos del objeto, si se especifica, se consultaran los campos que se envien en el ExtraFields mas los campos por defecto en el Viewdef, los Extrafields no se mostraran en el formulario pero si los tendremos disponibles en BaseObj:</p>
                     <SDKTextField CssClass="text-area-demoviewdef" Value="@ExtraFields"/>
                 <p>
                     Esto tambien aplica si queremos traer campos relacionados, como se ve en el ejemplo anterior,
                     se envia el campo "BaseObj.City.State" indicando que quiero traer en este caso la ciudad y el departamente de un barrio
                     y "BaseObj.City.State.Country", indicando que quiero ahora consultar tambien el Pais.
+                    Ejemplo:
+                    <ul>
+                        <li>BaseObj.City.State.Name</li>
+                        <li>BaseObj.City.State.Country.Rowid</li>
+                    </ul>
                 </p>
                 
         </div>
@@ -294,8 +321,38 @@
     string ButtonsActions=@"
                     ""Buttons"": [{
                         ""Action"": ""await MetodoBLFrontend()"",
-                        ""Style"": ""secondary""
+                        ""Style"": ""secondary"",
                         ""ListPermission"": [1,2,6]
+                        }]";
+
+    string ButtonsDefault =@"
+                    ""Buttons"": [{
+                        ""Action"": ""await MetodoBLFrontend()"",
+                        ""Style"": ""secondary"",
+                        ""Hidden"": ""true"",
+                        ""Disabled"": ""true""
+                        }]";
+
+    string ButtonsCustomAttributes =@"
+                    ""Buttons"": [{
+                        ""Action"": ""await MetodoBLFrontend()"",
+                        ""Style"": ""secondary"",
+                        ""CustomAttributes"": {
+                            ""sdk-disabled"":""onDisabled()"",
+                            ""sdk-hide"":""onHide()"",
+                            ""sdk-show"":""onShow()""
+                            }
+                        }]";
+
+    string ButtonsDefaultCustomAttributes =@"
+                    ""Buttons"": [{
+                        ""Id"": ""Save"",
+                        ""Disabled"": ""true"",
+                        ""CustomAttributes"": {
+                            ""sdk-disabled"":""onDisabled()"",
+                            ""sdk-hide"":""onHide()"",
+                            ""sdk-show"":""onShow()""
+                            }
                         }]";
 
     string ListFlex = @"
@@ -313,6 +370,22 @@
                             ///BL
                             public async Task CustomAction([tipo del baseObj] obj){
                                  //Todo lo que se quiera hacer
+                            }
+                            ";
+
+    string CustomActionsDisabled = @"
+                            ""CustomActions"": [{                            
+                            ""Action"": ""CustomAction"",
+                            ""IconClass"": ""fa fa-plus"",
+                            ""Disabled"": ""true"",
+                            ""Hidden"": ""true"",
+                            ""CustomAttributes"": {
+                                ""sdk-disabled"": ""DisableCondition""
+                            }]
+
+                            ///BL
+                            public async Task<bool> DisableCondition([Tipo baseObj] obj){
+                                 var result = true; //Todo: Implement logic return result; 
                             }
                             ";
 
@@ -336,10 +409,10 @@
                                 ""}""
                             ""],""
                             ""ExtraFields"": ""[
-                            ""Name: Id"",
-                            ""Name: Name"",
-                            ""Name: BaseObj.City.State"",
-                            ""Name: BaseObj.City.State.Country""
+                            ""BaseObj.Id"",
+                            ""BaseObj.Name"",
+                            ""BaseObj.City.State"",
+                            ""BaseObj.City.State.Country""
                             ""]""
                             }";
 }

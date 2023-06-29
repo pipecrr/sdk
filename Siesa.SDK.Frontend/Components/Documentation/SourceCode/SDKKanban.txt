@@ -22,7 +22,7 @@
                     <SDKCard>
                         <div class="row">
                             <div class="col-2">
-                                <i class="fa-solid fa-eye"></i>
+                                <SDKIcon Name="fa-eye"/>
                             </div>
                             <div class="col-10">
                                 <h3>@context.Url</h3>

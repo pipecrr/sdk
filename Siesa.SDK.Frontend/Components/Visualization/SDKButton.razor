@@ -2,6 +2,7 @@
 @using Siesa.SDK.Frontend.Application
 @using Siesa.SDK.Shared.Services
 @using Microsoft.JSInterop
+@using Siesa.Global.Enums
 @using Microsoft.AspNetCore.Components
 @inject IResourceManager ResourceManager
 @inject IAuthenticationService AuthenticationService
@@ -25,7 +26,7 @@
         title="@Text"
         >
         @if(!string.IsNullOrEmpty(IconCssClass)){
-            <i class="@IconCssClass"></i>
+            <SDKIcon Name="@IconCssClass"></SDKIcon>
         }else{
             @if(ChildContent != null)
             {
@@ -49,8 +50,9 @@
 
     [Parameter] public bool SubmitFormOnClick { get; set; } =  false;
 
-    [Parameter] public List<int> ListPermission { get; set; }
-    [Parameter] public string BusinessName { get; set; }    
+    [Parameter] public List<string> ListPermission { get; set; }
+    [Parameter] public string BusinessName { get; set; } 
+
     private bool HasPermission = true;
     private string Text { get; set; }
 
@@ -82,11 +84,13 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if(ListPermission != null && ListPermission.Count > 0){
-            if(!string.IsNullOrEmpty(BusinessName)){
-                HasPermission = false;
-                HasPermission = FeaturePermissionService.CheckUserActionPermissions(BusinessName, ListPermission, AuthenticationService);
-            }
+        
+        if(ListPermission != null && ListPermission.Count > 0)
+        {
+            HasPermission = false;
+      
+            HasPermission = await FeaturePermissionService.CheckUserActionPermissions(BusinessName, ListPermission, AuthenticationService);
+            
         }
         if(IsActionButton || (string.IsNullOrEmpty(ResourceTag) && (!RowidResource.HasValue || RowidResource == 0)))
         {

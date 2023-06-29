@@ -12,8 +12,6 @@
 @inject MenuService MenuService
 @inject NavigationService navigationService
 @inject NavigationManager NavigationManager
-@inject IFeaturePermissionService FeaturePermissionService
-@inject IAuthenticationService AuthenticationService
 
 @if(Menu != null)
 {
@@ -32,23 +30,33 @@
                 {
                     <button class="btn btn-sm layout_btn_standar-sm mr-3" data-toggle="tooltip"
                         data-placement="top" title="Atras" @onclick="@OnClick" >
-                        <i class="fa-solid fa-chevron-left"></i>
+                        <SDKIcon Name="fa-chevron-left"/>
                     </button>
+                }else
+                {
+                    <div class="px-4 mr-3">
+                        &nbsp;
+                    </div>
                 }
-                <h3 class="mb-0">
+                <div class="d-flex align-items-center justify-content-center icono_cabecera" style="background: #@MenuService?.SelectedSuite?.HexColor">
+                   <SDKIcon Name="@GetIconSuite()"></SDKIcon> 
+                </div>
+                <h3 class="mb-0 ml-4 pl-3 ml-sm-5 pl-sm-3 ml-md-5 pl-md-3 ml-lg-5 pl-lg-5">
+
                     @if(string.IsNullOrEmpty(Menu.CurrentText))
                     {
                         <ResourceViewer RowidResource="@Menu.RowidResource" />
                     }else{
                         @Menu.CurrentText
                     }
+
                 </h3>
             </div> 
             <div class="col-md-4 py-2 input-group input-group-sm d-flex align-items-center">
                 <input type="search" class="form-control" placeholder="Búsqueda" @bind="SearchString" @bind:event="oninput" />
                 <div class="input-group-append">
                     <span class="input-group-text">&nbsp;
-                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <SDKIcon Name="fa-magnifying-glass"/>
                     </span>
                     </div>
             </div>    
@@ -59,37 +67,7 @@
             @if(Menu.SubMenus != null && Menu.SubMenus.Count > 0){
                 @foreach(var submenu in GetSubMenuItems())
                 {
-                    if (submenu.Type != MenuType.Separator)
-                    {
-                        @if(submenu.Feature != null && submenu.Type == MenuType.Feature && string.IsNullOrEmpty(submenu.Url))
-                        {
-                            @if(FeaturePermissionService.CheckUserActionPermission(submenu.Feature.BusinessName, 4, AuthenticationService))
-                            {
-                                <div class="col-12 col-sm-6 col-md-4 py-3">
-                                    <button @onclick="@(()=>OnClickItem(submenu))" class="whcm_panel_button w-100 p-3 font-weight-bold text-truncate">
-                                        @if(string.IsNullOrEmpty(submenu.CurrentText))
-                                        {
-                                            <ResourceViewer RowidResource="@submenu.RowidResource" />
-                                        }else{
-                                            @submenu.CurrentText
-                                        }
-                                    </button>
-                                </div>
-                            }
-                        }else
-                        {
-                            <div class="col-12 col-sm-6 col-md-4 py-3">
-                                    <button @onclick="@(()=>OnClickItem(submenu))" class="whcm_panel_button w-100 p-3 font-weight-bold text-truncate">
-                                        @if(string.IsNullOrEmpty(submenu.CurrentText))
-                                        {
-                                            <ResourceViewer RowidResource="@submenu.RowidResource" />
-                                        }else{
-                                            @submenu.CurrentText
-                                        }
-                                    </button>
-                            </div>
-                        }  
-                    }
+                    <MenuViewerItem Menu="@submenu" OnClickItem="@OnClickItem" />
                 }
             }
         </div>
@@ -176,7 +154,7 @@
        
     }
 
-    private async Task OnClickItem(E00061_Menu item)
+    private void OnClickItem(E00061_Menu item)
     {
         SearchString = string.Empty;
         NavigationManager.NavigateTo(item.CurrentURL);
@@ -206,5 +184,17 @@
                 return x.CurrentText.ToLower().Contains(SearchString.ToLower());
             }
         }).OrderBy(x => x.Order);
+    }
+
+    public string GetIconSuite()
+    {
+        string IconSuite = "";
+
+        if (MenuService?.SelectedSuite != null)
+        {
+            IconSuite = MenuService.SelectedSuite.IconClass;
+        }
+
+        return IconSuite;
     }
 }

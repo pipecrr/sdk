@@ -15,6 +15,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Siesa.SDK.Shared.Configurations;
+using Siesa.SDK.Shared.Application;
+using Amazon.S3;
+using Amazon.Extensions.NETCore.Setup;
+using Amazon.Runtime;
 
 namespace Siesa.SDK.Backend.Extensions
 {
@@ -27,9 +31,10 @@ namespace Siesa.SDK.Backend.Extensions
             var dbConnections = configurationManager.GetSection("DbConnections").Get<List<SDKDbConnection>>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<ITenantProvider>( sp => ActivatorUtilities.CreateInstance<TenantProvider>(sp, dbConnections));
-            services.AddScoped<IFeaturePermissionService, FeaturePermissionService>();
+            services.AddSingleton<IFeaturePermissionService, FeaturePermissionService>();
             services.AddSingleton<IBackendRouterService, BackendRouterService>();
             services.AddScoped<EmailService>();
+            services.AddSingleton<IResourceManager, ResourceManager>(sp => ActivatorUtilities.CreateInstance<ResourceManager>(sp, false));
 
             services.AddScoped<ISDKJWT, Siesa.SDK.Backend.Criptography.SDKJWT>();
 
@@ -106,6 +111,15 @@ namespace Siesa.SDK.Backend.Extensions
                 dynamic factory = p.GetRequiredService(typeIDbContextFactory);
                 return factory.CreateDbContext();
             });
+            
+            var awsOptions = new AWSOptions();
+            var awsOptionsApp = configurationManager.GetSection("AWS").Get<SDKAWSOptionsDTO>();
+            if(awsOptionsApp != null){
+                awsOptions.Credentials = new BasicAWSCredentials(awsOptionsApp.AccessKeyId, awsOptionsApp.SecretAccessKey);
+                awsOptions.Region = Amazon.RegionEndpoint.GetBySystemName(awsOptionsApp.Region);
+                services.AddDefaultAWSOptions(awsOptions);
+            }
+            services.AddAWSService<IAmazonS3>();
 
         }
     }

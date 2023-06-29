@@ -5,22 +5,26 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @using System.Linq
 @using Siesa.SDK.Frontend.Services
+@using Siesa.SDK.Frontend.Components.Layout.AditionalField
+@using Siesa.SDK.Shared.Services
+@inject SDKDialogService SDKDialogService
+@inject NavigationManager NavigationManager
 @inject SDKGlobalLoaderService SDKGlobalLoaderService
 
 @if (Loading == true)
 {
     <ResourceViewer ResourceTag="Custom.Generic.Loading" />
 }
-else if(!string.IsNullOrEmpty(ErrorMsg))
-{
-    <ErrorsContainer ErrorMsg="@ErrorMsg"/>
-}
 else if (Panels == null || Panels.Count <= 0)
 {
-    <ResourceViewer ResourceTag="Custom.Formview.NotDefinition" />
+    @* <ResourceViewer ResourceTag="Custom.Formview.NotDefinition" /> *@
+    <ErrorsWindow GeneralErrors="@ErrorList"/>
 }
 else if (ModelLoaded == true)
 {
+    if(!string.IsNullOrEmpty(ErrorMsg)){
+        <ErrorsWindow GeneralErrors="@ErrorList"/>
+    }
         @if(IsSubpanel && ShowTitle){
             <h5 class="d-flex justify-content-center">@BusinessObj</h5>
             <hr />
@@ -44,19 +48,33 @@ else if (ModelLoaded == true)
                 <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef" ModelObj="@BusinessObj" DefaultColSize="@Panels[0].ColSize"/>
 
             }
+            @if(PanelsCollapsable.Count>0){
+                <div class="w-100">
+                    <SDKCollapse>
+                        <Items>
+                            @foreach (var panel in PanelsCollapsable)
+                            {
+                                <SDKCollapseItem Text="@panel.ResourceTag">
+                                    <div class="row">
+                                        <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                                    </div>
+                                </SDKCollapseItem>
+                            }
+                    </Items>
+                    </SDKCollapse>
+                </div>
+            }
         </DxFormLayout>
         @if(ContainAttachments){
             <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" 
                 Parent="@BusinessObj.BaseObj" ContainAttachments="@ContainAttachments" BLNameParentAttatchment="@BusinessName"
-                BusinessObj="@BusinessObj"/>
+                BusinessObj="@BusinessObj" BusinessName="@BusinessName"/>
         }else if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
         {
-             <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" />
+             <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" 
+                BusinessName="@BusinessName"/>
         }
-        @if(!string.IsNullOrEmpty(ErrorMsg))
-        {
-            <label>@((MarkupString)ErrorMsg)</label>
-        }
+        
     @if(IsSubpanel && ShowButtons){
         <div class="buttons-container">
             @foreach (var btn in FormViewModel.Buttons)
@@ -67,7 +85,7 @@ else if (ModelLoaded == true)
                 <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" Click="@((args) => dialogService.Close(false))" ResourceTag="Action.Close"/>
             }
             @if (ShowDeleteButton){
-                <SDKButton RenderStyle="SDKButtonRenderStyle.Danger" Click="DeleteBusiness" ResourceTag="Action.Delete" />                
+                <SDKButton RenderStyle="SDKButtonRenderStyle.Danger" Click="DeleteBusiness" ResourceTag="Action.Delete" />
             }
         </div>
     }
@@ -79,26 +97,58 @@ else if (ModelLoaded == true)
             <TopBarButtons>
 
                 @if(CanCreate){
-                <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus"  />
+                    if(CreateButton != null){
+                        if(!CreateButton.Hidden){
+                            <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus" Enabled="@(!CreateButton.Disabled)"/>
+                        }
+                    }else{
+                        <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus"  />
+                    }
                 }
                 @if(CanCreate){
-                <TopBarButton Click="GoToDuplicate" ResourceTag="Action.Duplicate" IconCssClass="fa-solid fa-copy"  />
+                    if(DuplicateButton != null){
+                        if(!DuplicateButton.Hidden){
+                            <TopBarButton Click="GoToDuplicate" ResourceTag="Action.Duplicate" IconCssClass="fa-solid fa-copy" Enabled="@(!DuplicateButton.Disabled)"/>
+                        }
+                    }else{
+                        <TopBarButton Click="GoToDuplicate" ResourceTag="Action.Duplicate" IconCssClass="fa-solid fa-copy"  />
+                    }
                 }
                 @if(CanEdit){
-                <TopBarButton Click="GoToEdit" ResourceTag="Action.Edit"  IconCssClass="fa-solid fa-pen"  />
+                    if(EditButton != null){
+                        if(!EditButton.Hidden){
+                            <TopBarButton Click="GoToEdit" ResourceTag="Action.Edit" IconCssClass="fa-solid fa-pen" Enabled="@(!EditButton.Disabled)"/>
+                        }
+                    }else{
+                        <TopBarButton Click="GoToEdit" ResourceTag="Action.Edit" IconCssClass="fa-solid fa-pen"  />
+                    }
                 }
-                @if(CanList){
-                <TopBarButton Click="GoToList" ResourceTag="Action.List"  IconCssClass="fa-solid fa-list"  />
+                @if(CanAcess){
+                    if(ListButton != null){
+                        if(!ListButton.Hidden){
+                            <TopBarButton Click="GoToList" ResourceTag="Action.List" IconCssClass="fa-solid fa-list" Enabled="@(!ListButton.Disabled)"/>
+                        }
+                    }else{
+                        <TopBarButton Click="GoToList" ResourceTag="Action.List" IconCssClass="fa-solid fa-list"  />
+                    }
                 }
                 @if(CanDelete){
-                <TopBarButton Click="OnClickDelete" ResourceTag="Action.Delete" IconCssClass="fa-solid fa-trash-can" />
+                    if(DeleteButton != null){
+                        if(!DeleteButton.Hidden){
+                            <TopBarButton Click="OnClickDelete" ResourceTag="Action.Delete" IconCssClass="fa-solid fa-trash-can" Enabled="@(!DeleteButton.Disabled)"/>
+                        }
+                    }else{
+                        <TopBarButton Click="OnClickDelete" ResourceTag="Action.Delete" IconCssClass="fa-solid fa-trash-can"  />
+                    }                
                 }
 
             </TopBarButtons>
             <TopBarExtraButtons>
-                @foreach (var btn in FormViewModel.Buttons)
+                @foreach (var btn in ExtraButtons)
                 {
-                    <TopBarButton Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" IconCssClass="@btn.IconClass" />
+                    if(!btn.Hidden){
+                        <TopBarButton Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" IconCssClass="@btn.IconClass" Enabled="@(!btn.Disabled)"/>
+                    }
                 }
             </TopBarExtraButtons>
         </SetTopBar>
@@ -120,5 +170,57 @@ else if (ModelLoaded == true)
         } 
         
         SDKGlobalLoaderService.Hide();
+    }
+     public async Task ConfirmDelete(int Rowid)
+    {
+        var confirmDelete = await SDKDialogService.ShowConfirmDialog(@<div class="col-12 p-0"><ResourceViewer ResourceTag="Esta seguro que desea eliminar los campos adicionales?"/></div>);
+        if(confirmDelete != null && confirmDelete == true){
+            bool deleteGroup = await DeleteGroup(Rowid);
+            if(deleteGroup){
+                var currentUrl = NavigationManager.Uri;
+                NavigationService.NavigateTo(currentUrl, true);
+            }
+                
+        }
+    }
+
+    public async Task ClickInAdd(int Rowid)
+    {   
+        var responseDynamicEntity = await BusinessObj.Backend.Call("GetDynamicEntity", Rowid);
+        if(responseDynamicEntity != null && responseDynamicEntity.Success){
+            dynamic dynamicEntity = responseDynamicEntity.Data;
+            var modal = await SDKDialogService.ShowCustomDialog(ds =>@<AditionalFields Business="@BusinessObj" IsCreate="true" DynamicEntity="dynamicEntity"/>,
+                    ShowTitle: false,
+                    standardWidth: SDKModalWidth.Large,
+                    CssClass: "aditional_fields_padding_0"
+                );
+            if(modal != null && modal == true){
+                await ModalConfirmMessage(modal);
+            }
+        }
+    }
+
+    public async Task ClickInEdit(int Rowid)
+    {
+        var responseDynamicEntity = await BusinessObj.Backend.Call("GetDynamicEntity", Rowid);
+        if(responseDynamicEntity != null && responseDynamicEntity.Success){
+            dynamic dynamicEntity = responseDynamicEntity.Data;
+            var modal = await SDKDialogService.ShowCustomDialog(ds =>@<AditionalFields Business="@BusinessObj" IsEdit="true" DynamicEntity="dynamicEntity"/>,
+                    ShowTitle: false,
+                    standardWidth: SDKModalWidth.Large,
+                    CssClass: "aditional_fields_padding_0"
+                );
+            if(modal != null && modal == true){
+                await ModalConfirmMessage(modal);
+            }
+        }
+    }
+
+    public async Task ModalConfirmMessage(bool response){
+        var confirm = await SDKDialogService.ShowConfirmDialog(@<div class="col-12 p-0"><ResourceViewer ResourceTag="Custom.AditionalFields.ConfirmMessage"/></div>);
+        if(confirm != null && confirm == true){
+            var currentUrl = NavigationManager.Uri;
+            NavigationService.NavigateTo(currentUrl, true);
+        }
     }
 }

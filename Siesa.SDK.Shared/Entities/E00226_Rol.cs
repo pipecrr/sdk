@@ -27,6 +27,8 @@ namespace Siesa.SDK.Entities
 		[ForeignKey("Company")]
 		public short? RowidCompany { get; set; }
 
+		public string? CalculatedPermissions { get; set; }
+
 
 		[SDKCheckRelationship]
 		public virtual E00201_Company Company { get; set; }

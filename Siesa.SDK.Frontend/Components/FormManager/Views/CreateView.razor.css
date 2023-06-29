@@ -4,3 +4,9 @@
     justify-content: flex-end;
     gap: 5px;
 }
+
+.buttons-aditional-fiels{
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px;
+}

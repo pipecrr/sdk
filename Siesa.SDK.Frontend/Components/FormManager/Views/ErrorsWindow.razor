@@ -1,0 +1,89 @@
+@if(_errorCount > 0 ){
+    <div class=@(ClassError +" col-12 p-0")>
+        <button class="sdk_error_log_btn d-flex align-items-center justify-content-between" @onclick="showDedtail">
+            <div class="d-flex align-items-center justify-content-center">
+                <SDKIcon Name="fa-triangle-exclamation"/>                
+                &nbsp;&nbsp;<ResourceViewer ResourceTag= "Custom.ErrorsWindow.Title"/>&nbsp;&nbsp;
+                <span class="rz-badge rz-badge-danger rz-variant-filled rz-shade-default rz-badge-pill" id="e-ap89kcR0" _bl_ed1a2bd5-f153-4727-94d3-fc34ec66d983="">
+                    @_errorCount
+                </span>
+            </div>
+            <SDKIcon Name="fa-chevron-down" CssClass="ml-2"></SDKIcon>
+        </button>
+    </div>
+    <div class="sdk_error_log_box_detail">
+        <div class="col-xl-6 offset-xl-3 col-lg-8 offset-lg-2 col-sm-12 offset-sm-0 sdk_error_log_box p-3">
+            <div class="sdk_error_log_box_head">
+                <p class="m-0">
+                    <SDKIcon Name="fa-triangle-exclamation"/>
+                    &nbsp;&nbsp;<ResourceViewer ResourceTag= "Custom.ErrorsWindow.Title"/>&nbsp;&nbsp; 
+                    <span class="rz-badge rz-badge-danger rz-variant-filled rz-shade-default rz-badge-pill" id="e-ap89kcR0" _bl_ed1a2bd5-f153-4727-94d3-fc34ec66d983="">
+                        @_errorCount
+                    </span>
+                </p>
+                <button class="btn btn-sm ml-1 p-0 text-light" @onclick="showDedtail">
+                    <SDKIcon Name="fa-xmark"/>
+                </button>
+            </div>
+            <div class="col-12 sdk_card sdk_error_log_box_body py-0">
+                <div class="table-responsive">
+                    @if(_errors.Any()){
+                        <table class="table table-striped sdk_table_v2">
+                            <thead>
+                                <tr>
+                                    <th class="col-3">
+                                        <ResourceViewer ResourceTag= "Custom.ErrorsWindow.Field"/> 
+                                    </th>
+                                    <th class="col-9">
+                                        <ResourceViewer ResourceTag= "Custom.ErrorsWindow.Description"/>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in _errors){
+                                    <tr>
+                                        <td class="align-middle">
+                                            <ResourceViewer ResourceTag= "@item.Field"/>
+                                        </td>
+                                        <td>
+                                            <ul class="ul_list_error">
+                                                @foreach (var error in item.Errors){
+                                                    <ResourceViewer ResourceTag= "@error.Key" FormatString="@error.Value"/>
+                                                }
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                    
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    @if(_generalErrors.Any()){
+                        <table class="table table-striped sdk_table_v2">
+                            <thead>
+                                <tr>
+                                    <th class="col-12">
+                                        <ResourceViewer ResourceTag= "Custom.ErrorsWindow.GeneralError"/>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <ul class="ul_list_error">
+                                            @foreach (var error in _generalErrors){
+                                                <ResourceViewer ResourceTag= "@error"/>
+                                            }
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="sdk_error_log_back"></div>
+    </div>
+}
