@@ -120,9 +120,6 @@ else if (BusinessObj != null)
 
     protected override  async Task CheckAccessPermission(bool disableAccessValidation = false)
     {
-        if(IsEntityField)
-        {
-            await base.CheckAccessPermission(true);
-        }
+        await base.CheckAccessPermission(IsEntityField);
     }
 }
