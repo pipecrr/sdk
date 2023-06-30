@@ -107,7 +107,7 @@
                 var SelectAllName = await ResourceManager.GetResource("Custom.Enum.SelectAll", AuthenticationService);
                 _options = _options.Append(new SelectBarItemWrap<TItem>
                 {
-                    Key = (TItem)Enum.Parse(enumType, (enumValues.Select(x => x.Key).Last() + 1).ToString()),
+                    Key = (TItem)Enum.Parse(enumType, (enumValues.Select(x => x.Key).Max() + 1).ToString()),
                     Name = SelectAllName
                 });
                 BindValue = _options.Select(x => x.Key).First();

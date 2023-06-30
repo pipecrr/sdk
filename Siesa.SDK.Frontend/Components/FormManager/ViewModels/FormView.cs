@@ -93,6 +93,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         public bool ContainAttachments = false;
 
+        protected bool loadDefaultViewdef = true;
+
         [Inject]
         public IBackendRouterService BackendRouterService { get; set; }
         [Inject] 
@@ -162,7 +164,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             {
                 data = BackendRouterService.GetViewdef(businessName, DefaultViewdefName);
             }
-            if(String.IsNullOrEmpty(data)){
+            if(String.IsNullOrEmpty(data) && loadDefaultViewdef){
                 _viewdefName = "default";
                 data = BackendRouterService.GetViewdef(businessName, _viewdefName);
             }

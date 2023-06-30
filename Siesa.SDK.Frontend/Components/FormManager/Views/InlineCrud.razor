@@ -43,6 +43,7 @@
         AllowEdit="@AllowEdit"
         AllowDelete="@AllowDelete"
         AllowDetail="@AllowDetail"
+        ShowSearchForm="@ShowSearchForm"
         OnSelectedRow=@OnSelectedRow
         Data="@Data"
         BLNameParentAttatchment="@BLNameParentAttatchment"
@@ -55,7 +56,7 @@
     [Parameter] public string BLNameParentAttatchment { get; set; }
     [Parameter] public string BusinessName { get; set; }
     [Parameter] public Dictionary<string, object> DefaultFieldsCreate { get; set; }
-
+    [Parameter] public bool ShowSearchForm { get; set; } = true;
     [Parameter] public string Filter { get; set; }
     [Parameter] public bool AllowCreate { get; set; } = true;
     [Parameter] public bool AllowEdit { get; set; } = true;

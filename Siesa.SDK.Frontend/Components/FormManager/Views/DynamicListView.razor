@@ -44,6 +44,7 @@ else if (BusinessObj != null)
     [Parameter] public dynamic businessObj { get; set; }
 
     [Parameter] public bool IsEntityField {get; set;} 
+    [Parameter] public bool ShowSearchForm { get; set; } = true;
 
     private RenderFragment RenderMain = null;
 
@@ -73,6 +74,7 @@ else if (BusinessObj != null)
             new_params.Add("FromEntityField", FromEntityField);
             new_params.Add("IsMultiple", IsMultiple);
             new_params.Add("SelectedItems", SelectedItems);
+            new_params.Add("ShowSearchForm", ShowSearchForm);
             if (IsSubpanel)
             {
                 new_params.Add("BLNameParentAttatchment", BLNameParentAttatchment);
@@ -120,9 +122,6 @@ else if (BusinessObj != null)
 
     protected override  async Task CheckAccessPermission(bool disableAccessValidation = false)
     {
-        if(IsEntityField)
-        {
-            await base.CheckAccessPermission(true);
-        }
+        await base.CheckAccessPermission(IsEntityField);
     }
 }
