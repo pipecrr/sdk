@@ -1,0 +1,21 @@
+@page "/autogestion"
+@using Siesa.SDK.Shared.Services
+@inject IAuthenticationService AuthenticationService
+
+<button onclick="@Logout">Logout</button>
+
+@code {
+
+    [CascadingParameter]
+    public MainLayout MainLayout { get; set; }
+    protected override async Task OnInitializedAsync(){
+        MainLayout.SetEmptyLayout(true);
+        await base.OnInitializedAsync();
+    }
+
+    private async Task Logout()
+    {
+        await AuthenticationService.LogoutPortal();
+    }
+    
+}

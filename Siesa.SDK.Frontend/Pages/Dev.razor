@@ -1,29 +1,11 @@
-@* @page "/dev" *@
-@using Siesa.SDK.Frontend.Components.Fields
+@page "/dev"
+@using Siesa.SDK.Shared.Services
 @using Siesa.SDK.Frontend.Components.Visualization
-@using Newtonsoft.Json.Schema
-@using Newtonsoft.Json.Schema.Generation
-@using Siesa.SDK.Shared.Utilities
+@inject IAuthenticationService AuthenticationService
 
-<SDKCharField @bind-Value="Name" />
-
-<SDKButton Click="@GenerateSchema">Generate Schema</SDKButton>
-
-<SDKTextField @bind-Value="schema" />
+@layout EmptyLayout
+<DynamicLoginView PortalName="autogestion" RowidConexion="1"/>
 
 @code {
-    public string Name { get; set; }
-    public string schema { get; set; }
-    JSchemaGenerator generator = new JSchemaGenerator();
-    public void GenerateSchema()
-    {
-        Type myType = Utilities.SearchType(Name);
-        if (myType == null)
-        {
-            schema = "Type not found";
-            return;
-        }
-        JSchema jsonSchema = generator.Generate(myType);
-        this.schema = jsonSchema.ToString();
-    }
+        
 }

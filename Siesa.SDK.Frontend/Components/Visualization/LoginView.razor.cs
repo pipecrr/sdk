@@ -25,9 +25,10 @@ public partial class LoginView
     private bool RecoveringPassword;
     private SDKDbConnection SelectedConnection = new ();
     private string error;
+    private bool PortalValid;
     protected override async Task OnInitializedAsync()
     {
-        init_loading = true;
+        init_loading = true;        
         if (AuthenticationService.PortalUser != null)
         {
             NavigationManager.NavigateTo($"/{PortalName}");
@@ -36,12 +37,23 @@ public partial class LoginView
         await InitLogin();
     }
 
+    public async Task<bool> ValidatePortal(){
+        var BLSDKPortalUser = BackendRouterService.GetSDKBusinessModel("BLSDKPortalUser", AuthenticationService);
+        var result = await BLSDKPortalUser.Call("ValidatePortal", PortalName, SelectedConnection.Rowid);
+        if(result.Success && result.Data != null){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     private async Task InitLogin()
     {
         var BLSDKPortalUser = BackendRouterService.GetSDKBusinessModel("BLSDKPortalUser", AuthenticationService);
         var result = await BLSDKPortalUser.Call("GetDBConnection", RowidConexion);
         if(result.Success && result.Data != null){
             SelectedConnection = result.Data;
+            PortalValid = await ValidatePortal();
             init_loading = false;
             await base.OnInitializedAsync();
             StateHasChanged();

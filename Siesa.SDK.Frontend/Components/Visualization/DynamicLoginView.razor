@@ -1,0 +1,21 @@
+@page "/Portal/{RowidConexion:int}/{PortalName}"
+@using Siesa.SDK.Frontend.Components.Visualization
+
+<LoginView LogoUrl="@LogoUrl" PortalName="@PortalName" RowidConexion="@RowidConexion"/>
+
+@code {
+
+    [CascadingParameter]
+    public MainLayout MainLayout { get; set; }
+    [Parameter]
+    public string PortalName { get; set; }
+    [Parameter]
+    public int RowidConexion { get; set; }
+
+    public string LogoUrl { get; set; } = "_content/Siesa.SDK.Frontend/assets/img/siesaLogo.png";
+    protected override async Task OnInitializedAsync(){
+
+        MainLayout.SetEmptyLayout(true);
+        await base.OnInitializedAsync();
+    }
+}

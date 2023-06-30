@@ -291,7 +291,7 @@ namespace Siesa.SDK.Frontend.Services
             PortalUserToken = "";
             _portalUser = null;
 
-            _navigationManager.NavigateTo($"Portal/{RowIdDBConnection}/autogestion");
+            _navigationManager.NavigateTo($"Portal/{RowIdDBConnection}/{PortalUser.PortalName}");
         }
 
         public async Task SetToken(string token, bool saveLocalStorage = true)
