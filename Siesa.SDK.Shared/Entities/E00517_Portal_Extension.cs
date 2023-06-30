@@ -14,8 +14,9 @@ namespace Siesa.SDK.Entities
 {
 	public partial class E00517_Portal
 	{
-
-
-
+		public override string ToString()
+		{
+			return $"{Id}";
+		}
 	}
 }
