@@ -118,10 +118,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 string customType = Enum.GetName(typeof(CustomTypeField), EnumValue);
                 CustomType = customType;
             }
-            // else if (CustomType.ToLower().Equals("default"))
-            // {
-            //     CustomType = string.Empty;
-            // }
         }
 
         private FieldObj InitField(object modelObj)
