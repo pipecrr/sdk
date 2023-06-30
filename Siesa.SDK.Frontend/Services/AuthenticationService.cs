@@ -183,11 +183,11 @@ namespace Siesa.SDK.Frontend.Services
             }
         }
 
-        public async Task LoginPortal(string username, string password, short rowIdDBConnection, 
+        public async Task LoginPortal(string username, string password, short rowIdDBConnection, string PortalName,
         bool IsUpdateSession = false, short rowIdCompanyGroup = 1)
         {
-            var BLPortalUser = _backendRouterService.GetSDKBusinessModel("BLPortalUser", this);
-            if (BLPortalUser == null)
+            var BLSDKPortalUser = _backendRouterService.GetSDKBusinessModel("BLSDKPortalUser", this);
+            if (BLSDKPortalUser == null)
             {
                 throw new Exception("Login Service not found");
             }
@@ -199,9 +199,10 @@ namespace Siesa.SDK.Frontend.Services
                 rowIdCompanyGroup = LastCompanyGroupSelected;
             }
             
-            var loginRequest = await BLPortalUser.Call("SignInSessionPortal", new Dictionary<string, dynamic> {
+            var loginRequest = await BLSDKPortalUser.Call("SignInSessionPortal", new Dictionary<string, dynamic> {
                 {"username", username},
                 {"password", password},
+                {"portalName", PortalName},
                 {"rowIdDBConnection", rowIdDBConnection},
                 {"rowidCulture", RowidCultureChanged},
                 {"rowIdCompanyGroup", rowIdCompanyGroup}
@@ -281,7 +282,7 @@ namespace Siesa.SDK.Frontend.Services
         public async Task LogoutPortal()
         {
             SDKDbConnection _selectedConnection = GetSelectedConnection();
-            var RowIdDBConnection = _selectedConnection != null _selectedConnection.Rowid : 0;
+            var RowIdDBConnection = _selectedConnection != null ? _selectedConnection.Rowid : 0;
 
             await _localStorageService.RemoveItemAsync("portalusertoken");
             await _localStorageService.RemoveItemAsync("portaluserPhoto");
@@ -290,7 +291,7 @@ namespace Siesa.SDK.Frontend.Services
             PortalUserToken = "";
             _portalUser = null;
 
-            _navigationManager.NavigateTo($"Portal/{RowIdDBConnection}/BLPortalPrb");
+            _navigationManager.NavigateTo($"Portal/{RowIdDBConnection}/autogestion");
         }
 
         public async Task SetToken(string token, bool saveLocalStorage = true)

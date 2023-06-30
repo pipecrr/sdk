@@ -27,13 +27,31 @@ public partial class LoginView
     private string error;
     protected override async Task OnInitializedAsync()
     {
-        var BLPortalUser = BackendRouterService.GetSDKBusinessModel("BLPortalUser", AuthenticationService);
-        var result = await BLPortalUser.Call("GetDBConnection", PortalName, RowidConexion);
+        init_loading = true;
+        if (AuthenticationService.PortalUser != null)
+        {
+            NavigationManager.NavigateTo($"/{PortalName}");
+            return;
+        }
+        await InitLogin();
+    }
+
+    private async Task InitLogin()
+    {
+        var BLSDKPortalUser = BackendRouterService.GetSDKBusinessModel("BLSDKPortalUser", AuthenticationService);
+        var result = await BLSDKPortalUser.Call("GetDBConnection", RowidConexion);
         if(result.Success && result.Data != null){
             SelectedConnection = result.Data;
+            init_loading = false;
+            await base.OnInitializedAsync();
+            StateHasChanged();
+        }else{
+            init_loading = false;
+            StateHasChanged();
         }
-        await base.OnInitializedAsync();
     }
+
+
     private async void HandleValidSubmit(){
         string message = "BLUser.Login.Message.SuccesLogin";
         loading = true;
@@ -56,7 +74,7 @@ public partial class LoginView
 
         try
         {
-            await AuthenticationService.LoginPortal(model.Username, model.Password,SelectedConnection.Rowid);
+            await AuthenticationService.LoginPortal(model.Username, model.Password,SelectedConnection.Rowid, PortalName);
             string urlReturn = $"/{PortalName}";
             NavigationManager.NavigateTo(urlReturn);
         }
