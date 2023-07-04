@@ -132,7 +132,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             FieldObj field = new FieldObj();
             Type originalPropertyType = null; //Used for enums
 
-            if (CustomComponent != null && String.IsNullOrEmpty(CustomType))
+            if ((CustomComponent != null && String.IsNullOrEmpty(CustomType)) || IsGroup)
             {
                 if (String.IsNullOrEmpty(ResourceTag))
                 {
@@ -143,7 +143,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 {
                     Name = Guid.NewGuid().ToString();
                 }
-                FieldType = FieldTypes.Custom;
+                FieldType = IsGroup ? FieldTypes.Group : FieldTypes.Custom;
                 field.Name = Name;
                 field.ModelObj = modelObj;
             }
