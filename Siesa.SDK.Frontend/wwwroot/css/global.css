@@ -1558,3 +1558,28 @@ div.dxbs-btn-group.dxbs-input-group-prepend>.btn.dx-btn.btn-sm {
     background-color: var(--color_alert_warning) !important;
     border-color: var(--color_alert_warning) !important;
 }
+
+.sdk-formlayout-group-title{
+    color: var(--color_primary) !important;
+    font-weight: 700!important;
+    padding: 0!important;
+    margin-bottom: 1rem;
+    max-width: 100%;
+    font-size: 16px;
+}
+
+.sdk-formlayout-group-border-right{
+    border-right: 1px solid #E1E1E1;
+}
+
+.sdk-formlayout-group-border-left{
+    border-left: 1px solid #E1E1E1;
+}
+
+.sdk-formlayout-group-border-top{
+    border-top: 1px solid #E1E1E1;
+}
+
+.sdk-formlayout-group-border-bottom{
+    border-bottom: 1px solid #E1E1E1;
+}
