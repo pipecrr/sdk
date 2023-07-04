@@ -92,6 +92,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         private FieldObj fieldObj = null;
 
         public bool ShowLabel { get; set; } = true;
+        public bool IsGroup { get; set; }
+        public int GroupMinHeight { get; set; }
+        public bool GroupRightBorder { get; set; } 
+        public bool GroupLeftBorder { get; set; }
+        public bool GroupTopBorder { get; set; }
+        public bool GroupBottomBorder { get; set; }
+        public List<FieldOptions> Fields { get; set; } = new List<FieldOptions>();
 
         public FieldObj GetFieldObj(object modelObj, bool force = false)
         {
