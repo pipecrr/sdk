@@ -30,11 +30,23 @@
                             ColSizeSm="@GetColSize(fld,"SM")"
                             ColSizeXs="@GetColSize(fld,"XS")"
                             ShowRequiredSymbol="@ShowRequiredSymbol(fld)"
+                            IsGroup="@fld.IsGroup"
+                            GroupMinHeight="@fld.GroupMinHeight"
+                            GroupRightBorder="@fld.GroupRightBorder"
+                            GroupLeftBorder="@fld.GroupLeftBorder"
+                            GroupTopBorder="@fld.GroupTopBorder"
+                            GroupBottomBorder="@fld.GroupBottomBorder"
                             @key="@GetItemUniqueId(fld)"
                             >
-                <div class="@GetCssDetail(fld)">
-                    <DynamicField FieldOpt="@fld" ModelObj="@ModelObj" @key="@GetItemUniqueId(fld, true)" ValidateField="@ValidateForm" />
-                </div>
+                @if(fld.IsGroup && fld.Fields != null && fld.Fields.Count > 0){
+                    <SDKFormLayout CaptionPosition="SDKCaptionPosition.Vertical">
+                        <FieldsContainer Fields="@fld.Fields" ModelObj="@ModelObj" DefaultColSize="@fld.ColSize" ValidateForm="@ValidateForm" />
+                    </SDKFormLayout>
+                }else{
+                    <div class="@GetCssDetail(fld)">
+                        <DynamicField FieldOpt="@fld" ModelObj="@ModelObj" @key="@GetItemUniqueId(fld, true)" ValidateField="@ValidateForm" />
+                    </div>
+                }
             </SDKFormLayoutItem>
         }
         

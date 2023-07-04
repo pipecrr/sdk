@@ -68,6 +68,51 @@
                 </SDKFormLayout>
                 </SDKCard>
         </div>
+        <div class="col-md-6 p-3">
+                <SDKCard>
+                        <h3>SDKFormLayout-SDKFormLayoutItem Group</h3>
+                <SDKFormLayout>
+                        <SDKFormLayoutItem ResourceTag="Name" ColSizeXs="6" IsGroup="true" GroupMinHeight="300" GroupRightBorder="true">
+                                <SDKFormLayout>
+                                <SDKFormLayoutItem ResourceTag="Name:" ColSizeMd="3">
+                                        <SDKCharField @bind-Value="@Name"/>
+                                </SDKFormLayoutItem>
+                                <SDKFormLayoutItem ResourceTag="Email:" ColSizeLg="3">
+                                        <SDKCharField @bind-Value="@Email"/>
+                                </SDKFormLayoutItem>
+                                <SDKFormLayoutItem ResourceTag="Age:" ColSizeXl="3">
+                                        <SDKIntegerField @bind-Value="@Age"/>
+                                </SDKFormLayoutItem>
+                                <SDKFormLayoutItem ResourceTag="Date:" ColSizeSm="3"> 
+                                        <SDKDateField @bind-Value="@DateTimeValue"/>
+                                </SDKFormLayoutItem>
+                                <SDKFormLayoutItem ResourceTag="Selected:" ColSizeXs="3">
+                                        <SDKBooleanField @bind-Value="@Selectd"/>
+                                </SDKFormLayoutItem>
+                                </SDKFormLayout>
+                        </SDKFormLayoutItem>
+                        <SDKFormLayoutItem ResourceTag="Email:" ColSizeXs="6" IsGroup="true" GroupMinHeight="300">
+                                <SDKFormLayout>
+                                <SDKFormLayoutItem ResourceTag="Name:" ColSizeMd="3">
+                                        <SDKCharField @bind-Value="@Name"/>
+                                </SDKFormLayoutItem>
+                                <SDKFormLayoutItem ResourceTag="Email:" ColSizeLg="3">
+                                        <SDKCharField @bind-Value="@Email"/>
+                                </SDKFormLayoutItem>
+                                <SDKFormLayoutItem ResourceTag="Age:" ColSizeXl="3">
+                                        <SDKIntegerField @bind-Value="@Age"/>
+                                </SDKFormLayoutItem>
+                                <SDKFormLayoutItem ResourceTag="Date:" ColSizeSm="3"> 
+                                        <SDKDateField @bind-Value="@DateTimeValue"/>
+                                </SDKFormLayoutItem>
+                                <SDKFormLayoutItem ResourceTag="Selected:" ColSizeXs="3">
+                                        <SDKBooleanField @bind-Value="@Selectd"/>
+                                </SDKFormLayoutItem>
+                                </SDKFormLayout>
+                        </SDKFormLayoutItem>
+                        </SDKFormLayout>
+                </SDKCard>
+        </div>
     </div>
 </div>
 
