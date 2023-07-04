@@ -1583,3 +1583,7 @@ div.dxbs-btn-group.dxbs-input-group-prepend>.btn.dx-btn.btn-sm {
 .sdk-formlayout-group-border-bottom{
     border-bottom: 1px solid #E1E1E1;
 }
+
+.sdk-formlayout-group{
+    margin-right: 10px!important;
+}
