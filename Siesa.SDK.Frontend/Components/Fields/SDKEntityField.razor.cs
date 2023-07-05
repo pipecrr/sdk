@@ -18,6 +18,7 @@ using Siesa.SDK.Frontend.Extension;
 using Siesa.SDK.Entities;
 using Siesa.SDK.Frontend.Components.FormManager;
 using Siesa.Global.Enums;
+using System.Text;
 
 namespace Siesa.SDK.Frontend.Components.Fields
 {
@@ -290,25 +291,25 @@ namespace Siesa.SDK.Frontend.Components.Fields
             badgeContainerClass = "badge-container d-none";
         }
 
-        private void OnKeyDown(KeyboardEventArgs e)
+        private async Task OnKeyDown(KeyboardEventArgs e)
         {
             if(e == null || e.Key == null){
                 return;
             }
-            if(!string.Equals(e.Key, "Escape", StringComparison.InvariantCulture) && !string.Equals(e.Key, "Enter", StringComparison.InvariantCulture) && !string.Equals(e.Key, "Tab", StringComparison.InvariantCulture)){
+            if(!string.Equals(e.Key, "Escape", StringComparison.Ordinal) && !string.Equals(e.Key, "Enter", StringComparison.Ordinal) && !string.Equals(e.Key, "Tab", StringComparison.Ordinal)){
                 SDKDropDown();
             }
 
             //if (e.Key.Equals("Enter"))
-            if(string.Equals(e.Key, "Enter", StringComparison.InvariantCulture))
+            if(string.Equals(e.Key, "Enter", StringComparison.Ordinal))
             {
                 if (CacheDataObjcts != null && CacheDataObjcts.Count > 0)
                 {
                     SetVal(CacheDataObjcts.First());
                     if(IsMultiple){
-                        LoadData("", null, true);
+                        await LoadData("", null, true);
                     }else{
-                        BlurElement();
+                        await BlurElement();
                     }
                     if(OnChange != null){
                         OnChange();
@@ -318,10 +319,12 @@ namespace Siesa.SDK.Frontend.Components.Fields
             }
         }
 
-        private async Task BlurElement(){
-            var elementInstance = await JsRuntime.InvokeAsync<IJSObjectReference>("$", $"#{idInput}");
-            await elementInstance.InvokeVoidAsync("dropdown","hide");
+        private async Task BlurElement()
+        {
+            var elementInstance = await JsRuntime.InvokeAsync<IJSObjectReference>("$", $"#{idInput}").ConfigureAwait(true);
+            await elementInstance.InvokeVoidAsync("dropdown", "hide").ConfigureAwait(true);
         }
+
 
         private string GetParamValue(string field, object item){
             var param = "";
@@ -439,7 +442,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 }
             }
 
-            filters = await AddParameterFilter(filters);
+            filters = await AddParameterFilter(filters).ConfigureAwait(true);
 
             if(IsMultiple && ItemsSelected != null && ItemsSelected.Count > 0){
                 foreach (dynamic item in ItemsSelected)
@@ -481,18 +484,20 @@ namespace Siesa.SDK.Frontend.Components.Fields
         }
 
         private string AddItemsSelectedFilters(string filters){
+            StringBuilder stringBuilder = new StringBuilder(filters);
             foreach (dynamic item in ItemsSelected)
             {
-                if (!string.IsNullOrEmpty(filters))
+                if (stringBuilder.Length > 0)
                 {
-                    filters += " && ";
+                    stringBuilder.Append(" && ");
                 }
 
-                filters += $"(Rowid != {item.Rowid})";
+                stringBuilder.Append($"(Rowid != {item.Rowid})");
             }
 
-            return filters;
+            return stringBuilder.ToString();
         }
+
 
         private async Task CheckPermissions()
         {
