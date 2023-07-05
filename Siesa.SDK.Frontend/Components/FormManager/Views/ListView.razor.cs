@@ -1370,9 +1370,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                                 if(field.Hidden != !result)
                                                 {
                                                     field.Hidden = !result;
-                                                    if(!result){
-                                                        FieldsHiddenList.Add(field.Name.Replace("BaseObj.", ""));
-                                                    }
                                                     shouldUpdate = true;
                                                 }
                                                 break;
@@ -1380,9 +1377,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                                 if(field.Hidden != result)
                                                 {
                                                     field.Hidden = result;
-                                                    if(result){
-                                                        FieldsHiddenList.Add(field.Name.Replace("BaseObj.", ""));
-                                                    }
                                                     shouldUpdate = true;
                                                 }
                                                 break;
@@ -1393,6 +1387,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                     catch (System.Exception ex)
                                     {
                                         Console.WriteLine($"Error: {ex.Message}");
+                                    }
+                                    if(field.Hidden){
+                                        FieldsHiddenList.Add(field.Name.Replace("BaseObj.", "", StringComparison.InvariantCultureIgnoreCase));
                                     }
                                 }
                                 if(shouldUpdate)
