@@ -161,7 +161,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public List<FieldOptions> FieldsHidden { get; set; } = new List<FieldOptions>();
 
         public List<FieldOptions> SavedHiddenFields { get; set; } = new List<FieldOptions>();
-
+        public List<string> FieldsHiddenList { get; set; } = new List<string>();
         public string BLEntityName { get; set; }
 
         public string LastFilter { get; set; }
@@ -1291,6 +1291,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private void hideCustomColumn()
         {
+            FieldsHiddenList = new List<string>();
             var useRoslyn = false;
             if(useRoslyn)
             {
@@ -1369,6 +1370,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                                 if(field.Hidden != !result)
                                                 {
                                                     field.Hidden = !result;
+                                                    if(!result){
+                                                        FieldsHiddenList.Add(field.Name.Replace("BaseObj.", ""));
+                                                    }
                                                     shouldUpdate = true;
                                                 }
                                                 break;
@@ -1376,6 +1380,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                                 if(field.Hidden != result)
                                                 {
                                                     field.Hidden = result;
+                                                    if(result){
+                                                        FieldsHiddenList.Add(field.Name.Replace("BaseObj.", ""));
+                                                    }
                                                     shouldUpdate = true;
                                                 }
                                                 break;
