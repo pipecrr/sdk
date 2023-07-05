@@ -295,13 +295,12 @@ namespace Siesa.SDK.Frontend.Components.Fields
             if(e == null || e.Key == null){
                 return;
             }
-            
-            if (!e.Key.Equals("Escape") && !e.Key.Equals("Enter") && !e.Key.Equals("Tab"))
-            {
+            if(!string.Equals(e.Key, "Escape", StringComparison.InvariantCulture) && !string.Equals(e.Key, "Enter", StringComparison.InvariantCulture) && !string.Equals(e.Key, "Tab", StringComparison.InvariantCulture)){
                 SDKDropDown();
             }
 
-            if (e.Key.Equals("Enter"))
+            //if (e.Key.Equals("Enter"))
+            if(string.Equals(e.Key, "Enter", StringComparison.InvariantCulture))
             {
                 if (CacheDataObjcts != null && CacheDataObjcts.Count > 0)
                 {
@@ -396,14 +395,10 @@ namespace Siesa.SDK.Frontend.Components.Fields
         private async Task<string> GetFilters()
         {
             var filters = "";
-            if (BaseObj != null && RelBusinessObj != null && RelBusinessObj.BaseObj != null && RelBusinessObj.BaseObj.GetType() == BaseObj.GetType())
-            {
-                var baseObjRowidProperty = BaseObj.GetType().GetProperty("Rowid");
-                if(baseObjRowidProperty != null && baseObjRowidProperty.GetValue(BaseObj) != null &&baseObjRowidProperty.GetValue(BaseObj) != 0 )
-                {
-                    filters = $"(Rowid != {BaseObj.Rowid})";
-                }
+            if (ShouldExcludeBaseObject()){
+                filters = $"(Rowid != {BaseObj.Rowid})";
             }
+
             foreach (var item in RelatedFilters)
             {
                 var value = item.Value;
@@ -444,28 +439,56 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 }
             }
 
-            if(Filters?.Count > 0){
-                string? paramFilter = "";
-                paramFilter = await FormUtils.GenerateFilters(Filters, ParentBusinessObj);
-                if(!string.IsNullOrEmpty(paramFilter)){
-                    if (!string.IsNullOrEmpty(filters))
-                    {
-                        filters += " && ";
-                    }else{
-                        filters += paramFilter;
-                    }
-                }
-            }
+            filters = await AddParameterFilter(filters);
 
             if(IsMultiple && ItemsSelected != null && ItemsSelected.Count > 0){
                 foreach (dynamic item in ItemsSelected)
                 {
-                    if (!string.IsNullOrEmpty(filters))
-                    {
-                        filters += " && ";
-                    }
-                    filters += $"(Rowid != {item.Rowid})";
+                    filters = AddItemsSelectedFilters(filters);
                 }
+            }
+
+            return filters;
+        }
+
+        private bool ShouldExcludeBaseObject(){
+            return BaseObj != null &&
+                RelBusinessObj != null &&
+                RelBusinessObj.BaseObj != null &&
+                RelBusinessObj.BaseObj.GetType() == BaseObj.GetType() &&
+                GetBaseObjRowId() != 0;
+        }
+
+        private int GetBaseObjRowId(){
+            var baseObjRowidProperty = BaseObj.GetType().GetProperty("Rowid");
+            return (int)(baseObjRowidProperty?.GetValue(BaseObj) ?? 0);
+        }
+
+        private async Task<string> AddParameterFilter(string filters){
+            if (Filters?.Count > 0)
+            {
+                string paramFilter = await FormUtils.GenerateFilters(Filters, ParentBusinessObj);
+
+                if (!string.IsNullOrEmpty(paramFilter) && !string.IsNullOrEmpty(filters))
+                {
+                    filters += " && ";
+                }
+
+                filters += paramFilter;
+            }
+
+            return filters;
+        }
+
+        private string AddItemsSelectedFilters(string filters){
+            foreach (dynamic item in ItemsSelected)
+            {
+                if (!string.IsNullOrEmpty(filters))
+                {
+                    filters += " && ";
+                }
+
+                filters += $"(Rowid != {item.Rowid})";
             }
 
             return filters;
