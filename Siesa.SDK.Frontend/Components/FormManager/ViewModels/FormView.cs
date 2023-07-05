@@ -20,6 +20,7 @@ using Siesa.SDK.Frontend.Components.FormManager.Fields;
 using Siesa.SDK.Frontend.Extension;
 using Microsoft.Extensions.Configuration;
 using Siesa.Global.Enums;
+using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 {
@@ -48,6 +49,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         protected FormViewModel FormViewModel { get; set; } = new FormViewModel();
 
         public List<Panel> Panels {get { return FormViewModel.Panels; } }
+        public List<Panel> PanelsCollapsable = new List<Panel>();
+        public bool ShowAditionalFields { get; set; }
 
         public Boolean Loading = true;
         public bool Saving = false;
@@ -90,6 +93,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         public bool ContainAttachments = false;
 
+        protected bool loadDefaultViewdef = true;
+
         [Inject]
         public IBackendRouterService BackendRouterService { get; set; }
         [Inject] 
@@ -102,7 +107,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         protected bool CanEdit;
         protected bool CanDelete;
         protected bool CanDetail;
-        protected bool CanList;
+        protected bool CanAcess;
         public bool FormHasErrors = false;
 
         public Dictionary<string, FileField> FileFields = new Dictionary<string, FileField>();
@@ -112,13 +117,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public bool HasExtraButtons { get; set; }
         public List<Button> ExtraButtons { get; set; }
         public Button SaveButton { get; set; }
+        public bool isOnePanel { get; set; }
         protected virtual async Task CheckPermissions()
         {
             if (FeaturePermissionService != null && !String.IsNullOrEmpty(BusinessName))
             {
                 try
                 {
-                    CanList = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
+                    CanAcess = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
                     CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Create, AuthenticationService);
                     CanEdit = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Edit, AuthenticationService);
                     CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Delete, AuthenticationService);
@@ -158,7 +164,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             {
                 data = BackendRouterService.GetViewdef(businessName, DefaultViewdefName);
             }
-            if(String.IsNullOrEmpty(data)){
+            if(String.IsNullOrEmpty(data) && loadDefaultViewdef){
                 _viewdefName = "default";
                 data = BackendRouterService.GetViewdef(businessName, _viewdefName);
             }
@@ -233,6 +239,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     var panels = JsonConvert.DeserializeObject<List<Panel>>(metadata);
                     FormViewModel.Panels = panels;
                 }
+                if(BusinessObj.GetType().GetProperty("DynamicEntities") != null && BusinessObj.DynamicEntities != null && BusinessObj.DynamicEntities.Count > 0){
+                    ShowAditionalFields = true;
+                    AddPanels(PanelsCollapsable);
+                }
             }
             try
             {
@@ -262,7 +272,41 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             BusinessObj.ParentComponent = this;
             StateHasChanged();
         }
-
+        private void AddPanels(List<Panel> panels){
+            
+            foreach(var item in BusinessObj.DynamicEntities){
+                var index = BusinessObj.DynamicEntities.IndexOf(item);
+                var panel = new Panel();
+                panel.ResourceTag = item.Name;
+                var fields = new List<FieldOptions>();
+                int rowidGroup = item.Rowid;
+                panel.RowidGroupDynamicEntity = rowidGroup;
+                foreach(var property in item.DynamicObject.GetType().GetProperties()){
+                    var field = new FieldOptions();
+                    var name = $"DynamicEntities[{index}].DynamicObject.{property.Name}";
+                    field.Name = name;
+                    field.ResourceTag = property.Name;
+                    Dictionary<string, int> colSize = new Dictionary<string, int>();
+                    colSize.Add("MD", 4);
+                    colSize.Add("SM", 4);
+                    colSize.Add("XS", 4);
+                    field.ColSize = colSize;
+                    fields.Add(field);
+                }                
+                panel.Fields = fields;
+                panels.Add(panel);
+            }
+        }
+         public async Task<bool> DeleteGroup(int rowid)
+        {
+            var response = await BusinessObj.Backend.Call("DeleteGroupDynamicEntity", rowid);
+            if(response.Success){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
         private async Task EvaluateButtonAttributes()
         {
             if(FormViewModel.Buttons != null ){
@@ -501,8 +545,13 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
                 }
             }
             if(DataAttatchmentDetail != null){
-                var result = await BusinessObj.SaveAttachmentDetail(DataAttatchmentDetail, rowid);
-                return result;
+                try{
+                    var result = await BusinessObj.SaveAttachmentDetail(DataAttatchmentDetail, rowid);
+                    return result;
+                }catch(Exception ex){
+                    SavingFile = false;
+                    return rowid;
+                }
             }
             return 0;
         }

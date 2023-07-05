@@ -13,6 +13,7 @@ namespace Siesa.SDK.Shared.Services
         public bool CheckUserActionPermissions(string businessName, List<int> permissions, IAuthenticationService authenticationService);
         public Task<bool> CheckUserActionPermission(string businessName, string actionName, IAuthenticationService authenticationService);
         public Task<bool> CheckUserActionPermissions(string businessName, List<string> actions, IAuthenticationService authenticationService);
+        public Task<int> GetActionRowid(string actionName);
     }
 
     public class FeaturePermissionService : IFeaturePermissionService
@@ -50,7 +51,7 @@ namespace Siesa.SDK.Shared.Services
             }
         }
 
-        private async Task<int> GetActionRowid(string actionName)
+        public async Task<int> GetActionRowid(string actionName)
         {
             if(loadingAction){
                 while(loadingAction){

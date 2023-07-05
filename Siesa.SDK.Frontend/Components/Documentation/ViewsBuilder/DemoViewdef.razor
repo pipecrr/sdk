@@ -143,7 +143,7 @@
                         
                 <p>El listar permite enviar acciones personalizadas se agregan a nivel general en el list.json, en el BL el metodo "CustomAction" recibe como parametro un objeto del tipo del registro</p>
                         <SDKTextField CssClass="text-area-demoviewdef" Value="@CustomActions"/>
-                <p>Para deshabilitar u ocultar un CustomActions es posible enviar la propiedad disabled o hidden en el CustomAction, adicionalemente se puede habilitar o deshabilitar dependiendo una condicion añadiendo en los CustomAtributtes las propiedades "sdk-disabled" y "sdk-hide" para deshabilitar y/o ocultar los botones, ambos metodos reciben como parametro el objeto seleccionado y debe retornar un bool que indica si habilita o no el boton.</p>
+                <p>Para deshabilitar u ocultar un CustomActions es posible enviar la propiedad disabled o hidden en el CustomAction, adicionalemente se puede habilitar o deshabilitar dependiendo una condicion añadiendo en los CustomAtributtes las propiedades "sdk-disabled", "sdk-show" y "sdk-hide" para deshabilitar y/o ocultar los botones, ambos metodos reciben como parametro el objeto seleccionado y debe retornar un bool que indica si habilita o no el boton.</p>
                         <SDKTextField CssClass="text-area-demoviewdef" Value="@CustomActionsDisabled"/>
 
                 <p>Utilizando la propiedad CustomAtributtes ahora podemos definir para un campo de tipo Booleano, 
@@ -157,8 +157,7 @@
                     Esto tambien aplica si queremos traer campos relacionados, como se ve en el ejemplo anterior,
                     se envia el campo "BaseObj.City.State" indicando que quiero traer en este caso la ciudad y el departamente de un barrio
                     y "BaseObj.City.State.Country", indicando que quiero ahora consultar tambien el Pais.
-
-                    Por ahora solo la <strong>Listview Flex</strong> soporta propiedades especificas del objeto relacionado por ejemplo:
+                    Ejemplo:
                     <ul>
                         <li>BaseObj.City.State.Name</li>
                         <li>BaseObj.City.State.Country.Rowid</li>

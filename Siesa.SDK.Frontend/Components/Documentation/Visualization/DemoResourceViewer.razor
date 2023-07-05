@@ -1,0 +1,50 @@
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Entities
+@using Siesa.SDK.Frontend.Services
+@using Siesa.SDK.Frontend.Components.Documentation
+@using Siesa.SDK.Frontend.Components.Layout
+
+@inject SDKNotificationService NotificationService
+
+@layout EmptyLayout
+
+<div class="container-fluid">
+<div class="container-fluid">
+        <h2>ResourceViewer Component</h2> 
+        <p>Demonstration and configuration of ResourceViewer component</p> 
+</div>
+<div class="row px-3">
+        <div class="col-12 p-3">
+            <SDKCard>
+                <h3>Demo ResourceViewer</h3>
+                <p>Este componente del SDK nos permite traducir Recursos del sistema directamente en la estructura HTML de una vista razor.</p>
+                <p>Este Componente recibe 4 parametros:</p>
+                <ul>
+                    <li>ResourceTag: String que representa el Tag del recurso que se quiere traducir</li>
+                    <li>RowidCulture: Int que representa la cultura en la que se quiere traducir el recurso(Este es opcional, ya que si se utiliza en vistas donde tengamos un usuario logueado, sacara la cultura de este mismo, en el caso del Login por ejemplo, si es necesario enviarle la cultura ya que aun no hay usuario logueado)</li>
+                    <li>RowidResource: Int que representa el rowid del recurso que se quiere traducir</li>
+                    <li>FormatString:  object[] que representa los parametros para aplicar FormatString al mensaje</li>
+                </ul>
+
+                <p>Veamos ejemplos de como usar el componente:</p>
+                
+                <ul>
+                    <li><ResourceViewer ResourceTag="BLUser.Login" RowidCulture="1" /></li>
+                    <li><ResourceViewer RowidResource="5423" /></li>
+                </ul>
+               
+                
+
+        
+            </SDKCard>
+        </div>
+    </div>
+</div>
+
+@code{
+
+
+
+}

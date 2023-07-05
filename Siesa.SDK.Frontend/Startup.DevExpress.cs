@@ -28,16 +28,12 @@ using GrapeCity.ActiveReports.Aspnetcore.Designer.Services;
 using Siesa.SDK.Frontend.Report.Services;
 using Microsoft.AspNetCore.ResponseCompression;
 using System.Linq;
+using Microsoft.Extensions.Hosting;
 
-namespace Siesa.SDK.Frontend {
+namespace Siesa.SDK.Frontend
+{
     public static class SiesaSecurityExtensions
     {
-		// private static readonly DirectoryInfo TemplatesRootDirectory =
-		// 	new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), "templates" + Path.DirectorySeparatorChar));
-
-		
-
-
         public static void AddSiesaSDKFrontend(this IServiceCollection services, IConfiguration serviceConfiguration)
         {
             services.AddControllers().PartManager.ApplicationParts.Add(new AssemblyPart(typeof(SiesaSecurityExtensions).Assembly));
@@ -57,58 +53,48 @@ namespace Siesa.SDK.Frontend {
             services.AddScoped<SaveController>(sp => ActivatorUtilities.CreateInstance<SaveController>(sp));
             services.AddScoped<NotificationService, SDKNotificationService>(sp => ActivatorUtilities.CreateInstance<SDKNotificationService>(sp));
             services.AddScoped<SDKNotificationService>(sp => (SDKNotificationService)sp.GetRequiredService<NotificationService>());
-            
-
             services.AddScoped<ISDKJWT, Siesa.SDK.Frontend.Criptography.SDKJWT>();
             services.AddScoped<SDKDialogService>();
             services.AddScoped<SDKGlobalLoaderService>();
             services.AddScoped<MenuService>();
-            services.AddSignalR(e => {
+            services.AddSignalR(e =>
+            {
                 e.MaximumReceiveMessageSize = 102400000;
             });
             services.AddHttpContextAccessor();
 
-
             services.AddReporting();
-            services.Configure<GzipCompressionProviderOptions>(options => {
-                options.Level = System.IO.Compression.CompressionLevel.Optimal;
-            });
-            services.AddResponseCompression(options =>
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            if (environment != Environments.Development)
             {
-                options.EnableForHttps = true;
-                options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[] { "application/javascript"});
-                options.Providers.Add<GzipCompressionProvider>();
-            });
-			services.AddDesigner();
-			services.AddSingleton<ITemplatesService>(new SDKSystemTemplates());
-			services.AddRazorPages().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
-			services.AddServerSideBlazor();
-           /* services.AddBlazorDB(options =>
-            {
-                options.Name = "SiesaSDK";
-                options.Version = 1;
-                options.StoreSchemas = new List<StoreSchema>() {
-                     new StoreSchema()
-                    {
-                        Name = "Person",
-                        PrimaryKey = "id",
-                        PrimaryKeyAuto = true,
-                        UniqueIndexes = new List<string> { "guid" },
-                        Indexes = new List<string> { "name" }
-                    }
-                };
-            });*/
+                services.Configure<GzipCompressionProviderOptions>(options =>
+                {
+                    options.Level = System.IO.Compression.CompressionLevel.Optimal;
+                });
+                services.AddResponseCompression(options =>
+                {
+                    options.EnableForHttps = true;
+                    options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[] { "application/javascript" });
+                    options.Providers.Add<GzipCompressionProvider>();
+                });
+            }
+            services.AddDesigner();
+            services.AddSingleton<ITemplatesService>(new SDKSystemTemplates());
+            services.AddRazorPages().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
+            services.AddServerSideBlazor();
 
-            services.AddScoped<IIndexedDbFactory,   IndexedDbFactory>();
+            services.AddScoped<IIndexedDbFactory, IndexedDbFactory>();
 
             SDKApp.AddAssembly(typeof(LayoutService).Assembly);
         }
 
         public static IApplicationBuilder UseSDK(this IApplicationBuilder app)
         {
-
-            //Habilita la compresion gZip
-            app.UseResponseCompression();
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            if (environment != Environments.Development)
+            {
+                app.UseResponseCompression();
+            }
             app.UseHttpsRedirection();
 
 
@@ -117,36 +103,33 @@ namespace Siesa.SDK.Frontend {
             var serviceScope = app.ApplicationServices.CreateScope().ServiceProvider;
 
             var resourcesSaveService = serviceScope.GetRequiredService<SaveController>();
-            app.UseReporting(config => {
-                config.UseCustomStore(id => {
-                    //SaveController _saveController = ActivatorUtilities.CreateInstance<SaveController>(serviceScope.ServiceProvider);
+            app.UseReporting(config =>
+            {
+                config.UseCustomStore(id =>
+                {
                     return resourcesSaveService.GetReport(id);
                 });
-                GrapeCity.ActiveReports.Web.Viewer.DataProviderInfo[] providers = new []{
+                GrapeCity.ActiveReports.Web.Viewer.DataProviderInfo[] providers = new[]{
                     new GrapeCity.ActiveReports.Web.Viewer.DataProviderInfo("Siesa.SDK.Business", typeof(SDKReportProvider).AssemblyQualifiedName),
                 };
                 config.UseDataProviders(providers);
 
             });
 
-            app.UseDesigner(config => {
-                //SaveController _saveController = ActivatorUtilities.CreateInstance<SaveController>(serviceScope.ServiceProvider);
-                //config.EnabledDataApi = false;
+            app.UseDesigner(config =>
+            {
                 config.UseCustomStore(resourcesSaveService);
-                DataProviderInfo[] providers = new []{
+                DataProviderInfo[] providers = new[]{
                     new DataProviderInfo("Siesa.SDK.Business", typeof(SDKReportProvider).AssemblyQualifiedName),
                 };
-                
+
                 config.UseDataProviders(providers);
-                // config
-
-
             });
 
             app.UseRouting();
-            
+
             app.UseEndpoints(endpoints =>
-            {   
+            {
                 endpoints.MapControllers();
                 endpoints.MapControllerRoute(
                     name: "default",
@@ -154,7 +137,7 @@ namespace Siesa.SDK.Frontend {
                     defaults: new { controller = "Api", action = "Index" });
             });
 
-            
+
             return app;
         }
 

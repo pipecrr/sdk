@@ -72,6 +72,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter]
         public bool FromEntityField {get; set;} = false;
 
+        [Parameter]
+        public string BLNameParentAttatchment { get; set; }
+
         [Inject]
         public ILocalStorageService localStorageService { get; set; }
 
@@ -168,11 +171,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private List<string> _extraFields = new List<string>();
 
+
+
         private bool CanCreate;
         private bool CanEdit;
         private bool CanDelete;
         private bool CanDetail;
-        private bool CanList;
+        private bool CanAccess;
+        private bool CanImport;
         private string defaultStyleSearchForm = "search_back position-relative";
         private string StyleSearchForm { get; set; } = "search_back position-relative";
         private Radzen.DataGridSelectionMode SelectionMode { get; set; } = Radzen.DataGridSelectionMode.Single;
@@ -431,19 +437,36 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         {
             if (FeaturePermissionService != null && !string.IsNullOrEmpty(BusinessName))
             {
-                try
-                {
-                    CanList = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
-                    CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Create, AuthenticationService);
-                    CanEdit = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Edit, AuthenticationService);
-                    CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Delete, AuthenticationService);
-                    CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
-                }
-                catch (System.Exception)
-                {
-                }
+               
+               if(IsSubpanel && BusinessName.Equals("BLAttachmentDetail"))
+               {
+                    try
+                    {
+                        CanAccess = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.AccessAttachment, AuthenticationService);
+                        CanCreate = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.UploadAttachment, AuthenticationService);
+                        CanDelete = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.DeleteAttachment, AuthenticationService);
+                        CanDetail = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.DownloadAttachment, AuthenticationService);
+                    }
+                    catch (System.Exception)
+                    {
+                    }
+               }else
+               {
+                    try
+                    {
+                        CanAccess = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Access, AuthenticationService);
+                        CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Create, AuthenticationService);
+                        CanEdit = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Edit, AuthenticationService);
+                        CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Delete, AuthenticationService);
+                        CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
+                        CanImport = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Import, AuthenticationService);
+                    }
+                    catch (System.Exception)
+                    {
+                    }
+               }
 
-                if (!CanList && !FromEntityField)
+                if (!CanAccess && !FromEntityField)
                 {
                     ErrorMsg = "Custom.Generic.Unauthorized";
                     ErrorList.Add("Custom.Generic.Unauthorized");
@@ -920,7 +943,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if (OnClickDelete != null){
                 OnClickDelete(id.ToString(), object_string);
             }
-            if (UseFlex)
+            if (UseFlex && !IsSubpanel)
             {
                 var confirm = await ConfirmDelete();
                 SDKGlobalLoaderService.Show();
@@ -958,8 +981,21 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if(string.IsNullOrEmpty(item)){
                 return;
             }
-            IList<object> objects = JsonConvert.DeserializeObject<IList<object>>(item);
-            OnSelectionChanged(objects);
+            List<dynamic> objects = JsonConvert.DeserializeObject<List<dynamic>>(item);
+            IList<dynamic> list = new List<dynamic>();
+            foreach (var dynamicObj in objects)
+            {
+                dynamic obj = Activator.CreateInstance(BusinessObj.BaseObj.GetType());
+                foreach(var prop in dynamicObj){
+                    var propertyName = prop.Name;
+                    if(propertyName.Equals("rowid")){
+                        propertyName = "Rowid";
+                    }
+                    await SetValueObj(obj, propertyName, prop.Value);
+                }
+                list.Add(obj);
+            }
+            OnSelectionChanged(list);
         }
 
         [JSInvokable]
@@ -986,16 +1022,21 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public async Task<bool> HideActionFromReact(string dataStr, Int64 index){
             Button button = CustomActions[(int)index];
             bool res = false;
+            bool deny = false;
             if(button != null){
+                var data = JsonConvert.DeserializeObject<dynamic>(dataStr);
                 dynamic hideCondition = null;
-                if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-hide")){
-                    var sdkHide = button.CustomAttributes["sdk-hide"];
-                    if(sdkHide != null){
-                        hideCondition = sdkHide;
-                    }
+                if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-hide") && button.CustomAttributes["sdk-hide"] != null){
+                    hideCondition = button.CustomAttributes["sdk-hide"];
+                }else if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-show") && button.CustomAttributes["sdk-show"] != null){
+                    hideCondition = button.CustomAttributes["sdk-show"];
+                    deny = true;
                 }
                 if(hideCondition != null){
                     res = await EvaluateCondition(data, hideCondition);
+                    if(deny){
+                        res = !res;
+                    }
                 }
             }
             return res;

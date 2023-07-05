@@ -25,6 +25,9 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.Extensions.DependencyInjection;
 using Siesa.Global.Enums;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.Collections;
 
 namespace Siesa.SDK.Business
 {
@@ -45,7 +48,9 @@ namespace Siesa.SDK.Business
         public List<Panel> Panels = new List<Panel>();
         [JsonIgnore]
         public List<FieldOptions> ListViewFields = new List<FieldOptions>();
-        public BaseSDK<int> BaseObj { get; set; }
+        public BaseSDK<int> BaseObj { get; set; }        
+        public List<dynamic> DynamicEntities { get; set; }        
+        public Type DynamicEntityType { get; set; }
 
         [JsonIgnore]
         protected IAuthenticationService AuthenticationService { get; set; }
@@ -134,7 +139,7 @@ namespace Siesa.SDK.Business
         public List<FieldOptions> ListViewFields = new List<FieldOptions>();
         [ValidateComplexType]
         public T BaseObj { get; set; }
-
+        public List<dynamic> DynamicEntities { get; set; }        
         public List<string> RelFieldsToSave { get; set; } = new List<string>();
 
         public async Task Refresh(bool Reload = false) {
@@ -231,8 +236,199 @@ namespace Siesa.SDK.Business
         public async virtual Task InitializeBusiness(Int64 rowid, List<string> extraFields = null)
         {
             BaseObj = await GetAsync(rowid, extraFields );
+            await InstanceDynamicEntities(BusinessName, rowid);
         }
 
+        public async Task InstanceDynamicEntities(string businessName, Int64 rowid = 0)
+        {
+            var requestGroups = await Backend.Call("GetGroupsDynamicEntity", BusinessName);
+            if(requestGroups.Success && requestGroups.Data != null && requestGroups.Data.Count > 0){
+                DynamicEntities = await CreateDynamicEntities(requestGroups.Data, rowid);
+                if(rowid > 0){
+                    await GetDynamicEmntitiesData(rowid);
+                }
+            }
+        }
+
+        private async Task GetDynamicEmntitiesData(Int64 rowid)
+        {
+            var request = await Backend.Call("GetDynamicEntitiesData", rowid);
+            if(request.Success && request.Data != null){
+                SetValueDynamicEntity(request.Data);
+            }
+        }
+
+        private void SetValueDynamicEntity(dynamic dynamicList)
+        {
+            foreach (var item in (IEnumerable<dynamic>)dynamicList)
+            {
+                var rowidGroup = Convert.ChangeType(item.EntityColumn.RowidDynamicEntity, typeof(Int64));
+                var entity = DynamicEntities.FirstOrDefault(x => x.Rowid == rowidGroup);
+                var indexEntity = DynamicEntities.IndexOf(entity);
+                var columnName = item.EntityColumn.Tag.ToString();
+                var type = Convert.ChangeType(item.EntityColumn.DataType, typeof(enumDynamicEntityDataType));
+                dynamic DynamicObject = entity.DynamicObject;
+                switch (type)
+                {
+                    case enumDynamicEntityDataType.Text:
+                        var valueText = item.TextData.ToString();
+                        DynamicObject.GetType().GetProperty(columnName).SetValue(DynamicObject, valueText);
+                        break;
+                    case enumDynamicEntityDataType.Number:
+                        var valueNumeric = Convert.ChangeType(item.NumericData, typeof(decimal));
+                        DynamicObject.GetType().GetProperty(columnName).SetValue(DynamicObject, valueNumeric);
+                        break;
+                    case enumDynamicEntityDataType.Date:
+                        var valueDate = Convert.ChangeType(item.DateData, typeof(DateTime));
+                        DynamicObject.GetType().GetProperty(columnName).SetValue(DynamicObject, valueDate);
+                        break;
+                    default:
+                        break;
+                }
+                var dynamicEntityFieldsType = typeof(DynamicEntityFieldsDTO<>).MakeGenericType(this.BaseObj.GetRowidType());
+                var dictionaryType = typeof(Dictionary<,>).MakeGenericType(typeof(string), dynamicEntityFieldsType);
+                dynamic fieldValue = DynamicEntities[indexEntity].Fields;
+                if(fieldValue.ContainsKey(columnName)){
+                    dynamic field = fieldValue[columnName];
+                    field.Rowid = Convert.ChangeType(item.Rowid, field.Rowid.GetType());
+                    field.RowVersion = Convert.ChangeType(item.RowVersion, typeof(byte[]));
+                    field.CreationDate = Convert.ChangeType(item.CreationDate, field.CreationDate.GetType());
+                    if(item.Source.Value == null){
+                        field.Source = null;
+                    }else{
+                        field.Source = Convert.ChangeType(item.Source, typeof(string));
+                    }
+                    field.RowidUserCreates = Convert.ChangeType(item.RowidUserCreates, field.RowidUserCreates.GetType());
+                    field.RowidUserLastUpdate = Convert.ChangeType(item.RowidUserLastUpdate, field.RowidUserLastUpdate.GetType());
+                    field.RowidSession = Convert.ChangeType(item.RowidSession, typeof(Int32?));
+                    field.RowidRecord = Convert.ChangeType(item.RowidRecord, field.RowidRecord.GetType());
+                    field.RowData = Convert.ChangeType(item.RowData, field.RowData.GetType());
+
+                    DynamicEntities[indexEntity].Fields[columnName] = field;
+                };
+                DynamicEntities[indexEntity].DynamicObject = DynamicObject;
+            }
+        }
+
+        private async Task<List<dynamic>> CreateDynamicEntities(dynamic data, Int64 rowid = 0)
+        {   
+            var nameSpaceEntity = this.BaseObj.GetType().Namespace;
+            var nameDynamicEntity = "D"+this.BaseObj.GetType().Name.Substring(1);
+            var dynamicEntityType = Utilities.SearchType(nameSpaceEntity + "." + nameDynamicEntity, true);
+            
+            List<dynamic> result = new List<dynamic>();
+            foreach(var item in data){
+                //DynamicEntityDTO entity = new DynamicEntityDTO();
+                var typeEntity = typeof(DynamicEntityDTO<>).MakeGenericType(this.BaseObj.GetRowidType());
+                dynamic entity = Activator.CreateInstance(typeEntity);
+                entity.Rowid = item.Rowid;
+                entity.Name = item.Tag;
+                entity.Id = item.Id;
+                var requestColumns = await Backend.Call("GetColumnsDynamicEntity", item.Rowid);
+                if(requestColumns.Success && requestColumns.Data != null){
+                    var dynamicEntityFieldsType = typeof(DynamicEntityFieldsDTO<>).MakeGenericType(this.BaseObj.GetRowidType());
+                    var dictionaryType = typeof(Dictionary<,>).MakeGenericType(typeof(string), dynamicEntityFieldsType);
+
+                    dynamic fields = Activator.CreateInstance(dictionaryType);
+                    Type baseObjType = CreateDynamicObject(item.Id, requestColumns.Data, fields, dynamicEntityFieldsType, rowid);
+                    var DynamicBaseObj = Activator.CreateInstance(baseObjType);
+                    entity.DynamicObject = DynamicBaseObj;
+                    entity.Fields = fields;
+                }
+                result.Add(entity);
+            }
+
+            return result;
+        }
+
+        private Type CreateDynamicObject(string id, dynamic fields, dynamic fieldsDictionary, Type dynamicEntityFieldsType, Int64 rowidRecord = 0)
+        {
+            // Crea una nueva assembly dinámica.
+            AssemblyName assemblyName = new AssemblyName("DynamicEntityAssembly");
+            AssemblyBuilder assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
+
+            // Crea un nuevo módulo dinámico en la assembly.
+            ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("DynamicEntityModule");
+
+            // Crea un nuevo tipo con propiedades nulas.
+            TypeBuilder typeBuilder = moduleBuilder.DefineType(id, TypeAttributes.Public | TypeAttributes.Class, typeof(object));
+            foreach(var field in fields){
+                
+                Type type = GetTypesColumn(field.DataType);
+                var name = field.Tag;
+                dynamic fieldDic = Activator.CreateInstance(dynamicEntityFieldsType);
+                fieldDic.RowidEntityColumn = field.Rowid;
+                if(rowidRecord > 0){
+                    var rowidType = fieldDic.RowidRecord.GetType();
+                    var rowidRecordConvert = Convert.ChangeType(rowidRecord, rowidType);
+                    fieldDic.RowidRecord = rowidRecordConvert;
+                }else{
+                    fieldDic.RowidRecord = 0;
+                }
+                
+                fieldsDictionary.Add(name, fieldDic);
+
+                //fieldsDictionary.Add(name, field.Rowid);
+                
+                // Crea un campo privado para cada propiedad del tipo original.
+                FieldBuilder fieldBuilder = typeBuilder.DefineField(name, type, FieldAttributes.Public);
+
+                // Crea una propiedad pública 
+                PropertyBuilder propertyBuilder = typeBuilder.DefineProperty(name, PropertyAttributes.None, type, new Type[] { type });
+
+                // Define el método get.
+                MethodBuilder getMethodBuilder = typeBuilder.DefineMethod("get_" + name, MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, type, Type.EmptyTypes);
+
+                // Crea el cuerpo del método.
+                ILGenerator getIL = getMethodBuilder.GetILGenerator();
+                getIL.Emit(OpCodes.Ldarg_0);
+                getIL.Emit(OpCodes.Ldfld, fieldBuilder);
+                getIL.Emit(OpCodes.Ret);
+                propertyBuilder.SetGetMethod(getMethodBuilder);
+
+                // Define el método set.
+                MethodBuilder setMethodBuilder = typeBuilder.DefineMethod("set_" + name, MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, null, new Type[] { type });
+
+                // Crea el cuerpo del método.
+                ILGenerator setIL = setMethodBuilder.GetILGenerator();
+                setIL.Emit(OpCodes.Ldarg_0);
+                setIL.Emit(OpCodes.Ldarg_1);
+                setIL.Emit(OpCodes.Stfld, fieldBuilder);
+                setIL.Emit(OpCodes.Ret);
+                propertyBuilder.SetSetMethod(setMethodBuilder);
+
+                if(/*!field.IsOptional*/false){//TODO: Verificar si es requerido
+                    ConstructorInfo requiredAttributeConstructor = typeof(SDKRequired).GetConstructor(Type.EmptyTypes);
+                    CustomAttributeBuilder requiredAttributeBuilder = new CustomAttributeBuilder(requiredAttributeConstructor, new object[] { });
+                    propertyBuilder.SetCustomAttribute(requiredAttributeBuilder);
+                }
+            }
+
+            // Crea el constructor.
+            ConstructorBuilder constructorBuilder = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, Type.EmptyTypes);
+            ILGenerator constructorIL = constructorBuilder.GetILGenerator();
+            constructorIL.Emit(OpCodes.Ldarg_0);
+            constructorIL.Emit(OpCodes.Call, typeof(object).GetConstructor(Type.EmptyTypes));
+            constructorIL.Emit(OpCodes.Ret);
+
+            Type generetedType = typeBuilder.CreateType();
+
+            return generetedType;
+        }
+
+        private Type GetTypesColumn(enumDynamicEntityDataType dataType)
+        {
+            switch(dataType){
+                case enumDynamicEntityDataType.Text:
+                    return typeof(string);
+                case enumDynamicEntityDataType.Number:
+                    return typeof(Decimal);
+                case enumDynamicEntityDataType.Date:
+                    return typeof(DateTime);
+                default:
+                    return typeof(string);
+            }
+        }
         public async virtual Task GetDuplicateInfo(Int64 rowid)
         {
             BaseObj = await GetAsync(rowid);
@@ -459,9 +655,9 @@ namespace Siesa.SDK.Business
             }
         }
 
-        public async Task<string> DownloadFile(string url)
+        public async Task<string> DownloadFile(string url, string contentType)
         {
-            var result = await Backend.Call("DownloadFile", url);
+            var result = await Backend.Call("DownloadFile", url, contentType);
             return result.Data;
         }
 
@@ -514,7 +710,7 @@ namespace Siesa.SDK.Business
 
         public async Task<int> SaveAttachmentDetail(SDKFileUploadDTO obj, int rowid = 0){
             var BLAttatchmentDetail = GetBackend("BLAttachmentDetail");
-            var result = await BLAttatchmentDetail.Call("SaveAttatchmentDetail", obj, rowid);
+            var result = await BLAttatchmentDetail.Call("SaveAttachmentDetail", obj, rowid);
             if(result.Success){
                 return result.Data;
             }else{

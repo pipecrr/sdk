@@ -18,9 +18,9 @@
         <div class="whcm_toolbar_text d-flex align-items-center">
             @if (ShowBackButton==true && navigationService.CanNavigateBack)
             {
-            <button Value="@ShowBackButton" class="btn btn-sm layout_btn_standar-sm mr-1 mr-sm-3" data-toggle="tooltip"
+            <button Value="@ShowBackButton" class="btn btn-sm layout_btn_standar-sm mr-1 mr-sm-3" data-automation-id="SDKButton_GoBack" data-toggle="tooltip"
                 data-placement="top" title="Atras" @onclick="@OnClick" >
-                <i class="fa-solid fa-chevron-left"></i>
+                <SDKIcon Name="fa-chevron-left"/>
             </button>
             }
             <h3 class="mb-0">@LayoutService.TopBarTitle</h3>
@@ -35,7 +35,7 @@
             {
                 <button id="TopBarExtraButtons" @onclick="@(()=>ShowMoreOptions = !ShowMoreOptions)" class="btn btn-sm layout_btn_standar-sm ml-1"
                     data-toggle="tooltip" data-placement="top" title="Más opciones">
-                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                    <SDKIcon Name="fa-ellipsis-vertical"/>
                 </button>
 
                 <DxDropDown @bind-IsOpen="@ShowMoreOptions" PositionMode="DropDownPositionMode.Bottom" PositionTarget="#TopBarExtraButtons"
@@ -294,15 +294,15 @@
         {
             if(MainLayout.IsMaximized())
             {
-                return "fa-solid fa-compress";
+                return "fa-compress";
             }
             else
             {
-                return "fa-solid fa-expand";
+                return "fa-expand";
             }
         }
 
-        return "fa-solid fa-expand";
+        return "fa-expand";
     }
 
 }

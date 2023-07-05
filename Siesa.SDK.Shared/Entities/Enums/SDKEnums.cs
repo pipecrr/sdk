@@ -51,13 +51,6 @@ namespace Siesa.Global.Enums
 		Consult = 5
 	}
 
-	public enum enumDynamicEntityDataType
-	{
-		Text = 0,
-		Number = 1,
-		Date = 2
-	}
-
 	public enum CustomTypeField
 	{
 		SwitchField = 1,
@@ -81,5 +74,39 @@ namespace Siesa.Global.Enums
 		Edit = 4,
 		List = 5,
 		Delete = 6
+	}
+
+	public enum enumThemeIconStyle
+	{
+		Solid = 0,
+		Regular = 1,
+		Light = 2,
+		Duotone = 3,
+		Thin = 4
+	}
+
+	public enum enumThemeTopbarStyle
+	{
+		OneColor = 0,
+		MultiColor = 1
+	}
+
+	public enum enumSDKIntegrationStatus
+	{
+		Queued = 0,
+		Processing = 1,
+		Success = 2,
+		Failed = 3
+	}
+
+	public enum enumDynamicEntityDataType
+	{
+		Text = 0,
+		Number = 1,
+		Date = 2,
+		Time = 3,
+		Boolean = 4,
+		GenericEntity = 5,
+		InternalEntity = 6
 	}
 }

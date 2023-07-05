@@ -69,6 +69,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 
         public int ColumnWidth { get; set; } = 0;
 
+        public int RowidEntityColumn { get; set; } = 0;
+
         //Para Listas
         public IEnumerable<object> Options { get; set; }
 
@@ -90,6 +92,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         private FieldObj fieldObj = null;
 
         public bool ShowLabel { get; set; } = true;
+        public bool IsGroup { get; set; }
+        public int GroupMinHeight { get; set; }
+        public bool GroupRightBorder { get; set; } 
+        public bool GroupLeftBorder { get; set; }
+        public bool GroupTopBorder { get; set; }
+        public bool GroupBottomBorder { get; set; }
+        public List<FieldOptions> Fields { get; set; } = new List<FieldOptions>();
 
         public FieldObj GetFieldObj(object modelObj, bool force = false)
         {
@@ -116,10 +125,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 string customType = Enum.GetName(typeof(CustomTypeField), EnumValue);
                 CustomType = customType;
             }
-            // else if (CustomType.ToLower().Equals("default"))
-            // {
-            //     CustomType = string.Empty;
-            // }
         }
 
         private FieldObj InitField(object modelObj)
@@ -127,7 +132,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             FieldObj field = new FieldObj();
             Type originalPropertyType = null; //Used for enums
 
-            if (CustomComponent != null && String.IsNullOrEmpty(CustomType))
+            if ((CustomComponent != null && String.IsNullOrEmpty(CustomType)) || IsGroup)
             {
                 if (String.IsNullOrEmpty(ResourceTag))
                 {
@@ -138,7 +143,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 {
                     Name = Guid.NewGuid().ToString();
                 }
-                FieldType = FieldTypes.Custom;
+                FieldType = IsGroup ? FieldTypes.Group : FieldTypes.Custom;
                 field.Name = Name;
                 field.ModelObj = modelObj;
             }

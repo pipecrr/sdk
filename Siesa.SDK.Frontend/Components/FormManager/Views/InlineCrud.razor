@@ -2,20 +2,32 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Components.Visualization
 @using Siesa.SDK.Frontend.Services
+@using Siesa.Global.Enums
 @using System.Reflection
 @inject DialogService DialogService
 @inject IAuthenticationService AuthenticationService
 @inject IBackendRouterService BackendRouterService
 @inject SDKDialogService SDKDialogService
+@inject IFeaturePermissionService FeaturePermissionService
 
 <div class="sdk-inlinecrud-container">
     @if(AllowCreate)
     {
+        @if(!string.IsNullOrEmpty(BLNameParentAttatchment) && BusinessName.Equals("BLAttachmentDetail"))
+        {
+            <SDKButton BusinessName="@BLNameParentAttatchment" ListPermission="@ListPermission" CssClass="mb-1" RenderStyle="SDKButtonRenderStyle.Primary" Click="@(async ()=> { await OpenModalCreate(); })">
+                <ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer 
+                    ResourceTag="@($"{BusinessName}.Singular")" />
+            </SDKButton>
 
-        <SDKButton BusinessName="@BusinessName" ListPermission="@ListPermission" CssClass="mb-1" RenderStyle="SDKButtonRenderStyle.Primary" Click="@(async ()=> { await OpenModalCreate(); })">
-            <ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer 
-                ResourceTag="@($"{BusinessName}.Singular")" />
-        </SDKButton>
+        }else
+        {
+            <SDKButton BusinessName="@BusinessName" ListPermission="@ListPermission" CssClass="mb-1" RenderStyle="SDKButtonRenderStyle.Primary" Click="@(async ()=> { await OpenModalCreate(); })">
+                <ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer 
+                    ResourceTag="@($"{BusinessName}.Singular")" />
+            </SDKButton>
+        }
+
     }
 
     <DynamicListView
@@ -31,8 +43,10 @@
         AllowEdit="@AllowEdit"
         AllowDelete="@AllowDelete"
         AllowDetail="@AllowDetail"
+        ShowSearchForm="@ShowSearchForm"
         OnSelectedRow=@OnSelectedRow
         Data="@Data"
+        BLNameParentAttatchment="@BLNameParentAttatchment"
         />
 </div>
 
@@ -42,7 +56,7 @@
     [Parameter] public string BLNameParentAttatchment { get; set; }
     [Parameter] public string BusinessName { get; set; }
     [Parameter] public Dictionary<string, object> DefaultFieldsCreate { get; set; }
-
+    [Parameter] public bool ShowSearchForm { get; set; } = true;
     [Parameter] public string Filter { get; set; }
     [Parameter] public bool AllowCreate { get; set; } = true;
     [Parameter] public bool AllowEdit { get; set; } = true;
@@ -54,13 +68,32 @@
     [Parameter] public string Width { get; set; } = "600px";
 
     [Parameter] public string Height { get; set; }
-    [Parameter] public bool UseFlex { get; set; } = true;
 
     private bool DefaultTitle = false;
 
-    public List<int> ListPermission { get; set; } = new List<int>(){1};
+    private int _rowidPermission ;
+
+    public List<string> ListPermission { get; set; } = new List<string>();
     
     Guid listview_key = Guid.NewGuid();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await ValidateBussinessName();
+    }
+        
+
+    private async Task ValidateBussinessName()
+    {
+        if (!string.IsNullOrEmpty(BusinessName) && BusinessName.Equals("BLAttachmentDetail"))
+        {
+            ListPermission.Add(enumSDKActions.UploadAttachment);
+        }else
+        {
+            ListPermission.Add(enumSDKActions.Create);
+        }
+    }
 
     public async Task OpenModalCreate()
     {
