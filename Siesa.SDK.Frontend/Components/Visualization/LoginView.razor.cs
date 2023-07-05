@@ -4,6 +4,10 @@ using Siesa.SDK.Shared.DTOS;
 using System.Threading.Tasks;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Frontend.Services;
+using Siesa.SDK.Entities;
+using System.Collections.Generic;
+using System.Linq;
+using Newtonsoft.Json;
 
 namespace Siesa.SDK.Frontend.Components.Visualization;
 
@@ -26,9 +30,12 @@ public partial class LoginView
     private SDKDbConnection SelectedConnection = new ();
     private string error;
     private bool PortalValid;
+    private E00021_Culture selectedCulture { get; set; }
+    private List<E00021_Culture> cultures = new List<E00021_Culture>();
+    string classCulture = "";
     protected override async Task OnInitializedAsync()
     {
-        init_loading = true;        
+        init_loading = true;
         if (AuthenticationService.PortalUser != null)
         {
             NavigationManager.NavigateTo($"/{PortalName}");
@@ -51,6 +58,8 @@ public partial class LoginView
     {
         var BLSDKPortalUser = BackendRouterService.GetSDKBusinessModel("BLSDKPortalUser", AuthenticationService);
         var result = await BLSDKPortalUser.Call("GetDBConnection", RowidConexion);
+        await getCultures();
+        getSelectedCulture();
         if(result.Success && result.Data != null){
             SelectedConnection = result.Data;
             PortalValid = await ValidatePortal();
@@ -99,7 +108,7 @@ public partial class LoginView
         }
     }
     private async void HandleInvalidSubmit(){
-        
+
     }
     private string GetCssLoding()
     {
@@ -108,5 +117,78 @@ public partial class LoginView
             return "login_loading_close";
         }
         return "";
-    }    
+    }
+
+    private void getSelectedCulture()
+    {
+        if (cultures != null)
+        {
+            selectedCulture = cultures.FirstOrDefault(x => x.Rowid == RowidCulture);
+        }
+        else
+        {
+            cultureDefault();
+        }
+        classCulture = $"fi fi-{GetCountryFlagCode(selectedCulture)} fis rounded-circle";
+    }
+    private async Task getCultures()
+    {
+        cultures = await getCulturesAsync();
+    }
+    private async Task<List<E00021_Culture>> getCulturesAsync(){
+        List<E00021_Culture> _cultures = new List<E00021_Culture>();
+                        var cultureBL = BackendRouterService.GetSDKBusinessModel("BLCulture", AuthenticationService);
+        if (cultureBL == null)
+        {
+            throw new Exception("Culture Service not found");
+        }
+        var _Allcultures = await cultureBL.GetData(null, null);
+        if (_Allcultures != null)
+        {
+            _cultures = _Allcultures.Data.Select(x => JsonConvert.DeserializeObject<E00021_Culture>(x)).ToList();
+        }
+        return _cultures;
+    }
+    private void cultureDefault(){
+        selectedCulture = new E00021_Culture()
+            {
+                Rowid = 1,
+                CountryCode = "co",
+                Description = "Colombia",
+                LanguageCode = "Es-co"
+            };
+    }
+    private string GetCountryFlagCode (E00021_Culture culture)
+    {
+        if(!string.IsNullOrEmpty(culture.CountryCode))
+        {
+            return culture.CountryCode;
+        }
+
+        switch (culture.LanguageCode)
+        {
+            case "en":
+                return "us";
+            case "es":
+                return "co";
+            case "fr":
+                return "fr";
+            case "de":
+                return "de";
+            case "it":
+                return "it";
+            case "pt":
+                return "pt";
+            case "ru":
+                return "ru";
+            case "zh":
+                return "cn";
+            case "ja":
+                return "jp";
+            case "ko":
+                return "kr";
+            default:
+                return "co";
+        }
+    }
 }
