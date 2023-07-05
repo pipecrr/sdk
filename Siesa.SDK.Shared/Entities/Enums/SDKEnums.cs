@@ -41,16 +41,6 @@ namespace Siesa.Global.Enums
 		CustomMenu = 4
 	}
 
-	public enum enumGeneralAction
-	{
-		None = 0,
-		Create = 1,
-		Edit = 2,
-		Delete = 3,
-		List = 4,
-		Consult = 5
-	}
-
 	public enum CustomTypeField
 	{
 		SwitchField = 1,
@@ -108,5 +98,15 @@ namespace Siesa.Global.Enums
 		Boolean = 4,
 		GenericEntity = 5,
 		InternalEntity = 6
+	}
+
+	public enum enumGeneralAction
+	{
+		None = 0,
+		Access = 1,
+		Create = 2,
+		Edit = 3,
+		Delete = 4,
+		Detail = 5
 	}
 }
