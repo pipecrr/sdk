@@ -18,7 +18,6 @@ using Siesa.SDK.Frontend.Extension;
 using Siesa.SDK.Entities;
 using Siesa.SDK.Frontend.Components.FormManager;
 using Siesa.Global.Enums;
-using System.Text;
 
 namespace Siesa.SDK.Frontend.Components.Fields
 {
@@ -307,9 +306,9 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 {
                     SetVal(CacheDataObjcts.First());
                     if(IsMultiple){
-                        await LoadData("", null, true);
+                        await LoadData("", null, true).ConfigureAwait(true);
                     }else{
-                        await BlurElement();
+                        await BlurElement().ConfigureAwait(true);
                     }
                     if(OnChange != null){
                         OnChange();
@@ -484,18 +483,17 @@ namespace Siesa.SDK.Frontend.Components.Fields
         }
 
         private string AddItemsSelectedFilters(string filters){
-            StringBuilder stringBuilder = new StringBuilder(filters);
             foreach (dynamic item in ItemsSelected)
             {
-                if (stringBuilder.Length > 0)
+                if (!string.IsNullOrEmpty(filters))
                 {
-                    stringBuilder.Append(" && ");
+                    filters += " && ";
                 }
 
-                stringBuilder.Append($"(Rowid != {item.Rowid})");
+                filters += $"(Rowid != {item.Rowid})";
             }
 
-            return stringBuilder.ToString();
+            return filters;
         }
 
 
