@@ -15,7 +15,7 @@
 
 <div class="@CssClassRelationship col-12 p-0">
 
-    <button class="whcm_data_related_btn" @onclick="() => OnClickRelationshipButton()">
+    <button class="whcm_data_related_btn" @onclick="() => OnClickRelationshipButton()" data-automation-id="Button_RelationShip_Container">
         <p>
             <ResourceViewer ResourceTag="Custom.SDK.RelationshipPanel" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
             <SDKIcon Name="fa-folder-tree"/>
@@ -41,7 +41,8 @@
                 <div class="col-12">
                     @if (_containAttachments && _accessAttachment)
                     {
-                        <button class="nav_btn_standar index_btn_related my-1" @onclick="async ()=>await OpenModal(RelationshipAttatchment)" >
+                        <button class="nav_btn_standar index_btn_related my-1" @onclick="async ()=>await OpenModal(RelationshipAttatchment)" 
+                            data-automation-id="Button_RelationShip_Attachments" >
                             <div class="nav_btn_standar_text">
                                 <ResourceViewer ResourceTag="@RelationshipAttatchment.ResourceTag" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
                             </div>
@@ -49,7 +50,8 @@
                     }
                     @foreach (var Relationship in Relationships)
                     {    
-                        <button class="nav_btn_standar index_btn_related my-1" @onclick="async ()=>await OpenModal(Relationship)" >
+                        <button class="nav_btn_standar index_btn_related my-1" @onclick="async ()=>await OpenModal(Relationship)" 
+                            data-automation-id="Button_@Relationship.ResourceTag">
                             <div class="nav_btn_standar_text">
                                 <ResourceViewer ResourceTag="@Relationship.ResourceTag" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
                             </div>
