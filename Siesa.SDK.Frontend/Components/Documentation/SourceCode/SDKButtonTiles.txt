@@ -15,13 +15,13 @@
         <div class="col-md-6 p-1">
             <SDKCard>
                 
-                <SDKButtonDashBoard Title="@Title_1" BackgroundColor="@BackgroundColor_1" 
+                <SDKButtonDashBoard ResourceTag="@Title_1" BackgroundColor="@BackgroundColor_1" 
                     IconClass="@Icon_1"/>
 
-                <SDKButtonDashBoard Title="@Title_2" BackgroundColor="@BackgroundColor_2" 
+                <SDKButtonDashBoard ResourceTag="@Title_2" BackgroundColor="@BackgroundColor_2" 
                     IconClass="@Icon_2"/>
                 
-                <SDKButtonDashBoard Title="@Title_3" BackgroundColor="@BackgroundColor_3" 
+                <SDKButtonDashBoard ResourceTag="@Title_3" BackgroundColor="@BackgroundColor_3" 
                     IconClass="@Icon_3"/>
             </SDKCard>
         </div>

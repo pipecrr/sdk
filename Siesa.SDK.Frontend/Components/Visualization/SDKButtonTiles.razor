@@ -13,7 +13,7 @@
 @code
 {
     [Parameter] public EventCallback<MouseEventArgs> Click { get; set; }
-    [Parameter] public string Title { get; set; }
+        
     [Parameter] public string BackgroundColor { get; set; }
 
     [Parameter] public string IconClass { get; set; }
@@ -26,7 +26,7 @@
     {
         await base.OnInitializedAsync();
 
-        _titleName = await UtilManager.GetResource(Title);
+        _titleName = await UtilManager.GetResource(ResourceTag);
         
     }
        

@@ -10,7 +10,7 @@
 @inject MenuService MenuService
 
 
-<SDKButtonDashBoard Click="@(async () => await OnClickSuite(Suite))" Title="@Title" BackgroundColor="@Suite.HexColor" 
+<SDKButtonTiles Click="@(async () => await OnClickSuite(Suite))" ResourceTag="@Title" BackgroundColor="@Suite.HexColor" 
     IconClass="@Suite.IconClass"/>
 
 
