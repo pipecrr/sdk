@@ -10,17 +10,13 @@
 @inject MenuService MenuService
 
 
-<button @onclick="@(async () => await OnClickSuite(@Suite))" data-automation-id="@Title"  @onclick:preventDefault class="suite_option" data-toggle="tooltip" data-placement="top" style="background-color: #@Suite.HexColor;" title="@Title" >
-    <div class="h4 m-0">
-        <SDKIcon Name="@Suite.IconClass" ></SDKIcon>
-    </div>
-    <div class="suite_option_base" style="background-color: #@Suite.HexColor;"></div> 
-</button>
+<SDKButtonDashBoard Click="@(async () => await OnClickSuite(Suite))" Title="@Title" BackgroundColor="@Suite.HexColor" 
+    IconClass="@Suite.IconClass"/>
+
 
 @code{
     [Parameter] public E00060_Suite Suite {get; set;}
     public int lastsuite;
-
     private string Title { get; set; } = "";
 
     protected override async Task OnParametersSetAsync(){

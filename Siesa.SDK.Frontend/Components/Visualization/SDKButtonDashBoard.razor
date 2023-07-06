@@ -1,0 +1,58 @@
+@inherits SDKComponent
+
+@inject UtilsManager UtilManager
+
+
+<button @onclick="@ActionClick" data-automation-id="@_titleName"  @onclick:preventDefault class="@GetCssClass()" data-toggle="tooltip" data-placement="top" style="background-color: #@BackgroundColor;" title="@_titleName" >
+    <div class="h4 m-0">
+        <SDKIcon Name="@IconClass" ></SDKIcon>
+    </div>
+    <div class="suite_option_base" style="background-color: #@BackgroundColor;"></div> 
+</button>
+
+@code
+{
+    [Parameter] public EventCallback<MouseEventArgs> Click { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public string BackgroundColor { get; set; }
+
+    [Parameter] public string IconClass { get; set; }
+
+    [Parameter] public string CssClass { get; set; }
+
+    private string _titleName = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        _titleName = await UtilManager.GetResource(Title);
+        
+    }
+       
+
+    private async Task ActionClick (MouseEventArgs Event)
+    {
+        if (Click.HasDelegate)
+        {
+            await Click.InvokeAsync(Event);
+            
+            StateHasChanged();
+        }
+    }
+
+    private string GetCssClass()
+    {
+        if (String.IsNullOrEmpty(CssClass))
+        {
+            return "suite_option";
+        }
+        else
+        {
+            return CssClass;
+        }
+    }
+    
+    
+}
+
