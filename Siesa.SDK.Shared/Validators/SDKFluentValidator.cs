@@ -20,17 +20,10 @@ namespace Siesa.SDK.Shared.Validators
 
                 string ValueMessage = resultFluent.ErrorMessage;
 
-                if (resultFluent.ErrorMessage.Split("//").Count() > 1)
-                {
-                    var splitMessage = ValueMessage.Split("//");
-
-                    ValueMessage = $"{splitMessage[0]}//{BaseObject.GetType().Name}.{splitMessage[1]}";
-                    
-                }else if (!String.IsNullOrEmpty(resultFluent.PropertyName))
+                if (!String.IsNullOrEmpty(resultFluent.PropertyName))
                 {
 
                     ValueMessage = $"{resultFluent.ErrorMessage}//{BaseObject.GetType().Name}.{resultFluent.PropertyName}";
-
                 }
                 // else if (resultFluent.ErrorMessage.Split("//").Count() > 1)
                 // {

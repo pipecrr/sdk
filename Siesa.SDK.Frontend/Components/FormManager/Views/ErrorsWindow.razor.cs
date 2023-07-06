@@ -22,6 +22,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private List<SDKErrorsWindowDTO> _errors = new List<SDKErrorsWindowDTO>();
 
+        private Dictionary<string, object[]> _generalerrorsFormat = new Dictionary<string, object[]>();
+
         private List<string> _generalErrors = new List<string>();
         protected override async Task OnParametersSetAsync(){
             _errorCount = 0;
@@ -102,7 +104,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                             //errorMsg = await UtilsManager.GetResource(errorMsg);
                             errorMsg = errorMsg;
                          }
-                        _generalErrors.Add(errorMsg);
+                         if (errorMsg.Split("//").Count() > 1)
+                         {
+                                var errorSplit = errorMsg.Split("//");
+                                var resourceTag = errorSplit[0];
+
+                                var errorFormat = errorSplit.Skip(1).ToArray();
+
+                                _generalerrorsFormat.Add(resourceTag, errorFormat);
+                         }else
+                         {
+                            _generalErrors.Add(errorMsg);
+                         }
                     }else{
                         //errorMsg = await UtilsManager.GetResource(err);
                         errorMsg = err;
