@@ -17,6 +17,12 @@
             <li>Width: para definir el ancho del modal, por defecto 600 px, por ejemplo Width="700px"</li>
             <li>Height: para definit el alto del modal, por defecto lo calcula basado en el anlto de la ventana, por ejemplo Height="500px" </li>
         </ul>
+        <p>Se pueden enviar acciones que se ejecutan despues de crear, editar o eliminar</p>
+        <ul>
+            <li>OnCreate: recibe como parametro un dynamic el cual es el rowid del registro que se esta creando</li>
+            <li>OnEdit: recibe como parametro un dynamic el cual es el rowid del registro que se esta editando</li>
+            <li>OnDelete: no recibe parametros, solo se ejecuta despues de eliminar el registro</li>
+        </ul>
     </div>
     <div class="row px-3">
         <div class="col-md-6 p-3">
