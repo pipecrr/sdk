@@ -1,0 +1,57 @@
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
+@using Siesa.Global.Enums
+@inject SDKNotificationService SDKNotificationService
+
+@layout EmptyLayout
+
+
+<div class="container-fluid m-3">
+    <div class="container-fluid">
+            <h2>SDKButton</h2> 
+            <p>Demonstration and configuration of the SDKButtonDashBoard component</p> 
+    </div>
+    <div class="row px-3"> 
+        <div class="col-md-6 p-1">
+            <SDKCard>
+                
+                <SDKButtonDashBoard Title="@Title_1" BackgroundColor="@BackgroundColor_1" 
+                    IconClass="@Icon_1"/>
+
+                <SDKButtonDashBoard Title="@Title_2" BackgroundColor="@BackgroundColor_2" 
+                    IconClass="@Icon_2"/>
+                
+                <SDKButtonDashBoard Title="@Title_3" BackgroundColor="@BackgroundColor_3" 
+                    IconClass="@Icon_3"/>
+            </SDKCard>
+        </div>
+         <div class="col-md-6 p-1">
+            <SDKCard>
+                <h3>Action Button</h3>
+
+                <SDKButtonDashBoard Click="@(() => OnClick())" Title="@Title_1" BackgroundColor="@BackgroundColor_1" 
+                    IconClass="@Icon_1"/>
+
+            </SDKCard>
+        </div>
+    </div>
+</div>
+
+@code{
+    public string Title_1 = "DemoTitle";
+    public string BackgroundColor_1 = "FF5733";
+    public string Icon_1 = "fa-solid fa-layer-group";
+
+    public string Title_2 = "DemoTitle2";
+    public string BackgroundColor_2 = "FFE933";
+    public string Icon_2 = "fa-solid fa-layer-group";
+
+    public string Title_3 = "DemoTitle3";
+    public string BackgroundColor_3 = "33FF52";
+    public string Icon_3 = "fa-solid fa-layer-group";
+
+    public async Task OnClick()
+    {
+      _ = SDKNotificationService.ShowSuccess("Clicked");
+    }
+}
