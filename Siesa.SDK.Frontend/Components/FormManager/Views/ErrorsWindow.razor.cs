@@ -111,7 +111,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
                                 var errorFormat = errorSplit.Skip(1).ToArray();
 
-                                _generalerrorsFormat.Add(resourceTag, errorFormat);
+                                if(!_generalerrorsFormat.ContainsKey(resourceTag))
+                                {
+                                    _generalerrorsFormat.Add(resourceTag, errorFormat);
+                                }
                          }else
                          {
                             _generalErrors.Add(errorMsg);

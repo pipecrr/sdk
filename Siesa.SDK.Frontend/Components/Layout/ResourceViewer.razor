@@ -59,8 +59,16 @@
                 var FormatTag = await ResourceManager.GetResource(item.ToString() , AuthenticationService);
                 formatArgs.Add(FormatTag);
             }
+            
+            try
+            {
+                return String.Format(text, formatArgs.ToArray());
+            }
+            catch (System.Exception)
+            {   
+                return "";             
+            }
 
-            return String.Format(text, formatArgs.ToArray());
         }
         return "";
     }
