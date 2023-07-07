@@ -1,0 +1,86 @@
+@typeparam ItemType
+@inherits SDKComponent
+
+<RadzenDatePicker 
+    TValue="ItemType"
+    Value=@Value 
+    ValueChanged ="@ValueChanged" 
+    ReadOnly="@ReadOnly" 
+    Disabled="@Disabled"
+    ShowTime="@ShowTime" 
+    ShowSeconds="@ShowSeconds" 
+    HoursStep="@HoursStep" 
+    MinutesStep="@MinutesStep" 
+    SecondsStep="@SecondsStep" 
+    DateFormat="MM/dd/yyyy HH:mm" 
+    HourFormat="@HourFormat"
+    TimeOnly="@TimeOnly"
+    DateRender="@DateRender"
+    Max="@Max"
+    Min="@Min"
+    Inline="@AsCalendar"
+    AllowClear="@ClearButton"
+    data-automation-id="@GetAutomationId()"
+    Name="@ResourceTag"
+>
+    @ChildContent
+</RadzenDatePicker>
+
+@code {
+
+    [Parameter] public ItemType Value { get; set; }
+
+    [Parameter] public EventCallback<ItemType> ValueChanged {get; set;}
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter] public bool ReadOnly  { get; set; }
+
+    [Parameter] public bool Disabled  { get; set; }
+
+    [Parameter] public bool ShowTime  { get; set; }
+
+    [Parameter] public bool ShowSeconds  { get; set; }
+
+    [Parameter] public string HoursStep  { get; set; }
+
+    [Parameter] public string MinutesStep  { get; set; } 
+
+    [Parameter] public string SecondsStep  { get; set; }
+
+    [Parameter] public string DateFormat  { get; set; }
+
+    [Parameter] public string HourFormat { get; set; } = "24";
+
+    [Parameter] public bool TimeOnly { get; set; }
+
+    [Parameter] public Action<DateRenderEventArgs> DateRender { get; set; }
+
+    [Parameter] public DateTime? Max { get; set; }
+
+    [Parameter] public DateTime? Min { get; set; }
+
+    [Parameter] public RenderFragment FooterTemplate { get; set; }
+
+    [Parameter] public bool AsCalendar { get; set; }
+
+    [Parameter] public bool ClearButton { get; set; } = true;
+
+    [Parameter] public ItemType InitialViewDate { get; set; }
+
+    [Parameter] public string YearRange { get; set; } = $"1950:{DateTime.Now.AddYears(30).Year}";
+
+
+    protected override string GetAutomationId()
+    {
+        if(string.IsNullOrEmpty(AutomationId))
+        {
+            if (!string.IsNullOrEmpty(ResourceTag))
+            {
+                    AutomationId = ResourceTag;
+            }
+        }
+        return base.GetAutomationId();
+    }
+
+}
