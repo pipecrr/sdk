@@ -1,6 +1,8 @@
 @typeparam ItemType
 @inherits SDKComponent
 
+@using System.Linq.Expressions
+
 <RadzenDatePicker 
     TValue="ItemType"
     Value=@Value 
@@ -28,7 +30,7 @@
 
 @code {
 
-    [Parameter] public ItemType Value { get; set; }
+    [Parameter] public ItemType Value { get; set; }    
 
     [Parameter] public EventCallback<ItemType> ValueChanged {get; set;}
 
@@ -69,6 +71,10 @@
     [Parameter] public ItemType InitialViewDate { get; set; }
 
     [Parameter] public string YearRange { get; set; }
+
+    [Parameter] public Expression<System.Func<ItemType>> ValueExpression { get; set; }
+
+    [Parameter] public string Placeholder { get; set; }
 
 
     protected override string GetAutomationId()

@@ -1,11 +1,13 @@
 ﻿@typeparam TTime
 @inherits FieldClass<TTime>
 @using System.Linq.Expressions
+@using Siesa.SDK.Frontend.Components.Fields
+
 @if (!FieldOpt.Hidden)
 {
     @FieldValidationTemplate
 
-    <DxTimeEdit 
+    @* <DxTimeEdit 
         T="TTime"
         NullText="@FieldOpt.Placeholder"
         ReadOnly="@(FieldOpt.Disabled)"
@@ -16,23 +18,68 @@
         field-name="@FieldOpt.Name"
         TimeExpression="@TimeExpression"
         data-automation-id="@GetDataAutomationId()"
+    /> *@
+
+    
+    <SDKDateTimeField 
+    ItemType="TimeSpan?" 
+    ReadOnly="@(FieldOpt.Disabled)" 
+    Value="@_value" 
+    ValueChanged="@(OnTimeChanged)" 
+    ClearButton="true" 
+    ValueExpression="@(()=> _value)"
+    ResourceTag="@FieldOpt.Name"
+    Placeholder="@FieldOpt.Placeholder"
+    ShowTime="true" 
+    TimeOnly="true" 
+    DateFormat="HH:mm"
     />
 }
 
 
 @code {
-    Expression<Func<TTime>> TimeExpression { get; set; }
+    Expression<Func<TimeSpan?>> TimeExpression { get; set; }
     private RenderFragment? _fieldValidationTemplate;
+
+    TimeSpan? _value {get{
+        TTime currentValue = BindValue;
+        TimeSpan? timeSpan = currentValue as TimeSpan?;
+        if(!timeSpan.HasValue)
+        {
+            return null;
+        }
+
+        return timeSpan;
+    }}
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
         var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
-        TimeExpression = (Expression<Func<TTime>>)Expression.Lambda(typeof(Func<>).MakeGenericType(typeof(TTime)), access);
+        //TimeExpression = (Expression<Func<TTime>>)Expression.Lambda(typeof(Func<>).MakeGenericType(typeof(TTime)), access);
     }
 
     private string GetDataAutomationId()
     {
         return $"TimeField_{FieldOpt.Name}";
+    }
+
+    void OnTimeChanged(TimeSpan? newValue)
+    { 
+        TTime valueToSet;
+
+        if(newValue == null)
+        {
+            valueToSet = default(TTime);
+
+        }else
+        {
+            valueToSet = (TTime)(object)newValue.Value;
+        }
+        
+        SetValue(valueToSet);
+
+        //SetValue(newValue);
+
     }
 }
