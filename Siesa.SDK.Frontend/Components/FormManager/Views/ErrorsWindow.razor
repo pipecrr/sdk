@@ -58,7 +58,7 @@
                             </tbody>
                         </table>
                     }
-                    @if(_generalErrors.Any()){
+                    @if(_generalErrors.Any() || _generalerrorsFormat.Any()){
                         <table class="table table-striped sdk_table_v2">
                             <thead>
                                 <tr>
@@ -69,13 +69,27 @@
                             </thead>
                             <tbody>
                                 <tr>
+                                    @if (_generalerrorsFormat.Count() > 0)
+                                    {
+                                        <td>
+                                            <ul class="ul_list_error">
+                                                @foreach (var error in _generalerrorsFormat)
+                                                {
+                                                    <li><ResourceViewer ResourceTag= "@error.Key" FormatString="@error.Value"/></li> 
+                                                }
+                                            </ul>
+                                        </td>
+                                    }
+                                    @if (_generalErrors.Count() > 0)
+                                    {
                                     <td>
                                         <ul class="ul_list_error">
                                             @foreach (var error in _generalErrors){
-                                                <ResourceViewer ResourceTag= "@error"/>
+                                               <li><ResourceViewer ResourceTag= "@error"/></li> 
                                             }
                                         </ul>
                                     </td>
+                                    }
                                 </tr>
                             </tbody>
                         </table>
