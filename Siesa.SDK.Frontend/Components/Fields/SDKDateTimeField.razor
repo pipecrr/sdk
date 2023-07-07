@@ -12,7 +12,7 @@
     HoursStep="@HoursStep" 
     MinutesStep="@MinutesStep" 
     SecondsStep="@SecondsStep" 
-    DateFormat="MM/dd/yyyy HH:mm" 
+    DateFormat="@DateFormat" 
     HourFormat="@HourFormat"
     TimeOnly="@TimeOnly"
     DateRender="@DateRender"
@@ -50,7 +50,7 @@
 
     [Parameter] public string DateFormat  { get; set; }
 
-    [Parameter] public string HourFormat { get; set; } = "24";
+    [Parameter] public string HourFormat { get; set; } 
 
     [Parameter] public bool TimeOnly { get; set; }
 
@@ -68,7 +68,7 @@
 
     [Parameter] public ItemType InitialViewDate { get; set; }
 
-    [Parameter] public string YearRange { get; set; } = $"1950:{DateTime.Now.AddYears(30).Year}";
+    [Parameter] public string YearRange { get; set; }
 
 
     protected override string GetAutomationId()

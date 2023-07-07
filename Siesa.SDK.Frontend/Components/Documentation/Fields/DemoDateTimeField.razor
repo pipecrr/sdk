@@ -18,14 +18,14 @@
         <div class="col-md-6 p-3">
             <SDKCard>
                 <h3>bind-Value</h3>
-                <SDKDateTimeField ItemType="DateTime?" @bind-Value="@DateTimeValue"/>
+                <SDKDateTimeField  @bind-Value="@DateTimeValue"/>
                 
             </SDKCard>
         </div>
         <div class="col-md-6 p-3">
             <SDKCard>
                 <h3>ReadOnly</h3>
-                <SDKDateTimeField ItemType="DateTime?" @bind-Value="@DateTimeValue3" ReadOnly="true"/>
+                <SDKDateTimeField  @bind-Value="@DateTimeValue3" ReadOnly="true"/>
                
             </SDKCard>
         </div>
@@ -39,51 +39,37 @@
         <div class="col-md-6 p-3">
             <SDKCard>
                 <h3>Picker Time</h3>
-                <SDKDateTimeField ItemType="DateTime?" @bind-Value="@DateTimeValue3" ShowTime="true" ShowSeconds="true" HoursStep="@HoursStep" MinutesStep="@MinutesStep" SecondsStep="@SecondsStep" DateFormat="@DateFormat" HourFormat="@HourFormat"/>
+                <SDKDateTimeField  @bind-Value="@DateTimeValue3" ShowTime="true" ShowSeconds="true" HoursStep="@HoursStep" MinutesStep="@MinutesStep" SecondsStep="@SecondsStep" DateFormat="@DateFormat" HourFormat="@HourFormat"/>
             </SDKCard>
         </div>
         <div class="col-md-6 p-3">
             <SDKCard>
                 <h3>Time Only</h3>
-                <SDKDateTimeField ItemType="DateTime?" @bind-Value="@TimeOnly" ShowTime="true" TimeOnly="true" DateFormat="HH:mm"/>
+                <SDKDateTimeField  @bind-Value="@TimeOnly" ShowTime="true" TimeOnly="true" DateFormat="HH:mm"/>
             </SDKCard>
         </div>
         <div class="col-md-6 p-3">
             <SDKCard> 
                 <h3>DatePicker with special or disabled dates</h3>
-                <SDKDateTimeField ItemType="DateTime?" @bind-Value=@dateRender DateRender=@DateRender/>
+                <SDKDateTimeField  @bind-Value=@dateRender DateRender=@DateRender/>
             </SDKCard>
         </div>
         <div class="col-md-6 p-3">
             <SDKCard>
                 <h3>with initial view date and year range</h3>
-                <SDKDateTimeField ItemType="DateTime?" @bind-Value=@DateTimeValue4 InitialViewDate="@InitialViewDate" YearRange="@YearRange"/>
+                <SDKDateTimeField  @bind-Value=@DateTimeValue4 InitialViewDate="@InitialViewDate" YearRange="@YearRange"/>
             </SDKCard>
         </div>
         <div class="col-md-6 p-3">
             <SDKCard>
                 <h3>Min and Max Date</h3>
-                <SDKDateTimeField ItemType="DateTime?" @bind-Value=@DateTimeValue4 Min="@Min" Max="@Max"/>
+                <SDKDateTimeField  @bind-Value=@DateTimeValue4 Min="@Min" Max="@Max"/>
             </SDKCard>
         </div>
         <div class="col-md-6 p-3">
             <SDKCard>
                 <h3>As Calendar</h3>
-                <SDKDateTimeField ItemType="DateTime?" @bind-Value=@DateTimeValue4 AsCalendar="true"/>
-            </SDKCard>
-        </div>
-        <div class="col-md-6 p-3">
-            <SDKCard>
-                <h3>As Calendar</h3>
-                <SDKDateTimeField ItemType="DateTime?" @bind-Value=@DateTimeValue4 AsCalendar="true"/>
-            </SDKCard>
-        </div>
-        <div class="col-md-6 p-3">
-            <SDKCard>
-                <h3>ItemType</h3>
-                <SDKDateTimeField ItemType="DateOnly" Value=@dateOnly ValueChanged="@(args => dateOnly = args)" DateFormat="MM/dd/yyyy" >
-                   
-                </SDKDateTimeField>
+                <SDKDateTimeField  @bind-Value=@DateTimeValue4 AsCalendar="true"/>
             </SDKCard>
         </div>
     </div>
@@ -103,19 +89,23 @@
 
     DateOnly dateOnly;
 
+    DateOnly dateOnlyNullable;
+
+    DateTime _dateTime ;
+
+    DateTime? _dateTimeNullable;
+
     public string HourFormat = "12"; //default 24
 
-    public string HoursStep = "2"; //default 1
-
-    public string MinutesStep = "10"; //default 5
-
-    public string SecondsStep = "20"; //default 10
+    public string HoursStep = "2"; 
+    public string MinutesStep = "10"; 
+    public string SecondsStep = "20"; 
 
     public string DateFormat="MM/dd/yyyy h:mm tt"; //default MM/dd/yyyy HH:mm
 
     public DateTime? InitialViewDate = new DateTime(2040,06,01); 
 
-    public string YearRange { get; set; } = "1900:2100";// default $"1950:{DateTime.Now.AddYears(30).Year}"
+    public string YearRange { get; set; } = "1900:2100";
 
     public DateTime? Max { get; set; } = DateTime.Now.AddDays(7); 
     public DateTime? Min { get; set; } = DateTime.Now.AddDays(-7);
