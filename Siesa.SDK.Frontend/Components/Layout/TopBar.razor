@@ -1,4 +1,5 @@
-﻿@using Siesa.SDK.Entities;
+﻿
+@using Siesa.SDK.Entities;
 @using Siesa.SDK.Shared.Services 
 @using Newtonsoft.Json;
 @using System.Linq;
@@ -28,7 +29,9 @@
         <div class="whcm_toolbar_button d-flex align-items-center position-relative pt-2 pt-sm-0">
             @if(MainLayout != null && MainLayout.IsDefaultArea)
             {
-                <TopBarButton  ResourceTag="Action.Expand" IconCssClass="@GetExpandIcon()" Click="@OnClickExpand"/>
+                <div class="topbarbutton_expand">
+                    <TopBarButton  ResourceTag="Action.Expand" IconCssClass="@GetExpandIcon()" Click="@OnClickExpand"/>
+                </div>
             }
             @LayoutService.TopBarButtons
             @if(LayoutService.HasExtraButtons)
