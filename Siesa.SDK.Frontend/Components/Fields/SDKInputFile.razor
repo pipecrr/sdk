@@ -58,7 +58,7 @@
 
     [Parameter] public int RowidAttachmentDetail {get; set;}
     [Parameter] public int RowidAttachmentRelationship {get; set;}
-    [Parameter] public bool SaveBytes {get; set;} = false;
+    [Parameter] public bool SaveBytes {get; set;} = true;
     [Parameter] public int MaxSize {get; set;} = 3000000;
     
     private List<SDKInputFieldDTO> _FilesSelected = new ();
@@ -76,7 +76,7 @@
     {
         if(IsMultiple){
             if(_FilesSelected.Count == 0){
-                var response = await BackendRouterService.GetSDKBusinessModel("BLAttachmentDetail", AuthenticationService).Call("GetAttachmentsDetail", RowidAttachmentRelationship);
+                var response = await BackendRouterService.GetSDKBusinessModel("BLAttachmentDetail", AuthenticationService).Call("GetAttachmentsDetail", RowidAttachmentRelationship, SaveBytes);
                 if(response.Success){
                     var attachments = response.Data;
                     foreach (var item in attachments)
