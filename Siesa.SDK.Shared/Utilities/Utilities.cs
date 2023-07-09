@@ -121,7 +121,7 @@ namespace Siesa.SDK.Shared.Utilities
                     return reader.ReadToEnd();
                 }
             }
-            catch (Exception e) {
+            catch (Exception) {
                 return null;
             }
 
@@ -141,7 +141,7 @@ namespace Siesa.SDK.Shared.Utilities
 
                 
             }
-            catch (Exception e) {
+            catch (Exception) {
                 return null;
             }
 
@@ -154,7 +154,7 @@ namespace Siesa.SDK.Shared.Utilities
                 return asm.GetManifestResourceNames().Where(str => str.StartsWith(fullpath)).ToList();
                 
             }
-            catch (Exception e) {
+            catch (Exception) {
                 return null;
             }
 

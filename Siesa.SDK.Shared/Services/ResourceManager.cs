@@ -17,9 +17,9 @@ namespace Siesa.SDK.Shared.Services
         public Task<string> GetResource(Int64 resourceRowid, IAuthenticationService authenticationService);
         public Task<string> GetResource(string resourceTag, IAuthenticationService authenticationService);
 
-        public Task<string> GetResourcesByModule(Int64 moduleRowid, Int64 cultureRowid);
-        public Task<Dictionary<string, string>> GetResourceByCulture(int rowidCulture);
-        public Task<string> GetEnumValues(string enumName, Int64 cultureRowid, Int64 moduleRowid);
+        //public Task<string> GetResourcesByModule(Int64 moduleRowid, Int64 cultureRowid);
+        public Dictionary<string, string> GetResourceByCulture(int rowidCulture);
+        //public Task<string> GetEnumValues(string enumName, Int64 cultureRowid, Int64 moduleRowid);
         public Task<Dictionary<byte,string>> GetEnumValues(string enumName, Int64 cultureRowid);
         Dictionary<long, Dictionary<string, string>> GetResourceValuesDict();
     }
@@ -43,7 +43,7 @@ namespace Siesa.SDK.Shared.Services
                 {
                     var defaultRowidCulture = Configuration["DefaultRowidCulture"] ?? "1";
                     var cultureRowid = Convert.ToInt64(defaultRowidCulture);
-                    this.GetAllResources(cultureRowid);
+                    _ = this.GetAllResources(cultureRowid);
                 }
                 catch (System.Exception)
                 {
@@ -172,14 +172,14 @@ namespace Siesa.SDK.Shared.Services
             return "Invalid User";
         }
         
-        public async Task<string> GetResourcesByModule(Int64 moduleRowid, Int64 cultureRowid)
-        {
-            return "";
-        }
-        public async Task<string> GetEnumValues(string enumName, Int64 cultureRowid, Int64 moduleRowid)
-        {
-            return "";
-        }
+        // public async Task<string> GetResourcesByModule(Int64 moduleRowid, Int64 cultureRowid)
+        // {
+        //     return "";
+        // }
+        // public async Task<string> GetEnumValues(string enumName, Int64 cultureRowid, Int64 moduleRowid)
+        // {
+        //     return "";
+        // }
 
         public async Task<Dictionary<byte, string>> GetEnumValues(string enumName, Int64 cultureRowid)
         {
@@ -192,10 +192,10 @@ namespace Siesa.SDK.Shared.Services
             return null;
         }
 
-        public async Task<Dictionary<string, string>> GetResourceByCulture(int rowidCulture)
+        public Dictionary<string, string> GetResourceByCulture(int rowidCulture)
         {            
             var resource = resourceValuesDict[rowidCulture];
-           return resource;
+            return resource;
         }
 
         public Dictionary<long, Dictionary<string, string>> GetResourceValuesDict()

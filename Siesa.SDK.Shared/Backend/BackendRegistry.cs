@@ -17,7 +17,6 @@ namespace Siesa.SDK.Shared.Backend
         public string Name { get; set; }
         public string Url { get; set; }
         public BusinessesResponse businessRegisters = new BusinessesResponse();
-        private readonly IServiceScopeFactory _scopeFactory;
 
         private IAuthenticationService AuthenticationService { get; set; }
 

@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Siesa.SDK.Shared.DTOS;
 using Siesa.SDK.Shared.Utilities;
 using System;
-using System.Threading.Tasks;
 using System.Linq;
 namespace Siesa.SDK.Shared.Services
 {
@@ -81,7 +80,8 @@ namespace Siesa.SDK.Shared.Services
         {
             var result = false;
             var actionRowid = await GetActionRowid(actionName);
-            return CheckUserActionPermission(businessName, actionRowid, authenticationService);
+            result = CheckUserActionPermission(businessName, actionRowid, authenticationService);
+            return result;
         }
 
         public bool CheckUserActionPermissions(string businessName, List<int> permissions, IAuthenticationService authenticationService){
