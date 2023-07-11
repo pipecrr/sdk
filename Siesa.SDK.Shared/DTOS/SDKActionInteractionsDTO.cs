@@ -9,7 +9,7 @@ public record SDKActionInteractionsDTO
     public SDKActionDTO Action { get; set; }
     //Pueden ser varias que alteren a otras
     public List<SDKActionDTO> Actions { get; set; }
-    public bool AnyoneActionCanAlter { get; set; }
+    public bool AnyActionCanAlter { get; set; }
     public List<SDKInteractionDetail> ActionsToAlter { get; set; }
 }
 
