@@ -19,4 +19,5 @@ public record SDKInteractionDetail
     public SDKActionDTO Action { get; set; }
     //Con qué estado va a interactuar, cuando prenda o cuando apague
     public bool StatusToInteract { get; set; }
+    public bool ApplyToAll {get; set;}
 }
