@@ -2,21 +2,24 @@ using System.Collections.Generic;
 
 namespace Siesa.SDK.Shared.DTOS;
 
-//Una vez se crea, no cambia
-public record SDKActionInteractionsDTO
+public abstract record SDKInteractionBase
 {
-    //Puede ser una accion que altere a varias
+    //Interaccion basada por accion
     public SDKActionDTO Action { get; set; }
-    //Pueden ser varias que alteren a otras
+    //Interaccion basada para acciones
     public List<SDKActionDTO> Actions { get; set; }
+}
+
+//Una vez se crea, no cambia
+public record SDKActionInteractionsDTO : SDKInteractionBase
+{
     public bool AnyActionCanAlter { get; set; }
     public List<SDKInteractionDetail> ActionsToAlter { get; set; }
 }
 
 //Una vez se crea, no cambia
-public record SDKInteractionDetail
+public record SDKInteractionDetail : SDKInteractionBase
 {
-    public SDKActionDTO Action { get; set; }
     //Con qué estado va a interactuar, cuando prenda o cuando apague
     public bool StatusToInteract { get; set; }
     public bool ApplyToAll {get; set;}
