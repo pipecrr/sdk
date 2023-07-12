@@ -27,7 +27,20 @@
         >
         @if(OnlyIcon)
         {
-        <SDKIcon Name="@IconCssClass" />
+            @if(!string.IsNullOrEmpty(IconCssClass)){
+                <SDKIcon Name="@IconCssClass" />
+            }
+            else
+            {
+                @if (ChildContent != null)
+                {
+                    @ChildContent
+                }
+                else
+                {
+                    @Text
+                }
+            }
         }else{
         <div class="d-flex align-items-center sdk-btn-icon-text-cnt">
             @if(!string.IsNullOrEmpty(IconCssClass)){
