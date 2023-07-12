@@ -31,7 +31,7 @@
     max-width: 28px;
     max-height: 28px;
 }
-
+/* 
 ::deep .suite_option{
     position: relative;
     min-height: 3rem;
@@ -67,7 +67,7 @@
     border-radius: var(--border_radius_standar);
     transition: all 0.2s ease;
     outline: none;
-}
+} */
 .suite_option_content{
     max-width: 100%;
     display: flex;
