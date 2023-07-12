@@ -120,8 +120,7 @@
                                             <div class="d-flex align-items-center">
 
 
-                                                <input class="mr-2" type="radio" name="ThemeColor" value="@theme.Key" @onchange="OnChangeSelectedTheme" checked="@ValidCheckedThemeColor(theme.Key)" 
-                                                disabled="@ValidDisabledThemeColor(theme.Key)">
+                                                <input class="mr-2" type="radio" name="ThemeColor" value="@theme.Key" @onchange="OnChangeSelectedTheme" checked="@ValidCheckedThemeColor(theme.Key)" >
 
                                                 <ResourceViewer ResourceTag=@theme.Key />
                                         
@@ -508,6 +507,19 @@
     private void OnChangeSelectedTheme(ChangeEventArgs args)
     {
         _selectedThemeStyle = args.Value.ToString();
+
+        if(_selectedThemeStyle.Equals("Custom.SDK.Theme.Orange") ) 
+        {
+
+            SDKDbConnection SelectedConnection = AuthenticationService.GetSelectedConnection();
+
+            if(SelectedConnection != null)
+            {
+                SelectedConnection.StyleUrl = "_content/Siesa.SDK.Frontend/css/DarkTheme.css";
+
+                AuthenticationService.SetSelectedConnection(SelectedConnection);
+            }
+        }
 
         StateHasChanged();
     }

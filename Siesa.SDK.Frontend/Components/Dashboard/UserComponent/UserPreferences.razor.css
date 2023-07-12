@@ -115,11 +115,11 @@
  }
  .whcm_select_box>.input-group-append >.whcm-btn-outline {
     color: var(--color_primary_light);
-    border-color: #ced4da;
+    border-color: transparent;
  }
  .whcm_select_box>.input-group-append >.whcm-btn-outline:hover {
     color: var(--color_primary_light);
-    border-color: #ced4da;
+    border-color: transparent;
     background-color: var(--color_back_2);
  }
  .whcm_select_list_img {

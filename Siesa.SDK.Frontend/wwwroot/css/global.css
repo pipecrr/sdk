@@ -1,5 +1,4 @@
 :root {
-
     --color_back_body: #F5F5F5;
     --color_primary: #0E79FD; 
     --color_primary_header: #0E79FD; 
@@ -9,6 +8,7 @@
     --color_form_border: #C4C4C4; 
     --color_border: #C4C4C4;
     --color_back: #FAFAFA;
+    --color_field_detail: #FAFAFA;
     --color_back_2: #F0F0F0;
     --color_primary_dark: #2345CB;
     --color_primary_light: #57BCFF;
@@ -36,7 +36,7 @@
     /* Base: color light */
     --color_button_negative_back: #FFFFFF;
     /* Base: color primary */
-    --color_button_back_180: linear-gradient(180deg, rgba(14,121,253,.3) 0%, rgba(14,121,253,1) 100%);
+    --color_button_back_180: #00142161;
     /* Base: color primario dark con 30% de transparencia */
     --color_primary_shadow: #2345CB33;
     --shadow_standar: 0px 3px 12px var(--color_primary_shadow);
@@ -47,7 +47,7 @@
     --color_table_even: rgba(14,121,253,0.04);
     /* Base: color primary (Para hover de tablas) */
     --color_table_hover: rgba(14,121,253,0.1);
-    --color_search_back: linear-gradient(180deg, rgba(14,121,253,.3) 0%, rgba(14,121,253,1) 100%);
+    --color_search_back: #23ACFF;
     --border_radius_card_login: 0.5rem;
     --border_radius_standar: .25rem;
     --border_radius_standar_max: .5rem;
@@ -67,6 +67,8 @@
     --color_alert_success: #00BA5E;
     --color_alert_error: #E00052;
     --color_alert_warning: #F5A927;
+    --color_delete: #e00052;
+    --color_delete_dark: #910047;
 
     
 
@@ -74,10 +76,10 @@
     /* Base: color error log */
     --color_error_log_back_180: linear-gradient(180deg, rgba(224, 0, 82,0) 0%, rgba(224, 0, 82,1) 100%);
 
-    --rz-notification-error-icon-color: #721c24 !important;
-    --rz-notification-warning-icon-color: #856404 !important;
-    --rz-notification-success-icon-color: #155724 !important;
-    --rz-notification-info-icon-color: #0c5460 !important;
+    --rz-notification-error-icon-color: #FFFFFF !important;
+    --rz-notification-warning-icon-color: #FFFFFF !important;
+    --rz-notification-success-icon-color: #FFFFFF !important;
+    --rz-notification-info-icon-color: #FFFFFF !important;
     --rz-grid-column-resizer-helper-background-color: var(--color_primary) !important;
     --rz-grid-column-resizer-helper-width: 2px !important;
 
@@ -112,6 +114,7 @@ html {
 }
 body{
     color: var(--color_text) !important;
+    background: var(--color_back_body)!important;
 }
 
 .valid {
@@ -281,6 +284,7 @@ body {
 .btn_secondary_danger:hover {
     background-color: var(--color_delete_dark) !important;
     border-color: var(--color_delete_dark) !important;
+    color: var(--color_light_text)!important;
 }
 
 .btn_secondary_link {
@@ -799,11 +803,21 @@ input#collapse_open:checked~.collapse_open_btn>.nav_btn_standar_text {
 .col-form-label {
     color: var(--color_text) !important;
 }
-/* .form-control{
+
+div .form-control{
     color: var(--color_text) !important;
-    background-color: var(--color_input_back) !important;
-    border: 1px solid var(--color_form_border) !important;
-} */
+    background-color: var(--color_input_back);
+    border: 1px;
+    border-style: solid !important;
+    border-color: var(--color_form_border);
+}
+div .form-control, div .form-control:focus{
+    color: var(--color_text) !important;
+    background-color: var(--color_input_back);
+    border: 1px;
+    border-style: solid !important;
+    border-color: var(--color_form_border);
+}
 
 .untruncate-grid-column-action>div>span.rz-column-title {
     overflow: unset;
@@ -1213,27 +1227,27 @@ input#collapse_open:checked~.collapse_open_btn>.nav_btn_standar_text {
 }
 
 .rz-growl-message-success .rz-growl-item {
-    color: #155724 !important;
-    background-color: #d4edda !important;
-    border-color: #c3e6cb !important;
+    color: var(--color_alert_text) !important;
+    background-color: var(--color_alert_success) !important;
+    border-color: var(--color_alert_success) !important;
 }
 
 .rz-growl-message-warn .rz-growl-item {
-    color: #856404 !important;
-    background-color: #fff3cd !important;
-    border-color: #ffeeba !important;
+    color: var(--color_alert_text) !important;
+    background-color:var(--color_alert_warning) !important;
+    border-color:var(--color_alert_warning) !important;
 }
 
 .rz-growl-message-error .rz-growl-item {
-    color: #721c24 !important;
-    background-color: #f8d7da !important;
-    border-color: #f5c6cb !important;
+    color: var(--color_alert_text) !important;
+    background-color: var(--color_alert_error) !important;
+    border-color: var(--color_alert_error) !important;
 }
 
 .rz-growl-message-info .rz-growl-item {
-    color: #0c5460 !important;
-    background-color: #d1ecf1 !important;
-    border-color: #bee5eb !important;
+    color: var(--color_alert_text) !important;
+    background-color: var(--color_alert_info) !important;
+    border-color: var(--color_alert_info) !important;
 }
 
 .rz-growl-image.rzi-check:before {
@@ -1245,6 +1259,8 @@ input#collapse_open:checked~.collapse_open_btn>.nav_btn_standar_text {
     content: "\f05a" !important;
     font-family: "Font Awesome 6 Pro" !important;
 }
+
+
 
 .rz-growl-image.rzi-times:before {
     content: "\f06a" !important;
@@ -1358,7 +1374,7 @@ input#collapse_open:checked~.collapse_open_btn>.nav_btn_standar_text {
 
 .whcm_company_select::after {
     content: "";
-    border: solid white;
+    border: solid var(--color_light_text);
     border-width: 0 2px 2px 0;
     display: inline-block;
     padding: 3px;
