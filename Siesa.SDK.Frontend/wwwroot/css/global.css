@@ -1587,3 +1587,7 @@ div.dxbs-btn-group.dxbs-input-group-prepend>.btn.dx-btn.btn-sm {
 .sdk-formlayout-group{
     margin-right: 10px!important;
 }
+
+.sdk-btn-icon-text-cnt{
+    gap: 5px;
+}
