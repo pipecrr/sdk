@@ -48,11 +48,8 @@
                             </SDKCard>
                     
                     </SDKTab>
-                        <SDKTab IconCssClass="fa-solid fa-code">  
-
-                            <SDKTextField Value="@ViewSourceCode()"
-                            CssClass="tab-text-area"/>
-
+                        <SDKTab IconCssClass="fa-solid fa-code">
+                            <CodeViewer Code="@ViewSourceCode()" CssClass="vh-100" ReadOnly="true" />
                         </SDKTab>
                     </SDKTabs>
                     }
@@ -191,6 +188,9 @@
         try
         {
             await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/js/utils.js");
+            await JSRuntime.InvokeVoidAsync("window.loadScript", "_content/BlazorMonaco/jsInterop.js");
+            await JSRuntime.InvokeVoidAsync("window.loadScript", "_content/BlazorMonaco/lib/monaco-editor/min/vs/loader.js");
+            await JSRuntime.InvokeVoidAsync("window.loadScript", "_content/BlazorMonaco/lib/monaco-editor/min/vs/editor/editor.main.js");
         }catch (Exception)
         {
         }
