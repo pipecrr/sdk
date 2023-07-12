@@ -1,0 +1,51 @@
+@using BlazorMonaco
+@using BlazorMonaco.Editor
+
+<div>
+    <StandaloneCodeEditor @ref="_editor" Id="@(_editorId.ToString())" CssClass="@CssClass" ConstructionOptions="EditorConstructionOptions"/>
+</div>
+@code {
+    private Guid _editorId = Guid.NewGuid();
+    [Parameter]
+    public string Code { get; set; }
+    [Parameter]
+    public string Language { get; set; } = "razor";
+    [Parameter]
+    public string CssClass { get; set; } = "code-viewer-area";
+    [Parameter]
+    public bool ReadOnly { get; set; }
+    [Parameter]
+    public string Theme { get; set; } = "vs-dark";
+    
+    private StandaloneCodeEditor _editor = null!;
+
+    protected override void OnInitialized()
+    {
+        _editorId = Guid.NewGuid();
+        base.OnInitialized();
+    }
+    
+    private StandaloneEditorConstructionOptions EditorConstructionOptions(StandaloneCodeEditor editor)
+    {
+        return new StandaloneEditorConstructionOptions
+        {
+            AutomaticLayout = true,
+            Language = Language,
+            Value = Code,
+            ReadOnly = ReadOnly,
+            Theme = Theme,
+            WordWrap = "on"
+        };
+    }
+
+    public async Task<string> GetValue()
+    {
+        return await _editor.GetValue();
+    }
+    
+    public async Task SetValue(string value)
+    {
+        await _editor.SetValue(value);
+    }
+
+}

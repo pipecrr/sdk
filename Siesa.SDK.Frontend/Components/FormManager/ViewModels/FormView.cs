@@ -617,44 +617,45 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
             if (result.Errors.Count > 0)
             {
                 //ErrorMsg = "<ul>";
-                Type editFormCurrentType = EditFormContext.Model.GetType();
+                
                 foreach (var error in result.Errors)
                 {
                     FieldIdentifier fieldIdentifier;
+                    Type editFormCurrentType = EditFormContext.Model.GetType();
                     bool fieldInContext = false;
                     //check if attribute is in Model
-                    // if(editFormCurrentType.GetProperty(error.Attribute) != null)
-                    // {
-                    //     fieldIdentifier = new FieldIdentifier(EditFormContext.Model, error.Attribute);
-                    //     fieldInContext = true;
-                    // }
-                    // else if(((string)error.Attribute).Split('.').Count() > 1)
-                    // {
-                    //     var attr = ((string)error.Attribute).Split('.');
-                    //     foreach(string item in attr)
-                    //     {
-                    //         if(editFormCurrentType.GetProperty(item) != null)
-                    //         {
-                    //             editFormCurrentType = editFormCurrentType.GetProperty(item).PropertyType;
-                    //         }
+                    if(editFormCurrentType.GetProperty(error.Attribute) != null)
+                    {
+                        fieldIdentifier = new FieldIdentifier(EditFormContext.Model, error.Attribute);
+                        fieldInContext = true;
+                    }
+                    else if(((string)error.Attribute).Split('.').Count() > 1)
+                    {
+                        var attr = ((string)error.Attribute).Split('.');
+                        var fieldExists = true;
+                        foreach(string item in attr)
+                        {
+                            if(editFormCurrentType.GetProperty(item) != null)
+                            {
+                                editFormCurrentType = editFormCurrentType.GetProperty(item).PropertyType;
+                            }else{
+                                fieldExists = false;
+                                break;
+                            }
 
-                    //     }
-                    //     fieldIdentifier = new FieldIdentifier(EditFormContext.Model, $"BaseObj.{error.Attribute}");
-                    //     fieldInContext = true;
-                    // }
-                    // if(fieldInContext)
-                    // {
-                    //     _messageStore.Add(fieldIdentifier, (string)error.Message);
-                    // }
-                    fieldIdentifier = new FieldIdentifier(EditFormContext.Model, error.Attribute);
-                    _messageStore.Add(fieldIdentifier, (string)error.Message);
-                    // ErrorMsg += $"<li>";
-                    // ErrorMsg += !string.IsNullOrWhiteSpace(error.Attribute) ?  $"{error.Attribute} - " : string.Empty;
-                    // string ErrorTag = await ResourceManager.GetResource(error.Message, AuthenticationService.GetRoiwdCulture());
-                    // ErrorMsg += ErrorTag;//error.Message.Replace("\n", "<br />");
-                    // ErrorMsg += $"</li>";
-
-                    ErrorList.Add("Exception: "+error.Message);
+                        }
+                        if(fieldExists)
+                        {
+                            fieldIdentifier = new FieldIdentifier(EditFormContext.Model, error.Attribute);
+                            fieldInContext = true;
+                        }
+                    }
+                    if(fieldInContext)
+                    {
+                        _messageStore.Add(fieldIdentifier, (string)error.Message);
+                    }else{
+                        ErrorList.Add("Exception: "+error.Message);
+                    }
                 }
                 //ErrorMsg += "</ul>";
                 EditFormContext.NotifyValidationStateChanged();

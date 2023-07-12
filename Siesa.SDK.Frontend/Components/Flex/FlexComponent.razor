@@ -86,6 +86,8 @@
     [Parameter]
     public int FlexRowId {get;set;} = 0;
     //private enumThemeIconStyle IconsStyles {get;set;} = enumThemeIconStyle.Solid;
+    [Parameter]
+    public List<string> FieldsHiddenList { get; set; } = new List<string>();
 
     private string _guid ="";
     private bool _isDebug = false;
@@ -171,6 +173,8 @@
             _flexRowId = FlexRowId;
             _currentView = "detail";
         }
+
+        var fieldsHiddenListString = JsonConvert.SerializeObject(FieldsHiddenList);
         
         string style = GetStyle();
 
@@ -196,10 +200,14 @@
         FlexAttributes.Add("is_multiple", IsMultiple.ToString());
         FlexAttributes.Add("flex_filters", FlexFilters);
         FlexAttributes.Add("preference_style", style);
+        FlexAttributes.Add("fields_hidden_list", fieldsHiddenListString);
         if(_flexRowId != 0)
         {
             FlexAttributes.Add("base_obj_id", _flexRowId);
         }
+
+        //updateFieldsHide
+        JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+_guid+".props.updateFieldsHide", fieldsHiddenListString);
 
         StateHasChanged();
         
@@ -209,8 +217,6 @@
             _= MountFlexComponent();
             _isMounted = true;
         }
-
-
     }
 
     private string GetStyle(){

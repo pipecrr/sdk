@@ -27,6 +27,8 @@
 
     [Parameter]
     public Action OnClick { get; set; }
+    
+    private string[] IconsStyles = new string[] { "fa-solid", "fa-regular", "fa-light", "fa-duotone", "fa-thin" };
 
     private string GetIconClass()
     {
@@ -37,7 +39,11 @@
 
         if (NameSplit != null && NameSplit.Length > 1)
         {
-            Name = NameSplit[1];
+            //remove the first element if it is a style
+            if (IconsStyles.Contains(NameSplit[0]))
+            {
+                Name = string.Join(" ", NameSplit.Skip(1));
+            }
         }
 
         var UserPreferences = AuthenticationService?.GetPreferencesUser();
