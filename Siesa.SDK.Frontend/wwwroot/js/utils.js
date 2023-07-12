@@ -128,6 +128,13 @@ function downloadFileFromStream(fileName, bytes) {
     element.click();
   }
   
+function globalVariableExists(variableName) {
+    if (typeof window[variableName] !== 'undefined') {
+      return true;
+    }
+    return false;
+}
+  
 
 window.downloadFileFromStream = downloadFileFromStream;
 window.loadScript = loadScript;
@@ -140,3 +147,4 @@ window.preloadFlex = preloadFlex;
 window.previewImage = previewImage;
 window.getUrlsImage = getUrlsImage;
 window.clickInputFile = clickInputFile;
+window.globalVariableExists = globalVariableExists;
