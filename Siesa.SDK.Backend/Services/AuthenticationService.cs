@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System.Linq;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Shared.DTOS;
-using Siesa.SDK.Backend.Criptography;
 
 namespace Siesa.SDK.Backend.Services
 {
@@ -18,7 +17,7 @@ namespace Siesa.SDK.Backend.Services
         private ISDKJWT _sdkJWT;
         public AuthenticationService(ISDKJWT sdkJWT){
             _minutesExp = 120; //TODO: get from config
-            _secretKey = "testsecretKeyabc$"; //TODO: get from config
+            _secretKey =  Siesa.SDK.Backend.Criptography.SDKRsaKeys.PrivateKey; //TODO: get from config
             _sdkJWT = sdkJWT;
         }
 

@@ -2,6 +2,7 @@ using Siesa.SDK.Shared.Criptography;
 using Siesa.SDK.Shared.Services;
 using System.Collections.Generic;
 using Siesa.SDK.Entities;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Siesa.SDK.Backend.Criptography
 {
@@ -19,6 +20,11 @@ namespace Siesa.SDK.Backend.Criptography
         public T Validate<T>(string token)
         {
             return JWTUtils.Validate<T>(token, Siesa.SDK.Shared.Criptography.SDKRsaKeys.PublicKey);
+        }
+
+        public JwtSecurityToken RenewToken(string token)
+        {
+            return JWTUtils.RenewToken(token, SDKRsaKeys.PrivateKey);
         }
     }
 }
