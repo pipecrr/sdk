@@ -10,7 +10,7 @@ namespace Siesa.SDK.Frontend.Criptography
         {
         }
         
-        public string Generate<T>(T obj, long min, Dictionary<string, List<int>>? featurePermissions = null, List<SessionRol> roles = null,  short rowIdDBConnection = 0, short rowidcompanygroup =0)
+        public string Generate<T>(T obj, long min)
         {
             throw new System.NotImplementedException();
         }

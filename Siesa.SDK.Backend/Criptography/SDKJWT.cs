@@ -11,16 +11,9 @@ namespace Siesa.SDK.Backend.Criptography
         {
         }
         
-        public string Generate<T>(T obj, long min, Dictionary<string, List<int>>? featurePermissions = null, List<SessionRol> roles = null,    short rowIdDBConnection = 0, short rowidcompanygroup =0)
+        public string Generate<T>(T obj, long min)
         {
-            if(obj is E00220_User)
-            {
-                E00220_User user = (E00220_User)(object)obj;
-                return JWTUtils.Generate(user, SDKRsaKeys.PrivateKey, min, featurePermissions, roles, rowIdDBConnection, rowidcompanygroup);
-            }else
-            {
-                return JWTUtils.Generate<T>(obj, SDKRsaKeys.PrivateKey, min);
-            }
+            return JWTUtils.Generate<T>(obj, SDKRsaKeys.PrivateKey, min);
         }
 
         public T Validate<T>(string token)

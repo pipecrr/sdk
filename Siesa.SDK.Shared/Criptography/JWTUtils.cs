@@ -23,49 +23,10 @@ namespace Siesa.SDK.Shared.Criptography
             {
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             };
-
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] {
                     new Claim("data", Newtonsoft.Json.JsonConvert.SerializeObject(data,Formatting.None,serializerSettings)),
-                }),
-                Expires = DateTime.UtcNow.AddMinutes(minutesExp),
-                SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.RsaSha256Signature, SecurityAlgorithms.Sha256Digest)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
-        }
-
-        public static string Generate (E00220_User? user, string secretKey, long minutesExp, Dictionary<string, List<int>>? featurePermissions = null, List<SessionRol> roles = null,    short rowIdDBConnection = 0, short rowidcompanygroup =0)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = KeyHelper.BuildRsaSigningKey(secretKey);
-
-            var serializerSettings = new Newtonsoft.Json.JsonSerializerSettings
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            };
-
-            var userToken = new JwtUserData() {
-                Rowid = user.Rowid,
-                Path = user.Path,
-                PasswordRecoveryEmail = user.PasswordRecoveryEmail,
-                Name = user.Name,
-                Id = user.Id,
-                Description = user.Description,
-                RowidCulture = user.RowidCulture,
-                Roles = roles,
-                FeaturePermissions = featurePermissions,
-                RowidCompanyGroup = rowidcompanygroup,
-                RowIdDBConnection = rowIdDBConnection,
-                IsAdministrator = user.IsAdministrator,
-                RowidAttachmentUserProfilePicture = user.RowidAttachmentUserProfilePicture
-            };
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new[] {
-                    new Claim("data", Newtonsoft.Json.JsonConvert.SerializeObject(userToken, Formatting.None, serializerSettings)),
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(minutesExp),
                 SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.RsaSha256Signature, SecurityAlgorithms.Sha256Digest)
