@@ -34,9 +34,7 @@
 .input-badge-container {
     flex: 1;
     border: 1px solid var(--color_form_border);
-    border-top-left-radius: 0.2rem;
-    border-bottom-left-radius: 0.2rem;
-    border-right: transparent;
+    border-radius: 0.2rem;
     padding: 0px;
 }
 

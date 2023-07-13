@@ -80,6 +80,8 @@
     --rz-notification-warning-icon-color: #FFFFFF !important;
     --rz-notification-success-icon-color: #FFFFFF !important;
     --rz-notification-info-icon-color: #FFFFFF !important;
+    --rz-dialog-title-background-color: #F5F5F5 !important;
+    --rz-dialog-title-color: #172642 !important;
     --rz-grid-column-resizer-helper-background-color: var(--color_primary) !important;
     --rz-grid-column-resizer-helper-width: 2px !important;
 
@@ -266,7 +268,7 @@ body {
     border-color: var(--color_cancel) !important;
     border-radius: var(--border_radius_btn) !important;
     font-weight: 700 !important;
-    color: var(--color_light_text)!important;
+    color: var(--color_light)!important;
 }
 
 .btn_secondary_cancel:hover {
@@ -948,7 +950,7 @@ div .form-control, div .form-control:focus{
 
 .whcm_modal_relacion>.rz-dialog-content {
     overflow: unset !important;
-    background: var(--color_light);
+    background: var(--color_panel_back);
 }
 
 .rz-dialog-wrapper {
@@ -1000,12 +1002,17 @@ div .form-control, div .form-control:focus{
 
 .whcm_select_box>.input-group-append>.whcm-btn-outline {
     color: var(--color_primary_light);
-    border-color: #ced4da;
+    border-color:  transparent;
+}
+.dropdown-menu
+{
+  background-color: var(--color_panel_back);
+  color: var(--color_text);
 }
 
 .whcm_select_box>.input-group-append>.whcm-btn-outline:hover {
     color: var(--color_primary_light);
-    border-color: #ced4da;
+    border-color: transparent;
     background-color: var(--color_back_2);
 }
 
@@ -1333,6 +1340,8 @@ div .form-control, div .form-control:focus{
 .rz-card {
     margin: 0px !important;
     padding: 0px !important;
+    background-color: var(--color_panel_back)!important;
+    box-shadow: var(--shadow_standar_min) !important;
 }
 
 .sdk_card p {

@@ -57,7 +57,7 @@
     border-radius: 0px;          
     padding: 2px 6px 2px 12px;
     background: var(--color_primary);
-    color: var(--color_light);
+    color: var(--color_light_text);
     margin-bottom: -1px; 
 }
 .rectangle_borders:first-child::before{
