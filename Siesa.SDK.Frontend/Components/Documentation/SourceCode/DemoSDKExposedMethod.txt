@@ -1,0 +1,34 @@
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Fields
+
+<div class="container-fluid">
+    <div class="row p-3">
+        <div class="col-12"><h2>SDKExposedMethod</h2></div>
+        <div class="col-12"><p>Demonstration and configuration of the SDKExposedMethod</p></div> 
+    </div>
+    <div class="row px-3 mt-3"> 
+        <div class="col-md-6 p-3 ">
+                <h5><strong>Este atributo se utiliza para exponer metodos del Backend y poder consumirlos desde el Frontend.</strong></h5>
+                <SDKCard>
+                    <p>Dentro del proyecto se ha utilizado multiples veces, veamos un ejemplo:</p>
+                    
+                    <SDKFileViewer type="SDKTypeFile.Image" url="_content/Siesa.SDK.Frontend/images/SDKExposedMethod.png" />
+
+                    <p>En el SDKExposedMethod se puede especificar los permisos para poder ejecutar el metodo, "Permission" que es un arreglo de enteros que recibe el rowid de las acciones sobre las cuales el usuario debe tener permisos para ejecutar el metodo expuesto</p>
+                    <SDKTextField Value="@Permissions"/>
+                    <p>En el ejemplo anterior se valida que el usuario tenga permiso sobre las acciones con el rowid 1 y 2.</p>
+                    <p>En caso de no tener permisos para ejecutar la accion el Backend devuelve un error con el tag "Custom.Generic.Unauthorized"</p>
+                    <SDKTextField CssClass="text-area-demo-expodeMethod" Value="@Response"/>
+                </SDKCard>
+        </div>
+    </div>
+</div>
+
+@code{
+    string Permissions = @"[SDKExposedMethod(Permissions: new int[] { 1, 2 })]";
+
+    string Response = @"{
+        Success: false
+        Error: [""Custom.Generic.Unauthorized""]
+    }";
+}

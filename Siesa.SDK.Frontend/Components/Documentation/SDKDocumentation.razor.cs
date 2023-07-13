@@ -24,13 +24,14 @@ namespace Siesa.SDK.Frontend.Components.Documentation
 
         public string ComponentName { get; set; }
 
-        public RenderFragment ComponentFragment { get; set; }
+        public Type ComponentType { get; set; }
 
         public string SourceCode { get; set; }
     }
 
     public partial class SDKDocumentation : ComponentBase
     {
+        private string _codeViewerId = Guid.NewGuid().ToString();
         private string GetNavigateUrl(ComponentDemo item)
         {
             return $"/sdk-docs/{item.ComponentName}";
@@ -48,6 +49,7 @@ namespace Siesa.SDK.Frontend.Components.Documentation
         private void SetSelectedComponent(ComponentDemo item)
         {
             SelectedComponent = item;
+            _codeViewerId = Guid.NewGuid().ToString();
             StateHasChanged();
         }
 
@@ -59,6 +61,8 @@ namespace Siesa.SDK.Frontend.Components.Documentation
                 if (x != null)
                 {
                     SelectedComponent = x.Components.Where(x => x.ComponentName == pComponentName).FirstOrDefault();
+                    _codeViewerId = Guid.NewGuid().ToString();
+                    StateHasChanged();
                 }
             }
         }
@@ -69,17 +73,17 @@ namespace Siesa.SDK.Frontend.Components.Documentation
             Init();
         }
 
-        public string ViewSourceCode()
+        public string ViewSourceCode(ComponentDemo item)
         {
             try
             {
-                string Source = Utilities.ReadAssemblyResource(this.GetType().Assembly, $"Components.Documentation.SourceCode.{SelectedComponent.ComponentName}.txt");
-                return SelectedComponent.SourceCode = Source;
+                string source = Utilities.ReadAssemblyResource(this.GetType().Assembly, $"Components.Documentation.SourceCode.{item.ComponentType.Name}.txt");
+                return item.SourceCode = source;
                 
             }
-            catch (System.Exception)
+            catch (Exception)
             {
-                Notification.ShowError("Custom.SDKDocumentation.SourceCodeNotFound");
+                _ = Notification.ShowError("Custom.SDKDocumentation.SourceCodeNotFound");
                 StateHasChanged();
                 return "";
             }

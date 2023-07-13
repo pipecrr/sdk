@@ -33,23 +33,24 @@
                     </Items>
                 </DxMenuItem>
             }
+            <DxMenuItem Text="Playground" IconCssClass="fa-solid fa-code" NavigateUrl="/sdk-docs/playground" />
         </Items>
     </DxMenu>
 </SDKCard>
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-12">
-                @if(SelectedComponent != null && SelectedComponent.ComponentFragment != null)
+                @if(SelectedComponent != null && SelectedComponent.ComponentType != null)
                 {
                     <SDKTabs>
                         <SDKTab IconCssClass="fa-solid fa-eye">
                             <SDKCard>
-                                @SelectedComponent.ComponentFragment
+                                <DynamicComponent Type="@SelectedComponent.ComponentType" />
                             </SDKCard>
                     
                     </SDKTab>
                         <SDKTab IconCssClass="fa-solid fa-code">
-                            <CodeViewer Code="@ViewSourceCode()" CssClass="vh-100" ReadOnly="true" />
+                            <CodeViewer @key="@_codeViewerId" Code="@ViewSourceCode(@SelectedComponent)" CssClass="vh-100" ReadOnly="true" />
                         </SDKTab>
                     </SDKTabs>
                     }
@@ -71,98 +72,98 @@
         {
             new ComponentCategory() {
                 Name = "Fields", Components = {
-                    new ComponentDemo{ComponentName="SDKBooleanField",ComponentFragment = @<DemoBooleanField /> },
-                    new ComponentDemo{ComponentName="SDKBooleanNullableField",ComponentFragment = @<DemoBooleanNullableField /> },
-                    new ComponentDemo{ComponentName="SDKCharField",ComponentFragment = @<DemoCharField />},
-                    new ComponentDemo{ComponentName="SDKDateField",ComponentFragment = @<DemoDateField />},
-                    new ComponentDemo{ComponentName="SDKDecimalField",ComponentFragment = @<DemoDecimalField />},
-                    new ComponentDemo{ComponentName="SDKIntegerField",ComponentFragment = @<DemoIntegerField />},
-                    new ComponentDemo{ComponentName="SDKTextField",ComponentFragment = @<DemoTextField />},
-                    new ComponentDemo{ComponentName="SDKColorPicker",ComponentFragment = @<DemoColorPicker />},
-                    new ComponentDemo{ComponentName="SDKKanban",ComponentFragment = @<DemoKanban />},
-                    new ComponentDemo{ComponentName="SDKSwitch",ComponentFragment = @<DemoSwitch />},
-                    new ComponentDemo{ComponentName="SDKSelectBar",ComponentFragment = @<DemoSelectBar />},
-                    new ComponentDemo{ComponentName="SDKSteps",ComponentFragment = @<DemoSteps />},
-                    new ComponentDemo{ComponentName="SDKSelectField",ComponentFragment = @<DemoSelectField />},
-                    new ComponentDemo{ComponentName="SDKEmailField",ComponentFragment = @<DemoEmailField />},
-                    new ComponentDemo{ComponentName="SDKGrid",ComponentFragment = @<DemoGrid />},
-                    new ComponentDemo{ComponentName="SDKRecorder",ComponentFragment = @<DemoRecorder />},
-                    new ComponentDemo{ComponentName="SDKRadioButton",ComponentFragment = @<DemoRadioButton />},
-                    new ComponentDemo{ComponentName="SDKEntityField",ComponentFragment = @<DemoEntityField />},
-                    new ComponentDemo{ComponentName="SDKInputFile",ComponentFragment = @<DemoInputFile />}
+                    new ComponentDemo{ComponentName="SDKBooleanField",ComponentType = typeof(DemoBooleanField) },
+                    new ComponentDemo{ComponentName="SDKBooleanNullableField",ComponentType = typeof(DemoBooleanNullableField) },
+                    new ComponentDemo{ComponentName="SDKCharField",ComponentType = typeof(DemoCharField)},
+                    new ComponentDemo{ComponentName="SDKDateField",ComponentType = typeof(DemoDateField)},
+                    new ComponentDemo{ComponentName="SDKDecimalField",ComponentType = typeof(DemoDecimalField)},
+                    new ComponentDemo{ComponentName="SDKIntegerField",ComponentType = typeof(DemoIntegerField)},
+                    new ComponentDemo{ComponentName="SDKTextField",ComponentType = typeof(DemoTextField)},
+                    new ComponentDemo{ComponentName="SDKColorPicker",ComponentType = typeof(DemoColorPicker)},
+                    new ComponentDemo{ComponentName="SDKKanban",ComponentType = typeof(DemoKanban)},
+                    new ComponentDemo{ComponentName="SDKSwitch",ComponentType = typeof(DemoSwitch)},
+                    new ComponentDemo{ComponentName="SDKSelectBar",ComponentType = typeof(DemoSelectBar)},
+                    new ComponentDemo{ComponentName="SDKSteps",ComponentType = typeof(DemoSteps)},
+                    new ComponentDemo{ComponentName="SDKSelectField",ComponentType = typeof(DemoSelectField)},
+                    new ComponentDemo{ComponentName="SDKEmailField",ComponentType = typeof(DemoEmailField)},
+                    new ComponentDemo{ComponentName="SDKGrid",ComponentType = typeof(DemoGrid)},
+                    new ComponentDemo{ComponentName="SDKRecorder",ComponentType = typeof(DemoRecorder)},
+                    new ComponentDemo{ComponentName="SDKRadioButton",ComponentType = typeof(DemoRadioButton)},
+                    new ComponentDemo{ComponentName="SDKEntityField",ComponentType = typeof(DemoEntityField)},
+                    new ComponentDemo{ComponentName="SDKInputFile",ComponentType = typeof(DemoInputFile)}
 
                 }, Icon ="fa-solid fa-cubes"
             },
              new ComponentCategory() {
                 Name = "FormManager", Components = {
-                    new ComponentDemo{ComponentName="InlineCrud", ComponentFragment = @<DemoInlineCrud />},
-                    new ComponentDemo{ComponentName="SDKFormLayout", ComponentFragment = @<DemoFormLayout />},
-                    new ComponentDemo{ComponentName="FreeForm", ComponentFragment = @<DemoFreeForm />},
-                    new ComponentDemo{ComponentName="DynamicListView", ComponentFragment = @<DemoDynamicListView />},
-                    new ComponentDemo{ComponentName="DynamicCreateView", ComponentFragment = @<DemoDynamicCreateView />},
-                    new ComponentDemo{ComponentName="DynamicDetailView", ComponentFragment = @<DemoDynamicDetailView />},
-                    new ComponentDemo{ComponentName="DynamicEditView", ComponentFragment = @<DemoDynamicEditView />},
-                    new ComponentDemo{ComponentName="SDKFlex", ComponentFragment = @<DemoSDKFlex />},
+                    new ComponentDemo{ComponentName="InlineCrud", ComponentType = typeof(DemoInlineCrud)},
+                    new ComponentDemo{ComponentName="SDKFormLayout", ComponentType = typeof(DemoFormLayout)},
+                    new ComponentDemo{ComponentName="FreeForm", ComponentType = typeof(DemoFreeForm)},
+                    new ComponentDemo{ComponentName="DynamicListView", ComponentType = typeof(DemoDynamicListView)},
+                    new ComponentDemo{ComponentName="DynamicCreateView", ComponentType = typeof(DemoDynamicCreateView)},
+                    new ComponentDemo{ComponentName="DynamicDetailView", ComponentType = typeof(DemoDynamicDetailView)},
+                    new ComponentDemo{ComponentName="DynamicEditView", ComponentType = typeof(DemoDynamicEditView)},
+                    new ComponentDemo{ComponentName="SDKFlex", ComponentType = typeof(DemoSDKFlex)},
                     },Icon ="fa-solid fa-list"
             },
              new ComponentCategory() {
                 Name = "Layout", Components = {
-                    new ComponentDemo{ComponentName="RelationshipPanel", ComponentFragment = @<DemoRelationshipPanel />}
+                    new ComponentDemo{ComponentName="RelationshipPanel", ComponentType = typeof(DemoRelationshipPanel)}
                 },Icon ="fa-solid fa-layer-group"
             }, 
             new ComponentCategory() {
                 Name = "Visualization", Components = {
-                    new ComponentDemo{ComponentName="SDKCard", ComponentFragment = @<DemoCard />},
-                    new ComponentDemo{ComponentName="SDKConfirmDialog", ComponentFragment = @<DemoConfirmDialog />},
-                    new ComponentDemo{ComponentName="SDKBadge", ComponentFragment = @<DemoBadge />},
-                    new ComponentDemo{ComponentName="SDKProgessBar", ComponentFragment = @<DemoProgressBar />},
-                    new ComponentDemo{ComponentName="SDKButton", ComponentFragment = @<DemoButton />},
-                    new ComponentDemo{ComponentName="SDKCollapse", ComponentFragment = @<DemoCollapse />},
-                    new ComponentDemo{ComponentName="SDKFileViewer", ComponentFragment = @<DemoFileViewer />},
-                    new ComponentDemo{ComponentName="SDKRadialGauge", ComponentFragment = @<DemoRadialGauge />},
-                    new ComponentDemo{ComponentName="SDKTabs", ComponentFragment = @<DemoTabs />},
-                    new ComponentDemo{ComponentName="SDKGrid",ComponentFragment = @<DemoGrid />},
-                    new ComponentDemo{ComponentName="Diagrams",ComponentFragment = @<DemoDiagrams />},
-                    new ComponentDemo{ComponentName="SDKImageViewer", ComponentFragment = @<DemoImageViewer />},
-                    new ComponentDemo{ComponentName="SDKGlobalLoader", ComponentFragment = @<DemoGlobalLoader />},
-                    new ComponentDemo{ComponentName="SDKPieChart", ComponentFragment = @<DemoPieChart />},
-                    new ComponentDemo{ComponentName="SDKRangeSlider", ComponentFragment = @<DemoRangeSlider />},
-                    new ComponentDemo{ComponentName="ResourceViewer", ComponentFragment = @<DemoResourceViewer />},
-                    new ComponentDemo{ComponentName="SDKIcon", ComponentFragment = @<DemoIcon />},
-                    new ComponentDemo{ComponentName="SDKButtonTiles", ComponentFragment = @<DemoButtonTiles />}
+                    new ComponentDemo{ComponentName="SDKCard", ComponentType = typeof(DemoCard)},
+                    new ComponentDemo{ComponentName="SDKConfirmDialog", ComponentType = typeof(DemoConfirmDialog)},
+                    new ComponentDemo{ComponentName="SDKBadge", ComponentType = typeof(DemoBadge)},
+                    new ComponentDemo{ComponentName="SDKProgessBar", ComponentType = typeof(DemoProgressBar)},
+                    new ComponentDemo{ComponentName="SDKButton", ComponentType = typeof(DemoButton)},
+                    new ComponentDemo{ComponentName="SDKCollapse", ComponentType = typeof(DemoCollapse)},
+                    new ComponentDemo{ComponentName="SDKFileViewer", ComponentType = typeof(DemoFileViewer)},
+                    new ComponentDemo{ComponentName="SDKRadialGauge", ComponentType = typeof(DemoRadialGauge)},
+                    new ComponentDemo{ComponentName="SDKTabs", ComponentType = typeof(DemoTabs)},
+                    new ComponentDemo{ComponentName="SDKGrid",ComponentType = typeof(DemoGrid)},
+                    new ComponentDemo{ComponentName="Diagrams",ComponentType = typeof(DemoDiagrams)},
+                    new ComponentDemo{ComponentName="SDKImageViewer", ComponentType = typeof(DemoImageViewer)},
+                    new ComponentDemo{ComponentName="SDKGlobalLoader", ComponentType = typeof(DemoGlobalLoader)},
+                    new ComponentDemo{ComponentName="SDKPieChart", ComponentType = typeof(DemoPieChart)},
+                    new ComponentDemo{ComponentName="SDKRangeSlider", ComponentType = typeof(DemoRangeSlider)},
+                    new ComponentDemo{ComponentName="ResourceViewer", ComponentType = typeof(DemoResourceViewer)},
+                    new ComponentDemo{ComponentName="SDKIcon", ComponentType = typeof(DemoIcon)},
+                    new ComponentDemo{ComponentName="SDKButtonTiles", ComponentType = typeof(DemoButtonTiles)}
                 },Icon ="fa-solid fa-cube" 
             },
             new ComponentCategory() {
                 Name = "ViewsBuilder", Components = {
-                    new ComponentDemo{ComponentName="Viewdef", ComponentFragment = @<DemoViewdef />}
+                    new ComponentDemo{ComponentName="Viewdef", ComponentType = typeof(DemoViewdef)}
                 },Icon ="fa-solid fa-layer-group"
             }, 
             new ComponentCategory() {
                 Name = "DataAnnotations", Components = {
-                    new ComponentDemo{ComponentName="SDKApiMethod", ComponentFragment = @<DemoSDKApiMethod />},
-                    new ComponentDemo{ComponentName="SDKDataEncrypt", ComponentFragment = @<DemoSDKDataEncrypt />},
-                    new ComponentDemo{ComponentName="SDKExposedMethod", ComponentFragment = @<DemoSDKExposedMethod />},
-                    new ComponentDemo{ComponentName="SDKCheckRelationship", ComponentFragment = @<DemoSDKCheckRelationship />},
-                    new ComponentDemo{ComponentName="SDKExternalView", ComponentFragment = @<DemoSDKExternalView />},
-                    new ComponentDemo{ComponentName="SDKIdentity", ComponentFragment = @<DemoSDKIdentity />},
-                    new ComponentDemo{ComponentName="SDKLogEntity", ComponentFragment = @<DemoSDKLogEntity />},
-                    new ComponentDemo{ComponentName="SDKRequired", ComponentFragment = @<DemoSDKRequired />},
-                    new ComponentDemo{ComponentName="SDKMaxLength", ComponentFragment = @<DemoSDKMaxLength />},
-                    new ComponentDemo{ComponentName="SDKStringLength", ComponentFragment = @<DemoSDKStringLength />},
-                    new ComponentDemo{ComponentName="SDKRegularExpression", ComponentFragment = @<DemoSDKRegularExpression />},
-                    new ComponentDemo{ComponentName="SDKCustomType", ComponentFragment = @<DemoSDKCustomType />},
-                    new ComponentDemo{ComponentName="SDKSensitiveData", ComponentFragment = @<DemoSDKSensitiveData />}
+                    new ComponentDemo{ComponentName="SDKApiMethod", ComponentType = typeof(DemoSDKApiMethod)},
+                    new ComponentDemo{ComponentName="SDKDataEncrypt", ComponentType = typeof(DemoSDKDataEncrypt)},
+                    new ComponentDemo{ComponentName="SDKExposedMethod", ComponentType = typeof(DemoSDKExposedMethod)},
+                    new ComponentDemo{ComponentName="SDKCheckRelationship", ComponentType = typeof(DemoSDKCheckRelationship)},
+                    new ComponentDemo{ComponentName="SDKExternalView", ComponentType = typeof(DemoSDKExternalView)},
+                    new ComponentDemo{ComponentName="SDKIdentity", ComponentType = typeof(DemoSDKIdentity)},
+                    new ComponentDemo{ComponentName="SDKLogEntity", ComponentType = typeof(DemoSDKLogEntity)},
+                    new ComponentDemo{ComponentName="SDKRequired", ComponentType = typeof(DemoSDKRequired)},
+                    new ComponentDemo{ComponentName="SDKMaxLength", ComponentType = typeof(DemoSDKMaxLength)},
+                    new ComponentDemo{ComponentName="SDKStringLength", ComponentType = typeof(DemoSDKStringLength)},
+                    new ComponentDemo{ComponentName="SDKRegularExpression", ComponentType = typeof(DemoSDKRegularExpression)},
+                    new ComponentDemo{ComponentName="SDKCustomType", ComponentType = typeof(DemoSDKCustomType)},
+                    new ComponentDemo{ComponentName="SDKSensitiveData", ComponentType = typeof(DemoSDKSensitiveData)}
                 },Icon ="fa-solid fa-note-sticky"
             },
 
             new ComponentCategory()
             {
                 Name= "SDKServices", Components = {
-                    new ComponentDemo{ComponentName="EmailService", ComponentFragment = @<DemoEmailServices />},
-                    new ComponentDemo{ComponentName="SDKNotificationService", ComponentFragment = @<DemoNotificationservices />},
-                    new ComponentDemo{ComponentName="FeaturePermissionService", ComponentFragment = @<DemoFeaturePermission/>},
-                    new ComponentDemo{ComponentName="ResourceManager", ComponentFragment = @<DemoResourceManager/>},
-                    new ComponentDemo{ComponentName="AuthenticationService", ComponentFragment = @<DemoAuthenticationService/>},
+                    new ComponentDemo{ComponentName="EmailService", ComponentType = typeof(DemoEmailServices)},
+                    new ComponentDemo{ComponentName="SDKNotificationService", ComponentType = typeof(DemoNotificationservices)},
+                    new ComponentDemo{ComponentName="FeaturePermissionService", ComponentType = typeof(DemoFeaturePermission)},
+                    new ComponentDemo{ComponentName="ResourceManager", ComponentType = typeof(DemoResourceManager)},
+                    new ComponentDemo{ComponentName="AuthenticationService", ComponentType = typeof(DemoAuthenticationService)}
                 },Icon ="fa-solid fa-code-compare"
             }
 

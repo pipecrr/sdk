@@ -1,0 +1,85 @@
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Fields
+@inject SDKNotificationService NotificationService
+
+@layout EmptyLayout
+
+
+<div class="container-fluid">
+    <div class="container-fluid">
+            <h2>SDKSteps</h2> 
+            <p>Demonstration and configuration of the SDKSteps component</p> 
+    </div>
+    <div class="row px-3"> 
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>Steps Value Changed</h3>
+                <SDKSteps SelectedIndex="@mySelect" SelectedIndexChanged="@OnChange" ShowStepsButtons="true">
+                    <Steps>
+                        <SDKStepsItem ResourceTag="BLFlex.Plural">
+                            <h4>RenderFragment Step1</h4>
+                        </SDKStepsItem>
+                        <SDKStepsItem ResourceTag="Step 2">
+                            <h4>RenderFragment Step2</h4>
+                        </SDKStepsItem>
+                        <SDKStepsItem ResourceTag="Step 3">
+                            <h4>RenderFragment Step3</h4>
+                        </SDKStepsItem>
+                        <SDKStepsItem ResourceTag="Step 4">
+                            <h4>RenderFragment Step4</h4>
+                        </SDKStepsItem>
+                    </Steps>
+                </SDKSteps>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>Steps icons</h3>
+                <SDKSteps SelectedIndex="@mySelect" SelectedIndexChanged="@OnChange" ShowStepsNumbers="false">
+                    <Steps>
+                        <SDKStepsItem IconCssClass="fa-solid fa-house" ResourceTag="BLFlex.Plural">
+                            <h4>RenderFragment Step1</h4>
+                        </SDKStepsItem>
+                        <SDKStepsItem IconCssClass="fa-solid fa-star" ResourceTag="Step 2">
+                            <h4>RenderFragment Step2</h4>
+                        </SDKStepsItem>
+                        <SDKStepsItem IconCssClass="fa-solid fa-heart" ResourceTag="Step 3">
+                            <h4>RenderFragment Step3</h4>
+                        </SDKStepsItem>
+                        <SDKStepsItem IconCssClass="fa-solid fa-music" ResourceTag="Step 4">
+                            <h4>RenderFragment Step4</h4>
+                        </SDKStepsItem>
+                    </Steps>
+                </SDKSteps>
+            </SDKCard>
+        </div>
+    </div>
+</div>
+
+@code{
+    int mySelect;
+
+    public void OnChange(int index){
+        mySelect = index;
+
+        switch (index)
+        {
+            case 0:
+            NotificationService.ShowInfo("Selected Step 1");
+            break;
+            case 1:
+            NotificationService.ShowInfo("Selected Step 2");
+            break;
+            case 2:
+            NotificationService.ShowInfo("Selected Step 3");
+            break;
+            case 3:
+            NotificationService.ShowInfo("Selected Step 4");
+            break;
+
+            default:
+            break;
+        }
+    }
+}
+
