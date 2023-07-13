@@ -72,7 +72,7 @@ namespace Siesa.SDK.Shared.Services
             {
                 _observers.Add(observer);
             }
-            NotifyObservers();
+            _ = NotifyObservers();
         }
 
         public void RemoveObserver(BackendInfo observer)
@@ -82,7 +82,7 @@ namespace Siesa.SDK.Shared.Services
 
                 _observers.Remove(observer);
             }
-            NotifyObservers();
+          _ = NotifyObservers();
         }
 
 

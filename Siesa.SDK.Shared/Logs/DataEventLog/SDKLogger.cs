@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
 using Siesa.SDK.Shared.Configurations;
-using Microsoft.Extensions.Logging;
 using System;
 using Microsoft.Extensions.DependencyInjection;
 

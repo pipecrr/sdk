@@ -1,7 +1,6 @@
 ﻿syntax = "proto3";
 option csharp_namespace = "Siesa.SDK.Protos";
 import "Protos/BusinessMessages.proto";
-import "google/protobuf/wrappers.proto";
 
 service GRPCBackendManagerService {
   rpc RegisterBackend (RegisterBackendRequest) returns (RegisterBackendResponse);
