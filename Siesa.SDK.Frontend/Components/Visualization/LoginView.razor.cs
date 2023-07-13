@@ -36,42 +36,43 @@ public partial class LoginView
     protected override async Task OnInitializedAsync()
     {
         init_loading = true;
-        if (AuthenticationService.PortalUser != null)
+        await GetConnection();
+        PortalValid = await ValidatePortal();
+        if(!PortalValid){
+            throw new Exception("Portal not valid");
+        }
+        if (AuthenticationService.PortalUser != null )
         {
             NavigationManager.NavigateTo($"/{PortalName}");
             return;
         }
-        await InitLogin();
+        await base.OnInitializedAsync();
     }
 
     public async Task<bool> ValidatePortal(){
         var BLSDKPortalUser = BackendRouterService.GetSDKBusinessModel("BLSDKPortalUser", AuthenticationService);
-        var result = await BLSDKPortalUser.Call("ValidatePortal", PortalName, SelectedConnection.Rowid);
+        short _conexion = (short)RowidConexion;
+        var result = await BLSDKPortalUser.Call("ValidatePortal", PortalName, _conexion);
         if(result.Success && result.Data != null){
-            return true;
+            return result.Data;
         }else{
             return false;
         }
     }
 
-    private async Task InitLogin()
-    {
+    private async Task GetConnection(){
         var BLSDKPortalUser = BackendRouterService.GetSDKBusinessModel("BLSDKPortalUser", AuthenticationService);
         var result = await BLSDKPortalUser.Call("GetDBConnection", RowidConexion);
         await getCultures();
         getSelectedCulture();
+        init_loading = false;
         if(result.Success && result.Data != null){
             SelectedConnection = result.Data;
-            PortalValid = await ValidatePortal();
-            init_loading = false;
-            await base.OnInitializedAsync();
             StateHasChanged();
         }else{
-            init_loading = false;
             StateHasChanged();
         }
     }
-
 
     private async void HandleValidSubmit(){
         string message = "BLUser.Login.Message.SuccesLogin";

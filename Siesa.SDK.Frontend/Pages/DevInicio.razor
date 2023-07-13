@@ -1,8 +1,12 @@
 @page "/autogestion"
 @using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Frontend.Components.Layout.Header
+@using Siesa.SDK.Frontend.Components.Layout.NavMenu
 @inject IAuthenticationService AuthenticationService
 
-<button onclick="@Logout">Logout</button>
+
+<SDKHeaderPortal />
+<NavMenuPortal />
 
 @code {
 
@@ -12,10 +16,4 @@
         MainLayout.SetEmptyLayout(true);
         await base.OnInitializedAsync();
     }
-
-    private async Task Logout()
-    {
-        await AuthenticationService.LogoutPortal();
-    }
-    
 }

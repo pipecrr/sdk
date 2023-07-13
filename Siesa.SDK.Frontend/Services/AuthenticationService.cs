@@ -283,6 +283,7 @@ namespace Siesa.SDK.Frontend.Services
         {
             SDKDbConnection _selectedConnection = GetSelectedConnection();
             var RowIdDBConnection = _selectedConnection != null ? _selectedConnection.Rowid : 0;
+            var portalName = PortalUser.PortalName;
 
             await _localStorageService.RemoveItemAsync("portalusertoken");
             await _localStorageService.RemoveItemAsync("portaluserPhoto");
@@ -291,7 +292,7 @@ namespace Siesa.SDK.Frontend.Services
             PortalUserToken = "";
             _portalUser = null;
 
-            _navigationManager.NavigateTo($"Portal/{RowIdDBConnection}/{PortalUser.PortalName}");
+            _navigationManager.NavigateTo($"Portal/{RowIdDBConnection}/{portalName}");
         }
 
         public async Task SetToken(string token, bool saveLocalStorage = true)
