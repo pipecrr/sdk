@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Components;
+using Siesa.SDK.Frontend.Components.Documentation.Playground;
 using Siesa.SDK.Frontend.Services;
 using Siesa.SDK.Shared.Utilities;
 
@@ -57,10 +58,24 @@ namespace Siesa.SDK.Frontend.Components.Documentation
         {
             if (!string.IsNullOrEmpty(pComponentName))
             {
-                var x = Category.Where(x => x.Components.Any(y => y.ComponentName == pComponentName)).FirstOrDefault();
-                if (x != null)
+                if (pComponentName == "playground")
                 {
-                    SelectedComponent = x.Components.Where(x => x.ComponentName == pComponentName).FirstOrDefault();
+                    SelectedComponent = new ComponentDemo()
+                    {
+                        ComponentName = "playground",
+                        ComponentType = typeof(PlaygroundView)
+                    };
+                }
+                else
+                {
+                    var x = Category.Where(x => x.Components.Any(y => y.ComponentName == pComponentName)).FirstOrDefault();
+                    if (x != null)
+                    {
+                        SelectedComponent = x.Components.Where(x => x.ComponentName == pComponentName).FirstOrDefault();
+                    }
+                }
+                if (SelectedComponent != null)
+                {
                     _codeViewerId = Guid.NewGuid().ToString();
                     StateHasChanged();
                 }

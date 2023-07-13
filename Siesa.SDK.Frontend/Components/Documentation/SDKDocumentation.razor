@@ -11,6 +11,7 @@
 @using Siesa.SDK.Frontend.Components.Documentation.Layout
 @using Siesa.SDK.Frontend.Components.Documentation.ViewsBuilder
 @using Siesa.SDK.Frontend.Components.Documentation.DataAnnotations
+@using Siesa.SDK.Frontend.Components.Documentation.Playground
 @using Siesa.SDK.Frontend.Components.Documentation.SDKServices
 
 @inject IJSRuntime JSRuntime
@@ -42,17 +43,25 @@
         <div class="col-12">
                 @if(SelectedComponent != null && SelectedComponent.ComponentType != null)
                 {
-                    <SDKTabs>
-                        <SDKTab IconCssClass="fa-solid fa-eye">
-                            <SDKCard>
-                                <DynamicComponent Type="@SelectedComponent.ComponentType" />
-                            </SDKCard>
-                    
-                    </SDKTab>
-                        <SDKTab IconCssClass="fa-solid fa-code">
-                            <CodeViewer @key="@_codeViewerId" Code="@ViewSourceCode(@SelectedComponent)" CssClass="vh-100" ReadOnly="true" />
+                    if (SelectedComponent.ComponentType == typeof(PlaygroundView))
+                    {
+                        <DynamicComponent Type="@SelectedComponent.ComponentType" />
+                    }
+                    else
+                    {
+                        <SDKTabs>
+                            <SDKTab IconCssClass="fa-solid fa-eye">
+                                <SDKCard>
+                                    <DynamicComponent Type="@SelectedComponent.ComponentType" />
+                                </SDKCard>
+                        
                         </SDKTab>
-                    </SDKTabs>
+                            <SDKTab IconCssClass="fa-solid fa-code">
+                                <CodeViewer @key="@_codeViewerId" Code="@ViewSourceCode(@SelectedComponent)" CssClass="vh-100" ReadOnly="true" />
+                            </SDKTab>
+                        </SDKTabs>
+                        
+                    }
                     }
         </div>
     </div>
@@ -198,11 +207,3 @@
     }
     
 }
-
-
-
-
-
-
-
-
