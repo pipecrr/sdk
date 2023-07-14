@@ -36,6 +36,9 @@ namespace Siesa.SDK.Entities
 		[SDKRequired]
 		public int RowidInternalUser { get; set; }
 
+		[SDKStringLength(10)]
+		public string? IconClass { get; set; }
+
 
 		[SDKCheckRelationship]
 		[SDKRequired]
