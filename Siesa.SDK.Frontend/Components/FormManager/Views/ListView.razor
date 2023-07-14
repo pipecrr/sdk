@@ -380,7 +380,7 @@ else
                 }
             </TopBarButtons>
             <TopBarExtraButtons>
-                @foreach (var btn in ExtraButtons)
+                @foreach (var btn in ExtraButtons.Where(x => string.IsNullOrEmpty(x.Id)))
                 {
                     if(!btn.Hidden){
                         <TopBarButton Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" IconCssClass="@btn.IconClass" Enabled="@(!btn.Disabled)"/>
