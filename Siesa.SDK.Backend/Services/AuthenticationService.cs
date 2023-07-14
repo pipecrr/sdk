@@ -22,6 +22,7 @@ namespace Siesa.SDK.Backend.Services
         }
 
         private JwtUserData? _user;
+        private JwtUserData? _portalUser;
 
         public JwtUserData User { get {
             if(UserToken == ""){
@@ -47,7 +48,19 @@ namespace Siesa.SDK.Backend.Services
                 if(PortalUserToken == ""){
                     return null;
                 }
-                return new SDKJWT(_secretKey, _minutesExp).Validate(PortalUserToken);
+                if(_portalUser == null){
+                    try
+                    {
+                        _portalUser = _sdkJWT.Validate<JwtUserData>(PortalUserToken);
+                    }
+                    catch (System.Exception)
+                    {
+                        
+                        _portalUser = null;
+                    }
+                   
+                }
+                return _portalUser;
             }
         }
 

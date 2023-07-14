@@ -10,7 +10,7 @@
     </div>
     <div class="col-6 sdk_profile" >
         <div class="row">
-            <h6 class="sdk_name_profile">Arnol</h6>
+            <h6 class="sdk_name_profile">@UserName</h6>
             <div class="sdk_picture_profile">
                 <SDKIcon Name="fa-user" />
             </div>
@@ -19,11 +19,13 @@
 </header>
 
 @code {
-    private string LogoUrl { get; set; } = "";
+    private string LogoUrl { get; set; }
+    private string UserName { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnParametersSet()
     {
         LogoUrl = AuthenticationService.GetConnectionLogo();
+        UserName = AuthenticationService.PortalUser?.IdExternalUser;
+        base.OnParametersSet();
     }
-
 }

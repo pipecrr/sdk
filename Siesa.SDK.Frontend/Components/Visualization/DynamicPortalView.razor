@@ -4,7 +4,8 @@
 @using Siesa.SDK.Frontend.Components.Layout.NavMenu
 @using Siesa.SDK.Frontend.Components.Dashboard
 @using Siesa.SDK.Shared.Services
-@using Siesa.SDK.Entities
+@using Siesa.SDK.Shared.DTOS
+
 @inject IAuthenticationService AuthenticationService
 @inject IBackendRouterService BackendRouterService
 
@@ -26,8 +27,8 @@ else
     [Parameter]
     public int RowidConexion { get; set; }
     public string LogoUrl { get; set; } = "_content/Siesa.SDK.Frontend/assets/img/siesaLogo.png";
-    public List<E00517_Portal> Portals { get; set; } = new List<E00517_Portal>();
-    public E00517_Portal SelectedPortal { get; set; }
+    public List<SDKPortalDTO> Portals { get; set; } = new List<SDKPortalDTO>();
+    public SDKPortalDTO SelectedPortal { get; set; }
     private bool _userLogged;
     
     protected override async Task OnParametersSetAsync()
@@ -38,7 +39,7 @@ else
             var blsdkPortalUser = BackendRouterService.GetSDKBusinessModel("BLSDKPortalUser", AuthenticationService);
             var result = await blsdkPortalUser.Call("GetPortals", AuthenticationService.PortalUser.RowidExternalUser);
             if(result.Success && result.Data != null){
-                Portals = result.Data as List<E00517_Portal>;
+                Portals = result.Data as List<SDKPortalDTO>;
                 SelectedPortal = Portals?.FirstOrDefault();
             }
         }
@@ -54,7 +55,7 @@ else
         await base.OnInitializedAsync();
     }
     
-    public void OnPortalChange(E00517_Portal portal)
+    public void OnPortalChange(SDKPortalDTO portal)
     {
         SelectedPortal = portal;
         StateHasChanged();

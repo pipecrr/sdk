@@ -83,7 +83,14 @@ namespace Siesa.SDK.Frontend.Services
                 }
                 if (_portalUser == null)
                 {
-                    _portalUser = new SDKJWT(_secretKey, _minutesExp).Validate(PortalUserToken);
+                    try
+                    {
+                        _portalUser = _sdkJWT.Validate<JwtUserData>(PortalUserToken);
+                    }
+                    catch (System.Exception)
+                    {
+                        _portalUser = null;
+                    }
                 }
                 return _portalUser;
             }

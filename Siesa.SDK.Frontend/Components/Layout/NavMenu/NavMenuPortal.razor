@@ -1,6 +1,8 @@
 ﻿@using Siesa.SDK.Shared.Services
 @using Siesa.SDK.Frontend.Services
-@using Siesa.SDK.Entities
+@using Siesa.SDK.Shared.DTOS
+
+
 @inject IAuthenticationService AuthenticationService
 @inject UtilsManager UtilManager
 
@@ -11,7 +13,7 @@
         {
             foreach (var portal in Portals)
             {
-                <a class="my-1" @onclick="() => ChangeMenu(portal)">
+                <a class="nav_btn_standar my-1" @onclick="() => ChangeMenu(portal)">
                     <div class="nav_btn_standar_icon">
                         <SDKIcon Name="fa-plus"/>
                     </div>
@@ -34,9 +36,9 @@
 
 @code {
     [Parameter]
-    public List<E00517_Portal> Portals { get; set; } = new List<E00517_Portal>();
+    public List<SDKPortalDTO> Portals { get; set; } = new List<SDKPortalDTO>();
     [Parameter]
-    public Action<E00517_Portal> OnPortalChange { get; set; }
+    public Action<SDKPortalDTO> OnPortalChange { get; set; }
     
     private string TitleLogout { get; set; }
 
@@ -46,9 +48,9 @@
         await base.OnInitializedAsync();
     }
 
-    private void ChangeMenu(E00517_Portal e00517Portal)
+    private void ChangeMenu(SDKPortalDTO portalDto)
     {
-        OnPortalChange?.Invoke(e00517Portal);
+        OnPortalChange?.Invoke(portalDto);
     }
 
 }
