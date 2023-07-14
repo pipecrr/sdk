@@ -111,23 +111,22 @@
                                 @foreach (var theme in ThemeColor)
                                 {
                                     <div class="col-4 ">
-                                        <div class="sdk_card p-2 mb-2">
-                                            <div class="d-flex justify-content-between">
-                                                <div class="col-12 pl-0 pr-0">
-                                                    <div
-                                                        style="background-color:@theme.Value; border-radius: 4px; height: 20px;">
+                                        <div @onclick="()=> OnChangeSelectedTheme(theme.Key)">
+                                            <div class="sdk_card p-2 mb-2">
+                                                <div class="d-flex justify-content-between">
+                                                    <div class="col-12 pl-0 pr-0">
+                                                        <div
+                                                            style="background-color:@theme.Value; border-radius: 4px; height: 20px;">
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="d-flex align-items-center">
+                                            <div class="d-flex align-items-center">
 
+                                                <input class="mr-2" type="radio" name="ThemeColor" value="@theme.Key">
 
-                                            <input class="mr-2" type="radio" name="ThemeColor" value="@theme.Key"
-                                                @onchange="OnChangeSelectedTheme" checked="@ValidCheckedThemeColor(theme.Key)">
-
-                                            <ResourceViewer ResourceTag=@theme.Key />
-
+                                                <ResourceViewer ResourceTag=@theme.Key />
+                                            </div>
                                         </div>
                                     </div>
                                 }
@@ -307,6 +306,8 @@
 
 @code
 {
+    [CascadingParameter]
+    public MainLayout MainLayout { get; set; }
     private SDKInputFile? _refinputFile;
     private int _rowidAttachmentDetail { get; set; }
     private IJSObjectReference _jsModule;
@@ -381,33 +382,31 @@
         _selectedIconStyle = BLUser.BaseObj.ThemeIconStyle;
         _selectedColorComplementary = BLUser.BaseObj.ThemeSecondaryColor;
         _selectedTopbarStyle = BLUser.BaseObj.ThemeTopbarStyle;
-        _rowidAttachmentDetail = BLUser.BaseObj.RowidAttachmentUserProfilePicture;
+        _rowidAttachmentDetail = BLUser.BaseObj.RowidAttachmentUserProfilePicture ?? 0;
         //TODO: _userPreferences
 
         ThemeColor = new Dictionary<string, string>()
-{
-{ "Custom.SDK.Theme.Blue", "#1079FD" },
-{ "Custom.SDK.Theme.Dark", "#042339" },
-};
+        {
+            { "Custom.SDK.Theme.Blue", "#1079FD" },
+            { "Custom.SDK.Theme.Dark", "#042339" },
+        };
 
         IconsStyles = new List<enumThemeIconStyle>()
-{
-{ enumThemeIconStyle.Solid },
-{ enumThemeIconStyle.Regular },
-{ enumThemeIconStyle.Light },
-{ enumThemeIconStyle.Duotone },
-{ enumThemeIconStyle.Thin }
-};
+        {
+            { enumThemeIconStyle.Solid },
+            { enumThemeIconStyle.Regular },
+            { enumThemeIconStyle.Light },
+            { enumThemeIconStyle.Duotone },
+            { enumThemeIconStyle.Thin }
+        };
 
         ComplementaryColors = new List<ComplementaryColor>()
-{
-new ComplementaryColor() { ColorName = "Tono1", PrimaryColor = "#1079FD", SecundaryColor="#661079FD" },
-new ComplementaryColor() { ColorName = "Tono2", PrimaryColor = "#9B111E", SecundaryColor="#669B111E" }
-};
+        {
+            new ComplementaryColor() { ColorName = "Tono1", PrimaryColor = "#1079FD", SecundaryColor="#661079FD" },
+            new ComplementaryColor() { ColorName = "Tono2", PrimaryColor = "#9B111E", SecundaryColor="#669B111E" }
+        };
 
         StateHasChanged();
-
-
     }
 
 
@@ -453,20 +452,18 @@ new ComplementaryColor() { ColorName = "Tono2", PrimaryColor = "#9B111E", Secund
         if (result.Success)
         {
             Console.WriteLine("Success Save Changes");
-            AuthenticationService.SetUserPhoto(ProfileImageData);
+            await AuthenticationService.SetUserPhoto(ProfileImageData);
 
             _userPreferences.ThemeColor = _selectedThemeStyle;
             _userPreferences.IconsStyles = _selectedIconStyle;
             _userPreferences.ComplementaryColors = _selectedColorComplementary;
             _userPreferences.TopbarStyles = _selectedTopbarStyle;
 
-            AuthenticationService.SetPreferencesUser(_userPreferences);
+            await AuthenticationService.SetPreferencesUser(_userPreferences);
 
             DialogService.Close(true);
-
-            NavigationService.NavigateTo("/", forceLoad: true, replace: true);
-
-            return;
+            MainLayout?.Refresh();
+            NavigationService.NavigateTo("/", forceLoad: true,replace: true);
         }
 
     }
@@ -511,33 +508,9 @@ new ComplementaryColor() { ColorName = "Tono2", PrimaryColor = "#9B111E", Secund
         }
     }
 
-    private void OnChangeSelectedTheme(ChangeEventArgs args)
+    private void OnChangeSelectedTheme(string args)
     {
-        _selectedThemeStyle = args.Value.ToString();
-
-        SDKDbConnection SelectedConnection = AuthenticationService.GetSelectedConnection();
-
-        if (SelectedConnection != null)
-        {
-            switch (_selectedThemeStyle)
-            {
-                case "Custom.SDK.Theme.Dark":
-
-                    SelectedConnection.StyleUrl = "_content/Siesa.SDK.Frontend/css/Themes/DarkTheme.css";
-                    break;
-
-                case "Custom.SDK.Theme.Blue":
-
-                    SelectedConnection.StyleUrl = "_content/Siesa.SDK.Frontend/css/global.css";
-                    break;
-
-
-                default:
-                    break;
-            }
-
-            AuthenticationService.SetSelectedConnection(SelectedConnection);
-        }
+        _selectedThemeStyle = args;
 
         StateHasChanged();
     }
@@ -567,24 +540,9 @@ new ComplementaryColor() { ColorName = "Tono2", PrimaryColor = "#9B111E", Secund
     {
         if (!string.IsNullOrEmpty(BLUser.BaseObj.Theme) && BLUser.BaseObj.Theme.Equals(ThemeColorName))
         {
-            //_selectedThemeStyle = BLUser.BaseObj.Theme;
             return true;
         }
         else if (ThemeColorName.Equals("Custom.SDK.Theme.Blue"))
-        {
-            _selectedThemeStyle = ThemeColorName;
-
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    private bool ValidDisabledThemeColor(string ThemeColorName)
-    {
-        if (!ThemeColorName.Equals("Custom.SDK.Theme.Blue"))
         {
             return true;
         }

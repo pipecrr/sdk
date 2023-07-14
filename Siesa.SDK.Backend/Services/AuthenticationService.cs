@@ -150,5 +150,10 @@ namespace Siesa.SDK.Backend.Services
         public async Task SetUserPhoto(string _data, bool saveLocalStorage = true){
             throw new NotImplementedException();
         }
+
+        public string GetThemeStyle()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
