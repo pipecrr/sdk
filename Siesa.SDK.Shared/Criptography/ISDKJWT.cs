@@ -9,7 +9,5 @@ namespace Siesa.SDK.Shared.Criptography
         public string Generate<T>(T obj, long min);
 
         public T Validate<T>(string token);
-
-        public JwtSecurityToken RenewToken(string token);
     }
 }

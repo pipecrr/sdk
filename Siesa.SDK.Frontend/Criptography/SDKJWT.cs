@@ -20,10 +20,5 @@ namespace Siesa.SDK.Frontend.Criptography
         {
             return JWTUtils.Validate<T>(token, SDKRsaKeys.PublicKey);
         }
-
-        public JwtSecurityToken RenewToken(string token)
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

@@ -21,10 +21,5 @@ namespace Siesa.SDK.Backend.Criptography
         {
             return JWTUtils.Validate<T>(token, Siesa.SDK.Shared.Criptography.SDKRsaKeys.PublicKey);
         }
-
-        public JwtSecurityToken RenewToken(string token)
-        {
-            return JWTUtils.RenewToken(token, SDKRsaKeys.PrivateKey);
-        }
     }
 }
