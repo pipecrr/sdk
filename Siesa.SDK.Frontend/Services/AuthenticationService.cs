@@ -511,5 +511,24 @@ namespace Siesa.SDK.Frontend.Services
             
             return UserPreferences;
         }
+
+        public string GetThemeStyle()
+        {
+            string _rootThemeStyle = "";
+
+            if (UserPreferences != null && !string.IsNullOrEmpty(UserPreferences.ThemeColor))
+            {
+                switch (UserPreferences.ThemeColor)
+                {
+                    case "Custom.SDK.Theme.Dark":
+                        _rootThemeStyle = "_content/Siesa.SDK.Frontend/css/Themes/DarkTheme.css";
+                        break;
+
+                    default:
+                        break;
+                }       
+            }
+            return _rootThemeStyle;
+        }
     }
 }

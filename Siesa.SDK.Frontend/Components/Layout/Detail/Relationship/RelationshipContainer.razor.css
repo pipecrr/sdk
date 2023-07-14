@@ -68,7 +68,7 @@
     padding: 0.5rem 0.35rem;
     line-height: 1;
     font-size: 0.875rem;
-    color: var(--color_light);
+    color: var(--color_light_text);
     background: var(--color_primary);
     border-radius: var(--border_radius_standar);
     border: none;
@@ -110,7 +110,7 @@
     right: 0;
     opacity: 1;
     box-shadow: var(--shadow_standar);
-    background: var(--color_light);
+    background: var(--color_panel_back);
     border-radius: 1rem;
     display: inline-block;
     min-width: 250px;

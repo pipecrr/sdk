@@ -66,6 +66,7 @@ namespace Siesa.SDK.Shared.Services
         Task SetUserPhoto(string data, bool saveLocalStorage = true);
         Task SetPreferencesUser(UserPreferencesDTO preferences);
         UserPreferencesDTO GetPreferencesUser();
+        string GetThemeStyle();
     }
 
     

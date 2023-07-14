@@ -218,6 +218,7 @@ input#collapse_open:checked~ ::deep .nav_dx_menu {
 input#collapse_open:checked~.collapse_open_btn {
     /* width: calc(240px - 0.75rem); */
     transition-duration: .25s;
+    left: 230px;
 }
 
 .nav_logo {
@@ -328,7 +329,7 @@ input#collapse_open:checked~.collapse_open_btn {
     opacity: 1;
     transition: all .2s ease;
 }
-.nav_btn_standar_suite:hover > .nav_btn_standar_icon_suite > i{
+.nav_btn_standar_suite:hover .nav_btn_standar_icon_suite > i{
     color: var(--color_light) !important;
 }
 .nav_btn_standar_suite:hover > .nav_btn_standar_text{

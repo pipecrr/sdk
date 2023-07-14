@@ -23,12 +23,14 @@
         <div class="sdk-test-watermark" data-watermark="@WatermarkText"></div>
     } 
 
-    @if(!string.IsNullOrEmpty(AuthenticationService.GetSelectedConnection().StyleUrl))
+    @if(!string.IsNullOrEmpty(AuthenticationService.GetThemeStyle()))
     {
         <head>
-            <link rel="stylesheet" href="@AuthenticationService.GetConnectionStyle()">
+            <link rel="stylesheet" href="@AuthenticationService.GetThemeStyle()">
         </head>
     }
+
+    
 }
 
 <RadzenDialog />
@@ -364,6 +366,11 @@
     public void NavigateTo(string url)
     {
         NavigationService.NavigateTo(url);
+    }
+
+    public async Task Refresh()
+    {
+        StateHasChanged();
     }
 }
 
