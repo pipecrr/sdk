@@ -25,7 +25,7 @@ namespace Siesa.SDK.Entities
 
 		[ForeignKey("Feature")]
 		[SDKRequired]
-		public int RowidFeature { get; set; } = 2;
+		public int RowidFeature { get; set; }
 
 
 		[SDKCheckRelationship]
