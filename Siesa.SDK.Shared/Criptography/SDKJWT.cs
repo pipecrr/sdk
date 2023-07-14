@@ -109,6 +109,7 @@ namespace Siesa.SDK.Shared.Criptography
 
             if(portalUser != null){
                 userToken.IdExternalUser = portalUser.ExternalUser.Id;
+                userToken.RowidExternalUser = portalUser.ExternalUser.Rowid;
                 userToken.PortalName = portalName;
                 userToken.RowidMainRecord = portalUser.RowidMainRecord;
             }

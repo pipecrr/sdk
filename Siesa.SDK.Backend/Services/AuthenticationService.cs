@@ -61,8 +61,7 @@ namespace Siesa.SDK.Backend.Services
             throw new NotImplementedException();
         }
 
-        public Task LoginPortal(string username, string password, short rowIdDBConnection, string PortalName,
-            bool IsUpdateSession = false, short rowIdCompanyGroup = 1)
+        public Task LoginPortal(string username, string password, short rowIdDBConnection, bool IsUpdateSession = false, short rowIdCompanyGroup = 1)
         {
             throw new NotImplementedException();
         }

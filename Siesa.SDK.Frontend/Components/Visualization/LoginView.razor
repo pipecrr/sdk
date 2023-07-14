@@ -1,9 +1,10 @@
 @using Siesa.SDK.Frontend.Components.Fields
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Pages.Login
 
 <div class="back_login">
-    <div class="col-12 offset-md-1 col-md-10 px-0 px-md-3" hidden="@init_loading">        
+    <div class="col-12 offset-md-1 col-md-10 px-0 px-md-3" hidden="@init_loading">
         <div class="card_login col-12">
             <div class="row image_back" data-image="assets/img/log_image_2.jpg">
                 <div class="info_area col-md-12 col-lg-7 p-3 p-lg-4">                    
@@ -32,7 +33,7 @@
                         <div id="lang">
                             <div class="position-relative">
                                 <button class="btn ml-2 d-flex btn_region" style="padding:0"
-                                     data-automation-id="Button_Select_Culture">
+                                     @onclick="() => IsOpen = !IsOpen" data-automation-id="Button_Select_Culture">
                                     @if(selectedCulture != null)
                                     {
                                         <span class="@classCulture"
@@ -136,7 +137,6 @@
         </div>
     </div>
 
-
     <div class="modal fade" id="LangModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -151,6 +151,15 @@
         </div>
     </div>
 
+    <DxDropDown @bind-IsOpen="@IsOpen" PositionMode="DropDownPositionMode.Bottom" PositionTarget="#lang"
+        RestrictionTarget="#Navigation-DropDown-Customization" CloseMode="DropDownCloseMode.Close"
+        PreventCloseOnPositionTargetClick="true" Id="boxRegion" CssClass="region_tooltip" MinWidth="230px" MaxWidth="250px" HeaderVisible="false"
+        FooterVisible="false">
+        <BodyTemplate>
+            <Lang _Cultures="@cultures" _idRow="@RowidCulture" OnChangeCulture="@((rowid)=> OnChangeCulture(rowid))" />
+        </BodyTemplate>
+    </DxDropDown>
+
     @* <div class="login_loading @GetCssLoding()">
         <div>
             <div class="text-center fa-4x font_color_primary_light mb-4">
@@ -163,3 +172,15 @@
     </div> *@
         
 </div>
+
+@code{
+    private async Task OnChangeCulture(short rowidCulture)
+    {
+        RowidCulture = rowidCulture;
+        IsOpen = false;
+        getSelectedCulture();
+        AuthenticationService.RowidCultureChanged = rowidCulture;
+        await AuthenticationService.SetCustomRowidCulture(rowidCulture);
+        StateHasChanged();
+    }
+}

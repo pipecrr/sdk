@@ -20,9 +20,9 @@ public partial class LoginView
     [Parameter] public string LogoUrl { get; set; }
     [Parameter] public string ImageUrl { get; set; }
     [Parameter] public int RowidConexion { get; set; }
-    [Parameter] public string PortalName { get; set; }
-    public int RowidCulture { get; set; } = 1;
+    public short RowidCulture { get; set; } = 1;
     public string FormID { get; set; } = Guid.NewGuid().ToString();
+    private string PortalName { get; set; }
     private SDKLoginModelDTO model = new SDKLoginModelDTO();
     private bool loading;
     private bool init_loading = true;
@@ -32,35 +32,31 @@ public partial class LoginView
     private bool PortalValid;
     private E00021_Culture selectedCulture { get; set; }
     private List<E00021_Culture> cultures = new List<E00021_Culture>();
-    string classCulture = "";
+    private bool IsOpen { get; set; } = false;
+    private string classCulture = "";
     protected override async Task OnInitializedAsync()
     {
         init_loading = true;
-        await GetConnection();
-        PortalValid = await ValidatePortal();
-        if(!PortalValid){
-            throw new Exception("Portal not valid");
-        }
-        if (AuthenticationService.PortalUser != null )
+        if (AuthenticationService.PortalUser != null)
         {
             NavigationManager.NavigateTo($"/{PortalName}");
             return;
         }
-        await base.OnInitializedAsync();
+        await InitLogin();
     }
 
     public async Task<bool> ValidatePortal(){
         var BLSDKPortalUser = BackendRouterService.GetSDKBusinessModel("BLSDKPortalUser", AuthenticationService);
-        short _conexion = (short)RowidConexion;
-        var result = await BLSDKPortalUser.Call("ValidatePortal", PortalName, _conexion);
+        var result = await BLSDKPortalUser.Call("ValidatePortal", PortalName, SelectedConnection.Rowid);
         if(result.Success && result.Data != null){
-            return result.Data;
+            return true;
         }else{
             return false;
         }
     }
 
-    private async Task GetConnection(){
+    private async Task InitLogin()
+    {
         var BLSDKPortalUser = BackendRouterService.GetSDKBusinessModel("BLSDKPortalUser", AuthenticationService);
         var result = await BLSDKPortalUser.Call("GetDBConnection", RowidConexion);
         await getCultures();
@@ -68,11 +64,13 @@ public partial class LoginView
         init_loading = false;
         if(result.Success && result.Data != null){
             SelectedConnection = result.Data;
+            await base.OnInitializedAsync();
             StateHasChanged();
         }else{
             StateHasChanged();
         }
     }
+
 
     private async void HandleValidSubmit(){
         string message = "BLUser.Login.Message.SuccesLogin";
@@ -96,9 +94,13 @@ public partial class LoginView
 
         try
         {
-            await AuthenticationService.LoginPortal(model.Username, model.Password,SelectedConnection.Rowid, PortalName);
-            string urlReturn = $"/{PortalName}";
-            NavigationManager.NavigateTo(urlReturn);
+            await AuthenticationService.LoginPortal(model.Username, model.Password,SelectedConnection.Rowid);
+            if (AuthenticationService.PortalUser != null){
+                string urlReturn = $"/Portal/{RowidConexion}";
+                NavigationManager.NavigateTo(urlReturn);
+            }else{
+                SDKNotificationService.ShowError("BLUser.Login.Message.InvalidCredentials", culture: RowidCulture);   
+            }
         }
         catch (Exception ex)
         {

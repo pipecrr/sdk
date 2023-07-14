@@ -100,6 +100,7 @@ namespace Siesa.SDK.Frontend.Services
         public async Task Initialize()
         {
             UserToken = await _localStorageService.GetItemAsync<string>("usertoken");
+            PortalUserToken = await _localStorageService.GetItemAsync<string>("portalusertoken");
             CustomRowidCulture = await _localStorageService.GetItemAsync<short>("customrowidculture");
             _selectedSuite = await _localStorageService.GetItemAsync<int>("selectedSuite");
             //_rowIdCompanyGroup = await _localStorageService.GetItemAsync<short>("rowIdCompanyGroup");
@@ -183,8 +184,7 @@ namespace Siesa.SDK.Frontend.Services
             }
         }
 
-        public async Task LoginPortal(string username, string password, short rowIdDBConnection, string PortalName,
-        bool IsUpdateSession = false, short rowIdCompanyGroup = 1)
+        public async Task LoginPortal(string username, string password, short rowIdDBConnection, bool IsUpdateSession = false, short rowIdCompanyGroup = 1)
         {
             var BLSDKPortalUser = _backendRouterService.GetSDKBusinessModel("BLSDKPortalUser", this);
             if (BLSDKPortalUser == null)
@@ -202,7 +202,6 @@ namespace Siesa.SDK.Frontend.Services
             var loginRequest = await BLSDKPortalUser.Call("SignInSessionPortal", new Dictionary<string, dynamic> {
                 {"username", username},
                 {"password", password},
-                {"portalName", PortalName},
                 {"rowIdDBConnection", rowIdDBConnection},
                 {"rowidCulture", RowidCultureChanged},
                 {"rowIdCompanyGroup", rowIdCompanyGroup}
@@ -283,8 +282,7 @@ namespace Siesa.SDK.Frontend.Services
         {
             SDKDbConnection _selectedConnection = GetSelectedConnection();
             var RowIdDBConnection = _selectedConnection != null ? _selectedConnection.Rowid : 0;
-            var portalName = PortalUser.PortalName;
-
+            
             await _localStorageService.RemoveItemAsync("portalusertoken");
             await _localStorageService.RemoveItemAsync("portaluserPhoto");
             await _localStorageService.RemoveItemAsync("portalUserPreferences");
@@ -292,7 +290,7 @@ namespace Siesa.SDK.Frontend.Services
             PortalUserToken = "";
             _portalUser = null;
 
-            _navigationManager.NavigateTo($"Portal/{RowIdDBConnection}/{portalName}");
+            _navigationManager.NavigateTo($"Portal/{RowIdDBConnection}");
         }
 
         public async Task SetToken(string token, bool saveLocalStorage = true)

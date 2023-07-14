@@ -1,0 +1,62 @@
+@page "/Portal/{RowidConexion:int}"
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Layout.Header
+@using Siesa.SDK.Frontend.Components.Layout.NavMenu
+@using Siesa.SDK.Frontend.Components.Dashboard
+@using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Entities
+@inject IAuthenticationService AuthenticationService
+@inject IBackendRouterService BackendRouterService
+
+@if (_userLogged){
+    <SDKHeaderPortal />
+    
+    <NavMenuPortal Portals="@Portals" OnPortalChange="OnPortalChange"/>
+    <SDKDashboardPortal Portal="@SelectedPortal" />
+}
+else
+{
+    <LoginView LogoUrl="@LogoUrl" RowidConexion="@RowidConexion"/>
+}
+
+@code {
+
+    [CascadingParameter]
+    public MainLayout MainLayout { get; set; }    
+    [Parameter]
+    public int RowidConexion { get; set; }
+    public string LogoUrl { get; set; } = "_content/Siesa.SDK.Frontend/assets/img/siesaLogo.png";
+    public List<E00517_Portal> Portals { get; set; } = new List<E00517_Portal>();
+    public E00517_Portal SelectedPortal { get; set; }
+    private bool _userLogged;
+    
+    protected override async Task OnParametersSetAsync()
+    {
+        if(AuthenticationService.PortalUser != null)
+        {
+            _userLogged = true;
+            var blsdkPortalUser = BackendRouterService.GetSDKBusinessModel("BLSDKPortalUser", AuthenticationService);
+            var result = await blsdkPortalUser.Call("GetPortals", AuthenticationService.PortalUser.RowidExternalUser);
+            if(result.Success && result.Data != null){
+                Portals = result.Data as List<E00517_Portal>;
+                SelectedPortal = Portals?.FirstOrDefault();
+            }
+        }
+        else
+        {
+            _userLogged = false;
+        }
+        await base.OnParametersSetAsync();
+    }
+
+    protected override async Task OnInitializedAsync(){
+        MainLayout.SetEmptyLayout(true);
+        await base.OnInitializedAsync();
+    }
+    
+    public void OnPortalChange(E00517_Portal portal)
+    {
+        SelectedPortal = portal;
+        StateHasChanged();
+    }
+}

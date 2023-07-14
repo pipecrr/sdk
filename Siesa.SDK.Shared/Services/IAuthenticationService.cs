@@ -27,13 +27,10 @@ namespace Siesa.SDK.Shared.Services
 
         public bool IsAdministrator { get; set; }
         public int? RowidAttachmentUserProfilePicture { get; set; }
-
         public string PortalName {get; set;}
-
         public string IdExternalUser { get; set; }
-
+        public int RowidExternalUser { get; set; }
         public long RowidMainRecord { get; set; }
-        
         public override string ToString()
         {
             return $"({Id}) - {Name}";
@@ -51,8 +48,7 @@ namespace Siesa.SDK.Shared.Services
         Task Initialize();
         Task Login(string username, string password, short rowIdDBConnection,
                      bool IsUpdateSession = false, short rowIdCompanyGroup = 1);
-        Task LoginPortal(string username, string password, short rowIdDBConnection, string PortalName,
-                        bool IsUpdateSession = false, short rowIdCompanyGroup = 1);
+        Task LoginPortal(string username, string password, short rowIdDBConnection, bool IsUpdateSession = false, short rowIdCompanyGroup = 1);
         Task Logout();
         Task LogoutPortal();
         public Task SetToken(string token, bool saveLocalStorage = true);
