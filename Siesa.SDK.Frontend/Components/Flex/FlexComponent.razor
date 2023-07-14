@@ -2,11 +2,15 @@
 @inject NavigationManager Navigation
 @inject NavigationService NavigationService
 @inject Radzen.DialogService dialogService
+@inject IAuthenticationService AuthenticationService
 @using Siesa.SDK.Frontend.Components.Layout
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Frontend.Components.FormManager.Views
 @using Siesa.SDK.Frontend.Components.FormManager.Model
 @using Newtonsoft.Json
+@using Siesa.Global.Enums
+@using Siesa.SDK.Shared.Services
+
 @inject UtilsManager UtilsManager
 @implements IDisposable
 
@@ -81,6 +85,9 @@
 
     [Parameter]
     public int FlexRowId {get;set;} = 0;
+    //private enumThemeIconStyle IconsStyles {get;set;} = enumThemeIconStyle.Solid;
+    [Parameter]
+    public List<string> FieldsHiddenList { get; set; } = new List<string>();
 
     private string _guid ="";
     private bool _isDebug = false;
@@ -166,6 +173,11 @@
             _flexRowId = FlexRowId;
             _currentView = "detail";
         }
+
+        var fieldsHiddenListString = JsonConvert.SerializeObject(FieldsHiddenList);
+        
+        string style = GetStyle();
+
         FlexAttributes.Clear();
         flexElementId = $"flexdebug_{_guid}";
         FlexAttributes.Add("id", flexElementId);
@@ -187,10 +199,15 @@
         FlexAttributes.Add("action_icons", actionIconsString);
         FlexAttributes.Add("is_multiple", IsMultiple.ToString());
         FlexAttributes.Add("flex_filters", FlexFilters);
+        FlexAttributes.Add("preference_style", style);
+        FlexAttributes.Add("fields_hidden_list", fieldsHiddenListString);
         if(_flexRowId != 0)
         {
             FlexAttributes.Add("base_obj_id", _flexRowId);
         }
+
+        //updateFieldsHide
+        JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+_guid+".props.updateFieldsHide", fieldsHiddenListString);
 
         StateHasChanged();
         
@@ -200,8 +217,38 @@
             _= MountFlexComponent();
             _isMounted = true;
         }
+    }
 
+    private string GetStyle(){
+        string style = "";
+        enumThemeIconStyle IconsStyles = enumThemeIconStyle.Solid;
+        var UserPreferences = AuthenticationService?.GetPreferencesUser();
 
+        if(UserPreferences != null)
+        {
+            IconsStyles = UserPreferences.IconsStyles;
+        }
+        
+        switch(IconsStyles){
+            case enumThemeIconStyle.Solid:
+                style = "fa-solid";
+                break;
+            case enumThemeIconStyle.Regular:
+                style = "fa-regular";
+                break;
+            case enumThemeIconStyle.Light:
+                style = "fa-light";
+                break;
+            case enumThemeIconStyle.Duotone:
+                style = "fa-duotone";
+                break;
+            case enumThemeIconStyle.Thin:
+                style = "fa-thin";
+                    break;
+
+        }
+
+        return style;
     }
 
     private async Task MountFlexComponent()

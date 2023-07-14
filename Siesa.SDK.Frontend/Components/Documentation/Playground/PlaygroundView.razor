@@ -1,0 +1,179 @@
+@page "/sdk-docs/playground"
+@using Orientation = Radzen.Orientation
+@using Siesa.SDK.Frontend.Components.Documentation.Services
+@using Siesa.SDK.Components.Visualization
+@inject IJSRuntime JSRuntime
+@inject SDKGlobalLoaderService SDKGlobalLoaderService
+@inject CompilerService Compiler
+@inject SDKDialogService SDKDialogService
+@inject SDKNotificationService SDKNotificationService
+@layout EmptyLayout
+<SDKGlobalLoader />
+<div class="playground-container">
+    <div class="playground-toolbar">
+        <h3 class="playground-title">SDK Playground</h3>
+        <div class="playground-buttons">
+            <SDKButton ResourceTag="Load Demo" OnlyIcon="false" IconCssClass="fa-file" Enabled="RunEnabled" Click="OpenDemoDialog" CssClass="playground-button" RenderStyleMode="SDKButtonRenderStyleMode.Outline" RenderStyle="SDKButtonRenderStyle.Secondary" />
+            <SDKButton ResourceTag="@RunTag" OnlyIcon="false" IconCssClass="@RunIcon" Enabled="RunEnabled" Click="RunCode" CssClass="playground-button" RenderStyleMode="SDKButtonRenderStyleMode.Outline" RenderStyle="SDKButtonRenderStyle.Secondary" />
+        </div>
+    </div>
+    <RadzenSplitter Orientation="Orientation.Horizontal">
+        <RadzenSplitterPane Size="50%" Min="200px" Max="70%">
+            <div class="code-container">
+                <p class="container-title">Code</p>
+                @if (_isLoaded)
+                {
+                    <CodeViewer CssClass="code-viewer-area" @ref="_codeEditor"/>
+                }
+            </div>
+        </RadzenSplitterPane>
+        <RadzenSplitterPane>
+            <div lass="code-container">
+                <p class="container-title">Result <SDKIcon Name="@ResultIcon" /></p>
+                <ErrorBoundary @ref="errorBoundary">
+                    <ChildContent>
+                        @if (_compiledType != null)
+                        {
+                            <div class="result-area">
+                                <DynamicComponent Type="@_compiledType"/>
+                            </div>
+                        }
+                    </ChildContent>
+                    <ErrorContent Context="Exception">
+                        <div class="result-area">
+                            <div class="col-12 text-center font_color_primary_dark py-5">
+                                <SDKIcon Name="fa-triangle-exclamation fa-3x"/>
+                                <p class="mt-3">
+                                    <p>@Exception</p>
+                                </p>
+                            </div>
+                        </div>
+                    </ErrorContent>
+                </ErrorBoundary>
+
+                @if (_errorMessage != null)
+                {
+                    <div class="result-area">
+                        <div class="col-12 text-center font_color_primary_dark py-5">
+                            <SDKIcon Name="fa-triangle-exclamation fa-3x"/>
+                            <p class="mt-3">
+                                <p>@_errorMessage</p>
+                            </p>
+                        </div>
+                    </div>
+                        }
+            </div>
+        </RadzenSplitterPane>
+    </RadzenSplitter>
+</div>
+@code {
+    private bool _isLoaded;
+    private CodeViewer _codeEditor;
+    private Type _compiledType;
+    private string _errorMessage;
+    private ErrorBoundary? errorBoundary;
+    private bool _compiling;
+    private bool RunEnabled => !_compiling;
+    private string RunTag => _compiling ? "" : "Run";
+    private string RunIcon => _compiling ? "fa-spinner fa-spin" : "fa-play";
+
+    private string ResultIcon
+    {
+        //checkf if there is an error or if the code is compiling
+        get
+        {
+            if (_errorMessage != null)
+            {
+                return "fa-times-circle";
+            }
+            if (_compiling)
+            {
+                return "fa-spinner fa-spin";
+            }
+            return "fa-check-circle";
+        }
+    }
+    
+    private async Task RunCode()
+    {
+        var code = await _codeEditor.GetValue();
+        try
+        {
+            _compiling = true;
+            StateHasChanged();
+            _compiledType = await Compiler.CompileAsync(code);
+            _errorMessage = null;
+        }
+        catch (ApplicationException e)
+        {
+            _errorMessage = e.Message;
+            _compiledType = null;
+        }
+        finally
+        {
+            _compiling = false;
+        }
+        StateHasChanged();
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender){
+            try
+            {
+                await ImportJs();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+    }
+    
+    private async Task<bool> IsMonacoLoaded()
+    {
+        bool monaco;
+        try
+        {
+            monaco = await JSRuntime.InvokeAsync<bool>("globalVariableExists", "monaco");
+        }
+        catch (Exception e)
+        {
+            monaco = false;
+        }
+        return monaco != false;
+    }
+
+    private async Task ImportJs()
+    {
+        SDKGlobalLoaderService.Show();
+        await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/js/utils.js");
+        await JSRuntime.InvokeVoidAsync("window.loadScript", "_content/BlazorMonaco/jsInterop.js");
+        await JSRuntime.InvokeVoidAsync("window.loadScript", "_content/BlazorMonaco/lib/monaco-editor/min/vs/loader.js");
+        await JSRuntime.InvokeVoidAsync("window.loadScript", "_content/BlazorMonaco/lib/monaco-editor/min/vs/editor/editor.main.js");
+        //wait for monaco to be ready
+        while (!await IsMonacoLoaded())
+        {
+            await Task.Delay(500);
+        }
+        SDKGlobalLoaderService.Hide();
+        _isLoaded = true;
+        StateHasChanged();
+        
+    }
+    
+    private async Task OpenDemoDialog()
+    {
+        var selectedCode = await SDKDialogService.ShowCustomDialog(ds => @<OpenDemoComponent DialogService="@ds"/>, ShowTitle: false, standardWidth: SDKModalWidth.Medium, CssClass: "open-demo-dialog");
+        if (selectedCode != null)
+        {
+            await _codeEditor.SetValue(selectedCode);
+            _ = SDKNotificationService.ShowSuccess("Code loaded");
+            _ = RunCode();
+        }
+        else
+        {
+            _ = SDKNotificationService.ShowError("No code selected");
+        }
+    }
+}

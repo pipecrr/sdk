@@ -20,5 +20,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
             {"SM", 6},
             {"XS", 12},
         };
+        public int RowidGroupDynamicEntity { get; set; }
     }
 }

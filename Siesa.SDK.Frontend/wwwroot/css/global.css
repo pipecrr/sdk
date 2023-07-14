@@ -928,6 +928,10 @@ input#collapse_open:checked~.collapse_open_btn>.nav_btn_standar_text {
     overflow: unset !important;
 }
 
+.whcm_modal_relacion.aditional_fields_padding_0>.rz-dialog-content{
+    padding: 0 !important;
+}
+
 .whcm_modal_relacion>.rz-dialog-content {
     overflow: unset !important;
     background: var(--color_light);
@@ -1101,14 +1105,14 @@ input#collapse_open:checked~.collapse_open_btn>.nav_btn_standar_text {
     }
 
     .area2 {
-        padding-top: 4rem;
+        padding-top: 4.5rem;
     }
 
     .whcm_company_select {
         right: 50% !important;
         transform: translateX(50%);
         max-width: 300px;
-        top: 1.3rem !important;
+        top: 1.8rem !important;
     }
 
     .menu_content>.nav_section_1>.nav_btn_standar>.nav_btn_standar_text {
@@ -1553,4 +1557,37 @@ div.dxbs-btn-group.dxbs-input-group-prepend>.btn.dx-btn.btn-sm {
     color: var(--color_alert_text) !important;
     background-color: var(--color_alert_warning) !important;
     border-color: var(--color_alert_warning) !important;
+}
+
+.sdk-formlayout-group-title{
+    color: var(--color_primary) !important;
+    font-weight: 700!important;
+    padding: 0!important;
+    margin-bottom: 1rem;
+    max-width: 100%;
+    font-size: 16px;
+}
+
+.sdk-formlayout-group-border-right{
+    border-right: 1px solid #E1E1E1;
+}
+
+.sdk-formlayout-group-border-left{
+    border-left: 1px solid #E1E1E1;
+}
+
+.sdk-formlayout-group-border-top{
+    border-top: 1px solid #E1E1E1;
+}
+
+.sdk-formlayout-group-border-bottom{
+    border-bottom: 1px solid #E1E1E1;
+}
+
+.sdk-formlayout-group{
+    margin-right: 10px!important;
+}
+
+.sdk-btn-icon-text-cnt{
+    gap: 5px;
 }

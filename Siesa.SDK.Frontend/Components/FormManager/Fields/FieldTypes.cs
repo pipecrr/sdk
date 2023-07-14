@@ -15,6 +15,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
         TextField,
         BooleanField,
         Custom,
+        Group,
         Unknown,
         EntityField,
         ByteField,

@@ -3,46 +3,80 @@
 @using Siesa.SDK.Frontend.Components.Layout
 @using Siesa.SDK.Entities
 @using Siesa.Global.Enums
+@using Siesa.SDK.Frontend.Components.Layout.AditionalField
+
 @inject IAuthenticationService AuthenticationService
 @inject IBackendRouterService BackendRouterService
 @inject SDKNotificationService SDKNotificationService
 @inject IFeaturePermissionService FeaturePermissionService
+@inject SDKDialogService SDKDialogService
+@inject NavigationManager NavigationManager
+@inject NavigationService NavigationService
 
 <div class="@CssClassRelationship col-12 p-0">
 
-    <button class="whcm_data_related_btn" @onclick="() => _isOpen = !_isOpen ">
+    <button class="whcm_data_related_btn" @onclick="() => OnClickRelationshipButton()" data-automation-id="Button_RelationShip_Container">
         <p>
             <ResourceViewer ResourceTag="Custom.SDK.RelationshipPanel" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
-            <i class="fa-solid fa-folder-tree"></i>
+            <SDKIcon Name="fa-folder-tree"/>
         </p>
-    </button>
-    <div class="whcm_data_related_content p-3">
-        <div class="border-bottom pb-3 pt-1 text-center">
-            <h6><span><ResourceViewer ResourceTag="Custom.SDK.DataRelationship" RowidCulture=@AuthenticationService.GetRoiwdCulture() /></span></h6>
-            <p class="m-0 font_size_087 text-left">
-                <ResourceViewer ResourceTag="Custom.SDK.RelationshipInformation" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
+    </button>   
+    @if(ShowAditionalFields){
+        <button class="whcm_data_related_btn2" @onclick="() => OnClickAditionalButton()">
+            <p>
+                <ResourceViewer ResourceTag="" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
+                <SDKIcon Name="fa-diagram-subtask"/>
             </p>
-        </div>
-        <div class="whcm_row panel_box_data">
-            <div class="col-12">
-                @if (_containAttachments && _accessAttachment)
-                {
-                    <button class="nav_btn_standar index_btn_related my-1" @onclick="async ()=>await OpenModal(RelationshipAttatchment)" >
+        </button>
+    }
+    <div class="whcm_data_related_content p-3">
+        @if(_isOpenRelationship){
+            <div class="border-bottom pb-3 pt-1 text-center">
+                <h6><span><ResourceViewer ResourceTag="Custom.SDK.DataRelationship" RowidCulture=@AuthenticationService.GetRoiwdCulture() /></span></h6>
+                <p class="m-0 font_size_087 text-left">
+                    <ResourceViewer ResourceTag="Custom.SDK.RelationshipInformation" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
+                </p>
+            </div>
+            <div class="whcm_row panel_box_data">
+                <div class="col-12">
+                    @if (_containAttachments && _accessAttachment)
+                    {
+                        <button class="nav_btn_standar index_btn_related my-1" @onclick="async ()=>await OpenModal(RelationshipAttatchment)" 
+                            data-automation-id="Button_RelationShip_Attachments" >
+                            <div class="nav_btn_standar_text">
+                                <ResourceViewer ResourceTag="@RelationshipAttatchment.ResourceTag" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
+                            </div>
+                        </button> 
+                    }
+                    @foreach (var Relationship in Relationships)
+                    {    
+                        <button class="nav_btn_standar index_btn_related my-1" @onclick="async ()=>await OpenModal(Relationship)" 
+                            data-automation-id="Button_@Relationship.ResourceTag">
+                            <div class="nav_btn_standar_text">
+                                <ResourceViewer ResourceTag="@Relationship.ResourceTag" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
+                            </div>
+                        </button>
+                    }
+                </div>
+            </div>
+        }
+        @if(_isOpenAditional){
+            <div class="border-bottom pb-3 pt-1 text-center">
+                <h6><span><ResourceViewer ResourceTag="Custom.SDK.RelationshipPanel.AddtitionalFields" RowidCulture=@AuthenticationService.GetRoiwdCulture() /></span></h6>
+                <p class="m-0 font_size_087 text-left">
+                    <ResourceViewer ResourceTag="Custom.SDK.RelationshipPanel.AddtitionalFields.Info" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
+                </p>
+            </div>
+            <div class="whcm_row panel_box_data">
+                <div class="col-12">
+                    <button class="nav_btn_standar index_btn_related my-1" @onclick="async ()=>await OpenModalAditionalField()" >
                         <div class="nav_btn_standar_text">
-                            <ResourceViewer ResourceTag="@RelationshipAttatchment.ResourceTag" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
-                        </div>
-                    </button> 
-                }
-                @foreach (var Relationship in Relationships)
-                {    
-                    <button class="nav_btn_standar index_btn_related my-1" @onclick="async ()=>await OpenModal(Relationship)" >
-                        <div class="nav_btn_standar_text">
-                            <ResourceViewer ResourceTag="@Relationship.ResourceTag" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
+                            <ResourceViewer ResourceTag="Custom.RelationshipPanel.AddtitionalFields.BtnCreate" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
                         </div>
                     </button>
-                }
+                </div>
             </div>
-        </div>
+        }
     </div>
         @if (_openModal)
         {
@@ -53,10 +87,10 @@
                     </h6>
                     <div class="d-flex">
                         <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => _openModal = !_openModal">
-                            <i class="fa-solid fa-chevron-right"></i>
+                            <SDKIcon Name="fa-chevron-right"/>
                         </button>
                         <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => CloseRelationshipPanel()">
-                            <i class="fa-solid fa-xmark"></i>
+                            <SDKIcon Name="fa-xmark"/>
                         </button>
                     </div>
                 </div>
@@ -90,14 +124,12 @@
     [Parameter] public Action<string,string> OnClickDelete { get; set; } = null;
     [Parameter] public Action OnClickNew { get; set; } = null;
     [Parameter] public bool ContainAttachments { get; set; } = false;
-
     [Parameter] public string Width { get; set; }
     [Parameter] public string Height { get; set; }
-
     [Parameter] public dynamic BusinessObj { get; set; }
     [Parameter] public string BusinessName { get; set; }
-
     [Parameter] public bool isCreateView { get; set; } = false;
+    [Parameter] public bool ShowAditionalFields { get; set; }
     private Relationship SelectedRelationship { get; set; }
     private Relationship RelationshipAttatchment { get; set; }
     public dynamic ParentAttachment { get; set; }
@@ -108,8 +140,8 @@
 
     private Dictionary<string, object> DefaultFieldsCreate { get; set; }
 
-    private bool _isOpen = false;
-
+    private bool _isOpenRelationship = false;
+    private bool _isOpenAditional = false;
     private bool _containAttachments = false;
 
     private bool _openModal  = false;
@@ -125,7 +157,7 @@
             {
                 return "whcm_data_related_box_crud";
             }
-            if (_isOpen)
+            if (_isOpenRelationship || _isOpenAditional)
             {
                 return "whcm_data_related_box";
             }
@@ -135,20 +167,6 @@
             }
         }
     }
-/*
-var rowidAttachment = Parent.RowidAttachment;
-            ParentAttachment = new E00270_Attachment();
-
-            ParentAttachment.Rowid = rowidAttachment;
-
-RelationshipAttatchment = new Relationship(){
-            Name  = "BLAttachmentDetail",
-            Type = RelationshipType.OneToMany,
-            RelatedBusiness = "BLAttachmentDetail",
-            RelatedField = "BaseObj.Attachment",
-            ResourceTag = "BLAttachmentDetail.Plural"
-            };
-*/
 
     private async Task CheckPermissions()
     {
@@ -163,12 +181,27 @@ RelationshipAttatchment = new Relationship(){
             }
         }
     }
+    private async Task OpenModalAditionalField(){
+        var modal = await SDKDialogService.ShowCustomDialog(ds =>@<AditionalFields Business="@BusinessObj"/>,
+                ShowTitle: false,
+                standardWidth: SDKModalWidth.Large,
+                CssClass: "aditional_fields_padding_0"
+            );
+        if(modal != null && modal == true){
+            var confirm = await SDKDialogService.ShowConfirmDialog(@<div class="col-12 p-0"><ResourceViewer ResourceTag="Custom.AditionalFields.ConfirmMessage"/></div>);
+            if(confirm != null && confirm == true){
+                var currentUrl = NavigationManager.Uri;
+                NavigationService.NavigateTo(currentUrl, true);
+            }
+        }
+    }
+
     private async Task OpenModal(Relationship relationship)
     {
         if(Parent.Rowid == 0 && isCreateView)
         {
            _ = SDKNotificationService.ShowError("Custom.RelationshipContainer.Error",new object[] {$"{BusinessObj.BusinessName}.Singular"} , culture: AuthenticationService.GetRoiwdCulture());
-           _isOpen = false;
+           _isOpenRelationship = false;
             return;
         }
         SelectedRelationship = relationship;
@@ -215,7 +248,7 @@ RelationshipAttatchment = new Relationship(){
 
     public void CloseRelationshipPanel()
     {
-        _isOpen = false;
+        _isOpenRelationship = false;
         _openModal = false;
         _parent = null;
         StateHasChanged();
@@ -342,5 +375,14 @@ RelationshipAttatchment = new Relationship(){
                 new_params.Add("OnClickNew", OnClickNew);
             }
     }
-
+    private void OnClickRelationshipButton(){
+        _isOpenRelationship = !_isOpenRelationship;
+        _isOpenAditional = false;
+        StateHasChanged();
+    }
+    private void OnClickAditionalButton(){
+        _isOpenAditional = !_isOpenAditional;
+        _isOpenRelationship = false;
+        StateHasChanged();
+    }
 }

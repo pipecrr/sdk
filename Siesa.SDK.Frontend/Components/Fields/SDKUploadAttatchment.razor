@@ -1,3 +1,4 @@
+@inherits SDKComponent;
 @using Microsoft.AspNetCore.Components;
 @using Siesa.SDK.Shared.DTOS;
 @using Newtonsoft.Json;
@@ -11,13 +12,13 @@
 @inject IBackendRouterService BackendRouterService
 
 <div class="sdk-upload-attatchment">
-    <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" IconCssClass="@iconClass" Click="@TestClickButton"/>
+    <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" IconCssClass="@iconClass" Click="@TestClickButton" AutomationId="SDKUploadAttachment_Record"/>
     @if(useRecorder){
         <SDKRecorder GetAudio="@GetAudio"></SDKRecorder>
     }else{
         <div class="m-5">
             <RadzenUpload Url="@Url" class="@StyleCss" ChooseText="@ResourceChooseText"
-            Accept="@Accept" Progress="@SDKProgress" Complete="@SDKComplete" Change="@SDKChange" Auto="@Auto" @ref="sdkUpload" Disabled="@Disabled" Error="@SDKError">             
+            Accept="@Accept" Progress="@SDKProgress" Complete="@SDKComplete" Change="@SDKChange" Auto="@Auto" @ref="sdkUpload" Disabled="@Disabled" Error="@SDKError" data-automation-id="@GetAutomationId()">             
             </RadzenUpload >
         </div>
     }
@@ -148,4 +149,16 @@
         }
         StateHasChanged();
     }
+
+    protected override string GetAutomationId()
+        {
+            if(string.IsNullOrEmpty(AutomationId))
+            {
+                if (!string.IsNullOrEmpty(FieldName))
+                {
+                        AutomationId = FieldName;
+                }
+            }
+            return base.GetAutomationId();
+        }
 }

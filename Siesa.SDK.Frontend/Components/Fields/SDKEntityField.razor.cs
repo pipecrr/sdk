@@ -290,33 +290,41 @@ namespace Siesa.SDK.Frontend.Components.Fields
             badgeContainerClass = "badge-container d-none";
         }
 
-        private void OnKeyDown(KeyboardEventArgs e)
+        private async Task OnKeyDown(KeyboardEventArgs e)
         {
             if(e == null || e.Key == null){
                 return;
             }
-            
-            if (!e.Key.Equals("Escape"))
-            {
+            if(!string.Equals(e.Key, "Escape", StringComparison.Ordinal) && !string.Equals(e.Key, "Enter", StringComparison.Ordinal) && !string.Equals(e.Key, "Tab", StringComparison.Ordinal)){
                 SDKDropDown();
             }
 
-            if (e.Key == "Enter")
+            //if (e.Key.Equals("Enter"))
+            if(string.Equals(e.Key, "Enter", StringComparison.Ordinal))
             {
-                if (CacheLoadResult != null && CacheLoadResult.data != null)
+                if (CacheDataObjcts != null && CacheDataObjcts.Count > 0)
                 {
-                    var results = CacheLoadResult.data as IEnumerable<dynamic>;
-
-                    if (results.Count() > 0)
-                    {
-                        SetVal(results.First());
-                        //LoadData("", null,true);
+                    SetVal(CacheDataObjcts.First());
+                    if(IsMultiple){
+                        await LoadData("", null, true).ConfigureAwait(true);
+                    }else{
+                        await BlurElement().ConfigureAwait(true);
+                    }
+                    if(OnChange != null){
+                        OnChange();
                     }
                 }
                 StateHasChanged();
             }
         }
-        
+
+        private async Task BlurElement()
+        {
+            var elementInstance = await JsRuntime.InvokeAsync<IJSObjectReference>("$", $"#{idInput}").ConfigureAwait(true);
+            await elementInstance.InvokeVoidAsync("dropdown", "hide").ConfigureAwait(true);
+        }
+
+
         private string GetParamValue(string field, object item){
             var param = "";
             var property = item.GetType().GetProperty(field);
@@ -389,14 +397,10 @@ namespace Siesa.SDK.Frontend.Components.Fields
         private async Task<string> GetFilters()
         {
             var filters = "";
-            if (BaseObj != null && RelBusinessObj != null && RelBusinessObj.BaseObj != null && RelBusinessObj.BaseObj.GetType() == BaseObj.GetType())
-            {
-                var baseObjRowidProperty = BaseObj.GetType().GetProperty("Rowid");
-                if(baseObjRowidProperty != null && baseObjRowidProperty.GetValue(BaseObj) != null &&baseObjRowidProperty.GetValue(BaseObj) != 0 )
-                {
-                    filters = $"(Rowid != {BaseObj.Rowid})";
-                }
+            if (ShouldExcludeBaseObject()){
+                filters = $"(Rowid != {BaseObj.Rowid})";
             }
+
             foreach (var item in RelatedFilters)
             {
                 var value = item.Value;
@@ -437,21 +441,61 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 }
             }
 
-            if(Filters?.Count > 0){
-                string? paramFilter = "";
-                paramFilter = await FormUtils.GenerateFilters(Filters, ParentBusinessObj);
-                if(!string.IsNullOrEmpty(paramFilter)){
-                    if (!string.IsNullOrEmpty(filters))
-                    {
-                        filters += " && ";
-                    }else{
-                        filters += paramFilter;
-                    }
+            filters = await AddParameterFilter(filters).ConfigureAwait(true);
+
+            if(IsMultiple && ItemsSelected != null && ItemsSelected.Count > 0){
+                foreach (dynamic item in ItemsSelected)
+                {
+                    filters = AddItemsSelectedFilters(filters);
                 }
             }
 
             return filters;
         }
+
+        private bool ShouldExcludeBaseObject(){
+            return BaseObj != null &&
+                RelBusinessObj != null &&
+                RelBusinessObj.BaseObj != null &&
+                RelBusinessObj.BaseObj.GetType() == BaseObj.GetType() &&
+                GetBaseObjRowId() != 0;
+        }
+
+        private int GetBaseObjRowId(){
+            var baseObjRowidProperty = BaseObj.GetType().GetProperty("Rowid");
+            return (int)(baseObjRowidProperty?.GetValue(BaseObj) ?? 0);
+        }
+
+        private async Task<string> AddParameterFilter(string filters){
+            if (Filters?.Count > 0)
+            {
+                string paramFilter = await FormUtils.GenerateFilters(Filters, ParentBusinessObj);
+
+                if (!string.IsNullOrEmpty(paramFilter) && !string.IsNullOrEmpty(filters))
+                {
+                    filters += " && ";
+                }
+
+                filters += paramFilter;
+            }
+
+            return filters;
+        }
+
+        private string AddItemsSelectedFilters(string filters){
+            foreach (dynamic item in ItemsSelected)
+            {
+                if (!string.IsNullOrEmpty(filters))
+                {
+                    filters += " && ";
+                }
+
+                filters += $"(Rowid != {item.Rowid})";
+            }
+
+            return filters;
+        }
+
 
         private async Task CheckPermissions()
         {
@@ -555,6 +599,9 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 }else{
                     placeholder = "";
                 }
+            }
+            if(OnChange != null){
+                OnChange();
             }
             StateHasChanged();
         }

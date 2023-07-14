@@ -10,17 +10,13 @@
 @inject MenuService MenuService
 
 
-<button @onclick="@(async () => await OnClickSuite(@Suite))" data-automation-id="@Title"  @onclick:preventDefault class="suite_option" data-toggle="tooltip" data-placement="top" style="background-color: #@Suite.HexColor;" title="@Title" >
-    <div class="h4 m-0">
-        <i class="@Suite.IconClass"></i>
-    </div>
-    <div class="suite_option_base" style="background-color: #@Suite.HexColor;"></div> 
-</button>
+<SDKButtonTiles Click="@(async () => await OnClickSuite(Suite))" ResourceTag="@Title" BackgroundColor="@Suite.HexColor" 
+    IconClass="@Suite.IconClass"/>
+
 
 @code{
     [Parameter] public E00060_Suite Suite {get; set;}
     public int lastsuite;
-
     private string Title { get; set; } = "";
 
     protected override async Task OnParametersSetAsync(){
@@ -33,7 +29,6 @@
         if (lastsuite != Suite.Rowid){
             await MenuService.SetSelectedSuite(Suite.Rowid);
         }
-
     }
     private async Task<string> GetTitle(){
         return await ResourceManager.GetResource(Convert.ToInt64(Suite.RowidResource), AuthenticationService);

@@ -25,15 +25,34 @@
         data-automation-id="@GetAutomationId()"
         title="@Text"
         >
-        @if(!string.IsNullOrEmpty(IconCssClass)){
-            <i class="@IconCssClass"></i>
+        @if(OnlyIcon)
+        {
+            @if(!string.IsNullOrEmpty(IconCssClass)){
+                <SDKIcon Name="@IconCssClass" />
+            }
+            else
+            {
+                @if (ChildContent != null)
+                {
+                    @ChildContent
+                }
+                else
+                {
+                    @Text
+                }
+            }
         }else{
+        <div class="d-flex align-items-center sdk-btn-icon-text-cnt">
+            @if(!string.IsNullOrEmpty(IconCssClass)){
+                <SDKIcon Name="@IconCssClass" />
+                }
             @if(ChildContent != null)
             {
                 @ChildContent
             }else{
                 @Text
             }
+        </div>
         }
     </DxButton>    
 }
@@ -45,6 +64,9 @@
     [Parameter] public bool IsActionButton { get; set; }
     [Parameter] public string IconCssClass {get;set;}
     [Parameter] public string CssClass { get; set; }
+
+    [Parameter]
+    public bool OnlyIcon { get; set; } = true;
 
     [Parameter] public string form { get; set; }
 

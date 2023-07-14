@@ -43,6 +43,7 @@
         AllowEdit="@AllowEdit"
         AllowDelete="@AllowDelete"
         AllowDetail="@AllowDetail"
+        ShowSearchForm="@ShowSearchForm"
         OnSelectedRow=@OnSelectedRow
         Data="@Data"
         BLNameParentAttatchment="@BLNameParentAttatchment"
@@ -55,7 +56,7 @@
     [Parameter] public string BLNameParentAttatchment { get; set; }
     [Parameter] public string BusinessName { get; set; }
     [Parameter] public Dictionary<string, object> DefaultFieldsCreate { get; set; }
-
+    [Parameter] public bool ShowSearchForm { get; set; } = true;
     [Parameter] public string Filter { get; set; }
     [Parameter] public bool AllowCreate { get; set; } = true;
     [Parameter] public bool AllowEdit { get; set; } = true;
@@ -63,11 +64,13 @@
     [Parameter] public bool AllowDetail { get; set; } = true;
     [Parameter] public Action<IList<dynamic>> OnSelectedRow { get; set; } = null;
     [Parameter] public IEnumerable<object> Data { get; set; } = null;
+    [Parameter] public Action<dynamic> OnCreate { get; set; }
+    [Parameter] public Action<dynamic> OnEdit { get; set; }
+    [Parameter] public Action OnDelete { get; set; }
     
     [Parameter] public string Width { get; set; } = "600px";
 
     [Parameter] public string Height { get; set; }
-    [Parameter] public bool UseFlex { get; set; } = true;
 
     private bool DefaultTitle = false;
 
@@ -101,6 +104,9 @@
 
         var ShowCreateDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicCreateView BusinessName="@BusinessName" IsSubpanel=true  DefaultFields="@DefaultFieldsCreate" BLNameParentAttatchment="@BLNameParentAttatchment" ShowTitle="@DefaultTitle"/>, Width, $"{BusinessName}.Singular", true, true, Height);
         listview_key = Guid.NewGuid();
+        if(ShowCreateDialog != null && ShowCreateDialog.GetType() != typeof(bool)){
+            OnCreate?.Invoke(ShowCreateDialog);
+        }
         StateHasChanged();
     }
 
@@ -108,6 +114,9 @@
     {
         var ShowEditDialog = await SDKDialogService.ShowCustomDialog(ds =>@<DynamicEditView BusinessName="@BusinessName" IsSubpanel=true  BusinessObjId="@item_rowid"  DefaultFields="@DefaultFieldsCreate" BLNameParentAttatchment="@BLNameParentAttatchment" ShowTitle="@DefaultTitle"/>, Width, $"{BusinessName}.Singular", true, true, Height);
         listview_key = Guid.NewGuid();
+        if(ShowEditDialog != null && ShowEditDialog.GetType() != typeof(bool)){
+            OnEdit?.Invoke(ShowEditDialog);
+        }
         StateHasChanged();
     }
     
@@ -124,6 +133,7 @@
         if(modal_result == true) {
             var backend = BackendRouterService.GetSDKBusinessModel(BusinessName, AuthenticationService);
             await backend.DeleteAsync(Convert.ToInt64(item_rowid));
+            OnDelete?.Invoke();
         }
         listview_key = Guid.NewGuid();
         StateHasChanged();

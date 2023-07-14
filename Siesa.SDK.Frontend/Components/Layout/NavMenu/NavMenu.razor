@@ -1,7 +1,6 @@
 ﻿@using Siesa.SDK.Entities
 @implements IDisposable
 @using SDK.Components.Visualization
-@using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Shared.Backend
 @using Siesa.SDK.Frontend.Components.Layout.Menu
 @using Siesa.SDK.Shared.Services
@@ -20,7 +19,7 @@
         <div class="nav_btn_standar_suite_active" data-toggle="tooltip" data-placement="right" title="@MenuService?.SelectedSuite?.CurrentText">
             <div class="back_suite_active" style="background: #@MenuService?.SelectedSuite?.HexColor"></div>
             <div class="nav_btn_standar_icon_suite_active">
-                <i class="@MenuService?.SelectedSuite?.IconClass"></i> 
+                <SDKIcon Name="@GetIconsuite()"></SDKIcon> 
             </div>
         </div>
     </label>
@@ -28,7 +27,7 @@
 <input class="" type="checkbox" name="" id="collapse_open" data-automation-id="Button_Menu_Collapse">
 <label class="collapse_open_btn" for="collapse_open" style="background: #@MenuService?.SelectedSuite?.HexColor">
     <div class="open_nav_btn">
-        <i class="fa-solid fa-chevron-right"></i>
+        <SDKIcon Name="fa-chevron-right"/>
     </div>
     @* <div class="nav_btn_standar_text">
         <ResourceViewer ResourceTag="Custom.Menu.Collapse" />
@@ -53,16 +52,16 @@
             title="@TitleSuite" @onclick="@(()=> ShowSuiteMenu())" data-automation-id="Button_ShowSuiteMenu">
                     <div class="back_suite back_suite_general"></div>
                     <div class="nav_btn_standar_icon_suite">
-                        <i class="fa-solid fa-grid font_size_125"  style="color: #@MenuService?.SelectedSuite?.HexColor"></i> 
+                        <SDKIcon Name="fa-grid" Style="@GetIconColorsuite()" CssClass="font_size_125"/> 
                     </div>
                     <div class="nav_btn_standar_text">
                        <ResourceViewer ResourceTag="@SuiteMenu.ResourceTag" />
-                    </div>
+                    </div>  
             </a>	
             <a class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right" 
             title="@TitleLogout" @onclick="@(()=> AuthenticationService.Logout())" data-automation-id="Button_Logout">
                     <div class="nav_btn_standar_icon">
-                        <i class="fa-solid fa-right-from-bracket font_size_112"></i>
+                        <SDKIcon Name="fa-right-from-bracket" CssClass="font_size_112"/>
                     </div>
                     <div class="nav_btn_standar_text">
                        <ResourceViewer ResourceTag="BLUser.Logout" />
@@ -70,7 +69,7 @@
             </a>
             @if (AuthenticationService.User != null)
             {
-                <div class="nav_profile_btn" @onclick="@(()=> OpenModalPreferences())" data-automation-id="Button_ShowProfileMenu">
+                <div class="nav_profile_btn" @onclick="@(async ()=> OpenModalPreferences())" data-automation-id="Button_ShowProfileMenu">
                     <div class="nav_btn_standar_icon nav_profile_photo">
                         <img src="@UserPhoto" height="36px" alt="imagen perfil">
                     </div>
@@ -187,11 +186,15 @@
         SelectedMenu = ProfileMenu;
         StateHasChanged();
     }
-    private void OpenModalPreferences()
+    private async Task OpenModalPreferences()
     {
-        var modal = DialogService.ShowCustomDialog(ds => 
-        @<UserPreferences />, title: "Preferencias de usuario", standardWidth: SDKModalWidth.Large);
+        var modal = await DialogService.ShowCustomDialog(ds => 
+        @<UserPreferences />, title: "Custom.SDK.UserPreference", standardWidth: SDKModalWidth.Large);
 
+        if(modal){
+            UserPhoto = AuthenticationService.GetUserPhoto();
+            StateHasChanged();
+        }
     }
 	
 
@@ -262,6 +265,30 @@
         {
             MenuService.MenuLoaded -= OnMenuLoaded;
         }
+    }
+
+    public string GetIconColorsuite()
+    {
+        string ColorSuite = "color: #";
+
+        if (MenuService?.SelectedSuite != null)
+        {
+            ColorSuite += MenuService.SelectedSuite.HexColor;
+        }
+
+        return ColorSuite;
+    }
+
+    public string GetIconsuite()
+    {
+        string IconSuite = "";
+
+        if (MenuService?.SelectedSuite != null)
+        {
+            IconSuite = MenuService.SelectedSuite.IconClass;
+        }
+
+        return IconSuite;
     }
 
 }

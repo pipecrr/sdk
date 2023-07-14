@@ -49,6 +49,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         protected FormViewModel FormViewModel { get; set; } = new FormViewModel();
 
         public List<Panel> Panels {get { return FormViewModel.Panels; } }
+        public List<Panel> PanelsCollapsable = new List<Panel>();
+        public bool ShowAditionalFields { get; set; }
 
         public Boolean Loading = true;
         public bool Saving = false;
@@ -90,6 +92,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         private string _viewdefName = "";
 
         public bool ContainAttachments = false;
+
+        protected bool loadDefaultViewdef = true;
 
         [Inject]
         public IBackendRouterService BackendRouterService { get; set; }
@@ -160,7 +164,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             {
                 data = BackendRouterService.GetViewdef(businessName, DefaultViewdefName);
             }
-            if(String.IsNullOrEmpty(data)){
+            if(String.IsNullOrEmpty(data) && loadDefaultViewdef){
                 _viewdefName = "default";
                 data = BackendRouterService.GetViewdef(businessName, _viewdefName);
             }
@@ -236,8 +240,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     FormViewModel.Panels = panels;
                 }
                 if(BusinessObj.GetType().GetProperty("DynamicEntities") != null && BusinessObj.DynamicEntities != null && BusinessObj.DynamicEntities.Count > 0){
-                    FormViewModel.Panels[0].ResourceTag = "Custom.General.DefaultPanel";
-                    AddPanels(FormViewModel.Panels);
+                    ShowAditionalFields = true;
+                    AddPanels(PanelsCollapsable);
                 }
             }
             try
@@ -275,15 +279,32 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 var panel = new Panel();
                 panel.ResourceTag = item.Name;
                 var fields = new List<FieldOptions>();
+                int rowidGroup = item.Rowid;
+                panel.RowidGroupDynamicEntity = rowidGroup;
                 foreach(var property in item.DynamicObject.GetType().GetProperties()){
                     var field = new FieldOptions();
                     var name = $"DynamicEntities[{index}].DynamicObject.{property.Name}";
                     field.Name = name;
                     field.ResourceTag = property.Name;
+                    Dictionary<string, int> colSize = new Dictionary<string, int>();
+                    colSize.Add("MD", 4);
+                    colSize.Add("SM", 4);
+                    colSize.Add("XS", 4);
+                    field.ColSize = colSize;
                     fields.Add(field);
                 }                
                 panel.Fields = fields;
                 panels.Add(panel);
+            }
+        }
+         public async Task<bool> DeleteGroup(int rowid)
+        {
+            var response = await BusinessObj.Backend.Call("DeleteGroupDynamicEntity", rowid);
+            if(response.Success){
+                return true;
+            }
+            else{
+                return false;
             }
         }
         private async Task EvaluateButtonAttributes()
@@ -524,8 +545,13 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
                 }
             }
             if(DataAttatchmentDetail != null){
-                var result = await BusinessObj.SaveAttachmentDetail(DataAttatchmentDetail, rowid);
-                return result;
+                try{
+                    var result = await BusinessObj.SaveAttachmentDetail(DataAttatchmentDetail, rowid);
+                    return result;
+                }catch(Exception ex){
+                    SavingFile = false;
+                    return rowid;
+                }
             }
             return 0;
         }
@@ -591,44 +617,45 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
             if (result.Errors.Count > 0)
             {
                 //ErrorMsg = "<ul>";
-                Type editFormCurrentType = EditFormContext.Model.GetType();
+                
                 foreach (var error in result.Errors)
                 {
                     FieldIdentifier fieldIdentifier;
+                    Type editFormCurrentType = EditFormContext.Model.GetType();
                     bool fieldInContext = false;
                     //check if attribute is in Model
-                    // if(editFormCurrentType.GetProperty(error.Attribute) != null)
-                    // {
-                    //     fieldIdentifier = new FieldIdentifier(EditFormContext.Model, error.Attribute);
-                    //     fieldInContext = true;
-                    // }
-                    // else if(((string)error.Attribute).Split('.').Count() > 1)
-                    // {
-                    //     var attr = ((string)error.Attribute).Split('.');
-                    //     foreach(string item in attr)
-                    //     {
-                    //         if(editFormCurrentType.GetProperty(item) != null)
-                    //         {
-                    //             editFormCurrentType = editFormCurrentType.GetProperty(item).PropertyType;
-                    //         }
+                    if(editFormCurrentType.GetProperty(error.Attribute) != null)
+                    {
+                        fieldIdentifier = new FieldIdentifier(EditFormContext.Model, error.Attribute);
+                        fieldInContext = true;
+                    }
+                    else if(((string)error.Attribute).Split('.').Count() > 1)
+                    {
+                        var attr = ((string)error.Attribute).Split('.');
+                        var fieldExists = true;
+                        foreach(string item in attr)
+                        {
+                            if(editFormCurrentType.GetProperty(item) != null)
+                            {
+                                editFormCurrentType = editFormCurrentType.GetProperty(item).PropertyType;
+                            }else{
+                                fieldExists = false;
+                                break;
+                            }
 
-                    //     }
-                    //     fieldIdentifier = new FieldIdentifier(EditFormContext.Model, $"BaseObj.{error.Attribute}");
-                    //     fieldInContext = true;
-                    // }
-                    // if(fieldInContext)
-                    // {
-                    //     _messageStore.Add(fieldIdentifier, (string)error.Message);
-                    // }
-                    fieldIdentifier = new FieldIdentifier(EditFormContext.Model, error.Attribute);
-                    _messageStore.Add(fieldIdentifier, (string)error.Message);
-                    // ErrorMsg += $"<li>";
-                    // ErrorMsg += !string.IsNullOrWhiteSpace(error.Attribute) ?  $"{error.Attribute} - " : string.Empty;
-                    // string ErrorTag = await ResourceManager.GetResource(error.Message, AuthenticationService.GetRoiwdCulture());
-                    // ErrorMsg += ErrorTag;//error.Message.Replace("\n", "<br />");
-                    // ErrorMsg += $"</li>";
-
-                    ErrorList.Add("Exception: "+error.Message);
+                        }
+                        if(fieldExists)
+                        {
+                            fieldIdentifier = new FieldIdentifier(EditFormContext.Model, error.Attribute);
+                            fieldInContext = true;
+                        }
+                    }
+                    if(fieldInContext)
+                    {
+                        _messageStore.Add(fieldIdentifier, (string)error.Message);
+                    }else{
+                        ErrorList.Add("Exception: "+error.Message);
+                    }
                 }
                 //ErrorMsg += "</ul>";
                 EditFormContext.NotifyValidationStateChanged();

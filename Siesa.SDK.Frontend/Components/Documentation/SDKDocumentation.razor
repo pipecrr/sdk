@@ -11,6 +11,8 @@
 @using Siesa.SDK.Frontend.Components.Documentation.Layout
 @using Siesa.SDK.Frontend.Components.Documentation.ViewsBuilder
 @using Siesa.SDK.Frontend.Components.Documentation.DataAnnotations
+@using Siesa.SDK.Frontend.Components.Documentation.SDKServices
+
 @inject IJSRuntime JSRuntime
 
 
@@ -46,11 +48,8 @@
                             </SDKCard>
                     
                     </SDKTab>
-                        <SDKTab IconCssClass="fa-solid fa-code">  
-
-                            <SDKTextField Value="@ViewSourceCode()"
-                            CssClass="tab-text-area"/>
-
+                        <SDKTab IconCssClass="fa-solid fa-code">
+                            <CodeViewer Code="@ViewSourceCode()" CssClass="vh-100" ReadOnly="true" />
                         </SDKTab>
                     </SDKTabs>
                     }
@@ -127,7 +126,10 @@
                     new ComponentDemo{ComponentName="SDKImageViewer", ComponentFragment = @<DemoImageViewer />},
                     new ComponentDemo{ComponentName="SDKGlobalLoader", ComponentFragment = @<DemoGlobalLoader />},
                     new ComponentDemo{ComponentName="SDKPieChart", ComponentFragment = @<DemoPieChart />},
-                    new ComponentDemo{ComponentName="SDKRangeSlider", ComponentFragment = @<DemoRangeSlider />}
+                    new ComponentDemo{ComponentName="SDKRangeSlider", ComponentFragment = @<DemoRangeSlider />},
+                    new ComponentDemo{ComponentName="ResourceViewer", ComponentFragment = @<DemoResourceViewer />},
+                    new ComponentDemo{ComponentName="SDKIcon", ComponentFragment = @<DemoIcon />},
+                    new ComponentDemo{ComponentName="SDKButtonTiles", ComponentFragment = @<DemoButtonTiles />}
                 },Icon ="fa-solid fa-cube" 
             },
             new ComponentCategory() {
@@ -153,6 +155,17 @@
                 },Icon ="fa-solid fa-note-sticky"
             },
 
+            new ComponentCategory()
+            {
+                Name= "SDKServices", Components = {
+                    new ComponentDemo{ComponentName="EmailService", ComponentFragment = @<DemoEmailServices />},
+                    new ComponentDemo{ComponentName="SDKNotificationService", ComponentFragment = @<DemoNotificationservices />},
+                    new ComponentDemo{ComponentName="FeaturePermissionService", ComponentFragment = @<DemoFeaturePermission/>},
+                    new ComponentDemo{ComponentName="ResourceManager", ComponentFragment = @<DemoResourceManager/>},
+                    new ComponentDemo{ComponentName="AuthenticationService", ComponentFragment = @<DemoAuthenticationService/>},
+                },Icon ="fa-solid fa-code-compare"
+            }
+
         };
     }
 
@@ -175,6 +188,9 @@
         try
         {
             await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/js/utils.js");
+            await JSRuntime.InvokeVoidAsync("window.loadScript", "_content/BlazorMonaco/jsInterop.js");
+            await JSRuntime.InvokeVoidAsync("window.loadScript", "_content/BlazorMonaco/lib/monaco-editor/min/vs/loader.js");
+            await JSRuntime.InvokeVoidAsync("window.loadScript", "_content/BlazorMonaco/lib/monaco-editor/min/vs/editor/editor.main.js");
         }catch (Exception)
         {
         }

@@ -1,5 +1,7 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Components.Visualization
+@using DevExpress.Blazor
+@inject SDKNotificationService SDKNotificationService
 
 <div class="container-fluid">
     <div class="container-fluid">
@@ -11,6 +13,7 @@
             <li>Data: IEnumerable tel tipo TItem</li>
             <li>Diameter: Valor entre 0 y 1 que especifica la relación entre el diámetro del gráfico circular y el lado más pequeño del área del gráfico. Por defecto 0.6</li>
             <li>InnerDiameter: Valor entre 0 y 1 que es la relacion entre el diámetro interior y diámetro exterior(Diameter). Por defecto 0.8</li>
+            <li>PointSelectionMode: Especifica si un usuario puede seleccionar sectores circulares.</li>
         </ul>
         <p>El componente SDKPieChart tambien puede renderizar en su interior cualquier tipo de componente, para el caso de la dona se recomienda usar los componentes SDKPieChartSeries y SDKChartLegend</p>
         <p>El componente SDKPieChartSeries recibe como parametros:</p>
@@ -34,7 +37,7 @@
         </ul>
         <p>El titulo en este ejemplo se agrega con una simple etiqueta h4, pero podria ser cualquier tipo de etiqueta</p>
     </div>
-    <SDKPieChart TItem="ProfileCandidate" Data="@Data">
+    <SDKPieChart TItem="ProfileCandidate" Data="@Data" OnChange="SelectedChanged" OnClick="@OnClick" >
         <SDKPieChartSeries TItem="ProfileCandidate" TValue="decimal" TArgument="string" ValueField="x=>x.valueOfpercentaje" ArgumentField="x=>x.nameOfItemProfile" SummaryMethod="Enumerable.Sum">
         </SDKPieChartSeries>
         <h4 class="align-items-center font-weight-bold">Perfil</h4>
@@ -62,6 +65,17 @@
             new ProfileCandidate{nameOfItemProfile="Items conocimiento 40%",valueOfpercentaje= 40}
         };
         return ListProfileCandidate;
+    }
+
+
+    public void SelectedChanged(PieChartSelectionChangedEventArgs args)
+    {
+        SDKNotificationService.ShowSuccess($"SelectedChanged Action");
+    }
+
+    public void OnClick()
+    {
+        SDKNotificationService.ShowInfo($"OnClick Action");
     }
     
 }

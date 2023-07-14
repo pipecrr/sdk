@@ -12,7 +12,9 @@
                 CssClass="@GetCssClass()"
                 ColSpanXs="@ColSizeXs">
     <Template>
+        <div class="@GetInternalCssClass()" style="@GetInternalStyle()">
         @ChildContent
+        </div>
     </Template>
 </DxFormLayoutItem>
 
@@ -27,6 +29,12 @@
     [Parameter] public int ColSizeSm { get; set; }
     [Parameter] public int ColSizeXs { get; set; }
     [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public bool IsGroup { get; set; }
+    [Parameter] public bool GroupTopBorder { get; set; }
+    [Parameter] public bool GroupBottomBorder { get; set; }
+    [Parameter] public bool GroupLeftBorder { get; set; }
+    [Parameter] public bool GroupRightBorder { get; set; }
+    [Parameter] public int GroupMinHeight { get; set; }
 
     [Parameter] public bool ShowRequiredSymbol { get; set; }
 
@@ -34,7 +42,7 @@
 
     private async Task<string> GetText(){
         if(!String.IsNullOrEmpty(ResourceTag)){
-             return await ResourceManager.GetResource(ResourceTag, AuthenticationService);
+            return await ResourceManager.GetResource(ResourceTag, AuthenticationService);
         }
         if(RowidResource != 0 && RowidResource != null){
             return await ResourceManager.GetResource(Convert.ToInt64(RowidResource), AuthenticationService);
@@ -54,7 +62,12 @@
         }
 
         if(ShowRequiredSymbol){
-            CaptionCssClass = "required-caption";
+            CaptionCssClass = $"{CaptionCssClass} required-caption";
+        }
+
+        if(IsGroup)
+        {
+            CaptionCssClass = $"{CaptionCssClass} sdk-formlayout-group-title";
         }
     }
 
@@ -80,8 +93,47 @@
 
     private string GetCssClass()
     {
-        return GetAutomationId();
+        var result = GetAutomationId();
+        if(IsGroup)
+        {
+            result = $"{result} whcm_row sdk-formlayout-group";
+            if(GroupTopBorder)
+            {
+                result = $"{result} sdk-formlayout-group-border-top";
+            }
+            if(GroupBottomBorder)
+            {
+                result = $"{result} sdk-formlayout-group-border-bottom";
+            }
+            if(GroupLeftBorder)
+            {
+                result = $"{result} sdk-formlayout-group-border-left";
+            }
+            if(GroupRightBorder)
+            {
+                result = $"{result} sdk-formlayout-group-border-right";
+            }
+        }
+        return result;
     }
-    
+
+    private string GetInternalCssClass()
+    {
+        if(IsGroup)
+        {
+            return "whcm_row";
+        }
+        return "";
+    }
+
+    private string GetInternalStyle()
+    {
+        if(IsGroup)
+        {
+            return $"min-height: {GroupMinHeight}px;";
+        }
+        return "";
+    }
+
     
 }

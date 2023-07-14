@@ -25,6 +25,14 @@ namespace Siesa.SDK.Backend.Access
 {
     public class SDKContext : DbContext
     {
+	public DbSet<E00518_PortalUser>? E00518_PortalUser { get; set; }
+
+	public DbSet<E00517_Portal>? E00517_Portal { get; set; }
+
+	public DbSet<E00515_PortalType>? E00515_PortalType { get; set; }
+
+	public DbSet<E00510_ExternalUser>? E00510_ExternalUser { get; set; }
+
 	public DbSet<E00500_IntegrationLog>? E00500_IntegrationLog { get; set; }
 
 	public DbSet<E00231_FlexDelta>? E00231_FlexDelta { get; set; }
@@ -172,6 +180,36 @@ namespace Siesa.SDK.Backend.Access
         public override int SaveChanges()
         {
             return InternalSaveChanges(true);
+        }
+
+        public void BeginTransaction()
+        {
+            this.Database.BeginTransaction();
+        }
+
+        public void Commit()
+        {
+            this.Database.CommitTransaction();
+        }
+
+        public void Rollback()
+        {
+            this.Database.RollbackTransaction();
+        }
+
+        public async Task BeginTransactionAsync()
+        {
+            await this.Database.BeginTransactionAsync();
+        }
+
+        public async Task CommitAsync()
+        {
+            await this.Database.CommitTransactionAsync();
+        }
+
+        public async Task RollbackAsync()
+        {
+            await this.Database.RollbackTransactionAsync();
         }
         
         internal int InternalSaveChanges(bool ValidateUser = true)

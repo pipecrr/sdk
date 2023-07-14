@@ -10,7 +10,7 @@
                 @foreach (var item in Values){
                     <span class="badge badge-pill badge-light">@item
                         <button disabled="@Disabled" @onclick="@(()=> {closeItem(item);})">
-                            <i class="fa-solid fa-xmark"></i>
+                            <SDKIcon Name="fa-xmark"/>
                         </button>
                     </span>
                 }
@@ -18,15 +18,12 @@
         }
         
         <div class="dropdown">
-            <input autocomplete="nope" type="text" disabled="@Disabled" data-automation-id="@GetAutomationId()_inputtext" class="form-control" @bind-value:event="onchange" @bind-value="Value" @oninput="@(e => OnChangeValue(e.Value.ToString()))" @onkeydown="@OnKeyDown" @onfocus="@OnFocus" @onfocusout="@OnFocusOut" id="@idInput"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" placeholder="@placeholder">
+            <input autocomplete="nope" type="text" disabled="@Disabled" data-automation-id="@GetAutomationId()_inputtext" class="form-control" @bind-value:event="onchange" @bind-value="Value" @oninput="@(e => OnChangeValue(e.Value.ToString()))" @onkeydown="@(async (e) => OnKeyDown(e))" @onfocus="@OnFocus" @onfocusout="@OnFocusOut" id="@idInput"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" placeholder="@placeholder" @onkeypress:preventDefault>
             <div class="whcm_select_list dropdown-menu sdk-entity-result" aria-labelledby="@idInput">
                 <ul>
                     @if(CacheData.Count()>0){
                         foreach (var item in CacheData)
-                        {   
-                            if(IsMultiple && Values.Contains(item.Value.ToString())){
-                                continue;
-                            }
+                        {
                             <li class="d-flex justify-content-between dropdown-item" data-automation-id="@GetAutomationIdItem(item)" @onclick="@(()=> { OnSelectItem(item.Value); })">
                                 <div class="d-flex align-items-center">
                                     @if(FieldTemplate == 2){
@@ -50,7 +47,7 @@
                                 @if(CanEdit || CanDetail){
                                     <div>
                                         <button disabled="@Disabled" class="btn btn-sm layout_btn_standar-sm" data-automation-id="@GetAutomationIdItem(item)_ExpandBtn" type="button" data-toggle="tooltip" data-placement="top" title="Ampliar" @onclick="@(async ()=> { await OpenModalExpand(item.Value);})">
-                                            <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
+                                            <SDKIcon Name="fa-up-right-and-down-left-from-center"/>
                                         </button>
                                     </div>
                                 }
@@ -71,11 +68,11 @@
     </div>
     <div class="input-group-append sdk_btn_group_entity_field">
         @if(!IsMultiple && HasValue){
-            <button disabled="@Disabled" class="btn sdk_entity_field_close" type="button"  data-automation-id="@GetAutomationId()_CloseBtn" data-toggle="tooltip" data-placement="top" title="Limpiar" @onclick="@(async ()=> { await Clean();})"><i class="fa-solid fa-xmark"></i></button>
+            <button disabled="@Disabled" class="btn sdk_entity_field_close" type="button"  data-automation-id="@GetAutomationId()_CloseBtn" data-toggle="tooltip" data-placement="top" title="Limpiar" @onclick="@(async ()=> { await Clean();})"><SDKIcon Name="fa-xmark"/></button>
         }
-        <button disabled="@Disabled" class="btn whcm-btn-outline" type="button"  data-automation-id="@GetAutomationId()_SearchBtn" data-toggle="tooltip" data-placement="top" title="Buscar" @onclick="@(async ()=> { await OpenModalList();})"><i class="fa-solid fa-magnifying-glass"></i></button>
+        <button disabled="@Disabled" class="btn whcm-btn-outline" type="button"  data-automation-id="@GetAutomationId()_SearchBtn" data-toggle="tooltip" data-placement="top" title="Buscar" @onclick="@(async ()=> { await OpenModalList();})"><SDKIcon Name="fa-magnifying-glass"/></button>
         @if(CanCreate){
-            <button disabled="@Disabled" class="btn whcm-btn-outline" type="button" data-automation-id="@GetAutomationId()_CreateBtn" data-toggle="tooltip" data-placement="top" title="Crear" @onclick="@(async ()=> { await OpenModalCreate(); })" ><i class="fa-solid fa-circle-plus"></i></button>
+            <button disabled="@Disabled" class="btn whcm-btn-outline" type="button" data-automation-id="@GetAutomationId()_CreateBtn" data-toggle="tooltip" data-placement="top" title="Crear" @onclick="@(async ()=> { await OpenModalCreate(); })" ><SDKIcon Name="fa-circle-plus"/></button>
         }
     </div>
 </div>

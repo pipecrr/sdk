@@ -17,7 +17,7 @@
     color: #ffffff80;
 }
 
-.sdk_search>i {
+.sdk_search> ::deep i {
     position: absolute;
     right: .5rem;
     top: .5rem;

@@ -1,10 +1,15 @@
 @typeparam TItem
 @using System.Linq.Expressions
+@using DevExpress.Blazor
 
 <DxPieChart Data="@Data"
             Diameter="@Diameter"
             InnerDiameter="@InnerDiameter"
-            T="TItem">
+            T="TItem"
+            PointSelectionMode="@PointSelectionMode"
+            SelectionChanged="@OnChange"
+            onclick="@OnClick"
+            >
     @ChildContent
 </DxPieChart>
 
@@ -12,5 +17,13 @@
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public IEnumerable<TItem> Data { get; set; }
     [Parameter] public double Diameter { get; set; } = 0.8;
-    [Parameter] public double InnerDiameter { get; set; } = 0.6;    
+    [Parameter] public double InnerDiameter { get; set; } = 0.6;   
+
+    [Parameter]
+    public ChartSelectionMode PointSelectionMode { get; set; } = ChartSelectionMode.Single;
+
+    [Parameter] public Action<PieChartSelectionChangedEventArgs> OnChange { get; set; }
+    
+    [Parameter] public Action OnClick { get; set; }
+
 }

@@ -1,0 +1,64 @@
+@using Siesa.SDK.Shared.Services
+@using System.Reflection;
+@using System.Text;
+@using Siesa.SDK.Shared.Utilities;
+@using System.IO;
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Services
+
+
+@inject IBackendRouterService BackendRouterService
+@inject IAuthenticationService AuthenticationService
+@inject SDKNotificationService Notification
+
+@layout EmptyLayout
+
+
+<div class="container-fluid">
+    <div class="container-fluid">
+            <h2>AuthenticationService</h2> 
+    </div>
+    <div class="row px-3"> 
+        <div class="col-12">
+            <SDKCard >
+                <h3>Demo AuthenticationService</h3>
+                <p>Este servicio ofrecido por el SDK se utiliza principalmente para, como si nombre lo indica, la autenticacion del usuario logueado.</p>
+                <p>Para utilizarlo se debe inyectar el servicio, no sin antes importar el respectivo using asi:
+                    using Siesa.SDK.Shared.Services;
+                    inject IAuthenticationService AuthenticationService
+
+                    Es un servicio compartido por lo que esta disponible tanto en Frontend como en Backend.
+                    En los BL este servicio de debe inyectar por el constructor del mismo.
+                </p>
+                <p>Aunque el servicio tiene algunos metodos que son de uso exclusivo del SDK tambien expone algunos otros que pueden llegar hacer muy utiles en el desarrollo de los modulos, veamos cuales:</p>
+                <ul>
+                    <li>short GetRoiwdCulture(),
+                        Este metodo nos devuelve el rowid de la cultura del usuario logueado, esto es util para saber en que idioma se debe mostrar la informacion al usuario.
+                    </li>
+                    <li>
+                        short GetRowidCompanyGroup(),
+                        Este metodo nos devuelve el rowid del grupo de compañia del usuario logueado.
+                    </li>
+                    <li>int GetSelectedSuite(),
+                        Este metodo nos devuelve el rowid de la suite seleccionada por el usuario logueado.
+                    </li>
+                    <li>string GetConnectionLogo(),
+                        Este metodo nos devuelve el logo de la compañia del usuario logueado.
+                    </li>
+                    <li>string GetUserPhoto(),
+                        Este metodo nos devuelve la foto del usuario logueado(base64).
+                    </li>
+                </ul>
+            </SDKCard>
+        </div>
+     </div>
+</div>
+
+    
+
+@code 
+{
+
+}
+

@@ -5,6 +5,10 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @using System.Linq
 @using Siesa.SDK.Frontend.Services
+@using Siesa.SDK.Frontend.Components.Layout.AditionalField
+@using Siesa.SDK.Shared.Services
+@inject SDKDialogService SDKDialogService
+@inject NavigationManager NavigationManager
 @inject SDKGlobalLoaderService SDKGlobalLoaderService
 
 @if (Loading == true)
@@ -18,7 +22,7 @@ else if (Panels == null || Panels.Count <= 0)
 }
 else if (ModelLoaded == true)
 {
-    if(!string.IsNullOrEmpty(ErrorMsg)){
+    if(!string.IsNullOrEmpty(ErrorMsg) || ErrorList.Count > 0){
         <ErrorsWindow GeneralErrors="@ErrorList"/>
     }
         @if(IsSubpanel && ShowTitle){
@@ -43,6 +47,22 @@ else if (ModelLoaded == true)
             {
                 <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef" ModelObj="@BusinessObj" DefaultColSize="@Panels[0].ColSize"/>
 
+            }
+            @if(PanelsCollapsable.Count>0){
+                <div class="w-100">
+                    <SDKCollapse>
+                        <Items>
+                            @foreach (var panel in PanelsCollapsable)
+                            {
+                                <SDKCollapseItem Text="@panel.ResourceTag">
+                                    <div class="row">
+                                        <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                                    </div>
+                                </SDKCollapseItem>
+                            }
+                    </Items>
+                    </SDKCollapse>
+                </div>
             }
         </DxFormLayout>
         @if(ContainAttachments){
@@ -150,5 +170,57 @@ else if (ModelLoaded == true)
         } 
         
         SDKGlobalLoaderService.Hide();
+    }
+     public async Task ConfirmDelete(int Rowid)
+    {
+        var confirmDelete = await SDKDialogService.ShowConfirmDialog(@<div class="col-12 p-0"><ResourceViewer ResourceTag="Esta seguro que desea eliminar los campos adicionales?"/></div>);
+        if(confirmDelete != null && confirmDelete == true){
+            bool deleteGroup = await DeleteGroup(Rowid);
+            if(deleteGroup){
+                var currentUrl = NavigationManager.Uri;
+                NavigationService.NavigateTo(currentUrl, true);
+            }
+                
+        }
+    }
+
+    public async Task ClickInAdd(int Rowid)
+    {   
+        var responseDynamicEntity = await BusinessObj.Backend.Call("GetDynamicEntity", Rowid);
+        if(responseDynamicEntity != null && responseDynamicEntity.Success){
+            dynamic dynamicEntity = responseDynamicEntity.Data;
+            var modal = await SDKDialogService.ShowCustomDialog(ds =>@<AditionalFields Business="@BusinessObj" IsCreate="true" DynamicEntity="dynamicEntity"/>,
+                    ShowTitle: false,
+                    standardWidth: SDKModalWidth.Large,
+                    CssClass: "aditional_fields_padding_0"
+                );
+            if(modal != null && modal == true){
+                await ModalConfirmMessage(modal);
+            }
+        }
+    }
+
+    public async Task ClickInEdit(int Rowid)
+    {
+        var responseDynamicEntity = await BusinessObj.Backend.Call("GetDynamicEntity", Rowid);
+        if(responseDynamicEntity != null && responseDynamicEntity.Success){
+            dynamic dynamicEntity = responseDynamicEntity.Data;
+            var modal = await SDKDialogService.ShowCustomDialog(ds =>@<AditionalFields Business="@BusinessObj" IsEdit="true" DynamicEntity="dynamicEntity"/>,
+                    ShowTitle: false,
+                    standardWidth: SDKModalWidth.Large,
+                    CssClass: "aditional_fields_padding_0"
+                );
+            if(modal != null && modal == true){
+                await ModalConfirmMessage(modal);
+            }
+        }
+    }
+
+    public async Task ModalConfirmMessage(bool response){
+        var confirm = await SDKDialogService.ShowConfirmDialog(@<div class="col-12 p-0"><ResourceViewer ResourceTag="Custom.AditionalFields.ConfirmMessage"/></div>);
+        if(confirm != null && confirm == true){
+            var currentUrl = NavigationManager.Uri;
+            NavigationService.NavigateTo(currentUrl, true);
+        }
     }
 }

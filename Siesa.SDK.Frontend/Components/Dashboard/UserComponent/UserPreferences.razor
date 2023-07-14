@@ -7,11 +7,24 @@
 @using Siesa.SDK.Shared.DTOS
 @using Siesa.SDK.Frontend.Components.FormManager.ViewModels
 @using Siesa.Global.Enums 
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.Visualization
+@using System.IO
+@using Microsoft.AspNetCore.Http
+@using Siesa.SDK.Frontend.Components.FormManager.Model
+
 
 @inject IServiceProvider ServiceProvider
 @inject IAuthenticationService AuthenticationService
 @inject IBackendRouterService BackendRouterService
 @inject SDKDialogService DialogService
+@inject IJSRuntime jsRuntime
+@inject UtilsManager UtilManager
+@inject NavigationService NavigationService
+
+@if(ErrorList.Count > 0){
+    <ErrorsWindow GeneralErrors="@ErrorList" />
+}
 
 
 
@@ -20,15 +33,17 @@
         class="container-foto-perfil d-flex align-items-center justify-content-center col-12 col-sm-12 col-md-4 col-lg-3">
 
         <div class="whcm_user_photo_box">
+            <SDKInputFile IsMultiple="false" FilterType="image/*" SaveBytes="true" RowidAttachmentDetail="@_rowidAttachmentDetail"
+                 BusinessName="BLUser"  OnInputFile="@OnInputFile" @ref="@_refinputFile"/>
             <div class="whcm_user_photo">
                 <img src="@ProfileImageData" alt="imagen perfil" style="max-width: 100%;">
             </div>
-            <button class="whcm_upload_photo btn btn-primary btn_primary_def_1 btn-sm" data-toggle="tooltip"
-                data-placement="top" title="" data-original-title="Preferencias_Usuario">
-                <i class="fa-solid fa-camera"></i>
+            <button class="whcm_upload_photo btn btn-primary btn_primary_def_1 btn-sm"  onclick="@(async () => PickComponent())">
+
+                <SDKIcon Name="fa-camera"></SDKIcon>
+
             </button>
         </div>
-
     </div>
 
     <div class="col-12 col-sm-12 col-md-8 col-lg-9 mt-3">
@@ -39,19 +54,19 @@
                 {
                     <button class="btn btn-sm layout_btn_negative-sm mb-1" data-toggle="tooltip" data-placement="top"
                         title="Editar" @onclick="@(()=> ChangeViewType())">
-                        <i class="fa-solid fa-circle-check"></i>
+                        <SDKIcon Name="fa-circle-check"/>
                     </button>
 
                     <button class="btn btn-sm layout_btn_negative-sm mb-1" data-toggle="tooltip" data-placement="top"
                         title="Editar" @onclick="@(()=> ChangeViewType())">
-                        <i class="fa-solid fa-ban"></i>
+                        <SDKIcon Name="fa-ban"/>
                     </button>
                 }
                 else
                 {
                     <button class="btn btn-sm layout_btn_negative-sm mb-1" data-toggle="tooltip" data-placement="top"
-                        title="Editar" @onclick="@(()=> ChangeViewType())">
-                        <i class="fa-solid fa-pen"></i>
+                        title="@EditUser" @onclick="@(()=> ChangeViewType())">
+                        <SDKIcon Name="fa-pen"/>
                     </button>
                 }
 
@@ -88,9 +103,9 @@
                     <div class="carousel-inner">
                         <div class="carousel-item active">
                             <div class="row px-4" alt="First slide">
-                                @if (_userPreferences != null && _userPreferences.ThemeColor != null)
+                                @if (ThemeColor != null)
                                 { 
-                                    @foreach (var theme in _userPreferences.ThemeColor)
+                                    @foreach (var theme in ThemeColor)
                                     {
                                         <div class="col-4 ">
                                             <div class="sdk_card p-2 mb-2">
@@ -121,16 +136,14 @@
                     <a class="carousel-control-prev" href="#carouselExampleControls" role="butto" style="opacity: 1;width: auto;"
                         data-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true">
-                            <i class="fa-solid fa-chevron-left" style="color:#1079FD"></i>
+                            <SDKIcon Name="fa-chevron-left" Style="color:#1079FD"/>
                         </span>
-                        <span class="sr-only">Previous</span>
                     </a>
                     <a class="carousel-control-next" href="#carouselExampleControls" role="button" style="opacity: 1;width: auto;"
                         data-slide="next">
                         <span class="carousel-control-next-icon" aria-hidden="true">
-                            <i class="fa-solid fa-chevron-right" style="color:#1079FD;"></i>
+                            <SDKIcon Name="fa-chevron-right" Style="color:#1079FD;"/>
                         </span>
-                        <span class="sr-only">Next</span>
                     </a>
                 </div>
              </div>
@@ -141,9 +154,9 @@
                 </label>
 
                 <div class="row">
-                    @if (_userPreferences != null && _userPreferences.ComplementaryColors != null)
+                    @if (ComplementaryColors != null)
                     {
-                        @foreach (var item in _userPreferences.ComplementaryColors)
+                        @foreach (var item in ComplementaryColors)
                         {   
                             <div class="col-4 ">
                                     <div class="sdk_card p-2 mb-2">
@@ -178,7 +191,7 @@
             </div>
 
             <div class="alert alert-info d-flex align-items-center font_size_087" role="alert">
-                <i class="fa-solid fa-circle-info mr-2"></i>
+                <SDKIcon Name="fa-circle-info mr-2"/>
                  <ResourceViewer ResourceTag="Custom.SDK.UserPreference.Notifi" />
             </div>
         </div>
@@ -192,9 +205,9 @@
         <div class="row">
             <div class="col-12 col-sm-12">
                 <div class="row">
-                    @if (_userPreferences != null && _userPreferences.IconsStyles != null)
+                    @if (IconsStyles != null)
                     {    
-                        @foreach (var icon in _userPreferences.IconsStyles)
+                        @foreach (var icon in IconsStyles)
                         {    
                             <div class="col-4 mb-3">
                                 <div class="sdk_card d-flex justify-content-center rounded p-4 mb-2">
@@ -289,24 +302,38 @@
 
 @code
 {
+    private SDKInputFile? _refinputFile;
+    private int _rowidAttachmentDetail {get; set;}
+    private IJSObjectReference _jsModule;
     private string ProfileImageData { get; set; }
+    private bool HasFile { get; set; } = false;
+    private List<string> ErrorList { get; set; } = new List<string>();
     private bool _IsEdit = false;
     public DynamicViewType DynamicViewType { get; set; } = DynamicViewType.Detail;
     public dynamic BLUser { get; set; }
 
-    private UserPreferencesDTO _userPreferences { get; set; }
+    public Dictionary<string, string> ThemeColor { get; set; } //Temporal
+
+    public List<enumThemeIconStyle> IconsStyles { get; set; } //Temporal
+    public List<ComplementaryColor> ComplementaryColors { get; set; } //Temporal
 
     private enumThemeIconStyle _selectedIconStyle { get; set; }
 
     private string _selectedColorComplementary { get; set; }
 
-    private string _selectedThemeStyle { get; set; } 
+    private string _selectedThemeStyle { get; set; }
+
+    private UserPreferencesDTO _userPreferences { get; set; } = new UserPreferencesDTO();
 
     private enumThemeTopbarStyle _selectedTopbarStyle { get; set; }
 
     private enumThemeTopbarStyle _OneColor { get; set; } = enumThemeTopbarStyle.OneColor;
 
     private enumThemeTopbarStyle _MultiColor { get; set; } = enumThemeTopbarStyle.MultiColor;
+
+
+    private string TitlePreferences { get; set; }
+    private string EditUser { get; set; }
 
     private void ChangeViewType()
     {
@@ -321,6 +348,13 @@
             DynamicViewType = DynamicViewType.Detail;
         }
 
+        StateHasChanged();
+    }
+
+    private void CancelEdit()
+    {
+        _IsEdit = false;
+        DynamicViewType = DynamicViewType.Detail;
         StateHasChanged();
     }
 
@@ -342,50 +376,69 @@
         _selectedIconStyle = BLUser.BaseObj.ThemeIconStyle;
         _selectedColorComplementary =  BLUser.BaseObj.ThemeSecondaryColor;
         _selectedTopbarStyle = BLUser.BaseObj.ThemeTopbarStyle;
+        _rowidAttachmentDetail = BLUser.BaseObj.RowidAttachmentUserProfilePicture;
         //TODO: _userPreferences 
 
-        _userPreferences = new UserPreferencesDTO() 
+        ThemeColor = new Dictionary<string, string>() 
         {
-            ThemeColor = new Dictionary<string, string>() 
-            {
-                { "Custom.SDK.Theme.Blue", "#1079FD" },
-                { "Custom.SDK.Theme.Orange", "#00AE3C" },
-                { "Custom.SDK.Theme.Green", "#FF8E2C" },
-            },
-            IconsStyles = new List<enumThemeIconStyle>() 
-            {
-                { enumThemeIconStyle.Solid },
-                { enumThemeIconStyle.Regular },
-                { enumThemeIconStyle.Light },
-                { enumThemeIconStyle.Duotone },
-                { enumThemeIconStyle.Thin }
-            },
-            ComplementaryColors = new List<ComplementaryColor>()
-            {
-                new ComplementaryColor() { ColorName = "Tono1", PrimaryColor = "#1079FD", SecundaryColor="#661079FD"  },
-                new ComplementaryColor() { ColorName = "Tono2", PrimaryColor = "#9B111E", SecundaryColor="#669B111E" } 
-            },
-            
+            { "Custom.SDK.Theme.Blue", "#1079FD" },
+            { "Custom.SDK.Theme.Orange", "#00AE3C" },
+            { "Custom.SDK.Theme.Green", "#FF8E2C" },
+        };
+
+        IconsStyles = new List<enumThemeIconStyle>() 
+        {
+            { enumThemeIconStyle.Solid },
+            { enumThemeIconStyle.Regular },
+            { enumThemeIconStyle.Light },
+            { enumThemeIconStyle.Duotone },
+            { enumThemeIconStyle.Thin }
+        };
+
+        ComplementaryColors = new List<ComplementaryColor>()
+        {
+            new ComplementaryColor() { ColorName = "Tono1", PrimaryColor = "#1079FD", SecundaryColor="#661079FD"  },
+            new ComplementaryColor() { ColorName = "Tono2", PrimaryColor = "#9B111E", SecundaryColor="#669B111E" } 
         };
 
         StateHasChanged();
+
+            
     }
+
+
 
     protected override async Task OnInitializedAsync()
     {
         await InitView();
 
         await base.OnInitializedAsync();
+
+        TitlePreferences = await UtilManager.GetResource("Custom.SDK.UserPreference");
+
+        EditUser = await UtilManager.GetResource("Custom.SDK.UserPreference.EditUser");
     }
     
     private async Task SaveUserPreferences()
     {
- 
-
+        ErrorList.Clear();
         BLUser.BaseObj.Theme = _selectedThemeStyle;
         BLUser.BaseObj.ThemeIconStyle = _selectedIconStyle;
         BLUser.BaseObj.ThemeSecondaryColor = _selectedColorComplementary;
         BLUser.BaseObj.ThemeTopbarStyle = _selectedTopbarStyle;
+
+        if(HasFile)
+        {
+            try{
+                await _refinputFile.SDKUploadFile();
+                BLUser.BaseObj.RowidAttachmentUserProfilePicture = _refinputFile.RowidAttachmentDetail;
+            }catch(Exception ex)
+            {
+                ErrorList.Add(ex.Message);
+                StateHasChanged();
+                return;
+            }
+        }
 
         var BL = BackendRouterService.GetSDKBusinessModel("BLUser",AuthenticationService);
 
@@ -394,7 +447,20 @@
         if (result.Success)
         {
             Console.WriteLine("Success Save Changes");
+            AuthenticationService.SetUserPhoto(ProfileImageData);
+
+            _userPreferences.ThemeColor = _selectedThemeStyle;
+            _userPreferences.IconsStyles = _selectedIconStyle;
+            _userPreferences.ComplementaryColors = _selectedColorComplementary;
+            _userPreferences.TopbarStyles = _selectedTopbarStyle;
+            
+            AuthenticationService.SetPreferencesUser(_userPreferences);
+
             DialogService.Close(true);
+
+            NavigationService.NavigateTo("/", forceLoad: true,replace: true);
+            
+            return;
         }
 
     }
@@ -562,6 +628,60 @@
         {
             return false;
         }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender || _jsModule == null)
+        {
+            _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/Components/Dashboard/UserComponent/UserPreferences.razor.js");
+        }
+    }
+
+    public void OnInputFile(InputFileChangeEventArgs FileInput)
+    {
+        ProcessImg(FileInput.File);
+    }
+
+    public async Task PickComponent()
+    {
+        await _jsModule.InvokeVoidAsync("clickInput", _refinputFile._refinputFile.Element);
+    }
+
+    private async Task ProcessImg(IBrowserFile browserFile)
+    {
+        var ms = new MemoryStream();
+        if(browserFile.Size > 3000000){
+            ErrorList.Add("La imagen no puede superar los 3MB");
+            return;
+        }        
+
+        await browserFile.OpenReadStream(maxAllowedSize: 3000000).CopyToAsync(ms);
+
+        var file = new FormFile(ms, 0, ms.Length, null, browserFile.Name)
+        {
+            Headers = new HeaderDictionary(),
+            ContentType = (browserFile.ContentType == "" ? "application/octet-stream": browserFile.ContentType)
+        };
+
+        if(file != null)
+        {
+            ProfileImageData = $"data:{file.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}";
+            HasFile = true;
+            StateHasChanged();
+        }
+        else
+        {
+            HasFile = false;
+            Console.WriteLine("Error al cargar la imagen");
+        }
+    }
+
+    public class ComplementaryColor //Temporal
+    {
+        public string ColorName { get; set; }
+        public string PrimaryColor { get; set; }
+        public string SecundaryColor { get; set; }
     }
 
 }

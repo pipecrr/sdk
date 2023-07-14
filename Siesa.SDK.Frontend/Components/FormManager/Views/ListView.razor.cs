@@ -161,7 +161,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public List<FieldOptions> FieldsHidden { get; set; } = new List<FieldOptions>();
 
         public List<FieldOptions> SavedHiddenFields { get; set; } = new List<FieldOptions>();
-
+        public List<string> FieldsHiddenList { get; set; } = new List<string>();
         public string BLEntityName { get; set; }
 
         public string LastFilter { get; set; }
@@ -1022,16 +1022,21 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public async Task<bool> HideActionFromReact(string dataStr, Int64 index){
             Button button = CustomActions[(int)index];
             bool res = false;
+            bool deny = false;
             if(button != null){
+                var data = JsonConvert.DeserializeObject<dynamic>(dataStr);
                 dynamic hideCondition = null;
-                if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-hide")){
-                    var sdkHide = button.CustomAttributes["sdk-hide"];
-                    if(sdkHide != null){
-                        hideCondition = sdkHide;
-                    }
+                if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-hide") && button.CustomAttributes["sdk-hide"] != null){
+                    hideCondition = button.CustomAttributes["sdk-hide"];
+                }else if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-show") && button.CustomAttributes["sdk-show"] != null){
+                    hideCondition = button.CustomAttributes["sdk-show"];
+                    deny = true;
                 }
                 if(hideCondition != null){
                     res = await EvaluateCondition(data, hideCondition);
+                    if(deny){
+                        res = !res;
+                    }
                 }
             }
             return res;
@@ -1286,6 +1291,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private void hideCustomColumn()
         {
+            FieldsHiddenList = new List<string>();
             var useRoslyn = false;
             if(useRoslyn)
             {
@@ -1381,6 +1387,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                     catch (System.Exception ex)
                                     {
                                         Console.WriteLine($"Error: {ex.Message}");
+                                    }
+                                    if(field.Hidden){
+                                        FieldsHiddenList.Add(field.Name.Replace("BaseObj.", "", StringComparison.InvariantCultureIgnoreCase));
                                     }
                                 }
                                 if(shouldUpdate)

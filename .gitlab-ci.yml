@@ -6,7 +6,6 @@ variables:
   NUGET_PACKAGES_DIRECTORY: '.nuget'
   SOURCE_CODE_PATH: '*/*/'
 
-
 cache:
   key: "$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
   paths:
@@ -18,7 +17,6 @@ cache:
 before_script:
   - dotnet nuget add source $PACKAGE_REGISTRY_URL --name gitlab --username gitlab-ci-token --password $CI_JOB_TOKEN --store-password-in-clear-text
   - 'dotnet restore --packages $NUGET_PACKAGES_DIRECTORY'
-
 
 build_dev:
     stage: build
@@ -32,12 +30,43 @@ build_dev:
         paths:
           - nuget/
 
-build:
+build_release:
     stage: build
     only: 
-      - docker-labs
+      - /^release_.*$/
     script:
-      - dotnet pack -c Release -o nuget --version-suffix "$(date +%Y%m%d)" --no-restore
+      - dotnet pack -c Release -o nuget --no-restore
+    tags:
+      - docker
+    artifacts:
+        paths:
+          - nuget/  
+
+generate_release:
+    stage: deploy
+    before_script:
+      - ''
+    only: 
+      - main
+    script:
+      # Delete the release branch if it already exists in the local repository
+      - git branch | grep release_$(date +%Y%m%d) && git branch -D release_$(date +%Y%m%d)
+      # Check if the release branch already exists in the remote repository
+      - git fetch --all
+      - git checkout main
+      - git pull
+      - git branch -r | grep release_$(date +%Y%m%d) || echo "Branch release_$(date +%Y%m%d) does not exist"
+      - git branch -r | grep release_$(date +%Y%m%d) && echo "Branch release_$(date +%Y%m%d) already exists" && exit 1
+      # Create a branch for the release
+      - git checkout -b release_$(date +%Y%m%d)
+      # add the version suffix in all csproj files recursively with the current date
+      - find . -name "*.csproj" -exec sed -i "s/<VersionSuffix>.*<\/VersionSuffix>/<VersionSuffix>$(date +%Y%m%d)<\/VersionSuffix>/g" {} \;
+      - git add .
+      # Config git user
+      - git config --global user.email "gitlab@siesa.com"
+      - git config --global user.name "GitLab Runner"
+      - git commit -m "Release $(date +%Y%m%d)"
+      - git push --set-upstream https://${GITLAB_RELEASE_CREDS}@${CI_REPOSITORY_URL#*@} release_$(date +%Y%m%d)
     tags:
       - docker
     artifacts:
@@ -46,6 +75,10 @@ build:
 
 test:
     stage: test
+    only: 
+      - develop
+      - /^release_.*$/
+      - merge_requests
     tags:
       - docker
     script:
@@ -70,7 +103,7 @@ sonarqube-check:
   allow_failure: true
   only:
     - merge_requests
-    - docker-labs
+    - main
     - develop
 
 
@@ -78,7 +111,7 @@ deploy:
     stage: deploy
     only: 
       - develop
-      - docker-labs
+      - /^release_.*$/
     tags:
       - docker
     script:
