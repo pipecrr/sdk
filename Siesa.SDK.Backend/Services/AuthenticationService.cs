@@ -15,9 +15,8 @@ namespace Siesa.SDK.Backend.Services
         private int _minutesExp;
         public short RowidCultureChanged { get; set; } = 0;
         private ISDKJWT _sdkJWT;
-        public AuthenticationService(ISDKJWT sdkJWT){
-            _minutesExp = 120; //TODO: get from config
-            _secretKey =  Siesa.SDK.Backend.Criptography.SDKRsaKeys.PrivateKey; //TODO: get from config
+        public AuthenticationService(ISDKJWT sdkJWT)
+        {
             _sdkJWT = sdkJWT;
         }
 
