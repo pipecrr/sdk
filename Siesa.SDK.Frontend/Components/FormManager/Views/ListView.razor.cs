@@ -333,9 +333,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                             }
                         }
                     }
-                    if(ExtraButtons.Count > 0){
-                        HasExtraButtons = true;
-                    }
+                    HasExtraButtons = ExtraButtons.Any(x => string.IsNullOrEmpty(x.Id));
                 }
                 UseFlex = ListViewModel.UseFlex;
                 FlexTake = ListViewModel.FlexTake;
