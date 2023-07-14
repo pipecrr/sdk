@@ -86,6 +86,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private Button ListButton { get; set; }
         private Button DeleteButton { get; set; }
         private string _viewdefName;
+
+        private void setViewContextField(FieldOptions field)
+        {
+            field.ViewContext = "DetailView";
+            field.GetFieldObj(BusinessObj);
+
+            if (field.Fields == null || field.Fields.Count <= 0) return;
+            foreach (var item in field.Fields.Select((value, i) => (value, i)))
+            {
+                setViewContextField(item.value);
+            }
+        }
         private void setViewContext(List<Panel> panels)
         {
             for (int i = 0; i < panels.Count; i++)
@@ -100,8 +112,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
                 for (int j = 0; j < panels[i].Fields.Count; j++)
                 {
-                    panels[i].Fields[j].ViewContext = "DetailView";
-                    panels[i].Fields[j].GetFieldObj(BusinessObj);
+                    setViewContextField(panels[i].Fields[j]);
                 }
                 if (panels[i].SubViewdef != null && panels[i].SubViewdef.Panels.Count > 0)
                 {
@@ -364,7 +375,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     }else{
                         ExtraButtons.Add(button);
                     }
-                    HasExtraButtons = ExtraButtons.Count > 0;
+
+                    HasExtraButtons = ExtraButtons.Any(x => string.IsNullOrEmpty(x.Id));
                 }
                 //_ = InvokeAsync(() => StateHasChanged());
             }

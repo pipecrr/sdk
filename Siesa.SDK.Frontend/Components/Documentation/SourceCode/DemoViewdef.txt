@@ -1,0 +1,418 @@
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Fields
+
+<div class="container-fluid">
+    <div class="row p-3">
+        <div class="col-12"><h2>Builder Views</h2></div>
+        <div class="col-12"><p>El SDK genera formularios y vistas  predeterminadas a patir de Metadatos definidos en un archivo JSON.</p></div>
+        <div class="col-12"><p>Todos los archivos JSON se deben crear en la carpeta Frontend/NombreDelNegocio/Viewdefs/</p></div> 
+    </div>
+    <div class="row px-3 mt-3"> 
+        <div class="col-12 p-3 ">
+                <h3 class="d-flex justify-content-center">Viewdef</h3>
+                <p>Un archivo de metadatos para una vista de creación, edición o detalle tiene el
+                siguiente formato:
+                </p>
+                    <SDKTextField CssClass="text-area-demoviewdef" Value="@ViewdefCreate"/>
+
+                <p>Es posible crear un único Viewdef con el nombre "default.json" para cargar las vistas de creación, edición y detalle, en caso de que exista un "create.json", "edit.json" y/o "detail.json" estos últimos tendrán prioridad sobre el "default.json", igualmente para el caso de los "related_*.json" este tendrá prioridad sobre los anteriores.</p>
+                <br/>
+
+                <p>El archivo de metadatos para una vista de lista, tiene el siguiente formato:</p>
+                    <SDKTextField CssClass="text-area-demoviewdef" Value="@ViewdefList"/>
+                
+                <p>Los filtros son una lista de listas de object donde cada elemento de la lista es un or y cada propiedad del objeto es un and, los tipos de filtros soportados son:</p>
+                <ul>
+                    <li>{FieldName}__in: para filtro in, se debe enviar una lista del tipo del campo con los elementos que se van a filtrar</li>
+                    <li>{FieldName}__not_in: para filtro not in, se debe enviar una lista del tipo del campo con los elementos que se van a filtrar</li>
+                    <li>{FieldName}__contains: para filtro contains</li>
+                    <li>{FieldName}__gt: para filtro mayor que</li>
+                    <li>{FieldName}__gte: para filtro mayor o igual que</li>
+                    <li>{FieldName}__lt: para filtro menor que</li>
+                    <li>{FieldName}__lte: para filtro menor o igual que</li>
+                    <li>{FieldName}: para filtrar por un valor igual a</li>
+                </ul>
+                
+
+                <p>Tambien se da soporte para los campos de tipo control entidad, 
+                    indicando el campo que se relaciona y con cual entidad hace relacion. Genera un campo de tipo
+                    select con los valores de la entidad relacionada:</p>
+                    <SDKTextField CssClass="text-area-demoviewdef" Value="@ControlEntidad"/>
+                
+                <p>Estos archivos se procesan en tiempo de ejecución y se generan las vistas
+                    correspondientes al ingresar a la URL del negocio:</p>
+                    <ul>
+                        <li>Creación: /NombreDelNegocio/create/</li>
+                        <li>Edición: /NombreDelNegocio/edit/{RowId}/</li>
+                        <li>Detalle: /NombreDelNegocio/detail/{RowId}/</li>
+                        <li>Lista: /NombreDelNegocio/</li>
+                    </ul>
+
+                <p>Tambien podemos renderizar un componente personalizado como un campo:</p>
+                        <SDKTextField CssClass="text-area-demoviewdef" Value="@CustomComponent"/>
+
+                <p>Se implementó en el generador unas directivas que se pueden utilizar en cada
+                    campo para definir comportamientos específicos, por ejemplo, 
+                    ocultar o mostrar un campo dependiendo de alguna condicion:</p>
+
+                    <SDKTextField CssClass="text-area-demoviewdef" Value="@CustomAtributtes"/>
+                
+                <p>En el Ejemplo anterior vemos que la seccion CustomAtributtes nos ayudara a definir dichas reglas. 
+                    en este caso especifico, solo mostrara el campo Name si cumple la condicion PersonType == 1, y lo 
+                    mismo aplica para el campo BusinessName, solo se mostrara si cumple con PersonType == 2.</p>
+                
+                <p><strong>Las directivas implementadas son las siguientes:</strong></p>
+
+                <ul>
+                    <li>sdk-show: Determina si el campo debe mostrarse cuando se cumpla la condición</li>
+                    <li>sdk-hide: Determina si el campo debe ocultarse cuando se cumpla la condición</li>
+                    <li>sdk-required: Determina si el campo es obligatorio</li>
+                    <li>sdk-readonly: Determina si el campo es solo lectura</li>
+                    <li>sdk-disabled: Determina si el campo está deshabilitado</li>
+                    <li>sdk-change: Ejecuta el código cuando se cambia el valor del campo</li>
+                </ul>
+
+                <p>Expecificamente en los campos tipo archivo se puede definir el tipo de archivo que se puede subir, en la propiedad CustomAtributtes.Extensions, por defecto el componente expecifica imagenes tipo archivo</p>
+                <SDKTextField CssClass="text-area-demoviewdef" Value="@CustomAtributtesExtenxions"/>
+
+                <p>El generador de vistas tambien nos permite especificar un campo de tipo personalizado, 
+                    los soportados hasta el momento son los siguientes:</p>
+
+                <ul>
+                   <li>SwitchField: Para campos de tipo Bool</li>
+                   <li>SelectBarField: Para Campos de Tipo Enum</li>
+                   <li>TextField: Para Campos tipo Texto</li>
+                   <li>EmailField: Para Campos tipo Email</li>
+                </ul>
+
+                <p>Lo podemos utilizar de la siguiente forma:</p>
+                    <SDKTextField CssClass="text-area-demoviewdef" Value="@CustomType"/>
+
+                <p>Tambien podemos definir el tamaño de un campo en especifico,
+                     con la propiedad ColSize.</p> 
+                <p>por ejemplo:</p> 
+                    <SDKTextField CssClass="text-area-demoviewdef" Value="@ColSize"/>                
+                    
+                <p>Tabien podemos asignar el tamaño de todos los campos de la vista(Dentro de Fields, tenemos todos los campos de la vista), asi:</p>
+
+                    <SDKTextField CssClass="text-area-demoviewdef" Value="@ColSizeAll"/>
+
+                <p>Para definir los campos extra que se muestran en un entityField se envia el parametro RelatedParams, es un objeto de tipo RelatedParams que tiene 3 propiedades:
+                    <ul>
+                        <li>ExtraFields: Lista de campos adicionales que se van a mostrar en la vista desplegable</li>
+                        <li>FieldTemplate: Entero, 1 plantilla sin foto, 2 plantilla con foto, por defecto se envia en 1, sin foto</li>
+                        <li>FieldPhoto: Nombre del campo de donde se va a traer la foto a pintar</li>
+                    </ul>
+                </p>
+                    <SDKTextField CssClass="text-area-demoviewdef" Value="@RelatedParams"/>
+
+                <p>Se da soporte para agregar botones que ejecuten metodos que se encuentren en el BL del Frontend:</p>
+                    
+                        <SDKTextField CssClass="text-area-demoviewdef" Value="@Buttons"/>
+
+                <p>En los botones se pueden especificar permisos para las acciones con el parametro ListPermission</p>
+
+                        <SDKTextField CssClass="text-area-demoviewdef" Value="@ButtonsActions"/>
+                    
+                <p>En los botones se pueden especificar si estan ocultos o deshabilitados por defecto </p>
+
+                        <SDKTextField CssClass="text-area-demoviewdef" Value="@ButtonsDefault"/>                
+
+                <p>En los botones se pueden especificar en el CustomAttributtes las opciones "sdk-disabled", "sdk-hide" y "sdk-show"</p>
+
+                        <SDKTextField CssClass="text-area-demoviewdef" Value="@ButtonsCustomAttributes"/>
+                
+                <p>Para agregar CustomAttributtes en los botones por defecto es necesario agregar un boton con el Id del boton, tambien se pueden agregar las propiedades Disabled y Hidden, los Id permitidos son:</p>
+                    <ul>
+                        <li>Create</li>
+                        <li>Save</li>
+                        <li>Duplicate</li>                        
+                        <li>Edit</li>
+                        <li>List</li>
+                        <li>Delete</li>                        
+                    </ul>
+                <p>Y agregar en el CustomAtributtes las propiedades que desea modificar como se muestra anteriormente, si el id no existe, no se tendra en cuanta el boton, si se envian propiedades adicionales a los botones por defecto no las tendra en cuenta</p>
+                    <SDKTextField CssClass="text-area-demoviewdef" Value="@ButtonsDefaultCustomAttributes"/>
+
+                <p>Por defecto se usa la flex en el listar, para quitar el componente flex en el listar, se agrega "UseFlex: false" en el list.json </p>
+                <p>Tambien se puede especificar que pagine por servidor y el tamaño de la pagina, por defecto el take es 100 y la paginacion servidor en true</p>                    
+                        <SDKTextField CssClass="text-area-demoviewdef" Value="@ListFlex"/>
+
+                <p>Por defecto el listar no muestra el linkTo si se desea agregar el LisnkTO es necesario indicarlo en el list.json</p>
+                        <SDKTextField CssClass="text-area-demoviewdef" Value="@ShowLinkTo"/>
+                        
+                <p>El listar permite enviar acciones personalizadas se agregan a nivel general en el list.json, en el BL el metodo "CustomAction" recibe como parametro un objeto del tipo del registro</p>
+                        <SDKTextField CssClass="text-area-demoviewdef" Value="@CustomActions"/>
+                <p>Para deshabilitar u ocultar un CustomActions es posible enviar la propiedad disabled o hidden en el CustomAction, adicionalemente se puede habilitar o deshabilitar dependiendo una condicion añadiendo en los CustomAtributtes las propiedades "sdk-disabled", "sdk-show" y "sdk-hide" para deshabilitar y/o ocultar los botones, ambos metodos reciben como parametro el objeto seleccionado y debe retornar un bool que indica si habilita o no el boton.</p>
+                        <SDKTextField CssClass="text-area-demoviewdef" Value="@CustomActionsDisabled"/>
+
+                <p>Utilizando la propiedad CustomAtributtes ahora podemos definir para un campo de tipo Booleano, 
+                    las opciones que se mostraran luego de definirlo como tipo Selectbar, enviando el tag del recurso de la siguiente manera:</p>
+                         <SDKTextField CssClass="text-area-demoviewdef" Value="@SelectbarBoolean"/>
+
+                <p>Los Viewdef soportan a traves de un nuevo objeto llamado ExtraFields(Lista de string) enviar los campos especificos que vamos a necesitar/consultar, esto aplica por ahora para las vistas "DetailView" y Listview(tanto Flex como Radzen).
+                    Si no se especifica ExtraFields, se consultaran todos los campos del objeto, si se especifica, se consultaran los campos que se envien en el ExtraFields mas los campos por defecto en el Viewdef, los Extrafields no se mostraran en el formulario pero si los tendremos disponibles en BaseObj:</p>
+                    <SDKTextField CssClass="text-area-demoviewdef" Value="@ExtraFields"/>
+                <p>
+                    Esto tambien aplica si queremos traer campos relacionados, como se ve en el ejemplo anterior,
+                    se envia el campo "BaseObj.City.State" indicando que quiero traer en este caso la ciudad y el departamente de un barrio
+                    y "BaseObj.City.State.Country", indicando que quiero ahora consultar tambien el Pais.
+                    Ejemplo:
+                    <ul>
+                        <li>BaseObj.City.State.Name</li>
+                        <li>BaseObj.City.State.Country.Rowid</li>
+                    </ul>
+                </p>
+                
+        </div>
+    </div>
+</div>
+
+@code{
+    string ShowLinkTo = @"""ShowLinkTo"": true";
+    string ViewdefCreate = @"{
+                                ""Panels"": [
+                                    {
+                                    ""Fields"": [
+                                        {
+                                        ""Name"": ""BaseObj.Id""
+                                        },
+                                        {
+                                        ""Name"": ""BaseObj.Name""
+                                        },
+                                        {
+                                        ""Name"": ""BaseObj.Description""
+                                        },
+                                        {
+                                        ""Name"": ""BaseObj.Status""
+                                        }
+                                            ]
+                                    }
+                                ]
+                            }";
+
+    string ViewdefList = @"{
+                                ""OrderBy"": {
+                                    ""Field"": ""BaseObj.Id"",
+                                    ""Direction"": ""Asc""
+                                },
+                                ""Paging"": {
+                                    ""PageSize"": 10,
+                                    ""AllowedPageSizes"": [
+                                    10,
+                                    20,
+                                    50,
+                                    100
+                                    ]
+                                },
+                                ""Filters"": [
+                                    [
+                                        {
+                                            ""Status__in"": ""GetFilter()""
+                                        }
+                                    ]
+                                ],
+                                ""Fields"": [
+                                    {
+                                    ""Name"": ""BaseObj.Name""
+                                    },
+                                    {
+                                    ""Name"": ""BaseObj.Description""
+                                    },
+                                    {
+                                    ""Name"": ""BaseObj.Status""
+                                    }
+                                ],
+                                ""AllowEdit"": ""false"",
+                                ""AllowDelete"": ""false"",
+                                ""AllowDetail"": ""false"",
+                                ""AllowCreate"": ""false""
+                            }";
+
+    string ControlEntidad = @"  {
+                                ""Name"": ""BaseObj.IdentificationType""
+                                ""RelatedBusiness"": ""IdentificationType"",
+                                }";
+
+
+    string CustomComponent = @"{
+                                ""Panels"": [
+                                    {
+                                    ""Fields"": [
+                                        {
+                                        ""Name"": ""CreditRatingGauge"",
+                                        ""CustomComponent"": {
+                                         ""Name"": ""SDKRadialGauge"",
+                                         ""Namespace"": ""Siesa.SDK.Frontend.Components.Visualization"",
+                                         ""Attributes"": {
+                                         ""Value"": ""(double)BaseObj.CreditRating"",
+                                        }
+                                            ]
+                                    }
+                                ]
+                            }";
+
+
+    string CustomAtributtes = @"{
+                                    ""Name"": ""BaseObj.Name"",
+                                    ""Hidden"":""true"",
+                                    ""CustomAttributes"": {
+                                    ""sdk-show"": ""(int)BaseObj.PersonType == 1""}
+
+                                    ""Name"": ""BaseObj.BusinessName"",
+                                    ""Hidden"": ""true"",
+                                    ""CustomAttributes"": {
+                                    ""sdk-show"": ""(int)BaseObj.PersonType == 2""}
+                                }" ;
+
+    string CustomAtributtesExtenxions = @"{
+                            ""Name"": ""BaseObj.AttachmentDetail"",
+                            ""CustomAttributes"": {                                
+                                ""Extensions"":["".jpg"", "".png"", "".jpeg""]
+                                }
+                            }";
+
+    string CustomType = @"{
+                            ""Name"": ""BaseObj.IsClient"", 
+                            ""CustomType"": ""SwitchField"",
+                            }";
+
+    string ColSize = @"{
+                        ""Name"": ""BaseObj.Id"",
+                        ""CustomAttributes"":{
+                        ""sdk-show"": ""ItemIdSite""},
+                        ""ColSize"": {
+                        ""XS"": ""12"",
+                        ""SM"": ""12"",
+                        ""MD"": ""3"",
+                        ""LG"": ""3""
+                        }
+                    }," ;
+
+    string RelatedParams = @"{
+                        ""Name"": ""BaseObj.Id"",
+                        ""CustomAttributes"":{
+                        ""sdk-show"": ""ItemIdSite""},
+                        ""RelatedParams"": {
+                            ""ExtraFields"": ""[""Id"",""Country""]"",
+                            ""FieldTemplate"": 2
+                        }
+                    }," ;        
+
+    string ColSizeAll = @"{
+                            ""Panels"": [{,
+                                ""Fields"": [...],
+                                ""ColSize"": {
+                                ""XS"": ""12"",
+                                ""SM"": ""12"",
+                                ""MD"": ""12"",
+                                ""LG"": ""12""
+                                }
+                            }
+                            ]
+                        }";
+    
+    string Buttons=@"
+                    ""Buttons"": [{
+                        ""Action"": ""await MetodoBLFrontend()"",
+                        ""Style"": ""secondary""
+                        }]";
+
+    string ButtonsActions=@"
+                    ""Buttons"": [{
+                        ""Action"": ""await MetodoBLFrontend()"",
+                        ""Style"": ""secondary"",
+                        ""ListPermission"": [1,2,6]
+                        }]";
+
+    string ButtonsDefault =@"
+                    ""Buttons"": [{
+                        ""Action"": ""await MetodoBLFrontend()"",
+                        ""Style"": ""secondary"",
+                        ""Hidden"": ""true"",
+                        ""Disabled"": ""true""
+                        }]";
+
+    string ButtonsCustomAttributes =@"
+                    ""Buttons"": [{
+                        ""Action"": ""await MetodoBLFrontend()"",
+                        ""Style"": ""secondary"",
+                        ""CustomAttributes"": {
+                            ""sdk-disabled"":""onDisabled()"",
+                            ""sdk-hide"":""onHide()"",
+                            ""sdk-show"":""onShow()""
+                            }
+                        }]";
+
+    string ButtonsDefaultCustomAttributes =@"
+                    ""Buttons"": [{
+                        ""Id"": ""Save"",
+                        ""Disabled"": ""true"",
+                        ""CustomAttributes"": {
+                            ""sdk-disabled"":""onDisabled()"",
+                            ""sdk-hide"":""onHide()"",
+                            ""sdk-show"":""onShow()""
+                            }
+                        }]";
+
+    string ListFlex = @"
+                       ""UseFlex"": ""true"",
+                        ""FlexTake"": 100,
+                        ""ServerPaginationFlex"": ""true""
+                        ";
+    
+    string CustomActions = @"
+                            ""CustomActions"": [{                            
+                            ""Action"": ""CustomAction"",
+                            ""IconClass"": ""fa fa-plus""
+                            }]
+                            
+                            ///BL
+                            public async Task CustomAction([tipo del baseObj] obj){
+                                 //Todo lo que se quiera hacer
+                            }
+                            ";
+
+    string CustomActionsDisabled = @"
+                            ""CustomActions"": [{                            
+                            ""Action"": ""CustomAction"",
+                            ""IconClass"": ""fa fa-plus"",
+                            ""Disabled"": ""true"",
+                            ""Hidden"": ""true"",
+                            ""CustomAttributes"": {
+                                ""sdk-disabled"": ""DisableCondition""
+                            }]
+
+                            ///BL
+                            public async Task<bool> DisableCondition([Tipo baseObj] obj){
+                                 var result = true; //Todo: Implement logic return result; 
+                            }
+                            ";
+
+    string SelectbarBoolean = @"
+                                    ""Name"": ""BaseObj.HasScheduledAccess"", 
+                                    ""CustomType"": ""SelectBarField"",
+                                        ""CustomAttributes"": {
+                                        ""BooleanYesResourceTag"": ""Custom.Prueba.Si"",
+                                        ""BooleanNoResourceTag"": ""Custom.Prueba.No""
+                                        }" ;
+    
+    string ExtraFields = @"
+                            ""{
+                            ""Panels"": [
+                                {
+                                ""Fields"": [
+                                ""...""
+                                ""...""
+                                ""...""
+                                ""]""
+                                ""}""
+                            ""],""
+                            ""ExtraFields"": ""[
+                            ""BaseObj.Id"",
+                            ""BaseObj.Name"",
+                            ""BaseObj.City.State"",
+                            ""BaseObj.City.State.Country""
+                            ""]""
+                            }";
+}

@@ -1,0 +1,41 @@
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.Visualization
+@layout EmptyLayout
+
+<div class="container-fluid">
+    <div class="container-fluid">
+            <h2>SDKColorPicker</h2> 
+            <p>Demonstration and configuration of the SDKColorPicker component</p> 
+    </div>
+    <div class="row px-3"> 
+        <div class="col-md-6 p-3">
+            <div class="row">
+                <div class="col-md-6 p-3">
+                <SDKCard>
+                        <SDKBooleanField @bind-Value=@showHSV Enabled="true">showHSV</SDKBooleanField>
+
+                        <SDKBooleanField @bind-Value=@showRGBA Enabled="true">showRGBA</SDKBooleanField>
+
+                        <SDKBooleanField @bind-Value=@showColors Enabled="true">showColors</SDKBooleanField>
+                </SDKCard>
+                </div>
+                 <div class="col-md-6 p-3">
+                    <SDKColorPicker @bind-Value=@color ShowHSV=@showHSV ShowRGBA=@showRGBA ShowColors=@showColors FullWidth="true"/>
+                 </div>
+            </div>
+        </div>
+        <div class="col-md-6 p-3">
+            <h2 style="background-color: @color;">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat veritatis corrupti expedita praesentium neque possimus delectus beatae similique quisquam, nobis omnis aperiam porro accusamus reprehenderit cupiditate nisi sapiente temporibus at?
+            </h2>
+        </div>
+    </div>
+</div>
+     
+@code {
+    string color = "rgb(68, 58, 110)";
+    bool showHSV = true;
+    bool showRGBA = true;
+    bool showColors = true;
+    bool showButton = false;
+}

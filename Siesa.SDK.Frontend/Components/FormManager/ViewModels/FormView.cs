@@ -339,7 +339,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                         ExtraButtons.Add(button);
                     }
                 }
-                HasExtraButtons = ExtraButtons.Count > 0;
+
+                HasExtraButtons = ExtraButtons.Any(x => string.IsNullOrEmpty(x.Id));
                 _ = InvokeAsync(() => StateHasChanged());
             }
         }

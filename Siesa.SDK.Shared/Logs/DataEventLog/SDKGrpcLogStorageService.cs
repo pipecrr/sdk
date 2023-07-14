@@ -19,7 +19,7 @@ namespace Siesa.SDK.Shared.Logs.DataEventLog
         public SDKGrpcLogStorageService(IConfiguration configuration)
         {
             var auditUrl = configuration["ServiceConfiguration:AuditServerUrl"];
-            var _channel = GrpcUtils.GetChannel(auditUrl);
+            _channel = GrpcUtils.GetChannel(auditUrl);
             _client = new DataLogEventClient(_channel);
         }
 
@@ -59,7 +59,7 @@ namespace Siesa.SDK.Shared.Logs.DataEventLog
             {
                 return  _client.QueryLog(request);
             }
-            catch (Grpc.Core.RpcException e)
+            catch (Grpc.Core.RpcException)
             {
                 
             }

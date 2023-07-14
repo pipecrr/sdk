@@ -1,0 +1,25 @@
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Fields
+
+<div class="container-fluid">
+    <div class="row p-3">
+        <div class="col-12"><h2>SDKCustomType</h2></div>
+        <div class="col-12"><p>Demonstration and configuration of the SDKCustomType</p></div> 
+    </div>
+    <div class="row px-3 mt-3"> 
+        <div class="col-md-6 p-3 ">
+                <h5><strong>Este atributo sirve para indicar el tipo de campo que se mostrara para esta propiedad</strong></h5>
+                <SDKCard>
+                    <SDKFileViewer type="SDKTypeFile.Image" url="_content/Siesa.SDK.Frontend/images/SDKCustomType.png" /> 
+                </SDKCard>
+            
+            <P>Recibe como parametro el tipo de campo que se quiere pintar, indicado a traves de un enum y teniendo en cuenta el tipo de dato que sea la       propiedad:
+                Bool => SwitchField = 1,
+                Enum =>  SelectBarField = 2,
+                String => TextField = 3,
+                String => EmailField = 4,
+                Enum =>  RadioButtonField = 5,
+            </P>
+        </div>
+    </div>
+</div>
