@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
+
 namespace Siesa.SDK.Shared.Logs.DataChangeLog
 {
     public static class LogService
@@ -35,7 +36,7 @@ namespace Siesa.SDK.Shared.Logs.DataChangeLog
         private static void ConvertAndSave(DataEntityLog log, SDKGrpcChangeLogStorageService dataChangeLog)
         {
             MemoryStream ms = new MemoryStream();
-            using (BsonWriter writer = new BsonWriter(ms))
+            using (BsonDataWriter writer = new BsonDataWriter(ms))
             {
                 JsonSerializer serializer = new JsonSerializer();
                 serializer.Serialize(writer, log);

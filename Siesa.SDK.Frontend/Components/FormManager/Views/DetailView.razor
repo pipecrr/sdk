@@ -92,7 +92,7 @@ else if (ModelLoaded == true)
     @if(SetTopBar)
     {
         <PageTitle>@BusinessObj</PageTitle>
-        <SetTopBar HasExtraButtons="@(FormViewModel.Buttons != null && FormViewModel.Buttons.Count > 0 ? true: false)" BusinessObj="@BusinessObj" DisableCompanies="true">
+        <SetTopBar HasExtraButtons="@(FormViewModel.Buttons != null && FormViewModel.Buttons.Any(x => string.IsNullOrEmpty(x.Id)) ? true: false)" BusinessObj="@BusinessObj" DisableCompanies="true">
             <TopBarTitle>@BusinessObj</TopBarTitle>
             <TopBarButtons>
 
@@ -144,7 +144,7 @@ else if (ModelLoaded == true)
 
             </TopBarButtons>
             <TopBarExtraButtons>
-                @foreach (var btn in ExtraButtons)
+                @foreach (var btn in ExtraButtons.Where(x => string.IsNullOrEmpty(x.Id)))
                 {
                     if(!btn.Hidden){
                         <TopBarButton Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" IconCssClass="@btn.IconClass" Enabled="@(!btn.Disabled)"/>

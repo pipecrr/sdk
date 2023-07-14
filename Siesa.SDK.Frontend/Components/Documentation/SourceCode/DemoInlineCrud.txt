@@ -1,0 +1,84 @@
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Components.FormManager.Model
+@using Siesa.SDK.Frontend.Components.FormManager.Views
+@using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Entities
+
+@inject SDKNotificationService SDKNotificationService
+
+
+<div class="container-fluid">
+    <div class="container-fluid">
+        <h2>InlineCrud</h2>
+        <p>Demonstration and configuration of the InlineCrud component</p>
+        <p>El RelationshipPanel component permite configurar el ancho y alto del modal con las propiedades:</p>
+        <ul>
+            <li>Width: para definir el ancho del modal, por defecto 600 px, por ejemplo Width="700px"</li>
+            <li>Height: para definit el alto del modal, por defecto lo calcula basado en el anlto de la ventana, por ejemplo Height="500px" </li>
+        </ul>
+        <p>Se pueden enviar acciones que se ejecutan despues de crear, editar o eliminar</p>
+        <ul>
+            <li>OnCreate: recibe como parametro un dynamic el cual es el rowid del registro que se esta creando</li>
+            <li>OnEdit: recibe como parametro un dynamic el cual es el rowid del registro que se esta editando</li>
+            <li>OnDelete: no recibe parametros, solo se ejecuta despues de eliminar el registro</li>
+        </ul>
+    </div>
+    <div class="row px-3">
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>InlineCrud BLCulture</h3>
+                <div class="d-flex justify-content-around">
+                    <SDKBooleanField @bind-Value="@AllowCreate"> AllowCreate</SDKBooleanField>
+                    <SDKBooleanField @bind-Value="@AllowDelete"> AllowDelete</SDKBooleanField>
+                    <SDKBooleanField @bind-Value="@AllowEdit"> AllowEdit</SDKBooleanField>
+                    <SDKBooleanField @bind-Value="@AllowDetail"> AllowDetail</SDKBooleanField>
+                </div>
+                <InlineCrud BusinessName="BLCulture" AllowCreate="@AllowCreate" AllowDelete="@AllowDelete"
+                    AllowEdit="@AllowEdit" AllowDetail="@AllowDetail" Width="900px"/>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+             <SDKCard>
+                <h3>InlineCrud BLCulture With Default Fields Create</h3>
+                <InlineCrud BusinessName="BLCulture" DefaultFieldsCreate="@DefaultField" />
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>InlineCrud BLCulture With Filter</h3>
+                <InlineCrud BusinessName="BLCulture" Filter="@filter" />
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>InlineCrud BLCulture With Data</h3>
+                <InlineCrud BusinessName="BLCulture" Data="@Data" />
+            </SDKCard>
+        </div>
+    </div>
+</div>
+
+
+@code {
+
+    bool AllowCreate = false;
+    bool AllowDelete = false;
+    bool AllowEdit = false;
+    bool AllowDetail = false;
+    string filter = @"Description == ""Español""";
+
+    private Dictionary<string, object> DefaultField = new Dictionary<string, object>()
+    {
+        {"BaseObj.Description","Español"},
+        {"BaseObj.LanguageCode","es-ES"},
+    };
+
+    private List<E00021_Culture> Data = new List<E00021_Culture>()
+    {
+        new E00021_Culture(){Rowid = 1, LanguageCode = "Path-1", CountryCode = "Country-1"},
+        new E00021_Culture(){Rowid = 1, LanguageCode = "Path-2", CountryCode = "Country-2"},
+        new E00021_Culture(){Rowid = 1, LanguageCode = "Path-3", CountryCode = "Country-3"},
+        new E00021_Culture(){Rowid = 1, LanguageCode = "Path-4", CountryCode = "Country-4"}
+    };
+};
