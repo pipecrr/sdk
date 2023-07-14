@@ -7,6 +7,8 @@ using Siesa.SDK.Entities;
 using Siesa.SDK.Shared.Services;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
+using System.Text;
 
 
 namespace Siesa.SDK.Shared.Criptography
@@ -18,10 +20,14 @@ namespace Siesa.SDK.Shared.Criptography
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = KeyHelper.BuildRsaSigningKey(secretKey);
 
+            var serializerSettings = new Newtonsoft.Json.JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] {
-                    new Claim("data", Newtonsoft.Json.JsonConvert.SerializeObject(data)),
+                    new Claim("data", Newtonsoft.Json.JsonConvert.SerializeObject(data,Formatting.None,serializerSettings)),
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(minutesExp),
                 SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.RsaSha256Signature, SecurityAlgorithms.Sha256Digest)
@@ -34,7 +40,8 @@ namespace Siesa.SDK.Shared.Criptography
         {
             if (String.IsNullOrEmpty(token) || String.IsNullOrEmpty(publicKey))
             {
-                throw new Exception("Invalid Token");
+                //throw new Exception("Invalid Token");
+                return default(T);
             }
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = KeyHelper.BuildRsaSigningKey(publicKey);
@@ -58,6 +65,34 @@ namespace Siesa.SDK.Shared.Criptography
             catch
             {
                 throw new Exception("Invalid Token");
+            }
+        }
+
+        public static JwtSecurityToken RenewToken(string token, string _secretKey)
+        {
+            if (String.IsNullOrEmpty(token)){
+                return null;
+            }
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_secretKey);
+            try
+            {
+                tokenHandler.ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    // set clockskew to zero so tokens expire exactly at token expiration time (instead of 5 minutes later)
+                    ClockSkew = TimeSpan.Zero
+                }, out SecurityToken validatedToken);
+
+                var jwtToken = (JwtSecurityToken)validatedToken;
+                return jwtToken;
+            }
+            catch
+            {
+                return null;
             }
         }
     }
