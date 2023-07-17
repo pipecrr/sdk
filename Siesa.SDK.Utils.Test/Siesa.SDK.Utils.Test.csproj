@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <DisableGclm>true</DisableGclm>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,8 +14,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Siesa.SDK.Shared\Siesa.SDK.Shared.csproj" />
-    <!-- <ProjectReference Include="..\Siesa.SDK.Backend\Siesa.SDK.Backend.csproj" /> -->
-    <!-- <ProjectReference Include="..\Siesa.SDK.Frontend\Siesa.SDK.Frontend.csproj" /> -->
+    <ProjectReference Include="..\Siesa.SDK.Backend\Siesa.SDK.Backend.csproj" />
+    <ProjectReference Include="..\Siesa.SDK.Frontend\Siesa.SDK.Frontend.csproj" />
   </ItemGroup>
 
 </Project>

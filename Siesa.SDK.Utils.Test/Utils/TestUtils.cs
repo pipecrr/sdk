@@ -1,6 +1,5 @@
 using System;
 using Siesa.SDK.Shared.Services;
-using Siesa.SDK.Backend.Services;
 using Microsoft.EntityFrameworkCore;
 using Siesa.SDK.Backend.Access;
 using Moq;
@@ -10,12 +9,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Castle.Core.Configuration;
 using Siesa.SDK.Shared.Configurations;
 using Microsoft.Extensions.Options;
+using Siesa.SDK.Backend.Services;
 
 namespace Siesa.SDK.Utils.Test
 {
     public class TestUtils
     {
-        public static T GetBusiness<T>(type DbContext)
+        public static T GetBusiness<T>(Type DbContext)
         {
             var serviceProvider = GetProvider<T>(DbContext);
 
@@ -24,7 +24,7 @@ namespace Siesa.SDK.Utils.Test
             return Business;
         }
 
-        public static IServiceProvider GetProvider<T>(type DbContext)
+        public static IServiceProvider GetProvider<T>(Type _tDbContext)
         {
             var ServiceConf = Options.Create(new ServiceConfiguration()); 
             //Siesa.MasterBackend.Business.Backend.Test
@@ -54,12 +54,10 @@ namespace Siesa.SDK.Utils.Test
 
             var mockLoggerFactory = new Mock<ILoggerFactory>();
             mockLoggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(() => mockLogger.Object);
-
-            var mockDbFactory = new Mock<IDbContextFactory<DbContext>>();
+//(new DbContextOptionsBuilder<SDKContext>().UseInMemoryDatabase("InMemoryTest").Options));
+            var mockDbFactory = new Mock<IDbContextFactory<SDKContext>>();
                 mockDbFactory.Setup(f => f.CreateDbContext())
-                    .Returns(() => new DbContext(new DbContextOptionsBuilder<DbContext>()
-                        .UseInMemoryDatabase("InMemoryTest")
-                        .Options));
+                    .Returns(() =>  (SDKContext)Activator.CreateInstance(_tDbContext, new DbContextOptionsBuilder<SDKContext>().UseInMemoryDatabase("InMemoryTest").Options));
             var services = new ServiceCollection();
 
 
@@ -71,7 +69,7 @@ namespace Siesa.SDK.Utils.Test
             services.AddScoped<Microsoft.Extensions.Configuration.IConfiguration>(sp => mockConfig.Object);
             services.AddScoped<IResourceManager>(sp => resourceManager.Object);
             services.AddScoped<Microsoft.Extensions.Logging.ILoggerFactory>(sp => mockLoggerFactory.Object);
-            services.AddScoped<IDbContextFactory<DbContext>>(sp => mockDbFactory.Object);
+            services.AddScoped<IDbContextFactory<SDKContext>>(sp => mockDbFactory.Object);
 
             var serviceProvider = services.BuildServiceProvider();
 
