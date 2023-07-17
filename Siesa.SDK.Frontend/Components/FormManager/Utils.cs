@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
@@ -101,7 +102,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager
 
         private static string GenerateFilterCondition(string name, dynamic value, string comparisonOperator){
             Type type = value.GetType();
-            bool isNullable = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
 
             if (type == typeof(int?) || type == typeof(int) || type == typeof(decimal?) || type == typeof(decimal) || type == typeof(byte?) || type == typeof(byte))
             {
@@ -118,7 +118,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager
             else if (type == typeof(DateTime) || type == typeof(DateTime?))
             {
                 var date = (DateTime)value;
-                var dateStr = date.ToString("yyyy, MM, dd");
+                var dateStr = date.ToString("yyyy, MM, dd", CultureInfo.InvariantCulture);
                 return $"({name} == null ? DateTime.MinValue : {name}) {comparisonOperator} DateTime({dateStr})";
             }
             else
@@ -130,7 +130,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager
         private static string GetFiltersStr(string name, dynamic dynamicValue){
             string filtersAndStr = "(";
 
-            if (name.EndsWith("__in"))
+            if (name.EndsWith("__in", StringComparison.Ordinal))
             {
                 var list = JsonConvert.DeserializeObject<List<dynamic>>(JsonConvert.SerializeObject(dynamicValue));
                 if (list.Count > 0)
@@ -149,7 +149,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager
                     }
                 }
             }
-            else if (name.EndsWith("__notin"))
+            else if (name.EndsWith("__notin", StringComparison.Ordinal))
             {
                 var list = JsonConvert.DeserializeObject<List<dynamic>>(JsonConvert.SerializeObject(dynamicValue));
                 if (list.Count > 0)
@@ -168,27 +168,27 @@ namespace Siesa.SDK.Frontend.Components.FormManager
                     }
                 }
             }
-            else if (name.EndsWith("__gt"))
+            else if (name.EndsWith("__gt", StringComparison.Ordinal))
             {
                 name = name.Replace("__gt", "");
                 filtersAndStr += GenerateFilterCondition(name, dynamicValue, ">");
             }
-            else if (name.EndsWith("__gte"))
+            else if (name.EndsWith("__gte", StringComparison.Ordinal))
             {
                 name = name.Replace("__gte", "");
                 filtersAndStr += GenerateFilterCondition(name, dynamicValue, ">=");
             }
-            else if (name.EndsWith("__lt"))
+            else if (name.EndsWith("__lt", StringComparison.Ordinal))
             {
                 name = name.Replace("__lt", "");
                 filtersAndStr += GenerateFilterCondition(name, dynamicValue, "<");
             }
-            else if (name.EndsWith("__lte"))
+            else if (name.EndsWith("__lte", StringComparison.Ordinal))
             {
                 name = name.Replace("__lte", "");
                 filtersAndStr += GenerateFilterCondition(name, dynamicValue, "<=");
             }
-            else if (name.EndsWith("__contains"))
+            else if (name.EndsWith("__contains", StringComparison.Ordinal))
             {
                 name = name.Replace("__contains", "");
                 filtersAndStr += GenerateFilterCondition(name, dynamicValue, ".ToLower().Contains");
