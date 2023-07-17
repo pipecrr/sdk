@@ -74,7 +74,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         }       
 
         public async Task AddResourceLocalStorage(int rowidCulture){
-            var resource = ResourceManager.GetResourceByCulture(rowidCulture).Result;
+            var resource = ResourceManager.GetResourceByCulture(rowidCulture);
             var resourceJson = JsonConvert.SerializeObject(resource);
             string encriptResource = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(resourceJson));
             await _localStorageService.SetItemAsync("resources", encriptResource);

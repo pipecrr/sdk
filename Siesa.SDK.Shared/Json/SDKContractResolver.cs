@@ -7,7 +7,7 @@ namespace Siesa.SDK.Shared.Json
 {
     public class SDKContractResolver : DefaultContractResolver
 {
-    public new static readonly SDKContractResolver Instance = new SDKContractResolver();
+    public static readonly SDKContractResolver Instance = new SDKContractResolver();
 
     protected override JsonContract CreateContract(Type objectType)
     {

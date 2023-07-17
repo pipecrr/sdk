@@ -1,0 +1,62 @@
+.playground-container{
+    height: 100vh;
+    width: 100%;
+    background-color: #1e1e1e;
+    max-height: 100vh;
+    overflow: hidden;
+}
+
+.playground-container ::deep .rz-splitter-pane {
+    display:flex;
+    flex-direction: column;
+}
+
+.code-container{
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+}
+
+.playground-container ::deep .code-container > div {
+    flex-grow: 1;
+    display: flex;
+}
+
+::deep .code-viewer-area{
+    /*height: 100%;*/
+    width: 100%;
+    flex-grow: 1;
+}
+
+::deep .result-area {
+    background-color: #fff;
+    border-radius: 7px;
+    margin: 0.5rem;
+    overflow: auto;
+    max-height: calc(100vh - 4.5rem);
+}
+
+::deep .container-title{
+    font-weight: 600;
+    margin-bottom: 0.1rem;
+    color: #fff;
+    margin-left: 0.5rem;
+}
+.playground-toolbar{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1e1e1e;
+    padding: 0.5rem;
+    border-bottom: 1px solid #fff;
+}
+.playground-title{
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #fff;
+    margin: 0;
+}
+::deep .playground-button{
+    border-radius: 1px !important;
+}

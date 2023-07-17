@@ -1,0 +1,24 @@
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Fields
+
+<div class="container-fluid">
+    <div class="row p-3">
+        <div class="col-12"><h2>SDKIdentity</h2></div>
+        <div class="col-12"><p>Demonstration and configuration of the SDKIdentity</p></div> 
+    </div>
+    <div class="row px-3 mt-3"> 
+        <div class="col-md-6 p-3 ">
+                <h5><strong>Este atributo sirve para indicar las entidades que queremos que sean auditadas, es decir, 
+                    que el servicio de logs guarde un registro de todos los cambios de dicha entidad
+                </strong></h5>
+                <SDKCard>
+                
+                    <SDKFileViewer type="SDKTypeFile.Image" url="_content/Siesa.SDK.Frontend/images/SDKLogEntity.png" /> 
+                    <br>
+                    <p>Tambien podemos especificar los campos que queremos que se auditen por medio de parametro, asi:</p> 
+                    <br>    
+                    <SDKFileViewer type="SDKTypeFile.Image" url="_content/Siesa.SDK.Frontend/images/SDKLogEntityParam.png" /> 
+                </SDKCard>
+        </div>
+    </div>
+</div>

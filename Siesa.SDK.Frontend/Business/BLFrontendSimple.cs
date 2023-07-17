@@ -602,7 +602,7 @@ namespace Siesa.SDK.Business
         {
             ValidateBussines(ref baseOperation, BaseObj.GetRowid() == 0 ? BLUserActionEnum.Create : BLUserActionEnum.Update);
             K validator = Activator.CreateInstance<K>();
-            validator.ValidatorType = "Entity";
+            validator.ValidatorType = "BaseObj";
             SDKValidator.Validate<T>(BaseObj, validator, ref baseOperation);
         }
 

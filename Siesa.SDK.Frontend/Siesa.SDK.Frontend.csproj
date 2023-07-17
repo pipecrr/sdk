@@ -1,5 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
-
+	<!-- <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    	<Exec Command="npm run buildcss" />
+  	</Target> -->
+	<!-- Search all razor components recursively  in Siesa.SDK.Frontend\Components\Documentation and copy to Siesa.SDK.Frontend\Components\Documentation\SourceCode, change extension to .txt -->
+	<Target Name="CopySourceCode" BeforeTargets="Build">
+		<Copy SourceFiles="@(RazorDocumentationCode)" DestinationFiles="@(RazorDocumentationCode->'Components\Documentation\SourceCode\%(Filename).txt')" />
+	</Target> 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<AnalysisLevel>latest</AnalysisLevel>
@@ -12,13 +18,26 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<OutputPath></OutputPath>
 	</PropertyGroup>
-
+	<ItemGroup>
+		<RazorDocumentationCode Include="Components\Documentation\**\*.razor" />
+		<!-- exclude 3 level-->
+		<RazorDocumentationCode Remove="Components\Documentation\*\*\*.razor" />
+		<RazorDocumentationCode Remove="Components\Documentation\Playground\*.razor" />
+		<RazorDocumentationCode Remove="Components\Documentation\SDKDocumentation.razor" />
+		<RazorDocumentationCode Remove="Components\Documentation\CodeViewer.razor" />
+	</ItemGroup>
 	<ItemGroup>
 		<None Remove="Components\Layout\MainLayout.razor.css" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<Content Include="Components\Layout\MainLayout.razor.css" />
+		<Content Update="Components\Documentation\CodeViewer.razor.css">
+		  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+		</Content>
+		<Content Update="Components\Documentation\Playground\PlaygroundView.razor.css">
+		  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+		</Content>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -37,6 +56,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="BlazorMonaco" Version="3.0.0" />
 		<Reference Include="System.Reflection.Emit" />
 		<PackageReference Include="blazor-dragdrop" Version="2.4.0" />
 		<PackageReference Include="Blazored.LocalStorage" Version="4.2.0" />
@@ -53,6 +73,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.ResponseCompression" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.0.1" />
+		<PackageReference Include="Microsoft.CodeAnalysis.Razor" Version="6.0.20" />
 		<PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="6.0.0" />
 		<PackageReference Include="Radzen.Blazor" Version="4.13.5" />

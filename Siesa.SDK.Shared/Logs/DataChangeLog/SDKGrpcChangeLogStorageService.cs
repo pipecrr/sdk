@@ -20,7 +20,7 @@ namespace Siesa.SDK.Shared.Logs.DataChangeLog
         public SDKGrpcChangeLogStorageService(IConfiguration configuration)
         {
             var auditUrl = configuration["ServiceConfiguration:AuditServerUrl"];
-            var _channel = GrpcUtils.GetChannel(auditUrl);
+            _channel = GrpcUtils.GetChannel(auditUrl);
             _client = new DataLogChangeClient(_channel);     
         }
 
@@ -30,7 +30,7 @@ namespace Siesa.SDK.Shared.Logs.DataChangeLog
             {
                 return  _client.QueryLog(request);
             }
-            catch (Grpc.Core.RpcException e)
+            catch (Grpc.Core.RpcException)
             {
                 
             }
