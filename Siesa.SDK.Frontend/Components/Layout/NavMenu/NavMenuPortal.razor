@@ -1,0 +1,56 @@
+﻿@using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Frontend.Services
+@using Siesa.SDK.Shared.DTOS
+
+
+@inject IAuthenticationService AuthenticationService
+@inject UtilsManager UtilManager
+
+<input type="checkbox" name="" checked id="menu">
+<nav class="menu_content">
+    <div class="nav_section_portals w-100">
+        @if (Portals != null && Portals.Count > 0)
+        {
+            foreach (var portal in Portals)
+            {
+                <a class="nav_btn_standar my-1" @onclick="() => ChangeMenu(portal)">
+                    <div class="nav_btn_standar_icon">
+                        <SDKIcon Name="fa-plus"/>
+                    </div>
+                </a>
+            }
+        }
+    </div>
+    <div class="nav_section_foot w-100">
+        <a class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
+           title="@TitleLogout" @onclick="@(() => AuthenticationService.LogoutPortal())" data-automation-id="Button_Logout">
+            <div class="nav_btn_standar_icon">
+                <SDKIcon Name="fa-right-from-bracket" CssClass="font_size_112"/>
+            </div>
+            <div class="nav_btn_standar_text">
+                <ResourceViewer ResourceTag="BLUser.Logout"/>
+            </div>
+        </a>
+    </div>
+</nav>
+
+@code {
+    [Parameter]
+    public List<SDKPortalDTO> Portals { get; set; } = new List<SDKPortalDTO>();
+    [Parameter]
+    public Action<SDKPortalDTO> OnPortalChange { get; set; }
+    
+    private string TitleLogout { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        TitleLogout = await UtilManager.GetResource("BLUser.Logout");        
+        await base.OnInitializedAsync();
+    }
+
+    private void ChangeMenu(SDKPortalDTO portalDto)
+    {
+        OnPortalChange?.Invoke(portalDto);
+    }
+
+}

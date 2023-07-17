@@ -1,0 +1,19 @@
+﻿@using Siesa.SDK.Shared.DTOS
+
+<aside class="sdk_dashboard_portal">
+    <h3>@PortalName</h3>
+</aside>
+
+@code {
+    [Parameter] public SDKPortalDTO Portal { get; set; }
+    public string PortalName { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if(Portal != null)
+        {
+            PortalName = Portal.IdPortal;
+        }
+        base.OnParametersSet();
+    }
+}

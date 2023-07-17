@@ -27,7 +27,10 @@ namespace Siesa.SDK.Shared.Services
 
         public bool IsAdministrator { get; set; }
         public int? RowidAttachmentUserProfilePicture { get; set; }
-        
+        public string PortalName {get; set;}
+        public string IdExternalUser { get; set; }
+        public int RowidExternalUser { get; set; }
+        public long RowidMainRecord { get; set; }
         public override string ToString()
         {
             return $"({Id}) - {Name}";
@@ -37,14 +40,19 @@ namespace Siesa.SDK.Shared.Services
     public interface IAuthenticationService
     {
         string UserToken { get; }
+        string PortalUserToken { get; }
         JwtUserData User { get; }
+        JwtUserData PortalUser { get; }
         short RowidCultureChanged { get; set; }
 
         Task Initialize();
         Task Login(string username, string password, short rowIdDBConnection,
                      bool IsUpdateSession = false, short rowIdCompanyGroup = 1);
+        Task LoginPortal(string username, string password, short rowIdDBConnection, bool IsUpdateSession = false, short rowIdCompanyGroup = 1);
         Task Logout();
+        Task LogoutPortal();
         public Task SetToken(string token, bool saveLocalStorage = true);
+        public Task SetTokenPortal(string token, bool saveLocalStorage = true);
         Task SetCustomRowidCulture(short rowid);
         short GetRoiwdCulture();
         Task SetRowidCompanyGroup(short rowid);

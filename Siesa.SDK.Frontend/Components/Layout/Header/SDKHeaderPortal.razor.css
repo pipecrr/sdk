@@ -1,0 +1,54 @@
+.sdk_header{
+    height: 48px;
+    width: 100%;
+    background: #FFFFFF;
+    position: fixed !important;
+    z-index: 3;
+    display: flex;
+    padding: 0.5rem 0.875rem;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 0px;
+}
+
+.sdk_profile{
+    display: flex;
+    justify-content: flex-end; 
+}
+
+.sdk_name_profile{
+    width: 90px;
+    letter-spacing: 0px;
+    opacity: 1;
+    display: flex;
+    align-items: flex-end;
+}
+
+.sdk_picture_profile{
+    width: 30px;
+    height: 30px;    
+    box-shadow: 0px 3px 6px #D9D9D9;
+    border-radius: 25px;
+    opacity: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.whcm_logo_compania{
+    max-height: 32px;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+@media (max-width: 767.98px) {    
+    .whcm_logo_compania {
+        max-width: 160px;
+    }    
+}
+
+@media (max-width: 575.98px) {
+    .whcm_logo_compania{
+        max-width: 125px;
+    }
+ }

@@ -136,7 +136,7 @@
     protected override async Task OnParametersSetAsync()
     {
         Filters = new List<List<object>>();
-        object filter1 = new {Name__contains="Us"};
+        object filter1 = new {Rowid__in= new List<int>() {1}};
         Filters.Add(new List<object>() { filter1 });
         
         base.OnParametersSet();

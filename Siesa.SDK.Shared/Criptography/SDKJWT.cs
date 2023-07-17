@@ -86,7 +86,7 @@ namespace Siesa.SDK.Shared.Criptography
             }
         }
 
-        public string Generate(E00220_User? user, Dictionary<string, List<int>>? featurePermissions, List<SessionRol> roles,  short rowIdDBConnection, short rowidcompanygroup =0)
+        public string Generate(E00220_User? user, Dictionary<string, List<int>>? featurePermissions, List<SessionRol> roles,  short rowIdDBConnection, short rowidcompanygroup =0, E00518_PortalUser portalUser = null, string portalName = "")
         {
             // generate token that is valid for 7 days
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -107,7 +107,12 @@ namespace Siesa.SDK.Shared.Criptography
                 RowidAttachmentUserProfilePicture = user.RowidAttachmentUserProfilePicture
             };
 
-
+            if(portalUser != null){
+                userToken.IdExternalUser = portalUser.ExternalUser.Id;
+                userToken.RowidExternalUser = portalUser.ExternalUser.Rowid;
+                userToken.PortalName = portalName;
+                userToken.RowidMainRecord = portalUser.RowidMainRecord;
+            }
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {

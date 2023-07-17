@@ -14,7 +14,10 @@ namespace Siesa.SDK.Entities
 {
 	public partial class E00515_PortalType
 	{
-
+		public override string ToString()
+		{
+			return $"{Rowid}";
+		}
 
 
 	}
