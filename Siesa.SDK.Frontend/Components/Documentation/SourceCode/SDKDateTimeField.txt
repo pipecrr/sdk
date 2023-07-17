@@ -1,0 +1,139 @@
+@using Siesa.SDK.Frontend.Components.Fields
+@using System
+@using Siesa.SDK.Frontend.Services
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
+@using Siesa.Global.Enums
+
+@inject SDKNotificationService Notification
+
+@layout EmptyLayout
+
+<div class="container-fluid">
+    <div class="container-fluid">
+            <h2>SDKDateTimeField</h2> 
+            <p>Demonstration and configuration of the SDKDateTimeField component</p> 
+    </div>
+    <div class="row px-3"> 
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>bind-Value</h3>
+                <SDKDateTimeField  @bind-Value="@DateTimeValue"/>
+                
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>ReadOnly</h3>
+                <SDKDateTimeField  @bind-Value="@DateTimeValue3" ReadOnly="true"/>
+               
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>Value Change</h3>
+                <SDKDateTimeField ItemType="DateTime?" Value="@valueChange" ValueChanged="((value) => Onchange(value))" />
+            </SDKCard>
+        </div>
+
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>Picker Time</h3>
+                <SDKDateTimeField  @bind-Value="@DateTimeValue3" ShowTime="true" ShowSeconds="true" HoursStep="@HoursStep" MinutesStep="@MinutesStep" SecondsStep="@SecondsStep" DateFormat="@DateFormat" HourFormat="@HourFormat"/>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>Time Only</h3>
+                <SDKDateTimeField  @bind-Value="@TimeOnly" ShowTime="true" TimeOnly="true" DateFormat="HH:mm"/>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard> 
+                <h3>DatePicker with special or disabled dates</h3>
+                <SDKDateTimeField  @bind-Value=@dateRender DateRender=@DateRender/>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>with initial view date and year range</h3>
+                <SDKDateTimeField  @bind-Value=@DateTimeValue4 InitialViewDate="@InitialViewDate" YearRange="@YearRange"/>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>Min and Max Date</h3>
+                <SDKDateTimeField  @bind-Value=@DateTimeValue4 Min="@Min" Max="@Max"/>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>As Calendar</h3>
+                <SDKDateTimeField  @bind-Value=@DateTimeValue4 AsCalendar="true"/>
+            </SDKCard>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    DateTime? DateTimeValue { get; set; } = DateTime.Now;
+    DateTime? DateTimeValue2 { get; set; } = DateTime.Now;
+    DateTime? DateTimeValue3 { get; set; } = DateTime.Now;
+    DateTime? TimeOnly { get; set; } = DateTime.Now;
+    DateTime? DateTimeValue4 { get; set; }
+
+    DateTime? DateTimeValueChild { get; set; } = DateTime.Now;
+
+    DateTime? valueChange = DateTime.Now;
+
+    DateOnly dateOnly;
+
+    DateOnly dateOnlyNullable;
+
+    DateTime _dateTime ;
+
+    DateTime? _dateTimeNullable;
+
+    public string HourFormat = "12"; //default 24
+
+    public string HoursStep = "2"; 
+    public string MinutesStep = "10"; 
+    public string SecondsStep = "20"; 
+
+    public string DateFormat="MM/dd/yyyy h:mm tt"; //default MM/dd/yyyy HH:mm
+
+    public DateTime? InitialViewDate = new DateTime(2040,06,01); 
+
+    public string YearRange { get; set; } = "1900:2100";
+
+    public DateTime? Max { get; set; } = DateTime.Now.AddDays(7); 
+    public DateTime? Min { get; set; } = DateTime.Now.AddDays(-7);
+    DateTime? dateRender = DateTime.Now;
+    IEnumerable<DateTime> dates = new DateTime[] { DateTime.Today.AddDays(-1), DateTime.Today.AddDays(1) };
+
+    public DateTime Onchange(DateTime? value){
+
+        valueChange = value;
+        Notification.ShowWarning("This value changed "+$"{valueChange}");
+
+       return valueChange?? DateTime.Now;
+
+        
+    }
+
+    void DateRender(DateRenderEventArgs args)
+    {
+        if (dates.Contains(args.Date))
+        {
+            args.Attributes.Add("style", "background-color: #ff6d41; border-color: white;");
+        }
+
+        args.Disabled = args.Disabled || args.Date.DayOfWeek == DayOfWeek.Sunday || args.Date.DayOfWeek == DayOfWeek.Saturday;
+    }
+
+    public void TodayClick()
+    {
+        DateTimeValueChild = DateTime.Now;
+    }
+}

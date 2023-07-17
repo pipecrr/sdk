@@ -1,11 +1,12 @@
 ﻿@typeparam TDate
 @inherits FieldClass<TDate>
 @using System.Linq.Expressions
+@using Siesa.SDK.Frontend.Components.Fields
 @if (!FieldOpt.Hidden)
 {
     @FieldValidationTemplate
 
-    <DxDateEdit 
+    @* <DxDateEdit 
         T="TDate"
         NullText="@FieldOpt.Placeholder"
         ReadOnly="@(FieldOpt.Disabled)"
@@ -17,7 +18,21 @@
         DateExpression="@DateExpression"
         TimeSectionVisible="@ShowTime" 
         data-automation-id="@GetDataAutomationId()"
+        
+    /> *@
+
+    <SDKDateTimeField 
+    ItemType="TDate" 
+    ReadOnly="@(FieldOpt.Disabled)" 
+    Value="@(BindValue)" 
+    ValueChanged="@((str) => { SetValue(str); })" 
+    ClearButton="true" 
+    ValueExpression="@DateExpression"
+    ResourceTag="@FieldOpt.Name"
+    Placeholder="@FieldOpt.Placeholder"
     />
+
+
 }
 
 
