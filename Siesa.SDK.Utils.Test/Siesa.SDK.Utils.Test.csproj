@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Siesa.SDK.Shared\Siesa.SDK.Shared.csproj" />
-    <ProjectReference Include="..\Siesa.SDK.Backend\Siesa.SDK.Backend.csproj" />
+    <!-- <ProjectReference Include="..\Siesa.SDK.Backend\Siesa.SDK.Backend.csproj" /> -->
     <!-- <ProjectReference Include="..\Siesa.SDK.Frontend\Siesa.SDK.Frontend.csproj" /> -->
   </ItemGroup>
 
