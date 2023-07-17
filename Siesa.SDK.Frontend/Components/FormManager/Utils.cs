@@ -32,7 +32,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager
                 builder.CloseComponent();
             };
         }
-        
         public static async Task<string> GenerateFilters(List<List<object>> filters, dynamic BusinessObj)
         {
             var filter = "";
@@ -51,9 +50,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager
                         }else{
                             properties = JsonConvert.DeserializeObject<dynamic>(item.ToString()).Properties();
                         }
-                        List<string> filtersAnd = new List<string>();
+                        List<string> filtersAnd = new ();
                         foreach (dynamic property in properties){
-                            string filtersAndStr = "";
+                            string filtersAndStr;
                             string name = property.Name;
                             var codeValue = "";
                             if(BusinessObj != null){
@@ -127,9 +126,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager
                 return $"{name} {comparisonOperator} {value}";
             }
         }
-        
+
         private static string GetFiltersStr(string name, dynamic dynamicValue){
-            StringBuilder filtersAndStr = new StringBuilder("(");
+            StringBuilder filtersAndStr = new ("(");
 
             switch (name)
             {
@@ -137,7 +136,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager
                     var list = JsonConvert.DeserializeObject<List<dynamic>>(JsonConvert.SerializeObject(dynamicValue));
                     if (list.Count > 0)
                     {
-                        name = name.Replace("__in", "");
+                        name = name.Replace("__in", "", StringComparison.Ordinal);
                         AppendFilterConditions(filtersAndStr, list, name, "==", " or ");
                     }
                     break;
@@ -145,24 +144,24 @@ namespace Siesa.SDK.Frontend.Components.FormManager
                     var listNotIn = JsonConvert.DeserializeObject<List<dynamic>>(JsonConvert.SerializeObject(dynamicValue));
                     if (listNotIn.Count > 0)
                     {
-                        name = name.Replace("__notin", "");
+                        name = name.Replace("__notin", "", StringComparison.Ordinal);
                         AppendFilterConditions(filtersAndStr, listNotIn, name, "!=", " and ");
                     }
                     break;
                 case var _ when name.EndsWith("__gt", StringComparison.Ordinal):
-                    AppendFilterCondition(filtersAndStr, name.Replace("__gt", ""), dynamicValue, ">");
+                    AppendFilterCondition(filtersAndStr, name.Replace("__gt", "", StringComparison.Ordinal), dynamicValue, ">");
                     break;
                 case var _ when name.EndsWith("__gte", StringComparison.Ordinal):
-                    AppendFilterCondition(filtersAndStr, name.Replace("__gte", ""), dynamicValue, ">=");
+                    AppendFilterCondition(filtersAndStr, name.Replace("__gte", "", StringComparison.Ordinal), dynamicValue, ">=");
                     break;
                 case var _ when name.EndsWith("__lt", StringComparison.Ordinal):
-                    AppendFilterCondition(filtersAndStr, name.Replace("__lt", ""), dynamicValue, "<");
+                    AppendFilterCondition(filtersAndStr, name.Replace("__lt", "", StringComparison.Ordinal), dynamicValue, "<");
                     break;
                 case var _ when name.EndsWith("__lte", StringComparison.Ordinal):
-                    AppendFilterCondition(filtersAndStr, name.Replace("__lte", ""), dynamicValue, "<=");
+                    AppendFilterCondition(filtersAndStr, name.Replace("__lte", "", StringComparison.Ordinal), dynamicValue, "<=");
                     break;
                 case var _ when name.EndsWith("__contains", StringComparison.Ordinal):
-                    AppendFilterCondition(filtersAndStr, name.Replace("__contains", ""), dynamicValue, ".ToLower().Contains");
+                    AppendFilterCondition(filtersAndStr, name.Replace("__contains", "", StringComparison.Ordinal), dynamicValue, ".ToLower().Contains");
                     break;
                 default:
                     AppendFilterCondition(filtersAndStr, name, dynamicValue, "==");
@@ -202,6 +201,4 @@ namespace Siesa.SDK.Frontend.Components.FormManager
             return filterValue;
         }
     }
-
-
 }
