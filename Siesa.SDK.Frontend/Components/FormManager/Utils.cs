@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
@@ -30,7 +32,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager
                 builder.CloseComponent();
             };
         }
-        
         public static async Task<string> GenerateFilters(List<List<object>> filters, dynamic BusinessObj)
         {
             var filter = "";
@@ -49,9 +50,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager
                         }else{
                             properties = JsonConvert.DeserializeObject<dynamic>(item.ToString()).Properties();
                         }
-                        List<string> filtersAnd = new List<string>();
+                        List<string> filtersAnd = new ();
                         foreach (dynamic property in properties){
-                            string filtersAndStr = "";
+                            string filtersAndStr;
                             string name = property.Name;
                             var codeValue = "";
                             if(BusinessObj != null){
@@ -99,101 +100,97 @@ namespace Siesa.SDK.Frontend.Components.FormManager
             return filter;
         }
 
-        private static string GetFiltersStr(string name, dynamic dynamicValue)
-        {
-            string filtersAndStr = "(";
-            Type type = dynamicValue.GetType();
-            bool isNullable = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>) ? true : false;
-            if(name.EndsWith("__in")){
-                var list = JsonConvert.DeserializeObject<List<dynamic>>(JsonConvert.SerializeObject(dynamicValue));
-                if(list.Count > 0){
-                    name = name.Replace("__in", "");
-                    foreach (var itemIn in list){
-                        dynamic itemInValue = GetFilterValue(itemIn);
-                        Type typeIn = itemIn.GetType();
-                        if(filtersAndStr != "("){
-                            filtersAndStr += " or ";
-                        }
-                        if(typeIn == typeof(int?) || typeIn == typeof(int) || typeIn == typeof(decimal?) || typeIn == typeof(decimal) || typeIn == typeof(byte?) || typeIn == typeof(byte)){
-                            filtersAndStr += $"({name} == null ? 0 : {name}) == {itemInValue}";
-                        }else if(typeIn == typeof(bool) || typeIn == typeof(bool?)){
-                            filtersAndStr += $"({name} == null ? false : {name}) == {itemInValue}";
-                        }else if(typeIn == typeof(string)){
-                            filtersAndStr += $"({name} == null ? \"\" : {name}) == {itemInValue}";
-                        }
-                        else{
-                            filtersAndStr += $"{name} == {itemInValue}";
-                        }
-                    }
-                }
-            }else if(name.EndsWith("__notin")){
-                var list = JsonConvert.DeserializeObject<List<dynamic>>(JsonConvert.SerializeObject(dynamicValue));
-                if(list.Count > 0){
-                    name = name.Replace("__notin", "");
-                    foreach (var itemIn in list){
-                        dynamic itemInValue = GetFilterValue(itemIn);
-                        Type typeIn = itemIn.GetType();
-                        if(filtersAndStr != "("){
-                            filtersAndStr += " and ";
-                        }
-                        if(typeIn == typeof(int?) || typeIn == typeof(int) || typeIn == typeof(decimal?) || typeIn == typeof(decimal) || typeIn == typeof(byte?) || typeIn == typeof(byte)){
-                            filtersAndStr += $"({name} == null ? 0 : {name}) != {itemInValue}";
-                        }else if(typeIn == typeof(bool) || typeIn == typeof(bool?)){
-                            filtersAndStr += $"({name} == null ? false : {name}) != {itemInValue}";
-                        }else if(typeIn == typeof(string)){
-                            filtersAndStr += $"({name} == null ? \"\" : {name}) != {itemInValue}";
-                        }else{
-                            filtersAndStr += $"{name} != {itemInValue}";
-                        }
-                    }
-                }
+        private static string GenerateFilterCondition(string name, dynamic value, string comparisonOperator){
+            Type type = value.GetType();
+
+            if (type == typeof(int?) || type == typeof(int) || type == typeof(decimal?) || type == typeof(decimal) || type == typeof(byte?) || type == typeof(byte))
+            {
+                return $"({name} == null ? 0 : {name}) {comparisonOperator} {value}";
             }
-            else if(name.EndsWith("__gt")){
-                name = name.Replace("__gt", "");
-                if(type == typeof(int?) || type == typeof(int) || type == typeof(decimal?) || type == typeof(decimal) || type == typeof(byte?) || type == typeof(byte)){
-                    filtersAndStr += $"({name} == null ? 0 : {name}) > {dynamicValue}";
-                }else{
-                    filtersAndStr += $"{name} > {dynamicValue}";
-                }
-            }else if(name.EndsWith("__gte")){
-                name = name.Replace("__gte", "");
-                if(type == typeof(int?) || type == typeof(int) || type == typeof(decimal?) || type == typeof(decimal) || type == typeof(byte?) || type == typeof(byte)){
-                    filtersAndStr += $"({name} == null ? 0 : {name}) >= {dynamicValue}";
-                }else{
-                    filtersAndStr += $"{name} >= {dynamicValue}";
-                }                
-            }else if(name.EndsWith("__lt")){
-                name = name.Replace("__lt", "");
-                if(type == typeof(int?) || type == typeof(int) || type == typeof(decimal?) || type == typeof(decimal) || type == typeof(byte?) || type == typeof(byte)){
-                    filtersAndStr += $"({name} == null ? 0 : {name}) < {dynamicValue}";
-                }else{
-                    filtersAndStr += $"{name} < {dynamicValue}";
-                }
-            }else if(name.EndsWith("__lte")){
-                name = name.Replace("__lte", "");
-                if(type == typeof(int?) || type == typeof(int) || type == typeof(decimal?) || type == typeof(decimal) || type == typeof(byte?) || type == typeof(byte)){
-                    filtersAndStr += $"({name} == null ? 0 : {name}) <= {dynamicValue}";
-                }else{
-                    filtersAndStr += $"{name} <= {dynamicValue}";
-                }
-            }else if(name.EndsWith("__contains")){
-                name = name.Replace("__contains", "");
-                filtersAndStr += $"({name} == null ? \"\" : {name}).ToLower().Contains(\"{dynamicValue}\".ToLower())";
-            }else{
-                if(type == typeof(int?) || type == typeof(int) || type == typeof(decimal?) || type == typeof(decimal) || type == typeof(byte?) || type == typeof(byte)){
-                    filtersAndStr += $"({name} == null ? 0 : {name}) == {dynamicValue}";
-                }else if(type == typeof(bool) || type == typeof(bool?)){
-                    filtersAndStr += $"({name} == null ? false : {name}) == {dynamicValue}";
-                }else if(type == typeof(string)){
-                    filtersAndStr += $"({name} == null ? \"\" : {name}).ToLower() == \"{dynamicValue}\".ToLower()";
-                }else{
-                    filtersAndStr += $"{name} == {dynamicValue}";
-                }
+            else if (type == typeof(bool) || type == typeof(bool?))
+            {
+                return $"({name} == null ? false : {name}) {comparisonOperator} {value}";
             }
-            filtersAndStr += ")";
-            return filtersAndStr;
+            else if (type == typeof(string))
+            {
+                return $"({name} == null ? \"\" : {name}).ToLower() {comparisonOperator} \"{value}\".ToLower()";
+            }
+            else if (type == typeof(DateTime) || type == typeof(DateTime?))
+            {
+                var date = (DateTime)value;
+                var dateStr = date.ToString("yyyy, MM, dd", CultureInfo.InvariantCulture);
+                return $"({name} == null ? DateTime.MinValue : {name}) {comparisonOperator} DateTime({dateStr})";
+            }
+            else
+            {
+                return $"{name} {comparisonOperator} {value}";
+            }
         }
 
+        private static string GetFiltersStr(string name, dynamic dynamicValue){
+            StringBuilder filtersAndStr = new ("(");
+
+            switch (name)
+            {
+                case var _ when name.EndsWith("__in", StringComparison.Ordinal):
+                    var list = JsonConvert.DeserializeObject<List<dynamic>>(JsonConvert.SerializeObject(dynamicValue));
+                    if (list.Count > 0)
+                    {
+                        name = name.Replace("__in", "", StringComparison.Ordinal);
+                        AppendFilterConditions(filtersAndStr, list, name, "==", " or ");
+                    }
+                    break;
+                case var _ when name.EndsWith("__notin", StringComparison.Ordinal):
+                    var listNotIn = JsonConvert.DeserializeObject<List<dynamic>>(JsonConvert.SerializeObject(dynamicValue));
+                    if (listNotIn.Count > 0)
+                    {
+                        name = name.Replace("__notin", "", StringComparison.Ordinal);
+                        AppendFilterConditions(filtersAndStr, listNotIn, name, "!=", " and ");
+                    }
+                    break;
+                case var _ when name.EndsWith("__gt", StringComparison.Ordinal):
+                    AppendFilterCondition(filtersAndStr, name.Replace("__gt", "", StringComparison.Ordinal), dynamicValue, ">");
+                    break;
+                case var _ when name.EndsWith("__gte", StringComparison.Ordinal):
+                    AppendFilterCondition(filtersAndStr, name.Replace("__gte", "", StringComparison.Ordinal), dynamicValue, ">=");
+                    break;
+                case var _ when name.EndsWith("__lt", StringComparison.Ordinal):
+                    AppendFilterCondition(filtersAndStr, name.Replace("__lt", "", StringComparison.Ordinal), dynamicValue, "<");
+                    break;
+                case var _ when name.EndsWith("__lte", StringComparison.Ordinal):
+                    AppendFilterCondition(filtersAndStr, name.Replace("__lte", "", StringComparison.Ordinal), dynamicValue, "<=");
+                    break;
+                case var _ when name.EndsWith("__contains", StringComparison.Ordinal):
+                    AppendFilterCondition(filtersAndStr, name.Replace("__contains", "", StringComparison.Ordinal), dynamicValue, ".ToLower().Contains");
+                    break;
+                default:
+                    AppendFilterCondition(filtersAndStr, name, dynamicValue, "==");
+                    break;
+            }
+
+            filtersAndStr.Append(')');
+            return filtersAndStr.ToString();
+        }
+
+        private static void AppendFilterConditions(StringBuilder filtersAndStr, List<dynamic> list, string name, string conditionOperator, string separator)
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                dynamic itemIn = list[i];
+                dynamic itemInValue = GetFilterValue(itemIn);
+                string condition = GenerateFilterCondition(name, itemInValue, conditionOperator);
+
+                if (i > 0)
+                    filtersAndStr.Append(separator);
+
+                filtersAndStr.Append(condition);
+            }
+        }
+
+        private static void AppendFilterCondition(StringBuilder filtersAndStr, string name, dynamic dynamicValue, string conditionOperator)
+        {
+            filtersAndStr.Append(GenerateFilterCondition(name, dynamicValue, conditionOperator));
+        }
         private static dynamic GetFilterValue(dynamic dynamicValue)
         {
             Type type = dynamicValue.GetType();
@@ -204,6 +201,4 @@ namespace Siesa.SDK.Frontend.Components.FormManager
             return filterValue;
         }
     }
-
-
 }
