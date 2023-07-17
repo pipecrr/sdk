@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
@@ -128,78 +129,72 @@ namespace Siesa.SDK.Frontend.Components.FormManager
         }
 
         private static string GetFiltersStr(string name, dynamic dynamicValue){
-            string filtersAndStr = "(";
+            StringBuilder filtersAndStr = new StringBuilder("(");
 
-            if (name.EndsWith("__in", StringComparison.Ordinal))
-            {
-                var list = JsonConvert.DeserializeObject<List<dynamic>>(JsonConvert.SerializeObject(dynamicValue));
-                if (list.Count > 0)
-                {
-                    name = name.Replace("__in", "");
-                    for (int i = 0; i < list.Count; i++)
+            switch(name){
+                case var _ when name.EndsWith("__in", StringComparison.Ordinal):
+                    var list = JsonConvert.DeserializeObject<List<dynamic>>(JsonConvert.SerializeObject(dynamicValue));
+                    if (list.Count > 0)
                     {
-                        dynamic itemIn = list[i];
-                        dynamic itemInValue = GetFilterValue(itemIn);
-                        string condition = GenerateFilterCondition(name, itemInValue, "==");
+                        name = name.Replace("__in", "");
+                        for (int i = 0; i < list.Count; i++)
+                        {
+                            dynamic itemIn = list[i];
+                            dynamic itemInValue = GetFilterValue(itemIn);
+                            string condition = GenerateFilterCondition(name, itemInValue, "==");
 
-                        if (i > 0)
-                            filtersAndStr += " or ";
+                            if (i > 0)
+                                filtersAndStr.Append(" or ");
 
-                        filtersAndStr += condition;
+                            filtersAndStr.Append(condition);
+                        }
                     }
-                }
-            }
-            else if (name.EndsWith("__notin", StringComparison.Ordinal))
-            {
-                var list = JsonConvert.DeserializeObject<List<dynamic>>(JsonConvert.SerializeObject(dynamicValue));
-                if (list.Count > 0)
-                {
-                    name = name.Replace("__notin", "");
-                    for (int i = 0; i < list.Count; i++)
+                    break;
+                case var _ when name.EndsWith("__notin", StringComparison.Ordinal):
+                    var listNotIn = JsonConvert.DeserializeObject<List<dynamic>>(JsonConvert.SerializeObject(dynamicValue));
+                    if (listNotIn.Count > 0)
                     {
-                        dynamic itemIn = list[i];
-                        dynamic itemInValue = GetFilterValue(itemIn);
-                        string condition = GenerateFilterCondition(name, itemInValue, "!=");
+                        name = name.Replace("__notin", "");
+                        for (int i = 0; i < listNotIn.Count; i++)
+                        {
+                            dynamic itemIn = listNotIn[i];
+                            dynamic itemInValue = GetFilterValue(itemIn);
+                            string condition = GenerateFilterCondition(name, itemInValue, "!=");
 
-                        if (i > 0)
-                            filtersAndStr += " and ";
+                            if (i > 0)
+                                filtersAndStr.Append(" and ");
 
-                        filtersAndStr += condition;
+                            filtersAndStr.Append(condition);
+                        }
                     }
-                }
-            }
-            else if (name.EndsWith("__gt", StringComparison.Ordinal))
-            {
-                name = name.Replace("__gt", "");
-                filtersAndStr += GenerateFilterCondition(name, dynamicValue, ">");
-            }
-            else if (name.EndsWith("__gte", StringComparison.Ordinal))
-            {
-                name = name.Replace("__gte", "");
-                filtersAndStr += GenerateFilterCondition(name, dynamicValue, ">=");
-            }
-            else if (name.EndsWith("__lt", StringComparison.Ordinal))
-            {
-                name = name.Replace("__lt", "");
-                filtersAndStr += GenerateFilterCondition(name, dynamicValue, "<");
-            }
-            else if (name.EndsWith("__lte", StringComparison.Ordinal))
-            {
-                name = name.Replace("__lte", "");
-                filtersAndStr += GenerateFilterCondition(name, dynamicValue, "<=");
-            }
-            else if (name.EndsWith("__contains", StringComparison.Ordinal))
-            {
-                name = name.Replace("__contains", "");
-                filtersAndStr += GenerateFilterCondition(name, dynamicValue, ".ToLower().Contains");
-            }
-            else
-            {
-                filtersAndStr += GenerateFilterCondition(name, dynamicValue, "==");
+                    break;
+                case var _ when name.EndsWith("__gt", StringComparison.Ordinal):
+                    name = name.Replace("__gt", "");
+                    filtersAndStr.Append(GenerateFilterCondition(name, dynamicValue, ">"));
+                    break;
+                case var _ when name.EndsWith("__gte", StringComparison.Ordinal):
+                    name = name.Replace("__gte", "");
+                    filtersAndStr.Append(GenerateFilterCondition(name, dynamicValue, ">="));
+                    break;
+                case var _ when name.EndsWith("__lt", StringComparison.Ordinal):
+                    name = name.Replace("__lt", "");
+                    filtersAndStr.Append(GenerateFilterCondition(name, dynamicValue, "<"));
+                    break;
+                case var _ when name.EndsWith("__lte", StringComparison.Ordinal):
+                    name = name.Replace("__lte", "");
+                    filtersAndStr.Append(GenerateFilterCondition(name, dynamicValue, "<="));
+                    break;
+                case var _ when name.EndsWith("__contains", StringComparison.Ordinal):
+                    name = name.Replace("__contains", "");
+                    filtersAndStr.Append(GenerateFilterCondition(name, dynamicValue, ".ToLower().Contains"));
+                    break;
+                default:
+                    filtersAndStr.Append(GenerateFilterCondition(name, dynamicValue, "=="));
+                    break;
             }
 
-            filtersAndStr += ")";
-            return filtersAndStr;
+            filtersAndStr.Append(")");
+            return filtersAndStr.ToString();
         }
 
         private static dynamic GetFilterValue(dynamic dynamicValue)
