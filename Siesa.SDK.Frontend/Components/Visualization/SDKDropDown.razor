@@ -1,0 +1,172 @@
+@using DevExpress.Blazor.Configuration;
+@using System.Drawing
+@inherits SDKComponent
+
+
+<DxDropDown IsOpen="@IsOpen"
+            IsOpenChanged="@IsOpenChanged"
+            AllowResize="@AllowResize"
+            BodyContentTemplate="@BodyContentTemplate"
+            BodyTemplate="@BodyTemplate"
+            BodyCssClass="@BodyCssClass"
+            CssClass="@CssClass"
+            BodyText="@BodyText"
+            BodyTextTemplate="@BodyTextTemplate"
+            CloseMode="@CloseMode"
+            CloseOnOutsideClick="@CloseOnOutsideClick"
+            FitToRestriction="@FitToRestriction"
+            FooterContentTemplate="@FooterContentTemplate"
+            FooterCssClass="@FooterCssClass"
+            FooterTemplate="@FooterTemplate"
+            FooterText="@FooterText"
+            FooterTextTemplate="@FooterTextTemplate"
+            FooterVisible="@FooterVisible"
+            HeaderContentTemplate="@HeaderContentTemplate"
+            HeaderCssClass="@HeaderCssClass"
+            HeaderTemplate="@HeaderTemplate"
+            HeaderText="@HeaderText"
+            HeaderTextTemplate="@HeaderTextTemplate"
+            HeaderVisible="@HeaderVisible"
+            Height="@Height"
+            Width="@Width"
+            MaxHeight="@MaxHeight"
+            MaxWidth="@MaxWidth"
+            MinHeight="@MinHeight"
+            MinWidth="@MinWidth"
+            PositionMode="@PositionMode"
+            PositionRectangle="@PositionRectangle"
+            HorizontalOffset="@HorizontalOffset"
+            VerticalOffset="@VerticalOffset"
+            Scrollable="@Scrollable"
+            SizeMode="@SizeMode"
+            StopOutsideClickPropagation="@StopOutsideClickPropagation"
+            PreventCloseOnPositionTargetClick="@PreventCloseOnPositionTargetClick"
+            PositionTarget="@PositionTarget"
+            RestrictionTarget="@RestrictionTarget"
+            data-automation-id ="@GetAutomationId()">
+</DxDropDown>
+
+
+@code
+{
+
+    [Parameter]
+    public bool IsOpen { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsOpenChanged { get; set; }
+
+    [Parameter]
+    public bool AllowResize { get; set; }
+
+    [Parameter]
+    public RenderFragment<IPopupElementInfo> BodyContentTemplate { get; set; }
+
+    [Parameter]
+    public RenderFragment<IPopupElementInfo> BodyTemplate { get; set; }
+
+    [Parameter]
+    public string BodyCssClass { get; set; }
+    [Parameter]
+    public string CssClass { get; set; }
+
+    [Parameter]
+    public string BodyText { get; set; }
+
+    [Parameter]
+    public RenderFragment<IPopupElementInfo> BodyTextTemplate { get; set; }
+
+    [Parameter]
+    public DropDownCloseMode CloseMode { get; set; }
+
+    [Parameter]
+    public bool CloseOnOutsideClick { get; set; } = true;
+
+    [Parameter]
+    public bool FitToRestriction { get; set; }
+
+    [Parameter]
+    public RenderFragment<IPopupElementInfo> FooterContentTemplate { get; set; }
+
+    [Parameter]
+    public string FooterCssClass { get; set; }
+
+    [Parameter]
+    public RenderFragment<IPopupElementInfo> FooterTemplate { get; set; }
+
+    [Parameter]
+    public string FooterText { get; set; }
+
+    [Parameter]
+    public RenderFragment<IPopupElementInfo> FooterTextTemplate { get; set; }
+
+    [Parameter]
+    public bool FooterVisible { get; set; }
+
+    [Parameter]
+    public RenderFragment<IPopupElementInfo> HeaderContentTemplate { get; set; }
+
+    [Parameter]
+    public string HeaderCssClass { get; set; }
+
+    [Parameter]
+    public RenderFragment<IPopupElementInfo> HeaderTemplate { get; set; }
+
+    [Parameter]
+    public string HeaderText { get; set; }
+
+    [Parameter]
+    public RenderFragment<IPopupElementInfo> HeaderTextTemplate { get; set; }
+
+    [Parameter]
+    public bool HeaderVisible { get; set; } = false;
+
+    [Parameter]
+    public string Height { get; set; }
+
+    [Parameter]
+    public string Width { get; set; }
+
+    [Parameter]
+    public string MaxHeight { get; set; }
+
+    [Parameter]
+    public string MaxWidth { get; set; }
+
+    [Parameter]
+    public string MinHeight { get; set; }
+
+    [Parameter]
+    public string MinWidth { get; set; }
+
+    [Parameter]
+    public DropDownPositionMode PositionMode { get; set; }
+
+    [Parameter]
+    public Rectangle PositionRectangle { get; set; }
+
+
+    [Parameter]
+    public int HorizontalOffset { get; set; }
+
+    [Parameter]
+    public int VerticalOffset { get; set; }
+
+    [Parameter]
+    public bool Scrollable { get; set; } = true;
+
+    [Parameter]
+    public SizeMode? SizeMode { get; set; } = null;
+
+    [Parameter]
+    public bool StopOutsideClickPropagation { get; set; }
+
+    [Parameter]
+    public bool PreventCloseOnPositionTargetClick { get; set; }
+
+    [Parameter]
+    public string PositionTarget { get; set; }
+
+    [Parameter]
+    public string RestrictionTarget { get; set; }
+}

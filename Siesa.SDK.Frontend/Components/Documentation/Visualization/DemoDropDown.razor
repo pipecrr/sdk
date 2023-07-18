@@ -1,0 +1,77 @@
+@using Siesa.SDK.Frontend.Pages.Login
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
+@using Siesa.Global.Enums
+
+
+<div class="container-fluid m-3">
+    <div class="container-fluid">
+            <h2>SDKDropDown</h2> 
+            <p>Demonstration and configuration of the SDKDropDown component</p> 
+    </div>
+    <div class="row px-3"> 
+        <div class="col-md-6 p-1">
+            <SDKCard>
+                <h3>SDKDropDown</h3>
+
+                    <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" 
+                        ResourceTag="ShowDrop" Click="() => IsOpen = !IsOpen" />
+
+                    <SDKDropDown @bind-IsOpen="@IsOpen" HeaderText="Header"
+                    BodyText="@BodyText" FooterText="Footer" FooterVisible="true" HeaderVisible="true" MinWidth="300px" MaxWidth="300px"
+                    >
+                    
+                </SDKDropDown>
+
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-1">
+            <SDKCard>
+                <h3>SDKDropDown Body and Footer template</h3>
+
+                    <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" 
+                        ResourceTag="ShowDrop" Click="() => IsOpen2 = !IsOpen2" />
+
+                    <SDKDropDown @bind-IsOpen="@IsOpen2" 
+                    BodyText="@BodyText" FooterText="Footer" FooterVisible="true" HeaderVisible="true" MinWidth="300px" MaxWidth="300px">
+
+                        <HeaderTemplate>
+                            <div style="background-color:rgb(95,54,141); color:white; padding-left:10px; font-size:20px">
+                                Information
+                            </div>
+                        </HeaderTemplate>
+
+                        <BodyTemplate>
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h5>BodyTemplate</h5>
+                                        <p>BodyTemplate is used to customize the body of the SDKDropDown</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </BodyTemplate>
+
+                        <FooterContentTemplate>
+                            <div style="background-color:rgb(95,54,141); color:white; padding-left:10px; font-size:20px">
+                                OK
+                            </div>
+                        </FooterContentTemplate>
+
+                        
+                    </SDKDropDown>
+
+            </SDKCard>
+        </div>
+
+    </div>
+</div>
+
+
+@code {
+    bool IsOpen { get; set; } = false;
+
+    bool IsOpen2 { get; set; } = false;
+
+    string BodyText { get; set; } = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris sit amet metus";
+}

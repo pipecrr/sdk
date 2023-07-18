@@ -227,14 +227,14 @@
         
 </div>
 
-<DxDropDown @bind-IsOpen="@IsOpen" PositionMode="DropDownPositionMode.Bottom" PositionTarget="#lang"
+<SDKDropDown @bind-IsOpen="@IsOpen" PositionMode="DropDownPositionMode.Bottom" PositionTarget="#lang"
     RestrictionTarget="#Navigation-DropDown-Customization" CloseMode="DropDownCloseMode.Close"
-    PreventCloseOnPositionTargetClick="true" Id="boxRegion" CssClass="region_tooltip" MinWidth="230px" MaxWidth="250px" HeaderVisible="false"
-    FooterVisible="false">
+    PreventCloseOnPositionTargetClick="true"  CssClass="region_tooltip" MinWidth="230px" MaxWidth="250px" HeaderVisible="false"
+    FooterVisible="false" AutomationId="Cultures_Login">
     <BodyTemplate>
         <Lang _Cultures="@cultures" _idRow="@RowidCulture" OnChangeCulture="@((rowid)=> OnChangeCulture(rowid))" />
     </BodyTemplate>
-</DxDropDown>
+</SDKDropDown>
 
 @code {
     string classCulture = "";
