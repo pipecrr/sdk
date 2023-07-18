@@ -16,30 +16,46 @@
 @inject IAuthenticationService AuthenticationService
 @inject IServiceProvider ServiceProvider
 
-<div class="file-upload-container">
-    <div class="input-container">
-        <InputFile OnChange="@_OnChange" multiple="@IsMultiple" style="width: 300px; height: 200px; " accept="@FilterType" @ref="_refinputFile"/>
-    </div>
-    <img @ref="previewImageElem" width="200" height="100" />
-    <div class="file-upload-icon">
-        <SDKIcon Name="fa-arrow-up-from-bracket" OnClick="@ClickIcon"></SDKIcon>
-    </div>
-</div>
-@if(IsMultiple){
-    <div class="container">
-        <div class="row d-flex justify-content-start px-2 py-3">
-            @foreach (var url in _FilesSelected)
-            {
-                <div class="col-4 img-container">
-                    <img class="sdk-preview-multi" src="@url.Url" >
-                    <button class="close-preview" onclick="@(()=> CloseItem(url))">
-                        <SDKIcon Name="fa-xmark" CssClass="icon-close"/>
-                    </button>
+<div class="@CssClass">
+    @if(ShowPreview){
+        <div class="file-upload-container">
+            @if(!_IsLoading && !IsDetail){
+                <div class="input-container">
+                    <InputFile OnChange="@_OnChange" multiple="@IsMultiple" style="width: 300px; height: 200px; " accept="@FilterType" @ref="_refinputFile"/>
                 </div>
             }
+            @if((RowidAttachmentDetail != 0 || _FilesSelected.Count > 0) && !_IsLoading){
+                <img src="@_UrlImage" height="100%" width="100%">
+            }else{
+                <img @ref="previewImageElem" height="100%" width="100%"/>
+            }
+            <div class="file-upload-icon">
+                @if(_IsLoading){
+                    <SDKIcon Name="fa-spinner fa-spin"/>
+                }else if(!IsDetail){
+                    <SDKIcon Name="fa-arrow-up-from-bracket" OnClick="@ClickIcon"></SDKIcon>
+                }
+            </div>
         </div>
-    </div>
-}
+    }
+    @if(IsMultiple){
+        <div class="container">
+            <div class="row d-flex justify-content-start px-2 py-3">
+                @foreach (var url in _FilesSelected)
+                {
+                    <div class="col-4 img-container">
+                        <img class="sdk-preview-multi" src="@url.Url" onclick="@(() => ClickImg(url))" >
+                        @if(!IsDetail){
+                            <button class="close-preview" onclick="@(()=> CloseItem(url))">
+                                <SDKIcon Name="fa-xmark" CssClass="icon-close"/>
+                            </button>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
 
 @code {
 
@@ -60,12 +76,16 @@
     [Parameter] public int RowidAttachmentRelationship {get; set;}
     [Parameter] public bool SaveBytes {get; set;} = true;
     [Parameter] public int MaxSize {get; set;} = 3000000;
+    [Parameter] public bool IsDetail {get; set;}
+    [Parameter] public bool ShowPreview {get; set;} = true;
     
     private List<SDKInputFieldDTO> _FilesSelected = new ();
     private List<SDKInputFieldDTO> _FilesToSave = new ();
     private List<int> _FilesDeleted = new ();
+    private string _UrlImage = "";
 
-    private dynamic BusinessObj = null;
+    private dynamic BusinessObj;
+    private bool _IsLoading;
 
     protected override async Task OnInitializedAsync()
     {
@@ -74,22 +94,34 @@
     
     protected override async Task OnParametersSetAsync()
     {
-        if(IsMultiple){
-            if(_FilesSelected.Count == 0){
-                var response = await BackendRouterService.GetSDKBusinessModel("BLAttachmentDetail", AuthenticationService).Call("GetAttachmentsDetail", RowidAttachmentRelationship, SaveBytes);
-                if(response.Success){
-                    var attachments = response.Data;
-                    foreach (var item in attachments)
-                    {
-                        SDKInputFieldDTO inputFieldDTO = new (){
-                            Url = item.Url,
-                            RowidAttachmentDetail = item.Rowid
-                        };
-                        _FilesSelected.Add(inputFieldDTO);
-                    }
-                }                
+        _IsLoading = true;
+        if(IsMultiple && _FilesSelected.Count == 0){
+            var response = await BackendRouterService.GetSDKBusinessModel("BLAttachmentDetail", AuthenticationService).Call("GetAttachmentsDetail", RowidAttachmentRelationship, SaveBytes);
+            if(response.Success && response.Data != null && response.Data.Count > 0){
+                var attachments = response.Data;
+                foreach (var item in attachments)
+                {
+                    SDKInputFieldDTO inputFieldDTO = new (){
+                        Url = item.Url,
+                        RowidAttachmentDetail = item.Rowid
+                    };
+                    _FilesSelected.Add(inputFieldDTO);
+                }
+                _UrlImage = _FilesSelected[0].Url;
+            }
+        }else if(RowidAttachmentDetail > 0){
+            var response = await BackendRouterService.GetSDKBusinessModel("BLAttachmentDetail", AuthenticationService).Call("GetAttachmentDetail", RowidAttachmentDetail);
+            if(response.Success && response.Data != null){
+                var attachment = response.Data;
+                SDKInputFieldDTO inputFieldDTO = new (){
+                    Url = attachment.Url,
+                    RowidAttachmentDetail = attachment.Rowid
+                };
+                _UrlImage = inputFieldDTO.Url;
             }
         }
+        _IsLoading = false;
+        StateHasChanged();
         base.OnParametersSet();
     }
 
@@ -104,6 +136,12 @@
     private void ClickIcon()
     {
         JSRuntime.InvokeVoidAsync("clickInputFile", _refinputFile.Element);
+    }
+
+    private void ClickImg(SDKInputFieldDTO sdkInputFieldDTO){
+        var url = sdkInputFieldDTO.Url;
+        _UrlImage = url;
+        StateHasChanged();
     }
 
     private async Task _OnChange(InputFileChangeEventArgs _InputFile)
@@ -124,7 +162,8 @@
                     };
                     _FilesSelected.Add(inputFieldDTO);
                     _FilesToSave.Add(inputFieldDTO);
-                }                
+                }
+                _UrlImage = _FilesSelected[0].Url;
             }else{
                 await GetPreviewFile();
             }
@@ -149,6 +188,11 @@
         _FilesToSave.RemoveAll(x => x.Url == url);
         if(sdkInputFieldDTO.RowidAttachmentDetail > 0){
             _FilesDeleted.Add(sdkInputFieldDTO.RowidAttachmentDetail);
+        }
+        if(_FilesSelected.Count > 0){
+            _UrlImage = _FilesSelected[0].Url;
+        }else{
+            _UrlImage = "";
         }
         StateHasChanged();
     }

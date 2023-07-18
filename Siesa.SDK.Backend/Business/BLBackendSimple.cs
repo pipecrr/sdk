@@ -1318,7 +1318,7 @@ namespace Siesa.SDK.Business
             string url = "";
             string dataType = "";
             var BLAttatchmentDetail = GetBackend("BLAttachmentDetail");
-            var response = await BLAttatchmentDetail.Call("GetAttatchmentDetail", rowid);
+            var response = await BLAttatchmentDetail.Call("GetAttachmentDetail", rowid);
             SDKFileFieldDTO SDKFileField = new SDKFileFieldDTO();
             if(response.Success){
                 var data = response.Data;
