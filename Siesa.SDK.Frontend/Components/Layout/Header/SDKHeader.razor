@@ -2,7 +2,9 @@
 @using Siesa.SDK.Frontend.Components.Layout
 @using Siesa.SDK.Entities;
 @using Siesa.SDK.Shared.DTOS
+@using Siesa.SDK.Frontend.Components.Fields;
 @using Siesa.SDK.Frontend.Components.Visualization   
+
 @inject IAuthenticationService AuthenticationService
 @inject NavigationService NavigationService
 @inject IJSRuntime JSRuntime
@@ -76,12 +78,16 @@
                                 <div class="form-group connect_select_search">
                                     <label class="col-form-label col-form-label-sm font-weight-bold" for="inputGrupo"><ResourceViewer ResourceTag="Custom.SDKHeader.Group" /></label>
                                     <div class="d-flex form-control form-control-sm p-0">
-                                        <select id="inputGrupo" class="p-1" @bind="SelectedGroup.Rowid">
+
+                                         <SDKSelectField ItemType="short" @bind-Value="@SelectedGroup.Rowid" Options="@ListCompanyGroups" TextProperty="DisplayText" ValueProperty="Type">
+
+                                         </SDKSelectField>
+                                        @* <select id="inputGrupo" class="p-1" @bind="SelectedGroup.Rowid">
                                             @foreach (var group in CompanyGroups)
                                             {
                                                 <option value="@group.Rowid">@group.Name</option>
                                             }
-                                        </select>
+                                        </select> *@
                                     </div>
                                 </div>
                             </div>
@@ -139,6 +145,8 @@
 
     private string NameTag { get; set; } = "";
 
+    private List<SDKEnumWrapper<short>> ListCompanyGroups { get; set; } = new List<SDKEnumWrapper<short>>();
+
 
 
     protected override async Task OnInitializedAsync()
@@ -149,6 +157,8 @@
         var DataCompanyGroup = await BL.GetData(null, null);
         
         CompanyGroups = DataCompanyGroup.Data.Select(x => JsonConvert.DeserializeObject<E00200_CompanyGroup>(x)).ToList();
+        
+        ListCompanyGroups = CompanyGroups.Select(x => new SDKEnumWrapper<short>(x.Rowid, x.Name)).ToList();
 
         SelectedGroup = CompanyGroups.FirstOrDefault(x => x.Rowid == AuthenticationService.GetRowidCompanyGroup());
         if(SelectedGroup == null)
