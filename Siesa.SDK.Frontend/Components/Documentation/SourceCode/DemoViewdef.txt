@@ -105,8 +105,22 @@
                     </ul>
                 </p>
                     <SDKTextField CssClass="text-area-demoviewdef" Value="@RelatedParams"/>
-
-                <p>Se da soporte para agregar botones que ejecuten metodos que se encuentren en el BL del Frontend:</p>
+                
+                    <p>Para definir los filtros que se envian en el entityField se envia el parametro Filters, que es una Lista de Listas de objetos donde cada elemento de la lista es un or y cada propiedad del objeto es un and, los tipos de filtros soportados son los siguientes:
+                        <ul>
+                            <li>{FieldName}__in: para filtro in, se debe enviar una lista del tipo del campo con los elementos que se van a filtrar</li>
+                            <li>{FieldName}__not_in: para filtro not in, se debe enviar una lista del tipo del campo con los elementos que se van a filtrar</li>
+                            <li>{FieldName}__contains: para filtro contains</li>
+                            <li>{FieldName}__gt: para filtro mayor que</li>
+                            <li>{FieldName}__gte: para filtro mayor o igual que</li>
+                            <li>{FieldName}__lt: para filtro menor que</li>
+                            <li>{FieldName}__lte: para filtro menor o igual que</li>
+                            <li>{FieldName}: para filtrar por un valor igual a</li>
+                        </ul>
+                    </p>
+                        <SDKTextField CssClass="text-area-demoviewdef" Value="@FiltersEntityField"></SDKTextField>
+                    
+                    <p>Se da soporte para agregar botones que ejecuten metodos que se encuentren en el BL del Frontend:</p>
                     
                         <SDKTextField CssClass="text-area-demoviewdef" Value="@Buttons"/>
 
@@ -297,7 +311,31 @@
                             ""ExtraFields"": ""[""Id"",""Country""]"",
                             ""FieldTemplate"": 2
                         }
-                    }," ;        
+                    }," ;
+    string FiltersEntityField = @"{
+          ""Name"":""BaseObj.Country"",
+          ""RelatedBusiness"": ""BLCountry"",
+          ""ColSize"": {
+                ""XS"": 12,""SM"": 12,""MD"": 12,""LG"": 12,""XL"": 12
+                },
+          ""Filters"": [
+                [
+                    {
+                    ""Rowid__in"": ""GetFilters()""
+                    }
+                ]
+            ]
+         }
+        
+        //BL code
+           public List<int> GetFilters()
+            {
+                List<int> list = new();
+                list.Add(1);
+                list.Add(2);
+                return list;
+            }
+        ";
 
     string ColSizeAll = @"{
                             ""Panels"": [{,
