@@ -21,6 +21,14 @@
             <button @onclick="@(()=> UploadFile())">Upload File</button>
         </div>
         <div class="col-md-6 p-3">
+            <SDKCard > 
+                <p>Sinlge Detail</p>
+                <p>Para poner el inputFile en vista detalle se envia parametro "IsDetail" en true</p>
+                <SDKInputFile IsMultiple="false" FilterType="image/*, .pdf"
+                 BusinessName="BLCity"  OnInputFile="@OnInputFile" @ref="@_refinputFileSingledetail" IsDetail="true" RowidAttachmentDetail="152"/>
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
             <SDKCard >
                 <p>Multiple</p>
                 <p>Para el inputFile Con IsMultiple en true es necesario agragar el RowidAttachmentRelationship</p>
@@ -30,6 +38,14 @@
 
             <button @onclick="@(()=> UploadFileMulti())">Upload File</button>
         </div>
+        <div class="col-md-6 p-3">
+            <SDKCard >
+                <p>Multiple Detail</p>
+                <p>Para el detalle tambien es posible enviar un parametro para mostrar o no el priview de la imagen seleccionada "ShowPreview" por defecto true</p>
+                <SDKInputFile IsMultiple="true" FilterType="image/*, .pdf"
+                 BusinessName="BLCity"  OnInputFile="@OnInputFile" @ref="@_refinputFileDetail" RowidAttachmentRelationship="624" IsDetail="true" ShowPreview="false"/>
+            </SDKCard>
+        </div>        
     </div>
 </div>
 
@@ -38,6 +54,8 @@
 {
     public SDKInputFile? _refinputFile;
     public SDKInputFile? _refinputFileMulti;
+    public SDKInputFile? _refinputFileDetail;
+    public SDKInputFile? _refinputFileSingledetail;
 
     public void OnInputFile(InputFileChangeEventArgs FileInput)
     {
@@ -47,11 +65,13 @@
     public void UploadFile()
     {
         _refinputFile.SDKUploadFile();
+        StateHasChanged();
     }
 
     public void UploadFileMulti()
     {
         _refinputFileMulti.SDKUploadFile();
+        StateHasChanged();
     }
 
 }
