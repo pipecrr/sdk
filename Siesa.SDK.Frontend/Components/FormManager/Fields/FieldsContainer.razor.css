@@ -17,6 +17,7 @@
     background: var(--color_field_detail);
     border: none;
     padding: 0;
+    border-style: none !important;
 }
 
 

@@ -274,7 +274,7 @@ body {
     background-color: var(--color_primary) !important;
     border-radius: var(--border_radius_btn) !important;
     font-weight: 700 !important;
-    color: var(--color_primary) !important;
+    color: var(--color_light_text) !important;
     border: 1px solid var(--color_primary);
     border-color: var(--color_primary) !important;
 }
@@ -332,20 +332,19 @@ a, .btn-link {
     background-color: transparent !important;
     border-radius: var(--border_radius_btn) !important;
     font-weight: 700 !important;
-    color: var(--color_light_btn) !important;
+    color: var(--color_light) !important;
     min-width: 31px;
-    border: 1px solid var(--color_light_btn);
-    border-color: var(--color_light_btn) !important;
+    border: 1px solid var(--color_light);
+    border-color: var(--color_light) !important;
 }
 .btn_ghost_def_1:hover{
-    background-color: var(--color_light_btn) !important;
-    border-color: var(--color_light_btn) !important;
+    background-color: var(--color_panel_back) !important;
+    border-color: var(--color_light) !important;
     border-radius: var(--border_radius_btn) !important;
     font-weight: 700 !important;
-    color: var(--color_primary) !important;
+    color: var(--color_light) !important;
     min-width: 31px;
-    border: 1px solid var(--color_light_btn);
-    border-color: var(--color_light_btn) !important;
+    border: 1px solid var(--color_light);
 }
 
 
@@ -1370,7 +1369,8 @@ div .form-control, div .form-control:focus{
     margin: 0px !important;
     padding: 0px !important;
     background-color: var(--color_panel_back)!important;
-    box-shadow: var(--shadow_standar_min) !important;
+    box-shadow: var(--shadow_standar) !important;
+    border: var(--color_border) !important;
 }
 
 .sdk_card p {
