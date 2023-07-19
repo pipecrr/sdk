@@ -184,17 +184,26 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 
                 for (int j = 0; j < panels[i].Fields.Count; j++)
                 {
-                    if(viewType == DynamicViewType.Detail && String.IsNullOrEmpty(panels[i].Fields[j].ViewContext))
-                    {
-                        panels[i].Fields[j].ViewContext = "DetailView";
-                    }
-                    
-                    panels[i].Fields[j].GetFieldObj(BusinessObj);
+                    setViewContextField(panels[i].Fields[j], viewType);
                 }
                 if (panels[i].SubViewdef != null && panels[i].SubViewdef.Panels.Count > 0)
                 {
                     setViewContext(panels[i].SubViewdef.Panels, viewType);
-                }
+                }                
+            }
+        }
+
+        private void setViewContextField(FieldOptions field, DynamicViewType viewType){
+            if(viewType == DynamicViewType.Detail && String.IsNullOrEmpty(field.ViewContext)){
+                field.ViewContext = "DetailView";
+            }
+            field.GetFieldObj(BusinessObj);
+
+            if (field.Fields == null || field.Fields.Count <= 0) return;
+
+            foreach (var item in field.Fields.Select((value, i) => (value, i)))
+            {
+                setViewContextField(item.value, viewType);
             }
         }
 
