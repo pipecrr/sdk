@@ -18,8 +18,7 @@
                         ResourceTag="ShowDrop" Click="() => IsOpen = !IsOpen" />
 
                     <SDKDropDown @bind-IsOpen="@IsOpen" HeaderText="Header"
-                    BodyText="@BodyText" FooterText="Footer" FooterVisible="true" HeaderVisible="true" MinWidth="300px" MaxWidth="300px"
-                    >
+                    BodyText="@BodyText" FooterText="Footer" FooterVisible="true" HeaderVisible="true" MinWidth="300px" MaxWidth="300px"  HorizontalOffset="200" VerticalOffset="200">
                     
                 </SDKDropDown>
 
@@ -33,7 +32,7 @@
                         ResourceTag="ShowDrop" Click="() => IsOpen2 = !IsOpen2" />
 
                     <SDKDropDown @bind-IsOpen="@IsOpen2" 
-                    BodyText="@BodyText" FooterText="Footer" FooterVisible="true" HeaderVisible="true" MinWidth="300px" MaxWidth="300px">
+                    BodyText="@BodyText"  FooterVisible="true" HeaderVisible="true" MinWidth="300px" MaxWidth="300px">
 
                         <HeaderTemplate>
                             <div style="background-color:rgb(95,54,141); color:white; padding-left:10px; font-size:20px">
@@ -52,11 +51,47 @@
                             </div>
                         </BodyTemplate>
 
-                        <FooterContentTemplate>
+                        <FooterTemplate>
                             <div style="background-color:rgb(95,54,141); color:white; padding-left:10px; font-size:20px">
                                 OK
                             </div>
-                        </FooterContentTemplate>
+                        </FooterTemplate>
+
+                        
+                    </SDKDropDown>
+
+            </SDKCard>
+        </div>
+         <div class="col-md-6 p-1">
+            <SDKCard>
+                <h3>SDKDropDown PositionTarget and PositionMode</h3>
+
+                        <button  id="SDKButton_ShowDroptarget" @onclick="() => IsOpen3 = !IsOpen3">DropDownTarget</button>
+
+                    <SDKDropDown @bind-IsOpen="@IsOpen3" 
+                    BodyText="@BodyText"  MinWidth="300px" MaxWidth="300px"
+                    PositionTarget="#SDKButton_ShowDroptarget"
+                    PositionMode="DropDownPositionMode.Bottom">
+
+                        
+                    </SDKDropDown>
+
+            </SDKCard>
+        </div>
+
+        <div class="col-md-6 p-1">
+            <SDKCard>
+                <h3>SDKDropDown CssClass</h3>
+
+                    <button  id="SDKButton_ShowDroptarget2" @onclick="() => IsOpen4 = !IsOpen3">DropDownTarget</button>
+
+                    <SDKDropDown @bind-IsOpen="@IsOpen4" 
+                    BodyText="@BodyText"  MinWidth="300px" MaxWidth="300px"
+                    PositionTarget="#SDKButton_ShowDroptarget2"
+                    PositionMode="DropDownPositionMode.Bottom"
+                    FooterVisible="true" HeaderVisible="true"
+                    FooterCssClass="footer" BodyCssClass="body"
+                    HeaderCssClass="header">
 
                         
                     </SDKDropDown>
@@ -67,11 +102,31 @@
     </div>
 </div>
 
+<style>
+    .footer {
+        background-color:red;
+
+    }
+
+    .body {
+        background-color:blue;
+
+    }
+
+    .header {
+        background-color:yellow;
+
+    }
+</style>
+
+
 
 @code {
     bool IsOpen { get; set; } = false;
 
     bool IsOpen2 { get; set; } = false;
+    bool IsOpen3 { get; set; } = false;
+    bool IsOpen4 { get; set; }= false;
 
     string BodyText { get; set; } = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris sit amet metus";
 }
