@@ -111,7 +111,10 @@
 .sdk_conection>div>.btn_connect>div>p{
     max-width: 160px;
 }
-::deep .connect_tooltip{
+
+
+
+.sdk_conection > ::deep .connect_tooltip{
     min-width: 268px;
     max-width: 268px;
     border-radius: var(--border_radius_standar);
@@ -122,8 +125,9 @@
     z-index: 1;
     box-shadow: var(--shadow_standar);
     display: none;
+    background-color: red;
 }
-::deep .connect_tooltip::before {
+.sdk_conection > ::deep  .connect_tooltip::before {
     content: "";
     width: 0px;
     height: 0px;
@@ -134,6 +138,7 @@
     border-right: 9px solid transparent;
     border-bottom: 9px solid var(--color_panel_back);
     border-left: 9px solid transparent;
+    background-color: red;
 }
 .connect_select_search {
     position: relative;

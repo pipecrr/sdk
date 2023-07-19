@@ -55,9 +55,9 @@
                         <SDKIcon Name="fa-chevron-down"/>
                     </div>
                 </button>
-                <DxDropDown @bind-IsOpen="@ConnectEnabled"
+                <SDKDropDown @bind-IsOpen="@ConnectEnabled"
                 CssClass="connect_tooltip" 
-                data-automation-id ="@GetAutomationId()"
+                ResourceTag="SDKHeader_Config"
                 PositionTarget="#SDKHeader_ButtonConfig"
                 PositionMode="DropDownPositionMode.Bottom"
                 FooterVisible="true" HeaderVisible="true">
@@ -82,9 +82,6 @@
                                                 <option value="@group.Rowid">@group.Name</option>
                                             }
                                         </select>
-                                        <button>
-                                            <SDKIcon Name="fa-magnifying-glass" />
-                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -105,7 +102,7 @@
                                     </button>
                                 </div>
                             </FooterTemplate>
-                </DxDropDown>
+                </SDKDropDown>
             </div>
         </div>
         <div class="whcm_footer d-flex flex-row-reverse flex-md-row align-items-center justify-content-between">
