@@ -111,7 +111,7 @@
 .sdk_conection>div>.btn_connect>div>p{
     max-width: 160px;
 }
-.connect_tooltip{
+::deep .connect_tooltip{
     min-width: 268px;
     max-width: 268px;
     border-radius: var(--border_radius_standar);
@@ -123,7 +123,7 @@
     box-shadow: var(--shadow_standar);
     display: none;
 }
-.connect_tooltip::before {
+::deep .connect_tooltip::before {
     content: "";
     width: 0px;
     height: 0px;
