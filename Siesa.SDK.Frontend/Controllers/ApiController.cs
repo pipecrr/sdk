@@ -14,6 +14,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
 
 namespace Siesa.SDK.Frontend.Controllers
 {
@@ -26,6 +27,12 @@ namespace Siesa.SDK.Frontend.Controllers
         public ApiController(IServiceProvider ServiceProvider, IAuthenticationService AuthenticationService, IBackendRouterService backendRouterService)
         {
             this.ServiceProvider = ServiceProvider;
+            try{
+                //replace NavigationManager service in ServiceProvider with the one from the controller
+                var navigationManager = ServiceProvider.GetRequiredService<NavigationManager>();
+                navigationManager.GetType().GetMethod("Initialize", BindingFlags.NonPublic | BindingFlags.Instance)?.Invoke(navigationManager, new object[] { "https://localhost:5002/", "https://localhost:5002/" });
+            }catch(Exception e){
+            }
             this.AuthenticationService = AuthenticationService;
             this.BackendRouterService = backendRouterService;
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
