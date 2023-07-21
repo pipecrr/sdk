@@ -22,35 +22,31 @@
          @onclick="@RecentMenuClick" @onclick:preventDefault id="BreadCrum_RecentMenu">
             <SDKIcon Name="fa-clock-rotate-left"/>
         </button>
-        @if(IsOpenRecentMenu)
-        {
-            <div class="whcm_recent_box">
-                <SDKDropDown @bind-IsOpen="@IsOpenRecentMenu"
-                    CssClass="whcm_recent_box" 
-                    PositionTarget="#BreadCrum_RecentMenu"
-                    PositionMode="DropDownPositionMode.Bottom"
-                    FooterVisible="true" HeaderVisible="true"
-                    ResourceTag="BreadCrum_RecentMenu">
 
-                    <HeaderTemplate>
-                        <div class="pt-3 pl-3 pr-3 pb-0 text-center width_content">
-                            <h6 class="font-weight-bold m-0 border-bottom pb-3">
-                                <span>
-                                    <ResourceViewer ResourceTag="Custom.SDKBreadcrumb.ButtonRecents" RowidCulture=@AuthenticationService.GetRoiwdCulture()/>
-                                </span>
-                            </h6>
-                        </div>
-                    </HeaderTemplate>
+            <SDKDropDown @bind-IsOpen="@IsOpenRecentMenu"
+                CssClass="whcm_recent_box" 
+                PositionTarget="#BreadCrum_RecentMenu"
+                PositionMode="DropDownPositionMode.Bottom"
+                FooterVisible="true" HeaderVisible="true"
+                ResourceTag="BreadCrum_RecentMenu">
 
-                    <BodyTemplate>
-                        <div class="whcm_recent_list">
-                            <RecentMenuComponent/>
-                        </div>
-                    </BodyTemplate>
+                <HeaderTemplate>
+                    <div class="pt-3 pl-3 pr-3 pb-0 text-center width_content">
+                        <h6 class="font-weight-bold m-0 border-bottom pb-3">
+                            <span>
+                                <ResourceViewer ResourceTag="Custom.SDKBreadcrumb.ButtonRecents" RowidCulture=@AuthenticationService.GetRoiwdCulture()/>
+                            </span>
+                        </h6>
+                    </div>
+                </HeaderTemplate>
 
-                </SDKDropDown>
-            </div>
-        }
+                <BodyTemplate>
+                    <div class="whcm_recent_list">
+                        <RecentMenuComponent Click="@RecentMenuClick"/>
+                    </div>
+                </BodyTemplate>
+
+            </SDKDropDown>
     </div>
 }
     <nav class="pl-4 ml-3" aria-label="breadcrumb">
