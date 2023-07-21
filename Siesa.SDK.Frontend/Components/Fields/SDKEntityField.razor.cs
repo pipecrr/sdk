@@ -33,7 +33,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         [Parameter] public string RelatedBusiness { get; set; }
         [Parameter] public dynamic BaseObj { get; set; }
         [Parameter] public dynamic ParentBusinessObj { get; set; }
-        [Parameter] public int MinCharsEntityField { get; set; } = 2;
+        [Parameter] public int MinCharsEntityField { get; set; } = 0;
         [Parameter] public Dictionary<string, string> RelatedFilters { get; set; } = new Dictionary<string, string>();
         [Parameter] public RelatedParams RelatedParams { get; set; }
         [Parameter] public Action<object> SetValue { get; set; }
@@ -263,6 +263,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         
         private async Task OnChangeValue(string value)
         {
+            Value = value;
             if(string.IsNullOrEmpty(Value) && !IsMultiple){
                 ItemsSelected.Clear();
                 Values.Clear();
@@ -315,6 +316,21 @@ namespace Siesa.SDK.Frontend.Components.Fields
                     }
                 }
                 StateHasChanged();
+            }
+            else
+            {
+                //concatenate the key pressed to the search string
+                if (e.Key.Length == 1)
+                {
+                    await OnChangeValue(Value + e.Key).ConfigureAwait(true);
+                }
+                else if (e.Key.Equals("Backspace", StringComparison.Ordinal))
+                {
+                    if (Value.Length > 0)
+                    {
+                        await OnChangeValue(Value.Substring(0, Value.Length - 1)).ConfigureAwait(true);
+                    }
+                }
             }
         }
 
