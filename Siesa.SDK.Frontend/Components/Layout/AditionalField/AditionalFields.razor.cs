@@ -12,12 +12,13 @@ namespace Siesa.SDK.Frontend.Components.Layout.AditionalField
         [Inject] public IAuthenticationService AuthenticationService { get; set; }
         [Inject] public SDKGlobalLoaderService GlobalLoaderService { get; set; }
         [Parameter] public dynamic Business { get; set; }
-        [Parameter] public E00250_DynamicEntity DynamicEntity { get; set; } = new E00250_DynamicEntity();
+        [Parameter] public E00250_DynamicEntity DynamicEntity { get; set; } = new ();
         [Parameter] public bool IsEdit { get; set; }
         [Parameter] public bool IsCreate { get; set; }
         private string Title = "Custom.Group.AditionalFields.Title";
         private int Page;
-        private List<E00251_DynamicEntityColumn> DynamicEntityColumns = new List<E00251_DynamicEntityColumn>();
+        private List<E00251_DynamicEntityColumn> DynamicEntityColumns = new ();
+        private List<int> DynamicEntityColumnsDelete = new ();
         private int SizeField;
         private int TypeGroupDynamicEntity = 1;
         private bool EnableButtonNext;
@@ -32,7 +33,7 @@ namespace Siesa.SDK.Frontend.Components.Layout.AditionalField
                     DynamicEntityColumns = responseGroupsDynamicEntity.Data;
                 }
             }else{
-                E00251_DynamicEntityColumn DynamicEntityColumn = new E00251_DynamicEntityColumn();
+                E00251_DynamicEntityColumn DynamicEntityColumn = new ();
                 DynamicEntityColumns.Add(DynamicEntityColumn);
             }
             base.OnInitialized();
@@ -68,7 +69,7 @@ namespace Siesa.SDK.Frontend.Components.Layout.AditionalField
                 DynamicEntity.IsMultiRecord = true;
             }
 
-            DynamicEntity.Id = $"{DynamicEntity.Tag}";
+            DynamicEntity.Id = $"{DynamicEntity.Id}";
             var RowidGroupsDynamicEntity = DynamicEntity.Rowid;
             if(!IsEdit){
                 var responseGroupsDynamicEntity = await Business.Backend.Call("SaveGroupsDynamicEntity", DynamicEntity);
@@ -79,21 +80,28 @@ namespace Siesa.SDK.Frontend.Components.Layout.AditionalField
 
             foreach(var DynamicEntityColumn in DynamicEntityColumns){
                 DynamicEntityColumn.RowidDynamicEntity = RowidGroupsDynamicEntity;
-                DynamicEntityColumn.Id = $"{DynamicEntityColumn.Tag}";
+                DynamicEntityColumn.Id = $"{DynamicEntityColumn.Id}";
                 
                 await Business.Backend.Call("SaveDynamicEntityColumn", DynamicEntityColumn);                
             }
+
+            if(DynamicEntityColumnsDelete.Count > 0){
+                await Business.Backend.Call("DeleteDynamicEntityColumns", DynamicEntityColumnsDelete);
+            }            
 
             GlobalLoaderService.Hide();
             SDKDialogService.Close(true);
         }
 
         public void DeleteButton(int index){
+            if(DynamicEntityColumns[index].Rowid != 0){
+                DynamicEntityColumnsDelete.Add(DynamicEntityColumns[index].Rowid);
+            }
             DynamicEntityColumns.RemoveAt(index);
             OnChangeTagField();
         }
         public void AddButton(){
-            E00251_DynamicEntityColumn DynamicEntityColumn = new E00251_DynamicEntityColumn();
+            E00251_DynamicEntityColumn DynamicEntityColumn = new ();
             DynamicEntityColumns.Add(DynamicEntityColumn);
             EnableButtonSave = false;
             StateHasChanged();
