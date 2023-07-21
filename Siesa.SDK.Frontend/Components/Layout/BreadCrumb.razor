@@ -24,32 +24,32 @@
         </button>
         @if(IsOpenRecentMenu)
         {
-            <SDKDropDown @bind-IsOpen="@IsOpenRecentMenu"
-                CssClass="whcm_recent_box" 
-                PositionTarget="#BreadCrum_RecentMenu"
-                PositionMode="DropDownPositionMode.Bottom"
-                FooterVisible="true" HeaderVisible="true"
-                ResourceTag="BreadCrum_RecentMenu">
+            <div class="whcm_recent_box">
+                <SDKDropDown @bind-IsOpen="@IsOpenRecentMenu"
+                    CssClass="whcm_recent_box" 
+                    PositionTarget="#BreadCrum_RecentMenu"
+                    PositionMode="DropDownPositionMode.Bottom"
+                    FooterVisible="true" HeaderVisible="true"
+                    ResourceTag="BreadCrum_RecentMenu">
 
-                 <HeaderTemplate>
-                    <div class="pt-3 pl-3 pr-3 pb-0 text-center">
-                        <h6 class="font-weight-bold m-0 border-bottom pb-3">
-                            <span>
-                                <ResourceViewer ResourceTag="Custom.SDKBreadcrumb.ButtonRecents" RowidCulture=@AuthenticationService.GetRoiwdCulture()/>
-                            </span>
-                        </h6>
-                    </div>
-                </HeaderTemplate>
-                @*data-automation-id ="@GetAutomationId()"*@
-                <BodyTemplate>
-                    <div class="whcm_recent_box">
+                    <HeaderTemplate>
+                        <div class="pt-3 pl-3 pr-3 pb-0 text-center width_content">
+                            <h6 class="font-weight-bold m-0 border-bottom pb-3">
+                                <span>
+                                    <ResourceViewer ResourceTag="Custom.SDKBreadcrumb.ButtonRecents" RowidCulture=@AuthenticationService.GetRoiwdCulture()/>
+                                </span>
+                            </h6>
+                        </div>
+                    </HeaderTemplate>
+
+                    <BodyTemplate>
                         <div class="whcm_recent_list">
                             <RecentMenuComponent/>
                         </div>
-                    </div>
-                </BodyTemplate>
+                    </BodyTemplate>
 
-            </SDKDropDown>
+                </SDKDropDown>
+            </div>
         }
     </div>
 }

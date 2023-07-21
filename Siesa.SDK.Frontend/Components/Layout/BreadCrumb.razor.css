@@ -68,7 +68,7 @@
     scrollbar-width: thin;
     padding: 0rem 0.65rem 1rem 1rem;
 }
-.whcm_recent_box{
+::deep .whcm_recent_box{
     position: absolute;
     min-width: 450px !important;
     padding: 0rem !important;
@@ -84,7 +84,7 @@
     z-index: 3 !important;
 }
 
-.whcm_recent_box::before {
+::deep .whcm_recent_box::before {
     content: "";
     width: 0px;
     height: 0px;
@@ -97,6 +97,11 @@
     border-left: 9px solid transparent;
 }
 
+.width_content
+{
+    min-width: 450px;
+}
+
 /*Fin MenuRecent*/
 @media (max-width: 575.98px) { 
     .area1{
@@ -106,6 +111,9 @@
         width: 100%;
     }
     .whcm_recent_box {
+        min-width: calc(100vw - 2rem) !important;
+    }
+    .width_content {
         min-width: calc(100vw - 2rem) !important;
     }
 }
