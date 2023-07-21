@@ -35,15 +35,7 @@
             </SDKCard>
         </div>
 
-        <div class="col-md-6 p-3">
-            <SDKCard>
-                <h3>ProgressBar Onchange</h3>
-                
-                <SDKProgressBar Value="@valor4" ValueChanged="OnChangeValue" Max="100"/>
-
-                <SDKRangeSlider MinRange="0" MaxRange="100" @bind-Value="@valor4" Step="20" />
-            </SDKCard>
-        </div>
+    
         
     </div>
 </div>
@@ -52,11 +44,5 @@
     double valor = 75;
     double valor2 = 50;
     double valor3 = 0;
-    double valor4 = 100;
-
-    public void OnChangeValue(double value)
-    {
-       SDKNotificationService.ShowSuccess($"Change value to {value}");
-    }
 
 }

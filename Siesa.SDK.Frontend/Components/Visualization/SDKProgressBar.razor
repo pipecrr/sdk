@@ -4,7 +4,7 @@
 
 
 <div class="sdk_progressbar">
-    <RadzenProgressBar Value="@Value" Max="@Max" Mode="@BarMode" ProgressBarStyle="@BarStyle" ValueChanged="@ValueChanged" Min="@Min"/>
+    <RadzenProgressBar Value="@Value" Max="@Max" Mode="@BarMode" ProgressBarStyle="@BarStyle" Min="@Min"/>
 </div>
 
 @code {
@@ -14,7 +14,6 @@
     [Parameter] public double Min { get; set; } = 0;
     [Parameter] public ProgressBarMode BarMode { get; set; }
     [Parameter] public ProgressBarStyle BarStyle { get; set; }
-    [Parameter] public Action<double> ValueChanged { get; set; }
     [Parameter] public bool ShowRangeColor { get; set; }
 
     protected override void OnParametersSet()
@@ -40,8 +39,5 @@
                 
             }
         }
-
-
-
     }
 }

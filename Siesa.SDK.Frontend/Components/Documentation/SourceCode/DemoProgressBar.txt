@@ -15,13 +15,13 @@
         <div class="col-md-6 p-3">
             <SDKCard>
                 <h3>ProgressBar in determinate mode</h3>
-                <SDKProgressBar ProgressValue="@valor" />
+                <SDKProgressBar Value="@valor" />
             </SDKCard>
         </div>
         <div class="col-md-6 p-3">
             <SDKCard>
                 <h3>ProgressBar in max value > 100</h3>
-                <SDKProgressBar ProgressValue="@valor2" MaxValue="100" />
+                <SDKProgressBar Value="@valor2" Max="100" />
             </SDKCard>
         </div>
 
@@ -29,21 +29,13 @@
             <SDKCard>
                 <h3>ProgressBar Range Color</h3>
 
-                <SDKProgressBar ProgressValue="@valor3" MaxValue="100" ShowRangeColor="true"/>
+                <SDKProgressBar Value="@valor3" Max="100" ShowRangeColor="true"/>
 
                 <SDKRangeSlider MinRange="0" MaxRange="100" @bind-Value="@valor3" />
             </SDKCard>
         </div>
 
-        <div class="col-md-6 p-3">
-            <SDKCard>
-                <h3>ProgressBar Onchange</h3>
-                
-                <SDKProgressBar ProgressValue="@valor4" ValueChanged="OnChangeValue" MaxValue="100"/>
-
-                <SDKRangeSlider MinRange="0" MaxRange="100" @bind-Value="@valor4" Step="20" />
-            </SDKCard>
-        </div>
+    
         
     </div>
 </div>
@@ -52,11 +44,5 @@
     double valor = 75;
     double valor2 = 50;
     double valor3 = 0;
-    double valor4 = 100;
-
-    public void OnChangeValue(double value)
-    {
-       SDKNotificationService.ShowSuccess($"Change value to {value}");
-    }
 
 }
