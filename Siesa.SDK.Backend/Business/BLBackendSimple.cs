@@ -851,6 +851,26 @@ namespace Siesa.SDK.Business
             return response;
         }
 
+        [SDKExposedMethod]
+        public void DeleteDynamicEntityColumns(List<int> rowidsEnityColumn){
+            try{
+                using (SDKContext context = CreateDbContext())
+                {
+                    context.SetProvider(_provider);
+                    var columns = context.Set<E00251_DynamicEntityColumn>().Where(x => rowidsEnityColumn.Contains(x.Rowid)).ToList();
+                    if(columns != null){
+                        context.RemoveRange(columns);
+                        rowidsEnityColumn = columns.Select(x => x.Rowid).ToList();
+                        DeleteDynamicEntity(context, rowidsEnityColumn);
+                    }
+                    context.SaveChanges();
+                }
+            }catch(Exception ex){
+                throw new Exception("Error deleting aditional fields", ex);
+            }
+        }
+
+
         protected virtual void DeleteDynamicEntity(SDKContext Context, List<int> rowidsEnityColumn = null){
             var nameSpaceEntity = typeof(T).Namespace;
             var nameDynamicEntity = "D"+typeof(T).Name.Substring(1);
