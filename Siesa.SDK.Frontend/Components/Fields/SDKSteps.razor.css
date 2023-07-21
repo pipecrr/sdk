@@ -57,7 +57,7 @@
 
 ::deep  .rz-state-highlight>.rz-menuitem-link .rz-steps-number {
     background: var(--color_primary) !important;
-    color: var(--color_light) !important;
+    color: var(--color_light_text) !important;
 }
 
 ::deep .rz-state-disabled>.rz-menuitem-link .rz-steps-number {

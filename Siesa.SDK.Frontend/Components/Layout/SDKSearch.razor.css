@@ -5,11 +5,11 @@
 .sdk_search>input {
     border: transparent;
     background: #ffffff4d;
-    color: white;
+    color: var(--color_light);
 }
 
 .sdk_search>input:focus {
-    color: white;
+    color: var(--color_light);
     background-color: #ffffff4d;
 }
 
