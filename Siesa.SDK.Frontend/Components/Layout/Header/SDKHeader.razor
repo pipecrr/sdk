@@ -62,7 +62,8 @@
                 ResourceTag="SDKHeader_Config"
                 PositionTarget="#SDKHeader_ButtonConfig"
                 PositionMode="DropDownPositionMode.Bottom"
-                FooterVisible="true" HeaderVisible="true">
+                FooterVisible="true" HeaderVisible="true"
+                StopOutsideClickPropagation="true">
 
                     <HeaderTemplate>
                         <label class="pt-3 px-3 pb-0 col-form-label font-weight-bold"><ResourceViewer ResourceTag="Custom.SDKHeader.Config" /></label>
@@ -79,15 +80,18 @@
                                     <label class="col-form-label col-form-label-sm font-weight-bold" for="inputGrupo"><ResourceViewer ResourceTag="Custom.SDKHeader.Group" /></label>
                                     <div class="d-flex form-control form-control-sm p-0">
 
-                                         <SDKSelectField ItemType="short" @bind-Value="@SelectedGroup.Rowid" Options="@ListCompanyGroups" TextProperty="DisplayText" ValueProperty="Type">
+                                        <div @onclick:stopPropagation="true">
+                                             <SDKSelectField ItemType="short" @bind-Value="@SelectedGroup.Rowid" Options="@ListCompanyGroups" TextProperty="DisplayText" ValueProperty="Type">
 
-                                         </SDKSelectField>
-                                        @* <select id="inputGrupo" class="p-1" @bind="SelectedGroup.Rowid">
+                                            </SDKSelectField>
+                                        </div> 
+                                        
+                                         @* <select id="inputGrupo" class="p-1" @bind="SelectedGroup.Rowid">
                                             @foreach (var group in CompanyGroups)
                                             {
                                                 <option value="@group.Rowid">@group.Name</option>
                                             }
-                                        </select> *@
+                                        </select>  *@
                                     </div>
                                 </div>
                             </div>
@@ -145,7 +149,7 @@
 
     private string NameTag { get; set; } = "";
 
-    private List<SDKEnumWrapper<short>> ListCompanyGroups { get; set; } = new List<SDKEnumWrapper<short>>();
+    private List<SDKEnumWrapper<short>> ListCompanyGroups { get; set; }
 
 
 
@@ -158,7 +162,12 @@
         
         CompanyGroups = DataCompanyGroup.Data.Select(x => JsonConvert.DeserializeObject<E00200_CompanyGroup>(x)).ToList();
         
-        ListCompanyGroups = CompanyGroups.Select(x => new SDKEnumWrapper<short>(x.Rowid, x.Name)).ToList();
+        ListCompanyGroups = CompanyGroups.Select(x => new SDKEnumWrapper<short>()
+            {
+                DisplayText = x.Name,
+                Type = x.Rowid
+            }).ToList();
+
 
         SelectedGroup = CompanyGroups.FirstOrDefault(x => x.Rowid == AuthenticationService.GetRowidCompanyGroup());
         if(SelectedGroup == null)
