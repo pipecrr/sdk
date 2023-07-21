@@ -1,6 +1,47 @@
-<RadzenProgressBar Value="@Value" Max="@Max" />
+@using Radzen
+@using Radzen.Blazor
+@using System.Collections.Generic;
+
+
+<div class="sdk_progressbar">
+    <RadzenProgressBar Value="@Value" Max="@Max" Mode="@BarMode" ProgressBarStyle="@BarStyle" ValueChanged="@ValueChanged" Min="@Min"/>
+</div>
 
 @code {
+
     [Parameter] public double Value { get; set; }
     [Parameter] public double Max { get; set; }
+    [Parameter] public double Min { get; set; } = 0;
+    [Parameter] public ProgressBarMode BarMode { get; set; }
+    [Parameter] public ProgressBarStyle BarStyle { get; set; }
+    [Parameter] public Action<double> ValueChanged { get; set; }
+    [Parameter] public bool ShowRangeColor { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        if(ShowRangeColor)
+        {
+            switch (Value)
+            {
+                case double n when (n < 25):
+                    BarStyle = ProgressBarStyle.Danger;
+                    break;
+                case double n when (n >= 25 && n < 50):
+                    BarStyle = ProgressBarStyle.Warning;
+                    break;
+                case double n when (n >= 50 && n < 75):
+                    BarStyle = ProgressBarStyle.Info;
+                    break;
+                case double n when (n >= 75):
+                    BarStyle = ProgressBarStyle.Success;
+                    break;
+                
+            }
+        }
+
+
+
+    }
 }

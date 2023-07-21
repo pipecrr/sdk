@@ -1,0 +1,45 @@
+.sdk_progressbar
+{
+    width:  100%;
+}
+
+.sdk_progressbar ::deep  .rz-progressbar-determinate-danger
+{
+    background-color: var(--color_delete);
+}
+
+.sdk_progressbar ::deep  .rz-progressbar-determinate-warning
+{
+    background-color: var(--color_estado_creación);
+    
+}
+
+.sdk_progressbar ::deep .rz-progressbar-determinate-success
+{
+    background-color: var(--color_alert_success);
+}
+
+.sdk_progressbar ::deep  .rz-progressbar-determinate-info
+{
+    background-color: var(--color_alert_warning);
+}
+
+.sdk_progressbar ::deep  .rz-progressbar-determinate-info .rz-progressbar-value
+{
+    background-color: transparent !important;
+}
+
+.sdk_progressbar ::deep .rz-progressbar-determinate-warning .rz-progressbar-value 
+{
+    background-color: transparent !important;
+}
+
+.sdk_progressbar ::deep .rz-progressbar-determinate-danger .rz-progressbar-value 
+{
+    background-color: transparent !important;
+}
+
+.sdk_progressbar ::deep .rz-progressbar-determinate-success .rz-progressbar-value 
+{
+    background-color: transparent !important;
+}
