@@ -32,13 +32,13 @@ namespace Siesa.SDK.Frontend.Components.Layout.AditionalField
                 _resourceTagSize = "Custom.Fields.AditionalFields.SizeTextName";
             }
             SetType();
-            var TextNumeric = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioNumeric", AuthenticationService);
-            var TextText = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioText", AuthenticationService);
-            var TextDate = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioDate", AuthenticationService);
-            var TextHour = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioHour", AuthenticationService);
-            var TextBool = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioBool", AuthenticationService);
-            var InternalMaster = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioInternalMaster", AuthenticationService);
-            var GenericMaster = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioGenericMaster", AuthenticationService);
+            var TextNumeric = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioNumeric", AuthenticationService).ConfigureAwait(false);
+            var TextText = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioText", AuthenticationService).ConfigureAwait(false);
+            var TextDate = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioDate", AuthenticationService).ConfigureAwait(false);
+            var TextHour = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioHour", AuthenticationService).ConfigureAwait(false);
+            var TextBool = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioBool", AuthenticationService).ConfigureAwait(false);
+            var InternalMaster = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioInternalMaster", AuthenticationService).ConfigureAwait(false);
+            var GenericMaster = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioGenericMaster", AuthenticationService).ConfigureAwait(false);
 
             DataType.Add(new SelectBarItemWrap<int>() {Key=1, Name=TextNumeric});
             DataType.Add(new SelectBarItemWrap<int>() {Key=2, Name=TextText});
