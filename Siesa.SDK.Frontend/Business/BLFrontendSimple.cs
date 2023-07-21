@@ -243,7 +243,7 @@ namespace Siesa.SDK.Business
         public async Task InstanceDynamicEntities(string businessName, Int64 rowid = 0)
         {
             var nameSpaceEntity = this.BaseObj.GetType().Namespace;
-            var nameDynamicEntity = "D"+this.BaseObj.GetType().Name.Substring(1);
+            var nameDynamicEntity = string.Concat("D", this.BaseObj.GetType().Name.AsSpan(1));
             var dynamicEntityType = Utilities.SearchType(nameSpaceEntity + "." + nameDynamicEntity, true);
             var requestGroups = await Backend.Call("GetGroupsDynamicEntity", BusinessName);
             if(requestGroups.Success && requestGroups.Data != null && dynamicEntityType != null){
