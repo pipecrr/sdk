@@ -307,6 +307,16 @@ namespace Siesa.SDK.GRPCServices
                         var paramValue = JsonConvert.DeserializeObject(methodParameter.Value, paramType);
                         parameters = parameters.Append(paramValue).ToArray();
                     }
+
+                    if (parameters.Length != method.GetParameters().Length)
+                    {
+                        //add missing parameters
+                        var missingParams = method.GetParameters().Length - parameters.Length;
+                        for (int i = 0; i < missingParams; i++)
+                        {
+                            parameters = parameters.Append(Type.Missing).ToArray();
+                        }
+                    }
                 }
                 var resultMethod = method.Invoke(businessObj, parameters);
 

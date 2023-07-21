@@ -28,7 +28,7 @@
     top: 49%;
     left: 50%;
     transform: translate(-50%, -50%) scale(0);
-    color: var(--color_light);
+    color: var(--color_light_text);
     transition: 0.2s;
 }
 .sdk_show{

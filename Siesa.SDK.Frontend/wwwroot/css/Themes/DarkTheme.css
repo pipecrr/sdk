@@ -71,7 +71,7 @@
     --color_light_text: #042339;
     --color_light_nav: #042339;
     --color_light_table: #074069;
-    --color_border_card: #ffffff33;
+    --color_border_card: #3E7FAF;
     --color_focus_general: #8DCFFF;
 
     --color_alert_text: #FFFFFF;
@@ -99,4 +99,11 @@
     --rz-grid-hover-background-color: var(--color_table_hover) !important;
 
     --animate_faster: all 0.2s ease;
+
+    --color_highlight: #8DCFFF;
+
+    --color_scroll_hover: #ffffff;
+    --color_scroll_track: #ffffff33;
+    --color_scroll_handle: #013458;
+    --color_scroll_border: #ffffff80;
 }
