@@ -68,7 +68,7 @@ namespace Siesa.SDK.Frontend.Components.Layout.AditionalField
                 DynamicEntity.IsMultiRecord = true;
             }
 
-            DynamicEntity.Id = $"ED_{DynamicEntity.Tag}";
+            DynamicEntity.Id = $"{DynamicEntity.Tag}";
             var RowidGroupsDynamicEntity = DynamicEntity.Rowid;
             if(!IsEdit){
                 var responseGroupsDynamicEntity = await Business.Backend.Call("SaveGroupsDynamicEntity", DynamicEntity);
@@ -79,7 +79,7 @@ namespace Siesa.SDK.Frontend.Components.Layout.AditionalField
 
             foreach(var DynamicEntityColumn in DynamicEntityColumns){
                 DynamicEntityColumn.RowidDynamicEntity = RowidGroupsDynamicEntity;
-                DynamicEntityColumn.Id = $"CED_{DynamicEntityColumn.Tag}";
+                DynamicEntityColumn.Id = $"{DynamicEntityColumn.Tag}";
                 
                 await Business.Backend.Call("SaveDynamicEntityColumn", DynamicEntityColumn);                
             }

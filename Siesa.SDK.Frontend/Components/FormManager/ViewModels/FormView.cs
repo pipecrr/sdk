@@ -248,9 +248,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     var panels = JsonConvert.DeserializeObject<List<Panel>>(metadata);
                     FormViewModel.Panels = panels;
                 }
-                if(BusinessObj.GetType().GetProperty("DynamicEntities") != null && BusinessObj.DynamicEntities != null && BusinessObj.DynamicEntities.Count > 0){
+                if(BusinessObj.GetType().GetProperty("DynamicEntities") != null && BusinessObj.DynamicEntities != null ){
                     ShowAditionalFields = true;
-                    AddPanels(PanelsCollapsable);
+                    if(BusinessObj.DynamicEntities.Count > 0){
+                        AddPanels(PanelsCollapsable);
+                    }
                 }
             }
             try

@@ -51,6 +51,7 @@ namespace Siesa.SDK.Business
         public BaseSDK<int> BaseObj { get; set; }        
         public List<dynamic> DynamicEntities { get; set; }        
         public Type DynamicEntityType { get; set; }
+        public bool ShowAditionalFields { get; set; }
 
         [JsonIgnore]
         protected IAuthenticationService AuthenticationService { get; set; }
@@ -241,8 +242,11 @@ namespace Siesa.SDK.Business
 
         public async Task InstanceDynamicEntities(string businessName, Int64 rowid = 0)
         {
+            var nameSpaceEntity = this.BaseObj.GetType().Namespace;
+            var nameDynamicEntity = "D"+this.BaseObj.GetType().Name.Substring(1);
+            var dynamicEntityType = Utilities.SearchType(nameSpaceEntity + "." + nameDynamicEntity, true);
             var requestGroups = await Backend.Call("GetGroupsDynamicEntity", BusinessName);
-            if(requestGroups.Success && requestGroups.Data != null && requestGroups.Data.Count > 0){
+            if(requestGroups.Success && requestGroups.Data != null && dynamicEntityType != null){
                 DynamicEntities = await CreateDynamicEntities(requestGroups.Data, rowid);
                 if(rowid > 0){
                     await GetDynamicEmntitiesData(rowid);
@@ -312,13 +316,8 @@ namespace Siesa.SDK.Business
 
         private async Task<List<dynamic>> CreateDynamicEntities(dynamic data, Int64 rowid = 0)
         {   
-            var nameSpaceEntity = this.BaseObj.GetType().Namespace;
-            var nameDynamicEntity = "D"+this.BaseObj.GetType().Name.Substring(1);
-            var dynamicEntityType = Utilities.SearchType(nameSpaceEntity + "." + nameDynamicEntity, true);
-            
             List<dynamic> result = new List<dynamic>();
             foreach(var item in data){
-                //DynamicEntityDTO entity = new DynamicEntityDTO();
                 var typeEntity = typeof(DynamicEntityDTO<>).MakeGenericType(this.BaseObj.GetRowidType());
                 dynamic entity = Activator.CreateInstance(typeEntity);
                 entity.Rowid = item.Rowid;
