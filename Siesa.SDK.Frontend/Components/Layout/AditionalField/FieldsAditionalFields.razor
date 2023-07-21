@@ -5,6 +5,18 @@
 <div class="sdk_fields_aditional_background p-4">
     <div class="row pl-2">
         <div class="col-4 col-sm-4 col-md-4 col-lg-4 pl-0 border_right border_bottom">
+            <h6 class="font-weight-bold"><ResourceViewer ResourceTag="Custom.Fields.AditionalFields.IdName"/></h6>
+            <p><ResourceViewer ResourceTag="Custom.Fields.AditionalFields.IdDescription"/></p>
+        </div>
+        <div class="col-8 col-sm-8 col-md-8 col-lg-8 border_bottom">
+            <div class="align-bottom">
+                <h6>&nbsp;</h6>
+                <SDKCharField @bind-Value="@DynamicEntityColumn.Id"/>
+            </div>        
+        </div>
+    </div>
+    <div class="row pl-2">
+        <div class="col-4 col-sm-4 col-md-4 col-lg-4 pl-0 border_right border_bottom">
             <h6 class="font-weight-bold"><ResourceViewer ResourceTag="Custom.Fields.AditionalFields.TagName"/></h6>
             <p><ResourceViewer ResourceTag="Custom.Fields.AditionalFields.TagDescription"/></p>
         </div>
@@ -46,52 +58,58 @@
         <div class="col-8 col-sm-8 col-md-8 col-lg-8 border_bottom">
             <h6>&nbsp;</h6>
             <SDKRadioButton ItemType="int" Value="@Type" Data="@DataType" ValueChanged="(myValue2)=>Onchange(myValue2)"/>
+            @if(Type==1 || Type==2){
+                <hr>
+                <SDKFormLayout>
+                    <SDKFormLayoutItem ResourceTag="@_resourceTagSize"
+                        ColSizeMd="12"
+                        ColSizeLg="12"
+                        ColSizeXl="12"
+                        ColSizeSm="12"
+                        ColSizeXs="12">
+                        <SDKIntegerField @bind-Value="@DynamicEntityColumn.Size"/>
+                    </SDKFormLayoutItem>
+                </SDKFormLayout>
+                @if(Type == 1){
+                    <SDKFormLayout>
+                        <SDKFormLayoutItem ResourceTag="Custom.Fields.AditionalFields.QuestionMinMax"
+                            ColSizeMd="10"
+                            ColSizeLg="10"
+                            ColSizeXl="10"
+                            ColSizeSm="10"
+                            ColSizeXs="10">
+                        </SDKFormLayoutItem>
+                        <SDKFormLayoutItem 
+                            ColSizeMd="2"
+                            ColSizeLg="2"
+                            ColSizeXl="2"
+                            ColSizeSm="2"
+                            ColSizeXs="2">
+                            <SDKSwitch @bind-Value="@HasMinMax"/>
+                        </SDKFormLayoutItem>
+                    </SDKFormLayout>
+                    <SDKFormLayout>                
+                        <SDKFormLayoutItem ResourceTag="Custom.Fields.AditionalFields.MinValueName"
+                            ColSizeMd="6"
+                            ColSizeLg="6"
+                            ColSizeXl="6"
+                            ColSizeSm="6"
+                            ColSizeXs="6">
+                            <SDKIntegerField @bind-Value="@DynamicEntityColumn.MinValue" ReadOnly="@(!HasMinMax)"/>
+                        </SDKFormLayoutItem>
+                        <SDKFormLayoutItem ResourceTag="Custom.Fields.AditionalFields.MaxValueName"
+                            ColSizeMd="6"
+                            ColSizeLg="6"
+                            ColSizeXl="6"
+                            ColSizeSm="6"
+                            ColSizeXs="6">
+                            <SDKIntegerField @bind-Value="@DynamicEntityColumn.MaxValue" ReadOnly="@(!HasMinMax)"/>
+                        </SDKFormLayoutItem>
+                    </SDKFormLayout>
+                }
+            }
         </div>
-    </div>
-    <div class="row pl-2">
-        <div class="col-4 col-sm-4 col-md-4 col-lg-4 pl-0 border_right border_bottom">
-            <h6 class="font-weight-bold"><ResourceViewer ResourceTag="Custom.Fields.AditionalFields.SizeName"/></h6>
-            <p><ResourceViewer ResourceTag="Custom.Fields.AditionalFields.SizeDescription"/></p>
-        </div>
-        <div class="col-8 col-sm-8 col-md-8 col-lg-8 border_bottom">
-            <SDKFormLayout>
-                <SDKFormLayoutItem ResourceTag="Custom.Fields.AditionalFields.SizeName"
-                    ColSizeMd="4"
-                    ColSizeLg="4"
-                    ColSizeXl="4"
-                    ColSizeSm="4"
-                    ColSizeXs="4">
-                    <SDKIntegerField @bind-Value="@DynamicEntityColumn.Size"/>
-                </SDKFormLayoutItem>
-                <SDKFormLayoutItem ResourceTag="Custom.Fields.AditionalFields.MinValueName"
-                    ColSizeMd="4"
-                    ColSizeLg="4"
-                    ColSizeXl="4"
-                    ColSizeSm="4"
-                    ColSizeXs="4">
-                    <SDKIntegerField @bind-Value="@DynamicEntityColumn.MinValue" ReadOnly="@(ReadOnlyMinMax)"/>
-                </SDKFormLayoutItem>
-                <SDKFormLayoutItem ResourceTag="Custom.Fields.AditionalFields.MaxValueName"
-                    ColSizeMd="4"
-                    ColSizeLg="4"
-                    ColSizeXl="4"
-                    ColSizeSm="4"
-                    ColSizeXs="4">
-                    <SDKIntegerField @bind-Value="@DynamicEntityColumn.MaxValue" ReadOnly="@(ReadOnlyMinMax)"/>
-                </SDKFormLayoutItem>
-            </SDKFormLayout>
-        </div>
-    </div>
-    @* <div class="row pl-2">
-        <div class="col-4 col-sm-4 col-md-4 col-lg-4 pl-0 border_right border_bottom">
-            <h6 class="font-weight-bold"><ResourceViewer ResourceTag="Custom.Fields.AditionalFields.VisualizationName"/></h6>
-            <p><ResourceViewer ResourceTag="Custom.Fields.AditionalFields.VisualizationDescription"/></p>
-        </div>
-        <div class="col-8 col-sm-8 col-md-8 col-lg-8 border_bottom">
-            <h6>&nbsp;</h6>
-            <SDKRadioButton ItemType="int" @bind-Value="@TypeVisualization" Data="@DataTypeVisualization"/>
-        </div>
-    </div> *@
+    </div>    
     <div class="row pl-2">
         <div class="col-4 col-sm-4 col-md-4 col-lg-4 pl-0 border_right border_bottom">
             <h6 class="font-weight-bold"><ResourceViewer ResourceTag="Custom.Fields.AditionalFields.ClearName"/></h6>

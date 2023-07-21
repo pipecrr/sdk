@@ -14,21 +14,22 @@
 @inject NavigationService NavigationService
 
 <div class="@CssClassRelationship col-12 p-0">
-
-    <button class="whcm_data_related_btn" @onclick="() => OnClickRelationshipButton()" data-automation-id="Button_RelationShip_Container">
-        <p>
-            <ResourceViewer ResourceTag="Custom.SDK.RelationshipPanel" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
-            <SDKIcon Name="fa-folder-tree"/>
-        </p>
-    </button>   
-    @if(ShowAditionalFields){
-        <button class="whcm_data_related_btn2" @onclick="() => OnClickAditionalButton()">
+    <div class='@($"sdk_container_data_related_btn {classOrderContainer}")'>
+        <button class='@($"whcm_data_related_btn {classExpandBtn1}")' @onclick="() => OnClickRelationshipButton()" data-automation-id="Button_RelationShip_Container">
             <p>
-                <ResourceViewer ResourceTag="" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
-                <SDKIcon Name="fa-diagram-subtask"/>
+                <ResourceViewer ResourceTag="@tagBtnAttachment" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
+                <SDKIcon Name="fa-folder-tree"/>
             </p>
-        </button>
-    }
+        </button>   
+        @if(ShowAditionalFields){
+            <button class='@($"whcm_data_related_btn2 {classExpandBtn2}")' @onclick="() => OnClickAditionalButton()">
+                <p>
+                    <ResourceViewer ResourceTag="@tagBtnAdditionalField" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
+                    <SDKIcon Name="fa-diagram-subtask"/>
+                </p>
+            </button>
+        }
+    </div>
     <div class="whcm_data_related_content p-3">
         @if(_isOpenRelationship){
             <div class="border-bottom pb-3 pt-1 text-center">
@@ -137,6 +138,11 @@
     bool isOpen = false;
     string filter = "";
     Guid listview_key = Guid.NewGuid();
+    private string tagBtnAttachment = "Custom.SDK.RelationshipPanel";
+    private string tagBtnAdditionalField = "";
+    private string classOrderContainer = "";
+    private string classExpandBtn1 = "sdk-data-related-expand1";
+    private string classExpandBtn2 = "sdk-data-related-expand2";
 
     private Dictionary<string, object> DefaultFieldsCreate { get; set; }
 
@@ -376,11 +382,21 @@
             }
     }
     private void OnClickRelationshipButton(){
+        classOrderContainer = "";
+        classExpandBtn1 = "sdk-data-related-expand1";
+        classExpandBtn2 = "";
+        tagBtnAttachment = "Custom.SDK.RelationshipPanel";
+        tagBtnAdditionalField = "";
         _isOpenRelationship = !_isOpenRelationship;
         _isOpenAditional = false;
         StateHasChanged();
     }
     private void OnClickAditionalButton(){
+        classOrderContainer = "sdk-data-related-order";
+        classExpandBtn1 = "";
+        classExpandBtn2 = "sdk-data-related-expand2";
+        tagBtnAttachment = "";
+        tagBtnAdditionalField = "Custom.SDK.RelationshipPanel.AddtitionalFields";
         _isOpenAditional = !_isOpenAditional;
         _isOpenRelationship = false;
         StateHasChanged();

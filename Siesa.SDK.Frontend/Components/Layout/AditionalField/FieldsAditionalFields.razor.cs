@@ -17,35 +17,36 @@ namespace Siesa.SDK.Frontend.Components.Layout.AditionalField
         [Parameter] public bool ShowAddButton { get; set; }
         [Parameter] public Action OnChangeTag { get; set; }
         private int Type { get; set; } = 1;
-        private bool ReadOnlyMinMax;
+        private bool HasMinMax;
+        private string _resourceTagSize; 
         List<SelectBarItemWrap<int>> DataType = new List<SelectBarItemWrap<int>>();
         
         List<SelectBarItemWrap<int>> DataTypeVisualization = new List<SelectBarItemWrap<int>>();
 
         protected override async Task OnInitializedAsync()
-        {   
-            if(DynamicEntityColumn.Rowid !=0 && DynamicEntityColumn.DataType != enumDynamicEntityDataType.Number){
-                ReadOnlyMinMax = true;
-            }else{
-                ReadOnlyMinMax = false;
+        {
+            if(!(DynamicEntityColumn.Rowid !=0 && DynamicEntityColumn.DataType != enumDynamicEntityDataType.Number)){
                 DynamicEntityColumn.DataType = enumDynamicEntityDataType.Number;
+                _resourceTagSize = "Custom.Fields.AditionalFields.SizeName";
+            }else if(DynamicEntityColumn.DataType != enumDynamicEntityDataType.Text){
+                _resourceTagSize = "Custom.Fields.AditionalFields.SizeTextName";
             }
             SetType();
-            var TextNumeric = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioNumeric", AuthenticationService);
-            var TextDecimal = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioDecimal", AuthenticationService);
-            var TextDate = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioDate", AuthenticationService);
-            var TextText = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioText", AuthenticationService);
+            var TextNumeric = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioNumeric", AuthenticationService).ConfigureAwait(false);
+            var TextText = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioText", AuthenticationService).ConfigureAwait(false);
+            var TextDate = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioDate", AuthenticationService).ConfigureAwait(false);
+            var TextHour = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioHour", AuthenticationService).ConfigureAwait(false);
+            var TextBool = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioBool", AuthenticationService).ConfigureAwait(false);
+            var InternalMaster = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioInternalMaster", AuthenticationService).ConfigureAwait(false);
+            var GenericMaster = await ResourceManager.GetResource("Custom.Fields.AditionalFields.Type.RadioGenericMaster", AuthenticationService).ConfigureAwait(false);
 
             DataType.Add(new SelectBarItemWrap<int>() {Key=1, Name=TextNumeric});
-            DataType.Add(new SelectBarItemWrap<int>() {Key=2, Name=TextDecimal});
+            DataType.Add(new SelectBarItemWrap<int>() {Key=2, Name=TextText});
             DataType.Add(new SelectBarItemWrap<int>() {Key=3, Name=TextDate});
-            DataType.Add(new SelectBarItemWrap<int>() {Key=4, Name=TextText});
-
-            var TextDefault = await ResourceManager.GetResource("Custom.Fields.AditionalFields.TypeVisualization.RadioDefault", AuthenticationService);
-            var TextButtonGroup = await ResourceManager.GetResource("Custom.Fields.AditionalFields.TypeVisualization.RadioButtonGroup", AuthenticationService);
-
-            DataTypeVisualization.Add(new SelectBarItemWrap<int>() {Key=1, Name=TextDefault});
-            DataTypeVisualization.Add(new SelectBarItemWrap<int>() {Key=2, Name=TextButtonGroup});
+            DataType.Add(new SelectBarItemWrap<int>() {Key=4, Name=TextHour});
+            DataType.Add(new SelectBarItemWrap<int>() {Key=5, Name=TextBool});
+            DataType.Add(new SelectBarItemWrap<int>() {Key=6, Name=InternalMaster});
+            DataType.Add(new SelectBarItemWrap<int>() {Key=7, Name=GenericMaster});
 
             base.OnInitialized();            
         }
@@ -55,42 +56,41 @@ namespace Siesa.SDK.Frontend.Components.Layout.AditionalField
                 case enumDynamicEntityDataType.Number:
                     Type = 1;
                     break;
+                case enumDynamicEntityDataType.Text:
+                    Type = 2;
+                    break;
                 case enumDynamicEntityDataType.Date:
                     Type = 3;
-                    break;
-                case enumDynamicEntityDataType.Text:
-                    Type = 4;
-                    break;
+                    break;                
                 default:
-                    Type = 4;
+                    Type = 2;
                     break;
             }
         }
 
-        public void DeleteField(){            
+        public void DeleteField(){
             if(OnDeleteField != null)
                 OnDeleteField(Index);
         }
 
         public void AddField(){
             if(OnAddField != null)
-                OnAddField();            
+                OnAddField();
         }
 
         public int Onchange(int item){
             Type = item;
-            ReadOnlyMinMax = true;
             switch (Type){
                 case 1:
-                case 2:
                     DynamicEntityColumn.DataType = enumDynamicEntityDataType.Number;
-                    ReadOnlyMinMax = false;
+                    _resourceTagSize = "Custom.Fields.AditionalFields.SizeName";
+                    break;
+                case 2:
+                    DynamicEntityColumn.DataType = enumDynamicEntityDataType.Text;
+                    _resourceTagSize = "Custom.Fields.AditionalFields.SizeTextName";
                     break;
                 case 3:
                     DynamicEntityColumn.DataType = enumDynamicEntityDataType.Date;
-                    break;
-                case 4:
-                    DynamicEntityColumn.DataType = enumDynamicEntityDataType.Text;
                     break;
                 default:
                     DynamicEntityColumn.DataType = enumDynamicEntityDataType.Text;
