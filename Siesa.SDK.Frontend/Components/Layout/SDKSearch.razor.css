@@ -38,6 +38,8 @@
     box-shadow: var(--shadow_standar);
     display: none;
     font-size: 0.875rem;
+    left: -65px;
+    top: 10px;
 }
 
 .search_tooltip::before {
