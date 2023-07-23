@@ -112,9 +112,8 @@
     max-width: 160px;
 }
 
-
-
-.sdk_conection > ::deep .connect_tooltip{
+/* .sdk_conection ::deep .dxbl-dropdown>.dxbs-dropdown-dialog
+{
     min-width: 268px;
     max-width: 268px;
     border-radius: var(--border_radius_standar);
@@ -125,9 +124,10 @@
     z-index: 1;
     box-shadow: var(--shadow_standar);
     display: none;
-    background-color: red;
+
 }
-.sdk_conection > ::deep  .connect_tooltip::before {
+.sdk_conection ::deep .dxbl-dropdown>.dxbs-dropdown-dialog::before
+{
     content: "";
     width: 0px;
     height: 0px;
@@ -138,7 +138,37 @@
     border-right: 9px solid transparent;
     border-bottom: 9px solid var(--color_panel_back);
     border-left: 9px solid transparent;
-    background-color: red;
+
+} */
+
+.dxbs-dropdown  ::deep .connect_tooltip{
+    min-width: 268px;
+    max-width: 268px;
+    border-radius: var(--border_radius_standar);
+    background-color: var(--color_panel_back);
+    position: absolute;
+    top: 42px;
+    right: -2px;
+    z-index: 1;
+    box-shadow: var(--shadow_standar);
+    display: none;
+}
+.dxbs-dropdown  ::deep  .connect_tooltip::before {
+    content: "";
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    top: -8px;
+    right: 15px;
+    border-top: 0px solid transparent;
+    border-right: 9px solid transparent;
+    border-bottom: 9px solid var(--color_panel_back);
+    border-left: 9px solid transparent;
+}
+.width_content_Header
+{
+    min-width: 230px !important;
+
 }
 .connect_select_search {
     position: relative;
@@ -270,5 +300,8 @@
     }
     .header_circles_box{
         left: -320px;
+    }
+    .width_content_Header {
+        min-width: calc(100vw - 2rem) !important;
     }
  }
