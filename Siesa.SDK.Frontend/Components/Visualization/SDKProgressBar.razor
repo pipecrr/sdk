@@ -1,6 +1,60 @@
-<RadzenProgressBar Value="@Value" Max="@Max" />
+@using Radzen
+@using Radzen.Blazor
+@using System;
+@using System.Collections.Generic;
+@using Siesa.SDK.Components.Visualization;
+@using Siesa.SDK.Frontend.Components.Visualization;
+@using Siesa.SDK.Frontend.Components;
+
+
+<div class="sdk_progressbar">
+    <RadzenProgressBar Value="@Value" 
+    Max="@Max" Mode="@BarMode" 
+    ProgressBarStyle="@SDKEnums.GetStyleProgressBar(BarStyle)" 
+    Min="@Min">
+        <Template>
+            <div  style="@($"width: {(Value)}%;")">
+                <span>@Value.ToString("0.00")%</span>
+            </div>
+        </Template>
+    </RadzenProgressBar>
+</div>
 
 @code {
+
     [Parameter] public double Value { get; set; }
     [Parameter] public double Max { get; set; }
+    [Parameter] public double Min { get; set; } = 0;
+    [Parameter] public ProgressBarMode BarMode { get; set; }
+    [Parameter] public SDKProgressBarStyle BarStyle { get; set; }
+    [Parameter] public bool ShowRangeColor { get; set; }
+
+    [Parameter] public List<SDKProgressBarScaleRange> ScaleRanges { get; set; }
+
+    private double NormalizedValue => Math.Min(Math.Max((Value - Min) / (Max - Min), 0), 1);
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        if (ScaleRanges != null && ScaleRanges.Any())
+        {
+            foreach (var range in ScaleRanges)
+            {
+                if (Value >= range.From && Value <= range.To)
+                {
+                    BarStyle = range.BarStyle;
+                    break;
+                }
+            }
+        }else
+        {
+            BarStyle = SDKProgressBarStyle.Primary;
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
 }

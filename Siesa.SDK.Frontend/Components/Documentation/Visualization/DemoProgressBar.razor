@@ -1,6 +1,7 @@
 
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Components;
 @inject SDKNotificationService SDKNotificationService
 @inject SDKDialogService SDKDialogService
 @inject DialogService DialogService
@@ -24,11 +25,61 @@
                 <SDKProgressBar Value="@valor2" Max="100" />
             </SDKCard>
         </div>
+
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>ProgressBar Range Color</h3>
+
+                <SDKProgressBar Value="@valor3" Max="100" ShowRangeColor="true" ScaleRanges="@ranges"/>
+
+                <SDKRangeSlider MinRange="0" MaxRange="100" @bind-Value="@valor3" />
+            </SDKCard>
+        </div>
+
+    
+        
     </div>
 </div>
 
 @code {
     double valor = 75;
     double valor2 = 50;
+    double valor3 = 54;
+
+    List<SDKProgressBarScaleRange> ranges = new List<SDKProgressBarScaleRange>()
+    {
+        new SDKProgressBarScaleRange()
+        {
+            From = 0,
+            To = 10,
+            BarStyle = SDKProgressBarStyle.Danger
+        },
+        new SDKProgressBarScaleRange()
+        {
+            From = 11,
+            To = 25,
+            BarStyle = SDKProgressBarStyle.Warning
+        },
+        new SDKProgressBarScaleRange()
+        {
+            From = 26,
+            To = 50,
+            BarStyle = SDKProgressBarStyle.Info
+        },
+        new SDKProgressBarScaleRange()
+        {
+            From = 51,
+            To = 75,
+            BarStyle = SDKProgressBarStyle.Success
+        },
+        new SDKProgressBarScaleRange()
+        {
+            From = 76,
+            To = 100,
+            BarStyle = SDKProgressBarStyle.Primary
+        }
+    };
+
+
 
 }
