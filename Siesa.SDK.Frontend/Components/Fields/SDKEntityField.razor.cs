@@ -167,7 +167,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
             if(BaseObj != null && !string.IsNullOrEmpty(Value)){
                 HasValue = true;
             }
-            await base.OnParametersSetAsync();            
+            await base.OnParametersSetAsync().ConfigureAwait(true);
         }
 
         private async Task OnSelectItem(dynamic item){
@@ -270,10 +270,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
             {
                 cancellationTokenSource.Cancel();
             }
-            cancellationTokenSource = new CancellationTokenSource();
-            // if(OnChange != null){
-            //     OnChange();
-            // }
+            cancellationTokenSource = new CancellationTokenSource();            
             await LoadData(value, cancellationTokenSource.Token);
             StateHasChanged();
         }
@@ -296,8 +293,6 @@ namespace Siesa.SDK.Frontend.Components.Fields
             if(!string.Equals(e.Key, "Escape", StringComparison.Ordinal) && !string.Equals(e.Key, "Enter", StringComparison.Ordinal) && !string.Equals(e.Key, "Tab", StringComparison.Ordinal)){
                 SDKDropDown();
             }
-
-            //if (e.Key.Equals("Enter"))
             if(string.Equals(e.Key, "Enter", StringComparison.Ordinal))
             {
                 if (CacheDataObjcts != null && CacheDataObjcts.Count > 0)
