@@ -173,11 +173,9 @@ namespace Siesa.SDK.Frontend.Components.Fields
         //     }
         // }
 
-        private async Task OnSelectItem(dynamic item)
-        {
+        private async Task OnSelectItem(dynamic item){
             SetVal(item);
-            if(OnChange != null)
-            {
+            if(OnChange != null){
                 OnChange();
 
             }
