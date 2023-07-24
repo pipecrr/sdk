@@ -7,34 +7,45 @@
 
 
 <div class="sdk_search" @onclick="()=>ShowSearch()">
-    <input autocomplete="off" type="search" class="form-control form-control-sm pr-4" id="busqueda" placeholder="@placeholder"
+    <input autocomplete="off" type="search" class="form-control form-control-sm pr-4"  placeholder="@placeholder"
         @bind-value:event="onchange" @oninput="@((ChangeEventArgs __e) => OnChangeSearch(__e?.Value?.ToString()))"
         @bind-value="searchString"  data-automation-id="@GetAutomationId()">
     <SDKIcon Name="fa-magnifying-glass"/>
 </div>
-@if (SearchEnabled && LastSearch.Count > 0)
-{
-    <div id="boxSearch" class="search_tooltip py-2" style="display:block;" tabindex="0" @onfocusout="@(() => HideSearch())">
-        <div>
-        @foreach (var menuItem in LastSearch)
-        {
-            var bread = "";
-            @for (int i = 0; i < menuItem.Breadcrumb.Count; i++)
+
+<SDKDropDown @bind-IsOpen="@SearchEnabled"
+        ResourceTag="SDKHeader_Search"
+        PositionTarget="#SDKHeader_Search"
+        PositionMode="DropDownPositionMode.Bottom"
+        >
+        <BodyTemplate>
+            @if (SearchEnabled && LastSearch.Count > 0)
             {
-                if (i == menuItem.Breadcrumb.Count - 1)
-                {
-                    bread += "<span class=\"search_tooltip_result\">" + @menuItem.Breadcrumb[i] + "</span>";
-                }
-                else
-                {
-                    bread += @menuItem.Breadcrumb[i] + " / ";
-                }
+                <div id="boxSearch" class="search_tooltip py-2" style="display:block;" tabindex="0" @onfocusout="@(() => HideSearch())">
+                    <div>
+                    @foreach (var menuItem in LastSearch)
+                    {
+                        var bread = "";
+                        @for (int i = 0; i < menuItem.Breadcrumb.Count; i++)
+                        {
+                            if (i == menuItem.Breadcrumb.Count - 1)
+                            {
+                                bread += "<span class=\"search_tooltip_result\">" + @menuItem.Breadcrumb[i] + "</span>";
+                            }
+                            else
+                            {
+                                bread += @menuItem.Breadcrumb[i] + " / ";
+                            }
+                        }
+                        <a href="@menuItem.CurrentUrl" class="px-2 py-2 m-0" @onclick="()=>HideSearch()">@((MarkupString)bread)</a>
+                    }
+                    </div>
+                </div>
             }
-            <a href="@menuItem.CurrentUrl" class="px-2 py-2 m-0" @onclick="()=>HideSearch()">@((MarkupString)bread)</a>
-        }
-        </div>
-    </div>
-}
+        </BodyTemplate>
+
+</SDKDropDown>
+
 
 
 @code{
