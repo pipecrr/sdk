@@ -1439,32 +1439,6 @@ namespace Siesa.SDK.Business
             }
         }
 
-        private string GetUTableEntity()
-        {
-            var dataAnnotation = typeof(T).GetCustomAttributes(typeof(SDKAuthorization), false);
-
-            string TableName = "";
-
-            if (dataAnnotation.Length > 0)
-            {
-                //Get the table name
-                TableName = ((SDKAuthorization)dataAnnotation[0]).TableName;
-
-                if (!string.IsNullOrEmpty(TableName))
-                    return TableName;
-            }
-
-            //Get table name from the context
-            TableName = typeof(T).Name;
-
-            //Replace the first character of the table name with the letter "u"
-            if (TableName.Length > 0)
-                TableName = "U" + TableName.Substring(1);
-
-            TableName = $"{typeof(T).Namespace}.{TableName}";
-            return TableName;
-        }
-
         public virtual Siesa.SDK.Shared.Business.LoadResult GetUData(int? skip, int? take, string filter = "", string uFilter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null, bool includeCount = false, List<string> selectFields = null)
         {
             this._logger.LogInformation($"Get UData {this.GetType().Name}");
@@ -1553,8 +1527,7 @@ namespace Siesa.SDK.Business
                     "Rowid", "UserType", "AuthorizationType", "RestrictionType"
                 };
 
-                var UTableName = GetUTableEntity();
-                Type DynamicEntityType = typeof(T).Assembly.GetType(UTableName);
+                var DynamicEntityType = Utilities.GetVisibilityType(typeof(T));
                 var RowidRecordType = DynamicEntityType.GetProperty("RowidRecord");
 
                 dynamic TableProxy = context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(DynamicEntityType).Invoke(context, null);
@@ -1650,8 +1623,7 @@ namespace Siesa.SDK.Business
                 this._logger.LogInformation($"Get general UObject by UserType {this.GetType().Name}");
 
                 dynamic Result = null;
-                var UTableName = GetUTableEntity();
-                Type DynamicEntityType = typeof(T).Assembly.GetType(UTableName);
+                var DynamicEntityType = Utilities.GetVisibilityType(typeof(T));
 
                 var RowidRecordType = DynamicEntityType.GetProperty("RowidRecord");
 
@@ -1740,9 +1712,8 @@ namespace Siesa.SDK.Business
                     throw new Exception("Data is required");
 
                 this._logger.LogInformation($"Manage U data {this.GetType().Name} - Create, Update, Delete");
-
-                var UTableName = GetUTableEntity();
-                Type DynamicEntityType = typeof(T).Assembly.GetType(UTableName);
+                
+                var DynamicEntityType = Utilities.GetVisibilityType(typeof(T));
 
                 var DataToAdd = Data.Where(x => x.Action == BLUserActionEnum.Create)
                                     .Select(x => JsonConvert.DeserializeObject($"{x.UObject}", type: DynamicEntityType))
@@ -1822,7 +1793,7 @@ namespace Siesa.SDK.Business
             }
         }
 
-        private Expression GetInExpression(Expression ColumNameProperty, List<int> RowidRecords)
+        protected Expression GetInExpression(Expression ColumNameProperty, List<int> RowidRecords)
         {
             RowidRecords = RowidRecords.Distinct().ToList();
 
@@ -1838,7 +1809,7 @@ namespace Siesa.SDK.Business
             return InExpression;
         }
 
-        private IQueryable GetWhereExpression(dynamic Data, Type DynamicEntityType, Expression CoincidenceExpression, ParameterExpression EntityExpression)
+        protected IQueryable GetWhereExpression(dynamic Data, Type DynamicEntityType, Expression CoincidenceExpression, ParameterExpression EntityExpression)
         {
             var funcExpression = typeof(Func<,>).MakeGenericType(new Type[] { DynamicEntityType, typeof(bool) });
             var returnExp = Expression.Lambda(funcExpression, CoincidenceExpression, new ParameterExpression[] { EntityExpression });
@@ -1854,7 +1825,7 @@ namespace Siesa.SDK.Business
             return Data;
         }
 
-        private dynamic GetDynamicList(dynamic Result)
+        protected dynamic GetDynamicList(dynamic Result)
         {
             var _assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
             var dynamicListMethod = typeof(IEnumerable).GetExtensionMethod(_assemblyDynamic, "ToDynamicList", new[] { typeof(IEnumerable) });
@@ -1864,7 +1835,7 @@ namespace Siesa.SDK.Business
             return DynamicList;
         }
 
-        private bool GetDynamicAny(dynamic Data)
+        protected bool GetDynamicAny(dynamic Data)
         {
             var _assemblyAny = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
 
