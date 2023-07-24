@@ -2,7 +2,9 @@
 @using Siesa.SDK.Frontend.Components.Layout
 @using Siesa.SDK.Entities;
 @using Siesa.SDK.Shared.DTOS
+@using Siesa.SDK.Frontend.Components.Fields;
 @using Siesa.SDK.Frontend.Components.Visualization   
+
 @inject IAuthenticationService AuthenticationService
 @inject NavigationService NavigationService
 @inject IJSRuntime JSRuntime
@@ -55,54 +57,59 @@
                         <SDKIcon Name="fa-chevron-down"/>
                     </div>
                 </button>
-                <SDKDropDown @bind-IsOpen="@ConnectEnabled"
-                CssClass="connect_tooltip" 
-                ResourceTag="SDKHeader_Config"
-                PositionTarget="#SDKHeader_ButtonConfig"
-                PositionMode="DropDownPositionMode.Bottom"
-                FooterVisible="true" HeaderVisible="true">
 
-                    <HeaderTemplate>
-                        <label class="pt-3 px-3 pb-0 col-form-label font-weight-bold"><ResourceViewer ResourceTag="Custom.SDKHeader.Config" /></label>
-                    </HeaderTemplate>
+                    <SDKDropDown @bind-IsOpen="@ConnectEnabled"
+                    CssClass="connect_tooltip" 
+                    ResourceTag="SDKHeader_Config"
+                    PositionTarget="#SDKHeader_ButtonConfig"
+                    PositionMode="DropDownPositionMode.Bottom"
+                    FooterVisible="true" HeaderVisible="true"
+                    StopOutsideClickPropagation="true">
 
-                        <BodyTemplate>
-                            <div class="p-3">
-                                <div class="alert alert-info mb-3 font_size_087 p-3" role="alert">
-                                    <p><ResourceViewer ResourceTag="Custom.SDKHeader.ChangeConfigCompanyGroup" /></p>
-                                    <p style="margin:0px"><strong><ResourceViewer ResourceTag="Custom.SDKHeader.Connection" /></strong></p>
-                                    <p style="margin:0px">@GetCurrentConnectionName()</p>
-                                </div>
-                                <div class="form-group connect_select_search">
-                                    <label class="col-form-label col-form-label-sm font-weight-bold" for="inputGrupo"><ResourceViewer ResourceTag="Custom.SDKHeader.Group" /></label>
-                                    <div class="d-flex form-control form-control-sm p-0">
-                                        <select id="inputGrupo" class="p-1" @bind="SelectedGroup.Rowid">
-                                            @foreach (var group in CompanyGroups)
-                                            {
-                                                <option value="@group.Rowid">@group.Name</option>
-                                            }
-                                        </select>
+                        <HeaderTemplate>
+                            
+                            <label class="pt-3 px-3 pb-0 col-form-label font-weight-bold width_content_Header"><ResourceViewer ResourceTag="Custom.SDKHeader.Config" /></label>
+                        </HeaderTemplate>
+
+                            <BodyTemplate>
+                                <div class="p-3">
+                                    <div class="alert alert-info mb-3 font_size_087 p-3" role="alert">
+                                        <p><ResourceViewer ResourceTag="Custom.SDKHeader.ChangeConfigCompanyGroup" /></p>
+                                        <p style="margin:0px"><strong><ResourceViewer ResourceTag="Custom.SDKHeader.Connection" /></strong></p>
+                                        <p style="margin:0px">@GetCurrentConnectionName()</p>
+                                    </div>
+                                    <div class="connect_select_search">
+                                        <label class="col-form-label col-form-label-sm font-weight-bold" for="inputGrupo"><ResourceViewer ResourceTag="Custom.SDKHeader.Group" /></label>
+                                        <div class="d-flex form-control form-control-sm p-0">
+
+                                            <SDKEntityField
+                                                RelatedBusiness="@RelatedBusiness"
+                                                BaseObj="@this"
+                                                FieldName="SelectedGroup"
+                                                RelatedParams="@RelatedParams"
+                                            />
+
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                        </BodyTemplate>
+                            </BodyTemplate>
 
-                            <FooterTemplate>
-                                <div class="p-3">
-                                    <button @onclick:stopPropagation="true" @onclick:preventDefault @onclick="@SetCompanyGroup" class="btn btn-primary btn_primary_def_1 btn-sm w-100 mt-2">
-                                        @if (loading)
-                                        {
-                                            <p style="margin-bottom: 0 !important"><ResourceViewer ResourceTag="Custom.Generic.Loading" /><span class="spinner-border spinner-border-sm mr-1"></span></p>
-                                        }
-                                        else
-                                        {
-                                            <p style="margin-bottom: 0 !important"><ResourceViewer ResourceTag="Custom.SDKHeader.ChangeSettings" /></p>
-                                        }
-                                    </button>
-                                </div>
-                            </FooterTemplate>
-                </SDKDropDown>
+                                <FooterTemplate>
+                                    <div class="p-3">
+                                        <button @onclick:stopPropagation="true" @onclick:preventDefault @onclick="@SetCompanyGroup" class="btn btn-primary btn_primary_def_1 btn-sm w-100 ">
+                                            @if (loading)
+                                            {
+                                                <p style="margin-bottom: 0 !important"><ResourceViewer ResourceTag="Custom.Generic.Loading" /><span class="spinner-border spinner-border-sm mr-1"></span></p>
+                                            }
+                                            else
+                                            {
+                                                <p style="margin-bottom: 0 !important"><ResourceViewer ResourceTag="Custom.SDKHeader.ChangeSettings" /></p>
+                                            }
+                                        </button>
+                                    </div>
+                                </FooterTemplate>
+                    </SDKDropDown>
             </div>
         </div>
         <div class="whcm_footer d-flex flex-row-reverse flex-md-row align-items-center justify-content-between">
@@ -129,7 +136,7 @@
 
     private List<E00200_CompanyGroup> CompanyGroups { get; set; } = new List<E00200_CompanyGroup>();
 
-    private E00200_CompanyGroup SelectedGroup { get; set; } = new E00200_CompanyGroup();
+    public E00200_CompanyGroup SelectedGroup { get; set; } = new E00200_CompanyGroup();
 
     private bool loading = false;
     
@@ -138,6 +145,10 @@
     private SDKDbConnection _connection { get; set; } = new SDKDbConnection();
 
     private string NameTag { get; set; } = "";
+    string RelatedBusiness { get; set; } = "BLSDKCompanyGroup";
+    RelatedParams RelatedParams { get; set; } = new RelatedParams(){
+        ExtraFields = new List<string>(){"Id","Name"}
+    };
 
 
 
@@ -149,7 +160,7 @@
         var DataCompanyGroup = await BL.GetData(null, null);
         
         CompanyGroups = DataCompanyGroup.Data.Select(x => JsonConvert.DeserializeObject<E00200_CompanyGroup>(x)).ToList();
-
+        
         SelectedGroup = CompanyGroups.FirstOrDefault(x => x.Rowid == AuthenticationService.GetRowidCompanyGroup());
         if(SelectedGroup == null)
         {
@@ -160,6 +171,7 @@
 
         NameTag = GetCurrentCompanyGroupName();
     }
+
 
     public async  Task SetCompanyGroup()
     {
