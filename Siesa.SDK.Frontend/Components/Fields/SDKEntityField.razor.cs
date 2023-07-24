@@ -126,7 +126,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         }
 
         public override async Task SetParametersAsync(ParameterView parameters){
-            if (parameters.TryGetValue<dynamic>("BaseObj", out dynamic baseObjNew)){
+            if (parameters.TryGetValue<dynamic>("BaseObj", out dynamic baseObjNew)){                
                 if(BaseObj != null && baseObjNew != null){
                     BindProperty = BaseObj.GetType().GetProperty(FieldName);
                     dynamic baseObjNewRelated = baseObjNew.GetType().GetProperty(FieldName).GetValue(baseObjNew);
@@ -163,15 +163,12 @@ namespace Siesa.SDK.Frontend.Components.Fields
             await base.SetParametersAsync(parameters);
         }
 
-        // protected override async Task OnParametersSetAsync(){
-        //     await base.OnParametersSetAsync();
-        //     var currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-        //     if((currentTime - lastRefresh) > 1000)
-        //     {
-        //         lastRefresh = currentTime;
-        //         //await LoadData("", null, true);
-        //     }
-        // }
+        protected override async Task OnParametersSetAsync(){
+            if(BaseObj != null && !string.IsNullOrEmpty(Value)){
+                HasValue = true;
+            }
+            await base.OnParametersSetAsync();            
+        }
 
         private async Task OnSelectItem(dynamic item){
             SetVal(item);
