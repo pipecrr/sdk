@@ -59,6 +59,17 @@ namespace Siesa.SDK.Frontend.Components
 
         }
 
+        public static ProgressBarMode GetModeProgressBar(this SDKProgressBarType progresBarType)
+        {
+
+            return progresBarType switch
+            {
+                SDKProgressBarType.Determinate => ProgressBarMode.Determinate,
+                SDKProgressBarType.Indeterminate => ProgressBarMode.Indeterminate
+            };
+
+        }
+
         public static DevExpress.Blazor.Orientation GetOrientationMenu(this SDKOrientationMenu orientationMenu)
         {
             return orientationMenu switch
@@ -222,5 +233,11 @@ namespace Siesa.SDK.Frontend.Components
         Light = ProgressBarStyle.Light,  
 
         Dark = ProgressBarStyle.Dark
+    }
+
+    public enum SDKProgressBarType
+    {
+        Determinate = ProgressBarMode.Determinate,
+        Indeterminate = ProgressBarMode.Indeterminate
     }
 }

@@ -30,14 +30,11 @@
             <SDKCard>
                 <h3>ProgressBar Range Color</h3>
 
-                <SDKProgressBar Value="@valor3" Max="100" ShowRangeColor="true" ScaleRanges="@ranges"/>
+                <SDKProgressBar Value="@valor3" Max="100" ScaleRanges="@ranges"/>
 
                 <SDKRangeSlider MinRange="0" MaxRange="100" @bind-Value="@valor3" />
             </SDKCard>
         </div>
-
-    
-        
     </div>
 </div>
 
@@ -45,6 +42,8 @@
     double valor = 75;
     double valor2 = 50;
     double valor3 = 54;
+
+    double valor4 = 100;
 
     List<SDKProgressBarScaleRange> ranges = new List<SDKProgressBarScaleRange>()
     {
