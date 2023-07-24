@@ -82,12 +82,11 @@
                                         <label class="col-form-label col-form-label-sm font-weight-bold" for="inputGrupo"><ResourceViewer ResourceTag="Custom.SDKHeader.Group" /></label>
                                         <div class="d-flex form-control form-control-sm p-0">
 
-                                                <SDKEntityField
+                                            <SDKEntityField
                                                 RelatedBusiness="@RelatedBusiness"
-                                                BaseObj="@BaseObj"
-                                                FieldName="@FieldName"
+                                                BaseObj="@this"
+                                                FieldName="SelectedGroup"
                                                 RelatedParams="@RelatedParams"
-                                                ValueChange="@ValueChanged"
                                             />
 
                                         </div>
@@ -137,7 +136,7 @@
 
     private List<E00200_CompanyGroup> CompanyGroups { get; set; } = new List<E00200_CompanyGroup>();
 
-    private E00200_CompanyGroup SelectedGroup { get; set; } = new E00200_CompanyGroup();
+    public E00200_CompanyGroup SelectedGroup { get; set; } = new E00200_CompanyGroup();
 
     private bool loading = false;
     
@@ -146,10 +145,7 @@
     private SDKDbConnection _connection { get; set; } = new SDKDbConnection();
 
     private string NameTag { get; set; } = "";
-
     string RelatedBusiness { get; set; } = "BLSDKCompanyGroup";
-    E00200_CompanyGroup BaseObj { get; set; } = new E00200_CompanyGroup();
-    string FieldName { get; set; } = "Logo";
     RelatedParams RelatedParams { get; set; } = new RelatedParams(){
         ExtraFields = new List<string>(){"Id","Name"}
     };
@@ -176,12 +172,6 @@
         NameTag = GetCurrentCompanyGroupName();
     }
 
-
-
-    public void ValueChanged(object _selectedCompanyGroup)
-    {
-        SelectedGroup = (E00200_CompanyGroup)_selectedCompanyGroup;
-    }
 
     public async  Task SetCompanyGroup()
     {
