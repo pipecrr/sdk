@@ -237,7 +237,9 @@ namespace Siesa.SDK.Business
         public async virtual Task InitializeBusiness(Int64 rowid, List<string> extraFields = null)
         {
             BaseObj = await GetAsync(rowid, extraFields );
-            await InstanceDynamicEntities(BusinessName, rowid);
+            if(BaseObj != null){
+                await InstanceDynamicEntities(BusinessName, rowid);
+            }
         }
 
         public async Task InstanceDynamicEntities(string businessName, Int64 rowid = 0)
