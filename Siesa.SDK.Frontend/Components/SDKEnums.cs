@@ -42,6 +42,23 @@ namespace Siesa.SDK.Frontend.Components
 
         }
 
+        public static ProgressBarStyle GetStyleProgressBar(this SDKProgressBarStyle progresBarStyle)
+        {
+
+            return progresBarStyle switch
+            {
+                SDKProgressBarStyle.Primary => ProgressBarStyle.Primary,
+                SDKProgressBarStyle.Secondary => ProgressBarStyle.Secondary,
+                SDKProgressBarStyle.Success => ProgressBarStyle.Success,
+                SDKProgressBarStyle.Danger => ProgressBarStyle.Danger,
+                SDKProgressBarStyle.Warning => ProgressBarStyle.Warning,
+                SDKProgressBarStyle.Info => ProgressBarStyle.Info,
+                SDKProgressBarStyle.Light => ProgressBarStyle.Light,
+                SDKProgressBarStyle.Dark => ProgressBarStyle.Dark
+            };
+
+        }
+
         public static DevExpress.Blazor.Orientation GetOrientationMenu(this SDKOrientationMenu orientationMenu)
         {
             return orientationMenu switch
@@ -192,5 +209,18 @@ namespace Siesa.SDK.Frontend.Components
         Small = 1,
         Medium = 2,
         Large = 3
+    }
+
+    public enum SDKProgressBarStyle 
+    {
+        Primary = ProgressBarStyle.Primary,
+        Secondary = ProgressBarStyle.Secondary,
+        Success = ProgressBarStyle.Success,
+        Danger = ProgressBarStyle.Danger,
+        Warning = ProgressBarStyle.Warning,
+        Info = ProgressBarStyle.Info,
+        Light = ProgressBarStyle.Light,  
+
+        Dark = ProgressBarStyle.Dark
     }
 }

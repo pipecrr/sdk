@@ -1,10 +1,23 @@
 @using Radzen
 @using Radzen.Blazor
+@using System;
 @using System.Collections.Generic;
+@using Siesa.SDK.Components.Visualization;
+@using Siesa.SDK.Frontend.Components.Visualization;
+@using Siesa.SDK.Frontend.Components;
 
 
 <div class="sdk_progressbar">
-    <RadzenProgressBar Value="@Value" Max="@Max" Mode="@BarMode" ProgressBarStyle="@BarStyle" Min="@Min"/>
+    <RadzenProgressBar Value="@Value" 
+    Max="@Max" Mode="@BarMode" 
+    ProgressBarStyle="@SDKEnums.GetStyleProgressBar(BarStyle)" 
+    Min="@Min">
+        <Template>
+            <div  style="@($"width: {(Value)}%;")">
+                <span>@Value.ToString("0.00")%</span>
+            </div>
+        </Template>
+    </RadzenProgressBar>
 </div>
 
 @code {
@@ -13,31 +26,35 @@
     [Parameter] public double Max { get; set; }
     [Parameter] public double Min { get; set; } = 0;
     [Parameter] public ProgressBarMode BarMode { get; set; }
-    [Parameter] public ProgressBarStyle BarStyle { get; set; }
+    [Parameter] public SDKProgressBarStyle BarStyle { get; set; }
     [Parameter] public bool ShowRangeColor { get; set; }
+
+    [Parameter] public List<SDKProgressBarScaleRange> ScaleRanges { get; set; }
+
+    private double NormalizedValue => Math.Min(Math.Max((Value - Min) / (Max - Min), 0), 1);
 
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
 
-        if(ShowRangeColor)
+        if (ScaleRanges != null && ScaleRanges.Any())
         {
-            switch (Value)
+            foreach (var range in ScaleRanges)
             {
-                case double n when (n < 25):
-                    BarStyle = ProgressBarStyle.Danger;
+                if (Value >= range.From && Value <= range.To)
+                {
+                    BarStyle = range.BarStyle;
                     break;
-                case double n when (n >= 25 && n < 50):
-                    BarStyle = ProgressBarStyle.Warning;
-                    break;
-                case double n when (n >= 50 && n < 75):
-                    BarStyle = ProgressBarStyle.Info;
-                    break;
-                case double n when (n >= 75):
-                    BarStyle = ProgressBarStyle.Success;
-                    break;
-                
+                }
             }
+        }else
+        {
+            BarStyle = SDKProgressBarStyle.Primary;
         }
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
     }
 }
