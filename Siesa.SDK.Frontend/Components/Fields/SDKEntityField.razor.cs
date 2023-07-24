@@ -177,10 +177,8 @@ namespace Siesa.SDK.Frontend.Components.Fields
             SetVal(item);
             if(OnChange != null){
                 OnChange();
-
             }
             LoadData("", null, true);
-            
             StateHasChanged();
         }
 
