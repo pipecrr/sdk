@@ -42,6 +42,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         [Parameter] public bool IsMultiple { get; set; } = false;
         [Parameter] public bool Disabled { get; set; }
         [Parameter] public List<List<object>> Filters { get; set; }
+        [Parameter] public bool CanSearch { get; set; } = true;
         public dynamic RelBusinessObj { get; set; }
         private string Value = "";
         private long rowidLastValue = -1;
