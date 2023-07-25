@@ -67,8 +67,8 @@ namespace Siesa.SDK.Shared.Services
         string GetConnectionStyle();
         Task<bool> IsValidToken();
         Task<bool> ForgotPasswordAsync(string email);
-        Task<bool> ValidateUserToken(int rowidUser);
-        Task<bool> ChangePassword(int rowidUser, string NewPassword, string ConfirmPassword);
+        Task<bool> ValidateUserToken(string userToken);
+        Task<bool> ChangePassword(string userToken,short rowIdDBConnection, string NewPassword, string ConfirmPassword );
         Task RenewToken();
         string GetUserPhoto();
         Task SetUserPhoto(string data, bool saveLocalStorage = true);

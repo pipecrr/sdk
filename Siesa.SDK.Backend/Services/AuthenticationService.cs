@@ -159,10 +159,11 @@ namespace Siesa.SDK.Backend.Services
         public async Task<bool> ForgotPasswordAsync(string email){
              throw new NotImplementedException();
         }
-        public async Task<bool> ValidateUserToken(int rowidUser){
+        public async Task<bool> ValidateUserToken(string userToken){
             throw new NotImplementedException();
         }
-        public async Task<bool> ChangePassword(int rowidUser, string NewPassword="", string ConfirmPassword=""){
+        public async Task<bool> ChangePassword(string userToken,short rowIdDBConnection, string NewPassword="", string ConfirmPassword="")
+        {
              throw new NotImplementedException();
         }
 
