@@ -14,8 +14,8 @@ namespace Siesa.SDK.Entities
 {
 	public partial class E00219_UserAccessToken
 	{
-
-
-
+		public override string ToString(){
+			return $"{this.Id} - {this.User.Id}";
+		}
 	}
 }
