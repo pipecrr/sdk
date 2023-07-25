@@ -1444,7 +1444,7 @@ namespace Siesa.SDK.Business
             this._logger.LogInformation($"Get UData {this.GetType().Name}");
 
             var result = new Siesa.SDK.Shared.Business.LoadResult();
-            using (SDKContext context = CreateDbContext())
+            using (var context = CreateDbContext())
             {
                 context.SetProvider(_provider);
                 var query = context.Set<T>().AsQueryable();
@@ -1478,9 +1478,9 @@ namespace Siesa.SDK.Business
                     query = query.Take(take.Value);
                 }
 
-                List<string> LeftColumns = new() { "Rowid as ERowid", "Id as Id", "Name as Name", "Status as Status", "IsPrivate as IsPrivate" };
+                List<string> LeftColumns = new() { "Rowid as ERowid", "Id as EId", "Name as EName"};
 
-                if (selectFields != null && selectFields.Count > 0)
+                if (selectFields is { Count: > 0 })
                 {
                     LeftColumns.Clear();
                     selectFields.Add("Rowid");
@@ -1491,7 +1491,7 @@ namespace Siesa.SDK.Business
                         var Length = splitInclude.Length;
                         if (Length > 1)
                         {
-                            for (int i = 1; i <= Length; i++)
+                            for (var i = 1; i <= Length; i++)
                             {
                                 var include = string.Join(".", splitInclude.Take(i));
 
@@ -1504,8 +1504,9 @@ namespace Siesa.SDK.Business
                                         query = Result;
                                     }
                                 }
-                                catch (System.Exception)
+                                catch (Exception)
                                 {
+                                    //ignore
                                 }
                             }
                             var Alias = string.Join("", splitInclude);
@@ -1521,6 +1522,13 @@ namespace Siesa.SDK.Business
 
                     query = query.Select<T>($"new ({selectedFields})");
 
+                }
+                else
+                {
+                    var BaseObjType = typeof(T);
+                    string[] OptionalFields = { "Status", "IsPrivate" };
+
+                    LeftColumns.AddRange(from Field in OptionalFields where BaseObjType.GetProperty(Field) is not null select $"{Field} as E{Field}");
                 }
 
                 List<string> UExtraFields = new(){
@@ -1541,7 +1549,7 @@ namespace Siesa.SDK.Business
                 Dictionary<string, Type> virtualColumnsNameType = new();
                 virtualColumnsNameType.Add("RowidRecord", RowidRecordType.PropertyType);
 
-                Type _typeLeftJoinExtension = typeof(LeftJoinExtension);
+                var _typeLeftJoinExtension = typeof(LeftJoinExtension);
                 var leftJoinMethod = _typeLeftJoinExtension.GetMethod("LeftJoin");
 
                 var CoincidenceResult = leftJoinMethod.Invoke(null, new object[] { query, authSet, "Rowid", "RowidRecord", LeftColumns, RightColumns });
@@ -1620,7 +1628,7 @@ namespace Siesa.SDK.Business
         {
             try
             {
-                this._logger.LogInformation($"Get general UObject by UserType {this.GetType().Name}");
+                _logger.LogInformation($"Get general UObject by UserType {this.GetType().Name}");
 
                 dynamic Result = null;
                 var DynamicEntityType = Utilities.GetVisibilityType(typeof(T));
@@ -1635,19 +1643,12 @@ namespace Siesa.SDK.Business
                 //RowidRecord is null
                 Expression CoincidenceExpression = Expression.Equal(ColumnNameProperty, ColumnValue);
 
-                string ColumnName;
-
-                switch (UserType)
+                var ColumnName = UserType switch
                 {
-                    case PermissionUserTypes.Team:
-                        ColumnName = "RowidDataVisibilityGroup";
-                        break;
-                    case PermissionUserTypes.User:
-                        ColumnName = "RowidUser";
-                        break;
-                    default:
-                        throw new ArgumentNullException("UserType not supported");
-                }
+                    PermissionUserTypes.Team => "RowidDataVisibilityGroup",
+                    PermissionUserTypes.User => "RowidUser",
+                    _ => throw new ArgumentNullException("UserType not supported")
+                };
 
                 var _assemblyDynamicQueryable = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
 
