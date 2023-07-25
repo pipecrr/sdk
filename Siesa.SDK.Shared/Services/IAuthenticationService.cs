@@ -75,6 +75,7 @@ namespace Siesa.SDK.Shared.Services
         Task SetPreferencesUser(UserPreferencesDTO preferences);
         UserPreferencesDTO GetPreferencesUser();
         string GetThemeStyle();
+        Task<string> LoginSessionByToken(string userAccesstoken, short rowidDBConnection);
     }
 
     

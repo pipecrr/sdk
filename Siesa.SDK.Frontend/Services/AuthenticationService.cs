@@ -143,6 +143,31 @@ namespace Siesa.SDK.Frontend.Services
             //Console.WriteLine($"UserToken: {UserToken}");
         }
 
+        public async Task<string> LoginSessionByToken(string userAccesstoken, short rowidDBConnection){
+            var BLuser = _backendRouterService.GetSDKBusinessModel("BLUser", this);
+            if (BLuser == null)
+            {
+                throw new Exception("Login session not found");
+            }
+            
+            string ipAddress = _contextAccesor.HttpContext.Connection.RemoteIpAddress?.ToString();
+
+            string browserName = _contextAccesor.HttpContext.Request.Headers["User-Agent"].ToString();
+            
+            var loginRequest = await BLuser.Call("SignInSessionByToken", new Dictionary<string, dynamic> {
+                {"accessToken", userAccesstoken},
+                {"rowidConnection", rowidDBConnection},
+                {"ipAddress", ipAddress},
+                {"browserName", browserName}
+            });
+
+            if (loginRequest.Success){
+                return loginRequest.Data;
+            }else{
+                throw new Exception(loginRequest.Errors.FirstOrDefault());
+            }
+        }
+
         public async Task Login(string username, string password, short rowIdDBConnection, 
         bool IsUpdateSession = false, short rowIdCompanyGroup = 1)
         {

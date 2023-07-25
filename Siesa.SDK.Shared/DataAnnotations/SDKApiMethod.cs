@@ -6,8 +6,7 @@ namespace Siesa.SDK.Shared.DataAnnotations
     public class SDKApiMethod : Attribute
     {
         public string HTTPMethod { get; set; } = "GET";
-
-        //Constructor
+        
         public SDKApiMethod(string http_method)
         {
             HTTPMethod = http_method;

@@ -202,5 +202,10 @@ namespace Siesa.SDK.Backend.Services
         {
             throw new NotImplementedException();
         }
+
+        public Task<string> LoginSessionByToken(string userAccesstoken, short rowidDBConnection)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

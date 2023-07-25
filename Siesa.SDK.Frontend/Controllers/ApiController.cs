@@ -259,5 +259,16 @@ namespace Siesa.SDK.Frontend.Controllers
             Response.StatusCode = HTTPCodeResponse;
             return Content(json, "application/json");
         }
+
+        [HttpPost]
+        public async Task<ActionResult> GetSessionToken([FromForm] string AccessToken, short RowidConnection)
+        {
+            try{
+                string sessionToken = await AuthenticationService.LoginSessionByToken(AccessToken, RowidConnection);
+                return Content(sessionToken, "application/json");
+            }catch(Exception e){
+                return ReturnError(Response, e.Message, 401);
+            }
+        }
     }
 }
