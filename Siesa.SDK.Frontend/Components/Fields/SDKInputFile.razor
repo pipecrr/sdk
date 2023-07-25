@@ -46,7 +46,7 @@
                     <div class="col-4 img-container">
                         <img class="sdk-preview-multi" src="@url.Url" onclick="@(() => ClickImg(url))" >
                         @if(!IsDetail){
-                            <button class="close-preview" onclick="@(()=> CloseItem(url))">
+                            <button @onclick:preventDefault class="close-preview" onclick="@(()=> CloseItem(url))">
                                 <SDKIcon Name="fa-xmark" CssClass="icon-close"/>
                             </button>
                         }
