@@ -9,12 +9,14 @@ using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Shared.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using System.Globalization;
 
 namespace Siesa.SDK.Frontend.Controllers
 {
@@ -102,26 +104,24 @@ namespace Siesa.SDK.Frontend.Controllers
             //get auth token from headers
             string authToken = "";
             var sessionId = "";
-            short rowIdDBConnection = 1;
+            short rowidDbConnection = 1;
             Request.Cookies.TryGetValue("sdksession", out sessionId);
-            Request.Cookies.TryGetValue("selectedConnection", out string rowIdDBConnectionStr);
+            if(!Request.Cookies.TryGetValue("selectedConnection", out string rowidDbConnectionStr)){
+                if(Request.Headers.TryGetValue("x-sdk-selected-connection", out StringValues rowidDbConnectionHeader)){
+                    rowidDbConnectionStr = rowidDbConnectionHeader.ToString();
+                }
+            };
 
-            if (!string.IsNullOrEmpty(rowIdDBConnectionStr))
-            {
-                rowIdDBConnection = short.Parse(rowIdDBConnectionStr);
+            if (!string.IsNullOrEmpty(rowidDbConnectionStr)){
+                rowidDbConnection = short.Parse(rowidDbConnectionStr);
             }
             if (!string.IsNullOrEmpty(sessionId)){
                 var BLSession = BackendRouterService.GetSDKBusinessModel("BLSession", AuthenticationService);
-                var response = await BLSession.Call("GetSession", sessionId, rowIdDBConnection);
+                var response = await BLSession.Call("GetSession", sessionId, rowidDbConnection);
                 if(response.Success){
                     authToken = response.Data;
                 }
             }
-            /*if(token.Trim().StartsWith("\"")){
-                authToken = JsonConvert.DeserializeObject<string>(Request.Headers["X-Auth-Token"]);
-            }else{
-                authToken = token;
-            }*/
             
             if (string.IsNullOrEmpty(authToken))
             {
@@ -261,12 +261,17 @@ namespace Siesa.SDK.Frontend.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> GetSessionToken([FromForm] string AccessToken, short RowidConnection)
+        public async Task<ActionResult> GetSessionToken([FromForm] string accessToken)
         {
-            try{
-                string sessionToken = await AuthenticationService.LoginSessionByToken(AccessToken, RowidConnection);
-                return Content(sessionToken, "application/json");
-            }catch(Exception e){
+            try
+            {
+                if ((Request.Headers.TryGetValue("x-sdk-selected-connection", out StringValues rowidConnectionStringValues)) && short.TryParse(rowidConnectionStringValues, NumberStyles.Integer, CultureInfo.InvariantCulture, out short rowidConnection)){
+                    string sessionToken = await AuthenticationService.LoginSessionByToken(accessToken, rowidConnection).ConfigureAwait(false);
+                    return Content(sessionToken, "application/json");
+                }else{
+                    return ReturnError(Response, "Invalid value for x-sdk-selected-connection header.", 400);
+                }
+            }catch (Exception e){
                 return ReturnError(Response, e.Message, 401);
             }
         }
