@@ -25,6 +25,8 @@ namespace Siesa.SDK.Backend.Access
 {
     public class SDKContext : DbContext
     {
+	public DbSet<E00218_UserRecoveryToken>? E00218_UserRecoveryToken { get; set; }
+
 	public DbSet<E00219_UserAccessToken>? E00219_UserAccessToken { get; set; }
 
 	public DbSet<E00518_PortalUser>? E00518_PortalUser { get; set; }
