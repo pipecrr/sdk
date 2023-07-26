@@ -512,11 +512,14 @@ namespace Siesa.SDK.Frontend.Services
         }
 
 
-        public async Task<bool> ForgotPasswordAsync(string email){
+        public async Task<bool> ForgotPasswordAsync(string email)
+        {
+            HttpContext httpContext = _contextAccesor.HttpContext;
+            string UrlSystem = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}";
 
             var request = await GetBLUser();
 
-            var result = await request.Call("SendEmailRecoveryPassword", email, SelectedConnection.Rowid);
+            var result = await request.Call("SendEmailRecoveryPassword", email, SelectedConnection.Rowid, UrlSystem);
 
             if (result.Success)
             {
@@ -526,11 +529,12 @@ namespace Siesa.SDK.Frontend.Services
             return false;
         }
 
-        public async Task<bool> ValidateUserToken(int rowidUser){
+        public async Task<bool> ValidateUserToken(string userToken)
+        {
 
             var request = await GetBLUser();
 
-            var result = await request.Call("ValidateUserToken", rowidUser,SelectedConnection.Rowid);
+            var result = await request.Call("ValidateUserRecoveryPass", userToken, SelectedConnection.Rowid);
 
             if (result.Success)
             {
@@ -539,17 +543,17 @@ namespace Siesa.SDK.Frontend.Services
             return false;
         }
 
-        public async Task<bool> ChangePassword(int rowidUser, string NewPassword, string ConfirmPassword)
+        public async Task<bool> ChangePassword(string userToken,short rowIdDBConnection, string NewPassword, string ConfirmPassword)
         {
             var request = await GetBLUser();
             if (!string.IsNullOrEmpty(NewPassword) && !string.IsNullOrEmpty(ConfirmPassword))
             {
-                if (NewPassword != ConfirmPassword)
+                if (!NewPassword.Equals(ConfirmPassword))
                 {
-                    throw new Exception("Custom.ForgotPassword.ChangePasswordError");
+                    return false;
                 }else
                 {
-                    var resultChangePassword = await request.Call("RecoveryPassword",rowidUser,NewPassword,ConfirmPassword,SelectedConnection.Rowid);
+                    var resultChangePassword = await request.Call("RecoveryPassword",userToken,NewPassword,SelectedConnection.Rowid);
                     if (resultChangePassword.Success)
                     {
                         return true;
