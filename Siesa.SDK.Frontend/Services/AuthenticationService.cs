@@ -550,7 +550,7 @@ namespace Siesa.SDK.Frontend.Services
             {
                 if (!NewPassword.Equals(ConfirmPassword))
                 {
-                    throw new Exception("Custom.ForgotPassword.ChangePasswordError");
+                    return false;
                 }else
                 {
                     var resultChangePassword = await request.Call("RecoveryPassword",userToken,NewPassword,SelectedConnection.Rowid);
