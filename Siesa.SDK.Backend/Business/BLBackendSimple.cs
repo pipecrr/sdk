@@ -1439,38 +1439,12 @@ namespace Siesa.SDK.Business
             }
         }
 
-        private string GetUTableEntity()
-        {
-            var dataAnnotation = typeof(T).GetCustomAttributes(typeof(SDKAuthorization), false);
-
-            string TableName = "";
-
-            if (dataAnnotation.Length > 0)
-            {
-                //Get the table name
-                TableName = ((SDKAuthorization)dataAnnotation[0]).TableName;
-
-                if (!string.IsNullOrEmpty(TableName))
-                    return TableName;
-            }
-
-            //Get table name from the context
-            TableName = typeof(T).Name;
-
-            //Replace the first character of the table name with the letter "u"
-            if (TableName.Length > 0)
-                TableName = "U" + TableName.Substring(1);
-
-            TableName = $"{typeof(T).Namespace}.{TableName}";
-            return TableName;
-        }
-
         public virtual Siesa.SDK.Shared.Business.LoadResult GetUData(int? skip, int? take, string filter = "", string uFilter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null, bool includeCount = false, List<string> selectFields = null)
         {
             this._logger.LogInformation($"Get UData {this.GetType().Name}");
 
             var result = new Siesa.SDK.Shared.Business.LoadResult();
-            using (SDKContext context = CreateDbContext())
+            using (var context = CreateDbContext())
             {
                 context.SetProvider(_provider);
                 var query = context.Set<T>().AsQueryable();
@@ -1504,9 +1478,9 @@ namespace Siesa.SDK.Business
                     query = query.Take(take.Value);
                 }
 
-                List<string> LeftColumns = new() { "Rowid as ERowid", "Id as Id", "Name as Name", "Status as Status", "IsPrivate as IsPrivate" };
+                List<string> LeftColumns = new() { "Rowid as ERowid", "Id as EId", "Name as EName"};
 
-                if (selectFields != null && selectFields.Count > 0)
+                if (selectFields is { Count: > 0 })
                 {
                     LeftColumns.Clear();
                     selectFields.Add("Rowid");
@@ -1517,7 +1491,7 @@ namespace Siesa.SDK.Business
                         var Length = splitInclude.Length;
                         if (Length > 1)
                         {
-                            for (int i = 1; i <= Length; i++)
+                            for (var i = 1; i <= Length; i++)
                             {
                                 var include = string.Join(".", splitInclude.Take(i));
 
@@ -1530,11 +1504,12 @@ namespace Siesa.SDK.Business
                                         query = Result;
                                     }
                                 }
-                                catch (System.Exception)
+                                catch (Exception)
                                 {
+                                    //ignore
                                 }
                             }
-                            var Alias = string.Join("", splitInclude);
+                            var Alias = string.Join("_", splitInclude);
                             LeftColumns.Add($"{string.Join(".", splitInclude)} as E{Alias}");
                         }
                         else
@@ -1548,13 +1523,19 @@ namespace Siesa.SDK.Business
                     query = query.Select<T>($"new ({selectedFields})");
 
                 }
+                else
+                {
+                    var BaseObjType = typeof(T);
+                    string[] OptionalFields = { "Status", "IsPrivate" };
+
+                    LeftColumns.AddRange(from Field in OptionalFields where BaseObjType.GetProperty(Field) is not null select $"{Field} as E{Field}");
+                }
 
                 List<string> UExtraFields = new(){
                     "Rowid", "UserType", "AuthorizationType", "RestrictionType"
                 };
 
-                var UTableName = GetUTableEntity();
-                Type DynamicEntityType = typeof(T).Assembly.GetType(UTableName);
+                var DynamicEntityType = Utilities.GetVisibilityType(typeof(T));
                 var RowidRecordType = DynamicEntityType.GetProperty("RowidRecord");
 
                 dynamic TableProxy = context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(DynamicEntityType).Invoke(context, null);
@@ -1568,7 +1549,7 @@ namespace Siesa.SDK.Business
                 Dictionary<string, Type> virtualColumnsNameType = new();
                 virtualColumnsNameType.Add("RowidRecord", RowidRecordType.PropertyType);
 
-                Type _typeLeftJoinExtension = typeof(LeftJoinExtension);
+                var _typeLeftJoinExtension = typeof(LeftJoinExtension);
                 var leftJoinMethod = _typeLeftJoinExtension.GetMethod("LeftJoin");
 
                 var CoincidenceResult = leftJoinMethod.Invoke(null, new object[] { query, authSet, "Rowid", "RowidRecord", LeftColumns, RightColumns });
@@ -1647,11 +1628,10 @@ namespace Siesa.SDK.Business
         {
             try
             {
-                this._logger.LogInformation($"Get general UObject by UserType {this.GetType().Name}");
+                _logger.LogInformation($"Get general UObject by UserType {this.GetType().Name}");
 
                 dynamic Result = null;
-                var UTableName = GetUTableEntity();
-                Type DynamicEntityType = typeof(T).Assembly.GetType(UTableName);
+                var DynamicEntityType = Utilities.GetVisibilityType(typeof(T));
 
                 var RowidRecordType = DynamicEntityType.GetProperty("RowidRecord");
 
@@ -1663,19 +1643,12 @@ namespace Siesa.SDK.Business
                 //RowidRecord is null
                 Expression CoincidenceExpression = Expression.Equal(ColumnNameProperty, ColumnValue);
 
-                string ColumnName;
-
-                switch (UserType)
+                var ColumnName = UserType switch
                 {
-                    case PermissionUserTypes.Team:
-                        ColumnName = "RowidDataVisibilityGroup";
-                        break;
-                    case PermissionUserTypes.User:
-                        ColumnName = "RowidUser";
-                        break;
-                    default:
-                        throw new ArgumentNullException("UserType not supported");
-                }
+                    PermissionUserTypes.Team => "RowidDataVisibilityGroup",
+                    PermissionUserTypes.User => "RowidUser",
+                    _ => throw new ArgumentNullException("UserType not supported")
+                };
 
                 var _assemblyDynamicQueryable = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
 
@@ -1740,9 +1713,8 @@ namespace Siesa.SDK.Business
                     throw new Exception("Data is required");
 
                 this._logger.LogInformation($"Manage U data {this.GetType().Name} - Create, Update, Delete");
-
-                var UTableName = GetUTableEntity();
-                Type DynamicEntityType = typeof(T).Assembly.GetType(UTableName);
+                
+                var DynamicEntityType = Utilities.GetVisibilityType(typeof(T));
 
                 var DataToAdd = Data.Where(x => x.Action == BLUserActionEnum.Create)
                                     .Select(x => JsonConvert.DeserializeObject($"{x.UObject}", type: DynamicEntityType))
@@ -1822,7 +1794,7 @@ namespace Siesa.SDK.Business
             }
         }
 
-        private Expression GetInExpression(Expression ColumNameProperty, List<int> RowidRecords)
+        protected Expression GetInExpression(Expression ColumNameProperty, List<int> RowidRecords)
         {
             RowidRecords = RowidRecords.Distinct().ToList();
 
@@ -1838,7 +1810,7 @@ namespace Siesa.SDK.Business
             return InExpression;
         }
 
-        private IQueryable GetWhereExpression(dynamic Data, Type DynamicEntityType, Expression CoincidenceExpression, ParameterExpression EntityExpression)
+        protected IQueryable GetWhereExpression(dynamic Data, Type DynamicEntityType, Expression CoincidenceExpression, ParameterExpression EntityExpression)
         {
             var funcExpression = typeof(Func<,>).MakeGenericType(new Type[] { DynamicEntityType, typeof(bool) });
             var returnExp = Expression.Lambda(funcExpression, CoincidenceExpression, new ParameterExpression[] { EntityExpression });
@@ -1854,7 +1826,7 @@ namespace Siesa.SDK.Business
             return Data;
         }
 
-        private dynamic GetDynamicList(dynamic Result)
+        protected dynamic GetDynamicList(dynamic Result)
         {
             var _assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
             var dynamicListMethod = typeof(IEnumerable).GetExtensionMethod(_assemblyDynamic, "ToDynamicList", new[] { typeof(IEnumerable) });
@@ -1864,7 +1836,7 @@ namespace Siesa.SDK.Business
             return DynamicList;
         }
 
-        private bool GetDynamicAny(dynamic Data)
+        protected bool GetDynamicAny(dynamic Data)
         {
             var _assemblyAny = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
 
