@@ -1509,7 +1509,7 @@ namespace Siesa.SDK.Business
                                     //ignore
                                 }
                             }
-                            var Alias = string.Join("", splitInclude);
+                            var Alias = string.Join("_", splitInclude);
                             LeftColumns.Add($"{string.Join(".", splitInclude)} as E{Alias}");
                         }
                         else
