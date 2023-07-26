@@ -159,7 +159,7 @@ namespace Siesa.SDK.Frontend.Services
                 {"rowidConnection", rowidDBConnection},
                 {"ipAddress", ipAddress},
                 {"browserName", browserName}
-            });
+            }).ConfigureAwait(true);
 
             if (loginRequest.Success){
                 return loginRequest.Data;

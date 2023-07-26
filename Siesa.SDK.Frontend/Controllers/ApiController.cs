@@ -105,18 +105,16 @@ namespace Siesa.SDK.Frontend.Controllers
             var sessionId = "";
             short rowidDbConnection = 1;
             Request.Cookies.TryGetValue("sdksession", out sessionId);
-            if(!Request.Cookies.TryGetValue("selectedConnection", out string rowidDbConnectionStr)){
-                if(Request.Headers.TryGetValue("x-sdk-selected-connection", out StringValues rowidDbConnectionHeader)){
-                    rowidDbConnectionStr = rowidDbConnectionHeader.ToString();
-                }
-            };
+            if(!Request.Cookies.TryGetValue("selectedConnection", out string rowidDbConnectionStr) && Request.Headers.TryGetValue("x-sdk-selected-connection", out StringValues rowidDbConnectionHeader)){
+                rowidDbConnectionStr = rowidDbConnectionHeader.ToString();
+            }
 
             if (!string.IsNullOrEmpty(rowidDbConnectionStr)){
-                rowidDbConnection = short.Parse(rowidDbConnectionStr);
+                short.TryParse(rowidDbConnectionStr, NumberStyles.Integer, CultureInfo.InvariantCulture, out rowidDbConnection);
             }
             if (!string.IsNullOrEmpty(sessionId)){
-                var BLSession = BackendRouterService.GetSDKBusinessModel("BLSession", AuthenticationService);
-                var response = await BLSession.Call("GetSession", sessionId, rowidDbConnection);
+                var blSession = BackendRouterService.GetSDKBusinessModel("BLSession", AuthenticationService);
+                var response = await blSession.Call("GetSession", sessionId, rowidDbConnection).ConfigureAwait(true);
                 if(response.Success){
                     authToken = response.Data;
                 }
@@ -267,7 +265,7 @@ namespace Siesa.SDK.Frontend.Controllers
             try
             {
                 if ((Request.Headers.TryGetValue("x-sdk-selected-connection", out StringValues rowidConnectionStringValues)) && short.TryParse(rowidConnectionStringValues, NumberStyles.Integer, CultureInfo.InvariantCulture, out short rowidConnection)){
-                    string sessionToken = await AuthenticationService.LoginSessionByToken(accessToken, rowidConnection).ConfigureAwait(false);
+                    string sessionToken = await AuthenticationService.LoginSessionByToken(accessToken, rowidConnection).ConfigureAwait(true);
                     jsonResponse.Add("status", true);
                     jsonResponse.Add("data", sessionToken);
                     json = Newtonsoft.Json.JsonConvert.SerializeObject(jsonResponse, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
