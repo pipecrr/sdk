@@ -16,7 +16,6 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using System.Globalization;
 
 namespace Siesa.SDK.Frontend.Controllers
 {
@@ -263,11 +262,16 @@ namespace Siesa.SDK.Frontend.Controllers
         [HttpPost]
         public async Task<ActionResult> GetSessionToken([FromForm] string accessToken)
         {
+            var jsonResponse = new Dictionary<string, object>();
+            string json;
             try
             {
                 if ((Request.Headers.TryGetValue("x-sdk-selected-connection", out StringValues rowidConnectionStringValues)) && short.TryParse(rowidConnectionStringValues, NumberStyles.Integer, CultureInfo.InvariantCulture, out short rowidConnection)){
                     string sessionToken = await AuthenticationService.LoginSessionByToken(accessToken, rowidConnection).ConfigureAwait(false);
-                    return Content(sessionToken, "application/json");
+                    jsonResponse.Add("status", true);
+                    jsonResponse.Add("data", sessionToken);
+                    json = Newtonsoft.Json.JsonConvert.SerializeObject(jsonResponse, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+                    return Content(json, "application/json");
                 }else{
                     return ReturnError(Response, "Invalid value for x-sdk-selected-connection header.", 400);
                 }
