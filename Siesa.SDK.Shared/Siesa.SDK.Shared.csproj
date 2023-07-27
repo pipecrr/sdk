@@ -4,6 +4,7 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<VersionSuffix>dev</VersionSuffix>
 		<NoWarn>8632,8669</NoWarn>
+		<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

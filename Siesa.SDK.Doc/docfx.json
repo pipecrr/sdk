@@ -3,7 +3,7 @@
     {
       "src": [
         {
-          "cwd": "../",
+          "src": "../",
           "files": [
             "Siesa.SDK.Frontend/**.csproj",
             "Siesa.SDK.share/**.csproj",
@@ -16,6 +16,7 @@
         }
       ],
       "dest": "api",
+      "filter": "filter.yml",
       "noBuild": true,
       "includePrivateMembers": false,
       "disableGitFeatures": false,
