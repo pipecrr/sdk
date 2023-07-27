@@ -118,10 +118,8 @@ deploy:
       - dotnet nuget push "nuget/*.nupkg" --source gitlab
       
 pages:
-    image: erothejoker/docker-docfx:latest
-    before_script:
-      - ''
     script:
+      - dotnet tool update -g docfx
       - docfx Siesa.SDK.Doc/docfx.json
       - mv Siesa.SDK.Doc/_site public
     artifacts:
