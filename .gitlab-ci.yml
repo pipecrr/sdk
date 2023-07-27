@@ -119,6 +119,8 @@ deploy:
       
 pages:
     image: erothejoker/docker-docfx:latest
+    before_script:
+      - ''
     script:
       - docfx Siesa.SDK.Doc/docfx.json
       - mv Siesa.SDK.Doc/_site public

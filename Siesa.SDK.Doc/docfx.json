@@ -55,8 +55,7 @@
     "globalMetadataFiles": [],
     "fileMetadataFiles": [],
     "template": [
-      "default",
-      "modern"
+      "statictoc"
     ],
     "postProcessors": [],
     "keepFileLink": false,
