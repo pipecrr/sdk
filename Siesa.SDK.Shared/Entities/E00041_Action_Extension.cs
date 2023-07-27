@@ -13,6 +13,6 @@ namespace Siesa.SDK.Entities
 {
 	public partial class E00041_Action
 	{
-
+		
 	}
 }
