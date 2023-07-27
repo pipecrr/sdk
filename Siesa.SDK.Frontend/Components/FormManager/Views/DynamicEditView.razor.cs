@@ -59,7 +59,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             await base.SetParametersAsync(parameters);
 
             if(BusinessObjId != null && (changeBusinessObjId || changeBusinessName)){
-                ErrorMsg = "";
                 await InitEdit(Convert.ToInt64(BusinessObjId));
                 StateHasChanged();
             }
