@@ -507,6 +507,11 @@ namespace Siesa.SDK.Business
         }
         //utilizado antes de eliminar el objeto, con la posibilidad de hacer rollback en caso de error.
         //comentado para luego utilizar docfx
+        /// <summary>
+        /// used before deleting the object, with the ability to rollback on error.
+        /// </summary>
+        /// <param name="result">ValidateAndSaveBusinessObjResponse object that contains the result of the transaction performed</param>
+        /// <param name="context">The current context of the transaction that is taking place while it is being deleted</param>
         public virtual void BeforeDelete(ref ValidateAndSaveBusinessObjResponse result, SDKContext context)
         {
             //Do nothing
