@@ -1,0 +1,241 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Components.SDKNotificationSeverity
+  commentId: T:Siesa.SDK.Frontend.Components.SDKNotificationSeverity
+  id: SDKNotificationSeverity
+  parent: Siesa.SDK.Frontend.Components
+  children:
+  - Siesa.SDK.Frontend.Components.SDKNotificationSeverity.Error
+  - Siesa.SDK.Frontend.Components.SDKNotificationSeverity.Info
+  - Siesa.SDK.Frontend.Components.SDKNotificationSeverity.Success
+  - Siesa.SDK.Frontend.Components.SDKNotificationSeverity.Warning
+  langs:
+  - csharp
+  - vb
+  name: SDKNotificationSeverity
+  nameWithType: SDKNotificationSeverity
+  fullName: Siesa.SDK.Frontend.Components.SDKNotificationSeverity
+  type: Enum
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/SDKEnums.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SDKNotificationSeverity
+    path: ../Siesa.SDK.Frontend/Components/SDKEnums.cs
+    startLine: 155
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components
+  syntax:
+    content: public enum SDKNotificationSeverity
+    content.vb: Public Enum SDKNotificationSeverity
+  extensionMethods:
+  - Siesa.SDK.Frontend.Components.SDKNotificationSeverity.Siesa.SDK.Frontend.Components.SDKEnums.GetNotification
+- uid: Siesa.SDK.Frontend.Components.SDKNotificationSeverity.Error
+  commentId: F:Siesa.SDK.Frontend.Components.SDKNotificationSeverity.Error
+  id: Error
+  parent: Siesa.SDK.Frontend.Components.SDKNotificationSeverity
+  langs:
+  - csharp
+  - vb
+  name: Error
+  nameWithType: SDKNotificationSeverity.Error
+  fullName: Siesa.SDK.Frontend.Components.SDKNotificationSeverity.Error
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/SDKEnums.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Error
+    path: ../Siesa.SDK.Frontend/Components/SDKEnums.cs
+    startLine: 157
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components
+  syntax:
+    content: Error = 0
+    return:
+      type: Siesa.SDK.Frontend.Components.SDKNotificationSeverity
+- uid: Siesa.SDK.Frontend.Components.SDKNotificationSeverity.Info
+  commentId: F:Siesa.SDK.Frontend.Components.SDKNotificationSeverity.Info
+  id: Info
+  parent: Siesa.SDK.Frontend.Components.SDKNotificationSeverity
+  langs:
+  - csharp
+  - vb
+  name: Info
+  nameWithType: SDKNotificationSeverity.Info
+  fullName: Siesa.SDK.Frontend.Components.SDKNotificationSeverity.Info
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/SDKEnums.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Info
+    path: ../Siesa.SDK.Frontend/Components/SDKEnums.cs
+    startLine: 158
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components
+  syntax:
+    content: Info = 1
+    return:
+      type: Siesa.SDK.Frontend.Components.SDKNotificationSeverity
+- uid: Siesa.SDK.Frontend.Components.SDKNotificationSeverity.Success
+  commentId: F:Siesa.SDK.Frontend.Components.SDKNotificationSeverity.Success
+  id: Success
+  parent: Siesa.SDK.Frontend.Components.SDKNotificationSeverity
+  langs:
+  - csharp
+  - vb
+  name: Success
+  nameWithType: SDKNotificationSeverity.Success
+  fullName: Siesa.SDK.Frontend.Components.SDKNotificationSeverity.Success
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/SDKEnums.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Success
+    path: ../Siesa.SDK.Frontend/Components/SDKEnums.cs
+    startLine: 160
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components
+  syntax:
+    content: Success = 2
+    return:
+      type: Siesa.SDK.Frontend.Components.SDKNotificationSeverity
+- uid: Siesa.SDK.Frontend.Components.SDKNotificationSeverity.Warning
+  commentId: F:Siesa.SDK.Frontend.Components.SDKNotificationSeverity.Warning
+  id: Warning
+  parent: Siesa.SDK.Frontend.Components.SDKNotificationSeverity
+  langs:
+  - csharp
+  - vb
+  name: Warning
+  nameWithType: SDKNotificationSeverity.Warning
+  fullName: Siesa.SDK.Frontend.Components.SDKNotificationSeverity.Warning
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/SDKEnums.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Warning
+    path: ../Siesa.SDK.Frontend/Components/SDKEnums.cs
+    startLine: 161
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components
+  syntax:
+    content: Warning = 3
+    return:
+      type: Siesa.SDK.Frontend.Components.SDKNotificationSeverity
+references:
+- uid: Siesa.SDK.Frontend.Components
+  commentId: N:Siesa.SDK.Frontend.Components
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Components
+  nameWithType: Siesa.SDK.Frontend.Components
+  fullName: Siesa.SDK.Frontend.Components
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+- uid: Siesa.SDK.Frontend.Components.SDKNotificationSeverity.Siesa.SDK.Frontend.Components.SDKEnums.GetNotification
+  commentId: M:Siesa.SDK.Frontend.Components.SDKEnums.GetNotification(Siesa.SDK.Frontend.Components.SDKNotificationSeverity)
+  parent: Siesa.SDK.Frontend.Components.SDKEnums
+  definition: Siesa.SDK.Frontend.Components.SDKEnums.GetNotification(Siesa.SDK.Frontend.Components.SDKNotificationSeverity)
+  href: Siesa.SDK.Frontend.Components.SDKEnums.html#Siesa.SDK.Frontend.Components.SDKEnums.GetNotification(Siesa.SDK.Frontend.Components.SDKNotificationSeverity)
+  name: GetNotification(SDKNotificationSeverity)
+  nameWithType: SDKEnums.GetNotification(SDKNotificationSeverity)
+  fullName: Siesa.SDK.Frontend.Components.SDKEnums.GetNotification(Siesa.SDK.Frontend.Components.SDKNotificationSeverity)
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.SDKEnums.GetNotification(Siesa.SDK.Frontend.Components.SDKNotificationSeverity)
+    name: GetNotification
+    href: Siesa.SDK.Frontend.Components.SDKEnums.html#Siesa.SDK.Frontend.Components.SDKEnums.GetNotification(Siesa.SDK.Frontend.Components.SDKNotificationSeverity)
+  - name: (
+  - uid: Siesa.SDK.Frontend.Components.SDKNotificationSeverity
+    name: SDKNotificationSeverity
+    href: Siesa.SDK.Frontend.Components.SDKNotificationSeverity.html
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.SDKEnums.GetNotification(Siesa.SDK.Frontend.Components.SDKNotificationSeverity)
+    name: GetNotification
+    href: Siesa.SDK.Frontend.Components.SDKEnums.html#Siesa.SDK.Frontend.Components.SDKEnums.GetNotification(Siesa.SDK.Frontend.Components.SDKNotificationSeverity)
+  - name: (
+  - uid: Siesa.SDK.Frontend.Components.SDKNotificationSeverity
+    name: SDKNotificationSeverity
+    href: Siesa.SDK.Frontend.Components.SDKNotificationSeverity.html
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.SDKEnums.GetNotification(Siesa.SDK.Frontend.Components.SDKNotificationSeverity)
+  commentId: M:Siesa.SDK.Frontend.Components.SDKEnums.GetNotification(Siesa.SDK.Frontend.Components.SDKNotificationSeverity)
+  href: Siesa.SDK.Frontend.Components.SDKEnums.html#Siesa.SDK.Frontend.Components.SDKEnums.GetNotification(Siesa.SDK.Frontend.Components.SDKNotificationSeverity)
+  name: GetNotification(SDKNotificationSeverity)
+  nameWithType: SDKEnums.GetNotification(SDKNotificationSeverity)
+  fullName: Siesa.SDK.Frontend.Components.SDKEnums.GetNotification(Siesa.SDK.Frontend.Components.SDKNotificationSeverity)
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.SDKEnums.GetNotification(Siesa.SDK.Frontend.Components.SDKNotificationSeverity)
+    name: GetNotification
+    href: Siesa.SDK.Frontend.Components.SDKEnums.html#Siesa.SDK.Frontend.Components.SDKEnums.GetNotification(Siesa.SDK.Frontend.Components.SDKNotificationSeverity)
+  - name: (
+  - uid: Siesa.SDK.Frontend.Components.SDKNotificationSeverity
+    name: SDKNotificationSeverity
+    href: Siesa.SDK.Frontend.Components.SDKNotificationSeverity.html
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.SDKEnums.GetNotification(Siesa.SDK.Frontend.Components.SDKNotificationSeverity)
+    name: GetNotification
+    href: Siesa.SDK.Frontend.Components.SDKEnums.html#Siesa.SDK.Frontend.Components.SDKEnums.GetNotification(Siesa.SDK.Frontend.Components.SDKNotificationSeverity)
+  - name: (
+  - uid: Siesa.SDK.Frontend.Components.SDKNotificationSeverity
+    name: SDKNotificationSeverity
+    href: Siesa.SDK.Frontend.Components.SDKNotificationSeverity.html
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.SDKEnums
+  commentId: T:Siesa.SDK.Frontend.Components.SDKEnums
+  parent: Siesa.SDK.Frontend.Components
+  href: Siesa.SDK.Frontend.Components.SDKEnums.html
+  name: SDKEnums
+  nameWithType: SDKEnums
+  fullName: Siesa.SDK.Frontend.Components.SDKEnums
+- uid: Siesa.SDK.Frontend.Components.SDKNotificationSeverity
+  commentId: T:Siesa.SDK.Frontend.Components.SDKNotificationSeverity
+  parent: Siesa.SDK.Frontend.Components
+  href: Siesa.SDK.Frontend.Components.SDKNotificationSeverity.html
+  name: SDKNotificationSeverity
+  nameWithType: SDKNotificationSeverity
+  fullName: Siesa.SDK.Frontend.Components.SDKNotificationSeverity

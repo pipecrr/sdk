@@ -1,0 +1,1468 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Services.MenuService
+  commentId: T:Siesa.SDK.Frontend.Services.MenuService
+  id: MenuService
+  parent: Siesa.SDK.Frontend.Services
+  children:
+  - Siesa.SDK.Frontend.Services.MenuService.#ctor(Siesa.SDK.Shared.Services.IBackendRouterService,Siesa.SDK.Shared.Services.IAuthenticationService,Siesa.SDK.Frontend.Components.FormManager.Model.UtilsManager)
+  - Siesa.SDK.Frontend.Services.MenuService.ClearMenu
+  - Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithChilds(System.Int32)
+  - Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithChildsAndOperations(System.Int32)
+  - Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithoutSubLevelsByMenu(Siesa.SDK.Shared.Services.SDKBusinessModel,System.Int32)
+  - Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithoutSubLevelsBySuite(Siesa.SDK.Shared.Services.SDKBusinessModel,System.Int32)
+  - Siesa.SDK.Frontend.Services.MenuService.LoadMenu(System.Int32)
+  - Siesa.SDK.Frontend.Services.MenuService.MenuLoaded
+  - Siesa.SDK.Frontend.Services.MenuService.MenuManagerBySuite(Siesa.SDK.Shared.Services.SDKBusinessModel,System.Int32,System.Collections.Generic.List{Siesa.SDK.Entities.E00061_Menu},System.Boolean,System.Boolean)
+  - Siesa.SDK.Frontend.Services.MenuService.Menus
+  - Siesa.SDK.Frontend.Services.MenuService.NotifyMenuLoaded
+  - Siesa.SDK.Frontend.Services.MenuService.ReloadMenu
+  - Siesa.SDK.Frontend.Services.MenuService.SelectedSuite
+  - Siesa.SDK.Frontend.Services.MenuService.SetSelectedSuite(System.Int32)
+  - Siesa.SDK.Frontend.Services.MenuService.SuiteData
+  - Siesa.SDK.Frontend.Services.MenuService.Suites
+  langs:
+  - csharp
+  - vb
+  name: MenuService
+  nameWithType: MenuService
+  fullName: Siesa.SDK.Frontend.Services.MenuService
+  type: Class
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/MenuService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: MenuService
+    path: ../Siesa.SDK.Frontend/Services/MenuService.cs
+    startLine: 21
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  syntax:
+    content: public class MenuService
+    content.vb: Public Class MenuService
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: Siesa.SDK.Frontend.Services.MenuService.Menus
+  commentId: P:Siesa.SDK.Frontend.Services.MenuService.Menus
+  id: Menus
+  parent: Siesa.SDK.Frontend.Services.MenuService
+  langs:
+  - csharp
+  - vb
+  name: Menus
+  nameWithType: MenuService.Menus
+  fullName: Siesa.SDK.Frontend.Services.MenuService.Menus
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/MenuService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Menus
+    path: ../Siesa.SDK.Frontend/Services/MenuService.cs
+    startLine: 23
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  syntax:
+    content: public List<E00061_Menu> Menus { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{Siesa.SDK.Entities.E00061_Menu}
+    content.vb: Public Property Menus As List(Of E00061_Menu)
+  overload: Siesa.SDK.Frontend.Services.MenuService.Menus*
+- uid: Siesa.SDK.Frontend.Services.MenuService.Suites
+  commentId: P:Siesa.SDK.Frontend.Services.MenuService.Suites
+  id: Suites
+  parent: Siesa.SDK.Frontend.Services.MenuService
+  langs:
+  - csharp
+  - vb
+  name: Suites
+  nameWithType: MenuService.Suites
+  fullName: Siesa.SDK.Frontend.Services.MenuService.Suites
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/MenuService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Suites
+    path: ../Siesa.SDK.Frontend/Services/MenuService.cs
+    startLine: 24
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  syntax:
+    content: public List<E00060_Suite> Suites { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{Siesa.SDK.Entities.E00060_Suite}
+    content.vb: Public Property Suites As List(Of E00060_Suite)
+  overload: Siesa.SDK.Frontend.Services.MenuService.Suites*
+- uid: Siesa.SDK.Frontend.Services.MenuService.SuiteData
+  commentId: P:Siesa.SDK.Frontend.Services.MenuService.SuiteData
+  id: SuiteData
+  parent: Siesa.SDK.Frontend.Services.MenuService
+  langs:
+  - csharp
+  - vb
+  name: SuiteData
+  nameWithType: MenuService.SuiteData
+  fullName: Siesa.SDK.Frontend.Services.MenuService.SuiteData
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/MenuService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SuiteData
+    path: ../Siesa.SDK.Frontend/Services/MenuService.cs
+    startLine: 28
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  syntax:
+    content: public Dictionary<int, List<E00061_Menu>> SuiteData { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.Dictionary{System.Int32,System.Collections.Generic.List{Siesa.SDK.Entities.E00061_Menu}}
+    content.vb: Public Property SuiteData As Dictionary(Of Integer, List(Of E00061_Menu))
+  overload: Siesa.SDK.Frontend.Services.MenuService.SuiteData*
+- uid: Siesa.SDK.Frontend.Services.MenuService.SelectedSuite
+  commentId: P:Siesa.SDK.Frontend.Services.MenuService.SelectedSuite
+  id: SelectedSuite
+  parent: Siesa.SDK.Frontend.Services.MenuService
+  langs:
+  - csharp
+  - vb
+  name: SelectedSuite
+  nameWithType: MenuService.SelectedSuite
+  fullName: Siesa.SDK.Frontend.Services.MenuService.SelectedSuite
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/MenuService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SelectedSuite
+    path: ../Siesa.SDK.Frontend/Services/MenuService.cs
+    startLine: 30
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  syntax:
+    content: public E00060_Suite SelectedSuite { get; set; }
+    parameters: []
+    return:
+      type: Siesa.SDK.Entities.E00060_Suite
+    content.vb: Public Property SelectedSuite As E00060_Suite
+  overload: Siesa.SDK.Frontend.Services.MenuService.SelectedSuite*
+- uid: Siesa.SDK.Frontend.Services.MenuService.#ctor(Siesa.SDK.Shared.Services.IBackendRouterService,Siesa.SDK.Shared.Services.IAuthenticationService,Siesa.SDK.Frontend.Components.FormManager.Model.UtilsManager)
+  commentId: M:Siesa.SDK.Frontend.Services.MenuService.#ctor(Siesa.SDK.Shared.Services.IBackendRouterService,Siesa.SDK.Shared.Services.IAuthenticationService,Siesa.SDK.Frontend.Components.FormManager.Model.UtilsManager)
+  id: '#ctor(Siesa.SDK.Shared.Services.IBackendRouterService,Siesa.SDK.Shared.Services.IAuthenticationService,Siesa.SDK.Frontend.Components.FormManager.Model.UtilsManager)'
+  parent: Siesa.SDK.Frontend.Services.MenuService
+  langs:
+  - csharp
+  - vb
+  name: MenuService(IBackendRouterService, IAuthenticationService, UtilsManager)
+  nameWithType: MenuService.MenuService(IBackendRouterService, IAuthenticationService, UtilsManager)
+  fullName: Siesa.SDK.Frontend.Services.MenuService.MenuService(Siesa.SDK.Shared.Services.IBackendRouterService, Siesa.SDK.Shared.Services.IAuthenticationService, Siesa.SDK.Frontend.Components.FormManager.Model.UtilsManager)
+  type: Constructor
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/MenuService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: .ctor
+    path: ../Siesa.SDK.Frontend/Services/MenuService.cs
+    startLine: 36
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  syntax:
+    content: public MenuService(IBackendRouterService backendRouterService, IAuthenticationService authenticationService, UtilsManager utilsManager)
+    parameters:
+    - id: backendRouterService
+      type: Siesa.SDK.Shared.Services.IBackendRouterService
+    - id: authenticationService
+      type: Siesa.SDK.Shared.Services.IAuthenticationService
+    - id: utilsManager
+      type: Siesa.SDK.Frontend.Components.FormManager.Model.UtilsManager
+    content.vb: Public Sub New(backendRouterService As IBackendRouterService, authenticationService As IAuthenticationService, utilsManager As UtilsManager)
+  overload: Siesa.SDK.Frontend.Services.MenuService.#ctor*
+  nameWithType.vb: MenuService.New(IBackendRouterService, IAuthenticationService, UtilsManager)
+  fullName.vb: Siesa.SDK.Frontend.Services.MenuService.New(Siesa.SDK.Shared.Services.IBackendRouterService, Siesa.SDK.Shared.Services.IAuthenticationService, Siesa.SDK.Frontend.Components.FormManager.Model.UtilsManager)
+  name.vb: New(IBackendRouterService, IAuthenticationService, UtilsManager)
+- uid: Siesa.SDK.Frontend.Services.MenuService.MenuLoaded
+  commentId: E:Siesa.SDK.Frontend.Services.MenuService.MenuLoaded
+  id: MenuLoaded
+  parent: Siesa.SDK.Frontend.Services.MenuService
+  langs:
+  - csharp
+  - vb
+  name: MenuLoaded
+  nameWithType: MenuService.MenuLoaded
+  fullName: Siesa.SDK.Frontend.Services.MenuService.MenuLoaded
+  type: Event
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/MenuService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: MenuLoaded
+    path: ../Siesa.SDK.Frontend/Services/MenuService.cs
+    startLine: 158
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  syntax:
+    content: public event EventHandler MenuLoaded
+    return:
+      type: System.EventHandler
+    content.vb: Public Event MenuLoaded As EventHandler
+- uid: Siesa.SDK.Frontend.Services.MenuService.ReloadMenu
+  commentId: M:Siesa.SDK.Frontend.Services.MenuService.ReloadMenu
+  id: ReloadMenu
+  parent: Siesa.SDK.Frontend.Services.MenuService
+  langs:
+  - csharp
+  - vb
+  name: ReloadMenu()
+  nameWithType: MenuService.ReloadMenu()
+  fullName: Siesa.SDK.Frontend.Services.MenuService.ReloadMenu()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/MenuService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ReloadMenu
+    path: ../Siesa.SDK.Frontend/Services/MenuService.cs
+    startLine: 172
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  syntax:
+    content: public Task ReloadMenu()
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function ReloadMenu() As Task
+  overload: Siesa.SDK.Frontend.Services.MenuService.ReloadMenu*
+- uid: Siesa.SDK.Frontend.Services.MenuService.ClearMenu
+  commentId: M:Siesa.SDK.Frontend.Services.MenuService.ClearMenu
+  id: ClearMenu
+  parent: Siesa.SDK.Frontend.Services.MenuService
+  langs:
+  - csharp
+  - vb
+  name: ClearMenu()
+  nameWithType: MenuService.ClearMenu()
+  fullName: Siesa.SDK.Frontend.Services.MenuService.ClearMenu()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/MenuService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ClearMenu
+    path: ../Siesa.SDK.Frontend/Services/MenuService.cs
+    startLine: 181
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  syntax:
+    content: public void ClearMenu()
+    content.vb: Public Sub ClearMenu()
+  overload: Siesa.SDK.Frontend.Services.MenuService.ClearMenu*
+- uid: Siesa.SDK.Frontend.Services.MenuService.LoadMenu(System.Int32)
+  commentId: M:Siesa.SDK.Frontend.Services.MenuService.LoadMenu(System.Int32)
+  id: LoadMenu(System.Int32)
+  parent: Siesa.SDK.Frontend.Services.MenuService
+  langs:
+  - csharp
+  - vb
+  name: LoadMenu(int)
+  nameWithType: MenuService.LoadMenu(int)
+  fullName: Siesa.SDK.Frontend.Services.MenuService.LoadMenu(int)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/MenuService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: LoadMenu
+    path: ../Siesa.SDK.Frontend/Services/MenuService.cs
+    startLine: 186
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  syntax:
+    content: public Task LoadMenu(int suiteRowid)
+    parameters:
+    - id: suiteRowid
+      type: System.Int32
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function LoadMenu(suiteRowid As Integer) As Task
+  overload: Siesa.SDK.Frontend.Services.MenuService.LoadMenu*
+  nameWithType.vb: MenuService.LoadMenu(Integer)
+  fullName.vb: Siesa.SDK.Frontend.Services.MenuService.LoadMenu(Integer)
+  name.vb: LoadMenu(Integer)
+- uid: Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithoutSubLevelsBySuite(Siesa.SDK.Shared.Services.SDKBusinessModel,System.Int32)
+  commentId: M:Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithoutSubLevelsBySuite(Siesa.SDK.Shared.Services.SDKBusinessModel,System.Int32)
+  id: GetMenuItemsWithoutSubLevelsBySuite(Siesa.SDK.Shared.Services.SDKBusinessModel,System.Int32)
+  parent: Siesa.SDK.Frontend.Services.MenuService
+  langs:
+  - csharp
+  - vb
+  name: GetMenuItemsWithoutSubLevelsBySuite(SDKBusinessModel, int)
+  nameWithType: MenuService.GetMenuItemsWithoutSubLevelsBySuite(SDKBusinessModel, int)
+  fullName: Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithoutSubLevelsBySuite(Siesa.SDK.Shared.Services.SDKBusinessModel, int)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/MenuService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetMenuItemsWithoutSubLevelsBySuite
+    path: ../Siesa.SDK.Frontend/Services/MenuService.cs
+    startLine: 197
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  syntax:
+    content: public Task<bool> GetMenuItemsWithoutSubLevelsBySuite(SDKBusinessModel menuBL, int RowidSuite)
+    parameters:
+    - id: menuBL
+      type: Siesa.SDK.Shared.Services.SDKBusinessModel
+    - id: RowidSuite
+      type: System.Int32
+    return:
+      type: System.Threading.Tasks.Task{System.Boolean}
+    content.vb: Public Function GetMenuItemsWithoutSubLevelsBySuite(menuBL As SDKBusinessModel, RowidSuite As Integer) As Task(Of Boolean)
+  overload: Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithoutSubLevelsBySuite*
+  nameWithType.vb: MenuService.GetMenuItemsWithoutSubLevelsBySuite(SDKBusinessModel, Integer)
+  fullName.vb: Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithoutSubLevelsBySuite(Siesa.SDK.Shared.Services.SDKBusinessModel, Integer)
+  name.vb: GetMenuItemsWithoutSubLevelsBySuite(SDKBusinessModel, Integer)
+- uid: Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithoutSubLevelsByMenu(Siesa.SDK.Shared.Services.SDKBusinessModel,System.Int32)
+  commentId: M:Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithoutSubLevelsByMenu(Siesa.SDK.Shared.Services.SDKBusinessModel,System.Int32)
+  id: GetMenuItemsWithoutSubLevelsByMenu(Siesa.SDK.Shared.Services.SDKBusinessModel,System.Int32)
+  parent: Siesa.SDK.Frontend.Services.MenuService
+  langs:
+  - csharp
+  - vb
+  name: GetMenuItemsWithoutSubLevelsByMenu(SDKBusinessModel, int)
+  nameWithType: MenuService.GetMenuItemsWithoutSubLevelsByMenu(SDKBusinessModel, int)
+  fullName: Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithoutSubLevelsByMenu(Siesa.SDK.Shared.Services.SDKBusinessModel, int)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/MenuService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetMenuItemsWithoutSubLevelsByMenu
+    path: ../Siesa.SDK.Frontend/Services/MenuService.cs
+    startLine: 211
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  syntax:
+    content: public Task<List<E00061_Menu>> GetMenuItemsWithoutSubLevelsByMenu(SDKBusinessModel menuBL, int RowidMenuParent)
+    parameters:
+    - id: menuBL
+      type: Siesa.SDK.Shared.Services.SDKBusinessModel
+    - id: RowidMenuParent
+      type: System.Int32
+    return:
+      type: System.Threading.Tasks.Task{System.Collections.Generic.List{Siesa.SDK.Entities.E00061_Menu}}
+    content.vb: Public Function GetMenuItemsWithoutSubLevelsByMenu(menuBL As SDKBusinessModel, RowidMenuParent As Integer) As Task(Of List(Of E00061_Menu))
+  overload: Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithoutSubLevelsByMenu*
+  nameWithType.vb: MenuService.GetMenuItemsWithoutSubLevelsByMenu(SDKBusinessModel, Integer)
+  fullName.vb: Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithoutSubLevelsByMenu(Siesa.SDK.Shared.Services.SDKBusinessModel, Integer)
+  name.vb: GetMenuItemsWithoutSubLevelsByMenu(SDKBusinessModel, Integer)
+- uid: Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithChilds(System.Int32)
+  commentId: M:Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithChilds(System.Int32)
+  id: GetMenuItemsWithChilds(System.Int32)
+  parent: Siesa.SDK.Frontend.Services.MenuService
+  langs:
+  - csharp
+  - vb
+  name: GetMenuItemsWithChilds(int)
+  nameWithType: MenuService.GetMenuItemsWithChilds(int)
+  fullName: Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithChilds(int)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/MenuService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetMenuItemsWithChilds
+    path: ../Siesa.SDK.Frontend/Services/MenuService.cs
+    startLine: 225
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  syntax:
+    content: public Task<bool> GetMenuItemsWithChilds(int RowidSuite)
+    parameters:
+    - id: RowidSuite
+      type: System.Int32
+    return:
+      type: System.Threading.Tasks.Task{System.Boolean}
+    content.vb: Public Function GetMenuItemsWithChilds(RowidSuite As Integer) As Task(Of Boolean)
+  overload: Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithChilds*
+  nameWithType.vb: MenuService.GetMenuItemsWithChilds(Integer)
+  fullName.vb: Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithChilds(Integer)
+  name.vb: GetMenuItemsWithChilds(Integer)
+- uid: Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithChildsAndOperations(System.Int32)
+  commentId: M:Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithChildsAndOperations(System.Int32)
+  id: GetMenuItemsWithChildsAndOperations(System.Int32)
+  parent: Siesa.SDK.Frontend.Services.MenuService
+  langs:
+  - csharp
+  - vb
+  name: GetMenuItemsWithChildsAndOperations(int)
+  nameWithType: MenuService.GetMenuItemsWithChildsAndOperations(int)
+  fullName: Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithChildsAndOperations(int)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/MenuService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetMenuItemsWithChildsAndOperations
+    path: ../Siesa.SDK.Frontend/Services/MenuService.cs
+    startLine: 240
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  syntax:
+    content: public Task<bool> GetMenuItemsWithChildsAndOperations(int RowidSuite)
+    parameters:
+    - id: RowidSuite
+      type: System.Int32
+    return:
+      type: System.Threading.Tasks.Task{System.Boolean}
+    content.vb: Public Function GetMenuItemsWithChildsAndOperations(RowidSuite As Integer) As Task(Of Boolean)
+  overload: Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithChildsAndOperations*
+  nameWithType.vb: MenuService.GetMenuItemsWithChildsAndOperations(Integer)
+  fullName.vb: Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithChildsAndOperations(Integer)
+  name.vb: GetMenuItemsWithChildsAndOperations(Integer)
+- uid: Siesa.SDK.Frontend.Services.MenuService.MenuManagerBySuite(Siesa.SDK.Shared.Services.SDKBusinessModel,System.Int32,System.Collections.Generic.List{Siesa.SDK.Entities.E00061_Menu},System.Boolean,System.Boolean)
+  commentId: M:Siesa.SDK.Frontend.Services.MenuService.MenuManagerBySuite(Siesa.SDK.Shared.Services.SDKBusinessModel,System.Int32,System.Collections.Generic.List{Siesa.SDK.Entities.E00061_Menu},System.Boolean,System.Boolean)
+  id: MenuManagerBySuite(Siesa.SDK.Shared.Services.SDKBusinessModel,System.Int32,System.Collections.Generic.List{Siesa.SDK.Entities.E00061_Menu},System.Boolean,System.Boolean)
+  parent: Siesa.SDK.Frontend.Services.MenuService
+  langs:
+  - csharp
+  - vb
+  name: MenuManagerBySuite(SDKBusinessModel, int, List<E00061_Menu>, bool, bool)
+  nameWithType: MenuService.MenuManagerBySuite(SDKBusinessModel, int, List<E00061_Menu>, bool, bool)
+  fullName: Siesa.SDK.Frontend.Services.MenuService.MenuManagerBySuite(Siesa.SDK.Shared.Services.SDKBusinessModel, int, System.Collections.Generic.List<Siesa.SDK.Entities.E00061_Menu>, bool, bool)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/MenuService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: MenuManagerBySuite
+    path: ../Siesa.SDK.Frontend/Services/MenuService.cs
+    startLine: 255
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  syntax:
+    content: public void MenuManagerBySuite(SDKBusinessModel menuBL, int RowidSuite, List<E00061_Menu> menuResponse, bool IgnoreGeneralMenu = false, bool SetInSuiteData = false)
+    parameters:
+    - id: menuBL
+      type: Siesa.SDK.Shared.Services.SDKBusinessModel
+    - id: RowidSuite
+      type: System.Int32
+    - id: menuResponse
+      type: System.Collections.Generic.List{Siesa.SDK.Entities.E00061_Menu}
+    - id: IgnoreGeneralMenu
+      type: System.Boolean
+    - id: SetInSuiteData
+      type: System.Boolean
+    content.vb: Public Sub MenuManagerBySuite(menuBL As SDKBusinessModel, RowidSuite As Integer, menuResponse As List(Of E00061_Menu), IgnoreGeneralMenu As Boolean = False, SetInSuiteData As Boolean = False)
+  overload: Siesa.SDK.Frontend.Services.MenuService.MenuManagerBySuite*
+  nameWithType.vb: MenuService.MenuManagerBySuite(SDKBusinessModel, Integer, List(Of E00061_Menu), Boolean, Boolean)
+  fullName.vb: Siesa.SDK.Frontend.Services.MenuService.MenuManagerBySuite(Siesa.SDK.Shared.Services.SDKBusinessModel, Integer, System.Collections.Generic.List(Of Siesa.SDK.Entities.E00061_Menu), Boolean, Boolean)
+  name.vb: MenuManagerBySuite(SDKBusinessModel, Integer, List(Of E00061_Menu), Boolean, Boolean)
+- uid: Siesa.SDK.Frontend.Services.MenuService.NotifyMenuLoaded
+  commentId: M:Siesa.SDK.Frontend.Services.MenuService.NotifyMenuLoaded
+  id: NotifyMenuLoaded
+  parent: Siesa.SDK.Frontend.Services.MenuService
+  langs:
+  - csharp
+  - vb
+  name: NotifyMenuLoaded()
+  nameWithType: MenuService.NotifyMenuLoaded()
+  fullName: Siesa.SDK.Frontend.Services.MenuService.NotifyMenuLoaded()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/MenuService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: NotifyMenuLoaded
+    path: ../Siesa.SDK.Frontend/Services/MenuService.cs
+    startLine: 307
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  syntax:
+    content: protected void NotifyMenuLoaded()
+    content.vb: Protected Sub NotifyMenuLoaded()
+  overload: Siesa.SDK.Frontend.Services.MenuService.NotifyMenuLoaded*
+- uid: Siesa.SDK.Frontend.Services.MenuService.SetSelectedSuite(System.Int32)
+  commentId: M:Siesa.SDK.Frontend.Services.MenuService.SetSelectedSuite(System.Int32)
+  id: SetSelectedSuite(System.Int32)
+  parent: Siesa.SDK.Frontend.Services.MenuService
+  langs:
+  - csharp
+  - vb
+  name: SetSelectedSuite(int)
+  nameWithType: MenuService.SetSelectedSuite(int)
+  fullName: Siesa.SDK.Frontend.Services.MenuService.SetSelectedSuite(int)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/MenuService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SetSelectedSuite
+    path: ../Siesa.SDK.Frontend/Services/MenuService.cs
+    startLine: 319
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  syntax:
+    content: public Task SetSelectedSuite(int suiteRowid)
+    parameters:
+    - id: suiteRowid
+      type: System.Int32
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function SetSelectedSuite(suiteRowid As Integer) As Task
+  overload: Siesa.SDK.Frontend.Services.MenuService.SetSelectedSuite*
+  nameWithType.vb: MenuService.SetSelectedSuite(Integer)
+  fullName.vb: Siesa.SDK.Frontend.Services.MenuService.SetSelectedSuite(Integer)
+  name.vb: SetSelectedSuite(Integer)
+references:
+- uid: Siesa.SDK.Frontend.Services
+  commentId: N:Siesa.SDK.Frontend.Services
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Services
+  nameWithType: Siesa.SDK.Frontend.Services
+  fullName: Siesa.SDK.Frontend.Services
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Services
+    name: Services
+    href: Siesa.SDK.Frontend.Services.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Services
+    name: Services
+    href: Siesa.SDK.Frontend.Services.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Siesa.SDK.Frontend.Services.MenuService.Menus*
+  commentId: Overload:Siesa.SDK.Frontend.Services.MenuService.Menus
+  href: Siesa.SDK.Frontend.Services.MenuService.html#Siesa.SDK.Frontend.Services.MenuService.Menus
+  name: Menus
+  nameWithType: MenuService.Menus
+  fullName: Siesa.SDK.Frontend.Services.MenuService.Menus
+- uid: System.Collections.Generic.List{Siesa.SDK.Entities.E00061_Menu}
+  commentId: T:System.Collections.Generic.List{Siesa.SDK.Entities.E00061_Menu}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<E00061_Menu>
+  nameWithType: List<E00061_Menu>
+  fullName: System.Collections.Generic.List<Siesa.SDK.Entities.E00061_Menu>
+  nameWithType.vb: List(Of E00061_Menu)
+  fullName.vb: System.Collections.Generic.List(Of Siesa.SDK.Entities.E00061_Menu)
+  name.vb: List(Of E00061_Menu)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: Siesa.SDK.Entities.E00061_Menu
+    name: E00061_Menu
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Siesa.SDK.Entities.E00061_Menu
+    name: E00061_Menu
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: Siesa.SDK.Frontend.Services.MenuService.Suites*
+  commentId: Overload:Siesa.SDK.Frontend.Services.MenuService.Suites
+  href: Siesa.SDK.Frontend.Services.MenuService.html#Siesa.SDK.Frontend.Services.MenuService.Suites
+  name: Suites
+  nameWithType: MenuService.Suites
+  fullName: Siesa.SDK.Frontend.Services.MenuService.Suites
+- uid: System.Collections.Generic.List{Siesa.SDK.Entities.E00060_Suite}
+  commentId: T:System.Collections.Generic.List{Siesa.SDK.Entities.E00060_Suite}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<E00060_Suite>
+  nameWithType: List<E00060_Suite>
+  fullName: System.Collections.Generic.List<Siesa.SDK.Entities.E00060_Suite>
+  nameWithType.vb: List(Of E00060_Suite)
+  fullName.vb: System.Collections.Generic.List(Of Siesa.SDK.Entities.E00060_Suite)
+  name.vb: List(Of E00060_Suite)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: Siesa.SDK.Entities.E00060_Suite
+    name: E00060_Suite
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Siesa.SDK.Entities.E00060_Suite
+    name: E00060_Suite
+  - name: )
+- uid: Siesa.SDK.Frontend.Services.MenuService.SuiteData*
+  commentId: Overload:Siesa.SDK.Frontend.Services.MenuService.SuiteData
+  href: Siesa.SDK.Frontend.Services.MenuService.html#Siesa.SDK.Frontend.Services.MenuService.SuiteData
+  name: SuiteData
+  nameWithType: MenuService.SuiteData
+  fullName: Siesa.SDK.Frontend.Services.MenuService.SuiteData
+- uid: System.Collections.Generic.Dictionary{System.Int32,System.Collections.Generic.List{Siesa.SDK.Entities.E00061_Menu}}
+  commentId: T:System.Collections.Generic.Dictionary{System.Int32,System.Collections.Generic.List{Siesa.SDK.Entities.E00061_Menu}}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.Dictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<int, List<E00061_Menu>>
+  nameWithType: Dictionary<int, List<E00061_Menu>>
+  fullName: System.Collections.Generic.Dictionary<int, System.Collections.Generic.List<Siesa.SDK.Entities.E00061_Menu>>
+  nameWithType.vb: Dictionary(Of Integer, List(Of E00061_Menu))
+  fullName.vb: System.Collections.Generic.Dictionary(Of Integer, System.Collections.Generic.List(Of Siesa.SDK.Entities.E00061_Menu))
+  name.vb: Dictionary(Of Integer, List(Of E00061_Menu))
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: Siesa.SDK.Entities.E00061_Menu
+    name: E00061_Menu
+  - name: '>'
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Siesa.SDK.Entities.E00061_Menu
+    name: E00061_Menu
+  - name: )
+  - name: )
+- uid: System.Collections.Generic.Dictionary`2
+  commentId: T:System.Collections.Generic.Dictionary`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<TKey, TValue>
+  nameWithType: Dictionary<TKey, TValue>
+  fullName: System.Collections.Generic.Dictionary<TKey, TValue>
+  nameWithType.vb: Dictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.Generic.Dictionary(Of TKey, TValue)
+  name.vb: Dictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: Siesa.SDK.Frontend.Services.MenuService.SelectedSuite*
+  commentId: Overload:Siesa.SDK.Frontend.Services.MenuService.SelectedSuite
+  href: Siesa.SDK.Frontend.Services.MenuService.html#Siesa.SDK.Frontend.Services.MenuService.SelectedSuite
+  name: SelectedSuite
+  nameWithType: MenuService.SelectedSuite
+  fullName: Siesa.SDK.Frontend.Services.MenuService.SelectedSuite
+- uid: Siesa.SDK.Entities.E00060_Suite
+  commentId: T:Siesa.SDK.Entities.E00060_Suite
+  parent: Siesa.SDK.Entities
+  name: E00060_Suite
+  nameWithType: E00060_Suite
+  fullName: Siesa.SDK.Entities.E00060_Suite
+- uid: Siesa.SDK.Entities
+  commentId: N:Siesa.SDK.Entities
+  name: Siesa.SDK.Entities
+  nameWithType: Siesa.SDK.Entities
+  fullName: Siesa.SDK.Entities
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+  - name: .
+  - uid: Siesa.SDK.Entities
+    name: Entities
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+  - name: .
+  - uid: Siesa.SDK.Entities
+    name: Entities
+- uid: Siesa.SDK.Frontend.Services.MenuService.#ctor*
+  commentId: Overload:Siesa.SDK.Frontend.Services.MenuService.#ctor
+  href: Siesa.SDK.Frontend.Services.MenuService.html#Siesa.SDK.Frontend.Services.MenuService.#ctor(Siesa.SDK.Shared.Services.IBackendRouterService,Siesa.SDK.Shared.Services.IAuthenticationService,Siesa.SDK.Frontend.Components.FormManager.Model.UtilsManager)
+  name: MenuService
+  nameWithType: MenuService.MenuService
+  fullName: Siesa.SDK.Frontend.Services.MenuService.MenuService
+  nameWithType.vb: MenuService.New
+  fullName.vb: Siesa.SDK.Frontend.Services.MenuService.New
+  name.vb: New
+- uid: Siesa.SDK.Shared.Services.IBackendRouterService
+  commentId: T:Siesa.SDK.Shared.Services.IBackendRouterService
+  parent: Siesa.SDK.Shared.Services
+  name: IBackendRouterService
+  nameWithType: IBackendRouterService
+  fullName: Siesa.SDK.Shared.Services.IBackendRouterService
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService
+  commentId: T:Siesa.SDK.Shared.Services.IAuthenticationService
+  parent: Siesa.SDK.Shared.Services
+  name: IAuthenticationService
+  nameWithType: IAuthenticationService
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.UtilsManager
+  commentId: T:Siesa.SDK.Frontend.Components.FormManager.Model.UtilsManager
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.UtilsManager.html
+  name: UtilsManager
+  nameWithType: UtilsManager
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.UtilsManager
+- uid: Siesa.SDK.Shared.Services
+  commentId: N:Siesa.SDK.Shared.Services
+  name: Siesa.SDK.Shared.Services
+  nameWithType: Siesa.SDK.Shared.Services
+  fullName: Siesa.SDK.Shared.Services
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+  - name: .
+  - uid: Siesa.SDK.Shared
+    name: Shared
+  - name: .
+  - uid: Siesa.SDK.Shared.Services
+    name: Services
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+  - name: .
+  - uid: Siesa.SDK.Shared
+    name: Shared
+  - name: .
+  - uid: Siesa.SDK.Shared.Services
+    name: Services
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model
+  commentId: N:Siesa.SDK.Frontend.Components.FormManager.Model
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Components.FormManager.Model
+  nameWithType: Siesa.SDK.Frontend.Components.FormManager.Model
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager
+    name: FormManager
+    href: Siesa.SDK.Frontend.Components.FormManager.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model
+    name: Model
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager
+    name: FormManager
+    href: Siesa.SDK.Frontend.Components.FormManager.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model
+    name: Model
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.html
+- uid: System.EventHandler
+  commentId: T:System.EventHandler
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.eventhandler
+  name: EventHandler
+  nameWithType: EventHandler
+  fullName: System.EventHandler
+- uid: Siesa.SDK.Frontend.Services.MenuService.ReloadMenu*
+  commentId: Overload:Siesa.SDK.Frontend.Services.MenuService.ReloadMenu
+  href: Siesa.SDK.Frontend.Services.MenuService.html#Siesa.SDK.Frontend.Services.MenuService.ReloadMenu
+  name: ReloadMenu
+  nameWithType: MenuService.ReloadMenu
+  fullName: Siesa.SDK.Frontend.Services.MenuService.ReloadMenu
+- uid: System.Threading.Tasks.Task
+  commentId: T:System.Threading.Tasks.Task
+  parent: System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  name: Task
+  nameWithType: Task
+  fullName: System.Threading.Tasks.Task
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+- uid: Siesa.SDK.Frontend.Services.MenuService.ClearMenu*
+  commentId: Overload:Siesa.SDK.Frontend.Services.MenuService.ClearMenu
+  href: Siesa.SDK.Frontend.Services.MenuService.html#Siesa.SDK.Frontend.Services.MenuService.ClearMenu
+  name: ClearMenu
+  nameWithType: MenuService.ClearMenu
+  fullName: Siesa.SDK.Frontend.Services.MenuService.ClearMenu
+- uid: Siesa.SDK.Frontend.Services.MenuService.LoadMenu*
+  commentId: Overload:Siesa.SDK.Frontend.Services.MenuService.LoadMenu
+  href: Siesa.SDK.Frontend.Services.MenuService.html#Siesa.SDK.Frontend.Services.MenuService.LoadMenu(System.Int32)
+  name: LoadMenu
+  nameWithType: MenuService.LoadMenu
+  fullName: Siesa.SDK.Frontend.Services.MenuService.LoadMenu
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithoutSubLevelsBySuite*
+  commentId: Overload:Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithoutSubLevelsBySuite
+  href: Siesa.SDK.Frontend.Services.MenuService.html#Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithoutSubLevelsBySuite(Siesa.SDK.Shared.Services.SDKBusinessModel,System.Int32)
+  name: GetMenuItemsWithoutSubLevelsBySuite
+  nameWithType: MenuService.GetMenuItemsWithoutSubLevelsBySuite
+  fullName: Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithoutSubLevelsBySuite
+- uid: Siesa.SDK.Shared.Services.SDKBusinessModel
+  commentId: T:Siesa.SDK.Shared.Services.SDKBusinessModel
+  parent: Siesa.SDK.Shared.Services
+  name: SDKBusinessModel
+  nameWithType: SDKBusinessModel
+  fullName: Siesa.SDK.Shared.Services.SDKBusinessModel
+- uid: System.Threading.Tasks.Task{System.Boolean}
+  commentId: T:System.Threading.Tasks.Task{System.Boolean}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<bool>
+  nameWithType: Task<bool>
+  fullName: System.Threading.Tasks.Task<bool>
+  nameWithType.vb: Task(Of Boolean)
+  fullName.vb: System.Threading.Tasks.Task(Of Boolean)
+  name.vb: Task(Of Boolean)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: System.Threading.Tasks.Task`1
+  commentId: T:System.Threading.Tasks.Task`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<TResult>
+  nameWithType: Task<TResult>
+  fullName: System.Threading.Tasks.Task<TResult>
+  nameWithType.vb: Task(Of TResult)
+  fullName.vb: System.Threading.Tasks.Task(Of TResult)
+  name.vb: Task(Of TResult)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - name: TResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TResult
+  - name: )
+- uid: Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithoutSubLevelsByMenu*
+  commentId: Overload:Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithoutSubLevelsByMenu
+  href: Siesa.SDK.Frontend.Services.MenuService.html#Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithoutSubLevelsByMenu(Siesa.SDK.Shared.Services.SDKBusinessModel,System.Int32)
+  name: GetMenuItemsWithoutSubLevelsByMenu
+  nameWithType: MenuService.GetMenuItemsWithoutSubLevelsByMenu
+  fullName: Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithoutSubLevelsByMenu
+- uid: System.Threading.Tasks.Task{System.Collections.Generic.List{Siesa.SDK.Entities.E00061_Menu}}
+  commentId: T:System.Threading.Tasks.Task{System.Collections.Generic.List{Siesa.SDK.Entities.E00061_Menu}}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<List<E00061_Menu>>
+  nameWithType: Task<List<E00061_Menu>>
+  fullName: System.Threading.Tasks.Task<System.Collections.Generic.List<Siesa.SDK.Entities.E00061_Menu>>
+  nameWithType.vb: Task(Of List(Of E00061_Menu))
+  fullName.vb: System.Threading.Tasks.Task(Of System.Collections.Generic.List(Of Siesa.SDK.Entities.E00061_Menu))
+  name.vb: Task(Of List(Of E00061_Menu))
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: Siesa.SDK.Entities.E00061_Menu
+    name: E00061_Menu
+  - name: '>'
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Siesa.SDK.Entities.E00061_Menu
+    name: E00061_Menu
+  - name: )
+  - name: )
+- uid: Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithChilds*
+  commentId: Overload:Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithChilds
+  href: Siesa.SDK.Frontend.Services.MenuService.html#Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithChilds(System.Int32)
+  name: GetMenuItemsWithChilds
+  nameWithType: MenuService.GetMenuItemsWithChilds
+  fullName: Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithChilds
+- uid: Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithChildsAndOperations*
+  commentId: Overload:Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithChildsAndOperations
+  href: Siesa.SDK.Frontend.Services.MenuService.html#Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithChildsAndOperations(System.Int32)
+  name: GetMenuItemsWithChildsAndOperations
+  nameWithType: MenuService.GetMenuItemsWithChildsAndOperations
+  fullName: Siesa.SDK.Frontend.Services.MenuService.GetMenuItemsWithChildsAndOperations
+- uid: Siesa.SDK.Frontend.Services.MenuService.MenuManagerBySuite*
+  commentId: Overload:Siesa.SDK.Frontend.Services.MenuService.MenuManagerBySuite
+  href: Siesa.SDK.Frontend.Services.MenuService.html#Siesa.SDK.Frontend.Services.MenuService.MenuManagerBySuite(Siesa.SDK.Shared.Services.SDKBusinessModel,System.Int32,System.Collections.Generic.List{Siesa.SDK.Entities.E00061_Menu},System.Boolean,System.Boolean)
+  name: MenuManagerBySuite
+  nameWithType: MenuService.MenuManagerBySuite
+  fullName: Siesa.SDK.Frontend.Services.MenuService.MenuManagerBySuite
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Siesa.SDK.Frontend.Services.MenuService.NotifyMenuLoaded*
+  commentId: Overload:Siesa.SDK.Frontend.Services.MenuService.NotifyMenuLoaded
+  href: Siesa.SDK.Frontend.Services.MenuService.html#Siesa.SDK.Frontend.Services.MenuService.NotifyMenuLoaded
+  name: NotifyMenuLoaded
+  nameWithType: MenuService.NotifyMenuLoaded
+  fullName: Siesa.SDK.Frontend.Services.MenuService.NotifyMenuLoaded
+- uid: Siesa.SDK.Frontend.Services.MenuService.SetSelectedSuite*
+  commentId: Overload:Siesa.SDK.Frontend.Services.MenuService.SetSelectedSuite
+  href: Siesa.SDK.Frontend.Services.MenuService.html#Siesa.SDK.Frontend.Services.MenuService.SetSelectedSuite(System.Int32)
+  name: SetSelectedSuite
+  nameWithType: MenuService.SetSelectedSuite
+  fullName: Siesa.SDK.Frontend.Services.MenuService.SetSelectedSuite

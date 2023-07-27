@@ -453,7 +453,10 @@ namespace Siesa.SDK.Business
             }
         }
 
-
+        /// <summary>
+        /// Save the current object
+        /// </summary>
+        /// <returns>Returns the rowid of the record created </returns>
         public virtual Int64 Save()
         {
             return SaveAsync().GetAwaiter().GetResult();

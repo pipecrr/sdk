@@ -1,0 +1,23 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Backend.Interceptors
+  commentId: N:Siesa.SDK.Backend.Interceptors
+  id: Siesa.SDK.Backend.Interceptors
+  children:
+  - Siesa.SDK.Backend.Interceptors.SDKDBInterceptor
+  langs:
+  - csharp
+  - vb
+  name: Siesa.SDK.Backend.Interceptors
+  nameWithType: Siesa.SDK.Backend.Interceptors
+  fullName: Siesa.SDK.Backend.Interceptors
+  type: Namespace
+  assemblies:
+  - Siesa.SDK.Backend
+references:
+- uid: Siesa.SDK.Backend.Interceptors.SDKDBInterceptor
+  commentId: T:Siesa.SDK.Backend.Interceptors.SDKDBInterceptor
+  href: Siesa.SDK.Backend.Interceptors.SDKDBInterceptor.html
+  name: SDKDBInterceptor
+  nameWithType: SDKDBInterceptor
+  fullName: Siesa.SDK.Backend.Interceptors.SDKDBInterceptor

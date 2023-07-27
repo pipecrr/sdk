@@ -1,0 +1,770 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Components.Layout.ILayoutService
+  commentId: T:Siesa.SDK.Frontend.Components.Layout.ILayoutService
+  id: ILayoutService
+  parent: Siesa.SDK.Frontend.Components.Layout
+  children:
+  - Siesa.SDK.Frontend.Components.Layout.ILayoutService.BusinessObj
+  - Siesa.SDK.Frontend.Components.Layout.ILayoutService.DisableCompanies
+  - Siesa.SDK.Frontend.Components.Layout.ILayoutService.HasExtraButtons
+  - Siesa.SDK.Frontend.Components.Layout.ILayoutService.HiddenCompaies
+  - Siesa.SDK.Frontend.Components.Layout.ILayoutService.OnChangeCompany
+  - Siesa.SDK.Frontend.Components.Layout.ILayoutService.PropertyChanged
+  - Siesa.SDK.Frontend.Components.Layout.ILayoutService.ShowCompanies
+  - Siesa.SDK.Frontend.Components.Layout.ILayoutService.StyleName
+  - Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarButtons
+  - Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarExtraButtons
+  - Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarSetter
+  - Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarTitle
+  - Siesa.SDK.Frontend.Components.Layout.ILayoutService.UpdateTopBar
+  langs:
+  - csharp
+  - vb
+  name: ILayoutService
+  nameWithType: ILayoutService
+  fullName: Siesa.SDK.Frontend.Components.Layout.ILayoutService
+  type: Interface
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/Layout/ILayoutService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ILayoutService
+    path: ../Siesa.SDK.Frontend/Components/Layout/ILayoutService.cs
+    startLine: 12
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Layout
+  syntax:
+    content: public interface ILayoutService
+    content.vb: Public Interface ILayoutService
+- uid: Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarTitle
+  commentId: P:Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarTitle
+  id: TopBarTitle
+  parent: Siesa.SDK.Frontend.Components.Layout.ILayoutService
+  langs:
+  - csharp
+  - vb
+  name: TopBarTitle
+  nameWithType: ILayoutService.TopBarTitle
+  fullName: Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarTitle
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/Layout/ILayoutService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: TopBarTitle
+    path: ../Siesa.SDK.Frontend/Components/Layout/ILayoutService.cs
+    startLine: 14
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Layout
+  syntax:
+    content: RenderFragment TopBarTitle { get; }
+    parameters: []
+    return:
+      type: Microsoft.AspNetCore.Components.RenderFragment
+    content.vb: ReadOnly Property TopBarTitle As RenderFragment
+  overload: Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarTitle*
+- uid: Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarButtons
+  commentId: P:Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarButtons
+  id: TopBarButtons
+  parent: Siesa.SDK.Frontend.Components.Layout.ILayoutService
+  langs:
+  - csharp
+  - vb
+  name: TopBarButtons
+  nameWithType: ILayoutService.TopBarButtons
+  fullName: Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarButtons
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/Layout/ILayoutService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: TopBarButtons
+    path: ../Siesa.SDK.Frontend/Components/Layout/ILayoutService.cs
+    startLine: 15
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Layout
+  syntax:
+    content: RenderFragment TopBarButtons { get; }
+    parameters: []
+    return:
+      type: Microsoft.AspNetCore.Components.RenderFragment
+    content.vb: ReadOnly Property TopBarButtons As RenderFragment
+  overload: Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarButtons*
+- uid: Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarExtraButtons
+  commentId: P:Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarExtraButtons
+  id: TopBarExtraButtons
+  parent: Siesa.SDK.Frontend.Components.Layout.ILayoutService
+  langs:
+  - csharp
+  - vb
+  name: TopBarExtraButtons
+  nameWithType: ILayoutService.TopBarExtraButtons
+  fullName: Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarExtraButtons
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/Layout/ILayoutService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: TopBarExtraButtons
+    path: ../Siesa.SDK.Frontend/Components/Layout/ILayoutService.cs
+    startLine: 16
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Layout
+  syntax:
+    content: RenderFragment TopBarExtraButtons { get; }
+    parameters: []
+    return:
+      type: Microsoft.AspNetCore.Components.RenderFragment
+    content.vb: ReadOnly Property TopBarExtraButtons As RenderFragment
+  overload: Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarExtraButtons*
+- uid: Siesa.SDK.Frontend.Components.Layout.ILayoutService.StyleName
+  commentId: P:Siesa.SDK.Frontend.Components.Layout.ILayoutService.StyleName
+  id: StyleName
+  parent: Siesa.SDK.Frontend.Components.Layout.ILayoutService
+  langs:
+  - csharp
+  - vb
+  name: StyleName
+  nameWithType: ILayoutService.StyleName
+  fullName: Siesa.SDK.Frontend.Components.Layout.ILayoutService.StyleName
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/Layout/ILayoutService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: StyleName
+    path: ../Siesa.SDK.Frontend/Components/Layout/ILayoutService.cs
+    startLine: 17
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Layout
+  syntax:
+    content: string StyleName { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: ReadOnly Property StyleName As String
+  overload: Siesa.SDK.Frontend.Components.Layout.ILayoutService.StyleName*
+- uid: Siesa.SDK.Frontend.Components.Layout.ILayoutService.HasExtraButtons
+  commentId: P:Siesa.SDK.Frontend.Components.Layout.ILayoutService.HasExtraButtons
+  id: HasExtraButtons
+  parent: Siesa.SDK.Frontend.Components.Layout.ILayoutService
+  langs:
+  - csharp
+  - vb
+  name: HasExtraButtons
+  nameWithType: ILayoutService.HasExtraButtons
+  fullName: Siesa.SDK.Frontend.Components.Layout.ILayoutService.HasExtraButtons
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/Layout/ILayoutService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: HasExtraButtons
+    path: ../Siesa.SDK.Frontend/Components/Layout/ILayoutService.cs
+    startLine: 18
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Layout
+  syntax:
+    content: bool HasExtraButtons { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: ReadOnly Property HasExtraButtons As Boolean
+  overload: Siesa.SDK.Frontend.Components.Layout.ILayoutService.HasExtraButtons*
+- uid: Siesa.SDK.Frontend.Components.Layout.ILayoutService.HiddenCompaies
+  commentId: P:Siesa.SDK.Frontend.Components.Layout.ILayoutService.HiddenCompaies
+  id: HiddenCompaies
+  parent: Siesa.SDK.Frontend.Components.Layout.ILayoutService
+  langs:
+  - csharp
+  - vb
+  name: HiddenCompaies
+  nameWithType: ILayoutService.HiddenCompaies
+  fullName: Siesa.SDK.Frontend.Components.Layout.ILayoutService.HiddenCompaies
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/Layout/ILayoutService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: HiddenCompaies
+    path: ../Siesa.SDK.Frontend/Components/Layout/ILayoutService.cs
+    startLine: 19
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Layout
+  syntax:
+    content: bool HiddenCompaies { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: ReadOnly Property HiddenCompaies As Boolean
+  overload: Siesa.SDK.Frontend.Components.Layout.ILayoutService.HiddenCompaies*
+- uid: Siesa.SDK.Frontend.Components.Layout.ILayoutService.ShowCompanies
+  commentId: P:Siesa.SDK.Frontend.Components.Layout.ILayoutService.ShowCompanies
+  id: ShowCompanies
+  parent: Siesa.SDK.Frontend.Components.Layout.ILayoutService
+  langs:
+  - csharp
+  - vb
+  name: ShowCompanies
+  nameWithType: ILayoutService.ShowCompanies
+  fullName: Siesa.SDK.Frontend.Components.Layout.ILayoutService.ShowCompanies
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/Layout/ILayoutService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ShowCompanies
+    path: ../Siesa.SDK.Frontend/Components/Layout/ILayoutService.cs
+    startLine: 20
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Layout
+  syntax:
+    content: bool ShowCompanies { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: ReadOnly Property ShowCompanies As Boolean
+  overload: Siesa.SDK.Frontend.Components.Layout.ILayoutService.ShowCompanies*
+- uid: Siesa.SDK.Frontend.Components.Layout.ILayoutService.DisableCompanies
+  commentId: P:Siesa.SDK.Frontend.Components.Layout.ILayoutService.DisableCompanies
+  id: DisableCompanies
+  parent: Siesa.SDK.Frontend.Components.Layout.ILayoutService
+  langs:
+  - csharp
+  - vb
+  name: DisableCompanies
+  nameWithType: ILayoutService.DisableCompanies
+  fullName: Siesa.SDK.Frontend.Components.Layout.ILayoutService.DisableCompanies
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/Layout/ILayoutService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: DisableCompanies
+    path: ../Siesa.SDK.Frontend/Components/Layout/ILayoutService.cs
+    startLine: 21
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Layout
+  syntax:
+    content: bool DisableCompanies { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: ReadOnly Property DisableCompanies As Boolean
+  overload: Siesa.SDK.Frontend.Components.Layout.ILayoutService.DisableCompanies*
+- uid: Siesa.SDK.Frontend.Components.Layout.ILayoutService.BusinessObj
+  commentId: P:Siesa.SDK.Frontend.Components.Layout.ILayoutService.BusinessObj
+  id: BusinessObj
+  parent: Siesa.SDK.Frontend.Components.Layout.ILayoutService
+  langs:
+  - csharp
+  - vb
+  name: BusinessObj
+  nameWithType: ILayoutService.BusinessObj
+  fullName: Siesa.SDK.Frontend.Components.Layout.ILayoutService.BusinessObj
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/Layout/ILayoutService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: BusinessObj
+    path: ../Siesa.SDK.Frontend/Components/Layout/ILayoutService.cs
+    startLine: 22
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Layout
+  syntax:
+    content: dynamic BusinessObj { get; }
+    parameters: []
+    return:
+      type: dynamic
+    content.vb: ReadOnly Property BusinessObj As Object
+  overload: Siesa.SDK.Frontend.Components.Layout.ILayoutService.BusinessObj*
+- uid: Siesa.SDK.Frontend.Components.Layout.ILayoutService.OnChangeCompany
+  commentId: P:Siesa.SDK.Frontend.Components.Layout.ILayoutService.OnChangeCompany
+  id: OnChangeCompany
+  parent: Siesa.SDK.Frontend.Components.Layout.ILayoutService
+  langs:
+  - csharp
+  - vb
+  name: OnChangeCompany
+  nameWithType: ILayoutService.OnChangeCompany
+  fullName: Siesa.SDK.Frontend.Components.Layout.ILayoutService.OnChangeCompany
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/Layout/ILayoutService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: OnChangeCompany
+    path: ../Siesa.SDK.Frontend/Components/Layout/ILayoutService.cs
+    startLine: 23
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Layout
+  syntax:
+    content: EventCallback<E00201_Company> OnChangeCompany { get; }
+    parameters: []
+    return:
+      type: Microsoft.AspNetCore.Components.EventCallback{Siesa.SDK.Entities.E00201_Company}
+    content.vb: ReadOnly Property OnChangeCompany As EventCallback(Of E00201_Company)
+  overload: Siesa.SDK.Frontend.Components.Layout.ILayoutService.OnChangeCompany*
+- uid: Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarSetter
+  commentId: P:Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarSetter
+  id: TopBarSetter
+  parent: Siesa.SDK.Frontend.Components.Layout.ILayoutService
+  langs:
+  - csharp
+  - vb
+  name: TopBarSetter
+  nameWithType: ILayoutService.TopBarSetter
+  fullName: Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarSetter
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/Layout/ILayoutService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: TopBarSetter
+    path: ../Siesa.SDK.Frontend/Components/Layout/ILayoutService.cs
+    startLine: 24
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Layout
+  syntax:
+    content: SetTopBar TopBarSetter { get; set; }
+    parameters: []
+    return:
+      type: Siesa.SDK.Frontend.Components.FormManager.Model.SetTopBar
+    content.vb: Property TopBarSetter As SetTopBar
+  overload: Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarSetter*
+- uid: Siesa.SDK.Frontend.Components.Layout.ILayoutService.PropertyChanged
+  commentId: E:Siesa.SDK.Frontend.Components.Layout.ILayoutService.PropertyChanged
+  id: PropertyChanged
+  parent: Siesa.SDK.Frontend.Components.Layout.ILayoutService
+  langs:
+  - csharp
+  - vb
+  name: PropertyChanged
+  nameWithType: ILayoutService.PropertyChanged
+  fullName: Siesa.SDK.Frontend.Components.Layout.ILayoutService.PropertyChanged
+  type: Event
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/Layout/ILayoutService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: PropertyChanged
+    path: ../Siesa.SDK.Frontend/Components/Layout/ILayoutService.cs
+    startLine: 25
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Layout
+  syntax:
+    content: event PropertyChangedEventHandler PropertyChanged
+    return:
+      type: System.ComponentModel.PropertyChangedEventHandler
+    content.vb: Event PropertyChanged As PropertyChangedEventHandler
+- uid: Siesa.SDK.Frontend.Components.Layout.ILayoutService.UpdateTopBar
+  commentId: M:Siesa.SDK.Frontend.Components.Layout.ILayoutService.UpdateTopBar
+  id: UpdateTopBar
+  parent: Siesa.SDK.Frontend.Components.Layout.ILayoutService
+  langs:
+  - csharp
+  - vb
+  name: UpdateTopBar()
+  nameWithType: ILayoutService.UpdateTopBar()
+  fullName: Siesa.SDK.Frontend.Components.Layout.ILayoutService.UpdateTopBar()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/Layout/ILayoutService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: UpdateTopBar
+    path: ../Siesa.SDK.Frontend/Components/Layout/ILayoutService.cs
+    startLine: 26
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Layout
+  syntax:
+    content: void UpdateTopBar()
+    content.vb: Sub UpdateTopBar()
+  overload: Siesa.SDK.Frontend.Components.Layout.ILayoutService.UpdateTopBar*
+references:
+- uid: Siesa.SDK.Frontend.Components.Layout
+  commentId: N:Siesa.SDK.Frontend.Components.Layout
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Components.Layout
+  nameWithType: Siesa.SDK.Frontend.Components.Layout
+  fullName: Siesa.SDK.Frontend.Components.Layout
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.Layout
+    name: Layout
+    href: Siesa.SDK.Frontend.Components.Layout.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.Layout
+    name: Layout
+    href: Siesa.SDK.Frontend.Components.Layout.html
+- uid: Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarTitle*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarTitle
+  href: Siesa.SDK.Frontend.Components.Layout.ILayoutService.html#Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarTitle
+  name: TopBarTitle
+  nameWithType: ILayoutService.TopBarTitle
+  fullName: Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarTitle
+- uid: Microsoft.AspNetCore.Components.RenderFragment
+  commentId: T:Microsoft.AspNetCore.Components.RenderFragment
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.renderfragment
+  name: RenderFragment
+  nameWithType: RenderFragment
+  fullName: Microsoft.AspNetCore.Components.RenderFragment
+- uid: Microsoft.AspNetCore.Components
+  commentId: N:Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.AspNetCore.Components
+  nameWithType: Microsoft.AspNetCore.Components
+  fullName: Microsoft.AspNetCore.Components
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Components
+    name: Components
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Components
+    name: Components
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components
+- uid: Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarButtons*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarButtons
+  href: Siesa.SDK.Frontend.Components.Layout.ILayoutService.html#Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarButtons
+  name: TopBarButtons
+  nameWithType: ILayoutService.TopBarButtons
+  fullName: Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarButtons
+- uid: Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarExtraButtons*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarExtraButtons
+  href: Siesa.SDK.Frontend.Components.Layout.ILayoutService.html#Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarExtraButtons
+  name: TopBarExtraButtons
+  nameWithType: ILayoutService.TopBarExtraButtons
+  fullName: Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarExtraButtons
+- uid: Siesa.SDK.Frontend.Components.Layout.ILayoutService.StyleName*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Layout.ILayoutService.StyleName
+  href: Siesa.SDK.Frontend.Components.Layout.ILayoutService.html#Siesa.SDK.Frontend.Components.Layout.ILayoutService.StyleName
+  name: StyleName
+  nameWithType: ILayoutService.StyleName
+  fullName: Siesa.SDK.Frontend.Components.Layout.ILayoutService.StyleName
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Siesa.SDK.Frontend.Components.Layout.ILayoutService.HasExtraButtons*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Layout.ILayoutService.HasExtraButtons
+  href: Siesa.SDK.Frontend.Components.Layout.ILayoutService.html#Siesa.SDK.Frontend.Components.Layout.ILayoutService.HasExtraButtons
+  name: HasExtraButtons
+  nameWithType: ILayoutService.HasExtraButtons
+  fullName: Siesa.SDK.Frontend.Components.Layout.ILayoutService.HasExtraButtons
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Siesa.SDK.Frontend.Components.Layout.ILayoutService.HiddenCompaies*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Layout.ILayoutService.HiddenCompaies
+  href: Siesa.SDK.Frontend.Components.Layout.ILayoutService.html#Siesa.SDK.Frontend.Components.Layout.ILayoutService.HiddenCompaies
+  name: HiddenCompaies
+  nameWithType: ILayoutService.HiddenCompaies
+  fullName: Siesa.SDK.Frontend.Components.Layout.ILayoutService.HiddenCompaies
+- uid: Siesa.SDK.Frontend.Components.Layout.ILayoutService.ShowCompanies*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Layout.ILayoutService.ShowCompanies
+  href: Siesa.SDK.Frontend.Components.Layout.ILayoutService.html#Siesa.SDK.Frontend.Components.Layout.ILayoutService.ShowCompanies
+  name: ShowCompanies
+  nameWithType: ILayoutService.ShowCompanies
+  fullName: Siesa.SDK.Frontend.Components.Layout.ILayoutService.ShowCompanies
+- uid: Siesa.SDK.Frontend.Components.Layout.ILayoutService.DisableCompanies*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Layout.ILayoutService.DisableCompanies
+  href: Siesa.SDK.Frontend.Components.Layout.ILayoutService.html#Siesa.SDK.Frontend.Components.Layout.ILayoutService.DisableCompanies
+  name: DisableCompanies
+  nameWithType: ILayoutService.DisableCompanies
+  fullName: Siesa.SDK.Frontend.Components.Layout.ILayoutService.DisableCompanies
+- uid: Siesa.SDK.Frontend.Components.Layout.ILayoutService.BusinessObj*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Layout.ILayoutService.BusinessObj
+  href: Siesa.SDK.Frontend.Components.Layout.ILayoutService.html#Siesa.SDK.Frontend.Components.Layout.ILayoutService.BusinessObj
+  name: BusinessObj
+  nameWithType: ILayoutService.BusinessObj
+  fullName: Siesa.SDK.Frontend.Components.Layout.ILayoutService.BusinessObj
+- uid: dynamic
+  commentId: T:System.Object
+  isExternal: true
+  name: dynamic
+  nameWithType: dynamic
+  fullName: dynamic
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: Siesa.SDK.Frontend.Components.Layout.ILayoutService.OnChangeCompany*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Layout.ILayoutService.OnChangeCompany
+  href: Siesa.SDK.Frontend.Components.Layout.ILayoutService.html#Siesa.SDK.Frontend.Components.Layout.ILayoutService.OnChangeCompany
+  name: OnChangeCompany
+  nameWithType: ILayoutService.OnChangeCompany
+  fullName: Siesa.SDK.Frontend.Components.Layout.ILayoutService.OnChangeCompany
+- uid: Microsoft.AspNetCore.Components.EventCallback{Siesa.SDK.Entities.E00201_Company}
+  commentId: T:Microsoft.AspNetCore.Components.EventCallback{Siesa.SDK.Entities.E00201_Company}
+  parent: Microsoft.AspNetCore.Components
+  definition: Microsoft.AspNetCore.Components.EventCallback`1
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.eventcallback-1
+  name: EventCallback<E00201_Company>
+  nameWithType: EventCallback<E00201_Company>
+  fullName: Microsoft.AspNetCore.Components.EventCallback<Siesa.SDK.Entities.E00201_Company>
+  nameWithType.vb: EventCallback(Of E00201_Company)
+  fullName.vb: Microsoft.AspNetCore.Components.EventCallback(Of Siesa.SDK.Entities.E00201_Company)
+  name.vb: EventCallback(Of E00201_Company)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.EventCallback`1
+    name: EventCallback
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.eventcallback-1
+  - name: <
+  - uid: Siesa.SDK.Entities.E00201_Company
+    name: E00201_Company
+  - name: '>'
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.EventCallback`1
+    name: EventCallback
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.eventcallback-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Siesa.SDK.Entities.E00201_Company
+    name: E00201_Company
+  - name: )
+- uid: Microsoft.AspNetCore.Components.EventCallback`1
+  commentId: T:Microsoft.AspNetCore.Components.EventCallback`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.eventcallback-1
+  name: EventCallback<TValue>
+  nameWithType: EventCallback<TValue>
+  fullName: Microsoft.AspNetCore.Components.EventCallback<TValue>
+  nameWithType.vb: EventCallback(Of TValue)
+  fullName.vb: Microsoft.AspNetCore.Components.EventCallback(Of TValue)
+  name.vb: EventCallback(Of TValue)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.EventCallback`1
+    name: EventCallback
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.eventcallback-1
+  - name: <
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.EventCallback`1
+    name: EventCallback
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.eventcallback-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarSetter*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarSetter
+  href: Siesa.SDK.Frontend.Components.Layout.ILayoutService.html#Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarSetter
+  name: TopBarSetter
+  nameWithType: ILayoutService.TopBarSetter
+  fullName: Siesa.SDK.Frontend.Components.Layout.ILayoutService.TopBarSetter
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.SetTopBar
+  commentId: T:Siesa.SDK.Frontend.Components.FormManager.Model.SetTopBar
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.SetTopBar.html
+  name: SetTopBar
+  nameWithType: SetTopBar
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.SetTopBar
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model
+  commentId: N:Siesa.SDK.Frontend.Components.FormManager.Model
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Components.FormManager.Model
+  nameWithType: Siesa.SDK.Frontend.Components.FormManager.Model
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager
+    name: FormManager
+    href: Siesa.SDK.Frontend.Components.FormManager.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model
+    name: Model
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager
+    name: FormManager
+    href: Siesa.SDK.Frontend.Components.FormManager.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model
+    name: Model
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.html
+- uid: System.ComponentModel.PropertyChangedEventHandler
+  commentId: T:System.ComponentModel.PropertyChangedEventHandler
+  parent: System.ComponentModel
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.componentmodel.propertychangedeventhandler
+  name: PropertyChangedEventHandler
+  nameWithType: PropertyChangedEventHandler
+  fullName: System.ComponentModel.PropertyChangedEventHandler
+- uid: System.ComponentModel
+  commentId: N:System.ComponentModel
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.ComponentModel
+  nameWithType: System.ComponentModel
+  fullName: System.ComponentModel
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.ComponentModel
+    name: ComponentModel
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.componentmodel
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.ComponentModel
+    name: ComponentModel
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.componentmodel
+- uid: Siesa.SDK.Frontend.Components.Layout.ILayoutService.UpdateTopBar*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Layout.ILayoutService.UpdateTopBar
+  href: Siesa.SDK.Frontend.Components.Layout.ILayoutService.html#Siesa.SDK.Frontend.Components.Layout.ILayoutService.UpdateTopBar
+  name: UpdateTopBar
+  nameWithType: ILayoutService.UpdateTopBar
+  fullName: Siesa.SDK.Frontend.Components.Layout.ILayoutService.UpdateTopBar

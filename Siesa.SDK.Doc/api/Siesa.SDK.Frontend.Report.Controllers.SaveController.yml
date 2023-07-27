@@ -1,0 +1,1481 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Report.Controllers.SaveController
+  commentId: T:Siesa.SDK.Frontend.Report.Controllers.SaveController
+  id: SaveController
+  parent: Siesa.SDK.Frontend.Report.Controllers
+  children:
+  - Siesa.SDK.Frontend.Report.Controllers.SaveController.#ctor(Siesa.SDK.Shared.Services.IBackendRouterService,Siesa.SDK.Shared.Services.IAuthenticationService,Microsoft.AspNetCore.Http.IHttpContextAccessor)
+  - Siesa.SDK.Frontend.Report.Controllers.SaveController.DeleteReport(System.String)
+  - Siesa.SDK.Frontend.Report.Controllers.SaveController.GetBaseUri
+  - Siesa.SDK.Frontend.Report.Controllers.SaveController.GetImage(System.String,System.String@)
+  - Siesa.SDK.Frontend.Report.Controllers.SaveController.GetImagesList
+  - Siesa.SDK.Frontend.Report.Controllers.SaveController.GetReport(System.String)
+  - Siesa.SDK.Frontend.Report.Controllers.SaveController.GetReportsList
+  - Siesa.SDK.Frontend.Report.Controllers.SaveController.GetTheme(System.String)
+  - Siesa.SDK.Frontend.Report.Controllers.SaveController.GetThemesList
+  - Siesa.SDK.Frontend.Report.Controllers.SaveController.SaveReport(System.String,GrapeCity.ActiveReports.PageReportModel.Report,System.Boolean)
+  - Siesa.SDK.Frontend.Report.Controllers.SaveController.UpdateReport(System.String,GrapeCity.ActiveReports.PageReportModel.Report)
+  - Siesa.SDK.Frontend.Report.Controllers.SaveController._authenticationService
+  - Siesa.SDK.Frontend.Report.Controllers.SaveController._backendRouterService
+  langs:
+  - csharp
+  - vb
+  name: SaveController
+  nameWithType: SaveController
+  fullName: Siesa.SDK.Frontend.Report.Controllers.SaveController
+  type: Class
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/ActiveReport/Controller/SaveController.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SaveController
+    path: ../Siesa.SDK.Frontend/ActiveReport/Controller/SaveController.cs
+    startLine: 21
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Report.Controllers
+  syntax:
+    content: 'public class SaveController : IResourcesService'
+    content.vb: Public Class SaveController Implements IResourcesService
+  inheritance:
+  - System.Object
+  implements:
+  - GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: Siesa.SDK.Frontend.Report.Controllers.SaveController._backendRouterService
+  commentId: F:Siesa.SDK.Frontend.Report.Controllers.SaveController._backendRouterService
+  id: _backendRouterService
+  parent: Siesa.SDK.Frontend.Report.Controllers.SaveController
+  langs:
+  - csharp
+  - vb
+  name: _backendRouterService
+  nameWithType: SaveController._backendRouterService
+  fullName: Siesa.SDK.Frontend.Report.Controllers.SaveController._backendRouterService
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/ActiveReport/Controller/SaveController.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: _backendRouterService
+    path: ../Siesa.SDK.Frontend/ActiveReport/Controller/SaveController.cs
+    startLine: 23
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Report.Controllers
+  syntax:
+    content: public IBackendRouterService _backendRouterService
+    return:
+      type: Siesa.SDK.Shared.Services.IBackendRouterService
+    content.vb: Public _backendRouterService As IBackendRouterService
+- uid: Siesa.SDK.Frontend.Report.Controllers.SaveController._authenticationService
+  commentId: F:Siesa.SDK.Frontend.Report.Controllers.SaveController._authenticationService
+  id: _authenticationService
+  parent: Siesa.SDK.Frontend.Report.Controllers.SaveController
+  langs:
+  - csharp
+  - vb
+  name: _authenticationService
+  nameWithType: SaveController._authenticationService
+  fullName: Siesa.SDK.Frontend.Report.Controllers.SaveController._authenticationService
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/ActiveReport/Controller/SaveController.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: _authenticationService
+    path: ../Siesa.SDK.Frontend/ActiveReport/Controller/SaveController.cs
+    startLine: 24
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Report.Controllers
+  syntax:
+    content: public IAuthenticationService _authenticationService
+    return:
+      type: Siesa.SDK.Shared.Services.IAuthenticationService
+    content.vb: Public _authenticationService As IAuthenticationService
+- uid: Siesa.SDK.Frontend.Report.Controllers.SaveController.#ctor(Siesa.SDK.Shared.Services.IBackendRouterService,Siesa.SDK.Shared.Services.IAuthenticationService,Microsoft.AspNetCore.Http.IHttpContextAccessor)
+  commentId: M:Siesa.SDK.Frontend.Report.Controllers.SaveController.#ctor(Siesa.SDK.Shared.Services.IBackendRouterService,Siesa.SDK.Shared.Services.IAuthenticationService,Microsoft.AspNetCore.Http.IHttpContextAccessor)
+  id: '#ctor(Siesa.SDK.Shared.Services.IBackendRouterService,Siesa.SDK.Shared.Services.IAuthenticationService,Microsoft.AspNetCore.Http.IHttpContextAccessor)'
+  parent: Siesa.SDK.Frontend.Report.Controllers.SaveController
+  langs:
+  - csharp
+  - vb
+  name: SaveController(IBackendRouterService, IAuthenticationService, IHttpContextAccessor)
+  nameWithType: SaveController.SaveController(IBackendRouterService, IAuthenticationService, IHttpContextAccessor)
+  fullName: Siesa.SDK.Frontend.Report.Controllers.SaveController.SaveController(Siesa.SDK.Shared.Services.IBackendRouterService, Siesa.SDK.Shared.Services.IAuthenticationService, Microsoft.AspNetCore.Http.IHttpContextAccessor)
+  type: Constructor
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/ActiveReport/Controller/SaveController.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: .ctor
+    path: ../Siesa.SDK.Frontend/ActiveReport/Controller/SaveController.cs
+    startLine: 28
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Report.Controllers
+  syntax:
+    content: public SaveController(IBackendRouterService backendRouterService, IAuthenticationService authenticationService, IHttpContextAccessor httpContextAccessor)
+    parameters:
+    - id: backendRouterService
+      type: Siesa.SDK.Shared.Services.IBackendRouterService
+    - id: authenticationService
+      type: Siesa.SDK.Shared.Services.IAuthenticationService
+    - id: httpContextAccessor
+      type: Microsoft.AspNetCore.Http.IHttpContextAccessor
+    content.vb: Public Sub New(backendRouterService As IBackendRouterService, authenticationService As IAuthenticationService, httpContextAccessor As IHttpContextAccessor)
+  overload: Siesa.SDK.Frontend.Report.Controllers.SaveController.#ctor*
+  nameWithType.vb: SaveController.New(IBackendRouterService, IAuthenticationService, IHttpContextAccessor)
+  fullName.vb: Siesa.SDK.Frontend.Report.Controllers.SaveController.New(Siesa.SDK.Shared.Services.IBackendRouterService, Siesa.SDK.Shared.Services.IAuthenticationService, Microsoft.AspNetCore.Http.IHttpContextAccessor)
+  name.vb: New(IBackendRouterService, IAuthenticationService, IHttpContextAccessor)
+- uid: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetReport(System.String)
+  commentId: M:Siesa.SDK.Frontend.Report.Controllers.SaveController.GetReport(System.String)
+  id: GetReport(System.String)
+  parent: Siesa.SDK.Frontend.Report.Controllers.SaveController
+  langs:
+  - csharp
+  - vb
+  name: GetReport(string)
+  nameWithType: SaveController.GetReport(string)
+  fullName: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetReport(string)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/ActiveReport/Controller/SaveController.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetReport
+    path: ../Siesa.SDK.Frontend/ActiveReport/Controller/SaveController.cs
+    startLine: 80
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Report.Controllers
+  summary: Get report content by id
+  example: []
+  syntax:
+    content: public Report GetReport(string id)
+    parameters:
+    - id: id
+      type: System.String
+      description: Report id
+    return:
+      type: GrapeCity.ActiveReports.PageReportModel.Report
+      description: Report content
+    content.vb: Public Function GetReport(id As String) As Report
+  overload: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetReport*
+  implements:
+  - GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetReport(System.String)
+  nameWithType.vb: SaveController.GetReport(String)
+  fullName.vb: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetReport(String)
+  name.vb: GetReport(String)
+- uid: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetReportsList
+  commentId: M:Siesa.SDK.Frontend.Report.Controllers.SaveController.GetReportsList
+  id: GetReportsList
+  parent: Siesa.SDK.Frontend.Report.Controllers.SaveController
+  langs:
+  - csharp
+  - vb
+  name: GetReportsList()
+  nameWithType: SaveController.GetReportsList()
+  fullName: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetReportsList()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/ActiveReport/Controller/SaveController.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetReportsList
+    path: ../Siesa.SDK.Frontend/ActiveReport/Controller/SaveController.cs
+    startLine: 102
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Report.Controllers
+  summary: Get reports list
+  example: []
+  syntax:
+    content: public IReportInfo[] GetReportsList()
+    return:
+      type: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IReportInfo[]
+      description: Reports list
+    content.vb: Public Function GetReportsList() As IReportInfo()
+  overload: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetReportsList*
+  implements:
+  - GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetReportsList
+- uid: Siesa.SDK.Frontend.Report.Controllers.SaveController.SaveReport(System.String,GrapeCity.ActiveReports.PageReportModel.Report,System.Boolean)
+  commentId: M:Siesa.SDK.Frontend.Report.Controllers.SaveController.SaveReport(System.String,GrapeCity.ActiveReports.PageReportModel.Report,System.Boolean)
+  id: SaveReport(System.String,GrapeCity.ActiveReports.PageReportModel.Report,System.Boolean)
+  parent: Siesa.SDK.Frontend.Report.Controllers.SaveController
+  langs:
+  - csharp
+  - vb
+  name: SaveReport(string, Report, bool)
+  nameWithType: SaveController.SaveReport(string, Report, bool)
+  fullName: Siesa.SDK.Frontend.Report.Controllers.SaveController.SaveReport(string, GrapeCity.ActiveReports.PageReportModel.Report, bool)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/ActiveReport/Controller/SaveController.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SaveReport
+    path: ../Siesa.SDK.Frontend/ActiveReport/Controller/SaveController.cs
+    startLine: 128
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Report.Controllers
+  summary: Save report
+  example: []
+  syntax:
+    content: public string SaveReport(string name, Report report, bool isTemporary = false)
+    parameters:
+    - id: name
+      type: System.String
+      description: Report name
+    - id: report
+      type: GrapeCity.ActiveReports.PageReportModel.Report
+      description: Report content
+    - id: isTemporary
+      type: System.Boolean
+      description: Save report as temporary report
+    return:
+      type: System.String
+      description: Report id
+    content.vb: Public Function SaveReport(name As String, report As Report, isTemporary As Boolean = False) As String
+  overload: Siesa.SDK.Frontend.Report.Controllers.SaveController.SaveReport*
+  implements:
+  - GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.SaveReport(System.String,GrapeCity.ActiveReports.PageReportModel.Report,System.Boolean)
+  nameWithType.vb: SaveController.SaveReport(String, Report, Boolean)
+  fullName.vb: Siesa.SDK.Frontend.Report.Controllers.SaveController.SaveReport(String, GrapeCity.ActiveReports.PageReportModel.Report, Boolean)
+  name.vb: SaveReport(String, Report, Boolean)
+- uid: Siesa.SDK.Frontend.Report.Controllers.SaveController.UpdateReport(System.String,GrapeCity.ActiveReports.PageReportModel.Report)
+  commentId: M:Siesa.SDK.Frontend.Report.Controllers.SaveController.UpdateReport(System.String,GrapeCity.ActiveReports.PageReportModel.Report)
+  id: UpdateReport(System.String,GrapeCity.ActiveReports.PageReportModel.Report)
+  parent: Siesa.SDK.Frontend.Report.Controllers.SaveController
+  langs:
+  - csharp
+  - vb
+  name: UpdateReport(string, Report)
+  nameWithType: SaveController.UpdateReport(string, Report)
+  fullName: Siesa.SDK.Frontend.Report.Controllers.SaveController.UpdateReport(string, GrapeCity.ActiveReports.PageReportModel.Report)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/ActiveReport/Controller/SaveController.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: UpdateReport
+    path: ../Siesa.SDK.Frontend/ActiveReport/Controller/SaveController.cs
+    startLine: 148
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Report.Controllers
+  summary: Update report
+  example: []
+  syntax:
+    content: public string UpdateReport(string id, Report report)
+    parameters:
+    - id: id
+      type: System.String
+      description: Report id
+    - id: report
+      type: GrapeCity.ActiveReports.PageReportModel.Report
+      description: Report content
+    return:
+      type: System.String
+      description: Report id
+    content.vb: Public Function UpdateReport(id As String, report As Report) As String
+  overload: Siesa.SDK.Frontend.Report.Controllers.SaveController.UpdateReport*
+  implements:
+  - GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.UpdateReport(System.String,GrapeCity.ActiveReports.PageReportModel.Report)
+  nameWithType.vb: SaveController.UpdateReport(String, Report)
+  fullName.vb: Siesa.SDK.Frontend.Report.Controllers.SaveController.UpdateReport(String, GrapeCity.ActiveReports.PageReportModel.Report)
+  name.vb: UpdateReport(String, Report)
+- uid: Siesa.SDK.Frontend.Report.Controllers.SaveController.DeleteReport(System.String)
+  commentId: M:Siesa.SDK.Frontend.Report.Controllers.SaveController.DeleteReport(System.String)
+  id: DeleteReport(System.String)
+  parent: Siesa.SDK.Frontend.Report.Controllers.SaveController
+  langs:
+  - csharp
+  - vb
+  name: DeleteReport(string)
+  nameWithType: SaveController.DeleteReport(string)
+  fullName: Siesa.SDK.Frontend.Report.Controllers.SaveController.DeleteReport(string)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/ActiveReport/Controller/SaveController.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: DeleteReport
+    path: ../Siesa.SDK.Frontend/ActiveReport/Controller/SaveController.cs
+    startLine: 163
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Report.Controllers
+  summary: Delete report
+  example: []
+  syntax:
+    content: public void DeleteReport(string id)
+    parameters:
+    - id: id
+      type: System.String
+      description: Report id
+    content.vb: Public Sub DeleteReport(id As String)
+  overload: Siesa.SDK.Frontend.Report.Controllers.SaveController.DeleteReport*
+  implements:
+  - GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.DeleteReport(System.String)
+  nameWithType.vb: SaveController.DeleteReport(String)
+  fullName.vb: Siesa.SDK.Frontend.Report.Controllers.SaveController.DeleteReport(String)
+  name.vb: DeleteReport(String)
+- uid: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetBaseUri
+  commentId: M:Siesa.SDK.Frontend.Report.Controllers.SaveController.GetBaseUri
+  id: GetBaseUri
+  parent: Siesa.SDK.Frontend.Report.Controllers.SaveController
+  langs:
+  - csharp
+  - vb
+  name: GetBaseUri()
+  nameWithType: SaveController.GetBaseUri()
+  fullName: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetBaseUri()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/ActiveReport/Controller/SaveController.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetBaseUri
+    path: ../Siesa.SDK.Frontend/ActiveReport/Controller/SaveController.cs
+    startLine: 176
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Report.Controllers
+  summary: Gets the base <xref href="System.Uri" data-throw-if-not-resolved="false"></xref> that all the resources are located relatively to
+  example: []
+  syntax:
+    content: public Uri GetBaseUri()
+    return:
+      type: System.Uri
+      description: Base URI
+    content.vb: Public Function GetBaseUri() As Uri
+  overload: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetBaseUri*
+  implements:
+  - GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetBaseUri
+- uid: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetTheme(System.String)
+  commentId: M:Siesa.SDK.Frontend.Report.Controllers.SaveController.GetTheme(System.String)
+  id: GetTheme(System.String)
+  parent: Siesa.SDK.Frontend.Report.Controllers.SaveController
+  langs:
+  - csharp
+  - vb
+  name: GetTheme(string)
+  nameWithType: SaveController.GetTheme(string)
+  fullName: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetTheme(string)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/ActiveReport/Controller/SaveController.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetTheme
+    path: ../Siesa.SDK.Frontend/ActiveReport/Controller/SaveController.cs
+    startLine: 183
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Report.Controllers
+  summary: Get theme content by id
+  example: []
+  syntax:
+    content: public Theme GetTheme(string id)
+    parameters:
+    - id: id
+      type: System.String
+      description: Theme id
+    return:
+      type: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.Theme
+      description: Theme content
+    content.vb: Public Function GetTheme(id As String) As Theme
+  overload: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetTheme*
+  implements:
+  - GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetTheme(System.String)
+  nameWithType.vb: SaveController.GetTheme(String)
+  fullName.vb: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetTheme(String)
+  name.vb: GetTheme(String)
+- uid: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetThemesList
+  commentId: M:Siesa.SDK.Frontend.Report.Controllers.SaveController.GetThemesList
+  id: GetThemesList
+  parent: Siesa.SDK.Frontend.Report.Controllers.SaveController
+  langs:
+  - csharp
+  - vb
+  name: GetThemesList()
+  nameWithType: SaveController.GetThemesList()
+  fullName: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetThemesList()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/ActiveReport/Controller/SaveController.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetThemesList
+    path: ../Siesa.SDK.Frontend/ActiveReport/Controller/SaveController.cs
+    startLine: 190
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Report.Controllers
+  summary: Get themes list
+  example: []
+  syntax:
+    content: public IThemeInfo[] GetThemesList()
+    return:
+      type: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IThemeInfo[]
+      description: Themes list
+    content.vb: Public Function GetThemesList() As IThemeInfo()
+  overload: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetThemesList*
+  implements:
+  - GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetThemesList
+- uid: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetImage(System.String,System.String@)
+  commentId: M:Siesa.SDK.Frontend.Report.Controllers.SaveController.GetImage(System.String,System.String@)
+  id: GetImage(System.String,System.String@)
+  parent: Siesa.SDK.Frontend.Report.Controllers.SaveController
+  langs:
+  - csharp
+  - vb
+  name: GetImage(string, out string)
+  nameWithType: SaveController.GetImage(string, out string)
+  fullName: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetImage(string, out string)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/ActiveReport/Controller/SaveController.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetImage
+    path: ../Siesa.SDK.Frontend/ActiveReport/Controller/SaveController.cs
+    startLine: 196
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Report.Controllers
+  summary: Get image content by id
+  example: []
+  syntax:
+    content: public byte[] GetImage(string id, out string mimeType)
+    parameters:
+    - id: id
+      type: System.String
+      description: Image id
+    - id: mimeType
+      type: System.String
+      description: Image MIME type
+    return:
+      type: System.Byte[]
+      description: Image content
+    content.vb: Public Function GetImage(id As String, mimeType As String) As Byte()
+  overload: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetImage*
+  implements:
+  - GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetImage(System.String,System.String@)
+  nameWithType.vb: SaveController.GetImage(String, String)
+  fullName.vb: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetImage(String, String)
+  name.vb: GetImage(String, String)
+- uid: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetImagesList
+  commentId: M:Siesa.SDK.Frontend.Report.Controllers.SaveController.GetImagesList
+  id: GetImagesList
+  parent: Siesa.SDK.Frontend.Report.Controllers.SaveController
+  langs:
+  - csharp
+  - vb
+  name: GetImagesList()
+  nameWithType: SaveController.GetImagesList()
+  fullName: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetImagesList()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/ActiveReport/Controller/SaveController.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetImagesList
+    path: ../Siesa.SDK.Frontend/ActiveReport/Controller/SaveController.cs
+    startLine: 204
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Report.Controllers
+  summary: Get images list
+  example: []
+  syntax:
+    content: public IImageInfo[] GetImagesList()
+    return:
+      type: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IImageInfo[]
+      description: Images list
+    content.vb: Public Function GetImagesList() As IImageInfo()
+  overload: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetImagesList*
+  implements:
+  - GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetImagesList
+references:
+- uid: Siesa.SDK.Frontend.Report.Controllers
+  commentId: N:Siesa.SDK.Frontend.Report.Controllers
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Report.Controllers
+  nameWithType: Siesa.SDK.Frontend.Report.Controllers
+  fullName: Siesa.SDK.Frontend.Report.Controllers
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Report
+    name: Report
+    href: Siesa.SDK.Frontend.Report.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Report.Controllers
+    name: Controllers
+    href: Siesa.SDK.Frontend.Report.Controllers.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Report
+    name: Report
+    href: Siesa.SDK.Frontend.Report.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Report.Controllers
+    name: Controllers
+    href: Siesa.SDK.Frontend.Report.Controllers.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService
+  commentId: T:GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService
+  parent: GrapeCity.ActiveReports.Aspnetcore.Designer.Services
+  isExternal: true
+  name: IResourcesService
+  nameWithType: IResourcesService
+  fullName: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services
+  commentId: N:GrapeCity.ActiveReports.Aspnetcore.Designer.Services
+  isExternal: true
+  name: GrapeCity.ActiveReports.Aspnetcore.Designer.Services
+  nameWithType: GrapeCity.ActiveReports.Aspnetcore.Designer.Services
+  fullName: GrapeCity.ActiveReports.Aspnetcore.Designer.Services
+  spec.csharp:
+  - uid: GrapeCity
+    name: GrapeCity
+    isExternal: true
+  - name: .
+  - uid: GrapeCity.ActiveReports
+    name: ActiveReports
+    isExternal: true
+  - name: .
+  - uid: GrapeCity.ActiveReports.Aspnetcore
+    name: Aspnetcore
+    isExternal: true
+  - name: .
+  - uid: GrapeCity.ActiveReports.Aspnetcore.Designer
+    name: Designer
+    isExternal: true
+  - name: .
+  - uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services
+    name: Services
+    isExternal: true
+  spec.vb:
+  - uid: GrapeCity
+    name: GrapeCity
+    isExternal: true
+  - name: .
+  - uid: GrapeCity.ActiveReports
+    name: ActiveReports
+    isExternal: true
+  - name: .
+  - uid: GrapeCity.ActiveReports.Aspnetcore
+    name: Aspnetcore
+    isExternal: true
+  - name: .
+  - uid: GrapeCity.ActiveReports.Aspnetcore.Designer
+    name: Designer
+    isExternal: true
+  - name: .
+  - uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services
+    name: Services
+    isExternal: true
+- uid: Siesa.SDK.Shared.Services.IBackendRouterService
+  commentId: T:Siesa.SDK.Shared.Services.IBackendRouterService
+  parent: Siesa.SDK.Shared.Services
+  name: IBackendRouterService
+  nameWithType: IBackendRouterService
+  fullName: Siesa.SDK.Shared.Services.IBackendRouterService
+- uid: Siesa.SDK.Shared.Services
+  commentId: N:Siesa.SDK.Shared.Services
+  name: Siesa.SDK.Shared.Services
+  nameWithType: Siesa.SDK.Shared.Services
+  fullName: Siesa.SDK.Shared.Services
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+  - name: .
+  - uid: Siesa.SDK.Shared
+    name: Shared
+  - name: .
+  - uid: Siesa.SDK.Shared.Services
+    name: Services
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+  - name: .
+  - uid: Siesa.SDK.Shared
+    name: Shared
+  - name: .
+  - uid: Siesa.SDK.Shared.Services
+    name: Services
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService
+  commentId: T:Siesa.SDK.Shared.Services.IAuthenticationService
+  parent: Siesa.SDK.Shared.Services
+  name: IAuthenticationService
+  nameWithType: IAuthenticationService
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService
+- uid: Siesa.SDK.Frontend.Report.Controllers.SaveController.#ctor*
+  commentId: Overload:Siesa.SDK.Frontend.Report.Controllers.SaveController.#ctor
+  href: Siesa.SDK.Frontend.Report.Controllers.SaveController.html#Siesa.SDK.Frontend.Report.Controllers.SaveController.#ctor(Siesa.SDK.Shared.Services.IBackendRouterService,Siesa.SDK.Shared.Services.IAuthenticationService,Microsoft.AspNetCore.Http.IHttpContextAccessor)
+  name: SaveController
+  nameWithType: SaveController.SaveController
+  fullName: Siesa.SDK.Frontend.Report.Controllers.SaveController.SaveController
+  nameWithType.vb: SaveController.New
+  fullName.vb: Siesa.SDK.Frontend.Report.Controllers.SaveController.New
+  name.vb: New
+- uid: Microsoft.AspNetCore.Http.IHttpContextAccessor
+  commentId: T:Microsoft.AspNetCore.Http.IHttpContextAccessor
+  parent: Microsoft.AspNetCore.Http
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.ihttpcontextaccessor
+  name: IHttpContextAccessor
+  nameWithType: IHttpContextAccessor
+  fullName: Microsoft.AspNetCore.Http.IHttpContextAccessor
+- uid: Microsoft.AspNetCore.Http
+  commentId: N:Microsoft.AspNetCore.Http
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.AspNetCore.Http
+  nameWithType: Microsoft.AspNetCore.Http
+  fullName: Microsoft.AspNetCore.Http
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Http
+    name: Http
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Http
+    name: Http
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http
+- uid: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetReport*
+  commentId: Overload:Siesa.SDK.Frontend.Report.Controllers.SaveController.GetReport
+  href: Siesa.SDK.Frontend.Report.Controllers.SaveController.html#Siesa.SDK.Frontend.Report.Controllers.SaveController.GetReport(System.String)
+  name: GetReport
+  nameWithType: SaveController.GetReport
+  fullName: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetReport
+- uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetReport(System.String)
+  commentId: M:GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetReport(System.String)
+  parent: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: GetReport(string)
+  nameWithType: IResourcesService.GetReport(string)
+  fullName: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetReport(string)
+  nameWithType.vb: IResourcesService.GetReport(String)
+  fullName.vb: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetReport(String)
+  name.vb: GetReport(String)
+  spec.csharp:
+  - uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetReport(System.String)
+    name: GetReport
+    isExternal: true
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetReport(System.String)
+    name: GetReport
+    isExternal: true
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: GrapeCity.ActiveReports.PageReportModel.Report
+  commentId: T:GrapeCity.ActiveReports.PageReportModel.Report
+  parent: GrapeCity.ActiveReports.PageReportModel
+  isExternal: true
+  name: Report
+  nameWithType: Report
+  fullName: GrapeCity.ActiveReports.PageReportModel.Report
+- uid: GrapeCity.ActiveReports.PageReportModel
+  commentId: N:GrapeCity.ActiveReports.PageReportModel
+  isExternal: true
+  name: GrapeCity.ActiveReports.PageReportModel
+  nameWithType: GrapeCity.ActiveReports.PageReportModel
+  fullName: GrapeCity.ActiveReports.PageReportModel
+  spec.csharp:
+  - uid: GrapeCity
+    name: GrapeCity
+    isExternal: true
+  - name: .
+  - uid: GrapeCity.ActiveReports
+    name: ActiveReports
+    isExternal: true
+  - name: .
+  - uid: GrapeCity.ActiveReports.PageReportModel
+    name: PageReportModel
+    isExternal: true
+  spec.vb:
+  - uid: GrapeCity
+    name: GrapeCity
+    isExternal: true
+  - name: .
+  - uid: GrapeCity.ActiveReports
+    name: ActiveReports
+    isExternal: true
+  - name: .
+  - uid: GrapeCity.ActiveReports.PageReportModel
+    name: PageReportModel
+    isExternal: true
+- uid: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetReportsList*
+  commentId: Overload:Siesa.SDK.Frontend.Report.Controllers.SaveController.GetReportsList
+  href: Siesa.SDK.Frontend.Report.Controllers.SaveController.html#Siesa.SDK.Frontend.Report.Controllers.SaveController.GetReportsList
+  name: GetReportsList
+  nameWithType: SaveController.GetReportsList
+  fullName: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetReportsList
+- uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetReportsList
+  commentId: M:GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetReportsList
+  parent: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService
+  isExternal: true
+  name: GetReportsList()
+  nameWithType: IResourcesService.GetReportsList()
+  fullName: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetReportsList()
+  spec.csharp:
+  - uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetReportsList
+    name: GetReportsList
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetReportsList
+    name: GetReportsList
+    isExternal: true
+  - name: (
+  - name: )
+- uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IReportInfo[]
+  isExternal: true
+  name: IReportInfo[]
+  nameWithType: IReportInfo[]
+  fullName: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IReportInfo[]
+  nameWithType.vb: IReportInfo()
+  fullName.vb: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IReportInfo()
+  name.vb: IReportInfo()
+  spec.csharp:
+  - uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IReportInfo
+    name: IReportInfo
+    isExternal: true
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IReportInfo
+    name: IReportInfo
+    isExternal: true
+  - name: (
+  - name: )
+- uid: Siesa.SDK.Frontend.Report.Controllers.SaveController.SaveReport*
+  commentId: Overload:Siesa.SDK.Frontend.Report.Controllers.SaveController.SaveReport
+  href: Siesa.SDK.Frontend.Report.Controllers.SaveController.html#Siesa.SDK.Frontend.Report.Controllers.SaveController.SaveReport(System.String,GrapeCity.ActiveReports.PageReportModel.Report,System.Boolean)
+  name: SaveReport
+  nameWithType: SaveController.SaveReport
+  fullName: Siesa.SDK.Frontend.Report.Controllers.SaveController.SaveReport
+- uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.SaveReport(System.String,GrapeCity.ActiveReports.PageReportModel.Report,System.Boolean)
+  commentId: M:GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.SaveReport(System.String,GrapeCity.ActiveReports.PageReportModel.Report,System.Boolean)
+  parent: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: SaveReport(string, Report, bool)
+  nameWithType: IResourcesService.SaveReport(string, Report, bool)
+  fullName: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.SaveReport(string, GrapeCity.ActiveReports.PageReportModel.Report, bool)
+  nameWithType.vb: IResourcesService.SaveReport(String, Report, Boolean)
+  fullName.vb: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.SaveReport(String, GrapeCity.ActiveReports.PageReportModel.Report, Boolean)
+  name.vb: SaveReport(String, Report, Boolean)
+  spec.csharp:
+  - uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.SaveReport(System.String,GrapeCity.ActiveReports.PageReportModel.Report,System.Boolean)
+    name: SaveReport
+    isExternal: true
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: GrapeCity.ActiveReports.PageReportModel.Report
+    name: Report
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  spec.vb:
+  - uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.SaveReport(System.String,GrapeCity.ActiveReports.PageReportModel.Report,System.Boolean)
+    name: SaveReport
+    isExternal: true
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: GrapeCity.ActiveReports.PageReportModel.Report
+    name: Report
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Siesa.SDK.Frontend.Report.Controllers.SaveController.UpdateReport*
+  commentId: Overload:Siesa.SDK.Frontend.Report.Controllers.SaveController.UpdateReport
+  href: Siesa.SDK.Frontend.Report.Controllers.SaveController.html#Siesa.SDK.Frontend.Report.Controllers.SaveController.UpdateReport(System.String,GrapeCity.ActiveReports.PageReportModel.Report)
+  name: UpdateReport
+  nameWithType: SaveController.UpdateReport
+  fullName: Siesa.SDK.Frontend.Report.Controllers.SaveController.UpdateReport
+- uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.UpdateReport(System.String,GrapeCity.ActiveReports.PageReportModel.Report)
+  commentId: M:GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.UpdateReport(System.String,GrapeCity.ActiveReports.PageReportModel.Report)
+  parent: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: UpdateReport(string, Report)
+  nameWithType: IResourcesService.UpdateReport(string, Report)
+  fullName: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.UpdateReport(string, GrapeCity.ActiveReports.PageReportModel.Report)
+  nameWithType.vb: IResourcesService.UpdateReport(String, Report)
+  fullName.vb: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.UpdateReport(String, GrapeCity.ActiveReports.PageReportModel.Report)
+  name.vb: UpdateReport(String, Report)
+  spec.csharp:
+  - uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.UpdateReport(System.String,GrapeCity.ActiveReports.PageReportModel.Report)
+    name: UpdateReport
+    isExternal: true
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: GrapeCity.ActiveReports.PageReportModel.Report
+    name: Report
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.UpdateReport(System.String,GrapeCity.ActiveReports.PageReportModel.Report)
+    name: UpdateReport
+    isExternal: true
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: GrapeCity.ActiveReports.PageReportModel.Report
+    name: Report
+    isExternal: true
+  - name: )
+- uid: Siesa.SDK.Frontend.Report.Controllers.SaveController.DeleteReport*
+  commentId: Overload:Siesa.SDK.Frontend.Report.Controllers.SaveController.DeleteReport
+  href: Siesa.SDK.Frontend.Report.Controllers.SaveController.html#Siesa.SDK.Frontend.Report.Controllers.SaveController.DeleteReport(System.String)
+  name: DeleteReport
+  nameWithType: SaveController.DeleteReport
+  fullName: Siesa.SDK.Frontend.Report.Controllers.SaveController.DeleteReport
+- uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.DeleteReport(System.String)
+  commentId: M:GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.DeleteReport(System.String)
+  parent: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: DeleteReport(string)
+  nameWithType: IResourcesService.DeleteReport(string)
+  fullName: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.DeleteReport(string)
+  nameWithType.vb: IResourcesService.DeleteReport(String)
+  fullName.vb: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.DeleteReport(String)
+  name.vb: DeleteReport(String)
+  spec.csharp:
+  - uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.DeleteReport(System.String)
+    name: DeleteReport
+    isExternal: true
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.DeleteReport(System.String)
+    name: DeleteReport
+    isExternal: true
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: System.Uri
+  commentId: T:System.Uri
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uri
+  name: Uri
+  nameWithType: Uri
+  fullName: System.Uri
+- uid: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetBaseUri*
+  commentId: Overload:Siesa.SDK.Frontend.Report.Controllers.SaveController.GetBaseUri
+  href: Siesa.SDK.Frontend.Report.Controllers.SaveController.html#Siesa.SDK.Frontend.Report.Controllers.SaveController.GetBaseUri
+  name: GetBaseUri
+  nameWithType: SaveController.GetBaseUri
+  fullName: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetBaseUri
+- uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetBaseUri
+  commentId: M:GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetBaseUri
+  parent: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService
+  isExternal: true
+  name: GetBaseUri()
+  nameWithType: IResourcesService.GetBaseUri()
+  fullName: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetBaseUri()
+  spec.csharp:
+  - uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetBaseUri
+    name: GetBaseUri
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetBaseUri
+    name: GetBaseUri
+    isExternal: true
+  - name: (
+  - name: )
+- uid: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetTheme*
+  commentId: Overload:Siesa.SDK.Frontend.Report.Controllers.SaveController.GetTheme
+  href: Siesa.SDK.Frontend.Report.Controllers.SaveController.html#Siesa.SDK.Frontend.Report.Controllers.SaveController.GetTheme(System.String)
+  name: GetTheme
+  nameWithType: SaveController.GetTheme
+  fullName: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetTheme
+- uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetTheme(System.String)
+  commentId: M:GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetTheme(System.String)
+  parent: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: GetTheme(string)
+  nameWithType: IResourcesService.GetTheme(string)
+  fullName: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetTheme(string)
+  nameWithType.vb: IResourcesService.GetTheme(String)
+  fullName.vb: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetTheme(String)
+  name.vb: GetTheme(String)
+  spec.csharp:
+  - uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetTheme(System.String)
+    name: GetTheme
+    isExternal: true
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetTheme(System.String)
+    name: GetTheme
+    isExternal: true
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.Theme
+  commentId: T:GrapeCity.ActiveReports.Aspnetcore.Designer.Services.Theme
+  parent: GrapeCity.ActiveReports.Aspnetcore.Designer.Services
+  isExternal: true
+  name: Theme
+  nameWithType: Theme
+  fullName: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.Theme
+- uid: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetThemesList*
+  commentId: Overload:Siesa.SDK.Frontend.Report.Controllers.SaveController.GetThemesList
+  href: Siesa.SDK.Frontend.Report.Controllers.SaveController.html#Siesa.SDK.Frontend.Report.Controllers.SaveController.GetThemesList
+  name: GetThemesList
+  nameWithType: SaveController.GetThemesList
+  fullName: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetThemesList
+- uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetThemesList
+  commentId: M:GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetThemesList
+  parent: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService
+  isExternal: true
+  name: GetThemesList()
+  nameWithType: IResourcesService.GetThemesList()
+  fullName: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetThemesList()
+  spec.csharp:
+  - uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetThemesList
+    name: GetThemesList
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetThemesList
+    name: GetThemesList
+    isExternal: true
+  - name: (
+  - name: )
+- uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IThemeInfo[]
+  isExternal: true
+  name: IThemeInfo[]
+  nameWithType: IThemeInfo[]
+  fullName: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IThemeInfo[]
+  nameWithType.vb: IThemeInfo()
+  fullName.vb: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IThemeInfo()
+  name.vb: IThemeInfo()
+  spec.csharp:
+  - uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IThemeInfo
+    name: IThemeInfo
+    isExternal: true
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IThemeInfo
+    name: IThemeInfo
+    isExternal: true
+  - name: (
+  - name: )
+- uid: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetImage*
+  commentId: Overload:Siesa.SDK.Frontend.Report.Controllers.SaveController.GetImage
+  href: Siesa.SDK.Frontend.Report.Controllers.SaveController.html#Siesa.SDK.Frontend.Report.Controllers.SaveController.GetImage(System.String,System.String@)
+  name: GetImage
+  nameWithType: SaveController.GetImage
+  fullName: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetImage
+- uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetImage(System.String,System.String@)
+  commentId: M:GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetImage(System.String,System.String@)
+  parent: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: GetImage(string, out string)
+  nameWithType: IResourcesService.GetImage(string, out string)
+  fullName: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetImage(string, out string)
+  nameWithType.vb: IResourcesService.GetImage(String, String)
+  fullName.vb: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetImage(String, String)
+  name.vb: GetImage(String, String)
+  spec.csharp:
+  - uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetImage(System.String,System.String@)
+    name: GetImage
+    isExternal: true
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - name: out
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetImage(System.String,System.String@)
+    name: GetImage
+    isExternal: true
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: System.Byte[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.byte
+  name: byte[]
+  nameWithType: byte[]
+  fullName: byte[]
+  nameWithType.vb: Byte()
+  fullName.vb: Byte()
+  name.vb: Byte()
+  spec.csharp:
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: (
+  - name: )
+- uid: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetImagesList*
+  commentId: Overload:Siesa.SDK.Frontend.Report.Controllers.SaveController.GetImagesList
+  href: Siesa.SDK.Frontend.Report.Controllers.SaveController.html#Siesa.SDK.Frontend.Report.Controllers.SaveController.GetImagesList
+  name: GetImagesList
+  nameWithType: SaveController.GetImagesList
+  fullName: Siesa.SDK.Frontend.Report.Controllers.SaveController.GetImagesList
+- uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetImagesList
+  commentId: M:GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetImagesList
+  parent: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService
+  isExternal: true
+  name: GetImagesList()
+  nameWithType: IResourcesService.GetImagesList()
+  fullName: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetImagesList()
+  spec.csharp:
+  - uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetImagesList
+    name: GetImagesList
+    isExternal: true
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IResourcesService.GetImagesList
+    name: GetImagesList
+    isExternal: true
+  - name: (
+  - name: )
+- uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IImageInfo[]
+  isExternal: true
+  name: IImageInfo[]
+  nameWithType: IImageInfo[]
+  fullName: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IImageInfo[]
+  nameWithType.vb: IImageInfo()
+  fullName.vb: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IImageInfo()
+  name.vb: IImageInfo()
+  spec.csharp:
+  - uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IImageInfo
+    name: IImageInfo
+    isExternal: true
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: GrapeCity.ActiveReports.Aspnetcore.Designer.Services.IImageInfo
+    name: IImageInfo
+    isExternal: true
+  - name: (
+  - name: )

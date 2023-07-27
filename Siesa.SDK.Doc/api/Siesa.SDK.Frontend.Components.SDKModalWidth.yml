@@ -1,0 +1,182 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Components.SDKModalWidth
+  commentId: T:Siesa.SDK.Frontend.Components.SDKModalWidth
+  id: SDKModalWidth
+  parent: Siesa.SDK.Frontend.Components
+  children:
+  - Siesa.SDK.Frontend.Components.SDKModalWidth.Large
+  - Siesa.SDK.Frontend.Components.SDKModalWidth.Medium
+  - Siesa.SDK.Frontend.Components.SDKModalWidth.Small
+  - Siesa.SDK.Frontend.Components.SDKModalWidth.Undefined
+  langs:
+  - csharp
+  - vb
+  name: SDKModalWidth
+  nameWithType: SDKModalWidth
+  fullName: Siesa.SDK.Frontend.Components.SDKModalWidth
+  type: Enum
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/SDKEnums.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SDKModalWidth
+    path: ../Siesa.SDK.Frontend/Components/SDKEnums.cs
+    startLine: 217
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components
+  syntax:
+    content: public enum SDKModalWidth
+    content.vb: Public Enum SDKModalWidth
+- uid: Siesa.SDK.Frontend.Components.SDKModalWidth.Undefined
+  commentId: F:Siesa.SDK.Frontend.Components.SDKModalWidth.Undefined
+  id: Undefined
+  parent: Siesa.SDK.Frontend.Components.SDKModalWidth
+  langs:
+  - csharp
+  - vb
+  name: Undefined
+  nameWithType: SDKModalWidth.Undefined
+  fullName: Siesa.SDK.Frontend.Components.SDKModalWidth.Undefined
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/SDKEnums.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Undefined
+    path: ../Siesa.SDK.Frontend/Components/SDKEnums.cs
+    startLine: 218
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components
+  syntax:
+    content: Undefined = 0
+    return:
+      type: Siesa.SDK.Frontend.Components.SDKModalWidth
+- uid: Siesa.SDK.Frontend.Components.SDKModalWidth.Small
+  commentId: F:Siesa.SDK.Frontend.Components.SDKModalWidth.Small
+  id: Small
+  parent: Siesa.SDK.Frontend.Components.SDKModalWidth
+  langs:
+  - csharp
+  - vb
+  name: Small
+  nameWithType: SDKModalWidth.Small
+  fullName: Siesa.SDK.Frontend.Components.SDKModalWidth.Small
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/SDKEnums.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Small
+    path: ../Siesa.SDK.Frontend/Components/SDKEnums.cs
+    startLine: 219
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components
+  syntax:
+    content: Small = 1
+    return:
+      type: Siesa.SDK.Frontend.Components.SDKModalWidth
+- uid: Siesa.SDK.Frontend.Components.SDKModalWidth.Medium
+  commentId: F:Siesa.SDK.Frontend.Components.SDKModalWidth.Medium
+  id: Medium
+  parent: Siesa.SDK.Frontend.Components.SDKModalWidth
+  langs:
+  - csharp
+  - vb
+  name: Medium
+  nameWithType: SDKModalWidth.Medium
+  fullName: Siesa.SDK.Frontend.Components.SDKModalWidth.Medium
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/SDKEnums.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Medium
+    path: ../Siesa.SDK.Frontend/Components/SDKEnums.cs
+    startLine: 220
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components
+  syntax:
+    content: Medium = 2
+    return:
+      type: Siesa.SDK.Frontend.Components.SDKModalWidth
+- uid: Siesa.SDK.Frontend.Components.SDKModalWidth.Large
+  commentId: F:Siesa.SDK.Frontend.Components.SDKModalWidth.Large
+  id: Large
+  parent: Siesa.SDK.Frontend.Components.SDKModalWidth
+  langs:
+  - csharp
+  - vb
+  name: Large
+  nameWithType: SDKModalWidth.Large
+  fullName: Siesa.SDK.Frontend.Components.SDKModalWidth.Large
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/SDKEnums.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Large
+    path: ../Siesa.SDK.Frontend/Components/SDKEnums.cs
+    startLine: 221
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components
+  syntax:
+    content: Large = 3
+    return:
+      type: Siesa.SDK.Frontend.Components.SDKModalWidth
+references:
+- uid: Siesa.SDK.Frontend.Components
+  commentId: N:Siesa.SDK.Frontend.Components
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Components
+  nameWithType: Siesa.SDK.Frontend.Components
+  fullName: Siesa.SDK.Frontend.Components
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+- uid: Siesa.SDK.Frontend.Components.SDKModalWidth
+  commentId: T:Siesa.SDK.Frontend.Components.SDKModalWidth
+  parent: Siesa.SDK.Frontend.Components
+  href: Siesa.SDK.Frontend.Components.SDKModalWidth.html
+  name: SDKModalWidth
+  nameWithType: SDKModalWidth
+  fullName: Siesa.SDK.Frontend.Components.SDKModalWidth

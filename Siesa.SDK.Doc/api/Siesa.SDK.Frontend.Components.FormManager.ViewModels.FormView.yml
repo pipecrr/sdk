@@ -1,0 +1,4347 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  commentId: T:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  id: FormView
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  children:
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.AuthenticationService
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.BackendRouterService
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.BusinessName
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.BusinessObj
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CanAcess
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CanCreate
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CanDelete
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CanDetail
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CanEdit
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CancelButton
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CheckPermissions
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ClickInSave
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ContainAttachments
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CountUnicErrors
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.DataAttatchmentDetail
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.DefaultViewdefName
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.DeleteGroup(System.Int32)
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.EditFormContext
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ErrorList
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ErrorMsg
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ExtraButtons
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FeaturePermissionService
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FileFields
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FormHasErrors
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FormID
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FormViewModel
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.GetSaveBtnIcon
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.GlobalLoaderService
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.GoToList
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.HandleInvalidSubmit
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.HandleValidSubmit
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.HasExtraButtons
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.InitView(System.String)
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.IsSubpanel
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.JSRuntime
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.Loading
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.NavManager
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.NavigationService
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.NotificationService
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnCancel
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnClickCustomButton(Siesa.SDK.Frontend.Components.FormManager.Model.Button)
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnComplete(Siesa.SDK.Shared.DTOS.SDKUploadCompleteEventArgsDTO)
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnError(Siesa.SDK.Shared.DTOS.SDKUploadErrorEventArgsDTO)
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnInitializedAsync
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnSave
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.Panels
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.PanelsCollapsable
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ParentBaseObj
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.Refresh(System.Boolean)
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ResourceManager
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.SaveButton
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.Saving
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.SavingFile
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowAditionalFields
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowButtons
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowCancelButton
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowSaveButton
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowTitle
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ViewContext
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ViewdefName
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView._messageStore
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.configuration
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.dialogService
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.evaluateCodeButtons(Siesa.SDK.Frontend.Components.FormManager.Model.Button,System.String)
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.isOnePanel
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.loadDefaultViewdef
+  - Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.savingAttachment(Siesa.SDK.Frontend.Components.FormManager.Fields.FileField,System.Int32)
+  langs:
+  - csharp
+  - vb
+  name: FormView
+  nameWithType: FormView
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  type: Class
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: FormView
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 26
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: 'public abstract class FormView : ComponentBase, IComponent, IHandleEvent, IHandleAfterRender'
+    content.vb: Public MustInherit Class FormView Inherits ComponentBase Implements IComponent, IHandleEvent, IHandleAfterRender
+  inheritance:
+  - System.Object
+  - Microsoft.AspNetCore.Components.ComponentBase
+  derivedClasses:
+  - Siesa.SDK.Frontend.Components.FormManager.Views.CreateView
+  - Siesa.SDK.Frontend.Components.FormManager.Views.EditView
+  - Siesa.SDK.Frontend.Components.FormManager.Views.ExplorerView
+  - Siesa.SDK.Frontend.Components.FormManager.Views.FreeForm
+  implements:
+  - Microsoft.AspNetCore.Components.IComponent
+  - Microsoft.AspNetCore.Components.IHandleEvent
+  - Microsoft.AspNetCore.Components.IHandleAfterRender
+  inheritedMembers:
+  - Microsoft.AspNetCore.Components.ComponentBase.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  - Microsoft.AspNetCore.Components.ComponentBase.OnInitialized
+  - Microsoft.AspNetCore.Components.ComponentBase.OnParametersSet
+  - Microsoft.AspNetCore.Components.ComponentBase.OnParametersSetAsync
+  - Microsoft.AspNetCore.Components.ComponentBase.StateHasChanged
+  - Microsoft.AspNetCore.Components.ComponentBase.ShouldRender
+  - Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(System.Boolean)
+  - Microsoft.AspNetCore.Components.ComponentBase.OnAfterRenderAsync(System.Boolean)
+  - Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Action)
+  - Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func{System.Threading.Tasks.Task})
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.BusinessName
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.BusinessName
+  id: BusinessName
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: BusinessName
+  nameWithType: FormView.BusinessName
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.BusinessName
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: BusinessName
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 28
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: >-
+      [Parameter]
+
+      public string BusinessName { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <Parameter>
+
+      Public Property BusinessName As String
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.BusinessName*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.BusinessObj
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.BusinessObj
+  id: BusinessObj
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: BusinessObj
+  nameWithType: FormView.BusinessObj
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.BusinessObj
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: BusinessObj
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 30
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: >-
+      [Parameter]
+
+      public dynamic BusinessObj { get; set; }
+    parameters: []
+    return:
+      type: dynamic
+    content.vb: >-
+      <Parameter>
+
+      Public Property BusinessObj As Object
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.BusinessObj*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.IsSubpanel
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.IsSubpanel
+  id: IsSubpanel
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: IsSubpanel
+  nameWithType: FormView.IsSubpanel
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.IsSubpanel
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: IsSubpanel
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 33
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: >-
+      [Parameter]
+
+      public bool IsSubpanel { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <Parameter>
+
+      Public Property IsSubpanel As Boolean
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.IsSubpanel*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.dialogService
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.dialogService
+  id: dialogService
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: dialogService
+  nameWithType: FormView.dialogService
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.dialogService
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: dialogService
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 35
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: >-
+      [Inject]
+
+      public DialogService dialogService { get; set; }
+    parameters: []
+    return:
+      type: Radzen.DialogService
+    content.vb: >-
+      <Inject>
+
+      Public Property dialogService As DialogService
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.dialogService*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.InjectAttribute
+    ctor: Microsoft.AspNetCore.Components.InjectAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.JSRuntime
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.JSRuntime
+  id: JSRuntime
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: JSRuntime
+  nameWithType: FormView.JSRuntime
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.JSRuntime
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: JSRuntime
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 37
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: >-
+      [Inject]
+
+      public IJSRuntime JSRuntime { get; set; }
+    parameters: []
+    return:
+      type: Microsoft.JSInterop.IJSRuntime
+    content.vb: >-
+      <Inject>
+
+      Public Property JSRuntime As IJSRuntime
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.JSRuntime*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.InjectAttribute
+    ctor: Microsoft.AspNetCore.Components.InjectAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.NavManager
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.NavManager
+  id: NavManager
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: NavManager
+  nameWithType: FormView.NavManager
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.NavManager
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: NavManager
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 38
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: >-
+      [Inject]
+
+      public NavigationManager NavManager { get; set; }
+    parameters: []
+    return:
+      type: Microsoft.AspNetCore.Components.NavigationManager
+    content.vb: >-
+      <Inject>
+
+      Public Property NavManager As NavigationManager
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.NavManager*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.InjectAttribute
+    ctor: Microsoft.AspNetCore.Components.InjectAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.NavigationService
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.NavigationService
+  id: NavigationService
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: NavigationService
+  nameWithType: FormView.NavigationService
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.NavigationService
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: NavigationService
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 39
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: >-
+      [Inject]
+
+      public NavigationService NavigationService { get; set; }
+    parameters: []
+    return:
+      type: Siesa.SDK.Frontend.Services.NavigationService
+    content.vb: >-
+      <Inject>
+
+      Public Property NavigationService As NavigationService
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.NavigationService*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.InjectAttribute
+    ctor: Microsoft.AspNetCore.Components.InjectAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.NotificationService
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.NotificationService
+  id: NotificationService
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: NotificationService
+  nameWithType: FormView.NotificationService
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.NotificationService
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: NotificationService
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 40
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: >-
+      [Inject]
+
+      public SDKNotificationService NotificationService { get; set; }
+    parameters: []
+    return:
+      type: Siesa.SDK.Frontend.Services.SDKNotificationService
+    content.vb: >-
+      <Inject>
+
+      Public Property NotificationService As SDKNotificationService
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.NotificationService*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.InjectAttribute
+    ctor: Microsoft.AspNetCore.Components.InjectAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.configuration
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.configuration
+  id: configuration
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: configuration
+  nameWithType: FormView.configuration
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.configuration
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: configuration
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 41
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: >-
+      [Inject]
+
+      public IConfiguration configuration { get; set; }
+    parameters: []
+    return:
+      type: Microsoft.Extensions.Configuration.IConfiguration
+    content.vb: >-
+      <Inject>
+
+      Public Property configuration As IConfiguration
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.configuration*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.InjectAttribute
+    ctor: Microsoft.AspNetCore.Components.InjectAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.AuthenticationService
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.AuthenticationService
+  id: AuthenticationService
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: AuthenticationService
+  nameWithType: FormView.AuthenticationService
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.AuthenticationService
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: AuthenticationService
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 44
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: >-
+      [Inject]
+
+      protected IAuthenticationService AuthenticationService { get; set; }
+    parameters: []
+    return:
+      type: Siesa.SDK.Shared.Services.IAuthenticationService
+    content.vb: >-
+      <Inject>
+
+      Protected Property AuthenticationService As IAuthenticationService
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.AuthenticationService*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.InjectAttribute
+    ctor: Microsoft.AspNetCore.Components.InjectAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.GlobalLoaderService
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.GlobalLoaderService
+  id: GlobalLoaderService
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: GlobalLoaderService
+  nameWithType: FormView.GlobalLoaderService
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.GlobalLoaderService
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GlobalLoaderService
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 46
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: >-
+      [Inject]
+
+      public SDKGlobalLoaderService GlobalLoaderService { get; set; }
+    parameters: []
+    return:
+      type: Siesa.SDK.Frontend.Services.SDKGlobalLoaderService
+    content.vb: >-
+      <Inject>
+
+      Public Property GlobalLoaderService As SDKGlobalLoaderService
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.GlobalLoaderService*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.InjectAttribute
+    ctor: Microsoft.AspNetCore.Components.InjectAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FormViewModel
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FormViewModel
+  id: FormViewModel
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: FormViewModel
+  nameWithType: FormView.FormViewModel
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FormViewModel
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: FormViewModel
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 48
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: protected FormViewModel FormViewModel { get; set; }
+    parameters: []
+    return:
+      type: Siesa.SDK.Frontend.Components.FormManager.Model.FormViewModel
+    content.vb: Protected Property FormViewModel As FormViewModel
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FormViewModel*
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.Panels
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.Panels
+  id: Panels
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: Panels
+  nameWithType: FormView.Panels
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.Panels
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Panels
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 50
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: public List<Panel> Panels { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{Siesa.SDK.Frontend.Components.FormManager.Model.Panel}
+    content.vb: Public ReadOnly Property Panels As List(Of Panel)
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.Panels*
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.PanelsCollapsable
+  commentId: F:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.PanelsCollapsable
+  id: PanelsCollapsable
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: PanelsCollapsable
+  nameWithType: FormView.PanelsCollapsable
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.PanelsCollapsable
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: PanelsCollapsable
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 51
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: public List<Panel> PanelsCollapsable
+    return:
+      type: System.Collections.Generic.List{Siesa.SDK.Frontend.Components.FormManager.Model.Panel}
+    content.vb: Public PanelsCollapsable As List(Of Panel)
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowAditionalFields
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowAditionalFields
+  id: ShowAditionalFields
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: ShowAditionalFields
+  nameWithType: FormView.ShowAditionalFields
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowAditionalFields
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ShowAditionalFields
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 52
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: public bool ShowAditionalFields { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public Property ShowAditionalFields As Boolean
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowAditionalFields*
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.Loading
+  commentId: F:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.Loading
+  id: Loading
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: Loading
+  nameWithType: FormView.Loading
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.Loading
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Loading
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 54
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: public bool Loading
+    return:
+      type: System.Boolean
+    content.vb: Public Loading As Boolean
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.Saving
+  commentId: F:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.Saving
+  id: Saving
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: Saving
+  nameWithType: FormView.Saving
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.Saving
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Saving
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 55
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: public bool Saving
+    return:
+      type: System.Boolean
+    content.vb: Public Saving As Boolean
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.SavingFile
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.SavingFile
+  id: SavingFile
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: SavingFile
+  nameWithType: FormView.SavingFile
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.SavingFile
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SavingFile
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 56
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: public bool SavingFile { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public Property SavingFile As Boolean
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.SavingFile*
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ErrorMsg
+  commentId: F:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ErrorMsg
+  id: ErrorMsg
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: ErrorMsg
+  nameWithType: FormView.ErrorMsg
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ErrorMsg
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ErrorMsg
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 57
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: public string ErrorMsg
+    return:
+      type: System.String
+    content.vb: Public ErrorMsg As String
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ErrorList
+  commentId: F:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ErrorList
+  id: ErrorList
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: ErrorList
+  nameWithType: FormView.ErrorList
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ErrorList
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ErrorList
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 58
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: public List<string> ErrorList
+    return:
+      type: System.Collections.Generic.List{System.String}
+    content.vb: Public ErrorList As List(Of String)
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FormID
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FormID
+  id: FormID
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: FormID
+  nameWithType: FormView.FormID
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FormID
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: FormID
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 59
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: >-
+      [Parameter]
+
+      public string FormID { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <Parameter>
+
+      Public Property FormID As String
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FormID*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView._messageStore
+  commentId: F:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView._messageStore
+  id: _messageStore
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: _messageStore
+  nameWithType: FormView._messageStore
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView._messageStore
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: _messageStore
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 61
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: protected ValidationMessageStore _messageStore
+    return:
+      type: Microsoft.AspNetCore.Components.Forms.ValidationMessageStore
+    content.vb: Protected _messageStore As ValidationMessageStore
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.EditFormContext
+  commentId: F:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.EditFormContext
+  id: EditFormContext
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: EditFormContext
+  nameWithType: FormView.EditFormContext
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.EditFormContext
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: EditFormContext
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 62
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: public EditContext EditFormContext
+    return:
+      type: Microsoft.AspNetCore.Components.Forms.EditContext
+    content.vb: Public EditFormContext As EditContext
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ViewdefName
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ViewdefName
+  id: ViewdefName
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: ViewdefName
+  nameWithType: FormView.ViewdefName
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ViewdefName
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ViewdefName
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 63
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: >-
+      [Parameter]
+
+      public string ViewdefName { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <Parameter>
+
+      Public Property ViewdefName As String
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ViewdefName*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.DefaultViewdefName
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.DefaultViewdefName
+  id: DefaultViewdefName
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: DefaultViewdefName
+  nameWithType: FormView.DefaultViewdefName
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.DefaultViewdefName
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: DefaultViewdefName
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 66
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: >-
+      [Parameter]
+
+      public string DefaultViewdefName { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <Parameter>
+
+      Public Property DefaultViewdefName As String
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.DefaultViewdefName*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ViewContext
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ViewContext
+  id: ViewContext
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: ViewContext
+  nameWithType: FormView.ViewContext
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ViewContext
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ViewContext
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 69
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: >-
+      [Parameter]
+
+      public DynamicViewType ViewContext { get; set; }
+    parameters: []
+    return:
+      type: Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicViewType
+    content.vb: >-
+      <Parameter>
+
+      Public Property ViewContext As DynamicViewType
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ViewContext*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowTitle
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowTitle
+  id: ShowTitle
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: ShowTitle
+  nameWithType: FormView.ShowTitle
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowTitle
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ShowTitle
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 71
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: >-
+      [Parameter]
+
+      public bool ShowTitle { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <Parameter>
+
+      Public Property ShowTitle As Boolean
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowTitle*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowButtons
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowButtons
+  id: ShowButtons
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: ShowButtons
+  nameWithType: FormView.ShowButtons
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowButtons
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ShowButtons
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 73
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: >-
+      [Parameter]
+
+      public bool ShowButtons { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <Parameter>
+
+      Public Property ShowButtons As Boolean
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowButtons*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowCancelButton
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowCancelButton
+  id: ShowCancelButton
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: ShowCancelButton
+  nameWithType: FormView.ShowCancelButton
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowCancelButton
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ShowCancelButton
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 75
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: >-
+      [Parameter]
+
+      public bool ShowCancelButton { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <Parameter>
+
+      Public Property ShowCancelButton As Boolean
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowCancelButton*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowSaveButton
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowSaveButton
+  id: ShowSaveButton
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: ShowSaveButton
+  nameWithType: FormView.ShowSaveButton
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowSaveButton
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ShowSaveButton
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 77
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: >-
+      [Parameter]
+
+      public bool ShowSaveButton { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <Parameter>
+
+      Public Property ShowSaveButton As Boolean
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowSaveButton*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnSave
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnSave
+  id: OnSave
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: OnSave
+  nameWithType: FormView.OnSave
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnSave
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: OnSave
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 80
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: >-
+      [Parameter]
+
+      public Action<object> OnSave { get; set; }
+    parameters: []
+    return:
+      type: System.Action{System.Object}
+    content.vb: >-
+      <Parameter>
+
+      Public Property OnSave As Action(Of Object)
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnSave*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnCancel
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnCancel
+  id: OnCancel
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: OnCancel
+  nameWithType: FormView.OnCancel
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnCancel
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: OnCancel
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 83
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: >-
+      [Parameter]
+
+      public Action OnCancel { get; set; }
+    parameters: []
+    return:
+      type: System.Action
+    content.vb: >-
+      <Parameter>
+
+      Public Property OnCancel As Action
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnCancel*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ParentBaseObj
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ParentBaseObj
+  id: ParentBaseObj
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: ParentBaseObj
+  nameWithType: FormView.ParentBaseObj
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ParentBaseObj
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ParentBaseObj
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 86
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: >-
+      [Parameter]
+
+      public List<string> ParentBaseObj { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{System.String}
+    content.vb: >-
+      <Parameter>
+
+      Public Property ParentBaseObj As List(Of String)
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ParentBaseObj*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CountUnicErrors
+  commentId: F:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CountUnicErrors
+  id: CountUnicErrors
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: CountUnicErrors
+  nameWithType: FormView.CountUnicErrors
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CountUnicErrors
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: CountUnicErrors
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 89
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: public int CountUnicErrors
+    return:
+      type: System.Int32
+    content.vb: Public CountUnicErrors As Integer
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ContainAttachments
+  commentId: F:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ContainAttachments
+  id: ContainAttachments
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: ContainAttachments
+  nameWithType: FormView.ContainAttachments
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ContainAttachments
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ContainAttachments
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 93
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: public bool ContainAttachments
+    return:
+      type: System.Boolean
+    content.vb: Public ContainAttachments As Boolean
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.loadDefaultViewdef
+  commentId: F:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.loadDefaultViewdef
+  id: loadDefaultViewdef
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: loadDefaultViewdef
+  nameWithType: FormView.loadDefaultViewdef
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.loadDefaultViewdef
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: loadDefaultViewdef
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 95
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: protected bool loadDefaultViewdef
+    return:
+      type: System.Boolean
+    content.vb: Protected loadDefaultViewdef As Boolean
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.BackendRouterService
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.BackendRouterService
+  id: BackendRouterService
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: BackendRouterService
+  nameWithType: FormView.BackendRouterService
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.BackendRouterService
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: BackendRouterService
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 97
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: >-
+      [Inject]
+
+      public IBackendRouterService BackendRouterService { get; set; }
+    parameters: []
+    return:
+      type: Siesa.SDK.Shared.Services.IBackendRouterService
+    content.vb: >-
+      <Inject>
+
+      Public Property BackendRouterService As IBackendRouterService
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.BackendRouterService*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.InjectAttribute
+    ctor: Microsoft.AspNetCore.Components.InjectAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FeaturePermissionService
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FeaturePermissionService
+  id: FeaturePermissionService
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: FeaturePermissionService
+  nameWithType: FormView.FeaturePermissionService
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FeaturePermissionService
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: FeaturePermissionService
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 99
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: >-
+      [Inject]
+
+      public IFeaturePermissionService FeaturePermissionService { get; set; }
+    parameters: []
+    return:
+      type: Siesa.SDK.Shared.Services.IFeaturePermissionService
+    content.vb: >-
+      <Inject>
+
+      Public Property FeaturePermissionService As IFeaturePermissionService
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FeaturePermissionService*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.InjectAttribute
+    ctor: Microsoft.AspNetCore.Components.InjectAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ResourceManager
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ResourceManager
+  id: ResourceManager
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: ResourceManager
+  nameWithType: FormView.ResourceManager
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ResourceManager
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ResourceManager
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 102
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: >-
+      [Inject]
+
+      public IResourceManager ResourceManager { get; set; }
+    parameters: []
+    return:
+      type: Siesa.SDK.Shared.Services.IResourceManager
+    content.vb: >-
+      <Inject>
+
+      Public Property ResourceManager As IResourceManager
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ResourceManager*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.InjectAttribute
+    ctor: Microsoft.AspNetCore.Components.InjectAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CanCreate
+  commentId: F:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CanCreate
+  id: CanCreate
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: CanCreate
+  nameWithType: FormView.CanCreate
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CanCreate
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: CanCreate
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 105
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: protected bool CanCreate
+    return:
+      type: System.Boolean
+    content.vb: Protected CanCreate As Boolean
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CanEdit
+  commentId: F:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CanEdit
+  id: CanEdit
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: CanEdit
+  nameWithType: FormView.CanEdit
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CanEdit
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: CanEdit
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 106
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: protected bool CanEdit
+    return:
+      type: System.Boolean
+    content.vb: Protected CanEdit As Boolean
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CanDelete
+  commentId: F:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CanDelete
+  id: CanDelete
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: CanDelete
+  nameWithType: FormView.CanDelete
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CanDelete
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: CanDelete
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 107
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: protected bool CanDelete
+    return:
+      type: System.Boolean
+    content.vb: Protected CanDelete As Boolean
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CanDetail
+  commentId: F:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CanDetail
+  id: CanDetail
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: CanDetail
+  nameWithType: FormView.CanDetail
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CanDetail
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: CanDetail
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 108
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: protected bool CanDetail
+    return:
+      type: System.Boolean
+    content.vb: Protected CanDetail As Boolean
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CanAcess
+  commentId: F:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CanAcess
+  id: CanAcess
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: CanAcess
+  nameWithType: FormView.CanAcess
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CanAcess
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: CanAcess
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 109
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: protected bool CanAcess
+    return:
+      type: System.Boolean
+    content.vb: Protected CanAcess As Boolean
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FormHasErrors
+  commentId: F:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FormHasErrors
+  id: FormHasErrors
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: FormHasErrors
+  nameWithType: FormView.FormHasErrors
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FormHasErrors
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: FormHasErrors
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 110
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: public bool FormHasErrors
+    return:
+      type: System.Boolean
+    content.vb: Public FormHasErrors As Boolean
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FileFields
+  commentId: F:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FileFields
+  id: FileFields
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: FileFields
+  nameWithType: FormView.FileFields
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FileFields
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: FileFields
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 112
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: public Dictionary<string, FileField> FileFields
+    return:
+      type: System.Collections.Generic.Dictionary{System.String,Siesa.SDK.Frontend.Components.FormManager.Fields.FileField}
+    content.vb: Public FileFields As Dictionary(Of String, FileField)
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.DataAttatchmentDetail
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.DataAttatchmentDetail
+  id: DataAttatchmentDetail
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: DataAttatchmentDetail
+  nameWithType: FormView.DataAttatchmentDetail
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.DataAttatchmentDetail
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: DataAttatchmentDetail
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 113
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: public SDKFileUploadDTO DataAttatchmentDetail { get; set; }
+    parameters: []
+    return:
+      type: Siesa.SDK.Shared.DTOS.SDKFileUploadDTO
+    content.vb: Public Property DataAttatchmentDetail As SDKFileUploadDTO
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.DataAttatchmentDetail*
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ClickInSave
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ClickInSave
+  id: ClickInSave
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: ClickInSave
+  nameWithType: FormView.ClickInSave
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ClickInSave
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ClickInSave
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 115
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: public bool ClickInSave { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public Property ClickInSave As Boolean
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ClickInSave*
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.HasExtraButtons
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.HasExtraButtons
+  id: HasExtraButtons
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: HasExtraButtons
+  nameWithType: FormView.HasExtraButtons
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.HasExtraButtons
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: HasExtraButtons
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 116
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: public bool HasExtraButtons { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public Property HasExtraButtons As Boolean
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.HasExtraButtons*
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ExtraButtons
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ExtraButtons
+  id: ExtraButtons
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: ExtraButtons
+  nameWithType: FormView.ExtraButtons
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ExtraButtons
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ExtraButtons
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 117
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: public List<Button> ExtraButtons { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{Siesa.SDK.Frontend.Components.FormManager.Model.Button}
+    content.vb: Public Property ExtraButtons As List(Of Button)
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ExtraButtons*
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.SaveButton
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.SaveButton
+  id: SaveButton
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: SaveButton
+  nameWithType: FormView.SaveButton
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.SaveButton
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SaveButton
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 118
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: public Button SaveButton { get; set; }
+    parameters: []
+    return:
+      type: Siesa.SDK.Frontend.Components.FormManager.Model.Button
+    content.vb: Public Property SaveButton As Button
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.SaveButton*
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.isOnePanel
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.isOnePanel
+  id: isOnePanel
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: isOnePanel
+  nameWithType: FormView.isOnePanel
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.isOnePanel
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: isOnePanel
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 119
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: public bool isOnePanel { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public Property isOnePanel As Boolean
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.isOnePanel*
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CheckPermissions
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CheckPermissions
+  id: CheckPermissions
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: CheckPermissions()
+  nameWithType: FormView.CheckPermissions()
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CheckPermissions()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: CheckPermissions
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 120
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: protected virtual Task CheckPermissions()
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Protected Overridable Function CheckPermissions() As Task
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CheckPermissions*
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.Refresh(System.Boolean)
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.Refresh(System.Boolean)
+  id: Refresh(System.Boolean)
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: Refresh(bool)
+  nameWithType: FormView.Refresh(bool)
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.Refresh(bool)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Refresh
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 209
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: public void Refresh(bool Reload = false)
+    parameters:
+    - id: Reload
+      type: System.Boolean
+    content.vb: Public Sub Refresh(Reload As Boolean = False)
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.Refresh*
+  nameWithType.vb: FormView.Refresh(Boolean)
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.Refresh(Boolean)
+  name.vb: Refresh(Boolean)
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.InitView(System.String)
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.InitView(System.String)
+  id: InitView(System.String)
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: InitView(string)
+  nameWithType: FormView.InitView(string)
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.InitView(string)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: InitView
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 221
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: protected virtual Task InitView(string bName = null)
+    parameters:
+    - id: bName
+      type: System.String
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Protected Overridable Function InitView(bName As String = Nothing) As Task
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.InitView*
+  nameWithType.vb: FormView.InitView(String)
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.InitView(String)
+  name.vb: InitView(String)
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.DeleteGroup(System.Int32)
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.DeleteGroup(System.Int32)
+  id: DeleteGroup(System.Int32)
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: DeleteGroup(int)
+  nameWithType: FormView.DeleteGroup(int)
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.DeleteGroup(int)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: DeleteGroup
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 310
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: public Task<bool> DeleteGroup(int rowid)
+    parameters:
+    - id: rowid
+      type: System.Int32
+    return:
+      type: System.Threading.Tasks.Task{System.Boolean}
+    content.vb: Public Function DeleteGroup(rowid As Integer) As Task(Of Boolean)
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.DeleteGroup*
+  nameWithType.vb: FormView.DeleteGroup(Integer)
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.DeleteGroup(Integer)
+  name.vb: DeleteGroup(Integer)
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.evaluateCodeButtons(Siesa.SDK.Frontend.Components.FormManager.Model.Button,System.String)
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.evaluateCodeButtons(Siesa.SDK.Frontend.Components.FormManager.Model.Button,System.String)
+  id: evaluateCodeButtons(Siesa.SDK.Frontend.Components.FormManager.Model.Button,System.String)
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: evaluateCodeButtons(Button, string)
+  nameWithType: FormView.evaluateCodeButtons(Button, string)
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.evaluateCodeButtons(Siesa.SDK.Frontend.Components.FormManager.Model.Button, string)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: evaluateCodeButtons
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 357
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: public Task<bool> evaluateCodeButtons(Button button, string condition)
+    parameters:
+    - id: button
+      type: Siesa.SDK.Frontend.Components.FormManager.Model.Button
+    - id: condition
+      type: System.String
+    return:
+      type: System.Threading.Tasks.Task{System.Boolean}
+    content.vb: Public Function evaluateCodeButtons(button As Button, condition As String) As Task(Of Boolean)
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.evaluateCodeButtons*
+  nameWithType.vb: FormView.evaluateCodeButtons(Button, String)
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.evaluateCodeButtons(Siesa.SDK.Frontend.Components.FormManager.Model.Button, String)
+  name.vb: evaluateCodeButtons(Button, String)
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnInitializedAsync
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnInitializedAsync
+  id: OnInitializedAsync
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: OnInitializedAsync()
+  nameWithType: FormView.OnInitializedAsync()
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnInitializedAsync()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: OnInitializedAsync
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 509
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  summary: >-
+    Method invoked when the component is ready to start, having received its
+
+    initial parameters from its parent in the render tree.
+
+
+    Override this method if you will perform an asynchronous operation and
+
+    want the component to refresh when that operation is completed.
+  example: []
+  syntax:
+    content: protected override Task OnInitializedAsync()
+    return:
+      type: System.Threading.Tasks.Task
+      description: A <xref href="System.Threading.Tasks.Task" data-throw-if-not-resolved="false"></xref> representing any asynchronous operation.
+    content.vb: Protected Overrides Function OnInitializedAsync() As Task
+  overridden: Microsoft.AspNetCore.Components.ComponentBase.OnInitializedAsync
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnInitializedAsync*
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  id: SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: SetParametersAsync(ParameterView)
+  nameWithType: FormView.SetParametersAsync(ParameterView)
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SetParametersAsync
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 522
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  summary: Sets parameters supplied by the component's parent in the render tree.
+  remarks: >-
+    <p>
+                Parameters are passed when <xref href="Microsoft.AspNetCore.Components.ComponentBase.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)" data-throw-if-not-resolved="false"></xref> is called. It is not required that
+                the caller supply a parameter value for all of the parameters that are logically understood by the component.
+                </p>
+    <p>
+                The default implementation of <xref href="Microsoft.AspNetCore.Components.ComponentBase.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)" data-throw-if-not-resolved="false"></xref> will set the value of each property
+                decorated with <xref href="Microsoft.AspNetCore.Components.ParameterAttribute" data-throw-if-not-resolved="false"></xref> or <xref href="Microsoft.AspNetCore.Components.CascadingParameterAttribute" data-throw-if-not-resolved="false"></xref> that has
+                a corresponding value in the <xref href="Microsoft.AspNetCore.Components.ParameterView" data-throw-if-not-resolved="false"></xref>. Parameters that do not have a corresponding value
+                will be unchanged.
+                </p>
+  example: []
+  syntax:
+    content: public override Task SetParametersAsync(ParameterView parameters)
+    parameters:
+    - id: parameters
+      type: Microsoft.AspNetCore.Components.ParameterView
+      description: The parameters.
+    return:
+      type: System.Threading.Tasks.Task
+      description: A <xref href="System.Threading.Tasks.Task" data-throw-if-not-resolved="false"></xref> that completes when the component has finished updating and rendering itself.
+    content.vb: Public Overrides Function SetParametersAsync(parameters As ParameterView) As Task
+  overridden: Microsoft.AspNetCore.Components.ComponentBase.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.SetParametersAsync*
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnError(Siesa.SDK.Shared.DTOS.SDKUploadErrorEventArgsDTO)
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnError(Siesa.SDK.Shared.DTOS.SDKUploadErrorEventArgsDTO)
+  id: OnError(Siesa.SDK.Shared.DTOS.SDKUploadErrorEventArgsDTO)
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: OnError(SDKUploadErrorEventArgsDTO)
+  nameWithType: FormView.OnError(SDKUploadErrorEventArgsDTO)
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnError(Siesa.SDK.Shared.DTOS.SDKUploadErrorEventArgsDTO)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: OnError
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 537
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: public void OnError(SDKUploadErrorEventArgsDTO args)
+    parameters:
+    - id: args
+      type: Siesa.SDK.Shared.DTOS.SDKUploadErrorEventArgsDTO
+    content.vb: Public Sub OnError(args As SDKUploadErrorEventArgsDTO)
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnError*
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.savingAttachment(Siesa.SDK.Frontend.Components.FormManager.Fields.FileField,System.Int32)
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.savingAttachment(Siesa.SDK.Frontend.Components.FormManager.Fields.FileField,System.Int32)
+  id: savingAttachment(Siesa.SDK.Frontend.Components.FormManager.Fields.FileField,System.Int32)
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: savingAttachment(FileField, int)
+  nameWithType: FormView.savingAttachment(FileField, int)
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.savingAttachment(Siesa.SDK.Frontend.Components.FormManager.Fields.FileField, int)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: savingAttachment
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 542
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: public Task<int> savingAttachment(FileField fileField, int rowid = 0)
+    parameters:
+    - id: fileField
+      type: Siesa.SDK.Frontend.Components.FormManager.Fields.FileField
+    - id: rowid
+      type: System.Int32
+    return:
+      type: System.Threading.Tasks.Task{System.Int32}
+    content.vb: Public Function savingAttachment(fileField As FileField, rowid As Integer = 0) As Task(Of Integer)
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.savingAttachment*
+  nameWithType.vb: FormView.savingAttachment(FileField, Integer)
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.savingAttachment(Siesa.SDK.Frontend.Components.FormManager.Fields.FileField, Integer)
+  name.vb: savingAttachment(FileField, Integer)
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnComplete(Siesa.SDK.Shared.DTOS.SDKUploadCompleteEventArgsDTO)
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnComplete(Siesa.SDK.Shared.DTOS.SDKUploadCompleteEventArgsDTO)
+  id: OnComplete(Siesa.SDK.Shared.DTOS.SDKUploadCompleteEventArgsDTO)
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: OnComplete(SDKUploadCompleteEventArgsDTO)
+  nameWithType: FormView.OnComplete(SDKUploadCompleteEventArgsDTO)
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnComplete(Siesa.SDK.Shared.DTOS.SDKUploadCompleteEventArgsDTO)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: OnComplete
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 570
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: public void OnComplete(SDKUploadCompleteEventArgsDTO args)
+    parameters:
+    - id: args
+      type: Siesa.SDK.Shared.DTOS.SDKUploadCompleteEventArgsDTO
+    content.vb: Public Sub OnComplete(args As SDKUploadCompleteEventArgsDTO)
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnComplete*
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CancelButton
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CancelButton
+  id: CancelButton
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: CancelButton()
+  nameWithType: FormView.CancelButton()
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CancelButton()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: CancelButton
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 690
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: public Task CancelButton()
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function CancelButton() As Task
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CancelButton*
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.HandleValidSubmit
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.HandleValidSubmit
+  id: HandleValidSubmit
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: HandleValidSubmit()
+  nameWithType: FormView.HandleValidSubmit()
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.HandleValidSubmit()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: HandleValidSubmit
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 697
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: protected Task HandleValidSubmit()
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Protected Function HandleValidSubmit() As Task
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.HandleValidSubmit*
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.HandleInvalidSubmit
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.HandleInvalidSubmit
+  id: HandleInvalidSubmit
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: HandleInvalidSubmit()
+  nameWithType: FormView.HandleInvalidSubmit()
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.HandleInvalidSubmit()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: HandleInvalidSubmit
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 705
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: protected void HandleInvalidSubmit()
+    content.vb: Protected Sub HandleInvalidSubmit()
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.HandleInvalidSubmit*
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.GoToList
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.GoToList
+  id: GoToList
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: GoToList()
+  nameWithType: FormView.GoToList()
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.GoToList()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GoToList
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 718
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: protected void GoToList()
+    content.vb: Protected Sub GoToList()
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.GoToList*
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnClickCustomButton(Siesa.SDK.Frontend.Components.FormManager.Model.Button)
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnClickCustomButton(Siesa.SDK.Frontend.Components.FormManager.Model.Button)
+  id: OnClickCustomButton(Siesa.SDK.Frontend.Components.FormManager.Model.Button)
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: OnClickCustomButton(Button)
+  nameWithType: FormView.OnClickCustomButton(Button)
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnClickCustomButton(Siesa.SDK.Frontend.Components.FormManager.Model.Button)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: OnClickCustomButton
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 723
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: public Task OnClickCustomButton(Button button)
+    parameters:
+    - id: button
+      type: Siesa.SDK.Frontend.Components.FormManager.Model.Button
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function OnClickCustomButton(button As Button) As Task
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnClickCustomButton*
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.GetSaveBtnIcon
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.GetSaveBtnIcon
+  id: GetSaveBtnIcon
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView
+  langs:
+  - csharp
+  - vb
+  name: GetSaveBtnIcon()
+  nameWithType: FormView.GetSaveBtnIcon()
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.GetSaveBtnIcon()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetSaveBtnIcon
+    path: ../Siesa.SDK.Frontend/Components/FormManager/ViewModels/FormView.cs
+    startLine: 745
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  syntax:
+    content: protected string GetSaveBtnIcon()
+    return:
+      type: System.String
+    content.vb: Protected Function GetSaveBtnIcon() As String
+  overload: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.GetSaveBtnIcon*
+references:
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  commentId: N:Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  nameWithType: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager
+    name: FormManager
+    href: Siesa.SDK.Frontend.Components.FormManager.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+    name: ViewModels
+    href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager
+    name: FormManager
+    href: Siesa.SDK.Frontend.Components.FormManager.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+    name: ViewModels
+    href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: Microsoft.AspNetCore.Components.ComponentBase
+  commentId: T:Microsoft.AspNetCore.Components.ComponentBase
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase
+  name: ComponentBase
+  nameWithType: ComponentBase
+  fullName: Microsoft.AspNetCore.Components.ComponentBase
+- uid: Microsoft.AspNetCore.Components.IComponent
+  commentId: T:Microsoft.AspNetCore.Components.IComponent
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.icomponent
+  name: IComponent
+  nameWithType: IComponent
+  fullName: Microsoft.AspNetCore.Components.IComponent
+- uid: Microsoft.AspNetCore.Components.IHandleEvent
+  commentId: T:Microsoft.AspNetCore.Components.IHandleEvent
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.ihandleevent
+  name: IHandleEvent
+  nameWithType: IHandleEvent
+  fullName: Microsoft.AspNetCore.Components.IHandleEvent
+- uid: Microsoft.AspNetCore.Components.IHandleAfterRender
+  commentId: T:Microsoft.AspNetCore.Components.IHandleAfterRender
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.ihandleafterrender
+  name: IHandleAfterRender
+  nameWithType: IHandleAfterRender
+  fullName: Microsoft.AspNetCore.Components.IHandleAfterRender
+- uid: Microsoft.AspNetCore.Components.ComponentBase.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.buildrendertree
+  name: BuildRenderTree(RenderTreeBuilder)
+  nameWithType: ComponentBase.BuildRenderTree(RenderTreeBuilder)
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+    name: BuildRenderTree
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.buildrendertree
+  - name: (
+  - uid: Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder
+    name: RenderTreeBuilder
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.rendering.rendertreebuilder
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+    name: BuildRenderTree
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.buildrendertree
+  - name: (
+  - uid: Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder
+    name: RenderTreeBuilder
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.rendering.rendertreebuilder
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.OnInitialized
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.OnInitialized
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.oninitialized
+  name: OnInitialized()
+  nameWithType: ComponentBase.OnInitialized()
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.OnInitialized()
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnInitialized
+    name: OnInitialized
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.oninitialized
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnInitialized
+    name: OnInitialized
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.oninitialized
+  - name: (
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSet
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.OnParametersSet
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onparametersset
+  name: OnParametersSet()
+  nameWithType: ComponentBase.OnParametersSet()
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSet()
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSet
+    name: OnParametersSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onparametersset
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSet
+    name: OnParametersSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onparametersset
+  - name: (
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSetAsync
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.OnParametersSetAsync
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onparameterssetasync
+  name: OnParametersSetAsync()
+  nameWithType: ComponentBase.OnParametersSetAsync()
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSetAsync()
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSetAsync
+    name: OnParametersSetAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onparameterssetasync
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSetAsync
+    name: OnParametersSetAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onparameterssetasync
+  - name: (
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.StateHasChanged
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.StateHasChanged
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.statehaschanged
+  name: StateHasChanged()
+  nameWithType: ComponentBase.StateHasChanged()
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.StateHasChanged()
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.StateHasChanged
+    name: StateHasChanged
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.statehaschanged
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.StateHasChanged
+    name: StateHasChanged
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.statehaschanged
+  - name: (
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.ShouldRender
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.ShouldRender
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.shouldrender
+  name: ShouldRender()
+  nameWithType: ComponentBase.ShouldRender()
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.ShouldRender()
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.ShouldRender
+    name: ShouldRender
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.shouldrender
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.ShouldRender
+    name: ShouldRender
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.shouldrender
+  - name: (
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(System.Boolean)
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(System.Boolean)
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onafterrender
+  name: OnAfterRender(bool)
+  nameWithType: ComponentBase.OnAfterRender(bool)
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(bool)
+  nameWithType.vb: ComponentBase.OnAfterRender(Boolean)
+  fullName.vb: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(Boolean)
+  name.vb: OnAfterRender(Boolean)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(System.Boolean)
+    name: OnAfterRender
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onafterrender
+  - name: (
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(System.Boolean)
+    name: OnAfterRender
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onafterrender
+  - name: (
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRenderAsync(System.Boolean)
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.OnAfterRenderAsync(System.Boolean)
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onafterrenderasync
+  name: OnAfterRenderAsync(bool)
+  nameWithType: ComponentBase.OnAfterRenderAsync(bool)
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRenderAsync(bool)
+  nameWithType.vb: ComponentBase.OnAfterRenderAsync(Boolean)
+  fullName.vb: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRenderAsync(Boolean)
+  name.vb: OnAfterRenderAsync(Boolean)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRenderAsync(System.Boolean)
+    name: OnAfterRenderAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onafterrenderasync
+  - name: (
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRenderAsync(System.Boolean)
+    name: OnAfterRenderAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onafterrenderasync
+  - name: (
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Action)
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Action)
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.invokeasync#microsoft-aspnetcore-components-componentbase-invokeasync(system-action)
+  name: InvokeAsync(Action)
+  nameWithType: ComponentBase.InvokeAsync(Action)
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Action)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Action)
+    name: InvokeAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.invokeasync#microsoft-aspnetcore-components-componentbase-invokeasync(system-action)
+  - name: (
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Action)
+    name: InvokeAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.invokeasync#microsoft-aspnetcore-components-componentbase-invokeasync(system-action)
+  - name: (
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func{System.Threading.Tasks.Task})
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func{System.Threading.Tasks.Task})
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.invokeasync#microsoft-aspnetcore-components-componentbase-invokeasync(system-func((system-threading-tasks-task)))
+  name: InvokeAsync(Func<Task>)
+  nameWithType: ComponentBase.InvokeAsync(Func<Task>)
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func<System.Threading.Tasks.Task>)
+  nameWithType.vb: ComponentBase.InvokeAsync(Func(Of Task))
+  fullName.vb: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func(Of System.Threading.Tasks.Task))
+  name.vb: InvokeAsync(Func(Of Task))
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func{System.Threading.Tasks.Task})
+    name: InvokeAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.invokeasync#microsoft-aspnetcore-components-componentbase-invokeasync(system-func((system-threading-tasks-task)))
+  - name: (
+  - uid: System.Func`1
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-1
+  - name: <
+  - uid: System.Threading.Tasks.Task
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func{System.Threading.Tasks.Task})
+    name: InvokeAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.invokeasync#microsoft-aspnetcore-components-componentbase-invokeasync(system-func((system-threading-tasks-task)))
+  - name: (
+  - uid: System.Func`1
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Threading.Tasks.Task
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  - name: )
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Microsoft.AspNetCore.Components
+  commentId: N:Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.AspNetCore.Components
+  nameWithType: Microsoft.AspNetCore.Components
+  fullName: Microsoft.AspNetCore.Components
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Components
+    name: Components
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Components
+    name: Components
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.BusinessName*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.BusinessName
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.BusinessName
+  name: BusinessName
+  nameWithType: FormView.BusinessName
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.BusinessName
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.BusinessObj*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.BusinessObj
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.BusinessObj
+  name: BusinessObj
+  nameWithType: FormView.BusinessObj
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.BusinessObj
+- uid: dynamic
+  commentId: T:System.Object
+  isExternal: true
+  name: dynamic
+  nameWithType: dynamic
+  fullName: dynamic
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.IsSubpanel*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.IsSubpanel
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.IsSubpanel
+  name: IsSubpanel
+  nameWithType: FormView.IsSubpanel
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.IsSubpanel
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.dialogService*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.dialogService
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.dialogService
+  name: dialogService
+  nameWithType: FormView.dialogService
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.dialogService
+- uid: Radzen.DialogService
+  commentId: T:Radzen.DialogService
+  parent: Radzen
+  isExternal: true
+  name: DialogService
+  nameWithType: DialogService
+  fullName: Radzen.DialogService
+- uid: Radzen
+  commentId: N:Radzen
+  isExternal: true
+  name: Radzen
+  nameWithType: Radzen
+  fullName: Radzen
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.JSRuntime*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.JSRuntime
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.JSRuntime
+  name: JSRuntime
+  nameWithType: FormView.JSRuntime
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.JSRuntime
+- uid: Microsoft.JSInterop.IJSRuntime
+  commentId: T:Microsoft.JSInterop.IJSRuntime
+  parent: Microsoft.JSInterop
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.jsinterop.ijsruntime
+  name: IJSRuntime
+  nameWithType: IJSRuntime
+  fullName: Microsoft.JSInterop.IJSRuntime
+- uid: Microsoft.JSInterop
+  commentId: N:Microsoft.JSInterop
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.JSInterop
+  nameWithType: Microsoft.JSInterop
+  fullName: Microsoft.JSInterop
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.JSInterop
+    name: JSInterop
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.jsinterop
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.JSInterop
+    name: JSInterop
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.jsinterop
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.NavManager*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.NavManager
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.NavManager
+  name: NavManager
+  nameWithType: FormView.NavManager
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.NavManager
+- uid: Microsoft.AspNetCore.Components.NavigationManager
+  commentId: T:Microsoft.AspNetCore.Components.NavigationManager
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.navigationmanager
+  name: NavigationManager
+  nameWithType: NavigationManager
+  fullName: Microsoft.AspNetCore.Components.NavigationManager
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.NavigationService*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.NavigationService
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.NavigationService
+  name: NavigationService
+  nameWithType: FormView.NavigationService
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.NavigationService
+- uid: Siesa.SDK.Frontend.Services.NavigationService
+  commentId: T:Siesa.SDK.Frontend.Services.NavigationService
+  parent: Siesa.SDK.Frontend.Services
+  href: Siesa.SDK.Frontend.Services.NavigationService.html
+  name: NavigationService
+  nameWithType: NavigationService
+  fullName: Siesa.SDK.Frontend.Services.NavigationService
+- uid: Siesa.SDK.Frontend.Services
+  commentId: N:Siesa.SDK.Frontend.Services
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Services
+  nameWithType: Siesa.SDK.Frontend.Services
+  fullName: Siesa.SDK.Frontend.Services
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Services
+    name: Services
+    href: Siesa.SDK.Frontend.Services.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Services
+    name: Services
+    href: Siesa.SDK.Frontend.Services.html
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.NotificationService*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.NotificationService
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.NotificationService
+  name: NotificationService
+  nameWithType: FormView.NotificationService
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.NotificationService
+- uid: Siesa.SDK.Frontend.Services.SDKNotificationService
+  commentId: T:Siesa.SDK.Frontend.Services.SDKNotificationService
+  parent: Siesa.SDK.Frontend.Services
+  href: Siesa.SDK.Frontend.Services.SDKNotificationService.html
+  name: SDKNotificationService
+  nameWithType: SDKNotificationService
+  fullName: Siesa.SDK.Frontend.Services.SDKNotificationService
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.configuration*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.configuration
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.configuration
+  name: configuration
+  nameWithType: FormView.configuration
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.configuration
+- uid: Microsoft.Extensions.Configuration.IConfiguration
+  commentId: T:Microsoft.Extensions.Configuration.IConfiguration
+  parent: Microsoft.Extensions.Configuration
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.configuration.iconfiguration
+  name: IConfiguration
+  nameWithType: IConfiguration
+  fullName: Microsoft.Extensions.Configuration.IConfiguration
+- uid: Microsoft.Extensions.Configuration
+  commentId: N:Microsoft.Extensions.Configuration
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.Extensions.Configuration
+  nameWithType: Microsoft.Extensions.Configuration
+  fullName: Microsoft.Extensions.Configuration
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.Extensions
+    name: Extensions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions
+  - name: .
+  - uid: Microsoft.Extensions.Configuration
+    name: Configuration
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.configuration
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.Extensions
+    name: Extensions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions
+  - name: .
+  - uid: Microsoft.Extensions.Configuration
+    name: Configuration
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.configuration
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.AuthenticationService*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.AuthenticationService
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.AuthenticationService
+  name: AuthenticationService
+  nameWithType: FormView.AuthenticationService
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.AuthenticationService
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService
+  commentId: T:Siesa.SDK.Shared.Services.IAuthenticationService
+  parent: Siesa.SDK.Shared.Services
+  name: IAuthenticationService
+  nameWithType: IAuthenticationService
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService
+- uid: Siesa.SDK.Shared.Services
+  commentId: N:Siesa.SDK.Shared.Services
+  name: Siesa.SDK.Shared.Services
+  nameWithType: Siesa.SDK.Shared.Services
+  fullName: Siesa.SDK.Shared.Services
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+  - name: .
+  - uid: Siesa.SDK.Shared
+    name: Shared
+  - name: .
+  - uid: Siesa.SDK.Shared.Services
+    name: Services
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+  - name: .
+  - uid: Siesa.SDK.Shared
+    name: Shared
+  - name: .
+  - uid: Siesa.SDK.Shared.Services
+    name: Services
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.GlobalLoaderService*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.GlobalLoaderService
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.GlobalLoaderService
+  name: GlobalLoaderService
+  nameWithType: FormView.GlobalLoaderService
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.GlobalLoaderService
+- uid: Siesa.SDK.Frontend.Services.SDKGlobalLoaderService
+  commentId: T:Siesa.SDK.Frontend.Services.SDKGlobalLoaderService
+  parent: Siesa.SDK.Frontend.Services
+  href: Siesa.SDK.Frontend.Services.SDKGlobalLoaderService.html
+  name: SDKGlobalLoaderService
+  nameWithType: SDKGlobalLoaderService
+  fullName: Siesa.SDK.Frontend.Services.SDKGlobalLoaderService
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FormViewModel*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FormViewModel
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FormViewModel
+  name: FormViewModel
+  nameWithType: FormView.FormViewModel
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FormViewModel
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.FormViewModel
+  commentId: T:Siesa.SDK.Frontend.Components.FormManager.Model.FormViewModel
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.FormViewModel.html
+  name: FormViewModel
+  nameWithType: FormViewModel
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.FormViewModel
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model
+  commentId: N:Siesa.SDK.Frontend.Components.FormManager.Model
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Components.FormManager.Model
+  nameWithType: Siesa.SDK.Frontend.Components.FormManager.Model
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager
+    name: FormManager
+    href: Siesa.SDK.Frontend.Components.FormManager.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model
+    name: Model
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager
+    name: FormManager
+    href: Siesa.SDK.Frontend.Components.FormManager.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model
+    name: Model
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.html
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.Panels*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.Panels
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.Panels
+  name: Panels
+  nameWithType: FormView.Panels
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.Panels
+- uid: System.Collections.Generic.List{Siesa.SDK.Frontend.Components.FormManager.Model.Panel}
+  commentId: T:System.Collections.Generic.List{Siesa.SDK.Frontend.Components.FormManager.Model.Panel}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<Panel>
+  nameWithType: List<Panel>
+  fullName: System.Collections.Generic.List<Siesa.SDK.Frontend.Components.FormManager.Model.Panel>
+  nameWithType.vb: List(Of Panel)
+  fullName.vb: System.Collections.Generic.List(Of Siesa.SDK.Frontend.Components.FormManager.Model.Panel)
+  name.vb: List(Of Panel)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Panel
+    name: Panel
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Panel
+    name: Panel
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.html
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowAditionalFields*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowAditionalFields
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowAditionalFields
+  name: ShowAditionalFields
+  nameWithType: FormView.ShowAditionalFields
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowAditionalFields
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.SavingFile*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.SavingFile
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.SavingFile
+  name: SavingFile
+  nameWithType: FormView.SavingFile
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.SavingFile
+- uid: System.Collections.Generic.List{System.String}
+  commentId: T:System.Collections.Generic.List{System.String}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<string>
+  nameWithType: List<string>
+  fullName: System.Collections.Generic.List<string>
+  nameWithType.vb: List(Of String)
+  fullName.vb: System.Collections.Generic.List(Of String)
+  name.vb: List(Of String)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FormID*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FormID
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FormID
+  name: FormID
+  nameWithType: FormView.FormID
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FormID
+- uid: Microsoft.AspNetCore.Components.Forms.ValidationMessageStore
+  commentId: T:Microsoft.AspNetCore.Components.Forms.ValidationMessageStore
+  parent: Microsoft.AspNetCore.Components.Forms
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.forms.validationmessagestore
+  name: ValidationMessageStore
+  nameWithType: ValidationMessageStore
+  fullName: Microsoft.AspNetCore.Components.Forms.ValidationMessageStore
+- uid: Microsoft.AspNetCore.Components.Forms
+  commentId: N:Microsoft.AspNetCore.Components.Forms
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.AspNetCore.Components.Forms
+  nameWithType: Microsoft.AspNetCore.Components.Forms
+  fullName: Microsoft.AspNetCore.Components.Forms
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Components
+    name: Components
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components
+  - name: .
+  - uid: Microsoft.AspNetCore.Components.Forms
+    name: Forms
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.forms
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Components
+    name: Components
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components
+  - name: .
+  - uid: Microsoft.AspNetCore.Components.Forms
+    name: Forms
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.forms
+- uid: Microsoft.AspNetCore.Components.Forms.EditContext
+  commentId: T:Microsoft.AspNetCore.Components.Forms.EditContext
+  parent: Microsoft.AspNetCore.Components.Forms
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.forms.editcontext
+  name: EditContext
+  nameWithType: EditContext
+  fullName: Microsoft.AspNetCore.Components.Forms.EditContext
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ViewdefName*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ViewdefName
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ViewdefName
+  name: ViewdefName
+  nameWithType: FormView.ViewdefName
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ViewdefName
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.DefaultViewdefName*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.DefaultViewdefName
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.DefaultViewdefName
+  name: DefaultViewdefName
+  nameWithType: FormView.DefaultViewdefName
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.DefaultViewdefName
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ViewContext*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ViewContext
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ViewContext
+  name: ViewContext
+  nameWithType: FormView.ViewContext
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ViewContext
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicViewType
+  commentId: T:Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicViewType
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicViewType.html
+  name: DynamicViewType
+  nameWithType: DynamicViewType
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicViewType
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowTitle*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowTitle
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowTitle
+  name: ShowTitle
+  nameWithType: FormView.ShowTitle
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowTitle
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowButtons*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowButtons
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowButtons
+  name: ShowButtons
+  nameWithType: FormView.ShowButtons
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowButtons
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowCancelButton*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowCancelButton
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowCancelButton
+  name: ShowCancelButton
+  nameWithType: FormView.ShowCancelButton
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowCancelButton
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowSaveButton*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowSaveButton
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowSaveButton
+  name: ShowSaveButton
+  nameWithType: FormView.ShowSaveButton
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ShowSaveButton
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnSave*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnSave
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnSave
+  name: OnSave
+  nameWithType: FormView.OnSave
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnSave
+- uid: System.Action{System.Object}
+  commentId: T:System.Action{System.Object}
+  parent: System
+  definition: System.Action`1
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<object>
+  nameWithType: Action<object>
+  fullName: System.Action<object>
+  nameWithType.vb: Action(Of Object)
+  fullName.vb: System.Action(Of Object)
+  name.vb: Action(Of Object)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Object
+    name: Object
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Action`1
+  commentId: T:System.Action`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<T>
+  nameWithType: Action<T>
+  fullName: System.Action<T>
+  nameWithType.vb: Action(Of T)
+  fullName.vb: System.Action(Of T)
+  name.vb: Action(Of T)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnCancel*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnCancel
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnCancel
+  name: OnCancel
+  nameWithType: FormView.OnCancel
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnCancel
+- uid: System.Action
+  commentId: T:System.Action
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.action
+  name: Action
+  nameWithType: Action
+  fullName: System.Action
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ParentBaseObj*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ParentBaseObj
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ParentBaseObj
+  name: ParentBaseObj
+  nameWithType: FormView.ParentBaseObj
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ParentBaseObj
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.BackendRouterService*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.BackendRouterService
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.BackendRouterService
+  name: BackendRouterService
+  nameWithType: FormView.BackendRouterService
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.BackendRouterService
+- uid: Siesa.SDK.Shared.Services.IBackendRouterService
+  commentId: T:Siesa.SDK.Shared.Services.IBackendRouterService
+  parent: Siesa.SDK.Shared.Services
+  name: IBackendRouterService
+  nameWithType: IBackendRouterService
+  fullName: Siesa.SDK.Shared.Services.IBackendRouterService
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FeaturePermissionService*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FeaturePermissionService
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FeaturePermissionService
+  name: FeaturePermissionService
+  nameWithType: FormView.FeaturePermissionService
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.FeaturePermissionService
+- uid: Siesa.SDK.Shared.Services.IFeaturePermissionService
+  commentId: T:Siesa.SDK.Shared.Services.IFeaturePermissionService
+  parent: Siesa.SDK.Shared.Services
+  name: IFeaturePermissionService
+  nameWithType: IFeaturePermissionService
+  fullName: Siesa.SDK.Shared.Services.IFeaturePermissionService
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ResourceManager*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ResourceManager
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ResourceManager
+  name: ResourceManager
+  nameWithType: FormView.ResourceManager
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ResourceManager
+- uid: Siesa.SDK.Shared.Services.IResourceManager
+  commentId: T:Siesa.SDK.Shared.Services.IResourceManager
+  parent: Siesa.SDK.Shared.Services
+  name: IResourceManager
+  nameWithType: IResourceManager
+  fullName: Siesa.SDK.Shared.Services.IResourceManager
+- uid: System.Collections.Generic.Dictionary{System.String,Siesa.SDK.Frontend.Components.FormManager.Fields.FileField}
+  commentId: T:System.Collections.Generic.Dictionary{System.String,Siesa.SDK.Frontend.Components.FormManager.Fields.FileField}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.Dictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<string, FileField>
+  nameWithType: Dictionary<string, FileField>
+  fullName: System.Collections.Generic.Dictionary<string, Siesa.SDK.Frontend.Components.FormManager.Fields.FileField>
+  nameWithType.vb: Dictionary(Of String, FileField)
+  fullName.vb: System.Collections.Generic.Dictionary(Of String, Siesa.SDK.Frontend.Components.FormManager.Fields.FileField)
+  name.vb: Dictionary(Of String, FileField)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Fields.FileField
+    name: FileField
+    href: Siesa.SDK.Frontend.Components.FormManager.Fields.FileField.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Fields.FileField
+    name: FileField
+    href: Siesa.SDK.Frontend.Components.FormManager.Fields.FileField.html
+  - name: )
+- uid: System.Collections.Generic.Dictionary`2
+  commentId: T:System.Collections.Generic.Dictionary`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<TKey, TValue>
+  nameWithType: Dictionary<TKey, TValue>
+  fullName: System.Collections.Generic.Dictionary<TKey, TValue>
+  nameWithType.vb: Dictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.Generic.Dictionary(Of TKey, TValue)
+  name.vb: Dictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.DataAttatchmentDetail*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.DataAttatchmentDetail
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.DataAttatchmentDetail
+  name: DataAttatchmentDetail
+  nameWithType: FormView.DataAttatchmentDetail
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.DataAttatchmentDetail
+- uid: Siesa.SDK.Shared.DTOS.SDKFileUploadDTO
+  commentId: T:Siesa.SDK.Shared.DTOS.SDKFileUploadDTO
+  parent: Siesa.SDK.Shared.DTOS
+  name: SDKFileUploadDTO
+  nameWithType: SDKFileUploadDTO
+  fullName: Siesa.SDK.Shared.DTOS.SDKFileUploadDTO
+- uid: Siesa.SDK.Shared.DTOS
+  commentId: N:Siesa.SDK.Shared.DTOS
+  name: Siesa.SDK.Shared.DTOS
+  nameWithType: Siesa.SDK.Shared.DTOS
+  fullName: Siesa.SDK.Shared.DTOS
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+  - name: .
+  - uid: Siesa.SDK.Shared
+    name: Shared
+  - name: .
+  - uid: Siesa.SDK.Shared.DTOS
+    name: DTOS
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+  - name: .
+  - uid: Siesa.SDK.Shared
+    name: Shared
+  - name: .
+  - uid: Siesa.SDK.Shared.DTOS
+    name: DTOS
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ClickInSave*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ClickInSave
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ClickInSave
+  name: ClickInSave
+  nameWithType: FormView.ClickInSave
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ClickInSave
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.HasExtraButtons*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.HasExtraButtons
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.HasExtraButtons
+  name: HasExtraButtons
+  nameWithType: FormView.HasExtraButtons
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.HasExtraButtons
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ExtraButtons*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ExtraButtons
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ExtraButtons
+  name: ExtraButtons
+  nameWithType: FormView.ExtraButtons
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.ExtraButtons
+- uid: System.Collections.Generic.List{Siesa.SDK.Frontend.Components.FormManager.Model.Button}
+  commentId: T:System.Collections.Generic.List{Siesa.SDK.Frontend.Components.FormManager.Model.Button}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<Button>
+  nameWithType: List<Button>
+  fullName: System.Collections.Generic.List<Siesa.SDK.Frontend.Components.FormManager.Model.Button>
+  nameWithType.vb: List(Of Button)
+  fullName.vb: System.Collections.Generic.List(Of Siesa.SDK.Frontend.Components.FormManager.Model.Button)
+  name.vb: List(Of Button)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Button
+    name: Button
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Button.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Button
+    name: Button
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Button.html
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.SaveButton*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.SaveButton
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.SaveButton
+  name: SaveButton
+  nameWithType: FormView.SaveButton
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.SaveButton
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Button
+  commentId: T:Siesa.SDK.Frontend.Components.FormManager.Model.Button
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Button.html
+  name: Button
+  nameWithType: Button
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Button
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.isOnePanel*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.isOnePanel
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.isOnePanel
+  name: isOnePanel
+  nameWithType: FormView.isOnePanel
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.isOnePanel
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CheckPermissions*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CheckPermissions
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CheckPermissions
+  name: CheckPermissions
+  nameWithType: FormView.CheckPermissions
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CheckPermissions
+- uid: System.Threading.Tasks.Task
+  commentId: T:System.Threading.Tasks.Task
+  parent: System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  name: Task
+  nameWithType: Task
+  fullName: System.Threading.Tasks.Task
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.Refresh*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.Refresh
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.Refresh(System.Boolean)
+  name: Refresh
+  nameWithType: FormView.Refresh
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.Refresh
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.InitView*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.InitView
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.InitView(System.String)
+  name: InitView
+  nameWithType: FormView.InitView
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.InitView
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.DeleteGroup*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.DeleteGroup
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.DeleteGroup(System.Int32)
+  name: DeleteGroup
+  nameWithType: FormView.DeleteGroup
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.DeleteGroup
+- uid: System.Threading.Tasks.Task{System.Boolean}
+  commentId: T:System.Threading.Tasks.Task{System.Boolean}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<bool>
+  nameWithType: Task<bool>
+  fullName: System.Threading.Tasks.Task<bool>
+  nameWithType.vb: Task(Of Boolean)
+  fullName.vb: System.Threading.Tasks.Task(Of Boolean)
+  name.vb: Task(Of Boolean)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: System.Threading.Tasks.Task`1
+  commentId: T:System.Threading.Tasks.Task`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<TResult>
+  nameWithType: Task<TResult>
+  fullName: System.Threading.Tasks.Task<TResult>
+  nameWithType.vb: Task(Of TResult)
+  fullName.vb: System.Threading.Tasks.Task(Of TResult)
+  name.vb: Task(Of TResult)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - name: TResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TResult
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.evaluateCodeButtons*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.evaluateCodeButtons
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.evaluateCodeButtons(Siesa.SDK.Frontend.Components.FormManager.Model.Button,System.String)
+  name: evaluateCodeButtons
+  nameWithType: FormView.evaluateCodeButtons
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.evaluateCodeButtons
+- uid: Microsoft.AspNetCore.Components.ComponentBase.OnInitializedAsync
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.OnInitializedAsync
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.oninitializedasync
+  name: OnInitializedAsync()
+  nameWithType: ComponentBase.OnInitializedAsync()
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.OnInitializedAsync()
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnInitializedAsync
+    name: OnInitializedAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.oninitializedasync
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnInitializedAsync
+    name: OnInitializedAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.oninitializedasync
+  - name: (
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnInitializedAsync*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnInitializedAsync
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnInitializedAsync
+  name: OnInitializedAsync
+  nameWithType: FormView.OnInitializedAsync
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnInitializedAsync
+- uid: Microsoft.AspNetCore.Components.ComponentBase.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.setparametersasync
+  name: SetParametersAsync(ParameterView)
+  nameWithType: ComponentBase.SetParametersAsync(ParameterView)
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+    name: SetParametersAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.setparametersasync
+  - name: (
+  - uid: Microsoft.AspNetCore.Components.ParameterView
+    name: ParameterView
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.parameterview
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+    name: SetParametersAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.setparametersasync
+  - name: (
+  - uid: Microsoft.AspNetCore.Components.ParameterView
+    name: ParameterView
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.parameterview
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ParameterAttribute
+  commentId: T:Microsoft.AspNetCore.Components.ParameterAttribute
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.parameterattribute
+  name: ParameterAttribute
+  nameWithType: ParameterAttribute
+  fullName: Microsoft.AspNetCore.Components.ParameterAttribute
+- uid: Microsoft.AspNetCore.Components.CascadingParameterAttribute
+  commentId: T:Microsoft.AspNetCore.Components.CascadingParameterAttribute
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.cascadingparameterattribute
+  name: CascadingParameterAttribute
+  nameWithType: CascadingParameterAttribute
+  fullName: Microsoft.AspNetCore.Components.CascadingParameterAttribute
+- uid: Microsoft.AspNetCore.Components.ParameterView
+  commentId: T:Microsoft.AspNetCore.Components.ParameterView
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.parameterview
+  name: ParameterView
+  nameWithType: ParameterView
+  fullName: Microsoft.AspNetCore.Components.ParameterView
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.SetParametersAsync*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.SetParametersAsync
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  name: SetParametersAsync
+  nameWithType: FormView.SetParametersAsync
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.SetParametersAsync
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnError*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnError
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnError(Siesa.SDK.Shared.DTOS.SDKUploadErrorEventArgsDTO)
+  name: OnError
+  nameWithType: FormView.OnError
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnError
+- uid: Siesa.SDK.Shared.DTOS.SDKUploadErrorEventArgsDTO
+  commentId: T:Siesa.SDK.Shared.DTOS.SDKUploadErrorEventArgsDTO
+  parent: Siesa.SDK.Shared.DTOS
+  name: SDKUploadErrorEventArgsDTO
+  nameWithType: SDKUploadErrorEventArgsDTO
+  fullName: Siesa.SDK.Shared.DTOS.SDKUploadErrorEventArgsDTO
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.savingAttachment*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.savingAttachment
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.savingAttachment(Siesa.SDK.Frontend.Components.FormManager.Fields.FileField,System.Int32)
+  name: savingAttachment
+  nameWithType: FormView.savingAttachment
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.savingAttachment
+- uid: Siesa.SDK.Frontend.Components.FormManager.Fields.FileField
+  commentId: T:Siesa.SDK.Frontend.Components.FormManager.Fields.FileField
+  parent: Siesa.SDK.Frontend.Components.FormManager.Fields
+  href: Siesa.SDK.Frontend.Components.FormManager.Fields.FileField.html
+  name: FileField
+  nameWithType: FileField
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Fields.FileField
+- uid: System.Threading.Tasks.Task{System.Int32}
+  commentId: T:System.Threading.Tasks.Task{System.Int32}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<int>
+  nameWithType: Task<int>
+  fullName: System.Threading.Tasks.Task<int>
+  nameWithType.vb: Task(Of Integer)
+  fullName.vb: System.Threading.Tasks.Task(Of Integer)
+  name.vb: Task(Of Integer)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.FormManager.Fields
+  commentId: N:Siesa.SDK.Frontend.Components.FormManager.Fields
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Components.FormManager.Fields
+  nameWithType: Siesa.SDK.Frontend.Components.FormManager.Fields
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Fields
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager
+    name: FormManager
+    href: Siesa.SDK.Frontend.Components.FormManager.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Fields
+    name: Fields
+    href: Siesa.SDK.Frontend.Components.FormManager.Fields.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager
+    name: FormManager
+    href: Siesa.SDK.Frontend.Components.FormManager.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Fields
+    name: Fields
+    href: Siesa.SDK.Frontend.Components.FormManager.Fields.html
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnComplete*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnComplete
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnComplete(Siesa.SDK.Shared.DTOS.SDKUploadCompleteEventArgsDTO)
+  name: OnComplete
+  nameWithType: FormView.OnComplete
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnComplete
+- uid: Siesa.SDK.Shared.DTOS.SDKUploadCompleteEventArgsDTO
+  commentId: T:Siesa.SDK.Shared.DTOS.SDKUploadCompleteEventArgsDTO
+  parent: Siesa.SDK.Shared.DTOS
+  name: SDKUploadCompleteEventArgsDTO
+  nameWithType: SDKUploadCompleteEventArgsDTO
+  fullName: Siesa.SDK.Shared.DTOS.SDKUploadCompleteEventArgsDTO
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CancelButton*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CancelButton
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CancelButton
+  name: CancelButton
+  nameWithType: FormView.CancelButton
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.CancelButton
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.HandleValidSubmit*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.HandleValidSubmit
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.HandleValidSubmit
+  name: HandleValidSubmit
+  nameWithType: FormView.HandleValidSubmit
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.HandleValidSubmit
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.HandleInvalidSubmit*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.HandleInvalidSubmit
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.HandleInvalidSubmit
+  name: HandleInvalidSubmit
+  nameWithType: FormView.HandleInvalidSubmit
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.HandleInvalidSubmit
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.GoToList*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.GoToList
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.GoToList
+  name: GoToList
+  nameWithType: FormView.GoToList
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.GoToList
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnClickCustomButton*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnClickCustomButton
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnClickCustomButton(Siesa.SDK.Frontend.Components.FormManager.Model.Button)
+  name: OnClickCustomButton
+  nameWithType: FormView.OnClickCustomButton
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.OnClickCustomButton
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.GetSaveBtnIcon*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.GetSaveBtnIcon
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.html#Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.GetSaveBtnIcon
+  name: GetSaveBtnIcon
+  nameWithType: FormView.GetSaveBtnIcon
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.FormView.GetSaveBtnIcon

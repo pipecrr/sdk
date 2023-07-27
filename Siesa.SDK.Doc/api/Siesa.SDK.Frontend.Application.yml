@@ -1,0 +1,69 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Application
+  commentId: N:Siesa.SDK.Frontend.Application
+  id: Siesa.SDK.Frontend.Application
+  children:
+  - Siesa.SDK.Frontend.Application.IViewdefManager
+  - Siesa.SDK.Frontend.Application.ViewdefManager
+  langs:
+  - csharp
+  - vb
+  name: Siesa.SDK.Frontend.Application
+  nameWithType: Siesa.SDK.Frontend.Application
+  fullName: Siesa.SDK.Frontend.Application
+  type: Namespace
+  assemblies:
+  - Siesa.SDK.Frontend
+references:
+- uid: Siesa.SDK.Frontend.Application.IViewdefManager
+  commentId: T:Siesa.SDK.Frontend.Application.IViewdefManager
+  parent: Siesa.SDK.Frontend.Application
+  href: Siesa.SDK.Frontend.Application.IViewdefManager.html
+  name: IViewdefManager
+  nameWithType: IViewdefManager
+  fullName: Siesa.SDK.Frontend.Application.IViewdefManager
+- uid: Siesa.SDK.Frontend.Application.ViewdefManager
+  commentId: T:Siesa.SDK.Frontend.Application.ViewdefManager
+  href: Siesa.SDK.Frontend.Application.ViewdefManager.html
+  name: ViewdefManager
+  nameWithType: ViewdefManager
+  fullName: Siesa.SDK.Frontend.Application.ViewdefManager
+- uid: Siesa.SDK.Frontend.Application
+  commentId: N:Siesa.SDK.Frontend.Application
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Application
+  nameWithType: Siesa.SDK.Frontend.Application
+  fullName: Siesa.SDK.Frontend.Application
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Application
+    name: Application
+    href: Siesa.SDK.Frontend.Application.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Application
+    name: Application
+    href: Siesa.SDK.Frontend.Application.html

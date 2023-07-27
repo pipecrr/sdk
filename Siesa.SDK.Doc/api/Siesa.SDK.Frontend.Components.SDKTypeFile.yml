@@ -1,0 +1,236 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Components.SDKTypeFile
+  commentId: T:Siesa.SDK.Frontend.Components.SDKTypeFile
+  id: SDKTypeFile
+  parent: Siesa.SDK.Frontend.Components
+  children:
+  - Siesa.SDK.Frontend.Components.SDKTypeFile.Audio
+  - Siesa.SDK.Frontend.Components.SDKTypeFile.Image
+  - Siesa.SDK.Frontend.Components.SDKTypeFile.Other
+  - Siesa.SDK.Frontend.Components.SDKTypeFile.Pdf
+  - Siesa.SDK.Frontend.Components.SDKTypeFile.Text
+  - Siesa.SDK.Frontend.Components.SDKTypeFile.Video
+  langs:
+  - csharp
+  - vb
+  name: SDKTypeFile
+  nameWithType: SDKTypeFile
+  fullName: Siesa.SDK.Frontend.Components.SDKTypeFile
+  type: Enum
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/SDKEnums.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SDKTypeFile
+    path: ../Siesa.SDK.Frontend/Components/SDKEnums.cs
+    startLine: 175
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components
+  syntax:
+    content: public enum SDKTypeFile
+    content.vb: Public Enum SDKTypeFile
+- uid: Siesa.SDK.Frontend.Components.SDKTypeFile.Image
+  commentId: F:Siesa.SDK.Frontend.Components.SDKTypeFile.Image
+  id: Image
+  parent: Siesa.SDK.Frontend.Components.SDKTypeFile
+  langs:
+  - csharp
+  - vb
+  name: Image
+  nameWithType: SDKTypeFile.Image
+  fullName: Siesa.SDK.Frontend.Components.SDKTypeFile.Image
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/SDKEnums.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Image
+    path: ../Siesa.SDK.Frontend/Components/SDKEnums.cs
+    startLine: 176
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components
+  syntax:
+    content: Image = 1
+    return:
+      type: Siesa.SDK.Frontend.Components.SDKTypeFile
+- uid: Siesa.SDK.Frontend.Components.SDKTypeFile.Video
+  commentId: F:Siesa.SDK.Frontend.Components.SDKTypeFile.Video
+  id: Video
+  parent: Siesa.SDK.Frontend.Components.SDKTypeFile
+  langs:
+  - csharp
+  - vb
+  name: Video
+  nameWithType: SDKTypeFile.Video
+  fullName: Siesa.SDK.Frontend.Components.SDKTypeFile.Video
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/SDKEnums.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Video
+    path: ../Siesa.SDK.Frontend/Components/SDKEnums.cs
+    startLine: 177
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components
+  syntax:
+    content: Video = 2
+    return:
+      type: Siesa.SDK.Frontend.Components.SDKTypeFile
+- uid: Siesa.SDK.Frontend.Components.SDKTypeFile.Audio
+  commentId: F:Siesa.SDK.Frontend.Components.SDKTypeFile.Audio
+  id: Audio
+  parent: Siesa.SDK.Frontend.Components.SDKTypeFile
+  langs:
+  - csharp
+  - vb
+  name: Audio
+  nameWithType: SDKTypeFile.Audio
+  fullName: Siesa.SDK.Frontend.Components.SDKTypeFile.Audio
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/SDKEnums.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Audio
+    path: ../Siesa.SDK.Frontend/Components/SDKEnums.cs
+    startLine: 178
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components
+  syntax:
+    content: Audio = 3
+    return:
+      type: Siesa.SDK.Frontend.Components.SDKTypeFile
+- uid: Siesa.SDK.Frontend.Components.SDKTypeFile.Pdf
+  commentId: F:Siesa.SDK.Frontend.Components.SDKTypeFile.Pdf
+  id: Pdf
+  parent: Siesa.SDK.Frontend.Components.SDKTypeFile
+  langs:
+  - csharp
+  - vb
+  name: Pdf
+  nameWithType: SDKTypeFile.Pdf
+  fullName: Siesa.SDK.Frontend.Components.SDKTypeFile.Pdf
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/SDKEnums.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Pdf
+    path: ../Siesa.SDK.Frontend/Components/SDKEnums.cs
+    startLine: 179
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components
+  syntax:
+    content: Pdf = 4
+    return:
+      type: Siesa.SDK.Frontend.Components.SDKTypeFile
+- uid: Siesa.SDK.Frontend.Components.SDKTypeFile.Text
+  commentId: F:Siesa.SDK.Frontend.Components.SDKTypeFile.Text
+  id: Text
+  parent: Siesa.SDK.Frontend.Components.SDKTypeFile
+  langs:
+  - csharp
+  - vb
+  name: Text
+  nameWithType: SDKTypeFile.Text
+  fullName: Siesa.SDK.Frontend.Components.SDKTypeFile.Text
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/SDKEnums.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Text
+    path: ../Siesa.SDK.Frontend/Components/SDKEnums.cs
+    startLine: 180
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components
+  syntax:
+    content: Text = 5
+    return:
+      type: Siesa.SDK.Frontend.Components.SDKTypeFile
+- uid: Siesa.SDK.Frontend.Components.SDKTypeFile.Other
+  commentId: F:Siesa.SDK.Frontend.Components.SDKTypeFile.Other
+  id: Other
+  parent: Siesa.SDK.Frontend.Components.SDKTypeFile
+  langs:
+  - csharp
+  - vb
+  name: Other
+  nameWithType: SDKTypeFile.Other
+  fullName: Siesa.SDK.Frontend.Components.SDKTypeFile.Other
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/SDKEnums.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Other
+    path: ../Siesa.SDK.Frontend/Components/SDKEnums.cs
+    startLine: 181
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components
+  syntax:
+    content: Other = 6
+    return:
+      type: Siesa.SDK.Frontend.Components.SDKTypeFile
+references:
+- uid: Siesa.SDK.Frontend.Components
+  commentId: N:Siesa.SDK.Frontend.Components
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Components
+  nameWithType: Siesa.SDK.Frontend.Components
+  fullName: Siesa.SDK.Frontend.Components
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+- uid: Siesa.SDK.Frontend.Components.SDKTypeFile
+  commentId: T:Siesa.SDK.Frontend.Components.SDKTypeFile
+  parent: Siesa.SDK.Frontend.Components
+  href: Siesa.SDK.Frontend.Components.SDKTypeFile.html
+  name: SDKTypeFile
+  nameWithType: SDKTypeFile
+  fullName: Siesa.SDK.Frontend.Components.SDKTypeFile

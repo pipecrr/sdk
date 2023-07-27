@@ -1,0 +1,223 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Components
+  commentId: N:Siesa.SDK.Frontend.Components
+  id: Siesa.SDK.Frontend.Components
+  children:
+  - Siesa.SDK.Frontend.Components.Dev
+  - Siesa.SDK.Frontend.Components.SDKBadgeStyle
+  - Siesa.SDK.Frontend.Components.SDKCaptionPosition
+  - Siesa.SDK.Frontend.Components.SDKChartHorizontalAlignment
+  - Siesa.SDK.Frontend.Components.SDKChartOrientation
+  - Siesa.SDK.Frontend.Components.SDKChartRelativePosition
+  - Siesa.SDK.Frontend.Components.SDKChartVerticalEdge
+  - Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode
+  - Siesa.SDK.Frontend.Components.SDKColumnAlign
+  - Siesa.SDK.Frontend.Components.SDKComponent
+  - Siesa.SDK.Frontend.Components.SDKEnums
+  - Siesa.SDK.Frontend.Components.SDKModalWidth
+  - Siesa.SDK.Frontend.Components.SDKNotificationSeverity
+  - Siesa.SDK.Frontend.Components.SDKOrientationMenu
+  - Siesa.SDK.Frontend.Components.SDKProgressBarStyle
+  - Siesa.SDK.Frontend.Components.SDKProgressBarType
+  - Siesa.SDK.Frontend.Components.SDKSelectionMode
+  - Siesa.SDK.Frontend.Components.SDKTypeFile
+  - Siesa.SDK.Frontend.Components.SelectBarItemWrap`1
+  langs:
+  - csharp
+  - vb
+  name: Siesa.SDK.Frontend.Components
+  nameWithType: Siesa.SDK.Frontend.Components
+  fullName: Siesa.SDK.Frontend.Components
+  type: Namespace
+  assemblies:
+  - Siesa.SDK.Frontend
+references:
+- uid: Siesa.SDK.Frontend.Components.SelectBarItemWrap`1
+  commentId: T:Siesa.SDK.Frontend.Components.SelectBarItemWrap`1
+  href: Siesa.SDK.Frontend.Components.SelectBarItemWrap-1.html
+  name: SelectBarItemWrap<T>
+  nameWithType: SelectBarItemWrap<T>
+  fullName: Siesa.SDK.Frontend.Components.SelectBarItemWrap<T>
+  nameWithType.vb: SelectBarItemWrap(Of T)
+  fullName.vb: Siesa.SDK.Frontend.Components.SelectBarItemWrap(Of T)
+  name.vb: SelectBarItemWrap(Of T)
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.SelectBarItemWrap`1
+    name: SelectBarItemWrap
+    href: Siesa.SDK.Frontend.Components.SelectBarItemWrap-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.SelectBarItemWrap`1
+    name: SelectBarItemWrap
+    href: Siesa.SDK.Frontend.Components.SelectBarItemWrap-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.SDKComponent
+  commentId: T:Siesa.SDK.Frontend.Components.SDKComponent
+  parent: Siesa.SDK.Frontend.Components
+  href: Siesa.SDK.Frontend.Components.SDKComponent.html
+  name: SDKComponent
+  nameWithType: SDKComponent
+  fullName: Siesa.SDK.Frontend.Components.SDKComponent
+- uid: Siesa.SDK.Frontend.Components.SDKEnums
+  commentId: T:Siesa.SDK.Frontend.Components.SDKEnums
+  parent: Siesa.SDK.Frontend.Components
+  href: Siesa.SDK.Frontend.Components.SDKEnums.html
+  name: SDKEnums
+  nameWithType: SDKEnums
+  fullName: Siesa.SDK.Frontend.Components.SDKEnums
+- uid: Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode
+  commentId: T:Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode
+  parent: Siesa.SDK.Frontend.Components
+  href: Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode.html
+  name: SDKClearButtonDisplayMode
+  nameWithType: SDKClearButtonDisplayMode
+  fullName: Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode
+- uid: Siesa.SDK.Frontend.Components.SDKSelectionMode
+  commentId: T:Siesa.SDK.Frontend.Components.SDKSelectionMode
+  parent: Siesa.SDK.Frontend.Components
+  href: Siesa.SDK.Frontend.Components.SDKSelectionMode.html
+  name: SDKSelectionMode
+  nameWithType: SDKSelectionMode
+  fullName: Siesa.SDK.Frontend.Components.SDKSelectionMode
+- uid: Siesa.SDK.Frontend.Components.SDKColumnAlign
+  commentId: T:Siesa.SDK.Frontend.Components.SDKColumnAlign
+  parent: Siesa.SDK.Frontend.Components
+  href: Siesa.SDK.Frontend.Components.SDKColumnAlign.html
+  name: SDKColumnAlign
+  nameWithType: SDKColumnAlign
+  fullName: Siesa.SDK.Frontend.Components.SDKColumnAlign
+- uid: Siesa.SDK.Frontend.Components.SDKNotificationSeverity
+  commentId: T:Siesa.SDK.Frontend.Components.SDKNotificationSeverity
+  parent: Siesa.SDK.Frontend.Components
+  href: Siesa.SDK.Frontend.Components.SDKNotificationSeverity.html
+  name: SDKNotificationSeverity
+  nameWithType: SDKNotificationSeverity
+  fullName: Siesa.SDK.Frontend.Components.SDKNotificationSeverity
+- uid: Siesa.SDK.Frontend.Components.SDKBadgeStyle
+  commentId: T:Siesa.SDK.Frontend.Components.SDKBadgeStyle
+  parent: Siesa.SDK.Frontend.Components
+  href: Siesa.SDK.Frontend.Components.SDKBadgeStyle.html
+  name: SDKBadgeStyle
+  nameWithType: SDKBadgeStyle
+  fullName: Siesa.SDK.Frontend.Components.SDKBadgeStyle
+- uid: Siesa.SDK.Frontend.Components.SDKTypeFile
+  commentId: T:Siesa.SDK.Frontend.Components.SDKTypeFile
+  parent: Siesa.SDK.Frontend.Components
+  href: Siesa.SDK.Frontend.Components.SDKTypeFile.html
+  name: SDKTypeFile
+  nameWithType: SDKTypeFile
+  fullName: Siesa.SDK.Frontend.Components.SDKTypeFile
+- uid: Siesa.SDK.Frontend.Components.SDKOrientationMenu
+  commentId: T:Siesa.SDK.Frontend.Components.SDKOrientationMenu
+  parent: Siesa.SDK.Frontend.Components
+  href: Siesa.SDK.Frontend.Components.SDKOrientationMenu.html
+  name: SDKOrientationMenu
+  nameWithType: SDKOrientationMenu
+  fullName: Siesa.SDK.Frontend.Components.SDKOrientationMenu
+- uid: Siesa.SDK.Frontend.Components.SDKCaptionPosition
+  commentId: T:Siesa.SDK.Frontend.Components.SDKCaptionPosition
+  parent: Siesa.SDK.Frontend.Components
+  href: Siesa.SDK.Frontend.Components.SDKCaptionPosition.html
+  name: SDKCaptionPosition
+  nameWithType: SDKCaptionPosition
+  fullName: Siesa.SDK.Frontend.Components.SDKCaptionPosition
+- uid: Siesa.SDK.Frontend.Components.SDKChartRelativePosition
+  commentId: T:Siesa.SDK.Frontend.Components.SDKChartRelativePosition
+  parent: Siesa.SDK.Frontend.Components
+  href: Siesa.SDK.Frontend.Components.SDKChartRelativePosition.html
+  name: SDKChartRelativePosition
+  nameWithType: SDKChartRelativePosition
+  fullName: Siesa.SDK.Frontend.Components.SDKChartRelativePosition
+- uid: Siesa.SDK.Frontend.Components.SDKChartHorizontalAlignment
+  commentId: T:Siesa.SDK.Frontend.Components.SDKChartHorizontalAlignment
+  parent: Siesa.SDK.Frontend.Components
+  href: Siesa.SDK.Frontend.Components.SDKChartHorizontalAlignment.html
+  name: SDKChartHorizontalAlignment
+  nameWithType: SDKChartHorizontalAlignment
+  fullName: Siesa.SDK.Frontend.Components.SDKChartHorizontalAlignment
+- uid: Siesa.SDK.Frontend.Components.SDKChartVerticalEdge
+  commentId: T:Siesa.SDK.Frontend.Components.SDKChartVerticalEdge
+  parent: Siesa.SDK.Frontend.Components
+  href: Siesa.SDK.Frontend.Components.SDKChartVerticalEdge.html
+  name: SDKChartVerticalEdge
+  nameWithType: SDKChartVerticalEdge
+  fullName: Siesa.SDK.Frontend.Components.SDKChartVerticalEdge
+- uid: Siesa.SDK.Frontend.Components.SDKChartOrientation
+  commentId: T:Siesa.SDK.Frontend.Components.SDKChartOrientation
+  parent: Siesa.SDK.Frontend.Components
+  href: Siesa.SDK.Frontend.Components.SDKChartOrientation.html
+  name: SDKChartOrientation
+  nameWithType: SDKChartOrientation
+  fullName: Siesa.SDK.Frontend.Components.SDKChartOrientation
+- uid: Siesa.SDK.Frontend.Components.SDKModalWidth
+  commentId: T:Siesa.SDK.Frontend.Components.SDKModalWidth
+  parent: Siesa.SDK.Frontend.Components
+  href: Siesa.SDK.Frontend.Components.SDKModalWidth.html
+  name: SDKModalWidth
+  nameWithType: SDKModalWidth
+  fullName: Siesa.SDK.Frontend.Components.SDKModalWidth
+- uid: Siesa.SDK.Frontend.Components.SDKProgressBarStyle
+  commentId: T:Siesa.SDK.Frontend.Components.SDKProgressBarStyle
+  parent: Siesa.SDK.Frontend.Components
+  href: Siesa.SDK.Frontend.Components.SDKProgressBarStyle.html
+  name: SDKProgressBarStyle
+  nameWithType: SDKProgressBarStyle
+  fullName: Siesa.SDK.Frontend.Components.SDKProgressBarStyle
+- uid: Siesa.SDK.Frontend.Components.SDKProgressBarType
+  commentId: T:Siesa.SDK.Frontend.Components.SDKProgressBarType
+  parent: Siesa.SDK.Frontend.Components
+  href: Siesa.SDK.Frontend.Components.SDKProgressBarType.html
+  name: SDKProgressBarType
+  nameWithType: SDKProgressBarType
+  fullName: Siesa.SDK.Frontend.Components.SDKProgressBarType
+- uid: Siesa.SDK.Frontend.Components.Dev
+  commentId: T:Siesa.SDK.Frontend.Components.Dev
+  href: Siesa.SDK.Frontend.Components.Dev.html
+  name: Dev
+  nameWithType: Dev
+  fullName: Siesa.SDK.Frontend.Components.Dev
+- uid: Siesa.SDK.Frontend.Components
+  commentId: N:Siesa.SDK.Frontend.Components
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Components
+  nameWithType: Siesa.SDK.Frontend.Components
+  fullName: Siesa.SDK.Frontend.Components
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html

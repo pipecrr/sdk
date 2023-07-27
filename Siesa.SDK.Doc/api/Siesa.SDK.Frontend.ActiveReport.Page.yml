@@ -1,0 +1,30 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.ActiveReport.Page
+  commentId: N:Siesa.SDK.Frontend.ActiveReport.Page
+  id: Siesa.SDK.Frontend.ActiveReport.Page
+  children:
+  - Siesa.SDK.Frontend.ActiveReport.Page.ReportDesigner
+  - Siesa.SDK.Frontend.ActiveReport.Page.SDKReportViewer
+  langs:
+  - csharp
+  - vb
+  name: Siesa.SDK.Frontend.ActiveReport.Page
+  nameWithType: Siesa.SDK.Frontend.ActiveReport.Page
+  fullName: Siesa.SDK.Frontend.ActiveReport.Page
+  type: Namespace
+  assemblies:
+  - Siesa.SDK.Frontend
+references:
+- uid: Siesa.SDK.Frontend.ActiveReport.Page.SDKReportViewer
+  commentId: T:Siesa.SDK.Frontend.ActiveReport.Page.SDKReportViewer
+  href: Siesa.SDK.Frontend.ActiveReport.Page.SDKReportViewer.html
+  name: SDKReportViewer
+  nameWithType: SDKReportViewer
+  fullName: Siesa.SDK.Frontend.ActiveReport.Page.SDKReportViewer
+- uid: Siesa.SDK.Frontend.ActiveReport.Page.ReportDesigner
+  commentId: T:Siesa.SDK.Frontend.ActiveReport.Page.ReportDesigner
+  href: Siesa.SDK.Frontend.ActiveReport.Page.ReportDesigner.html
+  name: ReportDesigner
+  nameWithType: ReportDesigner
+  fullName: Siesa.SDK.Frontend.ActiveReport.Page.ReportDesigner

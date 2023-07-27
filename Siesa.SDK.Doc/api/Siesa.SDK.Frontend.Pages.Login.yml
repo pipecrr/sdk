@@ -1,0 +1,144 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Pages.Login
+  commentId: N:Siesa.SDK.Frontend.Pages.Login
+  id: Siesa.SDK.Frontend.Pages.Login
+  children:
+  - Siesa.SDK.Frontend.Pages.Login.ForgotPassword
+  - Siesa.SDK.Frontend.Pages.Login.ForgotPassword.ModelRecoveryPassword
+  - Siesa.SDK.Frontend.Pages.Login.Lang
+  - Siesa.SDK.Frontend.Pages.Login.Login
+  - Siesa.SDK.Frontend.Pages.Login.ModalLogin
+  - Siesa.SDK.Frontend.Pages.Login.SDKRecoveryPassword
+  - Siesa.SDK.Frontend.Pages.Login.SDKRecoveryPassword.PasswordChangeModel
+  langs:
+  - csharp
+  - vb
+  name: Siesa.SDK.Frontend.Pages.Login
+  nameWithType: Siesa.SDK.Frontend.Pages.Login
+  fullName: Siesa.SDK.Frontend.Pages.Login
+  type: Namespace
+  assemblies:
+  - Siesa.SDK.Frontend
+references:
+- uid: Siesa.SDK.Frontend.Pages.Login.Login
+  commentId: T:Siesa.SDK.Frontend.Pages.Login.Login
+  parent: Siesa.SDK.Frontend.Pages.Login
+  href: Siesa.SDK.Frontend.Pages.Login.Login.html
+  name: Login
+  nameWithType: Login
+  fullName: Siesa.SDK.Frontend.Pages.Login.Login
+- uid: Siesa.SDK.Frontend.Pages.Login.ForgotPassword
+  commentId: T:Siesa.SDK.Frontend.Pages.Login.ForgotPassword
+  href: Siesa.SDK.Frontend.Pages.Login.ForgotPassword.html
+  name: ForgotPassword
+  nameWithType: ForgotPassword
+  fullName: Siesa.SDK.Frontend.Pages.Login.ForgotPassword
+- uid: Siesa.SDK.Frontend.Pages.Login.ForgotPassword.ModelRecoveryPassword
+  commentId: T:Siesa.SDK.Frontend.Pages.Login.ForgotPassword.ModelRecoveryPassword
+  href: Siesa.SDK.Frontend.Pages.Login.ForgotPassword.html
+  name: ForgotPassword.ModelRecoveryPassword
+  nameWithType: ForgotPassword.ModelRecoveryPassword
+  fullName: Siesa.SDK.Frontend.Pages.Login.ForgotPassword.ModelRecoveryPassword
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Pages.Login.ForgotPassword
+    name: ForgotPassword
+    href: Siesa.SDK.Frontend.Pages.Login.ForgotPassword.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Pages.Login.ForgotPassword.ModelRecoveryPassword
+    name: ModelRecoveryPassword
+    href: Siesa.SDK.Frontend.Pages.Login.ForgotPassword.ModelRecoveryPassword.html
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Pages.Login.ForgotPassword
+    name: ForgotPassword
+    href: Siesa.SDK.Frontend.Pages.Login.ForgotPassword.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Pages.Login.ForgotPassword.ModelRecoveryPassword
+    name: ModelRecoveryPassword
+    href: Siesa.SDK.Frontend.Pages.Login.ForgotPassword.ModelRecoveryPassword.html
+- uid: Siesa.SDK.Frontend.Pages.Login.ModalLogin
+  commentId: T:Siesa.SDK.Frontend.Pages.Login.ModalLogin
+  href: Siesa.SDK.Frontend.Pages.Login.ModalLogin.html
+  name: ModalLogin
+  nameWithType: ModalLogin
+  fullName: Siesa.SDK.Frontend.Pages.Login.ModalLogin
+- uid: Siesa.SDK.Frontend.Pages.Login.SDKRecoveryPassword
+  commentId: T:Siesa.SDK.Frontend.Pages.Login.SDKRecoveryPassword
+  href: Siesa.SDK.Frontend.Pages.Login.SDKRecoveryPassword.html
+  name: SDKRecoveryPassword
+  nameWithType: SDKRecoveryPassword
+  fullName: Siesa.SDK.Frontend.Pages.Login.SDKRecoveryPassword
+- uid: Siesa.SDK.Frontend.Pages.Login.SDKRecoveryPassword.PasswordChangeModel
+  commentId: T:Siesa.SDK.Frontend.Pages.Login.SDKRecoveryPassword.PasswordChangeModel
+  href: Siesa.SDK.Frontend.Pages.Login.SDKRecoveryPassword.html
+  name: SDKRecoveryPassword.PasswordChangeModel
+  nameWithType: SDKRecoveryPassword.PasswordChangeModel
+  fullName: Siesa.SDK.Frontend.Pages.Login.SDKRecoveryPassword.PasswordChangeModel
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Pages.Login.SDKRecoveryPassword
+    name: SDKRecoveryPassword
+    href: Siesa.SDK.Frontend.Pages.Login.SDKRecoveryPassword.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Pages.Login.SDKRecoveryPassword.PasswordChangeModel
+    name: PasswordChangeModel
+    href: Siesa.SDK.Frontend.Pages.Login.SDKRecoveryPassword.PasswordChangeModel.html
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Pages.Login.SDKRecoveryPassword
+    name: SDKRecoveryPassword
+    href: Siesa.SDK.Frontend.Pages.Login.SDKRecoveryPassword.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Pages.Login.SDKRecoveryPassword.PasswordChangeModel
+    name: PasswordChangeModel
+    href: Siesa.SDK.Frontend.Pages.Login.SDKRecoveryPassword.PasswordChangeModel.html
+- uid: Siesa.SDK.Frontend.Pages.Login.Lang
+  commentId: T:Siesa.SDK.Frontend.Pages.Login.Lang
+  href: Siesa.SDK.Frontend.Pages.Login.Lang.html
+  name: Lang
+  nameWithType: Lang
+  fullName: Siesa.SDK.Frontend.Pages.Login.Lang
+- uid: Siesa.SDK.Frontend.Pages.Login
+  commentId: N:Siesa.SDK.Frontend.Pages.Login
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Pages.Login
+  nameWithType: Siesa.SDK.Frontend.Pages.Login
+  fullName: Siesa.SDK.Frontend.Pages.Login
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Pages
+    name: Pages
+    href: Siesa.SDK.Frontend.Pages.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Pages.Login
+    name: Login
+    href: Siesa.SDK.Frontend.Pages.Login.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Pages
+    name: Pages
+    href: Siesa.SDK.Frontend.Pages.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Pages.Login
+    name: Login
+    href: Siesa.SDK.Frontend.Pages.Login.html

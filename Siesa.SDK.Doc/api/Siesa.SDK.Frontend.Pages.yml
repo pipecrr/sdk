@@ -1,0 +1,30 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Pages
+  commentId: N:Siesa.SDK.Frontend.Pages
+  id: Siesa.SDK.Frontend.Pages
+  children:
+  - Siesa.SDK.Frontend.Pages.Index
+  - Siesa.SDK.Frontend.Pages.Logout
+  langs:
+  - csharp
+  - vb
+  name: Siesa.SDK.Frontend.Pages
+  nameWithType: Siesa.SDK.Frontend.Pages
+  fullName: Siesa.SDK.Frontend.Pages
+  type: Namespace
+  assemblies:
+  - Siesa.SDK.Frontend
+references:
+- uid: Siesa.SDK.Frontend.Pages.Logout
+  commentId: T:Siesa.SDK.Frontend.Pages.Logout
+  href: Siesa.SDK.Frontend.Pages.Logout.html
+  name: Logout
+  nameWithType: Logout
+  fullName: Siesa.SDK.Frontend.Pages.Logout
+- uid: Siesa.SDK.Frontend.Pages.Index
+  commentId: T:Siesa.SDK.Frontend.Pages.Index
+  href: Siesa.SDK.Frontend.Pages.Index.html
+  name: Index
+  nameWithType: Index
+  fullName: Siesa.SDK.Frontend.Pages.Index

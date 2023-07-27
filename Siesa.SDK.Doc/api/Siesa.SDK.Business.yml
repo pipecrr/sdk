@@ -1,0 +1,146 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Business
+  commentId: N:Siesa.SDK.Business
+  id: Siesa.SDK.Business
+  children:
+  - Siesa.SDK.Business.BLBackendExplorer`1
+  - Siesa.SDK.Business.BLBackendSimple
+  - Siesa.SDK.Business.BLBackendSimple`2
+  - Siesa.SDK.Business.BLFrontendExplorer`1
+  - Siesa.SDK.Business.BLFrontendSimple
+  - Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: Siesa.SDK.Business
+  nameWithType: Siesa.SDK.Business
+  fullName: Siesa.SDK.Business
+  type: Namespace
+  assemblies:
+  - Siesa.SDK.Backend
+references:
+- uid: Siesa.SDK.Business.BLBackendExplorer`1
+  commentId: T:Siesa.SDK.Business.BLBackendExplorer`1
+  href: Siesa.SDK.Business.BLBackendExplorer-1.html
+  name: BLBackendExplorer<T>
+  nameWithType: BLBackendExplorer<T>
+  fullName: Siesa.SDK.Business.BLBackendExplorer<T>
+  nameWithType.vb: BLBackendExplorer(Of T)
+  fullName.vb: Siesa.SDK.Business.BLBackendExplorer(Of T)
+  name.vb: BLBackendExplorer(Of T)
+  spec.csharp:
+  - uid: Siesa.SDK.Business.BLBackendExplorer`1
+    name: BLBackendExplorer
+    href: Siesa.SDK.Business.BLBackendExplorer-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: Siesa.SDK.Business.BLBackendExplorer`1
+    name: BLBackendExplorer
+    href: Siesa.SDK.Business.BLBackendExplorer-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Siesa.SDK.Business.BLBackendSimple
+  commentId: T:Siesa.SDK.Business.BLBackendSimple
+  href: Siesa.SDK.Business.BLBackendSimple.html
+  name: BLBackendSimple
+  nameWithType: BLBackendSimple
+  fullName: Siesa.SDK.Business.BLBackendSimple
+- uid: Siesa.SDK.Business.BLBackendSimple`2
+  commentId: T:Siesa.SDK.Business.BLBackendSimple`2
+  href: Siesa.SDK.Business.BLBackendSimple-2.html
+  name: BLBackendSimple<T, K>
+  nameWithType: BLBackendSimple<T, K>
+  fullName: Siesa.SDK.Business.BLBackendSimple<T, K>
+  nameWithType.vb: BLBackendSimple(Of T, K)
+  fullName.vb: Siesa.SDK.Business.BLBackendSimple(Of T, K)
+  name.vb: BLBackendSimple(Of T, K)
+  spec.csharp:
+  - uid: Siesa.SDK.Business.BLBackendSimple`2
+    name: BLBackendSimple
+    href: Siesa.SDK.Business.BLBackendSimple-2.html
+  - name: <
+  - name: T
+  - name: ','
+  - name: " "
+  - name: K
+  - name: '>'
+  spec.vb:
+  - uid: Siesa.SDK.Business.BLBackendSimple`2
+    name: BLBackendSimple
+    href: Siesa.SDK.Business.BLBackendSimple-2.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: ','
+  - name: " "
+  - name: K
+  - name: )
+- uid: Siesa.SDK.Business.BLFrontendExplorer`1
+  commentId: T:Siesa.SDK.Business.BLFrontendExplorer`1
+  href: Siesa.SDK.Business.BLFrontendExplorer-1.html
+  name: BLFrontendExplorer<T>
+  nameWithType: BLFrontendExplorer<T>
+  fullName: Siesa.SDK.Business.BLFrontendExplorer<T>
+  nameWithType.vb: BLFrontendExplorer(Of T)
+  fullName.vb: Siesa.SDK.Business.BLFrontendExplorer(Of T)
+  name.vb: BLFrontendExplorer(Of T)
+  spec.csharp:
+  - uid: Siesa.SDK.Business.BLFrontendExplorer`1
+    name: BLFrontendExplorer
+    href: Siesa.SDK.Business.BLFrontendExplorer-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: Siesa.SDK.Business.BLFrontendExplorer`1
+    name: BLFrontendExplorer
+    href: Siesa.SDK.Business.BLFrontendExplorer-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Siesa.SDK.Business.BLFrontendSimple
+  commentId: T:Siesa.SDK.Business.BLFrontendSimple
+  href: Siesa.SDK.Business.BLFrontendSimple.html
+  name: BLFrontendSimple
+  nameWithType: BLFrontendSimple
+  fullName: Siesa.SDK.Business.BLFrontendSimple
+- uid: Siesa.SDK.Business.BLFrontendSimple`2
+  commentId: T:Siesa.SDK.Business.BLFrontendSimple`2
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html
+  name: BLFrontendSimple<T, K>
+  nameWithType: BLFrontendSimple<T, K>
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>
+  nameWithType.vb: BLFrontendSimple(Of T, K)
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K)
+  name.vb: BLFrontendSimple(Of T, K)
+  spec.csharp:
+  - uid: Siesa.SDK.Business.BLFrontendSimple`2
+    name: BLFrontendSimple
+    href: Siesa.SDK.Business.BLFrontendSimple-2.html
+  - name: <
+  - name: T
+  - name: ','
+  - name: " "
+  - name: K
+  - name: '>'
+  spec.vb:
+  - uid: Siesa.SDK.Business.BLFrontendSimple`2
+    name: BLFrontendSimple
+    href: Siesa.SDK.Business.BLFrontendSimple-2.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: ','
+  - name: " "
+  - name: K
+  - name: )

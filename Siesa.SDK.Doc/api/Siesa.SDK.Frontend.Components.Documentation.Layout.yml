@@ -1,0 +1,23 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Components.Documentation.Layout
+  commentId: N:Siesa.SDK.Frontend.Components.Documentation.Layout
+  id: Siesa.SDK.Frontend.Components.Documentation.Layout
+  children:
+  - Siesa.SDK.Frontend.Components.Documentation.Layout.DemoRelationshipPanel
+  langs:
+  - csharp
+  - vb
+  name: Siesa.SDK.Frontend.Components.Documentation.Layout
+  nameWithType: Siesa.SDK.Frontend.Components.Documentation.Layout
+  fullName: Siesa.SDK.Frontend.Components.Documentation.Layout
+  type: Namespace
+  assemblies:
+  - Siesa.SDK.Frontend
+references:
+- uid: Siesa.SDK.Frontend.Components.Documentation.Layout.DemoRelationshipPanel
+  commentId: T:Siesa.SDK.Frontend.Components.Documentation.Layout.DemoRelationshipPanel
+  href: Siesa.SDK.Frontend.Components.Documentation.Layout.DemoRelationshipPanel.html
+  name: DemoRelationshipPanel
+  nameWithType: DemoRelationshipPanel
+  fullName: Siesa.SDK.Frontend.Components.Documentation.Layout.DemoRelationshipPanel

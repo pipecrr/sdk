@@ -1,0 +1,77 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Pages.IntegrationComponents
+  commentId: N:Siesa.SDK.Frontend.Pages.IntegrationComponents
+  id: Siesa.SDK.Frontend.Pages.IntegrationComponents
+  children:
+  - Siesa.SDK.Frontend.Pages.IntegrationComponents.ImportComponent
+  - Siesa.SDK.Frontend.Pages.IntegrationComponents.MappingData
+  langs:
+  - csharp
+  - vb
+  name: Siesa.SDK.Frontend.Pages.IntegrationComponents
+  nameWithType: Siesa.SDK.Frontend.Pages.IntegrationComponents
+  fullName: Siesa.SDK.Frontend.Pages.IntegrationComponents
+  type: Namespace
+  assemblies:
+  - Siesa.SDK.Frontend
+references:
+- uid: Siesa.SDK.Frontend.Pages.IntegrationComponents.MappingData
+  commentId: T:Siesa.SDK.Frontend.Pages.IntegrationComponents.MappingData
+  href: Siesa.SDK.Frontend.Pages.IntegrationComponents.MappingData.html
+  name: MappingData
+  nameWithType: MappingData
+  fullName: Siesa.SDK.Frontend.Pages.IntegrationComponents.MappingData
+- uid: Siesa.SDK.Frontend.Pages.IntegrationComponents.ImportComponent
+  commentId: T:Siesa.SDK.Frontend.Pages.IntegrationComponents.ImportComponent
+  parent: Siesa.SDK.Frontend.Pages.IntegrationComponents
+  href: Siesa.SDK.Frontend.Pages.IntegrationComponents.ImportComponent.html
+  name: ImportComponent
+  nameWithType: ImportComponent
+  fullName: Siesa.SDK.Frontend.Pages.IntegrationComponents.ImportComponent
+- uid: Siesa.SDK.Frontend.Pages.IntegrationComponents
+  commentId: N:Siesa.SDK.Frontend.Pages.IntegrationComponents
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Pages.IntegrationComponents
+  nameWithType: Siesa.SDK.Frontend.Pages.IntegrationComponents
+  fullName: Siesa.SDK.Frontend.Pages.IntegrationComponents
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Pages
+    name: Pages
+    href: Siesa.SDK.Frontend.Pages.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Pages.IntegrationComponents
+    name: IntegrationComponents
+    href: Siesa.SDK.Frontend.Pages.IntegrationComponents.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Pages
+    name: Pages
+    href: Siesa.SDK.Frontend.Pages.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Pages.IntegrationComponents
+    name: IntegrationComponents
+    href: Siesa.SDK.Frontend.Pages.IntegrationComponents.html

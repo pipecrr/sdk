@@ -1,0 +1,30 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Components.Layout.Menu
+  commentId: N:Siesa.SDK.Frontend.Components.Layout.Menu
+  id: Siesa.SDK.Frontend.Components.Layout.Menu
+  children:
+  - Siesa.SDK.Frontend.Components.Layout.Menu.MenuViewer
+  - Siesa.SDK.Frontend.Components.Layout.Menu.MenuViewerItem
+  langs:
+  - csharp
+  - vb
+  name: Siesa.SDK.Frontend.Components.Layout.Menu
+  nameWithType: Siesa.SDK.Frontend.Components.Layout.Menu
+  fullName: Siesa.SDK.Frontend.Components.Layout.Menu
+  type: Namespace
+  assemblies:
+  - Siesa.SDK.Frontend
+references:
+- uid: Siesa.SDK.Frontend.Components.Layout.Menu.MenuViewer
+  commentId: T:Siesa.SDK.Frontend.Components.Layout.Menu.MenuViewer
+  href: Siesa.SDK.Frontend.Components.Layout.Menu.MenuViewer.html
+  name: MenuViewer
+  nameWithType: MenuViewer
+  fullName: Siesa.SDK.Frontend.Components.Layout.Menu.MenuViewer
+- uid: Siesa.SDK.Frontend.Components.Layout.Menu.MenuViewerItem
+  commentId: T:Siesa.SDK.Frontend.Components.Layout.Menu.MenuViewerItem
+  href: Siesa.SDK.Frontend.Components.Layout.Menu.MenuViewerItem.html
+  name: MenuViewerItem
+  nameWithType: MenuViewerItem
+  fullName: Siesa.SDK.Frontend.Components.Layout.Menu.MenuViewerItem

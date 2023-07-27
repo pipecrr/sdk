@@ -1,0 +1,2486 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1
+  id: SDKDateTimeField`1
+  parent: Siesa.SDK.Frontend.Components.Fields
+  children:
+  - Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.AsCalendar
+  - Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  - Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ChildContent
+  - Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ClearButton
+  - Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.DateFormat
+  - Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.DateRender
+  - Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Disabled
+  - Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.FooterTemplate
+  - Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.GetAutomationId
+  - Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.HourFormat
+  - Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.HoursStep
+  - Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.InitialViewDate
+  - Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Max
+  - Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Min
+  - Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.MinutesStep
+  - Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Placeholder
+  - Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ReadOnly
+  - Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.SecondsStep
+  - Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ShowSeconds
+  - Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ShowTime
+  - Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.TimeOnly
+  - Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Value
+  - Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ValueChanged
+  - Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ValueExpression
+  - Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.YearRange
+  langs:
+  - csharp
+  - vb
+  name: SDKDateTimeField<ItemType>
+  nameWithType: SDKDateTimeField<ItemType>
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>
+  type: Class
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SDKDateTimeField
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+    startLine: 179
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Fields
+  syntax:
+    content: 'public class SDKDateTimeField<ItemType> : SDKComponent, IComponent, IHandleEvent, IHandleAfterRender'
+    typeParameters:
+    - id: ItemType
+    content.vb: Public Class SDKDateTimeField(Of ItemType) Inherits SDKComponent Implements IComponent, IHandleEvent, IHandleAfterRender
+  inheritance:
+  - System.Object
+  - Microsoft.AspNetCore.Components.ComponentBase
+  - Siesa.SDK.Frontend.Components.SDKComponent
+  implements:
+  - Microsoft.AspNetCore.Components.IComponent
+  - Microsoft.AspNetCore.Components.IHandleEvent
+  - Microsoft.AspNetCore.Components.IHandleAfterRender
+  inheritedMembers:
+  - Siesa.SDK.Frontend.Components.SDKComponent.AutomationId
+  - Siesa.SDK.Frontend.Components.SDKComponent.ResourceTag
+  - Siesa.SDK.Frontend.Components.SDKComponent.RowidResource
+  - Siesa.SDK.Frontend.Components.SDKComponent.RowidCulture
+  - Siesa.SDK.Frontend.Components.SDKComponent.AuthenticationService
+  - Siesa.SDK.Frontend.Components.SDKComponent.ResourceManager
+  - Siesa.SDK.Frontend.Components.SDKComponent.GetText
+  - Microsoft.AspNetCore.Components.ComponentBase.OnInitialized
+  - Microsoft.AspNetCore.Components.ComponentBase.OnInitializedAsync
+  - Microsoft.AspNetCore.Components.ComponentBase.OnParametersSet
+  - Microsoft.AspNetCore.Components.ComponentBase.OnParametersSetAsync
+  - Microsoft.AspNetCore.Components.ComponentBase.StateHasChanged
+  - Microsoft.AspNetCore.Components.ComponentBase.ShouldRender
+  - Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(System.Boolean)
+  - Microsoft.AspNetCore.Components.ComponentBase.OnAfterRenderAsync(System.Boolean)
+  - Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Action)
+  - Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func{System.Threading.Tasks.Task})
+  - Microsoft.AspNetCore.Components.ComponentBase.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  nameWithType.vb: SDKDateTimeField(Of ItemType)
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType)
+  name.vb: SDKDateTimeField(Of ItemType)
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  commentId: M:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  id: BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  parent: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1
+  langs:
+  - csharp
+  - vb
+  name: BuildRenderTree(RenderTreeBuilder)
+  nameWithType: SDKDateTimeField<ItemType>.BuildRenderTree(RenderTreeBuilder)
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: BuildRenderTree
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+    startLine: 182
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Fields
+  summary: Renders the component to the supplied <xref href="Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: protected override void BuildRenderTree(RenderTreeBuilder __builder)
+    parameters:
+    - id: __builder
+      type: Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder
+    content.vb: Protected Overrides Sub BuildRenderTree(__builder As RenderTreeBuilder)
+  overridden: Microsoft.AspNetCore.Components.ComponentBase.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  overload: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.BuildRenderTree*
+  nameWithType.vb: SDKDateTimeField(Of ItemType).BuildRenderTree(RenderTreeBuilder)
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Value
+  commentId: P:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Value
+  id: Value
+  parent: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1
+  langs:
+  - csharp
+  - vb
+  name: Value
+  nameWithType: SDKDateTimeField<ItemType>.Value
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.Value
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Value
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+    startLine: 373
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Fields
+  syntax:
+    content: >-
+      [Parameter]
+
+      public ItemType Value { get; set; }
+    parameters: []
+    return:
+      type: '{ItemType}'
+    content.vb: >-
+      <Parameter>
+
+      Public Property Value As ItemType
+  overload: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Value*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+  nameWithType.vb: SDKDateTimeField(Of ItemType).Value
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).Value
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ValueChanged
+  commentId: P:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ValueChanged
+  id: ValueChanged
+  parent: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1
+  langs:
+  - csharp
+  - vb
+  name: ValueChanged
+  nameWithType: SDKDateTimeField<ItemType>.ValueChanged
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.ValueChanged
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ValueChanged
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+    startLine: 375
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Fields
+  syntax:
+    content: >-
+      [Parameter]
+
+      public EventCallback<ItemType> ValueChanged { get; set; }
+    parameters: []
+    return:
+      type: Microsoft.AspNetCore.Components.EventCallback{{ItemType}}
+    content.vb: >-
+      <Parameter>
+
+      Public Property ValueChanged As EventCallback(Of ItemType)
+  overload: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ValueChanged*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+  nameWithType.vb: SDKDateTimeField(Of ItemType).ValueChanged
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).ValueChanged
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ChildContent
+  commentId: P:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ChildContent
+  id: ChildContent
+  parent: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1
+  langs:
+  - csharp
+  - vb
+  name: ChildContent
+  nameWithType: SDKDateTimeField<ItemType>.ChildContent
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.ChildContent
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ChildContent
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+    startLine: 377
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Fields
+  syntax:
+    content: >-
+      [Parameter]
+
+      public RenderFragment? ChildContent { get; set; }
+    parameters: []
+    return:
+      type: Microsoft.AspNetCore.Components.RenderFragment
+    content.vb: >-
+      <Parameter>
+
+      Public Property ChildContent As RenderFragment
+  overload: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ChildContent*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+  nameWithType.vb: SDKDateTimeField(Of ItemType).ChildContent
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).ChildContent
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ReadOnly
+  commentId: P:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ReadOnly
+  id: ReadOnly
+  parent: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1
+  langs:
+  - csharp
+  - vb
+  name: ReadOnly
+  nameWithType: SDKDateTimeField<ItemType>.ReadOnly
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.ReadOnly
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ReadOnly
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+    startLine: 379
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Fields
+  syntax:
+    content: >-
+      [Parameter]
+
+      public bool ReadOnly { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <Parameter>
+
+      Public Property [ReadOnly] As Boolean
+  overload: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ReadOnly*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+  nameWithType.vb: SDKDateTimeField(Of ItemType).ReadOnly
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).ReadOnly
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Disabled
+  commentId: P:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Disabled
+  id: Disabled
+  parent: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1
+  langs:
+  - csharp
+  - vb
+  name: Disabled
+  nameWithType: SDKDateTimeField<ItemType>.Disabled
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.Disabled
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Disabled
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+    startLine: 381
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Fields
+  syntax:
+    content: >-
+      [Parameter]
+
+      public bool Disabled { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <Parameter>
+
+      Public Property Disabled As Boolean
+  overload: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Disabled*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+  nameWithType.vb: SDKDateTimeField(Of ItemType).Disabled
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).Disabled
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ShowTime
+  commentId: P:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ShowTime
+  id: ShowTime
+  parent: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1
+  langs:
+  - csharp
+  - vb
+  name: ShowTime
+  nameWithType: SDKDateTimeField<ItemType>.ShowTime
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.ShowTime
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ShowTime
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+    startLine: 383
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Fields
+  syntax:
+    content: >-
+      [Parameter]
+
+      public bool ShowTime { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <Parameter>
+
+      Public Property ShowTime As Boolean
+  overload: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ShowTime*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+  nameWithType.vb: SDKDateTimeField(Of ItemType).ShowTime
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).ShowTime
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ShowSeconds
+  commentId: P:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ShowSeconds
+  id: ShowSeconds
+  parent: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1
+  langs:
+  - csharp
+  - vb
+  name: ShowSeconds
+  nameWithType: SDKDateTimeField<ItemType>.ShowSeconds
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.ShowSeconds
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ShowSeconds
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+    startLine: 385
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Fields
+  syntax:
+    content: >-
+      [Parameter]
+
+      public bool ShowSeconds { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <Parameter>
+
+      Public Property ShowSeconds As Boolean
+  overload: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ShowSeconds*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+  nameWithType.vb: SDKDateTimeField(Of ItemType).ShowSeconds
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).ShowSeconds
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.HoursStep
+  commentId: P:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.HoursStep
+  id: HoursStep
+  parent: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1
+  langs:
+  - csharp
+  - vb
+  name: HoursStep
+  nameWithType: SDKDateTimeField<ItemType>.HoursStep
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.HoursStep
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: HoursStep
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+    startLine: 387
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Fields
+  syntax:
+    content: >-
+      [Parameter]
+
+      public string HoursStep { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <Parameter>
+
+      Public Property HoursStep As String
+  overload: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.HoursStep*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+  nameWithType.vb: SDKDateTimeField(Of ItemType).HoursStep
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).HoursStep
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.MinutesStep
+  commentId: P:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.MinutesStep
+  id: MinutesStep
+  parent: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1
+  langs:
+  - csharp
+  - vb
+  name: MinutesStep
+  nameWithType: SDKDateTimeField<ItemType>.MinutesStep
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.MinutesStep
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: MinutesStep
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+    startLine: 389
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Fields
+  syntax:
+    content: >-
+      [Parameter]
+
+      public string MinutesStep { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <Parameter>
+
+      Public Property MinutesStep As String
+  overload: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.MinutesStep*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+  nameWithType.vb: SDKDateTimeField(Of ItemType).MinutesStep
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).MinutesStep
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.SecondsStep
+  commentId: P:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.SecondsStep
+  id: SecondsStep
+  parent: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1
+  langs:
+  - csharp
+  - vb
+  name: SecondsStep
+  nameWithType: SDKDateTimeField<ItemType>.SecondsStep
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.SecondsStep
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SecondsStep
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+    startLine: 391
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Fields
+  syntax:
+    content: >-
+      [Parameter]
+
+      public string SecondsStep { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <Parameter>
+
+      Public Property SecondsStep As String
+  overload: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.SecondsStep*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+  nameWithType.vb: SDKDateTimeField(Of ItemType).SecondsStep
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).SecondsStep
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.DateFormat
+  commentId: P:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.DateFormat
+  id: DateFormat
+  parent: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1
+  langs:
+  - csharp
+  - vb
+  name: DateFormat
+  nameWithType: SDKDateTimeField<ItemType>.DateFormat
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.DateFormat
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: DateFormat
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+    startLine: 393
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Fields
+  syntax:
+    content: >-
+      [Parameter]
+
+      public string DateFormat { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <Parameter>
+
+      Public Property DateFormat As String
+  overload: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.DateFormat*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+  nameWithType.vb: SDKDateTimeField(Of ItemType).DateFormat
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).DateFormat
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.HourFormat
+  commentId: P:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.HourFormat
+  id: HourFormat
+  parent: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1
+  langs:
+  - csharp
+  - vb
+  name: HourFormat
+  nameWithType: SDKDateTimeField<ItemType>.HourFormat
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.HourFormat
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: HourFormat
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+    startLine: 395
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Fields
+  syntax:
+    content: >-
+      [Parameter]
+
+      public string HourFormat { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <Parameter>
+
+      Public Property HourFormat As String
+  overload: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.HourFormat*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+  nameWithType.vb: SDKDateTimeField(Of ItemType).HourFormat
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).HourFormat
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.TimeOnly
+  commentId: P:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.TimeOnly
+  id: TimeOnly
+  parent: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1
+  langs:
+  - csharp
+  - vb
+  name: TimeOnly
+  nameWithType: SDKDateTimeField<ItemType>.TimeOnly
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.TimeOnly
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: TimeOnly
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+    startLine: 397
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Fields
+  syntax:
+    content: >-
+      [Parameter]
+
+      public bool TimeOnly { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <Parameter>
+
+      Public Property TimeOnly As Boolean
+  overload: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.TimeOnly*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+  nameWithType.vb: SDKDateTimeField(Of ItemType).TimeOnly
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).TimeOnly
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.DateRender
+  commentId: P:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.DateRender
+  id: DateRender
+  parent: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1
+  langs:
+  - csharp
+  - vb
+  name: DateRender
+  nameWithType: SDKDateTimeField<ItemType>.DateRender
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.DateRender
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: DateRender
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+    startLine: 399
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Fields
+  syntax:
+    content: >-
+      [Parameter]
+
+      public Action<DateRenderEventArgs> DateRender { get; set; }
+    parameters: []
+    return:
+      type: System.Action{Radzen.DateRenderEventArgs}
+    content.vb: >-
+      <Parameter>
+
+      Public Property DateRender As Action(Of DateRenderEventArgs)
+  overload: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.DateRender*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+  nameWithType.vb: SDKDateTimeField(Of ItemType).DateRender
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).DateRender
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Max
+  commentId: P:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Max
+  id: Max
+  parent: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1
+  langs:
+  - csharp
+  - vb
+  name: Max
+  nameWithType: SDKDateTimeField<ItemType>.Max
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.Max
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Max
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+    startLine: 401
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Fields
+  syntax:
+    content: >-
+      [Parameter]
+
+      public DateTime? Max { get; set; }
+    parameters: []
+    return:
+      type: System.Nullable{System.DateTime}
+    content.vb: >-
+      <Parameter>
+
+      Public Property Max As Date?
+  overload: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Max*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+  nameWithType.vb: SDKDateTimeField(Of ItemType).Max
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).Max
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Min
+  commentId: P:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Min
+  id: Min
+  parent: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1
+  langs:
+  - csharp
+  - vb
+  name: Min
+  nameWithType: SDKDateTimeField<ItemType>.Min
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.Min
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Min
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+    startLine: 403
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Fields
+  syntax:
+    content: >-
+      [Parameter]
+
+      public DateTime? Min { get; set; }
+    parameters: []
+    return:
+      type: System.Nullable{System.DateTime}
+    content.vb: >-
+      <Parameter>
+
+      Public Property Min As Date?
+  overload: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Min*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+  nameWithType.vb: SDKDateTimeField(Of ItemType).Min
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).Min
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.FooterTemplate
+  commentId: P:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.FooterTemplate
+  id: FooterTemplate
+  parent: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1
+  langs:
+  - csharp
+  - vb
+  name: FooterTemplate
+  nameWithType: SDKDateTimeField<ItemType>.FooterTemplate
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.FooterTemplate
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: FooterTemplate
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+    startLine: 405
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Fields
+  syntax:
+    content: >-
+      [Parameter]
+
+      public RenderFragment FooterTemplate { get; set; }
+    parameters: []
+    return:
+      type: Microsoft.AspNetCore.Components.RenderFragment
+    content.vb: >-
+      <Parameter>
+
+      Public Property FooterTemplate As RenderFragment
+  overload: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.FooterTemplate*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+  nameWithType.vb: SDKDateTimeField(Of ItemType).FooterTemplate
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).FooterTemplate
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.AsCalendar
+  commentId: P:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.AsCalendar
+  id: AsCalendar
+  parent: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1
+  langs:
+  - csharp
+  - vb
+  name: AsCalendar
+  nameWithType: SDKDateTimeField<ItemType>.AsCalendar
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.AsCalendar
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: AsCalendar
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+    startLine: 407
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Fields
+  syntax:
+    content: >-
+      [Parameter]
+
+      public bool AsCalendar { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <Parameter>
+
+      Public Property AsCalendar As Boolean
+  overload: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.AsCalendar*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+  nameWithType.vb: SDKDateTimeField(Of ItemType).AsCalendar
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).AsCalendar
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ClearButton
+  commentId: P:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ClearButton
+  id: ClearButton
+  parent: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1
+  langs:
+  - csharp
+  - vb
+  name: ClearButton
+  nameWithType: SDKDateTimeField<ItemType>.ClearButton
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.ClearButton
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ClearButton
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+    startLine: 409
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Fields
+  syntax:
+    content: >-
+      [Parameter]
+
+      public bool ClearButton { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <Parameter>
+
+      Public Property ClearButton As Boolean
+  overload: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ClearButton*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+  nameWithType.vb: SDKDateTimeField(Of ItemType).ClearButton
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).ClearButton
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.InitialViewDate
+  commentId: P:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.InitialViewDate
+  id: InitialViewDate
+  parent: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1
+  langs:
+  - csharp
+  - vb
+  name: InitialViewDate
+  nameWithType: SDKDateTimeField<ItemType>.InitialViewDate
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.InitialViewDate
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: InitialViewDate
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+    startLine: 411
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Fields
+  syntax:
+    content: >-
+      [Parameter]
+
+      public ItemType InitialViewDate { get; set; }
+    parameters: []
+    return:
+      type: '{ItemType}'
+    content.vb: >-
+      <Parameter>
+
+      Public Property InitialViewDate As ItemType
+  overload: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.InitialViewDate*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+  nameWithType.vb: SDKDateTimeField(Of ItemType).InitialViewDate
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).InitialViewDate
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.YearRange
+  commentId: P:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.YearRange
+  id: YearRange
+  parent: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1
+  langs:
+  - csharp
+  - vb
+  name: YearRange
+  nameWithType: SDKDateTimeField<ItemType>.YearRange
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.YearRange
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: YearRange
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+    startLine: 413
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Fields
+  syntax:
+    content: >-
+      [Parameter]
+
+      public string YearRange { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <Parameter>
+
+      Public Property YearRange As String
+  overload: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.YearRange*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+  nameWithType.vb: SDKDateTimeField(Of ItemType).YearRange
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).YearRange
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ValueExpression
+  commentId: P:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ValueExpression
+  id: ValueExpression
+  parent: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1
+  langs:
+  - csharp
+  - vb
+  name: ValueExpression
+  nameWithType: SDKDateTimeField<ItemType>.ValueExpression
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.ValueExpression
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ValueExpression
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+    startLine: 415
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Fields
+  syntax:
+    content: >-
+      [Parameter]
+
+      public Expression<Func<ItemType>> ValueExpression { get; set; }
+    parameters: []
+    return:
+      type: System.Linq.Expressions.Expression{System.Func{{ItemType}}}
+    content.vb: >-
+      <Parameter>
+
+      Public Property ValueExpression As Expression(Of Func(Of ItemType))
+  overload: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ValueExpression*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+  nameWithType.vb: SDKDateTimeField(Of ItemType).ValueExpression
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).ValueExpression
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Placeholder
+  commentId: P:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Placeholder
+  id: Placeholder
+  parent: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1
+  langs:
+  - csharp
+  - vb
+  name: Placeholder
+  nameWithType: SDKDateTimeField<ItemType>.Placeholder
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.Placeholder
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Placeholder
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+    startLine: 417
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Fields
+  syntax:
+    content: >-
+      [Parameter]
+
+      public string Placeholder { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <Parameter>
+
+      Public Property Placeholder As String
+  overload: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Placeholder*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+  nameWithType.vb: SDKDateTimeField(Of ItemType).Placeholder
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).Placeholder
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.GetAutomationId
+  commentId: M:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.GetAutomationId
+  id: GetAutomationId
+  parent: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1
+  langs:
+  - csharp
+  - vb
+  name: GetAutomationId()
+  nameWithType: SDKDateTimeField<ItemType>.GetAutomationId()
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.GetAutomationId()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetAutomationId
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Fields_SDKDateTimeField_razor.g.cs
+    startLine: 420
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Fields
+  example: []
+  syntax:
+    content: protected override string GetAutomationId()
+    return:
+      type: System.String
+    content.vb: Protected Overrides Function GetAutomationId() As String
+  overridden: Siesa.SDK.Frontend.Components.SDKComponent.GetAutomationId
+  overload: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.GetAutomationId*
+  nameWithType.vb: SDKDateTimeField(Of ItemType).GetAutomationId()
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).GetAutomationId()
+references:
+- uid: Siesa.SDK.Frontend.Components.Fields
+  commentId: N:Siesa.SDK.Frontend.Components.Fields
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Components.Fields
+  nameWithType: Siesa.SDK.Frontend.Components.Fields
+  fullName: Siesa.SDK.Frontend.Components.Fields
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.Fields
+    name: Fields
+    href: Siesa.SDK.Frontend.Components.Fields.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.Fields
+    name: Fields
+    href: Siesa.SDK.Frontend.Components.Fields.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: Microsoft.AspNetCore.Components.ComponentBase
+  commentId: T:Microsoft.AspNetCore.Components.ComponentBase
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase
+  name: ComponentBase
+  nameWithType: ComponentBase
+  fullName: Microsoft.AspNetCore.Components.ComponentBase
+- uid: Siesa.SDK.Frontend.Components.SDKComponent
+  commentId: T:Siesa.SDK.Frontend.Components.SDKComponent
+  parent: Siesa.SDK.Frontend.Components
+  href: Siesa.SDK.Frontend.Components.SDKComponent.html
+  name: SDKComponent
+  nameWithType: SDKComponent
+  fullName: Siesa.SDK.Frontend.Components.SDKComponent
+- uid: Microsoft.AspNetCore.Components.IComponent
+  commentId: T:Microsoft.AspNetCore.Components.IComponent
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.icomponent
+  name: IComponent
+  nameWithType: IComponent
+  fullName: Microsoft.AspNetCore.Components.IComponent
+- uid: Microsoft.AspNetCore.Components.IHandleEvent
+  commentId: T:Microsoft.AspNetCore.Components.IHandleEvent
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.ihandleevent
+  name: IHandleEvent
+  nameWithType: IHandleEvent
+  fullName: Microsoft.AspNetCore.Components.IHandleEvent
+- uid: Microsoft.AspNetCore.Components.IHandleAfterRender
+  commentId: T:Microsoft.AspNetCore.Components.IHandleAfterRender
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.ihandleafterrender
+  name: IHandleAfterRender
+  nameWithType: IHandleAfterRender
+  fullName: Microsoft.AspNetCore.Components.IHandleAfterRender
+- uid: Siesa.SDK.Frontend.Components.SDKComponent.AutomationId
+  commentId: P:Siesa.SDK.Frontend.Components.SDKComponent.AutomationId
+  parent: Siesa.SDK.Frontend.Components.SDKComponent
+  href: Siesa.SDK.Frontend.Components.SDKComponent.html#Siesa.SDK.Frontend.Components.SDKComponent.AutomationId
+  name: AutomationId
+  nameWithType: SDKComponent.AutomationId
+  fullName: Siesa.SDK.Frontend.Components.SDKComponent.AutomationId
+- uid: Siesa.SDK.Frontend.Components.SDKComponent.ResourceTag
+  commentId: P:Siesa.SDK.Frontend.Components.SDKComponent.ResourceTag
+  parent: Siesa.SDK.Frontend.Components.SDKComponent
+  href: Siesa.SDK.Frontend.Components.SDKComponent.html#Siesa.SDK.Frontend.Components.SDKComponent.ResourceTag
+  name: ResourceTag
+  nameWithType: SDKComponent.ResourceTag
+  fullName: Siesa.SDK.Frontend.Components.SDKComponent.ResourceTag
+- uid: Siesa.SDK.Frontend.Components.SDKComponent.RowidResource
+  commentId: P:Siesa.SDK.Frontend.Components.SDKComponent.RowidResource
+  parent: Siesa.SDK.Frontend.Components.SDKComponent
+  href: Siesa.SDK.Frontend.Components.SDKComponent.html#Siesa.SDK.Frontend.Components.SDKComponent.RowidResource
+  name: RowidResource
+  nameWithType: SDKComponent.RowidResource
+  fullName: Siesa.SDK.Frontend.Components.SDKComponent.RowidResource
+- uid: Siesa.SDK.Frontend.Components.SDKComponent.RowidCulture
+  commentId: P:Siesa.SDK.Frontend.Components.SDKComponent.RowidCulture
+  parent: Siesa.SDK.Frontend.Components.SDKComponent
+  href: Siesa.SDK.Frontend.Components.SDKComponent.html#Siesa.SDK.Frontend.Components.SDKComponent.RowidCulture
+  name: RowidCulture
+  nameWithType: SDKComponent.RowidCulture
+  fullName: Siesa.SDK.Frontend.Components.SDKComponent.RowidCulture
+- uid: Siesa.SDK.Frontend.Components.SDKComponent.AuthenticationService
+  commentId: P:Siesa.SDK.Frontend.Components.SDKComponent.AuthenticationService
+  parent: Siesa.SDK.Frontend.Components.SDKComponent
+  href: Siesa.SDK.Frontend.Components.SDKComponent.html#Siesa.SDK.Frontend.Components.SDKComponent.AuthenticationService
+  name: AuthenticationService
+  nameWithType: SDKComponent.AuthenticationService
+  fullName: Siesa.SDK.Frontend.Components.SDKComponent.AuthenticationService
+- uid: Siesa.SDK.Frontend.Components.SDKComponent.ResourceManager
+  commentId: P:Siesa.SDK.Frontend.Components.SDKComponent.ResourceManager
+  parent: Siesa.SDK.Frontend.Components.SDKComponent
+  href: Siesa.SDK.Frontend.Components.SDKComponent.html#Siesa.SDK.Frontend.Components.SDKComponent.ResourceManager
+  name: ResourceManager
+  nameWithType: SDKComponent.ResourceManager
+  fullName: Siesa.SDK.Frontend.Components.SDKComponent.ResourceManager
+- uid: Siesa.SDK.Frontend.Components.SDKComponent.GetText
+  commentId: M:Siesa.SDK.Frontend.Components.SDKComponent.GetText
+  parent: Siesa.SDK.Frontend.Components.SDKComponent
+  href: Siesa.SDK.Frontend.Components.SDKComponent.html#Siesa.SDK.Frontend.Components.SDKComponent.GetText
+  name: GetText()
+  nameWithType: SDKComponent.GetText()
+  fullName: Siesa.SDK.Frontend.Components.SDKComponent.GetText()
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.SDKComponent.GetText
+    name: GetText
+    href: Siesa.SDK.Frontend.Components.SDKComponent.html#Siesa.SDK.Frontend.Components.SDKComponent.GetText
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.SDKComponent.GetText
+    name: GetText
+    href: Siesa.SDK.Frontend.Components.SDKComponent.html#Siesa.SDK.Frontend.Components.SDKComponent.GetText
+  - name: (
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.OnInitialized
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.OnInitialized
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.oninitialized
+  name: OnInitialized()
+  nameWithType: ComponentBase.OnInitialized()
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.OnInitialized()
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnInitialized
+    name: OnInitialized
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.oninitialized
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnInitialized
+    name: OnInitialized
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.oninitialized
+  - name: (
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.OnInitializedAsync
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.OnInitializedAsync
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.oninitializedasync
+  name: OnInitializedAsync()
+  nameWithType: ComponentBase.OnInitializedAsync()
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.OnInitializedAsync()
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnInitializedAsync
+    name: OnInitializedAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.oninitializedasync
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnInitializedAsync
+    name: OnInitializedAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.oninitializedasync
+  - name: (
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSet
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.OnParametersSet
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onparametersset
+  name: OnParametersSet()
+  nameWithType: ComponentBase.OnParametersSet()
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSet()
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSet
+    name: OnParametersSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onparametersset
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSet
+    name: OnParametersSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onparametersset
+  - name: (
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSetAsync
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.OnParametersSetAsync
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onparameterssetasync
+  name: OnParametersSetAsync()
+  nameWithType: ComponentBase.OnParametersSetAsync()
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSetAsync()
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSetAsync
+    name: OnParametersSetAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onparameterssetasync
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSetAsync
+    name: OnParametersSetAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onparameterssetasync
+  - name: (
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.StateHasChanged
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.StateHasChanged
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.statehaschanged
+  name: StateHasChanged()
+  nameWithType: ComponentBase.StateHasChanged()
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.StateHasChanged()
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.StateHasChanged
+    name: StateHasChanged
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.statehaschanged
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.StateHasChanged
+    name: StateHasChanged
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.statehaschanged
+  - name: (
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.ShouldRender
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.ShouldRender
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.shouldrender
+  name: ShouldRender()
+  nameWithType: ComponentBase.ShouldRender()
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.ShouldRender()
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.ShouldRender
+    name: ShouldRender
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.shouldrender
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.ShouldRender
+    name: ShouldRender
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.shouldrender
+  - name: (
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(System.Boolean)
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(System.Boolean)
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onafterrender
+  name: OnAfterRender(bool)
+  nameWithType: ComponentBase.OnAfterRender(bool)
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(bool)
+  nameWithType.vb: ComponentBase.OnAfterRender(Boolean)
+  fullName.vb: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(Boolean)
+  name.vb: OnAfterRender(Boolean)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(System.Boolean)
+    name: OnAfterRender
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onafterrender
+  - name: (
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(System.Boolean)
+    name: OnAfterRender
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onafterrender
+  - name: (
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRenderAsync(System.Boolean)
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.OnAfterRenderAsync(System.Boolean)
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onafterrenderasync
+  name: OnAfterRenderAsync(bool)
+  nameWithType: ComponentBase.OnAfterRenderAsync(bool)
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRenderAsync(bool)
+  nameWithType.vb: ComponentBase.OnAfterRenderAsync(Boolean)
+  fullName.vb: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRenderAsync(Boolean)
+  name.vb: OnAfterRenderAsync(Boolean)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRenderAsync(System.Boolean)
+    name: OnAfterRenderAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onafterrenderasync
+  - name: (
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRenderAsync(System.Boolean)
+    name: OnAfterRenderAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onafterrenderasync
+  - name: (
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Action)
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Action)
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.invokeasync#microsoft-aspnetcore-components-componentbase-invokeasync(system-action)
+  name: InvokeAsync(Action)
+  nameWithType: ComponentBase.InvokeAsync(Action)
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Action)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Action)
+    name: InvokeAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.invokeasync#microsoft-aspnetcore-components-componentbase-invokeasync(system-action)
+  - name: (
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Action)
+    name: InvokeAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.invokeasync#microsoft-aspnetcore-components-componentbase-invokeasync(system-action)
+  - name: (
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func{System.Threading.Tasks.Task})
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func{System.Threading.Tasks.Task})
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.invokeasync#microsoft-aspnetcore-components-componentbase-invokeasync(system-func((system-threading-tasks-task)))
+  name: InvokeAsync(Func<Task>)
+  nameWithType: ComponentBase.InvokeAsync(Func<Task>)
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func<System.Threading.Tasks.Task>)
+  nameWithType.vb: ComponentBase.InvokeAsync(Func(Of Task))
+  fullName.vb: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func(Of System.Threading.Tasks.Task))
+  name.vb: InvokeAsync(Func(Of Task))
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func{System.Threading.Tasks.Task})
+    name: InvokeAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.invokeasync#microsoft-aspnetcore-components-componentbase-invokeasync(system-func((system-threading-tasks-task)))
+  - name: (
+  - uid: System.Func`1
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-1
+  - name: <
+  - uid: System.Threading.Tasks.Task
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func{System.Threading.Tasks.Task})
+    name: InvokeAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.invokeasync#microsoft-aspnetcore-components-componentbase-invokeasync(system-func((system-threading-tasks-task)))
+  - name: (
+  - uid: System.Func`1
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Threading.Tasks.Task
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  - name: )
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.setparametersasync
+  name: SetParametersAsync(ParameterView)
+  nameWithType: ComponentBase.SetParametersAsync(ParameterView)
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+    name: SetParametersAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.setparametersasync
+  - name: (
+  - uid: Microsoft.AspNetCore.Components.ParameterView
+    name: ParameterView
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.parameterview
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+    name: SetParametersAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.setparametersasync
+  - name: (
+  - uid: Microsoft.AspNetCore.Components.ParameterView
+    name: ParameterView
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.parameterview
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Microsoft.AspNetCore.Components
+  commentId: N:Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.AspNetCore.Components
+  nameWithType: Microsoft.AspNetCore.Components
+  fullName: Microsoft.AspNetCore.Components
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Components
+    name: Components
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Components
+    name: Components
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components
+- uid: Siesa.SDK.Frontend.Components
+  commentId: N:Siesa.SDK.Frontend.Components
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Components
+  nameWithType: Siesa.SDK.Frontend.Components
+  fullName: Siesa.SDK.Frontend.Components
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+- uid: Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder
+  commentId: T:Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder
+  parent: Microsoft.AspNetCore.Components.Rendering
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.rendering.rendertreebuilder
+  name: RenderTreeBuilder
+  nameWithType: RenderTreeBuilder
+  fullName: Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder
+- uid: Microsoft.AspNetCore.Components.ComponentBase.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.buildrendertree
+  name: BuildRenderTree(RenderTreeBuilder)
+  nameWithType: ComponentBase.BuildRenderTree(RenderTreeBuilder)
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+    name: BuildRenderTree
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.buildrendertree
+  - name: (
+  - uid: Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder
+    name: RenderTreeBuilder
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.rendering.rendertreebuilder
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+    name: BuildRenderTree
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.buildrendertree
+  - name: (
+  - uid: Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder
+    name: RenderTreeBuilder
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.rendering.rendertreebuilder
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.BuildRenderTree*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.BuildRenderTree
+  href: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField-1.html#Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  name: BuildRenderTree
+  nameWithType: SDKDateTimeField<ItemType>.BuildRenderTree
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.BuildRenderTree
+  nameWithType.vb: SDKDateTimeField(Of ItemType).BuildRenderTree
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).BuildRenderTree
+- uid: Microsoft.AspNetCore.Components.Rendering
+  commentId: N:Microsoft.AspNetCore.Components.Rendering
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.AspNetCore.Components.Rendering
+  nameWithType: Microsoft.AspNetCore.Components.Rendering
+  fullName: Microsoft.AspNetCore.Components.Rendering
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Components
+    name: Components
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components
+  - name: .
+  - uid: Microsoft.AspNetCore.Components.Rendering
+    name: Rendering
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.rendering
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Components
+    name: Components
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components
+  - name: .
+  - uid: Microsoft.AspNetCore.Components.Rendering
+    name: Rendering
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.rendering
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Value*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Value
+  href: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField-1.html#Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Value
+  name: Value
+  nameWithType: SDKDateTimeField<ItemType>.Value
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.Value
+  nameWithType.vb: SDKDateTimeField(Of ItemType).Value
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).Value
+- uid: '{ItemType}'
+  commentId: '!:ItemType'
+  definition: ItemType
+  name: ItemType
+  nameWithType: ItemType
+  fullName: ItemType
+- uid: ItemType
+  name: ItemType
+  nameWithType: ItemType
+  fullName: ItemType
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ValueChanged*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ValueChanged
+  href: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField-1.html#Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ValueChanged
+  name: ValueChanged
+  nameWithType: SDKDateTimeField<ItemType>.ValueChanged
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.ValueChanged
+  nameWithType.vb: SDKDateTimeField(Of ItemType).ValueChanged
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).ValueChanged
+- uid: Microsoft.AspNetCore.Components.EventCallback{{ItemType}}
+  commentId: T:Microsoft.AspNetCore.Components.EventCallback{`0}
+  parent: Microsoft.AspNetCore.Components
+  definition: Microsoft.AspNetCore.Components.EventCallback`1
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.eventcallback-1
+  name: EventCallback<ItemType>
+  nameWithType: EventCallback<ItemType>
+  fullName: Microsoft.AspNetCore.Components.EventCallback<ItemType>
+  nameWithType.vb: EventCallback(Of ItemType)
+  fullName.vb: Microsoft.AspNetCore.Components.EventCallback(Of ItemType)
+  name.vb: EventCallback(Of ItemType)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.EventCallback`1
+    name: EventCallback
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.eventcallback-1
+  - name: <
+  - name: ItemType
+  - name: '>'
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.EventCallback`1
+    name: EventCallback
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.eventcallback-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: ItemType
+  - name: )
+- uid: Microsoft.AspNetCore.Components.EventCallback`1
+  commentId: T:Microsoft.AspNetCore.Components.EventCallback`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.eventcallback-1
+  name: EventCallback<TValue>
+  nameWithType: EventCallback<TValue>
+  fullName: Microsoft.AspNetCore.Components.EventCallback<TValue>
+  nameWithType.vb: EventCallback(Of TValue)
+  fullName.vb: Microsoft.AspNetCore.Components.EventCallback(Of TValue)
+  name.vb: EventCallback(Of TValue)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.EventCallback`1
+    name: EventCallback
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.eventcallback-1
+  - name: <
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.EventCallback`1
+    name: EventCallback
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.eventcallback-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ChildContent*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ChildContent
+  href: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField-1.html#Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ChildContent
+  name: ChildContent
+  nameWithType: SDKDateTimeField<ItemType>.ChildContent
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.ChildContent
+  nameWithType.vb: SDKDateTimeField(Of ItemType).ChildContent
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).ChildContent
+- uid: Microsoft.AspNetCore.Components.RenderFragment
+  commentId: T:Microsoft.AspNetCore.Components.RenderFragment
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.renderfragment
+  name: RenderFragment
+  nameWithType: RenderFragment
+  fullName: Microsoft.AspNetCore.Components.RenderFragment
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ReadOnly*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ReadOnly
+  href: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField-1.html#Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ReadOnly
+  name: ReadOnly
+  nameWithType: SDKDateTimeField<ItemType>.ReadOnly
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.ReadOnly
+  nameWithType.vb: SDKDateTimeField(Of ItemType).ReadOnly
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).ReadOnly
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Disabled*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Disabled
+  href: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField-1.html#Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Disabled
+  name: Disabled
+  nameWithType: SDKDateTimeField<ItemType>.Disabled
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.Disabled
+  nameWithType.vb: SDKDateTimeField(Of ItemType).Disabled
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).Disabled
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ShowTime*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ShowTime
+  href: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField-1.html#Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ShowTime
+  name: ShowTime
+  nameWithType: SDKDateTimeField<ItemType>.ShowTime
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.ShowTime
+  nameWithType.vb: SDKDateTimeField(Of ItemType).ShowTime
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).ShowTime
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ShowSeconds*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ShowSeconds
+  href: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField-1.html#Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ShowSeconds
+  name: ShowSeconds
+  nameWithType: SDKDateTimeField<ItemType>.ShowSeconds
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.ShowSeconds
+  nameWithType.vb: SDKDateTimeField(Of ItemType).ShowSeconds
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).ShowSeconds
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.HoursStep*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.HoursStep
+  href: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField-1.html#Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.HoursStep
+  name: HoursStep
+  nameWithType: SDKDateTimeField<ItemType>.HoursStep
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.HoursStep
+  nameWithType.vb: SDKDateTimeField(Of ItemType).HoursStep
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).HoursStep
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.MinutesStep*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.MinutesStep
+  href: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField-1.html#Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.MinutesStep
+  name: MinutesStep
+  nameWithType: SDKDateTimeField<ItemType>.MinutesStep
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.MinutesStep
+  nameWithType.vb: SDKDateTimeField(Of ItemType).MinutesStep
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).MinutesStep
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.SecondsStep*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.SecondsStep
+  href: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField-1.html#Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.SecondsStep
+  name: SecondsStep
+  nameWithType: SDKDateTimeField<ItemType>.SecondsStep
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.SecondsStep
+  nameWithType.vb: SDKDateTimeField(Of ItemType).SecondsStep
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).SecondsStep
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.DateFormat*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.DateFormat
+  href: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField-1.html#Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.DateFormat
+  name: DateFormat
+  nameWithType: SDKDateTimeField<ItemType>.DateFormat
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.DateFormat
+  nameWithType.vb: SDKDateTimeField(Of ItemType).DateFormat
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).DateFormat
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.HourFormat*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.HourFormat
+  href: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField-1.html#Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.HourFormat
+  name: HourFormat
+  nameWithType: SDKDateTimeField<ItemType>.HourFormat
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.HourFormat
+  nameWithType.vb: SDKDateTimeField(Of ItemType).HourFormat
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).HourFormat
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.TimeOnly*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.TimeOnly
+  href: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField-1.html#Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.TimeOnly
+  name: TimeOnly
+  nameWithType: SDKDateTimeField<ItemType>.TimeOnly
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.TimeOnly
+  nameWithType.vb: SDKDateTimeField(Of ItemType).TimeOnly
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).TimeOnly
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.DateRender*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.DateRender
+  href: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField-1.html#Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.DateRender
+  name: DateRender
+  nameWithType: SDKDateTimeField<ItemType>.DateRender
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.DateRender
+  nameWithType.vb: SDKDateTimeField(Of ItemType).DateRender
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).DateRender
+- uid: System.Action{Radzen.DateRenderEventArgs}
+  commentId: T:System.Action{Radzen.DateRenderEventArgs}
+  parent: System
+  definition: System.Action`1
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<DateRenderEventArgs>
+  nameWithType: Action<DateRenderEventArgs>
+  fullName: System.Action<Radzen.DateRenderEventArgs>
+  nameWithType.vb: Action(Of DateRenderEventArgs)
+  fullName.vb: System.Action(Of Radzen.DateRenderEventArgs)
+  name.vb: Action(Of DateRenderEventArgs)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - uid: Radzen.DateRenderEventArgs
+    name: DateRenderEventArgs
+    isExternal: true
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Radzen.DateRenderEventArgs
+    name: DateRenderEventArgs
+    isExternal: true
+  - name: )
+- uid: System.Action`1
+  commentId: T:System.Action`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<T>
+  nameWithType: Action<T>
+  fullName: System.Action<T>
+  nameWithType.vb: Action(Of T)
+  fullName.vb: System.Action(Of T)
+  name.vb: Action(Of T)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Max*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Max
+  href: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField-1.html#Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Max
+  name: Max
+  nameWithType: SDKDateTimeField<ItemType>.Max
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.Max
+  nameWithType.vb: SDKDateTimeField(Of ItemType).Max
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).Max
+- uid: System.Nullable{System.DateTime}
+  commentId: T:System.Nullable{System.DateTime}
+  parent: System
+  definition: System.Nullable`1
+  href: https://learn.microsoft.com/dotnet/api/system.datetime
+  name: DateTime?
+  nameWithType: DateTime?
+  fullName: System.DateTime?
+  nameWithType.vb: Date?
+  fullName.vb: Date?
+  name.vb: Date?
+  spec.csharp:
+  - uid: System.DateTime
+    name: DateTime
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.datetime
+  - name: '?'
+  spec.vb:
+  - uid: System.DateTime
+    name: Date
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.datetime
+  - name: '?'
+- uid: System.Nullable`1
+  commentId: T:System.Nullable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  name: Nullable<T>
+  nameWithType: Nullable<T>
+  fullName: System.Nullable<T>
+  nameWithType.vb: Nullable(Of T)
+  fullName.vb: System.Nullable(Of T)
+  name.vb: Nullable(Of T)
+  spec.csharp:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Min*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Min
+  href: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField-1.html#Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Min
+  name: Min
+  nameWithType: SDKDateTimeField<ItemType>.Min
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.Min
+  nameWithType.vb: SDKDateTimeField(Of ItemType).Min
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).Min
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.FooterTemplate*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.FooterTemplate
+  href: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField-1.html#Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.FooterTemplate
+  name: FooterTemplate
+  nameWithType: SDKDateTimeField<ItemType>.FooterTemplate
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.FooterTemplate
+  nameWithType.vb: SDKDateTimeField(Of ItemType).FooterTemplate
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).FooterTemplate
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.AsCalendar*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.AsCalendar
+  href: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField-1.html#Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.AsCalendar
+  name: AsCalendar
+  nameWithType: SDKDateTimeField<ItemType>.AsCalendar
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.AsCalendar
+  nameWithType.vb: SDKDateTimeField(Of ItemType).AsCalendar
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).AsCalendar
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ClearButton*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ClearButton
+  href: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField-1.html#Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ClearButton
+  name: ClearButton
+  nameWithType: SDKDateTimeField<ItemType>.ClearButton
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.ClearButton
+  nameWithType.vb: SDKDateTimeField(Of ItemType).ClearButton
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).ClearButton
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.InitialViewDate*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.InitialViewDate
+  href: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField-1.html#Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.InitialViewDate
+  name: InitialViewDate
+  nameWithType: SDKDateTimeField<ItemType>.InitialViewDate
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.InitialViewDate
+  nameWithType.vb: SDKDateTimeField(Of ItemType).InitialViewDate
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).InitialViewDate
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.YearRange*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.YearRange
+  href: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField-1.html#Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.YearRange
+  name: YearRange
+  nameWithType: SDKDateTimeField<ItemType>.YearRange
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.YearRange
+  nameWithType.vb: SDKDateTimeField(Of ItemType).YearRange
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).YearRange
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ValueExpression*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ValueExpression
+  href: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField-1.html#Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.ValueExpression
+  name: ValueExpression
+  nameWithType: SDKDateTimeField<ItemType>.ValueExpression
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.ValueExpression
+  nameWithType.vb: SDKDateTimeField(Of ItemType).ValueExpression
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).ValueExpression
+- uid: System.Linq.Expressions.Expression{System.Func{{ItemType}}}
+  commentId: T:System.Linq.Expressions.Expression{System.Func{`0}}
+  parent: System.Linq.Expressions
+  definition: System.Linq.Expressions.Expression`1
+  href: https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1
+  name: Expression<Func<ItemType>>
+  nameWithType: Expression<Func<ItemType>>
+  fullName: System.Linq.Expressions.Expression<System.Func<ItemType>>
+  nameWithType.vb: Expression(Of Func(Of ItemType))
+  fullName.vb: System.Linq.Expressions.Expression(Of System.Func(Of ItemType))
+  name.vb: Expression(Of Func(Of ItemType))
+  spec.csharp:
+  - uid: System.Linq.Expressions.Expression`1
+    name: Expression
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1
+  - name: <
+  - uid: System.Func`1
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-1
+  - name: <
+  - name: ItemType
+  - name: '>'
+  - name: '>'
+  spec.vb:
+  - uid: System.Linq.Expressions.Expression`1
+    name: Expression
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Func`1
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: ItemType
+  - name: )
+  - name: )
+- uid: System.Linq.Expressions.Expression`1
+  commentId: T:System.Linq.Expressions.Expression`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1
+  name: Expression<TDelegate>
+  nameWithType: Expression<TDelegate>
+  fullName: System.Linq.Expressions.Expression<TDelegate>
+  nameWithType.vb: Expression(Of TDelegate)
+  fullName.vb: System.Linq.Expressions.Expression(Of TDelegate)
+  name.vb: Expression(Of TDelegate)
+  spec.csharp:
+  - uid: System.Linq.Expressions.Expression`1
+    name: Expression
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1
+  - name: <
+  - name: TDelegate
+  - name: '>'
+  spec.vb:
+  - uid: System.Linq.Expressions.Expression`1
+    name: Expression
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TDelegate
+  - name: )
+- uid: System.Linq.Expressions
+  commentId: N:System.Linq.Expressions
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Linq.Expressions
+  nameWithType: System.Linq.Expressions
+  fullName: System.Linq.Expressions
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Linq
+    name: Linq
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.linq
+  - name: .
+  - uid: System.Linq.Expressions
+    name: Expressions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.linq.expressions
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Linq
+    name: Linq
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.linq
+  - name: .
+  - uid: System.Linq.Expressions
+    name: Expressions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.linq.expressions
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Placeholder*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Placeholder
+  href: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField-1.html#Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.Placeholder
+  name: Placeholder
+  nameWithType: SDKDateTimeField<ItemType>.Placeholder
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.Placeholder
+  nameWithType.vb: SDKDateTimeField(Of ItemType).Placeholder
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).Placeholder
+- uid: Siesa.SDK.Frontend.Components.SDKComponent.GetAutomationId
+  commentId: M:Siesa.SDK.Frontend.Components.SDKComponent.GetAutomationId
+  parent: Siesa.SDK.Frontend.Components.SDKComponent
+  href: Siesa.SDK.Frontend.Components.SDKComponent.html#Siesa.SDK.Frontend.Components.SDKComponent.GetAutomationId
+  name: GetAutomationId()
+  nameWithType: SDKComponent.GetAutomationId()
+  fullName: Siesa.SDK.Frontend.Components.SDKComponent.GetAutomationId()
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.SDKComponent.GetAutomationId
+    name: GetAutomationId
+    href: Siesa.SDK.Frontend.Components.SDKComponent.html#Siesa.SDK.Frontend.Components.SDKComponent.GetAutomationId
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.SDKComponent.GetAutomationId
+    name: GetAutomationId
+    href: Siesa.SDK.Frontend.Components.SDKComponent.html#Siesa.SDK.Frontend.Components.SDKComponent.GetAutomationId
+  - name: (
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.GetAutomationId*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.GetAutomationId
+  href: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField-1.html#Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1.GetAutomationId
+  name: GetAutomationId
+  nameWithType: SDKDateTimeField<ItemType>.GetAutomationId
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>.GetAutomationId
+  nameWithType.vb: SDKDateTimeField(Of ItemType).GetAutomationId
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType).GetAutomationId

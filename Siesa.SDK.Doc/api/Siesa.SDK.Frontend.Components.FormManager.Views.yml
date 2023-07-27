@@ -1,0 +1,184 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Components.FormManager.Views
+  commentId: N:Siesa.SDK.Frontend.Components.FormManager.Views
+  id: Siesa.SDK.Frontend.Components.FormManager.Views
+  children:
+  - Siesa.SDK.Frontend.Components.FormManager.Views.AddFilter
+  - Siesa.SDK.Frontend.Components.FormManager.Views.ConfirmDelete
+  - Siesa.SDK.Frontend.Components.FormManager.Views.CreateView
+  - Siesa.SDK.Frontend.Components.FormManager.Views.DetailView
+  - Siesa.SDK.Frontend.Components.FormManager.Views.DynamicCreateView
+  - Siesa.SDK.Frontend.Components.FormManager.Views.DynamicCustomAction
+  - Siesa.SDK.Frontend.Components.FormManager.Views.DynamicDetailView
+  - Siesa.SDK.Frontend.Components.FormManager.Views.DynamicEditView
+  - Siesa.SDK.Frontend.Components.FormManager.Views.DynamicListView
+  - Siesa.SDK.Frontend.Components.FormManager.Views.EditView
+  - Siesa.SDK.Frontend.Components.FormManager.Views.ErrorsContainer
+  - Siesa.SDK.Frontend.Components.FormManager.Views.ErrorsWindow
+  - Siesa.SDK.Frontend.Components.FormManager.Views.ExplorerView
+  - Siesa.SDK.Frontend.Components.FormManager.Views.FreeForm
+  - Siesa.SDK.Frontend.Components.FormManager.Views.InlineCrud
+  - Siesa.SDK.Frontend.Components.FormManager.Views.ListView
+  langs:
+  - csharp
+  - vb
+  name: Siesa.SDK.Frontend.Components.FormManager.Views
+  nameWithType: Siesa.SDK.Frontend.Components.FormManager.Views
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Views
+  type: Namespace
+  assemblies:
+  - Siesa.SDK.Frontend
+references:
+- uid: Siesa.SDK.Frontend.Components.FormManager.Views.CreateView
+  commentId: T:Siesa.SDK.Frontend.Components.FormManager.Views.CreateView
+  href: Siesa.SDK.Frontend.Components.FormManager.Views.CreateView.html
+  name: CreateView
+  nameWithType: CreateView
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Views.CreateView
+- uid: Siesa.SDK.Frontend.Components.FormManager.Views.DetailView
+  commentId: T:Siesa.SDK.Frontend.Components.FormManager.Views.DetailView
+  href: Siesa.SDK.Frontend.Components.FormManager.Views.DetailView.html
+  name: DetailView
+  nameWithType: DetailView
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Views.DetailView
+- uid: Siesa.SDK.Frontend.Components.FormManager.Views.DynamicCreateView
+  commentId: T:Siesa.SDK.Frontend.Components.FormManager.Views.DynamicCreateView
+  href: Siesa.SDK.Frontend.Components.FormManager.Views.DynamicCreateView.html
+  name: DynamicCreateView
+  nameWithType: DynamicCreateView
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Views.DynamicCreateView
+- uid: Siesa.SDK.Frontend.Components.FormManager.Views.DynamicDetailView
+  commentId: T:Siesa.SDK.Frontend.Components.FormManager.Views.DynamicDetailView
+  href: Siesa.SDK.Frontend.Components.FormManager.Views.DynamicDetailView.html
+  name: DynamicDetailView
+  nameWithType: DynamicDetailView
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Views.DynamicDetailView
+- uid: Siesa.SDK.Frontend.Components.FormManager.Views.DynamicEditView
+  commentId: T:Siesa.SDK.Frontend.Components.FormManager.Views.DynamicEditView
+  href: Siesa.SDK.Frontend.Components.FormManager.Views.DynamicEditView.html
+  name: DynamicEditView
+  nameWithType: DynamicEditView
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Views.DynamicEditView
+- uid: Siesa.SDK.Frontend.Components.FormManager.Views.DynamicListView
+  commentId: T:Siesa.SDK.Frontend.Components.FormManager.Views.DynamicListView
+  href: Siesa.SDK.Frontend.Components.FormManager.Views.DynamicListView.html
+  name: DynamicListView
+  nameWithType: DynamicListView
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Views.DynamicListView
+- uid: Siesa.SDK.Frontend.Components.FormManager.Views.EditView
+  commentId: T:Siesa.SDK.Frontend.Components.FormManager.Views.EditView
+  href: Siesa.SDK.Frontend.Components.FormManager.Views.EditView.html
+  name: EditView
+  nameWithType: EditView
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Views.EditView
+- uid: Siesa.SDK.Frontend.Components.FormManager.Views.ErrorsWindow
+  commentId: T:Siesa.SDK.Frontend.Components.FormManager.Views.ErrorsWindow
+  href: Siesa.SDK.Frontend.Components.FormManager.Views.ErrorsWindow.html
+  name: ErrorsWindow
+  nameWithType: ErrorsWindow
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Views.ErrorsWindow
+- uid: Siesa.SDK.Frontend.Components.FormManager.Views.ExplorerView
+  commentId: T:Siesa.SDK.Frontend.Components.FormManager.Views.ExplorerView
+  href: Siesa.SDK.Frontend.Components.FormManager.Views.ExplorerView.html
+  name: ExplorerView
+  nameWithType: ExplorerView
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Views.ExplorerView
+- uid: Siesa.SDK.Frontend.Components.FormManager.Views.FreeForm
+  commentId: T:Siesa.SDK.Frontend.Components.FormManager.Views.FreeForm
+  parent: Siesa.SDK.Frontend.Components.FormManager.Views
+  href: Siesa.SDK.Frontend.Components.FormManager.Views.FreeForm.html
+  name: FreeForm
+  nameWithType: FreeForm
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Views.FreeForm
+- uid: Siesa.SDK.Frontend.Components.FormManager.Views.ListView
+  commentId: T:Siesa.SDK.Frontend.Components.FormManager.Views.ListView
+  parent: Siesa.SDK.Frontend.Components.FormManager.Views
+  href: Siesa.SDK.Frontend.Components.FormManager.Views.ListView.html
+  name: ListView
+  nameWithType: ListView
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Views.ListView
+- uid: Siesa.SDK.Frontend.Components.FormManager.Views.DynamicCustomAction
+  commentId: T:Siesa.SDK.Frontend.Components.FormManager.Views.DynamicCustomAction
+  href: Siesa.SDK.Frontend.Components.FormManager.Views.DynamicCustomAction.html
+  name: DynamicCustomAction
+  nameWithType: DynamicCustomAction
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Views.DynamicCustomAction
+- uid: Siesa.SDK.Frontend.Components.FormManager.Views.ErrorsContainer
+  commentId: T:Siesa.SDK.Frontend.Components.FormManager.Views.ErrorsContainer
+  href: Siesa.SDK.Frontend.Components.FormManager.Views.ErrorsContainer.html
+  name: ErrorsContainer
+  nameWithType: ErrorsContainer
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Views.ErrorsContainer
+- uid: Siesa.SDK.Frontend.Components.FormManager.Views.InlineCrud
+  commentId: T:Siesa.SDK.Frontend.Components.FormManager.Views.InlineCrud
+  href: Siesa.SDK.Frontend.Components.FormManager.Views.InlineCrud.html
+  name: InlineCrud
+  nameWithType: InlineCrud
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Views.InlineCrud
+- uid: Siesa.SDK.Frontend.Components.FormManager.Views.ConfirmDelete
+  commentId: T:Siesa.SDK.Frontend.Components.FormManager.Views.ConfirmDelete
+  href: Siesa.SDK.Frontend.Components.FormManager.Views.ConfirmDelete.html
+  name: ConfirmDelete
+  nameWithType: ConfirmDelete
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Views.ConfirmDelete
+- uid: Siesa.SDK.Frontend.Components.FormManager.Views.AddFilter
+  commentId: T:Siesa.SDK.Frontend.Components.FormManager.Views.AddFilter
+  href: Siesa.SDK.Frontend.Components.FormManager.Views.AddFilter.html
+  name: AddFilter
+  nameWithType: AddFilter
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Views.AddFilter
+- uid: Siesa.SDK.Frontend.Components.FormManager.Views
+  commentId: N:Siesa.SDK.Frontend.Components.FormManager.Views
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Components.FormManager.Views
+  nameWithType: Siesa.SDK.Frontend.Components.FormManager.Views
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Views
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager
+    name: FormManager
+    href: Siesa.SDK.Frontend.Components.FormManager.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Views
+    name: Views
+    href: Siesa.SDK.Frontend.Components.FormManager.Views.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager
+    name: FormManager
+    href: Siesa.SDK.Frontend.Components.FormManager.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Views
+    name: Views
+    href: Siesa.SDK.Frontend.Components.FormManager.Views.html

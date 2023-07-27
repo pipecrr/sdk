@@ -1,0 +1,53 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Components.Dashboard.UserComponent
+  commentId: N:Siesa.SDK.Frontend.Components.Dashboard.UserComponent
+  id: Siesa.SDK.Frontend.Components.Dashboard.UserComponent
+  children:
+  - Siesa.SDK.Frontend.Components.Dashboard.UserComponent.UserDashboard
+  - Siesa.SDK.Frontend.Components.Dashboard.UserComponent.UserPreferences
+  - Siesa.SDK.Frontend.Components.Dashboard.UserComponent.UserPreferences.ComplementaryColor
+  langs:
+  - csharp
+  - vb
+  name: Siesa.SDK.Frontend.Components.Dashboard.UserComponent
+  nameWithType: Siesa.SDK.Frontend.Components.Dashboard.UserComponent
+  fullName: Siesa.SDK.Frontend.Components.Dashboard.UserComponent
+  type: Namespace
+  assemblies:
+  - Siesa.SDK.Frontend
+references:
+- uid: Siesa.SDK.Frontend.Components.Dashboard.UserComponent.UserPreferences
+  commentId: T:Siesa.SDK.Frontend.Components.Dashboard.UserComponent.UserPreferences
+  href: Siesa.SDK.Frontend.Components.Dashboard.UserComponent.UserPreferences.html
+  name: UserPreferences
+  nameWithType: UserPreferences
+  fullName: Siesa.SDK.Frontend.Components.Dashboard.UserComponent.UserPreferences
+- uid: Siesa.SDK.Frontend.Components.Dashboard.UserComponent.UserPreferences.ComplementaryColor
+  commentId: T:Siesa.SDK.Frontend.Components.Dashboard.UserComponent.UserPreferences.ComplementaryColor
+  href: Siesa.SDK.Frontend.Components.Dashboard.UserComponent.UserPreferences.html
+  name: UserPreferences.ComplementaryColor
+  nameWithType: UserPreferences.ComplementaryColor
+  fullName: Siesa.SDK.Frontend.Components.Dashboard.UserComponent.UserPreferences.ComplementaryColor
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.Dashboard.UserComponent.UserPreferences
+    name: UserPreferences
+    href: Siesa.SDK.Frontend.Components.Dashboard.UserComponent.UserPreferences.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.Dashboard.UserComponent.UserPreferences.ComplementaryColor
+    name: ComplementaryColor
+    href: Siesa.SDK.Frontend.Components.Dashboard.UserComponent.UserPreferences.ComplementaryColor.html
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.Dashboard.UserComponent.UserPreferences
+    name: UserPreferences
+    href: Siesa.SDK.Frontend.Components.Dashboard.UserComponent.UserPreferences.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.Dashboard.UserComponent.UserPreferences.ComplementaryColor
+    name: ComplementaryColor
+    href: Siesa.SDK.Frontend.Components.Dashboard.UserComponent.UserPreferences.ComplementaryColor.html
+- uid: Siesa.SDK.Frontend.Components.Dashboard.UserComponent.UserDashboard
+  commentId: T:Siesa.SDK.Frontend.Components.Dashboard.UserComponent.UserDashboard
+  href: Siesa.SDK.Frontend.Components.Dashboard.UserComponent.UserDashboard.html
+  name: UserDashboard
+  nameWithType: UserDashboard
+  fullName: Siesa.SDK.Frontend.Components.Dashboard.UserComponent.UserDashboard

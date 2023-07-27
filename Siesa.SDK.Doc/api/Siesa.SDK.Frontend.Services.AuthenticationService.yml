@@ -1,0 +1,3337 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService
+  commentId: T:Siesa.SDK.Frontend.Services.AuthenticationService
+  id: AuthenticationService
+  parent: Siesa.SDK.Frontend.Services
+  children:
+  - Siesa.SDK.Frontend.Services.AuthenticationService.#ctor(Microsoft.AspNetCore.Components.NavigationManager,Blazored.LocalStorage.ILocalStorageService,Siesa.SDK.Shared.Services.IBackendRouterService,Microsoft.AspNetCore.Http.IHttpContextAccessor,Microsoft.JSInterop.IJSRuntime,Siesa.SDK.Shared.Criptography.ISDKJWT)
+  - Siesa.SDK.Frontend.Services.AuthenticationService.ChangePassword(System.Int32,System.String,System.String)
+  - Siesa.SDK.Frontend.Services.AuthenticationService.FetchConnectionLogo(System.Int16)
+  - Siesa.SDK.Frontend.Services.AuthenticationService.ForgotPasswordAsync(System.String)
+  - Siesa.SDK.Frontend.Services.AuthenticationService.GetConnectionLogo
+  - Siesa.SDK.Frontend.Services.AuthenticationService.GetConnectionStyle
+  - Siesa.SDK.Frontend.Services.AuthenticationService.GetPreferencesUser
+  - Siesa.SDK.Frontend.Services.AuthenticationService.GetRoiwdCulture
+  - Siesa.SDK.Frontend.Services.AuthenticationService.GetRowidCompanyGroup
+  - Siesa.SDK.Frontend.Services.AuthenticationService.GetSelectedConnection
+  - Siesa.SDK.Frontend.Services.AuthenticationService.GetSelectedSuite
+  - Siesa.SDK.Frontend.Services.AuthenticationService.GetThemeStyle
+  - Siesa.SDK.Frontend.Services.AuthenticationService.GetUserPhoto
+  - Siesa.SDK.Frontend.Services.AuthenticationService.Initialize
+  - Siesa.SDK.Frontend.Services.AuthenticationService.IsValidToken
+  - Siesa.SDK.Frontend.Services.AuthenticationService.Login(System.String,System.String,System.Int16,System.Boolean)
+  - Siesa.SDK.Frontend.Services.AuthenticationService.Login(System.String,System.String,System.Int16,System.Boolean,System.Int16)
+  - Siesa.SDK.Frontend.Services.AuthenticationService.LoginPortal(System.String,System.String,System.Int16,System.Boolean,System.Int16)
+  - Siesa.SDK.Frontend.Services.AuthenticationService.LoginSessionByToken(System.String,System.Int16)
+  - Siesa.SDK.Frontend.Services.AuthenticationService.Logout
+  - Siesa.SDK.Frontend.Services.AuthenticationService.LogoutPortal
+  - Siesa.SDK.Frontend.Services.AuthenticationService.PortalUser
+  - Siesa.SDK.Frontend.Services.AuthenticationService.PortalUserPreferences
+  - Siesa.SDK.Frontend.Services.AuthenticationService.PortalUserToken
+  - Siesa.SDK.Frontend.Services.AuthenticationService.RemoveCustomRowidCulture
+  - Siesa.SDK.Frontend.Services.AuthenticationService.RenewToken
+  - Siesa.SDK.Frontend.Services.AuthenticationService.RowidCultureChanged
+  - Siesa.SDK.Frontend.Services.AuthenticationService.SetConnectionLogo(System.String,System.Boolean)
+  - Siesa.SDK.Frontend.Services.AuthenticationService.SetCustomRowidCulture(System.Int16)
+  - Siesa.SDK.Frontend.Services.AuthenticationService.SetPortalUserPhoto(System.String,System.Boolean)
+  - Siesa.SDK.Frontend.Services.AuthenticationService.SetPreferencesPortalUser(Siesa.SDK.Shared.DTOS.UserPreferencesDTO)
+  - Siesa.SDK.Frontend.Services.AuthenticationService.SetPreferencesUser(Siesa.SDK.Shared.DTOS.UserPreferencesDTO)
+  - Siesa.SDK.Frontend.Services.AuthenticationService.SetRowidCompanyGroup(System.Int16)
+  - Siesa.SDK.Frontend.Services.AuthenticationService.SetSelectedConnection(Siesa.SDK.Shared.DTOS.SDKDbConnection)
+  - Siesa.SDK.Frontend.Services.AuthenticationService.SetSelectedSuite(System.Int32)
+  - Siesa.SDK.Frontend.Services.AuthenticationService.SetToken(System.String,System.Boolean)
+  - Siesa.SDK.Frontend.Services.AuthenticationService.SetTokenPortal(System.String,System.Boolean)
+  - Siesa.SDK.Frontend.Services.AuthenticationService.SetUserPhoto(System.String,System.Boolean)
+  - Siesa.SDK.Frontend.Services.AuthenticationService.User
+  - Siesa.SDK.Frontend.Services.AuthenticationService.UserPreferences
+  - Siesa.SDK.Frontend.Services.AuthenticationService.UserToken
+  - Siesa.SDK.Frontend.Services.AuthenticationService.ValidateUserToken(System.Int32)
+  langs:
+  - csharp
+  - vb
+  name: AuthenticationService
+  nameWithType: AuthenticationService
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService
+  type: Class
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: AuthenticationService
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 18
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  syntax:
+    content: 'public class AuthenticationService : IAuthenticationService'
+    content.vb: Public Class AuthenticationService Implements IAuthenticationService
+  inheritance:
+  - System.Object
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.RowidCultureChanged
+  commentId: P:Siesa.SDK.Frontend.Services.AuthenticationService.RowidCultureChanged
+  id: RowidCultureChanged
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: RowidCultureChanged
+  nameWithType: AuthenticationService.RowidCultureChanged
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.RowidCultureChanged
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: RowidCultureChanged
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 30
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public short RowidCultureChanged { get; set; }
+    parameters: []
+    return:
+      type: System.Int16
+    content.vb: Public Property RowidCultureChanged As Short
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.RowidCultureChanged*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.RowidCultureChanged
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.UserToken
+  commentId: P:Siesa.SDK.Frontend.Services.AuthenticationService.UserToken
+  id: UserToken
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: UserToken
+  nameWithType: AuthenticationService.UserToken
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.UserToken
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: UserToken
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 34
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public string UserToken { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property UserToken As String
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.UserToken*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.UserToken
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.PortalUserToken
+  commentId: P:Siesa.SDK.Frontend.Services.AuthenticationService.PortalUserToken
+  id: PortalUserToken
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: PortalUserToken
+  nameWithType: AuthenticationService.PortalUserToken
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.PortalUserToken
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: PortalUserToken
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 35
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public string PortalUserToken { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property PortalUserToken As String
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.PortalUserToken*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.PortalUserToken
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.UserPreferences
+  commentId: P:Siesa.SDK.Frontend.Services.AuthenticationService.UserPreferences
+  id: UserPreferences
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: UserPreferences
+  nameWithType: AuthenticationService.UserPreferences
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.UserPreferences
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: UserPreferences
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 47
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  syntax:
+    content: public UserPreferencesDTO UserPreferences { get; set; }
+    parameters: []
+    return:
+      type: Siesa.SDK.Shared.DTOS.UserPreferencesDTO
+    content.vb: Public Property UserPreferences As UserPreferencesDTO
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.UserPreferences*
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.PortalUserPreferences
+  commentId: P:Siesa.SDK.Frontend.Services.AuthenticationService.PortalUserPreferences
+  id: PortalUserPreferences
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: PortalUserPreferences
+  nameWithType: AuthenticationService.PortalUserPreferences
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.PortalUserPreferences
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: PortalUserPreferences
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 48
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  syntax:
+    content: public UserPreferencesDTO PortalUserPreferences { get; set; }
+    parameters: []
+    return:
+      type: Siesa.SDK.Shared.DTOS.UserPreferencesDTO
+    content.vb: Public Property PortalUserPreferences As UserPreferencesDTO
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.PortalUserPreferences*
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.User
+  commentId: P:Siesa.SDK.Frontend.Services.AuthenticationService.User
+  id: User
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: User
+  nameWithType: AuthenticationService.User
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.User
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: User
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 52
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public JwtUserData User { get; }
+    parameters: []
+    return:
+      type: Siesa.SDK.Shared.Services.JwtUserData
+    content.vb: Public ReadOnly Property User As JwtUserData
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.User*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.User
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.PortalUser
+  commentId: P:Siesa.SDK.Frontend.Services.AuthenticationService.PortalUser
+  id: PortalUser
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: PortalUser
+  nameWithType: AuthenticationService.PortalUser
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.PortalUser
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: PortalUser
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 75
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public JwtUserData PortalUser { get; }
+    parameters: []
+    return:
+      type: Siesa.SDK.Shared.Services.JwtUserData
+    content.vb: Public ReadOnly Property PortalUser As JwtUserData
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.PortalUser*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.PortalUser
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.#ctor(Microsoft.AspNetCore.Components.NavigationManager,Blazored.LocalStorage.ILocalStorageService,Siesa.SDK.Shared.Services.IBackendRouterService,Microsoft.AspNetCore.Http.IHttpContextAccessor,Microsoft.JSInterop.IJSRuntime,Siesa.SDK.Shared.Criptography.ISDKJWT)
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.#ctor(Microsoft.AspNetCore.Components.NavigationManager,Blazored.LocalStorage.ILocalStorageService,Siesa.SDK.Shared.Services.IBackendRouterService,Microsoft.AspNetCore.Http.IHttpContextAccessor,Microsoft.JSInterop.IJSRuntime,Siesa.SDK.Shared.Criptography.ISDKJWT)
+  id: '#ctor(Microsoft.AspNetCore.Components.NavigationManager,Blazored.LocalStorage.ILocalStorageService,Siesa.SDK.Shared.Services.IBackendRouterService,Microsoft.AspNetCore.Http.IHttpContextAccessor,Microsoft.JSInterop.IJSRuntime,Siesa.SDK.Shared.Criptography.ISDKJWT)'
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: AuthenticationService(NavigationManager, ILocalStorageService, IBackendRouterService, IHttpContextAccessor, IJSRuntime, ISDKJWT)
+  nameWithType: AuthenticationService.AuthenticationService(NavigationManager, ILocalStorageService, IBackendRouterService, IHttpContextAccessor, IJSRuntime, ISDKJWT)
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.AuthenticationService(Microsoft.AspNetCore.Components.NavigationManager, Blazored.LocalStorage.ILocalStorageService, Siesa.SDK.Shared.Services.IBackendRouterService, Microsoft.AspNetCore.Http.IHttpContextAccessor, Microsoft.JSInterop.IJSRuntime, Siesa.SDK.Shared.Criptography.ISDKJWT)
+  type: Constructor
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: .ctor
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 98
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  syntax:
+    content: public AuthenticationService(NavigationManager navigationManager, ILocalStorageService localStorageService, IBackendRouterService BackendRouterService, IHttpContextAccessor ContextAccessor, IJSRuntime jsRuntime, ISDKJWT sdkJWT)
+    parameters:
+    - id: navigationManager
+      type: Microsoft.AspNetCore.Components.NavigationManager
+    - id: localStorageService
+      type: Blazored.LocalStorage.ILocalStorageService
+    - id: BackendRouterService
+      type: Siesa.SDK.Shared.Services.IBackendRouterService
+    - id: ContextAccessor
+      type: Microsoft.AspNetCore.Http.IHttpContextAccessor
+    - id: jsRuntime
+      type: Microsoft.JSInterop.IJSRuntime
+    - id: sdkJWT
+      type: Siesa.SDK.Shared.Criptography.ISDKJWT
+    content.vb: Public Sub New(navigationManager As NavigationManager, localStorageService As ILocalStorageService, BackendRouterService As IBackendRouterService, ContextAccessor As IHttpContextAccessor, jsRuntime As IJSRuntime, sdkJWT As ISDKJWT)
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.#ctor*
+  nameWithType.vb: AuthenticationService.New(NavigationManager, ILocalStorageService, IBackendRouterService, IHttpContextAccessor, IJSRuntime, ISDKJWT)
+  fullName.vb: Siesa.SDK.Frontend.Services.AuthenticationService.New(Microsoft.AspNetCore.Components.NavigationManager, Blazored.LocalStorage.ILocalStorageService, Siesa.SDK.Shared.Services.IBackendRouterService, Microsoft.AspNetCore.Http.IHttpContextAccessor, Microsoft.JSInterop.IJSRuntime, Siesa.SDK.Shared.Criptography.ISDKJWT)
+  name.vb: New(NavigationManager, ILocalStorageService, IBackendRouterService, IHttpContextAccessor, IJSRuntime, ISDKJWT)
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.Initialize
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.Initialize
+  id: Initialize
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: Initialize()
+  nameWithType: AuthenticationService.Initialize()
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.Initialize()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Initialize
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 117
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public Task Initialize()
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function Initialize() As Task
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.Initialize*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.Initialize
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.LoginSessionByToken(System.String,System.Int16)
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.LoginSessionByToken(System.String,System.Int16)
+  id: LoginSessionByToken(System.String,System.Int16)
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: LoginSessionByToken(string, short)
+  nameWithType: AuthenticationService.LoginSessionByToken(string, short)
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.LoginSessionByToken(string, short)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: LoginSessionByToken
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 145
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public Task<string> LoginSessionByToken(string userAccesstoken, short rowidDBConnection)
+    parameters:
+    - id: userAccesstoken
+      type: System.String
+    - id: rowidDBConnection
+      type: System.Int16
+    return:
+      type: System.Threading.Tasks.Task{System.String}
+    content.vb: Public Function LoginSessionByToken(userAccesstoken As String, rowidDBConnection As Short) As Task(Of String)
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.LoginSessionByToken*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.LoginSessionByToken(System.String,System.Int16)
+  nameWithType.vb: AuthenticationService.LoginSessionByToken(String, Short)
+  fullName.vb: Siesa.SDK.Frontend.Services.AuthenticationService.LoginSessionByToken(String, Short)
+  name.vb: LoginSessionByToken(String, Short)
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.Login(System.String,System.String,System.Int16,System.Boolean,System.Int16)
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.Login(System.String,System.String,System.Int16,System.Boolean,System.Int16)
+  id: Login(System.String,System.String,System.Int16,System.Boolean,System.Int16)
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: Login(string, string, short, bool, short)
+  nameWithType: AuthenticationService.Login(string, string, short, bool, short)
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.Login(string, string, short, bool, short)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Login
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 170
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public Task Login(string username, string password, short rowIdDBConnection, bool IsUpdateSession = false, short rowIdCompanyGroup = 1)
+    parameters:
+    - id: username
+      type: System.String
+    - id: password
+      type: System.String
+    - id: rowIdDBConnection
+      type: System.Int16
+    - id: IsUpdateSession
+      type: System.Boolean
+    - id: rowIdCompanyGroup
+      type: System.Int16
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function Login(username As String, password As String, rowIdDBConnection As Short, IsUpdateSession As Boolean = False, rowIdCompanyGroup As Short = 1) As Task
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.Login*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.Login(System.String,System.String,System.Int16,System.Boolean,System.Int16)
+  nameWithType.vb: AuthenticationService.Login(String, String, Short, Boolean, Short)
+  fullName.vb: Siesa.SDK.Frontend.Services.AuthenticationService.Login(String, String, Short, Boolean, Short)
+  name.vb: Login(String, String, Short, Boolean, Short)
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.LoginPortal(System.String,System.String,System.Int16,System.Boolean,System.Int16)
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.LoginPortal(System.String,System.String,System.Int16,System.Boolean,System.Int16)
+  id: LoginPortal(System.String,System.String,System.Int16,System.Boolean,System.Int16)
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: LoginPortal(string, string, short, bool, short)
+  nameWithType: AuthenticationService.LoginPortal(string, string, short, bool, short)
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.LoginPortal(string, string, short, bool, short)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: LoginPortal
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 229
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public Task LoginPortal(string username, string password, short rowIdDBConnection, bool IsUpdateSession = false, short rowIdCompanyGroup = 1)
+    parameters:
+    - id: username
+      type: System.String
+    - id: password
+      type: System.String
+    - id: rowIdDBConnection
+      type: System.Int16
+    - id: IsUpdateSession
+      type: System.Boolean
+    - id: rowIdCompanyGroup
+      type: System.Int16
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function LoginPortal(username As String, password As String, rowIdDBConnection As Short, IsUpdateSession As Boolean = False, rowIdCompanyGroup As Short = 1) As Task
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.LoginPortal*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.LoginPortal(System.String,System.String,System.Int16,System.Boolean,System.Int16)
+  nameWithType.vb: AuthenticationService.LoginPortal(String, String, Short, Boolean, Short)
+  fullName.vb: Siesa.SDK.Frontend.Services.AuthenticationService.LoginPortal(String, String, Short, Boolean, Short)
+  name.vb: LoginPortal(String, String, Short, Boolean, Short)
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.RenewToken
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.RenewToken
+  id: RenewToken
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: RenewToken()
+  nameWithType: AuthenticationService.RenewToken()
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.RenewToken()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: RenewToken
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 274
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public Task RenewToken()
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function RenewToken() As Task
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.RenewToken*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.RenewToken
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.Logout
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.Logout
+  id: Logout
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: Logout()
+  nameWithType: AuthenticationService.Logout()
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.Logout()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Logout
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 292
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public Task Logout()
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function Logout() As Task
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.Logout*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.Logout
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.LogoutPortal
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.LogoutPortal
+  id: LogoutPortal
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: LogoutPortal()
+  nameWithType: AuthenticationService.LogoutPortal()
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.LogoutPortal()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: LogoutPortal
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 323
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public Task LogoutPortal()
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function LogoutPortal() As Task
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.LogoutPortal*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.LogoutPortal
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.SetToken(System.String,System.Boolean)
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.SetToken(System.String,System.Boolean)
+  id: SetToken(System.String,System.Boolean)
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: SetToken(string, bool)
+  nameWithType: AuthenticationService.SetToken(string, bool)
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.SetToken(string, bool)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SetToken
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 338
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public Task SetToken(string token, bool saveLocalStorage = true)
+    parameters:
+    - id: token
+      type: System.String
+    - id: saveLocalStorage
+      type: System.Boolean
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function SetToken(token As String, saveLocalStorage As Boolean = True) As Task
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.SetToken*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.SetToken(System.String,System.Boolean)
+  nameWithType.vb: AuthenticationService.SetToken(String, Boolean)
+  fullName.vb: Siesa.SDK.Frontend.Services.AuthenticationService.SetToken(String, Boolean)
+  name.vb: SetToken(String, Boolean)
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.SetTokenPortal(System.String,System.Boolean)
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.SetTokenPortal(System.String,System.Boolean)
+  id: SetTokenPortal(System.String,System.Boolean)
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: SetTokenPortal(string, bool)
+  nameWithType: AuthenticationService.SetTokenPortal(string, bool)
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.SetTokenPortal(string, bool)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SetTokenPortal
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 347
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public Task SetTokenPortal(string token, bool saveLocalStorage = true)
+    parameters:
+    - id: token
+      type: System.String
+    - id: saveLocalStorage
+      type: System.Boolean
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function SetTokenPortal(token As String, saveLocalStorage As Boolean = True) As Task
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.SetTokenPortal*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.SetTokenPortal(System.String,System.Boolean)
+  nameWithType.vb: AuthenticationService.SetTokenPortal(String, Boolean)
+  fullName.vb: Siesa.SDK.Frontend.Services.AuthenticationService.SetTokenPortal(String, Boolean)
+  name.vb: SetTokenPortal(String, Boolean)
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.SetUserPhoto(System.String,System.Boolean)
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.SetUserPhoto(System.String,System.Boolean)
+  id: SetUserPhoto(System.String,System.Boolean)
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: SetUserPhoto(string, bool)
+  nameWithType: AuthenticationService.SetUserPhoto(string, bool)
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.SetUserPhoto(string, bool)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SetUserPhoto
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 356
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public Task SetUserPhoto(string _data, bool saveLocalStorage = true)
+    parameters:
+    - id: _data
+      type: System.String
+    - id: saveLocalStorage
+      type: System.Boolean
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function SetUserPhoto(_data As String, saveLocalStorage As Boolean = True) As Task
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.SetUserPhoto*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.SetUserPhoto(System.String,System.Boolean)
+  nameWithType.vb: AuthenticationService.SetUserPhoto(String, Boolean)
+  fullName.vb: Siesa.SDK.Frontend.Services.AuthenticationService.SetUserPhoto(String, Boolean)
+  name.vb: SetUserPhoto(String, Boolean)
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.SetPortalUserPhoto(System.String,System.Boolean)
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.SetPortalUserPhoto(System.String,System.Boolean)
+  id: SetPortalUserPhoto(System.String,System.Boolean)
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: SetPortalUserPhoto(string, bool)
+  nameWithType: AuthenticationService.SetPortalUserPhoto(string, bool)
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.SetPortalUserPhoto(string, bool)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SetPortalUserPhoto
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 366
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  syntax:
+    content: public Task SetPortalUserPhoto(string _data, bool saveLocalStorage = true)
+    parameters:
+    - id: _data
+      type: System.String
+    - id: saveLocalStorage
+      type: System.Boolean
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function SetPortalUserPhoto(_data As String, saveLocalStorage As Boolean = True) As Task
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.SetPortalUserPhoto*
+  nameWithType.vb: AuthenticationService.SetPortalUserPhoto(String, Boolean)
+  fullName.vb: Siesa.SDK.Frontend.Services.AuthenticationService.SetPortalUserPhoto(String, Boolean)
+  name.vb: SetPortalUserPhoto(String, Boolean)
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.SetConnectionLogo(System.String,System.Boolean)
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.SetConnectionLogo(System.String,System.Boolean)
+  id: SetConnectionLogo(System.String,System.Boolean)
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: SetConnectionLogo(string, bool)
+  nameWithType: AuthenticationService.SetConnectionLogo(string, bool)
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.SetConnectionLogo(string, bool)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SetConnectionLogo
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 376
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  syntax:
+    content: public Task SetConnectionLogo(string _data, bool saveLocalStorage = true)
+    parameters:
+    - id: _data
+      type: System.String
+    - id: saveLocalStorage
+      type: System.Boolean
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function SetConnectionLogo(_data As String, saveLocalStorage As Boolean = True) As Task
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.SetConnectionLogo*
+  nameWithType.vb: AuthenticationService.SetConnectionLogo(String, Boolean)
+  fullName.vb: Siesa.SDK.Frontend.Services.AuthenticationService.SetConnectionLogo(String, Boolean)
+  name.vb: SetConnectionLogo(String, Boolean)
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.SetSelectedConnection(Siesa.SDK.Shared.DTOS.SDKDbConnection)
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.SetSelectedConnection(Siesa.SDK.Shared.DTOS.SDKDbConnection)
+  id: SetSelectedConnection(Siesa.SDK.Shared.DTOS.SDKDbConnection)
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: SetSelectedConnection(SDKDbConnection)
+  nameWithType: AuthenticationService.SetSelectedConnection(SDKDbConnection)
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.SetSelectedConnection(Siesa.SDK.Shared.DTOS.SDKDbConnection)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SetSelectedConnection
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 386
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public Task SetSelectedConnection(SDKDbConnection selectedConnection)
+    parameters:
+    - id: selectedConnection
+      type: Siesa.SDK.Shared.DTOS.SDKDbConnection
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function SetSelectedConnection(selectedConnection As SDKDbConnection) As Task
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.SetSelectedConnection*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.SetSelectedConnection(Siesa.SDK.Shared.DTOS.SDKDbConnection)
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.GetSelectedConnection
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.GetSelectedConnection
+  id: GetSelectedConnection
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: GetSelectedConnection()
+  nameWithType: AuthenticationService.GetSelectedConnection()
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.GetSelectedConnection()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetSelectedConnection
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 398
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public SDKDbConnection GetSelectedConnection()
+    return:
+      type: Siesa.SDK.Shared.DTOS.SDKDbConnection
+    content.vb: Public Function GetSelectedConnection() As SDKDbConnection
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.GetSelectedConnection*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.GetSelectedConnection
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.FetchConnectionLogo(System.Int16)
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.FetchConnectionLogo(System.Int16)
+  id: FetchConnectionLogo(System.Int16)
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: FetchConnectionLogo(short)
+  nameWithType: AuthenticationService.FetchConnectionLogo(short)
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.FetchConnectionLogo(short)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: FetchConnectionLogo
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 403
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  syntax:
+    content: public Task<string> FetchConnectionLogo(short rowidCompanyGroup = 0)
+    parameters:
+    - id: rowidCompanyGroup
+      type: System.Int16
+    return:
+      type: System.Threading.Tasks.Task{System.String}
+    content.vb: Public Function FetchConnectionLogo(rowidCompanyGroup As Short = 0) As Task(Of String)
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.FetchConnectionLogo*
+  nameWithType.vb: AuthenticationService.FetchConnectionLogo(Short)
+  fullName.vb: Siesa.SDK.Frontend.Services.AuthenticationService.FetchConnectionLogo(Short)
+  name.vb: FetchConnectionLogo(Short)
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.GetUserPhoto
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.GetUserPhoto
+  id: GetUserPhoto
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: GetUserPhoto()
+  nameWithType: AuthenticationService.GetUserPhoto()
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.GetUserPhoto()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetUserPhoto
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 434
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public string GetUserPhoto()
+    return:
+      type: System.String
+    content.vb: Public Function GetUserPhoto() As String
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.GetUserPhoto*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.GetUserPhoto
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.GetConnectionLogo
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.GetConnectionLogo
+  id: GetConnectionLogo
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: GetConnectionLogo()
+  nameWithType: AuthenticationService.GetConnectionLogo()
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.GetConnectionLogo()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetConnectionLogo
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 444
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public string GetConnectionLogo()
+    return:
+      type: System.String
+    content.vb: Public Function GetConnectionLogo() As String
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.GetConnectionLogo*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.GetConnectionLogo
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.GetConnectionStyle
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.GetConnectionStyle
+  id: GetConnectionStyle
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: GetConnectionStyle()
+  nameWithType: AuthenticationService.GetConnectionStyle()
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.GetConnectionStyle()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetConnectionStyle
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 454
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public string GetConnectionStyle()
+    return:
+      type: System.String
+    content.vb: Public Function GetConnectionStyle() As String
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.GetConnectionStyle*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.GetConnectionStyle
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.SetCustomRowidCulture(System.Int16)
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.SetCustomRowidCulture(System.Int16)
+  id: SetCustomRowidCulture(System.Int16)
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: SetCustomRowidCulture(short)
+  nameWithType: AuthenticationService.SetCustomRowidCulture(short)
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.SetCustomRowidCulture(short)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SetCustomRowidCulture
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 459
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public Task SetCustomRowidCulture(short rowid)
+    parameters:
+    - id: rowid
+      type: System.Int16
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function SetCustomRowidCulture(rowid As Short) As Task
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.SetCustomRowidCulture*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.SetCustomRowidCulture(System.Int16)
+  nameWithType.vb: AuthenticationService.SetCustomRowidCulture(Short)
+  fullName.vb: Siesa.SDK.Frontend.Services.AuthenticationService.SetCustomRowidCulture(Short)
+  name.vb: SetCustomRowidCulture(Short)
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.RemoveCustomRowidCulture
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.RemoveCustomRowidCulture
+  id: RemoveCustomRowidCulture
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: RemoveCustomRowidCulture()
+  nameWithType: AuthenticationService.RemoveCustomRowidCulture()
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.RemoveCustomRowidCulture()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: RemoveCustomRowidCulture
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 465
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public Task RemoveCustomRowidCulture()
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function RemoveCustomRowidCulture() As Task
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.RemoveCustomRowidCulture*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.RemoveCustomRowidCulture
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.SetRowidCompanyGroup(System.Int16)
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.SetRowidCompanyGroup(System.Int16)
+  id: SetRowidCompanyGroup(System.Int16)
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: SetRowidCompanyGroup(short)
+  nameWithType: AuthenticationService.SetRowidCompanyGroup(short)
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.SetRowidCompanyGroup(short)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SetRowidCompanyGroup
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 471
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public Task SetRowidCompanyGroup(short rowid)
+    parameters:
+    - id: rowid
+      type: System.Int16
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function SetRowidCompanyGroup(rowid As Short) As Task
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.SetRowidCompanyGroup*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.SetRowidCompanyGroup(System.Int16)
+  nameWithType.vb: AuthenticationService.SetRowidCompanyGroup(Short)
+  fullName.vb: Siesa.SDK.Frontend.Services.AuthenticationService.SetRowidCompanyGroup(Short)
+  name.vb: SetRowidCompanyGroup(Short)
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.GetRowidCompanyGroup
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.GetRowidCompanyGroup
+  id: GetRowidCompanyGroup
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: GetRowidCompanyGroup()
+  nameWithType: AuthenticationService.GetRowidCompanyGroup()
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.GetRowidCompanyGroup()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetRowidCompanyGroup
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 491
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public short GetRowidCompanyGroup()
+    return:
+      type: System.Int16
+    content.vb: Public Function GetRowidCompanyGroup() As Short
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.GetRowidCompanyGroup*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.GetRowidCompanyGroup
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.GetRoiwdCulture
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.GetRoiwdCulture
+  id: GetRoiwdCulture
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: GetRoiwdCulture()
+  nameWithType: AuthenticationService.GetRoiwdCulture()
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.GetRoiwdCulture()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetRoiwdCulture
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 503
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public short GetRoiwdCulture()
+    return:
+      type: System.Int16
+    content.vb: Public Function GetRoiwdCulture() As Short
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.GetRoiwdCulture*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.GetRoiwdCulture
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.IsValidToken
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.IsValidToken
+  id: IsValidToken
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: IsValidToken()
+  nameWithType: AuthenticationService.IsValidToken()
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.IsValidToken()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: IsValidToken
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 522
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public Task<bool> IsValidToken()
+    return:
+      type: System.Threading.Tasks.Task{System.Boolean}
+    content.vb: Public Function IsValidToken() As Task(Of Boolean)
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.IsValidToken*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.IsValidToken
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.ForgotPasswordAsync(System.String)
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.ForgotPasswordAsync(System.String)
+  id: ForgotPasswordAsync(System.String)
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: ForgotPasswordAsync(string)
+  nameWithType: AuthenticationService.ForgotPasswordAsync(string)
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.ForgotPasswordAsync(string)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ForgotPasswordAsync
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 539
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public Task<bool> ForgotPasswordAsync(string email)
+    parameters:
+    - id: email
+      type: System.String
+    return:
+      type: System.Threading.Tasks.Task{System.Boolean}
+    content.vb: Public Function ForgotPasswordAsync(email As String) As Task(Of Boolean)
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.ForgotPasswordAsync*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.ForgotPasswordAsync(System.String)
+  nameWithType.vb: AuthenticationService.ForgotPasswordAsync(String)
+  fullName.vb: Siesa.SDK.Frontend.Services.AuthenticationService.ForgotPasswordAsync(String)
+  name.vb: ForgotPasswordAsync(String)
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.ValidateUserToken(System.Int32)
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.ValidateUserToken(System.Int32)
+  id: ValidateUserToken(System.Int32)
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: ValidateUserToken(int)
+  nameWithType: AuthenticationService.ValidateUserToken(int)
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.ValidateUserToken(int)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ValidateUserToken
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 553
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public Task<bool> ValidateUserToken(int rowidUser)
+    parameters:
+    - id: rowidUser
+      type: System.Int32
+    return:
+      type: System.Threading.Tasks.Task{System.Boolean}
+    content.vb: Public Function ValidateUserToken(rowidUser As Integer) As Task(Of Boolean)
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.ValidateUserToken*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.ValidateUserToken(System.Int32)
+  nameWithType.vb: AuthenticationService.ValidateUserToken(Integer)
+  fullName.vb: Siesa.SDK.Frontend.Services.AuthenticationService.ValidateUserToken(Integer)
+  name.vb: ValidateUserToken(Integer)
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.ChangePassword(System.Int32,System.String,System.String)
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.ChangePassword(System.Int32,System.String,System.String)
+  id: ChangePassword(System.Int32,System.String,System.String)
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: ChangePassword(int, string, string)
+  nameWithType: AuthenticationService.ChangePassword(int, string, string)
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.ChangePassword(int, string, string)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ChangePassword
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 566
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public Task<bool> ChangePassword(int rowidUser, string NewPassword, string ConfirmPassword)
+    parameters:
+    - id: rowidUser
+      type: System.Int32
+    - id: NewPassword
+      type: System.String
+    - id: ConfirmPassword
+      type: System.String
+    return:
+      type: System.Threading.Tasks.Task{System.Boolean}
+    content.vb: Public Function ChangePassword(rowidUser As Integer, NewPassword As String, ConfirmPassword As String) As Task(Of Boolean)
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.ChangePassword*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.ChangePassword(System.Int32,System.String,System.String)
+  nameWithType.vb: AuthenticationService.ChangePassword(Integer, String, String)
+  fullName.vb: Siesa.SDK.Frontend.Services.AuthenticationService.ChangePassword(Integer, String, String)
+  name.vb: ChangePassword(Integer, String, String)
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.GetSelectedSuite
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.GetSelectedSuite
+  id: GetSelectedSuite
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: GetSelectedSuite()
+  nameWithType: AuthenticationService.GetSelectedSuite()
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.GetSelectedSuite()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetSelectedSuite
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 635
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public int GetSelectedSuite()
+    return:
+      type: System.Int32
+    content.vb: Public Function GetSelectedSuite() As Integer
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.GetSelectedSuite*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.GetSelectedSuite
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.SetSelectedSuite(System.Int32)
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.SetSelectedSuite(System.Int32)
+  id: SetSelectedSuite(System.Int32)
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: SetSelectedSuite(int)
+  nameWithType: AuthenticationService.SetSelectedSuite(int)
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.SetSelectedSuite(int)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SetSelectedSuite
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 640
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public void SetSelectedSuite(int rowid)
+    parameters:
+    - id: rowid
+      type: System.Int32
+    content.vb: Public Sub SetSelectedSuite(rowid As Integer)
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.SetSelectedSuite*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.SetSelectedSuite(System.Int32)
+  nameWithType.vb: AuthenticationService.SetSelectedSuite(Integer)
+  fullName.vb: Siesa.SDK.Frontend.Services.AuthenticationService.SetSelectedSuite(Integer)
+  name.vb: SetSelectedSuite(Integer)
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.Login(System.String,System.String,System.Int16,System.Boolean)
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.Login(System.String,System.String,System.Int16,System.Boolean)
+  id: Login(System.String,System.String,System.Int16,System.Boolean)
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: Login(string, string, short, bool)
+  nameWithType: AuthenticationService.Login(string, string, short, bool)
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.Login(string, string, short, bool)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Login
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 646
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  syntax:
+    content: public Task Login(string username, string password, short rowIdDBConnection, bool IsUpdateSession = false)
+    parameters:
+    - id: username
+      type: System.String
+    - id: password
+      type: System.String
+    - id: rowIdDBConnection
+      type: System.Int16
+    - id: IsUpdateSession
+      type: System.Boolean
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function Login(username As String, password As String, rowIdDBConnection As Short, IsUpdateSession As Boolean = False) As Task
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.Login*
+  nameWithType.vb: AuthenticationService.Login(String, String, Short, Boolean)
+  fullName.vb: Siesa.SDK.Frontend.Services.AuthenticationService.Login(String, String, Short, Boolean)
+  name.vb: Login(String, String, Short, Boolean)
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.SetPreferencesUser(Siesa.SDK.Shared.DTOS.UserPreferencesDTO)
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.SetPreferencesUser(Siesa.SDK.Shared.DTOS.UserPreferencesDTO)
+  id: SetPreferencesUser(Siesa.SDK.Shared.DTOS.UserPreferencesDTO)
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: SetPreferencesUser(UserPreferencesDTO)
+  nameWithType: AuthenticationService.SetPreferencesUser(UserPreferencesDTO)
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.SetPreferencesUser(Siesa.SDK.Shared.DTOS.UserPreferencesDTO)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SetPreferencesUser
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 650
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public Task SetPreferencesUser(UserPreferencesDTO _userPreferencesDTO)
+    parameters:
+    - id: _userPreferencesDTO
+      type: Siesa.SDK.Shared.DTOS.UserPreferencesDTO
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function SetPreferencesUser(_userPreferencesDTO As UserPreferencesDTO) As Task
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.SetPreferencesUser*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.SetPreferencesUser(Siesa.SDK.Shared.DTOS.UserPreferencesDTO)
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.SetPreferencesPortalUser(Siesa.SDK.Shared.DTOS.UserPreferencesDTO)
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.SetPreferencesPortalUser(Siesa.SDK.Shared.DTOS.UserPreferencesDTO)
+  id: SetPreferencesPortalUser(Siesa.SDK.Shared.DTOS.UserPreferencesDTO)
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: SetPreferencesPortalUser(UserPreferencesDTO)
+  nameWithType: AuthenticationService.SetPreferencesPortalUser(UserPreferencesDTO)
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.SetPreferencesPortalUser(Siesa.SDK.Shared.DTOS.UserPreferencesDTO)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SetPreferencesPortalUser
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 655
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  syntax:
+    content: public Task SetPreferencesPortalUser(UserPreferencesDTO _userPreferencesDTO)
+    parameters:
+    - id: _userPreferencesDTO
+      type: Siesa.SDK.Shared.DTOS.UserPreferencesDTO
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function SetPreferencesPortalUser(_userPreferencesDTO As UserPreferencesDTO) As Task
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.SetPreferencesPortalUser*
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.GetPreferencesUser
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.GetPreferencesUser
+  id: GetPreferencesUser
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: GetPreferencesUser()
+  nameWithType: AuthenticationService.GetPreferencesUser()
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.GetPreferencesUser()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetPreferencesUser
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 661
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public UserPreferencesDTO GetPreferencesUser()
+    return:
+      type: Siesa.SDK.Shared.DTOS.UserPreferencesDTO
+    content.vb: Public Function GetPreferencesUser() As UserPreferencesDTO
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.GetPreferencesUser*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.GetPreferencesUser
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.GetThemeStyle
+  commentId: M:Siesa.SDK.Frontend.Services.AuthenticationService.GetThemeStyle
+  id: GetThemeStyle
+  parent: Siesa.SDK.Frontend.Services.AuthenticationService
+  langs:
+  - csharp
+  - vb
+  name: GetThemeStyle()
+  nameWithType: AuthenticationService.GetThemeStyle()
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.GetThemeStyle()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Services/AuthenticationService.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetThemeStyle
+    path: ../Siesa.SDK.Frontend/Services/AuthenticationService.cs
+    startLine: 671
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Services
+  example: []
+  syntax:
+    content: public string GetThemeStyle()
+    return:
+      type: System.String
+    content.vb: Public Function GetThemeStyle() As String
+  overload: Siesa.SDK.Frontend.Services.AuthenticationService.GetThemeStyle*
+  implements:
+  - Siesa.SDK.Shared.Services.IAuthenticationService.GetThemeStyle
+references:
+- uid: Siesa.SDK.Frontend.Services
+  commentId: N:Siesa.SDK.Frontend.Services
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Services
+  nameWithType: Siesa.SDK.Frontend.Services
+  fullName: Siesa.SDK.Frontend.Services
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Services
+    name: Services
+    href: Siesa.SDK.Frontend.Services.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Services
+    name: Services
+    href: Siesa.SDK.Frontend.Services.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService
+  commentId: T:Siesa.SDK.Shared.Services.IAuthenticationService
+  parent: Siesa.SDK.Shared.Services
+  name: IAuthenticationService
+  nameWithType: IAuthenticationService
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Siesa.SDK.Shared.Services
+  commentId: N:Siesa.SDK.Shared.Services
+  name: Siesa.SDK.Shared.Services
+  nameWithType: Siesa.SDK.Shared.Services
+  fullName: Siesa.SDK.Shared.Services
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+  - name: .
+  - uid: Siesa.SDK.Shared
+    name: Shared
+  - name: .
+  - uid: Siesa.SDK.Shared.Services
+    name: Services
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+  - name: .
+  - uid: Siesa.SDK.Shared
+    name: Shared
+  - name: .
+  - uid: Siesa.SDK.Shared.Services
+    name: Services
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.RowidCultureChanged*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.RowidCultureChanged
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.RowidCultureChanged
+  name: RowidCultureChanged
+  nameWithType: AuthenticationService.RowidCultureChanged
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.RowidCultureChanged
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.RowidCultureChanged
+  commentId: P:Siesa.SDK.Shared.Services.IAuthenticationService.RowidCultureChanged
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  name: RowidCultureChanged
+  nameWithType: IAuthenticationService.RowidCultureChanged
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.RowidCultureChanged
+- uid: System.Int16
+  commentId: T:System.Int16
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int16
+  name: short
+  nameWithType: short
+  fullName: short
+  nameWithType.vb: Short
+  fullName.vb: Short
+  name.vb: Short
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.UserToken*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.UserToken
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.UserToken
+  name: UserToken
+  nameWithType: AuthenticationService.UserToken
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.UserToken
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.UserToken
+  commentId: P:Siesa.SDK.Shared.Services.IAuthenticationService.UserToken
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  name: UserToken
+  nameWithType: IAuthenticationService.UserToken
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.UserToken
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.PortalUserToken*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.PortalUserToken
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.PortalUserToken
+  name: PortalUserToken
+  nameWithType: AuthenticationService.PortalUserToken
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.PortalUserToken
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.PortalUserToken
+  commentId: P:Siesa.SDK.Shared.Services.IAuthenticationService.PortalUserToken
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  name: PortalUserToken
+  nameWithType: IAuthenticationService.PortalUserToken
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.PortalUserToken
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.UserPreferences*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.UserPreferences
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.UserPreferences
+  name: UserPreferences
+  nameWithType: AuthenticationService.UserPreferences
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.UserPreferences
+- uid: Siesa.SDK.Shared.DTOS.UserPreferencesDTO
+  commentId: T:Siesa.SDK.Shared.DTOS.UserPreferencesDTO
+  parent: Siesa.SDK.Shared.DTOS
+  name: UserPreferencesDTO
+  nameWithType: UserPreferencesDTO
+  fullName: Siesa.SDK.Shared.DTOS.UserPreferencesDTO
+- uid: Siesa.SDK.Shared.DTOS
+  commentId: N:Siesa.SDK.Shared.DTOS
+  name: Siesa.SDK.Shared.DTOS
+  nameWithType: Siesa.SDK.Shared.DTOS
+  fullName: Siesa.SDK.Shared.DTOS
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+  - name: .
+  - uid: Siesa.SDK.Shared
+    name: Shared
+  - name: .
+  - uid: Siesa.SDK.Shared.DTOS
+    name: DTOS
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+  - name: .
+  - uid: Siesa.SDK.Shared
+    name: Shared
+  - name: .
+  - uid: Siesa.SDK.Shared.DTOS
+    name: DTOS
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.PortalUserPreferences*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.PortalUserPreferences
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.PortalUserPreferences
+  name: PortalUserPreferences
+  nameWithType: AuthenticationService.PortalUserPreferences
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.PortalUserPreferences
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.User*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.User
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.User
+  name: User
+  nameWithType: AuthenticationService.User
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.User
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.User
+  commentId: P:Siesa.SDK.Shared.Services.IAuthenticationService.User
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  name: User
+  nameWithType: IAuthenticationService.User
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.User
+- uid: Siesa.SDK.Shared.Services.JwtUserData
+  commentId: T:Siesa.SDK.Shared.Services.JwtUserData
+  parent: Siesa.SDK.Shared.Services
+  name: JwtUserData
+  nameWithType: JwtUserData
+  fullName: Siesa.SDK.Shared.Services.JwtUserData
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.PortalUser*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.PortalUser
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.PortalUser
+  name: PortalUser
+  nameWithType: AuthenticationService.PortalUser
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.PortalUser
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.PortalUser
+  commentId: P:Siesa.SDK.Shared.Services.IAuthenticationService.PortalUser
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  name: PortalUser
+  nameWithType: IAuthenticationService.PortalUser
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.PortalUser
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.#ctor*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.#ctor
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.#ctor(Microsoft.AspNetCore.Components.NavigationManager,Blazored.LocalStorage.ILocalStorageService,Siesa.SDK.Shared.Services.IBackendRouterService,Microsoft.AspNetCore.Http.IHttpContextAccessor,Microsoft.JSInterop.IJSRuntime,Siesa.SDK.Shared.Criptography.ISDKJWT)
+  name: AuthenticationService
+  nameWithType: AuthenticationService.AuthenticationService
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.AuthenticationService
+  nameWithType.vb: AuthenticationService.New
+  fullName.vb: Siesa.SDK.Frontend.Services.AuthenticationService.New
+  name.vb: New
+- uid: Microsoft.AspNetCore.Components.NavigationManager
+  commentId: T:Microsoft.AspNetCore.Components.NavigationManager
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.navigationmanager
+  name: NavigationManager
+  nameWithType: NavigationManager
+  fullName: Microsoft.AspNetCore.Components.NavigationManager
+- uid: Blazored.LocalStorage.ILocalStorageService
+  commentId: T:Blazored.LocalStorage.ILocalStorageService
+  parent: Blazored.LocalStorage
+  isExternal: true
+  name: ILocalStorageService
+  nameWithType: ILocalStorageService
+  fullName: Blazored.LocalStorage.ILocalStorageService
+- uid: Siesa.SDK.Shared.Services.IBackendRouterService
+  commentId: T:Siesa.SDK.Shared.Services.IBackendRouterService
+  parent: Siesa.SDK.Shared.Services
+  name: IBackendRouterService
+  nameWithType: IBackendRouterService
+  fullName: Siesa.SDK.Shared.Services.IBackendRouterService
+- uid: Microsoft.AspNetCore.Http.IHttpContextAccessor
+  commentId: T:Microsoft.AspNetCore.Http.IHttpContextAccessor
+  parent: Microsoft.AspNetCore.Http
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.ihttpcontextaccessor
+  name: IHttpContextAccessor
+  nameWithType: IHttpContextAccessor
+  fullName: Microsoft.AspNetCore.Http.IHttpContextAccessor
+- uid: Microsoft.JSInterop.IJSRuntime
+  commentId: T:Microsoft.JSInterop.IJSRuntime
+  parent: Microsoft.JSInterop
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.jsinterop.ijsruntime
+  name: IJSRuntime
+  nameWithType: IJSRuntime
+  fullName: Microsoft.JSInterop.IJSRuntime
+- uid: Siesa.SDK.Shared.Criptography.ISDKJWT
+  commentId: T:Siesa.SDK.Shared.Criptography.ISDKJWT
+  parent: Siesa.SDK.Shared.Criptography
+  name: ISDKJWT
+  nameWithType: ISDKJWT
+  fullName: Siesa.SDK.Shared.Criptography.ISDKJWT
+- uid: Microsoft.AspNetCore.Components
+  commentId: N:Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.AspNetCore.Components
+  nameWithType: Microsoft.AspNetCore.Components
+  fullName: Microsoft.AspNetCore.Components
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Components
+    name: Components
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Components
+    name: Components
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components
+- uid: Blazored.LocalStorage
+  commentId: N:Blazored.LocalStorage
+  isExternal: true
+  name: Blazored.LocalStorage
+  nameWithType: Blazored.LocalStorage
+  fullName: Blazored.LocalStorage
+  spec.csharp:
+  - uid: Blazored
+    name: Blazored
+    isExternal: true
+  - name: .
+  - uid: Blazored.LocalStorage
+    name: LocalStorage
+    isExternal: true
+  spec.vb:
+  - uid: Blazored
+    name: Blazored
+    isExternal: true
+  - name: .
+  - uid: Blazored.LocalStorage
+    name: LocalStorage
+    isExternal: true
+- uid: Microsoft.AspNetCore.Http
+  commentId: N:Microsoft.AspNetCore.Http
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.AspNetCore.Http
+  nameWithType: Microsoft.AspNetCore.Http
+  fullName: Microsoft.AspNetCore.Http
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Http
+    name: Http
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Http
+    name: Http
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http
+- uid: Microsoft.JSInterop
+  commentId: N:Microsoft.JSInterop
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.JSInterop
+  nameWithType: Microsoft.JSInterop
+  fullName: Microsoft.JSInterop
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.JSInterop
+    name: JSInterop
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.jsinterop
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.JSInterop
+    name: JSInterop
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.jsinterop
+- uid: Siesa.SDK.Shared.Criptography
+  commentId: N:Siesa.SDK.Shared.Criptography
+  name: Siesa.SDK.Shared.Criptography
+  nameWithType: Siesa.SDK.Shared.Criptography
+  fullName: Siesa.SDK.Shared.Criptography
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+  - name: .
+  - uid: Siesa.SDK.Shared
+    name: Shared
+  - name: .
+  - uid: Siesa.SDK.Shared.Criptography
+    name: Criptography
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+  - name: .
+  - uid: Siesa.SDK.Shared
+    name: Shared
+  - name: .
+  - uid: Siesa.SDK.Shared.Criptography
+    name: Criptography
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.Initialize*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.Initialize
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.Initialize
+  name: Initialize
+  nameWithType: AuthenticationService.Initialize
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.Initialize
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.Initialize
+  commentId: M:Siesa.SDK.Shared.Services.IAuthenticationService.Initialize
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  name: Initialize()
+  nameWithType: IAuthenticationService.Initialize()
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.Initialize()
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.Initialize
+    name: Initialize
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.Initialize
+    name: Initialize
+  - name: (
+  - name: )
+- uid: System.Threading.Tasks.Task
+  commentId: T:System.Threading.Tasks.Task
+  parent: System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  name: Task
+  nameWithType: Task
+  fullName: System.Threading.Tasks.Task
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.LoginSessionByToken*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.LoginSessionByToken
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.LoginSessionByToken(System.String,System.Int16)
+  name: LoginSessionByToken
+  nameWithType: AuthenticationService.LoginSessionByToken
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.LoginSessionByToken
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.LoginSessionByToken(System.String,System.Int16)
+  commentId: M:Siesa.SDK.Shared.Services.IAuthenticationService.LoginSessionByToken(System.String,System.Int16)
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: LoginSessionByToken(string, short)
+  nameWithType: IAuthenticationService.LoginSessionByToken(string, short)
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.LoginSessionByToken(string, short)
+  nameWithType.vb: IAuthenticationService.LoginSessionByToken(String, Short)
+  fullName.vb: Siesa.SDK.Shared.Services.IAuthenticationService.LoginSessionByToken(String, Short)
+  name.vb: LoginSessionByToken(String, Short)
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.LoginSessionByToken(System.String,System.Int16)
+    name: LoginSessionByToken
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Int16
+    name: short
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int16
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.LoginSessionByToken(System.String,System.Int16)
+    name: LoginSessionByToken
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Int16
+    name: Short
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int16
+  - name: )
+- uid: System.Threading.Tasks.Task{System.String}
+  commentId: T:System.Threading.Tasks.Task{System.String}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<string>
+  nameWithType: Task<string>
+  fullName: System.Threading.Tasks.Task<string>
+  nameWithType.vb: Task(Of String)
+  fullName.vb: System.Threading.Tasks.Task(Of String)
+  name.vb: Task(Of String)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: System.Threading.Tasks.Task`1
+  commentId: T:System.Threading.Tasks.Task`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<TResult>
+  nameWithType: Task<TResult>
+  fullName: System.Threading.Tasks.Task<TResult>
+  nameWithType.vb: Task(Of TResult)
+  fullName.vb: System.Threading.Tasks.Task(Of TResult)
+  name.vb: Task(Of TResult)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - name: TResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TResult
+  - name: )
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.Login*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.Login
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.Login(System.String,System.String,System.Int16,System.Boolean,System.Int16)
+  name: Login
+  nameWithType: AuthenticationService.Login
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.Login
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.Login(System.String,System.String,System.Int16,System.Boolean,System.Int16)
+  commentId: M:Siesa.SDK.Shared.Services.IAuthenticationService.Login(System.String,System.String,System.Int16,System.Boolean,System.Int16)
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: Login(string, string, short, bool, short)
+  nameWithType: IAuthenticationService.Login(string, string, short, bool, short)
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.Login(string, string, short, bool, short)
+  nameWithType.vb: IAuthenticationService.Login(String, String, Short, Boolean, Short)
+  fullName.vb: Siesa.SDK.Shared.Services.IAuthenticationService.Login(String, String, Short, Boolean, Short)
+  name.vb: Login(String, String, Short, Boolean, Short)
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.Login(System.String,System.String,System.Int16,System.Boolean,System.Int16)
+    name: Login
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Int16
+    name: short
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int16
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: ','
+  - name: " "
+  - uid: System.Int16
+    name: short
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int16
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.Login(System.String,System.String,System.Int16,System.Boolean,System.Int16)
+    name: Login
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Int16
+    name: Short
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int16
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: ','
+  - name: " "
+  - uid: System.Int16
+    name: Short
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int16
+  - name: )
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.LoginPortal*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.LoginPortal
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.LoginPortal(System.String,System.String,System.Int16,System.Boolean,System.Int16)
+  name: LoginPortal
+  nameWithType: AuthenticationService.LoginPortal
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.LoginPortal
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.LoginPortal(System.String,System.String,System.Int16,System.Boolean,System.Int16)
+  commentId: M:Siesa.SDK.Shared.Services.IAuthenticationService.LoginPortal(System.String,System.String,System.Int16,System.Boolean,System.Int16)
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: LoginPortal(string, string, short, bool, short)
+  nameWithType: IAuthenticationService.LoginPortal(string, string, short, bool, short)
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.LoginPortal(string, string, short, bool, short)
+  nameWithType.vb: IAuthenticationService.LoginPortal(String, String, Short, Boolean, Short)
+  fullName.vb: Siesa.SDK.Shared.Services.IAuthenticationService.LoginPortal(String, String, Short, Boolean, Short)
+  name.vb: LoginPortal(String, String, Short, Boolean, Short)
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.LoginPortal(System.String,System.String,System.Int16,System.Boolean,System.Int16)
+    name: LoginPortal
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Int16
+    name: short
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int16
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: ','
+  - name: " "
+  - uid: System.Int16
+    name: short
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int16
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.LoginPortal(System.String,System.String,System.Int16,System.Boolean,System.Int16)
+    name: LoginPortal
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Int16
+    name: Short
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int16
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: ','
+  - name: " "
+  - uid: System.Int16
+    name: Short
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int16
+  - name: )
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.RenewToken*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.RenewToken
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.RenewToken
+  name: RenewToken
+  nameWithType: AuthenticationService.RenewToken
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.RenewToken
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.RenewToken
+  commentId: M:Siesa.SDK.Shared.Services.IAuthenticationService.RenewToken
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  name: RenewToken()
+  nameWithType: IAuthenticationService.RenewToken()
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.RenewToken()
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.RenewToken
+    name: RenewToken
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.RenewToken
+    name: RenewToken
+  - name: (
+  - name: )
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.Logout*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.Logout
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.Logout
+  name: Logout
+  nameWithType: AuthenticationService.Logout
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.Logout
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.Logout
+  commentId: M:Siesa.SDK.Shared.Services.IAuthenticationService.Logout
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  name: Logout()
+  nameWithType: IAuthenticationService.Logout()
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.Logout()
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.Logout
+    name: Logout
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.Logout
+    name: Logout
+  - name: (
+  - name: )
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.LogoutPortal*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.LogoutPortal
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.LogoutPortal
+  name: LogoutPortal
+  nameWithType: AuthenticationService.LogoutPortal
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.LogoutPortal
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.LogoutPortal
+  commentId: M:Siesa.SDK.Shared.Services.IAuthenticationService.LogoutPortal
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  name: LogoutPortal()
+  nameWithType: IAuthenticationService.LogoutPortal()
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.LogoutPortal()
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.LogoutPortal
+    name: LogoutPortal
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.LogoutPortal
+    name: LogoutPortal
+  - name: (
+  - name: )
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.SetToken*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.SetToken
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.SetToken(System.String,System.Boolean)
+  name: SetToken
+  nameWithType: AuthenticationService.SetToken
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.SetToken
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.SetToken(System.String,System.Boolean)
+  commentId: M:Siesa.SDK.Shared.Services.IAuthenticationService.SetToken(System.String,System.Boolean)
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: SetToken(string, bool)
+  nameWithType: IAuthenticationService.SetToken(string, bool)
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.SetToken(string, bool)
+  nameWithType.vb: IAuthenticationService.SetToken(String, Boolean)
+  fullName.vb: Siesa.SDK.Shared.Services.IAuthenticationService.SetToken(String, Boolean)
+  name.vb: SetToken(String, Boolean)
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.SetToken(System.String,System.Boolean)
+    name: SetToken
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.SetToken(System.String,System.Boolean)
+    name: SetToken
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.SetTokenPortal*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.SetTokenPortal
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.SetTokenPortal(System.String,System.Boolean)
+  name: SetTokenPortal
+  nameWithType: AuthenticationService.SetTokenPortal
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.SetTokenPortal
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.SetTokenPortal(System.String,System.Boolean)
+  commentId: M:Siesa.SDK.Shared.Services.IAuthenticationService.SetTokenPortal(System.String,System.Boolean)
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: SetTokenPortal(string, bool)
+  nameWithType: IAuthenticationService.SetTokenPortal(string, bool)
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.SetTokenPortal(string, bool)
+  nameWithType.vb: IAuthenticationService.SetTokenPortal(String, Boolean)
+  fullName.vb: Siesa.SDK.Shared.Services.IAuthenticationService.SetTokenPortal(String, Boolean)
+  name.vb: SetTokenPortal(String, Boolean)
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.SetTokenPortal(System.String,System.Boolean)
+    name: SetTokenPortal
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.SetTokenPortal(System.String,System.Boolean)
+    name: SetTokenPortal
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.SetUserPhoto*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.SetUserPhoto
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.SetUserPhoto(System.String,System.Boolean)
+  name: SetUserPhoto
+  nameWithType: AuthenticationService.SetUserPhoto
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.SetUserPhoto
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.SetUserPhoto(System.String,System.Boolean)
+  commentId: M:Siesa.SDK.Shared.Services.IAuthenticationService.SetUserPhoto(System.String,System.Boolean)
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: SetUserPhoto(string, bool)
+  nameWithType: IAuthenticationService.SetUserPhoto(string, bool)
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.SetUserPhoto(string, bool)
+  nameWithType.vb: IAuthenticationService.SetUserPhoto(String, Boolean)
+  fullName.vb: Siesa.SDK.Shared.Services.IAuthenticationService.SetUserPhoto(String, Boolean)
+  name.vb: SetUserPhoto(String, Boolean)
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.SetUserPhoto(System.String,System.Boolean)
+    name: SetUserPhoto
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.SetUserPhoto(System.String,System.Boolean)
+    name: SetUserPhoto
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.SetPortalUserPhoto*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.SetPortalUserPhoto
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.SetPortalUserPhoto(System.String,System.Boolean)
+  name: SetPortalUserPhoto
+  nameWithType: AuthenticationService.SetPortalUserPhoto
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.SetPortalUserPhoto
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.SetConnectionLogo*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.SetConnectionLogo
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.SetConnectionLogo(System.String,System.Boolean)
+  name: SetConnectionLogo
+  nameWithType: AuthenticationService.SetConnectionLogo
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.SetConnectionLogo
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.SetSelectedConnection*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.SetSelectedConnection
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.SetSelectedConnection(Siesa.SDK.Shared.DTOS.SDKDbConnection)
+  name: SetSelectedConnection
+  nameWithType: AuthenticationService.SetSelectedConnection
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.SetSelectedConnection
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.SetSelectedConnection(Siesa.SDK.Shared.DTOS.SDKDbConnection)
+  commentId: M:Siesa.SDK.Shared.Services.IAuthenticationService.SetSelectedConnection(Siesa.SDK.Shared.DTOS.SDKDbConnection)
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  name: SetSelectedConnection(SDKDbConnection)
+  nameWithType: IAuthenticationService.SetSelectedConnection(SDKDbConnection)
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.SetSelectedConnection(Siesa.SDK.Shared.DTOS.SDKDbConnection)
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.SetSelectedConnection(Siesa.SDK.Shared.DTOS.SDKDbConnection)
+    name: SetSelectedConnection
+  - name: (
+  - uid: Siesa.SDK.Shared.DTOS.SDKDbConnection
+    name: SDKDbConnection
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.SetSelectedConnection(Siesa.SDK.Shared.DTOS.SDKDbConnection)
+    name: SetSelectedConnection
+  - name: (
+  - uid: Siesa.SDK.Shared.DTOS.SDKDbConnection
+    name: SDKDbConnection
+  - name: )
+- uid: Siesa.SDK.Shared.DTOS.SDKDbConnection
+  commentId: T:Siesa.SDK.Shared.DTOS.SDKDbConnection
+  parent: Siesa.SDK.Shared.DTOS
+  name: SDKDbConnection
+  nameWithType: SDKDbConnection
+  fullName: Siesa.SDK.Shared.DTOS.SDKDbConnection
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.GetSelectedConnection*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.GetSelectedConnection
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.GetSelectedConnection
+  name: GetSelectedConnection
+  nameWithType: AuthenticationService.GetSelectedConnection
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.GetSelectedConnection
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.GetSelectedConnection
+  commentId: M:Siesa.SDK.Shared.Services.IAuthenticationService.GetSelectedConnection
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  name: GetSelectedConnection()
+  nameWithType: IAuthenticationService.GetSelectedConnection()
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.GetSelectedConnection()
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.GetSelectedConnection
+    name: GetSelectedConnection
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.GetSelectedConnection
+    name: GetSelectedConnection
+  - name: (
+  - name: )
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.FetchConnectionLogo*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.FetchConnectionLogo
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.FetchConnectionLogo(System.Int16)
+  name: FetchConnectionLogo
+  nameWithType: AuthenticationService.FetchConnectionLogo
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.FetchConnectionLogo
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.GetUserPhoto*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.GetUserPhoto
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.GetUserPhoto
+  name: GetUserPhoto
+  nameWithType: AuthenticationService.GetUserPhoto
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.GetUserPhoto
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.GetUserPhoto
+  commentId: M:Siesa.SDK.Shared.Services.IAuthenticationService.GetUserPhoto
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  name: GetUserPhoto()
+  nameWithType: IAuthenticationService.GetUserPhoto()
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.GetUserPhoto()
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.GetUserPhoto
+    name: GetUserPhoto
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.GetUserPhoto
+    name: GetUserPhoto
+  - name: (
+  - name: )
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.GetConnectionLogo*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.GetConnectionLogo
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.GetConnectionLogo
+  name: GetConnectionLogo
+  nameWithType: AuthenticationService.GetConnectionLogo
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.GetConnectionLogo
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.GetConnectionLogo
+  commentId: M:Siesa.SDK.Shared.Services.IAuthenticationService.GetConnectionLogo
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  name: GetConnectionLogo()
+  nameWithType: IAuthenticationService.GetConnectionLogo()
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.GetConnectionLogo()
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.GetConnectionLogo
+    name: GetConnectionLogo
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.GetConnectionLogo
+    name: GetConnectionLogo
+  - name: (
+  - name: )
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.GetConnectionStyle*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.GetConnectionStyle
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.GetConnectionStyle
+  name: GetConnectionStyle
+  nameWithType: AuthenticationService.GetConnectionStyle
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.GetConnectionStyle
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.GetConnectionStyle
+  commentId: M:Siesa.SDK.Shared.Services.IAuthenticationService.GetConnectionStyle
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  name: GetConnectionStyle()
+  nameWithType: IAuthenticationService.GetConnectionStyle()
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.GetConnectionStyle()
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.GetConnectionStyle
+    name: GetConnectionStyle
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.GetConnectionStyle
+    name: GetConnectionStyle
+  - name: (
+  - name: )
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.SetCustomRowidCulture*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.SetCustomRowidCulture
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.SetCustomRowidCulture(System.Int16)
+  name: SetCustomRowidCulture
+  nameWithType: AuthenticationService.SetCustomRowidCulture
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.SetCustomRowidCulture
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.SetCustomRowidCulture(System.Int16)
+  commentId: M:Siesa.SDK.Shared.Services.IAuthenticationService.SetCustomRowidCulture(System.Int16)
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int16
+  name: SetCustomRowidCulture(short)
+  nameWithType: IAuthenticationService.SetCustomRowidCulture(short)
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.SetCustomRowidCulture(short)
+  nameWithType.vb: IAuthenticationService.SetCustomRowidCulture(Short)
+  fullName.vb: Siesa.SDK.Shared.Services.IAuthenticationService.SetCustomRowidCulture(Short)
+  name.vb: SetCustomRowidCulture(Short)
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.SetCustomRowidCulture(System.Int16)
+    name: SetCustomRowidCulture
+  - name: (
+  - uid: System.Int16
+    name: short
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int16
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.SetCustomRowidCulture(System.Int16)
+    name: SetCustomRowidCulture
+  - name: (
+  - uid: System.Int16
+    name: Short
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int16
+  - name: )
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.RemoveCustomRowidCulture*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.RemoveCustomRowidCulture
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.RemoveCustomRowidCulture
+  name: RemoveCustomRowidCulture
+  nameWithType: AuthenticationService.RemoveCustomRowidCulture
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.RemoveCustomRowidCulture
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.RemoveCustomRowidCulture
+  commentId: M:Siesa.SDK.Shared.Services.IAuthenticationService.RemoveCustomRowidCulture
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  name: RemoveCustomRowidCulture()
+  nameWithType: IAuthenticationService.RemoveCustomRowidCulture()
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.RemoveCustomRowidCulture()
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.RemoveCustomRowidCulture
+    name: RemoveCustomRowidCulture
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.RemoveCustomRowidCulture
+    name: RemoveCustomRowidCulture
+  - name: (
+  - name: )
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.SetRowidCompanyGroup*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.SetRowidCompanyGroup
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.SetRowidCompanyGroup(System.Int16)
+  name: SetRowidCompanyGroup
+  nameWithType: AuthenticationService.SetRowidCompanyGroup
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.SetRowidCompanyGroup
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.SetRowidCompanyGroup(System.Int16)
+  commentId: M:Siesa.SDK.Shared.Services.IAuthenticationService.SetRowidCompanyGroup(System.Int16)
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int16
+  name: SetRowidCompanyGroup(short)
+  nameWithType: IAuthenticationService.SetRowidCompanyGroup(short)
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.SetRowidCompanyGroup(short)
+  nameWithType.vb: IAuthenticationService.SetRowidCompanyGroup(Short)
+  fullName.vb: Siesa.SDK.Shared.Services.IAuthenticationService.SetRowidCompanyGroup(Short)
+  name.vb: SetRowidCompanyGroup(Short)
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.SetRowidCompanyGroup(System.Int16)
+    name: SetRowidCompanyGroup
+  - name: (
+  - uid: System.Int16
+    name: short
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int16
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.SetRowidCompanyGroup(System.Int16)
+    name: SetRowidCompanyGroup
+  - name: (
+  - uid: System.Int16
+    name: Short
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int16
+  - name: )
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.GetRowidCompanyGroup*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.GetRowidCompanyGroup
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.GetRowidCompanyGroup
+  name: GetRowidCompanyGroup
+  nameWithType: AuthenticationService.GetRowidCompanyGroup
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.GetRowidCompanyGroup
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.GetRowidCompanyGroup
+  commentId: M:Siesa.SDK.Shared.Services.IAuthenticationService.GetRowidCompanyGroup
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  name: GetRowidCompanyGroup()
+  nameWithType: IAuthenticationService.GetRowidCompanyGroup()
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.GetRowidCompanyGroup()
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.GetRowidCompanyGroup
+    name: GetRowidCompanyGroup
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.GetRowidCompanyGroup
+    name: GetRowidCompanyGroup
+  - name: (
+  - name: )
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.GetRoiwdCulture*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.GetRoiwdCulture
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.GetRoiwdCulture
+  name: GetRoiwdCulture
+  nameWithType: AuthenticationService.GetRoiwdCulture
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.GetRoiwdCulture
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.GetRoiwdCulture
+  commentId: M:Siesa.SDK.Shared.Services.IAuthenticationService.GetRoiwdCulture
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  name: GetRoiwdCulture()
+  nameWithType: IAuthenticationService.GetRoiwdCulture()
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.GetRoiwdCulture()
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.GetRoiwdCulture
+    name: GetRoiwdCulture
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.GetRoiwdCulture
+    name: GetRoiwdCulture
+  - name: (
+  - name: )
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.IsValidToken*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.IsValidToken
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.IsValidToken
+  name: IsValidToken
+  nameWithType: AuthenticationService.IsValidToken
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.IsValidToken
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.IsValidToken
+  commentId: M:Siesa.SDK.Shared.Services.IAuthenticationService.IsValidToken
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  name: IsValidToken()
+  nameWithType: IAuthenticationService.IsValidToken()
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.IsValidToken()
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.IsValidToken
+    name: IsValidToken
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.IsValidToken
+    name: IsValidToken
+  - name: (
+  - name: )
+- uid: System.Threading.Tasks.Task{System.Boolean}
+  commentId: T:System.Threading.Tasks.Task{System.Boolean}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<bool>
+  nameWithType: Task<bool>
+  fullName: System.Threading.Tasks.Task<bool>
+  nameWithType.vb: Task(Of Boolean)
+  fullName.vb: System.Threading.Tasks.Task(Of Boolean)
+  name.vb: Task(Of Boolean)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.ForgotPasswordAsync*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.ForgotPasswordAsync
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.ForgotPasswordAsync(System.String)
+  name: ForgotPasswordAsync
+  nameWithType: AuthenticationService.ForgotPasswordAsync
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.ForgotPasswordAsync
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.ForgotPasswordAsync(System.String)
+  commentId: M:Siesa.SDK.Shared.Services.IAuthenticationService.ForgotPasswordAsync(System.String)
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: ForgotPasswordAsync(string)
+  nameWithType: IAuthenticationService.ForgotPasswordAsync(string)
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.ForgotPasswordAsync(string)
+  nameWithType.vb: IAuthenticationService.ForgotPasswordAsync(String)
+  fullName.vb: Siesa.SDK.Shared.Services.IAuthenticationService.ForgotPasswordAsync(String)
+  name.vb: ForgotPasswordAsync(String)
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.ForgotPasswordAsync(System.String)
+    name: ForgotPasswordAsync
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.ForgotPasswordAsync(System.String)
+    name: ForgotPasswordAsync
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.ValidateUserToken*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.ValidateUserToken
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.ValidateUserToken(System.Int32)
+  name: ValidateUserToken
+  nameWithType: AuthenticationService.ValidateUserToken
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.ValidateUserToken
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.ValidateUserToken(System.Int32)
+  commentId: M:Siesa.SDK.Shared.Services.IAuthenticationService.ValidateUserToken(System.Int32)
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: ValidateUserToken(int)
+  nameWithType: IAuthenticationService.ValidateUserToken(int)
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.ValidateUserToken(int)
+  nameWithType.vb: IAuthenticationService.ValidateUserToken(Integer)
+  fullName.vb: Siesa.SDK.Shared.Services.IAuthenticationService.ValidateUserToken(Integer)
+  name.vb: ValidateUserToken(Integer)
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.ValidateUserToken(System.Int32)
+    name: ValidateUserToken
+  - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.ValidateUserToken(System.Int32)
+    name: ValidateUserToken
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.ChangePassword*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.ChangePassword
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.ChangePassword(System.Int32,System.String,System.String)
+  name: ChangePassword
+  nameWithType: AuthenticationService.ChangePassword
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.ChangePassword
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.ChangePassword(System.Int32,System.String,System.String)
+  commentId: M:Siesa.SDK.Shared.Services.IAuthenticationService.ChangePassword(System.Int32,System.String,System.String)
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: ChangePassword(int, string, string)
+  nameWithType: IAuthenticationService.ChangePassword(int, string, string)
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.ChangePassword(int, string, string)
+  nameWithType.vb: IAuthenticationService.ChangePassword(Integer, String, String)
+  fullName.vb: Siesa.SDK.Shared.Services.IAuthenticationService.ChangePassword(Integer, String, String)
+  name.vb: ChangePassword(Integer, String, String)
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.ChangePassword(System.Int32,System.String,System.String)
+    name: ChangePassword
+  - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.ChangePassword(System.Int32,System.String,System.String)
+    name: ChangePassword
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.GetSelectedSuite*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.GetSelectedSuite
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.GetSelectedSuite
+  name: GetSelectedSuite
+  nameWithType: AuthenticationService.GetSelectedSuite
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.GetSelectedSuite
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.GetSelectedSuite
+  commentId: M:Siesa.SDK.Shared.Services.IAuthenticationService.GetSelectedSuite
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  name: GetSelectedSuite()
+  nameWithType: IAuthenticationService.GetSelectedSuite()
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.GetSelectedSuite()
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.GetSelectedSuite
+    name: GetSelectedSuite
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.GetSelectedSuite
+    name: GetSelectedSuite
+  - name: (
+  - name: )
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.SetSelectedSuite*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.SetSelectedSuite
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.SetSelectedSuite(System.Int32)
+  name: SetSelectedSuite
+  nameWithType: AuthenticationService.SetSelectedSuite
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.SetSelectedSuite
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.SetSelectedSuite(System.Int32)
+  commentId: M:Siesa.SDK.Shared.Services.IAuthenticationService.SetSelectedSuite(System.Int32)
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: SetSelectedSuite(int)
+  nameWithType: IAuthenticationService.SetSelectedSuite(int)
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.SetSelectedSuite(int)
+  nameWithType.vb: IAuthenticationService.SetSelectedSuite(Integer)
+  fullName.vb: Siesa.SDK.Shared.Services.IAuthenticationService.SetSelectedSuite(Integer)
+  name.vb: SetSelectedSuite(Integer)
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.SetSelectedSuite(System.Int32)
+    name: SetSelectedSuite
+  - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.SetSelectedSuite(System.Int32)
+    name: SetSelectedSuite
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.SetPreferencesUser*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.SetPreferencesUser
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.SetPreferencesUser(Siesa.SDK.Shared.DTOS.UserPreferencesDTO)
+  name: SetPreferencesUser
+  nameWithType: AuthenticationService.SetPreferencesUser
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.SetPreferencesUser
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.SetPreferencesUser(Siesa.SDK.Shared.DTOS.UserPreferencesDTO)
+  commentId: M:Siesa.SDK.Shared.Services.IAuthenticationService.SetPreferencesUser(Siesa.SDK.Shared.DTOS.UserPreferencesDTO)
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  name: SetPreferencesUser(UserPreferencesDTO)
+  nameWithType: IAuthenticationService.SetPreferencesUser(UserPreferencesDTO)
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.SetPreferencesUser(Siesa.SDK.Shared.DTOS.UserPreferencesDTO)
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.SetPreferencesUser(Siesa.SDK.Shared.DTOS.UserPreferencesDTO)
+    name: SetPreferencesUser
+  - name: (
+  - uid: Siesa.SDK.Shared.DTOS.UserPreferencesDTO
+    name: UserPreferencesDTO
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.SetPreferencesUser(Siesa.SDK.Shared.DTOS.UserPreferencesDTO)
+    name: SetPreferencesUser
+  - name: (
+  - uid: Siesa.SDK.Shared.DTOS.UserPreferencesDTO
+    name: UserPreferencesDTO
+  - name: )
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.SetPreferencesPortalUser*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.SetPreferencesPortalUser
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.SetPreferencesPortalUser(Siesa.SDK.Shared.DTOS.UserPreferencesDTO)
+  name: SetPreferencesPortalUser
+  nameWithType: AuthenticationService.SetPreferencesPortalUser
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.SetPreferencesPortalUser
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.GetPreferencesUser*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.GetPreferencesUser
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.GetPreferencesUser
+  name: GetPreferencesUser
+  nameWithType: AuthenticationService.GetPreferencesUser
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.GetPreferencesUser
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.GetPreferencesUser
+  commentId: M:Siesa.SDK.Shared.Services.IAuthenticationService.GetPreferencesUser
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  name: GetPreferencesUser()
+  nameWithType: IAuthenticationService.GetPreferencesUser()
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.GetPreferencesUser()
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.GetPreferencesUser
+    name: GetPreferencesUser
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.GetPreferencesUser
+    name: GetPreferencesUser
+  - name: (
+  - name: )
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService.GetThemeStyle*
+  commentId: Overload:Siesa.SDK.Frontend.Services.AuthenticationService.GetThemeStyle
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html#Siesa.SDK.Frontend.Services.AuthenticationService.GetThemeStyle
+  name: GetThemeStyle
+  nameWithType: AuthenticationService.GetThemeStyle
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService.GetThemeStyle
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService.GetThemeStyle
+  commentId: M:Siesa.SDK.Shared.Services.IAuthenticationService.GetThemeStyle
+  parent: Siesa.SDK.Shared.Services.IAuthenticationService
+  name: GetThemeStyle()
+  nameWithType: IAuthenticationService.GetThemeStyle()
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService.GetThemeStyle()
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.GetThemeStyle
+    name: GetThemeStyle
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Services.IAuthenticationService.GetThemeStyle
+    name: GetThemeStyle
+  - name: (
+  - name: )

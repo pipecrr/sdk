@@ -1,0 +1,23 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Report.Implementation
+  commentId: N:Siesa.SDK.Report.Implementation
+  id: Siesa.SDK.Report.Implementation
+  children:
+  - Siesa.SDK.Report.Implementation.SDKSystemTemplates
+  langs:
+  - csharp
+  - vb
+  name: Siesa.SDK.Report.Implementation
+  nameWithType: Siesa.SDK.Report.Implementation
+  fullName: Siesa.SDK.Report.Implementation
+  type: Namespace
+  assemblies:
+  - Siesa.SDK.Frontend
+references:
+- uid: Siesa.SDK.Report.Implementation.SDKSystemTemplates
+  commentId: T:Siesa.SDK.Report.Implementation.SDKSystemTemplates
+  href: Siesa.SDK.Report.Implementation.SDKSystemTemplates.html
+  name: SDKSystemTemplates
+  nameWithType: SDKSystemTemplates
+  fullName: Siesa.SDK.Report.Implementation.SDKSystemTemplates

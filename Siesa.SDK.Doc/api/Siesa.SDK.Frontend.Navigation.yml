@@ -1,0 +1,30 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Navigation
+  commentId: N:Siesa.SDK.Frontend.Navigation
+  id: Siesa.SDK.Frontend.Navigation
+  children:
+  - Siesa.SDK.Frontend.Navigation.AppRouteView
+  - Siesa.SDK.Frontend.Navigation.NavigationManagerExtensions
+  langs:
+  - csharp
+  - vb
+  name: Siesa.SDK.Frontend.Navigation
+  nameWithType: Siesa.SDK.Frontend.Navigation
+  fullName: Siesa.SDK.Frontend.Navigation
+  type: Namespace
+  assemblies:
+  - Siesa.SDK.Frontend
+references:
+- uid: Siesa.SDK.Frontend.Navigation.AppRouteView
+  commentId: T:Siesa.SDK.Frontend.Navigation.AppRouteView
+  href: Siesa.SDK.Frontend.Navigation.AppRouteView.html
+  name: AppRouteView
+  nameWithType: AppRouteView
+  fullName: Siesa.SDK.Frontend.Navigation.AppRouteView
+- uid: Siesa.SDK.Frontend.Navigation.NavigationManagerExtensions
+  commentId: T:Siesa.SDK.Frontend.Navigation.NavigationManagerExtensions
+  href: Siesa.SDK.Frontend.Navigation.NavigationManagerExtensions.html
+  name: NavigationManagerExtensions
+  nameWithType: NavigationManagerExtensions
+  fullName: Siesa.SDK.Frontend.Navigation.NavigationManagerExtensions

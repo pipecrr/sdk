@@ -1,0 +1,499 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Components.Fields
+  commentId: N:Siesa.SDK.Frontend.Components.Fields
+  id: Siesa.SDK.Frontend.Components.Fields
+  children:
+  - Siesa.SDK.Frontend.Components.Fields.SDKBadge
+  - Siesa.SDK.Frontend.Components.Fields.SDKBooleanField
+  - Siesa.SDK.Frontend.Components.Fields.SDKBooleanNullableField
+  - Siesa.SDK.Frontend.Components.Fields.SDKCharField
+  - Siesa.SDK.Frontend.Components.Fields.SDKColorPicker
+  - Siesa.SDK.Frontend.Components.Fields.SDKDateField
+  - Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1
+  - Siesa.SDK.Frontend.Components.Fields.SDKDecimalField`1
+  - Siesa.SDK.Frontend.Components.Fields.SDKEmailField
+  - Siesa.SDK.Frontend.Components.Fields.SDKEntityField
+  - Siesa.SDK.Frontend.Components.Fields.SDKEnumWrapper`1
+  - Siesa.SDK.Frontend.Components.Fields.SDKFileField
+  - Siesa.SDK.Frontend.Components.Fields.SDKFormLayout
+  - Siesa.SDK.Frontend.Components.Fields.SDKFormLayoutItem
+  - Siesa.SDK.Frontend.Components.Fields.SDKFormLayoutTabPage
+  - Siesa.SDK.Frontend.Components.Fields.SDKFormLayoutTabPages
+  - Siesa.SDK.Frontend.Components.Fields.SDKGridColumn`1
+  - Siesa.SDK.Frontend.Components.Fields.SDKGrid`1
+  - Siesa.SDK.Frontend.Components.Fields.SDKInputFile
+  - Siesa.SDK.Frontend.Components.Fields.SDKIntegerField`1
+  - Siesa.SDK.Frontend.Components.Fields.SDKKanban`1
+  - Siesa.SDK.Frontend.Components.Fields.SDKLabel
+  - Siesa.SDK.Frontend.Components.Fields.SDKNumericMask
+  - Siesa.SDK.Frontend.Components.Fields.SDKPasswordField
+  - Siesa.SDK.Frontend.Components.Fields.SDKRadioButton`1
+  - Siesa.SDK.Frontend.Components.Fields.SDKRecorder
+  - Siesa.SDK.Frontend.Components.Fields.SDKSelectBarItem
+  - Siesa.SDK.Frontend.Components.Fields.SDKSelectBar`1
+  - Siesa.SDK.Frontend.Components.Fields.SDKSelectField`1
+  - Siesa.SDK.Frontend.Components.Fields.SDKSteps
+  - Siesa.SDK.Frontend.Components.Fields.SDKStepsItem
+  - Siesa.SDK.Frontend.Components.Fields.SDKSwitch
+  - Siesa.SDK.Frontend.Components.Fields.SDKTextField
+  - Siesa.SDK.Frontend.Components.Fields.SDKUpload
+  - Siesa.SDK.Frontend.Components.Fields.SDKUploadAttatchment
+  langs:
+  - csharp
+  - vb
+  name: Siesa.SDK.Frontend.Components.Fields
+  nameWithType: Siesa.SDK.Frontend.Components.Fields
+  fullName: Siesa.SDK.Frontend.Components.Fields
+  type: Namespace
+  assemblies:
+  - Siesa.SDK.Frontend
+references:
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKEntityField
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKEntityField
+  href: Siesa.SDK.Frontend.Components.Fields.SDKEntityField.html
+  name: SDKEntityField
+  nameWithType: SDKEntityField
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKEntityField
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKEnumWrapper`1
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKEnumWrapper`1
+  href: Siesa.SDK.Frontend.Components.Fields.SDKEnumWrapper-1.html
+  name: SDKEnumWrapper<T>
+  nameWithType: SDKEnumWrapper<T>
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKEnumWrapper<T>
+  nameWithType.vb: SDKEnumWrapper(Of T)
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKEnumWrapper(Of T)
+  name.vb: SDKEnumWrapper(Of T)
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.Fields.SDKEnumWrapper`1
+    name: SDKEnumWrapper
+    href: Siesa.SDK.Frontend.Components.Fields.SDKEnumWrapper-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.Fields.SDKEnumWrapper`1
+    name: SDKEnumWrapper
+    href: Siesa.SDK.Frontend.Components.Fields.SDKEnumWrapper-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKNumericMask
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKNumericMask
+  href: Siesa.SDK.Frontend.Components.Fields.SDKNumericMask.html
+  name: SDKNumericMask
+  nameWithType: SDKNumericMask
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKNumericMask
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKRadioButton`1
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKRadioButton`1
+  href: Siesa.SDK.Frontend.Components.Fields.SDKRadioButton-1.html
+  name: SDKRadioButton<ItemType>
+  nameWithType: SDKRadioButton<ItemType>
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKRadioButton<ItemType>
+  nameWithType.vb: SDKRadioButton(Of ItemType)
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKRadioButton(Of ItemType)
+  name.vb: SDKRadioButton(Of ItemType)
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.Fields.SDKRadioButton`1
+    name: SDKRadioButton
+    href: Siesa.SDK.Frontend.Components.Fields.SDKRadioButton-1.html
+  - name: <
+  - name: ItemType
+  - name: '>'
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.Fields.SDKRadioButton`1
+    name: SDKRadioButton
+    href: Siesa.SDK.Frontend.Components.Fields.SDKRadioButton-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: ItemType
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKSelectBar`1
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKSelectBar`1
+  href: Siesa.SDK.Frontend.Components.Fields.SDKSelectBar-1.html
+  name: SDKSelectBar<ItemType>
+  nameWithType: SDKSelectBar<ItemType>
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKSelectBar<ItemType>
+  nameWithType.vb: SDKSelectBar(Of ItemType)
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKSelectBar(Of ItemType)
+  name.vb: SDKSelectBar(Of ItemType)
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.Fields.SDKSelectBar`1
+    name: SDKSelectBar
+    href: Siesa.SDK.Frontend.Components.Fields.SDKSelectBar-1.html
+  - name: <
+  - name: ItemType
+  - name: '>'
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.Fields.SDKSelectBar`1
+    name: SDKSelectBar
+    href: Siesa.SDK.Frontend.Components.Fields.SDKSelectBar-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: ItemType
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKSelectField`1
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKSelectField`1
+  href: Siesa.SDK.Frontend.Components.Fields.SDKSelectField-1.html
+  name: SDKSelectField<ItemType>
+  nameWithType: SDKSelectField<ItemType>
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKSelectField<ItemType>
+  nameWithType.vb: SDKSelectField(Of ItemType)
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKSelectField(Of ItemType)
+  name.vb: SDKSelectField(Of ItemType)
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.Fields.SDKSelectField`1
+    name: SDKSelectField
+    href: Siesa.SDK.Frontend.Components.Fields.SDKSelectField-1.html
+  - name: <
+  - name: ItemType
+  - name: '>'
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.Fields.SDKSelectField`1
+    name: SDKSelectField
+    href: Siesa.SDK.Frontend.Components.Fields.SDKSelectField-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: ItemType
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKFormLayout
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKFormLayout
+  href: Siesa.SDK.Frontend.Components.Fields.SDKFormLayout.html
+  name: SDKFormLayout
+  nameWithType: SDKFormLayout
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKFormLayout
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKRecorder
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKRecorder
+  href: Siesa.SDK.Frontend.Components.Fields.SDKRecorder.html
+  name: SDKRecorder
+  nameWithType: SDKRecorder
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKRecorder
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateField
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKDateField
+  href: Siesa.SDK.Frontend.Components.Fields.SDKDateField.html
+  name: SDKDateField
+  nameWithType: SDKDateField
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateField
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKGrid`1
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKGrid`1
+  href: Siesa.SDK.Frontend.Components.Fields.SDKGrid-1.html
+  name: SDKGrid<TItem>
+  nameWithType: SDKGrid<TItem>
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKGrid<TItem>
+  nameWithType.vb: SDKGrid(Of TItem)
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKGrid(Of TItem)
+  name.vb: SDKGrid(Of TItem)
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.Fields.SDKGrid`1
+    name: SDKGrid
+    href: Siesa.SDK.Frontend.Components.Fields.SDKGrid-1.html
+  - name: <
+  - name: TItem
+  - name: '>'
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.Fields.SDKGrid`1
+    name: SDKGrid
+    href: Siesa.SDK.Frontend.Components.Fields.SDKGrid-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TItem
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKKanban`1
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKKanban`1
+  href: Siesa.SDK.Frontend.Components.Fields.SDKKanban-1.html
+  name: SDKKanban<ItemType>
+  nameWithType: SDKKanban<ItemType>
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKKanban<ItemType>
+  nameWithType.vb: SDKKanban(Of ItemType)
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKKanban(Of ItemType)
+  name.vb: SDKKanban(Of ItemType)
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.Fields.SDKKanban`1
+    name: SDKKanban
+    href: Siesa.SDK.Frontend.Components.Fields.SDKKanban-1.html
+  - name: <
+  - name: ItemType
+  - name: '>'
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.Fields.SDKKanban`1
+    name: SDKKanban
+    href: Siesa.SDK.Frontend.Components.Fields.SDKKanban-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: ItemType
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKInputFile
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKInputFile
+  parent: Siesa.SDK.Frontend.Components.Fields
+  href: Siesa.SDK.Frontend.Components.Fields.SDKInputFile.html
+  name: SDKInputFile
+  nameWithType: SDKInputFile
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKInputFile
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKColorPicker
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKColorPicker
+  href: Siesa.SDK.Frontend.Components.Fields.SDKColorPicker.html
+  name: SDKColorPicker
+  nameWithType: SDKColorPicker
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKColorPicker
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKCharField
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKCharField
+  href: Siesa.SDK.Frontend.Components.Fields.SDKCharField.html
+  name: SDKCharField
+  nameWithType: SDKCharField
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKCharField
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKUploadAttatchment
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKUploadAttatchment
+  href: Siesa.SDK.Frontend.Components.Fields.SDKUploadAttatchment.html
+  name: SDKUploadAttatchment
+  nameWithType: SDKUploadAttatchment
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKUploadAttatchment
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKBadge
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKBadge
+  href: Siesa.SDK.Frontend.Components.Fields.SDKBadge.html
+  name: SDKBadge
+  nameWithType: SDKBadge
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKBadge
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKFormLayoutTabPages
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKFormLayoutTabPages
+  parent: Siesa.SDK.Frontend.Components.Fields
+  href: Siesa.SDK.Frontend.Components.Fields.SDKFormLayoutTabPages.html
+  name: SDKFormLayoutTabPages
+  nameWithType: SDKFormLayoutTabPages
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKFormLayoutTabPages
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKStepsItem
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKStepsItem
+  href: Siesa.SDK.Frontend.Components.Fields.SDKStepsItem.html
+  name: SDKStepsItem
+  nameWithType: SDKStepsItem
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKStepsItem
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKSelectBarItem
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKSelectBarItem
+  href: Siesa.SDK.Frontend.Components.Fields.SDKSelectBarItem.html
+  name: SDKSelectBarItem
+  nameWithType: SDKSelectBarItem
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKSelectBarItem
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKEmailField
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKEmailField
+  href: Siesa.SDK.Frontend.Components.Fields.SDKEmailField.html
+  name: SDKEmailField
+  nameWithType: SDKEmailField
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKEmailField
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKSwitch
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKSwitch
+  href: Siesa.SDK.Frontend.Components.Fields.SDKSwitch.html
+  name: SDKSwitch
+  nameWithType: SDKSwitch
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKSwitch
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKBooleanNullableField
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKBooleanNullableField
+  href: Siesa.SDK.Frontend.Components.Fields.SDKBooleanNullableField.html
+  name: SDKBooleanNullableField
+  nameWithType: SDKBooleanNullableField
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKBooleanNullableField
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKPasswordField
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKPasswordField
+  href: Siesa.SDK.Frontend.Components.Fields.SDKPasswordField.html
+  name: SDKPasswordField
+  nameWithType: SDKPasswordField
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKPasswordField
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1
+  href: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField-1.html
+  name: SDKDateTimeField<ItemType>
+  nameWithType: SDKDateTimeField<ItemType>
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField<ItemType>
+  nameWithType.vb: SDKDateTimeField(Of ItemType)
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField(Of ItemType)
+  name.vb: SDKDateTimeField(Of ItemType)
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1
+    name: SDKDateTimeField
+    href: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField-1.html
+  - name: <
+  - name: ItemType
+  - name: '>'
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField`1
+    name: SDKDateTimeField
+    href: Siesa.SDK.Frontend.Components.Fields.SDKDateTimeField-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: ItemType
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKTextField
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKTextField
+  href: Siesa.SDK.Frontend.Components.Fields.SDKTextField.html
+  name: SDKTextField
+  nameWithType: SDKTextField
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKTextField
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKFormLayoutItem
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKFormLayoutItem
+  href: Siesa.SDK.Frontend.Components.Fields.SDKFormLayoutItem.html
+  name: SDKFormLayoutItem
+  nameWithType: SDKFormLayoutItem
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKFormLayoutItem
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKFormLayoutTabPage
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKFormLayoutTabPage
+  href: Siesa.SDK.Frontend.Components.Fields.SDKFormLayoutTabPage.html
+  name: SDKFormLayoutTabPage
+  nameWithType: SDKFormLayoutTabPage
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKFormLayoutTabPage
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKBooleanField
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKBooleanField
+  href: Siesa.SDK.Frontend.Components.Fields.SDKBooleanField.html
+  name: SDKBooleanField
+  nameWithType: SDKBooleanField
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKBooleanField
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKFileField
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKFileField
+  href: Siesa.SDK.Frontend.Components.Fields.SDKFileField.html
+  name: SDKFileField
+  nameWithType: SDKFileField
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKFileField
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKGridColumn`1
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKGridColumn`1
+  href: Siesa.SDK.Frontend.Components.Fields.SDKGridColumn-1.html
+  name: SDKGridColumn<TItem>
+  nameWithType: SDKGridColumn<TItem>
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKGridColumn<TItem>
+  nameWithType.vb: SDKGridColumn(Of TItem)
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKGridColumn(Of TItem)
+  name.vb: SDKGridColumn(Of TItem)
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.Fields.SDKGridColumn`1
+    name: SDKGridColumn
+    href: Siesa.SDK.Frontend.Components.Fields.SDKGridColumn-1.html
+  - name: <
+  - name: TItem
+  - name: '>'
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.Fields.SDKGridColumn`1
+    name: SDKGridColumn
+    href: Siesa.SDK.Frontend.Components.Fields.SDKGridColumn-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TItem
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKUpload
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKUpload
+  href: Siesa.SDK.Frontend.Components.Fields.SDKUpload.html
+  name: SDKUpload
+  nameWithType: SDKUpload
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKUpload
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKIntegerField`1
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKIntegerField`1
+  href: Siesa.SDK.Frontend.Components.Fields.SDKIntegerField-1.html
+  name: SDKIntegerField<TInt>
+  nameWithType: SDKIntegerField<TInt>
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKIntegerField<TInt>
+  nameWithType.vb: SDKIntegerField(Of TInt)
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKIntegerField(Of TInt)
+  name.vb: SDKIntegerField(Of TInt)
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.Fields.SDKIntegerField`1
+    name: SDKIntegerField
+    href: Siesa.SDK.Frontend.Components.Fields.SDKIntegerField-1.html
+  - name: <
+  - name: TInt
+  - name: '>'
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.Fields.SDKIntegerField`1
+    name: SDKIntegerField
+    href: Siesa.SDK.Frontend.Components.Fields.SDKIntegerField-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TInt
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKLabel
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKLabel
+  href: Siesa.SDK.Frontend.Components.Fields.SDKLabel.html
+  name: SDKLabel
+  nameWithType: SDKLabel
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKLabel
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKDecimalField`1
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKDecimalField`1
+  href: Siesa.SDK.Frontend.Components.Fields.SDKDecimalField-1.html
+  name: SDKDecimalField<TItem>
+  nameWithType: SDKDecimalField<TItem>
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKDecimalField<TItem>
+  nameWithType.vb: SDKDecimalField(Of TItem)
+  fullName.vb: Siesa.SDK.Frontend.Components.Fields.SDKDecimalField(Of TItem)
+  name.vb: SDKDecimalField(Of TItem)
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.Fields.SDKDecimalField`1
+    name: SDKDecimalField
+    href: Siesa.SDK.Frontend.Components.Fields.SDKDecimalField-1.html
+  - name: <
+  - name: TItem
+  - name: '>'
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.Fields.SDKDecimalField`1
+    name: SDKDecimalField
+    href: Siesa.SDK.Frontend.Components.Fields.SDKDecimalField-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TItem
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.Fields.SDKSteps
+  commentId: T:Siesa.SDK.Frontend.Components.Fields.SDKSteps
+  href: Siesa.SDK.Frontend.Components.Fields.SDKSteps.html
+  name: SDKSteps
+  nameWithType: SDKSteps
+  fullName: Siesa.SDK.Frontend.Components.Fields.SDKSteps
+- uid: Siesa.SDK.Frontend.Components.Fields
+  commentId: N:Siesa.SDK.Frontend.Components.Fields
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Components.Fields
+  nameWithType: Siesa.SDK.Frontend.Components.Fields
+  fullName: Siesa.SDK.Frontend.Components.Fields
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.Fields
+    name: Fields
+    href: Siesa.SDK.Frontend.Components.Fields.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.Fields
+    name: Fields
+    href: Siesa.SDK.Frontend.Components.Fields.html

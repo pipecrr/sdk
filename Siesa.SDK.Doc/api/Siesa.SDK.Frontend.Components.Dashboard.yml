@@ -1,0 +1,105 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Components.Dashboard
+  commentId: N:Siesa.SDK.Frontend.Components.Dashboard
+  id: Siesa.SDK.Frontend.Components.Dashboard
+  children:
+  - Siesa.SDK.Frontend.Components.Dashboard.InternalSDKDashlet
+  - Siesa.SDK.Frontend.Components.Dashboard.PreviewDashlets
+  - Siesa.SDK.Frontend.Components.Dashboard.SDKDashboard
+  - Siesa.SDK.Frontend.Components.Dashboard.SDKDashboardPortal
+  - Siesa.SDK.Frontend.Components.Dashboard.SDKDashletModel
+  - Siesa.SDK.Frontend.Components.Dashboard.SDKDashletWidth
+  langs:
+  - csharp
+  - vb
+  name: Siesa.SDK.Frontend.Components.Dashboard
+  nameWithType: Siesa.SDK.Frontend.Components.Dashboard
+  fullName: Siesa.SDK.Frontend.Components.Dashboard
+  type: Namespace
+  assemblies:
+  - Siesa.SDK.Frontend
+references:
+- uid: Siesa.SDK.Frontend.Components.Dashboard.SDKDashletWidth
+  commentId: T:Siesa.SDK.Frontend.Components.Dashboard.SDKDashletWidth
+  parent: Siesa.SDK.Frontend.Components.Dashboard
+  href: Siesa.SDK.Frontend.Components.Dashboard.SDKDashletWidth.html
+  name: SDKDashletWidth
+  nameWithType: SDKDashletWidth
+  fullName: Siesa.SDK.Frontend.Components.Dashboard.SDKDashletWidth
+- uid: Siesa.SDK.Frontend.Components.Dashboard.SDKDashletModel
+  commentId: T:Siesa.SDK.Frontend.Components.Dashboard.SDKDashletModel
+  href: Siesa.SDK.Frontend.Components.Dashboard.SDKDashletModel.html
+  name: SDKDashletModel
+  nameWithType: SDKDashletModel
+  fullName: Siesa.SDK.Frontend.Components.Dashboard.SDKDashletModel
+- uid: Siesa.SDK.Frontend.Components.Dashboard.InternalSDKDashlet
+  commentId: T:Siesa.SDK.Frontend.Components.Dashboard.InternalSDKDashlet
+  href: Siesa.SDK.Frontend.Components.Dashboard.InternalSDKDashlet.html
+  name: InternalSDKDashlet
+  nameWithType: InternalSDKDashlet
+  fullName: Siesa.SDK.Frontend.Components.Dashboard.InternalSDKDashlet
+- uid: Siesa.SDK.Frontend.Components.Dashboard.SDKDashboard
+  commentId: T:Siesa.SDK.Frontend.Components.Dashboard.SDKDashboard
+  href: Siesa.SDK.Frontend.Components.Dashboard.SDKDashboard.html
+  name: SDKDashboard
+  nameWithType: SDKDashboard
+  fullName: Siesa.SDK.Frontend.Components.Dashboard.SDKDashboard
+- uid: Siesa.SDK.Frontend.Components.Dashboard.PreviewDashlets
+  commentId: T:Siesa.SDK.Frontend.Components.Dashboard.PreviewDashlets
+  href: Siesa.SDK.Frontend.Components.Dashboard.PreviewDashlets.html
+  name: PreviewDashlets
+  nameWithType: PreviewDashlets
+  fullName: Siesa.SDK.Frontend.Components.Dashboard.PreviewDashlets
+- uid: Siesa.SDK.Frontend.Components.Dashboard.SDKDashboardPortal
+  commentId: T:Siesa.SDK.Frontend.Components.Dashboard.SDKDashboardPortal
+  href: Siesa.SDK.Frontend.Components.Dashboard.SDKDashboardPortal.html
+  name: SDKDashboardPortal
+  nameWithType: SDKDashboardPortal
+  fullName: Siesa.SDK.Frontend.Components.Dashboard.SDKDashboardPortal
+- uid: Siesa.SDK.Frontend.Components.Dashboard
+  commentId: N:Siesa.SDK.Frontend.Components.Dashboard
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Components.Dashboard
+  nameWithType: Siesa.SDK.Frontend.Components.Dashboard
+  fullName: Siesa.SDK.Frontend.Components.Dashboard
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.Dashboard
+    name: Dashboard
+    href: Siesa.SDK.Frontend.Components.Dashboard.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.Dashboard
+    name: Dashboard
+    href: Siesa.SDK.Frontend.Components.Dashboard.html

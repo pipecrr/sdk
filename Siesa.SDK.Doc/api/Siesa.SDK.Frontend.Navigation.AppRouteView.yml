@@ -1,0 +1,710 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Navigation.AppRouteView
+  commentId: T:Siesa.SDK.Frontend.Navigation.AppRouteView
+  id: AppRouteView
+  parent: Siesa.SDK.Frontend.Navigation
+  children:
+  - Siesa.SDK.Frontend.Navigation.AppRouteView.AuthenticationService
+  - Siesa.SDK.Frontend.Navigation.AppRouteView.NavigationManager
+  - Siesa.SDK.Frontend.Navigation.AppRouteView.Render(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  langs:
+  - csharp
+  - vb
+  name: AppRouteView
+  nameWithType: AppRouteView
+  fullName: Siesa.SDK.Frontend.Navigation.AppRouteView
+  type: Class
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Navigation/AppRouteView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: AppRouteView
+    path: ../Siesa.SDK.Frontend/Navigation/AppRouteView.cs
+    startLine: 10
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Navigation
+  syntax:
+    content: 'public class AppRouteView : RouteView, IComponent'
+    content.vb: Public Class AppRouteView Inherits RouteView Implements IComponent
+  inheritance:
+  - System.Object
+  - Microsoft.AspNetCore.Components.RouteView
+  implements:
+  - Microsoft.AspNetCore.Components.IComponent
+  inheritedMembers:
+  - Microsoft.AspNetCore.Components.RouteView.Attach(Microsoft.AspNetCore.Components.RenderHandle)
+  - Microsoft.AspNetCore.Components.RouteView.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  - Microsoft.AspNetCore.Components.RouteView.RouteData
+  - Microsoft.AspNetCore.Components.RouteView.DefaultLayout
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: Siesa.SDK.Frontend.Navigation.AppRouteView.NavigationManager
+  commentId: P:Siesa.SDK.Frontend.Navigation.AppRouteView.NavigationManager
+  id: NavigationManager
+  parent: Siesa.SDK.Frontend.Navigation.AppRouteView
+  langs:
+  - csharp
+  - vb
+  name: NavigationManager
+  nameWithType: AppRouteView.NavigationManager
+  fullName: Siesa.SDK.Frontend.Navigation.AppRouteView.NavigationManager
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Navigation/AppRouteView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: NavigationManager
+    path: ../Siesa.SDK.Frontend/Navigation/AppRouteView.cs
+    startLine: 12
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Navigation
+  syntax:
+    content: >-
+      [Inject]
+
+      public NavigationManager NavigationManager { get; set; }
+    parameters: []
+    return:
+      type: Microsoft.AspNetCore.Components.NavigationManager
+    content.vb: >-
+      <Inject>
+
+      Public Property NavigationManager As NavigationManager
+  overload: Siesa.SDK.Frontend.Navigation.AppRouteView.NavigationManager*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.InjectAttribute
+    ctor: Microsoft.AspNetCore.Components.InjectAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Navigation.AppRouteView.AuthenticationService
+  commentId: P:Siesa.SDK.Frontend.Navigation.AppRouteView.AuthenticationService
+  id: AuthenticationService
+  parent: Siesa.SDK.Frontend.Navigation.AppRouteView
+  langs:
+  - csharp
+  - vb
+  name: AuthenticationService
+  nameWithType: AppRouteView.AuthenticationService
+  fullName: Siesa.SDK.Frontend.Navigation.AppRouteView.AuthenticationService
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Navigation/AppRouteView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: AuthenticationService
+    path: ../Siesa.SDK.Frontend/Navigation/AppRouteView.cs
+    startLine: 15
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Navigation
+  syntax:
+    content: >-
+      [Inject]
+
+      public IAuthenticationService AuthenticationService { get; set; }
+    parameters: []
+    return:
+      type: Siesa.SDK.Shared.Services.IAuthenticationService
+    content.vb: >-
+      <Inject>
+
+      Public Property AuthenticationService As IAuthenticationService
+  overload: Siesa.SDK.Frontend.Navigation.AppRouteView.AuthenticationService*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.InjectAttribute
+    ctor: Microsoft.AspNetCore.Components.InjectAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Navigation.AppRouteView.Render(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  commentId: M:Siesa.SDK.Frontend.Navigation.AppRouteView.Render(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  id: Render(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  parent: Siesa.SDK.Frontend.Navigation.AppRouteView
+  langs:
+  - csharp
+  - vb
+  name: Render(RenderTreeBuilder)
+  nameWithType: AppRouteView.Render(RenderTreeBuilder)
+  fullName: Siesa.SDK.Frontend.Navigation.AppRouteView.Render(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Navigation/AppRouteView.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Render
+    path: ../Siesa.SDK.Frontend/Navigation/AppRouteView.cs
+    startLine: 18
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Navigation
+  summary: Renders the component.
+  example: []
+  syntax:
+    content: protected override void Render(RenderTreeBuilder builder)
+    parameters:
+    - id: builder
+      type: Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder
+      description: The <xref href="Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder" data-throw-if-not-resolved="false"></xref>.
+    content.vb: Protected Overrides Sub Render(builder As RenderTreeBuilder)
+  overridden: Microsoft.AspNetCore.Components.RouteView.Render(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  overload: Siesa.SDK.Frontend.Navigation.AppRouteView.Render*
+references:
+- uid: Siesa.SDK.Frontend.Navigation
+  commentId: N:Siesa.SDK.Frontend.Navigation
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Navigation
+  nameWithType: Siesa.SDK.Frontend.Navigation
+  fullName: Siesa.SDK.Frontend.Navigation
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Navigation
+    name: Navigation
+    href: Siesa.SDK.Frontend.Navigation.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Navigation
+    name: Navigation
+    href: Siesa.SDK.Frontend.Navigation.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: Microsoft.AspNetCore.Components.RouteView
+  commentId: T:Microsoft.AspNetCore.Components.RouteView
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.routeview
+  name: RouteView
+  nameWithType: RouteView
+  fullName: Microsoft.AspNetCore.Components.RouteView
+- uid: Microsoft.AspNetCore.Components.IComponent
+  commentId: T:Microsoft.AspNetCore.Components.IComponent
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.icomponent
+  name: IComponent
+  nameWithType: IComponent
+  fullName: Microsoft.AspNetCore.Components.IComponent
+- uid: Microsoft.AspNetCore.Components.RouteView.Attach(Microsoft.AspNetCore.Components.RenderHandle)
+  commentId: M:Microsoft.AspNetCore.Components.RouteView.Attach(Microsoft.AspNetCore.Components.RenderHandle)
+  parent: Microsoft.AspNetCore.Components.RouteView
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.routeview.attach
+  name: Attach(RenderHandle)
+  nameWithType: RouteView.Attach(RenderHandle)
+  fullName: Microsoft.AspNetCore.Components.RouteView.Attach(Microsoft.AspNetCore.Components.RenderHandle)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.RouteView.Attach(Microsoft.AspNetCore.Components.RenderHandle)
+    name: Attach
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.routeview.attach
+  - name: (
+  - uid: Microsoft.AspNetCore.Components.RenderHandle
+    name: RenderHandle
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.renderhandle
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.RouteView.Attach(Microsoft.AspNetCore.Components.RenderHandle)
+    name: Attach
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.routeview.attach
+  - name: (
+  - uid: Microsoft.AspNetCore.Components.RenderHandle
+    name: RenderHandle
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.renderhandle
+  - name: )
+- uid: Microsoft.AspNetCore.Components.RouteView.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  commentId: M:Microsoft.AspNetCore.Components.RouteView.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  parent: Microsoft.AspNetCore.Components.RouteView
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.routeview.setparametersasync
+  name: SetParametersAsync(ParameterView)
+  nameWithType: RouteView.SetParametersAsync(ParameterView)
+  fullName: Microsoft.AspNetCore.Components.RouteView.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.RouteView.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+    name: SetParametersAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.routeview.setparametersasync
+  - name: (
+  - uid: Microsoft.AspNetCore.Components.ParameterView
+    name: ParameterView
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.parameterview
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.RouteView.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+    name: SetParametersAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.routeview.setparametersasync
+  - name: (
+  - uid: Microsoft.AspNetCore.Components.ParameterView
+    name: ParameterView
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.parameterview
+  - name: )
+- uid: Microsoft.AspNetCore.Components.RouteView.RouteData
+  commentId: P:Microsoft.AspNetCore.Components.RouteView.RouteData
+  parent: Microsoft.AspNetCore.Components.RouteView
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.routeview.routedata
+  name: RouteData
+  nameWithType: RouteView.RouteData
+  fullName: Microsoft.AspNetCore.Components.RouteView.RouteData
+- uid: Microsoft.AspNetCore.Components.RouteView.DefaultLayout
+  commentId: P:Microsoft.AspNetCore.Components.RouteView.DefaultLayout
+  parent: Microsoft.AspNetCore.Components.RouteView
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.routeview.defaultlayout
+  name: DefaultLayout
+  nameWithType: RouteView.DefaultLayout
+  fullName: Microsoft.AspNetCore.Components.RouteView.DefaultLayout
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Microsoft.AspNetCore.Components
+  commentId: N:Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.AspNetCore.Components
+  nameWithType: Microsoft.AspNetCore.Components
+  fullName: Microsoft.AspNetCore.Components
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Components
+    name: Components
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Components
+    name: Components
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components
+- uid: Siesa.SDK.Frontend.Navigation.AppRouteView.NavigationManager*
+  commentId: Overload:Siesa.SDK.Frontend.Navigation.AppRouteView.NavigationManager
+  href: Siesa.SDK.Frontend.Navigation.AppRouteView.html#Siesa.SDK.Frontend.Navigation.AppRouteView.NavigationManager
+  name: NavigationManager
+  nameWithType: AppRouteView.NavigationManager
+  fullName: Siesa.SDK.Frontend.Navigation.AppRouteView.NavigationManager
+- uid: Microsoft.AspNetCore.Components.NavigationManager
+  commentId: T:Microsoft.AspNetCore.Components.NavigationManager
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.navigationmanager
+  name: NavigationManager
+  nameWithType: NavigationManager
+  fullName: Microsoft.AspNetCore.Components.NavigationManager
+- uid: Siesa.SDK.Frontend.Navigation.AppRouteView.AuthenticationService*
+  commentId: Overload:Siesa.SDK.Frontend.Navigation.AppRouteView.AuthenticationService
+  href: Siesa.SDK.Frontend.Navigation.AppRouteView.html#Siesa.SDK.Frontend.Navigation.AppRouteView.AuthenticationService
+  name: AuthenticationService
+  nameWithType: AppRouteView.AuthenticationService
+  fullName: Siesa.SDK.Frontend.Navigation.AppRouteView.AuthenticationService
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService
+  commentId: T:Siesa.SDK.Shared.Services.IAuthenticationService
+  parent: Siesa.SDK.Shared.Services
+  name: IAuthenticationService
+  nameWithType: IAuthenticationService
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService
+- uid: Siesa.SDK.Shared.Services
+  commentId: N:Siesa.SDK.Shared.Services
+  name: Siesa.SDK.Shared.Services
+  nameWithType: Siesa.SDK.Shared.Services
+  fullName: Siesa.SDK.Shared.Services
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+  - name: .
+  - uid: Siesa.SDK.Shared
+    name: Shared
+  - name: .
+  - uid: Siesa.SDK.Shared.Services
+    name: Services
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+  - name: .
+  - uid: Siesa.SDK.Shared
+    name: Shared
+  - name: .
+  - uid: Siesa.SDK.Shared.Services
+    name: Services
+- uid: Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder
+  commentId: T:Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder
+  parent: Microsoft.AspNetCore.Components.Rendering
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.rendering.rendertreebuilder
+  name: RenderTreeBuilder
+  nameWithType: RenderTreeBuilder
+  fullName: Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder
+- uid: Microsoft.AspNetCore.Components.RouteView.Render(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  commentId: M:Microsoft.AspNetCore.Components.RouteView.Render(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  parent: Microsoft.AspNetCore.Components.RouteView
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.routeview.render
+  name: Render(RenderTreeBuilder)
+  nameWithType: RouteView.Render(RenderTreeBuilder)
+  fullName: Microsoft.AspNetCore.Components.RouteView.Render(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.RouteView.Render(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+    name: Render
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.routeview.render
+  - name: (
+  - uid: Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder
+    name: RenderTreeBuilder
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.rendering.rendertreebuilder
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.RouteView.Render(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+    name: Render
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.routeview.render
+  - name: (
+  - uid: Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder
+    name: RenderTreeBuilder
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.rendering.rendertreebuilder
+  - name: )
+- uid: Siesa.SDK.Frontend.Navigation.AppRouteView.Render*
+  commentId: Overload:Siesa.SDK.Frontend.Navigation.AppRouteView.Render
+  href: Siesa.SDK.Frontend.Navigation.AppRouteView.html#Siesa.SDK.Frontend.Navigation.AppRouteView.Render(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  name: Render
+  nameWithType: AppRouteView.Render
+  fullName: Siesa.SDK.Frontend.Navigation.AppRouteView.Render
+- uid: Microsoft.AspNetCore.Components.Rendering
+  commentId: N:Microsoft.AspNetCore.Components.Rendering
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.AspNetCore.Components.Rendering
+  nameWithType: Microsoft.AspNetCore.Components.Rendering
+  fullName: Microsoft.AspNetCore.Components.Rendering
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Components
+    name: Components
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components
+  - name: .
+  - uid: Microsoft.AspNetCore.Components.Rendering
+    name: Rendering
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.rendering
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Components
+    name: Components
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components
+  - name: .
+  - uid: Microsoft.AspNetCore.Components.Rendering
+    name: Rendering
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.rendering

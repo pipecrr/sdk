@@ -1,0 +1,128 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Services
+  commentId: N:Siesa.SDK.Frontend.Services
+  id: Siesa.SDK.Frontend.Services
+  children:
+  - Siesa.SDK.Frontend.Services.AuthenticationService
+  - Siesa.SDK.Frontend.Services.BackendRouterService
+  - Siesa.SDK.Frontend.Services.MenuService
+  - Siesa.SDK.Frontend.Services.NavigationService
+  - Siesa.SDK.Frontend.Services.SDKDialogOption
+  - Siesa.SDK.Frontend.Services.SDKDialogService
+  - Siesa.SDK.Frontend.Services.SDKGlobalLoaderService
+  - Siesa.SDK.Frontend.Services.SDKGuidedTourService
+  - Siesa.SDK.Frontend.Services.SDKNotificationMessage
+  - Siesa.SDK.Frontend.Services.SDKNotificationService
+  langs:
+  - csharp
+  - vb
+  name: Siesa.SDK.Frontend.Services
+  nameWithType: Siesa.SDK.Frontend.Services
+  fullName: Siesa.SDK.Frontend.Services
+  type: Namespace
+  assemblies:
+  - Siesa.SDK.Frontend
+references:
+- uid: Siesa.SDK.Frontend.Services.AuthenticationService
+  commentId: T:Siesa.SDK.Frontend.Services.AuthenticationService
+  href: Siesa.SDK.Frontend.Services.AuthenticationService.html
+  name: AuthenticationService
+  nameWithType: AuthenticationService
+  fullName: Siesa.SDK.Frontend.Services.AuthenticationService
+- uid: Siesa.SDK.Frontend.Services.BackendRouterService
+  commentId: T:Siesa.SDK.Frontend.Services.BackendRouterService
+  href: Siesa.SDK.Frontend.Services.BackendRouterService.html
+  name: BackendRouterService
+  nameWithType: BackendRouterService
+  fullName: Siesa.SDK.Frontend.Services.BackendRouterService
+- uid: Siesa.SDK.Frontend.Services.MenuService
+  commentId: T:Siesa.SDK.Frontend.Services.MenuService
+  href: Siesa.SDK.Frontend.Services.MenuService.html
+  name: MenuService
+  nameWithType: MenuService
+  fullName: Siesa.SDK.Frontend.Services.MenuService
+- uid: Siesa.SDK.Frontend.Services.NavigationService
+  commentId: T:Siesa.SDK.Frontend.Services.NavigationService
+  parent: Siesa.SDK.Frontend.Services
+  href: Siesa.SDK.Frontend.Services.NavigationService.html
+  name: NavigationService
+  nameWithType: NavigationService
+  fullName: Siesa.SDK.Frontend.Services.NavigationService
+- uid: Siesa.SDK.Frontend.Services.SDKDialogOption
+  commentId: T:Siesa.SDK.Frontend.Services.SDKDialogOption
+  href: Siesa.SDK.Frontend.Services.SDKDialogOption.html
+  name: SDKDialogOption
+  nameWithType: SDKDialogOption
+  fullName: Siesa.SDK.Frontend.Services.SDKDialogOption
+- uid: Siesa.SDK.Frontend.Services.SDKDialogService
+  commentId: T:Siesa.SDK.Frontend.Services.SDKDialogService
+  parent: Siesa.SDK.Frontend.Services
+  href: Siesa.SDK.Frontend.Services.SDKDialogService.html
+  name: SDKDialogService
+  nameWithType: SDKDialogService
+  fullName: Siesa.SDK.Frontend.Services.SDKDialogService
+- uid: Siesa.SDK.Frontend.Services.SDKGlobalLoaderService
+  commentId: T:Siesa.SDK.Frontend.Services.SDKGlobalLoaderService
+  parent: Siesa.SDK.Frontend.Services
+  href: Siesa.SDK.Frontend.Services.SDKGlobalLoaderService.html
+  name: SDKGlobalLoaderService
+  nameWithType: SDKGlobalLoaderService
+  fullName: Siesa.SDK.Frontend.Services.SDKGlobalLoaderService
+- uid: Siesa.SDK.Frontend.Services.SDKGuidedTourService
+  commentId: T:Siesa.SDK.Frontend.Services.SDKGuidedTourService
+  href: Siesa.SDK.Frontend.Services.SDKGuidedTourService.html
+  name: SDKGuidedTourService
+  nameWithType: SDKGuidedTourService
+  fullName: Siesa.SDK.Frontend.Services.SDKGuidedTourService
+- uid: Siesa.SDK.Frontend.Services.SDKNotificationMessage
+  commentId: T:Siesa.SDK.Frontend.Services.SDKNotificationMessage
+  href: Siesa.SDK.Frontend.Services.SDKNotificationMessage.html
+  name: SDKNotificationMessage
+  nameWithType: SDKNotificationMessage
+  fullName: Siesa.SDK.Frontend.Services.SDKNotificationMessage
+- uid: Siesa.SDK.Frontend.Services.SDKNotificationService
+  commentId: T:Siesa.SDK.Frontend.Services.SDKNotificationService
+  parent: Siesa.SDK.Frontend.Services
+  href: Siesa.SDK.Frontend.Services.SDKNotificationService.html
+  name: SDKNotificationService
+  nameWithType: SDKNotificationService
+  fullName: Siesa.SDK.Frontend.Services.SDKNotificationService
+- uid: Siesa.SDK.Frontend.Services
+  commentId: N:Siesa.SDK.Frontend.Services
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Services
+  nameWithType: Siesa.SDK.Frontend.Services
+  fullName: Siesa.SDK.Frontend.Services
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Services
+    name: Services
+    href: Siesa.SDK.Frontend.Services.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Services
+    name: Services
+    href: Siesa.SDK.Frontend.Services.html

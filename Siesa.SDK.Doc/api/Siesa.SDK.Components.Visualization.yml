@@ -1,0 +1,85 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Components.Visualization
+  commentId: N:Siesa.SDK.Components.Visualization
+  id: Siesa.SDK.Components.Visualization
+  children:
+  - Siesa.SDK.Components.Visualization.SDKButtonExtensions
+  - Siesa.SDK.Components.Visualization.SDKButtonRenderStyle
+  - Siesa.SDK.Components.Visualization.SDKButtonRenderStyleMode
+  - Siesa.SDK.Components.Visualization.SDKScaleRange
+  langs:
+  - csharp
+  - vb
+  name: Siesa.SDK.Components.Visualization
+  nameWithType: Siesa.SDK.Components.Visualization
+  fullName: Siesa.SDK.Components.Visualization
+  type: Namespace
+  assemblies:
+  - Siesa.SDK.Frontend
+references:
+- uid: Siesa.SDK.Components.Visualization.SDKButtonExtensions
+  commentId: T:Siesa.SDK.Components.Visualization.SDKButtonExtensions
+  parent: Siesa.SDK.Components.Visualization
+  href: Siesa.SDK.Components.Visualization.SDKButtonExtensions.html
+  name: SDKButtonExtensions
+  nameWithType: SDKButtonExtensions
+  fullName: Siesa.SDK.Components.Visualization.SDKButtonExtensions
+- uid: Siesa.SDK.Components.Visualization.SDKButtonRenderStyle
+  commentId: T:Siesa.SDK.Components.Visualization.SDKButtonRenderStyle
+  parent: Siesa.SDK.Components.Visualization
+  href: Siesa.SDK.Components.Visualization.SDKButtonRenderStyle.html
+  name: SDKButtonRenderStyle
+  nameWithType: SDKButtonRenderStyle
+  fullName: Siesa.SDK.Components.Visualization.SDKButtonRenderStyle
+- uid: Siesa.SDK.Components.Visualization.SDKButtonRenderStyleMode
+  commentId: T:Siesa.SDK.Components.Visualization.SDKButtonRenderStyleMode
+  parent: Siesa.SDK.Components.Visualization
+  href: Siesa.SDK.Components.Visualization.SDKButtonRenderStyleMode.html
+  name: SDKButtonRenderStyleMode
+  nameWithType: SDKButtonRenderStyleMode
+  fullName: Siesa.SDK.Components.Visualization.SDKButtonRenderStyleMode
+- uid: Siesa.SDK.Components.Visualization.SDKScaleRange
+  commentId: T:Siesa.SDK.Components.Visualization.SDKScaleRange
+  href: Siesa.SDK.Components.Visualization.SDKScaleRange.html
+  name: SDKScaleRange
+  nameWithType: SDKScaleRange
+  fullName: Siesa.SDK.Components.Visualization.SDKScaleRange
+- uid: Siesa.SDK.Components.Visualization
+  commentId: N:Siesa.SDK.Components.Visualization
+  href: Siesa.html
+  name: Siesa.SDK.Components.Visualization
+  nameWithType: Siesa.SDK.Components.Visualization
+  fullName: Siesa.SDK.Components.Visualization
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Components
+    name: Components
+    href: Siesa.SDK.Components.html
+  - name: .
+  - uid: Siesa.SDK.Components.Visualization
+    name: Visualization
+    href: Siesa.SDK.Components.Visualization.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Components
+    name: Components
+    href: Siesa.SDK.Components.html
+  - name: .
+  - uid: Siesa.SDK.Components.Visualization
+    name: Visualization
+    href: Siesa.SDK.Components.Visualization.html

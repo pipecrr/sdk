@@ -1,0 +1,837 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Panel
+  commentId: T:Siesa.SDK.Frontend.Components.FormManager.Model.Panel
+  id: Panel
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model
+  children:
+  - Siesa.SDK.Frontend.Components.FormManager.Model.Panel.ColSize
+  - Siesa.SDK.Frontend.Components.FormManager.Model.Panel.Fields
+  - Siesa.SDK.Frontend.Components.FormManager.Model.Panel.Name
+  - Siesa.SDK.Frontend.Components.FormManager.Model.Panel.PanelId
+  - Siesa.SDK.Frontend.Components.FormManager.Model.Panel.PreserveDOM
+  - Siesa.SDK.Frontend.Components.FormManager.Model.Panel.ResourceTag
+  - Siesa.SDK.Frontend.Components.FormManager.Model.Panel.RowidGroupDynamicEntity
+  - Siesa.SDK.Frontend.Components.FormManager.Model.Panel.SubViewdef
+  langs:
+  - csharp
+  - vb
+  name: Panel
+  nameWithType: Panel
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Panel
+  type: Class
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/Model/Panel.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Panel
+    path: ../Siesa.SDK.Frontend/Components/FormManager/Model/Panel.cs
+    startLine: 6
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.Model
+  syntax:
+    content: public class Panel
+    content.vb: Public Class Panel
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.Name
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Panel.Name
+  id: Name
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model.Panel
+  langs:
+  - csharp
+  - vb
+  name: Name
+  nameWithType: Panel.Name
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.Name
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/Model/Panel.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Name
+    path: ../Siesa.SDK.Frontend/Components/FormManager/Model/Panel.cs
+    startLine: 8
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.Model
+  syntax:
+    content: public string Name { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property Name As String
+  overload: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.Name*
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.ResourceTag
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Panel.ResourceTag
+  id: ResourceTag
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model.Panel
+  langs:
+  - csharp
+  - vb
+  name: ResourceTag
+  nameWithType: Panel.ResourceTag
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.ResourceTag
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/Model/Panel.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ResourceTag
+    path: ../Siesa.SDK.Frontend/Components/FormManager/Model/Panel.cs
+    startLine: 9
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.Model
+  syntax:
+    content: public string ResourceTag { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property ResourceTag As String
+  overload: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.ResourceTag*
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.PreserveDOM
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Panel.PreserveDOM
+  id: PreserveDOM
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model.Panel
+  langs:
+  - csharp
+  - vb
+  name: PreserveDOM
+  nameWithType: Panel.PreserveDOM
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.PreserveDOM
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/Model/Panel.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: PreserveDOM
+    path: ../Siesa.SDK.Frontend/Components/FormManager/Model/Panel.cs
+    startLine: 11
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.Model
+  syntax:
+    content: public bool PreserveDOM { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public Property PreserveDOM As Boolean
+  overload: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.PreserveDOM*
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.PanelId
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Panel.PanelId
+  id: PanelId
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model.Panel
+  langs:
+  - csharp
+  - vb
+  name: PanelId
+  nameWithType: Panel.PanelId
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.PanelId
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/Model/Panel.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: PanelId
+    path: ../Siesa.SDK.Frontend/Components/FormManager/Model/Panel.cs
+    startLine: 12
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.Model
+  syntax:
+    content: public string PanelId { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property PanelId As String
+  overload: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.PanelId*
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.Fields
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Panel.Fields
+  id: Fields
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model.Panel
+  langs:
+  - csharp
+  - vb
+  name: Fields
+  nameWithType: Panel.Fields
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.Fields
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/Model/Panel.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Fields
+    path: ../Siesa.SDK.Frontend/Components/FormManager/Model/Panel.cs
+    startLine: 13
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.Model
+  syntax:
+    content: public List<FieldOptions> Fields { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldOptions}
+    content.vb: Public Property Fields As List(Of FieldOptions)
+  overload: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.Fields*
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.SubViewdef
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Panel.SubViewdef
+  id: SubViewdef
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model.Panel
+  langs:
+  - csharp
+  - vb
+  name: SubViewdef
+  nameWithType: Panel.SubViewdef
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.SubViewdef
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/Model/Panel.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SubViewdef
+    path: ../Siesa.SDK.Frontend/Components/FormManager/Model/Panel.cs
+    startLine: 14
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.Model
+  syntax:
+    content: public SubViewdef SubViewdef { get; set; }
+    parameters: []
+    return:
+      type: Siesa.SDK.Frontend.Components.FormManager.Model.SubViewdef
+    content.vb: Public Property SubViewdef As SubViewdef
+  overload: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.SubViewdef*
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.ColSize
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Panel.ColSize
+  id: ColSize
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model.Panel
+  langs:
+  - csharp
+  - vb
+  name: ColSize
+  nameWithType: Panel.ColSize
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.ColSize
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/Model/Panel.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ColSize
+    path: ../Siesa.SDK.Frontend/Components/FormManager/Model/Panel.cs
+    startLine: 16
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.Model
+  syntax:
+    content: public Dictionary<string, int> ColSize { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.Dictionary{System.String,System.Int32}
+    content.vb: Public Property ColSize As Dictionary(Of String, Integer)
+  overload: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.ColSize*
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.RowidGroupDynamicEntity
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Panel.RowidGroupDynamicEntity
+  id: RowidGroupDynamicEntity
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model.Panel
+  langs:
+  - csharp
+  - vb
+  name: RowidGroupDynamicEntity
+  nameWithType: Panel.RowidGroupDynamicEntity
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.RowidGroupDynamicEntity
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/Model/Panel.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: RowidGroupDynamicEntity
+    path: ../Siesa.SDK.Frontend/Components/FormManager/Model/Panel.cs
+    startLine: 22
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.Model
+  syntax:
+    content: public int RowidGroupDynamicEntity { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public Property RowidGroupDynamicEntity As Integer
+  overload: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.RowidGroupDynamicEntity*
+references:
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model
+  commentId: N:Siesa.SDK.Frontend.Components.FormManager.Model
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Components.FormManager.Model
+  nameWithType: Siesa.SDK.Frontend.Components.FormManager.Model
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager
+    name: FormManager
+    href: Siesa.SDK.Frontend.Components.FormManager.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model
+    name: Model
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager
+    name: FormManager
+    href: Siesa.SDK.Frontend.Components.FormManager.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model
+    name: Model
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.Name*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.Model.Panel.Name
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.html#Siesa.SDK.Frontend.Components.FormManager.Model.Panel.Name
+  name: Name
+  nameWithType: Panel.Name
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.Name
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.ResourceTag*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.Model.Panel.ResourceTag
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.html#Siesa.SDK.Frontend.Components.FormManager.Model.Panel.ResourceTag
+  name: ResourceTag
+  nameWithType: Panel.ResourceTag
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.ResourceTag
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.PreserveDOM*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.Model.Panel.PreserveDOM
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.html#Siesa.SDK.Frontend.Components.FormManager.Model.Panel.PreserveDOM
+  name: PreserveDOM
+  nameWithType: Panel.PreserveDOM
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.PreserveDOM
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.PanelId*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.Model.Panel.PanelId
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.html#Siesa.SDK.Frontend.Components.FormManager.Model.Panel.PanelId
+  name: PanelId
+  nameWithType: Panel.PanelId
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.PanelId
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.Fields*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.Model.Panel.Fields
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.html#Siesa.SDK.Frontend.Components.FormManager.Model.Panel.Fields
+  name: Fields
+  nameWithType: Panel.Fields
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.Fields
+- uid: System.Collections.Generic.List{Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldOptions}
+  commentId: T:System.Collections.Generic.List{Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldOptions}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<FieldOptions>
+  nameWithType: List<FieldOptions>
+  fullName: System.Collections.Generic.List<Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldOptions>
+  nameWithType.vb: List(Of FieldOptions)
+  fullName.vb: System.Collections.Generic.List(Of Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldOptions)
+  name.vb: List(Of FieldOptions)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldOptions
+    name: FieldOptions
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldOptions.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldOptions
+    name: FieldOptions
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldOptions.html
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.SubViewdef*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.Model.Panel.SubViewdef
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.html#Siesa.SDK.Frontend.Components.FormManager.Model.Panel.SubViewdef
+  name: SubViewdef
+  nameWithType: Panel.SubViewdef
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.SubViewdef
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.SubViewdef
+  commentId: T:Siesa.SDK.Frontend.Components.FormManager.Model.SubViewdef
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.SubViewdef.html
+  name: SubViewdef
+  nameWithType: SubViewdef
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.SubViewdef
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.ColSize*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.Model.Panel.ColSize
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.html#Siesa.SDK.Frontend.Components.FormManager.Model.Panel.ColSize
+  name: ColSize
+  nameWithType: Panel.ColSize
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.ColSize
+- uid: System.Collections.Generic.Dictionary{System.String,System.Int32}
+  commentId: T:System.Collections.Generic.Dictionary{System.String,System.Int32}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.Dictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<string, int>
+  nameWithType: Dictionary<string, int>
+  fullName: System.Collections.Generic.Dictionary<string, int>
+  nameWithType.vb: Dictionary(Of String, Integer)
+  fullName.vb: System.Collections.Generic.Dictionary(Of String, Integer)
+  name.vb: Dictionary(Of String, Integer)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: System.Collections.Generic.Dictionary`2
+  commentId: T:System.Collections.Generic.Dictionary`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  name: Dictionary<TKey, TValue>
+  nameWithType: Dictionary<TKey, TValue>
+  fullName: System.Collections.Generic.Dictionary<TKey, TValue>
+  nameWithType.vb: Dictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.Generic.Dictionary(Of TKey, TValue)
+  name.vb: Dictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.RowidGroupDynamicEntity*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.Model.Panel.RowidGroupDynamicEntity
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.html#Siesa.SDK.Frontend.Components.FormManager.Model.Panel.RowidGroupDynamicEntity
+  name: RowidGroupDynamicEntity
+  nameWithType: Panel.RowidGroupDynamicEntity
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.RowidGroupDynamicEntity
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer

@@ -1,0 +1,1597 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Components.FormManager.Fields.CharField
+  commentId: T:Siesa.SDK.Frontend.Components.FormManager.Fields.CharField
+  id: CharField
+  parent: Siesa.SDK.Frontend.Components.FormManager.Fields
+  children:
+  - Siesa.SDK.Frontend.Components.FormManager.Fields.CharField.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  - Siesa.SDK.Frontend.Components.FormManager.Fields.CharField.FieldTemplate
+  langs:
+  - csharp
+  - vb
+  name: CharField
+  nameWithType: CharField
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Fields.CharField
+  type: Class
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_FormManager_Fields_CharField_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: CharField
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_FormManager_Fields_CharField_razor.g.cs
+    startLine: 186
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.Fields
+  syntax:
+    content: 'public class CharField : FieldClass<string>, IComponent, IHandleEvent, IHandleAfterRender'
+    content.vb: Public Class CharField Inherits FieldClass(Of String) Implements IComponent, IHandleEvent, IHandleAfterRender
+  inheritance:
+  - System.Object
+  - Microsoft.AspNetCore.Components.ComponentBase
+  - Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}
+  implements:
+  - Microsoft.AspNetCore.Components.IComponent
+  - Microsoft.AspNetCore.Components.IHandleEvent
+  - Microsoft.AspNetCore.Components.IHandleAfterRender
+  inheritedMembers:
+  - Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.BindValue
+  - Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.FieldOpt
+  - Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.BindModel
+  - Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.BindProperty
+  - Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.Text
+  - Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.jsRuntime
+  - Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.FieldName
+  - Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.ValidateField
+  - Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.IsRequired
+  - Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.MaxLength
+  - Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.IsEncrypted
+  - Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.IsUnique
+  - Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.IsNullable
+  - Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.ViewdefName
+  - Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.Init
+  - Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.OnInitializedAsync
+  - Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.SetValue(System.String,System.Object)
+  - Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.CheckUniqueValue
+  - Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.OnAfterRenderAsync(System.Boolean)
+  - Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.SetValue(System.String)
+  - Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.FieldValidationTemplate
+  - Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  - Microsoft.AspNetCore.Components.ComponentBase.OnInitialized
+  - Microsoft.AspNetCore.Components.ComponentBase.OnParametersSet
+  - Microsoft.AspNetCore.Components.ComponentBase.OnParametersSetAsync
+  - Microsoft.AspNetCore.Components.ComponentBase.StateHasChanged
+  - Microsoft.AspNetCore.Components.ComponentBase.ShouldRender
+  - Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(System.Boolean)
+  - Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Action)
+  - Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func{System.Threading.Tasks.Task})
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: Siesa.SDK.Frontend.Components.FormManager.Fields.CharField.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.Fields.CharField.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  id: BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  parent: Siesa.SDK.Frontend.Components.FormManager.Fields.CharField
+  langs:
+  - csharp
+  - vb
+  name: BuildRenderTree(RenderTreeBuilder)
+  nameWithType: CharField.BuildRenderTree(RenderTreeBuilder)
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Fields.CharField.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_FormManager_Fields_CharField_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: BuildRenderTree
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_FormManager_Fields_CharField_razor.g.cs
+    startLine: 189
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.Fields
+  summary: Renders the component to the supplied <xref href="Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: protected override void BuildRenderTree(RenderTreeBuilder __builder)
+    parameters:
+    - id: __builder
+      type: Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder
+    content.vb: Protected Overrides Sub BuildRenderTree(__builder As RenderTreeBuilder)
+  overridden: Microsoft.AspNetCore.Components.ComponentBase.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  overload: Siesa.SDK.Frontend.Components.FormManager.Fields.CharField.BuildRenderTree*
+- uid: Siesa.SDK.Frontend.Components.FormManager.Fields.CharField.FieldTemplate
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Fields.CharField.FieldTemplate
+  id: FieldTemplate
+  parent: Siesa.SDK.Frontend.Components.FormManager.Fields.CharField
+  langs:
+  - csharp
+  - vb
+  name: FieldTemplate
+  nameWithType: CharField.FieldTemplate
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Fields.CharField.FieldTemplate
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_FormManager_Fields_CharField_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: FieldTemplate
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_FormManager_Fields_CharField_razor.g.cs
+    startLine: 228
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.Fields
+  syntax:
+    content: public RenderFragment? FieldTemplate { get; }
+    parameters: []
+    return:
+      type: Microsoft.AspNetCore.Components.RenderFragment
+    content.vb: Public ReadOnly Property FieldTemplate As RenderFragment
+  overload: Siesa.SDK.Frontend.Components.FormManager.Fields.CharField.FieldTemplate*
+references:
+- uid: Siesa.SDK.Frontend.Components.FormManager.Fields
+  commentId: N:Siesa.SDK.Frontend.Components.FormManager.Fields
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Components.FormManager.Fields
+  nameWithType: Siesa.SDK.Frontend.Components.FormManager.Fields
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Fields
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager
+    name: FormManager
+    href: Siesa.SDK.Frontend.Components.FormManager.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Fields
+    name: Fields
+    href: Siesa.SDK.Frontend.Components.FormManager.Fields.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager
+    name: FormManager
+    href: Siesa.SDK.Frontend.Components.FormManager.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Fields
+    name: Fields
+    href: Siesa.SDK.Frontend.Components.FormManager.Fields.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: Microsoft.AspNetCore.Components.ComponentBase
+  commentId: T:Microsoft.AspNetCore.Components.ComponentBase
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase
+  name: ComponentBase
+  nameWithType: ComponentBase
+  fullName: Microsoft.AspNetCore.Components.ComponentBase
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}
+  commentId: T:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model.Fields
+  definition: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html
+  name: FieldClass<string>
+  nameWithType: FieldClass<string>
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<string>
+  nameWithType.vb: FieldClass(Of String)
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of String)
+  name.vb: FieldClass(Of String)
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1
+    name: FieldClass
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1
+    name: FieldClass
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: Microsoft.AspNetCore.Components.IComponent
+  commentId: T:Microsoft.AspNetCore.Components.IComponent
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.icomponent
+  name: IComponent
+  nameWithType: IComponent
+  fullName: Microsoft.AspNetCore.Components.IComponent
+- uid: Microsoft.AspNetCore.Components.IHandleEvent
+  commentId: T:Microsoft.AspNetCore.Components.IHandleEvent
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.ihandleevent
+  name: IHandleEvent
+  nameWithType: IHandleEvent
+  fullName: Microsoft.AspNetCore.Components.IHandleEvent
+- uid: Microsoft.AspNetCore.Components.IHandleAfterRender
+  commentId: T:Microsoft.AspNetCore.Components.IHandleAfterRender
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.ihandleafterrender
+  name: IHandleAfterRender
+  nameWithType: IHandleAfterRender
+  fullName: Microsoft.AspNetCore.Components.IHandleAfterRender
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.BindValue
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.BindValue
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}
+  definition: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.BindValue
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.BindValue
+  name: BindValue
+  nameWithType: FieldClass<string>.BindValue
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<string>.BindValue
+  nameWithType.vb: FieldClass(Of String).BindValue
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of String).BindValue
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.FieldOpt
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.FieldOpt
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}
+  definition: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.FieldOpt
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.FieldOpt
+  name: FieldOpt
+  nameWithType: FieldClass<string>.FieldOpt
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<string>.FieldOpt
+  nameWithType.vb: FieldClass(Of String).FieldOpt
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of String).FieldOpt
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.BindModel
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.BindModel
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}
+  definition: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.BindModel
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.BindModel
+  name: BindModel
+  nameWithType: FieldClass<string>.BindModel
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<string>.BindModel
+  nameWithType.vb: FieldClass(Of String).BindModel
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of String).BindModel
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.BindProperty
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.BindProperty
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}
+  definition: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.BindProperty
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.BindProperty
+  name: BindProperty
+  nameWithType: FieldClass<string>.BindProperty
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<string>.BindProperty
+  nameWithType.vb: FieldClass(Of String).BindProperty
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of String).BindProperty
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.Text
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.Text
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}
+  definition: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.Text
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.Text
+  name: Text
+  nameWithType: FieldClass<string>.Text
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<string>.Text
+  nameWithType.vb: FieldClass(Of String).Text
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of String).Text
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.jsRuntime
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.jsRuntime
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}
+  definition: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.jsRuntime
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.jsRuntime
+  name: jsRuntime
+  nameWithType: FieldClass<string>.jsRuntime
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<string>.jsRuntime
+  nameWithType.vb: FieldClass(Of String).jsRuntime
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of String).jsRuntime
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.FieldName
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.FieldName
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}
+  definition: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.FieldName
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.FieldName
+  name: FieldName
+  nameWithType: FieldClass<string>.FieldName
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<string>.FieldName
+  nameWithType.vb: FieldClass(Of String).FieldName
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of String).FieldName
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.ValidateField
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.ValidateField
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}
+  definition: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.ValidateField
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.ValidateField
+  name: ValidateField
+  nameWithType: FieldClass<string>.ValidateField
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<string>.ValidateField
+  nameWithType.vb: FieldClass(Of String).ValidateField
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of String).ValidateField
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.IsRequired
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.IsRequired
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}
+  definition: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.IsRequired
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.IsRequired
+  name: IsRequired
+  nameWithType: FieldClass<string>.IsRequired
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<string>.IsRequired
+  nameWithType.vb: FieldClass(Of String).IsRequired
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of String).IsRequired
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.MaxLength
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.MaxLength
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}
+  definition: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.MaxLength
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.MaxLength
+  name: MaxLength
+  nameWithType: FieldClass<string>.MaxLength
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<string>.MaxLength
+  nameWithType.vb: FieldClass(Of String).MaxLength
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of String).MaxLength
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.IsEncrypted
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.IsEncrypted
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}
+  definition: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.IsEncrypted
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.IsEncrypted
+  name: IsEncrypted
+  nameWithType: FieldClass<string>.IsEncrypted
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<string>.IsEncrypted
+  nameWithType.vb: FieldClass(Of String).IsEncrypted
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of String).IsEncrypted
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.IsUnique
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.IsUnique
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}
+  definition: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.IsUnique
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.IsUnique
+  name: IsUnique
+  nameWithType: FieldClass<string>.IsUnique
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<string>.IsUnique
+  nameWithType.vb: FieldClass(Of String).IsUnique
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of String).IsUnique
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.IsNullable
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.IsNullable
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}
+  definition: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.IsNullable
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.IsNullable
+  name: IsNullable
+  nameWithType: FieldClass<string>.IsNullable
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<string>.IsNullable
+  nameWithType.vb: FieldClass(Of String).IsNullable
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of String).IsNullable
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.ViewdefName
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.ViewdefName
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}
+  definition: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.ViewdefName
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.ViewdefName
+  name: ViewdefName
+  nameWithType: FieldClass<string>.ViewdefName
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<string>.ViewdefName
+  nameWithType.vb: FieldClass(Of String).ViewdefName
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of String).ViewdefName
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.Init
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.Init
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}
+  definition: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.Init
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.Init
+  name: Init()
+  nameWithType: FieldClass<string>.Init()
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<string>.Init()
+  nameWithType.vb: FieldClass(Of String).Init()
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of String).Init()
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.Init
+    name: Init
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.Init
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.Init
+    name: Init
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.Init
+  - name: (
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.OnInitializedAsync
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.OnInitializedAsync
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}
+  definition: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.OnInitializedAsync
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.OnInitializedAsync
+  name: OnInitializedAsync()
+  nameWithType: FieldClass<string>.OnInitializedAsync()
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<string>.OnInitializedAsync()
+  nameWithType.vb: FieldClass(Of String).OnInitializedAsync()
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of String).OnInitializedAsync()
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.OnInitializedAsync
+    name: OnInitializedAsync
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.OnInitializedAsync
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.OnInitializedAsync
+    name: OnInitializedAsync
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.OnInitializedAsync
+  - name: (
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.SetValue(System.String,System.Object)
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.SetValue(System.String,System.Object)
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}
+  definition: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.SetValue(System.String,System.Object)
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.SetValue(System.String,System.Object)
+  name: SetValue(string, object)
+  nameWithType: FieldClass<string>.SetValue(string, object)
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<string>.SetValue(string, object)
+  nameWithType.vb: FieldClass(Of String).SetValue(String, Object)
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of String).SetValue(String, Object)
+  name.vb: SetValue(String, Object)
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.SetValue(System.String,System.Object)
+    name: SetValue
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.SetValue(System.String,System.Object)
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.SetValue(System.String,System.Object)
+    name: SetValue
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.SetValue(System.String,System.Object)
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.CheckUniqueValue
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.CheckUniqueValue
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}
+  definition: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.CheckUniqueValue
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.CheckUniqueValue
+  name: CheckUniqueValue()
+  nameWithType: FieldClass<string>.CheckUniqueValue()
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<string>.CheckUniqueValue()
+  nameWithType.vb: FieldClass(Of String).CheckUniqueValue()
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of String).CheckUniqueValue()
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.CheckUniqueValue
+    name: CheckUniqueValue
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.CheckUniqueValue
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.CheckUniqueValue
+    name: CheckUniqueValue
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.CheckUniqueValue
+  - name: (
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.OnAfterRenderAsync(System.Boolean)
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.OnAfterRenderAsync(System.Boolean)
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}
+  definition: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.OnAfterRenderAsync(System.Boolean)
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.OnAfterRenderAsync(System.Boolean)
+  name: OnAfterRenderAsync(bool)
+  nameWithType: FieldClass<string>.OnAfterRenderAsync(bool)
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<string>.OnAfterRenderAsync(bool)
+  nameWithType.vb: FieldClass(Of String).OnAfterRenderAsync(Boolean)
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of String).OnAfterRenderAsync(Boolean)
+  name.vb: OnAfterRenderAsync(Boolean)
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.OnAfterRenderAsync(System.Boolean)
+    name: OnAfterRenderAsync
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.OnAfterRenderAsync(System.Boolean)
+  - name: (
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.OnAfterRenderAsync(System.Boolean)
+    name: OnAfterRenderAsync
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.OnAfterRenderAsync(System.Boolean)
+  - name: (
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.SetValue(System.String)
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.SetValue(System.String)
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}
+  definition: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.SetValue(`0)
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.SetValue(System.String)
+  name: SetValue(string)
+  nameWithType: FieldClass<string>.SetValue(string)
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<string>.SetValue(string)
+  nameWithType.vb: FieldClass(Of String).SetValue(String)
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of String).SetValue(String)
+  name.vb: SetValue(String)
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.SetValue(System.String)
+    name: SetValue
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.SetValue(System.String)
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.SetValue(System.String)
+    name: SetValue
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.SetValue(System.String)
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.FieldValidationTemplate
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.FieldValidationTemplate
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}
+  definition: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.FieldValidationTemplate
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.FieldValidationTemplate
+  name: FieldValidationTemplate
+  nameWithType: FieldClass<string>.FieldValidationTemplate
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<string>.FieldValidationTemplate
+  nameWithType.vb: FieldClass(Of String).FieldValidationTemplate
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of String).FieldValidationTemplate
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}
+  definition: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  name: SetParametersAsync(ParameterView)
+  nameWithType: FieldClass<string>.SetParametersAsync(ParameterView)
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<string>.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  nameWithType.vb: FieldClass(Of String).SetParametersAsync(ParameterView)
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of String).SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+    name: SetParametersAsync
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  - name: (
+  - uid: Microsoft.AspNetCore.Components.ParameterView
+    name: ParameterView
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.parameterview
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+    name: SetParametersAsync
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass{System.String}.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  - name: (
+  - uid: Microsoft.AspNetCore.Components.ParameterView
+    name: ParameterView
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.parameterview
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.OnInitialized
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.OnInitialized
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.oninitialized
+  name: OnInitialized()
+  nameWithType: ComponentBase.OnInitialized()
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.OnInitialized()
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnInitialized
+    name: OnInitialized
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.oninitialized
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnInitialized
+    name: OnInitialized
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.oninitialized
+  - name: (
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSet
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.OnParametersSet
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onparametersset
+  name: OnParametersSet()
+  nameWithType: ComponentBase.OnParametersSet()
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSet()
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSet
+    name: OnParametersSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onparametersset
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSet
+    name: OnParametersSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onparametersset
+  - name: (
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSetAsync
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.OnParametersSetAsync
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onparameterssetasync
+  name: OnParametersSetAsync()
+  nameWithType: ComponentBase.OnParametersSetAsync()
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSetAsync()
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSetAsync
+    name: OnParametersSetAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onparameterssetasync
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSetAsync
+    name: OnParametersSetAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onparameterssetasync
+  - name: (
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.StateHasChanged
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.StateHasChanged
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.statehaschanged
+  name: StateHasChanged()
+  nameWithType: ComponentBase.StateHasChanged()
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.StateHasChanged()
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.StateHasChanged
+    name: StateHasChanged
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.statehaschanged
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.StateHasChanged
+    name: StateHasChanged
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.statehaschanged
+  - name: (
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.ShouldRender
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.ShouldRender
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.shouldrender
+  name: ShouldRender()
+  nameWithType: ComponentBase.ShouldRender()
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.ShouldRender()
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.ShouldRender
+    name: ShouldRender
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.shouldrender
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.ShouldRender
+    name: ShouldRender
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.shouldrender
+  - name: (
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(System.Boolean)
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(System.Boolean)
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onafterrender
+  name: OnAfterRender(bool)
+  nameWithType: ComponentBase.OnAfterRender(bool)
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(bool)
+  nameWithType.vb: ComponentBase.OnAfterRender(Boolean)
+  fullName.vb: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(Boolean)
+  name.vb: OnAfterRender(Boolean)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(System.Boolean)
+    name: OnAfterRender
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onafterrender
+  - name: (
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(System.Boolean)
+    name: OnAfterRender
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onafterrender
+  - name: (
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Action)
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Action)
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.invokeasync#microsoft-aspnetcore-components-componentbase-invokeasync(system-action)
+  name: InvokeAsync(Action)
+  nameWithType: ComponentBase.InvokeAsync(Action)
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Action)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Action)
+    name: InvokeAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.invokeasync#microsoft-aspnetcore-components-componentbase-invokeasync(system-action)
+  - name: (
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Action)
+    name: InvokeAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.invokeasync#microsoft-aspnetcore-components-componentbase-invokeasync(system-action)
+  - name: (
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func{System.Threading.Tasks.Task})
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func{System.Threading.Tasks.Task})
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.invokeasync#microsoft-aspnetcore-components-componentbase-invokeasync(system-func((system-threading-tasks-task)))
+  name: InvokeAsync(Func<Task>)
+  nameWithType: ComponentBase.InvokeAsync(Func<Task>)
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func<System.Threading.Tasks.Task>)
+  nameWithType.vb: ComponentBase.InvokeAsync(Func(Of Task))
+  fullName.vb: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func(Of System.Threading.Tasks.Task))
+  name.vb: InvokeAsync(Func(Of Task))
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func{System.Threading.Tasks.Task})
+    name: InvokeAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.invokeasync#microsoft-aspnetcore-components-componentbase-invokeasync(system-func((system-threading-tasks-task)))
+  - name: (
+  - uid: System.Func`1
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-1
+  - name: <
+  - uid: System.Threading.Tasks.Task
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func{System.Threading.Tasks.Task})
+    name: InvokeAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.invokeasync#microsoft-aspnetcore-components-componentbase-invokeasync(system-func((system-threading-tasks-task)))
+  - name: (
+  - uid: System.Func`1
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Threading.Tasks.Task
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  - name: )
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Microsoft.AspNetCore.Components
+  commentId: N:Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.AspNetCore.Components
+  nameWithType: Microsoft.AspNetCore.Components
+  fullName: Microsoft.AspNetCore.Components
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Components
+    name: Components
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Components
+    name: Components
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1
+  commentId: T:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html
+  name: FieldClass<TProperty>
+  nameWithType: FieldClass<TProperty>
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<TProperty>
+  nameWithType.vb: FieldClass(Of TProperty)
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of TProperty)
+  name.vb: FieldClass(Of TProperty)
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1
+    name: FieldClass
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html
+  - name: <
+  - name: TProperty
+  - name: '>'
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1
+    name: FieldClass
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TProperty
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields
+  commentId: N:Siesa.SDK.Frontend.Components.FormManager.Model.Fields
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Components.FormManager.Model.Fields
+  nameWithType: Siesa.SDK.Frontend.Components.FormManager.Model.Fields
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager
+    name: FormManager
+    href: Siesa.SDK.Frontend.Components.FormManager.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model
+    name: Model
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields
+    name: Fields
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager
+    name: FormManager
+    href: Siesa.SDK.Frontend.Components.FormManager.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model
+    name: Model
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields
+    name: Fields
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.html
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.BindValue
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.BindValue
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.BindValue
+  name: BindValue
+  nameWithType: FieldClass<TProperty>.BindValue
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<TProperty>.BindValue
+  nameWithType.vb: FieldClass(Of TProperty).BindValue
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of TProperty).BindValue
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.FieldOpt
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.FieldOpt
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.FieldOpt
+  name: FieldOpt
+  nameWithType: FieldClass<TProperty>.FieldOpt
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<TProperty>.FieldOpt
+  nameWithType.vb: FieldClass(Of TProperty).FieldOpt
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of TProperty).FieldOpt
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.BindModel
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.BindModel
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.BindModel
+  name: BindModel
+  nameWithType: FieldClass<TProperty>.BindModel
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<TProperty>.BindModel
+  nameWithType.vb: FieldClass(Of TProperty).BindModel
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of TProperty).BindModel
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.BindProperty
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.BindProperty
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.BindProperty
+  name: BindProperty
+  nameWithType: FieldClass<TProperty>.BindProperty
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<TProperty>.BindProperty
+  nameWithType.vb: FieldClass(Of TProperty).BindProperty
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of TProperty).BindProperty
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.Text
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.Text
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.Text
+  name: Text
+  nameWithType: FieldClass<TProperty>.Text
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<TProperty>.Text
+  nameWithType.vb: FieldClass(Of TProperty).Text
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of TProperty).Text
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.jsRuntime
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.jsRuntime
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.jsRuntime
+  name: jsRuntime
+  nameWithType: FieldClass<TProperty>.jsRuntime
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<TProperty>.jsRuntime
+  nameWithType.vb: FieldClass(Of TProperty).jsRuntime
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of TProperty).jsRuntime
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.FieldName
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.FieldName
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.FieldName
+  name: FieldName
+  nameWithType: FieldClass<TProperty>.FieldName
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<TProperty>.FieldName
+  nameWithType.vb: FieldClass(Of TProperty).FieldName
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of TProperty).FieldName
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.ValidateField
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.ValidateField
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.ValidateField
+  name: ValidateField
+  nameWithType: FieldClass<TProperty>.ValidateField
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<TProperty>.ValidateField
+  nameWithType.vb: FieldClass(Of TProperty).ValidateField
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of TProperty).ValidateField
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.IsRequired
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.IsRequired
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.IsRequired
+  name: IsRequired
+  nameWithType: FieldClass<TProperty>.IsRequired
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<TProperty>.IsRequired
+  nameWithType.vb: FieldClass(Of TProperty).IsRequired
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of TProperty).IsRequired
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.MaxLength
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.MaxLength
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.MaxLength
+  name: MaxLength
+  nameWithType: FieldClass<TProperty>.MaxLength
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<TProperty>.MaxLength
+  nameWithType.vb: FieldClass(Of TProperty).MaxLength
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of TProperty).MaxLength
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.IsEncrypted
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.IsEncrypted
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.IsEncrypted
+  name: IsEncrypted
+  nameWithType: FieldClass<TProperty>.IsEncrypted
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<TProperty>.IsEncrypted
+  nameWithType.vb: FieldClass(Of TProperty).IsEncrypted
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of TProperty).IsEncrypted
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.IsUnique
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.IsUnique
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.IsUnique
+  name: IsUnique
+  nameWithType: FieldClass<TProperty>.IsUnique
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<TProperty>.IsUnique
+  nameWithType.vb: FieldClass(Of TProperty).IsUnique
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of TProperty).IsUnique
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.IsNullable
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.IsNullable
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.IsNullable
+  name: IsNullable
+  nameWithType: FieldClass<TProperty>.IsNullable
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<TProperty>.IsNullable
+  nameWithType.vb: FieldClass(Of TProperty).IsNullable
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of TProperty).IsNullable
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.ViewdefName
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.ViewdefName
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.ViewdefName
+  name: ViewdefName
+  nameWithType: FieldClass<TProperty>.ViewdefName
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<TProperty>.ViewdefName
+  nameWithType.vb: FieldClass(Of TProperty).ViewdefName
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of TProperty).ViewdefName
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.Init
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.Init
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.Init
+  name: Init()
+  nameWithType: FieldClass<TProperty>.Init()
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<TProperty>.Init()
+  nameWithType.vb: FieldClass(Of TProperty).Init()
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of TProperty).Init()
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.Init
+    name: Init
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.Init
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.Init
+    name: Init
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.Init
+  - name: (
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.OnInitializedAsync
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.OnInitializedAsync
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.OnInitializedAsync
+  name: OnInitializedAsync()
+  nameWithType: FieldClass<TProperty>.OnInitializedAsync()
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<TProperty>.OnInitializedAsync()
+  nameWithType.vb: FieldClass(Of TProperty).OnInitializedAsync()
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of TProperty).OnInitializedAsync()
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.OnInitializedAsync
+    name: OnInitializedAsync
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.OnInitializedAsync
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.OnInitializedAsync
+    name: OnInitializedAsync
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.OnInitializedAsync
+  - name: (
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.SetValue(System.String,System.Object)
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.SetValue(System.String,System.Object)
+  isExternal: true
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.SetValue(System.String,System.Object)
+  name: SetValue(string, object)
+  nameWithType: FieldClass<TProperty>.SetValue(string, object)
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<TProperty>.SetValue(string, object)
+  nameWithType.vb: FieldClass(Of TProperty).SetValue(String, Object)
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of TProperty).SetValue(String, Object)
+  name.vb: SetValue(String, Object)
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.SetValue(System.String,System.Object)
+    name: SetValue
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.SetValue(System.String,System.Object)
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.SetValue(System.String,System.Object)
+    name: SetValue
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.SetValue(System.String,System.Object)
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.CheckUniqueValue
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.CheckUniqueValue
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.CheckUniqueValue
+  name: CheckUniqueValue()
+  nameWithType: FieldClass<TProperty>.CheckUniqueValue()
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<TProperty>.CheckUniqueValue()
+  nameWithType.vb: FieldClass(Of TProperty).CheckUniqueValue()
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of TProperty).CheckUniqueValue()
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.CheckUniqueValue
+    name: CheckUniqueValue
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.CheckUniqueValue
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.CheckUniqueValue
+    name: CheckUniqueValue
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.CheckUniqueValue
+  - name: (
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.OnAfterRenderAsync(System.Boolean)
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.OnAfterRenderAsync(System.Boolean)
+  isExternal: true
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.OnAfterRenderAsync(System.Boolean)
+  name: OnAfterRenderAsync(bool)
+  nameWithType: FieldClass<TProperty>.OnAfterRenderAsync(bool)
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<TProperty>.OnAfterRenderAsync(bool)
+  nameWithType.vb: FieldClass(Of TProperty).OnAfterRenderAsync(Boolean)
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of TProperty).OnAfterRenderAsync(Boolean)
+  name.vb: OnAfterRenderAsync(Boolean)
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.OnAfterRenderAsync(System.Boolean)
+    name: OnAfterRenderAsync
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.OnAfterRenderAsync(System.Boolean)
+  - name: (
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.OnAfterRenderAsync(System.Boolean)
+    name: OnAfterRenderAsync
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.OnAfterRenderAsync(System.Boolean)
+  - name: (
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.SetValue(`0)
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.SetValue(`0)
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.SetValue(`0)
+  name: SetValue(TProperty)
+  nameWithType: FieldClass<TProperty>.SetValue(TProperty)
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<TProperty>.SetValue(TProperty)
+  nameWithType.vb: FieldClass(Of TProperty).SetValue(TProperty)
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of TProperty).SetValue(TProperty)
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.SetValue(`0)
+    name: SetValue
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.SetValue(`0)
+  - name: (
+  - name: TProperty
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.SetValue(`0)
+    name: SetValue
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.SetValue(`0)
+  - name: (
+  - name: TProperty
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.FieldValidationTemplate
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.FieldValidationTemplate
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.FieldValidationTemplate
+  name: FieldValidationTemplate
+  nameWithType: FieldClass<TProperty>.FieldValidationTemplate
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<TProperty>.FieldValidationTemplate
+  nameWithType.vb: FieldClass(Of TProperty).FieldValidationTemplate
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of TProperty).FieldValidationTemplate
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  isExternal: true
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  name: SetParametersAsync(ParameterView)
+  nameWithType: FieldClass<TProperty>.SetParametersAsync(ParameterView)
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass<TProperty>.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  nameWithType.vb: FieldClass(Of TProperty).SetParametersAsync(ParameterView)
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass(Of TProperty).SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+    name: SetParametersAsync
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  - name: (
+  - uid: Microsoft.AspNetCore.Components.ParameterView
+    name: ParameterView
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.parameterview
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+    name: SetParametersAsync
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass-1.html#Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldClass`1.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  - name: (
+  - uid: Microsoft.AspNetCore.Components.ParameterView
+    name: ParameterView
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.parameterview
+  - name: )
+- uid: Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder
+  commentId: T:Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder
+  parent: Microsoft.AspNetCore.Components.Rendering
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.rendering.rendertreebuilder
+  name: RenderTreeBuilder
+  nameWithType: RenderTreeBuilder
+  fullName: Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder
+- uid: Microsoft.AspNetCore.Components.ComponentBase.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.buildrendertree
+  name: BuildRenderTree(RenderTreeBuilder)
+  nameWithType: ComponentBase.BuildRenderTree(RenderTreeBuilder)
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+    name: BuildRenderTree
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.buildrendertree
+  - name: (
+  - uid: Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder
+    name: RenderTreeBuilder
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.rendering.rendertreebuilder
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+    name: BuildRenderTree
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.buildrendertree
+  - name: (
+  - uid: Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder
+    name: RenderTreeBuilder
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.rendering.rendertreebuilder
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.FormManager.Fields.CharField.BuildRenderTree*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.Fields.CharField.BuildRenderTree
+  href: Siesa.SDK.Frontend.Components.FormManager.Fields.CharField.html#Siesa.SDK.Frontend.Components.FormManager.Fields.CharField.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  name: BuildRenderTree
+  nameWithType: CharField.BuildRenderTree
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Fields.CharField.BuildRenderTree
+- uid: Microsoft.AspNetCore.Components.Rendering
+  commentId: N:Microsoft.AspNetCore.Components.Rendering
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.AspNetCore.Components.Rendering
+  nameWithType: Microsoft.AspNetCore.Components.Rendering
+  fullName: Microsoft.AspNetCore.Components.Rendering
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Components
+    name: Components
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components
+  - name: .
+  - uid: Microsoft.AspNetCore.Components.Rendering
+    name: Rendering
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.rendering
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Components
+    name: Components
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components
+  - name: .
+  - uid: Microsoft.AspNetCore.Components.Rendering
+    name: Rendering
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.rendering
+- uid: Siesa.SDK.Frontend.Components.FormManager.Fields.CharField.FieldTemplate*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.Fields.CharField.FieldTemplate
+  href: Siesa.SDK.Frontend.Components.FormManager.Fields.CharField.html#Siesa.SDK.Frontend.Components.FormManager.Fields.CharField.FieldTemplate
+  name: FieldTemplate
+  nameWithType: CharField.FieldTemplate
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Fields.CharField.FieldTemplate
+- uid: Microsoft.AspNetCore.Components.RenderFragment
+  commentId: T:Microsoft.AspNetCore.Components.RenderFragment
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.renderfragment
+  name: RenderFragment
+  nameWithType: RenderFragment
+  fullName: Microsoft.AspNetCore.Components.RenderFragment

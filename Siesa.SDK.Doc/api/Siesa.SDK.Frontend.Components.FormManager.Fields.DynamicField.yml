@@ -1,0 +1,1424 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField
+  commentId: T:Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField
+  id: DynamicField
+  parent: Siesa.SDK.Frontend.Components.FormManager.Fields
+  children:
+  - Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.AddUploadComponent(Siesa.SDK.Frontend.Components.FormManager.Fields.FileField,System.String)
+  - Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.BLParentBusinessName
+  - Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  - Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.FieldOpt
+  - Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.ModelObj
+  - Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.OnAfterRenderAsync(System.Boolean)
+  - Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.SensitiveData
+  - Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  - Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.UploadComponent
+  - Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.ValidateField
+  langs:
+  - csharp
+  - vb
+  name: DynamicField
+  nameWithType: DynamicField
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField
+  type: Class
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_FormManager_Fields_DynamicField_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: DynamicField
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_FormManager_Fields_DynamicField_razor.g.cs
+    startLine: 186
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.Fields
+  syntax:
+    content: 'public class DynamicField : ComponentBase, IComponent, IHandleEvent, IHandleAfterRender'
+    content.vb: Public Class DynamicField Inherits ComponentBase Implements IComponent, IHandleEvent, IHandleAfterRender
+  inheritance:
+  - System.Object
+  - Microsoft.AspNetCore.Components.ComponentBase
+  implements:
+  - Microsoft.AspNetCore.Components.IComponent
+  - Microsoft.AspNetCore.Components.IHandleEvent
+  - Microsoft.AspNetCore.Components.IHandleAfterRender
+  inheritedMembers:
+  - Microsoft.AspNetCore.Components.ComponentBase.OnInitialized
+  - Microsoft.AspNetCore.Components.ComponentBase.OnInitializedAsync
+  - Microsoft.AspNetCore.Components.ComponentBase.OnParametersSet
+  - Microsoft.AspNetCore.Components.ComponentBase.OnParametersSetAsync
+  - Microsoft.AspNetCore.Components.ComponentBase.StateHasChanged
+  - Microsoft.AspNetCore.Components.ComponentBase.ShouldRender
+  - Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(System.Boolean)
+  - Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Action)
+  - Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func{System.Threading.Tasks.Task})
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.BLParentBusinessName
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.BLParentBusinessName
+  id: BLParentBusinessName
+  parent: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField
+  langs:
+  - csharp
+  - vb
+  name: BLParentBusinessName
+  nameWithType: DynamicField.BLParentBusinessName
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.BLParentBusinessName
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/Fields/DynamicField.razor.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: BLParentBusinessName
+    path: ../Siesa.SDK.Frontend/Components/FormManager/Fields/DynamicField.razor.cs
+    startLine: 13
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.Fields
+  syntax:
+    content: >-
+      [Parameter]
+
+      public string BLParentBusinessName { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <Parameter>
+
+      Public Property BLParentBusinessName As String
+  overload: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.BLParentBusinessName*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.FieldOpt
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.FieldOpt
+  id: FieldOpt
+  parent: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField
+  langs:
+  - csharp
+  - vb
+  name: FieldOpt
+  nameWithType: DynamicField.FieldOpt
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.FieldOpt
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/Fields/DynamicField.razor.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: FieldOpt
+    path: ../Siesa.SDK.Frontend/Components/FormManager/Fields/DynamicField.razor.cs
+    startLine: 14
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.Fields
+  syntax:
+    content: >-
+      [Parameter]
+
+      public FieldOptions FieldOpt { get; set; }
+    parameters: []
+    return:
+      type: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldOptions
+    content.vb: >-
+      <Parameter>
+
+      Public Property FieldOpt As FieldOptions
+  overload: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.FieldOpt*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.ModelObj
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.ModelObj
+  id: ModelObj
+  parent: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField
+  langs:
+  - csharp
+  - vb
+  name: ModelObj
+  nameWithType: DynamicField.ModelObj
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.ModelObj
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/Fields/DynamicField.razor.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ModelObj
+    path: ../Siesa.SDK.Frontend/Components/FormManager/Fields/DynamicField.razor.cs
+    startLine: 15
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.Fields
+  syntax:
+    content: >-
+      [Parameter]
+
+      public object ModelObj { get; set; }
+    parameters: []
+    return:
+      type: System.Object
+    content.vb: >-
+      <Parameter>
+
+      Public Property ModelObj As Object
+  overload: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.ModelObj*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.ValidateField
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.ValidateField
+  id: ValidateField
+  parent: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField
+  langs:
+  - csharp
+  - vb
+  name: ValidateField
+  nameWithType: DynamicField.ValidateField
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.ValidateField
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/Fields/DynamicField.razor.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ValidateField
+    path: ../Siesa.SDK.Frontend/Components/FormManager/Fields/DynamicField.razor.cs
+    startLine: 16
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.Fields
+  syntax:
+    content: >-
+      [Parameter]
+
+      public bool ValidateField { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <Parameter>
+
+      Public Property ValidateField As Boolean
+  overload: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.ValidateField*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.UploadComponent
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.UploadComponent
+  id: UploadComponent
+  parent: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField
+  langs:
+  - csharp
+  - vb
+  name: UploadComponent
+  nameWithType: DynamicField.UploadComponent
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.UploadComponent
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/Fields/DynamicField.razor.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: UploadComponent
+    path: ../Siesa.SDK.Frontend/Components/FormManager/Fields/DynamicField.razor.cs
+    startLine: 18
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.Fields
+  syntax:
+    content: public FileField UploadComponent { get; set; }
+    parameters: []
+    return:
+      type: Siesa.SDK.Frontend.Components.FormManager.Fields.FileField
+    content.vb: Public Property UploadComponent As FileField
+  overload: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.UploadComponent*
+- uid: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.SensitiveData
+  commentId: P:Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.SensitiveData
+  id: SensitiveData
+  parent: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField
+  langs:
+  - csharp
+  - vb
+  name: SensitiveData
+  nameWithType: DynamicField.SensitiveData
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.SensitiveData
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/Fields/DynamicField.razor.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SensitiveData
+    path: ../Siesa.SDK.Frontend/Components/FormManager/Fields/DynamicField.razor.cs
+    startLine: 32
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.Fields
+  syntax:
+    content: public bool SensitiveData { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public Property SensitiveData As Boolean
+  overload: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.SensitiveData*
+- uid: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  id: SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  parent: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField
+  langs:
+  - csharp
+  - vb
+  name: SetParametersAsync(ParameterView)
+  nameWithType: DynamicField.SetParametersAsync(ParameterView)
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/Fields/DynamicField.razor.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SetParametersAsync
+    path: ../Siesa.SDK.Frontend/Components/FormManager/Fields/DynamicField.razor.cs
+    startLine: 66
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.Fields
+  summary: Sets parameters supplied by the component's parent in the render tree.
+  remarks: >-
+    <p>
+                Parameters are passed when <xref href="Microsoft.AspNetCore.Components.ComponentBase.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)" data-throw-if-not-resolved="false"></xref> is called. It is not required that
+                the caller supply a parameter value for all of the parameters that are logically understood by the component.
+                </p>
+    <p>
+                The default implementation of <xref href="Microsoft.AspNetCore.Components.ComponentBase.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)" data-throw-if-not-resolved="false"></xref> will set the value of each property
+                decorated with <xref href="Microsoft.AspNetCore.Components.ParameterAttribute" data-throw-if-not-resolved="false"></xref> or <xref href="Microsoft.AspNetCore.Components.CascadingParameterAttribute" data-throw-if-not-resolved="false"></xref> that has
+                a corresponding value in the <xref href="Microsoft.AspNetCore.Components.ParameterView" data-throw-if-not-resolved="false"></xref>. Parameters that do not have a corresponding value
+                will be unchanged.
+                </p>
+  example: []
+  syntax:
+    content: public override Task SetParametersAsync(ParameterView parameters)
+    parameters:
+    - id: parameters
+      type: Microsoft.AspNetCore.Components.ParameterView
+      description: The parameters.
+    return:
+      type: System.Threading.Tasks.Task
+      description: A <xref href="System.Threading.Tasks.Task" data-throw-if-not-resolved="false"></xref> that completes when the component has finished updating and rendering itself.
+    content.vb: Public Overrides Function SetParametersAsync(parameters As ParameterView) As Task
+  overridden: Microsoft.AspNetCore.Components.ComponentBase.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  overload: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.SetParametersAsync*
+- uid: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.OnAfterRenderAsync(System.Boolean)
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.OnAfterRenderAsync(System.Boolean)
+  id: OnAfterRenderAsync(System.Boolean)
+  parent: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField
+  langs:
+  - csharp
+  - vb
+  name: OnAfterRenderAsync(bool)
+  nameWithType: DynamicField.OnAfterRenderAsync(bool)
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.OnAfterRenderAsync(bool)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/Fields/DynamicField.razor.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: OnAfterRenderAsync
+    path: ../Siesa.SDK.Frontend/Components/FormManager/Fields/DynamicField.razor.cs
+    startLine: 72
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.Fields
+  summary: >-
+    Method invoked after each time the component has been rendered. Note that the component does
+
+    not automatically re-render after the completion of any returned <xref href="System.Threading.Tasks.Task" data-throw-if-not-resolved="false"></xref>, because
+
+    that would cause an infinite render loop.
+  remarks: >-
+    The <xref href="Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(System.Boolean)" data-throw-if-not-resolved="false"></xref> and <xref href="Microsoft.AspNetCore.Components.ComponentBase.OnAfterRenderAsync(System.Boolean)" data-throw-if-not-resolved="false"></xref> lifecycle methods
+
+    are useful for performing interop, or interacting with values received from <code>@ref</code>.
+
+    Use the <code class="paramref">firstRender</code> parameter to ensure that initialization work is only performed
+
+    once.
+  example: []
+  syntax:
+    content: protected override Task OnAfterRenderAsync(bool firstRender)
+    parameters:
+    - id: firstRender
+      type: System.Boolean
+      description: >-
+        Set to <code>true</code> if this is the first time <xref href="Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(System.Boolean)" data-throw-if-not-resolved="false"></xref> has been invoked
+
+        on this component instance; otherwise <code>false</code>.
+    return:
+      type: System.Threading.Tasks.Task
+      description: A <xref href="System.Threading.Tasks.Task" data-throw-if-not-resolved="false"></xref> representing any asynchronous operation.
+    content.vb: Protected Overrides Function OnAfterRenderAsync(firstRender As Boolean) As Task
+  overridden: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRenderAsync(System.Boolean)
+  overload: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.OnAfterRenderAsync*
+  nameWithType.vb: DynamicField.OnAfterRenderAsync(Boolean)
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.OnAfterRenderAsync(Boolean)
+  name.vb: OnAfterRenderAsync(Boolean)
+- uid: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.AddUploadComponent(Siesa.SDK.Frontend.Components.FormManager.Fields.FileField,System.String)
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.AddUploadComponent(Siesa.SDK.Frontend.Components.FormManager.Fields.FileField,System.String)
+  id: AddUploadComponent(Siesa.SDK.Frontend.Components.FormManager.Fields.FileField,System.String)
+  parent: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField
+  langs:
+  - csharp
+  - vb
+  name: AddUploadComponent(FileField, string)
+  nameWithType: DynamicField.AddUploadComponent(FileField, string)
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.AddUploadComponent(Siesa.SDK.Frontend.Components.FormManager.Fields.FileField, string)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/FormManager/Fields/DynamicField.razor.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: AddUploadComponent
+    path: ../Siesa.SDK.Frontend/Components/FormManager/Fields/DynamicField.razor.cs
+    startLine: 79
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.Fields
+  syntax:
+    content: public Task AddUploadComponent(FileField uploadComponent, string fieldName)
+    parameters:
+    - id: uploadComponent
+      type: Siesa.SDK.Frontend.Components.FormManager.Fields.FileField
+    - id: fieldName
+      type: System.String
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function AddUploadComponent(uploadComponent As FileField, fieldName As String) As Task
+  overload: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.AddUploadComponent*
+  nameWithType.vb: DynamicField.AddUploadComponent(FileField, String)
+  fullName.vb: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.AddUploadComponent(Siesa.SDK.Frontend.Components.FormManager.Fields.FileField, String)
+  name.vb: AddUploadComponent(FileField, String)
+- uid: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  commentId: M:Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  id: BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  parent: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField
+  langs:
+  - csharp
+  - vb
+  name: BuildRenderTree(RenderTreeBuilder)
+  nameWithType: DynamicField.BuildRenderTree(RenderTreeBuilder)
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_FormManager_Fields_DynamicField_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: BuildRenderTree
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_FormManager_Fields_DynamicField_razor.g.cs
+    startLine: 189
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.FormManager.Fields
+  summary: Renders the component to the supplied <xref href="Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: protected override void BuildRenderTree(RenderTreeBuilder __builder)
+    parameters:
+    - id: __builder
+      type: Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder
+    content.vb: Protected Overrides Sub BuildRenderTree(__builder As RenderTreeBuilder)
+  overridden: Microsoft.AspNetCore.Components.ComponentBase.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  overload: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.BuildRenderTree*
+references:
+- uid: Siesa.SDK.Frontend.Components.FormManager.Fields
+  commentId: N:Siesa.SDK.Frontend.Components.FormManager.Fields
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Components.FormManager.Fields
+  nameWithType: Siesa.SDK.Frontend.Components.FormManager.Fields
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Fields
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager
+    name: FormManager
+    href: Siesa.SDK.Frontend.Components.FormManager.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Fields
+    name: Fields
+    href: Siesa.SDK.Frontend.Components.FormManager.Fields.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager
+    name: FormManager
+    href: Siesa.SDK.Frontend.Components.FormManager.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Fields
+    name: Fields
+    href: Siesa.SDK.Frontend.Components.FormManager.Fields.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: Microsoft.AspNetCore.Components.ComponentBase
+  commentId: T:Microsoft.AspNetCore.Components.ComponentBase
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase
+  name: ComponentBase
+  nameWithType: ComponentBase
+  fullName: Microsoft.AspNetCore.Components.ComponentBase
+- uid: Microsoft.AspNetCore.Components.IComponent
+  commentId: T:Microsoft.AspNetCore.Components.IComponent
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.icomponent
+  name: IComponent
+  nameWithType: IComponent
+  fullName: Microsoft.AspNetCore.Components.IComponent
+- uid: Microsoft.AspNetCore.Components.IHandleEvent
+  commentId: T:Microsoft.AspNetCore.Components.IHandleEvent
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.ihandleevent
+  name: IHandleEvent
+  nameWithType: IHandleEvent
+  fullName: Microsoft.AspNetCore.Components.IHandleEvent
+- uid: Microsoft.AspNetCore.Components.IHandleAfterRender
+  commentId: T:Microsoft.AspNetCore.Components.IHandleAfterRender
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.ihandleafterrender
+  name: IHandleAfterRender
+  nameWithType: IHandleAfterRender
+  fullName: Microsoft.AspNetCore.Components.IHandleAfterRender
+- uid: Microsoft.AspNetCore.Components.ComponentBase.OnInitialized
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.OnInitialized
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.oninitialized
+  name: OnInitialized()
+  nameWithType: ComponentBase.OnInitialized()
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.OnInitialized()
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnInitialized
+    name: OnInitialized
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.oninitialized
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnInitialized
+    name: OnInitialized
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.oninitialized
+  - name: (
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.OnInitializedAsync
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.OnInitializedAsync
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.oninitializedasync
+  name: OnInitializedAsync()
+  nameWithType: ComponentBase.OnInitializedAsync()
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.OnInitializedAsync()
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnInitializedAsync
+    name: OnInitializedAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.oninitializedasync
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnInitializedAsync
+    name: OnInitializedAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.oninitializedasync
+  - name: (
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSet
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.OnParametersSet
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onparametersset
+  name: OnParametersSet()
+  nameWithType: ComponentBase.OnParametersSet()
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSet()
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSet
+    name: OnParametersSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onparametersset
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSet
+    name: OnParametersSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onparametersset
+  - name: (
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSetAsync
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.OnParametersSetAsync
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onparameterssetasync
+  name: OnParametersSetAsync()
+  nameWithType: ComponentBase.OnParametersSetAsync()
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSetAsync()
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSetAsync
+    name: OnParametersSetAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onparameterssetasync
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSetAsync
+    name: OnParametersSetAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onparameterssetasync
+  - name: (
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.StateHasChanged
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.StateHasChanged
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.statehaschanged
+  name: StateHasChanged()
+  nameWithType: ComponentBase.StateHasChanged()
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.StateHasChanged()
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.StateHasChanged
+    name: StateHasChanged
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.statehaschanged
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.StateHasChanged
+    name: StateHasChanged
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.statehaschanged
+  - name: (
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.ShouldRender
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.ShouldRender
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.shouldrender
+  name: ShouldRender()
+  nameWithType: ComponentBase.ShouldRender()
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.ShouldRender()
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.ShouldRender
+    name: ShouldRender
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.shouldrender
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.ShouldRender
+    name: ShouldRender
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.shouldrender
+  - name: (
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(System.Boolean)
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(System.Boolean)
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onafterrender
+  name: OnAfterRender(bool)
+  nameWithType: ComponentBase.OnAfterRender(bool)
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(bool)
+  nameWithType.vb: ComponentBase.OnAfterRender(Boolean)
+  fullName.vb: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(Boolean)
+  name.vb: OnAfterRender(Boolean)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(System.Boolean)
+    name: OnAfterRender
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onafterrender
+  - name: (
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(System.Boolean)
+    name: OnAfterRender
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onafterrender
+  - name: (
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Action)
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Action)
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.invokeasync#microsoft-aspnetcore-components-componentbase-invokeasync(system-action)
+  name: InvokeAsync(Action)
+  nameWithType: ComponentBase.InvokeAsync(Action)
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Action)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Action)
+    name: InvokeAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.invokeasync#microsoft-aspnetcore-components-componentbase-invokeasync(system-action)
+  - name: (
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Action)
+    name: InvokeAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.invokeasync#microsoft-aspnetcore-components-componentbase-invokeasync(system-action)
+  - name: (
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func{System.Threading.Tasks.Task})
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func{System.Threading.Tasks.Task})
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.invokeasync#microsoft-aspnetcore-components-componentbase-invokeasync(system-func((system-threading-tasks-task)))
+  name: InvokeAsync(Func<Task>)
+  nameWithType: ComponentBase.InvokeAsync(Func<Task>)
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func<System.Threading.Tasks.Task>)
+  nameWithType.vb: ComponentBase.InvokeAsync(Func(Of Task))
+  fullName.vb: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func(Of System.Threading.Tasks.Task))
+  name.vb: InvokeAsync(Func(Of Task))
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func{System.Threading.Tasks.Task})
+    name: InvokeAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.invokeasync#microsoft-aspnetcore-components-componentbase-invokeasync(system-func((system-threading-tasks-task)))
+  - name: (
+  - uid: System.Func`1
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-1
+  - name: <
+  - uid: System.Threading.Tasks.Task
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func{System.Threading.Tasks.Task})
+    name: InvokeAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.invokeasync#microsoft-aspnetcore-components-componentbase-invokeasync(system-func((system-threading-tasks-task)))
+  - name: (
+  - uid: System.Func`1
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Threading.Tasks.Task
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  - name: )
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Microsoft.AspNetCore.Components
+  commentId: N:Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.AspNetCore.Components
+  nameWithType: Microsoft.AspNetCore.Components
+  fullName: Microsoft.AspNetCore.Components
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Components
+    name: Components
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Components
+    name: Components
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components
+- uid: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.BLParentBusinessName*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.BLParentBusinessName
+  href: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.html#Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.BLParentBusinessName
+  name: BLParentBusinessName
+  nameWithType: DynamicField.BLParentBusinessName
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.BLParentBusinessName
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.FieldOpt*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.FieldOpt
+  href: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.html#Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.FieldOpt
+  name: FieldOpt
+  nameWithType: DynamicField.FieldOpt
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.FieldOpt
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldOptions
+  commentId: T:Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldOptions
+  parent: Siesa.SDK.Frontend.Components.FormManager.Model.Fields
+  href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldOptions.html
+  name: FieldOptions
+  nameWithType: FieldOptions
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldOptions
+- uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields
+  commentId: N:Siesa.SDK.Frontend.Components.FormManager.Model.Fields
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Components.FormManager.Model.Fields
+  nameWithType: Siesa.SDK.Frontend.Components.FormManager.Model.Fields
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Model.Fields
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager
+    name: FormManager
+    href: Siesa.SDK.Frontend.Components.FormManager.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model
+    name: Model
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields
+    name: Fields
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager
+    name: FormManager
+    href: Siesa.SDK.Frontend.Components.FormManager.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model
+    name: Model
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields
+    name: Fields
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.html
+- uid: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.ModelObj*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.ModelObj
+  href: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.html#Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.ModelObj
+  name: ModelObj
+  nameWithType: DynamicField.ModelObj
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.ModelObj
+- uid: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.ValidateField*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.ValidateField
+  href: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.html#Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.ValidateField
+  name: ValidateField
+  nameWithType: DynamicField.ValidateField
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.ValidateField
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.UploadComponent*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.UploadComponent
+  href: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.html#Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.UploadComponent
+  name: UploadComponent
+  nameWithType: DynamicField.UploadComponent
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.UploadComponent
+- uid: Siesa.SDK.Frontend.Components.FormManager.Fields.FileField
+  commentId: T:Siesa.SDK.Frontend.Components.FormManager.Fields.FileField
+  parent: Siesa.SDK.Frontend.Components.FormManager.Fields
+  href: Siesa.SDK.Frontend.Components.FormManager.Fields.FileField.html
+  name: FileField
+  nameWithType: FileField
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Fields.FileField
+- uid: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.SensitiveData*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.SensitiveData
+  href: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.html#Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.SensitiveData
+  name: SensitiveData
+  nameWithType: DynamicField.SensitiveData
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.SensitiveData
+- uid: System.Threading.Tasks.Task
+  commentId: T:System.Threading.Tasks.Task
+  parent: System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  name: Task
+  nameWithType: Task
+  fullName: System.Threading.Tasks.Task
+- uid: Microsoft.AspNetCore.Components.ComponentBase.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.setparametersasync
+  name: SetParametersAsync(ParameterView)
+  nameWithType: ComponentBase.SetParametersAsync(ParameterView)
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+    name: SetParametersAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.setparametersasync
+  - name: (
+  - uid: Microsoft.AspNetCore.Components.ParameterView
+    name: ParameterView
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.parameterview
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+    name: SetParametersAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.setparametersasync
+  - name: (
+  - uid: Microsoft.AspNetCore.Components.ParameterView
+    name: ParameterView
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.parameterview
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ParameterAttribute
+  commentId: T:Microsoft.AspNetCore.Components.ParameterAttribute
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.parameterattribute
+  name: ParameterAttribute
+  nameWithType: ParameterAttribute
+  fullName: Microsoft.AspNetCore.Components.ParameterAttribute
+- uid: Microsoft.AspNetCore.Components.CascadingParameterAttribute
+  commentId: T:Microsoft.AspNetCore.Components.CascadingParameterAttribute
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.cascadingparameterattribute
+  name: CascadingParameterAttribute
+  nameWithType: CascadingParameterAttribute
+  fullName: Microsoft.AspNetCore.Components.CascadingParameterAttribute
+- uid: Microsoft.AspNetCore.Components.ParameterView
+  commentId: T:Microsoft.AspNetCore.Components.ParameterView
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.parameterview
+  name: ParameterView
+  nameWithType: ParameterView
+  fullName: Microsoft.AspNetCore.Components.ParameterView
+- uid: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.SetParametersAsync*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.SetParametersAsync
+  href: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.html#Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  name: SetParametersAsync
+  nameWithType: DynamicField.SetParametersAsync
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.SetParametersAsync
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+- uid: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRenderAsync(System.Boolean)
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.OnAfterRenderAsync(System.Boolean)
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onafterrenderasync
+  name: OnAfterRenderAsync(bool)
+  nameWithType: ComponentBase.OnAfterRenderAsync(bool)
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRenderAsync(bool)
+  nameWithType.vb: ComponentBase.OnAfterRenderAsync(Boolean)
+  fullName.vb: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRenderAsync(Boolean)
+  name.vb: OnAfterRenderAsync(Boolean)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRenderAsync(System.Boolean)
+    name: OnAfterRenderAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onafterrenderasync
+  - name: (
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRenderAsync(System.Boolean)
+    name: OnAfterRenderAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onafterrenderasync
+  - name: (
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.OnAfterRenderAsync*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.OnAfterRenderAsync
+  href: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.html#Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.OnAfterRenderAsync(System.Boolean)
+  name: OnAfterRenderAsync
+  nameWithType: DynamicField.OnAfterRenderAsync
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.OnAfterRenderAsync
+- uid: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.AddUploadComponent*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.AddUploadComponent
+  href: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.html#Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.AddUploadComponent(Siesa.SDK.Frontend.Components.FormManager.Fields.FileField,System.String)
+  name: AddUploadComponent
+  nameWithType: DynamicField.AddUploadComponent
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.AddUploadComponent
+- uid: Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder
+  commentId: T:Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder
+  parent: Microsoft.AspNetCore.Components.Rendering
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.rendering.rendertreebuilder
+  name: RenderTreeBuilder
+  nameWithType: RenderTreeBuilder
+  fullName: Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder
+- uid: Microsoft.AspNetCore.Components.ComponentBase.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.buildrendertree
+  name: BuildRenderTree(RenderTreeBuilder)
+  nameWithType: ComponentBase.BuildRenderTree(RenderTreeBuilder)
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+    name: BuildRenderTree
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.buildrendertree
+  - name: (
+  - uid: Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder
+    name: RenderTreeBuilder
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.rendering.rendertreebuilder
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+    name: BuildRenderTree
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.buildrendertree
+  - name: (
+  - uid: Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder
+    name: RenderTreeBuilder
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.rendering.rendertreebuilder
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.BuildRenderTree*
+  commentId: Overload:Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.BuildRenderTree
+  href: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.html#Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  name: BuildRenderTree
+  nameWithType: DynamicField.BuildRenderTree
+  fullName: Siesa.SDK.Frontend.Components.FormManager.Fields.DynamicField.BuildRenderTree
+- uid: Microsoft.AspNetCore.Components.Rendering
+  commentId: N:Microsoft.AspNetCore.Components.Rendering
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.AspNetCore.Components.Rendering
+  nameWithType: Microsoft.AspNetCore.Components.Rendering
+  fullName: Microsoft.AspNetCore.Components.Rendering
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Components
+    name: Components
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components
+  - name: .
+  - uid: Microsoft.AspNetCore.Components.Rendering
+    name: Rendering
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.rendering
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Components
+    name: Components
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components
+  - name: .
+  - uid: Microsoft.AspNetCore.Components.Rendering
+    name: Rendering
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.rendering

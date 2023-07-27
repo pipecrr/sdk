@@ -1,0 +1,186 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Report.Controllers
+  commentId: N:Siesa.SDK.Frontend.Report.Controllers
+  id: Siesa.SDK.Frontend.Report.Controllers
+  children:
+  - Siesa.SDK.Frontend.Report.Controllers.ConnectionProperties
+  - Siesa.SDK.Frontend.Report.Controllers.DataSet
+  - Siesa.SDK.Frontend.Report.Controllers.DataSetModel
+  - Siesa.SDK.Frontend.Report.Controllers.DataSetsController
+  - Siesa.SDK.Frontend.Report.Controllers.DataSource
+  - Siesa.SDK.Frontend.Report.Controllers.Field
+  - Siesa.SDK.Frontend.Report.Controllers.InternalSDKReportProvider
+  - Siesa.SDK.Frontend.Report.Controllers.Parameter
+  - Siesa.SDK.Frontend.Report.Controllers.Query
+  - Siesa.SDK.Frontend.Report.Controllers.ReportInfo
+  - Siesa.SDK.Frontend.Report.Controllers.SDKReportCommand
+  - Siesa.SDK.Frontend.Report.Controllers.SDKReportConnection
+  - Siesa.SDK.Frontend.Report.Controllers.SDKReportDataReader
+  - Siesa.SDK.Frontend.Report.Controllers.SDKReportParameter
+  - Siesa.SDK.Frontend.Report.Controllers.SDKReportProvider
+  - Siesa.SDK.Frontend.Report.Controllers.SaveController
+  - Siesa.SDK.Frontend.Report.Controllers.TemplatesController
+  langs:
+  - csharp
+  - vb
+  name: Siesa.SDK.Frontend.Report.Controllers
+  nameWithType: Siesa.SDK.Frontend.Report.Controllers
+  fullName: Siesa.SDK.Frontend.Report.Controllers
+  type: Namespace
+  assemblies:
+  - Siesa.SDK.Frontend
+references:
+- uid: Siesa.SDK.Frontend.Report.Controllers.DataSetsController
+  commentId: T:Siesa.SDK.Frontend.Report.Controllers.DataSetsController
+  href: Siesa.SDK.Frontend.Report.Controllers.DataSetsController.html
+  name: DataSetsController
+  nameWithType: DataSetsController
+  fullName: Siesa.SDK.Frontend.Report.Controllers.DataSetsController
+- uid: Siesa.SDK.Frontend.Report.Controllers.DataSetModel
+  commentId: T:Siesa.SDK.Frontend.Report.Controllers.DataSetModel
+  href: Siesa.SDK.Frontend.Report.Controllers.DataSetModel.html
+  name: DataSetModel
+  nameWithType: DataSetModel
+  fullName: Siesa.SDK.Frontend.Report.Controllers.DataSetModel
+- uid: Siesa.SDK.Frontend.Report.Controllers.DataSet
+  commentId: T:Siesa.SDK.Frontend.Report.Controllers.DataSet
+  parent: Siesa.SDK.Frontend.Report.Controllers
+  href: Siesa.SDK.Frontend.Report.Controllers.DataSet.html
+  name: DataSet
+  nameWithType: DataSet
+  fullName: Siesa.SDK.Frontend.Report.Controllers.DataSet
+- uid: Siesa.SDK.Frontend.Report.Controllers.Field
+  commentId: T:Siesa.SDK.Frontend.Report.Controllers.Field
+  href: Siesa.SDK.Frontend.Report.Controllers.Field.html
+  name: Field
+  nameWithType: Field
+  fullName: Siesa.SDK.Frontend.Report.Controllers.Field
+- uid: Siesa.SDK.Frontend.Report.Controllers.Query
+  commentId: T:Siesa.SDK.Frontend.Report.Controllers.Query
+  parent: Siesa.SDK.Frontend.Report.Controllers
+  href: Siesa.SDK.Frontend.Report.Controllers.Query.html
+  name: Query
+  nameWithType: Query
+  fullName: Siesa.SDK.Frontend.Report.Controllers.Query
+- uid: Siesa.SDK.Frontend.Report.Controllers.DataSource
+  commentId: T:Siesa.SDK.Frontend.Report.Controllers.DataSource
+  parent: Siesa.SDK.Frontend.Report.Controllers
+  href: Siesa.SDK.Frontend.Report.Controllers.DataSource.html
+  name: DataSource
+  nameWithType: DataSource
+  fullName: Siesa.SDK.Frontend.Report.Controllers.DataSource
+- uid: Siesa.SDK.Frontend.Report.Controllers.ConnectionProperties
+  commentId: T:Siesa.SDK.Frontend.Report.Controllers.ConnectionProperties
+  parent: Siesa.SDK.Frontend.Report.Controllers
+  href: Siesa.SDK.Frontend.Report.Controllers.ConnectionProperties.html
+  name: ConnectionProperties
+  nameWithType: ConnectionProperties
+  fullName: Siesa.SDK.Frontend.Report.Controllers.ConnectionProperties
+- uid: Siesa.SDK.Frontend.Report.Controllers.Parameter
+  commentId: T:Siesa.SDK.Frontend.Report.Controllers.Parameter
+  href: Siesa.SDK.Frontend.Report.Controllers.Parameter.html
+  name: Parameter
+  nameWithType: Parameter
+  fullName: Siesa.SDK.Frontend.Report.Controllers.Parameter
+- uid: Siesa.SDK.Frontend.Report.Controllers.InternalSDKReportProvider
+  commentId: T:Siesa.SDK.Frontend.Report.Controllers.InternalSDKReportProvider
+  parent: Siesa.SDK.Frontend.Report.Controllers
+  href: Siesa.SDK.Frontend.Report.Controllers.InternalSDKReportProvider.html
+  name: InternalSDKReportProvider
+  nameWithType: InternalSDKReportProvider
+  fullName: Siesa.SDK.Frontend.Report.Controllers.InternalSDKReportProvider
+- uid: Siesa.SDK.Frontend.Report.Controllers.SDKReportProvider
+  commentId: T:Siesa.SDK.Frontend.Report.Controllers.SDKReportProvider
+  href: Siesa.SDK.Frontend.Report.Controllers.SDKReportProvider.html
+  name: SDKReportProvider
+  nameWithType: SDKReportProvider
+  fullName: Siesa.SDK.Frontend.Report.Controllers.SDKReportProvider
+- uid: Siesa.SDK.Frontend.Report.Controllers.SaveController
+  commentId: T:Siesa.SDK.Frontend.Report.Controllers.SaveController
+  href: Siesa.SDK.Frontend.Report.Controllers.SaveController.html
+  name: SaveController
+  nameWithType: SaveController
+  fullName: Siesa.SDK.Frontend.Report.Controllers.SaveController
+- uid: Siesa.SDK.Frontend.Report.Controllers.ReportInfo
+  commentId: T:Siesa.SDK.Frontend.Report.Controllers.ReportInfo
+  href: Siesa.SDK.Frontend.Report.Controllers.ReportInfo.html
+  name: ReportInfo
+  nameWithType: ReportInfo
+  fullName: Siesa.SDK.Frontend.Report.Controllers.ReportInfo
+- uid: Siesa.SDK.Frontend.Report.Controllers.SDKReportParameter
+  commentId: T:Siesa.SDK.Frontend.Report.Controllers.SDKReportParameter
+  href: Siesa.SDK.Frontend.Report.Controllers.SDKReportParameter.html
+  name: SDKReportParameter
+  nameWithType: SDKReportParameter
+  fullName: Siesa.SDK.Frontend.Report.Controllers.SDKReportParameter
+- uid: Siesa.SDK.Frontend.Report.Controllers.SDKReportDataReader
+  commentId: T:Siesa.SDK.Frontend.Report.Controllers.SDKReportDataReader
+  href: Siesa.SDK.Frontend.Report.Controllers.SDKReportDataReader.html
+  name: SDKReportDataReader
+  nameWithType: SDKReportDataReader
+  fullName: Siesa.SDK.Frontend.Report.Controllers.SDKReportDataReader
+- uid: Siesa.SDK.Frontend.Report.Controllers.SDKReportCommand
+  commentId: T:Siesa.SDK.Frontend.Report.Controllers.SDKReportCommand
+  href: Siesa.SDK.Frontend.Report.Controllers.SDKReportCommand.html
+  name: SDKReportCommand
+  nameWithType: SDKReportCommand
+  fullName: Siesa.SDK.Frontend.Report.Controllers.SDKReportCommand
+- uid: Siesa.SDK.Frontend.Report.Controllers.SDKReportConnection
+  commentId: T:Siesa.SDK.Frontend.Report.Controllers.SDKReportConnection
+  href: Siesa.SDK.Frontend.Report.Controllers.SDKReportConnection.html
+  name: SDKReportConnection
+  nameWithType: SDKReportConnection
+  fullName: Siesa.SDK.Frontend.Report.Controllers.SDKReportConnection
+- uid: Siesa.SDK.Frontend.Report.Controllers.TemplatesController
+  commentId: T:Siesa.SDK.Frontend.Report.Controllers.TemplatesController
+  href: Siesa.SDK.Frontend.Report.Controllers.TemplatesController.html
+  name: TemplatesController
+  nameWithType: TemplatesController
+  fullName: Siesa.SDK.Frontend.Report.Controllers.TemplatesController
+- uid: Siesa.SDK.Frontend.Report.Controllers
+  commentId: N:Siesa.SDK.Frontend.Report.Controllers
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Report.Controllers
+  nameWithType: Siesa.SDK.Frontend.Report.Controllers
+  fullName: Siesa.SDK.Frontend.Report.Controllers
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Report
+    name: Report
+    href: Siesa.SDK.Frontend.Report.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Report.Controllers
+    name: Controllers
+    href: Siesa.SDK.Frontend.Report.Controllers.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Report
+    name: Report
+    href: Siesa.SDK.Frontend.Report.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Report.Controllers
+    name: Controllers
+    href: Siesa.SDK.Frontend.Report.Controllers.html

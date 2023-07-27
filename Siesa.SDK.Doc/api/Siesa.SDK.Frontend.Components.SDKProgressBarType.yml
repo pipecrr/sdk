@@ -1,0 +1,187 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Components.SDKProgressBarType
+  commentId: T:Siesa.SDK.Frontend.Components.SDKProgressBarType
+  id: SDKProgressBarType
+  parent: Siesa.SDK.Frontend.Components
+  children:
+  - Siesa.SDK.Frontend.Components.SDKProgressBarType.Determinate
+  - Siesa.SDK.Frontend.Components.SDKProgressBarType.Indeterminate
+  langs:
+  - csharp
+  - vb
+  name: SDKProgressBarType
+  nameWithType: SDKProgressBarType
+  fullName: Siesa.SDK.Frontend.Components.SDKProgressBarType
+  type: Enum
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/SDKEnums.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SDKProgressBarType
+    path: ../Siesa.SDK.Frontend/Components/SDKEnums.cs
+    startLine: 237
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components
+  syntax:
+    content: public enum SDKProgressBarType
+    content.vb: Public Enum SDKProgressBarType
+  extensionMethods:
+  - Siesa.SDK.Frontend.Components.SDKProgressBarType.Siesa.SDK.Frontend.Components.SDKEnums.GetModeProgressBar
+- uid: Siesa.SDK.Frontend.Components.SDKProgressBarType.Determinate
+  commentId: F:Siesa.SDK.Frontend.Components.SDKProgressBarType.Determinate
+  id: Determinate
+  parent: Siesa.SDK.Frontend.Components.SDKProgressBarType
+  langs:
+  - csharp
+  - vb
+  name: Determinate
+  nameWithType: SDKProgressBarType.Determinate
+  fullName: Siesa.SDK.Frontend.Components.SDKProgressBarType.Determinate
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/SDKEnums.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Determinate
+    path: ../Siesa.SDK.Frontend/Components/SDKEnums.cs
+    startLine: 239
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components
+  syntax:
+    content: Determinate = 0
+    return:
+      type: Siesa.SDK.Frontend.Components.SDKProgressBarType
+- uid: Siesa.SDK.Frontend.Components.SDKProgressBarType.Indeterminate
+  commentId: F:Siesa.SDK.Frontend.Components.SDKProgressBarType.Indeterminate
+  id: Indeterminate
+  parent: Siesa.SDK.Frontend.Components.SDKProgressBarType
+  langs:
+  - csharp
+  - vb
+  name: Indeterminate
+  nameWithType: SDKProgressBarType.Indeterminate
+  fullName: Siesa.SDK.Frontend.Components.SDKProgressBarType.Indeterminate
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/SDKEnums.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Indeterminate
+    path: ../Siesa.SDK.Frontend/Components/SDKEnums.cs
+    startLine: 240
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components
+  syntax:
+    content: Indeterminate = 1
+    return:
+      type: Siesa.SDK.Frontend.Components.SDKProgressBarType
+references:
+- uid: Siesa.SDK.Frontend.Components
+  commentId: N:Siesa.SDK.Frontend.Components
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Components
+  nameWithType: Siesa.SDK.Frontend.Components
+  fullName: Siesa.SDK.Frontend.Components
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+- uid: Siesa.SDK.Frontend.Components.SDKProgressBarType.Siesa.SDK.Frontend.Components.SDKEnums.GetModeProgressBar
+  commentId: M:Siesa.SDK.Frontend.Components.SDKEnums.GetModeProgressBar(Siesa.SDK.Frontend.Components.SDKProgressBarType)
+  parent: Siesa.SDK.Frontend.Components.SDKEnums
+  definition: Siesa.SDK.Frontend.Components.SDKEnums.GetModeProgressBar(Siesa.SDK.Frontend.Components.SDKProgressBarType)
+  href: Siesa.SDK.Frontend.Components.SDKEnums.html#Siesa.SDK.Frontend.Components.SDKEnums.GetModeProgressBar(Siesa.SDK.Frontend.Components.SDKProgressBarType)
+  name: GetModeProgressBar(SDKProgressBarType)
+  nameWithType: SDKEnums.GetModeProgressBar(SDKProgressBarType)
+  fullName: Siesa.SDK.Frontend.Components.SDKEnums.GetModeProgressBar(Siesa.SDK.Frontend.Components.SDKProgressBarType)
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.SDKEnums.GetModeProgressBar(Siesa.SDK.Frontend.Components.SDKProgressBarType)
+    name: GetModeProgressBar
+    href: Siesa.SDK.Frontend.Components.SDKEnums.html#Siesa.SDK.Frontend.Components.SDKEnums.GetModeProgressBar(Siesa.SDK.Frontend.Components.SDKProgressBarType)
+  - name: (
+  - uid: Siesa.SDK.Frontend.Components.SDKProgressBarType
+    name: SDKProgressBarType
+    href: Siesa.SDK.Frontend.Components.SDKProgressBarType.html
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.SDKEnums.GetModeProgressBar(Siesa.SDK.Frontend.Components.SDKProgressBarType)
+    name: GetModeProgressBar
+    href: Siesa.SDK.Frontend.Components.SDKEnums.html#Siesa.SDK.Frontend.Components.SDKEnums.GetModeProgressBar(Siesa.SDK.Frontend.Components.SDKProgressBarType)
+  - name: (
+  - uid: Siesa.SDK.Frontend.Components.SDKProgressBarType
+    name: SDKProgressBarType
+    href: Siesa.SDK.Frontend.Components.SDKProgressBarType.html
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.SDKEnums.GetModeProgressBar(Siesa.SDK.Frontend.Components.SDKProgressBarType)
+  commentId: M:Siesa.SDK.Frontend.Components.SDKEnums.GetModeProgressBar(Siesa.SDK.Frontend.Components.SDKProgressBarType)
+  href: Siesa.SDK.Frontend.Components.SDKEnums.html#Siesa.SDK.Frontend.Components.SDKEnums.GetModeProgressBar(Siesa.SDK.Frontend.Components.SDKProgressBarType)
+  name: GetModeProgressBar(SDKProgressBarType)
+  nameWithType: SDKEnums.GetModeProgressBar(SDKProgressBarType)
+  fullName: Siesa.SDK.Frontend.Components.SDKEnums.GetModeProgressBar(Siesa.SDK.Frontend.Components.SDKProgressBarType)
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.SDKEnums.GetModeProgressBar(Siesa.SDK.Frontend.Components.SDKProgressBarType)
+    name: GetModeProgressBar
+    href: Siesa.SDK.Frontend.Components.SDKEnums.html#Siesa.SDK.Frontend.Components.SDKEnums.GetModeProgressBar(Siesa.SDK.Frontend.Components.SDKProgressBarType)
+  - name: (
+  - uid: Siesa.SDK.Frontend.Components.SDKProgressBarType
+    name: SDKProgressBarType
+    href: Siesa.SDK.Frontend.Components.SDKProgressBarType.html
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.SDKEnums.GetModeProgressBar(Siesa.SDK.Frontend.Components.SDKProgressBarType)
+    name: GetModeProgressBar
+    href: Siesa.SDK.Frontend.Components.SDKEnums.html#Siesa.SDK.Frontend.Components.SDKEnums.GetModeProgressBar(Siesa.SDK.Frontend.Components.SDKProgressBarType)
+  - name: (
+  - uid: Siesa.SDK.Frontend.Components.SDKProgressBarType
+    name: SDKProgressBarType
+    href: Siesa.SDK.Frontend.Components.SDKProgressBarType.html
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.SDKEnums
+  commentId: T:Siesa.SDK.Frontend.Components.SDKEnums
+  parent: Siesa.SDK.Frontend.Components
+  href: Siesa.SDK.Frontend.Components.SDKEnums.html
+  name: SDKEnums
+  nameWithType: SDKEnums
+  fullName: Siesa.SDK.Frontend.Components.SDKEnums
+- uid: Siesa.SDK.Frontend.Components.SDKProgressBarType
+  commentId: T:Siesa.SDK.Frontend.Components.SDKProgressBarType
+  parent: Siesa.SDK.Frontend.Components
+  href: Siesa.SDK.Frontend.Components.SDKProgressBarType.html
+  name: SDKProgressBarType
+  nameWithType: SDKProgressBarType
+  fullName: Siesa.SDK.Frontend.Components.SDKProgressBarType

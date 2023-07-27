@@ -1,0 +1,4656 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Business.BLFrontendSimple`2
+  commentId: T:Siesa.SDK.Business.BLFrontendSimple`2
+  id: BLFrontendSimple`2
+  parent: Siesa.SDK.Business
+  children:
+  - Siesa.SDK.Business.BLFrontendSimple`2.#ctor(Siesa.SDK.Shared.Services.IAuthenticationService,Siesa.SDK.Frontend.Services.SDKNotificationService,Microsoft.Extensions.Logging.ILoggerFactory)
+  - Siesa.SDK.Business.BLFrontendSimple`2.#ctor(System.IServiceProvider)
+  - Siesa.SDK.Business.BLFrontendSimple`2.AddRelFieldToSave(System.String)
+  - Siesa.SDK.Business.BLFrontendSimple`2.AuthenticationService
+  - Siesa.SDK.Business.BLFrontendSimple`2.Backend
+  - Siesa.SDK.Business.BLFrontendSimple`2.BaseObj
+  - Siesa.SDK.Business.BLFrontendSimple`2.BusinessName
+  - Siesa.SDK.Business.BLFrontendSimple`2.Delete
+  - Siesa.SDK.Business.BLFrontendSimple`2.DeleteAsync
+  - Siesa.SDK.Business.BLFrontendSimple`2.DownloadFile(System.String,System.String)
+  - Siesa.SDK.Business.BLFrontendSimple`2.DynamicEntities
+  - Siesa.SDK.Business.BLFrontendSimple`2.EntityFieldSearch(System.String,System.String,System.Nullable{System.Int32},System.String,System.Collections.Generic.List{System.String})
+  - Siesa.SDK.Business.BLFrontendSimple`2.EntityFieldSearchAsync(System.String,System.String,System.Nullable{System.Int32},System.String,System.Collections.Generic.List{System.String})
+  - Siesa.SDK.Business.BLFrontendSimple`2.Get(System.Int64,System.Collections.Generic.List{System.String})
+  - Siesa.SDK.Business.BLFrontendSimple`2.GetAsync(System.Int64,System.Collections.Generic.List{System.String})
+  - Siesa.SDK.Business.BLFrontendSimple`2.GetBackend(System.String)
+  - Siesa.SDK.Business.BLFrontendSimple`2.GetData(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,Siesa.SDK.Shared.Business.QueryFilterDelegate{`0},System.Boolean,System.Boolean,System.Collections.Generic.List{System.String})
+  - Siesa.SDK.Business.BLFrontendSimple`2.GetDataAsync(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.Boolean,System.Collections.Generic.List{System.String})
+  - Siesa.SDK.Business.BLFrontendSimple`2.GetDataWithTop(System.String)
+  - Siesa.SDK.Business.BLFrontendSimple`2.GetDuplicateInfo(System.Int64)
+  - Siesa.SDK.Business.BLFrontendSimple`2.GetNotificacionService(System.String)
+  - Siesa.SDK.Business.BLFrontendSimple`2.GetUByUserType(System.Int32,Siesa.Global.Enums.PermissionUserTypes,System.Collections.Generic.List{System.String})
+  - Siesa.SDK.Business.BLFrontendSimple`2.GetUData(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,Siesa.SDK.Shared.Business.QueryFilterDelegate{`0},System.Boolean,System.Collections.Generic.List{System.String})
+  - Siesa.SDK.Business.BLFrontendSimple`2.GetUDataAsync(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.Boolean,System.Collections.Generic.List{System.String})
+  - Siesa.SDK.Business.BLFrontendSimple`2.InitializeBusiness(System.Int64,System.Collections.Generic.List{System.String})
+  - Siesa.SDK.Business.BLFrontendSimple`2.InstanceDynamicEntities(System.String,System.Int64)
+  - Siesa.SDK.Business.BLFrontendSimple`2.ListViewFields
+  - Siesa.SDK.Business.BLFrontendSimple`2.Logger
+  - Siesa.SDK.Business.BLFrontendSimple`2.Main
+  - Siesa.SDK.Business.BLFrontendSimple`2.ManageUData(System.Collections.Generic.List{Siesa.SDK.Shared.DTOS.UObjectDTO})
+  - Siesa.SDK.Business.BLFrontendSimple`2.NotificationService
+  - Siesa.SDK.Business.BLFrontendSimple`2.OnReady(Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicViewType,System.Int64)
+  - Siesa.SDK.Business.BLFrontendSimple`2.Panels
+  - Siesa.SDK.Business.BLFrontendSimple`2.ParentComponent
+  - Siesa.SDK.Business.BLFrontendSimple`2.Refresh(System.Boolean)
+  - Siesa.SDK.Business.BLFrontendSimple`2.RelFieldsToSave
+  - Siesa.SDK.Business.BLFrontendSimple`2.Save
+  - Siesa.SDK.Business.BLFrontendSimple`2.SaveAsync
+  - Siesa.SDK.Business.BLFrontendSimple`2.SaveAttachmentDetail(Siesa.SDK.Shared.DTOS.SDKFileUploadDTO,System.Int32)
+  - Siesa.SDK.Business.BLFrontendSimple`2.SetPropertyValue(System.String,System.Object)
+  - Siesa.SDK.Business.BLFrontendSimple`2.ToString
+  - Siesa.SDK.Business.BLFrontendSimple`2.Update
+  - Siesa.SDK.Business.BLFrontendSimple`2.UploadSingle(Microsoft.AspNetCore.Http.IFormFile)
+  - Siesa.SDK.Business.BLFrontendSimple`2.UploadSingleByte(Microsoft.AspNetCore.Http.IFormFile)
+  - Siesa.SDK.Business.BLFrontendSimple`2.ValidateAndSave(System.Boolean)
+  - Siesa.SDK.Business.BLFrontendSimple`2.ValidateAndSaveAsync
+  - Siesa.SDK.Business.BLFrontendSimple`2.ValidateBussines(Siesa.SDK.Protos.ValidateAndSaveBusinessObjResponse@,Siesa.SDK.Shared.Business.BLUserActionEnum)
+  langs:
+  - csharp
+  - vb
+  name: BLFrontendSimple<T, K>
+  nameWithType: BLFrontendSimple<T, K>
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>
+  type: Class
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: BLFrontendSimple
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 125
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: 'public class BLFrontendSimple<T, K> : IBLBase<T> where T : class, IBaseSDK where K : BLBaseValidator<T>'
+    typeParameters:
+    - id: T
+    - id: K
+    content.vb: Public Class BLFrontendSimple(Of T As {Class, IBaseSDK}, K As BLBaseValidator(Of T)) Implements IBLBase(Of T)
+  inheritance:
+  - System.Object
+  derivedClasses:
+  - Siesa.SDK.Business.BLFrontendExplorer`1
+  implements:
+  - Siesa.SDK.Shared.Business.IBLBase{{T}}
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  nameWithType.vb: BLFrontendSimple(Of T, K)
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K)
+  name.vb: BLFrontendSimple(Of T, K)
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.ParentComponent
+  commentId: P:Siesa.SDK.Business.BLFrontendSimple`2.ParentComponent
+  id: ParentComponent
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: ParentComponent
+  nameWithType: BLFrontendSimple<T, K>.ParentComponent
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.ParentComponent
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ParentComponent
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 127
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: >-
+      [JsonIgnore]
+
+      public dynamic ParentComponent { get; set; }
+    parameters: []
+    return:
+      type: dynamic
+    content.vb: >-
+      <JsonIgnore>
+
+      Public Property ParentComponent As Object
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.ParentComponent*
+  attributes:
+  - type: Newtonsoft.Json.JsonIgnoreAttribute
+    ctor: Newtonsoft.Json.JsonIgnoreAttribute.#ctor
+    arguments: []
+  nameWithType.vb: BLFrontendSimple(Of T, K).ParentComponent
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).ParentComponent
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.BusinessName
+  commentId: P:Siesa.SDK.Business.BLFrontendSimple`2.BusinessName
+  id: BusinessName
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: BusinessName
+  nameWithType: BLFrontendSimple<T, K>.BusinessName
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.BusinessName
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: BusinessName
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 129
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  example: []
+  syntax:
+    content: public string BusinessName { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property BusinessName As String
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.BusinessName*
+  implements:
+  - Siesa.SDK.Shared.Business.IBLBase{{T}}.BusinessName
+  nameWithType.vb: BLFrontendSimple(Of T, K).BusinessName
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).BusinessName
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.Backend
+  commentId: P:Siesa.SDK.Business.BLFrontendSimple`2.Backend
+  id: Backend
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: Backend
+  nameWithType: BLFrontendSimple<T, K>.Backend
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.Backend
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Backend
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 130
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: >-
+      [JsonIgnore]
+
+      public SDKBusinessModel Backend { get; }
+    parameters: []
+    return:
+      type: Siesa.SDK.Shared.Services.SDKBusinessModel
+    content.vb: >-
+      <JsonIgnore>
+
+      Public ReadOnly Property Backend As SDKBusinessModel
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.Backend*
+  attributes:
+  - type: Newtonsoft.Json.JsonIgnoreAttribute
+    ctor: Newtonsoft.Json.JsonIgnoreAttribute.#ctor
+    arguments: []
+  nameWithType.vb: BLFrontendSimple(Of T, K).Backend
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).Backend
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.GetBackend(System.String)
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.GetBackend(System.String)
+  id: GetBackend(System.String)
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: GetBackend(string)
+  nameWithType: BLFrontendSimple<T, K>.GetBackend(string)
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.GetBackend(string)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetBackend
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 133
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: public SDKBusinessModel GetBackend(string business_name)
+    parameters:
+    - id: business_name
+      type: System.String
+    return:
+      type: Siesa.SDK.Shared.Services.SDKBusinessModel
+    content.vb: Public Function GetBackend(business_name As String) As SDKBusinessModel
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.GetBackend*
+  nameWithType.vb: BLFrontendSimple(Of T, K).GetBackend(String)
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).GetBackend(String)
+  name.vb: GetBackend(String)
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.Panels
+  commentId: F:Siesa.SDK.Business.BLFrontendSimple`2.Panels
+  id: Panels
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: Panels
+  nameWithType: BLFrontendSimple<T, K>.Panels
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.Panels
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Panels
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 137
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: >-
+      [JsonIgnore]
+
+      public List<Panel> Panels
+    return:
+      type: System.Collections.Generic.List{Siesa.SDK.Frontend.Components.FormManager.Model.Panel}
+    content.vb: >-
+      <JsonIgnore>
+
+      Public Panels As List(Of Panel)
+  attributes:
+  - type: Newtonsoft.Json.JsonIgnoreAttribute
+    ctor: Newtonsoft.Json.JsonIgnoreAttribute.#ctor
+    arguments: []
+  nameWithType.vb: BLFrontendSimple(Of T, K).Panels
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).Panels
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.ListViewFields
+  commentId: F:Siesa.SDK.Business.BLFrontendSimple`2.ListViewFields
+  id: ListViewFields
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: ListViewFields
+  nameWithType: BLFrontendSimple<T, K>.ListViewFields
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.ListViewFields
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ListViewFields
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 139
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: >-
+      [JsonIgnore]
+
+      public List<FieldOptions> ListViewFields
+    return:
+      type: System.Collections.Generic.List{Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldOptions}
+    content.vb: >-
+      <JsonIgnore>
+
+      Public ListViewFields As List(Of FieldOptions)
+  attributes:
+  - type: Newtonsoft.Json.JsonIgnoreAttribute
+    ctor: Newtonsoft.Json.JsonIgnoreAttribute.#ctor
+    arguments: []
+  nameWithType.vb: BLFrontendSimple(Of T, K).ListViewFields
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).ListViewFields
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.BaseObj
+  commentId: P:Siesa.SDK.Business.BLFrontendSimple`2.BaseObj
+  id: BaseObj
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: BaseObj
+  nameWithType: BLFrontendSimple<T, K>.BaseObj
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.BaseObj
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: BaseObj
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 140
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  example: []
+  syntax:
+    content: >-
+      [ValidateComplexType]
+
+      public T BaseObj { get; set; }
+    parameters: []
+    return:
+      type: '{T}'
+    content.vb: >-
+      <ValidateComplexType>
+
+      Public Property BaseObj As T
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.BaseObj*
+  implements:
+  - Siesa.SDK.Shared.Business.IBLBase{{T}}.BaseObj
+  attributes:
+  - type: System.ComponentModel.DataAnnotations.ValidateComplexTypeAttribute
+    ctor: System.ComponentModel.DataAnnotations.ValidateComplexTypeAttribute.#ctor
+    arguments: []
+  nameWithType.vb: BLFrontendSimple(Of T, K).BaseObj
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).BaseObj
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.DynamicEntities
+  commentId: P:Siesa.SDK.Business.BLFrontendSimple`2.DynamicEntities
+  id: DynamicEntities
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: DynamicEntities
+  nameWithType: BLFrontendSimple<T, K>.DynamicEntities
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.DynamicEntities
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: DynamicEntities
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 142
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: public List<dynamic> DynamicEntities { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{System.Object}
+    content.vb: Public Property DynamicEntities As List(Of Object)
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.DynamicEntities*
+  nameWithType.vb: BLFrontendSimple(Of T, K).DynamicEntities
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).DynamicEntities
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.RelFieldsToSave
+  commentId: P:Siesa.SDK.Business.BLFrontendSimple`2.RelFieldsToSave
+  id: RelFieldsToSave
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: RelFieldsToSave
+  nameWithType: BLFrontendSimple<T, K>.RelFieldsToSave
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.RelFieldsToSave
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: RelFieldsToSave
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 143
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: public List<string> RelFieldsToSave { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{System.String}
+    content.vb: Public Property RelFieldsToSave As List(Of String)
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.RelFieldsToSave*
+  nameWithType.vb: BLFrontendSimple(Of T, K).RelFieldsToSave
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).RelFieldsToSave
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.Refresh(System.Boolean)
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.Refresh(System.Boolean)
+  id: Refresh(System.Boolean)
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: Refresh(bool)
+  nameWithType: BLFrontendSimple<T, K>.Refresh(bool)
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.Refresh(bool)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Refresh
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 145
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: public Task Refresh(bool Reload = false)
+    parameters:
+    - id: Reload
+      type: System.Boolean
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function Refresh(Reload As Boolean = False) As Task
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.Refresh*
+  nameWithType.vb: BLFrontendSimple(Of T, K).Refresh(Boolean)
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).Refresh(Boolean)
+  name.vb: Refresh(Boolean)
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.AddRelFieldToSave(System.String)
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.AddRelFieldToSave(System.String)
+  id: AddRelFieldToSave(System.String)
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: AddRelFieldToSave(string)
+  nameWithType: BLFrontendSimple<T, K>.AddRelFieldToSave(string)
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.AddRelFieldToSave(string)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: AddRelFieldToSave
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 164
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: public void AddRelFieldToSave(string fieldName)
+    parameters:
+    - id: fieldName
+      type: System.String
+    content.vb: Public Sub AddRelFieldToSave(fieldName As String)
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.AddRelFieldToSave*
+  nameWithType.vb: BLFrontendSimple(Of T, K).AddRelFieldToSave(String)
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).AddRelFieldToSave(String)
+  name.vb: AddRelFieldToSave(String)
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.AuthenticationService
+  commentId: P:Siesa.SDK.Business.BLFrontendSimple`2.AuthenticationService
+  id: AuthenticationService
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: AuthenticationService
+  nameWithType: BLFrontendSimple<T, K>.AuthenticationService
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.AuthenticationService
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: AuthenticationService
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 173
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: >-
+      [JsonIgnore]
+
+      protected IAuthenticationService AuthenticationService { get; set; }
+    parameters: []
+    return:
+      type: Siesa.SDK.Shared.Services.IAuthenticationService
+    content.vb: >-
+      <JsonIgnore>
+
+      Protected Property AuthenticationService As IAuthenticationService
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.AuthenticationService*
+  attributes:
+  - type: Newtonsoft.Json.JsonIgnoreAttribute
+    ctor: Newtonsoft.Json.JsonIgnoreAttribute.#ctor
+    arguments: []
+  nameWithType.vb: BLFrontendSimple(Of T, K).AuthenticationService
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).AuthenticationService
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.NotificationService
+  commentId: P:Siesa.SDK.Business.BLFrontendSimple`2.NotificationService
+  id: NotificationService
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: NotificationService
+  nameWithType: BLFrontendSimple<T, K>.NotificationService
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.NotificationService
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: NotificationService
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 176
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: >-
+      [JsonIgnore]
+
+      protected SDKNotificationService NotificationService { get; set; }
+    parameters: []
+    return:
+      type: Siesa.SDK.Frontend.Services.SDKNotificationService
+    content.vb: >-
+      <JsonIgnore>
+
+      Protected Property NotificationService As SDKNotificationService
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.NotificationService*
+  attributes:
+  - type: Newtonsoft.Json.JsonIgnoreAttribute
+    ctor: Newtonsoft.Json.JsonIgnoreAttribute.#ctor
+    arguments: []
+  nameWithType.vb: BLFrontendSimple(Of T, K).NotificationService
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).NotificationService
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.Logger
+  commentId: P:Siesa.SDK.Business.BLFrontendSimple`2.Logger
+  id: Logger
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: Logger
+  nameWithType: BLFrontendSimple<T, K>.Logger
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.Logger
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Logger
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 179
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: >-
+      [JsonIgnore]
+
+      public ILogger Logger { get; set; }
+    parameters: []
+    return:
+      type: Microsoft.Extensions.Logging.ILogger
+    content.vb: >-
+      <JsonIgnore>
+
+      Public Property Logger As ILogger
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.Logger*
+  attributes:
+  - type: Newtonsoft.Json.JsonIgnoreAttribute
+    ctor: Newtonsoft.Json.JsonIgnoreAttribute.#ctor
+    arguments: []
+  nameWithType.vb: BLFrontendSimple(Of T, K).Logger
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).Logger
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.#ctor(Siesa.SDK.Shared.Services.IAuthenticationService,Siesa.SDK.Frontend.Services.SDKNotificationService,Microsoft.Extensions.Logging.ILoggerFactory)
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.#ctor(Siesa.SDK.Shared.Services.IAuthenticationService,Siesa.SDK.Frontend.Services.SDKNotificationService,Microsoft.Extensions.Logging.ILoggerFactory)
+  id: '#ctor(Siesa.SDK.Shared.Services.IAuthenticationService,Siesa.SDK.Frontend.Services.SDKNotificationService,Microsoft.Extensions.Logging.ILoggerFactory)'
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: BLFrontendSimple(IAuthenticationService, SDKNotificationService, ILoggerFactory)
+  nameWithType: BLFrontendSimple<T, K>.BLFrontendSimple(IAuthenticationService, SDKNotificationService, ILoggerFactory)
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.BLFrontendSimple(Siesa.SDK.Shared.Services.IAuthenticationService, Siesa.SDK.Frontend.Services.SDKNotificationService, Microsoft.Extensions.Logging.ILoggerFactory)
+  type: Constructor
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: .ctor
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 204
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: public BLFrontendSimple(IAuthenticationService authenticationService, SDKNotificationService notificationService = null, ILoggerFactory loggerFactory = null)
+    parameters:
+    - id: authenticationService
+      type: Siesa.SDK.Shared.Services.IAuthenticationService
+    - id: notificationService
+      type: Siesa.SDK.Frontend.Services.SDKNotificationService
+    - id: loggerFactory
+      type: Microsoft.Extensions.Logging.ILoggerFactory
+    content.vb: Public Sub New(authenticationService As IAuthenticationService, notificationService As SDKNotificationService = Nothing, loggerFactory As ILoggerFactory = Nothing)
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.#ctor*
+  nameWithType.vb: BLFrontendSimple(Of T, K).New(IAuthenticationService, SDKNotificationService, ILoggerFactory)
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).New(Siesa.SDK.Shared.Services.IAuthenticationService, Siesa.SDK.Frontend.Services.SDKNotificationService, Microsoft.Extensions.Logging.ILoggerFactory)
+  name.vb: New(IAuthenticationService, SDKNotificationService, ILoggerFactory)
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.#ctor(System.IServiceProvider)
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.#ctor(System.IServiceProvider)
+  id: '#ctor(System.IServiceProvider)'
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: BLFrontendSimple(IServiceProvider)
+  nameWithType: BLFrontendSimple<T, K>.BLFrontendSimple(IServiceProvider)
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.BLFrontendSimple(System.IServiceProvider)
+  type: Constructor
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: .ctor
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 209
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: public BLFrontendSimple(IServiceProvider provider)
+    parameters:
+    - id: provider
+      type: System.IServiceProvider
+    content.vb: Public Sub New(provider As IServiceProvider)
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.#ctor*
+  nameWithType.vb: BLFrontendSimple(Of T, K).New(IServiceProvider)
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).New(System.IServiceProvider)
+  name.vb: New(IServiceProvider)
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.Get(System.Int64,System.Collections.Generic.List{System.String})
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.Get(System.Int64,System.Collections.Generic.List{System.String})
+  id: Get(System.Int64,System.Collections.Generic.List{System.String})
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: Get(long, List<string>)
+  nameWithType: BLFrontendSimple<T, K>.Get(long, List<string>)
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.Get(long, System.Collections.Generic.List<string>)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Get
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 218
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  example: []
+  syntax:
+    content: public virtual T Get(long rowid, List<string> extraFields = null)
+    parameters:
+    - id: rowid
+      type: System.Int64
+    - id: extraFields
+      type: System.Collections.Generic.List{System.String}
+    return:
+      type: '{T}'
+    content.vb: Public Overridable Function [Get](rowid As Long, extraFields As List(Of String) = Nothing) As T
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.Get*
+  implements:
+  - Siesa.SDK.Shared.Business.IBLBase{{T}}.Get(System.Int64,System.Collections.Generic.List{System.String})
+  nameWithType.vb: BLFrontendSimple(Of T, K).Get(Long, List(Of String))
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).Get(Long, System.Collections.Generic.List(Of String))
+  name.vb: Get(Long, List(Of String))
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.GetAsync(System.Int64,System.Collections.Generic.List{System.String})
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.GetAsync(System.Int64,System.Collections.Generic.List{System.String})
+  id: GetAsync(System.Int64,System.Collections.Generic.List{System.String})
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: GetAsync(long, List<string>)
+  nameWithType: BLFrontendSimple<T, K>.GetAsync(long, List<string>)
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.GetAsync(long, System.Collections.Generic.List<string>)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetAsync
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 223
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  example: []
+  syntax:
+    content: public virtual Task<T> GetAsync(long rowid, List<string> extraFields = null)
+    parameters:
+    - id: rowid
+      type: System.Int64
+    - id: extraFields
+      type: System.Collections.Generic.List{System.String}
+    return:
+      type: System.Threading.Tasks.Task{{T}}
+    content.vb: Public Overridable Function GetAsync(rowid As Long, extraFields As List(Of String) = Nothing) As Task(Of T)
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.GetAsync*
+  implements:
+  - Siesa.SDK.Shared.Business.IBLBase{{T}}.GetAsync(System.Int64,System.Collections.Generic.List{System.String})
+  nameWithType.vb: BLFrontendSimple(Of T, K).GetAsync(Long, List(Of String))
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).GetAsync(Long, System.Collections.Generic.List(Of String))
+  name.vb: GetAsync(Long, List(Of String))
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.SaveAsync
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.SaveAsync
+  id: SaveAsync
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: SaveAsync()
+  nameWithType: BLFrontendSimple<T, K>.SaveAsync()
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.SaveAsync()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SaveAsync
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 230
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: public virtual Task<long> SaveAsync()
+    return:
+      type: System.Threading.Tasks.Task{System.Int64}
+    content.vb: Public Overridable Function SaveAsync() As Task(Of Long)
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.SaveAsync*
+  nameWithType.vb: BLFrontendSimple(Of T, K).SaveAsync()
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).SaveAsync()
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.InitializeBusiness(System.Int64,System.Collections.Generic.List{System.String})
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.InitializeBusiness(System.Int64,System.Collections.Generic.List{System.String})
+  id: InitializeBusiness(System.Int64,System.Collections.Generic.List{System.String})
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: InitializeBusiness(long, List<string>)
+  nameWithType: BLFrontendSimple<T, K>.InitializeBusiness(long, List<string>)
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.InitializeBusiness(long, System.Collections.Generic.List<string>)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: InitializeBusiness
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 236
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: public virtual Task InitializeBusiness(long rowid, List<string> extraFields = null)
+    parameters:
+    - id: rowid
+      type: System.Int64
+    - id: extraFields
+      type: System.Collections.Generic.List{System.String}
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Overridable Function InitializeBusiness(rowid As Long, extraFields As List(Of String) = Nothing) As Task
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.InitializeBusiness*
+  nameWithType.vb: BLFrontendSimple(Of T, K).InitializeBusiness(Long, List(Of String))
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).InitializeBusiness(Long, System.Collections.Generic.List(Of String))
+  name.vb: InitializeBusiness(Long, List(Of String))
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.InstanceDynamicEntities(System.String,System.Int64)
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.InstanceDynamicEntities(System.String,System.Int64)
+  id: InstanceDynamicEntities(System.String,System.Int64)
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: InstanceDynamicEntities(string, long)
+  nameWithType: BLFrontendSimple<T, K>.InstanceDynamicEntities(string, long)
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.InstanceDynamicEntities(string, long)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: InstanceDynamicEntities
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 244
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: public Task InstanceDynamicEntities(string businessName, long rowid = 0)
+    parameters:
+    - id: businessName
+      type: System.String
+    - id: rowid
+      type: System.Int64
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function InstanceDynamicEntities(businessName As String, rowid As Long = 0) As Task
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.InstanceDynamicEntities*
+  nameWithType.vb: BLFrontendSimple(Of T, K).InstanceDynamicEntities(String, Long)
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).InstanceDynamicEntities(String, Long)
+  name.vb: InstanceDynamicEntities(String, Long)
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.GetDuplicateInfo(System.Int64)
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.GetDuplicateInfo(System.Int64)
+  id: GetDuplicateInfo(System.Int64)
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: GetDuplicateInfo(long)
+  nameWithType: BLFrontendSimple<T, K>.GetDuplicateInfo(long)
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.GetDuplicateInfo(long)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetDuplicateInfo
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 432
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: public virtual Task GetDuplicateInfo(long rowid)
+    parameters:
+    - id: rowid
+      type: System.Int64
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Overridable Function GetDuplicateInfo(rowid As Long) As Task
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.GetDuplicateInfo*
+  nameWithType.vb: BLFrontendSimple(Of T, K).GetDuplicateInfo(Long)
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).GetDuplicateInfo(Long)
+  name.vb: GetDuplicateInfo(Long)
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.Save
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.Save
+  id: Save
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: Save()
+  nameWithType: BLFrontendSimple<T, K>.Save()
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.Save()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Save
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 459
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  summary: Save the current object
+  example: []
+  syntax:
+    content: public virtual long Save()
+    return:
+      type: System.Int64
+      description: Returns the rowid of the record created
+    content.vb: Public Overridable Function Save() As Long
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.Save*
+  nameWithType.vb: BLFrontendSimple(Of T, K).Save()
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).Save()
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.ValidateAndSave(System.Boolean)
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.ValidateAndSave(System.Boolean)
+  id: ValidateAndSave(System.Boolean)
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: ValidateAndSave(bool)
+  nameWithType: BLFrontendSimple<T, K>.ValidateAndSave(bool)
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.ValidateAndSave(bool)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ValidateAndSave
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 464
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  example: []
+  syntax:
+    content: public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave(bool ignorePermissions = false)
+    parameters:
+    - id: ignorePermissions
+      type: System.Boolean
+    return:
+      type: Siesa.SDK.Protos.ValidateAndSaveBusinessObjResponse
+    content.vb: Public Overridable Function ValidateAndSave(ignorePermissions As Boolean = False) As ValidateAndSaveBusinessObjResponse
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.ValidateAndSave*
+  implements:
+  - Siesa.SDK.Shared.Business.IBLBase{{T}}.ValidateAndSave(System.Boolean)
+  nameWithType.vb: BLFrontendSimple(Of T, K).ValidateAndSave(Boolean)
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).ValidateAndSave(Boolean)
+  name.vb: ValidateAndSave(Boolean)
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.Update
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.Update
+  id: Update
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: Update()
+  nameWithType: BLFrontendSimple<T, K>.Update()
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.Update()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Update
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 469
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  example: []
+  syntax:
+    content: public virtual void Update()
+    content.vb: Public Overridable Sub Update()
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.Update*
+  implements:
+  - Siesa.SDK.Shared.Business.IBLBase{{T}}.Update
+  nameWithType.vb: BLFrontendSimple(Of T, K).Update()
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).Update()
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.Delete
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.Delete
+  id: Delete
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: Delete()
+  nameWithType: BLFrontendSimple<T, K>.Delete()
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.Delete()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Delete
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 474
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  example: []
+  syntax:
+    content: public virtual DeleteBusinessObjResponse Delete()
+    return:
+      type: Siesa.SDK.Protos.DeleteBusinessObjResponse
+    content.vb: Public Overridable Function Delete() As DeleteBusinessObjResponse
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.Delete*
+  implements:
+  - Siesa.SDK.Shared.Business.IBLBase{{T}}.Delete
+  nameWithType.vb: BLFrontendSimple(Of T, K).Delete()
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).Delete()
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.DeleteAsync
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.DeleteAsync
+  id: DeleteAsync
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: DeleteAsync()
+  nameWithType: BLFrontendSimple<T, K>.DeleteAsync()
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.DeleteAsync()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: DeleteAsync
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 479
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: public virtual Task<DeleteBusinessObjResponse> DeleteAsync()
+    return:
+      type: System.Threading.Tasks.Task{Siesa.SDK.Protos.DeleteBusinessObjResponse}
+    content.vb: Public Overridable Function DeleteAsync() As Task(Of DeleteBusinessObjResponse)
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.DeleteAsync*
+  nameWithType.vb: BLFrontendSimple(Of T, K).DeleteAsync()
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).DeleteAsync()
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.ToString
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.ToString
+  id: ToString
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: ToString()
+  nameWithType: BLFrontendSimple<T, K>.ToString()
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.ToString()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ToString
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 493
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  summary: Returns a string that represents the current object.
+  example: []
+  syntax:
+    content: public override string ToString()
+    return:
+      type: System.String
+      description: A string that represents the current object.
+    content.vb: Public Overrides Function ToString() As String
+  overridden: System.Object.ToString
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.ToString*
+  nameWithType.vb: BLFrontendSimple(Of T, K).ToString()
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).ToString()
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.GetData(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,Siesa.SDK.Shared.Business.QueryFilterDelegate{`0},System.Boolean,System.Boolean,System.Collections.Generic.List{System.String})
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.GetData(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,Siesa.SDK.Shared.Business.QueryFilterDelegate{`0},System.Boolean,System.Boolean,System.Collections.Generic.List{System.String})
+  id: GetData(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,Siesa.SDK.Shared.Business.QueryFilterDelegate{`0},System.Boolean,System.Boolean,System.Collections.Generic.List{System.String})
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: GetData(int?, int?, string, string, QueryFilterDelegate<T>, bool, bool, List<string>)
+  nameWithType: BLFrontendSimple<T, K>.GetData(int?, int?, string, string, QueryFilterDelegate<T>, bool, bool, List<string>)
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.GetData(int?, int?, string, string, Siesa.SDK.Shared.Business.QueryFilterDelegate<T>, bool, bool, System.Collections.Generic.List<string>)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetData
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 502
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  example: []
+  syntax:
+    content: public virtual LoadResult GetData(int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null, bool includeCount = false, bool includeAttachments = true, List<string> extraFields = null)
+    parameters:
+    - id: skip
+      type: System.Nullable{System.Int32}
+    - id: take
+      type: System.Nullable{System.Int32}
+    - id: filter
+      type: System.String
+    - id: orderBy
+      type: System.String
+    - id: queryFilter
+      type: Siesa.SDK.Shared.Business.QueryFilterDelegate{{T}}
+    - id: includeCount
+      type: System.Boolean
+    - id: includeAttachments
+      type: System.Boolean
+    - id: extraFields
+      type: System.Collections.Generic.List{System.String}
+    return:
+      type: Siesa.SDK.Shared.Business.LoadResult
+    content.vb: Public Overridable Function GetData(skip As Integer?, take As Integer?, filter As String = "", orderBy As String = "", queryFilter As QueryFilterDelegate(Of T) = Nothing, includeCount As Boolean = False, includeAttachments As Boolean = True, extraFields As List(Of String) = Nothing) As LoadResult
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.GetData*
+  implements:
+  - Siesa.SDK.Shared.Business.IBLBase{{T}}.GetData(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,Siesa.SDK.Shared.Business.QueryFilterDelegate{{T}},System.Boolean,System.Boolean,System.Collections.Generic.List{System.String})
+  nameWithType.vb: BLFrontendSimple(Of T, K).GetData(Integer?, Integer?, String, String, QueryFilterDelegate(Of T), Boolean, Boolean, List(Of String))
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).GetData(Integer?, Integer?, String, String, Siesa.SDK.Shared.Business.QueryFilterDelegate(Of T), Boolean, Boolean, System.Collections.Generic.List(Of String))
+  name.vb: GetData(Integer?, Integer?, String, String, QueryFilterDelegate(Of T), Boolean, Boolean, List(Of String))
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.EntityFieldSearch(System.String,System.String,System.Nullable{System.Int32},System.String,System.Collections.Generic.List{System.String})
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.EntityFieldSearch(System.String,System.String,System.Nullable{System.Int32},System.String,System.Collections.Generic.List{System.String})
+  id: EntityFieldSearch(System.String,System.String,System.Nullable{System.Int32},System.String,System.Collections.Generic.List{System.String})
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: EntityFieldSearch(string, string, int?, string, List<string>)
+  nameWithType: BLFrontendSimple<T, K>.EntityFieldSearch(string, string, int?, string, List<string>)
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.EntityFieldSearch(string, string, int?, string, System.Collections.Generic.List<string>)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: EntityFieldSearch
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 507
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: public virtual LoadResult EntityFieldSearch(string searchText, string filters, int? top = null, string orderBy = "", List<string> extraFields = null)
+    parameters:
+    - id: searchText
+      type: System.String
+    - id: filters
+      type: System.String
+    - id: top
+      type: System.Nullable{System.Int32}
+    - id: orderBy
+      type: System.String
+    - id: extraFields
+      type: System.Collections.Generic.List{System.String}
+    return:
+      type: Siesa.SDK.Shared.Business.LoadResult
+    content.vb: Public Overridable Function EntityFieldSearch(searchText As String, filters As String, top As Integer? = Nothing, orderBy As String = "", extraFields As List(Of String) = Nothing) As LoadResult
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.EntityFieldSearch*
+  nameWithType.vb: BLFrontendSimple(Of T, K).EntityFieldSearch(String, String, Integer?, String, List(Of String))
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).EntityFieldSearch(String, String, Integer?, String, System.Collections.Generic.List(Of String))
+  name.vb: EntityFieldSearch(String, String, Integer?, String, List(Of String))
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.EntityFieldSearchAsync(System.String,System.String,System.Nullable{System.Int32},System.String,System.Collections.Generic.List{System.String})
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.EntityFieldSearchAsync(System.String,System.String,System.Nullable{System.Int32},System.String,System.Collections.Generic.List{System.String})
+  id: EntityFieldSearchAsync(System.String,System.String,System.Nullable{System.Int32},System.String,System.Collections.Generic.List{System.String})
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: EntityFieldSearchAsync(string, string, int?, string, List<string>)
+  nameWithType: BLFrontendSimple<T, K>.EntityFieldSearchAsync(string, string, int?, string, List<string>)
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.EntityFieldSearchAsync(string, string, int?, string, System.Collections.Generic.List<string>)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: EntityFieldSearchAsync
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 512
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: public virtual Task<LoadResult> EntityFieldSearchAsync(string searchText, string filters, int? top = null, string orderBy = "", List<string> extraFields = null)
+    parameters:
+    - id: searchText
+      type: System.String
+    - id: filters
+      type: System.String
+    - id: top
+      type: System.Nullable{System.Int32}
+    - id: orderBy
+      type: System.String
+    - id: extraFields
+      type: System.Collections.Generic.List{System.String}
+    return:
+      type: System.Threading.Tasks.Task{Siesa.SDK.Shared.Business.LoadResult}
+    content.vb: Public Overridable Function EntityFieldSearchAsync(searchText As String, filters As String, top As Integer? = Nothing, orderBy As String = "", extraFields As List(Of String) = Nothing) As Task(Of LoadResult)
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.EntityFieldSearchAsync*
+  nameWithType.vb: BLFrontendSimple(Of T, K).EntityFieldSearchAsync(String, String, Integer?, String, List(Of String))
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).EntityFieldSearchAsync(String, String, Integer?, String, System.Collections.Generic.List(Of String))
+  name.vb: EntityFieldSearchAsync(String, String, Integer?, String, List(Of String))
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.GetDataWithTop(System.String)
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.GetDataWithTop(System.String)
+  id: GetDataWithTop(System.String)
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: GetDataWithTop(string)
+  nameWithType: BLFrontendSimple<T, K>.GetDataWithTop(string)
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.GetDataWithTop(string)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetDataWithTop
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 524
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: public Task<List<dynamic>> GetDataWithTop(string filters = "")
+    parameters:
+    - id: filters
+      type: System.String
+    return:
+      type: System.Threading.Tasks.Task{System.Collections.Generic.List{System.Object}}
+    content.vb: Public Function GetDataWithTop(filters As String = "") As Task(Of List(Of Object))
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.GetDataWithTop*
+  nameWithType.vb: BLFrontendSimple(Of T, K).GetDataWithTop(String)
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).GetDataWithTop(String)
+  name.vb: GetDataWithTop(String)
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.GetDataAsync(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.Boolean,System.Collections.Generic.List{System.String})
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.GetDataAsync(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.Boolean,System.Collections.Generic.List{System.String})
+  id: GetDataAsync(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.Boolean,System.Collections.Generic.List{System.String})
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: GetDataAsync(int?, int?, string, string, bool, List<string>)
+  nameWithType: BLFrontendSimple<T, K>.GetDataAsync(int?, int?, string, string, bool, List<string>)
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.GetDataAsync(int?, int?, string, string, bool, System.Collections.Generic.List<string>)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetDataAsync
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 533
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: public virtual Task<LoadResult> GetDataAsync(int? skip, int? take, string filter = "", string orderBy = "", bool includeCount = false, List<string> extraFields = null)
+    parameters:
+    - id: skip
+      type: System.Nullable{System.Int32}
+    - id: take
+      type: System.Nullable{System.Int32}
+    - id: filter
+      type: System.String
+    - id: orderBy
+      type: System.String
+    - id: includeCount
+      type: System.Boolean
+    - id: extraFields
+      type: System.Collections.Generic.List{System.String}
+    return:
+      type: System.Threading.Tasks.Task{Siesa.SDK.Shared.Business.LoadResult}
+    content.vb: Public Overridable Function GetDataAsync(skip As Integer?, take As Integer?, filter As String = "", orderBy As String = "", includeCount As Boolean = False, extraFields As List(Of String) = Nothing) As Task(Of LoadResult)
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.GetDataAsync*
+  nameWithType.vb: BLFrontendSimple(Of T, K).GetDataAsync(Integer?, Integer?, String, String, Boolean, List(Of String))
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).GetDataAsync(Integer?, Integer?, String, String, Boolean, System.Collections.Generic.List(Of String))
+  name.vb: GetDataAsync(Integer?, Integer?, String, String, Boolean, List(Of String))
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.GetUData(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,Siesa.SDK.Shared.Business.QueryFilterDelegate{`0},System.Boolean,System.Collections.Generic.List{System.String})
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.GetUData(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,Siesa.SDK.Shared.Business.QueryFilterDelegate{`0},System.Boolean,System.Collections.Generic.List{System.String})
+  id: GetUData(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,Siesa.SDK.Shared.Business.QueryFilterDelegate{`0},System.Boolean,System.Collections.Generic.List{System.String})
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: GetUData(int?, int?, string, string, string, QueryFilterDelegate<T>, bool, List<string>)
+  nameWithType: BLFrontendSimple<T, K>.GetUData(int?, int?, string, string, string, QueryFilterDelegate<T>, bool, List<string>)
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.GetUData(int?, int?, string, string, string, Siesa.SDK.Shared.Business.QueryFilterDelegate<T>, bool, System.Collections.Generic.List<string>)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetUData
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 560
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  example: []
+  syntax:
+    content: public virtual LoadResult GetUData(int? skip, int? take, string filter = "", string uFilter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null, bool includeCount = false, List<string> extraFields = null)
+    parameters:
+    - id: skip
+      type: System.Nullable{System.Int32}
+    - id: take
+      type: System.Nullable{System.Int32}
+    - id: filter
+      type: System.String
+    - id: uFilter
+      type: System.String
+    - id: orderBy
+      type: System.String
+    - id: queryFilter
+      type: Siesa.SDK.Shared.Business.QueryFilterDelegate{{T}}
+    - id: includeCount
+      type: System.Boolean
+    - id: extraFields
+      type: System.Collections.Generic.List{System.String}
+    return:
+      type: Siesa.SDK.Shared.Business.LoadResult
+    content.vb: Public Overridable Function GetUData(skip As Integer?, take As Integer?, filter As String = "", uFilter As String = "", orderBy As String = "", queryFilter As QueryFilterDelegate(Of T) = Nothing, includeCount As Boolean = False, extraFields As List(Of String) = Nothing) As LoadResult
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.GetUData*
+  implements:
+  - Siesa.SDK.Shared.Business.IBLBase{{T}}.GetUData(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,Siesa.SDK.Shared.Business.QueryFilterDelegate{{T}},System.Boolean,System.Collections.Generic.List{System.String})
+  nameWithType.vb: BLFrontendSimple(Of T, K).GetUData(Integer?, Integer?, String, String, String, QueryFilterDelegate(Of T), Boolean, List(Of String))
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).GetUData(Integer?, Integer?, String, String, String, Siesa.SDK.Shared.Business.QueryFilterDelegate(Of T), Boolean, System.Collections.Generic.List(Of String))
+  name.vb: GetUData(Integer?, Integer?, String, String, String, QueryFilterDelegate(Of T), Boolean, List(Of String))
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.GetUDataAsync(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.Boolean,System.Collections.Generic.List{System.String})
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.GetUDataAsync(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.Boolean,System.Collections.Generic.List{System.String})
+  id: GetUDataAsync(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.Boolean,System.Collections.Generic.List{System.String})
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: GetUDataAsync(int?, int?, string, string, string, bool, List<string>)
+  nameWithType: BLFrontendSimple<T, K>.GetUDataAsync(int?, int?, string, string, string, bool, List<string>)
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.GetUDataAsync(int?, int?, string, string, string, bool, System.Collections.Generic.List<string>)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetUDataAsync
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 565
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: public virtual Task<LoadResult> GetUDataAsync(int? skip, int? take, string filter = "", string uFilter = "", string orderBy = "", bool includeCount = false, List<string> extraFields = null)
+    parameters:
+    - id: skip
+      type: System.Nullable{System.Int32}
+    - id: take
+      type: System.Nullable{System.Int32}
+    - id: filter
+      type: System.String
+    - id: uFilter
+      type: System.String
+    - id: orderBy
+      type: System.String
+    - id: includeCount
+      type: System.Boolean
+    - id: extraFields
+      type: System.Collections.Generic.List{System.String}
+    return:
+      type: System.Threading.Tasks.Task{Siesa.SDK.Shared.Business.LoadResult}
+    content.vb: Public Overridable Function GetUDataAsync(skip As Integer?, take As Integer?, filter As String = "", uFilter As String = "", orderBy As String = "", includeCount As Boolean = False, extraFields As List(Of String) = Nothing) As Task(Of LoadResult)
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.GetUDataAsync*
+  nameWithType.vb: BLFrontendSimple(Of T, K).GetUDataAsync(Integer?, Integer?, String, String, String, Boolean, List(Of String))
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).GetUDataAsync(Integer?, Integer?, String, String, String, Boolean, System.Collections.Generic.List(Of String))
+  name.vb: GetUDataAsync(Integer?, Integer?, String, String, String, Boolean, List(Of String))
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.ValidateAndSaveAsync
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.ValidateAndSaveAsync
+  id: ValidateAndSaveAsync
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: ValidateAndSaveAsync()
+  nameWithType: BLFrontendSimple<T, K>.ValidateAndSaveAsync()
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.ValidateAndSaveAsync()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ValidateAndSaveAsync
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 592
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: public virtual Task<ValidateAndSaveBusinessObjResponse> ValidateAndSaveAsync()
+    return:
+      type: System.Threading.Tasks.Task{Siesa.SDK.Protos.ValidateAndSaveBusinessObjResponse}
+    content.vb: Public Overridable Function ValidateAndSaveAsync() As Task(Of ValidateAndSaveBusinessObjResponse)
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.ValidateAndSaveAsync*
+  nameWithType.vb: BLFrontendSimple(Of T, K).ValidateAndSaveAsync()
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).ValidateAndSaveAsync()
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.ValidateBussines(Siesa.SDK.Protos.ValidateAndSaveBusinessObjResponse@,Siesa.SDK.Shared.Business.BLUserActionEnum)
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.ValidateBussines(Siesa.SDK.Protos.ValidateAndSaveBusinessObjResponse@,Siesa.SDK.Shared.Business.BLUserActionEnum)
+  id: ValidateBussines(Siesa.SDK.Protos.ValidateAndSaveBusinessObjResponse@,Siesa.SDK.Shared.Business.BLUserActionEnum)
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: ValidateBussines(ref ValidateAndSaveBusinessObjResponse, BLUserActionEnum)
+  nameWithType: BLFrontendSimple<T, K>.ValidateBussines(ref ValidateAndSaveBusinessObjResponse, BLUserActionEnum)
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.ValidateBussines(ref Siesa.SDK.Protos.ValidateAndSaveBusinessObjResponse, Siesa.SDK.Shared.Business.BLUserActionEnum)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ValidateBussines
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 612
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: protected virtual void ValidateBussines(ref ValidateAndSaveBusinessObjResponse operationResult, BLUserActionEnum action)
+    parameters:
+    - id: operationResult
+      type: Siesa.SDK.Protos.ValidateAndSaveBusinessObjResponse
+    - id: action
+      type: Siesa.SDK.Shared.Business.BLUserActionEnum
+    content.vb: Protected Overridable Sub ValidateBussines(operationResult As ValidateAndSaveBusinessObjResponse, action As BLUserActionEnum)
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.ValidateBussines*
+  nameWithType.vb: BLFrontendSimple(Of T, K).ValidateBussines(ValidateAndSaveBusinessObjResponse, BLUserActionEnum)
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).ValidateBussines(Siesa.SDK.Protos.ValidateAndSaveBusinessObjResponse, Siesa.SDK.Shared.Business.BLUserActionEnum)
+  name.vb: ValidateBussines(ValidateAndSaveBusinessObjResponse, BLUserActionEnum)
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.OnReady(Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicViewType,System.Int64)
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.OnReady(Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicViewType,System.Int64)
+  id: OnReady(Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicViewType,System.Int64)
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: OnReady(DynamicViewType, long)
+  nameWithType: BLFrontendSimple<T, K>.OnReady(DynamicViewType, long)
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.OnReady(Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicViewType, long)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: OnReady
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 617
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: public virtual void OnReady(DynamicViewType viewType, long rowid = 0)
+    parameters:
+    - id: viewType
+      type: Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicViewType
+    - id: rowid
+      type: System.Int64
+    content.vb: Public Overridable Sub OnReady(viewType As DynamicViewType, rowid As Long = 0)
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.OnReady*
+  nameWithType.vb: BLFrontendSimple(Of T, K).OnReady(DynamicViewType, Long)
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).OnReady(Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicViewType, Long)
+  name.vb: OnReady(DynamicViewType, Long)
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.SetPropertyValue(System.String,System.Object)
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.SetPropertyValue(System.String,System.Object)
+  id: SetPropertyValue(System.String,System.Object)
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: SetPropertyValue(string, object)
+  nameWithType: BLFrontendSimple<T, K>.SetPropertyValue(string, object)
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.SetPropertyValue(string, object)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SetPropertyValue
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 622
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: public void SetPropertyValue(string propertyName, object value)
+    parameters:
+    - id: propertyName
+      type: System.String
+    - id: value
+      type: System.Object
+    content.vb: Public Sub SetPropertyValue(propertyName As String, value As Object)
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.SetPropertyValue*
+  nameWithType.vb: BLFrontendSimple(Of T, K).SetPropertyValue(String, Object)
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).SetPropertyValue(String, Object)
+  name.vb: SetPropertyValue(String, Object)
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.GetNotificacionService(System.String)
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.GetNotificacionService(System.String)
+  id: GetNotificacionService(System.String)
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: GetNotificacionService(string)
+  nameWithType: BLFrontendSimple<T, K>.GetNotificacionService(string)
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.GetNotificacionService(string)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetNotificacionService
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 648
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: public Task GetNotificacionService(string message)
+    parameters:
+    - id: message
+      type: System.String
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Public Function GetNotificacionService(message As String) As Task
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.GetNotificacionService*
+  nameWithType.vb: BLFrontendSimple(Of T, K).GetNotificacionService(String)
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).GetNotificacionService(String)
+  name.vb: GetNotificacionService(String)
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.DownloadFile(System.String,System.String)
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.DownloadFile(System.String,System.String)
+  id: DownloadFile(System.String,System.String)
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: DownloadFile(string, string)
+  nameWithType: BLFrontendSimple<T, K>.DownloadFile(string, string)
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.DownloadFile(string, string)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: DownloadFile
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 661
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: public Task<string> DownloadFile(string url, string contentType)
+    parameters:
+    - id: url
+      type: System.String
+    - id: contentType
+      type: System.String
+    return:
+      type: System.Threading.Tasks.Task{System.String}
+    content.vb: Public Function DownloadFile(url As String, contentType As String) As Task(Of String)
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.DownloadFile*
+  nameWithType.vb: BLFrontendSimple(Of T, K).DownloadFile(String, String)
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).DownloadFile(String, String)
+  name.vb: DownloadFile(String, String)
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.UploadSingle(Microsoft.AspNetCore.Http.IFormFile)
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.UploadSingle(Microsoft.AspNetCore.Http.IFormFile)
+  id: UploadSingle(Microsoft.AspNetCore.Http.IFormFile)
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: UploadSingle(IFormFile)
+  nameWithType: BLFrontendSimple<T, K>.UploadSingle(IFormFile)
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.UploadSingle(Microsoft.AspNetCore.Http.IFormFile)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: UploadSingle
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 667
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: >-
+      [SDKApiMethod("POST")]
+
+      public virtual Task<SDKFileUploadDTO> UploadSingle(IFormFile file)
+    parameters:
+    - id: file
+      type: Microsoft.AspNetCore.Http.IFormFile
+    return:
+      type: System.Threading.Tasks.Task{Siesa.SDK.Shared.DTOS.SDKFileUploadDTO}
+    content.vb: >-
+      <SDKApiMethod("POST")>
+
+      Public Overridable Function UploadSingle(file As IFormFile) As Task(Of SDKFileUploadDTO)
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.UploadSingle*
+  attributes:
+  - type: Siesa.SDK.Shared.DataAnnotations.SDKApiMethod
+    ctor: Siesa.SDK.Shared.DataAnnotations.SDKApiMethod.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: POST
+  nameWithType.vb: BLFrontendSimple(Of T, K).UploadSingle(IFormFile)
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).UploadSingle(Microsoft.AspNetCore.Http.IFormFile)
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.UploadSingleByte(Microsoft.AspNetCore.Http.IFormFile)
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.UploadSingleByte(Microsoft.AspNetCore.Http.IFormFile)
+  id: UploadSingleByte(Microsoft.AspNetCore.Http.IFormFile)
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: UploadSingleByte(IFormFile)
+  nameWithType: BLFrontendSimple<T, K>.UploadSingleByte(IFormFile)
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.UploadSingleByte(Microsoft.AspNetCore.Http.IFormFile)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: UploadSingleByte
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 690
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: >-
+      [SDKApiMethod("POST")]
+
+      public virtual Task<SDKFileUploadDTO> UploadSingleByte(IFormFile file)
+    parameters:
+    - id: file
+      type: Microsoft.AspNetCore.Http.IFormFile
+    return:
+      type: System.Threading.Tasks.Task{Siesa.SDK.Shared.DTOS.SDKFileUploadDTO}
+    content.vb: >-
+      <SDKApiMethod("POST")>
+
+      Public Overridable Function UploadSingleByte(file As IFormFile) As Task(Of SDKFileUploadDTO)
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.UploadSingleByte*
+  attributes:
+  - type: Siesa.SDK.Shared.DataAnnotations.SDKApiMethod
+    ctor: Siesa.SDK.Shared.DataAnnotations.SDKApiMethod.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: POST
+  nameWithType.vb: BLFrontendSimple(Of T, K).UploadSingleByte(IFormFile)
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).UploadSingleByte(Microsoft.AspNetCore.Http.IFormFile)
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.SaveAttachmentDetail(Siesa.SDK.Shared.DTOS.SDKFileUploadDTO,System.Int32)
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.SaveAttachmentDetail(Siesa.SDK.Shared.DTOS.SDKFileUploadDTO,System.Int32)
+  id: SaveAttachmentDetail(Siesa.SDK.Shared.DTOS.SDKFileUploadDTO,System.Int32)
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: SaveAttachmentDetail(SDKFileUploadDTO, int)
+  nameWithType: BLFrontendSimple<T, K>.SaveAttachmentDetail(SDKFileUploadDTO, int)
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.SaveAttachmentDetail(Siesa.SDK.Shared.DTOS.SDKFileUploadDTO, int)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SaveAttachmentDetail
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 714
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: public Task<int> SaveAttachmentDetail(SDKFileUploadDTO obj, int rowid = 0)
+    parameters:
+    - id: obj
+      type: Siesa.SDK.Shared.DTOS.SDKFileUploadDTO
+    - id: rowid
+      type: System.Int32
+    return:
+      type: System.Threading.Tasks.Task{System.Int32}
+    content.vb: Public Function SaveAttachmentDetail(obj As SDKFileUploadDTO, rowid As Integer = 0) As Task(Of Integer)
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.SaveAttachmentDetail*
+  nameWithType.vb: BLFrontendSimple(Of T, K).SaveAttachmentDetail(SDKFileUploadDTO, Integer)
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).SaveAttachmentDetail(Siesa.SDK.Shared.DTOS.SDKFileUploadDTO, Integer)
+  name.vb: SaveAttachmentDetail(SDKFileUploadDTO, Integer)
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.Main
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.Main
+  id: Main
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: Main()
+  nameWithType: BLFrontendSimple<T, K>.Main()
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.Main()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Main
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 725
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: public virtual RenderFragment Main()
+    return:
+      type: Microsoft.AspNetCore.Components.RenderFragment
+    content.vb: Public Overridable Function Main() As RenderFragment
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.Main*
+  nameWithType.vb: BLFrontendSimple(Of T, K).Main()
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).Main()
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.GetUByUserType(System.Int32,Siesa.Global.Enums.PermissionUserTypes,System.Collections.Generic.List{System.String})
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.GetUByUserType(System.Int32,Siesa.Global.Enums.PermissionUserTypes,System.Collections.Generic.List{System.String})
+  id: GetUByUserType(System.Int32,Siesa.Global.Enums.PermissionUserTypes,System.Collections.Generic.List{System.String})
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: GetUByUserType(int, PermissionUserTypes, List<string>)
+  nameWithType: BLFrontendSimple<T, K>.GetUByUserType(int, PermissionUserTypes, List<string>)
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.GetUByUserType(int, Siesa.Global.Enums.PermissionUserTypes, System.Collections.Generic.List<string>)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetUByUserType
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 729
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: public Task<dynamic> GetUByUserType(int Rowid, PermissionUserTypes UserType, List<string> ExtraFields = null)
+    parameters:
+    - id: Rowid
+      type: System.Int32
+    - id: UserType
+      type: Siesa.Global.Enums.PermissionUserTypes
+    - id: ExtraFields
+      type: System.Collections.Generic.List{System.String}
+    return:
+      type: System.Threading.Tasks.Task{System.Object}
+    content.vb: Public Function GetUByUserType(Rowid As Integer, UserType As PermissionUserTypes, ExtraFields As List(Of String) = Nothing) As Task(Of Object)
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.GetUByUserType*
+  nameWithType.vb: BLFrontendSimple(Of T, K).GetUByUserType(Integer, PermissionUserTypes, List(Of String))
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).GetUByUserType(Integer, Siesa.Global.Enums.PermissionUserTypes, System.Collections.Generic.List(Of String))
+  name.vb: GetUByUserType(Integer, PermissionUserTypes, List(Of String))
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.ManageUData(System.Collections.Generic.List{Siesa.SDK.Shared.DTOS.UObjectDTO})
+  commentId: M:Siesa.SDK.Business.BLFrontendSimple`2.ManageUData(System.Collections.Generic.List{Siesa.SDK.Shared.DTOS.UObjectDTO})
+  id: ManageUData(System.Collections.Generic.List{Siesa.SDK.Shared.DTOS.UObjectDTO})
+  parent: Siesa.SDK.Business.BLFrontendSimple`2
+  langs:
+  - csharp
+  - vb
+  name: ManageUData(List<UObjectDTO>)
+  nameWithType: BLFrontendSimple<T, K>.ManageUData(List<UObjectDTO>)
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.ManageUData(System.Collections.Generic.List<Siesa.SDK.Shared.DTOS.UObjectDTO>)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ManageUData
+    path: ../Siesa.SDK.Frontend/Business/BLFrontendSimple.cs
+    startLine: 744
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Business
+  syntax:
+    content: public Task<string> ManageUData(List<UObjectDTO> Data)
+    parameters:
+    - id: Data
+      type: System.Collections.Generic.List{Siesa.SDK.Shared.DTOS.UObjectDTO}
+    return:
+      type: System.Threading.Tasks.Task{System.String}
+    content.vb: Public Function ManageUData(Data As List(Of UObjectDTO)) As Task(Of String)
+  overload: Siesa.SDK.Business.BLFrontendSimple`2.ManageUData*
+  nameWithType.vb: BLFrontendSimple(Of T, K).ManageUData(List(Of UObjectDTO))
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).ManageUData(System.Collections.Generic.List(Of Siesa.SDK.Shared.DTOS.UObjectDTO))
+  name.vb: ManageUData(List(Of UObjectDTO))
+references:
+- uid: Siesa.SDK.Business
+  commentId: N:Siesa.SDK.Business
+  href: Siesa.html
+  name: Siesa.SDK.Business
+  nameWithType: Siesa.SDK.Business
+  fullName: Siesa.SDK.Business
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Business
+    name: Business
+    href: Siesa.SDK.Business.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Business
+    name: Business
+    href: Siesa.SDK.Business.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: Siesa.SDK.Shared.Business.IBLBase{{T}}
+  commentId: T:Siesa.SDK.Shared.Business.IBLBase{`0}
+  parent: Siesa.SDK.Shared.Business
+  definition: Siesa.SDK.Shared.Business.IBLBase`1
+  name: IBLBase<T>
+  nameWithType: IBLBase<T>
+  fullName: Siesa.SDK.Shared.Business.IBLBase<T>
+  nameWithType.vb: IBLBase(Of T)
+  fullName.vb: Siesa.SDK.Shared.Business.IBLBase(Of T)
+  name.vb: IBLBase(Of T)
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Business.IBLBase`1
+    name: IBLBase
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Business.IBLBase`1
+    name: IBLBase
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Siesa.SDK.Shared.Business.IBLBase`1
+  commentId: T:Siesa.SDK.Shared.Business.IBLBase`1
+  name: IBLBase<T>
+  nameWithType: IBLBase<T>
+  fullName: Siesa.SDK.Shared.Business.IBLBase<T>
+  nameWithType.vb: IBLBase(Of T)
+  fullName.vb: Siesa.SDK.Shared.Business.IBLBase(Of T)
+  name.vb: IBLBase(Of T)
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Business.IBLBase`1
+    name: IBLBase
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Business.IBLBase`1
+    name: IBLBase
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Siesa.SDK.Shared.Business
+  commentId: N:Siesa.SDK.Shared.Business
+  name: Siesa.SDK.Shared.Business
+  nameWithType: Siesa.SDK.Shared.Business
+  fullName: Siesa.SDK.Shared.Business
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+  - name: .
+  - uid: Siesa.SDK.Shared
+    name: Shared
+  - name: .
+  - uid: Siesa.SDK.Shared.Business
+    name: Business
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+  - name: .
+  - uid: Siesa.SDK.Shared
+    name: Shared
+  - name: .
+  - uid: Siesa.SDK.Shared.Business
+    name: Business
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.ParentComponent*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.ParentComponent
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.ParentComponent
+  name: ParentComponent
+  nameWithType: BLFrontendSimple<T, K>.ParentComponent
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.ParentComponent
+  nameWithType.vb: BLFrontendSimple(Of T, K).ParentComponent
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).ParentComponent
+- uid: dynamic
+  commentId: T:System.Object
+  isExternal: true
+  name: dynamic
+  nameWithType: dynamic
+  fullName: dynamic
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.BusinessName*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.BusinessName
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.BusinessName
+  name: BusinessName
+  nameWithType: BLFrontendSimple<T, K>.BusinessName
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.BusinessName
+  nameWithType.vb: BLFrontendSimple(Of T, K).BusinessName
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).BusinessName
+- uid: Siesa.SDK.Shared.Business.IBLBase{{T}}.BusinessName
+  commentId: P:Siesa.SDK.Shared.Business.IBLBase{`0}.BusinessName
+  parent: Siesa.SDK.Shared.Business.IBLBase{{T}}
+  definition: Siesa.SDK.Shared.Business.IBLBase`1.BusinessName
+  name: BusinessName
+  nameWithType: IBLBase<T>.BusinessName
+  fullName: Siesa.SDK.Shared.Business.IBLBase<T>.BusinessName
+  nameWithType.vb: IBLBase(Of T).BusinessName
+  fullName.vb: Siesa.SDK.Shared.Business.IBLBase(Of T).BusinessName
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Siesa.SDK.Shared.Business.IBLBase`1.BusinessName
+  commentId: P:Siesa.SDK.Shared.Business.IBLBase`1.BusinessName
+  name: BusinessName
+  nameWithType: IBLBase<T>.BusinessName
+  fullName: Siesa.SDK.Shared.Business.IBLBase<T>.BusinessName
+  nameWithType.vb: IBLBase(Of T).BusinessName
+  fullName.vb: Siesa.SDK.Shared.Business.IBLBase(Of T).BusinessName
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.Backend*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.Backend
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.Backend
+  name: Backend
+  nameWithType: BLFrontendSimple<T, K>.Backend
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.Backend
+  nameWithType.vb: BLFrontendSimple(Of T, K).Backend
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).Backend
+- uid: Siesa.SDK.Shared.Services.SDKBusinessModel
+  commentId: T:Siesa.SDK.Shared.Services.SDKBusinessModel
+  parent: Siesa.SDK.Shared.Services
+  name: SDKBusinessModel
+  nameWithType: SDKBusinessModel
+  fullName: Siesa.SDK.Shared.Services.SDKBusinessModel
+- uid: Siesa.SDK.Shared.Services
+  commentId: N:Siesa.SDK.Shared.Services
+  name: Siesa.SDK.Shared.Services
+  nameWithType: Siesa.SDK.Shared.Services
+  fullName: Siesa.SDK.Shared.Services
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+  - name: .
+  - uid: Siesa.SDK.Shared
+    name: Shared
+  - name: .
+  - uid: Siesa.SDK.Shared.Services
+    name: Services
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+  - name: .
+  - uid: Siesa.SDK.Shared
+    name: Shared
+  - name: .
+  - uid: Siesa.SDK.Shared.Services
+    name: Services
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.GetBackend*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.GetBackend
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.GetBackend(System.String)
+  name: GetBackend
+  nameWithType: BLFrontendSimple<T, K>.GetBackend
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.GetBackend
+  nameWithType.vb: BLFrontendSimple(Of T, K).GetBackend
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).GetBackend
+- uid: System.Collections.Generic.List{Siesa.SDK.Frontend.Components.FormManager.Model.Panel}
+  commentId: T:System.Collections.Generic.List{Siesa.SDK.Frontend.Components.FormManager.Model.Panel}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<Panel>
+  nameWithType: List<Panel>
+  fullName: System.Collections.Generic.List<Siesa.SDK.Frontend.Components.FormManager.Model.Panel>
+  nameWithType.vb: List(Of Panel)
+  fullName.vb: System.Collections.Generic.List(Of Siesa.SDK.Frontend.Components.FormManager.Model.Panel)
+  name.vb: List(Of Panel)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Panel
+    name: Panel
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Panel
+    name: Panel
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Panel.html
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: System.Collections.Generic.List{Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldOptions}
+  commentId: T:System.Collections.Generic.List{Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldOptions}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<FieldOptions>
+  nameWithType: List<FieldOptions>
+  fullName: System.Collections.Generic.List<Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldOptions>
+  nameWithType.vb: List(Of FieldOptions)
+  fullName.vb: System.Collections.Generic.List(Of Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldOptions)
+  name.vb: List(Of FieldOptions)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldOptions
+    name: FieldOptions
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldOptions.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldOptions
+    name: FieldOptions
+    href: Siesa.SDK.Frontend.Components.FormManager.Model.Fields.FieldOptions.html
+  - name: )
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.BaseObj*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.BaseObj
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.BaseObj
+  name: BaseObj
+  nameWithType: BLFrontendSimple<T, K>.BaseObj
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.BaseObj
+  nameWithType.vb: BLFrontendSimple(Of T, K).BaseObj
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).BaseObj
+- uid: Siesa.SDK.Shared.Business.IBLBase{{T}}.BaseObj
+  commentId: P:Siesa.SDK.Shared.Business.IBLBase{`0}.BaseObj
+  parent: Siesa.SDK.Shared.Business.IBLBase{{T}}
+  definition: Siesa.SDK.Shared.Business.IBLBase`1.BaseObj
+  name: BaseObj
+  nameWithType: IBLBase<T>.BaseObj
+  fullName: Siesa.SDK.Shared.Business.IBLBase<T>.BaseObj
+  nameWithType.vb: IBLBase(Of T).BaseObj
+  fullName.vb: Siesa.SDK.Shared.Business.IBLBase(Of T).BaseObj
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: Siesa.SDK.Shared.Business.IBLBase`1.BaseObj
+  commentId: P:Siesa.SDK.Shared.Business.IBLBase`1.BaseObj
+  name: BaseObj
+  nameWithType: IBLBase<T>.BaseObj
+  fullName: Siesa.SDK.Shared.Business.IBLBase<T>.BaseObj
+  nameWithType.vb: IBLBase(Of T).BaseObj
+  fullName.vb: Siesa.SDK.Shared.Business.IBLBase(Of T).BaseObj
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.DynamicEntities*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.DynamicEntities
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.DynamicEntities
+  name: DynamicEntities
+  nameWithType: BLFrontendSimple<T, K>.DynamicEntities
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.DynamicEntities
+  nameWithType.vb: BLFrontendSimple(Of T, K).DynamicEntities
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).DynamicEntities
+- uid: System.Collections.Generic.List{System.Object}
+  commentId: T:System.Collections.Generic.List{System.Object}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<dynamic>
+  nameWithType: List<dynamic>
+  fullName: System.Collections.Generic.List<dynamic>
+  nameWithType.vb: List(Of Object)
+  fullName.vb: System.Collections.Generic.List(Of Object)
+  name.vb: List(Of Object)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: dynamic
+    name: dynamic
+    isExternal: true
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: Object
+  - name: )
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.RelFieldsToSave*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.RelFieldsToSave
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.RelFieldsToSave
+  name: RelFieldsToSave
+  nameWithType: BLFrontendSimple<T, K>.RelFieldsToSave
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.RelFieldsToSave
+  nameWithType.vb: BLFrontendSimple(Of T, K).RelFieldsToSave
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).RelFieldsToSave
+- uid: System.Collections.Generic.List{System.String}
+  commentId: T:System.Collections.Generic.List{System.String}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<string>
+  nameWithType: List<string>
+  fullName: System.Collections.Generic.List<string>
+  nameWithType.vb: List(Of String)
+  fullName.vb: System.Collections.Generic.List(Of String)
+  name.vb: List(Of String)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.Refresh*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.Refresh
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.Refresh(System.Boolean)
+  name: Refresh
+  nameWithType: BLFrontendSimple<T, K>.Refresh
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.Refresh
+  nameWithType.vb: BLFrontendSimple(Of T, K).Refresh
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).Refresh
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: System.Threading.Tasks.Task
+  commentId: T:System.Threading.Tasks.Task
+  parent: System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  name: Task
+  nameWithType: Task
+  fullName: System.Threading.Tasks.Task
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.AddRelFieldToSave*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.AddRelFieldToSave
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.AddRelFieldToSave(System.String)
+  name: AddRelFieldToSave
+  nameWithType: BLFrontendSimple<T, K>.AddRelFieldToSave
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.AddRelFieldToSave
+  nameWithType.vb: BLFrontendSimple(Of T, K).AddRelFieldToSave
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).AddRelFieldToSave
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.AuthenticationService*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.AuthenticationService
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.AuthenticationService
+  name: AuthenticationService
+  nameWithType: BLFrontendSimple<T, K>.AuthenticationService
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.AuthenticationService
+  nameWithType.vb: BLFrontendSimple(Of T, K).AuthenticationService
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).AuthenticationService
+- uid: Siesa.SDK.Shared.Services.IAuthenticationService
+  commentId: T:Siesa.SDK.Shared.Services.IAuthenticationService
+  parent: Siesa.SDK.Shared.Services
+  name: IAuthenticationService
+  nameWithType: IAuthenticationService
+  fullName: Siesa.SDK.Shared.Services.IAuthenticationService
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.NotificationService*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.NotificationService
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.NotificationService
+  name: NotificationService
+  nameWithType: BLFrontendSimple<T, K>.NotificationService
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.NotificationService
+  nameWithType.vb: BLFrontendSimple(Of T, K).NotificationService
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).NotificationService
+- uid: Siesa.SDK.Frontend.Services.SDKNotificationService
+  commentId: T:Siesa.SDK.Frontend.Services.SDKNotificationService
+  parent: Siesa.SDK.Frontend.Services
+  href: Siesa.SDK.Frontend.Services.SDKNotificationService.html
+  name: SDKNotificationService
+  nameWithType: SDKNotificationService
+  fullName: Siesa.SDK.Frontend.Services.SDKNotificationService
+- uid: Siesa.SDK.Frontend.Services
+  commentId: N:Siesa.SDK.Frontend.Services
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Services
+  nameWithType: Siesa.SDK.Frontend.Services
+  fullName: Siesa.SDK.Frontend.Services
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Services
+    name: Services
+    href: Siesa.SDK.Frontend.Services.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Services
+    name: Services
+    href: Siesa.SDK.Frontend.Services.html
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.Logger*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.Logger
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.Logger
+  name: Logger
+  nameWithType: BLFrontendSimple<T, K>.Logger
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.Logger
+  nameWithType.vb: BLFrontendSimple(Of T, K).Logger
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).Logger
+- uid: Microsoft.Extensions.Logging.ILogger
+  commentId: T:Microsoft.Extensions.Logging.ILogger
+  parent: Microsoft.Extensions.Logging
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging.ilogger
+  name: ILogger
+  nameWithType: ILogger
+  fullName: Microsoft.Extensions.Logging.ILogger
+- uid: Microsoft.Extensions.Logging
+  commentId: N:Microsoft.Extensions.Logging
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.Extensions.Logging
+  nameWithType: Microsoft.Extensions.Logging
+  fullName: Microsoft.Extensions.Logging
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.Extensions
+    name: Extensions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions
+  - name: .
+  - uid: Microsoft.Extensions.Logging
+    name: Logging
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.Extensions
+    name: Extensions
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions
+  - name: .
+  - uid: Microsoft.Extensions.Logging
+    name: Logging
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.#ctor*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.#ctor
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.#ctor(Siesa.SDK.Shared.Services.IAuthenticationService,Siesa.SDK.Frontend.Services.SDKNotificationService,Microsoft.Extensions.Logging.ILoggerFactory)
+  name: BLFrontendSimple
+  nameWithType: BLFrontendSimple<T, K>.BLFrontendSimple
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.BLFrontendSimple
+  nameWithType.vb: BLFrontendSimple(Of T, K).New
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).New
+  name.vb: New
+- uid: Microsoft.Extensions.Logging.ILoggerFactory
+  commentId: T:Microsoft.Extensions.Logging.ILoggerFactory
+  parent: Microsoft.Extensions.Logging
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging.iloggerfactory
+  name: ILoggerFactory
+  nameWithType: ILoggerFactory
+  fullName: Microsoft.Extensions.Logging.ILoggerFactory
+- uid: System.IServiceProvider
+  commentId: T:System.IServiceProvider
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iserviceprovider
+  name: IServiceProvider
+  nameWithType: IServiceProvider
+  fullName: System.IServiceProvider
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.Get*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.Get
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.Get(System.Int64,System.Collections.Generic.List{System.String})
+  name: Get
+  nameWithType: BLFrontendSimple<T, K>.Get
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.Get
+  nameWithType.vb: BLFrontendSimple(Of T, K).Get
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).Get
+- uid: Siesa.SDK.Shared.Business.IBLBase{{T}}.Get(System.Int64,System.Collections.Generic.List{System.String})
+  commentId: M:Siesa.SDK.Shared.Business.IBLBase{`0}.Get(System.Int64,System.Collections.Generic.List{System.String})
+  parent: Siesa.SDK.Shared.Business.IBLBase{{T}}
+  definition: Siesa.SDK.Shared.Business.IBLBase`1.Get(System.Int64,System.Collections.Generic.List{System.String})
+  href: https://learn.microsoft.com/dotnet/api/system.int64
+  name: Get(long, List<string>)
+  nameWithType: IBLBase<T>.Get(long, List<string>)
+  fullName: Siesa.SDK.Shared.Business.IBLBase<T>.Get(long, System.Collections.Generic.List<string>)
+  nameWithType.vb: IBLBase(Of T).Get(Long, List(Of String))
+  fullName.vb: Siesa.SDK.Shared.Business.IBLBase(Of T).Get(Long, System.Collections.Generic.List(Of String))
+  name.vb: Get(Long, List(Of String))
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Business.IBLBase{`0}.Get(System.Int64,System.Collections.Generic.List{System.String})
+    name: Get
+  - name: (
+  - uid: System.Int64
+    name: long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Business.IBLBase{`0}.Get(System.Int64,System.Collections.Generic.List{System.String})
+    name: Get
+  - name: (
+  - uid: System.Int64
+    name: Long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  - name: )
+- uid: System.Int64
+  commentId: T:System.Int64
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int64
+  name: long
+  nameWithType: long
+  fullName: long
+  nameWithType.vb: Long
+  fullName.vb: Long
+  name.vb: Long
+- uid: Siesa.SDK.Shared.Business.IBLBase`1.Get(System.Int64,System.Collections.Generic.List{System.String})
+  commentId: M:Siesa.SDK.Shared.Business.IBLBase`1.Get(System.Int64,System.Collections.Generic.List{System.String})
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int64
+  name: Get(long, List<string>)
+  nameWithType: IBLBase<T>.Get(long, List<string>)
+  fullName: Siesa.SDK.Shared.Business.IBLBase<T>.Get(long, System.Collections.Generic.List<string>)
+  nameWithType.vb: IBLBase(Of T).Get(Long, List(Of String))
+  fullName.vb: Siesa.SDK.Shared.Business.IBLBase(Of T).Get(Long, System.Collections.Generic.List(Of String))
+  name.vb: Get(Long, List(Of String))
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Business.IBLBase`1.Get(System.Int64,System.Collections.Generic.List{System.String})
+    name: Get
+  - name: (
+  - uid: System.Int64
+    name: long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Business.IBLBase`1.Get(System.Int64,System.Collections.Generic.List{System.String})
+    name: Get
+  - name: (
+  - uid: System.Int64
+    name: Long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  - name: )
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.GetAsync*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.GetAsync
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.GetAsync(System.Int64,System.Collections.Generic.List{System.String})
+  name: GetAsync
+  nameWithType: BLFrontendSimple<T, K>.GetAsync
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.GetAsync
+  nameWithType.vb: BLFrontendSimple(Of T, K).GetAsync
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).GetAsync
+- uid: Siesa.SDK.Shared.Business.IBLBase{{T}}.GetAsync(System.Int64,System.Collections.Generic.List{System.String})
+  commentId: M:Siesa.SDK.Shared.Business.IBLBase{`0}.GetAsync(System.Int64,System.Collections.Generic.List{System.String})
+  parent: Siesa.SDK.Shared.Business.IBLBase{{T}}
+  definition: Siesa.SDK.Shared.Business.IBLBase`1.GetAsync(System.Int64,System.Collections.Generic.List{System.String})
+  href: https://learn.microsoft.com/dotnet/api/system.int64
+  name: GetAsync(long, List<string>)
+  nameWithType: IBLBase<T>.GetAsync(long, List<string>)
+  fullName: Siesa.SDK.Shared.Business.IBLBase<T>.GetAsync(long, System.Collections.Generic.List<string>)
+  nameWithType.vb: IBLBase(Of T).GetAsync(Long, List(Of String))
+  fullName.vb: Siesa.SDK.Shared.Business.IBLBase(Of T).GetAsync(Long, System.Collections.Generic.List(Of String))
+  name.vb: GetAsync(Long, List(Of String))
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Business.IBLBase{`0}.GetAsync(System.Int64,System.Collections.Generic.List{System.String})
+    name: GetAsync
+  - name: (
+  - uid: System.Int64
+    name: long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Business.IBLBase{`0}.GetAsync(System.Int64,System.Collections.Generic.List{System.String})
+    name: GetAsync
+  - name: (
+  - uid: System.Int64
+    name: Long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  - name: )
+- uid: System.Threading.Tasks.Task{{T}}
+  commentId: T:System.Threading.Tasks.Task{`0}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<T>
+  nameWithType: Task<T>
+  fullName: System.Threading.Tasks.Task<T>
+  nameWithType.vb: Task(Of T)
+  fullName.vb: System.Threading.Tasks.Task(Of T)
+  name.vb: Task(Of T)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Siesa.SDK.Shared.Business.IBLBase`1.GetAsync(System.Int64,System.Collections.Generic.List{System.String})
+  commentId: M:Siesa.SDK.Shared.Business.IBLBase`1.GetAsync(System.Int64,System.Collections.Generic.List{System.String})
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int64
+  name: GetAsync(long, List<string>)
+  nameWithType: IBLBase<T>.GetAsync(long, List<string>)
+  fullName: Siesa.SDK.Shared.Business.IBLBase<T>.GetAsync(long, System.Collections.Generic.List<string>)
+  nameWithType.vb: IBLBase(Of T).GetAsync(Long, List(Of String))
+  fullName.vb: Siesa.SDK.Shared.Business.IBLBase(Of T).GetAsync(Long, System.Collections.Generic.List(Of String))
+  name.vb: GetAsync(Long, List(Of String))
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Business.IBLBase`1.GetAsync(System.Int64,System.Collections.Generic.List{System.String})
+    name: GetAsync
+  - name: (
+  - uid: System.Int64
+    name: long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Business.IBLBase`1.GetAsync(System.Int64,System.Collections.Generic.List{System.String})
+    name: GetAsync
+  - name: (
+  - uid: System.Int64
+    name: Long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  - name: )
+- uid: System.Threading.Tasks.Task`1
+  commentId: T:System.Threading.Tasks.Task`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<TResult>
+  nameWithType: Task<TResult>
+  fullName: System.Threading.Tasks.Task<TResult>
+  nameWithType.vb: Task(Of TResult)
+  fullName.vb: System.Threading.Tasks.Task(Of TResult)
+  name.vb: Task(Of TResult)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - name: TResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TResult
+  - name: )
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.SaveAsync*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.SaveAsync
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.SaveAsync
+  name: SaveAsync
+  nameWithType: BLFrontendSimple<T, K>.SaveAsync
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.SaveAsync
+  nameWithType.vb: BLFrontendSimple(Of T, K).SaveAsync
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).SaveAsync
+- uid: System.Threading.Tasks.Task{System.Int64}
+  commentId: T:System.Threading.Tasks.Task{System.Int64}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<long>
+  nameWithType: Task<long>
+  fullName: System.Threading.Tasks.Task<long>
+  nameWithType.vb: Task(Of Long)
+  fullName.vb: System.Threading.Tasks.Task(Of Long)
+  name.vb: Task(Of Long)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: System.Int64
+    name: long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Int64
+    name: Long
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int64
+  - name: )
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.InitializeBusiness*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.InitializeBusiness
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.InitializeBusiness(System.Int64,System.Collections.Generic.List{System.String})
+  name: InitializeBusiness
+  nameWithType: BLFrontendSimple<T, K>.InitializeBusiness
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.InitializeBusiness
+  nameWithType.vb: BLFrontendSimple(Of T, K).InitializeBusiness
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).InitializeBusiness
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.InstanceDynamicEntities*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.InstanceDynamicEntities
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.InstanceDynamicEntities(System.String,System.Int64)
+  name: InstanceDynamicEntities
+  nameWithType: BLFrontendSimple<T, K>.InstanceDynamicEntities
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.InstanceDynamicEntities
+  nameWithType.vb: BLFrontendSimple(Of T, K).InstanceDynamicEntities
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).InstanceDynamicEntities
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.GetDuplicateInfo*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.GetDuplicateInfo
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.GetDuplicateInfo(System.Int64)
+  name: GetDuplicateInfo
+  nameWithType: BLFrontendSimple<T, K>.GetDuplicateInfo
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.GetDuplicateInfo
+  nameWithType.vb: BLFrontendSimple(Of T, K).GetDuplicateInfo
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).GetDuplicateInfo
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.Save*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.Save
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.Save
+  name: Save
+  nameWithType: BLFrontendSimple<T, K>.Save
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.Save
+  nameWithType.vb: BLFrontendSimple(Of T, K).Save
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).Save
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.ValidateAndSave*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.ValidateAndSave
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.ValidateAndSave(System.Boolean)
+  name: ValidateAndSave
+  nameWithType: BLFrontendSimple<T, K>.ValidateAndSave
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.ValidateAndSave
+  nameWithType.vb: BLFrontendSimple(Of T, K).ValidateAndSave
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).ValidateAndSave
+- uid: Siesa.SDK.Shared.Business.IBLBase{{T}}.ValidateAndSave(System.Boolean)
+  commentId: M:Siesa.SDK.Shared.Business.IBLBase{`0}.ValidateAndSave(System.Boolean)
+  parent: Siesa.SDK.Shared.Business.IBLBase{{T}}
+  definition: Siesa.SDK.Shared.Business.IBLBase`1.ValidateAndSave(System.Boolean)
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: ValidateAndSave(bool)
+  nameWithType: IBLBase<T>.ValidateAndSave(bool)
+  fullName: Siesa.SDK.Shared.Business.IBLBase<T>.ValidateAndSave(bool)
+  nameWithType.vb: IBLBase(Of T).ValidateAndSave(Boolean)
+  fullName.vb: Siesa.SDK.Shared.Business.IBLBase(Of T).ValidateAndSave(Boolean)
+  name.vb: ValidateAndSave(Boolean)
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Business.IBLBase{`0}.ValidateAndSave(System.Boolean)
+    name: ValidateAndSave
+  - name: (
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Business.IBLBase{`0}.ValidateAndSave(System.Boolean)
+    name: ValidateAndSave
+  - name: (
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: Siesa.SDK.Protos.ValidateAndSaveBusinessObjResponse
+  commentId: T:Siesa.SDK.Protos.ValidateAndSaveBusinessObjResponse
+  parent: Siesa.SDK.Protos
+  name: ValidateAndSaveBusinessObjResponse
+  nameWithType: ValidateAndSaveBusinessObjResponse
+  fullName: Siesa.SDK.Protos.ValidateAndSaveBusinessObjResponse
+- uid: Siesa.SDK.Shared.Business.IBLBase`1.ValidateAndSave(System.Boolean)
+  commentId: M:Siesa.SDK.Shared.Business.IBLBase`1.ValidateAndSave(System.Boolean)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: ValidateAndSave(bool)
+  nameWithType: IBLBase<T>.ValidateAndSave(bool)
+  fullName: Siesa.SDK.Shared.Business.IBLBase<T>.ValidateAndSave(bool)
+  nameWithType.vb: IBLBase(Of T).ValidateAndSave(Boolean)
+  fullName.vb: Siesa.SDK.Shared.Business.IBLBase(Of T).ValidateAndSave(Boolean)
+  name.vb: ValidateAndSave(Boolean)
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Business.IBLBase`1.ValidateAndSave(System.Boolean)
+    name: ValidateAndSave
+  - name: (
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Business.IBLBase`1.ValidateAndSave(System.Boolean)
+    name: ValidateAndSave
+  - name: (
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: Siesa.SDK.Protos
+  commentId: N:Siesa.SDK.Protos
+  name: Siesa.SDK.Protos
+  nameWithType: Siesa.SDK.Protos
+  fullName: Siesa.SDK.Protos
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+  - name: .
+  - uid: Siesa.SDK.Protos
+    name: Protos
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+  - name: .
+  - uid: Siesa.SDK.Protos
+    name: Protos
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.Update*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.Update
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.Update
+  name: Update
+  nameWithType: BLFrontendSimple<T, K>.Update
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.Update
+  nameWithType.vb: BLFrontendSimple(Of T, K).Update
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).Update
+- uid: Siesa.SDK.Shared.Business.IBLBase{{T}}.Update
+  commentId: M:Siesa.SDK.Shared.Business.IBLBase{`0}.Update
+  parent: Siesa.SDK.Shared.Business.IBLBase{{T}}
+  definition: Siesa.SDK.Shared.Business.IBLBase`1.Update
+  name: Update()
+  nameWithType: IBLBase<T>.Update()
+  fullName: Siesa.SDK.Shared.Business.IBLBase<T>.Update()
+  nameWithType.vb: IBLBase(Of T).Update()
+  fullName.vb: Siesa.SDK.Shared.Business.IBLBase(Of T).Update()
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Business.IBLBase{`0}.Update
+    name: Update
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Business.IBLBase{`0}.Update
+    name: Update
+  - name: (
+  - name: )
+- uid: Siesa.SDK.Shared.Business.IBLBase`1.Update
+  commentId: M:Siesa.SDK.Shared.Business.IBLBase`1.Update
+  name: Update()
+  nameWithType: IBLBase<T>.Update()
+  fullName: Siesa.SDK.Shared.Business.IBLBase<T>.Update()
+  nameWithType.vb: IBLBase(Of T).Update()
+  fullName.vb: Siesa.SDK.Shared.Business.IBLBase(Of T).Update()
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Business.IBLBase`1.Update
+    name: Update
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Business.IBLBase`1.Update
+    name: Update
+  - name: (
+  - name: )
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.Delete*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.Delete
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.Delete
+  name: Delete
+  nameWithType: BLFrontendSimple<T, K>.Delete
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.Delete
+  nameWithType.vb: BLFrontendSimple(Of T, K).Delete
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).Delete
+- uid: Siesa.SDK.Shared.Business.IBLBase{{T}}.Delete
+  commentId: M:Siesa.SDK.Shared.Business.IBLBase{`0}.Delete
+  parent: Siesa.SDK.Shared.Business.IBLBase{{T}}
+  definition: Siesa.SDK.Shared.Business.IBLBase`1.Delete
+  name: Delete()
+  nameWithType: IBLBase<T>.Delete()
+  fullName: Siesa.SDK.Shared.Business.IBLBase<T>.Delete()
+  nameWithType.vb: IBLBase(Of T).Delete()
+  fullName.vb: Siesa.SDK.Shared.Business.IBLBase(Of T).Delete()
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Business.IBLBase{`0}.Delete
+    name: Delete
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Business.IBLBase{`0}.Delete
+    name: Delete
+  - name: (
+  - name: )
+- uid: Siesa.SDK.Protos.DeleteBusinessObjResponse
+  commentId: T:Siesa.SDK.Protos.DeleteBusinessObjResponse
+  parent: Siesa.SDK.Protos
+  name: DeleteBusinessObjResponse
+  nameWithType: DeleteBusinessObjResponse
+  fullName: Siesa.SDK.Protos.DeleteBusinessObjResponse
+- uid: Siesa.SDK.Shared.Business.IBLBase`1.Delete
+  commentId: M:Siesa.SDK.Shared.Business.IBLBase`1.Delete
+  name: Delete()
+  nameWithType: IBLBase<T>.Delete()
+  fullName: Siesa.SDK.Shared.Business.IBLBase<T>.Delete()
+  nameWithType.vb: IBLBase(Of T).Delete()
+  fullName.vb: Siesa.SDK.Shared.Business.IBLBase(Of T).Delete()
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Business.IBLBase`1.Delete
+    name: Delete
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Business.IBLBase`1.Delete
+    name: Delete
+  - name: (
+  - name: )
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.DeleteAsync*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.DeleteAsync
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.DeleteAsync
+  name: DeleteAsync
+  nameWithType: BLFrontendSimple<T, K>.DeleteAsync
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.DeleteAsync
+  nameWithType.vb: BLFrontendSimple(Of T, K).DeleteAsync
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).DeleteAsync
+- uid: System.Threading.Tasks.Task{Siesa.SDK.Protos.DeleteBusinessObjResponse}
+  commentId: T:System.Threading.Tasks.Task{Siesa.SDK.Protos.DeleteBusinessObjResponse}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<DeleteBusinessObjResponse>
+  nameWithType: Task<DeleteBusinessObjResponse>
+  fullName: System.Threading.Tasks.Task<Siesa.SDK.Protos.DeleteBusinessObjResponse>
+  nameWithType.vb: Task(Of DeleteBusinessObjResponse)
+  fullName.vb: System.Threading.Tasks.Task(Of Siesa.SDK.Protos.DeleteBusinessObjResponse)
+  name.vb: Task(Of DeleteBusinessObjResponse)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: Siesa.SDK.Protos.DeleteBusinessObjResponse
+    name: DeleteBusinessObjResponse
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Siesa.SDK.Protos.DeleteBusinessObjResponse
+    name: DeleteBusinessObjResponse
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.ToString*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.ToString
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.ToString
+  name: ToString
+  nameWithType: BLFrontendSimple<T, K>.ToString
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.ToString
+  nameWithType.vb: BLFrontendSimple(Of T, K).ToString
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).ToString
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.GetData*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.GetData
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.GetData(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,Siesa.SDK.Shared.Business.QueryFilterDelegate{`0},System.Boolean,System.Boolean,System.Collections.Generic.List{System.String})
+  name: GetData
+  nameWithType: BLFrontendSimple<T, K>.GetData
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.GetData
+  nameWithType.vb: BLFrontendSimple(Of T, K).GetData
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).GetData
+- uid: Siesa.SDK.Shared.Business.IBLBase{{T}}.GetData(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,Siesa.SDK.Shared.Business.QueryFilterDelegate{{T}},System.Boolean,System.Boolean,System.Collections.Generic.List{System.String})
+  commentId: M:Siesa.SDK.Shared.Business.IBLBase{`0}.GetData(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,Siesa.SDK.Shared.Business.QueryFilterDelegate{`0},System.Boolean,System.Boolean,System.Collections.Generic.List{System.String})
+  parent: Siesa.SDK.Shared.Business.IBLBase{{T}}
+  definition: Siesa.SDK.Shared.Business.IBLBase`1.GetData(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,Siesa.SDK.Shared.Business.QueryFilterDelegate{`0},System.Boolean,System.Boolean,System.Collections.Generic.List{System.String})
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: GetData(int?, int?, string, string, QueryFilterDelegate<T>, bool, bool, List<string>)
+  nameWithType: IBLBase<T>.GetData(int?, int?, string, string, QueryFilterDelegate<T>, bool, bool, List<string>)
+  fullName: Siesa.SDK.Shared.Business.IBLBase<T>.GetData(int?, int?, string, string, Siesa.SDK.Shared.Business.QueryFilterDelegate<T>, bool, bool, System.Collections.Generic.List<string>)
+  nameWithType.vb: IBLBase(Of T).GetData(Integer?, Integer?, String, String, QueryFilterDelegate(Of T), Boolean, Boolean, List(Of String))
+  fullName.vb: Siesa.SDK.Shared.Business.IBLBase(Of T).GetData(Integer?, Integer?, String, String, Siesa.SDK.Shared.Business.QueryFilterDelegate(Of T), Boolean, Boolean, System.Collections.Generic.List(Of String))
+  name.vb: GetData(Integer?, Integer?, String, String, QueryFilterDelegate(Of T), Boolean, Boolean, List(Of String))
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Business.IBLBase{`0}.GetData(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,Siesa.SDK.Shared.Business.QueryFilterDelegate{`0},System.Boolean,System.Boolean,System.Collections.Generic.List{System.String})
+    name: GetData
+  - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '?'
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '?'
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: Siesa.SDK.Shared.Business.QueryFilterDelegate`1
+    name: QueryFilterDelegate
+  - name: <
+  - name: T
+  - name: '>'
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Business.IBLBase{`0}.GetData(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,Siesa.SDK.Shared.Business.QueryFilterDelegate{`0},System.Boolean,System.Boolean,System.Collections.Generic.List{System.String})
+    name: GetData
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '?'
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '?'
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: Siesa.SDK.Shared.Business.QueryFilterDelegate`1
+    name: QueryFilterDelegate
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  - name: )
+- uid: System.Nullable{System.Int32}
+  commentId: T:System.Nullable{System.Int32}
+  parent: System
+  definition: System.Nullable`1
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int?
+  nameWithType: int?
+  fullName: int?
+  nameWithType.vb: Integer?
+  fullName.vb: Integer?
+  name.vb: Integer?
+  spec.csharp:
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '?'
+  spec.vb:
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '?'
+- uid: Siesa.SDK.Shared.Business.QueryFilterDelegate{{T}}
+  commentId: T:Siesa.SDK.Shared.Business.QueryFilterDelegate{`0}
+  parent: Siesa.SDK.Shared.Business
+  definition: Siesa.SDK.Shared.Business.QueryFilterDelegate`1
+  name: QueryFilterDelegate<T>
+  nameWithType: QueryFilterDelegate<T>
+  fullName: Siesa.SDK.Shared.Business.QueryFilterDelegate<T>
+  nameWithType.vb: QueryFilterDelegate(Of T)
+  fullName.vb: Siesa.SDK.Shared.Business.QueryFilterDelegate(Of T)
+  name.vb: QueryFilterDelegate(Of T)
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Business.QueryFilterDelegate`1
+    name: QueryFilterDelegate
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Business.QueryFilterDelegate`1
+    name: QueryFilterDelegate
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Siesa.SDK.Shared.Business.LoadResult
+  commentId: T:Siesa.SDK.Shared.Business.LoadResult
+  parent: Siesa.SDK.Shared.Business
+  name: LoadResult
+  nameWithType: LoadResult
+  fullName: Siesa.SDK.Shared.Business.LoadResult
+- uid: Siesa.SDK.Shared.Business.IBLBase`1.GetData(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,Siesa.SDK.Shared.Business.QueryFilterDelegate{`0},System.Boolean,System.Boolean,System.Collections.Generic.List{System.String})
+  commentId: M:Siesa.SDK.Shared.Business.IBLBase`1.GetData(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,Siesa.SDK.Shared.Business.QueryFilterDelegate{`0},System.Boolean,System.Boolean,System.Collections.Generic.List{System.String})
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: GetData(int?, int?, string, string, QueryFilterDelegate<T>, bool, bool, List<string>)
+  nameWithType: IBLBase<T>.GetData(int?, int?, string, string, QueryFilterDelegate<T>, bool, bool, List<string>)
+  fullName: Siesa.SDK.Shared.Business.IBLBase<T>.GetData(int?, int?, string, string, Siesa.SDK.Shared.Business.QueryFilterDelegate<T>, bool, bool, System.Collections.Generic.List<string>)
+  nameWithType.vb: IBLBase(Of T).GetData(Integer?, Integer?, String, String, QueryFilterDelegate(Of T), Boolean, Boolean, List(Of String))
+  fullName.vb: Siesa.SDK.Shared.Business.IBLBase(Of T).GetData(Integer?, Integer?, String, String, Siesa.SDK.Shared.Business.QueryFilterDelegate(Of T), Boolean, Boolean, System.Collections.Generic.List(Of String))
+  name.vb: GetData(Integer?, Integer?, String, String, QueryFilterDelegate(Of T), Boolean, Boolean, List(Of String))
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Business.IBLBase`1.GetData(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,Siesa.SDK.Shared.Business.QueryFilterDelegate{`0},System.Boolean,System.Boolean,System.Collections.Generic.List{System.String})
+    name: GetData
+  - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '?'
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '?'
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: Siesa.SDK.Shared.Business.QueryFilterDelegate`1
+    name: QueryFilterDelegate
+  - name: <
+  - name: T
+  - name: '>'
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Business.IBLBase`1.GetData(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,Siesa.SDK.Shared.Business.QueryFilterDelegate{`0},System.Boolean,System.Boolean,System.Collections.Generic.List{System.String})
+    name: GetData
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '?'
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '?'
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: Siesa.SDK.Shared.Business.QueryFilterDelegate`1
+    name: QueryFilterDelegate
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  - name: )
+- uid: System.Nullable`1
+  commentId: T:System.Nullable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  name: Nullable<T>
+  nameWithType: Nullable<T>
+  fullName: System.Nullable<T>
+  nameWithType.vb: Nullable(Of T)
+  fullName.vb: System.Nullable(Of T)
+  name.vb: Nullable(Of T)
+  spec.csharp:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Siesa.SDK.Shared.Business.QueryFilterDelegate`1
+  commentId: T:Siesa.SDK.Shared.Business.QueryFilterDelegate`1
+  name: QueryFilterDelegate<T>
+  nameWithType: QueryFilterDelegate<T>
+  fullName: Siesa.SDK.Shared.Business.QueryFilterDelegate<T>
+  nameWithType.vb: QueryFilterDelegate(Of T)
+  fullName.vb: Siesa.SDK.Shared.Business.QueryFilterDelegate(Of T)
+  name.vb: QueryFilterDelegate(Of T)
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Business.QueryFilterDelegate`1
+    name: QueryFilterDelegate
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Business.QueryFilterDelegate`1
+    name: QueryFilterDelegate
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.EntityFieldSearch*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.EntityFieldSearch
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.EntityFieldSearch(System.String,System.String,System.Nullable{System.Int32},System.String,System.Collections.Generic.List{System.String})
+  name: EntityFieldSearch
+  nameWithType: BLFrontendSimple<T, K>.EntityFieldSearch
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.EntityFieldSearch
+  nameWithType.vb: BLFrontendSimple(Of T, K).EntityFieldSearch
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).EntityFieldSearch
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.EntityFieldSearchAsync*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.EntityFieldSearchAsync
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.EntityFieldSearchAsync(System.String,System.String,System.Nullable{System.Int32},System.String,System.Collections.Generic.List{System.String})
+  name: EntityFieldSearchAsync
+  nameWithType: BLFrontendSimple<T, K>.EntityFieldSearchAsync
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.EntityFieldSearchAsync
+  nameWithType.vb: BLFrontendSimple(Of T, K).EntityFieldSearchAsync
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).EntityFieldSearchAsync
+- uid: System.Threading.Tasks.Task{Siesa.SDK.Shared.Business.LoadResult}
+  commentId: T:System.Threading.Tasks.Task{Siesa.SDK.Shared.Business.LoadResult}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<LoadResult>
+  nameWithType: Task<LoadResult>
+  fullName: System.Threading.Tasks.Task<Siesa.SDK.Shared.Business.LoadResult>
+  nameWithType.vb: Task(Of LoadResult)
+  fullName.vb: System.Threading.Tasks.Task(Of Siesa.SDK.Shared.Business.LoadResult)
+  name.vb: Task(Of LoadResult)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: Siesa.SDK.Shared.Business.LoadResult
+    name: LoadResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Siesa.SDK.Shared.Business.LoadResult
+    name: LoadResult
+  - name: )
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.GetDataWithTop*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.GetDataWithTop
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.GetDataWithTop(System.String)
+  name: GetDataWithTop
+  nameWithType: BLFrontendSimple<T, K>.GetDataWithTop
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.GetDataWithTop
+  nameWithType.vb: BLFrontendSimple(Of T, K).GetDataWithTop
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).GetDataWithTop
+- uid: System.Threading.Tasks.Task{System.Collections.Generic.List{System.Object}}
+  commentId: T:System.Threading.Tasks.Task{System.Collections.Generic.List{System.Object}}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<List<dynamic>>
+  nameWithType: Task<List<dynamic>>
+  fullName: System.Threading.Tasks.Task<System.Collections.Generic.List<dynamic>>
+  nameWithType.vb: Task(Of List(Of Object))
+  fullName.vb: System.Threading.Tasks.Task(Of System.Collections.Generic.List(Of Object))
+  name.vb: Task(Of List(Of Object))
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: dynamic
+    name: dynamic
+    isExternal: true
+  - name: '>'
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: Object
+  - name: )
+  - name: )
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.GetDataAsync*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.GetDataAsync
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.GetDataAsync(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.Boolean,System.Collections.Generic.List{System.String})
+  name: GetDataAsync
+  nameWithType: BLFrontendSimple<T, K>.GetDataAsync
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.GetDataAsync
+  nameWithType.vb: BLFrontendSimple(Of T, K).GetDataAsync
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).GetDataAsync
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.GetUData*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.GetUData
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.GetUData(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,Siesa.SDK.Shared.Business.QueryFilterDelegate{`0},System.Boolean,System.Collections.Generic.List{System.String})
+  name: GetUData
+  nameWithType: BLFrontendSimple<T, K>.GetUData
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.GetUData
+  nameWithType.vb: BLFrontendSimple(Of T, K).GetUData
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).GetUData
+- uid: Siesa.SDK.Shared.Business.IBLBase{{T}}.GetUData(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,Siesa.SDK.Shared.Business.QueryFilterDelegate{{T}},System.Boolean,System.Collections.Generic.List{System.String})
+  commentId: M:Siesa.SDK.Shared.Business.IBLBase{`0}.GetUData(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,Siesa.SDK.Shared.Business.QueryFilterDelegate{`0},System.Boolean,System.Collections.Generic.List{System.String})
+  parent: Siesa.SDK.Shared.Business.IBLBase{{T}}
+  definition: Siesa.SDK.Shared.Business.IBLBase`1.GetUData(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,Siesa.SDK.Shared.Business.QueryFilterDelegate{`0},System.Boolean,System.Collections.Generic.List{System.String})
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: GetUData(int?, int?, string, string, string, QueryFilterDelegate<T>, bool, List<string>)
+  nameWithType: IBLBase<T>.GetUData(int?, int?, string, string, string, QueryFilterDelegate<T>, bool, List<string>)
+  fullName: Siesa.SDK.Shared.Business.IBLBase<T>.GetUData(int?, int?, string, string, string, Siesa.SDK.Shared.Business.QueryFilterDelegate<T>, bool, System.Collections.Generic.List<string>)
+  nameWithType.vb: IBLBase(Of T).GetUData(Integer?, Integer?, String, String, String, QueryFilterDelegate(Of T), Boolean, List(Of String))
+  fullName.vb: Siesa.SDK.Shared.Business.IBLBase(Of T).GetUData(Integer?, Integer?, String, String, String, Siesa.SDK.Shared.Business.QueryFilterDelegate(Of T), Boolean, System.Collections.Generic.List(Of String))
+  name.vb: GetUData(Integer?, Integer?, String, String, String, QueryFilterDelegate(Of T), Boolean, List(Of String))
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Business.IBLBase{`0}.GetUData(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,Siesa.SDK.Shared.Business.QueryFilterDelegate{`0},System.Boolean,System.Collections.Generic.List{System.String})
+    name: GetUData
+  - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '?'
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '?'
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: Siesa.SDK.Shared.Business.QueryFilterDelegate`1
+    name: QueryFilterDelegate
+  - name: <
+  - name: T
+  - name: '>'
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Business.IBLBase{`0}.GetUData(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,Siesa.SDK.Shared.Business.QueryFilterDelegate{`0},System.Boolean,System.Collections.Generic.List{System.String})
+    name: GetUData
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '?'
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '?'
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: Siesa.SDK.Shared.Business.QueryFilterDelegate`1
+    name: QueryFilterDelegate
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  - name: )
+- uid: Siesa.SDK.Shared.Business.IBLBase`1.GetUData(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,Siesa.SDK.Shared.Business.QueryFilterDelegate{`0},System.Boolean,System.Collections.Generic.List{System.String})
+  commentId: M:Siesa.SDK.Shared.Business.IBLBase`1.GetUData(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,Siesa.SDK.Shared.Business.QueryFilterDelegate{`0},System.Boolean,System.Collections.Generic.List{System.String})
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: GetUData(int?, int?, string, string, string, QueryFilterDelegate<T>, bool, List<string>)
+  nameWithType: IBLBase<T>.GetUData(int?, int?, string, string, string, QueryFilterDelegate<T>, bool, List<string>)
+  fullName: Siesa.SDK.Shared.Business.IBLBase<T>.GetUData(int?, int?, string, string, string, Siesa.SDK.Shared.Business.QueryFilterDelegate<T>, bool, System.Collections.Generic.List<string>)
+  nameWithType.vb: IBLBase(Of T).GetUData(Integer?, Integer?, String, String, String, QueryFilterDelegate(Of T), Boolean, List(Of String))
+  fullName.vb: Siesa.SDK.Shared.Business.IBLBase(Of T).GetUData(Integer?, Integer?, String, String, String, Siesa.SDK.Shared.Business.QueryFilterDelegate(Of T), Boolean, System.Collections.Generic.List(Of String))
+  name.vb: GetUData(Integer?, Integer?, String, String, String, QueryFilterDelegate(Of T), Boolean, List(Of String))
+  spec.csharp:
+  - uid: Siesa.SDK.Shared.Business.IBLBase`1.GetUData(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,Siesa.SDK.Shared.Business.QueryFilterDelegate{`0},System.Boolean,System.Collections.Generic.List{System.String})
+    name: GetUData
+  - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '?'
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '?'
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: Siesa.SDK.Shared.Business.QueryFilterDelegate`1
+    name: QueryFilterDelegate
+  - name: <
+  - name: T
+  - name: '>'
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Shared.Business.IBLBase`1.GetUData(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,Siesa.SDK.Shared.Business.QueryFilterDelegate{`0},System.Boolean,System.Collections.Generic.List{System.String})
+    name: GetUData
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '?'
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '?'
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: ','
+  - name: " "
+  - uid: Siesa.SDK.Shared.Business.QueryFilterDelegate`1
+    name: QueryFilterDelegate
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: ','
+  - name: " "
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+  - name: )
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.GetUDataAsync*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.GetUDataAsync
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.GetUDataAsync(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.Boolean,System.Collections.Generic.List{System.String})
+  name: GetUDataAsync
+  nameWithType: BLFrontendSimple<T, K>.GetUDataAsync
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.GetUDataAsync
+  nameWithType.vb: BLFrontendSimple(Of T, K).GetUDataAsync
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).GetUDataAsync
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.ValidateAndSaveAsync*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.ValidateAndSaveAsync
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.ValidateAndSaveAsync
+  name: ValidateAndSaveAsync
+  nameWithType: BLFrontendSimple<T, K>.ValidateAndSaveAsync
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.ValidateAndSaveAsync
+  nameWithType.vb: BLFrontendSimple(Of T, K).ValidateAndSaveAsync
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).ValidateAndSaveAsync
+- uid: System.Threading.Tasks.Task{Siesa.SDK.Protos.ValidateAndSaveBusinessObjResponse}
+  commentId: T:System.Threading.Tasks.Task{Siesa.SDK.Protos.ValidateAndSaveBusinessObjResponse}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<ValidateAndSaveBusinessObjResponse>
+  nameWithType: Task<ValidateAndSaveBusinessObjResponse>
+  fullName: System.Threading.Tasks.Task<Siesa.SDK.Protos.ValidateAndSaveBusinessObjResponse>
+  nameWithType.vb: Task(Of ValidateAndSaveBusinessObjResponse)
+  fullName.vb: System.Threading.Tasks.Task(Of Siesa.SDK.Protos.ValidateAndSaveBusinessObjResponse)
+  name.vb: Task(Of ValidateAndSaveBusinessObjResponse)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: Siesa.SDK.Protos.ValidateAndSaveBusinessObjResponse
+    name: ValidateAndSaveBusinessObjResponse
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Siesa.SDK.Protos.ValidateAndSaveBusinessObjResponse
+    name: ValidateAndSaveBusinessObjResponse
+  - name: )
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.ValidateBussines*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.ValidateBussines
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.ValidateBussines(Siesa.SDK.Protos.ValidateAndSaveBusinessObjResponse@,Siesa.SDK.Shared.Business.BLUserActionEnum)
+  name: ValidateBussines
+  nameWithType: BLFrontendSimple<T, K>.ValidateBussines
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.ValidateBussines
+  nameWithType.vb: BLFrontendSimple(Of T, K).ValidateBussines
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).ValidateBussines
+- uid: Siesa.SDK.Shared.Business.BLUserActionEnum
+  commentId: T:Siesa.SDK.Shared.Business.BLUserActionEnum
+  parent: Siesa.SDK.Shared.Business
+  name: BLUserActionEnum
+  nameWithType: BLUserActionEnum
+  fullName: Siesa.SDK.Shared.Business.BLUserActionEnum
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.OnReady*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.OnReady
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.OnReady(Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicViewType,System.Int64)
+  name: OnReady
+  nameWithType: BLFrontendSimple<T, K>.OnReady
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.OnReady
+  nameWithType.vb: BLFrontendSimple(Of T, K).OnReady
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).OnReady
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicViewType
+  commentId: T:Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicViewType
+  parent: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicViewType.html
+  name: DynamicViewType
+  nameWithType: DynamicViewType
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicViewType
+- uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  commentId: N:Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  nameWithType: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  fullName: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager
+    name: FormManager
+    href: Siesa.SDK.Frontend.Components.FormManager.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+    name: ViewModels
+    href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager
+    name: FormManager
+    href: Siesa.SDK.Frontend.Components.FormManager.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.FormManager.ViewModels
+    name: ViewModels
+    href: Siesa.SDK.Frontend.Components.FormManager.ViewModels.html
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.SetPropertyValue*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.SetPropertyValue
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.SetPropertyValue(System.String,System.Object)
+  name: SetPropertyValue
+  nameWithType: BLFrontendSimple<T, K>.SetPropertyValue
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.SetPropertyValue
+  nameWithType.vb: BLFrontendSimple(Of T, K).SetPropertyValue
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).SetPropertyValue
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.GetNotificacionService*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.GetNotificacionService
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.GetNotificacionService(System.String)
+  name: GetNotificacionService
+  nameWithType: BLFrontendSimple<T, K>.GetNotificacionService
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.GetNotificacionService
+  nameWithType.vb: BLFrontendSimple(Of T, K).GetNotificacionService
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).GetNotificacionService
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.DownloadFile*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.DownloadFile
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.DownloadFile(System.String,System.String)
+  name: DownloadFile
+  nameWithType: BLFrontendSimple<T, K>.DownloadFile
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.DownloadFile
+  nameWithType.vb: BLFrontendSimple(Of T, K).DownloadFile
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).DownloadFile
+- uid: System.Threading.Tasks.Task{System.String}
+  commentId: T:System.Threading.Tasks.Task{System.String}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<string>
+  nameWithType: Task<string>
+  fullName: System.Threading.Tasks.Task<string>
+  nameWithType.vb: Task(Of String)
+  fullName.vb: System.Threading.Tasks.Task(Of String)
+  name.vb: Task(Of String)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.UploadSingle*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.UploadSingle
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.UploadSingle(Microsoft.AspNetCore.Http.IFormFile)
+  name: UploadSingle
+  nameWithType: BLFrontendSimple<T, K>.UploadSingle
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.UploadSingle
+  nameWithType.vb: BLFrontendSimple(Of T, K).UploadSingle
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).UploadSingle
+- uid: Microsoft.AspNetCore.Http.IFormFile
+  commentId: T:Microsoft.AspNetCore.Http.IFormFile
+  parent: Microsoft.AspNetCore.Http
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.iformfile
+  name: IFormFile
+  nameWithType: IFormFile
+  fullName: Microsoft.AspNetCore.Http.IFormFile
+- uid: System.Threading.Tasks.Task{Siesa.SDK.Shared.DTOS.SDKFileUploadDTO}
+  commentId: T:System.Threading.Tasks.Task{Siesa.SDK.Shared.DTOS.SDKFileUploadDTO}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<SDKFileUploadDTO>
+  nameWithType: Task<SDKFileUploadDTO>
+  fullName: System.Threading.Tasks.Task<Siesa.SDK.Shared.DTOS.SDKFileUploadDTO>
+  nameWithType.vb: Task(Of SDKFileUploadDTO)
+  fullName.vb: System.Threading.Tasks.Task(Of Siesa.SDK.Shared.DTOS.SDKFileUploadDTO)
+  name.vb: Task(Of SDKFileUploadDTO)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: Siesa.SDK.Shared.DTOS.SDKFileUploadDTO
+    name: SDKFileUploadDTO
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Siesa.SDK.Shared.DTOS.SDKFileUploadDTO
+    name: SDKFileUploadDTO
+  - name: )
+- uid: Microsoft.AspNetCore.Http
+  commentId: N:Microsoft.AspNetCore.Http
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.AspNetCore.Http
+  nameWithType: Microsoft.AspNetCore.Http
+  fullName: Microsoft.AspNetCore.Http
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Http
+    name: Http
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Http
+    name: Http
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.UploadSingleByte*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.UploadSingleByte
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.UploadSingleByte(Microsoft.AspNetCore.Http.IFormFile)
+  name: UploadSingleByte
+  nameWithType: BLFrontendSimple<T, K>.UploadSingleByte
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.UploadSingleByte
+  nameWithType.vb: BLFrontendSimple(Of T, K).UploadSingleByte
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).UploadSingleByte
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.SaveAttachmentDetail*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.SaveAttachmentDetail
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.SaveAttachmentDetail(Siesa.SDK.Shared.DTOS.SDKFileUploadDTO,System.Int32)
+  name: SaveAttachmentDetail
+  nameWithType: BLFrontendSimple<T, K>.SaveAttachmentDetail
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.SaveAttachmentDetail
+  nameWithType.vb: BLFrontendSimple(Of T, K).SaveAttachmentDetail
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).SaveAttachmentDetail
+- uid: Siesa.SDK.Shared.DTOS.SDKFileUploadDTO
+  commentId: T:Siesa.SDK.Shared.DTOS.SDKFileUploadDTO
+  parent: Siesa.SDK.Shared.DTOS
+  name: SDKFileUploadDTO
+  nameWithType: SDKFileUploadDTO
+  fullName: Siesa.SDK.Shared.DTOS.SDKFileUploadDTO
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: System.Threading.Tasks.Task{System.Int32}
+  commentId: T:System.Threading.Tasks.Task{System.Int32}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<int>
+  nameWithType: Task<int>
+  fullName: System.Threading.Tasks.Task<int>
+  nameWithType.vb: Task(Of Integer)
+  fullName.vb: System.Threading.Tasks.Task(Of Integer)
+  name.vb: Task(Of Integer)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: )
+- uid: Siesa.SDK.Shared.DTOS
+  commentId: N:Siesa.SDK.Shared.DTOS
+  name: Siesa.SDK.Shared.DTOS
+  nameWithType: Siesa.SDK.Shared.DTOS
+  fullName: Siesa.SDK.Shared.DTOS
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+  - name: .
+  - uid: Siesa.SDK.Shared
+    name: Shared
+  - name: .
+  - uid: Siesa.SDK.Shared.DTOS
+    name: DTOS
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+  - name: .
+  - uid: Siesa.SDK.Shared
+    name: Shared
+  - name: .
+  - uid: Siesa.SDK.Shared.DTOS
+    name: DTOS
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.Main*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.Main
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.Main
+  name: Main
+  nameWithType: BLFrontendSimple<T, K>.Main
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.Main
+  nameWithType.vb: BLFrontendSimple(Of T, K).Main
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).Main
+- uid: Microsoft.AspNetCore.Components.RenderFragment
+  commentId: T:Microsoft.AspNetCore.Components.RenderFragment
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.renderfragment
+  name: RenderFragment
+  nameWithType: RenderFragment
+  fullName: Microsoft.AspNetCore.Components.RenderFragment
+- uid: Microsoft.AspNetCore.Components
+  commentId: N:Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.AspNetCore.Components
+  nameWithType: Microsoft.AspNetCore.Components
+  fullName: Microsoft.AspNetCore.Components
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Components
+    name: Components
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Components
+    name: Components
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.GetUByUserType*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.GetUByUserType
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.GetUByUserType(System.Int32,Siesa.Global.Enums.PermissionUserTypes,System.Collections.Generic.List{System.String})
+  name: GetUByUserType
+  nameWithType: BLFrontendSimple<T, K>.GetUByUserType
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.GetUByUserType
+  nameWithType.vb: BLFrontendSimple(Of T, K).GetUByUserType
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).GetUByUserType
+- uid: Siesa.Global.Enums.PermissionUserTypes
+  commentId: T:Siesa.Global.Enums.PermissionUserTypes
+  parent: Siesa.Global.Enums
+  name: PermissionUserTypes
+  nameWithType: PermissionUserTypes
+  fullName: Siesa.Global.Enums.PermissionUserTypes
+- uid: System.Threading.Tasks.Task{System.Object}
+  commentId: T:System.Threading.Tasks.Task{System.Object}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<dynamic>
+  nameWithType: Task<dynamic>
+  fullName: System.Threading.Tasks.Task<dynamic>
+  nameWithType.vb: Task(Of Object)
+  fullName.vb: System.Threading.Tasks.Task(Of Object)
+  name.vb: Task(Of Object)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: dynamic
+    name: dynamic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: Object
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: Siesa.Global.Enums
+  commentId: N:Siesa.Global.Enums
+  name: Siesa.Global.Enums
+  nameWithType: Siesa.Global.Enums
+  fullName: Siesa.Global.Enums
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+  - name: .
+  - uid: Siesa.Global
+    name: Global
+  - name: .
+  - uid: Siesa.Global.Enums
+    name: Enums
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+  - name: .
+  - uid: Siesa.Global
+    name: Global
+  - name: .
+  - uid: Siesa.Global.Enums
+    name: Enums
+- uid: Siesa.SDK.Business.BLFrontendSimple`2.ManageUData*
+  commentId: Overload:Siesa.SDK.Business.BLFrontendSimple`2.ManageUData
+  href: Siesa.SDK.Business.BLFrontendSimple-2.html#Siesa.SDK.Business.BLFrontendSimple`2.ManageUData(System.Collections.Generic.List{Siesa.SDK.Shared.DTOS.UObjectDTO})
+  name: ManageUData
+  nameWithType: BLFrontendSimple<T, K>.ManageUData
+  fullName: Siesa.SDK.Business.BLFrontendSimple<T, K>.ManageUData
+  nameWithType.vb: BLFrontendSimple(Of T, K).ManageUData
+  fullName.vb: Siesa.SDK.Business.BLFrontendSimple(Of T, K).ManageUData
+- uid: System.Collections.Generic.List{Siesa.SDK.Shared.DTOS.UObjectDTO}
+  commentId: T:System.Collections.Generic.List{Siesa.SDK.Shared.DTOS.UObjectDTO}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<UObjectDTO>
+  nameWithType: List<UObjectDTO>
+  fullName: System.Collections.Generic.List<Siesa.SDK.Shared.DTOS.UObjectDTO>
+  nameWithType.vb: List(Of UObjectDTO)
+  fullName.vb: System.Collections.Generic.List(Of Siesa.SDK.Shared.DTOS.UObjectDTO)
+  name.vb: List(Of UObjectDTO)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: Siesa.SDK.Shared.DTOS.UObjectDTO
+    name: UObjectDTO
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Siesa.SDK.Shared.DTOS.UObjectDTO
+    name: UObjectDTO
+  - name: )

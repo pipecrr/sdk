@@ -1,0 +1,490 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Data.ResourceDetail
+  commentId: T:Siesa.SDK.Frontend.Data.ResourceDetail
+  id: ResourceDetail
+  parent: Siesa.SDK.Frontend.Data
+  children:
+  - Siesa.SDK.Frontend.Data.ResourceDetail.Description
+  - Siesa.SDK.Frontend.Data.ResourceDetail.IdCulture
+  - Siesa.SDK.Frontend.Data.ResourceDetail.IdResource
+  - Siesa.SDK.Frontend.Data.ResourceDetail.Rowid
+  langs:
+  - csharp
+  - vb
+  name: ResourceDetail
+  nameWithType: ResourceDetail
+  fullName: Siesa.SDK.Frontend.Data.ResourceDetail
+  type: Class
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Data/ResourceDetail.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ResourceDetail
+    path: ../Siesa.SDK.Frontend/Data/ResourceDetail.cs
+    startLine: 4
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Data
+  syntax:
+    content: public class ResourceDetail
+    content.vb: Public Class ResourceDetail
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: Siesa.SDK.Frontend.Data.ResourceDetail.Rowid
+  commentId: P:Siesa.SDK.Frontend.Data.ResourceDetail.Rowid
+  id: Rowid
+  parent: Siesa.SDK.Frontend.Data.ResourceDetail
+  langs:
+  - csharp
+  - vb
+  name: Rowid
+  nameWithType: ResourceDetail.Rowid
+  fullName: Siesa.SDK.Frontend.Data.ResourceDetail.Rowid
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Data/ResourceDetail.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Rowid
+    path: ../Siesa.SDK.Frontend/Data/ResourceDetail.cs
+    startLine: 5
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Data
+  syntax:
+    content: >-
+      [Key]
+
+      public int Rowid { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: >-
+      <Key>
+
+      Public Property Rowid As Integer
+  overload: Siesa.SDK.Frontend.Data.ResourceDetail.Rowid*
+  attributes:
+  - type: System.ComponentModel.DataAnnotations.KeyAttribute
+    ctor: System.ComponentModel.DataAnnotations.KeyAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Data.ResourceDetail.IdCulture
+  commentId: P:Siesa.SDK.Frontend.Data.ResourceDetail.IdCulture
+  id: IdCulture
+  parent: Siesa.SDK.Frontend.Data.ResourceDetail
+  langs:
+  - csharp
+  - vb
+  name: IdCulture
+  nameWithType: ResourceDetail.IdCulture
+  fullName: Siesa.SDK.Frontend.Data.ResourceDetail.IdCulture
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Data/ResourceDetail.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: IdCulture
+    path: ../Siesa.SDK.Frontend/Data/ResourceDetail.cs
+    startLine: 7
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Data
+  syntax:
+    content: public string IdCulture { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property IdCulture As String
+  overload: Siesa.SDK.Frontend.Data.ResourceDetail.IdCulture*
+- uid: Siesa.SDK.Frontend.Data.ResourceDetail.IdResource
+  commentId: P:Siesa.SDK.Frontend.Data.ResourceDetail.IdResource
+  id: IdResource
+  parent: Siesa.SDK.Frontend.Data.ResourceDetail
+  langs:
+  - csharp
+  - vb
+  name: IdResource
+  nameWithType: ResourceDetail.IdResource
+  fullName: Siesa.SDK.Frontend.Data.ResourceDetail.IdResource
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Data/ResourceDetail.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: IdResource
+    path: ../Siesa.SDK.Frontend/Data/ResourceDetail.cs
+    startLine: 8
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Data
+  syntax:
+    content: public string IdResource { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property IdResource As String
+  overload: Siesa.SDK.Frontend.Data.ResourceDetail.IdResource*
+- uid: Siesa.SDK.Frontend.Data.ResourceDetail.Description
+  commentId: P:Siesa.SDK.Frontend.Data.ResourceDetail.Description
+  id: Description
+  parent: Siesa.SDK.Frontend.Data.ResourceDetail
+  langs:
+  - csharp
+  - vb
+  name: Description
+  nameWithType: ResourceDetail.Description
+  fullName: Siesa.SDK.Frontend.Data.ResourceDetail.Description
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Data/ResourceDetail.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Description
+    path: ../Siesa.SDK.Frontend/Data/ResourceDetail.cs
+    startLine: 9
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Data
+  syntax:
+    content: public string Description { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property Description As String
+  overload: Siesa.SDK.Frontend.Data.ResourceDetail.Description*
+references:
+- uid: Siesa.SDK.Frontend.Data
+  commentId: N:Siesa.SDK.Frontend.Data
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Data
+  nameWithType: Siesa.SDK.Frontend.Data
+  fullName: Siesa.SDK.Frontend.Data
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Data
+    name: Data
+    href: Siesa.SDK.Frontend.Data.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Data
+    name: Data
+    href: Siesa.SDK.Frontend.Data.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Siesa.SDK.Frontend.Data.ResourceDetail.Rowid*
+  commentId: Overload:Siesa.SDK.Frontend.Data.ResourceDetail.Rowid
+  href: Siesa.SDK.Frontend.Data.ResourceDetail.html#Siesa.SDK.Frontend.Data.ResourceDetail.Rowid
+  name: Rowid
+  nameWithType: ResourceDetail.Rowid
+  fullName: Siesa.SDK.Frontend.Data.ResourceDetail.Rowid
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Siesa.SDK.Frontend.Data.ResourceDetail.IdCulture*
+  commentId: Overload:Siesa.SDK.Frontend.Data.ResourceDetail.IdCulture
+  href: Siesa.SDK.Frontend.Data.ResourceDetail.html#Siesa.SDK.Frontend.Data.ResourceDetail.IdCulture
+  name: IdCulture
+  nameWithType: ResourceDetail.IdCulture
+  fullName: Siesa.SDK.Frontend.Data.ResourceDetail.IdCulture
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Siesa.SDK.Frontend.Data.ResourceDetail.IdResource*
+  commentId: Overload:Siesa.SDK.Frontend.Data.ResourceDetail.IdResource
+  href: Siesa.SDK.Frontend.Data.ResourceDetail.html#Siesa.SDK.Frontend.Data.ResourceDetail.IdResource
+  name: IdResource
+  nameWithType: ResourceDetail.IdResource
+  fullName: Siesa.SDK.Frontend.Data.ResourceDetail.IdResource
+- uid: Siesa.SDK.Frontend.Data.ResourceDetail.Description*
+  commentId: Overload:Siesa.SDK.Frontend.Data.ResourceDetail.Description
+  href: Siesa.SDK.Frontend.Data.ResourceDetail.html#Siesa.SDK.Frontend.Data.ResourceDetail.Description
+  name: Description
+  nameWithType: ResourceDetail.Description
+  fullName: Siesa.SDK.Frontend.Data.ResourceDetail.Description

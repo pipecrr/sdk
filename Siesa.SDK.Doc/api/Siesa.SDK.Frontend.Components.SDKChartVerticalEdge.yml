@@ -1,0 +1,187 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Components.SDKChartVerticalEdge
+  commentId: T:Siesa.SDK.Frontend.Components.SDKChartVerticalEdge
+  id: SDKChartVerticalEdge
+  parent: Siesa.SDK.Frontend.Components
+  children:
+  - Siesa.SDK.Frontend.Components.SDKChartVerticalEdge.Bottom
+  - Siesa.SDK.Frontend.Components.SDKChartVerticalEdge.Top
+  langs:
+  - csharp
+  - vb
+  name: SDKChartVerticalEdge
+  nameWithType: SDKChartVerticalEdge
+  fullName: Siesa.SDK.Frontend.Components.SDKChartVerticalEdge
+  type: Enum
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/SDKEnums.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SDKChartVerticalEdge
+    path: ../Siesa.SDK.Frontend/Components/SDKEnums.cs
+    startLine: 207
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components
+  syntax:
+    content: public enum SDKChartVerticalEdge
+    content.vb: Public Enum SDKChartVerticalEdge
+  extensionMethods:
+  - Siesa.SDK.Frontend.Components.SDKChartVerticalEdge.Siesa.SDK.Frontend.Components.SDKEnums.Get
+- uid: Siesa.SDK.Frontend.Components.SDKChartVerticalEdge.Top
+  commentId: F:Siesa.SDK.Frontend.Components.SDKChartVerticalEdge.Top
+  id: Top
+  parent: Siesa.SDK.Frontend.Components.SDKChartVerticalEdge
+  langs:
+  - csharp
+  - vb
+  name: Top
+  nameWithType: SDKChartVerticalEdge.Top
+  fullName: Siesa.SDK.Frontend.Components.SDKChartVerticalEdge.Top
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/SDKEnums.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Top
+    path: ../Siesa.SDK.Frontend/Components/SDKEnums.cs
+    startLine: 208
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components
+  syntax:
+    content: Top = 0
+    return:
+      type: Siesa.SDK.Frontend.Components.SDKChartVerticalEdge
+- uid: Siesa.SDK.Frontend.Components.SDKChartVerticalEdge.Bottom
+  commentId: F:Siesa.SDK.Frontend.Components.SDKChartVerticalEdge.Bottom
+  id: Bottom
+  parent: Siesa.SDK.Frontend.Components.SDKChartVerticalEdge
+  langs:
+  - csharp
+  - vb
+  name: Bottom
+  nameWithType: SDKChartVerticalEdge.Bottom
+  fullName: Siesa.SDK.Frontend.Components.SDKChartVerticalEdge.Bottom
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/SDKEnums.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Bottom
+    path: ../Siesa.SDK.Frontend/Components/SDKEnums.cs
+    startLine: 209
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components
+  syntax:
+    content: Bottom = 1
+    return:
+      type: Siesa.SDK.Frontend.Components.SDKChartVerticalEdge
+references:
+- uid: Siesa.SDK.Frontend.Components
+  commentId: N:Siesa.SDK.Frontend.Components
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Components
+  nameWithType: Siesa.SDK.Frontend.Components
+  fullName: Siesa.SDK.Frontend.Components
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+- uid: Siesa.SDK.Frontend.Components.SDKChartVerticalEdge.Siesa.SDK.Frontend.Components.SDKEnums.Get
+  commentId: M:Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKChartVerticalEdge)
+  parent: Siesa.SDK.Frontend.Components.SDKEnums
+  definition: Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKChartVerticalEdge)
+  href: Siesa.SDK.Frontend.Components.SDKEnums.html#Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKChartVerticalEdge)
+  name: Get(SDKChartVerticalEdge)
+  nameWithType: SDKEnums.Get(SDKChartVerticalEdge)
+  fullName: Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKChartVerticalEdge)
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKChartVerticalEdge)
+    name: Get
+    href: Siesa.SDK.Frontend.Components.SDKEnums.html#Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKChartVerticalEdge)
+  - name: (
+  - uid: Siesa.SDK.Frontend.Components.SDKChartVerticalEdge
+    name: SDKChartVerticalEdge
+    href: Siesa.SDK.Frontend.Components.SDKChartVerticalEdge.html
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKChartVerticalEdge)
+    name: Get
+    href: Siesa.SDK.Frontend.Components.SDKEnums.html#Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKChartVerticalEdge)
+  - name: (
+  - uid: Siesa.SDK.Frontend.Components.SDKChartVerticalEdge
+    name: SDKChartVerticalEdge
+    href: Siesa.SDK.Frontend.Components.SDKChartVerticalEdge.html
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKChartVerticalEdge)
+  commentId: M:Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKChartVerticalEdge)
+  href: Siesa.SDK.Frontend.Components.SDKEnums.html#Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKChartVerticalEdge)
+  name: Get(SDKChartVerticalEdge)
+  nameWithType: SDKEnums.Get(SDKChartVerticalEdge)
+  fullName: Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKChartVerticalEdge)
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKChartVerticalEdge)
+    name: Get
+    href: Siesa.SDK.Frontend.Components.SDKEnums.html#Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKChartVerticalEdge)
+  - name: (
+  - uid: Siesa.SDK.Frontend.Components.SDKChartVerticalEdge
+    name: SDKChartVerticalEdge
+    href: Siesa.SDK.Frontend.Components.SDKChartVerticalEdge.html
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKChartVerticalEdge)
+    name: Get
+    href: Siesa.SDK.Frontend.Components.SDKEnums.html#Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKChartVerticalEdge)
+  - name: (
+  - uid: Siesa.SDK.Frontend.Components.SDKChartVerticalEdge
+    name: SDKChartVerticalEdge
+    href: Siesa.SDK.Frontend.Components.SDKChartVerticalEdge.html
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.SDKEnums
+  commentId: T:Siesa.SDK.Frontend.Components.SDKEnums
+  parent: Siesa.SDK.Frontend.Components
+  href: Siesa.SDK.Frontend.Components.SDKEnums.html
+  name: SDKEnums
+  nameWithType: SDKEnums
+  fullName: Siesa.SDK.Frontend.Components.SDKEnums
+- uid: Siesa.SDK.Frontend.Components.SDKChartVerticalEdge
+  commentId: T:Siesa.SDK.Frontend.Components.SDKChartVerticalEdge
+  parent: Siesa.SDK.Frontend.Components
+  href: Siesa.SDK.Frontend.Components.SDKChartVerticalEdge.html
+  name: SDKChartVerticalEdge
+  nameWithType: SDKChartVerticalEdge
+  fullName: Siesa.SDK.Frontend.Components.SDKChartVerticalEdge

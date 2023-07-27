@@ -1,0 +1,30 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend
+  commentId: N:Siesa.SDK.Frontend
+  id: Siesa.SDK.Frontend
+  children:
+  - Siesa.SDK.Frontend.SiesaSecurityExtensions
+  - Siesa.SDK.Frontend._Imports
+  langs:
+  - csharp
+  - vb
+  name: Siesa.SDK.Frontend
+  nameWithType: Siesa.SDK.Frontend
+  fullName: Siesa.SDK.Frontend
+  type: Namespace
+  assemblies:
+  - Siesa.SDK.Frontend
+references:
+- uid: Siesa.SDK.Frontend.SiesaSecurityExtensions
+  commentId: T:Siesa.SDK.Frontend.SiesaSecurityExtensions
+  href: Siesa.SDK.Frontend.SiesaSecurityExtensions.html
+  name: SiesaSecurityExtensions
+  nameWithType: SiesaSecurityExtensions
+  fullName: Siesa.SDK.Frontend.SiesaSecurityExtensions
+- uid: Siesa.SDK.Frontend._Imports
+  commentId: T:Siesa.SDK.Frontend._Imports
+  href: Siesa.SDK.Frontend._Imports.html
+  name: _Imports
+  nameWithType: _Imports
+  fullName: Siesa.SDK.Frontend._Imports

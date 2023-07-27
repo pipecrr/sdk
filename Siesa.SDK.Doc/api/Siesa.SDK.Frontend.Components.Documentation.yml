@@ -1,0 +1,91 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Components.Documentation
+  commentId: N:Siesa.SDK.Frontend.Components.Documentation
+  id: Siesa.SDK.Frontend.Components.Documentation
+  children:
+  - Siesa.SDK.Frontend.Components.Documentation.CodeViewer
+  - Siesa.SDK.Frontend.Components.Documentation.ComponentCategory
+  - Siesa.SDK.Frontend.Components.Documentation.ComponentDemo
+  - Siesa.SDK.Frontend.Components.Documentation.SDKDocumentation
+  langs:
+  - csharp
+  - vb
+  name: Siesa.SDK.Frontend.Components.Documentation
+  nameWithType: Siesa.SDK.Frontend.Components.Documentation
+  fullName: Siesa.SDK.Frontend.Components.Documentation
+  type: Namespace
+  assemblies:
+  - Siesa.SDK.Frontend
+references:
+- uid: Siesa.SDK.Frontend.Components.Documentation.ComponentCategory
+  commentId: T:Siesa.SDK.Frontend.Components.Documentation.ComponentCategory
+  href: Siesa.SDK.Frontend.Components.Documentation.ComponentCategory.html
+  name: ComponentCategory
+  nameWithType: ComponentCategory
+  fullName: Siesa.SDK.Frontend.Components.Documentation.ComponentCategory
+- uid: Siesa.SDK.Frontend.Components.Documentation.ComponentDemo
+  commentId: T:Siesa.SDK.Frontend.Components.Documentation.ComponentDemo
+  parent: Siesa.SDK.Frontend.Components.Documentation
+  href: Siesa.SDK.Frontend.Components.Documentation.ComponentDemo.html
+  name: ComponentDemo
+  nameWithType: ComponentDemo
+  fullName: Siesa.SDK.Frontend.Components.Documentation.ComponentDemo
+- uid: Siesa.SDK.Frontend.Components.Documentation.SDKDocumentation
+  commentId: T:Siesa.SDK.Frontend.Components.Documentation.SDKDocumentation
+  href: Siesa.SDK.Frontend.Components.Documentation.SDKDocumentation.html
+  name: SDKDocumentation
+  nameWithType: SDKDocumentation
+  fullName: Siesa.SDK.Frontend.Components.Documentation.SDKDocumentation
+- uid: Siesa.SDK.Frontend.Components.Documentation.CodeViewer
+  commentId: T:Siesa.SDK.Frontend.Components.Documentation.CodeViewer
+  href: Siesa.SDK.Frontend.Components.Documentation.CodeViewer.html
+  name: CodeViewer
+  nameWithType: CodeViewer
+  fullName: Siesa.SDK.Frontend.Components.Documentation.CodeViewer
+- uid: Siesa.SDK.Frontend.Components.Documentation
+  commentId: N:Siesa.SDK.Frontend.Components.Documentation
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Components.Documentation
+  nameWithType: Siesa.SDK.Frontend.Components.Documentation
+  fullName: Siesa.SDK.Frontend.Components.Documentation
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.Documentation
+    name: Documentation
+    href: Siesa.SDK.Frontend.Components.Documentation.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.Documentation
+    name: Documentation
+    href: Siesa.SDK.Frontend.Components.Documentation.html

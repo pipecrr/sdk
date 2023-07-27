@@ -1,0 +1,582 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Backend.Access.ITenantProvider
+  commentId: T:Siesa.SDK.Backend.Access.ITenantProvider
+  id: ITenantProvider
+  parent: Siesa.SDK.Backend.Access
+  children:
+  - Siesa.SDK.Backend.Access.ITenantProvider.GetTenant
+  - Siesa.SDK.Backend.Access.ITenantProvider.GetTenantShortName
+  - Siesa.SDK.Backend.Access.ITenantProvider.GetTenants
+  - Siesa.SDK.Backend.Access.ITenantProvider.GetUseLazyLoadingProxies
+  - Siesa.SDK.Backend.Access.ITenantProvider.Register(System.Action)
+  - Siesa.SDK.Backend.Access.ITenantProvider.SetTenant(Siesa.SDK.Shared.DTOS.SDKDbConnection)
+  - Siesa.SDK.Backend.Access.ITenantProvider.SetTenantByRowId(System.Int16)
+  - Siesa.SDK.Backend.Access.ITenantProvider.SetUseLazyLoadingProxies(System.Boolean)
+  - Siesa.SDK.Backend.Access.ITenantProvider.Unregister(System.Guid)
+  langs:
+  - csharp
+  - vb
+  name: ITenantProvider
+  nameWithType: ITenantProvider
+  fullName: Siesa.SDK.Backend.Access.ITenantProvider
+  type: Interface
+  source:
+    remote:
+      path: Siesa.SDK.Backend/Access/TenantProvider.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: ITenantProvider
+    path: ../Siesa.SDK.Backend/Access/TenantProvider.cs
+    startLine: 8
+  assemblies:
+  - Siesa.SDK.Backend
+  namespace: Siesa.SDK.Backend.Access
+  syntax:
+    content: public interface ITenantProvider
+    content.vb: Public Interface ITenantProvider
+- uid: Siesa.SDK.Backend.Access.ITenantProvider.SetTenant(Siesa.SDK.Shared.DTOS.SDKDbConnection)
+  commentId: M:Siesa.SDK.Backend.Access.ITenantProvider.SetTenant(Siesa.SDK.Shared.DTOS.SDKDbConnection)
+  id: SetTenant(Siesa.SDK.Shared.DTOS.SDKDbConnection)
+  parent: Siesa.SDK.Backend.Access.ITenantProvider
+  langs:
+  - csharp
+  - vb
+  name: SetTenant(SDKDbConnection)
+  nameWithType: ITenantProvider.SetTenant(SDKDbConnection)
+  fullName: Siesa.SDK.Backend.Access.ITenantProvider.SetTenant(Siesa.SDK.Shared.DTOS.SDKDbConnection)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Backend/Access/TenantProvider.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SetTenant
+    path: ../Siesa.SDK.Backend/Access/TenantProvider.cs
+    startLine: 10
+  assemblies:
+  - Siesa.SDK.Backend
+  namespace: Siesa.SDK.Backend.Access
+  syntax:
+    content: void SetTenant(SDKDbConnection tenant)
+    parameters:
+    - id: tenant
+      type: Siesa.SDK.Shared.DTOS.SDKDbConnection
+    content.vb: Sub SetTenant(tenant As SDKDbConnection)
+  overload: Siesa.SDK.Backend.Access.ITenantProvider.SetTenant*
+- uid: Siesa.SDK.Backend.Access.ITenantProvider.SetTenantByRowId(System.Int16)
+  commentId: M:Siesa.SDK.Backend.Access.ITenantProvider.SetTenantByRowId(System.Int16)
+  id: SetTenantByRowId(System.Int16)
+  parent: Siesa.SDK.Backend.Access.ITenantProvider
+  langs:
+  - csharp
+  - vb
+  name: SetTenantByRowId(short)
+  nameWithType: ITenantProvider.SetTenantByRowId(short)
+  fullName: Siesa.SDK.Backend.Access.ITenantProvider.SetTenantByRowId(short)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Backend/Access/TenantProvider.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SetTenantByRowId
+    path: ../Siesa.SDK.Backend/Access/TenantProvider.cs
+    startLine: 11
+  assemblies:
+  - Siesa.SDK.Backend
+  namespace: Siesa.SDK.Backend.Access
+  syntax:
+    content: void SetTenantByRowId(short rowId)
+    parameters:
+    - id: rowId
+      type: System.Int16
+    content.vb: Sub SetTenantByRowId(rowId As Short)
+  overload: Siesa.SDK.Backend.Access.ITenantProvider.SetTenantByRowId*
+  nameWithType.vb: ITenantProvider.SetTenantByRowId(Short)
+  fullName.vb: Siesa.SDK.Backend.Access.ITenantProvider.SetTenantByRowId(Short)
+  name.vb: SetTenantByRowId(Short)
+- uid: Siesa.SDK.Backend.Access.ITenantProvider.Register(System.Action)
+  commentId: M:Siesa.SDK.Backend.Access.ITenantProvider.Register(System.Action)
+  id: Register(System.Action)
+  parent: Siesa.SDK.Backend.Access.ITenantProvider
+  langs:
+  - csharp
+  - vb
+  name: Register(Action)
+  nameWithType: ITenantProvider.Register(Action)
+  fullName: Siesa.SDK.Backend.Access.ITenantProvider.Register(System.Action)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Backend/Access/TenantProvider.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Register
+    path: ../Siesa.SDK.Backend/Access/TenantProvider.cs
+    startLine: 12
+  assemblies:
+  - Siesa.SDK.Backend
+  namespace: Siesa.SDK.Backend.Access
+  syntax:
+    content: Guid Register(Action callback)
+    parameters:
+    - id: callback
+      type: System.Action
+    return:
+      type: System.Guid
+    content.vb: Function Register(callback As Action) As Guid
+  overload: Siesa.SDK.Backend.Access.ITenantProvider.Register*
+- uid: Siesa.SDK.Backend.Access.ITenantProvider.Unregister(System.Guid)
+  commentId: M:Siesa.SDK.Backend.Access.ITenantProvider.Unregister(System.Guid)
+  id: Unregister(System.Guid)
+  parent: Siesa.SDK.Backend.Access.ITenantProvider
+  langs:
+  - csharp
+  - vb
+  name: Unregister(Guid)
+  nameWithType: ITenantProvider.Unregister(Guid)
+  fullName: Siesa.SDK.Backend.Access.ITenantProvider.Unregister(System.Guid)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Backend/Access/TenantProvider.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Unregister
+    path: ../Siesa.SDK.Backend/Access/TenantProvider.cs
+    startLine: 13
+  assemblies:
+  - Siesa.SDK.Backend
+  namespace: Siesa.SDK.Backend.Access
+  syntax:
+    content: void Unregister(Guid id)
+    parameters:
+    - id: id
+      type: System.Guid
+    content.vb: Sub Unregister(id As Guid)
+  overload: Siesa.SDK.Backend.Access.ITenantProvider.Unregister*
+- uid: Siesa.SDK.Backend.Access.ITenantProvider.GetTenant
+  commentId: M:Siesa.SDK.Backend.Access.ITenantProvider.GetTenant
+  id: GetTenant
+  parent: Siesa.SDK.Backend.Access.ITenantProvider
+  langs:
+  - csharp
+  - vb
+  name: GetTenant()
+  nameWithType: ITenantProvider.GetTenant()
+  fullName: Siesa.SDK.Backend.Access.ITenantProvider.GetTenant()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Backend/Access/TenantProvider.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetTenant
+    path: ../Siesa.SDK.Backend/Access/TenantProvider.cs
+    startLine: 14
+  assemblies:
+  - Siesa.SDK.Backend
+  namespace: Siesa.SDK.Backend.Access
+  syntax:
+    content: SDKDbConnection GetTenant()
+    return:
+      type: Siesa.SDK.Shared.DTOS.SDKDbConnection
+    content.vb: Function GetTenant() As SDKDbConnection
+  overload: Siesa.SDK.Backend.Access.ITenantProvider.GetTenant*
+- uid: Siesa.SDK.Backend.Access.ITenantProvider.GetTenantShortName
+  commentId: M:Siesa.SDK.Backend.Access.ITenantProvider.GetTenantShortName
+  id: GetTenantShortName
+  parent: Siesa.SDK.Backend.Access.ITenantProvider
+  langs:
+  - csharp
+  - vb
+  name: GetTenantShortName()
+  nameWithType: ITenantProvider.GetTenantShortName()
+  fullName: Siesa.SDK.Backend.Access.ITenantProvider.GetTenantShortName()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Backend/Access/TenantProvider.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetTenantShortName
+    path: ../Siesa.SDK.Backend/Access/TenantProvider.cs
+    startLine: 15
+  assemblies:
+  - Siesa.SDK.Backend
+  namespace: Siesa.SDK.Backend.Access
+  syntax:
+    content: string GetTenantShortName()
+    return:
+      type: System.String
+    content.vb: Function GetTenantShortName() As String
+  overload: Siesa.SDK.Backend.Access.ITenantProvider.GetTenantShortName*
+- uid: Siesa.SDK.Backend.Access.ITenantProvider.GetUseLazyLoadingProxies
+  commentId: M:Siesa.SDK.Backend.Access.ITenantProvider.GetUseLazyLoadingProxies
+  id: GetUseLazyLoadingProxies
+  parent: Siesa.SDK.Backend.Access.ITenantProvider
+  langs:
+  - csharp
+  - vb
+  name: GetUseLazyLoadingProxies()
+  nameWithType: ITenantProvider.GetUseLazyLoadingProxies()
+  fullName: Siesa.SDK.Backend.Access.ITenantProvider.GetUseLazyLoadingProxies()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Backend/Access/TenantProvider.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetUseLazyLoadingProxies
+    path: ../Siesa.SDK.Backend/Access/TenantProvider.cs
+    startLine: 16
+  assemblies:
+  - Siesa.SDK.Backend
+  namespace: Siesa.SDK.Backend.Access
+  syntax:
+    content: bool GetUseLazyLoadingProxies()
+    return:
+      type: System.Boolean
+    content.vb: Function GetUseLazyLoadingProxies() As Boolean
+  overload: Siesa.SDK.Backend.Access.ITenantProvider.GetUseLazyLoadingProxies*
+- uid: Siesa.SDK.Backend.Access.ITenantProvider.SetUseLazyLoadingProxies(System.Boolean)
+  commentId: M:Siesa.SDK.Backend.Access.ITenantProvider.SetUseLazyLoadingProxies(System.Boolean)
+  id: SetUseLazyLoadingProxies(System.Boolean)
+  parent: Siesa.SDK.Backend.Access.ITenantProvider
+  langs:
+  - csharp
+  - vb
+  name: SetUseLazyLoadingProxies(bool)
+  nameWithType: ITenantProvider.SetUseLazyLoadingProxies(bool)
+  fullName: Siesa.SDK.Backend.Access.ITenantProvider.SetUseLazyLoadingProxies(bool)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Backend/Access/TenantProvider.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SetUseLazyLoadingProxies
+    path: ../Siesa.SDK.Backend/Access/TenantProvider.cs
+    startLine: 17
+  assemblies:
+  - Siesa.SDK.Backend
+  namespace: Siesa.SDK.Backend.Access
+  syntax:
+    content: void SetUseLazyLoadingProxies(bool value)
+    parameters:
+    - id: value
+      type: System.Boolean
+    content.vb: Sub SetUseLazyLoadingProxies(value As Boolean)
+  overload: Siesa.SDK.Backend.Access.ITenantProvider.SetUseLazyLoadingProxies*
+  nameWithType.vb: ITenantProvider.SetUseLazyLoadingProxies(Boolean)
+  fullName.vb: Siesa.SDK.Backend.Access.ITenantProvider.SetUseLazyLoadingProxies(Boolean)
+  name.vb: SetUseLazyLoadingProxies(Boolean)
+- uid: Siesa.SDK.Backend.Access.ITenantProvider.GetTenants
+  commentId: M:Siesa.SDK.Backend.Access.ITenantProvider.GetTenants
+  id: GetTenants
+  parent: Siesa.SDK.Backend.Access.ITenantProvider
+  langs:
+  - csharp
+  - vb
+  name: GetTenants()
+  nameWithType: ITenantProvider.GetTenants()
+  fullName: Siesa.SDK.Backend.Access.ITenantProvider.GetTenants()
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Backend/Access/TenantProvider.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: GetTenants
+    path: ../Siesa.SDK.Backend/Access/TenantProvider.cs
+    startLine: 18
+  assemblies:
+  - Siesa.SDK.Backend
+  namespace: Siesa.SDK.Backend.Access
+  syntax:
+    content: List<SDKDbConnection> GetTenants()
+    return:
+      type: System.Collections.Generic.List{Siesa.SDK.Shared.DTOS.SDKDbConnection}
+    content.vb: Function GetTenants() As List(Of SDKDbConnection)
+  overload: Siesa.SDK.Backend.Access.ITenantProvider.GetTenants*
+references:
+- uid: Siesa.SDK.Backend.Access
+  commentId: N:Siesa.SDK.Backend.Access
+  href: Siesa.html
+  name: Siesa.SDK.Backend.Access
+  nameWithType: Siesa.SDK.Backend.Access
+  fullName: Siesa.SDK.Backend.Access
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Backend
+    name: Backend
+    href: Siesa.SDK.Backend.html
+  - name: .
+  - uid: Siesa.SDK.Backend.Access
+    name: Access
+    href: Siesa.SDK.Backend.Access.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Backend
+    name: Backend
+    href: Siesa.SDK.Backend.html
+  - name: .
+  - uid: Siesa.SDK.Backend.Access
+    name: Access
+    href: Siesa.SDK.Backend.Access.html
+- uid: Siesa.SDK.Backend.Access.ITenantProvider.SetTenant*
+  commentId: Overload:Siesa.SDK.Backend.Access.ITenantProvider.SetTenant
+  href: Siesa.SDK.Backend.Access.ITenantProvider.html#Siesa.SDK.Backend.Access.ITenantProvider.SetTenant(Siesa.SDK.Shared.DTOS.SDKDbConnection)
+  name: SetTenant
+  nameWithType: ITenantProvider.SetTenant
+  fullName: Siesa.SDK.Backend.Access.ITenantProvider.SetTenant
+- uid: Siesa.SDK.Shared.DTOS.SDKDbConnection
+  commentId: T:Siesa.SDK.Shared.DTOS.SDKDbConnection
+  parent: Siesa.SDK.Shared.DTOS
+  name: SDKDbConnection
+  nameWithType: SDKDbConnection
+  fullName: Siesa.SDK.Shared.DTOS.SDKDbConnection
+- uid: Siesa.SDK.Shared.DTOS
+  commentId: N:Siesa.SDK.Shared.DTOS
+  name: Siesa.SDK.Shared.DTOS
+  nameWithType: Siesa.SDK.Shared.DTOS
+  fullName: Siesa.SDK.Shared.DTOS
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+  - name: .
+  - uid: Siesa.SDK.Shared
+    name: Shared
+  - name: .
+  - uid: Siesa.SDK.Shared.DTOS
+    name: DTOS
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+  - name: .
+  - uid: Siesa.SDK.Shared
+    name: Shared
+  - name: .
+  - uid: Siesa.SDK.Shared.DTOS
+    name: DTOS
+- uid: Siesa.SDK.Backend.Access.ITenantProvider.SetTenantByRowId*
+  commentId: Overload:Siesa.SDK.Backend.Access.ITenantProvider.SetTenantByRowId
+  href: Siesa.SDK.Backend.Access.ITenantProvider.html#Siesa.SDK.Backend.Access.ITenantProvider.SetTenantByRowId(System.Int16)
+  name: SetTenantByRowId
+  nameWithType: ITenantProvider.SetTenantByRowId
+  fullName: Siesa.SDK.Backend.Access.ITenantProvider.SetTenantByRowId
+- uid: System.Int16
+  commentId: T:System.Int16
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int16
+  name: short
+  nameWithType: short
+  fullName: short
+  nameWithType.vb: Short
+  fullName.vb: Short
+  name.vb: Short
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Siesa.SDK.Backend.Access.ITenantProvider.Register*
+  commentId: Overload:Siesa.SDK.Backend.Access.ITenantProvider.Register
+  href: Siesa.SDK.Backend.Access.ITenantProvider.html#Siesa.SDK.Backend.Access.ITenantProvider.Register(System.Action)
+  name: Register
+  nameWithType: ITenantProvider.Register
+  fullName: Siesa.SDK.Backend.Access.ITenantProvider.Register
+- uid: System.Action
+  commentId: T:System.Action
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.action
+  name: Action
+  nameWithType: Action
+  fullName: System.Action
+- uid: System.Guid
+  commentId: T:System.Guid
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.guid
+  name: Guid
+  nameWithType: Guid
+  fullName: System.Guid
+- uid: Siesa.SDK.Backend.Access.ITenantProvider.Unregister*
+  commentId: Overload:Siesa.SDK.Backend.Access.ITenantProvider.Unregister
+  href: Siesa.SDK.Backend.Access.ITenantProvider.html#Siesa.SDK.Backend.Access.ITenantProvider.Unregister(System.Guid)
+  name: Unregister
+  nameWithType: ITenantProvider.Unregister
+  fullName: Siesa.SDK.Backend.Access.ITenantProvider.Unregister
+- uid: Siesa.SDK.Backend.Access.ITenantProvider.GetTenant*
+  commentId: Overload:Siesa.SDK.Backend.Access.ITenantProvider.GetTenant
+  href: Siesa.SDK.Backend.Access.ITenantProvider.html#Siesa.SDK.Backend.Access.ITenantProvider.GetTenant
+  name: GetTenant
+  nameWithType: ITenantProvider.GetTenant
+  fullName: Siesa.SDK.Backend.Access.ITenantProvider.GetTenant
+- uid: Siesa.SDK.Backend.Access.ITenantProvider.GetTenantShortName*
+  commentId: Overload:Siesa.SDK.Backend.Access.ITenantProvider.GetTenantShortName
+  href: Siesa.SDK.Backend.Access.ITenantProvider.html#Siesa.SDK.Backend.Access.ITenantProvider.GetTenantShortName
+  name: GetTenantShortName
+  nameWithType: ITenantProvider.GetTenantShortName
+  fullName: Siesa.SDK.Backend.Access.ITenantProvider.GetTenantShortName
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Siesa.SDK.Backend.Access.ITenantProvider.GetUseLazyLoadingProxies*
+  commentId: Overload:Siesa.SDK.Backend.Access.ITenantProvider.GetUseLazyLoadingProxies
+  href: Siesa.SDK.Backend.Access.ITenantProvider.html#Siesa.SDK.Backend.Access.ITenantProvider.GetUseLazyLoadingProxies
+  name: GetUseLazyLoadingProxies
+  nameWithType: ITenantProvider.GetUseLazyLoadingProxies
+  fullName: Siesa.SDK.Backend.Access.ITenantProvider.GetUseLazyLoadingProxies
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Siesa.SDK.Backend.Access.ITenantProvider.SetUseLazyLoadingProxies*
+  commentId: Overload:Siesa.SDK.Backend.Access.ITenantProvider.SetUseLazyLoadingProxies
+  href: Siesa.SDK.Backend.Access.ITenantProvider.html#Siesa.SDK.Backend.Access.ITenantProvider.SetUseLazyLoadingProxies(System.Boolean)
+  name: SetUseLazyLoadingProxies
+  nameWithType: ITenantProvider.SetUseLazyLoadingProxies
+  fullName: Siesa.SDK.Backend.Access.ITenantProvider.SetUseLazyLoadingProxies
+- uid: Siesa.SDK.Backend.Access.ITenantProvider.GetTenants*
+  commentId: Overload:Siesa.SDK.Backend.Access.ITenantProvider.GetTenants
+  href: Siesa.SDK.Backend.Access.ITenantProvider.html#Siesa.SDK.Backend.Access.ITenantProvider.GetTenants
+  name: GetTenants
+  nameWithType: ITenantProvider.GetTenants
+  fullName: Siesa.SDK.Backend.Access.ITenantProvider.GetTenants
+- uid: System.Collections.Generic.List{Siesa.SDK.Shared.DTOS.SDKDbConnection}
+  commentId: T:System.Collections.Generic.List{Siesa.SDK.Shared.DTOS.SDKDbConnection}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<SDKDbConnection>
+  nameWithType: List<SDKDbConnection>
+  fullName: System.Collections.Generic.List<Siesa.SDK.Shared.DTOS.SDKDbConnection>
+  nameWithType.vb: List(Of SDKDbConnection)
+  fullName.vb: System.Collections.Generic.List(Of Siesa.SDK.Shared.DTOS.SDKDbConnection)
+  name.vb: List(Of SDKDbConnection)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - uid: Siesa.SDK.Shared.DTOS.SDKDbConnection
+    name: SDKDbConnection
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: Siesa.SDK.Shared.DTOS.SDKDbConnection
+    name: SDKDbConnection
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic

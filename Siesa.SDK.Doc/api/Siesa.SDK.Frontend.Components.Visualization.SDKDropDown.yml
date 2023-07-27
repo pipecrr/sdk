@@ -1,0 +1,3083 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  commentId: T:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  id: SDKDropDown
+  parent: Siesa.SDK.Frontend.Components.Visualization
+  children:
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.AllowResize
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyContentTemplate
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyCssClass
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyTemplate
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyText
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyTextTemplate
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.CloseMode
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.CloseOnOutsideClick
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.CssClass
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FitToRestriction
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterContentTemplate
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterCssClass
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterTemplate
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterText
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterTextTemplate
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterVisible
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderContentTemplate
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderCssClass
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderTemplate
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderText
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderTextTemplate
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderVisible
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.Height
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HorizontalOffset
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.IsOpen
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.IsOpenChanged
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MaxHeight
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MaxWidth
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MinHeight
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MinWidth
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PositionMode
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PositionRectangle
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PositionTarget
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PreventCloseOnPositionTargetClick
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.RestrictionTarget
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.Scrollable
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.SizeMode
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.StopOutsideClickPropagation
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.VerticalOffset
+  - Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.Width
+  langs:
+  - csharp
+  - vb
+  name: SDKDropDown
+  nameWithType: SDKDropDown
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  type: Class
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SDKDropDown
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 186
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: 'public class SDKDropDown : SDKComponent, IComponent, IHandleEvent, IHandleAfterRender'
+    content.vb: Public Class SDKDropDown Inherits SDKComponent Implements IComponent, IHandleEvent, IHandleAfterRender
+  inheritance:
+  - System.Object
+  - Microsoft.AspNetCore.Components.ComponentBase
+  - Siesa.SDK.Frontend.Components.SDKComponent
+  implements:
+  - Microsoft.AspNetCore.Components.IComponent
+  - Microsoft.AspNetCore.Components.IHandleEvent
+  - Microsoft.AspNetCore.Components.IHandleAfterRender
+  inheritedMembers:
+  - Siesa.SDK.Frontend.Components.SDKComponent.AutomationId
+  - Siesa.SDK.Frontend.Components.SDKComponent.ResourceTag
+  - Siesa.SDK.Frontend.Components.SDKComponent.RowidResource
+  - Siesa.SDK.Frontend.Components.SDKComponent.RowidCulture
+  - Siesa.SDK.Frontend.Components.SDKComponent.AuthenticationService
+  - Siesa.SDK.Frontend.Components.SDKComponent.ResourceManager
+  - Siesa.SDK.Frontend.Components.SDKComponent.GetAutomationId
+  - Siesa.SDK.Frontend.Components.SDKComponent.GetText
+  - Microsoft.AspNetCore.Components.ComponentBase.OnInitialized
+  - Microsoft.AspNetCore.Components.ComponentBase.OnInitializedAsync
+  - Microsoft.AspNetCore.Components.ComponentBase.OnParametersSet
+  - Microsoft.AspNetCore.Components.ComponentBase.OnParametersSetAsync
+  - Microsoft.AspNetCore.Components.ComponentBase.StateHasChanged
+  - Microsoft.AspNetCore.Components.ComponentBase.ShouldRender
+  - Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(System.Boolean)
+  - Microsoft.AspNetCore.Components.ComponentBase.OnAfterRenderAsync(System.Boolean)
+  - Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Action)
+  - Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func{System.Threading.Tasks.Task})
+  - Microsoft.AspNetCore.Components.ComponentBase.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  commentId: M:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  id: BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: BuildRenderTree(RenderTreeBuilder)
+  nameWithType: SDKDropDown.BuildRenderTree(RenderTreeBuilder)
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  type: Method
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: BuildRenderTree
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 189
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  summary: Renders the component to the supplied <xref href="Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: protected override void BuildRenderTree(RenderTreeBuilder __builder)
+    parameters:
+    - id: __builder
+      type: Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder
+    content.vb: Protected Overrides Sub BuildRenderTree(__builder As RenderTreeBuilder)
+  overridden: Microsoft.AspNetCore.Components.ComponentBase.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BuildRenderTree*
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.IsOpen
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.IsOpen
+  id: IsOpen
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: IsOpen
+  nameWithType: SDKDropDown.IsOpen
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.IsOpen
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: IsOpen
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 568
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public bool IsOpen { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <Parameter>
+
+      Public Property IsOpen As Boolean
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.IsOpen*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.IsOpenChanged
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.IsOpenChanged
+  id: IsOpenChanged
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: IsOpenChanged
+  nameWithType: SDKDropDown.IsOpenChanged
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.IsOpenChanged
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: IsOpenChanged
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 571
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public EventCallback<bool> IsOpenChanged { get; set; }
+    parameters: []
+    return:
+      type: Microsoft.AspNetCore.Components.EventCallback{System.Boolean}
+    content.vb: >-
+      <Parameter>
+
+      Public Property IsOpenChanged As EventCallback(Of Boolean)
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.IsOpenChanged*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.AllowResize
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.AllowResize
+  id: AllowResize
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: AllowResize
+  nameWithType: SDKDropDown.AllowResize
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.AllowResize
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: AllowResize
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 574
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public bool AllowResize { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <Parameter>
+
+      Public Property AllowResize As Boolean
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.AllowResize*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyContentTemplate
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyContentTemplate
+  id: BodyContentTemplate
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: BodyContentTemplate
+  nameWithType: SDKDropDown.BodyContentTemplate
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyContentTemplate
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: BodyContentTemplate
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 577
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public RenderFragment<IPopupElementInfo> BodyContentTemplate { get; set; }
+    parameters: []
+    return:
+      type: Microsoft.AspNetCore.Components.RenderFragment{DevExpress.Blazor.IPopupElementInfo}
+    content.vb: >-
+      <Parameter>
+
+      Public Property BodyContentTemplate As RenderFragment(Of IPopupElementInfo)
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyContentTemplate*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyTemplate
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyTemplate
+  id: BodyTemplate
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: BodyTemplate
+  nameWithType: SDKDropDown.BodyTemplate
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyTemplate
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: BodyTemplate
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 580
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public RenderFragment<IPopupElementInfo> BodyTemplate { get; set; }
+    parameters: []
+    return:
+      type: Microsoft.AspNetCore.Components.RenderFragment{DevExpress.Blazor.IPopupElementInfo}
+    content.vb: >-
+      <Parameter>
+
+      Public Property BodyTemplate As RenderFragment(Of IPopupElementInfo)
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyTemplate*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyCssClass
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyCssClass
+  id: BodyCssClass
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: BodyCssClass
+  nameWithType: SDKDropDown.BodyCssClass
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyCssClass
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: BodyCssClass
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 583
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public string BodyCssClass { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <Parameter>
+
+      Public Property BodyCssClass As String
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyCssClass*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.CssClass
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.CssClass
+  id: CssClass
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: CssClass
+  nameWithType: SDKDropDown.CssClass
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.CssClass
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: CssClass
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 585
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public string CssClass { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <Parameter>
+
+      Public Property CssClass As String
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.CssClass*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyText
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyText
+  id: BodyText
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: BodyText
+  nameWithType: SDKDropDown.BodyText
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyText
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: BodyText
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 588
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public string BodyText { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <Parameter>
+
+      Public Property BodyText As String
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyText*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyTextTemplate
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyTextTemplate
+  id: BodyTextTemplate
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: BodyTextTemplate
+  nameWithType: SDKDropDown.BodyTextTemplate
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyTextTemplate
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: BodyTextTemplate
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 591
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public RenderFragment<IPopupElementInfo> BodyTextTemplate { get; set; }
+    parameters: []
+    return:
+      type: Microsoft.AspNetCore.Components.RenderFragment{DevExpress.Blazor.IPopupElementInfo}
+    content.vb: >-
+      <Parameter>
+
+      Public Property BodyTextTemplate As RenderFragment(Of IPopupElementInfo)
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyTextTemplate*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.CloseMode
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.CloseMode
+  id: CloseMode
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: CloseMode
+  nameWithType: SDKDropDown.CloseMode
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.CloseMode
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: CloseMode
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 594
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public DropDownCloseMode CloseMode { get; set; }
+    parameters: []
+    return:
+      type: DevExpress.Blazor.DropDownCloseMode
+    content.vb: >-
+      <Parameter>
+
+      Public Property CloseMode As DropDownCloseMode
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.CloseMode*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.CloseOnOutsideClick
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.CloseOnOutsideClick
+  id: CloseOnOutsideClick
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: CloseOnOutsideClick
+  nameWithType: SDKDropDown.CloseOnOutsideClick
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.CloseOnOutsideClick
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: CloseOnOutsideClick
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 597
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public bool CloseOnOutsideClick { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <Parameter>
+
+      Public Property CloseOnOutsideClick As Boolean
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.CloseOnOutsideClick*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FitToRestriction
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FitToRestriction
+  id: FitToRestriction
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: FitToRestriction
+  nameWithType: SDKDropDown.FitToRestriction
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FitToRestriction
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: FitToRestriction
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 600
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public bool FitToRestriction { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <Parameter>
+
+      Public Property FitToRestriction As Boolean
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FitToRestriction*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterContentTemplate
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterContentTemplate
+  id: FooterContentTemplate
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: FooterContentTemplate
+  nameWithType: SDKDropDown.FooterContentTemplate
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterContentTemplate
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: FooterContentTemplate
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 603
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public RenderFragment<IPopupElementInfo> FooterContentTemplate { get; set; }
+    parameters: []
+    return:
+      type: Microsoft.AspNetCore.Components.RenderFragment{DevExpress.Blazor.IPopupElementInfo}
+    content.vb: >-
+      <Parameter>
+
+      Public Property FooterContentTemplate As RenderFragment(Of IPopupElementInfo)
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterContentTemplate*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterCssClass
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterCssClass
+  id: FooterCssClass
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: FooterCssClass
+  nameWithType: SDKDropDown.FooterCssClass
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterCssClass
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: FooterCssClass
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 606
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public string FooterCssClass { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <Parameter>
+
+      Public Property FooterCssClass As String
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterCssClass*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterTemplate
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterTemplate
+  id: FooterTemplate
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: FooterTemplate
+  nameWithType: SDKDropDown.FooterTemplate
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterTemplate
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: FooterTemplate
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 609
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public RenderFragment<IPopupElementInfo> FooterTemplate { get; set; }
+    parameters: []
+    return:
+      type: Microsoft.AspNetCore.Components.RenderFragment{DevExpress.Blazor.IPopupElementInfo}
+    content.vb: >-
+      <Parameter>
+
+      Public Property FooterTemplate As RenderFragment(Of IPopupElementInfo)
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterTemplate*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterText
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterText
+  id: FooterText
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: FooterText
+  nameWithType: SDKDropDown.FooterText
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterText
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: FooterText
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 612
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public string FooterText { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <Parameter>
+
+      Public Property FooterText As String
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterText*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterTextTemplate
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterTextTemplate
+  id: FooterTextTemplate
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: FooterTextTemplate
+  nameWithType: SDKDropDown.FooterTextTemplate
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterTextTemplate
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: FooterTextTemplate
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 615
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public RenderFragment<IPopupElementInfo> FooterTextTemplate { get; set; }
+    parameters: []
+    return:
+      type: Microsoft.AspNetCore.Components.RenderFragment{DevExpress.Blazor.IPopupElementInfo}
+    content.vb: >-
+      <Parameter>
+
+      Public Property FooterTextTemplate As RenderFragment(Of IPopupElementInfo)
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterTextTemplate*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterVisible
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterVisible
+  id: FooterVisible
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: FooterVisible
+  nameWithType: SDKDropDown.FooterVisible
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterVisible
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: FooterVisible
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 618
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public bool FooterVisible { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <Parameter>
+
+      Public Property FooterVisible As Boolean
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterVisible*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderContentTemplate
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderContentTemplate
+  id: HeaderContentTemplate
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: HeaderContentTemplate
+  nameWithType: SDKDropDown.HeaderContentTemplate
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderContentTemplate
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: HeaderContentTemplate
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 621
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public RenderFragment<IPopupElementInfo> HeaderContentTemplate { get; set; }
+    parameters: []
+    return:
+      type: Microsoft.AspNetCore.Components.RenderFragment{DevExpress.Blazor.IPopupElementInfo}
+    content.vb: >-
+      <Parameter>
+
+      Public Property HeaderContentTemplate As RenderFragment(Of IPopupElementInfo)
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderContentTemplate*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderCssClass
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderCssClass
+  id: HeaderCssClass
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: HeaderCssClass
+  nameWithType: SDKDropDown.HeaderCssClass
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderCssClass
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: HeaderCssClass
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 624
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public string HeaderCssClass { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <Parameter>
+
+      Public Property HeaderCssClass As String
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderCssClass*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderTemplate
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderTemplate
+  id: HeaderTemplate
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: HeaderTemplate
+  nameWithType: SDKDropDown.HeaderTemplate
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderTemplate
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: HeaderTemplate
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 627
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public RenderFragment<IPopupElementInfo> HeaderTemplate { get; set; }
+    parameters: []
+    return:
+      type: Microsoft.AspNetCore.Components.RenderFragment{DevExpress.Blazor.IPopupElementInfo}
+    content.vb: >-
+      <Parameter>
+
+      Public Property HeaderTemplate As RenderFragment(Of IPopupElementInfo)
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderTemplate*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderText
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderText
+  id: HeaderText
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: HeaderText
+  nameWithType: SDKDropDown.HeaderText
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderText
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: HeaderText
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 630
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public string HeaderText { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <Parameter>
+
+      Public Property HeaderText As String
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderText*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderTextTemplate
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderTextTemplate
+  id: HeaderTextTemplate
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: HeaderTextTemplate
+  nameWithType: SDKDropDown.HeaderTextTemplate
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderTextTemplate
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: HeaderTextTemplate
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 633
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public RenderFragment<IPopupElementInfo> HeaderTextTemplate { get; set; }
+    parameters: []
+    return:
+      type: Microsoft.AspNetCore.Components.RenderFragment{DevExpress.Blazor.IPopupElementInfo}
+    content.vb: >-
+      <Parameter>
+
+      Public Property HeaderTextTemplate As RenderFragment(Of IPopupElementInfo)
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderTextTemplate*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderVisible
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderVisible
+  id: HeaderVisible
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: HeaderVisible
+  nameWithType: SDKDropDown.HeaderVisible
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderVisible
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: HeaderVisible
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 636
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public bool HeaderVisible { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <Parameter>
+
+      Public Property HeaderVisible As Boolean
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderVisible*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.Height
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.Height
+  id: Height
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: Height
+  nameWithType: SDKDropDown.Height
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.Height
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Height
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 639
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public string Height { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <Parameter>
+
+      Public Property Height As String
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.Height*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.Width
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.Width
+  id: Width
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: Width
+  nameWithType: SDKDropDown.Width
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.Width
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Width
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 642
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public string Width { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <Parameter>
+
+      Public Property Width As String
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.Width*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MaxHeight
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MaxHeight
+  id: MaxHeight
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: MaxHeight
+  nameWithType: SDKDropDown.MaxHeight
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MaxHeight
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: MaxHeight
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 645
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public string MaxHeight { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <Parameter>
+
+      Public Property MaxHeight As String
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MaxHeight*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MaxWidth
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MaxWidth
+  id: MaxWidth
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: MaxWidth
+  nameWithType: SDKDropDown.MaxWidth
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MaxWidth
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: MaxWidth
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 648
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public string MaxWidth { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <Parameter>
+
+      Public Property MaxWidth As String
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MaxWidth*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MinHeight
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MinHeight
+  id: MinHeight
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: MinHeight
+  nameWithType: SDKDropDown.MinHeight
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MinHeight
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: MinHeight
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 651
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public string MinHeight { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <Parameter>
+
+      Public Property MinHeight As String
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MinHeight*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MinWidth
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MinWidth
+  id: MinWidth
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: MinWidth
+  nameWithType: SDKDropDown.MinWidth
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MinWidth
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: MinWidth
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 654
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public string MinWidth { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <Parameter>
+
+      Public Property MinWidth As String
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MinWidth*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PositionMode
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PositionMode
+  id: PositionMode
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: PositionMode
+  nameWithType: SDKDropDown.PositionMode
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PositionMode
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: PositionMode
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 657
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public DropDownPositionMode PositionMode { get; set; }
+    parameters: []
+    return:
+      type: DevExpress.Blazor.DropDownPositionMode
+    content.vb: >-
+      <Parameter>
+
+      Public Property PositionMode As DropDownPositionMode
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PositionMode*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PositionRectangle
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PositionRectangle
+  id: PositionRectangle
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: PositionRectangle
+  nameWithType: SDKDropDown.PositionRectangle
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PositionRectangle
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: PositionRectangle
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 660
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public Rectangle PositionRectangle { get; set; }
+    parameters: []
+    return:
+      type: System.Drawing.Rectangle
+    content.vb: >-
+      <Parameter>
+
+      Public Property PositionRectangle As Rectangle
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PositionRectangle*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HorizontalOffset
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HorizontalOffset
+  id: HorizontalOffset
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: HorizontalOffset
+  nameWithType: SDKDropDown.HorizontalOffset
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HorizontalOffset
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: HorizontalOffset
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 664
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public int HorizontalOffset { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: >-
+      <Parameter>
+
+      Public Property HorizontalOffset As Integer
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HorizontalOffset*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.VerticalOffset
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.VerticalOffset
+  id: VerticalOffset
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: VerticalOffset
+  nameWithType: SDKDropDown.VerticalOffset
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.VerticalOffset
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: VerticalOffset
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 667
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public int VerticalOffset { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: >-
+      <Parameter>
+
+      Public Property VerticalOffset As Integer
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.VerticalOffset*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.Scrollable
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.Scrollable
+  id: Scrollable
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: Scrollable
+  nameWithType: SDKDropDown.Scrollable
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.Scrollable
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Scrollable
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 670
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public bool Scrollable { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <Parameter>
+
+      Public Property Scrollable As Boolean
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.Scrollable*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.SizeMode
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.SizeMode
+  id: SizeMode
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: SizeMode
+  nameWithType: SDKDropDown.SizeMode
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.SizeMode
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SizeMode
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 673
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public SizeMode? SizeMode { get; set; }
+    parameters: []
+    return:
+      type: System.Nullable{DevExpress.Blazor.SizeMode}
+    content.vb: >-
+      <Parameter>
+
+      Public Property SizeMode As SizeMode?
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.SizeMode*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.StopOutsideClickPropagation
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.StopOutsideClickPropagation
+  id: StopOutsideClickPropagation
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: StopOutsideClickPropagation
+  nameWithType: SDKDropDown.StopOutsideClickPropagation
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.StopOutsideClickPropagation
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: StopOutsideClickPropagation
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 676
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public bool StopOutsideClickPropagation { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <Parameter>
+
+      Public Property StopOutsideClickPropagation As Boolean
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.StopOutsideClickPropagation*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PreventCloseOnPositionTargetClick
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PreventCloseOnPositionTargetClick
+  id: PreventCloseOnPositionTargetClick
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: PreventCloseOnPositionTargetClick
+  nameWithType: SDKDropDown.PreventCloseOnPositionTargetClick
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PreventCloseOnPositionTargetClick
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: PreventCloseOnPositionTargetClick
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 679
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public bool PreventCloseOnPositionTargetClick { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <Parameter>
+
+      Public Property PreventCloseOnPositionTargetClick As Boolean
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PreventCloseOnPositionTargetClick*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PositionTarget
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PositionTarget
+  id: PositionTarget
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: PositionTarget
+  nameWithType: SDKDropDown.PositionTarget
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PositionTarget
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: PositionTarget
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 682
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public string PositionTarget { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <Parameter>
+
+      Public Property PositionTarget As String
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PositionTarget*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.RestrictionTarget
+  commentId: P:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.RestrictionTarget
+  id: RestrictionTarget
+  parent: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown
+  langs:
+  - csharp
+  - vb
+  name: RestrictionTarget
+  nameWithType: SDKDropDown.RestrictionTarget
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.RestrictionTarget
+  type: Property
+  source:
+    remote:
+      path: Siesa.SDK.Doc/Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: RestrictionTarget
+    path: Microsoft.NET.Sdk.Razor.SourceGenerators/Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator/Components_Visualization_SDKDropDown_razor.g.cs
+    startLine: 685
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components.Visualization
+  syntax:
+    content: >-
+      [Parameter]
+
+      public string RestrictionTarget { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <Parameter>
+
+      Public Property RestrictionTarget As String
+  overload: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.RestrictionTarget*
+  attributes:
+  - type: Microsoft.AspNetCore.Components.ParameterAttribute
+    ctor: Microsoft.AspNetCore.Components.ParameterAttribute.#ctor
+    arguments: []
+references:
+- uid: Siesa.SDK.Frontend.Components.Visualization
+  commentId: N:Siesa.SDK.Frontend.Components.Visualization
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Components.Visualization
+  nameWithType: Siesa.SDK.Frontend.Components.Visualization
+  fullName: Siesa.SDK.Frontend.Components.Visualization
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.Visualization
+    name: Visualization
+    href: Siesa.SDK.Frontend.Components.Visualization.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components.Visualization
+    name: Visualization
+    href: Siesa.SDK.Frontend.Components.Visualization.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: Microsoft.AspNetCore.Components.ComponentBase
+  commentId: T:Microsoft.AspNetCore.Components.ComponentBase
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase
+  name: ComponentBase
+  nameWithType: ComponentBase
+  fullName: Microsoft.AspNetCore.Components.ComponentBase
+- uid: Siesa.SDK.Frontend.Components.SDKComponent
+  commentId: T:Siesa.SDK.Frontend.Components.SDKComponent
+  parent: Siesa.SDK.Frontend.Components
+  href: Siesa.SDK.Frontend.Components.SDKComponent.html
+  name: SDKComponent
+  nameWithType: SDKComponent
+  fullName: Siesa.SDK.Frontend.Components.SDKComponent
+- uid: Microsoft.AspNetCore.Components.IComponent
+  commentId: T:Microsoft.AspNetCore.Components.IComponent
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.icomponent
+  name: IComponent
+  nameWithType: IComponent
+  fullName: Microsoft.AspNetCore.Components.IComponent
+- uid: Microsoft.AspNetCore.Components.IHandleEvent
+  commentId: T:Microsoft.AspNetCore.Components.IHandleEvent
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.ihandleevent
+  name: IHandleEvent
+  nameWithType: IHandleEvent
+  fullName: Microsoft.AspNetCore.Components.IHandleEvent
+- uid: Microsoft.AspNetCore.Components.IHandleAfterRender
+  commentId: T:Microsoft.AspNetCore.Components.IHandleAfterRender
+  parent: Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.ihandleafterrender
+  name: IHandleAfterRender
+  nameWithType: IHandleAfterRender
+  fullName: Microsoft.AspNetCore.Components.IHandleAfterRender
+- uid: Siesa.SDK.Frontend.Components.SDKComponent.AutomationId
+  commentId: P:Siesa.SDK.Frontend.Components.SDKComponent.AutomationId
+  parent: Siesa.SDK.Frontend.Components.SDKComponent
+  href: Siesa.SDK.Frontend.Components.SDKComponent.html#Siesa.SDK.Frontend.Components.SDKComponent.AutomationId
+  name: AutomationId
+  nameWithType: SDKComponent.AutomationId
+  fullName: Siesa.SDK.Frontend.Components.SDKComponent.AutomationId
+- uid: Siesa.SDK.Frontend.Components.SDKComponent.ResourceTag
+  commentId: P:Siesa.SDK.Frontend.Components.SDKComponent.ResourceTag
+  parent: Siesa.SDK.Frontend.Components.SDKComponent
+  href: Siesa.SDK.Frontend.Components.SDKComponent.html#Siesa.SDK.Frontend.Components.SDKComponent.ResourceTag
+  name: ResourceTag
+  nameWithType: SDKComponent.ResourceTag
+  fullName: Siesa.SDK.Frontend.Components.SDKComponent.ResourceTag
+- uid: Siesa.SDK.Frontend.Components.SDKComponent.RowidResource
+  commentId: P:Siesa.SDK.Frontend.Components.SDKComponent.RowidResource
+  parent: Siesa.SDK.Frontend.Components.SDKComponent
+  href: Siesa.SDK.Frontend.Components.SDKComponent.html#Siesa.SDK.Frontend.Components.SDKComponent.RowidResource
+  name: RowidResource
+  nameWithType: SDKComponent.RowidResource
+  fullName: Siesa.SDK.Frontend.Components.SDKComponent.RowidResource
+- uid: Siesa.SDK.Frontend.Components.SDKComponent.RowidCulture
+  commentId: P:Siesa.SDK.Frontend.Components.SDKComponent.RowidCulture
+  parent: Siesa.SDK.Frontend.Components.SDKComponent
+  href: Siesa.SDK.Frontend.Components.SDKComponent.html#Siesa.SDK.Frontend.Components.SDKComponent.RowidCulture
+  name: RowidCulture
+  nameWithType: SDKComponent.RowidCulture
+  fullName: Siesa.SDK.Frontend.Components.SDKComponent.RowidCulture
+- uid: Siesa.SDK.Frontend.Components.SDKComponent.AuthenticationService
+  commentId: P:Siesa.SDK.Frontend.Components.SDKComponent.AuthenticationService
+  parent: Siesa.SDK.Frontend.Components.SDKComponent
+  href: Siesa.SDK.Frontend.Components.SDKComponent.html#Siesa.SDK.Frontend.Components.SDKComponent.AuthenticationService
+  name: AuthenticationService
+  nameWithType: SDKComponent.AuthenticationService
+  fullName: Siesa.SDK.Frontend.Components.SDKComponent.AuthenticationService
+- uid: Siesa.SDK.Frontend.Components.SDKComponent.ResourceManager
+  commentId: P:Siesa.SDK.Frontend.Components.SDKComponent.ResourceManager
+  parent: Siesa.SDK.Frontend.Components.SDKComponent
+  href: Siesa.SDK.Frontend.Components.SDKComponent.html#Siesa.SDK.Frontend.Components.SDKComponent.ResourceManager
+  name: ResourceManager
+  nameWithType: SDKComponent.ResourceManager
+  fullName: Siesa.SDK.Frontend.Components.SDKComponent.ResourceManager
+- uid: Siesa.SDK.Frontend.Components.SDKComponent.GetAutomationId
+  commentId: M:Siesa.SDK.Frontend.Components.SDKComponent.GetAutomationId
+  parent: Siesa.SDK.Frontend.Components.SDKComponent
+  href: Siesa.SDK.Frontend.Components.SDKComponent.html#Siesa.SDK.Frontend.Components.SDKComponent.GetAutomationId
+  name: GetAutomationId()
+  nameWithType: SDKComponent.GetAutomationId()
+  fullName: Siesa.SDK.Frontend.Components.SDKComponent.GetAutomationId()
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.SDKComponent.GetAutomationId
+    name: GetAutomationId
+    href: Siesa.SDK.Frontend.Components.SDKComponent.html#Siesa.SDK.Frontend.Components.SDKComponent.GetAutomationId
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.SDKComponent.GetAutomationId
+    name: GetAutomationId
+    href: Siesa.SDK.Frontend.Components.SDKComponent.html#Siesa.SDK.Frontend.Components.SDKComponent.GetAutomationId
+  - name: (
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.SDKComponent.GetText
+  commentId: M:Siesa.SDK.Frontend.Components.SDKComponent.GetText
+  parent: Siesa.SDK.Frontend.Components.SDKComponent
+  href: Siesa.SDK.Frontend.Components.SDKComponent.html#Siesa.SDK.Frontend.Components.SDKComponent.GetText
+  name: GetText()
+  nameWithType: SDKComponent.GetText()
+  fullName: Siesa.SDK.Frontend.Components.SDKComponent.GetText()
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.SDKComponent.GetText
+    name: GetText
+    href: Siesa.SDK.Frontend.Components.SDKComponent.html#Siesa.SDK.Frontend.Components.SDKComponent.GetText
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.SDKComponent.GetText
+    name: GetText
+    href: Siesa.SDK.Frontend.Components.SDKComponent.html#Siesa.SDK.Frontend.Components.SDKComponent.GetText
+  - name: (
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.OnInitialized
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.OnInitialized
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.oninitialized
+  name: OnInitialized()
+  nameWithType: ComponentBase.OnInitialized()
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.OnInitialized()
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnInitialized
+    name: OnInitialized
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.oninitialized
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnInitialized
+    name: OnInitialized
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.oninitialized
+  - name: (
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.OnInitializedAsync
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.OnInitializedAsync
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.oninitializedasync
+  name: OnInitializedAsync()
+  nameWithType: ComponentBase.OnInitializedAsync()
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.OnInitializedAsync()
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnInitializedAsync
+    name: OnInitializedAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.oninitializedasync
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnInitializedAsync
+    name: OnInitializedAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.oninitializedasync
+  - name: (
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSet
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.OnParametersSet
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onparametersset
+  name: OnParametersSet()
+  nameWithType: ComponentBase.OnParametersSet()
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSet()
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSet
+    name: OnParametersSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onparametersset
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSet
+    name: OnParametersSet
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onparametersset
+  - name: (
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSetAsync
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.OnParametersSetAsync
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onparameterssetasync
+  name: OnParametersSetAsync()
+  nameWithType: ComponentBase.OnParametersSetAsync()
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSetAsync()
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSetAsync
+    name: OnParametersSetAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onparameterssetasync
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnParametersSetAsync
+    name: OnParametersSetAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onparameterssetasync
+  - name: (
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.StateHasChanged
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.StateHasChanged
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.statehaschanged
+  name: StateHasChanged()
+  nameWithType: ComponentBase.StateHasChanged()
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.StateHasChanged()
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.StateHasChanged
+    name: StateHasChanged
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.statehaschanged
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.StateHasChanged
+    name: StateHasChanged
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.statehaschanged
+  - name: (
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.ShouldRender
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.ShouldRender
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.shouldrender
+  name: ShouldRender()
+  nameWithType: ComponentBase.ShouldRender()
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.ShouldRender()
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.ShouldRender
+    name: ShouldRender
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.shouldrender
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.ShouldRender
+    name: ShouldRender
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.shouldrender
+  - name: (
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(System.Boolean)
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(System.Boolean)
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onafterrender
+  name: OnAfterRender(bool)
+  nameWithType: ComponentBase.OnAfterRender(bool)
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(bool)
+  nameWithType.vb: ComponentBase.OnAfterRender(Boolean)
+  fullName.vb: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(Boolean)
+  name.vb: OnAfterRender(Boolean)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(System.Boolean)
+    name: OnAfterRender
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onafterrender
+  - name: (
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender(System.Boolean)
+    name: OnAfterRender
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onafterrender
+  - name: (
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRenderAsync(System.Boolean)
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.OnAfterRenderAsync(System.Boolean)
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onafterrenderasync
+  name: OnAfterRenderAsync(bool)
+  nameWithType: ComponentBase.OnAfterRenderAsync(bool)
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRenderAsync(bool)
+  nameWithType.vb: ComponentBase.OnAfterRenderAsync(Boolean)
+  fullName.vb: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRenderAsync(Boolean)
+  name.vb: OnAfterRenderAsync(Boolean)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRenderAsync(System.Boolean)
+    name: OnAfterRenderAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onafterrenderasync
+  - name: (
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.OnAfterRenderAsync(System.Boolean)
+    name: OnAfterRenderAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.onafterrenderasync
+  - name: (
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Action)
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Action)
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.invokeasync#microsoft-aspnetcore-components-componentbase-invokeasync(system-action)
+  name: InvokeAsync(Action)
+  nameWithType: ComponentBase.InvokeAsync(Action)
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Action)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Action)
+    name: InvokeAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.invokeasync#microsoft-aspnetcore-components-componentbase-invokeasync(system-action)
+  - name: (
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Action)
+    name: InvokeAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.invokeasync#microsoft-aspnetcore-components-componentbase-invokeasync(system-action)
+  - name: (
+  - uid: System.Action
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func{System.Threading.Tasks.Task})
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func{System.Threading.Tasks.Task})
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.invokeasync#microsoft-aspnetcore-components-componentbase-invokeasync(system-func((system-threading-tasks-task)))
+  name: InvokeAsync(Func<Task>)
+  nameWithType: ComponentBase.InvokeAsync(Func<Task>)
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func<System.Threading.Tasks.Task>)
+  nameWithType.vb: ComponentBase.InvokeAsync(Func(Of Task))
+  fullName.vb: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func(Of System.Threading.Tasks.Task))
+  name.vb: InvokeAsync(Func(Of Task))
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func{System.Threading.Tasks.Task})
+    name: InvokeAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.invokeasync#microsoft-aspnetcore-components-componentbase-invokeasync(system-func((system-threading-tasks-task)))
+  - name: (
+  - uid: System.Func`1
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-1
+  - name: <
+  - uid: System.Threading.Tasks.Task
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  - name: '>'
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.InvokeAsync(System.Func{System.Threading.Tasks.Task})
+    name: InvokeAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.invokeasync#microsoft-aspnetcore-components-componentbase-invokeasync(system-func((system-threading-tasks-task)))
+  - name: (
+  - uid: System.Func`1
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Threading.Tasks.Task
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task
+  - name: )
+  - name: )
+- uid: Microsoft.AspNetCore.Components.ComponentBase.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.setparametersasync
+  name: SetParametersAsync(ParameterView)
+  nameWithType: ComponentBase.SetParametersAsync(ParameterView)
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+    name: SetParametersAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.setparametersasync
+  - name: (
+  - uid: Microsoft.AspNetCore.Components.ParameterView
+    name: ParameterView
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.parameterview
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)
+    name: SetParametersAsync
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.setparametersasync
+  - name: (
+  - uid: Microsoft.AspNetCore.Components.ParameterView
+    name: ParameterView
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.parameterview
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Microsoft.AspNetCore.Components
+  commentId: N:Microsoft.AspNetCore.Components
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.AspNetCore.Components
+  nameWithType: Microsoft.AspNetCore.Components
+  fullName: Microsoft.AspNetCore.Components
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Components
+    name: Components
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Components
+    name: Components
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components
+- uid: Siesa.SDK.Frontend.Components
+  commentId: N:Siesa.SDK.Frontend.Components
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Components
+  nameWithType: Siesa.SDK.Frontend.Components
+  fullName: Siesa.SDK.Frontend.Components
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+- uid: Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder
+  commentId: T:Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder
+  parent: Microsoft.AspNetCore.Components.Rendering
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.rendering.rendertreebuilder
+  name: RenderTreeBuilder
+  nameWithType: RenderTreeBuilder
+  fullName: Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder
+- uid: Microsoft.AspNetCore.Components.ComponentBase.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  commentId: M:Microsoft.AspNetCore.Components.ComponentBase.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  parent: Microsoft.AspNetCore.Components.ComponentBase
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.buildrendertree
+  name: BuildRenderTree(RenderTreeBuilder)
+  nameWithType: ComponentBase.BuildRenderTree(RenderTreeBuilder)
+  fullName: Microsoft.AspNetCore.Components.ComponentBase.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+    name: BuildRenderTree
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.buildrendertree
+  - name: (
+  - uid: Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder
+    name: RenderTreeBuilder
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.rendering.rendertreebuilder
+  - name: )
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.ComponentBase.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+    name: BuildRenderTree
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.componentbase.buildrendertree
+  - name: (
+  - uid: Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder
+    name: RenderTreeBuilder
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.rendering.rendertreebuilder
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BuildRenderTree*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BuildRenderTree
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)
+  name: BuildRenderTree
+  nameWithType: SDKDropDown.BuildRenderTree
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BuildRenderTree
+- uid: Microsoft.AspNetCore.Components.Rendering
+  commentId: N:Microsoft.AspNetCore.Components.Rendering
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft
+  name: Microsoft.AspNetCore.Components.Rendering
+  nameWithType: Microsoft.AspNetCore.Components.Rendering
+  fullName: Microsoft.AspNetCore.Components.Rendering
+  spec.csharp:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Components
+    name: Components
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components
+  - name: .
+  - uid: Microsoft.AspNetCore.Components.Rendering
+    name: Rendering
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.rendering
+  spec.vb:
+  - uid: Microsoft
+    name: Microsoft
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft
+  - name: .
+  - uid: Microsoft.AspNetCore
+    name: AspNetCore
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore
+  - name: .
+  - uid: Microsoft.AspNetCore.Components
+    name: Components
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components
+  - name: .
+  - uid: Microsoft.AspNetCore.Components.Rendering
+    name: Rendering
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.rendering
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.IsOpen*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.IsOpen
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.IsOpen
+  name: IsOpen
+  nameWithType: SDKDropDown.IsOpen
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.IsOpen
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.IsOpenChanged*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.IsOpenChanged
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.IsOpenChanged
+  name: IsOpenChanged
+  nameWithType: SDKDropDown.IsOpenChanged
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.IsOpenChanged
+- uid: Microsoft.AspNetCore.Components.EventCallback{System.Boolean}
+  commentId: T:Microsoft.AspNetCore.Components.EventCallback{System.Boolean}
+  parent: Microsoft.AspNetCore.Components
+  definition: Microsoft.AspNetCore.Components.EventCallback`1
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.eventcallback-1
+  name: EventCallback<bool>
+  nameWithType: EventCallback<bool>
+  fullName: Microsoft.AspNetCore.Components.EventCallback<bool>
+  nameWithType.vb: EventCallback(Of Boolean)
+  fullName.vb: Microsoft.AspNetCore.Components.EventCallback(Of Boolean)
+  name.vb: EventCallback(Of Boolean)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.EventCallback`1
+    name: EventCallback
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.eventcallback-1
+  - name: <
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: '>'
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.EventCallback`1
+    name: EventCallback
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.eventcallback-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: Microsoft.AspNetCore.Components.EventCallback`1
+  commentId: T:Microsoft.AspNetCore.Components.EventCallback`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.eventcallback-1
+  name: EventCallback<TValue>
+  nameWithType: EventCallback<TValue>
+  fullName: Microsoft.AspNetCore.Components.EventCallback<TValue>
+  nameWithType.vb: EventCallback(Of TValue)
+  fullName.vb: Microsoft.AspNetCore.Components.EventCallback(Of TValue)
+  name.vb: EventCallback(Of TValue)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.EventCallback`1
+    name: EventCallback
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.eventcallback-1
+  - name: <
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.EventCallback`1
+    name: EventCallback
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.eventcallback-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.AllowResize*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.AllowResize
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.AllowResize
+  name: AllowResize
+  nameWithType: SDKDropDown.AllowResize
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.AllowResize
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyContentTemplate*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyContentTemplate
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyContentTemplate
+  name: BodyContentTemplate
+  nameWithType: SDKDropDown.BodyContentTemplate
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyContentTemplate
+- uid: Microsoft.AspNetCore.Components.RenderFragment{DevExpress.Blazor.IPopupElementInfo}
+  commentId: T:Microsoft.AspNetCore.Components.RenderFragment{DevExpress.Blazor.IPopupElementInfo}
+  parent: Microsoft.AspNetCore.Components
+  definition: Microsoft.AspNetCore.Components.RenderFragment`1
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.renderfragment-1
+  name: RenderFragment<IPopupElementInfo>
+  nameWithType: RenderFragment<IPopupElementInfo>
+  fullName: Microsoft.AspNetCore.Components.RenderFragment<DevExpress.Blazor.IPopupElementInfo>
+  nameWithType.vb: RenderFragment(Of IPopupElementInfo)
+  fullName.vb: Microsoft.AspNetCore.Components.RenderFragment(Of DevExpress.Blazor.IPopupElementInfo)
+  name.vb: RenderFragment(Of IPopupElementInfo)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.RenderFragment`1
+    name: RenderFragment
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.renderfragment-1
+  - name: <
+  - uid: DevExpress.Blazor.IPopupElementInfo
+    name: IPopupElementInfo
+    isExternal: true
+  - name: '>'
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.RenderFragment`1
+    name: RenderFragment
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.renderfragment-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: DevExpress.Blazor.IPopupElementInfo
+    name: IPopupElementInfo
+    isExternal: true
+  - name: )
+- uid: Microsoft.AspNetCore.Components.RenderFragment`1
+  commentId: T:Microsoft.AspNetCore.Components.RenderFragment`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.renderfragment-1
+  name: RenderFragment<TValue>
+  nameWithType: RenderFragment<TValue>
+  fullName: Microsoft.AspNetCore.Components.RenderFragment<TValue>
+  nameWithType.vb: RenderFragment(Of TValue)
+  fullName.vb: Microsoft.AspNetCore.Components.RenderFragment(Of TValue)
+  name.vb: RenderFragment(Of TValue)
+  spec.csharp:
+  - uid: Microsoft.AspNetCore.Components.RenderFragment`1
+    name: RenderFragment
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.renderfragment-1
+  - name: <
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: Microsoft.AspNetCore.Components.RenderFragment`1
+    name: RenderFragment
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.components.renderfragment-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyTemplate*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyTemplate
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyTemplate
+  name: BodyTemplate
+  nameWithType: SDKDropDown.BodyTemplate
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyTemplate
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyCssClass*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyCssClass
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyCssClass
+  name: BodyCssClass
+  nameWithType: SDKDropDown.BodyCssClass
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyCssClass
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.CssClass*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.CssClass
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.CssClass
+  name: CssClass
+  nameWithType: SDKDropDown.CssClass
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.CssClass
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyText*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyText
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyText
+  name: BodyText
+  nameWithType: SDKDropDown.BodyText
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyText
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyTextTemplate*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyTextTemplate
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyTextTemplate
+  name: BodyTextTemplate
+  nameWithType: SDKDropDown.BodyTextTemplate
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.BodyTextTemplate
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.CloseMode*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.CloseMode
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.CloseMode
+  name: CloseMode
+  nameWithType: SDKDropDown.CloseMode
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.CloseMode
+- uid: DevExpress.Blazor.DropDownCloseMode
+  commentId: T:DevExpress.Blazor.DropDownCloseMode
+  parent: DevExpress.Blazor
+  isExternal: true
+  name: DropDownCloseMode
+  nameWithType: DropDownCloseMode
+  fullName: DevExpress.Blazor.DropDownCloseMode
+- uid: DevExpress.Blazor
+  commentId: N:DevExpress.Blazor
+  isExternal: true
+  name: DevExpress.Blazor
+  nameWithType: DevExpress.Blazor
+  fullName: DevExpress.Blazor
+  spec.csharp:
+  - uid: DevExpress
+    name: DevExpress
+    isExternal: true
+  - name: .
+  - uid: DevExpress.Blazor
+    name: Blazor
+    isExternal: true
+  spec.vb:
+  - uid: DevExpress
+    name: DevExpress
+    isExternal: true
+  - name: .
+  - uid: DevExpress.Blazor
+    name: Blazor
+    isExternal: true
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.CloseOnOutsideClick*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.CloseOnOutsideClick
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.CloseOnOutsideClick
+  name: CloseOnOutsideClick
+  nameWithType: SDKDropDown.CloseOnOutsideClick
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.CloseOnOutsideClick
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FitToRestriction*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FitToRestriction
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FitToRestriction
+  name: FitToRestriction
+  nameWithType: SDKDropDown.FitToRestriction
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FitToRestriction
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterContentTemplate*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterContentTemplate
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterContentTemplate
+  name: FooterContentTemplate
+  nameWithType: SDKDropDown.FooterContentTemplate
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterContentTemplate
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterCssClass*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterCssClass
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterCssClass
+  name: FooterCssClass
+  nameWithType: SDKDropDown.FooterCssClass
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterCssClass
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterTemplate*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterTemplate
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterTemplate
+  name: FooterTemplate
+  nameWithType: SDKDropDown.FooterTemplate
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterTemplate
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterText*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterText
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterText
+  name: FooterText
+  nameWithType: SDKDropDown.FooterText
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterText
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterTextTemplate*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterTextTemplate
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterTextTemplate
+  name: FooterTextTemplate
+  nameWithType: SDKDropDown.FooterTextTemplate
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterTextTemplate
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterVisible*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterVisible
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterVisible
+  name: FooterVisible
+  nameWithType: SDKDropDown.FooterVisible
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.FooterVisible
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderContentTemplate*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderContentTemplate
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderContentTemplate
+  name: HeaderContentTemplate
+  nameWithType: SDKDropDown.HeaderContentTemplate
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderContentTemplate
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderCssClass*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderCssClass
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderCssClass
+  name: HeaderCssClass
+  nameWithType: SDKDropDown.HeaderCssClass
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderCssClass
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderTemplate*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderTemplate
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderTemplate
+  name: HeaderTemplate
+  nameWithType: SDKDropDown.HeaderTemplate
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderTemplate
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderText*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderText
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderText
+  name: HeaderText
+  nameWithType: SDKDropDown.HeaderText
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderText
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderTextTemplate*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderTextTemplate
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderTextTemplate
+  name: HeaderTextTemplate
+  nameWithType: SDKDropDown.HeaderTextTemplate
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderTextTemplate
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderVisible*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderVisible
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderVisible
+  name: HeaderVisible
+  nameWithType: SDKDropDown.HeaderVisible
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HeaderVisible
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.Height*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.Height
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.Height
+  name: Height
+  nameWithType: SDKDropDown.Height
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.Height
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.Width*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.Width
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.Width
+  name: Width
+  nameWithType: SDKDropDown.Width
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.Width
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MaxHeight*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MaxHeight
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MaxHeight
+  name: MaxHeight
+  nameWithType: SDKDropDown.MaxHeight
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MaxHeight
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MaxWidth*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MaxWidth
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MaxWidth
+  name: MaxWidth
+  nameWithType: SDKDropDown.MaxWidth
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MaxWidth
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MinHeight*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MinHeight
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MinHeight
+  name: MinHeight
+  nameWithType: SDKDropDown.MinHeight
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MinHeight
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MinWidth*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MinWidth
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MinWidth
+  name: MinWidth
+  nameWithType: SDKDropDown.MinWidth
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.MinWidth
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PositionMode*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PositionMode
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PositionMode
+  name: PositionMode
+  nameWithType: SDKDropDown.PositionMode
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PositionMode
+- uid: DevExpress.Blazor.DropDownPositionMode
+  commentId: T:DevExpress.Blazor.DropDownPositionMode
+  parent: DevExpress.Blazor
+  isExternal: true
+  name: DropDownPositionMode
+  nameWithType: DropDownPositionMode
+  fullName: DevExpress.Blazor.DropDownPositionMode
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PositionRectangle*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PositionRectangle
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PositionRectangle
+  name: PositionRectangle
+  nameWithType: SDKDropDown.PositionRectangle
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PositionRectangle
+- uid: System.Drawing.Rectangle
+  commentId: T:System.Drawing.Rectangle
+  parent: System.Drawing
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.drawing.rectangle
+  name: Rectangle
+  nameWithType: Rectangle
+  fullName: System.Drawing.Rectangle
+- uid: System.Drawing
+  commentId: N:System.Drawing
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Drawing
+  nameWithType: System.Drawing
+  fullName: System.Drawing
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Drawing
+    name: Drawing
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.drawing
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Drawing
+    name: Drawing
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.drawing
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HorizontalOffset*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HorizontalOffset
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HorizontalOffset
+  name: HorizontalOffset
+  nameWithType: SDKDropDown.HorizontalOffset
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.HorizontalOffset
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.VerticalOffset*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.VerticalOffset
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.VerticalOffset
+  name: VerticalOffset
+  nameWithType: SDKDropDown.VerticalOffset
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.VerticalOffset
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.Scrollable*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.Scrollable
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.Scrollable
+  name: Scrollable
+  nameWithType: SDKDropDown.Scrollable
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.Scrollable
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.SizeMode*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.SizeMode
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.SizeMode
+  name: SizeMode
+  nameWithType: SDKDropDown.SizeMode
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.SizeMode
+- uid: System.Nullable{DevExpress.Blazor.SizeMode}
+  commentId: T:System.Nullable{DevExpress.Blazor.SizeMode}
+  parent: System
+  definition: System.Nullable`1
+  name: SizeMode?
+  nameWithType: SizeMode?
+  fullName: DevExpress.Blazor.SizeMode?
+  spec.csharp:
+  - uid: DevExpress.Blazor.SizeMode
+    name: SizeMode
+    isExternal: true
+  - name: '?'
+  spec.vb:
+  - uid: DevExpress.Blazor.SizeMode
+    name: SizeMode
+    isExternal: true
+  - name: '?'
+- uid: System.Nullable`1
+  commentId: T:System.Nullable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  name: Nullable<T>
+  nameWithType: Nullable<T>
+  fullName: System.Nullable<T>
+  nameWithType.vb: Nullable(Of T)
+  fullName.vb: System.Nullable(Of T)
+  name.vb: Nullable(Of T)
+  spec.csharp:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.StopOutsideClickPropagation*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.StopOutsideClickPropagation
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.StopOutsideClickPropagation
+  name: StopOutsideClickPropagation
+  nameWithType: SDKDropDown.StopOutsideClickPropagation
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.StopOutsideClickPropagation
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PreventCloseOnPositionTargetClick*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PreventCloseOnPositionTargetClick
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PreventCloseOnPositionTargetClick
+  name: PreventCloseOnPositionTargetClick
+  nameWithType: SDKDropDown.PreventCloseOnPositionTargetClick
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PreventCloseOnPositionTargetClick
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PositionTarget*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PositionTarget
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PositionTarget
+  name: PositionTarget
+  nameWithType: SDKDropDown.PositionTarget
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.PositionTarget
+- uid: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.RestrictionTarget*
+  commentId: Overload:Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.RestrictionTarget
+  href: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.html#Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.RestrictionTarget
+  name: RestrictionTarget
+  nameWithType: SDKDropDown.RestrictionTarget
+  fullName: Siesa.SDK.Frontend.Components.Visualization.SDKDropDown.RestrictionTarget

@@ -1,0 +1,187 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode
+  commentId: T:Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode
+  id: SDKClearButtonDisplayMode
+  parent: Siesa.SDK.Frontend.Components
+  children:
+  - Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode.Auto
+  - Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode.Never
+  langs:
+  - csharp
+  - vb
+  name: SDKClearButtonDisplayMode
+  nameWithType: SDKClearButtonDisplayMode
+  fullName: Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode
+  type: Enum
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/SDKEnums.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SDKClearButtonDisplayMode
+    path: ../Siesa.SDK.Frontend/Components/SDKEnums.cs
+    startLine: 138
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components
+  syntax:
+    content: public enum SDKClearButtonDisplayMode
+    content.vb: Public Enum SDKClearButtonDisplayMode
+  extensionMethods:
+  - Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode.Siesa.SDK.Frontend.Components.SDKEnums.Get
+- uid: Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode.Auto
+  commentId: F:Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode.Auto
+  id: Auto
+  parent: Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode
+  langs:
+  - csharp
+  - vb
+  name: Auto
+  nameWithType: SDKClearButtonDisplayMode.Auto
+  fullName: Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode.Auto
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/SDKEnums.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Auto
+    path: ../Siesa.SDK.Frontend/Components/SDKEnums.cs
+    startLine: 140
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components
+  syntax:
+    content: Auto = 0
+    return:
+      type: Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode
+- uid: Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode.Never
+  commentId: F:Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode.Never
+  id: Never
+  parent: Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode
+  langs:
+  - csharp
+  - vb
+  name: Never
+  nameWithType: SDKClearButtonDisplayMode.Never
+  fullName: Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode.Never
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/SDKEnums.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Never
+    path: ../Siesa.SDK.Frontend/Components/SDKEnums.cs
+    startLine: 141
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components
+  syntax:
+    content: Never = 1
+    return:
+      type: Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode
+references:
+- uid: Siesa.SDK.Frontend.Components
+  commentId: N:Siesa.SDK.Frontend.Components
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Components
+  nameWithType: Siesa.SDK.Frontend.Components
+  fullName: Siesa.SDK.Frontend.Components
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+- uid: Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode.Siesa.SDK.Frontend.Components.SDKEnums.Get
+  commentId: M:Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode)
+  parent: Siesa.SDK.Frontend.Components.SDKEnums
+  definition: Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode)
+  href: Siesa.SDK.Frontend.Components.SDKEnums.html#Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode)
+  name: Get(SDKClearButtonDisplayMode)
+  nameWithType: SDKEnums.Get(SDKClearButtonDisplayMode)
+  fullName: Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode)
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode)
+    name: Get
+    href: Siesa.SDK.Frontend.Components.SDKEnums.html#Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode)
+  - name: (
+  - uid: Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode
+    name: SDKClearButtonDisplayMode
+    href: Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode.html
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode)
+    name: Get
+    href: Siesa.SDK.Frontend.Components.SDKEnums.html#Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode)
+  - name: (
+  - uid: Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode
+    name: SDKClearButtonDisplayMode
+    href: Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode.html
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode)
+  commentId: M:Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode)
+  href: Siesa.SDK.Frontend.Components.SDKEnums.html#Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode)
+  name: Get(SDKClearButtonDisplayMode)
+  nameWithType: SDKEnums.Get(SDKClearButtonDisplayMode)
+  fullName: Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode)
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode)
+    name: Get
+    href: Siesa.SDK.Frontend.Components.SDKEnums.html#Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode)
+  - name: (
+  - uid: Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode
+    name: SDKClearButtonDisplayMode
+    href: Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode.html
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode)
+    name: Get
+    href: Siesa.SDK.Frontend.Components.SDKEnums.html#Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode)
+  - name: (
+  - uid: Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode
+    name: SDKClearButtonDisplayMode
+    href: Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode.html
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.SDKEnums
+  commentId: T:Siesa.SDK.Frontend.Components.SDKEnums
+  parent: Siesa.SDK.Frontend.Components
+  href: Siesa.SDK.Frontend.Components.SDKEnums.html
+  name: SDKEnums
+  nameWithType: SDKEnums
+  fullName: Siesa.SDK.Frontend.Components.SDKEnums
+- uid: Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode
+  commentId: T:Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode
+  parent: Siesa.SDK.Frontend.Components
+  href: Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode.html
+  name: SDKClearButtonDisplayMode
+  nameWithType: SDKClearButtonDisplayMode
+  fullName: Siesa.SDK.Frontend.Components.SDKClearButtonDisplayMode

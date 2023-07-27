@@ -1,0 +1,187 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Components.SDKChartRelativePosition
+  commentId: T:Siesa.SDK.Frontend.Components.SDKChartRelativePosition
+  id: SDKChartRelativePosition
+  parent: Siesa.SDK.Frontend.Components
+  children:
+  - Siesa.SDK.Frontend.Components.SDKChartRelativePosition.Inside
+  - Siesa.SDK.Frontend.Components.SDKChartRelativePosition.Outside
+  langs:
+  - csharp
+  - vb
+  name: SDKChartRelativePosition
+  nameWithType: SDKChartRelativePosition
+  fullName: Siesa.SDK.Frontend.Components.SDKChartRelativePosition
+  type: Enum
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/SDKEnums.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: SDKChartRelativePosition
+    path: ../Siesa.SDK.Frontend/Components/SDKEnums.cs
+    startLine: 196
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components
+  syntax:
+    content: public enum SDKChartRelativePosition
+    content.vb: Public Enum SDKChartRelativePosition
+  extensionMethods:
+  - Siesa.SDK.Frontend.Components.SDKChartRelativePosition.Siesa.SDK.Frontend.Components.SDKEnums.Get
+- uid: Siesa.SDK.Frontend.Components.SDKChartRelativePosition.Inside
+  commentId: F:Siesa.SDK.Frontend.Components.SDKChartRelativePosition.Inside
+  id: Inside
+  parent: Siesa.SDK.Frontend.Components.SDKChartRelativePosition
+  langs:
+  - csharp
+  - vb
+  name: Inside
+  nameWithType: SDKChartRelativePosition.Inside
+  fullName: Siesa.SDK.Frontend.Components.SDKChartRelativePosition.Inside
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/SDKEnums.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Inside
+    path: ../Siesa.SDK.Frontend/Components/SDKEnums.cs
+    startLine: 197
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components
+  syntax:
+    content: Inside = 0
+    return:
+      type: Siesa.SDK.Frontend.Components.SDKChartRelativePosition
+- uid: Siesa.SDK.Frontend.Components.SDKChartRelativePosition.Outside
+  commentId: F:Siesa.SDK.Frontend.Components.SDKChartRelativePosition.Outside
+  id: Outside
+  parent: Siesa.SDK.Frontend.Components.SDKChartRelativePosition
+  langs:
+  - csharp
+  - vb
+  name: Outside
+  nameWithType: SDKChartRelativePosition.Outside
+  fullName: Siesa.SDK.Frontend.Components.SDKChartRelativePosition.Outside
+  type: Field
+  source:
+    remote:
+      path: Siesa.SDK.Frontend/Components/SDKEnums.cs
+      branch: docFX
+      repo: https://gitlab.siesadev.com/conversion/sdk/sdk.git
+    id: Outside
+    path: ../Siesa.SDK.Frontend/Components/SDKEnums.cs
+    startLine: 198
+  assemblies:
+  - Siesa.SDK.Frontend
+  namespace: Siesa.SDK.Frontend.Components
+  syntax:
+    content: Outside = 1
+    return:
+      type: Siesa.SDK.Frontend.Components.SDKChartRelativePosition
+references:
+- uid: Siesa.SDK.Frontend.Components
+  commentId: N:Siesa.SDK.Frontend.Components
+  href: Siesa.html
+  name: Siesa.SDK.Frontend.Components
+  nameWithType: Siesa.SDK.Frontend.Components
+  fullName: Siesa.SDK.Frontend.Components
+  spec.csharp:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+  spec.vb:
+  - uid: Siesa
+    name: Siesa
+    href: Siesa.html
+  - name: .
+  - uid: Siesa.SDK
+    name: SDK
+    href: Siesa.SDK.html
+  - name: .
+  - uid: Siesa.SDK.Frontend
+    name: Frontend
+    href: Siesa.SDK.Frontend.html
+  - name: .
+  - uid: Siesa.SDK.Frontend.Components
+    name: Components
+    href: Siesa.SDK.Frontend.Components.html
+- uid: Siesa.SDK.Frontend.Components.SDKChartRelativePosition.Siesa.SDK.Frontend.Components.SDKEnums.Get
+  commentId: M:Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKChartRelativePosition)
+  parent: Siesa.SDK.Frontend.Components.SDKEnums
+  definition: Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKChartRelativePosition)
+  href: Siesa.SDK.Frontend.Components.SDKEnums.html#Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKChartRelativePosition)
+  name: Get(SDKChartRelativePosition)
+  nameWithType: SDKEnums.Get(SDKChartRelativePosition)
+  fullName: Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKChartRelativePosition)
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKChartRelativePosition)
+    name: Get
+    href: Siesa.SDK.Frontend.Components.SDKEnums.html#Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKChartRelativePosition)
+  - name: (
+  - uid: Siesa.SDK.Frontend.Components.SDKChartRelativePosition
+    name: SDKChartRelativePosition
+    href: Siesa.SDK.Frontend.Components.SDKChartRelativePosition.html
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKChartRelativePosition)
+    name: Get
+    href: Siesa.SDK.Frontend.Components.SDKEnums.html#Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKChartRelativePosition)
+  - name: (
+  - uid: Siesa.SDK.Frontend.Components.SDKChartRelativePosition
+    name: SDKChartRelativePosition
+    href: Siesa.SDK.Frontend.Components.SDKChartRelativePosition.html
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKChartRelativePosition)
+  commentId: M:Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKChartRelativePosition)
+  href: Siesa.SDK.Frontend.Components.SDKEnums.html#Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKChartRelativePosition)
+  name: Get(SDKChartRelativePosition)
+  nameWithType: SDKEnums.Get(SDKChartRelativePosition)
+  fullName: Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKChartRelativePosition)
+  spec.csharp:
+  - uid: Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKChartRelativePosition)
+    name: Get
+    href: Siesa.SDK.Frontend.Components.SDKEnums.html#Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKChartRelativePosition)
+  - name: (
+  - uid: Siesa.SDK.Frontend.Components.SDKChartRelativePosition
+    name: SDKChartRelativePosition
+    href: Siesa.SDK.Frontend.Components.SDKChartRelativePosition.html
+  - name: )
+  spec.vb:
+  - uid: Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKChartRelativePosition)
+    name: Get
+    href: Siesa.SDK.Frontend.Components.SDKEnums.html#Siesa.SDK.Frontend.Components.SDKEnums.Get(Siesa.SDK.Frontend.Components.SDKChartRelativePosition)
+  - name: (
+  - uid: Siesa.SDK.Frontend.Components.SDKChartRelativePosition
+    name: SDKChartRelativePosition
+    href: Siesa.SDK.Frontend.Components.SDKChartRelativePosition.html
+  - name: )
+- uid: Siesa.SDK.Frontend.Components.SDKEnums
+  commentId: T:Siesa.SDK.Frontend.Components.SDKEnums
+  parent: Siesa.SDK.Frontend.Components
+  href: Siesa.SDK.Frontend.Components.SDKEnums.html
+  name: SDKEnums
+  nameWithType: SDKEnums
+  fullName: Siesa.SDK.Frontend.Components.SDKEnums
+- uid: Siesa.SDK.Frontend.Components.SDKChartRelativePosition
+  commentId: T:Siesa.SDK.Frontend.Components.SDKChartRelativePosition
+  parent: Siesa.SDK.Frontend.Components
+  href: Siesa.SDK.Frontend.Components.SDKChartRelativePosition.html
+  name: SDKChartRelativePosition
+  nameWithType: SDKChartRelativePosition
+  fullName: Siesa.SDK.Frontend.Components.SDKChartRelativePosition

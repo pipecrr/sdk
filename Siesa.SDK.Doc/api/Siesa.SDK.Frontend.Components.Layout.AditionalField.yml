@@ -1,0 +1,37 @@
+### YamlMime:ManagedReference
+items:
+- uid: Siesa.SDK.Frontend.Components.Layout.AditionalField
+  commentId: N:Siesa.SDK.Frontend.Components.Layout.AditionalField
+  id: Siesa.SDK.Frontend.Components.Layout.AditionalField
+  children:
+  - Siesa.SDK.Frontend.Components.Layout.AditionalField.AditionalFields
+  - Siesa.SDK.Frontend.Components.Layout.AditionalField.FieldsAditionalFields
+  - Siesa.SDK.Frontend.Components.Layout.AditionalField.GroupAditionalFields
+  langs:
+  - csharp
+  - vb
+  name: Siesa.SDK.Frontend.Components.Layout.AditionalField
+  nameWithType: Siesa.SDK.Frontend.Components.Layout.AditionalField
+  fullName: Siesa.SDK.Frontend.Components.Layout.AditionalField
+  type: Namespace
+  assemblies:
+  - Siesa.SDK.Frontend
+references:
+- uid: Siesa.SDK.Frontend.Components.Layout.AditionalField.AditionalFields
+  commentId: T:Siesa.SDK.Frontend.Components.Layout.AditionalField.AditionalFields
+  href: Siesa.SDK.Frontend.Components.Layout.AditionalField.AditionalFields.html
+  name: AditionalFields
+  nameWithType: AditionalFields
+  fullName: Siesa.SDK.Frontend.Components.Layout.AditionalField.AditionalFields
+- uid: Siesa.SDK.Frontend.Components.Layout.AditionalField.FieldsAditionalFields
+  commentId: T:Siesa.SDK.Frontend.Components.Layout.AditionalField.FieldsAditionalFields
+  href: Siesa.SDK.Frontend.Components.Layout.AditionalField.FieldsAditionalFields.html
+  name: FieldsAditionalFields
+  nameWithType: FieldsAditionalFields
+  fullName: Siesa.SDK.Frontend.Components.Layout.AditionalField.FieldsAditionalFields
+- uid: Siesa.SDK.Frontend.Components.Layout.AditionalField.GroupAditionalFields
+  commentId: T:Siesa.SDK.Frontend.Components.Layout.AditionalField.GroupAditionalFields
+  href: Siesa.SDK.Frontend.Components.Layout.AditionalField.GroupAditionalFields.html
+  name: GroupAditionalFields
+  nameWithType: GroupAditionalFields
+  fullName: Siesa.SDK.Frontend.Components.Layout.AditionalField.GroupAditionalFields
