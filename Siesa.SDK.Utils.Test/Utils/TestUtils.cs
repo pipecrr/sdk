@@ -12,6 +12,7 @@ using Microsoft.Extensions.Options;
 using Siesa.SDK.Backend.Services;
 using Siesa.SDK.Shared.Criptography;
 using System.Collections.Generic;
+using Siesa.SDK.Shared.DTOS;
 
 namespace Siesa.SDK.Utils.Test
 {
@@ -32,22 +33,28 @@ namespace Siesa.SDK.Utils.Test
 
             //Instanciar los servicios que se necesitan para el test
             var auth = new Mock<IAuthenticationService>();
-
-            var UserData = GetUser();
-
-            //auth.Setup(x => x.UserToken).Returns(UserData);
-
-            auth.Setup(x => x.User).Returns(UserData);
-
-
-            //auth.Setup(x => x.UserToken).Returns(GetToken());
-
-
-            //auth.Setup(x => x.UserToken).Returns("Token");
+            var sdkjwt = new Mock<ISDKJWT>();
             var tenant = new Mock<ITenantProvider>();
             var resourceManager = new Mock<IResourceManager>();
             var backRouter = new Mock<BackendRouterService>(ServiceConf);
             var email = new Mock<EmailService>(backRouter.Object, auth.Object);
+
+            //Configure Mock Services:
+            var UserData = GetUser();
+            auth.Setup(x => x.User).Returns(UserData);
+
+            var tenantOption = new SDKDbConnection()
+            {
+                Rowid = 1,
+                Name = "Tenant",
+                ConnectionString = "ConnectionString",
+                ProviderName = EnumDBType.InMemory,
+                LogoUrl = "LogoUrl",
+                StyleUrl = "StyleUrl",
+                IsTest = true
+            };
+
+            tenant.Setup(x => x.GetTenant()).Returns(tenantOption);
             
             Mock<IConfigurationSection> mockSection = new Mock<IConfigurationSection>();
             mockSection.Setup(x=>x.Value).Returns("false");
@@ -74,6 +81,7 @@ namespace Siesa.SDK.Utils.Test
             
             var services = new ServiceCollection();
             //Agregar las instancias simuladas a ServicesCollection
+            services.AddScoped<ISDKJWT>(sp => sdkjwt.Object);
             services.AddScoped<ITenantProvider>(sp => tenant.Object);
             services.AddScoped<IAuthenticationService>(sp => auth.Object);
             services.AddScoped<IBackendRouterService>(sp => backRouter.Object);
