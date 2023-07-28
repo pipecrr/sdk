@@ -1,5 +1,5 @@
 @page "/login"
-@page "/login/recoverypassword/{ChangePassword}/{RowIdDBConnection}/{UserToken}"
+@page "/login/recoverypassword/{RowIdDBConnection}/{UserToken}"
 
 @using System.ComponentModel.DataAnnotations
 @using SDK.Components.Visualization
@@ -66,19 +66,21 @@
                         <img src="_content/Siesa.SDK.Frontend/assets/img/siesaLogo.png" height="35px" alt="logo_siesa"> 
                     </div>
                     <div class="col-12 p-0 d-flex justify-content-center align-items-center">
-                        <select class="select_connect" id="SelectConnect" @onchange="OnChangeConnection">
-                            <option value=""><ResourceViewer ResourceTag="BLUser.Login.Message.SelectDbConnection" RowidCulture=@RowidCulture /></option>
-                            @if(ConnectionList != null && ConnectionList.Count > 0)
-                            {
-                                @foreach(var db in ConnectionList)
+                        @if(string.IsNullOrEmpty(UserToken))
+                        {
+                            <select class="select_connect" id="SelectConnect" @onchange="OnChangeConnection">
+                                <option value=""><ResourceViewer ResourceTag="BLUser.Login.Message.SelectDbConnection" RowidCulture=@RowidCulture /></option>
+                                @if(ConnectionList != null && ConnectionList.Count > 0)
                                 {
-                                    <option value="@db.Rowid" selected="@(db.Rowid == SelectedConnection.Rowid)" >@db.Name</option>
+                                    @foreach(var db in ConnectionList)
+                                    {
+                                        <option value="@db.Rowid" selected="@(db.Rowid == SelectedConnection.Rowid)" >@db.Name</option>
+                                    }
                                 }
-                            }
-                        </select>
-                    
+                            </select>
+                            <i class="ml-2 fa-solid fa-globe"></i>
+                        }
 
-                        <i class="ml-2 fa-solid fa-globe"></i>
                         <div id="lang">
                             <div class="position-relative">
                                 <button class="btn ml-2 d-flex btn_region" style="padding:0"
@@ -128,7 +130,7 @@
                             {
                                 <ForgotPassword _login="@this" RowidCulture="@RowidCulture"/>
 
-                            }else if (!string.IsNullOrEmpty(ChangePassword) && bool.Parse(ChangePassword))
+                            }else if (!string.IsNullOrEmpty(UserToken))
                             {
                                 <div class="border_left_md col-12 col-sm-12 col-md-6 col-lg-12">
                                     <div
@@ -292,7 +294,6 @@
     [Parameter] public bool? RecoveryPassword { get; set; }
     [Parameter] public string? UserToken { get; set; }
     [Parameter] public string? RowIdDBConnection { get; set; }
-    [Parameter] public string ChangePassword { get; set; } = "false";
 
     private PasswordChangeModel _Model = new PasswordChangeModel();
 
@@ -365,7 +366,7 @@
         init_loading = true;
         await InitLogin();
         
-        if ((!string.IsNullOrEmpty(ChangePassword) && bool.Parse(ChangePassword)) && !string.IsNullOrEmpty(UserToken))
+        if (!string.IsNullOrEmpty(UserToken))
         {
             ValidUser = await AuthenticationService.ValidateUserToken(UserToken);
         }
@@ -463,7 +464,7 @@
             {
                _ = SDKNotificationService.ShowSuccess("Custom.SDK.ForgotPassword.ChangePassword", culture: RowidCulture);
 
-                ChangePassword = "false";
+                NavigationManager.NavigateTo("/login", forceLoad: true);
             }else
             {
                 _ = SDKNotificationService.ShowError("Custom.SDK.ForgotPassword.ChangePasswordError", culture: RowidCulture);

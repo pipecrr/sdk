@@ -537,27 +537,20 @@ namespace Siesa.SDK.Frontend.Services
         }
 
 
-        public async Task<bool> ForgotPasswordAsync(string email)
+        public async void ForgotPasswordAsync(string email)
         {
             HttpContext httpContext = _contextAccesor.HttpContext;
             string UrlSystem = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}";
 
-            var request = await GetBLUser();
+            var request = await GetBLUser().ConfigureAwait(true);
 
-            var result = await request.Call("SendEmailRecoveryPassword", email, SelectedConnection.Rowid, UrlSystem);
-
-            if (result.Success)
-            {
-                return true;
-            }
-
-            return false;
+            await request.Call("SendEmailRecoveryPassword", email, SelectedConnection.Rowid, UrlSystem);
         }
 
         public async Task<bool> ValidateUserToken(string userToken)
         {
 
-            var request = await GetBLUser();
+            var request = await GetBLUser().ConfigureAwait(true);
 
             var result = await request.Call("ValidateUserRecoveryPass", userToken, SelectedConnection.Rowid);
 
