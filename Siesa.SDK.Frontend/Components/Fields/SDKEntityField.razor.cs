@@ -144,7 +144,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
                             SetVal(BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj));
                         }
                         BaseObj = baseObjNew;
-                        if(BaseObj!=null){
+                        if(BaseObj !=null && BaseObj.GetType().GetProperty("Rowid") != null && BaseObj.Rowid != 0){
                             Value = string.IsNullOrEmpty(BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj)?.ToString()) ? "" : BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj)?.ToString();
                         }
                         RelBusinessObj.GetType().GetProperty("BaseObj").SetValue(RelBusinessObj, baseObjNewRelated);
