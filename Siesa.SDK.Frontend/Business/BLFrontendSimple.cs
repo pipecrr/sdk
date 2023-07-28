@@ -445,35 +445,20 @@ namespace Siesa.SDK.Business
 
             var indexAttributes = blankBaseObj.GetType().GetCustomAttributes().Where(x => x?.GetType() == typeof(IndexAttribute) && ((IndexAttribute)x).IsUnique).ToList();
 
-            if(indexAttributes.Count > 0){
+            if (indexAttributes.Count > 0)
+            {
                 List<string> nameProperties = new();
                 foreach (var attr in indexAttributes)
                 {
-                    var propertyNames = ((IndexAttribute)attr).PropertyNames.Where(x => nameProperties.Contains(x) == false).ToList();
+                    var propertyNames = ((IndexAttribute)attr).PropertyNames.Where(x => !(nameProperties.Contains(x))).ToList();
                     nameProperties.AddRange(propertyNames);
                 }
-                foreach (string propertyName in nameProperties){
-                    var property = BaseObj.GetType().GetProperty(propertyName);
-                    if(property != null){
-                        SetValueInDuplicate(property, blankBaseObj);
-                    }
-
-                    if (propertyName.StartsWith("Rowid",StringComparison.Ordinal) && propertyName != "Rowid"){
-                        string relatedpropertyName = propertyName.Replace("Rowid", "", StringComparison.Ordinal);
-                        var relatedproperty = BaseObj.GetType().GetProperty(relatedpropertyName);
-                        if(relatedproperty != null){
-                            SetValueInDuplicate(relatedproperty, blankBaseObj);
-                        }
-                    }
-                }
+                ProcessProperties(nameProperties, blankBaseObj);
             }
-            
+
             if (Utilities.IsAssignableToGenericType(BaseObj.GetType(), typeof(BaseAudit<>)))
             {
-                foreach (var field in typeof(BaseAudit<>).GetProperties())
-                {
-                    SetValueInDuplicate(field, blankBaseObj);
-                }
+                ProcessAuditProperties(typeof(BaseAudit<>), blankBaseObj);
             }
         }
         
@@ -488,6 +473,37 @@ namespace Siesa.SDK.Business
                 BaseObj.GetType().GetProperty(field.Name)?.SetValue(BaseObj, blankBaseObj.GetType().GetProperty(field.Name)?.GetValue(blankBaseObj));
             }
         }
+
+        private void ProcessProperties(List<string> nameProperties, T blankBaseObj)
+        {
+            foreach (string propertyName in nameProperties)
+            {
+                var property = BaseObj.GetType().GetProperty(propertyName);
+                if (property != null)
+                {
+                    SetValueInDuplicate(property, blankBaseObj);
+                }
+
+                if (propertyName.StartsWith("Rowid", StringComparison.Ordinal) && propertyName != "Rowid")
+                {
+                    string relatedpropertyName = propertyName.Replace("Rowid", "", StringComparison.Ordinal);
+                    var relatedproperty = BaseObj.GetType().GetProperty(relatedpropertyName);
+                    if (relatedproperty != null)
+                    {
+                        SetValueInDuplicate(relatedproperty, blankBaseObj);
+                    }
+                }
+            }
+        }
+
+        private void ProcessAuditProperties(Type baseAuditType, T blankBaseObj)
+        {
+            foreach (var field in baseAuditType.GetProperties())
+            {
+                SetValueInDuplicate(field, blankBaseObj);
+            }
+        }
+
 
         /// <summary>
         /// Save the current object
