@@ -378,7 +378,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         {
             foreach (var item in Panels.Select((value, i) => (value, i)))
             {
-                var panelIndex = item.i;
                 var panel = item.value;
                 if (panel.Fields == null)
                 {
@@ -390,10 +389,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         private void EvaluateFields(List<FieldOptions> panelFields)
         {
-            foreach (var fieldItem in panelFields.Select((value, i) => (value, i)))
+            foreach (var field in panelFields)
             {
-                var field = fieldItem.value;
-                
                 if(field.Fields != null && field.Fields.Count > 0)
                 {
                     EvaluateFields(field.Fields);

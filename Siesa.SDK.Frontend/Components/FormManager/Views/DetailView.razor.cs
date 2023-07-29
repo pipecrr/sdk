@@ -124,9 +124,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private void EvaluateDynamicAttributes()
         {
-            foreach (var item in Panels.Select((value, i) => (value, i)))
+            foreach (var panel in Panels)
             {
-                var panel = item.value;
                 if (panel.Fields == null)
                 {
                     continue;
@@ -136,92 +135,104 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         }
         
         private void EvaluateFields(List<FieldOptions> panelFields)
+        {
+            foreach (var field in panelFields)
+            {
+                EvaluateFieldAttributes(field);
+
+                if (field.Fields != null && field.Fields.Count > 0)
                 {
-                    foreach (var fieldItem in panelFields.Select((value, i) => (value, i)))
+                    EvaluateFields(field.Fields);
+                }
+            }
+        }
+
+        private void EvaluateFieldAttributes(FieldOptions field)
+        {
+            if (field.CustomAttributes == null)
+            {
+                return;
+            }
+
+            var fieldCustomAttr = field.CustomAttributes?
+                .Where(x => x.Key.StartsWith("sdk-", StringComparison.Ordinal) && x.Key != "sdk-change")
+                .ToList();
+
+            List<string> allowAttr = new List<string>(){
+                "sdk-show",
+                "sdk-hide",
+                "sdk-required",
+                "sdk-readonly",
+                "sdk-disabled"
+            }; //TODO: Enum
+
+            _ = Task.Run(async () =>
+            {
+                bool shouldUpdate = false;
+
+                if (fieldCustomAttr == null)
+                {
+                    return;
+                }
+
+                foreach (var attr in fieldCustomAttr)
+                {
+                    if (!allowAttr.Contains(attr.Key))
                     {
-                        var field = fieldItem.value;
-                        
-                        if(field.Fields != null && field.Fields.Count > 0)
+                        continue;
+                    }
+
+                    try
+                    {
+                        var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
+
+                        switch (attr.Key)
                         {
-                            EvaluateFields(field.Fields);
+                            case "sdk-show":
+                                if (field.Hidden != !result)
+                                {
+                                    field.Hidden = !result;
+                                    shouldUpdate = true;
+                                }
+                                break;
+                            case "sdk-hide":
+                                if (field.Hidden != result)
+                                {
+                                    field.Hidden = result;
+                                    shouldUpdate = true;
+                                }
+                                break;
+                            case "sdk-required":
+                                if (field.Required != result)
+                                {
+                                    field.Required = result;
+                                    shouldUpdate = true;
+                                }
+                                break;
+                            case "sdk-readonly":
+                            case "sdk-disabled":
+                                if (field.Disabled != result)
+                                {
+                                    field.Disabled = result;
+                                    shouldUpdate = true;
+                                }
+                                break;
+                            default:
+                                break;
                         }
-        
-                        if(field.CustomAttributes == null){
-                            continue;
-                        }
-        
-                        var fieldCustomAttr = field.CustomAttributes?.Where(x => x.Key.StartsWith("sdk-",StringComparison.Ordinal) && x.Key != "sdk-change");
-                        
-                        List<string> allowAttr = new List<string>(){
-                            "sdk-show",
-                            "sdk-hide",
-                            "sdk-required",
-                            "sdk-readonly",
-                            "sdk-disabled"
-                        }; //TODO: Enum
-        
-                        _ = Task.Run(async () =>
-                        {
-                            bool shouldUpdate = false;
-                            if(fieldCustomAttr == null){
-                                return;
-                            }
-                            foreach (var attr in fieldCustomAttr)
-                            {
-                                if(!allowAttr.Contains(attr.Key))
-                                {
-                                    continue;
-                                }
-                                try
-                                {
-                                    var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
-                                    switch (attr.Key)
-                                    {
-                                        case "sdk-show":
-                                            if(field.Hidden != !result)
-                                            {
-                                                field.Hidden = !result;
-                                                shouldUpdate = true;
-                                            }
-                                            break;
-                                        case "sdk-hide":
-                                            if(field.Hidden != result)
-                                            {
-                                                field.Hidden = result;
-                                                shouldUpdate = true;
-                                            }
-                                            break;
-                                        case "sdk-required":
-                                            if(field.Required != result)
-                                            {
-                                                field.Required = result;
-                                                shouldUpdate = true;
-                                            }
-                                            break;
-                                        case "sdk-readonly":
-                                        case "sdk-disabled":
-                                            if(field.Disabled != result)
-                                            {
-                                                field.Disabled = result;
-                                                shouldUpdate = true;
-                                            }
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                }
-                                catch (System.Exception ex)
-                                {
-                                    Console.WriteLine($"Error: {ex.Message}");
-                                }
-                            }
-                            if(shouldUpdate)
-                            {
-                                _ = InvokeAsync(() => StateHasChanged());
-                            }
-                        });
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Console.WriteLine($"Error: {ex.Message}");
                     }
                 }
+
+                if (shouldUpdate)
+                {
+                    _ = InvokeAsync(() => StateHasChanged());
+                }
+            });
+        }
 
         protected async Task InitView(string bName = null)
         {
