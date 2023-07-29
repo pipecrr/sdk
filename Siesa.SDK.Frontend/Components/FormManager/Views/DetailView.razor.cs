@@ -124,13 +124,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private void EvaluateDynamicAttributes()
         {
-            foreach (var panel in Panels)
+            foreach (var panelFields in Panels.Select(panel => panel.Fields))
             {
-                if (panel.Fields == null)
-                {
-                    continue;
-                }
-                EvaluateFields(panel.Fields);
+                EvaluateFields(panelFields);
             }
         }
         
@@ -154,7 +150,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 return;
             }
 
-            var fieldCustomAttr = field.CustomAttributes?
+            var fieldCustomAttr = field.CustomAttributes
                 .Where(x => x.Key.StartsWith("sdk-", StringComparison.Ordinal) && x.Key != "sdk-change")
                 .ToList();
 
