@@ -24,6 +24,12 @@ namespace Siesa.SDK.Entities
 		[NotMapped]
         [JsonIgnore]
         public virtual bool? Show {get; set;}
+		[NotMapped]
+		[JsonIgnore]
+		public string ResourceMessage {get; set;}
+		[NotMapped]
+		[JsonIgnore]
+		public List<string> ActionsResourcesMessages {get; set;}
 
 	}
 }

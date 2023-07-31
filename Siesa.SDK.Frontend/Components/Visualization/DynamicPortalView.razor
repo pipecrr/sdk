@@ -12,9 +12,11 @@
 @if (_userLogged){
     <SDKHeaderPortal />
     
-    <NavMenuPortal Portals="@Portals" OnPortalChange="OnPortalChange"/>
-    <SDKDashboardPortal Portal="@SelectedPortal" />
-}
+    <NavMenuPortal SelectedPortal="@SelectedPortal" Portals="@Portals" OnPortalChange="OnPortalChange"/>
+    <CascadingValue Value="@SelectedPortal">
+        <SDKDashboardPortal />
+    </CascadingValue>
+        }
 else
 {
     <LoginView LogoUrl="@LogoUrl" RowidConexion="@RowidConexion"/>

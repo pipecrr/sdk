@@ -7,6 +7,7 @@
 @using Siesa.SDK.Shared.Utilities
 @using Microsoft.AspNetCore.Http
 @using System.IO
+@using System.Threading
 @using Siesa.SDK.Shared.DTOS
 
 @inherits SDKComponent
@@ -86,6 +87,8 @@
 
     private dynamic BusinessObj;
     private bool _IsLoading;
+    
+    private CancellationTokenSource _cancellationToken;
 
     protected override async Task OnInitializedAsync()
     {
@@ -94,6 +97,12 @@
     
     protected override async Task OnParametersSetAsync()
     {
+        if (_cancellationToken != null)
+        {
+            _cancellationToken.Cancel();
+        }
+        _cancellationToken = new CancellationTokenSource();
+        await Task.Delay(500, _cancellationToken.Token);
         _IsLoading = true;
         if(IsMultiple && _FilesSelected.Count == 0){
             var response = await BackendRouterService.GetSDKBusinessModel("BLAttachmentDetail", AuthenticationService).Call("GetAttachmentsDetail", RowidAttachmentRelationship, SaveBytes);
@@ -122,7 +131,7 @@
         }
         _IsLoading = false;
         StateHasChanged();
-        base.OnParametersSet();
+        base.OnParametersSetAsync();
     }
 
     private async Task GetPreviewFile()

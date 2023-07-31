@@ -13,9 +13,9 @@
         {
             foreach (var portal in Portals)
             {
-                <a class="nav_btn_standar my-1" @onclick="() => ChangeMenu(portal)">
+                <a class="@GetPortalCss(portal)" @onclick="() => ChangeMenu(portal)">
                     <div class="nav_btn_standar_icon">
-                        <SDKIcon Name="fa-plus"/>
+                        <SDKIcon Name="@portal.IconClass"/>
                     </div>
                 </a>
             }
@@ -39,8 +39,19 @@
     public List<SDKPortalDTO> Portals { get; set; } = new List<SDKPortalDTO>();
     [Parameter]
     public Action<SDKPortalDTO> OnPortalChange { get; set; }
-    
+    [Parameter]
+    public SDKPortalDTO SelectedPortal { get; set; }
     private string TitleLogout { get; set; }
+    
+    private string GetPortalCss(SDKPortalDTO portal)
+    {
+        var css = "nav_btn_standar my-1";
+        if (SelectedPortal != null && portal.IdPortal == SelectedPortal.IdPortal)
+        {
+            css += " nav_btn_standar_selected";
+        }
+        return css;
+    }
 
     protected async override Task OnInitializedAsync()
     {

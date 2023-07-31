@@ -7,7 +7,9 @@ using Siesa.SDK.Frontend.Services;
 using Siesa.SDK.Entities;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.JSInterop;
 using Newtonsoft.Json;
+using System.Globalization;
 
 namespace Siesa.SDK.Frontend.Components.Visualization;
 
@@ -17,6 +19,7 @@ public partial class LoginView
     [Inject] public IAuthenticationService AuthenticationService { get; set; }
     [Inject] public IBackendRouterService BackendRouterService { get; set; }
     [Inject] public SDKNotificationService SDKNotificationService { get; set; }
+    [Inject] public IJSRuntime JSRuntime { get; set; }
     [Parameter] public string LogoUrl { get; set; }
     [Parameter] public string ImageUrl { get; set; }
     [Parameter] public int RowidConexion { get; set; }
@@ -59,8 +62,9 @@ public partial class LoginView
     {
         var BLSDKPortalUser = BackendRouterService.GetSDKBusinessModel("BLSDKPortalUser", AuthenticationService);
         var result = await BLSDKPortalUser.Call("GetDBConnection", RowidConexion);
-        await getCultures();
+        await getCultures().ConfigureAwait(true);
         getSelectedCulture();
+        await GetUserlang().ConfigureAwait(true);
         init_loading = false;
         if(result.Success && result.Data != null){
             SelectedConnection = result.Data;
@@ -70,7 +74,56 @@ public partial class LoginView
             StateHasChanged();
         }
     }
+    
+    /// <summary>
+    /// Get user language from browser or database
+    /// </summary>
+    /// <exception cref="Exception"></exception>
+    private async Task GetUserlang()
+    {
+        short userlang;
+        try
+        {
+            userlang = AuthenticationService.GetRoiwdCulture();
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.ToString());
+        }
 
+        if (cultures == null)
+        {
+            cultures = await getCulturesAsync().ConfigureAwait(true);
+
+        }
+        try
+        {
+            if (userlang == 0)
+            {
+                var browserLang = await JSRuntime.InvokeAsync<string>("getBrowserLang").ConfigureAwait(true);
+                string[] language = browserLang.Split('-');
+                selectedCulture = cultures.FirstOrDefault(x => string.Equals(x.LanguageCode.ToUpperInvariant(),language[0].ToUpperInvariant(),StringComparison.Ordinal) && string.Equals(x.CountryCode.ToUpperInvariant(), language[1].ToUpperInvariant(),StringComparison.Ordinal));
+            }
+            else
+            {
+                selectedCulture = cultures.FirstOrDefault(x => x.Rowid == userlang);
+            }
+        }catch(Exception ex)
+        {
+        }
+
+        if (selectedCulture == null){
+            cultureDefault();
+            try {
+
+                await AuthenticationService.RemoveCustomRowidCulture().ConfigureAwait(true);
+            }catch(Exception ex){
+                
+            }
+        }else{
+            await OnChangeCulture(selectedCulture.Rowid).ConfigureAwait(true);
+        }
+    }
 
     private async void HandleValidSubmit(){
         string message = "BLUser.Login.Message.SuccesLogin";

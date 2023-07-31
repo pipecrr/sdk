@@ -14,7 +14,10 @@
   		<DisableGclm>true</DisableGclm>
 		<VersionSuffix>dev</VersionSuffix>
 	</PropertyGroup>
-
+	<PropertyGroup>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<OutputPath></OutputPath>
 	</PropertyGroup>

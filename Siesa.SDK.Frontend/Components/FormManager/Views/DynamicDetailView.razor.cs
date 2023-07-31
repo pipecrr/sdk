@@ -12,12 +12,21 @@ using Siesa.SDK.Frontend.Services;
 using Siesa.SDK.Shared.Services;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
-{
+{   
+    /// <summary>
+    /// Represents a dynamic detail view for displaying and editing business object details.
+    /// </summary>
     public partial class DynamicDetailView : DynamicBaseViewModel
     {
+        /// <summary>
+        /// Gets or sets a value indicating whether delete functionality is allowed.
+        /// </summary>
         [Parameter] 
         public bool AllowDelete { get; set; } = true;
         
+        /// <summary>
+        /// Gets or sets the injected backend router service for obtaining view definitions.
+        /// </summary>
         [Inject]
         public IBackendRouterService BackendRouterService { get; set; }
         private FormViewModel FormViewModel { get; set; } = new FormViewModel();
@@ -41,7 +50,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     metadata = BackendRouterService.GetViewdef(bName, "default");
                 }
 
-                FormViewModel = JsonConvert.DeserializeObject<FormViewModel>(metadata);
+                try
+                {
+                    FormViewModel = JsonConvert.DeserializeObject<FormViewModel>(metadata);
+                }
+                catch (JsonSerializationException)
+                {
+                    //Soporte a viewdefs anteriores
+                    var panels = JsonConvert.DeserializeObject<List<Panel>>(metadata);
+                    FormViewModel.Panels = panels;
+                }
 
                 var defaultFields = FormViewModel.Panels.SelectMany(panel => panel.Fields)
                                     .Where(f=> f.CustomComponent == null && f.Name.StartsWith("BaseObj."))
@@ -123,9 +141,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             bool changeBusinessName = parameters.DidParameterChange(nameof(BusinessName), BusinessName);
 
             await base.SetParametersAsync(parameters);
-            if(BusinessObjId !=null && (changeBusinessObjId || changeBusinessName)){
-                ErrorMsg = "";
-                ErrorList = new List<string>();
+            if(BusinessObjId !=null && (changeBusinessObjId || changeBusinessName)){                
                 await InitDetail(Convert.ToInt64(BusinessObjId));
                 StateHasChanged();
             }

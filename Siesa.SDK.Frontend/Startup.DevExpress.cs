@@ -135,6 +135,10 @@ namespace Siesa.SDK.Frontend
                 endpoints.MapControllers();
                 endpoints.MapControllerRoute(
                     name: "default",
+                    pattern: "api/login",
+                    defaults: new { controller = "Api", action = "GetSessionToken" });
+                endpoints.MapControllerRoute(
+                    name: "default",
                     pattern: "api/{blname}/{blaction}/",
                     defaults: new { controller = "Api", action = "Index" });
             });

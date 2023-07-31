@@ -106,4 +106,25 @@
     --color_scroll_track: #ffffff33;
     --color_scroll_handle: #013458;
     --color_scroll_border: #ffffff80;
+
+    /*Colores Adicionales*/
+
+    --color_blue_1: #91ceff;
+    --color_blue_2: #154ca9;
+    --color_magenta_1: #fdb9cb;
+    --color_magenta_2: #f95a87;
+    --color_yellow_1: #fde8b5;
+    --color_yellow_2: #f9cc5a;
+    --color_purple_1: #d3c4fb;
+    --color_purple_2: #9477e5;
+    --color_purple_3: #5537ce;
+    --color_green_1: #bef0d2;
+    --color_green_2: #59dd97;
+    --color_orange_1: #fed0c6;
+    --color_orange_2: #ff957d;
+    --color_grayscale_100: #e9e9e9;
+    --color_grayscale_200: #d9d9d9;
+    --color_grayscale_400: #9d9d9d;
+    --color_grayscale_600: #555555;
+    --color_grayscale_800: #262626;
 }

@@ -1,4 +1,6 @@
 @page "/login"
+@page "/login/recoverypassword/{RowIdDBConnection}/{UserToken}"
+
 @using System.ComponentModel.DataAnnotations
 @using SDK.Components.Visualization
 @using Siesa.SDK.Shared.Services
@@ -64,19 +66,21 @@
                         <img src="_content/Siesa.SDK.Frontend/assets/img/siesaLogo.png" height="35px" alt="logo_siesa"> 
                     </div>
                     <div class="col-12 p-0 d-flex justify-content-center align-items-center">
-                        <select class="select_connect" id="SelectConnect" @onchange="OnChangeConnection">
-                            <option value=""><ResourceViewer ResourceTag="BLUser.Login.Message.SelectDbConnection" RowidCulture=@RowidCulture /></option>
-                            @if(ConnectionList != null && ConnectionList.Count > 0)
-                            {
-                                @foreach(var db in ConnectionList)
+                        @if(string.IsNullOrEmpty(UserToken))
+                        {
+                            <select class="select_connect" id="SelectConnect" @onchange="OnChangeConnection">
+                                <option value=""><ResourceViewer ResourceTag="BLUser.Login.Message.SelectDbConnection" RowidCulture=@RowidCulture /></option>
+                                @if(ConnectionList != null && ConnectionList.Count > 0)
                                 {
-                                    <option value="@db.Rowid" selected="@(db.Rowid == SelectedConnection.Rowid)" >@db.Name</option>
+                                    @foreach(var db in ConnectionList)
+                                    {
+                                        <option value="@db.Rowid" selected="@(db.Rowid == SelectedConnection.Rowid)" >@db.Name</option>
+                                    }
                                 }
-                            }
-                        </select>
-                    
+                            </select>
+                            <i class="ml-2 fa-solid fa-globe"></i>
+                        }
 
-                        <i class="ml-2 fa-solid fa-globe"></i>
                         <div id="lang">
                             <div class="position-relative">
                                 <button class="btn ml-2 d-flex btn_region" style="padding:0"
@@ -122,9 +126,58 @@
                                 </div>
 
                             </div>
-                            @if(RecoveringPassword){
-                                <ForgotPassword _login="@this" />
-                            }else{
+                            @if(RecoveringPassword)
+                            {
+                                <ForgotPassword _login="@this" RowidCulture="@RowidCulture"/>
+
+                            }else if (!string.IsNullOrEmpty(UserToken))
+                            {
+                                <div class="border_left_md col-12 col-sm-12 col-md-6 col-lg-12">
+                                    <div
+                                        class="col-12 offset-sm-2 col-sm-8 offset-md-1 col-md-10 offset-lg-2 col-lg-8 px-md-3 px-lg-0">
+                                        <EditForm Model="@_Model" OnValidSubmit="ChangePasswordUser"  OnInvalidSubmit="ChangePasswordUserInvalid" >
+                                            <DataAnnotationsValidator />
+                                            @if (ValidUser)
+                                            {
+                                                <div class="form-group">
+                                                    <label class="col_form_label col_form_label-sm font-weight-bold" for="Password">
+                                                        <ResourceViewer ResourceTag="Custom.SDK.NewPassword"
+                                                        RowidCulture=@RowidCulture />
+                                                    </label>
+                                                    <SDKCharField  Password="true" @bind-Value="@_Model.Password"/>
+                                                    <ValidationMessage For="@(() => _Model.Password)" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col_form_label col_form_label-sm font-weight-bold" for="Password">
+                                                        <ResourceViewer ResourceTag="Custom.SDK.ConfirmNewPassword"
+                                                        RowidCulture=@RowidCulture />
+                                                    </label>
+                                                    <SDKCharField Password="true"  @bind-Value="@_Model.ConfirmPassword"/>
+                                                <ValidationMessage For="@(() => _Model.ConfirmPassword)" />
+                                                </div>
+                                                <button class="btn btn-primary btn_primary_def_1 btn-sm w-100 mt-2">
+                                                    @if (loadingChangePassword)
+                                                    {
+                                                        <span class="spinner-border spinner-border-sm mr-1"></span>
+                                                    }
+                                                    <ResourceViewer ResourceTag="BLUser.ChangePassword"
+                                                    RowidCulture=@RowidCulture />
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <p class="alert alert-danger mt-3 mb-0">
+                                                    <ResourceViewer ResourceTag="Custom.SDK.TokenInvalid"
+                                                    RowidCulture=@RowidCulture />
+                                                </p>
+                                            }
+                                        </EditForm>
+                                    </div>
+                                </div>
+
+                            }
+                            else
+                            {
                                 <div
                                     class="col-12 offset-sm-2 col-sm-8 offset-md-1 col-md-10 offset-lg-2 col-lg-8 px-md-3 px-lg-0">
                                     <EditForm id="@FormID" Model="@model" OnValidSubmit="HandleValidSubmit" OnInvalidSubmit="HandleInvalidSubmit">
@@ -237,11 +290,22 @@
 </SDKDropDown>
 
 @code {
+
+    [Parameter] public bool? RecoveryPassword { get; set; }
+    [Parameter] public string? UserToken { get; set; }
+    [Parameter] public string? RowIdDBConnection { get; set; }
+
+    private PasswordChangeModel _Model = new PasswordChangeModel();
+
+    private bool ValidUser { get; set; }
+
     string classCulture = "";
     public string FormID { get; set; } = Guid.NewGuid().ToString();
     private SDKLoginModelDTO model = new SDKLoginModelDTO();
     private bool init_loading = true;
     private bool loading;
+
+    private bool loadingChangePassword;
     private string error;
     bool IsOpen { get; set; } = false;
 
@@ -259,6 +323,8 @@
     List<SDKDbConnection> ConnectionList { get; set; } = new List<SDKDbConnection>();
 
     private bool RecoveringPassword { get; set; } = false;
+
+    
 
     private void ForgotPassword()
     {
@@ -294,6 +360,20 @@
         await InitLogin();        
     }
 
+    protected override async Task OnParametersSetAsync()
+    {
+        LogoUrl = AuthenticationService.GetConnectionLogo();
+        init_loading = true;
+        await InitLogin();
+        
+        if (!string.IsNullOrEmpty(UserToken))
+        {
+            ValidUser = await AuthenticationService.ValidateUserToken(UserToken);
+        }
+
+        await base.OnParametersSetAsync();
+    }
+
     private async Task InitLogin()
     {
         await getDbConnections();
@@ -305,6 +385,8 @@
         await ImportJs();
         StateHasChanged();
     }
+
+    
 
     private async Task OnChangeCulture(short rowidCulture)
     {
@@ -370,6 +452,42 @@
             StateHasChanged();
         }
     }
+
+    private async void ChangePasswordUser()
+    {
+        loadingChangePassword = true;
+        try
+        {
+            var result = await AuthenticationService.ChangePassword(UserToken,SelectedConnection.Rowid, _Model.Password, _Model.ConfirmPassword);
+
+            if (result)
+            {
+               _ = SDKNotificationService.ShowSuccess("Custom.SDK.ForgotPassword.ChangePassword", culture: RowidCulture);
+
+                NavigationManager.NavigateTo("/login", forceLoad: true);
+            }else
+            {
+                _ = SDKNotificationService.ShowError("Custom.SDK.ForgotPassword.ChangePasswordError", culture: RowidCulture);
+
+            }
+
+            loadingChangePassword = false;
+
+            StateHasChanged();
+            
+        }
+        catch (Exception ex)
+        {
+            
+        }
+    }
+
+    private void ChangePasswordUserInvalid()
+    {
+       _ = SDKNotificationService.ShowError("Custom.SDK.ForgotPassword.ChangePasswordInvalid", culture: RowidCulture);
+       loadingChangePassword = false;
+       StateHasChanged();
+    }
     
     private async Task getDbConnections()
     {
@@ -383,7 +501,14 @@
         {
 
             ConnectionList = result.Data as List<SDKDbConnection>;
-            if(AuthenticationService.GetSelectedConnection() == null || AuthenticationService.GetSelectedConnection().Rowid == 0){
+
+            if( !string.IsNullOrEmpty(RowIdDBConnection) && short.Parse(RowIdDBConnection) != 0 )
+            {
+                SelectedConnection = ConnectionList.FirstOrDefault(x => x.Rowid == short.Parse(RowIdDBConnection));
+
+                _ = AuthenticationService.SetSelectedConnection(SelectedConnection);
+            }
+            else if(AuthenticationService.GetSelectedConnection() == null || AuthenticationService.GetSelectedConnection().Rowid == 0){
 
                 SelectedConnection = ConnectionList.First();
                 _ = AuthenticationService.SetSelectedConnection(SelectedConnection);

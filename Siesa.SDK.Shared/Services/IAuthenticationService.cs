@@ -66,15 +66,16 @@ namespace Siesa.SDK.Shared.Services
         string GetConnectionLogo();
         string GetConnectionStyle();
         Task<bool> IsValidToken();
-        Task<bool> ForgotPasswordAsync(string email);
-        Task<bool> ValidateUserToken(int rowidUser);
-        Task<bool> ChangePassword(int rowidUser, string NewPassword, string ConfirmPassword);
+        void ForgotPasswordAsync(string email);
+        Task<bool> ValidateUserToken(string userToken);
+        Task<bool> ChangePassword(string userToken,short rowIdDBConnection, string NewPassword, string ConfirmPassword );
         Task RenewToken();
         string GetUserPhoto();
         Task SetUserPhoto(string data, bool saveLocalStorage = true);
         Task SetPreferencesUser(UserPreferencesDTO preferences);
         UserPreferencesDTO GetPreferencesUser();
         string GetThemeStyle();
+        Task<string> LoginSessionByToken(string userAccesstoken, short rowidDBConnection);
     }
 
     

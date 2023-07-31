@@ -156,13 +156,14 @@ namespace Siesa.SDK.Backend.Services
             // var user = new SDKJWT(_secretKey, _minutesExp).Validate(UserToken);
             // return user != null;
         }
-        public async Task<bool> ForgotPasswordAsync(string email){
+        public void ForgotPasswordAsync(string email){
              throw new NotImplementedException();
         }
-        public async Task<bool> ValidateUserToken(int rowidUser){
+        public async Task<bool> ValidateUserToken(string userToken){
             throw new NotImplementedException();
         }
-        public async Task<bool> ChangePassword(int rowidUser, string NewPassword="", string ConfirmPassword=""){
+        public async Task<bool> ChangePassword(string userToken,short rowIdDBConnection, string NewPassword="", string ConfirmPassword="")
+        {
              throw new NotImplementedException();
         }
 
@@ -199,6 +200,11 @@ namespace Siesa.SDK.Backend.Services
         }
 
         public string GetThemeStyle()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> LoginSessionByToken(string userAccesstoken, short rowidDBConnection)
         {
             throw new NotImplementedException();
         }

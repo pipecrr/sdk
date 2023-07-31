@@ -23,9 +23,9 @@
     justify-content: space-between;    
 }
 
-.nav_section_portals>a {
+/* .nav_section_portals>a {
     padding-top: 10px;
-}
+} */
 
 .nav_section_foot {
     padding: .5rem 0.375rem 0.5rem 0.375rem;

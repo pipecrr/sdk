@@ -116,3 +116,17 @@ deploy:
       - docker
     script:
       - dotnet nuget push "nuget/*.nupkg" --source gitlab
+      
+pages:
+    script:
+      - dotnet tool update -g docfx
+      - export PATH="$PATH:/root/.dotnet/tools"
+      - docfx Siesa.SDK.Doc/docfx.json
+      - mv Siesa.SDK.Doc/_site public
+    artifacts:
+      paths:
+        - public
+    tags:
+      - docker
+    only:
+      - develop

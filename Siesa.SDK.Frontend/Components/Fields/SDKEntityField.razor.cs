@@ -127,7 +127,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         }
 
         public override async Task SetParametersAsync(ParameterView parameters){
-            if (parameters.TryGetValue<dynamic>("BaseObj", out dynamic baseObjNew)){                
+            if (parameters.TryGetValue<dynamic>("BaseObj", out dynamic baseObjNew)){
                 if(BaseObj != null && baseObjNew != null){
                     BindProperty = BaseObj.GetType().GetProperty(FieldName);
                     dynamic baseObjNewRelated = baseObjNew.GetType().GetProperty(FieldName).GetValue(baseObjNew);
@@ -144,6 +144,9 @@ namespace Siesa.SDK.Frontend.Components.Fields
                             SetVal(BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj));
                         }
                         BaseObj = baseObjNew;
+                        if(BaseObj !=null && BaseObj.GetType().GetProperty("Rowid") != null && BaseObj.Rowid != 0){
+                            Value = string.IsNullOrEmpty(BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj)?.ToString()) ? "" : BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj)?.ToString();
+                        }
                         RelBusinessObj.GetType().GetProperty("BaseObj").SetValue(RelBusinessObj, baseObjNewRelated);
                         rowidLastValue = rowidNew;
                     }else{

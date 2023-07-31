@@ -36,5 +36,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
                 }
             }
         }
+
+        public void OnChange(){
+            try{
+                if(BindValue == null){
+                    this.SetValue(FieldOpt.EntityRowidField, null);
+                }
+            }catch(Exception ex){
+                Console.WriteLine(ex.Message);
+            }
+        }
     }
 }

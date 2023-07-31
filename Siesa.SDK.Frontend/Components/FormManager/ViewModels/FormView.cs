@@ -376,134 +376,100 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         private void EvaluateDynamicAttributes(FieldChangedEventArgs e)
         {
-            string code = "";
             foreach (var item in Panels.Select((value, i) => (value, i)))
             {
-                var panel_index = item.i;
                 var panel = item.value;
                 if (panel.Fields == null)
                 {
                     continue;
                 }
+                EvaluateFields(panel.Fields);
+            }
+        }
 
-                foreach (var fieldItem in panel.Fields.Select((value, i) => (value, i)))
+        private void EvaluateFields(List<FieldOptions> panelFields)
+        {
+            foreach (var field in panelFields)
+            {
+                if(field.Fields != null && field.Fields.Count > 0)
                 {
-                    var field_index = fieldItem.i;
-                    var field = fieldItem.value;
-                    if(field.CustomAttributes == null)
-                    {
-                        continue;
-                    }
+                    EvaluateFields(field.Fields);
+                }
 
-                    var fieldCustomAttr = field.CustomAttributes.Where(x => x.Key.StartsWith("sdk-") && x.Key != "sdk-change");
-                    if(UseRoslynToEval)
+                if(field.CustomAttributes == null){
+                    continue;
+                }
+
+                var fieldCustomAttr = field.CustomAttributes?.Where(x => x.Key.StartsWith("sdk-",StringComparison.Ordinal) && x.Key != "sdk-change");
+                
+                List<string> allowAttr = new List<string>(){
+                    "sdk-show",
+                    "sdk-hide",
+                    "sdk-required",
+                    "sdk-readonly",
+                    "sdk-disabled"
+                }; //TODO: Enum
+
+                _ = Task.Run(async () =>
+                {
+                    bool shouldUpdate = false;
+                    if(fieldCustomAttr == null){
+                        return;
+                    }
+                    foreach (var attr in fieldCustomAttr)
                     {
-                        foreach (var attr in fieldCustomAttr)
+                        if(!allowAttr.Contains(attr.Key))
                         {
+                            continue;
+                        }
+                        try
+                        {
+                            var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
                             switch (attr.Key)
                             {
                                 case "sdk-show":
-                                    code += @$"
-try {{ Panels[{panel_index}].Fields[{field_index}].Hidden = !({(string)attr.Value}); }} catch (Exception ex) {{ throw;  }}";
+                                    if(field.Hidden != !result)
+                                    {
+                                        field.Hidden = !result;
+                                        shouldUpdate = true;
+                                    }
                                     break;
                                 case "sdk-hide":
-                                    code += @$"
-try {{ Panels[{panel_index}].Fields[{field_index}].Hidden = ({(string)attr.Value}); }} catch (Exception ex) {{ throw;  }}";
+                                    if(field.Hidden != result)
+                                    {
+                                        field.Hidden = result;
+                                        shouldUpdate = true;
+                                    }
                                     break;
                                 case "sdk-required":
-                                    code += @$"
-try {{ Panels[{panel_index}].Fields[{field_index}].Required = ({(string)attr.Value}); }} catch (Exception ex) {{ throw;  }}";
+                                    if(field.Required != result)
+                                    {
+                                        field.Required = result;
+                                        shouldUpdate = true;
+                                    }
                                     break;
                                 case "sdk-readonly":
                                 case "sdk-disabled":
-                                    code += @$"
-try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Value}); }} catch (Exception ex) {{ throw; }}";
+                                    if(field.Disabled != result)
+                                    {
+                                        field.Disabled = result;
+                                        shouldUpdate = true;
+                                    }
                                     break;
                                 default:
                                     break;
                             }
                         }
-                    }else{
-                        
-                        List<string> allowAttr = new List<string>(){
-                            "sdk-show",
-                            "sdk-hide",
-                            "sdk-required",
-                            "sdk-readonly",
-                            "sdk-disabled"
-                        }; //TODO: Enum
-                        
-
-                        _ = Task.Run(async () =>
+                        catch (System.Exception ex)
                         {
-                            bool shouldUpdate = false;
-                            foreach (var attr in fieldCustomAttr)
-                            {
-                                if(!allowAttr.Contains(attr.Key))
-                                {
-                                    continue;
-                                }
-                                
-                                try
-                                {
-                                    var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
-                                    switch (attr.Key)
-                                    {
-                                        case "sdk-show":
-                                            if(field.Hidden != !result)
-                                            {
-                                                field.Hidden = !result;
-                                                shouldUpdate = true;
-                                            }
-                                            break;
-                                        case "sdk-hide":
-                                            if(field.Hidden != result)
-                                            {
-                                                field.Hidden = result;
-                                                shouldUpdate = true;
-                                            }
-                                            break;
-                                        case "sdk-required":
-                                            if(field.Required != result)
-                                            {
-                                                field.Required = result;
-                                                shouldUpdate = true;
-                                            }
-                                            break;
-                                        case "sdk-readonly":
-                                        case "sdk-disabled":
-                                            if(field.Disabled != result)
-                                            {
-                                                field.Disabled = result;
-                                                shouldUpdate = true;
-                                            }
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                }
-                                catch (System.Exception ex)
-                                {
-                                    Console.WriteLine($"Error: {ex.Message}");
-                                }
-                            }
-                            if(shouldUpdate)
-                            {
-                                _ = InvokeAsync(() => StateHasChanged());
-                            }
-                        });
+                            Console.WriteLine($"Error: {ex.Message}");
+                        }
                     }
-                }
-            }
-            //Console.WriteLine(code);
-            if(UseRoslynToEval && code != null & code != "")
-            {
-                _ = Task.Run(async () =>
-                 {
-                     BusinessObj.Panels = Panels;
-                     await Evaluator.EvaluateCode(code, BusinessObj, useRoslyn: UseRoslynToEval); //Revisar
-                     _ = InvokeAsync(() => StateHasChanged());
-                 });
+                    if(shouldUpdate)
+                    {
+                        _ = InvokeAsync(() => StateHasChanged());
+                    }
+                });
             }
         }
 

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Siesa.SDK.Shared.Application;
+using Siesa.SDK.Shared.DataAnnotations;
 using Siesa.SDK.Shared.Services;
 
 namespace Siesa.SDK.Shared.Utilities
@@ -189,6 +190,39 @@ namespace Siesa.SDK.Shared.Utilities
                 currentData = tmpValue;
             }
             return currentData;
+        }
+        
+        private static string GetUName(Type EntityType)
+        {
+            var dataAnnotation = EntityType.GetCustomAttributes(typeof(SDKAuthorization), false);
+
+            var TableName = string.Empty;
+
+            if (dataAnnotation.Length > 0)
+            {
+                //Get the table name
+                TableName = ((SDKAuthorization)dataAnnotation[0]).TableName;
+
+                if (!string.IsNullOrEmpty(TableName))
+                    return TableName;
+            }
+
+            //Get table name from the context
+            TableName = EntityType.Name;
+
+            //Replace the first character of the table name with the letter "u"
+            if (TableName.Length > 0)
+                TableName = $"U{TableName.Substring(1)}";
+
+            TableName = $"{EntityType.Namespace}.{TableName}";
+            return TableName;
+        }
+
+        public static Type GetVisibilityType(Type EntityType)
+        {
+            var TableName = GetUName(EntityType);
+            var UTable = EntityType.Assembly.GetType(TableName);
+            return UTable;
         }
     }
 }
