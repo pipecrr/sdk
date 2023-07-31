@@ -55,7 +55,19 @@ namespace Siesa.SDK.Utils.Test
             };
 
             tenant.Setup(x => x.GetTenant()).Returns(tenantOption);
-            
+
+            sdkjwt.Setup(x => x.Generate(It.IsAny<object>(), It.IsAny<long>()))
+            .Returns((object obj, long min) =>
+            {
+                return "jwt_token_generated";
+            });
+
+            // Configurar el método Validate
+            // sdkjwt.Setup(x => x.Validate<T>(It.IsAny<string>()))
+            //     .Returns((string token) =>
+            //     {   
+            //     });
+                    
             Mock<IConfigurationSection> mockSection = new Mock<IConfigurationSection>();
             mockSection.Setup(x=>x.Value).Returns("false");
 
