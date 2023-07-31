@@ -1,19 +1,144 @@
 ﻿@using Siesa.SDK.Shared.DTOS
-
+@using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Shared.Utilities
+@using Microsoft.Extensions.DependencyInjection
+@using Siesa.SDK.Business
+@using Siesa.SDK.Entities
+@inject IServiceProvider ServiceProvider
+@inject SDKGlobalLoaderService GlobalLoaderService
+@inject IBackendRouterService BackendRouterService
+@inject IAuthenticationService AuthenticationService
 <aside class="sdk_dashboard_portal">
-    <h3>@PortalName</h3>
+    @if (PortalConfiguration != null)
+    {
+        <DxGridLayout ColumnSpacing="0.8rem">
+            <Rows>
+                <DxGridLayoutRow/>
+            </Rows>
+            <Columns>
+                <DxGridLayoutColumn Width="50%"/>
+                <DxGridLayoutColumn/>
+            </Columns>
+            <Items>
+                <DxGridLayoutItem Row="0" Column="0">
+                    <Template>
+                        <DxGridLayout ColumnSpacing="0.8rem" RowSpacing="0.8rem">
+                            <Rows>
+                                @for(var i = 0; i < PortalConfiguration.DashboardRows.Count; i++)
+                                {
+                                    <DxGridLayoutRow Height="@PortalConfiguration.DashboardRows[i].Height" @key="@("sdk_portal_row_" + i)"/>
+                                }
+                            </Rows>
+                            <Columns>
+                                <DxGridLayoutColumn/>
+                                <DxGridLayoutColumn/>
+                                <DxGridLayoutColumn/>
+                                <DxGridLayoutColumn/>
+                                <DxGridLayoutColumn/>
+                                <DxGridLayoutColumn/>
+                                <DxGridLayoutColumn/>
+                                <DxGridLayoutColumn/>
+                                <DxGridLayoutColumn/>
+                                <DxGridLayoutColumn/>
+                                <DxGridLayoutColumn/>
+                                <DxGridLayoutColumn/>
+                            </Columns>
+                            <Items>
+                                @for(var i = 0; i < PortalConfiguration.DashboardRows.Count; i++)
+                                {
+                                    var item = PortalConfiguration.DashboardRows[i];
+                                    var lastColumn = 0;
+                                    @for(var j= 0; j < item.Dashlets.Count; j++)
+                                    {
+                                        var item2 = item.Dashlets[j];
+                                        var itemColumns = item2.Columns;
+                                        if (itemColumns == 1)
+                                        {
+                                            itemColumns = (12 / (item.Dashlets.Count - j)) - lastColumn;
+                                        }
+                                        <DxGridLayoutItem Row="@i" Column="@lastColumn" ColumnSpan="@itemColumns" RowSpan="@item2.Rows">
+                                            <Template>
+                                                <SDKDashletPortal Business="@Business" ComponentType="@item2.ComponentType" ResourceTag="@item2.ResourceTag" ShowTitle="@item2.ShowTitle"/>
+                                            </Template>
+                                        </DxGridLayoutItem>
+                                        lastColumn += itemColumns;
+                                    }
+                                }
+                            </Items>
+                        </DxGridLayout>
+                    </Template>
+                </DxGridLayoutItem>
+                <DxGridLayoutItem Row="0" Column="1">
+                    <Template>
+                        @if (PortalConfiguration.MainDashlet != null)
+                        {
+                            <SDKDashletPortal Business="@Business" ComponentType="@PortalConfiguration.MainDashlet.ComponentType" ResourceTag="@PortalConfiguration.MainDashlet.ResourceTag" ShowTitle="@PortalConfiguration.MainDashlet.ShowTitle"/>
+                        }
+                        
+                    </Template>
+                </DxGridLayoutItem>
+            </Items>
+        </DxGridLayout>
+    }
+    
 </aside>
 
 @code {
-    [Parameter] public SDKPortalDTO Portal { get; set; }
-    public string PortalName { get; set; }
-
-    protected override void OnParametersSet()
+    [CascadingParameter] 
+    public SDKPortalDTO Portal { get; set; }
+    private SDKPortalConfiguration PortalConfiguration { get; set; }
+    private dynamic Business { get; set; }
+    
+    private async Task<SDKPortalConfiguration> GetPortalConfiguration()
     {
-        if(Portal != null)
+        if (string.IsNullOrEmpty(Portal?.BusinessName))
         {
-            PortalName = Portal.IdPortal;
+            return null;
         }
-        base.OnParametersSet();
+
+        var blPortalRoute = BackendRouterService.GetSDKBusinessModel(Portal.BusinessName, AuthenticationService);
+        
+        if(blPortalRoute == null){
+            return null;
+        }
+
+        var blPortalType = Utilities.SearchType($"{blPortalRoute.Namespace}.{blPortalRoute.Name}", true);
+        if (blPortalType == null)
+        {
+            return null;
+        }
+        //var baseObjType = blPortalType.GetProperty("BaseObj")?.PropertyType;
+        Business = (dynamic)ActivatorUtilities.CreateInstance(ServiceProvider, blPortalType);
+        await Business.InitializeBusiness(Portal.RowidMainRecord);
+        return Business?.GetPortalConfiguration();
     }
+
+    /// <summary>
+    /// Restart the portal
+    /// </summary>
+    /// <param name="parameters"></param>
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        var newPortal = parameters.TryGetValue<SDKPortalDTO>(nameof(Portal), out var portal) ? portal : null;
+        var shouldRestart = Portal?.RowidPortal != newPortal?.RowidPortal;
+        await base.SetParametersAsync(parameters);
+        if(shouldRestart){
+            await Init();
+        }
+    }
+
+    private async Task Init()
+    {
+        GlobalLoaderService.Show();
+        PortalConfiguration = await GetPortalConfiguration();
+        GlobalLoaderService.Hide();
+        StateHasChanged();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Init();
+        await base.OnInitializedAsync();
+    }
+
 }

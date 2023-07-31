@@ -472,7 +472,8 @@ a, .btn-link {
 .collapse_open_btn:hover::before,
 .collapse_open_btn:focus::before,
 .nav_profile_btn:hover::before,
-.nav_profile_btn:focus::before {
+.nav_profile_btn:focus::before, 
+.nav_btn_standar_selected:before {
     width: 100%;
     opacity: 1;
     transition-duration: .2s;
@@ -493,7 +494,9 @@ a, .btn-link {
 .collapse_open_btn:focus .nav_btn_standar_icon,
 .collapse_open_btn:focus .nav_btn_standar_text,
 .nav_profile_btn:focus .nav_btn_standar_icon,
-.nav_profile_btn:focus .nav_btn_standar_text {
+.nav_profile_btn:focus .nav_btn_standar_text,
+.nav_btn_standar_selected .nav_btn_standar_icon,
+.nav_btn_standar_selected .nav_btn_standar_text {
     color: var(--color_light);
     transition-duration: .2s;
 }
