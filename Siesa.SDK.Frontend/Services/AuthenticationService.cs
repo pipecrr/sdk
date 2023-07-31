@@ -252,6 +252,7 @@ namespace Siesa.SDK.Frontend.Services
             if (loginRequest.Success)
             {
                 PortalUserToken = loginRequest.Data.Token;
+                UserToken = loginRequest.Data.Token;
                 await _localStorageService.SetItemAsync("portalusertoken", PortalUserToken);
                 await SetCookie("selectedConnection", rowIdDBConnection.ToString());
                 await SetPortalUserPhoto(loginRequest.Data.UserPhoto);
