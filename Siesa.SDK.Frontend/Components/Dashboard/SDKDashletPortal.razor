@@ -1,0 +1,62 @@
+@using Siesa.SDK.Shared.DTOS
+
+<ErrorBoundary>
+    <ChildContent>
+        <SDKCard StyleCss="@GetStyleCss()">
+            @if(ShowTitle)
+            {
+                <p class="sdk-dashlet-portal-title">@ResourceTag</p>
+            }
+            <div class="overflow-auto h-100">
+            @if(ComponentType != null)
+            {
+                <DynamicComponent Type="@ComponentType" Parameters="@GetParameters()"/>
+            }
+            </div>
+        </SDKCard>
+    </ChildContent> 
+    <ErrorContent Context="Exception">
+        <SDKCard StyleCss="@GetStyleCss()">
+            <div class="col-12 text-center font_color_primary_dark py-5">
+                <SDKIcon Name="fa-triangle-exclamation fa-3x"/>
+                <p class="mt-3">
+                    <ResourceViewer ResourceTag="Custom.Generic.Message.Error"/>
+                </p>
+            </div>
+        </SDKCard>
+    </ErrorContent>
+</ErrorBoundary>
+
+
+@code {
+    [Parameter]
+    public string ResourceTag { get; set; }
+    [Parameter]
+    public bool ShowTitle { get; set; } = true;
+    [Parameter]
+    public string CssClass { get; set; }
+    [Parameter]
+    public Type ComponentType { get; set; }
+    [CascadingParameter] 
+    public SDKPortalDTO Portal { get; set; }
+    [Parameter]
+    public dynamic Business { get; set; }
+    
+    private string GetStyleCss()
+    {
+        return CssClass ?? "h-100";
+    }
+    
+    private Dictionary<string, object> GetParameters()
+    {
+        var parameters = new Dictionary<string, object>();
+        //check if the component has a parameter called Business
+        var businessParameter = ComponentType.GetProperties().FirstOrDefault(x => x.Name == "Business");
+        if (businessParameter != null)
+        {
+            parameters.Add("Business", Business);
+        }
+        return parameters;
+    }
+
+}
