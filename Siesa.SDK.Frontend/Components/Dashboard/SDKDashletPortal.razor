@@ -5,7 +5,7 @@
         <SDKCard StyleCss="@GetStyleCss()">
             @if(ShowTitle)
             {
-                <p class="sdk-dashlet-portal-title">@ResourceTag</p>
+                <p class="sdk-dashlet-portal-title"><ResourceViewer ResourceTag="@ResourceTag"/></p>
             }
             <div class="overflow-auto h-100">
             @if(ComponentType != null)

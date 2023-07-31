@@ -7,6 +7,7 @@ using Siesa.SDK.Frontend.Services;
 using Siesa.SDK.Entities;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.JSInterop;
 using Newtonsoft.Json;
 
 namespace Siesa.SDK.Frontend.Components.Visualization;
@@ -17,6 +18,7 @@ public partial class LoginView
     [Inject] public IAuthenticationService AuthenticationService { get; set; }
     [Inject] public IBackendRouterService BackendRouterService { get; set; }
     [Inject] public SDKNotificationService SDKNotificationService { get; set; }
+    [Inject] public IJSRuntime JSRuntime { get; set; }
     [Parameter] public string LogoUrl { get; set; }
     [Parameter] public string ImageUrl { get; set; }
     [Parameter] public int RowidConexion { get; set; }
@@ -61,6 +63,7 @@ public partial class LoginView
         var result = await BLSDKPortalUser.Call("GetDBConnection", RowidConexion);
         await getCultures();
         getSelectedCulture();
+        await getUserlang();
         init_loading = false;
         if(result.Success && result.Data != null){
             SelectedConnection = result.Data;
@@ -70,7 +73,52 @@ public partial class LoginView
             StateHasChanged();
         }
     }
+    
+    private async Task getUserlang()
+    {
+        short userlang;
+        try
+        {
+            userlang = AuthenticationService.GetRoiwdCulture();
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.ToString());
+        }
 
+        if (cultures == null)
+        {
+            cultures = await getCulturesAsync();
+
+        }
+        try
+        {
+            if (userlang == 0)
+            {
+                var BrowserLang = await JSRuntime.InvokeAsync<string>("getBrowserLang");
+                string[] language = BrowserLang.Split('-');
+                selectedCulture = cultures.FirstOrDefault(x => x.LanguageCode.ToLower() == language[0].ToLower() && x.CountryCode.ToLower() == language[1].ToLower());
+            }
+            else
+            {
+                selectedCulture = cultures.FirstOrDefault(x => x.Rowid == userlang);
+            }
+        }catch(Exception ex)
+        {
+        }
+
+        if (selectedCulture == null){
+            cultureDefault();
+            try {
+
+                await AuthenticationService.RemoveCustomRowidCulture();
+            }catch(Exception ex){
+                
+            }
+        }else{
+            OnChangeCulture(selectedCulture.Rowid);
+        }
+    }
 
     private async void HandleValidSubmit(){
         string message = "BLUser.Login.Message.SuccesLogin";
