@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.JSInterop;
 using Newtonsoft.Json;
+using System.Globalization;
 
 namespace Siesa.SDK.Frontend.Components.Visualization;
 
@@ -61,9 +62,9 @@ public partial class LoginView
     {
         var BLSDKPortalUser = BackendRouterService.GetSDKBusinessModel("BLSDKPortalUser", AuthenticationService);
         var result = await BLSDKPortalUser.Call("GetDBConnection", RowidConexion);
-        await getCultures();
+        await getCultures().ConfigureAwait(true);
         getSelectedCulture();
-        await getUserlang();
+        await GetUserlang().ConfigureAwait(true);
         init_loading = false;
         if(result.Success && result.Data != null){
             SelectedConnection = result.Data;
@@ -74,7 +75,11 @@ public partial class LoginView
         }
     }
     
-    private async Task getUserlang()
+    /// <summary>
+    /// Get user language from browser or database
+    /// </summary>
+    /// <exception cref="Exception"></exception>
+    private async Task GetUserlang()
     {
         short userlang;
         try
@@ -88,16 +93,16 @@ public partial class LoginView
 
         if (cultures == null)
         {
-            cultures = await getCulturesAsync();
+            cultures = await getCulturesAsync().ConfigureAwait(true);
 
         }
         try
         {
             if (userlang == 0)
             {
-                var BrowserLang = await JSRuntime.InvokeAsync<string>("getBrowserLang");
-                string[] language = BrowserLang.Split('-');
-                selectedCulture = cultures.FirstOrDefault(x => x.LanguageCode.ToLower() == language[0].ToLower() && x.CountryCode.ToLower() == language[1].ToLower());
+                var browserLang = await JSRuntime.InvokeAsync<string>("getBrowserLang").ConfigureAwait(true);
+                string[] language = browserLang.Split('-');
+                selectedCulture = cultures.FirstOrDefault(x => string.Equals(x.LanguageCode.ToUpperInvariant(),language[0].ToUpperInvariant(),StringComparison.Ordinal) && string.Equals(x.CountryCode.ToUpperInvariant(), language[1].ToUpperInvariant(),StringComparison.Ordinal));
             }
             else
             {
@@ -111,12 +116,12 @@ public partial class LoginView
             cultureDefault();
             try {
 
-                await AuthenticationService.RemoveCustomRowidCulture();
+                await AuthenticationService.RemoveCustomRowidCulture().ConfigureAwait(true);
             }catch(Exception ex){
                 
             }
         }else{
-            OnChangeCulture(selectedCulture.Rowid);
+            await OnChangeCulture(selectedCulture.Rowid).ConfigureAwait(true);
         }
     }
 
