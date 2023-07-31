@@ -530,28 +530,41 @@ namespace Siesa.SDK.Business
 
             try
             {
-
                 Validate(ref result);
 
                 if (result.Errors.Count > 0)
                 {
                     return result;
                 }
-                using(SDKContext context = CreateDbContext()){
-                    try{
-                        context.BeginTransaction();
-                        BeforeSave(ref result, context);
-                        result.Rowid = Save(context);
-                        if (DynamicEntities != null && DynamicEntities.Count > 0)
-                        {
-                            SaveDynamicEntity(result.Rowid, context);
+                using(SDKContext context = CreateDbContext())
+                {
+                    if (!context.Database.IsInMemory())
+                    {
+                        try{
+                            if (!context.Database.IsInMemory())
+                            {
+                                context.BeginTransaction();
+                            }
+                            BeforeSave(ref result, context);
+                            result.Rowid = Save(context);
+                            if (DynamicEntities != null && DynamicEntities.Count > 0)
+                            {
+                                SaveDynamicEntity(result.Rowid, context);
+                            }
+                            AfterSave(ref result, context);
+                            if (!context.Database.IsInMemory())
+                            {
+                                context.Commit();
+                            }
+                            AfterValidateAndSave(ref result);
+                        }catch(Exception ex){
+                            if (!context.Database.IsInMemory())
+                            {
+                                context.Rollback();
+                            }
+                            result.Errors.Add(new OperationError() { Message = ex.Message });
                         }
-                        AfterSave(ref result, context);
-                        context.Commit();
-                        AfterValidateAndSave(ref result);
-                    }catch(Exception ex){
-                        context.Rollback();
-                        result.Errors.Add(new OperationError() { Message = ex.Message });
+                        
                     }
                 }
             }
@@ -827,20 +840,38 @@ namespace Siesa.SDK.Business
                 }
                 using (SDKContext context = CreateDbContext())
                 {
-                    try{
-                        context.BeginTransaction();
-                        BeforeDelete(ref result, context);
-                        DeleteDynamicEntity(context);
-                        DisableRelatedProperties(BaseObj, _navigationProperties);
-                        context.SetProvider(_provider);
-                        context.Set<T>().Remove(BaseObj);
-                        context.SaveChanges();
-                        AfterDelete(ref result, context);
-                        context.Commit();
-                    }catch(Exception ex){
-                        context.Rollback();
-                        response.Errors.Add(new OperationError() { Message = ex.Message });
+                    if (!context.Database.IsInMemory())
+                    {
+                        try{
+                            context.BeginTransaction();
+                            BeforeDelete(ref result, context);
+                            DeleteDynamicEntity(context);
+                            DisableRelatedProperties(BaseObj, _navigationProperties);
+                            context.SetProvider(_provider);
+                            context.Set<T>().Remove(BaseObj);
+                            context.SaveChanges();
+                            AfterDelete(ref result, context);
+                            context.Commit();
+                        }catch(Exception ex){
+                            context.Rollback();
+                            response.Errors.Add(new OperationError() { Message = ex.Message });
+                        }
+                        
+                    }else
+                    {
+                        try{
+                            BeforeDelete(ref result, context);
+                            DeleteDynamicEntity(context);
+                            DisableRelatedProperties(BaseObj, _navigationProperties);
+                            context.SetProvider(_provider);
+                            context.Set<T>().Remove(BaseObj);
+                            context.SaveChanges();
+                            AfterDelete(ref result, context);
+                        }catch(Exception ex){
+                            response.Errors.Add(new OperationError() { Message = ex.Message });
+                        }   
                     }
+                    
                 }
             }
             catch (Exception e)

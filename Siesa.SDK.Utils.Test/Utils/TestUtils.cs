@@ -47,7 +47,7 @@ namespace Siesa.SDK.Utils.Test
             {
                 Rowid = 1,
                 Name = "Tenant",
-                ConnectionString = "ConnectionString",
+                ConnectionString = "InMemoryTest",
                 ProviderName = EnumDBType.InMemory,
                 LogoUrl = "LogoUrl",
                 StyleUrl = "StyleUrl",
@@ -77,6 +77,7 @@ namespace Siesa.SDK.Utils.Test
             var mockDbFactory = new Mock<IDbContextFactory<SDKContext>>();
                 mockDbFactory.Setup(f => f.CreateDbContext())
                     .Returns(() =>  (SDKContext)Activator.CreateInstance(_tDbContext, new DbContextOptionsBuilder<SDKContext>().UseInMemoryDatabase("InMemoryTest").Options));
+
            
             
             var services = new ServiceCollection();
