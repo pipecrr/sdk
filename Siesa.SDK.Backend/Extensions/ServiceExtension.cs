@@ -54,7 +54,11 @@ namespace Siesa.SDK.Backend.Extensions
                 if(tenantProvider.GetUseLazyLoadingProxies()){
                     opts.UseLazyLoadingProxies();
                 }
-                if(tenant.ProviderName == EnumDBType.PostgreSQL)
+                if (tenant.ProviderName == EnumDBType.InMemory)
+                {
+                    //Pass
+                }
+                else if(tenant.ProviderName == EnumDBType.PostgreSQL)
                 {
                     opts.UseNpgsql(tenant.ConnectionString);
                 }else { //Default to SQL Server

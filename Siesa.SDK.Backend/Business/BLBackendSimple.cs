@@ -535,16 +535,19 @@ namespace Siesa.SDK.Business
 
             try
             {
-
                 Validate(ref result);
 
                 if (result.Errors.Count > 0)
                 {
                     return result;
                 }
-                using(SDKContext context = CreateDbContext()){
+                using(SDKContext context = CreateDbContext())
+                {
                     try{
-                        context.BeginTransaction();
+                        if (!context.Database.IsInMemory())
+                        {
+                            context.BeginTransaction();
+                        }
                         BeforeSave(ref result, context);
                         result.Rowid = Save(context);
                         if (DynamicEntities != null && DynamicEntities.Count > 0)
@@ -552,10 +555,16 @@ namespace Siesa.SDK.Business
                             SaveDynamicEntity(result.Rowid, context);
                         }
                         AfterSave(ref result, context);
-                        context.Commit();
+                        if (!context.Database.IsInMemory())
+                        {
+                            context.Commit();
+                        }
                         AfterValidateAndSave(ref result);
                     }catch(Exception ex){
-                        context.Rollback();
+                        if (!context.Database.IsInMemory())
+                        {
+                            context.Rollback();
+                        }
                         result.Errors.Add(new OperationError() { Message = ex.Message });
                     }
                 }
@@ -833,7 +842,10 @@ namespace Siesa.SDK.Business
                 using (SDKContext context = CreateDbContext())
                 {
                     try{
-                        context.BeginTransaction();
+                        if (!context.Database.IsInMemory())
+                        {
+                            context.BeginTransaction();
+                        }
                         BeforeDelete(ref result, context);
                         DeleteDynamicEntity(context);
                         DisableRelatedProperties(BaseObj, _navigationProperties);
@@ -841,11 +853,18 @@ namespace Siesa.SDK.Business
                         context.Set<T>().Remove(BaseObj);
                         context.SaveChanges();
                         AfterDelete(ref result, context);
-                        context.Commit();
+                        if (!context.Database.IsInMemory())
+                        {
+                            context.Commit();
+                        }
                     }catch(Exception ex){
-                        context.Rollback();
+                        if (!context.Database.IsInMemory())
+                        {
+                            context.Rollback();
+                        }
                         response.Errors.Add(new OperationError() { Message = ex.Message });
                     }
+ 
                 }
             }
             catch (Exception e)
