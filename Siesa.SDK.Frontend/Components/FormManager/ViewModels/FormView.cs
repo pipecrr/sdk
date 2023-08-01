@@ -557,26 +557,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 return;
             }
             GlobalLoaderService.Show();
-            if(FileFields.Count>0){
-                foreach (var item in FileFields)
-                {
-                    var fileField = item.Value;
-                    var rowidAttatchment = 0;
-                    var field = item.Key;
-                    dynamic property = BusinessObj.BaseObj.GetType().GetProperty(field).GetValue(BusinessObj.BaseObj);
-                    if(property != null){ 
-                        var rowidProp = property.GetType().GetProperty("Rowid").GetValue(property);
-                        if(rowidProp != null)
-                            rowidAttatchment = await savingAttachment(fileField, (int)rowidProp);
-                    }else{
-                        rowidAttatchment = await savingAttachment(fileField);
-                    }
-                    if(rowidAttatchment > 0){
-                        var AttatchmentDetail = Activator.CreateInstance(BusinessObj.BaseObj.GetType().GetProperty(field).PropertyType);
-                        AttatchmentDetail.GetType().GetProperty("Rowid").SetValue(AttatchmentDetail, rowidAttatchment);
-                        BusinessObj.BaseObj.GetType().GetProperty(field).SetValue(BusinessObj.BaseObj, AttatchmentDetail);
-                    }
-                }
+            if(FileFields.Count>0)
+            {
+                await SavingFiles().ConfigureAwait(true);
             }
             dynamic result = null;
             try{
@@ -651,6 +634,37 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             }else{
                 NavigationService.RemoveCurrentItem();
                 NavManager.NavigateTo($"{BusinessName}/detail/{id}/");
+            }
+        }
+        
+        /// <summary>
+        /// Saves the attached files to the business object.
+        /// </summary>
+        /// <remarks>
+        /// This function iterates through the collection of attached files represented by the "FileFields" dictionary.
+        /// For each attached file, it checks whether it already exists in the business object or is new. 
+        /// If it is new, it is saved, and its "Rowid" identifier is updated.
+        /// </remarks>        
+        public async Task SavingFiles()
+        {
+            foreach (var item in FileFields)
+            {
+                var fileField = item.Value;
+                var rowidAttatchment = 0;
+                var field = item.Key;
+                dynamic property = BusinessObj.BaseObj.GetType().GetProperty(field).GetValue(BusinessObj.BaseObj);
+                if(property != null){ 
+                    var rowidProp = property.GetType().GetProperty("Rowid").GetValue(property);
+                    if(rowidProp != null)
+                        rowidAttatchment = await savingAttachment(fileField, (int)rowidProp).ConfigureAwait(true);
+                }else{
+                    rowidAttatchment = await savingAttachment(fileField).ConfigureAwait(true);
+                }
+                if(rowidAttatchment > 0){
+                    var AttatchmentDetail = Activator.CreateInstance(BusinessObj.BaseObj.GetType().GetProperty(field).PropertyType);
+                    AttatchmentDetail.GetType().GetProperty("Rowid").SetValue(AttatchmentDetail, rowidAttatchment);
+                    BusinessObj.BaseObj.GetType().GetProperty(field).SetValue(BusinessObj.BaseObj, AttatchmentDetail);
+                }
             }
         }
 
