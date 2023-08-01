@@ -1,6 +1,7 @@
 @using Siesa.SDK.Frontend.Components.Fields
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Components.Visualization
+@using Siesa.Global.Enums
 
 @inject SDKNotificationService Notification
 
@@ -36,6 +37,13 @@
             <p>Item Selected: @myValue3</p>
             </SDKCard>
         </div>
+         <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>SelectField ItemType Enum</h3>
+            <SDKSelectField ItemType="enumStatusBaseMaster" @bind-Value="@myValue4" TextProperty="DisplayText" ValueProperty="Type"></SDKSelectField>
+            <p>Item Selected: @myValue4</p>
+            </SDKCard>
+        </div>
     </div>
 </div>
 
@@ -47,6 +55,8 @@
     int myValue2 = 2;
 
     int myValue3;
+
+    enumStatusBaseMaster myValue4 ;
 
 
     List<SDKEnumWrapper<int>> TestList = new List<SDKEnumWrapper<int>>()
