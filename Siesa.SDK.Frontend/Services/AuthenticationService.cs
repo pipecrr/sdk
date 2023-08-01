@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.JSInterop;
 using Siesa.Global.Enums;
 using Siesa.SDK.Frontend.Criptography;
+using System.Globalization;
 
 namespace Siesa.SDK.Frontend.Services
 {
@@ -171,29 +172,29 @@ namespace Siesa.SDK.Frontend.Services
         public async Task Login(string username, string password, short rowIdDBConnection, 
         bool IsUpdateSession = false, short rowIdCompanyGroup = 1)
         {
-            var BLuser = _backendRouterService.GetSDKBusinessModel("BLUser", this);
-            if (BLuser == null)
+            var blUser = _backendRouterService.GetSDKBusinessModel("BLUser", this);
+            if (blUser == null)
             {
                 throw new Exception("Login Service not found");
             }
 
             //Sacar la IP verdadera del Header**
 
-            string ipAddress = _contextAccesor.HttpContext.Connection.RemoteIpAddress?.ToString();
+            string ipAddress = _contextAccesor.HttpContext?.Connection.RemoteIpAddress?.ToString();
 
-            string browserName = _contextAccesor.HttpContext.Request.Headers["User-Agent"].ToString();
+            string browserName = _contextAccesor.HttpContext?.Request.Headers["User-Agent"].ToString();
 
-            string sessionId = IsUpdateSession ? _contextAccesor.HttpContext.Request.Cookies["sdksession"].ToString() : "";
+            string sessionId = IsUpdateSession ? _contextAccesor.HttpContext?.Request.Cookies["sdksession"]?.ToString() : "";
 
-            short LastCompanyGroupSelected = await _localStorageService.GetItemAsync<short>("rowidCompanyGroup");
+            short lastCompanyGroupSelected = await _localStorageService.GetItemAsync<short>("rowidCompanyGroup").ConfigureAwait(true);
 
-            if(LastCompanyGroupSelected > 0 && LastCompanyGroupSelected != rowIdCompanyGroup) 
+            if(lastCompanyGroupSelected > 0 && lastCompanyGroupSelected != rowIdCompanyGroup) 
             {
-                rowIdCompanyGroup = LastCompanyGroupSelected;
+                rowIdCompanyGroup = lastCompanyGroupSelected;
             }
 
             
-            var loginRequest = await BLuser.Call("SignInSession", new Dictionary<string, dynamic> {
+            var loginRequest = await blUser.Call("SignInSession", new Dictionary<string, dynamic> {
                 {"username", username},
                 {"password", password},
                 {"rowIdDBConnection", rowIdDBConnection},
@@ -203,14 +204,20 @@ namespace Siesa.SDK.Frontend.Services
                 {"sessionId", sessionId},
                 {"IsUpdateSession", IsUpdateSession},
                 {"rowIdCompanyGroup", rowIdCompanyGroup}
-            });
+            }).ConfigureAwait(true);
             if (loginRequest.Success)
             {
                 UserToken = loginRequest.Data.Token;
                 var sdksesion = loginRequest.Data.IdSession;
-                await _localStorageService.SetItemAsync("usertoken", UserToken);
+                
+                await _localStorageService.SetItemAsync("usertoken", UserToken).ConfigureAwait(true);
+                
+                if(await _localStorageService.ContainKeyAsync("bd").ConfigureAwait(true)){
+                    await _localStorageService.RemoveItemAsync("bd").ConfigureAwait(true);
+                }
+                
                 await SetCookie("sdksession", loginRequest.Data.IdSession);
-                await SetCookie("selectedConnection", rowIdDBConnection.ToString());
+                await SetCookie("selectedConnection", rowIdDBConnection.ToString(CultureInfo.InvariantCulture)).ConfigureAwait(true);
                 await SetUserPhoto(loginRequest.Data.UserPhoto);
                 await SetPreferencesUser(loginRequest.Data.UserPreferences);
             }
