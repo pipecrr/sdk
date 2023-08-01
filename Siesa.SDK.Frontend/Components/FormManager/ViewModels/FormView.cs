@@ -661,9 +661,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     rowidAttatchment = await savingAttachment(fileField).ConfigureAwait(true);
                 }
                 if(rowidAttatchment > 0){
-                    var AttatchmentDetail = Activator.CreateInstance(BusinessObj.BaseObj.GetType().GetProperty(field).PropertyType);
-                    AttatchmentDetail.GetType().GetProperty("Rowid").SetValue(AttatchmentDetail, rowidAttatchment);
-                    BusinessObj.BaseObj.GetType().GetProperty(field).SetValue(BusinessObj.BaseObj, AttatchmentDetail);
+                    var attatchmentDetail = Activator.CreateInstance(BusinessObj.BaseObj.GetType().GetProperty(field).PropertyType);
+                    attatchmentDetail.GetType().GetProperty("Rowid").SetValue(attatchmentDetail, rowidAttatchment);
+                    BusinessObj.BaseObj.GetType().GetProperty(field).SetValue(BusinessObj.BaseObj, attatchmentDetail);
                 }
             }
         }
