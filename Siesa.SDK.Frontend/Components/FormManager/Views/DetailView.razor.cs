@@ -230,6 +230,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             });
         }
 
+        /// <summary>
+        /// This method initializes the view.
+        /// </summary>
+        /// <param name="bName">The business name. If null, the method uses the default value from BusinessName.</param>
+
         protected async Task InitView(string bName = null)
         {
             Loading = true;
@@ -237,15 +242,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 bName = BusinessName;
             }
-            await CheckPermissions();
-            await CreateRelationshipAttachment();
+            await CheckPermissions().ConfigureAwait(true);
+            await CreateRelationshipAttachment().ConfigureAwait(true);
             if(String.IsNullOrEmpty(ViewdefName)){
                 _viewdefName = "detail";
             }else{
                 _viewdefName = ViewdefName;
             }            
             var metadata = BackendRouterService.GetViewdef(bName, _viewdefName);
-            if (String.IsNullOrEmpty(metadata) && _viewdefName.Equals("related_detail"))
+            if (IsSubpanel && String.IsNullOrEmpty(metadata)){
+                metadata = BackendRouterService.GetViewdef(bName, "related_default");
+            }
+            if (String.IsNullOrEmpty(metadata) && String.Equals(_viewdefName,"related_detail", StringComparison.Ordinal))
             {
                 metadata = BackendRouterService.GetViewdef(bName, "detail");
             }
@@ -284,13 +292,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         {
                             relationship.ResourceTag = $"{BusinessName}.Relationship.{relationship.Name}";
                         }
-                        var canListRel = await FeaturePermissionService.CheckUserActionPermission(relationship.RelatedBusiness, enumSDKActions.Detail, AuthenticationService);
+                        var canListRel = await FeaturePermissionService.CheckUserActionPermission(relationship.RelatedBusiness, enumSDKActions.Detail, AuthenticationService).ConfigureAwait(true);
                         relationship.Enabled = canListRel;
                     }
                 }
                 ModelLoaded = true;
             }
-            await EvaluateButtonAttributes();
+            await EvaluateButtonAttributes().ConfigureAwait(true);
             EvaluateDynamicAttributes();
             Loading = false;
             StateHasChanged();
