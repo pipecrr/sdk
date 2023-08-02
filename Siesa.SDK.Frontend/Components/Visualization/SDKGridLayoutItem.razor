@@ -1,0 +1,26 @@
+<DxGridLayoutItem Row="@Row" Column="@Column" ColumnSpan="@ColumnSpan" CssClass="@CssClass" RowSpan="@RowSpan" Visible="@Visible">
+
+</DxGridLayoutItem>
+
+@code
+{
+    [Parameter]
+    public string Area { get; set; }
+    [Parameter]
+    public int Column { get; set; }
+    [Parameter]
+    public int ColumnSpan { get; set; }
+    [Parameter]
+    public string CssClass { get; set; }
+
+    [Parameter]
+    public int Row { get; set; }
+    [Parameter]
+    public int RowSpan { get; set; }
+    [Parameter]
+    public RenderFragment Template { get; set; }
+
+    [Parameter]
+    public bool Visible { get; set; }
+
+}
