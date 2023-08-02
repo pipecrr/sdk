@@ -1,0 +1,115 @@
+
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Services
+@using Siesa.SDK.Frontend.Components.Fields
+
+<div class="container-fluid m-3">
+    <div class="container-fluid">
+            <h2>Demo SDKGridLayout</h2> 
+            <p>Demonstration and configuration of the SDKGridLayout component</p> 
+    </div>
+    <div class="row px-3"> 
+        <div class="col-md-6 p-1">
+            <SDKGridLayout CssClass="w-100 ch-480">
+                <Rows>
+                    <SDKGridLayoutRow Height="100px" />
+                    <SDKGridLayoutRow />
+                    <SDKGridLayoutRow Height="auto" />
+                </Rows>
+                <Columns>
+                    <SDKGridLayoutColumn Width="2fr" />
+                    <SDKGridLayoutColumn Width="60%" />
+                    <SDKGridLayoutColumn />
+                </Columns>
+                <Items>
+                    <SDKGridLayoutItem Row="0" Column="0" ColumnSpan="3">
+                        <Template>
+                            <div class="gridlayout-header gridlayout-item">
+                                Header
+                            </div>
+                        </Template>
+                    </SDKGridLayoutItem>
+                    <SDKGridLayoutItem Row="1" Column="1">
+                        <Template>
+                            <div class="gridlayout-content gridlayout-item">
+                                Content
+                            </div>
+                        </Template>
+                    </SDKGridLayoutItem>
+                    <SDKGridLayoutItem Row="1" Column="0">
+                        <Template>
+                            <div class="gridlayout-left-side-bar gridlayout-item">
+                                Left Bar
+                            </div>
+                        </Template>
+                    </SDKGridLayoutItem>
+                    <SDKGridLayoutItem Row="1" Column="2">
+                        <Template>
+                            <div class="gridlayout-right-side-bar gridlayout-item">
+                                Right Bar
+                            </div>
+                        </Template>
+                    </SDKGridLayoutItem>
+                    <SDKGridLayoutItem Row="2" Column="0" ColumnSpan="3">
+                        <Template>
+                            <div class="gridlayout-footer gridlayout-item">
+                                Footer
+                            </div>
+                        </Template>
+                    </SDKGridLayoutItem>
+                </Items>
+            </SDKGridLayout>
+        </div>
+    </div>
+</div>
+
+<style>
+
+.gridlayout-item {
+    font-size: 1.2em;
+    font-weight: 500;
+    text-align: center;
+    height: 100%;
+    padding: 0.5rem;
+    text-align: center;
+    position: relative;
+    z-index: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.gridlayout-item:before {
+    content: " ";
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    opacity: 0.4;
+}
+.gridlayout-header:before {
+    background-color: red;
+}
+.gridlayout-content:before {
+    background-color: yellow;
+}
+.gridlayout-left-side-bar:before {
+    background-color: green;
+}
+.gridlayout-right-side-bar:before {
+    background-color: blue;
+}
+.gridlayout-footer:before {
+    background-color: purple;
+    opacity: 0.5;
+}
+
+</style>
+
+
+@code{
+
+    private string ResourceTag { get; set; }
+}
