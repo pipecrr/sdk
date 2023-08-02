@@ -1,6 +1,7 @@
 @using Siesa.SDK.Frontend.Components.Fields
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Components.Visualization
+@using Siesa.Global.Enums
 
 @inject SDKNotificationService Notification
 
@@ -16,15 +17,14 @@
         <div class="col-md-6 p-3">
             <SDKCard>
                 <h3>SelectField bind-Value</h3>
-            <SDKSelectField ItemType="int" @bind-Value="@myValue" Options="@TestList" TextProperty="DisplayText" ValueProperty="Type"></SDKSelectField>
+            <SDKSelectField ItemType="int" @bind-Value="@myValue" Options="@TestList" ></SDKSelectField>
             <p>Item Selected: @myValue</p>
             </SDKCard>
         </div>
         <div class="col-md-6 p-3">
             <SDKCard>
                 <h3>SelectField Placeholder and Read    Only</h3>
-            <SDKSelectField ItemType="int" @bind-Value="@myValue2" Options="@TestList" TextProperty="DisplayText" 
-                            ValueProperty="Type" Placeholder="Hola Mundo" ReadOnly="true"></SDKSelectField>
+            <SDKSelectField ItemType="int" @bind-Value="@myValue2" Options="@TestList" Placeholder="Hola Mundo" ReadOnly="true"></SDKSelectField>
             <p>Item Selected: @myValue2</p>
             </SDKCard>
         </div>
@@ -32,8 +32,15 @@
             <SDKCard>
                 <h3>SelectField ValueChanged</h3>
             <SDKSelectField ItemType="int" Value="@myValue3" Options="@TestList" 
-            ValueChanged="(myValue3)=>Onchange(myValue3)" ValueProperty="Type" TextProperty="DisplayText"></SDKSelectField>
+            ValueChanged="(myValue3)=>Onchange(myValue3)"></SDKSelectField>
             <p>Item Selected: @myValue3</p>
+            </SDKCard>
+        </div>
+         <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>SelectField ItemType Enum</h3>
+            <SDKSelectField ItemType="enumStatusBaseMaster" @bind-Value="@myValue4"></SDKSelectField>
+            <p>Item Selected: @myValue4</p>
             </SDKCard>
         </div>
     </div>
@@ -47,6 +54,8 @@
     int myValue2 = 2;
 
     int myValue3;
+
+    enumStatusBaseMaster myValue4 ;
 
 
     List<SDKEnumWrapper<int>> TestList = new List<SDKEnumWrapper<int>>()
