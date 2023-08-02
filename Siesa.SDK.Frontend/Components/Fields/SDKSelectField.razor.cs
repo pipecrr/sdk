@@ -78,17 +78,6 @@ namespace Siesa.SDK.Frontend.Components.Fields
         [Parameter] public string CssClass { get; set; }
 
         /// <summary>
-        /// Gets or sets the TextProperty.
-        /// </summary>
-        [Parameter] public string TextProperty { get; set; }
-
-        /// <summary>
-        /// Gets or sets the value property.
-        /// </summary>
-        /// <value>The value property.</value>
-        [Parameter] public string ValueProperty { get; set; }
-
-        /// <summary>
         /// Gets or sets the FieldName.
         /// </summary>
         [Parameter] public string FieldName { get; set; }
@@ -107,6 +96,11 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
         private IEnumerable<SDKEnumWrapper<ItemType>> _options { get; set; }
         private Type enumType { get; set; }
+
+        private string _textProperty { get; set; } = "DisplayText";
+
+        private string _valueProperty { get; set; } = "Type";
+
 
         /// <summary>
         /// Constructor Component
