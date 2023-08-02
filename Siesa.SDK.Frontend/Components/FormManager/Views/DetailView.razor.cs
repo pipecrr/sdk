@@ -244,23 +244,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
             await CheckPermissions().ConfigureAwait(true);
             await CreateRelationshipAttachment().ConfigureAwait(true);
-            if(String.IsNullOrEmpty(ViewdefName)){
-                _viewdefName = "detail";
-            }else{
-                _viewdefName = ViewdefName;
-            }            
-            var metadata = BackendRouterService.GetViewdef(bName, _viewdefName);
-            if (IsSubpanel && String.IsNullOrEmpty(metadata)){
-                metadata = BackendRouterService.GetViewdef(bName, "related_default");
-            }
-            if (String.IsNullOrEmpty(metadata) && String.Equals(_viewdefName,"related_detail", StringComparison.Ordinal))
-            {
-                metadata = BackendRouterService.GetViewdef(bName, "detail");
-            }
-            if(String.IsNullOrEmpty(metadata))
-            {
-                metadata = BackendRouterService.GetViewdef(bName, "default");
-            }
+
+            string metadata = CreateMetadata(bName);
+                
             if (String.IsNullOrEmpty(metadata))
             {
                 //ErrorMsg = "No hay definición para la vista de detalle";
@@ -302,6 +288,32 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             EvaluateDynamicAttributes();
             Loading = false;
             StateHasChanged();
+        }
+
+        private string CreateMetadata(string bName)
+        {
+            string result = "";
+            if(String.IsNullOrEmpty(ViewdefName)){
+                _viewdefName = "detail";
+            }else{
+                _viewdefName = ViewdefName;
+            }
+            var metadata = BackendRouterService.GetViewdef(bName, _viewdefName);
+            if (IsSubpanel && String.IsNullOrEmpty(metadata)){
+                metadata = BackendRouterService.GetViewdef(bName, "related_default");
+                result = metadata;
+            }
+            if (String.IsNullOrEmpty(metadata) && String.Equals(_viewdefName,"related_detail", StringComparison.Ordinal))
+            {
+                metadata = BackendRouterService.GetViewdef(bName, "detail");
+                result = metadata;
+            }
+            if(String.IsNullOrEmpty(metadata))
+            {
+                metadata = BackendRouterService.GetViewdef(bName, "default");
+                result = metadata;
+            }
+            return result;
         }
 
         private void AddPanels(List<Panel> panels){
