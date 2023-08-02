@@ -1,3 +1,5 @@
+const version = '20230725';
+
 function loadScript(url, in_head = false, callback = null) {
 
     //check if script is already loaded
@@ -87,13 +89,13 @@ function preloadFlex(){
         loadScript("http://127.0.0.1:3000/static/js/1.chunk.js");
         loadScript("http://127.0.0.1:3000/static/js/main.chunk.js");
     }else{
-        loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/2.css?v=20230725');
-        loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/main.css?v=20230725');
+        loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/2.css?v=${version}');
+        loadCss('/_content/Siesa.SDK.Frontend/flex/static/css/main.css?v=${version}');
 
-        loadScript('/_content/Siesa.SDK.Frontend/flex/FlexComponent.js?v=20230725');
-        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/2.chunk.js?v=20230725");
-        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/main.chunk.js?v=20230725");
-        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/runtime-main.js?v=20230725");
+        loadScript('/_content/Siesa.SDK.Frontend/flex/FlexComponent.js?v=${version}');
+        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/2.chunk.js?v=${version}");
+        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/main.chunk.js?v=${version}");
+        loadScript("/_content/Siesa.SDK.Frontend/flex/static/js/runtime-main.js?v=${version}");
     }
     loadScript("/_content/Siesa.SDK.Frontend/vendor/dexie/dexie.js");
 }
