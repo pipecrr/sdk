@@ -3,21 +3,34 @@
 @inherits SDKComponent;
 
 <DxGridLayout ItemContainerCssClass="@ItemContainerCssClass" Id="@GetAutomationId()" ColumnSpacing="@ColumnSpacing" CssClass="@CssClass" RowSpacing="@RowSpacing">
-    <Columns>
-        @Columns
-    </Columns>
+
     <Rows>
-        @Rows
+        @if (SDKRows != null)
+        {
+            @SDKRows
+        }
     </Rows>
+
+    <Columns>
+        @if (SDKColumns != null)
+        {
+            @SDKColumns
+        }
+    </Columns>
+
     <Items>
-        @Items
+        @if (SDKItems != null)
+        {
+            @SDKItems
+        }
     </Items>
+    
 </DxGridLayout>
 
 @code
 {
         [Parameter]
-        public RenderFragment Columns { get; set; }
+        public RenderFragment SDKColumns { get; set; }
 
         [Parameter]
         public string ColumnSpacing { get; set; }
@@ -32,10 +45,10 @@
         public string ItemContainerCssClass { get; set; }
 
         [Parameter]
-        public RenderFragment Items { get; set; }
+        public RenderFragment SDKItems { get; set; }
 
         [Parameter]
-        public RenderFragment Rows { get; set; }
+        public RenderFragment SDKRows { get; set; }
 
         [Parameter]
         public string RowSpacing { get; set; }

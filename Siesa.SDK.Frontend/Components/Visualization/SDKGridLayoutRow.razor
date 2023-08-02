@@ -2,7 +2,7 @@
 @using Siesa.SDK.Frontend.Components;
 @inherits SDKComponent;
 
-<DxGridLayoutRow Height="@Height" Visible="@Visible" Areas="@Areas">
+<DxGridLayoutRow Height="@HeightRow" Visible="@ShowRow" Areas="@Area">
 
 </DxGridLayoutRow>
 
@@ -11,12 +11,12 @@
 {
 
     [Parameter]
-    public string Height { get; set; }
+    public string HeightRow { get; set; }
 
     [Parameter]
-    public bool Visible { get; set; } = true;
+    public bool ShowRow { get; set; } = true;
 
     [Parameter]
-    public string Areas { get; set; }
+    public string Area { get; set; }
     
 }

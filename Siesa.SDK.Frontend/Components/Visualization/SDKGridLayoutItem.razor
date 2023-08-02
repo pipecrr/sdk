@@ -1,4 +1,11 @@
-<DxGridLayoutItem Row="@Row" Column="@Column" ColumnSpan="@ColumnSpan" CssClass="@CssClass" RowSpan="@RowSpan" Visible="@Visible">
+<DxGridLayoutItem Row="@Row" Column="@Column" ColumnSpan="@ColumnSpan" CssClass="@CssClass" RowSpan="@RowSpan" Visible="@ShowItem">
+
+    <Template>
+        @if (SDKTemplate != null)
+        {
+            @SDKTemplate
+        }
+    </Template>
 
 </DxGridLayoutItem>
 
@@ -18,9 +25,9 @@
     [Parameter]
     public int RowSpan { get; set; }
     [Parameter]
-    public RenderFragment Template { get; set; }
+    public RenderFragment SDKTemplate { get; set; }
 
     [Parameter]
-    public bool Visible { get; set; } = true;
+    public bool ShowItem { get; set; } = true;
 
 }

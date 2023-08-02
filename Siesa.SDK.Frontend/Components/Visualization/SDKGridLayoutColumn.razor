@@ -1,12 +1,12 @@
-<DxGridLayoutColumn Width="@Width" Visible="@Visible">
+<DxGridLayoutColumn Width="@WidthColumn" Visible="@ShowColumn">
 
 </DxGridLayoutColumn>
 
 @code
 {
     [Parameter]
-    public string Width { get; set; }
+    public string WidthColumn { get; set; }
 
     [Parameter]
-    public bool Visible { get; set; } = true;
+    public bool ShowColumn { get; set; } = true;
 }
