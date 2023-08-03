@@ -79,14 +79,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 }
                 
                 var baseObj = BusinessObj.BaseObj;
+                List<string> extraFieldsTmp = new ();
                 foreach (string field in _extraFields){
                     var property = baseObj.GetType().GetProperty(field);
                     if(property != null && property.PropertyType.IsClass && !property.PropertyType.IsPrimitive && !property.PropertyType.IsEnum && property.PropertyType != typeof(string) && property.PropertyType != typeof(byte[])){
                         var rowidNameField = "Rowid"+field;
                         if(!_extraFields.Contains(rowidNameField)){
-                            _extraFields.Add(rowidNameField);
+                            extraFieldsTmp.Add(rowidNameField);
                         }
                     }
+                }
+                if(extraFieldsTmp.Count > 0){
+                    _extraFields = _extraFields.Union(extraFieldsTmp).ToList();
                 }
             }
             catch (Exception e)
