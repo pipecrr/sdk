@@ -301,18 +301,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             var metadata = BackendRouterService.GetViewdef(bName, _viewdefName);
             if (IsSubpanel && String.IsNullOrEmpty(metadata)){
                 metadata = BackendRouterService.GetViewdef(bName, "related_default");
-                result = metadata;
             }
             if (String.IsNullOrEmpty(metadata) && String.Equals(_viewdefName,"related_detail", StringComparison.Ordinal))
             {
                 metadata = BackendRouterService.GetViewdef(bName, "detail");
-                result = metadata;
             }
             if(String.IsNullOrEmpty(metadata))
             {
                 metadata = BackendRouterService.GetViewdef(bName, "default");
+            }
+            if(!String.IsNullOrEmpty(metadata)){
                 result = metadata;
             }
+
             return result;
         }
 
