@@ -32,19 +32,21 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private FormViewModel FormViewModel { get; set; } = new FormViewModel();
 
         private List<string> _extraFields = new List<string>();
-        private async Task GetExtraFields(string bName = null)
+        private void GetExtraFields(string bName = null)
         {
             try
             {
-                string _viewdefName = "detail";
+                string viewdefName = "detail";
 
                 if (IsSubpanel)
                 {
-                    _viewdefName = "related_detail";
+                    viewdefName = "related_detail";
                 }
 
-                var metadata = BackendRouterService.GetViewdef(bName, _viewdefName);
-
+                var metadata = BackendRouterService.GetViewdef(bName, viewdefName);
+                if (IsSubpanel && String.IsNullOrEmpty(metadata)){
+                    metadata = BackendRouterService.GetViewdef(bName, "related_default");
+                }
                 if(String.IsNullOrEmpty(metadata))
                 {
                     metadata = BackendRouterService.GetViewdef(bName, "default");
@@ -76,15 +78,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     _extraFields = defaultFields.Select(field => field.Replace("BaseObj.", "")).ToList();
                 }
                 
-                var BaseObj = BusinessObj.BaseObj;
+                var baseObj = BusinessObj.BaseObj;
+                List<string> extraFieldsTmp = new ();
                 foreach (string field in _extraFields){
-                    var property = BaseObj.GetType().GetProperty(field);
+                    var property = baseObj.GetType().GetProperty(field);
                     if(property != null && property.PropertyType.IsClass && !property.PropertyType.IsPrimitive && !property.PropertyType.IsEnum && property.PropertyType != typeof(string) && property.PropertyType != typeof(byte[])){
-                        var RowidNameField = "Rowid"+field;
-                        if(!_extraFields.Contains(RowidNameField)){
-                            _extraFields.Add(RowidNameField);
+                        var rowidNameField = "Rowid"+field;
+                        if(!_extraFields.Contains(rowidNameField)){
+                            extraFieldsTmp.Add(rowidNameField);
                         }
                     }
+                }
+                if(extraFieldsTmp.Count > 0){
+                    _extraFields = _extraFields.Union(extraFieldsTmp).ToList();
                 }
             }
             catch (Exception e)
@@ -93,12 +99,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
         }
 
-        private async Task InitDetail(Int64 business_obj_id)
+        private async Task InitDetail(Int64 businessObjId)
         {
-            await GetExtraFields(BusinessName);
+            GetExtraFields(BusinessName);
             try
             {
-                await BusinessObj.InitializeBusiness(business_obj_id,_extraFields);
+                await BusinessObj.InitializeBusiness(businessObjId,_extraFields);
             }
             catch (System.Exception e)
             {
