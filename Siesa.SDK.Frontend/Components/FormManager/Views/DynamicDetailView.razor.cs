@@ -76,15 +76,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     _extraFields = defaultFields.Select(field => field.Replace("BaseObj.", "")).ToList();
                 }
                 
-                var BaseObj = BusinessObj.BaseObj;
+                var baseObj = BusinessObj.BaseObj;
+                List<string> extraFieldsTmp = new ();
                 foreach (string field in _extraFields){
-                    var property = BaseObj.GetType().GetProperty(field);
+                    var property = baseObj.GetType().GetProperty(field);
                     if(property != null && property.PropertyType.IsClass && !property.PropertyType.IsPrimitive && !property.PropertyType.IsEnum && property.PropertyType != typeof(string) && property.PropertyType != typeof(byte[])){
-                        var RowidNameField = "Rowid"+field;
-                        if(!_extraFields.Contains(RowidNameField)){
-                            _extraFields.Add(RowidNameField);
+                        var rowidNameField = "Rowid"+field;
+                        if(!_extraFields.Contains(rowidNameField)){
+                            extraFieldsTmp.Add(rowidNameField);
                         }
                     }
+                }
+                if(extraFieldsTmp.Count > 0){
+                    _extraFields = _extraFields.Union(extraFieldsTmp).ToList();
                 }
             }
             catch (Exception e)
