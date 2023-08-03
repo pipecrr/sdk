@@ -1,22 +1,7 @@
-@using Microsoft.AspNetCore.Components;
-@using Siesa.SDK.Frontend.Components;
-@inherits SDKComponent;
+@using Microsoft.AspNetCore.Components
+@using Siesa.SDK.Frontend.Components
+@inherits DxGridLayoutRow
 
-<DxGridLayoutRow Height="@HeightRow" Visible="@ShowRow" Areas="@Area">
+<DxGridLayoutRow Height="@Height" Visible="@Visible" Areas="@Areas">
 
 </DxGridLayoutRow>
-
-
-@code 
-{
-
-    [Parameter]
-    public string HeightRow { get; set; }
-
-    [Parameter]
-    public bool ShowRow { get; set; } = true;
-
-    [Parameter]
-    public string Area { get; set; }
-    
-}

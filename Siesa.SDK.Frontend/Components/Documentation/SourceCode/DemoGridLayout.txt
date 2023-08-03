@@ -12,53 +12,53 @@
     <div class="row px-3"> 
         <div class="col-md-6 p-1">
             <SDKGridLayout CssClass="w-100 ch-480">
-                <SDKRows>
-                    <SDKGridLayoutRow HeightRow="100px" />
+                <Rows>
+                    <SDKGridLayoutRow Height="100px" />
                     <SDKGridLayoutRow />
-                    <SDKGridLayoutRow HeightRow="auto" />
-                </SDKRows>
-                <SDKColumns>
-                    <SDKGridLayoutColumn WidthColumn="2fr" />
-                    <SDKGridLayoutColumn WidthColumn="60%" />
+                    <SDKGridLayoutRow Height="auto" />
+                </Rows>
+                <Columns>
+                    <SDKGridLayoutColumn Width="2fr" />
+                    <SDKGridLayoutColumn Width="60%" />
                     <SDKGridLayoutColumn />
-                </SDKColumns>
-                <SDKItems>
+                </Columns>
+                <Items>
                     <SDKGridLayoutItem Row="0" Column="0" ColumnSpan="3">
-                        <SDKTemplate>
+                        <Template>
                             <div class="gridlayout-header gridlayout-item">
                                 Header
                             </div>
-                        </SDKTemplate>
+                        </Template>
                     </SDKGridLayoutItem>
                     <SDKGridLayoutItem Row="1" Column="1">
-                        <SDKTemplate>
+                        <Template>
                             <div class="gridlayout-content gridlayout-item">
                                 Content
                             </div>
-                        </SDKTemplate>
+                        </Template>
                     </SDKGridLayoutItem>
                     <SDKGridLayoutItem Row="1" Column="0">
-                        <SDKTemplate>
+                        <Template>
                             <div class="gridlayout-left-side-bar gridlayout-item">
                                 Left Bar
                             </div>
-                        </SDKTemplate>
+                        </Template>
                     </SDKGridLayoutItem>
                     <SDKGridLayoutItem Row="1" Column="2">
-                        <SDKTemplate>
+                        <Template>
                             <div class="gridlayout-right-side-bar gridlayout-item">
                                 Right Bar
                             </div>
-                        </SDKTemplate>
+                        </Template>
                     </SDKGridLayoutItem>
                     <SDKGridLayoutItem Row="2" Column="0" ColumnSpan="3">
-                        <SDKTemplate>
+                        <Template>
                             <div class="gridlayout-footer gridlayout-item">
                                 Footer
                             </div>
-                        </SDKTemplate>
+                        </Template>
                     </SDKGridLayoutItem>
-                </SDKItems>
+                </Items>
             </SDKGridLayout>
         </div>
     </div>
@@ -107,8 +107,3 @@
 }
 
 </style>
-
-
-@code{
-
-}

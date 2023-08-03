@@ -1,12 +1,4 @@
-<DxGridLayoutColumn Width="@WidthColumn" Visible="@ShowColumn">
+@inherits DxGridLayoutColumn
+<DxGridLayoutColumn Width="@Width" Visible="@Visible">
 
 </DxGridLayoutColumn>
-
-@code
-{
-    [Parameter]
-    public string WidthColumn { get; set; }
-
-    [Parameter]
-    public bool ShowColumn { get; set; } = true;
-}

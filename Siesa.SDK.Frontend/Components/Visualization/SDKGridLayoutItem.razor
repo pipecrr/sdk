@@ -1,33 +1,3 @@
-<DxGridLayoutItem Row="@Row" Column="@Column" ColumnSpan="@ColumnSpan" CssClass="@CssClass" RowSpan="@RowSpan" Visible="@ShowItem">
+@inherits DxGridLayoutItem
 
-    <Template>
-        @if (SDKTemplate != null)
-        {
-            @SDKTemplate
-        }
-    </Template>
-
-</DxGridLayoutItem>
-
-@code
-{
-    [Parameter]
-    public string Area { get; set; }
-    [Parameter]
-    public int Column { get; set; }
-    [Parameter]
-    public int ColumnSpan { get; set; }
-    [Parameter]
-    public string CssClass { get; set; }
-
-    [Parameter]
-    public int Row { get; set; }
-    [Parameter]
-    public int RowSpan { get; set; }
-    [Parameter]
-    public RenderFragment SDKTemplate { get; set; }
-
-    [Parameter]
-    public bool ShowItem { get; set; } = true;
-
-}
+<DxGridLayoutItem Row="@Row" Column="@Column" ColumnSpan="@ColumnSpan" CssClass="@CssClass" RowSpan="@RowSpan" Visible="@Visible" Template="@Template" />

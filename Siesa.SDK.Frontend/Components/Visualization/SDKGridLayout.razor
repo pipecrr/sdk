@@ -1,55 +1,5 @@
-@using Microsoft.AspNetCore.Components;
-@using Siesa.SDK.Frontend.Components;
-@inherits SDKComponent;
+@using Microsoft.AspNetCore.Components
+@using Siesa.SDK.Frontend.Components
+@inherits DxGridLayout
 
-<DxGridLayout ItemContainerCssClass="@ItemContainerCssClass" Id="@GetAutomationId()" ColumnSpacing="@ColumnSpacing" CssClass="@CssClass" RowSpacing="@RowSpacing">
-
-    <Rows>
-        @if (SDKRows != null)
-        {
-            @SDKRows
-        }
-    </Rows>
-
-    <Columns>
-        @if (SDKColumns != null)
-        {
-            @SDKColumns
-        }
-    </Columns>
-
-    <Items>
-        @if (SDKItems != null)
-        {
-            @SDKItems
-        }
-    </Items>
-    
-</DxGridLayout>
-
-@code
-{
-        [Parameter]
-        public RenderFragment SDKColumns { get; set; }
-
-        [Parameter]
-        public string ColumnSpacing { get; set; }
-
-        [Parameter]
-        public string CssClass { get; set; }
-
-        [Parameter]
-        public string Id { get; set; }
-
-        [Parameter]
-        public string ItemContainerCssClass { get; set; }
-
-        [Parameter]
-        public RenderFragment SDKItems { get; set; }
-
-        [Parameter]
-        public RenderFragment SDKRows { get; set; }
-
-        [Parameter]
-        public string RowSpacing { get; set; }
-}
+<DxGridLayout ColumnSpacing="@ColumnSpacing" CssClass="@CssClass" RowSpacing="@RowSpacing" Rows="@Rows" Columns="@Columns" Items="@Items" />    
