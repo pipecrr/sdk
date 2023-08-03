@@ -128,7 +128,7 @@
                             </div>
                             @if(RecoveringPassword)
                             {
-                                <ForgotPassword _login="@this" RowidCulture="@RowidCulture"/>
+                                <ForgotPassword Click="@NavigateFormLogin" RowidCulture="@RowidCulture"/>
 
                             }else if (!string.IsNullOrEmpty(UserToken))
                             {

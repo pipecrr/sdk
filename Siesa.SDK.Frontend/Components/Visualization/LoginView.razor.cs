@@ -23,6 +23,7 @@ public partial class LoginView
     [Parameter] public string LogoUrl { get; set; }
     [Parameter] public string ImageUrl { get; set; }
     [Parameter] public int RowidConexion { get; set; }
+    [Parameter] public string? UserToken { get; set; }
     public short RowidCulture { get; set; } = 1;
     public string FormID { get; set; } = Guid.NewGuid().ToString();
     private string PortalName { get; set; }
@@ -213,6 +214,12 @@ public partial class LoginView
                 Description = "Colombia",
                 LanguageCode = "Es-co"
             };
+    }
+
+    private void ForgotPassword()
+    {
+        RecoveringPassword = true;
+        StateHasChanged();
     }
     private string GetCountryFlagCode (E00021_Culture culture)
     {
