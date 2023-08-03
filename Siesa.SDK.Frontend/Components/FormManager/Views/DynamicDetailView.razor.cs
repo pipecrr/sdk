@@ -32,19 +32,21 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private FormViewModel FormViewModel { get; set; } = new FormViewModel();
 
         private List<string> _extraFields = new List<string>();
-        private async Task GetExtraFields(string bName = null)
+        private void GetExtraFields(string bName = null)
         {
             try
             {
-                string _viewdefName = "detail";
+                string viewdefName = "detail";
 
                 if (IsSubpanel)
                 {
-                    _viewdefName = "related_detail";
+                    viewdefName = "related_detail";
                 }
 
-                var metadata = BackendRouterService.GetViewdef(bName, _viewdefName);
-
+                var metadata = BackendRouterService.GetViewdef(bName, viewdefName);
+                if (IsSubpanel && String.IsNullOrEmpty(metadata)){
+                    metadata = BackendRouterService.GetViewdef(bName, "related_default");
+                }
                 if(String.IsNullOrEmpty(metadata))
                 {
                     metadata = BackendRouterService.GetViewdef(bName, "default");
@@ -97,12 +99,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
         }
 
-        private async Task InitDetail(Int64 business_obj_id)
+        private async Task InitDetail(Int64 businessObjId)
         {
-            await GetExtraFields(BusinessName);
+            GetExtraFields(BusinessName);
             try
             {
-                await BusinessObj.InitializeBusiness(business_obj_id,_extraFields);
+                await BusinessObj.InitializeBusiness(businessObjId,_extraFields);
             }
             catch (System.Exception e)
             {
