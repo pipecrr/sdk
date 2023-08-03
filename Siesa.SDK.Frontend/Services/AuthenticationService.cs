@@ -555,12 +555,12 @@ namespace Siesa.SDK.Frontend.Services
             await request.Call("SendEmailRecoveryPassword", email, SelectedConnection.Rowid, UrlSystem, isPortal);
         }
 
-        public async Task<bool> ValidateUserToken(string userToken)
+        public async Task<bool> ValidateUserToken(string userToken,bool IsPortal)
         {
 
             var request = await GetBLUser().ConfigureAwait(true);
 
-            var result = await request.Call("ValidateUserRecoveryPass", userToken, SelectedConnection.Rowid);
+            var result = await request.Call("ValidateUserRecoveryPass", userToken, SelectedConnection.Rowid, IsPortal);
 
             if (result.Success)
             {
