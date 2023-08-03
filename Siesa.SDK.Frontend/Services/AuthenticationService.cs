@@ -201,7 +201,7 @@ namespace Siesa.SDK.Frontend.Services
             if (loginRequest.Success)
             {
                 UserToken = loginRequest.Data.Token;
-                await LoginBrowser(loginRequest.Data, UserToken, rowidDbConnection.ToString(CultureInfo.InvariantCulture)).ConfigureAwait(true);
+                await LoginBrowser(loginRequest.Data, rowidDbConnection.ToString(CultureInfo.InvariantCulture)).ConfigureAwait(true);
             }
             else
             {
@@ -216,7 +216,7 @@ namespace Siesa.SDK.Frontend.Services
             }
         }
 
-        private async Task LoginBrowser(dynamic loginRequestData, string userToken, string rowidDbConnection)
+        private async Task LoginBrowser(dynamic loginRequestData, string rowidDbConnection)
         {
             await _localStorageService.SetItemAsync("usertoken", UserToken).ConfigureAwait(true);
                 
@@ -247,7 +247,7 @@ namespace Siesa.SDK.Frontend.Services
                 throw new Exception("Login Service not found");
             }
 
-            short lastCompanyGroupSelected = await _localStorageService.GetItemAsync<short>("rowidCompanyGroup");
+            short lastCompanyGroupSelected = await _localStorageService.GetItemAsync<short>("rowidCompanyGroup").ConfigureAwait(true);
 
             if(lastCompanyGroupSelected > 0 && lastCompanyGroupSelected != rowidCompanyGroup) 
             {
@@ -257,17 +257,18 @@ namespace Siesa.SDK.Frontend.Services
             var loginRequest = await blSdkPortalUser.Call("SignInSessionPortal", new Dictionary<string, dynamic> {
                 {"username", username},
                 {"password", password},
-                {"rowIdDBConnection", rowidDbConnection},
+                {"rowidDbConnection", rowidDbConnection},
                 {"rowidCulture", RowidCultureChanged},
                 {"rowIdCompanyGroup", rowidCompanyGroup}
-            });
+            }).ConfigureAwait(true);
             if (loginRequest.Success)
             {
                 UserToken = loginRequest.Data.Token;
-                await SetCookie("selectedConnection", rowidDbConnection.ToString()).ConfigureAwait(true);
+                string rowidDbConnectionString = rowidDbConnection.ToString(CultureInfo.InvariantCulture);
+                await SetCookie("selectedConnection", rowidDbConnectionString).ConfigureAwait(true);
                 await SetPortalUserPhoto(loginRequest.Data.UserPhoto).ConfigureAwait(true);
                 await SetPreferencesPortalUser(loginRequest.Data.UserPreferences).ConfigureAwait(true);
-                await LoginBrowser(loginRequest.Data, UserToken, rowidDbConnection.ToString()).ConfigureAwait(true);
+                await LoginBrowser(loginRequest.Data, rowidDbConnectionString).ConfigureAwait(true);
             }
             else
             {
