@@ -34,7 +34,6 @@ namespace Siesa.SDK.Frontend.Services
         private SDKDbConnection SelectedConnection = new SDKDbConnection();
 
         public string UserToken { get; private set; } = "";
-        public string PortalUserToken { get; private set; } = "";
 
         private int _selectedSuite;
 
@@ -105,7 +104,6 @@ namespace Siesa.SDK.Frontend.Services
         public async Task Initialize()
         {
             UserToken = await _localStorageService.GetItemAsync<string>("usertoken");
-            PortalUserToken = await _localStorageService.GetItemAsync<string>("portalusertoken");
             CustomRowidCulture = await _localStorageService.GetItemAsync<short>("customrowidculture");
             _selectedSuite = await _localStorageService.GetItemAsync<int>("selectedSuite");
             //_rowIdCompanyGroup = await _localStorageService.GetItemAsync<short>("rowIdCompanyGroup");
@@ -265,9 +263,7 @@ namespace Siesa.SDK.Frontend.Services
             });
             if (loginRequest.Success)
             {
-                PortalUserToken = loginRequest.Data.Token;
                 UserToken = loginRequest.Data.Token;
-                await _localStorageService.SetItemAsync("portalusertoken", PortalUserToken).ConfigureAwait(true);
                 await SetCookie("selectedConnection", rowidDbConnection.ToString()).ConfigureAwait(true);
                 await SetPortalUserPhoto(loginRequest.Data.UserPhoto).ConfigureAwait(true);
                 await SetPreferencesPortalUser(loginRequest.Data.UserPreferences).ConfigureAwait(true);
@@ -345,12 +341,10 @@ namespace Siesa.SDK.Frontend.Services
             SDKDbConnection selectedConnection = GetSelectedConnection();
             var rowidDbConnection = selectedConnection != null ? selectedConnection.Rowid : 0;
             
-            await _localStorageService.RemoveItemAsync("portalusertoken").ConfigureAwait(true);
             await _localStorageService.RemoveItemAsync("portaluserPhoto").ConfigureAwait(true);
             await _localStorageService.RemoveItemAsync("portalUserPreferences").ConfigureAwait(true);
             await RemoveCookie("selectedConnection").ConfigureAwait(true);
             await Logout().ConfigureAwait(true);
-            PortalUserToken = "";
 
             _navigationManager.NavigateTo($"Portal/{rowidDbConnection}");
         }
@@ -361,15 +355,6 @@ namespace Siesa.SDK.Frontend.Services
             if(saveLocalStorage)
             {
                 await _localStorageService.SetItemAsync("usertoken", UserToken);
-            }
-        }
-
-        public async Task SetTokenPortal(string token, bool saveLocalStorage = true)
-        {
-            PortalUserToken = token;
-            if(saveLocalStorage)
-            {
-                await _localStorageService.SetItemAsync("portalusertoken", PortalUserToken);
             }
         }
 

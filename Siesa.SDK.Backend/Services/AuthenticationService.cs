@@ -11,7 +11,6 @@ namespace Siesa.SDK.Backend.Services
     public class AuthenticationService : IAuthenticationService
     {
         public string UserToken { get; set; } = "";
-        public string PortalUserToken { get; set; } = "";
         private string _secretKey;
         private int _minutesExp;
         public short RowidCultureChanged { get; set; } = 0;
@@ -54,10 +53,6 @@ namespace Siesa.SDK.Backend.Services
         public async Task SetToken(string token, bool saveLocalStorage = true)
         {
             UserToken = token;
-        }
-        public async Task SetTokenPortal(string token, bool saveLocalStorage = true)
-        {
-            PortalUserToken = token;
         }
 
         public Task Initialize()

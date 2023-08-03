@@ -74,7 +74,6 @@ namespace Siesa.SDK.Shared.Services
     public interface IAuthenticationService
     {
         string UserToken { get; }
-        string PortalUserToken { get; }
         JwtUserData User { get; }
         PortalUserJwt PortalUser { get; }
         short RowidCultureChanged { get; set; }
@@ -86,7 +85,6 @@ namespace Siesa.SDK.Shared.Services
         Task Logout();
         Task LogoutPortal();
         public Task SetToken(string token, bool saveLocalStorage = true);
-        public Task SetTokenPortal(string token, bool saveLocalStorage = true);
         Task SetCustomRowidCulture(short rowid);
         short GetRoiwdCulture();
         Task SetRowidCompanyGroup(short rowid);
