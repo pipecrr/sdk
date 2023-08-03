@@ -27,13 +27,47 @@ namespace Siesa.SDK.Shared.Services
 
         public bool IsAdministrator { get; set; }
         public int? RowidAttachmentUserProfilePicture { get; set; }
-        public string PortalName {get; set;}
-        public string IdExternalUser { get; set; }
-        public int RowidExternalUser { get; set; }
-        public long RowidMainRecord { get; set; }
+        
+        /// <summary>
+        /// Portal user. This property represents the portal user associated with the session.
+        /// </summary>
+        public PortalUserJwt PortalUser { get; set; }
+        /// <summary>
+        /// Overrides the ToString() method to provide a custom string representation of the JwtUserData.
+        /// </summary>
+        /// <returns>A formatted string containing the user id and name.</returns>
         public override string ToString()
         {
             return $"({Id}) - {Name}";
+        }
+    }
+    
+    /// <summary>
+    /// DTO for portal user
+    /// </summary>
+    public class PortalUserJwt
+    {
+        /// <summary>
+        /// Rowid. This property represents the row identifier of the user in the external system.
+        /// </summary>
+        public int Rowid { get; set; }
+        /// <summary>
+        /// User id. This property represents the unique identifier for the portal user.
+        /// </summary>
+        public string Id { get; set; }
+
+        /// <summary>
+        /// Main record rowid. This property represents the row identifier of the main record associated with the user.
+        /// </summary>
+        public long RowidMainRecord { get; set; }
+
+        /// <summary>
+        /// Overrides the ToString() method to provide a custom string representation of the PortalUserDTO.
+        /// </summary>
+        /// <returns>A formatted string containing the user id and name.</returns>
+        public override string ToString()
+        {
+            return $"{Id}";
         }
     }
     
@@ -42,13 +76,13 @@ namespace Siesa.SDK.Shared.Services
         string UserToken { get; }
         string PortalUserToken { get; }
         JwtUserData User { get; }
-        JwtUserData PortalUser { get; }
+        PortalUserJwt PortalUser { get; }
         short RowidCultureChanged { get; set; }
 
         Task Initialize();
-        Task Login(string username, string password, short rowIdDBConnection,
-                     bool IsUpdateSession = false, short rowIdCompanyGroup = 1);
-        Task LoginPortal(string username, string password, short rowIdDBConnection, bool IsUpdateSession = false, short rowIdCompanyGroup = 1);
+        Task Login(string username, string password, short rowidDbConnection,
+                     bool isUpdateSession = false, short rowIdCompanyGroup = 1);
+        Task LoginPortal(string username, string password, short rowidDbConnection, bool isUpdateSession = false, short rowidCompanyGroup = 1);
         Task Logout();
         Task LogoutPortal();
         public Task SetToken(string token, bool saveLocalStorage = true);

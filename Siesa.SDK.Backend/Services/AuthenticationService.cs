@@ -22,7 +22,6 @@ namespace Siesa.SDK.Backend.Services
         }
 
         private JwtUserData? _user;
-        private JwtUserData? _portalUser;
 
         public JwtUserData User { get {
             if(UserToken == ""){
@@ -43,24 +42,12 @@ namespace Siesa.SDK.Backend.Services
             return _user;
         }}
 
-        public JwtUserData PortalUser {
+        /// <summary>
+        /// Portal user. This property represents the portal user associated with the session.
+        /// </summary>
+        public PortalUserJwt PortalUser {
             get {
-                if(PortalUserToken == ""){
-                    return null;
-                }
-                if(_portalUser == null){
-                    try
-                    {
-                        _portalUser = _sdkJWT.Validate<JwtUserData>(PortalUserToken);
-                    }
-                    catch (System.Exception)
-                    {
-                        
-                        _portalUser = null;
-                    }
-                   
-                }
-                return _portalUser;
+                return User?.PortalUser;
             }
         }
 
@@ -78,13 +65,13 @@ namespace Siesa.SDK.Backend.Services
             throw new NotImplementedException();
         }
 
-        public Task Login(string username, string password, short rowIdDBConnection, 
-            bool IsUpdateSession = false,short rowIdCompanyGroup = 1)
+        public Task Login(string username, string password, short rowidDbConnection, 
+            bool isUpdateSession = false,short rowIdCompanyGroup = 1)
         {
             throw new NotImplementedException();
         }
 
-        public Task LoginPortal(string username, string password, short rowIdDBConnection, bool IsUpdateSession = false, short rowIdCompanyGroup = 1)
+        public Task LoginPortal(string username, string password, short rowidDbConnection, bool isUpdateSession = false, short rowidCompanyGroup = 1)
         {
             throw new NotImplementedException();
         }

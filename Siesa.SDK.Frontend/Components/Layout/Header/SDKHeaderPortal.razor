@@ -21,11 +21,14 @@
 @code {
     private string LogoUrl { get; set; }
     private string UserName { get; set; }
-
+    
+    /// <summary>
+    /// Executed when component parameters are set.
+    /// </summary>
     protected override void OnParametersSet()
     {
         LogoUrl = AuthenticationService.GetConnectionLogo();
-        UserName = AuthenticationService.PortalUser?.IdExternalUser;
+        UserName = AuthenticationService.User?.PortalUser?.Id;
         base.OnParametersSet();
     }
 }
