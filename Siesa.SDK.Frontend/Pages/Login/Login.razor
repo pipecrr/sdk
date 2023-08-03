@@ -132,8 +132,8 @@
 
                             }else if (!string.IsNullOrEmpty(UserToken))
                             {
-                                <RecoveryPassword UserToken="@UserToken" />
-
+                                <RecoveryPassword UserToken="@UserToken" SelectedConnection="@SelectedConnection"
+                                RowidCulture="@RowidCulture" />
                             }
                             else
                             {
@@ -261,7 +261,6 @@
     private bool init_loading = true;
     private bool loading;
 
-    private bool loadingChangePassword;
     private string error;
     bool IsOpen { get; set; } = false;
 
@@ -321,11 +320,7 @@
         LogoUrl = AuthenticationService.GetConnectionLogo();
         init_loading = true;
         await InitLogin();
-        
-        if (!string.IsNullOrEmpty(UserToken))
-        {
-            ValidUser = await AuthenticationService.ValidateUserToken(UserToken);
-        }
+
 
         await base.OnParametersSetAsync();
     }
@@ -409,12 +404,6 @@
         }
     }
 
-    private void ChangePasswordUserInvalid()
-    {
-       _ = SDKNotificationService.ShowError("Custom.SDK.ForgotPassword.ChangePasswordInvalid", culture: RowidCulture);
-       loadingChangePassword = false;
-       StateHasChanged();
-    }
     
     private async Task getDbConnections()
     {
