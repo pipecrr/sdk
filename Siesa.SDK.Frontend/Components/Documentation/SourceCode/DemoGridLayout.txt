@@ -4,12 +4,17 @@
 @using Siesa.SDK.Frontend.Services
 @using Siesa.SDK.Frontend.Components.Fields
 
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Services
+@using Siesa.SDK.Frontend.Components.Fields
+
 <div class="container-fluid m-3">
     <div class="container-fluid">
-            <h2>Demo SDKGridLayout</h2> 
-            <p>Demonstration and configuration of the SDKGridLayout component</p> 
+        <h2>Demo SDKGridLayout</h2>
+        <p>Demonstration and configuration of the SDKGridLayout component</p>
     </div>
-    <div class="row px-3"> 
+    <div class="row px-3">
         <div class="col-md-6 p-1">
             <SDKGridLayout CssClass="w-100 ch-480">
                 <Rows>
@@ -26,13 +31,17 @@
                     <SDKGridLayoutItem Row="0" Column="0" ColumnSpan="3">
                         <Template>
                             <div class="gridlayout-header gridlayout-item">
-                                Header
+                                <SDKCard>
+                                    <SDKProgressBar Value="@valor3" Max="100" ScaleRanges="@ranges"/>
+
+                                    <SDKRangeSlider MinRange="0" MaxRange="100" @bind-Value="@valor3" />
+                                </SDKCard>
                             </div>
                         </Template>
                     </SDKGridLayoutItem>
                     <SDKGridLayoutItem Row="1" Column="1">
                         <Template>
-                            <div class="gridlayout-content gridlayout-item">
+                            <div style="background-color: red;" class="gridlayout-content gridlayout-item">
                                 Content
                             </div>
                         </Template>
@@ -40,21 +49,38 @@
                     <SDKGridLayoutItem Row="1" Column="0">
                         <Template>
                             <div class="gridlayout-left-side-bar gridlayout-item">
-                                Left Bar
+                                <SDKButtonTiles ResourceTag="DemoTitle" BackgroundColor="FF5733"
+                                    IconClass="fa-solid fa-layer-group" />
                             </div>
                         </Template>
                     </SDKGridLayoutItem>
                     <SDKGridLayoutItem Row="1" Column="2">
                         <Template>
                             <div class="gridlayout-right-side-bar gridlayout-item">
-                                Right Bar
+                                <SDKButtonTiles ResourceTag="DemoTitle3" BackgroundColor="33FF52"
+                                    IconClass="fa-solid fa-layer-group" />
                             </div>
                         </Template>
                     </SDKGridLayoutItem>
                     <SDKGridLayoutItem Row="2" Column="0" ColumnSpan="3">
                         <Template>
                             <div class="gridlayout-footer gridlayout-item">
-                                Footer
+                                <SDKCollapse>
+                                    <Items>
+                                        <SDKCollapseItem Text="Colapsable 1">
+                                            <div class="pt-2 pb-3 px-2">
+                                                <h3>Hello World</h3>
+                                                <p>Child content can be another component or custom html content</p>
+                                            </div>
+                                        </SDKCollapseItem>
+                                        <SDKCollapseItem Text="Colapsable 2">
+                                            <div class="pt-2 pb-3 px-2">
+                                                <h3>Hello World</h3>
+                                                <p>Child content can be another component or custom html content</p>
+                                            </div>
+                                        </SDKCollapseItem>
+                                    </Items>
+                                </SDKCollapse>
                             </div>
                         </Template>
                     </SDKGridLayoutItem>
@@ -64,46 +90,41 @@
     </div>
 </div>
 
-<style>
 
-.gridlayout-item {
-    font-size: 1.2em;
-    font-weight: 500;
-    text-align: center;
-    height: 100%;
-    padding: 0.5rem;
-    text-align: center;
-    position: relative;
-    z-index: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+@code
+{
+    double valor3 = 54;
+    List<SDKProgressBarScaleRange> ranges = new List<SDKProgressBarScaleRange>()
+    {
+        new SDKProgressBarScaleRange()
+        {
+            From = 0,
+            To = 10,
+            BarStyle = SDKProgressBarStyle.Danger
+        },
+        new SDKProgressBarScaleRange()
+        {
+            From = 11,
+            To = 25,
+            BarStyle = SDKProgressBarStyle.Warning
+        },
+        new SDKProgressBarScaleRange()
+        {
+            From = 26,
+            To = 50,
+            BarStyle = SDKProgressBarStyle.Info
+        },
+        new SDKProgressBarScaleRange()
+        {
+            From = 51,
+            To = 75,
+            BarStyle = SDKProgressBarStyle.Success
+        },
+        new SDKProgressBarScaleRange()
+        {
+            From = 76,
+            To = 100,
+            BarStyle = SDKProgressBarStyle.Primary
+        }
+    };
 }
-.gridlayout-item:before {
-    content: " ";
-    position: absolute;
-    z-index: -1;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0;
-    opacity: 0.4;
-}
-.gridlayout-header:before {
-    background-color: red;
-}
-.gridlayout-content:before {
-    background-color: yellow;
-}
-.gridlayout-left-side-bar:before {
-    background-color: green;
-}
-.gridlayout-right-side-bar:before {
-    background-color: blue;
-}
-.gridlayout-footer:before {
-    background-color: purple;
-    opacity: 0.5;
-}
-
-</style>
