@@ -569,7 +569,8 @@ namespace Siesa.SDK.Frontend.Services
             return false;
         }
 
-        public async Task<bool> ChangePassword(string userToken,short rowIdDBConnection, string NewPassword, string ConfirmPassword)
+        public async Task<bool> ChangePassword(string userToken,short rowIdDBConnection, string NewPassword, string ConfirmPassword,
+        bool isPortal = false)
         {
             var request = await GetBLUser();
             if (!string.IsNullOrEmpty(NewPassword) && !string.IsNullOrEmpty(ConfirmPassword))
@@ -579,7 +580,9 @@ namespace Siesa.SDK.Frontend.Services
                     return false;
                 }else
                 {
-                    var resultChangePassword = await request.Call("RecoveryPassword",userToken,NewPassword,SelectedConnection.Rowid);
+                    var resultChangePassword = await request.Call("RecoveryPassword",userToken,NewPassword,
+                    SelectedConnection.Rowid, isPortal);
+                    
                     if (resultChangePassword.Success)
                     {
                         return true;
