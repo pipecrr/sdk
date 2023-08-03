@@ -11,37 +11,37 @@
 <aside class="sdk_dashboard_portal">
     @if (PortalConfiguration != null)
     {
-        <DxGridLayout ColumnSpacing="0.8rem">
+        <SDKGridLayout ColumnSpacing="0.8rem">
             <Rows>
-                <DxGridLayoutRow/>
+                <SDKGridLayoutRow/>
             </Rows>
             <Columns>
-                <DxGridLayoutColumn Width="50%"/>
-                <DxGridLayoutColumn/>
+                <SDKGridLayoutColumn Width="50%"/>
+                <SDKGridLayoutColumn/>
             </Columns>
             <Items>
-                <DxGridLayoutItem Row="0" Column="0">
+                <SDKGridLayoutItem Row="0" Column="0">
                     <Template>
-                        <DxGridLayout ColumnSpacing="0.8rem" RowSpacing="0.8rem">
+                        <SDKGridLayout ColumnSpacing="0.8rem" RowSpacing="0.8rem">
                             <Rows>
                                 @for(var i = 0; i < PortalConfiguration.DashboardRows.Count; i++)
                                 {
-                                    <DxGridLayoutRow Height="@PortalConfiguration.DashboardRows[i].Height" @key="@("sdk_portal_row_" + i)"/>
+                                    <SDKGridLayoutRow Height="@PortalConfiguration.DashboardRows[i].Height" @key="@("sdk_portal_row_" + i)"/>
                                 }
                             </Rows>
                             <Columns>
-                                <DxGridLayoutColumn/>
-                                <DxGridLayoutColumn/>
-                                <DxGridLayoutColumn/>
-                                <DxGridLayoutColumn/>
-                                <DxGridLayoutColumn/>
-                                <DxGridLayoutColumn/>
-                                <DxGridLayoutColumn/>
-                                <DxGridLayoutColumn/>
-                                <DxGridLayoutColumn/>
-                                <DxGridLayoutColumn/>
-                                <DxGridLayoutColumn/>
-                                <DxGridLayoutColumn/>
+                                <SDKGridLayoutColumn/>
+                                <SDKGridLayoutColumn/>
+                                <SDKGridLayoutColumn/>
+                                <SDKGridLayoutColumn/>
+                                <SDKGridLayoutColumn/>
+                                <SDKGridLayoutColumn/>
+                                <SDKGridLayoutColumn/>
+                                <SDKGridLayoutColumn/>
+                                <SDKGridLayoutColumn/>
+                                <SDKGridLayoutColumn/>
+                                <SDKGridLayoutColumn/>
+                                <SDKGridLayoutColumn/>
                             </Columns>
                             <Items>
                                 @for(var i = 0; i < PortalConfiguration.DashboardRows.Count; i++)
@@ -56,19 +56,19 @@
                                         {
                                             itemColumns = (12 / (item.Dashlets.Count - j)) - lastColumn;
                                         }
-                                        <DxGridLayoutItem Row="@i" Column="@lastColumn" ColumnSpan="@itemColumns" RowSpan="@item2.Rows">
+                                        <SDKGridLayoutItem Row="@i" Column="@lastColumn" ColumnSpan="@itemColumns" RowSpan="@item2.Rows">
                                             <Template>
                                                 <SDKDashletPortal Business="@Business" ComponentType="@item2.ComponentType" ResourceTag="@item2.ResourceTag" ShowTitle="@item2.ShowTitle"/>
                                             </Template>
-                                        </DxGridLayoutItem>
+                                        </SDKGridLayoutItem>
                                         lastColumn += itemColumns;
                                     }
                                 }
                             </Items>
-                        </DxGridLayout>
+                        </SDKGridLayout>
                     </Template>
-                </DxGridLayoutItem>
-                <DxGridLayoutItem Row="0" Column="1">
+                </SDKGridLayoutItem>
+                <SDKGridLayoutItem Row="0" Column="1">
                     <Template>
                         @if (PortalConfiguration.MainDashlet != null)
                         {
@@ -76,9 +76,9 @@
                         }
                         
                     </Template>
-                </DxGridLayoutItem>
+                </SDKGridLayoutItem>
             </Items>
-        </DxGridLayout>
+        </SDKGridLayout>
     }
     
 </aside>
