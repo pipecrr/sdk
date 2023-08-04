@@ -132,15 +132,26 @@ namespace Siesa.SDK.Shared.Services
         }
     }
     
+    /// <summary>
+    /// Represents the authentication service interface for user login, logout, and related operations.
+    /// </summary>
     public interface IAuthenticationService
     {
         /// <summary>
         /// Gets the user token.
         /// </summary>
-
         string UserToken { get; }
+        /// <summary>
+        /// Gets the JwtUserData.
+        /// </summary>
         JwtUserData User { get; }
+        /// <summary>
+        /// Gets the  PortalUserJwt
+        /// </summary>
         PortalUserJwt PortalUser { get; }
+        /// <summary>
+        /// Gets the rowid of the culture changed.
+        /// </summary>
         short RowidCultureChanged { get; set; }
 
         /// <summary>
