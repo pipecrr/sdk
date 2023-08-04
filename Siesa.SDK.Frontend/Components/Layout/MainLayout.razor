@@ -37,24 +37,24 @@
 <NotificationServiceSDK />
 <SDKGlobalLoader />
 
-<DxGridLayout>
+<SDKGridLayout>
     <Rows>
-        <DxGridLayoutRow Height="auto" />
-        <DxGridLayoutRow />
+        <SDKGridLayoutRow Height="auto" />
+        <SDKGridLayoutRow />
     </Rows>
     <Columns>
-        <DxGridLayoutColumn />
+        <SDKGridLayoutColumn />
     </Columns>
     <Items>
-        <DxGridLayoutItem Row="0" Column="0">
+        <SDKGridLayoutItem Row="0" Column="0">
             <Template>
                 @if(!IsEmptyLayout)
                 {
                     <SDKHeader />
                 }
             </Template>
-        </DxGridLayoutItem>
-        <DxGridLayoutItem Row="1" Column="0">
+        </SDKGridLayoutItem>
+        <SDKGridLayoutItem Row="1" Column="0">
             <Template>
                 <div class="@GetCssNav()">
                     @if(!IsEmptyLayout)
@@ -99,9 +99,9 @@
                             </aside>                        
                 </div>
             </Template>
-        </DxGridLayoutItem>
+        </SDKGridLayoutItem>
     </Items>
-</DxGridLayout>
+</SDKGridLayout>
 
 
 <SDKGoTop />
