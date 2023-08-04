@@ -14,8 +14,10 @@ namespace Siesa.SDK.Entities
 {
 	public partial class E00510_ExternalUser
 	{
-
-
+		public override string ToString()
+		{
+			return $"{Id}";
+		}
 
 	}
 }
