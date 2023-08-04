@@ -4,35 +4,115 @@ using Siesa.SDK.Shared.DTOS;
 
 namespace Siesa.SDK.Shared.Services
 {
+    /// <summary>
+    /// Represents a session role with its rowid and name.
+    /// </summary>
     public class SessionRol
     {
+        /// <summary>
+        /// Gets or sets the rowid of the session role.
+        /// </summary>
         public int Rowid { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the session role.
+        /// </summary>
         public string Name { get; set; }
     }
+    /// <summary>
+    /// Represents the data stored in a JSON Web Token (JWT) for a user's session.
+    /// </summary>
     public class JwtUserData
     {
+        /// <summary>
+        /// Gets or sets the rowid of the user.
+        /// </summary>
         public int Rowid { get; set; }
+
+        /// <summary>
+        /// Gets or sets the path of the user.
+        /// </summary>
         public string Path { get; set; }
+
+        /// <summary>
+        /// Gets or sets the email used for password recovery.
+        /// </summary>
         public string PasswordRecoveryEmail { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the user.
+        /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ID of the user.
+        /// </summary>
         public string Id { get; set; }
+
+        /// <summary>
+        /// Gets or sets the description of the user.
+        /// </summary>
         public string Description { get; set; }
+
+        /// <summary>
+        /// Gets or sets the rowid of the user's culture.
+        /// </summary>
         public short RowidCulture { get; set; }
 
+        /// <summary>
+        /// Gets or sets the list of session roles assigned to the user.
+        /// </summary>
         public List<SessionRol> Roles { get; set; } = new List<SessionRol>();
 
+        /// <summary>
+        /// Gets or sets the rowid of the user's company group.
+        /// </summary>
         public short RowidCompanyGroup { get; set; }
+
+        /// <summary>
+        /// Gets or sets the rowid of the database connection for the user's session.
+        /// </summary>
         public short RowIdDBConnection { get; set; }
 
-        public Dictionary<string, List<int>> FeaturePermissions { get; set; } = new();
-        // public string[] Teams { get; set; }
+        /// <summary>
+        /// Gets or sets the dictionary of feature permissions for the user.
+        /// </summary>
+        public Dictionary<string, List<int>> FeaturePermissions { get; set; } = new Dictionary<string, List<int>>();
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the user is an administrator.
+        /// </summary>
         public bool IsAdministrator { get; set; }
+
+        /// <summary>
+        /// Gets or sets the rowid of the user's profile picture attachment.
+        /// </summary>
         public int? RowidAttachmentUserProfilePicture { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the portal the user belongs to.
+        /// </summary>
         public string PortalName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the external ID of the user.
+        /// </summary>
         public string IdExternalUser { get; set; }
+
+        /// <summary>
+        /// Gets or sets the rowid of the external user.
+        /// </summary>
         public int RowidExternalUser { get; set; }
+
+        /// <summary>
+        /// Gets or sets the main record rowid associated with the user.
+        /// </summary>
         public long RowidMainRecord { get; set; }
+
+        /// <summary>
+        /// Returns a string representation of the user data.
+        /// </summary>
+        /// <returns>The string representation of the user data.</returns>
         public override string ToString()
         {
             return $"({Id}) - {Name}";
@@ -142,9 +222,9 @@ namespace Siesa.SDK.Shared.Services
 
 
         /// <summary>
-        /// Gets the row ID for the selected company group.
+        /// Gets the rowid for the selected company group.
         /// </summary>
-        /// <returns>The row ID for the selected company group.</returns>
+        /// <returns>The rowid for the selected company group.</returns>
         short GetRowidCompanyGroup();
 
         /// <summary>
@@ -229,30 +309,30 @@ namespace Siesa.SDK.Shared.Services
         /// <param name="saveLocalStorage">Optional. Determines whether to save the photo data in local storage. Default is true.</param>
 
         Task SetUserPhoto(string data, bool saveLocalStorage = true);
-        
+
         /// <summary>
         /// Sets the user's preferences.
         /// </summary>
         /// <param name="preferences">The <see cref="UserPreferencesDTO"/> object representing the user's preferences.</param>
         Task SetPreferencesUser(UserPreferencesDTO preferences);
-        
+
         /// <summary>
         /// Gets the user's preferences.
         /// </summary>
         /// <returns>The <see cref="UserPreferencesDTO"/> object representing the user's preferences.</returns>
         UserPreferencesDTO GetPreferencesUser();
-        
+
         /// <summary>
         /// Gets the theme style for the current user.
         /// </summary>
         /// <returns>The theme style.</returns>
         string GetThemeStyle();
-        
+
         /// <summary>
         /// Logs in the user using the specified user access token and database connection.
         /// </summary>
         /// <param name="userAccesstoken">The user access token to use for login.</param>
-        /// <param name="rowidDBConnection">The row ID of the database connection to use for login.</param>
+        /// <param name="rowidDBConnection">The rowid of the database connection to use for login.</param>
         /// <returns>The authentication token as a string.</returns>
         Task<string> LoginSessionByToken(string userAccesstoken, short rowidDBConnection);
     }
