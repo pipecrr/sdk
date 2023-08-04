@@ -85,11 +85,26 @@ namespace Siesa.SDK.Shared.Criptography
                 return null;
             }
         }
-
-        public string Generate(E00220_User? user, Dictionary<string, List<int>>? featurePermissions, List<SessionRol> roles,  short rowIdDBConnection, short rowidcompanygroup =0, E00518_PortalUser portalUser = null, string portalName = "")
+        
+        /// <summary>
+        /// Generates a JSON Web Token (JWT) for the specified user with the given permissions and roles.
+        /// The token is valid for 7 days from the current UTC time.
+        /// </summary>
+        /// <param name="user">The user object representing the user's details.</param>
+        /// <param name="featurePermissions">A dictionary containing feature names as keys and associated permission rowids as values.</param>
+        /// <param name="roles">A list of SessionRol objects representing the roles assigned to the user.</param>
+        /// <param name="rowidDbConnection">The short integer representing the database connection row ID.</param>
+        /// <param name="rowidcompanygroup">Optional. The short integer representing the row ID of the company group. Default value is 0.</param>
+        /// <param name="portalUser">Optional. An E00518_PortalUser object representing additional portal user details. Default value is null.</param>
+        /// <param name="portalName">Optional. The name of the portal. Default value is an empty string.</param>
+        /// <returns>A string representing the generated JSON Web Token.</returns>
+        public string Generate(E00220_User? user, Dictionary<string, List<int>>? featurePermissions, List<SessionRol> roles,  short rowidDbConnection, short rowidcompanygroup =0, E00518_PortalUser portalUser = null, string portalName = "")
         {
             // generate token that is valid for 7 days
             var tokenHandler = new JwtSecurityTokenHandler();
+            if(user == null){
+                return "";
+            }
             var key = Encoding.ASCII.GetBytes(_secretKey);
              var userToken = new JwtUserData() {
                 Rowid = user.Rowid,
@@ -102,16 +117,16 @@ namespace Siesa.SDK.Shared.Criptography
                 Roles = roles,
                 FeaturePermissions = featurePermissions,
                 RowidCompanyGroup = rowidcompanygroup,
-                RowIdDBConnection = rowIdDBConnection,
+                RowIdDBConnection = rowidDbConnection,
                 IsAdministrator = user.IsAdministrator,
                 RowidAttachmentUserProfilePicture = user.RowidAttachmentUserProfilePicture
             };
 
             if(portalUser != null){
-                userToken.IdExternalUser = portalUser.ExternalUser.Id;
-                userToken.RowidExternalUser = portalUser.ExternalUser.Rowid;
-                userToken.PortalName = portalName;
-                userToken.RowidMainRecord = portalUser.RowidMainRecord;
+                PortalUserJwt portalUserJwt = new PortalUserJwt();
+                portalUserJwt.Id = portalUser.ExternalUser.Id;
+                portalUserJwt.RowidMainRecord = portalUser.RowidMainRecord;
+                userToken.PortalUser = portalUserJwt;
             }
 
             var tokenDescriptor = new SecurityTokenDescriptor

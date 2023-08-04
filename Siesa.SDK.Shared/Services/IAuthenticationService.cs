@@ -88,39 +88,50 @@ namespace Siesa.SDK.Shared.Services
         /// Gets or sets the rowid of the user's profile picture attachment.
         /// </summary>
         public int? RowidAttachmentUserProfilePicture { get; set; }
-
+        
         /// <summary>
-        /// Gets or sets the name of the portal the user belongs to.
+        /// Portal user. This property represents the portal user associated with the session.
         /// </summary>
-        public string PortalName { get; set; }
-
+        public PortalUserJwt PortalUser { get; set; }
         /// <summary>
-        /// Gets or sets the external ID of the user.
+        /// Overrides the ToString() method to provide a custom string representation of the JwtUserData.
         /// </summary>
-        public string IdExternalUser { get; set; }
-
-        /// <summary>
-        /// Gets or sets the rowid of the external user.
-        /// </summary>
-        public int RowidExternalUser { get; set; }
-
-        /// <summary>
-        /// Gets or sets the main record rowid associated with the user.
-        /// </summary>
-        public long RowidMainRecord { get; set; }
-
-        /// <summary>
-        /// Returns a string representation of the user data.
-        /// </summary>
-        /// <returns>The string representation of the user data.</returns>
+        /// <returns>A formatted string containing the user id and name.</returns>
         public override string ToString()
         {
             return $"({Id}) - {Name}";
         }
     }
+    
     /// <summary>
-    /// Represents the authentication service interface for user login, logout, and related operations.
+    /// DTO for portal user
     /// </summary>
+    public class PortalUserJwt
+    {
+        /// <summary>
+        /// Rowid. This property represents the row identifier of the user in the external system.
+        /// </summary>
+        public int Rowid { get; set; }
+        /// <summary>
+        /// User id. This property represents the unique identifier for the portal user.
+        /// </summary>
+        public string Id { get; set; }
+
+        /// <summary>
+        /// Main record rowid. This property represents the row identifier of the main record associated with the user.
+        /// </summary>
+        public long RowidMainRecord { get; set; }
+
+        /// <summary>
+        /// Overrides the ToString() method to provide a custom string representation of the PortalUserDTO.
+        /// </summary>
+        /// <returns>A formatted string containing the user id and name.</returns>
+        public override string ToString()
+        {
+            return $"{Id}";
+        }
+    }
+    
     public interface IAuthenticationService
     {
         /// <summary>
@@ -128,23 +139,8 @@ namespace Siesa.SDK.Shared.Services
         /// </summary>
 
         string UserToken { get; }
-        /// <summary>
-        /// Gets the portal user token.
-        /// </summary> 
-        string PortalUserToken { get; }
-
-        /// <summary>
-        /// Gets the current user data.
-        /// </summary>
         JwtUserData User { get; }
-
-        /// <summary>
-        /// Gets the portal user data.
-        /// </summary>
-        JwtUserData PortalUser { get; }
-        /// <summary>
-        /// Gets or sets the identifier of the culture changed row.
-        /// </summary> 
+        PortalUserJwt PortalUser { get; }
         short RowidCultureChanged { get; set; }
 
         /// <summary>
@@ -160,8 +156,8 @@ namespace Siesa.SDK.Shared.Services
         /// <param name="rowIdDBConnection">The identifier of the database connection.</param>
         /// <param name="IsUpdateSession">Indicates if the session should be updated.</param>
         /// <param name="rowIdCompanyGroup">The identifier of the company group.</param>
-        Task Login(string username, string password, short rowIdDBConnection,
-                     bool IsUpdateSession = false, short rowIdCompanyGroup = 1);
+        Task Login(string username, string password, short rowidDbConnection,
+                     bool isUpdateSession = false, short rowIdCompanyGroup = 1);
 
         /// <summary>
         /// Logs in the portal user with the provided credentials.
@@ -171,7 +167,7 @@ namespace Siesa.SDK.Shared.Services
         /// <param name="rowIdDBConnection">The identifier of the database connection.</param>
         /// <param name="IsUpdateSession">Indicates if the session should be updated.</param>
         /// <param name="rowIdCompanyGroup">The identifier of the company group.</param>
-        Task LoginPortal(string username, string password, short rowIdDBConnection, bool IsUpdateSession = false, short rowIdCompanyGroup = 1);
+        Task LoginPortal(string username, string password, short rowidDbConnection, bool isUpdateSession = false, short rowidCompanyGroup = 1);
 
         /// <summary>
         /// Logs out the user.
@@ -189,18 +185,6 @@ namespace Siesa.SDK.Shared.Services
         /// <param name="token">The authentication token.</param>
         /// <param name="saveLocalStorage">Indicates if the token should be saved in local storage.</param>
         public Task SetToken(string token, bool saveLocalStorage = true);
-
-        /// <summary>
-        /// Sets the authentication token for portal user.
-        /// </summary>
-        /// <param name="token">The authentication token.</param>
-        /// <param name="saveLocalStorage">Indicates if the token should be saved in local storage.</param>
-        public Task SetTokenPortal(string token, bool saveLocalStorage = true);
-
-        /// <summary>
-        /// Sets the custom rowid for the culture changed.
-        /// </summary>
-        /// <param name="rowid">The custom rowid for the culture changed.</param>
         Task SetCustomRowidCulture(short rowid);
 
         /// <summary>

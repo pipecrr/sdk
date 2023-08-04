@@ -37,13 +37,16 @@ else
     public SDKPortalDTO SelectedPortal { get; set; }
     private bool _userLogged;
     
+    /// <summary>
+    /// Runs when route parameters are changed asynchronously
+    /// </summary>
     protected override async Task OnParametersSetAsync()
     {
         if(AuthenticationService.PortalUser != null)
         {
             _userLogged = true;
             var blsdkPortalUser = BackendRouterService.GetSDKBusinessModel("BLSDKPortalUser", AuthenticationService);
-            var result = await blsdkPortalUser.Call("GetPortals", AuthenticationService.PortalUser.RowidExternalUser);
+            var result = await blsdkPortalUser.Call("GetPortals", AuthenticationService.User.PortalUser.Rowid);
             if(result.Success && result.Data != null){
                 Portals = result.Data as List<SDKPortalDTO>;
                 SelectedPortal = Portals?.FirstOrDefault();

@@ -111,6 +111,12 @@ namespace Siesa.SDK.Utils.Test
 
         public static JwtUserData GetUser()
         {
+            PortalUserJwt portalUser = new PortalUserJwt()
+            {
+                Rowid = 1,
+                Id = "IdExternalUser",
+                RowidMainRecord = 1
+            };
             var UserTest = new JwtUserData() 
             { 
                 Rowid = 1,
@@ -124,10 +130,7 @@ namespace Siesa.SDK.Utils.Test
                 RowidCompanyGroup = 1,
                 RowIdDBConnection = 1,
                 IsAdministrator = true,
-                PortalName = "PortalTest",
-                IdExternalUser = "IdExternalUser",
-                RowidExternalUser = 1,
-                RowidMainRecord = 1,
+                PortalUser = portalUser,
                 FeaturePermissions = new Dictionary<string, List<int>>()
                 {
                     { "BLSDKCompany", new List<int>() { 1, 2, 3,4,5 } },
