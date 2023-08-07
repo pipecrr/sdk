@@ -11,6 +11,7 @@
 <aside class="sdk_dashboard_portal">
     @if (PortalConfiguration != null)
     {
+        var row = 0;
         <DxGridLayout ColumnSpacing="0.8rem">
             <Rows>
                 <DxGridLayoutRow/>
@@ -20,7 +21,7 @@
                 <DxGridLayoutColumn/>
             </Columns>
             <Items>
-                <DxGridLayoutItem Row="0" Column="0">
+                <DxGridLayoutItem Row="0" Column="0" CssClass="sdk_left_dashlets">
                     <Template>
                         <DxGridLayout ColumnSpacing="0.8rem" RowSpacing="0.8rem">
                             <Rows>
@@ -48,6 +49,10 @@
                                 {
                                     var item = PortalConfiguration.DashboardRows[i];
                                     var lastColumn = 0;
+                                    bool showRow = true;                                        
+                                    if(PortalConfiguration.HasExpanded && !item.KeepInZoom ){
+                                        showRow = false;
+                                    }
                                     @for(var j= 0; j < item.Dashlets.Count; j++)
                                     {
                                         var item2 = item.Dashlets[j];
@@ -56,12 +61,29 @@
                                         {
                                             itemColumns = (12 / (item.Dashlets.Count - j)) - lastColumn;
                                         }
-                                        <DxGridLayoutItem Row="@i" Column="@lastColumn" ColumnSpan="@itemColumns" RowSpan="@item2.Rows">
-                                            <Template>
-                                                <SDKDashletPortal Business="@Business" ComponentType="@item2.ComponentType" ResourceTag="@item2.ResourceTag" ShowTitle="@item2.ShowTitle"/>
-                                            </Template>
-                                        </DxGridLayoutItem>
+                                        if (item2.Expanded)
+                                        {
+                                            itemColumns = 12;
+                                            showRow = true;
+                                            lastColumn = 0;
+                                        }
+                                        if (showRow){
+                                            <DxGridLayoutItem Row="@row" Column="@lastColumn" ColumnSpan="@itemColumns" RowSpan="@item2.Rows">
+                                                <Template>
+                                                    <CascadingValue Value="@this">
+                                                        <CascadingValue Value="@item2">
+                                                            @if(true){
+                                                                <SDKDashletPortal Business="@Business" ComponentType="@item2.ComponentType" ResourceTag="@item2.ResourceTag" ShowTitle="@item2.ShowTitle" IndexDashlet="@j" IndexRow="@i"/>
+                                                            }
+                                                        </CascadingValue>
+                                                    </CascadingValue>
+                                                </Template>
+                                            </DxGridLayoutItem>
+                                        }
                                         lastColumn += itemColumns;
+                                    }
+                                    if(showRow){
+                                        row++;
                                     }
                                 }
                             </Items>
@@ -141,4 +163,9 @@
         await base.OnInitializedAsync();
     }
 
+    public void ExpandDashlet()
+    {
+        PortalConfiguration.HasExpanded = true;
+        StateHasChanged();
+    }
 }

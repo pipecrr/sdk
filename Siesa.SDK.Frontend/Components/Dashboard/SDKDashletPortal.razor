@@ -10,7 +10,9 @@
             <div class="overflow-auto h-100">
             @if(ComponentType != null)
             {
-                <DynamicComponent Type="@ComponentType" Parameters="@GetParameters()"/>
+                <CascadingValue Value="@this">
+                    <DynamicComponent Type="@ComponentType" Parameters="@GetParameters()"/>
+                </CascadingValue>
             }
             </div>
         </SDKCard>
@@ -37,10 +39,18 @@
     public string CssClass { get; set; }
     [Parameter]
     public Type ComponentType { get; set; }
-    [CascadingParameter] 
-    public SDKPortalDTO Portal { get; set; }
+    [Parameter]
+    public int IndexDashlet { get; set; }
+    [Parameter]
+    public int IndexRow { get; set; }
     [Parameter]
     public dynamic Business { get; set; }
+    [CascadingParameter] 
+    public SDKPortalDTO Portal { get; set; }
+    [CascadingParameter]
+    public SDKDashboardPortal Parent { get; set; }
+    [CascadingParameter]
+    public PortalDashlet Dashlet { get; set; }
     
     private string GetStyleCss()
     {
@@ -58,5 +68,11 @@
         }
         return parameters;
     }
-
+    
+    public void Expand()
+    {
+        Dashlet.Expanded = true;
+        Parent.ExpandDashlet();
+        StateHasChanged();
+    }
 }
