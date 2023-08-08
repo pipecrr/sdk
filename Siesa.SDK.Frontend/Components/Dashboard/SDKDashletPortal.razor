@@ -1,4 +1,5 @@
 @using Siesa.SDK.Shared.DTOS
+@using GrapeCity.ActiveReports.Rdl.Tools
 
 <ErrorBoundary>
     <ChildContent>
@@ -45,6 +46,8 @@
     public int IndexRow { get; set; }
     [Parameter]
     public dynamic Business { get; set; }
+    [Parameter]
+    public Dictionary<string, object> Parameters { get; set; }
     [CascadingParameter] 
     public SDKPortalDTO Portal { get; set; }
     [CascadingParameter]
@@ -73,9 +76,15 @@
         {
             parameters.Add("Business", Business);
         }
+        if(Parameters != null)
+        {
+            parameters.AddRange(Parameters);
+        }
         return parameters;
     }
-    
+    /// <summary>
+    /// Method to expand the dashlet
+    /// </summary>
     public void Expand()
     {
         Dashlet.Expanded = true;
@@ -83,6 +92,9 @@
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Method to collapse the dashlet
+    /// </summary>     
     public void Collapse()
     {
         Dashlet.Expanded = false;
@@ -90,8 +102,22 @@
         StateHasChanged();
     }
 
-    public void Detail(Type type)
+    /// <summary>
+    /// Method to show the detail dashlet in the main dashlet    
+    /// </summary>
+    /// <param name="type">The type of dashlet to display.</param>
+    /// <param name="resourceTag">The (optional) resource tag for the dashlet.</param>
+    /// <param name="parameters">The (optional) parameters for the dashlet.</param>
+    public void Detail(Type type, String resourceTag = "", Dictionary<string,object> parameters = null)
     {
-        Parent.DetailDashlet(type);    
+        Parent.DetailDashlet(type, resourceTag, parameters);    
+    }
+    
+    /// <summary>
+    /// Method to close the detail dashlet
+    /// </summary>
+    public void CloseDetail()
+    {
+        Parent.CloseDetailDashlet();
     }
 }

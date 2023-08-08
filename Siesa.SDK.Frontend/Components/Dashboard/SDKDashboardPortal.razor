@@ -102,7 +102,7 @@
                             <SDKDashletPortal Business="@Business" ComponentType="@PortalConfiguration.MainDashlet.ComponentType" ResourceTag="@PortalConfiguration.MainDashlet.ResourceTag" ShowTitle="@PortalConfiguration.MainDashlet.ShowTitle"/>
                         }else if (ShowDetail)
                         {
-                            <SDKDashletPortal Business="@Business" ComponentType="@MainDashletType"/>
+                            <SDKDashletPortal Business="@Business" ComponentType="@MainDashletType" ResourceTag="@MainDashletResourceTag" ShowTitle="@MainDashletShowTitle" Parameters="@ParametersDetail"/>
                         }
                         
                     </Template>
@@ -114,13 +114,19 @@
 </aside>
 
 @code {
+    /// <summary>
+    /// The portal to display
+    /// </summary>
     [CascadingParameter] 
     public SDKPortalDTO Portal { get; set; }
     private SDKPortalConfiguration PortalConfiguration { get; set; }
     private dynamic Business { get; set; }
     private Type MainDashletType { get; set; }
+    private String MainDashletResourceTag { get; set; }
+    private bool MainDashletShowTitle { get; set; }
     private bool ShowDetail { get; set;}
-    
+    private Dictionary<string, object> ParametersDetail { get; set; }
+
     private async Task<SDKPortalConfiguration> GetPortalConfiguration()
     {
         ShowDetail = false;
@@ -173,13 +179,19 @@
         await Init();
         await base.OnInitializedAsync();
     }
-
+    
+    /// <summary>
+    /// Method to expand the dashlet
+    /// </summary>
     public void ExpandDashlet()
     {
         PortalConfiguration.HasExpanded = true;
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Method to collapse the dashlet    
+    /// </summary>
     public void CollapseDashlet()
     {
         PortalConfiguration.HasExpanded = false;
@@ -188,10 +200,32 @@
         StateHasChanged();
     }
 
-    public void DetailDashlet(Type type)
+    /// <summary>
+    /// Method to show the detail dashlet in the main dashlet    
+    /// </summary>
+    /// <param name="type">The type of dashlet to display.</param>
+    /// <param name="resourceTag">The (optional) resource tag for the dashlet.</param>
+    /// <param name="parameters">The (optional) parameters for the dashlet.</param>
+    public void DetailDashlet(Type type, String resourceTag = "", Dictionary<string, object> parameters = null)
     {
         MainDashletType = type;
+        MainDashletResourceTag = resourceTag;
+        if(!string.IsNullOrEmpty(resourceTag)){
+            MainDashletShowTitle = true;
+        }
+        ParametersDetail = parameters;
         ShowDetail = true;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Method to close the detail dashlet
+    /// </summary>     
+    public void CloseDetailDashlet()
+    {
+        MainDashletType = null;
+        ParametersDetail = null;
+        ShowDetail = false;
         StateHasChanged();
     }
 
