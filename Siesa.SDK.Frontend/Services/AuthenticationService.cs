@@ -196,7 +196,8 @@ namespace Siesa.SDK.Frontend.Services
                 {"rowidCulture", RowidCultureChanged},
                 {"sessionId", sessionId},
                 {"IsUpdateSession", isUpdateSession},
-                {"rowIdCompanyGroup", rowIdCompanyGroup}
+                {"rowIdCompanyGroup", rowIdCompanyGroup},
+                {"tokenPortal", ""}
             }).ConfigureAwait(true);
             if (loginRequest.Success)
             {
@@ -246,6 +247,12 @@ namespace Siesa.SDK.Frontend.Services
             {
                 throw new Exception("Login Service not found");
             }
+            
+            string ipAddress = _contextAccesor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+
+            string browserName = _contextAccesor.HttpContext?.Request.Headers["User-Agent"].ToString();
+
+            string sessionId = isUpdateSession ? _contextAccesor.HttpContext?.Request.Cookies["sdksession"]?.ToString() : "";
 
             short lastCompanyGroupSelected = await _localStorageService.GetItemAsync<short>("rowidCompanyGroup").ConfigureAwait(true);
 
@@ -258,8 +265,12 @@ namespace Siesa.SDK.Frontend.Services
                 {"username", username},
                 {"password", password},
                 {"rowidDbConnection", rowidDbConnection},
-                {"rowidCulture", RowidCultureChanged},
-                {"rowIdCompanyGroup", rowidCompanyGroup}
+                {"ipAddress", ipAddress},
+                {"browserName", browserName},
+                {"sessionId", sessionId},
+                {"isUpdateSession", isUpdateSession},
+                {"rowIdCompanyGroup", rowidCompanyGroup},
+                {"rowidCulture", RowidCultureChanged}
             }).ConfigureAwait(true);
             if (loginRequest.Success)
             {
