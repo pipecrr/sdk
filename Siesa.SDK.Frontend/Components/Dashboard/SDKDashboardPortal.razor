@@ -123,6 +123,7 @@
     
     private async Task<SDKPortalConfiguration> GetPortalConfiguration()
     {
+        ShowDetail = false;
         if (string.IsNullOrEmpty(Portal?.BusinessName))
         {
             return null;

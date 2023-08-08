@@ -58,7 +58,10 @@ namespace Siesa.SDK.Shared.DTOS
         /// Gets or sets the number of rows the dashlet occupies in the dashboard grid. Default value is 1.
         /// </summary>
         public int Rows { get; set; } = 1;
-        
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the dashlet is expanded.
+        /// </summary>
         public bool Expanded { get; set; }
     }
 
