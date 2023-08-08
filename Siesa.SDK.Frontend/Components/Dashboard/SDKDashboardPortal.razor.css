@@ -18,3 +18,7 @@
 ::deep .sdk_dashboard_portal_zoom_section{
     height: calc(100vh - 4rem);
 }
+
+::deep .sdk-dashlet-portal-expanded{
+    height: 100vh !important;
+}

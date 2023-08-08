@@ -57,6 +57,7 @@
                                     {
                                         var item2 = item.Dashlets[j];
                                         var itemColumns = item2.Columns;
+                                        bool showDashlet = false;
                                         if (itemColumns == 1)
                                         {
                                             itemColumns = (12 / (item.Dashlets.Count - j)) - lastColumn;
@@ -65,9 +66,13 @@
                                         {
                                             itemColumns = 12;
                                             showRow = true;
+                                            showDashlet = true;
                                             lastColumn = 0;
                                         }
-                                        if (showRow){
+                                        if(!PortalConfiguration.HasExpanded || item.KeepInZoom){
+                                            showDashlet = true;
+                                        }
+                                        if (showRow && showDashlet){
                                             <DxGridLayoutItem Row="@row" Column="@lastColumn" ColumnSpan="@itemColumns" RowSpan="@item2.Rows">
                                                 <Template>
                                                     <CascadingValue Value="@this">
@@ -92,9 +97,12 @@
                 </DxGridLayoutItem>
                 <DxGridLayoutItem Row="0" Column="1">
                     <Template>
-                        @if (PortalConfiguration.MainDashlet != null)
+                        @if (PortalConfiguration.MainDashlet != null && !ShowDetail)
                         {
                             <SDKDashletPortal Business="@Business" ComponentType="@PortalConfiguration.MainDashlet.ComponentType" ResourceTag="@PortalConfiguration.MainDashlet.ResourceTag" ShowTitle="@PortalConfiguration.MainDashlet.ShowTitle"/>
+                        }else if (ShowDetail)
+                        {
+                            <SDKDashletPortal Business="@Business" ComponentType="@MainDashletType"/>
                         }
                         
                     </Template>
@@ -110,6 +118,8 @@
     public SDKPortalDTO Portal { get; set; }
     private SDKPortalConfiguration PortalConfiguration { get; set; }
     private dynamic Business { get; set; }
+    private Type MainDashletType { get; set; }
+    private bool ShowDetail { get; set;}
     
     private async Task<SDKPortalConfiguration> GetPortalConfiguration()
     {
@@ -168,4 +178,20 @@
         PortalConfiguration.HasExpanded = true;
         StateHasChanged();
     }
+
+    public void CollapseDashlet()
+    {
+        PortalConfiguration.HasExpanded = false;
+        MainDashletType = null;
+        ShowDetail = false;
+        StateHasChanged();
+    }
+
+    public void DetailDashlet(Type type)
+    {
+        MainDashletType = type;
+        ShowDetail = true;
+        StateHasChanged();
+    }
+
 }

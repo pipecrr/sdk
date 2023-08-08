@@ -54,7 +54,14 @@
     
     private string GetStyleCss()
     {
-        return CssClass ?? "h-100";
+        string styleCss = CssClass ?? "h-100";
+        if (Dashlet != null && Dashlet.Expanded)
+        {
+            styleCss += " sdk-dashlet-portal-expanded";
+        }else{
+            styleCss.Replace(" sdk-dashlet-portal-expanded", "");
+        }
+        return styleCss;
     }
     
     private Dictionary<string, object> GetParameters()
@@ -74,5 +81,17 @@
         Dashlet.Expanded = true;
         Parent.ExpandDashlet();
         StateHasChanged();
+    }
+
+    public void Collapse()
+    {
+        Dashlet.Expanded = false;
+        Parent.CollapseDashlet();        
+        StateHasChanged();
+    }
+
+    public void Detail(Type type)
+    {
+        Parent.DetailDashlet(type);    
     }
 }
