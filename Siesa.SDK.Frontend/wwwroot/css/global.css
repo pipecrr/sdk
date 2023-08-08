@@ -117,6 +117,44 @@
     --color_grayscale_400: #9d9d9d;
     --color_grayscale_600: #555555;
     --color_grayscale_800: #262626;
+
+    /* flex chart colors */
+    --color_chart_flex_1: "#80c9a7";
+    --color_chart_flex_2: "#bada8c";
+    --color_chart_flex_3: "#326fac";
+    --color_chart_flex_4: "#32b9b0";
+    --color_chart_flex_5: "#56bd8d";
+    --color_chart_flex_6: "#d1e5b1";
+    --color_chart_flex_7: "#ffd690";
+    --color_chart_flex_8: "#5ac5d9";
+    --color_chart_flex_9: "#6691c0";
+    --color_chart_flex_10: "#00a89d";
+    --color_chart_flex_11: "#addfea";
+    --color_chart_flex_12: "#f27c93";
+    --color_chart_flex_13: "#84d1e0";
+    --color_chart_flex_14: "#134b95";
+    --color_chart_flex_15: "#a8d9c4";
+    --color_chart_flex_16: "#a3cf66";
+    --color_chart_flex_17: "#f9a94b";
+    --color_chart_flex_18: "#f9bca5";
+    --color_chart_flex_19: "#69c7c2";
+    --color_chart_flex_20: "#ffe3b5";
+    --color_chart_flex_21: "#8cc640";
+    --color_chart_flex_22: "#f5a6b7";
+    --color_chart_flex_23: "#f9be77";
+    --color_chart_flex_24: "#f05a26";
+    --color_chart_flex_25: "#ed294e";
+    --color_chart_flex_26: "#f69c7b";
+    --color_chart_flex_27: "#2fb6d0";
+    --color_chart_flex_28: "#f79420";
+    --color_chart_flex_29: "#ef5370";
+    --color_chart_flex_30: "#f37a50";
+    --color_chart_flex_31: "#ffca6d";
+    --color_chart_flex_32: "#9bd7d5";
+    --color_chart_flex_33: "#1eb473";
+    --color_chart_flex_34: "#fcbb48";
+    --color_chart_flex_35: "#fcd4a4";
+    --color_chart_flex_36: "#98b7d5";
 }
 
 
