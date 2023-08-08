@@ -1,14 +1,24 @@
 ﻿.sdk_dashboard_portal{
-    /* height: 100%; */
-    /* width: 100%; */
-    /* display: flex; */
-    /* flex-direction: column; */
     padding-top: calc(48px + 0.8rem);
-    /* padding-bottom: calc(32px + 7rem); */
     padding-left: calc(48px + 0.8rem);
     padding-right: 0.8rem;
+    height: 100vh;
+    overflow: hidden;
+    padding-bottom: 1rem;
+}
+
+.sdk_dashboard_portal ::deep .sdk_left_dashlets{
+    height: 100% !important;
+    overflow: scroll !important;
+    overflow-x: visible !important;
+    padding-left: 0rem !important;
+    padding-right: 0rem !important;
 }
 
 ::deep .sdk_dashboard_portal_zoom_section{
     height: calc(100vh - 4rem);
+}
+
+::deep .sdk-dashlet-portal-expanded{
+    height: 100vh !important;
 }
