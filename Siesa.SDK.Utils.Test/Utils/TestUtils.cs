@@ -42,7 +42,6 @@ namespace Siesa.SDK.Utils.Test
 
             Dictionary<string, List<int>> PermissionsUser = new Dictionary<string, List<int>>();
 
-            //Instanciar los servicios que se necesitan para el test
             var auth = new Mock<IAuthenticationService>();
             var sdkjwt = new Mock<ISDKJWT>();
             var tenant = new Mock<ITenantProvider>();
@@ -67,8 +66,9 @@ namespace Siesa.SDK.Utils.Test
                 
                 PermissionsUser = GetPermissionsUser(ListPermission, ActionsList);
             }
+
             var UserData = GetUser(PermissionsUser);
-            
+
             auth.Setup(x => x.User).Returns(UserData);
 
             var tenantOption = new SDKDbConnection()
@@ -113,15 +113,12 @@ namespace Siesa.SDK.Utils.Test
 
             var mockLoggerFactory = new Mock<ILoggerFactory>();
             mockLoggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(() => mockLogger.Object);
-            //(new DbContextOptionsBuilder<SDKContext>().UseInMemoryDatabase("InMemoryTest").Options));
             var mockDbFactory = new Mock<IDbContextFactory<SDKContext>>();
             mockDbFactory.Setup(f => f.CreateDbContext())
                 .Returns(() => (SDKContext)Activator.CreateInstance(_tDbContext, new DbContextOptionsBuilder<SDKContext>().UseInMemoryDatabase("InMemoryTest").Options));
 
-            //Create record in "InMemoryTest" database
 
             var services = new ServiceCollection();
-            //Agregar las instancias simuladas a ServicesCollection
             services.AddScoped<ISDKJWT>(sp => sdkjwt.Object);
             services.AddScoped<ITenantProvider>(sp => tenant.Object);
             services.AddScoped<IAuthenticationService>(sp => auth.Object);
@@ -163,9 +160,6 @@ namespace Siesa.SDK.Utils.Test
                 PortalUser = portalUser,
                 FeaturePermissions = PermissionsUser ?? new Dictionary<string, List<int>>()
             };
-
-            //string UserToken = JWTUtils.Generate<JwtUserData>(UserTest, Siesa.SDK.Backend.Criptography.SDKRsaKeys.PrivateKey, 30);
-
             return UserTest;
         }
 
