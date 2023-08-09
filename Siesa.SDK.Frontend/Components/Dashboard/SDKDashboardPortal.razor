@@ -78,7 +78,7 @@
                                                     <CascadingValue Value="@this">
                                                         <CascadingValue Value="@item2">
                                                             @if(true){
-                                                                <SDKDashletPortal Business="@Business" ComponentType="@item2.ComponentType" ResourceTag="@item2.ResourceTag" ShowTitle="@item2.ShowTitle" IndexDashlet="@j" IndexRow="@i"/>
+                                                                <SDKDashletPortal Business="@Business" ComponentType="@item2.ComponentType" ResourceTag="@item2.ResourceTag" ShowTitle="@item2.ShowTitle" IndexDashlet="@j" IndexRow="@i" CssClass="@item2.CssClass"/>
                                                             }
                                                         </CascadingValue>
                                                     </CascadingValue>
@@ -99,10 +99,10 @@
                     <Template>
                         @if (PortalConfiguration.MainDashlet != null && !ShowDetail)
                         {
-                            <SDKDashletPortal Business="@Business" ComponentType="@PortalConfiguration.MainDashlet.ComponentType" ResourceTag="@PortalConfiguration.MainDashlet.ResourceTag" ShowTitle="@PortalConfiguration.MainDashlet.ShowTitle"/>
+                            <SDKDashletPortal Business="@Business" ComponentType="@PortalConfiguration.MainDashlet.ComponentType" ResourceTag="@PortalConfiguration.MainDashlet.ResourceTag" ShowTitle="@PortalConfiguration.MainDashlet.ShowTitle" CssClass="@PortalConfiguration.MainDashlet.CssClass"/>
                         }else if (ShowDetail)
                         {
-                            <SDKDashletPortal Business="@Business" ComponentType="@MainDashletType" ResourceTag="@MainDashletResourceTag" ShowTitle="@MainDashletShowTitle" Parameters="@ParametersDetail"/>
+                            <SDKDashletPortal Business="@Business" ComponentType="@MainDashletType" ResourceTag="@MainDashletResourceTag" ShowTitle="@MainDashletShowTitle" Parameters="@ParametersDetail" CssClass="@PortalConfiguration.MainDashlet.CssClass"/>
                         }
                         
                     </Template>
