@@ -13,23 +13,34 @@ using Siesa.SDK.Backend.Services;
 using Siesa.SDK.Shared.Criptography;
 using System.Collections.Generic;
 using Siesa.SDK.Shared.DTOS;
+using Siesa.SDK.Entities;
 
 namespace Siesa.SDK.Utils.Test
 {
     public class TestUtils
     {
-        public static T GetBusiness<T>(Type DbContext)
+        public static T GetBusiness<T>(Type DbContext, Dictionary<string, List<string>> ListPermission = null)
         {
-            var serviceProvider = GetProvider<T>(DbContext);
+            var serviceProvider = GetProvider<T>(DbContext, ListPermission);
 
             dynamic Business = ActivatorUtilities.CreateInstance(serviceProvider, typeof(T));
             Business.SetProvider(serviceProvider);
             return Business;
         }
-
-        public static IServiceProvider GetProvider<T>(Type _tDbContext)
+        public static IServiceProvider GetProvider<T>(Type _tDbContext, Dictionary<string, List<string>> ListPermission)
         {
-            var ServiceConf = Options.Create(new ServiceConfiguration()); 
+            var ServiceConf = Options.Create(new ServiceConfiguration());
+
+            var ActionsList = new List<string>()
+            {
+                "Action.Access",
+                "Action.Create",
+                "Action.Edit",
+                "Action.Delete",
+                "Action.Detail"
+            };
+
+            Dictionary<string, List<int>> PermissionsUser = new Dictionary<string, List<int>>();
 
             //Instanciar los servicios que se necesitan para el test
             var auth = new Mock<IAuthenticationService>();
@@ -38,9 +49,26 @@ namespace Siesa.SDK.Utils.Test
             var resourceManager = new Mock<IResourceManager>();
             var backRouter = new Mock<BackendRouterService>(ServiceConf);
             var email = new Mock<EmailService>(backRouter.Object, auth.Object);
+            var featurePermissions = new Mock<FeaturePermissionService>();
 
             //Configure Mock Services:
-            var UserData = GetUser();
+            if (ListPermission != null && ListPermission.Any())
+            {
+                foreach (var item in ListPermission.Values)
+                {
+                    foreach (var action in item)
+                    {
+                        if (!ActionsList.Contains(action))
+                        {
+                            ActionsList.Add(action);
+                        }
+                    }
+                }
+                
+                PermissionsUser = GetPermissionsUser(ListPermission, ActionsList);
+            }
+            var UserData = GetUser(PermissionsUser);
+            
             auth.Setup(x => x.User).Returns(UserData);
 
             var tenantOption = new SDKDbConnection()
@@ -67,13 +95,13 @@ namespace Siesa.SDK.Utils.Test
             //     .Returns((string token) =>
             //     {   
             //     });
-                    
+
             Mock<IConfigurationSection> mockSection = new Mock<IConfigurationSection>();
-            mockSection.Setup(x=>x.Value).Returns("false");
+            mockSection.Setup(x => x.Value).Returns("false");
 
             Mock<Microsoft.Extensions.Configuration.IConfiguration> mockConfig = new Mock<Microsoft.Extensions.Configuration.IConfiguration>();
-            mockConfig.Setup(x=>x.GetSection("AWS:UseS3")).Returns(mockSection.Object);
-            
+            mockConfig.Setup(x => x.GetSection("AWS:UseS3")).Returns(mockSection.Object);
+
             var mockLogger = new Mock<ILogger<T>>();
             mockLogger.Setup(
                 m => m.Log(
@@ -85,13 +113,13 @@ namespace Siesa.SDK.Utils.Test
 
             var mockLoggerFactory = new Mock<ILoggerFactory>();
             mockLoggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(() => mockLogger.Object);
-//(new DbContextOptionsBuilder<SDKContext>().UseInMemoryDatabase("InMemoryTest").Options));
+            //(new DbContextOptionsBuilder<SDKContext>().UseInMemoryDatabase("InMemoryTest").Options));
             var mockDbFactory = new Mock<IDbContextFactory<SDKContext>>();
-                mockDbFactory.Setup(f => f.CreateDbContext())
-                    .Returns(() =>  (SDKContext)Activator.CreateInstance(_tDbContext, new DbContextOptionsBuilder<SDKContext>().UseInMemoryDatabase("InMemoryTest").Options));
+            mockDbFactory.Setup(f => f.CreateDbContext())
+                .Returns(() => (SDKContext)Activator.CreateInstance(_tDbContext, new DbContextOptionsBuilder<SDKContext>().UseInMemoryDatabase("InMemoryTest").Options));
 
-           
-            
+            //Create record in "InMemoryTest" database
+
             var services = new ServiceCollection();
             //Agregar las instancias simuladas a ServicesCollection
             services.AddScoped<ISDKJWT>(sp => sdkjwt.Object);
@@ -103,25 +131,27 @@ namespace Siesa.SDK.Utils.Test
             services.AddScoped<IResourceManager>(sp => resourceManager.Object);
             services.AddScoped<Microsoft.Extensions.Logging.ILoggerFactory>(sp => mockLoggerFactory.Object);
             services.AddScoped<IDbContextFactory<SDKContext>>(sp => mockDbFactory.Object);
+            services.AddScoped<IFeaturePermissionService>(sp => featurePermissions.Object);
 
             var serviceProvider = services.BuildServiceProvider();
 
             return serviceProvider;
         }
 
-        public static JwtUserData GetUser()
+        public static JwtUserData GetUser(Dictionary<string, List<int>> PermissionsUser)
         {
+
             PortalUserJwt portalUser = new PortalUserJwt()
             {
                 Rowid = 1,
                 Id = "IdExternalUser",
                 RowidMainRecord = 1
             };
-            var UserTest = new JwtUserData() 
-            { 
+            var UserTest = new JwtUserData()
+            {
                 Rowid = 1,
                 Path = "Path",
-                PasswordRecoveryEmail = "TestEmail", 
+                PasswordRecoveryEmail = "TestEmail",
                 Name = "Test User",
                 Id = "UserTest",
                 Description = "Usuario de Prueba",
@@ -131,18 +161,32 @@ namespace Siesa.SDK.Utils.Test
                 RowIdDBConnection = 1,
                 IsAdministrator = true,
                 PortalUser = portalUser,
-                FeaturePermissions = new Dictionary<string, List<int>>()
-                {
-                    { "BLSDKCompany", new List<int>() { 1, 2, 3,4,5 } },
-                    { "BLSDKCompanyGroup", new List<int>(){ 1, 2, 3,4,5 }},
-                    { "BLCompany", new List<int>(){ 1, 2, 3,4,5 }},
-                    { "BLCompanyGroup", new List<int>(){ 1, 2, 3,4,5 }},
-                }
+                FeaturePermissions = PermissionsUser ?? new Dictionary<string, List<int>>()
             };
 
             //string UserToken = JWTUtils.Generate<JwtUserData>(UserTest, Siesa.SDK.Backend.Criptography.SDKRsaKeys.PrivateKey, 30);
 
             return UserTest;
+        }
+
+        public static Dictionary<string, List<int>> GetPermissionsUser(Dictionary<string, List<string>> ListPermission, List<string> ListActions)
+        {
+            Dictionary<string, List<int>> PermissionsUser = new Dictionary<string, List<int>>();
+
+            foreach (var item in ListPermission)
+            {
+                List<int> ListActionsUser = new List<int>();
+                foreach (var action in item.Value)
+                {
+                    if (ListActions.Contains(action))
+                    {
+                        ListActionsUser.Add(ListActions.IndexOf(action) + 1);
+                    }
+                }
+                PermissionsUser.Add(item.Key, ListActionsUser);
+            }
+
+            return PermissionsUser;
         }
     }
 }
