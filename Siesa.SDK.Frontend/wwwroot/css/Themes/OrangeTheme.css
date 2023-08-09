@@ -1,0 +1,29 @@
+:root{
+
+    --color_back_body: #ffeddd;
+    
+    --color_primary: #FF8E2C;
+    
+    --color_primary_dark: #b85804;
+    
+    --color_primary_light: #ffc088;
+    
+    --color_primary_header: #aa4f00;
+    
+    --color_text: #3c2007;
+    
+    --color_text_2: #966439;
+    
+    --color_form_border: #dbcdc1;
+    
+    --color_table_hover: rgb(255 142 44 / 20%);
+    
+    --color_search_back: #ffc28e;
+    
+    --color_button_back: #ff8e2c;
+    
+    --color_primary_shadow: #ab3a1533;
+    
+    --color_table_even: rgb(253 119 14 / 4%);
+    
+    }
