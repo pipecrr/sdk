@@ -87,6 +87,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Parameter]
         public List<string> ParentBaseObj { get; set; }
 
+        public bool IsDocment { get; set; } = false;
+
         public int CountUnicErrors = 0;
 
         private string _viewdefName = "";
@@ -225,8 +227,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         protected virtual async Task InitView(string bName = null)
         {
             CreateRelationshipAttachment();
-
             Loading = true;
+            IsDocment = CheckIsDocument();
+            /*if (IsDocment)
+            {
+                Type relatedType = BusinessObj.GetTypeRelated();
+                dynamic emptyObj = Activator.CreateInstance(relatedType);
+                BusinessObj.RelatedBaseObjects.Add(emptyObj);
+            }*/
             if (bName == null)
             {
                 bName = BusinessName;
@@ -286,6 +294,20 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             BusinessObj.ParentComponent = this;
             StateHasChanged();
         }
+
+        private bool CheckIsDocument()
+        {
+            bool result = false;
+            Type docmentType = typeof(BLFrontendDocment<,>);
+            Type businessType = BusinessObj.GetType();
+            
+            if(businessType.BaseType != null && businessType.BaseType.IsGenericType && businessType.BaseType.GetGenericTypeDefinition() == docmentType){
+                result = true;
+            }
+            
+            return result;
+        }
+
         private void AddPanels(List<Panel> panels){
             
             foreach(var item in BusinessObj.DynamicEntities){

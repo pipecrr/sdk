@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
 using Siesa.Global.Enums;
+using Siesa.SDK.Entities;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -11,7 +13,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
     {
         [Parameter]
         public bool SetTopBar { get; set; } = true;
-
         [Parameter]
         public string BLNameParentAttatchment { get; set; }
 
@@ -19,6 +20,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         {
             DefaultViewdefName = String.IsNullOrEmpty(DefaultViewdefName) ? "create" : DefaultViewdefName;
             await BusinessObj.InstanceDynamicEntities(BusinessName);
+            
             await base.OnInitializedAsync();
         }
 
@@ -47,6 +49,5 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 }
             }
         }
-        
     }
 }

@@ -92,6 +92,20 @@ else if (Panels == null || Panels.Count <= 0)
                 </div>
             }
         </SDKFormLayout>
+        @if(IsDocment){
+            <SDKGrid Data="@BusinessObj.RelatedBaseObjects" TItem="dynamic">
+                <Columns>
+                    @foreach (var column in FormViewModel.DetailFields)
+                    {
+                        <SDKGridColumn TItem="dynamic" Title="@column.Name" Property="@column.Name">
+                            <Template Context="Data">
+                                 <DynamicField FieldOpt="@column" ModelObj="@Data" />
+                            </Template>
+                        </SDKGridColumn>
+                    }
+                </Columns>
+            </SDKGrid>            
+        }
     </EditForm>
     </CascadingValue>
     @if(IsSubpanel && ShowButtons){
