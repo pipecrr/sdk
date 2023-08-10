@@ -120,6 +120,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public List<Button> ExtraButtons { get; set; }
         public Button SaveButton { get; set; }
         public bool isOnePanel { get; set; }
+        private List<dynamic> _childObjectsTmp = new ();
         protected virtual async Task CheckPermissions()
         {
             if (FeaturePermissionService != null && !String.IsNullOrEmpty(BusinessName))
@@ -231,9 +232,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             IsDocment = CheckIsDocument();
             /*if (IsDocment)
             {
-                Type relatedType = BusinessObj.GetTypeRelated();
-                dynamic emptyObj = Activator.CreateInstance(relatedType);
-                BusinessObj.RelatedBaseObjects.Add(emptyObj);
+                _childObjectsTmp = BusinessObj.RelatedBaseObjects;
             }*/
             if (bName == null)
             {

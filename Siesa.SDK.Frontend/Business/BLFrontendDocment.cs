@@ -9,8 +9,10 @@ namespace Siesa.SDK.Business
     {
         public BLFrontendDocment(IAuthenticationService authenticationService) : base(authenticationService)
         {
+
         }
-        public List<TChild> RelatedBaseObjects { get; set; } = new ();
+
+        public List<TChild> RelatedBaseObjects { get; set; } = new();
 
         public Type GetTypeRelated()
         {

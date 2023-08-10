@@ -93,15 +93,18 @@ else if (Panels == null || Panels.Count <= 0)
             }
         </SDKFormLayout>
         @if(IsDocment){
-            <SDKGrid Data="@BusinessObj.RelatedBaseObjects" TItem="dynamic">
+            <SDKButton ResourceTag="Custom.Document.Button.Create" Click="@ClickAddRow"/>
+            <SDKGrid Data="@BusinessObj.RelatedBaseObjects" TItem="dynamic" @ref="_refGrid">
                 <Columns>
                     @foreach (FieldOptions column in FormViewModel.DetailFields)
                     {
-                        <SDKGridColumn TItem="dynamic" Title="@column.Name" Property="@column.Name">
-                            <Template Context="Data">
-                                 <DynamicField FieldOpt="@column" ModelObj="@Data" @key="@GetItemUniqueId(column, true)" />
-                            </Template>
-                        </SDKGridColumn>
+                        @if(true){
+                            <SDKGridColumn TItem="dynamic" Title="@column.Name">
+                                <Template Context="data">
+                                        <DynamicField FieldOpt="@column" ModelObj="@BusinessObj"/>
+                                </Template>
+                            </SDKGridColumn>
+                        }
                     }
                 </Columns>
             </SDKGrid>            

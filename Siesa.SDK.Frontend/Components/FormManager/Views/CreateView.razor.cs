@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
 using Siesa.Global.Enums;
 using Siesa.SDK.Entities;
+using Siesa.SDK.Frontend.Components.Fields;
 using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
@@ -17,6 +18,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter]
         public string BLNameParentAttatchment { get; set; }
         private string UniqueId;
+        private dynamic _refGrid;
+
         protected override async Task OnInitializedAsync()
         {
             UniqueId = Guid.NewGuid().ToString();
@@ -55,6 +58,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private string GetItemUniqueId(FieldOptions fld, bool isChild = false)
         {
             return $"{UniqueId}-{fld.Name}-{isChild}";
+        }
+
+        private void ClickAddRow()
+        {
+            Type typeChild = BusinessObj.GetTypeRelated();
+            dynamic obj = Activator.CreateInstance(typeChild);
+            if(BusinessObj.RelatedBaseObjects == null)
+            {
+                dynamic ListChildObj = typeof(List<>).MakeGenericType(new Type[] { typeChild });
+                BusinessObj.RelatedBaseObjects = Activator.CreateInstance(ListChildObj);
+            }
+            BusinessObj.RelatedBaseObjects.Add(obj);
+            _refGrid.Reload();
         }
     }
 }
