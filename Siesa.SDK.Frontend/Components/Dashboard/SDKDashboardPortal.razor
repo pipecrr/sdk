@@ -9,7 +9,7 @@
 @inject IBackendRouterService BackendRouterService
 @inject IAuthenticationService AuthenticationService
 <aside class="sdk_dashboard_portal">
-    @if (PortalConfiguration != null)
+    @if (PortalConfiguration != null && !IsLoading)
     {
         var row = 0;
         <SDKGridLayout ColumnSpacing="0.8rem">
@@ -126,6 +126,7 @@
     private bool MainDashletShowTitle { get; set; }
     private bool ShowDetail { get; set;}
     private Dictionary<string, object> ParametersDetail { get; set; }
+    private bool IsLoading { get; set; }
 
     private async Task<SDKPortalConfiguration> GetPortalConfiguration()
     {
@@ -168,9 +169,11 @@
 
     private async Task Init()
     {
+        IsLoading = true;
         GlobalLoaderService.Show();
         PortalConfiguration = await GetPortalConfiguration();
         GlobalLoaderService.Hide();
+        IsLoading = false;
         StateHasChanged();
     }
 
