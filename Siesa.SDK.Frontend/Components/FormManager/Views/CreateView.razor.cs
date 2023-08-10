@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
 using Siesa.Global.Enums;
 using Siesa.SDK.Entities;
+using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -15,9 +16,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public bool SetTopBar { get; set; } = true;
         [Parameter]
         public string BLNameParentAttatchment { get; set; }
-
+        private string UniqueId;
         protected override async Task OnInitializedAsync()
         {
+            UniqueId = Guid.NewGuid().ToString();
             DefaultViewdefName = String.IsNullOrEmpty(DefaultViewdefName) ? "create" : DefaultViewdefName;
             await BusinessObj.InstanceDynamicEntities(BusinessName);
             
@@ -48,6 +50,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     // NavigationService.NavigateTo("/", replace:true);
                 }
             }
+        }
+
+        private string GetItemUniqueId(FieldOptions fld, bool isChild = false)
+        {
+            return $"{UniqueId}-{fld.Name}-{isChild}";
         }
     }
 }

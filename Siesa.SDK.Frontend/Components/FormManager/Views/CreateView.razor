@@ -95,11 +95,11 @@ else if (Panels == null || Panels.Count <= 0)
         @if(IsDocment){
             <SDKGrid Data="@BusinessObj.RelatedBaseObjects" TItem="dynamic">
                 <Columns>
-                    @foreach (var column in FormViewModel.DetailFields)
+                    @foreach (FieldOptions column in FormViewModel.DetailFields)
                     {
                         <SDKGridColumn TItem="dynamic" Title="@column.Name" Property="@column.Name">
                             <Template Context="Data">
-                                 <DynamicField FieldOpt="@column" ModelObj="@Data" />
+                                 <DynamicField FieldOpt="@column" ModelObj="@Data" @key="@GetItemUniqueId(column, true)" />
                             </Template>
                         </SDKGridColumn>
                     }
