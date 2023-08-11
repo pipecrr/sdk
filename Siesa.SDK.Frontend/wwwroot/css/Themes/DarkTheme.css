@@ -52,7 +52,7 @@
     --color_primary_shadow_min: #06113a0d;
     --shadow_standar_min: 0px 3px 12px var(--color_primary_shadow_min);
     /* Base: color primary (Para even de tablas) */
-    --color_table_even: rgba(14, 121, 253, 0.04);
+    --color_table_even: #0c5890;
     /* Base: color primary (Para hover de tablas) */
     --color_table_hover: rgba(14, 121, 253, 0.1);
 
@@ -68,6 +68,7 @@
     --color_toolbar_back: #042339;
     --color_area2_back: #074069;
     --color_panel_back: #074069;
+    --color_panel_back_border: #396687;
     --color_light_text: #042339;
     --color_light_nav: #042339;
     --color_light_table: #074069;
