@@ -190,6 +190,7 @@
                                                 @bind-Value="model.Username" 
                                                 AllowAutoComplete="true" 
                                                 AutomationId="BLLogin.Username"
+                                                AutoFocus=true
                                             />
                                             <SDKValidationMessage For="@(() => model.Username)" />
                                         </div>
@@ -348,7 +349,6 @@
     protected override async Task OnInitializedAsync()
     {
         LogoUrl = AuthenticationService.GetConnectionLogo();
-        init_loading = true;
         // redirect to home if already logged in
         if (AuthenticationService.User != null)
         {
@@ -376,6 +376,7 @@
 
     private async Task InitLogin()
     {
+        init_loading = true;
         await getDbConnections();
         await getCultures();
         getSelectedCulture();
