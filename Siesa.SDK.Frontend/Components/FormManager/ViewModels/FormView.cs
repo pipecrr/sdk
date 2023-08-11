@@ -232,7 +232,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             IsDocment = CheckIsDocument();
             /*if (IsDocment)
             {
-                _childObjectsTmp = BusinessObj.RelatedBaseObjects;
+                _childObjectsTmp = BusinessObj.ChildObj;
             }*/
             if (bName == null)
             {

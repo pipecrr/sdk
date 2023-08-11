@@ -62,14 +62,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private void ClickAddRow()
         {
-            Type typeChild = BusinessObj.GetTypeRelated();
+            Type typeChild = BusinessObj.GetTypeChild();
             dynamic obj = Activator.CreateInstance(typeChild);
-            if(BusinessObj.RelatedBaseObjects == null)
+            if(BusinessObj.ChildObj == null)
             {
                 dynamic ListChildObj = typeof(List<>).MakeGenericType(new Type[] { typeChild });
-                BusinessObj.RelatedBaseObjects = Activator.CreateInstance(ListChildObj);
+                BusinessObj.ChildObj = Activator.CreateInstance(ListChildObj);
             }
-            BusinessObj.RelatedBaseObjects.Add(obj);
+            BusinessObj.ChildObj.Add(obj);
             _refGrid.Reload();
         }
     }

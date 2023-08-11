@@ -12,8 +12,8 @@ namespace Siesa.SDK.Business
         {
         }
 
-        public List<TChild> RelatedBaseObjects { get; set; } = new();
-        public Type GetTypeRelated()
+        public List<TChild> ChildObj { get; set; } = new();
+        public Type GetTypeChild()
         {
             return typeof(TChild);
         }
