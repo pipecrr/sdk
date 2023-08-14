@@ -120,7 +120,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public List<Button> ExtraButtons { get; set; }
         public Button SaveButton { get; set; }
         public bool isOnePanel { get; set; }
-        private List<dynamic> _childObjectsTmp = new ();
+        
+        public dynamic _refGrid;
         protected virtual async Task CheckPermissions()
         {
             if (FeaturePermissionService != null && !String.IsNullOrEmpty(BusinessName))
@@ -230,10 +231,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             CreateRelationshipAttachment();
             Loading = true;
             IsDocment = CheckIsDocument();
-            /*if (IsDocment)
-            {
-                _childObjectsTmp = BusinessObj.ChildObj;
-            }*/
             if (bName == null)
             {
                 bName = BusinessName;
@@ -283,6 +280,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     }
                 }
             }
+            if(IsDocment)
+            {
+                AddOnChangeCell();
+                BusinessObj.ExtrDetailFields = FormViewModel.DetailFields.Select(x => x.Name).ToList();
+                await BusinessObj.InitializeChilds().ConfigureAwait(true);
+            }
             Loading = false;
             EditFormContext = new EditContext(BusinessObj);
             EditFormContext.OnFieldChanged += EditContext_OnFieldChanged;
@@ -292,6 +295,17 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             EvaluateButtonAttributes();
             BusinessObj.ParentComponent = this;
             StateHasChanged();
+        }
+
+        private void AddOnChangeCell()
+        {
+            foreach (var item in FormViewModel.DetailFields)
+            {
+                if(item.CustomAttributes == null){
+                    item.CustomAttributes = new Dictionary<string, object>();
+                }
+                item.CustomAttributes.Add("sdk-change-cell", "SdkOnChangeCell()");
+            }
         }
 
         private bool CheckIsDocument()
@@ -750,6 +764,28 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         protected string GetSaveBtnIcon()
         {
             return Saving ? "fas fa-spinner fa-pulse" : "fa-solid fa-floppy-disk";
+        }
+        
+        public void ClickAddRow()
+        {
+            Type typeChild = BusinessObj.GetTypeChild();
+            dynamic obj = Activator.CreateInstance(typeChild);
+            dynamic ListChildObj = typeof(List<>).MakeGenericType(new Type[] { typeChild });
+            if(BusinessObj.ChildObjs == null)
+            {
+                BusinessObj.ChildObjs = Activator.CreateInstance(ListChildObj);
+            }
+            BusinessObj.ChildObjs.Add(obj);
+            _refGrid.Reload();
+        }
+        
+        public void ClickDeleteRow(dynamic obj){
+            BusinessObj.ChildObjs.Remove(obj);
+            if(obj.Rowid != null && obj.Rowid > 0){
+                BusinessObj.ChildObjsDeleted.Add(obj);
+                BusinessObj.ChildRowidsUpdated.Remove(obj.Rowid);
+            }
+            _refGrid.Reload();
         }
 
     }

@@ -88,7 +88,33 @@ else if (BusinessObj.BaseObj.Rowid != 0)
                 </div>
             }
         </DxFormLayout>
-        @* <ValidationSummary /> *@        
+        @if(IsDocment){
+                    <SDKButton ResourceTag="Custom.Document.Button.Create" Click="@ClickAddRow"/>
+                    <SDKGrid Data="@BusinessObj.ChildObjs" TItem="object" @ref="_refGrid">
+                        <Columns>
+                            <SDKGridColumn Width="150px" ResourceTag="Action.Generic.Actions" TItem="object">
+                                <Template Context="dataActions">
+                                    <div class="d-flex justify-content-center">
+                                        <SDKButton IconCssClass="fa-trash-can" IsActionButton="true" Click="@(()=>ClickDeleteRow(dataActions))"/>
+                                        <SDKButton IconCssClass="fa-pen" IsActionButton="true" Click="@(()=>ClickDeleteRow(dataActions))" Enabled="@IsEnable(dataActions)"/>
+                                    </div>
+                                </Template>
+                            </SDKGridColumn>
+                            @foreach (FieldOptions column in FormViewModel.DetailFields)
+                            {
+                                @if(true){
+                                    <SDKGridColumn TItem="object" Title="@column.Name">
+                                        <Template Context="data">
+                                            <CascadingValue Value="@EditFormContext">
+                                                <DynamicField FieldOpt="@column" ModelObj="@data"/>
+                                            </CascadingValue>
+                                        </Template>
+                                    </SDKGridColumn>
+                                }
+                            }
+                        </Columns>
+                    </SDKGrid>            
+                }
     </EditForm>
     </CascadingValue>
     @if(IsSubpanel && ShowButtons){

@@ -17,12 +17,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public bool SetTopBar { get; set; } = true;
         [Parameter]
         public string BLNameParentAttatchment { get; set; }
-        private string UniqueId;
-        private dynamic _refGrid;
 
         protected override async Task OnInitializedAsync()
         {
-            UniqueId = Guid.NewGuid().ToString();
             DefaultViewdefName = String.IsNullOrEmpty(DefaultViewdefName) ? "create" : DefaultViewdefName;
             await BusinessObj.InstanceDynamicEntities(BusinessName);
             
@@ -53,24 +50,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     // NavigationService.NavigateTo("/", replace:true);
                 }
             }
-        }
-
-        private string GetItemUniqueId(FieldOptions fld, bool isChild = false)
-        {
-            return $"{UniqueId}-{fld.Name}-{isChild}";
-        }
-
-        private void ClickAddRow()
-        {
-            Type typeChild = BusinessObj.GetTypeChild();
-            dynamic obj = Activator.CreateInstance(typeChild);
-            if(BusinessObj.ChildObj == null)
-            {
-                dynamic ListChildObj = typeof(List<>).MakeGenericType(new Type[] { typeChild });
-                BusinessObj.ChildObj = Activator.CreateInstance(ListChildObj);
-            }
-            BusinessObj.ChildObj.Add(obj);
-            _refGrid.Reload();
         }
     }
 }

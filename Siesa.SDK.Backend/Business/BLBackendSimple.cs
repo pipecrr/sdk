@@ -449,7 +449,7 @@ namespace Siesa.SDK.Business
             }
         }
 
-        private T CreateDynamicObject(Type type, dynamic dynamicObj)
+        public dynamic CreateDynamicObject(Type type, dynamic dynamicObj)
         {
             dynamic result = Activator.CreateInstance(type);
             foreach (var property in dynamicObj.GetType().GetProperties()){
@@ -1082,7 +1082,7 @@ namespace Siesa.SDK.Business
             return result;
         }
 
-        private void CreateQueryExtraFields(IQueryable<T> query, List<string> inlcudesAdd, List<string> extraFields, ref string selectedFields, ref bool hasRelated, bool containAttachments = false)
+        public void CreateQueryExtraFields(dynamic query, List<string> inlcudesAdd, List<string> extraFields, ref string selectedFields, ref bool hasRelated, bool containAttachments = false)
         {
             bool hasRelatedTmp = false;
             extraFields.Add("Rowid");

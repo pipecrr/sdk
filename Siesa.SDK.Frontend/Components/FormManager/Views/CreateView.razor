@@ -94,13 +94,12 @@ else if (Panels == null || Panels.Count <= 0)
         </SDKFormLayout>
         @if(IsDocment){
             <SDKButton ResourceTag="Custom.Document.Button.Create" Click="@ClickAddRow"/>
-            <SDKGrid Data="@BusinessObj.ChildObj" TItem="object" @ref="_refGrid">
+            <SDKGrid Data="@BusinessObj.ChildObjs" TItem="object" @ref="_refGrid">
                 <Columns>
                     <SDKGridColumn Width="150px" ResourceTag="Action.Generic.Actions" TItem="object">
                         <Template Context="dataActions">
                             <div class="d-flex justify-content-center">
-                                <SDKButton IconCssClass="fa-check" IsActionButton="true" />
-                                <SDKButton IconCssClass="fa-trash-can" IsActionButton="true"/>
+                                <SDKButton IconCssClass="fa-trash-can" IsActionButton="true" Click="@(()=>ClickDeleteRow(dataActions))"/>
                             </div>
                         </Template>
                     </SDKGridColumn>
