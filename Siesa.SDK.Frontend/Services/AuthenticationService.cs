@@ -693,7 +693,21 @@ namespace Siesa.SDK.Frontend.Services
                     case "Custom.SDK.Theme.Dark":
                         _rootThemeStyle = "_content/Siesa.SDK.Frontend/css/Themes/DarkTheme.css";
                         break;
-
+                    case "Custom.SDK.Theme.Orange":
+                        _rootThemeStyle = "_content/Siesa.SDK.Frontend/css/Themes/OrangeTheme.css";
+                        break;
+                    case "Custom.SDK.Theme.Green":
+                        _rootThemeStyle = "_content/Siesa.SDK.Frontend/css/Themes/GreenTheme.css";
+                        break;
+                    case "Custom.SDK.Theme.Terracotta":
+                        _rootThemeStyle = "_content/Siesa.SDK.Frontend/css/Themes/TerracottaTheme.css";
+                        break;
+                    case "Custom.SDK.Theme.Ruby":
+                        _rootThemeStyle = "_content/Siesa.SDK.Frontend/css/Themes/RubyTheme.css";
+                        break;
+                    case "Custom.SDK.Theme.Violet":
+                        _rootThemeStyle = "_content/Siesa.SDK.Frontend/css/Themes/VioletTheme.css";
+                        break;
                     default:
                         break;
                 }       
