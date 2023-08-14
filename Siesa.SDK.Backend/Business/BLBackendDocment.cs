@@ -12,21 +12,62 @@ using Siesa.SDK.Shared.Business;
 
 namespace Siesa.SDK.Business
 {
+    /// <summary>
+    /// Represents a class for managing parent-child relationships in the SDK context, inherits from BLBackendSimple.
+    /// </summary>
+    /// <typeparam name="TParent">The type of the parent object.</typeparam>
+    /// <typeparam name="TChild">The type of the child object.</typeparam>
     public class BLBackendDocment<TParent, TChild> : BLBackendSimple<TParent,BLBaseValidator<TParent>> where TParent : class,IBaseSDK where TChild : class
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BLBackendDocment{TParent, TChild}"/> class.
+        /// </summary>
+        /// <param name="authenticationService">The authentication service.</param>
         public BLBackendDocment(IAuthenticationService authenticationService) : base(authenticationService)
         {
         }
-
+        
+        /// <summary>
+        /// Gets or sets the child objects.
+        /// </summary>
         public List<TChild> ChildObjs { get; set; } = new();
+        /// <summary>
+        /// Gets or sets the child objects to be deleted.
+        /// </summary>
         public List<TChild> ChildObjsDeleted { get; set; } = new();
+        /// <summary>
+        /// Gets or sets the rowids of the child objects to be updated.
+        /// </summary>
         public List<dynamic> ChildRowidsUpdated { get; set; } = new();
+        /// <summary>
+        /// Gets or sets the extra detail fields.
+        /// </summary>
         public List<string> ExtrDetailFields { get; set; } = new();
+        /// <summary>
+        /// Gets the type of the child objects.
+        /// </summary>
+        /// <returns>The type of the child objects.</returns>
         public Type GetTypeChild()
         {
             return typeof(TChild);
         }
         
+        /// <summary>
+        /// Performs actions before deleting the business object, specifically deleting related child objects. 
+        /// </summary>
+        /// <param name="result">The result of the validation and save operation.</param>
+        /// <param name="context">The SDK context.</param>
+        public override void BeforeDelete(ref ValidateAndSaveBusinessObjResponse result, SDKContext context)
+        {
+            List<TChild> childsDelete = ChildObjs.FindAll(x =>
+            {
+                dynamic rowid = x.GetType().GetProperty("Rowid")?.GetValue(x);
+                return rowid != null && rowid != 0;
+            });
+            context.RemoveRange(childsDelete);
+            base.BeforeDelete(ref result, context);
+        }
+
         /// <summary>
         /// Performs actions after saving the business object, specifically updating related child objects with the appropriate value.
         /// </summary>
@@ -39,7 +80,7 @@ namespace Siesa.SDK.Business
             dynamic rowidValueProperty = ConvertToPropertyType(relatedChildField, rowidValue); 
             List<TChild> childsAdded = ChildObjs.FindAll(x =>
             {
-                dynamic rowid = x.GetType().GetProperty("Rowid").GetValue(x);
+                dynamic rowid = x.GetType().GetProperty("Rowid")?.GetValue(x);
                 bool isAdd = (rowid == null || rowid == 0);
                 if (isAdd)
                 {
@@ -117,7 +158,12 @@ namespace Siesa.SDK.Business
             
             return result;
         }
-        
+        /// <summary>
+        /// Retrieves child objects based on a parent's rowid and optional extra detail fields.
+        /// </summary>
+        /// <param name="rowid">The parent's rowid.</param>
+        /// <param name="extraDetailFields">Optional extra detail fields to retrieve.</param>
+        /// <returns>The action result containing the list of child objects.</returns>
         [SDKExposedMethod]
         public ActionResult<List<TChild>> GetChilds(Int64 rowid, List<string> extraDetailFields = null)
         {

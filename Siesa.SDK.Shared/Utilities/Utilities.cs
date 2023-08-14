@@ -59,7 +59,13 @@ namespace Siesa.SDK.Shared.Utilities
             }
             
         }
-
+        
+        /// <summary>
+        /// This method is used to get if the business object is a document or not.
+        /// </summary>
+        /// <param name="businessObj">Business object of which you want to know if it is a document</param>
+        /// <param name="docmentType">Type BLFrontendDocment</param>
+        /// <returns></returns>
         public static bool CheckIsDocument(dynamic businessObj, Type docmentType)
         {
             bool result = false;
