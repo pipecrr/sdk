@@ -9,7 +9,7 @@
 @inject IBackendRouterService BackendRouterService
 @inject IAuthenticationService AuthenticationService
 <aside class="sdk_dashboard_portal">
-    @if (PortalConfiguration != null)
+    @if (PortalConfiguration != null && !IsLoading)
     {
         var row = 0;
         <SDKGridLayout ColumnSpacing="0.8rem">
@@ -78,7 +78,7 @@
                                                     <CascadingValue Value="@this">
                                                         <CascadingValue Value="@item2">
                                                             @if(true){
-                                                                <SDKDashletPortal Business="@Business" ComponentType="@item2.ComponentType" ResourceTag="@item2.ResourceTag" ShowTitle="@item2.ShowTitle" IndexDashlet="@j" IndexRow="@i"/>
+                                                                <SDKDashletPortal Business="@Business" ComponentType="@item2.ComponentType" ResourceTag="@item2.ResourceTag" ShowTitle="@item2.ShowTitle" IndexDashlet="@j" IndexRow="@i" CssClass="@item2.CssClass"/>
                                                             }
                                                         </CascadingValue>
                                                     </CascadingValue>
@@ -99,10 +99,10 @@
                     <Template>
                         @if (PortalConfiguration.MainDashlet != null && !ShowDetail)
                         {
-                            <SDKDashletPortal Business="@Business" ComponentType="@PortalConfiguration.MainDashlet.ComponentType" ResourceTag="@PortalConfiguration.MainDashlet.ResourceTag" ShowTitle="@PortalConfiguration.MainDashlet.ShowTitle"/>
+                            <SDKDashletPortal Business="@Business" ComponentType="@PortalConfiguration.MainDashlet.ComponentType" ResourceTag="@PortalConfiguration.MainDashlet.ResourceTag" ShowTitle="@PortalConfiguration.MainDashlet.ShowTitle" CssClass="@PortalConfiguration.MainDashlet.CssClass"/>
                         }else if (ShowDetail)
                         {
-                            <SDKDashletPortal Business="@Business" ComponentType="@MainDashletType" ResourceTag="@MainDashletResourceTag" ShowTitle="@MainDashletShowTitle" Parameters="@ParametersDetail"/>
+                            <SDKDashletPortal Business="@Business" ComponentType="@MainDashletType" ResourceTag="@MainDashletResourceTag" ShowTitle="@MainDashletShowTitle" Parameters="@ParametersDetail" CssClass="@PortalConfiguration.MainDashlet.CssClass"/>
                         }
                         
                     </Template>
@@ -126,6 +126,7 @@
     private bool MainDashletShowTitle { get; set; }
     private bool ShowDetail { get; set;}
     private Dictionary<string, object> ParametersDetail { get; set; }
+    private bool IsLoading { get; set; }
 
     private async Task<SDKPortalConfiguration> GetPortalConfiguration()
     {
@@ -168,9 +169,11 @@
 
     private async Task Init()
     {
+        IsLoading = true;
         GlobalLoaderService.Show();
         PortalConfiguration = await GetPortalConfiguration();
         GlobalLoaderService.Hide();
+        IsLoading = false;
         StateHasChanged();
     }
 
