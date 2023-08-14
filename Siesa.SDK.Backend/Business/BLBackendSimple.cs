@@ -449,7 +449,13 @@ namespace Siesa.SDK.Business
             }
         }
 
-        private T CreateDynamicObject(Type type, dynamic dynamicObj)
+        /// <summary>
+        /// Get the object dynamically of the type type and the dynamic object dynamicObj
+        /// </summary>
+        /// <param name="type">type of object to create</param>
+        /// <param name="dynamicObj">dynamic object to create from</param>
+        /// <returns>Object type of type created</returns>
+        public dynamic CreateDynamicObject(Type type, dynamic dynamicObj)
         {
             dynamic result = Activator.CreateInstance(type);
             foreach (var property in dynamicObj.GetType().GetProperties()){
@@ -1082,7 +1088,16 @@ namespace Siesa.SDK.Business
             return result;
         }
 
-        private void CreateQueryExtraFields(IQueryable<T> query, List<string> inlcudesAdd, List<string> extraFields, ref string selectedFields, ref bool hasRelated, bool containAttachments = false)
+        /// <summary>
+        /// Create the query with the extra fields
+        /// </summary>
+        /// <param name="query">query to create</param>
+        /// <param name="inlcudesAdd">list of includes to add</param>
+        /// <param name="extraFields">list of extra fields</param>
+        /// <param name="selectedFields">string with the selected fields ref</param>
+        /// <param name="hasRelated">bool to know if has related ref</param>
+        /// <param name="containAttachments">bool to know if contain attachments, default false</param>
+        public void CreateQueryExtraFields(dynamic query, List<string> inlcudesAdd, List<string> extraFields, ref string selectedFields, ref bool hasRelated, bool containAttachments = false)
         {
             bool hasRelatedTmp = false;
             extraFields.Add("Rowid");

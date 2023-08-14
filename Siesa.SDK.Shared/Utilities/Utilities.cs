@@ -58,6 +58,24 @@ namespace Siesa.SDK.Shared.Utilities
             }
             
         }
+        
+        /// <summary>
+        /// This method is used to get if the business object is a document or not.
+        /// </summary>
+        /// <param name="businessObj">Business object of which you want to know if it is a document</param>
+        /// <param name="documentType">Type BLFrontendDocument</param>
+        /// <returns></returns>
+        public static bool CheckIsDocument(dynamic businessObj, Type documentType)
+        {
+            bool result = false;
+            Type businessType = businessObj.GetType();
+            
+            if(businessType.BaseType != null && businessType.BaseType.IsGenericType && businessType.BaseType.GetGenericTypeDefinition() == documentType){
+                result = true;
+            }
+            
+            return result;
+        }
 
         public static Assembly SearchAssemblyByType(string type_name) {
             Type type = Type.GetType(type_name);
