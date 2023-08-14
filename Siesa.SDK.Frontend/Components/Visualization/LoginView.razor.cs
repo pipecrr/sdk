@@ -23,6 +23,10 @@ public partial class LoginView
     [Parameter] public string LogoUrl { get; set; }
     [Parameter] public string ImageUrl { get; set; }
     [Parameter] public int RowidConexion { get; set; }
+
+    /// <summary>
+    /// User Token for recover password
+    /// </summary>
     [Parameter] public string? UserToken { get; set; }
     public short RowidCulture { get; set; } = 1;
     public string FormID { get; set; } = Guid.NewGuid().ToString();

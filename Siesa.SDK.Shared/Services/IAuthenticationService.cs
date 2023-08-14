@@ -276,7 +276,7 @@ namespace Siesa.SDK.Shared.Services
         /// <param name="userToken">The user token for password recovery.</param>
         /// <param name="isPortal">Indicates if the password recovery is for a portal user.</param>
         /// <returns>A boolean value indicating whether the user token is valid for password recovery.</returns>
-        Task<bool> ValidateUserToken(string userToken, bool isPortal = false);
+        Task<bool> ValidateUserToken(string userToken, bool isPortal);
 
         /// <summary>
         /// Changes the password of a user with the specified recovery token.

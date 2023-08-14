@@ -541,6 +541,11 @@ namespace Siesa.SDK.Frontend.Services
             }
         }
 
+        /// <summary>
+        ///  Implementation of the method to send an email to the user with the password recovery link.
+        /// </summary>
+        /// <param name="email">The email of the user.</param>
+        /// <param name="isPortal">Indicates if the password recovery is for a portal user.</param>
 
         public async void ForgotPasswordAsync(string email, bool isPortal = false)
         {
@@ -552,12 +557,19 @@ namespace Siesa.SDK.Frontend.Services
             await request.Call("SendEmailRecoveryPassword", email, SelectedConnection.Rowid, UrlSystem, isPortal);
         }
 
-        public async Task<bool> ValidateUserToken(string userToken,bool IsPortal)
+        /// <summary>
+        /// Implementation of the method to validate the user token for password recovery.
+        /// </summary>
+        /// <param name="userToken">The user token for password recovery</param>
+        /// <param name="isPortal">Indicates if the password recovery is for a portal user.</param>
+        /// <returns></returns>
+
+        public async Task<bool> ValidateUserToken(string userToken,bool isPortal)
         {
 
             var request = await GetBLUser().ConfigureAwait(true);
 
-            var result = await request.Call("ValidateUserRecoveryPass", userToken, SelectedConnection.Rowid, IsPortal);
+            var result = await request.Call("ValidateUserRecoveryPass", userToken, SelectedConnection.Rowid, isPortal);
 
             if (result.Success)
             {
@@ -566,10 +578,20 @@ namespace Siesa.SDK.Frontend.Services
             return false;
         }
 
+        /// <summary>
+        /// Implementation of the method for Changes the password of a user with the specified recovery token.
+        /// </summary>
+        /// <param name="userToken">Recovery token of the user.</param>
+        /// <param name="rowIdDBConnection">Identifier of the database connection.</param>
+        /// <param name="NewPassword">New password to be assigned to the user.</param>
+        /// <param name="ConfirmPassword">Confirmation of the new password.</param>
+        /// <param name="isPortal">Indicates if the password change is for a portal user.</param>
+        /// <returns>A boolean value indicating whether the password change was successful.</returns>
+
         public async Task<bool> ChangePassword(string userToken,short rowIdDBConnection, string NewPassword, string ConfirmPassword,
         bool isPortal = false)
         {
-            var request = await GetBLUser();
+            var request = await GetBLUser().ConfigureAwait(true);
             if (!string.IsNullOrEmpty(NewPassword) && !string.IsNullOrEmpty(ConfirmPassword))
             {
                 if (!NewPassword.Equals(ConfirmPassword))
