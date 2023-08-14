@@ -763,7 +763,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         /// </summary>
         public void ClickAddRow()
         {
-            Type typeChild = BusinessObj.GetTypeChild();
+            Type typeChild = BusinessObj.ChildType();
             dynamic obj = Activator.CreateInstance(typeChild);
             dynamic ListChildObj = typeof(List<>).MakeGenericType(new Type[] { typeChild });
             if(BusinessObj.ChildObjs == null)

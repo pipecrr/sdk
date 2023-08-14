@@ -27,17 +27,5 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 }
             }
         }
-
-        private static bool IsEnable(dynamic dataActions)
-        {
-            bool result = true;
-            var property = dataActions.GetType().GetProperty("Rowid");
-            if (property != null)
-            {
-                var rowid = property.GetValue(dataActions);
-                result = !(rowid == null || rowid == 0);
-            }
-            return result;
-        }
     }
 }

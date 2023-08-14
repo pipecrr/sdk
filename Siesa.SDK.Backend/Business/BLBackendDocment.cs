@@ -47,7 +47,7 @@ namespace Siesa.SDK.Business
         /// Method to return Type of the child object.
         /// </summary>
         /// <returns>Type of ChildObjs</returns>
-        public Type GetTypeChild() => typeof(TChild);
+        public Type ChildType() => typeof(TChild);
         /// <summary>
         /// Performs actions before deleting the business object, specifically deleting related child objects. 
         /// </summary>
