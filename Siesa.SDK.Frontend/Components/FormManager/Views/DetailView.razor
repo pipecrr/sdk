@@ -67,7 +67,7 @@ else if (ModelLoaded == true)
             </div>
         }
     </DxFormLayout>
-    @if(IsDocment){
+    @if(IsDocument){
         <SDKGrid Data="@BusinessObj.ChildObjs" TItem="object">
             <Columns>
                 @foreach (FieldOptions column in FormViewModel.DetailFields)

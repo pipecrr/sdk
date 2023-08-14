@@ -33,7 +33,6 @@ namespace Siesa.SDK.Shared.Utilities
 
         public static bool CheckUserActionPermission(string businessName, int actionRowid, IAuthenticationService authenticationService)
         {
-            return true;
             try
             {
                 if(authenticationService == null || authenticationService.User == null)
@@ -64,14 +63,14 @@ namespace Siesa.SDK.Shared.Utilities
         /// This method is used to get if the business object is a document or not.
         /// </summary>
         /// <param name="businessObj">Business object of which you want to know if it is a document</param>
-        /// <param name="docmentType">Type BLFrontendDocment</param>
+        /// <param name="documentType">Type BLFrontendDocument</param>
         /// <returns></returns>
-        public static bool CheckIsDocument(dynamic businessObj, Type docmentType)
+        public static bool CheckIsDocument(dynamic businessObj, Type documentType)
         {
             bool result = false;
             Type businessType = businessObj.GetType();
             
-            if(businessType.BaseType != null && businessType.BaseType.IsGenericType && businessType.BaseType.GetGenericTypeDefinition() == docmentType){
+            if(businessType.BaseType != null && businessType.BaseType.IsGenericType && businessType.BaseType.GetGenericTypeDefinition() == documentType){
                 result = true;
             }
             

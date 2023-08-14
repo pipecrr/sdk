@@ -92,7 +92,7 @@ else if (Panels == null || Panels.Count <= 0)
                 </div>
             }
         </SDKFormLayout>
-        @if(IsDocment){
+        @if(IsDocument){
             <SDKButton ResourceTag="Custom.Document.Button.Create" Click="@ClickAddRow"/>
             <SDKGrid Data="@BusinessObj.ChildObjs" TItem="object" @ref="RefGrid">
                 <Columns>

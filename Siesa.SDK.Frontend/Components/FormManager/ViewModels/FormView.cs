@@ -90,7 +90,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         /// <summary>
         /// Gets or sets a value indicating whether the business object is a document.
         /// </summary>
-        public bool IsDocment { get; set; }
+        public bool IsDocument { get; set; }
 
         public int CountUnicErrors = 0;
 
@@ -236,7 +236,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         {
             CreateRelationshipAttachment();
             Loading = true;
-            IsDocment = Utilities.CheckIsDocument(BusinessObj, typeof(BLFrontendDocment<,>));
+            IsDocument = Utilities.CheckIsDocument(BusinessObj, typeof(BLFrontendDocument<,>));
             if (bName == null)
             {
                 bName = BusinessName;
@@ -286,7 +286,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     }
                 }
             }
-            if(IsDocment)
+            if(IsDocument)
             {
                 AddOnChangeCell();
                 BusinessObj.ExtraDetailFields = FormViewModel.DetailFields.Select(x => x.Name).ToList();

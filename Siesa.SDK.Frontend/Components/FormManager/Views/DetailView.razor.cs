@@ -53,7 +53,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         /// <summary>
         /// Gets or sets a value indicating whether the business object is a document.
         /// </summary>
-        public bool IsDocment { get; set; }
+        public bool IsDocument { get; set; }
 
         public Boolean Loading = true;
 
@@ -243,7 +243,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         protected async Task InitView(string bName = null)
         {
             Loading = true;
-            IsDocment = Utilities.CheckIsDocument(BusinessObj, typeof(BLFrontendDocment<,>));
+            IsDocument = Utilities.CheckIsDocument(BusinessObj, typeof(BLFrontendDocument<,>));
             if (bName == null)
             {
                 bName = BusinessName;
@@ -290,7 +290,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 }
                 ModelLoaded = true;
             }
-            if(IsDocment)
+            if(IsDocument)
             {
                 List<string> extraDetailFields = new ();
                 FormViewModel.DetailFields.ForEach(x =>
