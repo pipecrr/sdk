@@ -517,21 +517,6 @@ namespace Siesa.SDK.Business
         {
             //Do nothing
         }
-
-        private void SendMessage(string exchangeName, string routingKey, string message)
-        {
-            var factory = new ConnectionFactory() { HostName = "coder.overjt.com" };
-            using (var connection = factory.CreateConnection())
-            using (var channel = connection.CreateModel())
-            {
-                channel.ExchangeDeclare(exchange: exchangeName, type: ExchangeType.Topic);
-
-                var body = Encoding.UTF8.GetBytes(message);
-                channel.BasicPublish(exchange: exchangeName, routingKey: routingKey, basicProperties: null, body: body);
-                
-                Console.WriteLine($"Sent message with routing key '{routingKey}': '{message}'");
-            }
-        }
         public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave(bool ignorePermissions = false)
         {
             ValidateAndSaveBusinessObjResponse result = new();
@@ -566,11 +551,6 @@ namespace Siesa.SDK.Business
                         }
                         BeforeSave(ref result, context);
                         result.Rowid = Save(context);
-                        if (true)
-                        {
-                            SendMessage("siesaExchanged", "siesaRoutingKey", "ValidateAndSave");
-                            
-                        }
                         if (DynamicEntities != null && DynamicEntities.Count > 0)
                         {
                             SaveDynamicEntity(result.Rowid, context);
