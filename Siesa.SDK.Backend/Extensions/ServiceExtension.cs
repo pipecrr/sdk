@@ -35,7 +35,7 @@ namespace Siesa.SDK.Backend.Extensions
             services.AddSingleton<IBackendRouterService, BackendRouterService>();
             services.AddScoped<EmailService>();
             services.AddSingleton<IResourceManager, ResourceManager>(sp => ActivatorUtilities.CreateInstance<ResourceManager>(sp, false));
-
+            services.AddSingleton<QueueService>();
             services.AddScoped<ISDKJWT, Siesa.SDK.Backend.Criptography.SDKJWT>();
 
             Action<IServiceProvider, DbContextOptionsBuilder> dbContextOptionsAction = (sp, opts) =>
