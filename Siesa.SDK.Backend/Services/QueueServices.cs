@@ -6,7 +6,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace Siesa.SDK.Backend.Services
 {
-    public class QueueService : BackgroundService
+    public class QueueService //: BackgroundService
     {
         private IConnection _connection;
         private IModel _channel;
