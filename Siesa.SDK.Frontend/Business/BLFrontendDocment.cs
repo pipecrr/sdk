@@ -37,15 +37,13 @@ namespace Siesa.SDK.Business
         /// <summary>
         /// Gets or sets the extra detail fields.
         /// </summary>
-        public List<string> ExtrDetailFields { get; set; } = new();
+        public List<string> ExtraDetailFields { get; set; } = new();
+        
         /// <summary>
-        /// Gets the type of the child objects.
+        /// Method to return Type of the child object.
         /// </summary>
-        /// <returns>The type of the child objects.</returns>
-        public Type GetTypeChild()
-        {
-            return typeof(TChild);
-        }        
+        /// <returns>Type of ChildObjs</returns>
+        public Type GetTypeChild() => typeof(TChild);
 
         /// <summary>
         /// Initializes the ChildObjs.
@@ -53,7 +51,7 @@ namespace Siesa.SDK.Business
         /// <returns>The task.</returns>
         public async Task InitializeChilds()
         {
-            var response = await Backend.Call("GetChilds",BaseObj.GetRowid(), ExtrDetailFields).ConfigureAwait(true);
+            var response = await Backend.Call("GetChilds",BaseObj.GetRowid(), ExtraDetailFields).ConfigureAwait(true);
             if (response.Success)
             {
                 ChildObjs = response.Data;

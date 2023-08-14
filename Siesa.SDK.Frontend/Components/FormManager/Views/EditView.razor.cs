@@ -28,7 +28,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
         }
 
-        private bool IsEnable(dynamic dataActions)
+        private static bool IsEnable(dynamic dataActions)
         {
             bool result = true;
             var property = dataActions.GetType().GetProperty("Rowid");

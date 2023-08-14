@@ -42,16 +42,12 @@ namespace Siesa.SDK.Business
         /// <summary>
         /// Gets or sets the extra detail fields.
         /// </summary>
-        public List<string> ExtrDetailFields { get; set; } = new();
+        public List<string> ExtraDetailFields { get; set; } = new();
         /// <summary>
-        /// Gets the type of the child objects.
+        /// Method to return Type of the child object.
         /// </summary>
-        /// <returns>The type of the child objects.</returns>
-        public Type GetTypeChild()
-        {
-            return typeof(TChild);
-        }
-        
+        /// <returns>Type of ChildObjs</returns>
+        public Type GetTypeChild() => typeof(TChild);
         /// <summary>
         /// Performs actions before deleting the business object, specifically deleting related child objects. 
         /// </summary>
@@ -59,13 +55,11 @@ namespace Siesa.SDK.Business
         /// <param name="context">The SDK context.</param>
         public override void BeforeDelete(ref ValidateAndSaveBusinessObjResponse result, SDKContext context)
         {
-            List<TChild> childsDelete = ChildObjs.FindAll(x =>
-            {
-                dynamic rowid = x.GetType().GetProperty("Rowid")?.GetValue(x);
-                return rowid != null && rowid != 0;
-            });
+            var query = context.AllSet<TChild>().AsQueryable();
+            query = query.Where($"{GetRelatedChildField()} == @0", BaseObj.GetRowid());
+            List<TChild> childsDelete = query.ToList();
             context.RemoveRange(childsDelete);
-            base.BeforeDelete(ref result, context);
+            context.SaveChanges();
         }
 
         /// <summary>
@@ -127,7 +121,7 @@ namespace Siesa.SDK.Business
 
         }
 
-        private object ConvertToPropertyType(string relatedChildField, long rowidValue)
+        private static object ConvertToPropertyType(string relatedChildField, long rowidValue)
         {
             object result = rowidValue;
             var propertyRelatedChild = typeof(TChild).GetProperty(relatedChildField);

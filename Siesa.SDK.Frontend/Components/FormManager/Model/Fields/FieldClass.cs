@@ -144,7 +144,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 }
             }
             OnChange = (string)FieldOpt.CustomAttributes?.Where(x => x.Key == "sdk-change").FirstOrDefault().Value;
-            OnChangeCell = (string)FieldOpt.CustomAttributes?.Where(x => x.Key == "sdk-change-cell").FirstOrDefault().Value;
+            OnChangeCell = (string)FieldOpt.CustomAttributes?.FirstOrDefault(x => x.Key.Equals("sdk-change-cell",StringComparison.Ordinal)).Value;
             StateHasChanged();
 
         }

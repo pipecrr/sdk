@@ -87,8 +87,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         [Parameter]
         public List<string> ParentBaseObj { get; set; }
-
-        public bool IsDocment { get; set; } = false;
+        /// <summary>
+        /// Gets or sets a value indicating whether the business object is a document.
+        /// </summary>
+        public bool IsDocment { get; set; }
 
         public int CountUnicErrors = 0;
 
@@ -121,8 +123,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public List<Button> ExtraButtons { get; set; }
         public Button SaveButton { get; set; }
         public bool isOnePanel { get; set; }
-        
-        public dynamic _refGrid;
+
+        /// <summary>
+        /// Gets or sets the reference grid.
+        /// </summary>
+        public dynamic RefGrid { get; set; }
         protected virtual async Task CheckPermissions()
         {
             if (FeaturePermissionService != null && !String.IsNullOrEmpty(BusinessName))
@@ -284,7 +289,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             if(IsDocment)
             {
                 AddOnChangeCell();
-                BusinessObj.ExtrDetailFields = FormViewModel.DetailFields.Select(x => x.Name).ToList();
+                BusinessObj.ExtraDetailFields = FormViewModel.DetailFields.Select(x => x.Name).ToList();
                 await BusinessObj.InitializeChilds().ConfigureAwait(true);
             }
             Loading = false;
@@ -753,7 +758,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         {
             return Saving ? "fas fa-spinner fa-pulse" : "fa-solid fa-floppy-disk";
         }
-        
+        /// <summary>
+        /// Method to add a new row to the grid.
+        /// </summary>
         public void ClickAddRow()
         {
             Type typeChild = BusinessObj.GetTypeChild();
@@ -764,16 +771,20 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 BusinessObj.ChildObjs = Activator.CreateInstance(ListChildObj);
             }
             BusinessObj.ChildObjs.Add(obj);
-            _refGrid.Reload();
+            RefGrid.Reload();
         }
         
+        /// <summary>
+        /// Method to delete a row from the grid.
+        /// </summary>
+        /// <param name="obj">The object to delete.</param>
         public void ClickDeleteRow(dynamic obj){
             BusinessObj.ChildObjs.Remove(obj);
             if(obj.Rowid != null && obj.Rowid > 0){
                 BusinessObj.ChildObjsDeleted.Add(obj);
                 BusinessObj.ChildRowidsUpdated.Remove(obj.Rowid);
             }
-            _refGrid.Reload();
+            RefGrid.Reload();
         }
 
     }

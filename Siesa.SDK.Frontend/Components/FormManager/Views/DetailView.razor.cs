@@ -50,7 +50,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         [Parameter]
         public string BLNameParentAttatchment { get; set; }
-        public bool IsDocment { get; set; } = false;
+        /// <summary>
+        /// Gets or sets a value indicating whether the business object is a document.
+        /// </summary>
+        public bool IsDocment { get; set; }
 
         public Boolean Loading = true;
 
@@ -295,7 +298,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     x.ViewContext = "DetailView";
                     extraDetailFields.Add(x.Name);
                 });
-                BusinessObj.ExtrDetailFields = extraDetailFields;
+                BusinessObj.ExtraDetailFields = extraDetailFields;
                 await BusinessObj.InitializeChilds().ConfigureAwait(true);
             }
             await EvaluateButtonAttributes().ConfigureAwait(true);
