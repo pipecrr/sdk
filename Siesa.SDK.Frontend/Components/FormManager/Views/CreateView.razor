@@ -105,13 +105,11 @@ else if (Panels == null || Panels.Count <= 0)
                     </SDKGridColumn>
                     @foreach (FieldOptions column in FormViewModel.DetailFields)
                     {
-                        @if(true){
-                            <SDKGridColumn TItem="object" Title="@column.Name">
-                                <Template Context="data">
-                                        <DynamicField FieldOpt="@column" ModelObj="@data"/>
-                                </Template>
-                            </SDKGridColumn>
-                        }
+                        <SDKGridColumn TItem="object" Title="@column.Name">
+                            <Template Context="data">
+                                    <DynamicField FieldOpt="@column" ModelObj="@data"/>
+                            </Template>
+                        </SDKGridColumn>
                     }
                 </Columns>
             </SDKGrid>            

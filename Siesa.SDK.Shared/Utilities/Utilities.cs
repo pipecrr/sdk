@@ -60,6 +60,18 @@ namespace Siesa.SDK.Shared.Utilities
             
         }
 
+        public static bool CheckIsDocument(dynamic businessObj, Type docmentType)
+        {
+            bool result = false;
+            Type businessType = businessObj.GetType();
+            
+            if(businessType.BaseType != null && businessType.BaseType.IsGenericType && businessType.BaseType.GetGenericTypeDefinition() == docmentType){
+                result = true;
+            }
+            
+            return result;
+        }
+
         public static Assembly SearchAssemblyByType(string type_name) {
             Type type = Type.GetType(type_name);
             if (type != null)

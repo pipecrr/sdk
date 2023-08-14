@@ -21,6 +21,7 @@ using Siesa.SDK.Frontend.Extension;
 using Microsoft.Extensions.Configuration;
 using Siesa.Global.Enums;
 using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
+using Siesa.SDK.Shared.Utilities;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 {
@@ -230,7 +231,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         {
             CreateRelationshipAttachment();
             Loading = true;
-            IsDocment = CheckIsDocument();
+            IsDocment = Utilities.CheckIsDocument(BusinessObj, typeof(BLFrontendDocment<,>));
             if (bName == null)
             {
                 bName = BusinessName;
@@ -306,19 +307,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 }
                 item.CustomAttributes.Add("sdk-change-cell", "SdkOnChangeCell()");
             }
-        }
-
-        private bool CheckIsDocument()
-        {
-            bool result = false;
-            Type docmentType = typeof(BLFrontendDocment<,>);
-            Type businessType = BusinessObj.GetType();
-            
-            if(businessType.BaseType != null && businessType.BaseType.IsGenericType && businessType.BaseType.GetGenericTypeDefinition() == docmentType){
-                result = true;
-            }
-            
-            return result;
         }
 
         private void AddPanels(List<Panel> panels){
