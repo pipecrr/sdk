@@ -15,7 +15,7 @@ namespace Siesa.SDK.Backend.Services
 {
     public interface IQueueService
     {
-        void Subscribe(string exchangeName, string bindingKey, Action<string> action = null, IServiceProvider serviceProvider = null);
+        void Subscribe(string exchangeName, string bindingKey, Action<string> action = null);
         void SendMessage(string exchangeName, string routingKey, string message);
 
         //void TestDisconection();
@@ -30,11 +30,13 @@ namespace Siesa.SDK.Backend.Services
         private Dictionary<string, List<QueueSubscribeActionDTO>> _subscriptionsActions = new();
         private int _reconect = 0;
         private ConnectionFactory factory = new ConnectionFactory() { HostName = "coder.overjt.com" };
+        private readonly IServiceProvider _serviceProvider;
 
-        public QueueService()
+        public QueueService(IServiceProvider serviceProvider)
         {
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
+            _serviceProvider = serviceProvider;
         }
         public void Subscribe(string exchangeName, string bindingKey, Action<string> action = null)
         {
@@ -66,7 +68,7 @@ namespace Siesa.SDK.Backend.Services
 
                 if (_subscriptionsActions.ContainsKey($"{exchange}_{routingKey}"))
                 {
-                    InvokeAction(exchange, routingKey);
+                    InvokeAction(exchange, routingKey, message);
                 }
                 Console.WriteLine($"[x] Received '{message}'");
             };
@@ -117,7 +119,7 @@ namespace Siesa.SDK.Backend.Services
                 _subscriptionsActions.Add(subscriptionKey, new List<QueueSubscribeActionDTO> { new QueueSubscribeActionDTO { MethodName = methodName, Target = blTarget } });
             }
         }
-        private void InvokeAction(string exchange, string routingKey)
+        private void InvokeAction(string exchange, string routingKey, string message)
         {
             var actions = _subscriptionsActions[$"{exchange}_{routingKey}"];
             foreach (var action in actions)
@@ -127,7 +129,7 @@ namespace Siesa.SDK.Backend.Services
                     Type blType = Utilities.SearchType(action.Target, true);
                     if (blType != null)
                     {
-                        var blInstance = ActivatorUtilities.CreateInstance(serviceProvider, blType);
+                        var blInstance = ActivatorUtilities.CreateInstance(_serviceProvider, blType);
                         var method = blType.GetMethod(action.MethodName);
                         method.Invoke(blInstance, new object[] { message });
                     }
