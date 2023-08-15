@@ -138,13 +138,39 @@ namespace Siesa.SDK.Backend.Services
             // var user = new SDKJWT(_secretKey, _minutesExp).Validate(UserToken);
             // return user != null;
         }
+
+        /// <summary>
+        /// Method to send an email to the user with the password recovery link.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="isPortal"></param>
+        /// <exception cref="NotImplementedException"></exception>
         public void ForgotPasswordAsync(string email, bool isPortal = false){
              throw new NotImplementedException();
         }
-        public async Task<bool> ValidateUserToken(string userToken, bool isPortal = false){
+
+
+        /// <summary>
+        /// Method to validate the user token for password recovery.
+        /// </summary>
+        /// <param name="userToken"></param>
+        /// <param name="isPortal"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<bool> ValidateUserToken(string userToken, bool isPortal){
             throw new NotImplementedException();
         }
-        public async Task<bool> ChangePassword(string userToken,short rowIdDBConnection, string NewPassword="", string ConfirmPassword="",bool isPortal = false)
+
+        /// <summary>
+        /// Method to change the user password.
+        /// </summary>
+        /// <param name="userToken"></param>
+        /// <param name="rowIdDBConnection"></param>
+        /// <param name="NewPassword"></param>
+        /// <param name="ConfirmPassword"></param>
+        /// <param name="isPortal"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<bool> ChangePassword(string userToken,short rowIdDBConnection, string NewPassword, string ConfirmPasswor,bool isPortal = false)
         {
              throw new NotImplementedException();
         }

@@ -164,8 +164,8 @@ namespace Siesa.SDK.Shared.Services
         /// </summary>
         /// <param name="username">The username of the user.</param>
         /// <param name="password">The password of the user.</param>
-        /// <param name="rowIdDBConnection">The identifier of the database connection.</param>
-        /// <param name="IsUpdateSession">Indicates if the session should be updated.</param>
+        /// <param name="rowidDbConnection">The identifier of the database connection.</param>
+        /// <param name="isUpdateSession">Indicates if the session should be updated.</param>
         /// <param name="rowIdCompanyGroup">The identifier of the company group.</param>
         Task Login(string username, string password, short rowidDbConnection,
                      bool isUpdateSession = false, short rowIdCompanyGroup = 1);
@@ -175,9 +175,9 @@ namespace Siesa.SDK.Shared.Services
         /// </summary>
         /// <param name="username">The username of the portal user.</param>
         /// <param name="password">The password of the portal user.</param>
-        /// <param name="rowIdDBConnection">The identifier of the database connection.</param>
-        /// <param name="IsUpdateSession">Indicates if the session should be updated.</param>
-        /// <param name="rowIdCompanyGroup">The identifier of the company group.</param>
+        /// <param name="rowidDbConnection">The identifier of the database connection.</param>
+        /// <param name="isUpdateSession">Indicates if the session should be updated.</param>
+        /// <param name="rowidCompanyGroup">The identifier of the company group.</param>
         Task LoginPortal(string username, string password, short rowidDbConnection, bool isUpdateSession = false, short rowidCompanyGroup = 1);
 
         /// <summary>
