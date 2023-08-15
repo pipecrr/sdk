@@ -1097,7 +1097,12 @@ namespace Siesa.SDK.Business
         /// <param name="selectedFields">string with the selected fields ref</param>
         /// <param name="hasRelated">bool to know if has related ref</param>
         /// <param name="containAttachments">bool to know if contain attachments, default false</param>
-        public void CreateQueryExtraFields(dynamic query, List<string> inlcudesAdd, List<string> extraFields, ref string selectedFields, ref bool hasRelated, bool containAttachments = false)
+        public void CreateQueryExtraFields(IQueryable<T> query, List<string> inlcudesAdd, List<string> extraFields, ref string selectedFields, ref bool hasRelated, bool containAttachments = false)
+        {
+            CreateQueryExtraFields<T>(query, inlcudesAdd, extraFields, ref selectedFields, ref hasRelated, containAttachments);
+        }
+
+        public void CreateQueryExtraFields<J>(IQueryable<J> query, List<string> inlcudesAdd, List<string> extraFields, ref string selectedFields, ref bool hasRelated, bool containAttachments = false)  where J : class
         {
             bool hasRelatedTmp = false;
             extraFields.Add("Rowid");

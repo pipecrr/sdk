@@ -181,7 +181,7 @@ namespace Siesa.SDK.Business
                     if(!extraDetailFields.Contains(relatedChildField)){
                         extraDetailFields.Add(relatedChildField);
                     }
-                    CreateQueryExtraFields(query, inlcudesAdd, extraDetailFields, ref selectedFields, ref hasRelated);
+                    CreateQueryExtraFields<TChild>(query, inlcudesAdd, extraDetailFields, ref selectedFields, ref hasRelated);
                 }
                 var rowidValueProperty = ConvertToPropertyType(relatedChildField, rowid);
                 query = query.Where($"{relatedChildField} == @0", rowidValueProperty);
