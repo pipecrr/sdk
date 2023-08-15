@@ -9,7 +9,12 @@ using System.Threading.Tasks;
 
 namespace Siesa.SDK.Backend.Services
 {
-    public class QueueService : BackgroundService
+    public interface IQueueService
+    {
+        void Subscribe(string exchangeName, string bindingKey);
+        void SendMessage(string exchangeName, string routingKey, string message);
+    }
+    public class QueueService : BackgroundService, IQueueService
     {
 
         private readonly IConnection _connection;
@@ -25,6 +30,21 @@ namespace Siesa.SDK.Backend.Services
         public void Subscribe(string exchangeName, string bindingKey)
         {
             _subscriptions[exchangeName] = bindingKey;
+
+            _channel.ExchangeDeclare(exchange: exchangeName, type: ExchangeType.Topic);
+
+            var queueName = _channel.QueueDeclare().QueueName;
+            _channel.QueueBind(queue: queueName, exchange: exchangeName, routingKey: bindingKey);
+
+            var consumer = new EventingBasicConsumer(_channel);
+            consumer.Received += (model, ea) =>
+            {
+                var body = ea.Body.ToArray();
+                var message = Encoding.UTF8.GetString(body);
+                Console.WriteLine($"[x] Received '{message}'");
+            };
+
+            _channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
         }
         public void SendMessage(string exchangeName, string routingKey, string message)
         {
@@ -35,41 +55,19 @@ namespace Siesa.SDK.Backend.Services
 
             //Console.WriteLine($"Sent message with routing key '{routingKey}': '{message}'");
         }
-        public void StartReceiving()
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            if (_subscriptions.Count == 0)
+            while (!stoppingToken.IsCancellationRequested)
             {
-                Console.WriteLine("No subscriptions to start receiving messages.");
-                return;
+                await Task.Delay(200);
             }
-            foreach (var topic in _subscriptions.Keys)
-            {
-                _channel.ExchangeDeclare(exchange: topic, type: ExchangeType.Topic);
-
-                var queueName = _channel.QueueDeclare().QueueName;
-                _channel.QueueBind(queue: queueName, exchange: topic, routingKey: _subscriptions[topic]);
-
-                var consumer = new EventingBasicConsumer(_channel);
-                consumer.Received += (model, ea) =>
-                {
-                    var body = ea.Body.ToArray();
-                    var message = Encoding.UTF8.GetString(body);
-                    Console.WriteLine($"[x] Received '{message}'");
-                };
-                _channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
-            }
+           // return Task.CompletedTask;
         }
 
         public void Dispose()
         {
             _channel?.Dispose();
             _connection?.Dispose();
-        }
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
-        {
-            StartReceiving();
-
-            return Task.CompletedTask;
         }
     }
 }
