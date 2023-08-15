@@ -128,53 +128,12 @@
                             </div>
                             @if(RecoveringPassword)
                             {
-                                <ForgotPassword _login="@this" RowidCulture="@RowidCulture"/>
+                                <ForgotPassword Click="@NavigateFormLogin" RowidCulture="@RowidCulture"/>
 
                             }else if (!string.IsNullOrEmpty(UserToken))
                             {
-                                <div class="border_left_md col-12 col-sm-12 col-md-6 col-lg-12">
-                                    <div
-                                        class="col-12 offset-sm-2 col-sm-8 offset-md-1 col-md-10 offset-lg-2 col-lg-8 px-md-3 px-lg-0">
-                                        <EditForm Model="@_Model" OnValidSubmit="ChangePasswordUser"  OnInvalidSubmit="ChangePasswordUserInvalid" >
-                                            <DataAnnotationsValidator />
-                                            @if (ValidUser)
-                                            {
-                                                <div class="form-group">
-                                                    <label class="col_form_label col_form_label-sm font-weight-bold" for="Password">
-                                                        <ResourceViewer ResourceTag="Custom.SDK.NewPassword"
-                                                        RowidCulture=@RowidCulture />
-                                                    </label>
-                                                    <SDKCharField  Password="true" @bind-Value="@_Model.Password"/>
-                                                    <ValidationMessage For="@(() => _Model.Password)" />
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="col_form_label col_form_label-sm font-weight-bold" for="Password">
-                                                        <ResourceViewer ResourceTag="Custom.SDK.ConfirmNewPassword"
-                                                        RowidCulture=@RowidCulture />
-                                                    </label>
-                                                    <SDKCharField Password="true"  @bind-Value="@_Model.ConfirmPassword"/>
-                                                <ValidationMessage For="@(() => _Model.ConfirmPassword)" />
-                                                </div>
-                                                <button class="btn btn-primary btn_primary_def_1 btn-sm w-100 mt-2">
-                                                    @if (loadingChangePassword)
-                                                    {
-                                                        <span class="spinner-border spinner-border-sm mr-1"></span>
-                                                    }
-                                                    <ResourceViewer ResourceTag="BLUser.ChangePassword"
-                                                    RowidCulture=@RowidCulture />
-                                                </button>
-                                            }
-                                            else
-                                            {
-                                                <p class="alert alert-danger mt-3 mb-0">
-                                                    <ResourceViewer ResourceTag="Custom.SDK.TokenInvalid"
-                                                    RowidCulture=@RowidCulture />
-                                                </p>
-                                            }
-                                        </EditForm>
-                                    </div>
-                                </div>
-
+                                <RecoveryPassword UserToken="@UserToken" SelectedConnection="@SelectedConnection"
+                                RowidCulture="@RowidCulture" />
                             }
                             else
                             {
@@ -296,9 +255,6 @@
     [Parameter] public string? UserToken { get; set; }
     [Parameter] public string? RowIdDBConnection { get; set; }
 
-    private PasswordChangeModel _Model = new PasswordChangeModel();
-
-    private bool ValidUser { get; set; }
 
     string classCulture = "";
     public string FormID { get; set; } = Guid.NewGuid().ToString();
@@ -306,7 +262,6 @@
     private bool init_loading = true;
     private bool loading;
 
-    private bool loadingChangePassword;
     private string error;
     bool IsOpen { get; set; } = false;
 
@@ -365,11 +320,7 @@
         LogoUrl = AuthenticationService.GetConnectionLogo();
         init_loading = true;
         await InitLogin();
-        
-        if (!string.IsNullOrEmpty(UserToken))
-        {
-            ValidUser = await AuthenticationService.ValidateUserToken(UserToken);
-        }
+
 
         await base.OnParametersSetAsync();
     }
@@ -454,41 +405,6 @@
         }
     }
 
-    private async void ChangePasswordUser()
-    {
-        loadingChangePassword = true;
-        try
-        {
-            var result = await AuthenticationService.ChangePassword(UserToken,SelectedConnection.Rowid, _Model.Password, _Model.ConfirmPassword);
-
-            if (result)
-            {
-               _ = SDKNotificationService.ShowSuccess("Custom.SDK.ForgotPassword.ChangePassword", culture: RowidCulture);
-
-                NavigationManager.NavigateTo("/login", forceLoad: true);
-            }else
-            {
-                _ = SDKNotificationService.ShowError("Custom.SDK.ForgotPassword.ChangePasswordError", culture: RowidCulture);
-
-            }
-
-            loadingChangePassword = false;
-
-            StateHasChanged();
-            
-        }
-        catch (Exception ex)
-        {
-            
-        }
-    }
-
-    private void ChangePasswordUserInvalid()
-    {
-       _ = SDKNotificationService.ShowError("Custom.SDK.ForgotPassword.ChangePasswordInvalid", culture: RowidCulture);
-       loadingChangePassword = false;
-       StateHasChanged();
-    }
     
     private async Task getDbConnections()
     {
