@@ -170,7 +170,7 @@ namespace Siesa.SDK.Backend.Services
         /// <param name="isPortal"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task<bool> ChangePassword(string userToken,short rowIdDBConnection, string NewPassword, string ConfirmPasswor,bool isPortal = false)
+        public async Task<bool> ChangePassword(string userToken,short rowIdDBConnection, string NewPassword, string ConfirmPassword,bool isPortal = false)
         {
              throw new NotImplementedException();
         }
