@@ -197,6 +197,8 @@ namespace Siesa.SDK.Business
         [JsonIgnore]
         protected IFeaturePermissionService FeaturePermissionService { get; set; }
 
+        private IQueueService _queueService;
+
         public SDKBusinessModel GetBackend(string business_name)
         {
             return BackendRouterService.Instance.GetSDKBusinessModel(business_name, AuthenticationService);
@@ -314,6 +316,7 @@ namespace Siesa.SDK.Business
 
             _backendRouterService = (IBackendRouterService)_provider.GetService(typeof(IBackendRouterService));
             _featurePermissionService = (IFeaturePermissionService)_provider.GetService(typeof(IFeaturePermissionService));
+            _queueService = (IQueueService)_provider.GetService(typeof(IQueueService));
             _configuration = (IConfiguration)_provider.GetService(typeof(IConfiguration));
             _useS3 = _configuration.GetValue<bool>("AWS:UseS3");
             if(_useS3){
@@ -551,6 +554,11 @@ namespace Siesa.SDK.Business
                         }
                         BeforeSave(ref result, context);
                         result.Rowid = Save(context);
+                        if (_queueService != null && !string.IsNullOrEmpty(BusinessName))
+                        {
+                            _queueService.Subscribe(BusinessName, enumMessageCategory.CRUD);
+                            _queueService.SendMessage(BusinessName, enumMessageCategory.CRUD, $"Registro Guardado en {BusinessName} con Rowid {result.Rowid}");
+                        }
                         if (DynamicEntities != null && DynamicEntities.Count > 0)
                         {
                             SaveDynamicEntity(result.Rowid, context);
@@ -857,6 +865,11 @@ namespace Siesa.SDK.Business
                         if (!context.Database.IsInMemory())
                         {
                             context.Commit();
+                        }
+                        if (_queueService != null && !string.IsNullOrEmpty(BusinessName))
+                        {
+                            _queueService.Subscribe(BusinessName, enumMessageCategory.CRUD);
+                            _queueService.SendMessage(BusinessName, enumMessageCategory.CRUD, $"Registro Eliminado en {BusinessName} con Rowid {result.Rowid}");
                         }
                     }catch(Exception ex){
                         if (!context.Database.IsInMemory())

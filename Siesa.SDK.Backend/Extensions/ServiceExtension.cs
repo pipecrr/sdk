@@ -38,7 +38,7 @@ namespace Siesa.SDK.Backend.Extensions
             services.AddSingleton<IResourceManager, ResourceManager>(sp => ActivatorUtilities.CreateInstance<ResourceManager>(sp, false));
             services.AddScoped<ISDKJWT, Siesa.SDK.Backend.Criptography.SDKJWT>();
             
-            services.AddSingleton<IQueueService, QueueService>();
+            services.AddSingleton<IQueueService, QueueService>(sp => ActivatorUtilities.CreateInstance<QueueService>(sp));
             services.AddHostedService<QueueService>();
 
             Action<IServiceProvider, DbContextOptionsBuilder> dbContextOptionsAction = (sp, opts) =>

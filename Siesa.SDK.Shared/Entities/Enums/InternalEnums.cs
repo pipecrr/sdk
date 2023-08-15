@@ -16,4 +16,10 @@ namespace Siesa.Global.Enums
 
         
     }
+
+    public static class enumMessageCategory
+    {
+        public static readonly string CRUD = "CRUD";
+        public static readonly string Custom = "Custom";
+    }
 }
