@@ -36,65 +36,6 @@ namespace Siesa.SDK.Backend.Services
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
         }
-        private void Reconnect()
-        {
-            while (!_connection.IsOpen && _reconect < 6)
-            {
-                try
-                {
-                    _reconect++;
-                    Console.WriteLine($"Reconnecting attempt {_reconect}");
-                    _connection = factory.CreateConnection();
-                    //Connect();
-                    break;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error during reconnection: {ex.Message}");
-                }
-            }
-        }
-
-        private void SubscribeAction(string exchangeName, string bindingKey, Action<string> action = null)
-        {
-            var methodName = action?.Method.Name ?? null;
-            var blTarget = action?.Target?.GetType()?.FullName ?? null;
-            var subscriptionKey = $"{exchangeName}_{bindingKey}";
-
-            if (_subscriptionsActions.ContainsKey(subscriptionKey))
-            {
-                var actions = _subscriptionsActions[subscriptionKey];
-                if (actions.Exists(a => a.MethodName == methodName && a.Target == blTarget))
-                {
-                    return;
-                }
-                actions.Add(new QueueSubscribeActionDTO { MethodName = methodName, Target = blTarget });
-            }
-            else
-            {
-                _subscriptionsActions.Add(subscriptionKey, new List<QueueSubscribeActionDTO> { new QueueSubscribeActionDTO { MethodName = methodName, Target = blTarget } });
-            }
-        }
-        private void InvokeAction(string exchange, string routingKey)
-        {
-            var actions = _subscriptionsActions[$"{exchange}_{routingKey}"];
-            foreach (var action in actions)
-            {
-                try
-                {
-                    Type blType = Utilities.SearchType(action.Target, true);
-                    if (blType != null)
-                    {
-                        var blInstance = ActivatorUtilities.CreateInstance(serviceProvider, blType);
-                        var method = blType.GetMethod(action.MethodName);
-                        method.Invoke(blInstance, new object[] { message });
-                    }
-                }
-                catch (System.Exception)
-                {
-                }
-            }
-        }
         public void Subscribe(string exchangeName, string bindingKey, Action<string> action = null)
         {
             if (action != null)
@@ -154,6 +95,66 @@ namespace Siesa.SDK.Backend.Services
         {
             _channel?.Dispose();
             _connection?.Dispose();
+        }
+
+        private void SubscribeAction(string exchangeName, string bindingKey, Action<string> action = null)
+        {
+            var methodName = action?.Method.Name ?? null;
+            var blTarget = action?.Target?.GetType()?.FullName ?? null;
+            var subscriptionKey = $"{exchangeName}_{bindingKey}";
+
+            if (_subscriptionsActions.ContainsKey(subscriptionKey))
+            {
+                var actions = _subscriptionsActions[subscriptionKey];
+                if (actions.Exists(a => a.MethodName == methodName && a.Target == blTarget))
+                {
+                    return;
+                }
+                actions.Add(new QueueSubscribeActionDTO { MethodName = methodName, Target = blTarget });
+            }
+            else
+            {
+                _subscriptionsActions.Add(subscriptionKey, new List<QueueSubscribeActionDTO> { new QueueSubscribeActionDTO { MethodName = methodName, Target = blTarget } });
+            }
+        }
+        private void InvokeAction(string exchange, string routingKey)
+        {
+            var actions = _subscriptionsActions[$"{exchange}_{routingKey}"];
+            foreach (var action in actions)
+            {
+                try
+                {
+                    Type blType = Utilities.SearchType(action.Target, true);
+                    if (blType != null)
+                    {
+                        var blInstance = ActivatorUtilities.CreateInstance(serviceProvider, blType);
+                        var method = blType.GetMethod(action.MethodName);
+                        method.Invoke(blInstance, new object[] { message });
+                    }
+                }
+                catch (System.Exception)
+                {
+                }
+            }
+        }
+
+        private void Reconnect()
+        {
+            while (!_connection.IsOpen && _reconect < 6)
+            {
+                try
+                {
+                    _reconect++;
+                    Console.WriteLine($"Reconnecting attempt {_reconect}");
+                    _connection = factory.CreateConnection();
+                    //Connect();
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error during reconnection: {ex.Message}");
+                }
+            }
         }
     }
 }
