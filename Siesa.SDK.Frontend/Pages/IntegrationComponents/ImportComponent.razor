@@ -1,3 +1,4 @@
+
 @page "/{BusinessName}/Import"
 @using System.Reflection
 @attribute [Authorize]
@@ -18,6 +19,7 @@
 @using Siesa.SDK.Frontend.Components.Fields
 @using Siesa.SDK.Shared.DTOS
 @using Siesa.SDK.Frontend.Components.Flex
+@using DevExpress.Spreadsheet;
 
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
 
@@ -258,33 +260,68 @@
         {
             SDKResponseImportDTO response = (SDKResponseImportDTO)result.Data;
             NotificationService.ShowSuccess(response.Message);
-            JsonObject = JsonConvert.SerializeObject(response.Guid, Formatting.None);   
+            JsonObject = JsonConvert.SerializeObject(response.Guid, Newtonsoft.Json.Formatting.None);   
             
         }else
         {
             //NotificationService.ShowError(result.Errors.FirstOrDefault());
-            //JsonObject = JsonConvert.SerializeObject(result.Errors, Formatting.None);
+            //JsonObject = JsonConvert.SerializeObject(result.Errors, Newtonsoft.Json.Formatting.None);
             ErrorList = result.Errors.ToList();
         }
         StateHasChanged();
     }
 
-    private async Task DownloadFileTemplate()
-    {
-        using (var stream = new MemoryStream())
-        {
-            using (var CsvWriter = new CsvWriter(new StreamWriter(stream, Encoding.UTF8), CultureInfo.InvariantCulture))
-            {
-                List<string> Headers = _fieldsEntity.Select(x => x.Key).ToList();
-                CsvWriter.WriteField(Headers);
-                CsvWriter.Flush();
-                byte[] bytes = stream.ToArray();
 
+    private async Task DownloadFileTemplate(){
+
+  using (var stream = new MemoryStream())
+        {
+        using (Workbook workbook = new Workbook())
+            {
+
+                List<string> Headers = _fieldsEntity.Select(x => x.Key).ToList();
+
+                // Access the first worksheet in the workbook.
+                Worksheet worksheet = workbook.Worksheets[0];
+                
+                
+                //TO DO  Crear el recurso para que salga el nombre de la hoja "Datos"
+                //worksheet.Name ="";
+
+                // Set the unit of measurement.
+                workbook.Unit = DevExpress.Office.DocumentUnit.Point;
+
+                workbook.BeginUpdate();
+                try
+                {
+                    // Create a multiplication table.
+                  
+
+                    for (int i = 0; i < Headers.Count(); i++){
+                            worksheet.Rows["1"][i].Value = Headers[i];   
+                    }
+
+                    worksheet.Rows.AutoFit(0, Headers.Count()-1);     
+                    worksheet.Columns.AutoFit(0, Headers.Count()-1); 
+ 
+                    
+                }
+                finally
+                {
+                    workbook.EndUpdate();
+                }
+
+                // Calculate the workbook.
+                workbook.Calculate();
+
+                // Save the document file under the specified name.
+                workbook.SaveDocument(stream, DocumentFormat.OpenXml);
                 string fileName = $"{EntityType.Name}";
+                byte[] bytes = stream.ToArray();
                 await JSRuntime.InvokeVoidAsync("downloadFileFromStream", fileName, bytes);
+ 
             }
         }
-        
     }
 
     private async Task LoadFiles(InputFileChangeEventArgs InputFile)
@@ -296,13 +333,40 @@
         {
             await InputFile.File.OpenReadStream().CopyToAsync(stream);
             stream.Position = 0;
-            var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
+            @* var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
                 HasHeaderRecord = true,
                 DetectDelimiter = true,
-            };
+            }; *@
 
-            using (var CsvReader = new CsvReader(new StreamReader(stream), csvConfig))
+                Workbook workbook = new Workbook();
+                workbook.LoadDocument(stream, DocumentFormat.Xlsx);
+
+                 Worksheet worksheet = workbook.Worksheets[0];
+
+
+                 var t = worksheet.Rows[1];
+
+                 var holi = t.GetType();
+
+
+                 foreach( var gt in t){
+                    var  tt = gt.Value;
+                 }
+                 
+
+                @* var ff = workbook.Sheets;
+                
+                for (int i =0; i <ff.Count; i++){
+                        var g = ff[i];
+
+                            g.
+
+                         g.Rows["1"][i].Value = Headers[i];   
+
+                } *@
+
+            @* using (var CsvReader = new CsvReader(new StreamReader(stream), csvConfig))
             {
                 var records = CsvReader.GetRecords<dynamic>();
 
@@ -319,7 +383,7 @@
 
                     FileData.Add(obj);
                 }
-            }
+            } *@
         }
 
         IsLoadingGrid = true;
@@ -387,7 +451,7 @@
             DataMapped.Add(row);
         }
 
-        JsonObject = JsonConvert.SerializeObject(DataMapped, Formatting.None);
+        JsonObject = JsonConvert.SerializeObject(DataMapped, Newtonsoft.Json.Formatting.None);
 
         StateHasChanged();
     }
