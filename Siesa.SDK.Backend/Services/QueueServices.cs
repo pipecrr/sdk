@@ -32,11 +32,11 @@ namespace Siesa.SDK.Backend.Services
         private ConnectionFactory factory = new ConnectionFactory() { HostName = "coder.overjt.com" };
         private readonly IServiceProvider _serviceProvider;
 
-        public QueueService(IServiceProvider serviceProvider)
+        public QueueService()
         {
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
-            _serviceProvider = serviceProvider;
+            _serviceProvider = SDKApp.GetServiceProvider();
         }
         public void Subscribe(string exchangeName, string bindingKey, Action<string> action = null)
         {
