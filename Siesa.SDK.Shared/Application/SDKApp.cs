@@ -5,6 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Siesa.SDK.Shared.Json;
+using Microsoft.Extensions.DependencyInjection;
+using Siesa.SDK.Shared.Backend;
+using Siesa.SDK.Shared.Services;
+
+
 
 namespace Siesa.SDK.Shared.Application
 {
@@ -96,6 +101,31 @@ namespace Siesa.SDK.Shared.Application
         public static Type GetIndexComponent()
         {
             return _indexComponent;
+        }
+
+        public static void ExecuteSubscribeToQueues()
+        {
+
+            //TODO: Get BusinessList from Backends 
+            var backendRouterService = _serviceProvider.GetRequiredService<IBackendRouterService>();
+
+            var BusinessList = backendRouterService.GetBusinessModelList();
+
+            // var bls = typeof(BackendRegistry).Assembly.GetTypes()
+            // .Where(t => t.GetInterfaces().Any(i => i.Name == "IBLBase`1"));
+
+            foreach (var bl in BusinessList)
+            {
+                var BLMethod = Siesa.SDK.Shared.Utilities.Utilities.SearchType($"{bl.Namespace}.{bl.Name}", true).GetMethod("SubscribeToQueues");
+
+                if (BLMethod != null && _serviceProvider != null && BLMethod.GetBaseDefinition().DeclaringType != BLMethod.DeclaringType)
+                {
+                    Type blType = Siesa.SDK.Shared.Utilities.Utilities.SearchType($"{bl.Namespace}.{bl.Name}", true);
+                    var blInstance = ActivatorUtilities.CreateInstance(_serviceProvider, blType);
+                    BLMethod.Invoke(blInstance, null);
+                }
+
+            }
         }
     }
 }

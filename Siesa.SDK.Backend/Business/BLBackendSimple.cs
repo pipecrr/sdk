@@ -526,6 +526,14 @@ namespace Siesa.SDK.Business
         {
             //Do nothing
         }
+
+        /// <summary>
+        /// Method used to Subscribe to queues
+        /// </summary>
+        public virtual void SubscribeToQueues()
+        {
+            //Do nothing
+        }
         public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave(bool ignorePermissions = false)
         {
             ValidateAndSaveBusinessObjResponse result = new();
