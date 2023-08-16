@@ -89,7 +89,7 @@ namespace Siesa.SDK.Backend.Access
                 }
                 if (_authenticationService.User != null)
                 {
-                    result.Add(CreateDataEntityLogFromChange(change, type, properties, _authenticationService.User.Rowid, _authenticationService.User.Name));
+                    result.Add(CreateDataEntityLogFromChange(change, type, properties, _authenticationService.User.Rowid, _authenticationService.User.Id));
                 }
                 else
                 {

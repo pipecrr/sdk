@@ -44,7 +44,7 @@
     --color_primary_shadow_min: #2345CB0D;
     --shadow_standar_min: 0px 3px 12px var(--color_primary_shadow_min);
     /* Base: color primary (Para even de tablas) */
-    --color_table_even: rgba(14,121,253,0.04);
+    --color_table_even: #eff6fe;
     /* Base: color primary (Para hover de tablas) */
     --color_table_hover: rgba(14,121,253,0.1);
     --color_search_back: #23ACFF;
@@ -57,6 +57,7 @@
     --color_toolbar_back: #FFFFFF;
     --color_area2_back: #FFFFFF;
     --color_panel_back: #FFFFFF;
+    --color_panel_back_border: #ffffff;
     --color_light_text: #FFFFFF;
     --color_light_nav: #FFFFFF;
     --color_light_table: #FFFFFF;
@@ -879,7 +880,7 @@ input#collapse_open:checked~.collapse_open_btn>.nav_btn_standar_text {
 .nav-tabs .nav-link.active,
 .nav-tabs .nav-item.show .nav-link {
     color: var(--color_text) !important;
-    background-color: #fff;
+    background-color: var(--color_area2_back);
     border: none;
     border-bottom: 3px solid var(--color_primary) !important;
     font-weight: 500 !important;
@@ -928,6 +929,7 @@ div .form-control, div .form-control:focus{
     position: relative;
     margin-top: 2.063rem;
     padding-top: 2.5rem;
+    border: 1px solid var(--color_panel_back_border)
 }
 
 .area2_no_btn{
@@ -1028,6 +1030,7 @@ div .form-control, div .form-control:focus{
 
 .whcm_select_list>ul>.dropdown-item {
     white-space: normal !important;
+    color:var(--color_text);
 }
 
 .whcm_modal_relacion {

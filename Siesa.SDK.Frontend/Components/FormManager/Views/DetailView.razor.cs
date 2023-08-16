@@ -17,6 +17,7 @@ using Siesa.SDK.Frontend.Components.FormManager.Fields;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Linq;
+using Siesa.SDK.Shared.Utilities;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -49,6 +50,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         [Parameter]
         public string BLNameParentAttatchment { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether the business object is a document.
+        /// </summary>
+        public bool IsDocument { get; set; }
 
         public Boolean Loading = true;
 
@@ -238,6 +243,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         protected async Task InitView(string bName = null)
         {
             Loading = true;
+            IsDocument = Utilities.CheckIsDocument(BusinessObj, typeof(BLFrontendDocument<,>));
             if (bName == null)
             {
                 bName = BusinessName;
@@ -283,6 +289,17 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     }
                 }
                 ModelLoaded = true;
+            }
+            if(IsDocument)
+            {
+                List<string> extraDetailFields = new ();
+                FormViewModel.DetailFields.ForEach(x =>
+                {
+                    x.ViewContext = "DetailView";
+                    extraDetailFields.Add(x.Name);
+                });
+                BusinessObj.ExtraDetailFields = extraDetailFields;
+                await BusinessObj.InitializeChilds().ConfigureAwait(true);
             }
             await EvaluateButtonAttributes().ConfigureAwait(true);
             EvaluateDynamicAttributes();

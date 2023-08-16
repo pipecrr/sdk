@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Microsoft.IdentityModel.Tokens;
 using Siesa.SDK.Frontend.Utils;
 using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
 using Siesa.SDK.Frontend.Components.Visualization;
@@ -70,6 +71,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         private RenderFragment? _fieldValidationTemplate;
 
         private string OnChange { get; set; }
+        private string OnChangeCell { get; set; }
         private bool HasError { get; set; }
 
         [CascadingParameter] EditContext EditFormContext { get; set; }
@@ -142,6 +144,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 }
             }
             OnChange = (string)FieldOpt.CustomAttributes?.Where(x => x.Key == "sdk-change").FirstOrDefault().Value;
+            OnChangeCell = (string)FieldOpt.CustomAttributes?.FirstOrDefault(x => x.Key.Equals("sdk-change-cell",StringComparison.Ordinal)).Value;
             StateHasChanged();
 
         }
@@ -279,30 +282,30 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         
         public void SetValue(TProperty value)
         {
-            var setValue = true;
-
-            if (setValue)
+            BindValue = value;
+            if (!OnChange.IsNullOrEmpty())
             {
-                BindValue = value;
-                if (OnChange != null && OnChange != "")
+                _ = Task.Run(async () =>
                 {
-                    _ = Task.Run(async () =>
-                    {
-                        await Evaluator.EvaluateCode(OnChange, EditFormContext.Model);
-                        if (formView != null)
-                        {
-                            _ = InvokeAsync(() => formView.Refresh());
-                        }
-                    });
-                }
+                    await Evaluator.EvaluateCode(OnChange, EditFormContext.Model).ConfigureAwait(true);
+                    if (formView != null)
+                    {                            
+                        _ = InvokeAsync(() => formView.Refresh());
+                    }
+                });
             }
-            else
-            {
-                //MuestreError();
+            if (!OnChangeCell.IsNullOrEmpty()){
+                var methodSdkOnChangeCell = EditFormContext.Model.GetType().GetMethod("SdkOnChangeCell");
+                if(methodSdkOnChangeCell != null){
+                    methodSdkOnChangeCell.Invoke(EditFormContext.Model, new []{BindModel});
+                }
+                var methodOnChangeCell = EditFormContext.Model.GetType().GetMethod(OnChangeCell);
+                if(methodOnChangeCell != null && !OnChangeCell.Equals("SdkOnChangeCell", StringComparison.Ordinal)){
+                    methodOnChangeCell.Invoke(EditFormContext.Model, new []{BindModel});
+                }
             }
             
             CheckUniqueValue();
-
         }
 
         public RenderFragment? FieldValidationTemplate

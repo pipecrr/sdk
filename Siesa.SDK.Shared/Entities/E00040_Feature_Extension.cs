@@ -31,5 +31,10 @@ namespace Siesa.SDK.Entities
 		[JsonIgnore]
 		public List<string> ActionsResourcesMessages {get; set;}
 
-	}
+        public override string ToString()
+        {
+            return $"{BusinessName}";
+        }
+
+    }
 }

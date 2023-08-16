@@ -21,6 +21,7 @@ using Siesa.SDK.Frontend.Extension;
 using Microsoft.Extensions.Configuration;
 using Siesa.Global.Enums;
 using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
+using Siesa.SDK.Shared.Utilities;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 {
@@ -86,6 +87,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         [Parameter]
         public List<string> ParentBaseObj { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether the business object is a document.
+        /// </summary>
+        public bool IsDocument { get; set; }
 
         public int CountUnicErrors = 0;
 
@@ -118,6 +123,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public List<Button> ExtraButtons { get; set; }
         public Button SaveButton { get; set; }
         public bool isOnePanel { get; set; }
+
+        /// <summary>
+        /// Gets or sets the reference grid.
+        /// </summary>
+        public dynamic RefGrid { get; set; }
         protected virtual async Task CheckPermissions()
         {
             if (FeaturePermissionService != null && !String.IsNullOrEmpty(BusinessName))
@@ -225,8 +235,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         protected virtual async Task InitView(string bName = null)
         {
             CreateRelationshipAttachment();
-
             Loading = true;
+            IsDocument = Utilities.CheckIsDocument(BusinessObj, typeof(BLFrontendDocument<,>));
             if (bName == null)
             {
                 bName = BusinessName;
@@ -276,6 +286,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     }
                 }
             }
+            if(IsDocument)
+            {
+                AddOnChangeCell();
+                BusinessObj.ExtraDetailFields = FormViewModel.DetailFields.Select(x => x.Name).ToList();
+                await BusinessObj.InitializeChilds().ConfigureAwait(true);
+            }
             Loading = false;
             EditFormContext = new EditContext(BusinessObj);
             EditFormContext.OnFieldChanged += EditContext_OnFieldChanged;
@@ -286,6 +302,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             BusinessObj.ParentComponent = this;
             StateHasChanged();
         }
+
+        private void AddOnChangeCell()
+        {
+            foreach (var item in FormViewModel.DetailFields)
+            {
+                if(item.CustomAttributes == null){
+                    item.CustomAttributes = new Dictionary<string, object>();
+                }
+                item.CustomAttributes.Add("sdk-change-cell", "SdkOnChangeCell()");
+            }
+        }
+
         private void AddPanels(List<Panel> panels){
             
             foreach(var item in BusinessObj.DynamicEntities){
@@ -729,6 +757,34 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         protected string GetSaveBtnIcon()
         {
             return Saving ? "fas fa-spinner fa-pulse" : "fa-solid fa-floppy-disk";
+        }
+        /// <summary>
+        /// Method to add a new row to the grid.
+        /// </summary>
+        public void ClickAddRow()
+        {
+            Type typeChild = BusinessObj.ChildType();
+            dynamic obj = Activator.CreateInstance(typeChild);
+            dynamic ListChildObj = typeof(List<>).MakeGenericType(new Type[] { typeChild });
+            if(BusinessObj.ChildObjs == null)
+            {
+                BusinessObj.ChildObjs = Activator.CreateInstance(ListChildObj);
+            }
+            BusinessObj.ChildObjs.Add(obj);
+            RefGrid.Reload();
+        }
+        
+        /// <summary>
+        /// Method to delete a row from the grid.
+        /// </summary>
+        /// <param name="obj">The object to delete.</param>
+        public void ClickDeleteRow(dynamic obj){
+            BusinessObj.ChildObjs.Remove(obj);
+            if(obj.Rowid != null && obj.Rowid > 0){
+                BusinessObj.ChildObjsDeleted.Add(obj);
+                BusinessObj.ChildRowidsUpdated.Remove(obj.Rowid);
+            }
+            RefGrid.Reload();
         }
 
     }
