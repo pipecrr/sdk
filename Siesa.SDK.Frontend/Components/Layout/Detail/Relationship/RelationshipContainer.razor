@@ -215,7 +215,7 @@
 
         _parent = Parent;
         
-        if (SelectedRelationship.RelatedBusiness.IsNullOrEmpty() && string.Equals(SelectedRelationship.RelatedBusiness, "BLAttachmentDetail", StringComparison.Ordinal))
+        if (!SelectedRelationship.RelatedBusiness.IsNullOrEmpty() && string.Equals(SelectedRelationship.RelatedBusiness, "BLAttachmentDetail", StringComparison.Ordinal))
         {
             var rowidAttachment = _parent.RowidAttachment;
             
