@@ -2048,31 +2048,68 @@ namespace Siesa.SDK.Business
 
             return new ActionResult<SDKResultImportDataDTO>{Success = true, Data = resultImport};
         }
-        private static T CreateDynamicObjectFromJson(Type type, dynamic dynamicObj)
+        private T CreateDynamicObjectFromJson(Type type, dynamic dynamicObj)
         {
-            dynamic result = Activator.CreateInstance(type);
-            
-            foreach (var property in dynamicObj.Properties()){
-                var propertyName = property.Name;
-                var propertyEntity = type.GetProperty(propertyName);
-                if(propertyEntity != null){
-                    dynamic value;
-                    //TODO : Revisar diferentes tipos de datos
-                    if(propertyEntity.PropertyType == typeof(bool)){                        
-                        if(property.Value == 1){
-                            value = true;
-                        }else{
-                            value = false;
-                        }
-                    }else{
-                        value = Convert.ChangeType(property.Value, propertyEntity.PropertyType);
-                    }
-                    type.GetProperty(propertyName).SetValue(result, value);
+            using (SDKContext context = CreateDbContext()){
+                dynamic result = Activator.CreateInstance(type);
+                if (int.TryParse(dynamicObj.Rowid.Value.ToString(), out int Rowid))
+                {
+                    result = context.Set<T>().Find(Rowid);
+                }else{
+                    dynamicObj.Rowid = 0;
                 }
-            }
-            return (T)result;
-        }
+                foreach (var property in dynamicObj.Properties()){
+                    var propertyName = property.Name;
+                    var propertyEntity = type.GetProperty(propertyName);
+                    if(propertyEntity != null){
+                        dynamic value = "";
+                        //TODO : Revisar diferentes tipos de datos
+                        if(propertyEntity.PropertyType.BaseType == typeof(ForeignKeyAttribute)){
+                            var holi = propertyEntity.PropertyType.BaseType;
+                        }
+                        if(propertyEntity.PropertyType.BaseType == typeof(Enum) ){
+                            if(!string.IsNullOrEmpty(property.Value.Value) ){
+                                var values = Enum.GetValues(propertyEntity.PropertyType);
+                                string idEnum = "";
+                                    string resourceTry = propertyEntity.PropertyType.Name;
+                                    string ValueTry = (string)property.Value;
+                                    //GetBackend("BLResource").Call("GetResource", "BLApprovalRequest.NextApprovedEmail.Requester", AuthenticationService.User.RowidCulture);
+                                    var Resource = context.Set<E00022_ResourceDescription>()
+                                                        .Include(x => x.Resource)
+                                                        .Where(x => x.Resource.Id.Contains(resourceTry) && x.Description.Equals(ValueTry) && x.RowidCulture==1)
+                                                        .Select(x => x.Resource.Id)
+                                                        .FirstOrDefault();
+                                    idEnum = Resource.Substring(Resource.LastIndexOf('.') + 1);
+                                    dynamic enumTry = enumStatusBaseMaster.Active; 
+                                
+                                foreach (var item in values){
+                                    if(item.ToString() == idEnum){
+                                        value = item;
+                                    }
+                                }
+                                type.GetProperty(propertyName).SetValue(result, value);
+                            }
+                        }else if(propertyEntity.PropertyType == typeof(bool)){
+                                if(property.Value == 1){
+                                    value = true;
+                                }else{
+                                    value = false;
+                                }
+                                type.GetProperty(propertyName).SetValue(result, value);
+                        }else{
+                            if(!string.IsNullOrEmpty(property.Value.ToString()) ){
+                                value = Convert.ChangeType(property.Value, propertyEntity.PropertyType);
+                                type.GetProperty(propertyName).SetValue(result, value);
+                                String.
+                            }
+                        }
+                    }
+                }
 
+                return (T)result;
+            }
+        }
     }
+
 
 }

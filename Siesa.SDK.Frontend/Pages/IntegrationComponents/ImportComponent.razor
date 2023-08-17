@@ -20,6 +20,8 @@
 @using Siesa.SDK.Shared.DTOS
 @using Siesa.SDK.Frontend.Components.Flex
 @using DevExpress.Spreadsheet;
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.EntityFrameworkCore
 
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
 
@@ -196,6 +198,9 @@
     private bool IsLoadingGrid = false;
 
     private int SelectedIndex = 0;
+        
+    private SDKRequestImportDataDTO importDataDTO = new SDKRequestImportDataDTO();
+
 
     public Dictionary<string, string> _newKeys = new Dictionary<string, string>();
 
@@ -226,31 +231,46 @@
         var _bannedTypes = new List<Type>() { typeof(byte[]),  typeof(string) };
 
         var ignoreEntityFields = EntityFields.Where(
-                                                     p => (p.PropertyType.IsClass
-                                                            && !p.PropertyType.IsPrimitive
-                                                            && !p.PropertyType.IsEnum
-                                                            && !_bannedTypes.Contains(p.PropertyType)
-                                                            && p.Name != "RowVersion"
-                                                            && p.GetCustomAttribute(typeof(NotMappedAttribute)) == null)
+                                                    p => (p.PropertyType.IsClass
+                                                    && !p.PropertyType.IsPrimitive
+                                                    && !p.PropertyType.IsEnum
+                                                    && !_bannedTypes.Contains(p.PropertyType)
+                                                    && p.Name != "RowVersion"
                                                             
-                                                            ||(p.PropertyType == typeof(byte[]) 
-                                                            || p.PropertyType == typeof(uint)
-                                                            || (p.DeclaringType.ToString().Split('`')[0] == "Siesa.SDK.Entities.BaseAudit"))
-                                                     ).Select(p => p.Name).ToList();
+                                                    && p.GetCustomAttribute(typeof(NotMappedAttribute)) == null)
+                                                    @* || p.GetCustomAttribute(typeof(KeyAttribute)) != null *@
+                                                    ||(p.PropertyType == typeof(byte[]) 
+                                                    || p.PropertyType == typeof(uint)
+                                                    || (p.DeclaringType.ToString().Split('`')[0] == "Siesa.SDK.Entities.BaseAudit"))
+                                                    ).Select(p => p.Name).ToList();
                                             
         foreach (var field in EntityFields.Where(x=> !ignoreEntityFields.Contains(x.Name)).ToList())
         {
-            var ResourceName = await ResourceManager.GetResource($"{EntityType.Name}.{field.Name}", AuthenticationService.GetRoiwdCulture()); 
-
-            _fieldsEntity.Add(ResourceName,field.Name);
-            _titleFields.Add(field.Name, ResourceName);
+            var ResourceName = "";
+            ForeignKeyAttribute attribute = field.GetCustomAttribute<ForeignKeyAttribute>();
+                if (attribute != null){
+                    string foreignKeyName = attribute.Name;
+                    var RelationAttribute = EntityFields.Where(x => x.Name == foreignKeyName).FirstOrDefault();
+                    IndexAttribute ForeingAttribute = RelationAttribute.PropertyType.GetCustomAttribute<IndexAttribute>();
+                    if(ForeingAttribute is not null && ForeingAttribute.IsUnique){
+                        var EntityName = await ResourceManager.GetResource($"{RelationAttribute.PropertyType.Name}.singular", AuthenticationService.GetRoiwdCulture()); 
+                        var FieldName = await ResourceManager.GetResource($"{RelationAttribute.PropertyType.Name}.{ForeingAttribute.PropertyNames[0]}", AuthenticationService.GetRoiwdCulture()); 
+                        ResourceName = $"{FieldName} - {EntityName}";
+                        importDataDTO.ForeingsKeysData.Add(field.Name, RelationAttribute.PropertyType.Name);
+                        _fieldsEntity.Add(ResourceName,field.Name);
+                        _titleFields.Add(field.Name, ResourceName);
+                    }
+                }else{
+                    ResourceName = await ResourceManager.GetResource($"{EntityType.Name}.{field.Name}", AuthenticationService.GetRoiwdCulture()); 
+                    _fieldsEntity.Add(ResourceName,field.Name);
+                    _titleFields.Add(field.Name, ResourceName);
+                }
         }
     }
 
     private async Task ImportData()
     {
         ErrorList.Clear();
-        SDKRequestImportDataDTO importDataDTO = new SDKRequestImportDataDTO();
         importDataDTO.BusinessName = BusinessName;
         importDataDTO.Data = DataMapped;
         importDataDTO.UrlResponse = "https://en77cb5mgajpj.x.pipedream.net";
@@ -342,10 +362,67 @@
                 Workbook workbook = new Workbook();
                 workbook.LoadDocument(stream, DocumentFormat.Xlsx);
 
-                 Worksheet worksheet = workbook.Worksheets[0];
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                var HeaderRowObj = worksheet.Rows[0];
+
+                List<string> Headers = new();
+
+                
+                //Obtencion del list de Strings con el header
+                foreach( var cellHeader in HeaderRowObj){
+                    if(cellHeader.HasData){
+                        var CellValueData = cellHeader.Value;
+                        if(CellValueData.IsText){
+                            Headers.Add(CellValueData.TextValue);
+                        }
+                    }else{
+                        break;
+                    }
+                }
+
+                List<dynamic> DataCells = new();
+                int RowCounter = 1;
+
+                var ActualRow = worksheet.Rows[RowCounter];
+
+                do{
+                    ExpandoObject obj = new ExpandoObject();
+                    for(int i = 0; i < Headers.Count(); i++){
+                        var cellData = ActualRow[i];
+                        dynamic value = "";
+                        if(cellData.HasData){
+                            var CellValueData = cellData.Value;
+                            switch (CellValueData.Type){
+                                case CellValueType.Text:
+                                DataCells.Add(CellValueData.TextValue);
+                                value = CellValueData.TextValue;
+                                break;
+                                case CellValueType.Numeric:
+                                DataCells.Add(CellValueData.NumericValue);
+                                value = CellValueData.NumericValue;
+                                break;
+                                case CellValueType.DateTime:
+                                DataCells.Add(CellValueData.DateTimeValue);
+                                value = CellValueData.DateTimeValue;
+                                break;
+                                case CellValueType.Boolean:
+                                DataCells.Add(CellValueData.BooleanValue);
+                                value = CellValueData.BooleanValue;
+                                break;
+                            }
+                        }
+                        ((IDictionary<string, object>)obj).Add(Headers[i], value);
+                    }
+                    FileData.Add(obj);
+                    RowCounter ++;
+                    ActualRow = worksheet.Rows[RowCounter];
+                }while(ActualRow.HasData);
 
 
-                 var t = worksheet.Rows[1];
+
+                 var t = worksheet.Rows[0];
+                 var t2 = worksheet.Rows[2];
 
                  var holi = t.GetType();
 
@@ -384,6 +461,46 @@
                     FileData.Add(obj);
                 }
             } *@
+        }
+
+        IsLoadingGrid = true;
+
+        _ = InvokeAsync(() => StateHasChanged());     
+    }
+
+        private async Task Holi(InputFileChangeEventArgs InputFile)
+    {
+        ErrorList.Clear();
+        FileData = new List<dynamic>();
+        IsLoadingGrid = false;
+        using (var stream = new MemoryStream())
+        {
+            await InputFile.File.OpenReadStream().CopyToAsync(stream);
+            stream.Position = 0;
+            var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                HasHeaderRecord = true,
+                DetectDelimiter = true,
+            };
+
+            using (var CsvReader = new CsvReader(new StreamReader(stream), csvConfig))
+            {
+                var records = CsvReader.GetRecords<dynamic>();
+
+                foreach (var record in records)
+                {                    
+                    ExpandoObject obj = new ExpandoObject();
+
+                    foreach(var prop in record) 
+                    {
+                        var key = prop.Key;
+                        var value = prop.Value;
+                        ((IDictionary<string, object>)obj).Add(key, value);
+                    }
+
+                    FileData.Add(obj);
+                }
+            }
         }
 
         IsLoadingGrid = true;
