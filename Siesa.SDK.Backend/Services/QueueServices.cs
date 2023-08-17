@@ -11,13 +11,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Siesa.SDK.Shared.Application;
 using Siesa.SDK.Shared.DTOS;
 using Newtonsoft.Json;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace Siesa.SDK.Backend.Services
 {
     public interface IQueueService
     {
-        void Subscribe(string exchangeName, string bindingKey, Action<string> action = null);
-        void SendMessage(string exchangeName, string routingKey, string message);
+        void Subscribe(string exchangeName, string bindingKey, Action<QueueMessageDTO> action = null);
+        void SendMessage(string exchangeName, string routingKey, QueueMessageDTO message);
 
         void TestDisconection();
     }
@@ -84,7 +86,7 @@ namespace Siesa.SDK.Backend.Services
         {
             _connection.Close();
         }
-        public void Subscribe(string exchangeName, string bindingKey, Action<string> action = null)
+        public void Subscribe(string exchangeName, string bindingKey, Action<QueueMessageDTO> action = null)
         {
             if (action != null)
             {
@@ -150,7 +152,7 @@ namespace Siesa.SDK.Backend.Services
             _connection?.Dispose();
         }
 
-        private void SubscribeAction(string exchangeName, string bindingKey, Action<string> action = null)
+        private void SubscribeAction(string exchangeName, string bindingKey, Action<QueueMessageDTO> action = null)
         {
             var methodName = action?.Method.Name ?? null;
             var blTarget = action?.Target?.GetType()?.FullName ?? null;
@@ -182,7 +184,14 @@ namespace Siesa.SDK.Backend.Services
                     {
                         var blInstance = ActivatorUtilities.CreateInstance(_serviceProvider, blType);
                         var method = blType.GetMethod(action.MethodName);
-                        //TODO: Check if method is async - QueueMessageDTO
+                        
+                        //TODO: Check if method is async
+                        /*if (method.GetCustomAttributes(typeof(AsyncStateMachineAttribute), false).Length > 0)
+                        {
+                            var task = (Task)method.Invoke(blInstance, new object[] { message });
+                            continue;
+                        }*/
+
                         method.Invoke(blInstance, new object[] { message });
                     }
                 }

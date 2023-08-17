@@ -573,7 +573,7 @@ namespace Siesa.SDK.Business
                             _queueService.Subscribe(BusinessName, enumMessageCategory.CRUD);
                             _queueService.SendMessage(BusinessName, enumMessageCategory.CRUD, new QueueMessageDTO()
                             {
-                                Message = "Se Guardo un registro",
+                                Message = $"Se Guardo un registro en {BusinessName}",
                                 Rowid = result.Rowid
                             });
                         }
@@ -887,7 +887,11 @@ namespace Siesa.SDK.Business
                         if (_queueService != null && !string.IsNullOrEmpty(BusinessName))
                         {
                             _queueService.Subscribe(BusinessName, enumMessageCategory.CRUD);
-                            _queueService.SendMessage(BusinessName, enumMessageCategory.CRUD, $"Registro Eliminado en {BusinessName} con Rowid {result.Rowid}");
+                            _queueService.SendMessage(BusinessName, enumMessageCategory.CRUD, new QueueMessageDTO()
+                            {
+                                Message = $"Se Elimino un registro en {BusinessName}",
+                                Rowid = result.Rowid
+                            });
                         }
                     }catch(Exception ex){
                         if (!context.Database.IsInMemory())
