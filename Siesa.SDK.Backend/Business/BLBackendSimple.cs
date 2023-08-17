@@ -571,7 +571,11 @@ namespace Siesa.SDK.Business
                         if (_queueService != null && !string.IsNullOrEmpty(BusinessName))
                         {
                             _queueService.Subscribe(BusinessName, enumMessageCategory.CRUD);
-                            _queueService.SendMessage(BusinessName, enumMessageCategory.CRUD, $"Registro Guardado en {BusinessName} con Rowid {result.Rowid}");
+                            _queueService.SendMessage(BusinessName, enumMessageCategory.CRUD, new QueueMessageDTO()
+                            {
+                                Message = "Se Guardo un registro",
+                                Rowid = result.Rowid
+                            });
                         }
                         if (DynamicEntities != null && DynamicEntities.Count > 0)
                         {

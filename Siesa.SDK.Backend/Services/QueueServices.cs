@@ -10,6 +10,7 @@ using Siesa.SDK.Shared.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Siesa.SDK.Shared.Application;
 using Siesa.SDK.Shared.DTOS;
+using Newtonsoft.Json;
 
 namespace Siesa.SDK.Backend.Services
 {
@@ -18,7 +19,7 @@ namespace Siesa.SDK.Backend.Services
         void Subscribe(string exchangeName, string bindingKey, Action<string> action = null);
         void SendMessage(string exchangeName, string routingKey, string message);
 
-        //void TestDisconection();
+        void TestDisconection();
     }
 
     public class QueueService : BackgroundService, IQueueService
@@ -28,15 +29,60 @@ namespace Siesa.SDK.Backend.Services
         private IModel _channel;
         private Dictionary<string, string> _subscriptions = new Dictionary<string, string>();
         private Dictionary<string, List<QueueSubscribeActionDTO>> _subscriptionsActions = new();
-        private int _reconect = 0;
+        private int _reconectAttemp = 0;
         private ConnectionFactory factory = new ConnectionFactory() { HostName = "coder.overjt.com" };
         private readonly IServiceProvider _serviceProvider;
 
         public QueueService()
         {
-            _connection = factory.CreateConnection();
-            _channel = _connection.CreateModel();
+            //_connection = factory.CreateConnection();
+            //_channel = _connection.CreateModel();
+            Connect();
             _serviceProvider = SDKApp.GetServiceProvider();
+        }
+        //TODO: Reconnect 
+        private void Connect()
+        {
+            try
+            {
+                _connection = factory.CreateConnection();
+                _channel = _connection.CreateModel();
+                _connection.ConnectionShutdown += OnConnectionShutdown;
+                _reconectAttemp = 0;
+                Console.WriteLine("Connection to RabbitMQ established.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error connecting to RabbitMQ: {ex.Message}");
+                Reconnect();
+            }
+        }
+        private void OnConnectionShutdown(object sender, ShutdownEventArgs args)
+        {
+            Console.WriteLine($"Connection to RabbitMQ was shut down: {_connection.CloseReason}. Trying to reconnect...");
+            Reconnect();
+        }
+        private void Reconnect()
+        {
+            while (!_connection.IsOpen && _reconectAttemp < 6)
+            {
+                try
+                {
+                    _reconectAttemp++;
+                    Console.WriteLine($"Reconnecting attempt {_reconectAttemp}");
+                    Connect();
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error during reconnection: {ex.Message}");
+                }
+            }
+        }
+
+        public void TestDisconection()
+        {
+            _connection.Close();
         }
         public void Subscribe(string exchangeName, string bindingKey, Action<string> action = null)
         {
@@ -63,23 +109,28 @@ namespace Siesa.SDK.Backend.Services
             {
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
+                var receivedQueueMessage = JsonConvert.DeserializeObject<QueueMessageDTO>(message);
+
                 var routingKey = ea.RoutingKey;
                 var exchange = ea.Exchange;
 
                 if (_subscriptionsActions.ContainsKey($"{exchange}_{routingKey}"))
                 {
-                    InvokeAction(exchange, routingKey, message);
+                    InvokeAction(exchange, routingKey, receivedQueueMessage);
                 }
-                Console.WriteLine($"[x] Received '{message}'");
+                Console.WriteLine($"[x] Received Message: '{receivedQueueMessage.Message}', Rowid: '{receivedQueueMessage.Rowid}'");
             };
 
             _channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
         }
-        public void SendMessage(string exchangeName, string routingKey, string message)
+        public void SendMessage(string exchangeName, string routingKey, QueueMessageDTO message)
         {
             _channel.ExchangeDeclare(exchange: exchangeName, type: ExchangeType.Topic);
 
-            var body = Encoding.UTF8.GetBytes(message);
+
+            var jsonMessage = JsonConvert.SerializeObject(message);
+            var body = Encoding.UTF8.GetBytes(jsonMessage);
+
             _channel.BasicPublish(exchange: exchangeName, routingKey: routingKey, basicProperties: null, body: body);
 
             //Console.WriteLine($"Sent message with routing key '{routingKey}': '{message}'");
@@ -119,7 +170,7 @@ namespace Siesa.SDK.Backend.Services
                 _subscriptionsActions.Add(subscriptionKey, new List<QueueSubscribeActionDTO> { new QueueSubscribeActionDTO { MethodName = methodName, Target = blTarget } });
             }
         }
-        private void InvokeAction(string exchange, string routingKey, string message)
+        private void InvokeAction(string exchange, string routingKey, QueueMessageDTO message)
         {
             var actions = _subscriptionsActions[$"{exchange}_{routingKey}"];
             foreach (var action in actions)
@@ -131,30 +182,12 @@ namespace Siesa.SDK.Backend.Services
                     {
                         var blInstance = ActivatorUtilities.CreateInstance(_serviceProvider, blType);
                         var method = blType.GetMethod(action.MethodName);
+                        //TODO: Check if method is async - QueueMessageDTO
                         method.Invoke(blInstance, new object[] { message });
                     }
                 }
                 catch (System.Exception)
                 {
-                }
-            }
-        }
-
-        private void Reconnect()
-        {
-            while (!_connection.IsOpen && _reconect < 6)
-            {
-                try
-                {
-                    _reconect++;
-                    Console.WriteLine($"Reconnecting attempt {_reconect}");
-                    _connection = factory.CreateConnection();
-                    //Connect();
-                    break;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error during reconnection: {ex.Message}");
                 }
             }
         }

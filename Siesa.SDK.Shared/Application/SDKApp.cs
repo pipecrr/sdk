@@ -103,28 +103,33 @@ namespace Siesa.SDK.Shared.Application
             return _indexComponent;
         }
 
-        public static void ExecuteSubscribeToQueues()
+        public static void ExecuteSubscribeToQueues(IEnumerable<Type> BusinessList)
         {
-
-            //TODO: Get BusinessList from Backends 
-            var backendRouterService = _serviceProvider.GetRequiredService<IBackendRouterService>();
-
-            var BusinessList = backendRouterService.GetBusinessModelList();
-
-            // var bls = typeof(BackendRegistry).Assembly.GetTypes()
-            // .Where(t => t.GetInterfaces().Any(i => i.Name == "IBLBase`1"));
-
-            foreach (var bl in BusinessList)
+            try
             {
-                var BLMethod = Siesa.SDK.Shared.Utilities.Utilities.SearchType($"{bl.Namespace}.{bl.Name}", true).GetMethod("SubscribeToQueues");
+                 //TODO: Get BusinessList from Backends 
+                //var backendRouterService = _serviceProvider.GetRequiredService<IBackendRouterService>();
 
-                if (BLMethod != null && _serviceProvider != null && BLMethod.GetBaseDefinition().DeclaringType != BLMethod.DeclaringType)
+                //var BusinessList = backendRouterService.GetBusinessModelList();
+
+                // var bls = typeof(BackendRegistry).Assembly.GetTypes()
+                // .Where(t => t.GetInterfaces().Any(i => i.Name == "IBLBase`1"));
+
+                foreach (var bl in BusinessList)
                 {
-                    Type blType = Siesa.SDK.Shared.Utilities.Utilities.SearchType($"{bl.Namespace}.{bl.Name}", true);
-                    var blInstance = ActivatorUtilities.CreateInstance(_serviceProvider, blType);
-                    BLMethod.Invoke(blInstance, null);
-                }
+                    var BLMethod = Siesa.SDK.Shared.Utilities.Utilities.SearchType($"{bl.Namespace}.{bl.Name}", true).GetMethod("SubscribeToQueues");
 
+                    if (BLMethod != null && _serviceProvider != null && BLMethod.GetBaseDefinition().DeclaringType != BLMethod.DeclaringType)
+                    {
+                        Type blType = Siesa.SDK.Shared.Utilities.Utilities.SearchType($"{bl.Namespace}.{bl.Name}", true);
+                        var blInstance = ActivatorUtilities.CreateInstance(_serviceProvider, blType);
+                        BLMethod.Invoke(blInstance, null);
+                    }
+
+                }
+            }
+            catch (System.Exception)
+            {
             }
         }
     }
