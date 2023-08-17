@@ -67,6 +67,7 @@
     [Parameter] public Action<dynamic> OnCreate { get; set; }
     [Parameter] public Action<dynamic> OnEdit { get; set; }
     [Parameter] public Action OnDelete { get; set; }
+    [Parameter] public SDKModalWidth ModalWidth { get; set; } = SDKModalWidth.Undefined;
     
     [Parameter] public string Width { get; set; } = "600px";
 
@@ -102,7 +103,7 @@
     {
         bool DefaultTitle = false;
 
-        var ShowCreateDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicCreateView BusinessName="@BusinessName" IsSubpanel=true  DefaultFields="@DefaultFieldsCreate" BLNameParentAttatchment="@BLNameParentAttatchment" ShowTitle="@DefaultTitle"/>, Width, $"{BusinessName}.Singular", true, true, Height);
+        var ShowCreateDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicCreateView BusinessName="@BusinessName" IsSubpanel=true  DefaultFields="@DefaultFieldsCreate" BLNameParentAttatchment="@BLNameParentAttatchment" ShowTitle="@DefaultTitle"/>, Width, $"{BusinessName}.Singular", true, true, Height, standardWidth: ModalWidth);
         listview_key = Guid.NewGuid();
         if(ShowCreateDialog != null && ShowCreateDialog.GetType() != typeof(bool)){
             OnCreate?.Invoke(ShowCreateDialog);
@@ -112,7 +113,7 @@
 
     public async Task OpenModalEdit(string item_rowid)
     {
-        var ShowEditDialog = await SDKDialogService.ShowCustomDialog(ds =>@<DynamicEditView BusinessName="@BusinessName" IsSubpanel=true  BusinessObjId="@item_rowid"  DefaultFields="@DefaultFieldsCreate" BLNameParentAttatchment="@BLNameParentAttatchment" ShowTitle="@DefaultTitle"/>, Width, $"{BusinessName}.Singular", true, true, Height);
+        var ShowEditDialog = await SDKDialogService.ShowCustomDialog(ds =>@<DynamicEditView BusinessName="@BusinessName" IsSubpanel=true  BusinessObjId="@item_rowid"  DefaultFields="@DefaultFieldsCreate" BLNameParentAttatchment="@BLNameParentAttatchment" ShowTitle="@DefaultTitle"/>, Width, $"{BusinessName}.Singular", true, true, Height, standardWidth: ModalWidth);
         listview_key = Guid.NewGuid();
         if(ShowEditDialog != null && ShowEditDialog.GetType() != typeof(bool)){
             OnEdit?.Invoke(ShowEditDialog);
@@ -122,7 +123,7 @@
     
     public async Task OpenModalDetail(string item_rowid)
     {
-        var ShowDetailDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicDetailView BusinessName="@BusinessName" IsSubpanel=true  BusinessObjId="@item_rowid" BLNameParentAttatchment="@BLNameParentAttatchment" ShowTitle="@DefaultTitle" AllowDelete="@AllowDelete" />, Width, $"{BusinessName}.Singular", true, true, Height);
+        var ShowDetailDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicDetailView BusinessName="@BusinessName" IsSubpanel=true  BusinessObjId="@item_rowid" BLNameParentAttatchment="@BLNameParentAttatchment" ShowTitle="@DefaultTitle" AllowDelete="@AllowDelete" />, Width, $"{BusinessName}.Singular", true, true, Height, standardWidth: ModalWidth);
         listview_key = Guid.NewGuid();
         StateHasChanged();
     }
