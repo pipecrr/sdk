@@ -1,3 +1,5 @@
+
+
 @using Siesa.SDK.Shared.Services
 @using Siesa.SDK.Frontend.Components
 @using Siesa.SDK.Frontend.Components.Visualization
@@ -5,6 +7,7 @@
 @inject SDKDialogService SDKDialogService
 @inject DialogService DialogService
 @inject IAuthenticationService AuthenticationService
+
 
 
 @if(ShowHeader){
@@ -40,23 +43,6 @@
 
 
 @code {
-    [Parameter] public string BLNameParentAttatchment { get; set; }
-    [Parameter] public Relationship Relationship { get; set; }
-    [Parameter] public dynamic Parent { get; set; }
-    [Parameter] public bool AllowCreate { get; set; } = true;
-    [Parameter] public bool AllowEdit { get; set; } = true;
-    [Parameter] public bool AllowDelete { get; set; } = true;
-    [Parameter] public bool AllowDetail { get; set; } = true;
-
-    [Parameter] public Action<string> OnClickEdit { get; set; } = null;
-    [Parameter] public Action<string> OnClickDetail { get; set; } = null;
-    [Parameter] public Action<string,string> OnClickDelete { get; set; } = null;
-    [Parameter] public Action OnClickNew { get; set; } = null;
-    [Parameter] public bool ShowHeader { get; set; } = true;
-
-    [Parameter] public string Width { get; set; }
-    [Parameter] public string Height { get; set; }
-    [Parameter] public SDKModalWidth ModalWidth { get; set; } = SDKModalWidth.Undefined;
 
     int? count = null;
     bool isOpen = false;
