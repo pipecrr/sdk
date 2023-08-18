@@ -14,7 +14,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
     public partial class SDKDynamicSelectBar : SDKComponent
     {
         /// <summary>
-        /// Gets or sets the list of items for the dynamic select bar.
+        /// Gets or sets the list of items. <see cref="DynamicSelectBarDetailDTO"/>
         /// </summary>
         [Parameter]
         public List<DynamicSelectBarDetailDTO> Items { get; set; }
@@ -23,13 +23,27 @@ namespace Siesa.SDK.Frontend.Components.Fields
         /// Gets or sets the action to be invoked when the value changes.
         /// </summary>
         [Parameter]
-        public Action ValueChanged { get; set; }
+        public Action ValueChangedItem { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the dynamic select bar is disabled.
         /// </summary>
         [Parameter]
         public bool Disabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets the selected Value. The value should be of type <see cref="DynamicSelectBarDetailDTO"/>.
+        /// </summary>
+        [Parameter]
+        public DynamicSelectBarDetailDTO Value { get; set; }
+
+        /// <summary>
+        /// Gets or sets the action to be invoked when the selected value of the dynamic select bar changes.
+        /// The action should accept a parameter of type <see cref="DynamicSelectBarDetailDTO"/> that represents the new selected value.
+        /// </summary>
+        [Parameter]
+        public Action<DynamicSelectBarDetailDTO> ValueChanged { get; set; }
+
         private string _id = $"{Guid.NewGuid()}";
 
         private static string GetActiveCss(DynamicSelectBarDetailDTO Item) => !Item.On ? string.Empty : "rz-state-active";
@@ -43,7 +57,12 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
             Item.On = true;
 
-            ValueChanged?.Invoke();
+            if (ValueChanged != null || ValueChangedItem != null)
+            {
+                Value = Item;
+                ValueChanged?.Invoke(Value);
+                ValueChangedItem?.Invoke();
+            }
 
             StateHasChanged();
         }
