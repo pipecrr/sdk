@@ -43,9 +43,9 @@
     <div class="col-xl-5 col-lg-6 col-md-6 col-sm-4 col-7 p-0 d-flex justify-content-end align-items-center info_head">
         <div class="sdk_conection">
             <div class="position-relative">
-                <button @onclick="()=> ToogleConnect()" class="btn btn_connect py-0 px-2 px-lg-3 d-flex align-items-center"   
-                        data-automation-id="@GetAutomationId()" id="SDKHeader_ButtonConfig">
-                    <div>
+                <SDKButton Click="ToogleConnect" CssClass="btn btn_connect py-0 px-2 px-lg-3 d-flex align-items-center"   
+                       AutomationId="SDKHeader_ButtonConfig">
+                    <div id="SDKHeader_ButtonConfig">
                         <p class="font-weight-bold m-0 text-truncate" data-toggle="tooltip" data-placement="bottom" title="">
                             @GetCurrentConnectionName()     
                             </p>
@@ -56,11 +56,11 @@
                     <div class="pl-2 pl-xl-3">
                         <SDKIcon Name="fa-chevron-down"/>
                     </div>
-                </button>
+                </SDKButton>
 
                     <SDKDropDown @bind-IsOpen="@ConnectEnabled"
                     CssClass="connect_tooltip" 
-                    ResourceTag="SDKHeader_Config"
+                    AutomationId="SDKHeader_Config"
                     PositionTarget="#SDKHeader_ButtonConfig"
                     PositionMode="DropDownPositionMode.Bottom"
                     FooterVisible="true" HeaderVisible="true"
@@ -98,7 +98,8 @@
 
                                 <FooterTemplate>
                                     <div class="p-3">
-                                        <button @onclick:stopPropagation="true" @onclick:preventDefault @onclick="@SetCompanyGroup" class="btn btn-primary btn_primary_def_1 btn-sm w-100 ">
+                                        <SDKButton Click="@SetCompanyGroup" CssClass="btn btn-primary btn_primary_def_1 btn-sm w-100"
+                                        AutomationId="SDKHeader_ButtonSetCompanyGroup">
                                             @if (loading)
                                             {
                                                 <p style="margin-bottom: 0 !important"><ResourceViewer ResourceTag="Custom.Generic.Loading" /><span class="spinner-border spinner-border-sm mr-1"></span></p>
@@ -107,7 +108,7 @@
                                             {
                                                 <p style="margin-bottom: 0 !important"><ResourceViewer ResourceTag="Custom.SDKHeader.ChangeSettings" /></p>
                                             }
-                                        </button>
+                                        </SDKButton>
                                     </div>
                                 </FooterTemplate>
                     </SDKDropDown>
