@@ -1,4 +1,5 @@
 @using Siesa.SDK.Entities
+@using Siesa.SDK.Frontend.Components
 @using Siesa.SDK.Frontend.Components.FormManager.Model
 @using Siesa.SDK.Frontend.Components.Visualization 
 @using Siesa.SDK.Frontend.Components.Fields
@@ -16,6 +17,13 @@
             <ul>
                 <li>Width: para definir el ancho del modal, por defecto 600 px, por ejemplo Width="700px"</li>
                 <li>Height: para definit el alto del modal, por defecto lo calcula basado en el anlto de la ventana, por ejemplo Height="500px" </li>
+            </ul>
+            <p>El RelationshipPanel configurar el ancho del modal con el parametro ModalWidth a partir <strong>(tiene prioridad sobre el parametro Width)</strong>  de un enum:          <strong>SDKModalWidth</strong></p>
+            <ul>
+                <li>SDKModalWidth.Undefined:valor por defecto, no toma en cuenta el parametro</li>
+                <li>SDKModalWidth.Small: 300px</li>
+                <li>SDKModalWidth.Medium: 600px</li>
+                <li>SDKModalWidth.Large: 90%</li>
             </ul>
     </div>
     <div class="row px-3">
@@ -40,10 +48,16 @@
                         />
             </SDKCard>
         </div>
-         <div class="col-md-6 p-3">
+        <div class="col-md-6 p-3">
             <SDKCard>
                 <h3>Demo RelationshipPanel Collapse</h3>
             <RelationshipPanel Relationship="@pbrRelationShip" Parent="@pbrUser" />
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>Demo RelationshipPanel ModalWidth</h3>
+            <RelationshipPanel Relationship="@pbrRelationShip" Parent="@pbrUser" ShowHeader="false"  ModalWidth="@ModalWidth"/>
             </SDKCard>
         </div>
     </div>
@@ -54,6 +68,7 @@
     bool AllowDelete = false;
     bool AllowEdit = false;
     bool AllowDetail = false;
+    SDKModalWidth ModalWidth = SDKModalWidth.Large;
 
     
     E00220_User pbrUser = new E00220_User();

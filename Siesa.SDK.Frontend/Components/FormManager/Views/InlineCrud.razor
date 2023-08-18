@@ -11,73 +11,46 @@
 @inject IFeaturePermissionService FeaturePermissionService
 
 <div class="sdk-inlinecrud-container">
-    @if(AllowCreate)
+    @if (AllowCreate)
     {
-        @if(!string.IsNullOrEmpty(BLNameParentAttatchment) && BusinessName.Equals("BLAttachmentDetail"))
+        @if (!string.IsNullOrEmpty(BLNameParentAttatchment) && BusinessName.Equals("BLAttachmentDetail"))
         {
-            <SDKButton BusinessName="@BLNameParentAttatchment" ListPermission="@ListPermission" CssClass="mb-1" RenderStyle="SDKButtonRenderStyle.Primary" Click="@(async ()=> { await OpenModalCreate(); })">
-                <ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer 
-                    ResourceTag="@($"{BusinessName}.Singular")" />
+            <SDKButton BusinessName="@BLNameParentAttatchment" ListPermission="@ListPermission" CssClass="mb-1"
+                RenderStyle="SDKButtonRenderStyle.Primary" Click="@(async ()=> { await OpenModalCreate(); })">
+                <ResourceViewer ResourceTag="Action.Create" />
+                <ResourceViewer ResourceTag="@($"{BusinessName}.Singular")" />
             </SDKButton>
 
-        }else
+        }
+        else
         {
-            <SDKButton BusinessName="@BusinessName" ListPermission="@ListPermission" CssClass="mb-1" RenderStyle="SDKButtonRenderStyle.Primary" Click="@(async ()=> { await OpenModalCreate(); })">
-                <ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer 
-                    ResourceTag="@($"{BusinessName}.Singular")" />
+            <SDKButton BusinessName="@BusinessName" ListPermission="@ListPermission" CssClass="mb-1"
+                RenderStyle="SDKButtonRenderStyle.Primary" Click="@(async ()=> { await OpenModalCreate(); })">
+                <ResourceViewer ResourceTag="Action.Create" />
+                <ResourceViewer ResourceTag="@($"{BusinessName}.Singular")" />
             </SDKButton>
         }
 
     }
 
-    <DynamicListView
-        BusinessName="@BusinessName"
-        IsSubpanel=true
-        SubpanelFilter="@Filter"
-        @key="listview_key"
+    <DynamicListView BusinessName="@BusinessName" IsSubpanel=true SubpanelFilter="@Filter" @key="listview_key"
         OnClickEdit="@(async (string item_rowid)=> { await OpenModalEdit(item_rowid); })"
         OnClickDetail="@(async (string item_rowid)=> { await OpenModalDetail(item_rowid); })"
-        OnClickDelete="@(async (string item_rowid, string object_string)=> { await OpenModalDelete(item_rowid, object_string); })" 
-        OnClickNew="@(async ()=> { await OpenModalCreate(); })"
-        AllowCreate="false"
-        AllowEdit="@AllowEdit"
-        AllowDelete="@AllowDelete"
-        AllowDetail="@AllowDetail"
-        ShowSearchForm="@ShowSearchForm"
-        OnSelectedRow=@OnSelectedRow
-        Data="@Data"
-        BLNameParentAttatchment="@BLNameParentAttatchment"
-        />
+        OnClickDelete="@(async (string item_rowid, string object_string)=> { await OpenModalDelete(item_rowid, object_string); })"
+        OnClickNew="@(async ()=> { await OpenModalCreate(); })" AllowCreate="false" AllowEdit="@AllowEdit"
+        AllowDelete="@AllowDelete" AllowDetail="@AllowDetail" ShowSearchForm="@ShowSearchForm"
+        OnSelectedRow=@OnSelectedRow Data="@Data" BLNameParentAttatchment="@BLNameParentAttatchment" />
 </div>
 
 
 
 @code {
-    [Parameter] public string BLNameParentAttatchment { get; set; }
-    [Parameter] public string BusinessName { get; set; }
-    [Parameter] public Dictionary<string, object> DefaultFieldsCreate { get; set; }
-    [Parameter] public bool ShowSearchForm { get; set; } = true;
-    [Parameter] public string Filter { get; set; }
-    [Parameter] public bool AllowCreate { get; set; } = true;
-    [Parameter] public bool AllowEdit { get; set; } = true;
-    [Parameter] public bool AllowDelete { get; set; } = true;
-    [Parameter] public bool AllowDetail { get; set; } = true;
-    [Parameter] public Action<IList<dynamic>> OnSelectedRow { get; set; } = null;
-    [Parameter] public IEnumerable<object> Data { get; set; } = null;
-    [Parameter] public Action<dynamic> OnCreate { get; set; }
-    [Parameter] public Action<dynamic> OnEdit { get; set; }
-    [Parameter] public Action OnDelete { get; set; }
-    
-    [Parameter] public string Width { get; set; } = "600px";
-
-    [Parameter] public string Height { get; set; }
-
     private bool DefaultTitle = false;
 
-    private int _rowidPermission ;
+    private int _rowidPermission;
 
     public List<string> ListPermission { get; set; } = new List<string>();
-    
+
     Guid listview_key = Guid.NewGuid();
 
     protected override async Task OnInitializedAsync()
@@ -85,52 +58,81 @@
         await base.OnInitializedAsync();
         await ValidateBussinessName();
     }
-        
+
 
     private async Task ValidateBussinessName()
     {
         if (!string.IsNullOrEmpty(BusinessName) && BusinessName.Equals("BLAttachmentDetail"))
         {
             ListPermission.Add(enumSDKActions.UploadAttachment);
-        }else
+        }
+        else
         {
             ListPermission.Add(enumSDKActions.Create);
         }
     }
 
+    /// <summary>
+    /// Opens the modal for creating a new item.
+    /// </summary>
     public async Task OpenModalCreate()
     {
         bool DefaultTitle = false;
 
-        var ShowCreateDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicCreateView BusinessName="@BusinessName" IsSubpanel=true  DefaultFields="@DefaultFieldsCreate" BLNameParentAttatchment="@BLNameParentAttatchment" ShowTitle="@DefaultTitle"/>, Width, $"{BusinessName}.Singular", true, true, Height);
+        var ShowCreateDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicCreateView BusinessName="@BusinessName" IsSubpanel=true DefaultFields="@DefaultFieldsCreate"
+    BLNameParentAttatchment="@BLNameParentAttatchment" ShowTitle="@DefaultTitle" />, Width, $"{BusinessName}.Singular",
+true, true, Height, standardWidth: ModalWidth);
         listview_key = Guid.NewGuid();
-        if(ShowCreateDialog != null && ShowCreateDialog.GetType() != typeof(bool)){
+        if (ShowCreateDialog != null && ShowCreateDialog.GetType() != typeof(bool))
+        {
             OnCreate?.Invoke(ShowCreateDialog);
         }
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Opens the modal for editing an item.
+    /// </summary>
+    /// <param name="item_rowid">The row ID of the item to edit.</param>
+
     public async Task OpenModalEdit(string item_rowid)
     {
-        var ShowEditDialog = await SDKDialogService.ShowCustomDialog(ds =>@<DynamicEditView BusinessName="@BusinessName" IsSubpanel=true  BusinessObjId="@item_rowid"  DefaultFields="@DefaultFieldsCreate" BLNameParentAttatchment="@BLNameParentAttatchment" ShowTitle="@DefaultTitle"/>, Width, $"{BusinessName}.Singular", true, true, Height);
+        var ShowEditDialog = await SDKDialogService.ShowCustomDialog(ds =>@<DynamicEditView BusinessName="@BusinessName" IsSubpanel=true BusinessObjId="@item_rowid"
+    DefaultFields="@DefaultFieldsCreate" BLNameParentAttatchment="@BLNameParentAttatchment" ShowTitle="@DefaultTitle" />
+        , Width, $"{BusinessName}.Singular", true, true, Height, standardWidth: ModalWidth);
         listview_key = Guid.NewGuid();
-        if(ShowEditDialog != null && ShowEditDialog.GetType() != typeof(bool)){
+        if (ShowEditDialog != null && ShowEditDialog.GetType() != typeof(bool))
+        {
             OnEdit?.Invoke(ShowEditDialog);
         }
         StateHasChanged();
     }
-    
+
+    /// <summary>
+    /// Opens the modal for viewing details of an item.
+    /// </summary>
+    /// <param name="item_rowid">The row ID of the item to view details of.</param>
+
     public async Task OpenModalDetail(string item_rowid)
     {
-        var ShowDetailDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicDetailView BusinessName="@BusinessName" IsSubpanel=true  BusinessObjId="@item_rowid" BLNameParentAttatchment="@BLNameParentAttatchment" ShowTitle="@DefaultTitle" AllowDelete="@AllowDelete" />, Width, $"{BusinessName}.Singular", true, true, Height);
+        var ShowDetailDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicDetailView BusinessName="@BusinessName" IsSubpanel=true BusinessObjId="@item_rowid"
+    BLNameParentAttatchment="@BLNameParentAttatchment" ShowTitle="@DefaultTitle" AllowDelete="@AllowDelete" />, Width,
+            $"{BusinessName}.Singular", true, true, Height, standardWidth: ModalWidth);
         listview_key = Guid.NewGuid();
         StateHasChanged();
     }
 
+    /// <summary>
+    /// Opens the modal for deleting an item.
+    /// </summary>
+    /// <param name="item_rowid">The row ID of the item to delete.</param>
+    /// <param name="object_string">The string representation of the item.</param>
+
     public async Task OpenModalDelete(string item_rowid, string object_string)
     {
-        var modal_result = await SDKDialogService.ShowCustomDialog(ds => @<ConfirmDelete DialogService=@ds/>,"340px");   
-        if(modal_result == true) {
+        var modal_result = await SDKDialogService.ShowCustomDialog(ds => @<ConfirmDelete DialogService=@ds />, "340px");
+        if (modal_result == true)
+        {
             var backend = BackendRouterService.GetSDKBusinessModel(BusinessName, AuthenticationService);
             await backend.DeleteAsync(Convert.ToInt64(item_rowid));
             OnDelete?.Invoke();
@@ -141,49 +143,61 @@
 
     /*protected override void OnParametersSet()
     {
-        base.OnParametersSet();
-        listview_key = Guid.NewGuid();
-        StateHasChanged();     
+    base.OnParametersSet();
+    listview_key = Guid.NewGuid();
+    StateHasChanged();
     }*/
     public override async Task SetParametersAsync(ParameterView parameters)
     {
         bool shouldRestart = validateChanged(parameters);
         await base.SetParametersAsync(parameters);
-        if(shouldRestart){
+        if (shouldRestart)
+        {
             listview_key = Guid.NewGuid();
             StateHasChanged();
         }
-    }        
+    }
     private bool validateChanged(ParameterView parameters)
     {
         var type = this.GetType();
         var properties = type.GetProperties();
         var result = false;
 
-        foreach (var property in properties){
+        foreach (var property in properties)
+        {
             var HasCustomAttributes = property.GetCustomAttributes().Count() > 0;
-            if(!HasCustomAttributes){
+            if (!HasCustomAttributes)
+            {
                 continue;
             }
             var dataAnnotationProperty = property.GetCustomAttributes().First().GetType();
             var parameterType = typeof(ParameterAttribute);
-            if(dataAnnotationProperty == parameterType){
-                try{
-                    if (parameters.TryGetValue<string>(property.Name, out var value)){
+            if (dataAnnotationProperty == parameterType)
+            {
+                try
+                {
+                    if (parameters.TryGetValue<string>(property.Name, out var value))
+                    {
                         var valueProperty = property.GetValue(this, null);
-                        if(property.PropertyType == typeof(String)){
-                            if (value != null && !value.Equals(valueProperty)){
+                        if (property.PropertyType == typeof(String))
+                        {
+                            if (value != null && !value.Equals(valueProperty))
+                            {
                                 result = true;
                                 break;
                             }
-                        }else{
-                            if (value != null && value != valueProperty){
+                        }
+                        else
+                        {
+                            if (value != null && value != valueProperty)
+                            {
                                 result = true;
                                 break;
                             }
                         }
                     }
-                }catch (Exception e){}
+                }
+                catch (Exception e) { }
             }
         }
         return result;
