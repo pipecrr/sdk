@@ -2032,31 +2032,37 @@ namespace Siesa.SDK.Business
             List<dynamic> ErrorData = new List<dynamic>();
             foreach (var item in dataList){
                 JObject itemObj = (JObject)item;
-                dynamic result = CreateDynamicObjectFromJson(typeof(T), itemObj);
+                //List<string> Errors = new();
+                dynamic result = CreateDynamicObjectFromJson(typeof(T), itemObj, out ErrorData);
                 BaseObj = result;
-                var resultValidate = ValidateAndSave();
-                if(resultValidate.Errors.Count > 0){
-                    itemObj.Add("Errors", JToken.FromObject(resultValidate.Errors));
-                    ErrorData.Add(itemObj);
-                }else{
-                    SuccessData.Add(BaseObj.GetRowid());
+                if(!ErrorData.Any()){
+                    var resultValidate = ValidateAndSave();
+                    if(resultValidate.Errors.Count > 0){
+                        itemObj.Add("Errors", JToken.FromObject(resultValidate.Errors));
+                        ErrorData.Add(itemObj);
+                    }else{
+                        SuccessData.Add(BaseObj.GetRowid());
+                    }
                 }
             }
-            SDKResultImportDataDTO resultImport = new SDKResultImportDataDTO();
-            resultImport.Success = SuccessData;
-            resultImport.Errors = ErrorData;
+            SDKResultImportDataDTO resultImport = new SDKResultImportDataDTO
+            {
+                Success = SuccessData,
+                Errors = ErrorData
+            };
 
             return new ActionResult<SDKResultImportDataDTO>{Success = true, Data = resultImport};
         }
-        private T CreateDynamicObjectFromJson(Type type, dynamic dynamicObj)
+        private T CreateDynamicObjectFromJson(Type type, dynamic dynamicObj, out List<dynamic> ErrorsList ) 
         {
+            ErrorsList = new List<dynamic>();
+            List<string> ErrorsListInternal = new();
             using (SDKContext context = CreateDbContext()){
                 dynamic result = Activator.CreateInstance(type);
-                if (int.TryParse(dynamicObj.Rowid.Value.ToString(), out int Rowid))
-                {
-                    result = context.Set<T>().Find(Rowid);
-                }else{
-                    dynamicObj.Rowid = 0;
+                if( dynamicObj.ContainsKey("Rowid")){
+                    if(dynamicObj.Rowid.Type != JTokenType.String){
+                        result = context.Set<T>().Find((int)dynamicObj.Rowid.Value);
+                    }
                 }
                 foreach (var property in dynamicObj.Properties()){
                     var propertyName = property.Name;
@@ -2064,9 +2070,6 @@ namespace Siesa.SDK.Business
                     if(propertyEntity != null){
                         dynamic value = "";
                         //TODO : Revisar diferentes tipos de datos
-                        if(propertyEntity.PropertyType.BaseType == typeof(ForeignKeyAttribute)){
-                            var holi = propertyEntity.PropertyType.BaseType;
-                        }
                         if(propertyEntity.PropertyType.BaseType == typeof(Enum) ){
                             if(!string.IsNullOrEmpty(property.Value.Value) ){
                                 var values = Enum.GetValues(propertyEntity.PropertyType);
@@ -2089,27 +2092,94 @@ namespace Siesa.SDK.Business
                                 }
                                 type.GetProperty(propertyName).SetValue(result, value);
                             }
-                        }else if(propertyEntity.PropertyType == typeof(bool)){
-                                if(property.Value == 1){
-                                    value = true;
-                                }else{
-                                    value = false;
-                                }
-                                type.GetProperty(propertyName).SetValue(result, value);
                         }else{
-                            if(!string.IsNullOrEmpty(property.Value.ToString()) ){
-                                value = Convert.ChangeType(property.Value, propertyEntity.PropertyType);
-                                type.GetProperty(propertyName).SetValue(result, value);
-                                String.
+                            try
+                            {
+                                var ValueValidated = GetValidatedValue(type, property.Value.Value, propertyName );
+                                if(ValueValidated.Success && ValueValidated.Data != null){
+                                    value = ValueValidated.Data;
+                                    type.GetProperty(propertyName).SetValue(result, value);
+                                }else{
+                                    ErrorsListInternal.AddRange(ValueValidated.Errors);
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                ErrorsListInternal.Add(e.Message);
                             }
                         }
                     }
                 }
-
+                if(ErrorsListInternal.Any()){
+                    dynamicObj.Add("Errors", JToken.FromObject(ErrorsListInternal));
+                    ErrorsList.Add(dynamicObj);
+                }
                 return (T)result;
             }
         }
+
+        private ActionResult<dynamic> GetValidatedValue(Type t, dynamic DynamicValue, string NameProperty){ //TODO a SDK -> Cambiar a object
+        Type TypeEntity  = t.GetProperty(NameProperty).PropertyType;
+        Type TypeDynamicValue = DynamicValue.GetType();
+        if (TypeDynamicValue == typeof(string)){
+            if(string.IsNullOrEmpty(DynamicValue)) return new ActionResult<dynamic>{Success = true, Data=null};;
+        }
+        if(TypeDynamicValue == TypeEntity)
+        {
+            return new ActionResult<dynamic>{Success = true, Data=DynamicValue};
+        }else{
+            bool IsNumberDynamicValue = IsNumber(TypeDynamicValue);
+            bool IsNumberTypeEntity = IsNumber(TypeEntity);
+            if (IsNumberTypeEntity && IsNumberDynamicValue)
+            {
+                return new ActionResult<dynamic>{Success = true, Data = Convert.ChangeType(DynamicValue, TypeEntity)};
+            }else{
+                if(TypeEntity == typeof(bool)){
+                    if (IsNumberDynamicValue || TypeDynamicValue == typeof(bool))
+                    {
+                        return new ActionResult<dynamic>{Success = true, Data = TypeDynamicValue == typeof(bool)? DynamicValue : DynamicValue == 1};
+                    }
+                }
+                return new ActionResult<dynamic>{Success = false, Errors = new List<string>(){"No son compatibles"}};
+            }
+        }
+    }
+    private bool IsNumber(Type valor)
+    {
+        return valor == typeof(sbyte) ||
+               valor == typeof( byte )||
+               valor == typeof( short)||
+               valor == typeof( ushort) ||
+               valor == typeof( int) ||
+               valor == typeof( uint) ||
+               valor == typeof( long) ||
+               valor == typeof( ulong) ||
+               valor == typeof( float) ||
+               valor == typeof( double) ||
+               valor == typeof( decimal) ||
+               valor == typeof( System.Int32) ||
+               valor == typeof( System.Int16) ||
+               valor == typeof( System.Int64) ||
+               valor == typeof( System.Decimal) ||
+               valor == typeof(System.Nullable<sbyte>) ||
+               valor == typeof(System.Nullable<byte>) ||
+               valor == typeof(System.Nullable<short>) ||
+               valor == typeof(System.Nullable<ushort>) ||
+               valor == typeof(System.Nullable<int>) ||
+               valor == typeof(System.Nullable<uint>) ||
+               valor == typeof(System.Nullable<long>) ||
+               valor == typeof(System.Nullable<ulong>) ||
+               valor == typeof(System.Nullable<float>) ||
+               valor == typeof(System.Nullable<double>) ||
+               valor == typeof(System.Nullable<decimal>) ||
+               valor == typeof(System.Nullable<System.Int32>) ||
+               valor == typeof(System.Nullable<System.Int16>) ||
+               valor == typeof(System.Nullable<System.Int64>) ||
+               valor == typeof( System.Double);
     }
 
-
+    private bool CheckNumber<T>(Type valor){
+        return valor == typeof(T) || valor == typeof(Nullable<>).MakeGenericType(valor);
+    }
+    }
 }
