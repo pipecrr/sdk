@@ -39,7 +39,7 @@
                     <SDKTabs @ref="_TabsRef">
                         @foreach(var opnEntry in OpenedEntries)
                         {
-                            <SDKTab>
+                            <SDKTab @key="@opnEntry.Name">
                                 <TabTemplate>
                                     <a role="tab" class="nav-link @GetActiveTabCss(opnEntry)" @onclick="(() => _fileTreeRef?.Select(opnEntry))">
                                         <div class="d-flex justify-content-between align-items-center">
@@ -108,12 +108,12 @@
     
     private async Task OpenDemoDialog()
     {
-        var selectedCode = await SDKDialogService.ShowCustomDialog(ds => @<OpenDemoComponent DialogService="@ds"/>, ShowTitle: false, standardWidth: SDKModalWidth.Medium, CssClass: "open-demo-dialog");
-        if (selectedCode != null)
+        Tuple<string, string> selectedCode = await SDKDialogService.ShowCustomDialog(ds => @<OpenDemoComponent DialogService="@ds"/>, ShowTitle: false, standardWidth: SDKModalWidth.Medium, CssClass: "open-demo-dialog");
+        if (selectedCode != null && selectedCode.Item1 != null && selectedCode.Item2 != null)
         {
-            await _codeEditor.SetValue(selectedCode);
+            await LoadSingleCode(selectedCode.Item2, selectedCode.Item1);
+            //await _codeEditor.SetValue(selectedCode);
             _ = SDKNotificationService.ShowSuccess("Code loaded");
-            _ = RunCode();
         }
         else
         {

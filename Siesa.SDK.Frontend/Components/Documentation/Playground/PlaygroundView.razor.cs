@@ -9,6 +9,7 @@ using Siesa.SDK.Frontend.Components.Documentation;
 using Siesa.SDK.Frontend.Components.Visualization;
 using Microsoft.AspNetCore.Components.Web;
 using System.Collections.Generic;
+using DevExpress.Data.Mask.Internal;
 
 namespace Siesa.SDK.Frontend.Components.Documentation.Playground
 {
@@ -25,7 +26,6 @@ namespace Siesa.SDK.Frontend.Components.Documentation.Playground
         [Inject]
         private SDKNotificationService SDKNotificationService { get; set; }
         private bool _isLoaded;
-        private CodeViewer _codeEditor;
         private Type _compiledType;
         private string _errorMessage;
         private ErrorBoundary? errorBoundary;
@@ -168,7 +168,9 @@ namespace Siesa.SDK.Frontend.Components.Documentation.Playground
         
         private async Task RunCode()
         {
-            var code = await _codeEditor.GetValue();
+            if(_fileTreeRef == null) return;
+            Entry selectedItem = _fileTreeRef.GetSelectedItem() as Entry;
+            var code = selectedItem.Code;
             try
             {
                 _compiling = true;
@@ -186,6 +188,22 @@ namespace Siesa.SDK.Frontend.Components.Documentation.Playground
                 _compiling = false;
             }
             StateHasChanged();
+        }
+        private async Task LoadSingleCode(string code, string fileName = null)
+        {
+            Entries.Clear();
+            Entries.Add(new Entry
+            {
+                Name = fileName ?? "Dummy.razor",
+                Code = code
+            });
+            OpenedEntries.Clear();
+            InvokeAsync(StateHasChanged);
+            await Task.Delay(100).ConfigureAwait(true);
+            OpenedEntries.Add(Entries[0]);
+            _fileTreeRef.Select(Entries[0]);
+            InvokeAsync(StateHasChanged);
+            _ = RunCode();
         }
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
