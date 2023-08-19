@@ -10,6 +10,7 @@ using Siesa.SDK.Frontend.Components.Visualization;
 using Microsoft.AspNetCore.Components.Web;
 using System.Collections.Generic;
 using DevExpress.Data.Mask.Internal;
+using System.Linq;
 
 namespace Siesa.SDK.Frontend.Components.Documentation.Playground
 {
@@ -102,7 +103,8 @@ namespace Siesa.SDK.Frontend.Components.Documentation.Playground
             {
                 Name = "New Item",
                 IsDirectory = isDirectory,
-                Children = new List<Entry>()
+                Children = new List<Entry>(),
+                Parent = parent
             });
             StateHasChanged();
         }
@@ -120,7 +122,7 @@ namespace Siesa.SDK.Frontend.Components.Documentation.Playground
         public void OnSelectItem(Entry entry)
         {
             if(entry.IsDirectory) return;
-            if (!OpenedEntries.Contains(entry))
+            if (!OpenedEntries.Contains(entry) && !OpenedEntries.Where(x => x.GetPath() == entry.GetPath()).Any())
             {
                 OpenedEntries.Add(entry);
             }

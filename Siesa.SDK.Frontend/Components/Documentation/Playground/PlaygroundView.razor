@@ -39,7 +39,7 @@
                     <SDKTabs @ref="_TabsRef">
                         @foreach(var opnEntry in OpenedEntries)
                         {
-                            <SDKTab @key="@opnEntry.Name">
+                            <SDKTab @key="@opnEntry.GetPath()">
                                 <TabTemplate>
                                     <a role="tab" class="nav-link @GetActiveTabCss(opnEntry)" @onclick="(() => _fileTreeRef?.Select(opnEntry))">
                                         <div class="d-flex justify-content-between align-items-center">

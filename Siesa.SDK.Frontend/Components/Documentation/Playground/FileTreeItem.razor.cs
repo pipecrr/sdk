@@ -10,6 +10,20 @@ public class Entry
     public bool IsDirectory { get; set; }
     public List<Entry> Children { get; set; }
     public string Code { get; set; }
+    public Entry Parent { get; set; }
+
+    public string GetPath()
+    {
+        var path = Name;
+        var parent = Parent;
+        while (parent != null)
+        {
+            path = parent.GetPath() + "/" + path;
+            parent = parent.Parent;
+        }
+
+        return path;
+    }
 }
 
 public partial class FileTreeItem: ComponentBase
