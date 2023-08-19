@@ -1,0 +1,7 @@
+::deep .rz-treenode-content-selected .rz-treenode-label {
+    background-color: var(--color_primary) !important;
+}
+
+::deep .rz-treenode-content:not(.rz-treenode-content-selected):hover .rz-treenode-label {
+    background-color: var(--color_primary) !important;
+}

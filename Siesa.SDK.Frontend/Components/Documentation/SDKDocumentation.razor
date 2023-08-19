@@ -45,7 +45,7 @@
                 {
                     if (SelectedComponent.ComponentType == typeof(PlaygroundView))
                     {
-                        <DynamicComponent Type="@SelectedComponent.ComponentType" />
+                        @* <DynamicComponent Type="@SelectedComponent.ComponentType" /> *@
                     }
                     else
                     {
@@ -57,7 +57,7 @@
                         
                         </SDKTab>
                             <SDKTab IconCssClass="fa-solid fa-code">
-                                <CodeViewer @key="@_codeViewerId" Code="@ViewSourceCode(@SelectedComponent)" CssClass="vh-100" ReadOnly="true" />
+                                <CodeViewer Language="razor" @key="@_codeViewerId" Code="@ViewSourceCode(@SelectedComponent)" CssClass="vh-100" ReadOnly="true" />
                             </SDKTab>
                         </SDKTabs>
                         
