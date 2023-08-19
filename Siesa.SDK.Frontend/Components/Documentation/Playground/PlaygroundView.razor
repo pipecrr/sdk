@@ -44,7 +44,7 @@
                                     <a role="tab" class="nav-link @GetActiveTabCss(opnEntry)" @onclick="(() => _fileTreeRef?.Select(opnEntry))">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div>@opnEntry.Name</div>
-                                            <a @onclick="(() => CloseEntry(opnEntry))" class="close ml-1 close-tab-button">
+                                            <a @onclick="(() => CloseEntry(opnEntry))" class="close ml-1 close-tab-button" @onclick:stopPropagation="true">
                                                 <SDKIcon Name="fa-times" />
                                             </a>
                                         </div>
@@ -111,7 +111,7 @@
         Tuple<string, string> selectedCode = await SDKDialogService.ShowCustomDialog(ds => @<OpenDemoComponent DialogService="@ds"/>, ShowTitle: false, standardWidth: SDKModalWidth.Medium, CssClass: "open-demo-dialog");
         if (selectedCode != null && selectedCode.Item1 != null && selectedCode.Item2 != null)
         {
-            await LoadSingleCode(selectedCode.Item2, selectedCode.Item1);
+            _ = LoadSingleCode(selectedCode.Item2, selectedCode.Item1);
             //await _codeEditor.SetValue(selectedCode);
             _ = SDKNotificationService.ShowSuccess("Code loaded");
         }

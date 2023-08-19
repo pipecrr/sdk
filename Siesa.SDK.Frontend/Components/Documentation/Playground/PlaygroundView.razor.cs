@@ -37,7 +37,6 @@ namespace Siesa.SDK.Frontend.Components.Documentation.Playground
         private string ChangeLayoutIcon => _currentLayout == Radzen.Orientation.Horizontal ? "fa-columns-3" : "fa-table-columns fa-rotate-270";
         private List<Entry> Entries { get; set; } = new();
         private List<Entry> OpenedEntries { get; set; } = new();
-        private Entry _selectedEntry;
         private SDKTabs _TabsRef;
         private bool _showFileTopbarButtons;
         private FileTree _fileTreeRef;
@@ -110,20 +109,16 @@ namespace Siesa.SDK.Frontend.Components.Documentation.Playground
 
         private void AddFolder()
         {
-            if(_selectedEntry != null && !_selectedEntry.IsDirectory) return;
-            AddItem(_selectedEntry, true);
+            AddItem(null, true);
         }
         
         private void AddFile()
         {
-            if(_selectedEntry != null && !_selectedEntry.IsDirectory) return;
-            AddItem(_selectedEntry, false);
+            AddItem(null, false);
         }
         
         public void OnSelectItem(Entry entry)
         {
-            
-            _selectedEntry = entry;
             if(entry.IsDirectory) return;
             if (!OpenedEntries.Contains(entry))
             {
@@ -140,7 +135,26 @@ namespace Siesa.SDK.Frontend.Components.Documentation.Playground
         {
             if (OpenedEntries.Contains(entry))
             {
+                var index = OpenedEntries.IndexOf(entry);
                 OpenedEntries.Remove(entry);
+                if(_fileTreeRef != null)
+                {
+                    if(_fileTreeRef.GetSelectedItem() == entry)
+                    {
+                        if(index == 0 && OpenedEntries.Count == 0)
+                        {
+                            _fileTreeRef.Select(null);
+                        }
+                        else if(index == 0 && OpenedEntries.Count > 0)
+                        {
+                            _fileTreeRef.Select(OpenedEntries[0]);
+                        }
+                        else if(index > 0 && OpenedEntries.Count > 0)
+                        {
+                            _fileTreeRef.Select(OpenedEntries[index - 1]);
+                        }
+                    }
+                }
             }
         }
 
