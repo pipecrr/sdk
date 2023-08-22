@@ -4,6 +4,12 @@ using Microsoft.AspNetCore.Components;
 
 namespace Siesa.SDK.Frontend.Components.Documentation.Playground;
 
+/// <summary>
+/// Represents a file or directory entry in the file tree.
+/// </summary>
+/// <summary>
+/// Represents a file or directory entry in the file tree.
+/// </summary>
 public class Entry
 {
     public string Name { get; set; }
