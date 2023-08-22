@@ -2121,18 +2121,39 @@ namespace Siesa.SDK.Business
         private ActionResult<dynamic> GetValidatedValue(Type t, dynamic DynamicValue, string NameProperty){ //TODO a SDK -> Cambiar a object
         Type TypeEntity  = t.GetProperty(NameProperty).PropertyType;
         Type TypeDynamicValue = DynamicValue.GetType();
+        //bool holib = char.IsNumber(DynamicValue);
         if (TypeDynamicValue == typeof(string)){
-            if(string.IsNullOrEmpty(DynamicValue)) return new ActionResult<dynamic>{Success = true, Data=null};;
+            if(string.IsNullOrEmpty(DynamicValue)) return new ActionResult<dynamic>{Success = true, Data=null};
         }
         if(TypeDynamicValue == TypeEntity)
         {
             return new ActionResult<dynamic>{Success = true, Data=DynamicValue};
         }else{
-            bool IsNumberDynamicValue = IsNumber(TypeDynamicValue);
-            bool IsNumberTypeEntity = IsNumber(TypeEntity);
-            if (IsNumberTypeEntity && IsNumberDynamicValue)
+
+        
+            bool IsNumberDynamicValue = IsNumber(TypeEntity, ref DynamicValue);
+            
+            // bool IsNumberTypeEntity = IsNumber(TypeEntity,DynamicValue);
+            if ( IsNumberDynamicValue)
             {
-                return new ActionResult<dynamic>{Success = true, Data = Convert.ChangeType(DynamicValue, TypeEntity)};
+                return new ActionResult<dynamic>{Success = true, Data=DynamicValue};
+                // string holi = DynamicValue.ToString();
+                // // return new ActionResult<dynamic>{Success = true, Data = Nullable.GetUnderlyingType(TypeEntity) != null ? DynamicValue : Convert.ChangeType(DynamicValue, TypeEntity)};
+                // if (int.TryParse(DynamicValue, out int number))
+                // {
+                //     return new ActionResult<dynamic>{Success = true, Data=number};
+                // }
+                // else if (double.TryParse(DynamicValue, NumberStyles.Any, CultureInfo.InvariantCulture, out double doubleNumber))
+                // {
+                //     return new ActionResult<dynamic>{Success = true, Data=doubleNumber};
+                // }
+                // else if (decimal.TryParse(DynamicValue, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal decimalNumber))
+                // {
+                //     return new ActionResult<dynamic>{Success = true, Data=decimalNumber};
+                // }
+                // else{
+                //     return new ActionResult<dynamic>{Success = true, Data=null};
+                // }
             }else{
                 if(TypeEntity == typeof(bool)){
                     if (IsNumberDynamicValue || TypeDynamicValue == typeof(bool))
@@ -2144,42 +2165,61 @@ namespace Siesa.SDK.Business
             }
         }
     }
-    private bool IsNumber(Type valor)
+    private bool IsNumber(Type valor, ref dynamic DynamicValue)
     {
-        return valor == typeof(sbyte) ||
-               valor == typeof( byte )||
-               valor == typeof( short)||
-               valor == typeof( ushort) ||
-               valor == typeof( int) ||
-               valor == typeof( uint) ||
-               valor == typeof( long) ||
-               valor == typeof( ulong) ||
-               valor == typeof( float) ||
-               valor == typeof( double) ||
-               valor == typeof( decimal) ||
-               valor == typeof( System.Int32) ||
-               valor == typeof( System.Int16) ||
-               valor == typeof( System.Int64) ||
-               valor == typeof( System.Decimal) ||
-               valor == typeof(System.Nullable<sbyte>) ||
-               valor == typeof(System.Nullable<byte>) ||
-               valor == typeof(System.Nullable<short>) ||
-               valor == typeof(System.Nullable<ushort>) ||
-               valor == typeof(System.Nullable<int>) ||
-               valor == typeof(System.Nullable<uint>) ||
-               valor == typeof(System.Nullable<long>) ||
-               valor == typeof(System.Nullable<ulong>) ||
-               valor == typeof(System.Nullable<float>) ||
-               valor == typeof(System.Nullable<double>) ||
-               valor == typeof(System.Nullable<decimal>) ||
-               valor == typeof(System.Nullable<System.Int32>) ||
-               valor == typeof(System.Nullable<System.Int16>) ||
-               valor == typeof(System.Nullable<System.Int64>) ||
-               valor == typeof( System.Double);
+        try
+        {
+            if(valor == typeof( sbyte) || valor == typeof( sbyte?)){
+                DynamicValue = (sbyte)DynamicValue;
+                    return true; 
+            }
+            if(valor == typeof( byte) || valor == typeof( byte?)){
+                DynamicValue = (byte)DynamicValue;
+                    return true; 
+            }
+            if(valor == typeof( short) || valor == typeof( short?)){
+                DynamicValue = (short)DynamicValue;
+                    return true; 
+            }
+            if(valor == typeof( ushort) || valor == typeof( ushort?)){
+                DynamicValue = (ushort)DynamicValue;
+                    return true; 
+            }
+            if(valor == typeof( int) || valor == typeof( int?)){
+                DynamicValue = (int)DynamicValue;
+                    return true; 
+            }
+            if(valor == typeof( uint) || valor == typeof( uint?)){
+                DynamicValue = (uint)DynamicValue;
+                    return true; 
+            }
+            if(valor == typeof( long) || valor == typeof( long?)){
+                DynamicValue = (long)DynamicValue;
+                    return true; 
+            }
+            if(valor == typeof( ulong) || valor == typeof( ulong?)){
+                DynamicValue = (ulong)DynamicValue;
+                    return true; 
+            }
+            if(valor == typeof( double) || valor == typeof( double?)){
+                DynamicValue = (double)DynamicValue;
+                    return true; 
+            }
+            if(valor == typeof( float) || valor == typeof( float?)){
+                DynamicValue = (float)DynamicValue;
+                    return true; 
+            }
+            if(valor == typeof( decimal) || valor == typeof( decimal?)){
+                DynamicValue = (decimal)DynamicValue;
+                    return true; 
+            }
+            return false;
+        }
+        catch (System.Exception)
+        {
+            return false;
+        }
     }
 
-    private bool CheckNumber<T>(Type valor){
-        return valor == typeof(T) || valor == typeof(Nullable<>).MakeGenericType(valor);
-    }
     }
 }
