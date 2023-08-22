@@ -19,7 +19,7 @@ namespace Siesa.SDK.Shared.Services
         public void AddObserver(BackendInfo observer);
         public void RemoveObserver(BackendInfo observer);
         public Task NotifyObservers();
-        public Task<List<BusinessModel>> RegisterServiceInMaster(List<BusinessModel> businessNames = null);
+        public Task<List<BusinessModel>> RegisterServiceInMaster(List<BusinessModel> businessNames = null, bool _isFrontendService = false);
         public BackendRegistry GetBackendRegistry(string backendName, IAuthenticationService authenticationService);
         public SDKBusinessModel GetSDKBusinessModel(string backendName, IAuthenticationService authenticationService);
         public string GetViewdef(string businessName, string viewName);
@@ -107,7 +107,7 @@ namespace Siesa.SDK.Shared.Services
             }
         }
 
-        public async Task<List<BusinessModel>> RegisterServiceInMaster(List<BusinessModel> businessNames = null)
+        public async Task<List<BusinessModel>> RegisterServiceInMaster(List<BusinessModel> businessNames = null, bool _isFrontendService = false)
         {
             try
             {
@@ -123,7 +123,8 @@ namespace Siesa.SDK.Shared.Services
                     BackendInfo = new Protos.BackendInfo
                     {
                         BackendName = "",
-                        BackendUrl = this.serviceConfiguration.GetCurrentUrl()
+                        BackendUrl = this.serviceConfiguration.GetCurrentUrl(),
+                        //isFrontendService = _isFrontendService
                     }
                 };
                 if (businessNames != null)

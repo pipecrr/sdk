@@ -107,14 +107,6 @@ namespace Siesa.SDK.Shared.Application
         {
             try
             {
-                 //TODO: Get BusinessList from Backends 
-                //var backendRouterService = _serviceProvider.GetRequiredService<IBackendRouterService>();
-
-                //var BusinessList = backendRouterService.GetBusinessModelList();
-
-                // var bls = typeof(BackendRegistry).Assembly.GetTypes()
-                // .Where(t => t.GetInterfaces().Any(i => i.Name == "IBLBase`1"));
-
                 foreach (var bl in BusinessList)
                 {
                     var BLMethod = Siesa.SDK.Shared.Utilities.Utilities.SearchType($"{bl.Namespace}.{bl.Name}", true).GetMethod("SubscribeToQueues");
@@ -125,7 +117,6 @@ namespace Siesa.SDK.Shared.Application
                         var blInstance = ActivatorUtilities.CreateInstance(_serviceProvider, blType);
                         BLMethod.Invoke(blInstance, null);
                     }
-
                 }
             }
             catch (System.Exception)
