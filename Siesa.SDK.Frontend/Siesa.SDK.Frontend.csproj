@@ -13,6 +13,7 @@
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   		<DisableGclm>true</DisableGclm>
 		<VersionSuffix>dev</VersionSuffix>
+		<NoWarn>8632,8669,1591</NoWarn>
 	</PropertyGroup>
 	<PropertyGroup>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>

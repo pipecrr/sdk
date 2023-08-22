@@ -1,7 +1,7 @@
 .playground-container{
     height: 100vh;
     width: 100%;
-    background-color: #1e1e1e;
+    background-color: #181818;
     max-height: 100vh;
     overflow: hidden;
 }
@@ -11,19 +11,31 @@
     flex-direction: column;
 }
 
-.code-container{
+.code-container, .result-container, .filetree-container{
     display: flex;
     flex-grow: 1;
     flex-direction: column;
 }
 
-.playground-container ::deep .code-container > div {
+.result-container{
+    background-color: #fff;
+}
+
+.result-container .container-title{
+    color: #000;
+}
+
+/* .playground-container ::deep .code-container > div {
     flex-grow: 1;
     display: flex;
+} */
+::deep .dx-tabs-content.active > div{
+    height: 100%;
+    display: flex;
+    background-color: #1e1e1e;
 }
 
 ::deep .code-viewer-area{
-    /*height: 100%;*/
     width: 100%;
     flex-grow: 1;
 }
@@ -47,7 +59,7 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    background-color: #1e1e1e;
+    background-color: #181818;
     padding: 0.5rem;
     border-bottom: 1px solid #fff;
 }
@@ -59,4 +71,55 @@
 }
 ::deep .playground-button{
     border-radius: 1px !important;
+}
+::deep .rz-splitter-vertical > .rz-splitter-bar {
+    height: 5px !important;
+}
+
+::deep .rz-splitter-horizontal > .rz-splitter-bar {
+    width: 5px !important;
+}
+
+::deep .code-container .nav-tabs .nav-link.active{
+    background-color: #1e1e1e !important;
+    color: #fff !important;
+}
+
+::deep .code-container .nav-tabs .nav-link:hover{
+    background-color: #1e1e1e !important;
+    color: #fff !important;
+}
+
+::deep .code-container .nav-tabs .nav-link:not(.active):focus, ::deep .code-container .nav-tabs .nav-link:not(.active):hover {
+    border-color: #3b3c3d !important;
+    box-shadow: none !important;
+}
+
+.filetree-topbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.filetree-topbar .filetree-topbar-buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+}
+.filetree-topbar .filetree-topbar-buttons ::deep .btn {
+    color: #d7d7d7;
+}
+
+.filetree-topbar .filetree-topbar-buttons ::deep .btn:hover {
+    color: #fff;
+}
+
+.filetree-topbar .filetree-topbar-buttons ::deep .btn:focus {
+    box-shadow: none !important;
+}
+
+::deep .close-tab-button{
+    font-size: 1rem;
 }
