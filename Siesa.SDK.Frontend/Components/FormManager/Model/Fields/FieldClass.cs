@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Microsoft.IdentityModel.Tokens;
 using Siesa.SDK.Frontend.Utils;
 using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
@@ -295,24 +296,65 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 });
             }
             if (!OnChangeCell.IsNullOrEmpty()){
-                var methodSdkOnChangeCell = EditFormContext.Model.GetType().GetMethod("SdkOnChangeCell");
-                if(methodSdkOnChangeCell != null){
-                    methodSdkOnChangeCell.Invoke(EditFormContext.Model, new []{BindModel});
-                }
-                var methodOnChangeCell = EditFormContext.Model.GetType().GetMethod(OnChangeCell);
-                if(methodOnChangeCell != null && !OnChangeCell.Equals("SdkOnChangeCell", StringComparison.Ordinal)){
-                    methodOnChangeCell.Invoke(EditFormContext.Model, new []{BindModel});
-                }
+                _ = Task.Run(async () =>
+                {
+                    bool modifyRow = true;
+
+                    if (!OnChangeCell.Equals("SdkOnChangeCell", StringComparison.Ordinal))
+                    {
+                        modifyRow = await EvaluateCellChangeAsync(OnChangeCell, EditFormContext.Model, true);
+                    }
+
+                    if (modifyRow)
+                    {
+                        await EvaluateCellChangeAsync("SdkOnChangeCell", EditFormContext.Model);
+                        StateHasChanged();
+                    }
+                    
+                    if (formView != null)
+                    {
+                        _ = InvokeAsync(() => formView.Refresh());
+                    }
+                });
             }
             
             CheckUniqueValue();
+        }
+
+        private async Task<bool> EvaluateCellChangeAsync(string code, object model, bool hasReturn = false)
+        {
+            dynamic eject = await Evaluator.EvaluateCode(code, model).ConfigureAwait(true);
+            MethodInfo methodInfo = (MethodInfo)(eject?.GetType().GetProperty("Method").GetValue(eject));
+
+            if (methodInfo != null)
+            {
+                if (methodInfo.GetCustomAttributes(typeof(AsyncStateMachineAttribute), false).Length > 0)
+                {
+                    if (hasReturn)
+                    {
+                        return await eject(BindModel).ConfigureAwait(true);
+                    }else{
+                        await eject(BindModel).ConfigureAwait(true);
+                    }
+                }
+                else
+                {
+                    if (hasReturn)
+                    {
+                        return eject(BindModel);
+                    }else{
+                        eject(BindModel);
+                    }
+                }
+            }
+
+            return true;
         }
 
         public RenderFragment? FieldValidationTemplate
         {
             get
             {
-
                 return _fieldValidationTemplate != null ? _fieldValidationTemplate : builder =>
                 {
                     var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);

@@ -33,5 +33,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         /// Gets or sets the list of additional detail fields for the BLDocument.
         /// </summary>
         public List<string> ExtraDetailFields { get; set; } = new List<string>();
+        /// <summary>
+        /// Gets or sets of actions to Add a row to the form.
+        /// </summary>
+        public string ActionAddRow { get; set; }
+        /// <summary>
+        /// Gets or sets of actions to Delete a row from the form.
+        /// </summary>
+        public string ActionDeleteRow { get; set; }
     }
 }

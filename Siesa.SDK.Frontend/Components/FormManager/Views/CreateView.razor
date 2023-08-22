@@ -93,13 +93,13 @@ else if (Panels == null || Panels.Count <= 0)
             }
         </SDKFormLayout>
         @if(IsDocument){
-            <SDKButton ResourceTag="Custom.Document.Button.Create" Click="@ClickAddRow"/>
+            <SDKButton ResourceTag="Custom.Document.Button.Create" Click="@(async () => await ClickAddRow())"/>
             <SDKGrid Data="@BusinessObj.ChildObjs" TItem="object" @ref="RefGrid">
                 <Columns>
                     <SDKGridColumn Width="150px" ResourceTag="Action.Generic.Actions" TItem="object">
                         <Template Context="dataActions">
                             <div class="d-flex justify-content-center">
-                                <SDKButton IconCssClass="fa-trash-can" IsActionButton="true" Click="@(()=>ClickDeleteRow(dataActions))"/>
+                                <SDKButton IconCssClass="fa-trash-can" IsActionButton="true" Click="@(async ()=> await ClickDeleteRow(dataActions))"/>
                             </div>
                         </Template>
                     </SDKGridColumn>
@@ -107,7 +107,11 @@ else if (Panels == null || Panels.Count <= 0)
                     {
                         <SDKGridColumn TItem="object" Title="@column.Name">
                             <Template Context="data">
-                                    <DynamicField FieldOpt="@column" ModelObj="@data"/>
+                                <CascadingValue Value="@EditFormContext">
+                                    <CascadingValue Value="this">
+                                        <FieldOptComponent Column="@column" Data="@data"/>
+                                    </CascadingValue>
+                                </CascadingValue>
                             </Template>
                         </SDKGridColumn>
                     }

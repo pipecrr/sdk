@@ -1,0 +1,22 @@
+﻿@using Siesa.SDK.Frontend.Components.FormManager.ViewModels
+
+<DynamicField FieldOpt="@Column" ModelObj="@Data"/>
+
+@code
+{
+    [Parameter]
+    public dynamic Data { get; set; }
+    [Parameter]
+    public FieldOptions Column { get; set; }
+    [CascadingParameter]
+    public FormView FormView { get; set; }
+    
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        if (FormView != null)
+        {
+            FormView.ListFieldOptComponents.Add(this);
+        }
+    }
+}

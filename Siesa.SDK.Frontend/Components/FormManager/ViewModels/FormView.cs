@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using Siesa.SDK.Frontend.Utils;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Frontend.Services;
@@ -21,6 +23,7 @@ using Siesa.SDK.Frontend.Extension;
 using Microsoft.Extensions.Configuration;
 using Siesa.Global.Enums;
 using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
+using Siesa.SDK.Frontend.Components.FormManager.Views;
 using Siesa.SDK.Shared.Utilities;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
@@ -91,7 +94,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         /// Gets or sets a value indicating whether the business object is a document.
         /// </summary>
         public bool IsDocument { get; set; }
-
+        public List<FieldOptComponent> ListFieldOptComponents  = new List<FieldOptComponent>();
         public int CountUnicErrors = 0;
 
         private string _viewdefName = "";
@@ -310,7 +313,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 if(item.CustomAttributes == null){
                     item.CustomAttributes = new Dictionary<string, object>();
                 }
-                item.CustomAttributes.Add("sdk-change-cell", "SdkOnChangeCell()");
+                if (!item.CustomAttributes.TryGetValue("sdk-change-cell", out object value))
+                {
+                    item.CustomAttributes.Add("sdk-change-cell", "SdkOnChangeCell");
+                }
             }
         }
 
@@ -416,92 +422,123 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 }
                 EvaluateFields(panel.Fields);
             }
+
+            if (IsDocument && ListFieldOptComponents.Any())
+            {
+                foreach (var fieldOptComponent in ListFieldOptComponents)
+                {
+                    FieldOptions field = fieldOptComponent.Column;
+                    dynamic data = fieldOptComponent.Data;
+                    _ = Task.Run(async () =>
+                    {
+                        bool shouldUpdate = await UpdateCustomAttr(field, true, data).ConfigureAwait(true);
+                        if(shouldUpdate)
+                        {
+                            _ = InvokeAsync(() => StateHasChanged());
+                        }
+                    });
+                }
+            }
         }
 
         private void EvaluateFields(List<FieldOptions> panelFields)
         {
             foreach (var field in panelFields)
             {
-                if(field.Fields != null && field.Fields.Count > 0)
-                {
-                    EvaluateFields(field.Fields);
-                }
-
-                if(field.CustomAttributes == null){
-                    continue;
-                }
-
-                var fieldCustomAttr = field.CustomAttributes?.Where(x => x.Key.StartsWith("sdk-",StringComparison.Ordinal) && x.Key != "sdk-change");
-                
-                List<string> allowAttr = new List<string>(){
-                    "sdk-show",
-                    "sdk-hide",
-                    "sdk-required",
-                    "sdk-readonly",
-                    "sdk-disabled"
-                }; //TODO: Enum
-
                 _ = Task.Run(async () =>
                 {
-                    bool shouldUpdate = false;
-                    if(fieldCustomAttr == null){
-                        return;
-                    }
-                    foreach (var attr in fieldCustomAttr)
-                    {
-                        if(!allowAttr.Contains(attr.Key))
-                        {
-                            continue;
-                        }
-                        try
-                        {
-                            var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
-                            switch (attr.Key)
-                            {
-                                case "sdk-show":
-                                    if(field.Hidden != !result)
-                                    {
-                                        field.Hidden = !result;
-                                        shouldUpdate = true;
-                                    }
-                                    break;
-                                case "sdk-hide":
-                                    if(field.Hidden != result)
-                                    {
-                                        field.Hidden = result;
-                                        shouldUpdate = true;
-                                    }
-                                    break;
-                                case "sdk-required":
-                                    if(field.Required != result)
-                                    {
-                                        field.Required = result;
-                                        shouldUpdate = true;
-                                    }
-                                    break;
-                                case "sdk-readonly":
-                                case "sdk-disabled":
-                                    if(field.Disabled != result)
-                                    {
-                                        field.Disabled = result;
-                                        shouldUpdate = true;
-                                    }
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                        catch (System.Exception ex)
-                        {
-                            Console.WriteLine($"Error: {ex.Message}");
-                        }
-                    }
+                    bool shouldUpdate = await UpdateCustomAttr(field).ConfigureAwait(true);
                     if(shouldUpdate)
                     {
                         _ = InvokeAsync(() => StateHasChanged());
                     }
                 });
             }
+        }
+        
+        private async Task<bool> UpdateCustomAttr(FieldOptions field, bool isFieldDocument = false, dynamic data = null)
+        {
+            if(field.Fields != null && field.Fields.Count > 0)
+            {
+                EvaluateFields(field.Fields);
+            }
+
+            if(field.CustomAttributes == null){
+                return false;
+            }
+            
+            var fieldCustomAttr = field.CustomAttributes.Where(x => x.Key.StartsWith("sdk-",StringComparison.Ordinal) && x.Key != "sdk-change");
+            
+            List<string> allowAttr = new List<string>(){
+                "sdk-show",
+                "sdk-hide",
+                "sdk-required",
+                "sdk-readonly",
+                "sdk-disabled"
+            }; //TODO: Enum
+
+            bool shouldUpdate = false;
+            
+            foreach (var attr in fieldCustomAttr)
+            {
+                if(!allowAttr.Contains(attr.Key))
+                {
+                    continue;
+                }
+                try
+                {
+                    string attrValue = (string)attr.Value;
+                    if (isFieldDocument && data != null)
+                    {
+                        var indexData = BusinessObj.ChildObjs.IndexOf(data);
+                        if (attrValue.Contains("data_detail", StringComparison.Ordinal))
+                        {
+                            attrValue = attrValue.Replace("data_detail", $"ChildObjs[{indexData}]",
+                                StringComparison.Ordinal);
+                        }
+                    }
+                    var result = (bool)await Evaluator.EvaluateCode(attrValue, BusinessObj);
+                    switch (attr.Key)
+                    {
+                        case "sdk-show":
+                            if(field.Hidden != !result)
+                            {
+                                field.Hidden = !result;
+                                shouldUpdate = true;
+                            }
+                            break;
+                        case "sdk-hide":
+                            if(field.Hidden != result)
+                            {
+                                field.Hidden = result;
+                                shouldUpdate = true;
+                            }
+                            break;
+                        case "sdk-required":
+                            if(field.Required != result)
+                            {
+                                field.Required = result;
+                                shouldUpdate = true;
+                            }
+                            break;
+                        case "sdk-readonly":
+                        case "sdk-disabled":
+                            if(field.Disabled != result)
+                            {
+                                field.Disabled = result;
+                                shouldUpdate = true;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex.Message}");
+                }
+            }
+            return shouldUpdate;
         }
 
         protected override async Task OnInitializedAsync()
@@ -761,7 +798,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         /// <summary>
         /// Method to add a new row to the grid.
         /// </summary>
-        public void ClickAddRow()
+        public async Task ClickAddRow()
         {
             Type typeChild = BusinessObj.ChildType();
             dynamic obj = Activator.CreateInstance(typeChild);
@@ -770,22 +807,48 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             {
                 BusinessObj.ChildObjs = Activator.CreateInstance(ListChildObj);
             }
+
+            if (!String.IsNullOrEmpty(FormViewModel.ActionAddRow))
+            {
+                obj = await EjectMethod(obj, FormViewModel.ActionAddRow);
+            }
             BusinessObj.ChildObjs.Add(obj);
             RefGrid.Reload();
         }
-        
+
         /// <summary>
         /// Method to delete a row from the grid.
         /// </summary>
         /// <param name="obj">The object to delete.</param>
-        public void ClickDeleteRow(dynamic obj){
-            BusinessObj.ChildObjs.Remove(obj);
-            if(obj.Rowid != null && obj.Rowid > 0){
-                BusinessObj.ChildObjsDeleted.Add(obj);
-                BusinessObj.ChildRowidsUpdated.Remove(obj.Rowid);
+        public async Task ClickDeleteRow(dynamic obj){
+            bool delete = true;
+            if (!String.IsNullOrEmpty(FormViewModel.ActionDeleteRow))
+            {
+                delete = await EjectMethod(obj, FormViewModel.ActionDeleteRow);
             }
+            if(delete){
+                BusinessObj.ChildObjs.Remove(obj);
+                if(obj.Rowid != null && obj.Rowid > 0){
+                    BusinessObj.ChildObjsDeleted.Add(obj);
+                    BusinessObj.ChildRowidsUpdated.Remove(obj.Rowid);
+                }
+            }
+
             RefGrid.Reload();
         }
-
+        
+        private async Task<dynamic> EjectMethod(dynamic obj, string action)
+        {
+            var eject = await Evaluator.EvaluateCode(action, BusinessObj);
+            MethodInfo methodInfo = (MethodInfo)(eject.GetType().GetProperty("Method").GetValue(eject));
+            if(methodInfo != null){
+                if(methodInfo.GetCustomAttributes(typeof(AsyncStateMachineAttribute), false).Length > 0){
+                    obj = await eject(obj).ConfigureAwait(true);
+                }else{
+                    obj = eject(obj);
+                }
+            }
+            return obj;
+        }
     }
 }
