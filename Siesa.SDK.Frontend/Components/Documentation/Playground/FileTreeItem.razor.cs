@@ -38,7 +38,8 @@ public partial class FileTreeItem: ComponentBase
         if (!isDirectory)
         {
             var extension = Entry.Name.Split('.').LastOrDefault();
-            switch (extension.ToLower())
+            if(extension == null) return fileIcon;
+            switch (extension.ToLowerInvariant())
             {
                 case "cs":
                     fileIcon = "fa-code";
