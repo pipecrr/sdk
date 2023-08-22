@@ -39,6 +39,7 @@
     private void SelectFile(string file)
     {
         var content = Utilities.ReadAssemblyResource(this.GetType().Assembly, $"Components.Documentation.SourceCode.{file}");
-        DialogService.Close(content);
+        var newFileName = $"{Path.GetFileNameWithoutExtension(file)}.razor";
+        DialogService.Close(new Tuple<string, string>(newFileName, content));
     }
 }

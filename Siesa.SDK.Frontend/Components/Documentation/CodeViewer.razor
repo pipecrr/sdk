@@ -1,27 +1,148 @@
 @using BlazorMonaco
 @using BlazorMonaco.Editor
+@using System.Threading
+@using System.IO
 
 <div>
-    <StandaloneCodeEditor @ref="_editor" Id="@(_editorId.ToString())" CssClass="@CssClass" ConstructionOptions="EditorConstructionOptions"/>
+    <StandaloneCodeEditor @ref="_editor" Id="@(_editorId.ToString())" CssClass="@CssClass" ConstructionOptions="EditorConstructionOptions" OnDidChangeModelContent="OnChangeContent" />
 </div>
 @code {
     private Guid _editorId = Guid.NewGuid();
     [Parameter]
     public string Code { get; set; }
     [Parameter]
-    public string Language { get; set; } = "razor";
+    public string Language { get; set; }
     [Parameter]
     public string CssClass { get; set; } = "code-viewer-area";
     [Parameter]
     public bool ReadOnly { get; set; }
     [Parameter]
     public string Theme { get; set; } = "vs-dark";
-    
+    [Parameter]
+    public EventCallback<string> CodeChanged { get; set; }
+    [Parameter]
+    public string FileName { get; set; } = "code.razor";
+
     private StandaloneCodeEditor _editor = null!;
+    private int MinMsBetweenCodeChangedEvents = 200;
+    private CancellationTokenSource cancellationTokenSource;
 
     protected override void OnInitialized()
     {
         _editorId = Guid.NewGuid();
+        if(string.IsNullOrEmpty(Language)){
+            //get the language from the file extension
+            var extension = Path.GetExtension(FileName);
+            if(!string.IsNullOrEmpty(extension)){
+                switch(extension){
+                    case ".cs":
+                        Language = "csharp";
+                        break;
+                    case ".razor":
+                        Language = "razor";
+                        break;
+                    case ".html":
+                        Language = "html";
+                        break;
+                    case ".js":
+                        Language = "javascript";
+                        break;
+                    case ".css":
+                        Language = "css";
+                        break;
+                    case ".json":
+                        Language = "json";
+                        break;
+                    case ".xml":
+                        Language = "xml";
+                        break;
+                    case ".sql":
+                        Language = "sql";
+                        break;
+                    case ".py":
+                        Language = "python";
+                        break;
+                    case ".ts":
+                        Language = "typescript";
+                        break;
+                    case ".cshtml":
+                        Language = "razor";
+                        break;
+                    case ".vb":
+                        Language = "vb";
+                        break;
+                    case ".fs":
+                        Language = "fsharp";
+                        break;
+                    case ".fsi":
+                        Language = "fsharp";
+                        break;
+                    case ".fsx":
+                        Language = "fsharp";
+                        break;
+                    case ".fsproj":
+                        Language = "xml";
+                        break;
+                    case ".sln":
+                        Language = "xml";
+                        break;
+                    case ".csproj":
+                        Language = "xml";
+                        break;
+                    case ".vbproj":
+                        Language = "xml";
+                        break;
+                    case ".props":
+                        Language = "xml";
+                        break;
+                    case ".targets":
+                        Language = "xml";
+                        break;
+                    case ".config":
+                        Language = "xml";
+                        break;
+                    case ".xaml":
+                        Language = "xml";
+                        break;
+                    case ".yaml":
+                        Language = "yaml";
+                        break;
+                    case ".md":
+                        Language = "markdown";
+                        break;
+                    case ".gitignore":
+                        Language = "gitignore";
+                        break;
+                    case ".dockerignore":
+                        Language = "dockerfile";
+                        break;
+                    case ".dockerfile":
+                        Language = "dockerfile";
+                        break;
+                    case ".csx":
+                        Language = "csharp";
+                        break;
+                    case ".bat":
+                        Language = "bat";
+                        break;
+                    case ".cmd":
+                        Language = "bat";
+                        break;
+                    case ".sh":
+                        Language = "shellscript";
+                        break;
+                    case ".ps1":
+                        Language = "powershell";
+                        break;
+                    case ".psm1":
+                        Language = "powershell";
+                        break;
+                    default:
+                        Language = "plaintext";
+                        break;
+                }
+            }
+        }
         base.OnInitialized();
     }
     
@@ -46,6 +167,31 @@
     public async Task SetValue(string value)
     {
         await _editor.SetValue(value);
+    }
+
+    private void OnChangeContent(ModelContentChangedEvent e)
+    {
+        if(!CodeChanged.HasDelegate)
+        {
+            return;
+        }
+
+        if (cancellationTokenSource != null)
+        {
+            cancellationTokenSource.Cancel();
+        }
+        cancellationTokenSource = new CancellationTokenSource();      
+        Task.Delay(MinMsBetweenCodeChangedEvents, cancellationTokenSource.Token).ContinueWith((task) =>
+        {
+            if (!task.IsCanceled)
+            {
+                InvokeAsync(async () =>
+                {
+                    var code = await _editor.GetValue();
+                    await CodeChanged.InvokeAsync(code);
+                });
+            }
+        }); 
     }
 
 }

@@ -4,13 +4,13 @@
 
 @if (TabTemplate != null)
 {
-    <DxTabPage Text="@TitleText" TabTemplate="@TabTemplate" ChildContent="@ChildContent" />
+    <DxTabPage Text="@TitleText" TabTemplate="@TabTemplate" ChildContent="@ChildContent" CssClass="@CssClass" />
 }
 else
 {
     @if (ShowBadge)
     {
-        <DxTabPage Text="@TitleText" ChildContent="@ChildContent">
+        <DxTabPage Text="@TitleText" ChildContent="@ChildContent" CssClass="@CssClass">
             <TabTemplate>
                 <a role="tab" class="nav-link @GetCss()">
                     @TitleText
@@ -19,7 +19,7 @@ else
             </TabTemplate>
         </DxTabPage>
     }else{
-        <DxTabPage Text="@TitleText" ChildContent="@ChildContent" TabIconCssClass=@IconCssClass/>
+        <DxTabPage Text="@TitleText" ChildContent="@ChildContent" TabIconCssClass=@IconCssClass CssClass="@CssClass" />
     }
 }
 
@@ -54,7 +54,8 @@ else
     public SDKTabs TabsContainer {get;set;}
 
     public int TabIndex {get;set;}
-
+    [Parameter]
+    public string CssClass {get;set;}
     string GetCss(){
         if(TabsContainer.ActiveTabIndex == TabIndex)
         {

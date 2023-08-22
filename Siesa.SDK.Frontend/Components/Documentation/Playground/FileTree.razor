@@ -1,0 +1,63 @@
+<div>
+    <RadzenTree @bind-Value=@SelectedItem Data=@Entries Expand=@OnExpand Style="width: 100%; height: 100%" Change="@OnChange" >
+        <RadzenTreeLevel Text=@GetTextForNode Template=@FileOrFolderTemplate/>
+    </RadzenTree>
+</div>
+@code {
+
+    [Parameter]
+    public IEnumerable<Entry> Entries { get; set; }
+    [Parameter]
+    public Action<Entry> OnSelect { get; set; }
+    private object SelectedItem { get; set; }
+
+    public void ClearSelection()
+    {
+        SelectedItem = null;
+    }
+    public void Select(Entry entry)
+    {
+        SelectedItem = entry;
+    }
+    public object GetSelectedItem()
+    {
+        return SelectedItem;
+    }
+    
+    private void OnChange(TreeEventArgs args)
+    {
+        var entry = args.Value as Entry;
+        if (entry != null)
+        {
+            OnSelect?.Invoke(entry);
+        }
+    }
+    
+    private void OnExpand(TreeExpandEventArgs args)
+    {
+        var entry = args.Value as Entry;
+        if (entry != null)
+        {
+            args.Children.Data = entry.Children;
+            args.Children.Text = GetTextForNode;
+            args.Children.HasChildren = (item) => (item as Entry).Children != null && (item as Entry).Children.Any();
+            args.Children.Template = FileOrFolderTemplate;
+        }
+        
+    }
+    private string GetTextForNode(object value)
+    {
+        var entry = value as Entry;
+        if (entry != null) return entry.Name;
+        return "";
+    }
+    
+    RenderFragment<RadzenTreeItem> FileOrFolderTemplate = (context) => builder =>
+    {
+        Entry entry = context.Value as Entry;
+        builder.OpenComponent<FileTreeItem>(0);
+        builder.AddAttribute(1, nameof(FileTreeItem.Entry), entry);
+        builder.CloseComponent();
+    };
+
+}
