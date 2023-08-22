@@ -4,6 +4,12 @@ using Microsoft.AspNetCore.Components;
 
 namespace Siesa.SDK.Frontend.Components.Documentation.Playground;
 
+/// <summary>
+/// Represents a file or directory entry in the file tree.
+/// </summary>
+/// <summary>
+/// Represents a file or directory entry in the file tree.
+/// </summary>
 public class Entry
 {
     public string Name { get; set; }
@@ -38,7 +44,8 @@ public partial class FileTreeItem: ComponentBase
         if (!isDirectory)
         {
             var extension = Entry.Name.Split('.').LastOrDefault();
-            switch (extension.ToLower())
+            if(extension == null) return fileIcon;
+            switch (extension.ToLowerInvariant())
             {
                 case "cs":
                     fileIcon = "fa-code";

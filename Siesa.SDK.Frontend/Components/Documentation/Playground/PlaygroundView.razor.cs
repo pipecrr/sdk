@@ -191,7 +191,7 @@ namespace Siesa.SDK.Frontend.Components.Documentation.Playground
             {
                 _compiling = true;
                 StateHasChanged();
-                _compiledType = await Compiler.CompileAsync(code);
+                _compiledType = await Compiler.CompileAsync(code).ConfigureAwait(true);
                 _errorMessage = null;
             }
             catch (ApplicationException e)
@@ -214,11 +214,11 @@ namespace Siesa.SDK.Frontend.Components.Documentation.Playground
                 Code = code
             });
             OpenedEntries.Clear();
-            InvokeAsync(StateHasChanged);
+            _ = InvokeAsync(StateHasChanged);
             await Task.Delay(100).ConfigureAwait(true);
             OpenedEntries.Add(Entries[0]);
             _fileTreeRef.Select(Entries[0]);
-            InvokeAsync(StateHasChanged);
+            _ = InvokeAsync(StateHasChanged);
             _ = RunCode();
         }
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -226,7 +226,7 @@ namespace Siesa.SDK.Frontend.Components.Documentation.Playground
             if(firstRender){
                 try
                 {
-                    await ImportJs();
+                    await ImportJs().ConfigureAwait(true);
                 }
                 catch (Exception e)
                 {
@@ -241,26 +241,26 @@ namespace Siesa.SDK.Frontend.Components.Documentation.Playground
             bool monaco;
             try
             {
-                monaco = await JSRuntime.InvokeAsync<bool>("globalVariableExists", "monaco");
+                monaco = await JSRuntime.InvokeAsync<bool>("globalVariableExists", "monaco").ConfigureAwait(true);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 monaco = false;
             }
-            return monaco != false;
+            return monaco;
         }
 
         private async Task ImportJs()
         {
             SDKGlobalLoaderService.Show();
-            await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/js/utils.js");
-            await JSRuntime.InvokeVoidAsync("window.loadScript", "_content/BlazorMonaco/jsInterop.js");
-            await JSRuntime.InvokeVoidAsync("window.loadScript", "_content/BlazorMonaco/lib/monaco-editor/min/vs/loader.js");
-            await JSRuntime.InvokeVoidAsync("window.loadScript", "_content/BlazorMonaco/lib/monaco-editor/min/vs/editor/editor.main.js");
+            await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/js/utils.js").ConfigureAwait(true);
+            await JSRuntime.InvokeVoidAsync("window.loadScript", "_content/BlazorMonaco/jsInterop.js").ConfigureAwait(true);
+            await JSRuntime.InvokeVoidAsync("window.loadScript", "_content/BlazorMonaco/lib/monaco-editor/min/vs/loader.js").ConfigureAwait(true);
+            await JSRuntime.InvokeVoidAsync("window.loadScript", "_content/BlazorMonaco/lib/monaco-editor/min/vs/editor/editor.main.js").ConfigureAwait(true);
             //wait for monaco to be ready
-            while (!await IsMonacoLoaded())
+            while (!await IsMonacoLoaded().ConfigureAwait(true))
             {
-                await Task.Delay(500);
+                await Task.Delay(500).ConfigureAwait(true);
             }
             SDKGlobalLoaderService.Hide();
             _isLoaded = true;
