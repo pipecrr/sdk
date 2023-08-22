@@ -1,0 +1,48 @@
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
+
+@inject SDKNotificationService Notification
+
+
+@layout EmptyLayout
+
+<div class="container-fluid">
+    <div class="container-fluid">
+        <h2>SDKSearchInput</h2>
+        <p>Demonstration and configuration of the SDKSearchInput component</p>
+    </div>
+    <div class="row px-3">
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>Default</h3>
+                <SDKSearchInput CssClass="w-100 form-control form-control-sm" Placeholder="@Placeholder"
+                    MinToFilter="MinToFilter" ValueChanged="@OnChangeValue" Value="@SearchValue" />
+            </SDKCard>
+        </div>
+        <div class="col-md-6 p-3">
+            <SDKCard>
+                <h3>Disabled</h3>
+                <SDKSearchInput Disabled="true" CssClass="w-100 form-control form-control-sm" Placeholder="@Placeholder"
+                    MinToFilter="MinToFilter" ValueChanged="@OnChangeValue" Value="@SearchValue" />
+            </SDKCard>
+        </div>
+
+    </div>
+</div>
+@code
+{
+    private string SearchValue { get; set; }
+    private string Placeholder { get; set; } = "Search";
+    private int MinToFilter { get; set; } = 3;
+
+    private void OnChangeValue(string value)
+    {
+        SearchValue = value;
+
+        Notification.ShowSuccess($"Esta Buscando el Valor {SearchValue}");
+
+        StateHasChanged();
+    }
+
+}
