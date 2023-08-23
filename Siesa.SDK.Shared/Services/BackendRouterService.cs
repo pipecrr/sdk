@@ -124,7 +124,7 @@ namespace Siesa.SDK.Shared.Services
                     {
                         BackendName = "",
                         BackendUrl = this.serviceConfiguration.GetCurrentUrl(),
-                        //isFrontendService = _isFrontendService
+                        IsFrontendService = _isFrontendService
                     }
                 };
                 if (businessNames != null)
