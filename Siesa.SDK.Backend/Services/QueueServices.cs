@@ -13,17 +13,10 @@ using Siesa.SDK.Shared.DTOS;
 using Newtonsoft.Json;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Siesa.SDK.Shared.Services;
 
 namespace Siesa.SDK.Backend.Services
 {
-    public interface IQueueService
-    {
-        void Subscribe(string exchangeName, string bindingKey, Action<QueueMessageDTO> action = null);
-        void SendMessage(string exchangeName, string routingKey, QueueMessageDTO message);
-
-        void TestDisconection();
-    }
-
     public class QueueService : BackgroundService, IQueueService
     {
 
@@ -115,6 +108,8 @@ namespace Siesa.SDK.Backend.Services
 
                 var routingKey = ea.RoutingKey;
                 var exchange = ea.Exchange;
+                
+                receivedQueueMessage.QueueName = $"{exchange}_{routingKey}";
 
                 if (_subscriptionsActions.ContainsKey($"{exchange}_{routingKey}"))
                 {
