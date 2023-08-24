@@ -27,7 +27,7 @@ namespace Siesa.SDK.Shared.Services
 
         public List<BusinessModel> GetBusinessModelList();
 
-        public Task OpenChannelFrontToBack(IServiceProvider serviceProvider);
+        public Task<AsyncDuplexStreamingCall<PruebaRequest, PruebaResponse>> OpenChannelFrontToBack(IServiceProvider serviceProvider, Action<string> Callback);
 
     }
 
@@ -110,12 +110,11 @@ namespace Siesa.SDK.Shared.Services
             }
         }
 
-        public async Task OpenChannelFrontToBack(IServiceProvider serviceProvider)
+        public async Task<AsyncDuplexStreamingCall<PruebaRequest, PruebaResponse>> OpenChannelFrontToBack(IServiceProvider serviceProvider, Action<string> Callback)
         {
             var channel = GrpcUtils.GetChannel(_masterBackendURL);
             var client = new Protos.GRPCBackendManagerService.GRPCBackendManagerServiceClient(channel);
-
-            using var streamingCall = client.Prueba();
+            var streamingCall = client.Prueba();
 
             _ = Task.Run(async () =>
             {
@@ -123,6 +122,7 @@ namespace Siesa.SDK.Shared.Services
                 {
                     await foreach (var response in streamingCall.ResponseStream.ReadAllAsync())
                     {
+                        Callback(response.Message);
                         Console.WriteLine(response.Message);
                     }
                 }
@@ -132,6 +132,8 @@ namespace Siesa.SDK.Shared.Services
                     Console.WriteLine("Error GRPC Bidireccional");
                 }
             });
+
+            return streamingCall;
         }
 
         public async Task<List<BusinessModel>> RegisterServiceInMaster(List<BusinessModel> businessNames = null, bool _isFrontendService = false)
@@ -211,5 +213,6 @@ namespace Siesa.SDK.Shared.Services
         {
             throw new NotImplementedException();
         }
+
     }
 }
