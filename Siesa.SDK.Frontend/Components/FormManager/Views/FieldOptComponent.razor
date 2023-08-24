@@ -1,6 +1,6 @@
 ﻿@using Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
-<DynamicField FieldOpt="@Column" ModelObj="@Data"/>
+<DynamicField FieldOpt="@Column" ModelObj="@Data" />
 
 @code
 {
@@ -11,12 +11,14 @@
     [CascadingParameter]
     public FormView FormView { get; set; }
     
-    protected override void OnInitialized()
+    protected override async Task OnParametersSetAsync()
     {
-        base.OnInitialized();
-        if (FormView != null)
+        bool shouldUpdate = false;
+        shouldUpdate = await FormView.UpdateCustomAttr(Column, true, Data).ConfigureAwait(false);
+        if (shouldUpdate)
         {
-            FormView.ListFieldOptComponents.Add(this);
+            await InvokeAsync(StateHasChanged).ConfigureAwait(false);
         }
+        await base.OnParametersSetAsync().ConfigureAwait(true);
     }
 }

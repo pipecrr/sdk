@@ -70,7 +70,7 @@ else if (ModelLoaded == true)
     @if(IsDocument){
         <SDKGrid Data="@BusinessObj.ChildObjs" TItem="object">
             <Columns>
-                @foreach (FieldOptions column in FormViewModel.DetailFields)
+                @foreach (FieldOptions column in DetailConfig.Fields)
                 {
                     <SDKGridColumn TItem="object" Title="@column.Name">
                         <Template Context="data">

@@ -96,20 +96,36 @@ else if (Panels == null || Panels.Count <= 0)
             <SDKButton ResourceTag="Custom.Document.Button.Create" Click="@(async () => await ClickAddRow())"/>
             <SDKGrid Data="@BusinessObj.ChildObjs" TItem="object" @ref="RefGrid">
                 <Columns>
-                    <SDKGridColumn Width="150px" ResourceTag="Action.Generic.Actions" TItem="object">
+                    <SDKGridColumn Width="150px" TItem="object" >
                         <Template Context="dataActions">
-                            <div class="d-flex justify-content-center">
-                                <SDKButton IconCssClass="fa-trash-can" IsActionButton="true" Click="@(async ()=> await ClickDeleteRow(dataActions))"/>
-                            </div>
+                            <CascadingValue Value="this">
+                                <div class="d-flex justify-content-center" @key="@GetKey("actionButtons", dataActions)">
+                                    @if (ButtonDeltete != null && !ButtonDeltete.Hidden)
+                                    {
+                                        <SDKButtonCustomAttr IconCssClass="fa-trash-can" IsActionButton="true" Click="@(() => ClickDeleteRow(dataActions))" BusinessObj="@BusinessObj" Button="@ButtonDeltete" Data=@dataActions Grid=@RefGrid/>
+                                    }
+                                    else
+                                    {
+                                        <SDKButton IconCssClass="fa-trash-can" IsActionButton="true" Click="@(() => ClickDeleteRow(dataActions))"/>
+                                    }
+                                    @foreach (var btn in DetailConfig.CustomActions)
+                                    {
+                                        if (!btn.Hidden)
+                                        {
+                                            <SDKButtonCustomAttr IconCssClass="@btn.IconClass" IsActionButton="true" Click="@(() => OnClickCustomButton(btn, dataActions))" BusinessObj="@BusinessObj" Button="@btn" Data=@dataActions Grid=@RefGrid/>
+                                        }
+                                    }
+                                </div>
+                            </CascadingValue>
                         </Template>
                     </SDKGridColumn>
-                    @foreach (FieldOptions column in FormViewModel.DetailFields)
+                    @foreach (FieldOptions column in DetailConfig.Fields)
                     {
-                        <SDKGridColumn TItem="object" Title="@column.Name">
+                        <SDKGridColumn TItem="object" Title="@column.Name" UniqueId="@column.Name">
                             <Template Context="data">
                                 <CascadingValue Value="@EditFormContext">
                                     <CascadingValue Value="this">
-                                        <FieldOptComponent Column="@column" Data="@data"/>
+                                        <FieldOptComponent Column="@column" Data="@data" @key="@GetKey(column.Name,data)"/>
                                     </CascadingValue>
                                 </CascadingValue>
                             </Template>
@@ -121,7 +137,7 @@ else if (Panels == null || Panels.Count <= 0)
     </EditForm>
     </CascadingValue>
     @if(IsSubpanel && ShowButtons){
-        <div class="buttons-container">
+        <div clidColumnass="buttons-container">
             @foreach (var btn in FormViewModel.Buttons)
             {
                 <SDKButton RenderStyle="@btn.RenderStyle"  Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag"  />
@@ -162,6 +178,13 @@ else if (Panels == null || Panels.Count <= 0)
 }
 
 @code {
+
+    private string GetKey(string name, dynamic data)
+    {
+        int index = BusinessObj.ChildObjs.IndexOf(data);
+        string key = $"{name}-{index}";
+        return key;
+    }
 
     protected override async Task InitView(string bName = null){
         await base.InitView(bName);

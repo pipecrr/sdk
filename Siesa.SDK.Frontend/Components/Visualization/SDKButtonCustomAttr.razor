@@ -1,0 +1,108 @@
+﻿@using Siesa.SDK.Frontend.Utils
+@using System.Reflection
+@using System.Runtime.CompilerServices
+@using DocumentFormat.OpenXml.Wordprocessing
+@using Microsoft.IdentityModel.Tokens
+@using Siesa.SDK.Frontend.Components.FormManager.ViewModels
+
+@if (!_hidden){
+    <SDKButton IconCssClass="@IconCssClass" IsActionButton="@IsActionButton" Click="@Click" Enabled="@_enabled"/>
+}
+
+@code{
+    [Parameter]
+    public dynamic BusinessObj { get; set; }
+    [Parameter] 
+    public EventCallback<MouseEventArgs> Click { get; set; }
+    [Parameter] 
+    public Button Button { get; set; }
+    [Parameter] 
+    public string IconCssClass { get; set; }
+    [Parameter] 
+    public bool IsActionButton { get; set; }
+    [Parameter]
+    public dynamic Data { get; set; }
+    [Parameter]
+    public dynamic Grid { get; set; }
+    [CascadingParameter]
+    public FormView FormView { get; set; }
+    
+    
+    private bool _enabled = true;
+    private bool _hidden = false;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _enabled = !Button.Disabled;
+        _hidden = Button.Hidden;
+        if(Button.CustomAttributes != null && Button.CustomAttributes.ContainsKey("sdk-disabled")){
+            var disabled = await FormView.EvaluateCodeButtons(Button, "sdk-disabled", Data);
+            if (_enabled == disabled)
+            {
+                _enabled = !disabled;
+                StateHasChanged();
+            }
+        }
+        if(Button.CustomAttributes != null && Button.CustomAttributes.ContainsKey("sdk-hide")){
+            var hidden = await FormView.EvaluateCodeButtons(Button, "sdk-hide", Data);
+            if (_hidden != hidden)
+            {
+                _hidden = hidden;
+                StateHasChanged();
+            }
+        }
+        if(Button.CustomAttributes != null && Button.CustomAttributes.ContainsKey("sdk-show")){
+            var show = await FormView.EvaluateCodeButtons(Button, "sdk-show", Data);
+            if (_hidden == show)
+            {
+                _hidden = !show;
+                StateHasChanged();
+            }
+        }        
+        await base.OnParametersSetAsync().ConfigureAwait(true);
+    }
+
+    // private async Task<bool> EvaluateCodeButtons(Button button, string condition)
+    // {
+    //     bool result = false;
+    //     var sdkAttr = button?.CustomAttributes[condition];
+    //     if(sdkAttr != null){
+    //         string attrValue = sdkAttr.ToString();
+    //         var indexData = BusinessObj.ChildObjs.IndexOf(Data);
+    //         if (attrValue.Contains("data_detail", StringComparison.Ordinal))
+    //         {
+    //             attrValue = attrValue.Replace("data_detail", $"ChildObjs[{indexData}]",
+    //                 StringComparison.Ordinal);
+    //         }
+    //         result = await EjectMethod(Data, attrValue, true).ConfigureAwait(true);
+    //     }
+    //     return result;
+    // }
+    //
+    //     private async Task<dynamic> EjectMethod(dynamic obj, string action, bool hasReturn = false)
+    //     {
+    //         var eject = await Evaluator.EvaluateCode(action, BusinessObj);
+    //         MethodInfo methodInfo = (MethodInfo)(eject?.GetType().GetProperty("Method")?.GetValue(eject));
+    //         if(methodInfo != null){
+    //             if(methodInfo.GetCustomAttributes(typeof(AsyncStateMachineAttribute), false).Length > 0){
+    //                 if (hasReturn)
+    //                 {
+    //                     return await eject(obj).ConfigureAwait(true);
+    //                 }else{
+    //                     await eject(obj).ConfigureAwait(true);
+    //                 }
+    //             }else{
+    //                 if (hasReturn)
+    //                 {
+    //                     return eject(obj);
+    //                 }else{
+    //                     eject(obj);
+    //                 }
+    //             }
+    //         }else if(eject != null && eject.GetType() == typeof(bool)){
+    //             return eject;
+    //         }
+    //         return obj;
+    //     }
+
+}

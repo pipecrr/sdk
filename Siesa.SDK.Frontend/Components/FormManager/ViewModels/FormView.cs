@@ -51,6 +51,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Inject] public SDKGlobalLoaderService GlobalLoaderService { get; set; }
 
         protected FormViewModel FormViewModel { get; set; } = new FormViewModel();
+        protected ListViewModel DetailConfig { get; set; } = new ListViewModel();
 
         public List<Panel> Panels {get { return FormViewModel.Panels; } }
         public List<Panel> PanelsCollapsable = new List<Panel>();
@@ -126,7 +127,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public List<Button> ExtraButtons { get; set; }
         public Button SaveButton { get; set; }
         public bool isOnePanel { get; set; }
-
+        protected Button ButtonDeltete {get; set;  }
+        protected Button ButtonCreate {get; set;  }
         /// <summary>
         /// Gets or sets the reference grid.
         /// </summary>
@@ -291,8 +293,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             }
             if(IsDocument)
             {
+                DetailConfig = FormViewModel.DetailConfig;
                 AddOnChangeCell();
-                BusinessObj.ExtraDetailFields = FormViewModel.DetailFields.Select(x => x.Name).ToList();
+                ButtonDeltete = DetailConfig.Buttons.Where(x => x.Id.Equals("Delete",StringComparison.Ordinal)).FirstOrDefault();
+                BusinessObj.ExtraDetailFields = DetailConfig.Fields.Select(x => x.Name).ToList();
+                
                 await BusinessObj.InitializeChilds().ConfigureAwait(true);
             }
             Loading = false;
@@ -308,7 +313,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         private void AddOnChangeCell()
         {
-            foreach (var item in FormViewModel.DetailFields)
+            foreach (var item in DetailConfig.Fields)
             {
                 if(item.CustomAttributes == null){
                     item.CustomAttributes = new Dictionary<string, object>();
@@ -361,15 +366,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 ExtraButtons = new List<Button>();
                 foreach (var button in FormViewModel.Buttons){
                     if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-disabled")){
-                        var disabled = await evaluateCodeButtons(button, "sdk-disabled");
+                        var disabled = await EvaluateCodeButtons(button, "sdk-disabled");
                         button.Disabled = disabled;
                     }
                     if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-hide")){
-                        var hidden = await evaluateCodeButtons(button, "sdk-hide");
+                        var hidden = await EvaluateCodeButtons(button, "sdk-hide");
                         button.Hidden = hidden;
                     }
                     if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-show")){
-                        var show = await evaluateCodeButtons(button, "sdk-show");
+                        var show = await EvaluateCodeButtons(button, "sdk-show");
                         button.Hidden = !show;
                     }
                     if(button.Id != null){
@@ -392,16 +397,38 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 _ = InvokeAsync(() => StateHasChanged());
             }
         }
-        public async Task<bool> evaluateCodeButtons(Button button, string condition){
-            bool disabled = button.Disabled;
-            var sdkDisable = button.CustomAttributes[condition];
+        /*public async Task<bool> EvaluateCodeButtons(Button button, string condition){
+            bool result = false;
+            var sdkDisable = button?.CustomAttributes[condition];
             if(sdkDisable != null){
                 var eject = (bool)await Evaluator.EvaluateCode((string)sdkDisable, BusinessObj); //revisar
-                if(eject != null){
-                    disabled = eject;
+                result = eject;
+            }
+            return result;
+        }*/
+        public async Task<bool> EvaluateCodeButtons(Button button, string condition, dynamic data = null)
+        {
+            bool result = false;
+            var sdkAttr = button?.CustomAttributes[condition];
+            if(sdkAttr != null){
+                string attrValue = sdkAttr.ToString();
+                if (data != null)
+                {
+                    var indexData = BusinessObj.ChildObjs.IndexOf(data);
+                    if (attrValue.Contains("data_detail", StringComparison.Ordinal))
+                    {
+                        attrValue = attrValue.Replace("data_detail", $"ChildObjs[{indexData}]",
+                            StringComparison.Ordinal);
+                    }
+                    result = await EjectMethod(data, attrValue, true).ConfigureAwait(true);
+                }
+                else
+                {
+                    var eject = (bool)await Evaluator.EvaluateCode(attrValue, BusinessObj);
+                    result = eject;
                 }
             }
-            return disabled;
+            return result;
         }
 
         private void EditContext_OnFieldChanged(object sender, FieldChangedEventArgs e)
@@ -427,17 +454,24 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             {
                 foreach (var fieldOptComponent in ListFieldOptComponents)
                 {
-                    FieldOptions field = fieldOptComponent.Column;
-                    dynamic data = fieldOptComponent.Data;
-                    _ = Task.Run(async () =>
+                    /*_ = Task.Run(async () =>
                     {
-                        bool shouldUpdate = await UpdateCustomAttr(field, true, data).ConfigureAwait(true);
-                        if(shouldUpdate)
-                        {
-                            _ = InvokeAsync(() => StateHasChanged());
-                        }
-                    });
+                        
+                    });*/
+                    /*Action<object> action = (x)=> Prueba((FieldOptComponent)x);
+                    new TaskFactory().StartNew(action, fieldOptComponent);*/
                 }
+            }
+        }
+
+        public async Task Prueba(FieldOptComponent fieldOptComponent){
+            FieldOptions field = fieldOptComponent.Column;
+            dynamic data = fieldOptComponent.Data;
+            bool shouldUpdate = await UpdateCustomAttr(field, true, data).ConfigureAwait(true);
+            if(shouldUpdate)
+            {
+                RefGrid.Reload();
+                _ = InvokeAsync(() => StateHasChanged());
             }
         }
 
@@ -456,7 +490,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             }
         }
         
-        private async Task<bool> UpdateCustomAttr(FieldOptions field, bool isFieldDocument = false, dynamic data = null)
+        public async Task<bool> UpdateCustomAttr(FieldOptions field, bool isFieldDocument = false, dynamic data = null)
         {
             if(field.Fields != null && field.Fields.Count > 0)
             {
@@ -769,7 +803,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             NavManager.NavigateTo($"{BusinessName}/");
         }
 
-        public async Task OnClickCustomButton(Button button)
+        public async Task OnClickCustomButton(Button button, dynamic obj = null)
         {
             if (!string.IsNullOrEmpty(button.Href))
             {
@@ -786,7 +820,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             }
             else if (!string.IsNullOrEmpty(button.Action))
             {
-                await Evaluator.EvaluateCode(button.Action, BusinessObj, useRoslyn: UseRoslynToEval); //Revisar
+                await EjectMethod(obj, button.Action).ConfigureAwait(true);
                 StateHasChanged();
             }
         }
@@ -808,9 +842,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 BusinessObj.ChildObjs = Activator.CreateInstance(ListChildObj);
             }
 
-            if (!String.IsNullOrEmpty(FormViewModel.ActionAddRow))
+            if (!String.IsNullOrEmpty(DetailConfig.ActionAddRow))
             {
-                obj = await EjectMethod(obj, FormViewModel.ActionAddRow);
+                obj = await EjectMethod(obj, DetailConfig.ActionAddRow, true).ConfigureAwait(true);
             }
             BusinessObj.ChildObjs.Add(obj);
             RefGrid.Reload();
@@ -822,9 +856,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         /// <param name="obj">The object to delete.</param>
         public async Task ClickDeleteRow(dynamic obj){
             bool delete = true;
-            if (!String.IsNullOrEmpty(FormViewModel.ActionDeleteRow))
+            if (!String.IsNullOrEmpty(DetailConfig.ActionDeleteRow))
             {
-                delete = await EjectMethod(obj, FormViewModel.ActionDeleteRow);
+                delete = await EjectMethod(obj, DetailConfig.ActionDeleteRow, true).ConfigureAwait(true);
             }
             if(delete){
                 BusinessObj.ChildObjs.Remove(obj);
@@ -837,18 +871,33 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             RefGrid.Reload();
         }
         
-        private async Task<dynamic> EjectMethod(dynamic obj, string action)
+        private async Task<dynamic> EjectMethod(dynamic obj, string action, bool hasReturn = false)
         {
             var eject = await Evaluator.EvaluateCode(action, BusinessObj);
-            MethodInfo methodInfo = (MethodInfo)(eject.GetType().GetProperty("Method").GetValue(eject));
+            MethodInfo methodInfo = (MethodInfo)(eject?.GetType().GetProperty("Method")?.GetValue(eject));
             if(methodInfo != null){
                 if(methodInfo.GetCustomAttributes(typeof(AsyncStateMachineAttribute), false).Length > 0){
-                    obj = await eject(obj).ConfigureAwait(true);
+                    if (hasReturn)
+                    {
+                        return await eject(obj).ConfigureAwait(true);
+                    }else{
+                        await eject(obj).ConfigureAwait(true);
+                    }
                 }else{
-                    obj = eject(obj);
+                    if (hasReturn)
+                    {
+                        return eject(obj);
+                    }else{
+                        eject(obj);
+                    }
                 }
+            }else if (eject != null && eject.GetType() == typeof(bool))
+            {
+                return eject;
             }
             return obj;
         }
+        
+        
     }
 }

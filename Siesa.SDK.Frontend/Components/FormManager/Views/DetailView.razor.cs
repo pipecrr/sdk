@@ -69,6 +69,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         [Inject] public SDKNotificationService NotificationService { get; set; }        
         protected FormViewModel FormViewModel { get; set; } = new FormViewModel();
+        protected ListViewModel DetailConfig { get; set; } = new ListViewModel();
         protected List<Panel> Panels { get { return FormViewModel.Panels; } }
         public List<Panel> PanelsCollapsable = new List<Panel>();
         public Boolean ModelLoaded = false;
@@ -293,7 +294,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if(IsDocument)
             {
                 List<string> extraDetailFields = new ();
-                FormViewModel.DetailFields.ForEach(x =>
+                DetailConfig.Fields.ForEach(x =>
                 {
                     x.ViewContext = "DetailView";
                     extraDetailFields.Add(x.Name);

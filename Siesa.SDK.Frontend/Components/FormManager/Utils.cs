@@ -105,7 +105,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager
 
             if (type == typeof(int?) || type == typeof(int) || type == typeof(decimal?) || type == typeof(decimal) || type == typeof(byte?) || type == typeof(byte))
             {
-                return $"({name} == null ? 0 : {name}) {comparisonOperator} {value}";
+                if (name.EndsWith("__", StringComparison.Ordinal))
+                {
+                    name = name.Replace("__", "", StringComparison.Ordinal);
+                    return $"{name} {comparisonOperator} {value}";
+                }
+                else
+                {
+                    return $"({name} == null ? 0 : {name}) {comparisonOperator} {value}";
+                }
             }
             else if (type == typeof(bool) || type == typeof(bool?))
             {

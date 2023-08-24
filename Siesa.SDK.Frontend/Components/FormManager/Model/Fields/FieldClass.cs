@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using GrapeCity.Enterprise.Data.Expressions.Evaluation;
 using Microsoft.IdentityModel.Tokens;
 using Siesa.SDK.Frontend.Utils;
 using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
@@ -290,24 +291,35 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 {
                     await Evaluator.EvaluateCode(OnChange, EditFormContext.Model).ConfigureAwait(true);
                     if (formView != null)
-                    {                            
+                    {
                         _ = InvokeAsync(() => formView.Refresh());
                     }
                 });
             }
             if (!OnChangeCell.IsNullOrEmpty()){
+                if (OnChangeCell.Contains("data_detail", StringComparison.Ordinal))
+                {
+                    var childObjs = EditFormContext.Model.GetType().GetProperty("ChildObjs")?
+                        .GetValue(EditFormContext.Model) as System.Collections.IList;
+                    if (childObjs != null)
+                    {
+                        var indexData = childObjs.IndexOf(BindModel);
+                        OnChangeCell = OnChangeCell.Replace("data_detail", $"ChildObjs[{indexData}]",
+                            StringComparison.Ordinal);
+                    }
+                }
                 _ = Task.Run(async () =>
                 {
                     bool modifyRow = true;
 
                     if (!OnChangeCell.Equals("SdkOnChangeCell", StringComparison.Ordinal))
                     {
-                        modifyRow = await EvaluateCellChangeAsync(OnChangeCell, EditFormContext.Model, true);
+                        modifyRow = await EvaluateCellChangeAsync(OnChangeCell, EditFormContext.Model, true).ConfigureAwait(true);
                     }
 
                     if (modifyRow)
                     {
-                        await EvaluateCellChangeAsync("SdkOnChangeCell", EditFormContext.Model);
+                        await EvaluateCellChangeAsync("SdkOnChangeCell", EditFormContext.Model).ConfigureAwait(true);
                         StateHasChanged();
                     }
                     
@@ -324,7 +336,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         private async Task<bool> EvaluateCellChangeAsync(string code, object model, bool hasReturn = false)
         {
             dynamic eject = await Evaluator.EvaluateCode(code, model).ConfigureAwait(true);
-            MethodInfo methodInfo = (MethodInfo)(eject?.GetType().GetProperty("Method").GetValue(eject));
+            MethodInfo methodInfo = (MethodInfo)(eject?.GetType().GetProperty("Method")?.GetValue(eject));
 
             if (methodInfo != null)
             {
@@ -346,8 +358,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                         eject(BindModel);
                     }
                 }
+            }else if(eject != null && eject.GetType() == typeof(bool) && eject){
+                return eject;
             }
-
+            
             return true;
         }
 

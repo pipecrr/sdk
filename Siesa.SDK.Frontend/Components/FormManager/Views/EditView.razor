@@ -99,7 +99,7 @@ else if (BusinessObj.BaseObj.Rowid != 0)
                             </div>
                         </Template>
                     </SDKGridColumn>
-                    @foreach (FieldOptions column in FormViewModel.DetailFields)
+                    @foreach (FieldOptions column in DetailConfig.Fields)
                     {
                         <SDKGridColumn TItem="object" Title="@column.Name">
                             <Template Context="data">
