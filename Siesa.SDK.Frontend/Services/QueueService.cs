@@ -11,11 +11,11 @@ namespace Siesa.SDK.Frontend.Services
         private readonly IBackendRouterService _backendRouterService;
         private readonly IAuthenticationService _authenticationService;
 
-        private Dictionary<string, List<QueueSubscribeActionDTO>> _subscriptionsActions = new();
+        private Dictionary<string, List<Action<QueueMessageDTO>>> _subscriptionsActions = new();
         public QueueService(IBackendRouterService backendRouterService, IAuthenticationService authenticationService)
         {
             _authenticationService = authenticationService;
-            _backendRouterService = backendRouterService;   
+            _backendRouterService = backendRouterService;
         }
 
         private SDKBusinessModel GetBackend()
@@ -29,11 +29,11 @@ namespace Siesa.SDK.Frontend.Services
 
         public void Subscribe(string exchangeName, string bindingKey, Action<QueueMessageDTO> action = null)
         {
-            SubscribeAction(exchangeName, bindingKey, action);         
-            
+            SubscribeAction(exchangeName, bindingKey, action);
+
             var BLBackend = GetBackend();
 
-            _ = BLBackend.Call("SubscribeToQueueFront",exchangeName, bindingKey );   
+            _ = BLBackend.Call("SubscribeToQueueFront", exchangeName, bindingKey);
 
         }
 
@@ -48,19 +48,19 @@ namespace Siesa.SDK.Frontend.Services
             var methodName = action?.Method.Name ?? null;
             var blTarget = action?.Target?.GetType()?.FullName ?? null;
 
-            
+
             if (_subscriptionsActions.ContainsKey(subscriptionKey))
             {
                 var actions = _subscriptionsActions[subscriptionKey];
-                if (actions.Exists(a => a.MethodName == methodName && a.Target == blTarget))
+                if (actions.Contains(action))
                 {
                     return;
                 }
-                actions.Add(new QueueSubscribeActionDTO { MethodName = methodName, Target = blTarget });
+                actions.Add(action);
             }
             else
             {
-                _subscriptionsActions.Add(subscriptionKey, new List<QueueSubscribeActionDTO> { new QueueSubscribeActionDTO { MethodName = methodName, Target = blTarget } });
+                _subscriptionsActions.Add(subscriptionKey, new List<Action<QueueMessageDTO>> { action });
             }
         }
     }

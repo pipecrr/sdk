@@ -15,6 +15,8 @@
 @inject NavigationService NavigationService
 @inject SDKDialogService SDKDialogService
 @inject SDKNotificationService SDKNotificationService
+@inject IServiceProvider ServiceProvider
+@inject IBackendRouterService BackendRouterService
 
 @if(AuthenticationService.GetSelectedConnection() != null && AuthenticationService.GetSelectedConnection().Rowid != 0)
 {
@@ -172,6 +174,7 @@
         FieldErrors = new List<string>();
         GeneralErrors = new List<string>();
         InitSDKJS();
+        BackendRouterService.OpenChannelFrontToBack(ServiceProvider);
     }
 
     private async Task InitSDKJS()

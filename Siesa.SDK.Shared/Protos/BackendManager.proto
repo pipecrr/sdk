@@ -4,6 +4,7 @@ import "Protos/BusinessMessages.proto";
 
 service GRPCBackendManagerService {
   rpc RegisterBackend (RegisterBackendRequest) returns (RegisterBackendResponse);
+  rpc Prueba (stream PruebaRequest) returns (stream PruebaResponse);
 }
 
 message BackendInfo {
@@ -19,4 +20,11 @@ message RegisterBackendRequest {
 
 message RegisterBackendResponse {
    repeated BusinessModel businesses = 1;
+}
+
+message PruebaRequest {
+  string name = 1;
+}
+message PruebaResponse {
+  string message = 1;
 }
