@@ -89,5 +89,11 @@ namespace Siesa.SDK.Frontend.Services
                 _subscriptionsActions.Add(subscriptionKey, new List<Action<QueueMessageDTO>> { action });
             }
         }
+
+        public void Unsubscribe(string exchangeName, string bindingKey)
+        {
+            _subscriptionsActions.Remove($"{exchangeName}_{bindingKey}");
+            //_backendRouterService.RemoveChannels($"{exchangeName}_{bindingKey}");
+        }
     }
 }

@@ -196,5 +196,9 @@ namespace Siesa.SDK.Backend.Services
                 }
             }
         }
+        public void Unsubscribe(string exchangeName, string bindingKey)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

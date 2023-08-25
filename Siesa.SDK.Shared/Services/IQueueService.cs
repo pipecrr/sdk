@@ -10,6 +10,8 @@ namespace Siesa.SDK.Shared.Services
         void Subscribe(string exchangeName, string bindingKey, Action<QueueMessageDTO> action = null);
         void SendMessage(string exchangeName, string routingKey, QueueMessageDTO message);
 
+        void Unsubscribe(string exchangeName, string bindingKey);
+
         void TestDisconection();
     }
 

@@ -35,6 +35,8 @@ namespace Siesa.SDK.Shared.Services
 
         public Dictionary<string, List<System.Threading.Channels.Channel<QueueMessageDTO>>> GetChannels();
 
+        public void RemoveChannels(string _queueName, System.Threading.Channels.Channel<QueueMessageDTO> _channel);
+
     }
 
     public abstract class BackendRouterServiceBase : IBackendRouterService
@@ -67,6 +69,18 @@ namespace Siesa.SDK.Shared.Services
         public Dictionary<string, List<System.Threading.Channels.Channel<QueueMessageDTO>>> GetChannels()
         {
             return Channels;
+        }
+
+        public void RemoveChannels(string _queueName, System.Threading.Channels.Channel<QueueMessageDTO> _channel)
+        {
+            if (Channels.ContainsKey(_queueName))
+            {
+                var queueToChannel = Channels[_queueName];
+                if (queueToChannel.Exists(x => x == _channel))
+                {
+                    queueToChannel.Remove(_channel);
+                }
+            }
         }
 
         public BackendRouterServiceBase(IOptions<ServiceConfiguration> serviceConfiguration)
@@ -163,7 +177,6 @@ namespace Siesa.SDK.Shared.Services
 
             return streamingCall;
         }
-
         public async Task<List<BusinessModel>> RegisterServiceInMaster(List<BusinessModel> businessNames = null, bool _isFrontendService = false)
         {
             try
