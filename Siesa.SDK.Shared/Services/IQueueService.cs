@@ -1,6 +1,7 @@
 
 using System;
 using Siesa.SDK.Shared.DTOS;
+using Siesa.SDK.Protos;
 
 namespace Siesa.SDK.Shared.Services
 {

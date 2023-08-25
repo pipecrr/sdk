@@ -59,6 +59,7 @@ namespace Siesa.SDK.Frontend
             services.AddScoped<SDKGlobalLoaderService>();
             services.AddScoped<MenuService>();
             services.AddScoped<CompilerService>();
+            services.AddScoped<IQueueService, QueueService>();
             services.AddSignalR(e =>
             {
                 e.MaximumReceiveMessageSize = 102400000;

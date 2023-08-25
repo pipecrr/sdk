@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Grpc.Core;
+using Siesa.SDK.Protos;
 using Siesa.SDK.Shared.DTOS;
 using Siesa.SDK.Shared.Services;
 
@@ -10,6 +13,8 @@ namespace Siesa.SDK.Frontend.Services
     {
         private readonly IBackendRouterService _backendRouterService;
         private readonly IAuthenticationService _authenticationService;
+
+        public Grpc.Core.AsyncDuplexStreamingCall<Siesa.SDK.Protos.OpeningChannelToBackRequest, Siesa.SDK.Protos.QueueMessageDTO> DuplexStreamingCall { get; set; }
 
         private Dictionary<string, List<Action<QueueMessageDTO>>> _subscriptionsActions = new();
         public QueueService(IBackendRouterService backendRouterService, IAuthenticationService authenticationService)
@@ -35,6 +40,30 @@ namespace Siesa.SDK.Frontend.Services
 
             _ = BLBackend.Call("SubscribeToQueueFront", exchangeName, bindingKey);
 
+            _ = OpenChannel( exchangeName,  bindingKey);
+
+        }
+
+        private async Task OpenChannel(string exchangeName, string bindingKey)
+        {
+            if (DuplexStreamingCall == null)
+            {
+                DuplexStreamingCall = await  _backendRouterService.OpenChannelFrontToBack(ExcuteActions);
+            }
+           await  DuplexStreamingCall.RequestStream.WriteAsync(new OpeningChannelToBackRequest() { ExchangeName = exchangeName, BindingKey = bindingKey });
+        }
+
+        private void ExcuteActions(QueueMessageDTO message)
+        {
+            if (_subscriptionsActions.ContainsKey(message.QueueName))
+            {
+                var actions = _subscriptionsActions[message.QueueName];
+
+                foreach (var action in actions)
+                {
+                    action(message);
+                }
+            }
         }
 
         public void TestDisconection()
@@ -45,10 +74,7 @@ namespace Siesa.SDK.Frontend.Services
         private void SubscribeAction(string exchangeName, string bindingKey, Action<QueueMessageDTO> action = null)
         {
             var subscriptionKey = $"{exchangeName}_{bindingKey}";
-            var methodName = action?.Method.Name ?? null;
-            var blTarget = action?.Target?.GetType()?.FullName ?? null;
-
-
+            
             if (_subscriptionsActions.ContainsKey(subscriptionKey))
             {
                 var actions = _subscriptionsActions[subscriptionKey];

@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Siesa.SDK.Shared.Services;
+using Siesa.SDK.Protos;
 
 namespace Siesa.SDK.Backend.Services
 {

@@ -9,6 +9,8 @@ using Siesa.SDK.Shared.Configurations;
 using System.Linq;
 using Siesa.SDK.Shared.GRPCServices;
 using Grpc.Core;
+using Siesa.SDK.Shared.DTOS;
+using System.IO;
 
 namespace Siesa.SDK.Shared.Services
 {
@@ -27,11 +29,17 @@ namespace Siesa.SDK.Shared.Services
 
         public List<BusinessModel> GetBusinessModelList();
 
-        public Task<AsyncDuplexStreamingCall<PruebaRequest, PruebaResponse>> OpenChannelFrontToBack(IServiceProvider serviceProvider, Action<string> Callback);
+        public Task<AsyncDuplexStreamingCall<OpeningChannelToBackRequest, QueueMessageDTO>> OpenChannelFrontToBack(Action<QueueMessageDTO> Callback);
+
+        public Dictionary<string, List<Tuple<AsyncDuplexStreamingCall<OpeningChannelToBackRequest, QueueMessageDTO>, Action<QueueMessageDTO>>>> GetStreamingCalls();
+
+        public void SetChannels(string _queueName, System.Threading.Channels.Channel<QueueMessageDTO> _channel);
+
+        public Dictionary<string, List<System.Threading.Channels.Channel<QueueMessageDTO>>> GetChannels();
 
     }
 
-    public abstract class BackendRouterServiceBase: IBackendRouterService
+    public abstract class BackendRouterServiceBase : IBackendRouterService
     {
         private readonly IServiceConfiguration serviceConfiguration;
         private Dictionary<string, BusinessModel> _backendBusinesses = new Dictionary<string, BusinessModel>();
@@ -39,6 +47,37 @@ namespace Siesa.SDK.Shared.Services
         private List<BackendInfo> _observers = new List<BackendInfo>();
         private string _masterBackendURL;
         public static BackendRouterServiceBase Instance { get; private set; }
+
+        public Dictionary<string, List<Tuple<AsyncDuplexStreamingCall<OpeningChannelToBackRequest, QueueMessageDTO>, Action<QueueMessageDTO>>>> StreamingCalls { get; set; } = new Dictionary<string, List<Tuple<AsyncDuplexStreamingCall<OpeningChannelToBackRequest, QueueMessageDTO>, Action<QueueMessageDTO>>>>();
+
+        public Dictionary<string, List<System.Threading.Channels.Channel<QueueMessageDTO>>> Channels { get; set; } = new Dictionary<string, List<System.Threading.Channels.Channel<QueueMessageDTO>>>();
+
+        public void SetChannels(string _queueName, System.Threading.Channels.Channel<QueueMessageDTO> _channel)
+        {
+            if (!Channels.ContainsKey(_queueName))
+            {
+                Channels.Add(_queueName, new List<System.Threading.Channels.Channel<QueueMessageDTO>>());
+            }
+            
+            var queueToChannel = Channels[_queueName];
+
+            if (queueToChannel.Exists(x => x == _channel))
+            {
+                return;
+            }
+            queueToChannel.Add(_channel);
+
+        }
+
+        public Dictionary<string, List<System.Threading.Channels.Channel<QueueMessageDTO>>> GetChannels()
+        {
+            return Channels;
+        }
+
+        public Dictionary<string, List<Tuple<AsyncDuplexStreamingCall<OpeningChannelToBackRequest, QueueMessageDTO>, Action<QueueMessageDTO>>>> GetStreamingCalls()
+        {
+            return StreamingCalls;
+        }
 
         public BackendRouterServiceBase(IOptions<ServiceConfiguration> serviceConfiguration)
         {
@@ -85,7 +124,7 @@ namespace Siesa.SDK.Shared.Services
 
                 _observers.Remove(observer);
             }
-          _ = NotifyObservers();
+            _ = NotifyObservers();
         }
 
 
@@ -110,11 +149,11 @@ namespace Siesa.SDK.Shared.Services
             }
         }
 
-        public async Task<AsyncDuplexStreamingCall<PruebaRequest, PruebaResponse>> OpenChannelFrontToBack(IServiceProvider serviceProvider, Action<string> Callback)
+        public async Task<AsyncDuplexStreamingCall<OpeningChannelToBackRequest, QueueMessageDTO>> OpenChannelFrontToBack(Action<QueueMessageDTO> Callback)
         {
             var channel = GrpcUtils.GetChannel(_masterBackendURL);
             var client = new Protos.GRPCBackendManagerService.GRPCBackendManagerServiceClient(channel);
-            var streamingCall = client.Prueba();
+            var streamingCall = client.OpeningChannelToBack();
 
             _ = Task.Run(async () =>
             {
@@ -122,13 +161,12 @@ namespace Siesa.SDK.Shared.Services
                 {
                     await foreach (var response in streamingCall.ResponseStream.ReadAllAsync())
                     {
-                        Callback(response.Message);
-                        Console.WriteLine(response.Message);
+                        Callback(response);
                     }
                 }
                 catch (System.Exception)
                 {
-                    
+
                     Console.WriteLine("Error GRPC Bidireccional");
                 }
             });
@@ -140,7 +178,7 @@ namespace Siesa.SDK.Shared.Services
         {
             try
             {
-                if(this.serviceConfiguration.GetCurrentUrl() == _masterBackendURL)
+                if (this.serviceConfiguration.GetCurrentUrl() == _masterBackendURL)
                 {
                     await Task.Delay(5000); //wait for the master backend to be ready
                 }
@@ -163,7 +201,7 @@ namespace Siesa.SDK.Shared.Services
 
                 var response = await client.RegisterBackendAsync(request);
                 return response.Businesses.ToList<BusinessModel>();
-                
+
 
 
             }
