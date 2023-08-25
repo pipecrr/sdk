@@ -61,48 +61,4 @@
         }        
         await base.OnParametersSetAsync().ConfigureAwait(true);
     }
-
-    // private async Task<bool> EvaluateCodeButtons(Button button, string condition)
-    // {
-    //     bool result = false;
-    //     var sdkAttr = button?.CustomAttributes[condition];
-    //     if(sdkAttr != null){
-    //         string attrValue = sdkAttr.ToString();
-    //         var indexData = BusinessObj.ChildObjs.IndexOf(Data);
-    //         if (attrValue.Contains("data_detail", StringComparison.Ordinal))
-    //         {
-    //             attrValue = attrValue.Replace("data_detail", $"ChildObjs[{indexData}]",
-    //                 StringComparison.Ordinal);
-    //         }
-    //         result = await EjectMethod(Data, attrValue, true).ConfigureAwait(true);
-    //     }
-    //     return result;
-    // }
-    //
-    //     private async Task<dynamic> EjectMethod(dynamic obj, string action, bool hasReturn = false)
-    //     {
-    //         var eject = await Evaluator.EvaluateCode(action, BusinessObj);
-    //         MethodInfo methodInfo = (MethodInfo)(eject?.GetType().GetProperty("Method")?.GetValue(eject));
-    //         if(methodInfo != null){
-    //             if(methodInfo.GetCustomAttributes(typeof(AsyncStateMachineAttribute), false).Length > 0){
-    //                 if (hasReturn)
-    //                 {
-    //                     return await eject(obj).ConfigureAwait(true);
-    //                 }else{
-    //                     await eject(obj).ConfigureAwait(true);
-    //                 }
-    //             }else{
-    //                 if (hasReturn)
-    //                 {
-    //                     return eject(obj);
-    //                 }else{
-    //                     eject(obj);
-    //                 }
-    //             }
-    //         }else if(eject != null && eject.GetType() == typeof(bool)){
-    //             return eject;
-    //         }
-    //         return obj;
-    //     }
-
 }

@@ -17,6 +17,7 @@ using Siesa.SDK.Frontend.Components.FormManager.Fields;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Siesa.SDK.Shared.Utilities;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
@@ -83,6 +84,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public Boolean ContainAttachments = false;
         Relationship RelationshipAttachment = new Relationship();
         E00270_Attachment ParentAttachment = new E00270_Attachment();
+        /// <summary>
+        /// Gets or sets the reference grid.
+        /// </summary>
+        public dynamic RefGrid { get; set; }
 
         private bool HasExtraButtons { get; set; }
         private List<Button> ExtraButtons { get; set; }
@@ -294,6 +299,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if(IsDocument)
             {
                 List<string> extraDetailFields = new ();
+                DetailConfig = FormViewModel.DetailConfig;
                 DetailConfig.Fields.ForEach(x =>
                 {
                     x.ViewContext = "DetailView";
@@ -542,7 +548,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         }
 
 
-        private void OnClickCustomButton(Button button)
+        public async Task OnClickCustomButton(Button button, dynamic obj = null)
         {
             if (!string.IsNullOrEmpty(button.Href))
             {
@@ -559,7 +565,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
             else if (!string.IsNullOrEmpty(button.Action))
             {
-                Evaluator.EvaluateCode(button.Action, BusinessObj);
+                await EjectMethod(obj, button.Action).ConfigureAwait(true);
+                StateHasChanged();
             }
         }
 
@@ -604,6 +611,32 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     }
                 }
             }
+        }
+        public async Task<dynamic> EjectMethod(dynamic obj, string action, bool hasReturn = false)
+        {
+            var eject = await Evaluator.EvaluateCode(action, BusinessObj);
+            MethodInfo methodInfo = (MethodInfo)(eject?.GetType().GetProperty("Method")?.GetValue(eject));
+            if(methodInfo != null){
+                if(methodInfo.GetCustomAttributes(typeof(AsyncStateMachineAttribute), false).Length > 0){
+                    if (hasReturn)
+                    {
+                        return await eject(obj).ConfigureAwait(true);
+                    }else{
+                        await eject(obj).ConfigureAwait(true);
+                    }
+                }else{
+                    if (hasReturn)
+                    {
+                        return eject(obj);
+                    }else{
+                        eject(obj);
+                    }
+                }
+            }else if (eject != null && eject.GetType() == typeof(bool))
+            {
+                return eject;
+            }
+            return obj;
         }
     }
 }

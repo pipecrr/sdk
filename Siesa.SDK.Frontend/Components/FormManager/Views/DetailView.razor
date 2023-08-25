@@ -68,18 +68,9 @@ else if (ModelLoaded == true)
         }
     </DxFormLayout>
     @if(IsDocument){
-        <SDKGrid Data="@BusinessObj.ChildObjs" TItem="object">
-            <Columns>
-                @foreach (FieldOptions column in DetailConfig.Fields)
-                {
-                    <SDKGridColumn TItem="object" Title="@column.Name">
-                        <Template Context="data">
-                            <DynamicField FieldOpt="@column" ModelObj="@data"/>
-                        </Template>
-                    </SDKGridColumn>
-                }
-            </Columns>
-        </SDKGrid>            
+        <CascadingValue Value="this">
+            <SDKGridDocument BusinessObj="@BusinessObj" DetailConfig="@DetailConfig" IsDetail="true"/>
+        </CascadingValue>
     }
         @if(ContainAttachments){
             <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" 

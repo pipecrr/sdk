@@ -128,7 +128,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public Button SaveButton { get; set; }
         public bool isOnePanel { get; set; }
         protected Button ButtonDeltete {get; set;  }
-        protected Button ButtonCreate {get; set;  }
         /// <summary>
         /// Gets or sets the reference grid.
         /// </summary>
@@ -871,7 +870,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             RefGrid.Reload();
         }
         
-        private async Task<dynamic> EjectMethod(dynamic obj, string action, bool hasReturn = false)
+        public async Task<dynamic> EjectMethod(dynamic obj, string action, bool hasReturn = false)
         {
             var eject = await Evaluator.EvaluateCode(action, BusinessObj);
             MethodInfo methodInfo = (MethodInfo)(eject?.GetType().GetProperty("Method")?.GetValue(eject));

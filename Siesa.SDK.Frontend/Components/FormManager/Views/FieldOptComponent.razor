@@ -8,17 +8,23 @@
     public dynamic Data { get; set; }
     [Parameter]
     public FieldOptions Column { get; set; }
+    [Parameter]
+    public bool IsDetail { get; set; }
     [CascadingParameter]
     public FormView FormView { get; set; }
     
     protected override async Task OnParametersSetAsync()
     {
-        bool shouldUpdate = false;
-        shouldUpdate = await FormView.UpdateCustomAttr(Column, true, Data).ConfigureAwait(false);
-        if (shouldUpdate)
+        if (!IsDetail)
         {
-            await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+            bool shouldUpdate = false;
+            shouldUpdate = await FormView.UpdateCustomAttr(Column, true, Data).ConfigureAwait(false);
+            if (shouldUpdate)
+            {
+                await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+            }
         }
+        
         await base.OnParametersSetAsync().ConfigureAwait(true);
     }
 }
