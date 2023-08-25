@@ -448,30 +448,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 }
                 EvaluateFields(panel.Fields);
             }
-
-            if (IsDocument && ListFieldOptComponents.Any())
-            {
-                foreach (var fieldOptComponent in ListFieldOptComponents)
-                {
-                    /*_ = Task.Run(async () =>
-                    {
-                        
-                    });*/
-                    /*Action<object> action = (x)=> Prueba((FieldOptComponent)x);
-                    new TaskFactory().StartNew(action, fieldOptComponent);*/
-                }
-            }
-        }
-
-        public async Task Prueba(FieldOptComponent fieldOptComponent){
-            FieldOptions field = fieldOptComponent.Column;
-            dynamic data = fieldOptComponent.Data;
-            bool shouldUpdate = await UpdateCustomAttr(field, true, data).ConfigureAwait(true);
-            if(shouldUpdate)
-            {
-                RefGrid.Reload();
-                _ = InvokeAsync(() => StateHasChanged());
-            }
         }
 
         private void EvaluateFields(List<FieldOptions> panelFields)
@@ -488,19 +464,27 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 });
             }
         }
-        
+        /// <summary>
+        /// Updates the custom attributes of a <paramref name="field"/> based on evaluation results.
+        /// </summary>
+        /// <param name="field">The <see cref="FieldOptions"/> object representing the field with custom attributes.</param>
+        /// <param name="isFieldDocument">Indicates whether the field is a document field.</param>
+        /// <param name="data">Additional data used for evaluation, applicable when <paramref name="isFieldDocument"/> is true.</param>
+        /// <returns>
+        /// Returns true if any custom attribute of the field has been updated, otherwise returns false.
+        /// </returns>
         public async Task<bool> UpdateCustomAttr(FieldOptions field, bool isFieldDocument = false, dynamic data = null)
         {
-            if(field.Fields != null && field.Fields.Count > 0)
+            if(field != null && field.Fields != null && field.Fields.Count > 0)
             {
                 EvaluateFields(field.Fields);
             }
 
-            if(field.CustomAttributes == null){
+            if(field != null && field.CustomAttributes == null){
                 return false;
             }
             
-            var fieldCustomAttr = field.CustomAttributes.Where(x => x.Key.StartsWith("sdk-",StringComparison.Ordinal) && x.Key != "sdk-change");
+            var fieldCustomAttr = field?.CustomAttributes.Where(x => x.Key.StartsWith("sdk-",StringComparison.Ordinal) && x.Key != "sdk-change");
             
             List<string> allowAttr = new List<string>(){
                 "sdk-show",
@@ -801,10 +785,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         {
             NavManager.NavigateTo($"{BusinessName}/");
         }
-
+        
+        /// <summary>
+        /// Handles the click event of a custom button, performing the associated action.
+        /// </summary>
+        /// <param name="button">The <see cref="Button"/> object representing the clicked button.</param>
+        /// <param name="obj">An optional dynamic object that may be passed to the action associated with the button.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task OnClickCustomButton(Button button, dynamic obj = null)
         {
-            if (!string.IsNullOrEmpty(button.Href))
+            if (!string.IsNullOrEmpty(button?.Href))
             {
                 if (button.Target == "_blank")
                 {
@@ -817,7 +807,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
 
             }
-            else if (!string.IsNullOrEmpty(button.Action))
+            else if (!string.IsNullOrEmpty(button?.Action))
             {
                 await EjectMethod(obj, button.Action).ConfigureAwait(true);
                 StateHasChanged();
@@ -870,6 +860,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             RefGrid.Reload();
         }
         
+        /// <summary>
+        /// Executes a specified action using an evaluator and method information extracted from the provided object. 
+        /// This method can handle asynchronous methods and optionally returns a value based on the 'hasReturn' parameter.
+        /// </summary>
+        /// <param name="obj">The object on which the action will be executed.</param>
+        /// <param name="action">The action to be executed.</param>
+        /// <param name="hasReturn">Indicates whether the action has a return value.</param>
+        /// <returns>
+        /// If 'hasReturn' is true and the action has a return value, the result of the action is returned.
+        /// If 'hasReturn' is false or the action is void, no explicit return value is provided.
+        /// If the action result is of type bool, it is returned directly.
+        /// </returns>
         public async Task<dynamic> EjectMethod(dynamic obj, string action, bool hasReturn = false)
         {
             var eject = await Evaluator.EvaluateCode(action, BusinessObj);
@@ -896,7 +898,5 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             }
             return obj;
         }
-        
-        
     }
 }

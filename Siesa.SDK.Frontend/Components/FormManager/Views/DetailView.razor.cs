@@ -554,7 +554,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 if (button.Target == "_blank")
                 {
-                    _ = JSRuntime.InvokeVoidAsync("window.open", button.Href, "_blank");
+                    _ = JSRuntime.InvokeVoidAsync("window.open", button.Href, "_blank").ConfigureAwait(true);
                 }
                 else
                 {
@@ -612,6 +612,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 }
             }
         }
+        
+        /// <summary>
+        /// Executes a specified action using an evaluator and method information extracted from the provided object. 
+        /// This method can handle asynchronous methods and optionally returns a value based on the 'hasReturn' parameter.
+        /// </summary>
+        /// <param name="obj">The object on which the action will be executed.</param>
+        /// <param name="action">The action to be executed.</param>
+        /// <param name="hasReturn">Indicates whether the action has a return value.</param>
+        /// <returns>
+        /// If 'hasReturn' is true and the action has a return value, the result of the action is returned.
+        /// If 'hasReturn' is false or the action is void, no explicit return value is provided.
+        /// If the action result is of type bool, it is returned directly.
+        /// </returns>
         public async Task<dynamic> EjectMethod(dynamic obj, string action, bool hasReturn = false)
         {
             var eject = await Evaluator.EvaluateCode(action, BusinessObj);

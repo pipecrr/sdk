@@ -45,11 +45,25 @@
 </SDKGrid>
 
 @code{
-
+    /// <summary>
+    /// The business object that is used to evaluate the button's custom attributes
+    /// </summary>
     [Parameter] public dynamic BusinessObj { get; set; }
+    /// <summary>
+    /// The button that is used to evaluate the custom attributes of the button
+    /// </summary>
     [Parameter] public Button ButtonDeltete { get; set; }
+    /// <summary>
+    /// The configuration of the detail exposed in the viewdef
+    /// </summary>
     [Parameter] public ListViewModel DetailConfig { get; set; } = new ListViewModel();
+    /// <summary>
+    /// Cascading parameter to get the form view component
+    /// </summary>
     [CascadingParameter] public dynamic FormView { get; set; }
+    /// <summary>
+    /// If the field is in detail mode
+    /// </summary>
     [Parameter] public bool IsDetail { get; set; }
 
     private string GetKey(string name, dynamic data)
