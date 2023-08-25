@@ -396,15 +396,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 _ = InvokeAsync(() => StateHasChanged());
             }
         }
-        /*public async Task<bool> EvaluateCodeButtons(Button button, string condition){
-            bool result = false;
-            var sdkDisable = button?.CustomAttributes[condition];
-            if(sdkDisable != null){
-                var eject = (bool)await Evaluator.EvaluateCode((string)sdkDisable, BusinessObj); //revisar
-                result = eject;
-            }
-            return result;
-        }*/
+        
+        /// <summary>
+        /// Evaluates a specified condition (sdk-disabled, sdk-hide, sdk-show) for a <paramref name="button"/> and returns the result.
+        /// </summary>
+        /// <param name="button">The <see cref="Button"/> object to evaluate the condition for.</param>
+        /// <param name="condition">The name of the condition stored in the custom attributes of the <paramref name="button"/>.</param>
+        /// <param name="data">An optional dynamic object that may be passed to the evaluation process.</param>
+        /// <returns>
+        /// Returns true if the condition evaluates to true; otherwise, returns false.
+        /// </returns>
         public async Task<bool> EvaluateCodeButtons(Button button, string condition, dynamic data = null)
         {
             bool result = false;
@@ -414,7 +415,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 if (data != null)
                 {
                     var indexData = BusinessObj.ChildObjs.IndexOf(data);
-                    if (attrValue.Contains("data_detail", StringComparison.Ordinal))
+                    if (attrValue != null && attrValue.Contains("data_detail", StringComparison.Ordinal))
                     {
                         attrValue = attrValue.Replace("data_detail", $"ChildObjs[{indexData}]",
                             StringComparison.Ordinal);
@@ -576,7 +577,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             bool changeViewContext = parameters.DidParameterChange(nameof(ViewContext), ViewContext);
             bool changeBusinessName = parameters.DidParameterChange(nameof(BusinessName), BusinessName);
 
-            await base.SetParametersAsync(parameters);
+            await base.SetParametersAsync(parameters).ConfigureAwait(true);
 
             if(changeViewContext || changeBusinessName)
             {
@@ -798,7 +799,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             {
                 if (button.Target == "_blank")
                 {
-                    _ = JSRuntime.InvokeVoidAsync("window.open", button.Href, "_blank");
+                    await JSRuntime.InvokeVoidAsync("window.open", button.Href, "_blank").ConfigureAwait(true);
                 }
                 else
                 {
@@ -810,7 +811,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             else if (!string.IsNullOrEmpty(button?.Action))
             {
                 await EjectMethod(obj, button.Action).ConfigureAwait(true);
-                StateHasChanged();
+                _ = InvokeAsync(() => StateHasChanged());
             }
         }
         

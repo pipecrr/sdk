@@ -398,15 +398,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 ExtraButtons = new List<Button>();
                 foreach (var button in FormViewModel.Buttons){
                     if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-disabled")){
-                        var disabled = await evaluateCodeButtons(button, "sdk-disabled");
+                        var disabled = await EvaluateCodeButtons(button, "sdk-disabled");
                         button.Disabled = disabled;
                     }
                     if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-hide")){
-                        var hidden = await evaluateCodeButtons(button, "sdk-hide");
+                        var hidden = await EvaluateCodeButtons(button, "sdk-hide");
                         button.Hidden = hidden;
                     }
                     if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-show")){
-                        var show = await evaluateCodeButtons(button, "sdk-show");
+                        var show = await EvaluateCodeButtons(button, "sdk-show");
                         button.Hidden = !show;
                     }
                     if(button.Id != null){
@@ -441,8 +441,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 //_ = InvokeAsync(() => StateHasChanged());
             }
         }
-
-        public async Task<bool> evaluateCodeButtons(Button button, string condition){
+    
+        public async Task<bool> EvaluateCodeButtons(Button button, string condition){
             bool disabled = button.Disabled;
             var sdkDisable = button.CustomAttributes[condition];
             if(sdkDisable != null){
@@ -547,14 +547,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
         }
 
-
+        /// <summary>
+        /// Handles the click event of a custom button, performing the associated action.
+        /// </summary>
+        /// <param name="button">The <see cref="Button"/> object representing the clicked button.</param>
+        /// <param name="obj">An optional dynamic object that may be passed to the action associated with the button.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task OnClickCustomButton(Button button, dynamic obj = null)
         {
-            if (!string.IsNullOrEmpty(button.Href))
+            if (!string.IsNullOrEmpty(button?.Href))
             {
                 if (button.Target == "_blank")
                 {
-                    _ = JSRuntime.InvokeVoidAsync("window.open", button.Href, "_blank").ConfigureAwait(true);
+                    await JSRuntime.InvokeVoidAsync("window.open", button.Href, "_blank").ConfigureAwait(true);
                 }
                 else
                 {
@@ -563,7 +568,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
 
             }
-            else if (!string.IsNullOrEmpty(button.Action))
+            else if (!string.IsNullOrEmpty(button?.Action))
             {
                 await EjectMethod(obj, button.Action).ConfigureAwait(true);
                 StateHasChanged();
