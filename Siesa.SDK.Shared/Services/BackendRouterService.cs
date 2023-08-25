@@ -31,8 +31,6 @@ namespace Siesa.SDK.Shared.Services
 
         public Task<AsyncDuplexStreamingCall<OpeningChannelToBackRequest, QueueMessageDTO>> OpenChannelFrontToBack(Action<QueueMessageDTO> Callback);
 
-        public Dictionary<string, List<Tuple<AsyncDuplexStreamingCall<OpeningChannelToBackRequest, QueueMessageDTO>, Action<QueueMessageDTO>>>> GetStreamingCalls();
-
         public void SetChannels(string _queueName, System.Threading.Channels.Channel<QueueMessageDTO> _channel);
 
         public Dictionary<string, List<System.Threading.Channels.Channel<QueueMessageDTO>>> GetChannels();
@@ -47,9 +45,6 @@ namespace Siesa.SDK.Shared.Services
         private List<BackendInfo> _observers = new List<BackendInfo>();
         private string _masterBackendURL;
         public static BackendRouterServiceBase Instance { get; private set; }
-
-        public Dictionary<string, List<Tuple<AsyncDuplexStreamingCall<OpeningChannelToBackRequest, QueueMessageDTO>, Action<QueueMessageDTO>>>> StreamingCalls { get; set; } = new Dictionary<string, List<Tuple<AsyncDuplexStreamingCall<OpeningChannelToBackRequest, QueueMessageDTO>, Action<QueueMessageDTO>>>>();
-
         public Dictionary<string, List<System.Threading.Channels.Channel<QueueMessageDTO>>> Channels { get; set; } = new Dictionary<string, List<System.Threading.Channels.Channel<QueueMessageDTO>>>();
 
         public void SetChannels(string _queueName, System.Threading.Channels.Channel<QueueMessageDTO> _channel)
@@ -72,11 +67,6 @@ namespace Siesa.SDK.Shared.Services
         public Dictionary<string, List<System.Threading.Channels.Channel<QueueMessageDTO>>> GetChannels()
         {
             return Channels;
-        }
-
-        public Dictionary<string, List<Tuple<AsyncDuplexStreamingCall<OpeningChannelToBackRequest, QueueMessageDTO>, Action<QueueMessageDTO>>>> GetStreamingCalls()
-        {
-            return StreamingCalls;
         }
 
         public BackendRouterServiceBase(IOptions<ServiceConfiguration> serviceConfiguration)
