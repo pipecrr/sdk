@@ -327,14 +327,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         private string OnChangeCellCode(string onChangeCell)
         {
             string result = onChangeCell;
-            if (onChangeCell.Contains("data_detail", StringComparison.Ordinal))
+            if (result.Contains("data_detail", StringComparison.Ordinal))
             {
                 var childObjs = EditFormContext.Model.GetType().GetProperty("ChildObjs")?
                     .GetValue(EditFormContext.Model) as System.Collections.IList;
                 if (childObjs != null)
                 {
                     var indexData = childObjs.IndexOf(BindModel);
-                    onChangeCell = onChangeCell.Replace("data_detail", $"ChildObjs[{indexData}]",
+                    result = result.Replace("data_detail", $"ChildObjs[{indexData}]",
                         StringComparison.Ordinal);
                 }
             }

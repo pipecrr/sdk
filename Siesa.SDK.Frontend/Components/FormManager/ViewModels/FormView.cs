@@ -504,14 +504,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 return false;
             }
             
-            List<string> allowedAttrs = new List<string>(){
-                "sdk-show",
-                "sdk-hide",
-                "sdk-required",
-                "sdk-readonly",
-                "sdk-disabled"
-            }; //TODO: Enum
-            
             bool shouldUpdate = false;
             
             var fieldCustomAttr = field.CustomAttributes.Where(x => x.Key.StartsWith("sdk-",StringComparison.Ordinal) && x.Key != "sdk-change");
@@ -533,10 +525,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         {
             string attrValue = (string)attr.Value;
 
-            if (isFieldDocument && data != null && attrValue.Contains("data_detail"))
+            if (isFieldDocument && data != null && attrValue.Contains("data_detail", StringComparison.Ordinal))            
             {
                 var indexData = BusinessObj.ChildObjs.IndexOf(data);
-                attrValue = attrValue.Replace("data_detail", $"ChildObjs[{indexData}]");
+                attrValue = attrValue.Replace("data_detail", $"ChildObjs[{indexData}]", StringComparison.Ordinal);
             }
 
             var result = (bool)await Evaluator.EvaluateCode(attrValue, BusinessObj);

@@ -32,6 +32,15 @@ namespace Siesa.SDK.Shared.Utilities
             return IsAssignableToGenericType(baseType, genericType);
         }
 
+        /// <summary>
+        /// Checks if the user has permission to perform a specified action on a business entity.
+        /// </summary>
+        /// <param name="businessName">The name of the business entity.</param>
+        /// <param name="actionRowid">The identifier of the action.</param>
+        /// <param name="authenticationService">The authentication service providing user information.</param>
+        /// <returns>
+        /// Returns true if the user has permission to perform the action; otherwise, returns false.
+        /// </returns>
         public static bool CheckUserActionPermission(string businessName, int actionRowid,
             IAuthenticationService authenticationService)
         {
@@ -83,6 +92,13 @@ namespace Siesa.SDK.Shared.Utilities
             return result;
         }
 
+        /// <summary>
+        /// Searches for an assembly containing a specified type by its name.
+        /// </summary>
+        /// <param name="type_name">The name of the type to search for.</param>
+        /// <returns>
+        /// Returns an <see cref="Assembly"/> containing the specified type, if found; otherwise, returns null.
+        /// </returns>
         public static Assembly SearchAssemblyByType(string type_name)
         {
             Type type = Type.GetType(type_name);
@@ -101,7 +117,14 @@ namespace Siesa.SDK.Shared.Utilities
             return null;
         }
 
-        //TODO: Refactorizar esos 2 métodos
+        /// <summary>
+        /// Searches for a type with the specified name within registered assemblies and optionally all loaded assemblies.
+        /// </summary>
+        /// <param name="name">The name of the type to search for.</param>
+        /// <param name="fullSearch">Indicates whether to perform a search within all loaded assemblies.</param>
+        /// <returns>
+        /// Returns a <see cref="Type"/> representing the found type, if available; otherwise, returns null.
+        /// </returns>
         public static Type SearchType(string name, bool fullSearch = false)
         {
             Type type = Type.GetType(name);
@@ -266,34 +289,5 @@ namespace Siesa.SDK.Shared.Utilities
             var UTable = EntityType.Assembly.GetType(TableName);
             return UTable;
         }
-        
-        /// <summary>
-        /// Replaces occurrences of a specified parameter code in the provided <paramref name="code"/> with formatted values.
-        /// </summary>
-        /// <param name="paramCode">The parameter code to replace within the <paramref name="code"/>.</param>
-        /// <param name="code">The original code containing the parameter code.</param>
-        /// <param name="model">The dynamic model containing the data.</param>
-        /// <param name="data">The dynamic data object.</param>
-        /// <returns>
-        /// Returns the <paramref name="code"/> with occurrences of <paramref name="paramCode"/> replaced by formatted values.
-        /// </returns>
-        public static string GetCodeFormat(string paramCode, string code, dynamic model, dynamic data)
-        {
-            string result = code;
-            if (code.Contains(paramCode, StringComparison.Ordinal))
-            {
-                var childObjs = model.GetType().GetProperty("ChildObjs")?
-                    .GetValue(model) as System.Collections.IList;
-                if (childObjs != null)
-                {
-                    var indexData = childObjs.IndexOf(data);
-                    code = code.Replace("data_detail", $"ChildObjs[{indexData}]",
-                        StringComparison.Ordinal);
-                }
-            }
-
-            return code;
-        }
-
     }
 }

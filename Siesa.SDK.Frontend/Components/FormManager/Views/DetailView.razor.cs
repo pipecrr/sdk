@@ -448,8 +448,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         /// Evaluates a specified condition (sdk-disabled, sdk-hide, sdk-show) for a <paramref name="button"/> and returns the result.
         /// </summary>
         /// <param name="button">The <see cref="Button"/> object to evaluate the condition for.</param>
-        /// <param name="condition">The name of the condition stored in the custom attributes of the <paramref name="button"/>.</param>
-        /// <param name="data">An optional dynamic object that may be passed to the evaluation process.</param>
+        /// <param name="condition">The name of the condition stored in the custom attributes of the <paramref name="button"/>.</param>        
         /// <returns>
         /// Returns true if the condition evaluates to true; otherwise, returns false.
         /// </returns>
