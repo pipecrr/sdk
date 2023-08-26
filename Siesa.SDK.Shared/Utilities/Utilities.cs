@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Microsoft.AspNetCore.Components.Forms;
 using Siesa.SDK.Shared.Application;
 using Siesa.SDK.Shared.DataAnnotations;
 using Siesa.SDK.Shared.Services;
@@ -31,24 +32,27 @@ namespace Siesa.SDK.Shared.Utilities
             return IsAssignableToGenericType(baseType, genericType);
         }
 
-        public static bool CheckUserActionPermission(string businessName, int actionRowid, IAuthenticationService authenticationService)
+        public static bool CheckUserActionPermission(string businessName, int actionRowid,
+            IAuthenticationService authenticationService)
         {
             try
             {
-                if(authenticationService == null || authenticationService.User == null)
+                if (authenticationService == null || authenticationService.User == null)
                 {
                     return false;
                 }
 
-                if(!authenticationService.User.FeaturePermissions.ContainsKey(businessName))
+                if (!authenticationService.User.FeaturePermissions.ContainsKey(businessName))
                 {
                     return false;
                 }
 
-                if(!authenticationService.User.FeaturePermissions[businessName].Contains(actionRowid) && !authenticationService.User.FeaturePermissions[businessName].Contains(-999))
+                if (!authenticationService.User.FeaturePermissions[businessName].Contains(actionRowid) &&
+                    !authenticationService.User.FeaturePermissions[businessName].Contains(-999))
                 {
                     return false;
                 }
+
                 return true;
 
             }
@@ -56,9 +60,9 @@ namespace Siesa.SDK.Shared.Utilities
             {
                 return false;
             }
-            
+
         }
-        
+
         /// <summary>
         /// This method is used to get if the business object is a document or not.
         /// </summary>
@@ -69,35 +73,43 @@ namespace Siesa.SDK.Shared.Utilities
         {
             bool result = false;
             Type businessType = businessObj.GetType();
-            
-            if(businessType.BaseType != null && businessType.BaseType.IsGenericType && businessType.BaseType.GetGenericTypeDefinition() == documentType){
+
+            if (businessType.BaseType != null && businessType.BaseType.IsGenericType &&
+                businessType.BaseType.GetGenericTypeDefinition() == documentType)
+            {
                 result = true;
             }
-            
+
             return result;
         }
 
-        public static Assembly SearchAssemblyByType(string type_name) {
+        public static Assembly SearchAssemblyByType(string type_name)
+        {
             Type type = Type.GetType(type_name);
             if (type != null)
             {
                 return Assembly.GetExecutingAssembly();
             }
+
             foreach (var asm in SDKApp.AsembliesReg)
             {
                 type = asm.GetType(type_name);
                 if (type != null)
                     return asm;
             }
+
             return null;
         }
+
         //TODO: Refactorizar esos 2 métodos
-        public static Type SearchType(string name, bool fullSearch = false) {
+        public static Type SearchType(string name, bool fullSearch = false)
+        {
             Type type = Type.GetType(name);
             if (type != null)
             {
                 return type;
             }
+
             foreach (var asm in SDKApp.AsembliesReg)
             {
                 type = asm.GetType(name);
@@ -105,26 +117,29 @@ namespace Siesa.SDK.Shared.Utilities
                     return type;
             }
 
-            if(fullSearch){
+            if (fullSearch)
+            {
                 foreach (Assembly ass in AppDomain.CurrentDomain.GetAssemblies())
                 {
-                    
+
                     type = ass.GetType(name);
                     if (type != null)
                         return type;
                 }
             }
 
-            
+
             return null;
         }
 
         public static object GetInstance(string strFullyQualifiedName, bool fullSearch = false)
         {
             Type type = Utilities.SearchType(strFullyQualifiedName, fullSearch);
-            if (type != null) {
+            if (type != null)
+            {
                 return Activator.CreateInstance(type);
             }
+
             return null;
         }
 
@@ -140,11 +155,13 @@ namespace Siesa.SDK.Shared.Utilities
                     return reader.ReadToEnd();
                 }
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 return null;
             }
 
         }
+
         public static byte[] ReadAssemblyResourceBytes(Assembly asm, string name)
         {
             try
@@ -158,22 +175,25 @@ namespace Siesa.SDK.Shared.Utilities
                     return memoryStream.ToArray();
                 }
 
-                
+
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 return null;
             }
 
         }
+
         public static List<string> GetAssemblyResources(Assembly asm, string path)
         {
             try
             {
                 string fullpath = $"{asm.GetName().Name}.{path}";
                 return asm.GetManifestResourceNames().Where(str => str.StartsWith(fullpath)).ToList();
-                
+
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 return null;
             }
 
@@ -193,23 +213,27 @@ namespace Siesa.SDK.Shared.Utilities
                     propertyIndex = int.Parse(propertyName.Substring(index + 1, propertyName.Length - index - 2));
                     propertyName = propertyName.Substring(0, index);
                 }
+
                 var tmpProperty = tmpType.GetProperty(propertyName);
                 var tmpValue = tmpProperty.GetValue(currentData, null);
-                if(propertyIndex > -1)
+                if (propertyIndex > -1)
                 {
                     tmpValue = ((System.Collections.IList)tmpValue)[propertyIndex];
                 }
+
                 var isEntity = Utilities.IsAssignableToGenericType(tmpProperty.PropertyType, typeBaseSDK);
                 if (tmpValue == null && isEntity)
                 {
                     tmpValue = Activator.CreateInstance(tmpProperty.PropertyType);
                     tmpProperty.SetValue(currentData, tmpValue);
                 }
+
                 currentData = tmpValue;
             }
+
             return currentData;
         }
-        
+
         private static string GetUName(Type EntityType)
         {
             var dataAnnotation = EntityType.GetCustomAttributes(typeof(SDKAuthorization), false);
@@ -242,5 +266,34 @@ namespace Siesa.SDK.Shared.Utilities
             var UTable = EntityType.Assembly.GetType(TableName);
             return UTable;
         }
+        
+        /// <summary>
+        /// Replaces occurrences of a specified parameter code in the provided <paramref name="code"/> with formatted values.
+        /// </summary>
+        /// <param name="paramCode">The parameter code to replace within the <paramref name="code"/>.</param>
+        /// <param name="code">The original code containing the parameter code.</param>
+        /// <param name="model">The dynamic model containing the data.</param>
+        /// <param name="data">The dynamic data object.</param>
+        /// <returns>
+        /// Returns the <paramref name="code"/> with occurrences of <paramref name="paramCode"/> replaced by formatted values.
+        /// </returns>
+        public static string GetCodeFormat(string paramCode, string code, dynamic model, dynamic data)
+        {
+            string result = code;
+            if (code.Contains(paramCode, StringComparison.Ordinal))
+            {
+                var childObjs = model.GetType().GetProperty("ChildObjs")?
+                    .GetValue(model) as System.Collections.IList;
+                if (childObjs != null)
+                {
+                    var indexData = childObjs.IndexOf(data);
+                    code = code.Replace("data_detail", $"ChildObjs[{indexData}]",
+                        StringComparison.Ordinal);
+                }
+            }
+
+            return code;
+        }
+
     }
 }

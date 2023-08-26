@@ -51,6 +51,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Inject] public SDKGlobalLoaderService GlobalLoaderService { get; set; }
 
         protected FormViewModel FormViewModel { get; set; } = new FormViewModel();
+        /// <summary>
+        /// Gets or sets the config detail view model.
+        /// </summary>
         protected ListViewModel DetailConfig { get; set; } = new ListViewModel();
 
         public List<Panel> Panels {get { return FormViewModel.Panels; } }
@@ -95,7 +98,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         /// Gets or sets a value indicating whether the business object is a document.
         /// </summary>
         public bool IsDocument { get; set; }
-        public List<FieldOptComponent> ListFieldOptComponents  = new List<FieldOptComponent>();
+        
         public int CountUnicErrors = 0;
 
         private string _viewdefName = "";
@@ -127,6 +130,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public List<Button> ExtraButtons { get; set; }
         public Button SaveButton { get; set; }
         public bool isOnePanel { get; set; }
+        /// <summary>
+        /// Gets or sets the delete button config. 
+        /// </summary>
         protected Button ButtonDeltete {get; set;  }
         /// <summary>
         /// Gets or sets the reference grid.
@@ -294,7 +300,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             {
                 DetailConfig = FormViewModel.DetailConfig;
                 AddOnChangeCell();
-                ButtonDeltete = DetailConfig.Buttons.Where(x => x.Id.Equals("Delete",StringComparison.Ordinal)).FirstOrDefault();
+                ButtonDeltete = DetailConfig.Buttons.FirstOrDefault(x => x.Id.Equals("Delete",StringComparison.Ordinal));
                 BusinessObj.ExtraDetailFields = DetailConfig.Fields.Select(x => x.Name).ToList();
                 
                 await BusinessObj.InitializeChilds().ConfigureAwait(true);
@@ -365,15 +371,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 ExtraButtons = new List<Button>();
                 foreach (var button in FormViewModel.Buttons){
                     if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-disabled")){
-                        var disabled = await EvaluateCodeButtons(button, "sdk-disabled");
+                        var disabled = await EvaluateCodeButtons(button, "sdk-disabled").ConfigureAwait(true);
                         button.Disabled = disabled;
                     }
                     if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-hide")){
-                        var hidden = await EvaluateCodeButtons(button, "sdk-hide");
+                        var hidden = await EvaluateCodeButtons(button, "sdk-hide").ConfigureAwait(true);
                         button.Hidden = hidden;
                     }
                     if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-show")){
-                        var show = await EvaluateCodeButtons(button, "sdk-show");
+                        var show = await EvaluateCodeButtons(button, "sdk-show").ConfigureAwait(true);
                         button.Hidden = !show;
                     }
                     if(button.Id != null){
@@ -414,12 +420,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 string attrValue = sdkAttr.ToString();
                 if (data != null)
                 {
-                    var indexData = BusinessObj.ChildObjs.IndexOf(data);
-                    if (attrValue != null && attrValue.Contains("data_detail", StringComparison.Ordinal))
-                    {
-                        attrValue = attrValue.Replace("data_detail", $"ChildObjs[{indexData}]",
-                            StringComparison.Ordinal);
-                    }
+                    attrValue = attrCode(attrValue, data);
                     result = await EjectMethod(data, attrValue, true).ConfigureAwait(true);
                 }
                 else
@@ -428,6 +429,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     result = eject;
                 }
             }
+            return result;
+        }
+
+        private string attrCode(string attrValue, dynamic data)
+        {
+            string result = attrValue;
+            var indexData = BusinessObj.ChildObjs.IndexOf(data);
+            if (result != null && result.Contains("data_detail", StringComparison.Ordinal))
+            {
+                result = result.Replace("data_detail", $"ChildObjs[{indexData}]",
+                    StringComparison.Ordinal);
+            }
+
             return result;
         }
 
@@ -476,80 +490,37 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         /// </returns>
         public async Task<bool> UpdateCustomAttr(FieldOptions field, bool isFieldDocument = false, dynamic data = null)
         {
-            if(field != null && field.Fields != null && field.Fields.Count > 0)
+            if (field == null)
+            {
+                return false;
+            }
+            
+            if(field.Fields != null && field.Fields.Count > 0)
             {
                 EvaluateFields(field.Fields);
             }
 
-            if(field != null && field.CustomAttributes == null){
+            if(field.CustomAttributes == null){
                 return false;
             }
             
-            var fieldCustomAttr = field?.CustomAttributes.Where(x => x.Key.StartsWith("sdk-",StringComparison.Ordinal) && x.Key != "sdk-change");
-            
-            List<string> allowAttr = new List<string>(){
+            List<string> allowedAttrs = new List<string>(){
                 "sdk-show",
                 "sdk-hide",
                 "sdk-required",
                 "sdk-readonly",
                 "sdk-disabled"
             }; //TODO: Enum
-
+            
             bool shouldUpdate = false;
             
+            var fieldCustomAttr = field.CustomAttributes.Where(x => x.Key.StartsWith("sdk-",StringComparison.Ordinal) && x.Key != "sdk-change");
+
             foreach (var attr in fieldCustomAttr)
             {
-                if(!allowAttr.Contains(attr.Key))
-                {
-                    continue;
-                }
                 try
                 {
-                    string attrValue = (string)attr.Value;
-                    if (isFieldDocument && data != null)
-                    {
-                        var indexData = BusinessObj.ChildObjs.IndexOf(data);
-                        if (attrValue.Contains("data_detail", StringComparison.Ordinal))
-                        {
-                            attrValue = attrValue.Replace("data_detail", $"ChildObjs[{indexData}]",
-                                StringComparison.Ordinal);
-                        }
-                    }
-                    var result = (bool)await Evaluator.EvaluateCode(attrValue, BusinessObj);
-                    switch (attr.Key)
-                    {
-                        case "sdk-show":
-                            if(field.Hidden != !result)
-                            {
-                                field.Hidden = !result;
-                                shouldUpdate = true;
-                            }
-                            break;
-                        case "sdk-hide":
-                            if(field.Hidden != result)
-                            {
-                                field.Hidden = result;
-                                shouldUpdate = true;
-                            }
-                            break;
-                        case "sdk-required":
-                            if(field.Required != result)
-                            {
-                                field.Required = result;
-                                shouldUpdate = true;
-                            }
-                            break;
-                        case "sdk-readonly":
-                        case "sdk-disabled":
-                            if(field.Disabled != result)
-                            {
-                                field.Disabled = result;
-                                shouldUpdate = true;
-                            }
-                            break;
-                        default:
-                            break;
-                    }
+                    shouldUpdate |= await UpdateFieldBasedOnAttr(field, attr, isFieldDocument, data);
                 }
                 catch (System.Exception ex)
                 {
@@ -557,6 +528,55 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 }
             }
             return shouldUpdate;
+        }
+        private async Task<bool> UpdateFieldBasedOnAttr(FieldOptions field, KeyValuePair<string, object> attr, bool isFieldDocument, dynamic data)
+        {
+            string attrValue = (string)attr.Value;
+
+            if (isFieldDocument && data != null && attrValue.Contains("data_detail"))
+            {
+                var indexData = BusinessObj.ChildObjs.IndexOf(data);
+                attrValue = attrValue.Replace("data_detail", $"ChildObjs[{indexData}]");
+            }
+
+            var result = (bool)await Evaluator.EvaluateCode(attrValue, BusinessObj);
+
+            switch (attr.Key)
+            {
+                case "sdk-show":
+                    if (field.Hidden != !result)
+                    {
+                        field.Hidden = !result;
+                        return true;
+                    }
+                    break;
+                case "sdk-hide":
+                    if (field.Hidden != result)
+                    {
+                        field.Hidden = result;
+                        return true;
+                    }
+                    break;
+                case "sdk-required":
+                    if (field.Required != result)
+                    {
+                        field.Required = result;
+                        return true;
+                    }
+                    break;
+                case "sdk-readonly":
+                case "sdk-disabled":
+                    if (field.Disabled != result)
+                    {
+                        field.Disabled = result;
+                        return true;
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            return false;
         }
 
         protected override async Task OnInitializedAsync()

@@ -296,18 +296,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                     }
                 });
             }
-            if (!OnChangeCell.IsNullOrEmpty()){
-                if (OnChangeCell.Contains("data_detail", StringComparison.Ordinal))
-                {
-                    var childObjs = EditFormContext.Model.GetType().GetProperty("ChildObjs")?
-                        .GetValue(EditFormContext.Model) as System.Collections.IList;
-                    if (childObjs != null)
-                    {
-                        var indexData = childObjs.IndexOf(BindModel);
-                        OnChangeCell = OnChangeCell.Replace("data_detail", $"ChildObjs[{indexData}]",
-                            StringComparison.Ordinal);
-                    }
-                }
+            if (!OnChangeCell.IsNullOrEmpty())
+            {
+                OnChangeCell = OnChangeCellCode(OnChangeCell);
                 _ = Task.Run(async () =>
                 {
                     bool modifyRow = true;
@@ -332,6 +323,24 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             
             CheckUniqueValue();
         }
+
+        private string OnChangeCellCode(string onChangeCell)
+        {
+            string result = onChangeCell;
+            if (onChangeCell.Contains("data_detail", StringComparison.Ordinal))
+            {
+                var childObjs = EditFormContext.Model.GetType().GetProperty("ChildObjs")?
+                    .GetValue(EditFormContext.Model) as System.Collections.IList;
+                if (childObjs != null)
+                {
+                    var indexData = childObjs.IndexOf(BindModel);
+                    onChangeCell = onChangeCell.Replace("data_detail", $"ChildObjs[{indexData}]",
+                        StringComparison.Ordinal);
+                }
+            }
+            return result;
+        }
+
 
         private async Task<bool> EvaluateCellChangeAsync(string code, object model, bool hasReturn = false)
         {

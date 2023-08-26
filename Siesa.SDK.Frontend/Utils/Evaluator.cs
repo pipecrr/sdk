@@ -24,7 +24,7 @@ namespace Siesa.SDK.Frontend.Utils
             if (propertyName.Contains('[', StringComparison.Ordinal))
             {
                 var index = propertyName.IndexOf('[', StringComparison.Ordinal);
-                propertyIndex = int.Parse(propertyName.Substring(index + 1, propertyName.Length - index - 2));
+                propertyIndex = int.Parse(propertyName.Substring(index + 1, propertyName.Length - index - 2), CultureInfo.InvariantCulture);
                 propertyName = propertyName.Substring(0, index);
                 singleProperty = propertyName;
             }

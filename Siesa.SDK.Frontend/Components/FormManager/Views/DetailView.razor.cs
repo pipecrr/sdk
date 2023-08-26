@@ -70,6 +70,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         [Inject] public SDKNotificationService NotificationService { get; set; }        
         protected FormViewModel FormViewModel { get; set; } = new FormViewModel();
+        /// <summary>
+        /// Gets or sets the config detail view model.
+        /// </summary>
         protected ListViewModel DetailConfig { get; set; } = new ListViewModel();
         protected List<Panel> Panels { get { return FormViewModel.Panels; } }
         public List<Panel> PanelsCollapsable = new List<Panel>();
@@ -398,15 +401,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 ExtraButtons = new List<Button>();
                 foreach (var button in FormViewModel.Buttons){
                     if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-disabled")){
-                        var disabled = await EvaluateCodeButtons(button, "sdk-disabled");
+                        var disabled = await EvaluateCodeButtons(button, "sdk-disabled").ConfigureAwait(true);
                         button.Disabled = disabled;
                     }
                     if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-hide")){
-                        var hidden = await EvaluateCodeButtons(button, "sdk-hide");
+                        var hidden = await EvaluateCodeButtons(button, "sdk-hide").ConfigureAwait(true);
                         button.Hidden = hidden;
                     }
                     if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-show")){
-                        var show = await EvaluateCodeButtons(button, "sdk-show");
+                        var show = await EvaluateCodeButtons(button, "sdk-show").ConfigureAwait(true);
                         button.Hidden = !show;
                     }
                     if(button.Id != null){
@@ -441,7 +444,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 //_ = InvokeAsync(() => StateHasChanged());
             }
         }
-    
+        /// <summary>
+        /// Evaluates a specified condition (sdk-disabled, sdk-hide, sdk-show) for a <paramref name="button"/> and returns the result.
+        /// </summary>
+        /// <param name="button">The <see cref="Button"/> object to evaluate the condition for.</param>
+        /// <param name="condition">The name of the condition stored in the custom attributes of the <paramref name="button"/>.</param>
+        /// <param name="data">An optional dynamic object that may be passed to the evaluation process.</param>
+        /// <returns>
+        /// Returns true if the condition evaluates to true; otherwise, returns false.
+        /// </returns>
         public async Task<bool> EvaluateCodeButtons(Button button, string condition){
             bool disabled = button.Disabled;
             var sdkDisable = button.CustomAttributes[condition];
