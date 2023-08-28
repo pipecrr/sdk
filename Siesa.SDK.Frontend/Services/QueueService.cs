@@ -8,15 +8,26 @@ using Siesa.SDK.Shared.Services;
 
 namespace Siesa.SDK.Frontend.Services
 {
-
+    /// <summary>
+    /// Implementación de un servicio para interactuar con colas de mensajes RabbitMQ.
+    /// </summary>
     public class QueueService : IQueueService
     {
         private readonly IBackendRouterService _backendRouterService;
         private readonly IAuthenticationService _authenticationService;
 
+        /// <summary>
+        /// Canal de comunicación con el Backend.
+        /// </summary>
         public Grpc.Core.AsyncDuplexStreamingCall<Siesa.SDK.Protos.OpeningChannelToBackRequest, Siesa.SDK.Protos.QueueMessageDTO> DuplexStreamingCall { get; set; }
 
         private Dictionary<string, List<Action<QueueMessageDTO>>> _subscriptionsActions = new();
+
+        /// <summary>
+        /// Constructor de la clase <see cref="QueueService"/>.
+        /// </summary>
+        /// <param name="backendRouterService">Servicio de enrutamiento hacia el Backend.</param>
+        /// <param name="authenticationService">Servicio de autenticación.</param>
         public QueueService(IBackendRouterService backendRouterService, IAuthenticationService authenticationService)
         {
             _authenticationService = authenticationService;
@@ -27,11 +38,22 @@ namespace Siesa.SDK.Frontend.Services
         {
             return _backendRouterService.GetSDKBusinessModel("BLSDKQueue", _authenticationService);
         }
+        /// <summary>
+        /// Envía un mensaje a un exchange específico.
+        /// </summary>
+        /// <param name="exchangeName">Nombre del exchange de destino.</param>
+        /// <param name="routingKey">Clave de enrutamiento del mensaje.</param>
+        /// <param name="message">Mensaje a enviar.</param>
         public void SendMessage(string exchangeName, string routingKey, QueueMessageDTO message)
         {
             throw new NotImplementedException();
         }
-
+        /// <summary>
+        /// Suscribe un método para recibir mensajes desde una cola específica en el Frontend.
+        /// </summary>
+        /// <param name="exchangeName">Nombre del exchange asociado a la cola.</param>
+        /// <param name="bindingKey">Clave de enrutamiento de la cola.</param>
+        /// <param name="action">Acción a ejecutar al recibir un mensaje (opcional).</param>
         public void Subscribe(string exchangeName, string bindingKey, Action<QueueMessageDTO> action = null)
         {
             SubscribeAction(exchangeName, bindingKey, action);
@@ -40,7 +62,7 @@ namespace Siesa.SDK.Frontend.Services
 
             _ = BLBackend.Call("SubscribeToQueueFront", exchangeName, bindingKey);
 
-            _ = OpenChannel( exchangeName,  bindingKey);
+            _ = OpenChannel(exchangeName, bindingKey);
 
         }
 
@@ -48,9 +70,10 @@ namespace Siesa.SDK.Frontend.Services
         {
             if (DuplexStreamingCall == null)
             {
-                DuplexStreamingCall = await  _backendRouterService.OpenChannelFrontToBack(ExcuteActions);
+                DuplexStreamingCall = await _backendRouterService.OpenChannelFrontToBack(ExcuteActions);
             }
-           await  DuplexStreamingCall.RequestStream.WriteAsync(new OpeningChannelToBackRequest() { ExchangeName = exchangeName, BindingKey = bindingKey });
+            //Cerrar canal
+            await DuplexStreamingCall.RequestStream.WriteAsync(new OpeningChannelToBackRequest() { ExchangeName = exchangeName, BindingKey = bindingKey });
         }
 
         private void ExcuteActions(QueueMessageDTO message)
@@ -74,7 +97,7 @@ namespace Siesa.SDK.Frontend.Services
         private void SubscribeAction(string exchangeName, string bindingKey, Action<QueueMessageDTO> action = null)
         {
             var subscriptionKey = $"{exchangeName}_{bindingKey}";
-            
+
             if (_subscriptionsActions.ContainsKey(subscriptionKey))
             {
                 var actions = _subscriptionsActions[subscriptionKey];
@@ -90,10 +113,21 @@ namespace Siesa.SDK.Frontend.Services
             }
         }
 
+        /// <summary>
+        /// Cancela la suscripción a una cola específica.
+        /// </summary>
+        /// <param name="exchangeName">Nombre del exchange asociado a la cola.</param>
+        /// <param name="bindingKey">Clave de enrutamiento de la cola.</param>
         public void Unsubscribe(string exchangeName, string bindingKey)
         {
             _subscriptionsActions.Remove($"{exchangeName}_{bindingKey}");
+            DuplexStreamingCall.Dispose();
             //_backendRouterService.RemoveChannels($"{exchangeName}_{bindingKey}");
+        }
+
+        public void TestDisconnection()
+        {
+            throw new NotImplementedException();
         }
     }
 }

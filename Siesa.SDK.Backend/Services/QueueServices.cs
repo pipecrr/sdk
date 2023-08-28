@@ -18,6 +18,9 @@ using Siesa.SDK.Protos;
 
 namespace Siesa.SDK.Backend.Services
 {
+    /// <summary>
+    /// Implementación de un servicio para interactuar con colas de mensajes RabbitMQ.
+    /// </summary>
     public class QueueService : BackgroundService, IQueueService
     {
 
@@ -29,6 +32,9 @@ namespace Siesa.SDK.Backend.Services
         private ConnectionFactory factory = new ConnectionFactory() { HostName = "coder.overjt.com" };
         private readonly IServiceProvider _serviceProvider;
 
+        /// <summary>
+        /// Constructor de la clase <see cref="QueueService"/>.
+        /// </summary>
         public QueueService()
         {
             //_connection = factory.CreateConnection();
@@ -80,6 +86,13 @@ namespace Siesa.SDK.Backend.Services
         {
             _connection.Close();
         }
+
+        /// <summary>
+        /// Suscribe un método para recibir mensajes desde una cola específica.
+        /// </summary>
+        /// <param name="exchangeName">Nombre del exchange asociado a la cola.</param>
+        /// <param name="bindingKey">Clave de enrutamiento de la cola.</param>
+        /// <param name="action">Acción a ejecutar al recibir un mensaje (opcional).</param>
         public void Subscribe(string exchangeName, string bindingKey, Action<QueueMessageDTO> action = null)
         {
             if (action != null)
@@ -121,6 +134,13 @@ namespace Siesa.SDK.Backend.Services
 
             _channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
         }
+
+        /// <summary>
+        /// Envía un mensaje a un exchange específico.
+        /// </summary>
+        /// <param name="exchangeName">Nombre del exchange de destino.</param>
+        /// <param name="routingKey">Clave de enrutamiento del mensaje.</param>
+        /// <param name="message">Mensaje a enviar.</param>
         public void SendMessage(string exchangeName, string routingKey, QueueMessageDTO message)
         {
             _channel.ExchangeDeclare(exchange: exchangeName, type: ExchangeType.Topic);
@@ -197,6 +217,11 @@ namespace Siesa.SDK.Backend.Services
             }
         }
         public void Unsubscribe(string exchangeName, string bindingKey)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void TestDisconnection ()
         {
             throw new NotImplementedException();
         }
