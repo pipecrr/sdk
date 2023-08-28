@@ -120,8 +120,16 @@ namespace Siesa.SDK.Frontend.Services
         /// <param name="bindingKey">Clave de enrutamiento de la cola.</param>
         public void Unsubscribe(string exchangeName, string bindingKey)
         {
-            _subscriptionsActions.Remove($"{exchangeName}_{bindingKey}");
-            DuplexStreamingCall.Dispose();
+            try
+            {
+
+                _subscriptionsActions.Remove($"{exchangeName}_{bindingKey}");
+                DuplexStreamingCall.Dispose();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Error al cerrar el canal");
+            }
             //_backendRouterService.RemoveChannels($"{exchangeName}_{bindingKey}");
         }
 

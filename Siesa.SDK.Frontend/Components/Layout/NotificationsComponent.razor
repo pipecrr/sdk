@@ -1,0 +1,47 @@
+@using Siesa.SDK.Frontend.Components.Visualization
+@inherits SDKComponent
+
+<div class="card-container">
+
+    @if (Notifications.Any())
+    {
+        @foreach (var notify in Notifications)
+        {
+            <SDKCard StyleCss="notification-card">
+                <h5>@notify.QueueName</h5>
+                <br />
+                <p>@notify.Message</p>
+            </SDKCard>
+        }
+    }else
+    {
+        <SDKCard StyleCss="notification-card">
+            <h5>Notificaciones</h5>
+            <br />
+            <p>No hay notificaciones</p>
+        </SDKCard>
+    }
+</div>
+
+@code 
+{
+    [Parameter]
+    public Siesa.SDK.Protos.QueueMessageDTO Message { get; set; }
+
+    private List<Siesa.SDK.Protos.QueueMessageDTO> Notifications { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();   
+    }
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Notifications == null)
+            Notifications = new List<Siesa.SDK.Protos.QueueMessageDTO>();
+
+        Notifications.Add(Message);
+
+        await base.OnParametersSetAsync();
+    }
+
+}
