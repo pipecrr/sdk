@@ -624,7 +624,7 @@ input#collapse_open:checked~.collapse_open_btn>.nav_btn_standar_text {
 
 .whcm_table>div>table>thead>tr>th {
     padding: 0.5rem 0 !important;
-    background-color: var(--color_light);
+    background-color: var(--color_panel_back);
     border-bottom: 1px solid var(--color_primary);
     border-left: none !important;
     border-right: none !important;
@@ -939,6 +939,7 @@ div .form-control, div .form-control:focus{
     position: relative;
     margin-top: 2.063rem;
     padding-top: 2.5rem;
+    border: 1px solid var(--color_panel_back_border);
 }
 
 .btn-secondary,
@@ -1304,7 +1305,7 @@ div .form-control, div .form-control:focus{
 }
 
 .rz-growl-icon-close:hover {
-    color: #000 !important;
+    color:var(--color_alert_text) !important;
     text-decoration: none !important;
     opacity: 1 !important;
 }
@@ -1379,7 +1380,7 @@ div .form-control, div .form-control:focus{
 .sdk_card{
     background-color: var(--color_panel_back) !important;
     background-clip: border-box;
-    border: 1px solid var(--color_border_card);
+    border: 1px solid var(--color_panel_back_border);
     border-radius: var(--border_radius_standar_max) !important;
     box-shadow: var(--shadow_standar_min) !important;
 } 
@@ -1524,6 +1525,7 @@ div .form-control, div .form-control:focus{
 
 .modal-content {
     border: none !important;
+    background-color: var(--color_panel_back) !important;
 }
 
 .modal_circle_back_info,

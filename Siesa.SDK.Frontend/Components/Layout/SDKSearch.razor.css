@@ -5,7 +5,7 @@
 .sdk_search>input {
     border: transparent;
     background: #ffffff4d;
-    color: var(--color_light);
+    color: var(--color_light) !important;
 }
 
 .sdk_search>input:focus {

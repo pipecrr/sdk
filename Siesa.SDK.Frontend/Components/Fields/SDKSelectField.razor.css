@@ -142,7 +142,7 @@
 }
 
 .sdk-dropdown-container> ::deep .rz-dropdown-panel .rz-dropdown-items-wrapper .rz-dropdown-items .rz-dropdown-item:hover {
-    background-color: #4dabdc;
+    background-color: var(--color_back_2);
     color: #ffffff;
     border-radius: 0;
 }
