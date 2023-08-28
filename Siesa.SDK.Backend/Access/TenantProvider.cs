@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Shared.DTOS;
+using Microsoft.EntityFrameworkCore;
+using Siesa.SDK.Backend.Interceptors;
 
 namespace Siesa.SDK.Backend.Access
 {
@@ -17,6 +19,7 @@ namespace Siesa.SDK.Backend.Access
         bool GetUseLazyLoadingProxies();
         void SetUseLazyLoadingProxies(bool value);
         List<SDKDbConnection> GetTenants();
+        DbContextOptionsBuilder GetContextOptionTenant(short rowIdDBConnection);
     }
     public class TenantProvider: ITenantProvider
     {
@@ -84,5 +87,43 @@ namespace Siesa.SDK.Backend.Access
         public bool GetUseLazyLoadingProxies() => UseLazyLoadingProxies;
 
         public void SetUseLazyLoadingProxies(bool value) => UseLazyLoadingProxies = value;
+
+        public DbContextOptionsBuilder GetContextOptionTenant(short rowIdDBConnection)
+        {
+            try
+            {
+                if (rowIdDBConnection == 0)
+                {
+                    throw new Exception("Tenant provider not found");
+                }
+
+                this.SetTenantByRowId(rowIdDBConnection);
+                var tenant = this.GetTenant();
+                if (tenant == null)
+                {
+                    throw new Exception("Tenant provider not found");
+                }
+
+                DbContextOptionsBuilder tenantOptions = new DbContextOptionsBuilder<SDKContext>();
+
+                if (tenant.ProviderName == EnumDBType.PostgreSQL)
+                {
+                    tenantOptions.UseNpgsql(tenant.ConnectionString);
+                }
+                else
+                {
+                    //Default to SQL Server
+                    tenantOptions.UseSqlServer(tenant.ConnectionString);
+                }
+
+                tenantOptions.AddInterceptors(new SDKDBInterceptor());
+
+                return tenantOptions;
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"{e.Message}");
+            }
+        }
     }
 }
