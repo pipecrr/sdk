@@ -31,7 +31,5 @@ namespace Siesa.SDK.Shared.Services
         /// <param name="exchangeName">Nombre del exchange asociado a la cola.</param>
         /// <param name="bindingKey">Clave de enrutamiento de la cola.</param>
         void Unsubscribe(string exchangeName, string bindingKey);
-
-        void TestDisconnection();
     }
 }
