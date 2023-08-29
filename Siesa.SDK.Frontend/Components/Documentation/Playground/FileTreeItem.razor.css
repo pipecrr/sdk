@@ -1,7 +1,0 @@
-.file-tree-item {
-    color: #c1cccc;
-}
-
-.file-tree-item:hover, .rz-treenode-content-selected .file-tree-item {
-    color: #fff !important;
-}
