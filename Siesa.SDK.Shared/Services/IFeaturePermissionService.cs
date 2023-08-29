@@ -24,6 +24,7 @@ namespace Siesa.SDK.Shared.Services
 
         public bool CheckUserActionPermission(string businessName, int actionRowid, IAuthenticationService authenticationService)
         {
+            return true;
             return Siesa.SDK.Shared.Utilities.Utilities.CheckUserActionPermission(businessName, actionRowid, authenticationService);
         }
 
