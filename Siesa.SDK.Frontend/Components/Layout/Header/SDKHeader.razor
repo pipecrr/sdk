@@ -4,6 +4,8 @@
 @using Siesa.SDK.Shared.DTOS
 @using Siesa.SDK.Frontend.Components.Fields;
 @using Siesa.SDK.Frontend.Components.Visualization   
+@using Siesa.SDK.Frontend.Components.Layout
+@using Newtonsoft.Json;
 
 @inject IAuthenticationService AuthenticationService
 @inject NavigationService NavigationService
@@ -11,7 +13,6 @@
 @inject Blazored.LocalStorage.ILocalStorageService localStorageService;
 @layout EmptyLayout
 @inject IBackendRouterService BackendRouterService
-@using Newtonsoft.Json;
 @inherits SDKComponent;
 
 <header class="col-12 pl-5 sdk_header">
@@ -42,6 +43,7 @@
     </div>
     <div class="col-xl-5 col-lg-6 col-md-6 col-sm-4 col-7 p-0 d-flex justify-content-end align-items-center info_head">
         <div class="sdk_conection">
+
             <div class="position-relative">
                 <button @onclick="()=> ToogleConnect()" class="btn btn_connect py-0 px-2 px-lg-3 d-flex align-items-center"   
                         data-automation-id="@GetAutomationId()" id="SDKHeader_ButtonConfig">
@@ -111,6 +113,13 @@
                                     </div>
                                 </FooterTemplate>
                     </SDKDropDown>
+            </div>
+        </div>
+        <div class="sdk_conection">
+            <div class="position-relative">
+                <div class="px-1 d-flex align-items-center">
+                    <NotificationsComponent/>
+                </div>
             </div>
         </div>
         <div class="whcm_footer d-flex flex-row-reverse flex-md-row align-items-center justify-content-between">

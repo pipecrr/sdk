@@ -1,47 +1,136 @@
 @using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Shared.Services
+@using Siesa.Global.Enums
+@using Siesa.SDK.Components.Visualization
+@using Siesa.SDK.Protos
 @inherits SDKComponent
+@inject IQueueService QueueService
+@inject SDKNotificationService NotificationService
+@implements IDisposable
 
-<div class="card-container">
-
-    @if (Notifications.Any())
-    {
-        @foreach (var notify in Notifications)
-        {
-            <SDKCard StyleCss="notification-card">
-                <h5>@notify.QueueName</h5>
-                <br />
-                <p>@notify.Message</p>
-            </SDKCard>
-        }
-    }else
-    {
-        <SDKCard StyleCss="notification-card">
-            <h5>Notificaciones</h5>
-            <br />
-            <p>No hay notificaciones</p>
-        </SDKCard>
-    }
+<div id="DashBoard_Notification">
+    <SDKButton ResourceTag="SDK.DashBoard.Notification" CssClass="btn btn-sm button_notification"
+        RenderStyle="SDKButtonRenderStyle.None" Click="@OpenNotification">
+        <SDKIcon Name="fa-bell"/>
+    </SDKButton>
 </div>
+<SDKDropDown @bind-IsOpen="@_OpenNotifications"
+CssClass="layout_dropdown"
+PositionTarget="#DashBoard_Notification"
+PositionMode="DropDownPositionMode.Bottom"
+FooterVisible="false" HeaderVisible="true"
+ResourceTag="DashBoard_Notification"
+>
+    <HeaderTemplate>
+        <div class="pt-3 pl-3 pr-3 pb-0">
+            <h6 class="font-weight-bold m-0 border-bottom pb-3">
+                <span>
+                    <ResourceViewer ResourceTag="Custom.SDKNotification.ButtonNotifications" RowidCulture=@AuthenticationService.GetRoiwdCulture()/>
+                </span>
+            </h6>
+        </div>
+    </HeaderTemplate>
+
+    <BodyTemplate>
+        <div class="card_container">
+            @if (Notifications != null && Notifications.Any())
+            {
+                @foreach (var notify in Notifications)
+                {
+                    <SDKCard StyleCss="notification_card">
+                        <h6><strong>@notify.QueueName</strong></h6>
+                        <br />
+                        <p>@notify.Message</p>
+                    </SDKCard>
+                }
+            }else
+            {
+                <SDKCard StyleCss="notification_card">
+                    <p>No hay notificaciones</p>
+                </SDKCard>
+            }
+        </div>
+    </BodyTemplate>
+
+</SDKDropDown>
+
+@* @if (FloatingNotification)
+{
+    <div class="floating_notification">
+        <SDKButton ResourceTag="SDK.DashBoard.Notification.Close" CssClass="btn btn-sm close_button"
+        RenderStyle="SDKButtonRenderStyle.None" Click="@CloseFloatingNotification">
+            <SDKIcon Name="fa-x"/>
+        </SDKButton>
+        <br />
+        <p>¡Nueva notificación!</p>
+    </div>
+} *@
+
 
 @code 
 {
-    [Parameter]
-    public Siesa.SDK.Protos.QueueMessageDTO Message { get; set; }
 
     private List<Siesa.SDK.Protos.QueueMessageDTO> Notifications { get; set; }
 
+    private string Message { get; set; }
+
+    private bool _OpenNotifications = false;
+    private bool FloatingNotification = false;
+
     protected override async Task OnInitializedAsync()
     {
+        QueueService.Subscribe("BLUser", enumMessageCategory.CRUD, OnCrudNotification);
         await base.OnInitializedAsync();   
     }
-    protected override async Task OnParametersSetAsync()
+
+    public void OnCrudNotification(QueueMessageDTO message)
     {
+        Console.WriteLine($"Desde Notification Component {message.Message}");
+
         if (Notifications == null)
             Notifications = new List<Siesa.SDK.Protos.QueueMessageDTO>();
 
-        Notifications.Add(Message);
+        if(message != null)
+            Notifications.Add(message);
 
-        await base.OnParametersSetAsync();
+        NotificationService.ShowInfo($"¡Nueva notificación!: {message.Message}");
+
+       //_ = ShowFloatingNotification(message.Message);
+
+        //StateHasChanged();
+        //FloatingNotification = true;
+    }
+
+    public void Dispose()
+    {
+        QueueService.Unsubscribe("BLUser", enumMessageCategory.CRUD);
+    }
+
+    private void OpenNotification()
+    {
+        _OpenNotifications = !_OpenNotifications;
+        StateHasChanged();
+    }
+
+    private async Task ShowFloatingNotification()
+    {
+        // esperar 3 segundos
+
+        FloatingNotification = true;
+        StateHasChanged();
+
+
+        /* await Task.Run(async () => await Task.Delay(3000));
+
+        FloatingNotification = false;
+        StateHasChanged(); */
+
+    }
+
+    private void CloseFloatingNotification()
+    {
+        FloatingNotification = false;
+        StateHasChanged();
     }
 
 }
