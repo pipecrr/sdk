@@ -1164,6 +1164,7 @@ div .form-control:focus {
 
     margin: 10px 10px 10px 0 !important;
     padding: 0px 0px 0px 10px !important;
+    position: relative !important;
 }
 .floating_notification {
     position: absolute;
@@ -1181,11 +1182,11 @@ div .form-control:focus {
     top: 5px;
     right: 5px;
     padding: 2px;
-    background-color: #ccc;
     border: none;
     cursor: pointer;
     font-size: 12px;
     line-height: 1;
+    color: var(--color_cancel);
   }
 
 .button_notification

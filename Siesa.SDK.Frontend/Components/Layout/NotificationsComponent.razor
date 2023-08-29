@@ -11,21 +11,18 @@
 <div id="DashBoard_Notification">
     <SDKButton ResourceTag="SDK.DashBoard.Notification" CssClass="btn btn-sm button_notification"
         RenderStyle="SDKButtonRenderStyle.None" Click="@OpenNotification">
-        <SDKIcon Name="fa-bell"/>
+        <SDKIcon Name="fa-bell" />
     </SDKButton>
 </div>
-<SDKDropDown @bind-IsOpen="@_OpenNotifications"
-CssClass="layout_dropdown"
-PositionTarget="#DashBoard_Notification"
-PositionMode="DropDownPositionMode.Bottom"
-FooterVisible="false" HeaderVisible="true"
-ResourceTag="DashBoard_Notification"
->
+<SDKDropDown @bind-IsOpen="@_OpenNotifications" CssClass="layout_dropdown" PositionTarget="#DashBoard_Notification"
+    PositionMode="DropDownPositionMode.Bottom" FooterVisible="false" HeaderVisible="true"
+    ResourceTag="DashBoard_Notification">
     <HeaderTemplate>
         <div class="pt-3 pl-3 pr-3 pb-0">
             <h6 class="font-weight-bold m-0 border-bottom pb-3">
                 <span>
-                    <ResourceViewer ResourceTag="Custom.SDKNotification.ButtonNotifications" RowidCulture=@AuthenticationService.GetRoiwdCulture()/>
+                    <ResourceViewer ResourceTag="Custom.SDKNotification.ButtonNotifications"
+                        RowidCulture=@AuthenticationService.GetRoiwdCulture() />
                 </span>
             </h6>
         </div>
@@ -41,9 +38,16 @@ ResourceTag="DashBoard_Notification"
                         <h6><strong>@notify.QueueName</strong></h6>
                         <br />
                         <p>@notify.Message</p>
+
+                        <SDKButton ResourceTag="SDK.DashBoard.Notification.Close" CssClass="btn btn-sm close_button"
+                            RenderStyle="SDKButtonRenderStyle.None" Click="@(()=>RemoveNotification(notify))">
+                            <SDKIcon Name="fa-x" />
+                        </SDKButton>
+
                     </SDKCard>
                 }
-            }else
+            }
+            else
             {
                 <SDKCard StyleCss="notification_card">
                     <p>No hay notificaciones</p>
@@ -54,23 +58,29 @@ ResourceTag="DashBoard_Notification"
 
 </SDKDropDown>
 
-@* @if (FloatingNotification)
+@if (FloatingNotification)
 {
-    <div class="floating_notification">
-        <SDKButton ResourceTag="SDK.DashBoard.Notification.Close" CssClass="btn btn-sm close_button"
-        RenderStyle="SDKButtonRenderStyle.None" Click="@CloseFloatingNotification">
-            <SDKIcon Name="fa-x"/>
-        </SDKButton>
-        <br />
-        <p>¡Nueva notificación!</p>
-    </div>
-} *@
+    @foreach (var notify in TempsNotifications)
+    {
+        <div class="floating_notification">
+            <SDKButton ResourceTag="SDK.DashBoard.Notification.Close" CssClass="btn btn-sm close_button"
+                RenderStyle="SDKButtonRenderStyle.None" Click="@CloseFloatingNotification">
+                <SDKIcon Name="fa-x" />
+            </SDKButton>
+            <br />
+            <p>@notify.Message</p>
+        </div>
+    }
+    
+}
 
 
-@code 
+@code
 {
 
     private List<Siesa.SDK.Protos.QueueMessageDTO> Notifications { get; set; }
+    
+    private List<Siesa.SDK.Protos.QueueMessageDTO> TempsNotifications { get; set; }
 
     private string Message { get; set; }
 
@@ -80,7 +90,7 @@ ResourceTag="DashBoard_Notification"
     protected override async Task OnInitializedAsync()
     {
         QueueService.Subscribe("BLUser", enumMessageCategory.CRUD, OnCrudNotification);
-        await base.OnInitializedAsync();   
+        await base.OnInitializedAsync();
     }
 
     public void OnCrudNotification(QueueMessageDTO message)
@@ -89,15 +99,16 @@ ResourceTag="DashBoard_Notification"
 
         if (Notifications == null)
             Notifications = new List<Siesa.SDK.Protos.QueueMessageDTO>();
+            TempsNotifications = new List<Siesa.SDK.Protos.QueueMessageDTO>();
 
-        if(message != null)
+        if (message != null)
             Notifications.Add(message);
+            TempsNotifications.Add(message);
 
-        NotificationService.ShowInfo($"¡Nueva notificación!: {message.Message}");
-
-       //_ = ShowFloatingNotification(message.Message);
+        Task.Run(async () => await ShowFloatingNotification(message));
 
         //StateHasChanged();
+        InvokeAsync(() => StateHasChanged());
         //FloatingNotification = true;
     }
 
@@ -112,24 +123,29 @@ ResourceTag="DashBoard_Notification"
         StateHasChanged();
     }
 
-    private async Task ShowFloatingNotification()
+    private async Task ShowFloatingNotification(QueueMessageDTO message)
     {
-        // esperar 3 segundos
-
         FloatingNotification = true;
-        StateHasChanged();
+        InvokeAsync(()=> StateHasChanged());
 
-
-        /* await Task.Run(async () => await Task.Delay(3000));
+        await Task.Delay(3000);
 
         FloatingNotification = false;
-        StateHasChanged(); */
+        TempsNotifications.Remove(message);
 
+        InvokeAsync(()=> StateHasChanged());
     }
+
 
     private void CloseFloatingNotification()
     {
         FloatingNotification = false;
+        StateHasChanged();
+    }
+
+    private void RemoveNotification(Siesa.SDK.Protos.QueueMessageDTO notify)
+    {
+        Notifications.Remove(notify);
         StateHasChanged();
     }
 
