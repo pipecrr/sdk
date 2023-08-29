@@ -3,6 +3,16 @@
     font-size: 1.2rem;
     font-weight: 600;
     padding: 0.7rem 0.7rem 0;
-    color: #393939;
-    
+    color: #393939;    
+}
+
+.sdk-dashlet-portal{
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: visible;
+}
+
+.sdk-dashlet-portal::-webkit-scrollbar{
+    height: 0.25rem;
+    width: 0.25rem;
 }
