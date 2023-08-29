@@ -123,9 +123,9 @@ namespace Siesa.SDK.Shared.Application
                     }
                 }
             }
-            catch ()
+            catch (Exception ex)
             {
-                Console.WriteLine("Error SDKAPP");
+                Console.WriteLine($"Error SDKAPP: {ex.Message}");
             }
         }
     }
