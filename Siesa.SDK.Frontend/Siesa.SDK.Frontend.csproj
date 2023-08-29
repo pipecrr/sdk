@@ -21,40 +21,20 @@
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<OutputPath></OutputPath>
-	</PropertyGroup>
-	<ItemGroup>
-		<RazorDocumentationCode Include="Components\Documentation\**\*.razor" />
-		<!-- exclude 3 level-->
-		<RazorDocumentationCode Remove="Components\Documentation\*\*\*.razor" />
-		<RazorDocumentationCode Remove="Components\Documentation\Playground\*.razor" />
-		<RazorDocumentationCode Remove="Components\Documentation\SDKDocumentation.razor" />
-		<RazorDocumentationCode Remove="Components\Documentation\CodeViewer.razor" />
-	</ItemGroup>
+	</PropertyGroup>	
 	<ItemGroup>
 		<None Remove="Components\Layout\MainLayout.razor.css" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Content Include="Components\Layout\MainLayout.razor.css" />
-		<Content Update="Components\Documentation\CodeViewer.razor.css">
-		  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-		</Content>
-		<Content Update="Components\Documentation\Playground\PlaygroundView.razor.css">
-		  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-		</Content>
+		<Content Include="Components\Layout\MainLayout.razor.css" />				
 		<Content Update="Components\Dashboard\SDKDashboardPortal.razor.css">
 		  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 		</Content>
 	</ItemGroup>
 
-	<ItemGroup>
-		
-		<EmbeddedResource Include="Components\Documentation\SourceCode\*.txt" />
+	<ItemGroup>		
 		<EmbeddedResource Include="ActiveReport\templates\*" />
-
-		<!-- <None Remove="Components\Documentation\SourceCode\SDKPieChart.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKPieChart.txt" /> -->
-
 	</ItemGroup> 
 
 
