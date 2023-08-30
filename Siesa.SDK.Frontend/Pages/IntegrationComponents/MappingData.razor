@@ -1,3 +1,4 @@
+@using System.Linq;
 
 <select class="select_connect" id="SelectConnect" @onchange="OnChangeSelectItem">
 
@@ -10,9 +11,14 @@
             {
                 selectedValue = ImportComponent._newKeys[FieldFile.Key.ToString()] == field.Value;
             }
-            <option value="@field.Value" selected="@selectedValue" >
-                @field.Key
-            </option>
+
+            var ExcludedFiled = HiddenFields.Contains(field.Value);
+
+            if(!ExcludedFiled){
+                <option value="@field.Value" selected="@selectedValue" >
+                    @field.Key
+                </option>
+            }
         }
 
 </select>
@@ -22,6 +28,7 @@
     [CascadingParameter] public ImportComponent ImportComponent { get; set; } 
 
     [Parameter] public dynamic FieldFile { get; set; }
+    [Parameter] public List<string> HiddenFields { get; set; }
 
     [Parameter] public Dictionary<string, string> FieldsEntity { get; set; } = new Dictionary<string, string>();
     
