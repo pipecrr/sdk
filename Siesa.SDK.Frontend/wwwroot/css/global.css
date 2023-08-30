@@ -350,7 +350,11 @@ a, .btn-link {
     color: var(--color_highlight);
 }
 
-
+a:hover 
+{
+    color: var(--color_primary);
+    text-decoration: underline;
+}
 
 .btn_secondary_cancel {
     background-color: var(--color_cancel) !important;
@@ -617,6 +621,26 @@ input#collapse_open:checked~.collapse_open_btn>.nav_btn_standar_text {
     color: var(--color_primary);
 }
 
+.rz-data-grid > .rz-data-grid-data > .rz-grid-table > tbody > tr:not(.rz-expanded-row-content):nth-child(even) > td
+{
+    background-color: var(--color_table_even);
+}
+
+.rz-data-grid > .rz-data-grid-data > .rz-grid-table > tbody > tr:not(.rz-expanded-row-content):nth-child(odd) > td
+{
+    background-color: var(--color_panel_back);
+}
+
+.rz-data-grid > .rz-data-grid-data > .rz-grid-table  thead th .rz-column-title 
+{
+    color : var(--color_text);
+}
+
+.rz-selectable tbody tr.rz-data-row:hover:not(.rz-state-highlight) > td {
+
+    background-color: var(--color_table_hover) !important;
+}
+
 .whcm_table>div>table td,
 .whcm_table>div>table th {
     vertical-align: middle !important;
@@ -863,6 +887,13 @@ input#collapse_open:checked~.collapse_open_btn>.nav_btn_standar_text {
 .input-group>.custom-select:not(:last-child),
 .input-group>.form-control:not(:last-child) {
     border-right: 1px solid transparent !important;
+}
+.input-group>.custom-select:not(:last-child), .input-group>.form-control:not(:last-child)::placeholder
+{
+    color: var(--color_text);
+}
+.form-control:disabled::placeholder{
+    color: var(--color_text);
 }
 
 .nav-link {

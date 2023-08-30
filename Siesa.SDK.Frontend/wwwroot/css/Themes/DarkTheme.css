@@ -54,7 +54,7 @@
     /* Base: color primary (Para even de tablas) */
     --color_table_even: #0c5890;
     /* Base: color primary (Para hover de tablas) */
-    --color_table_hover: rgba(14, 121, 253, 0.1);
+    --color_table_hover: #2870ad;
 
     --color_search_back: #23ACFF;
 
