@@ -2029,23 +2029,15 @@ namespace Siesa.SDK.Business
         [SDKExposedMethod]
         public ActionResult<SDKResultImportDataDTO> ImportData(string dataStr){
             JArray dataList = JArray.Parse(dataStr);
-            List<dynamic> SuccessData = new List<dynamic>();
-            List<dynamic> ErrorData = new List<dynamic>();
-            Stopwatch stopwatch = new Stopwatch();
-            string idEnum;
+            List<dynamic> SuccessData = new();
+            List<dynamic> ErrorData = new();
+            Stopwatch stopwatch = new();
             stopwatch.Start();
-            using (SDKContext context = CreateDbContext()){
-                    var Resource = context.Set<E00022_ResourceDescription>()
-                                        .Include(x => x.Resource)
-                                        .Where(x => x.Resource.Id.Contains("enumStatusBaseMaster") && x.Description.Equals("Activo") && x.RowidCulture==1)
-                                        .Select(x => x.Resource.Id)
-                                        .FirstOrDefault();
-                    idEnum = Resource.Substring(Resource.LastIndexOf('.') + 1);
-                    }
+            List<EnumSearchDTO> EnumSearchList = GetEnumDTO(typeof(T));
             foreach (var item in dataList){
                 JObject itemObj = (JObject)item;
                 //List<string> Errors = new();
-                dynamic result = CreateDynamicObjectFromJson(typeof(T), itemObj, idEnum ,out ErrorData);
+                dynamic result = CreateDynamicObjectFromJson(typeof(T), itemObj, EnumSearchList ,ref ErrorData);
                 BaseObj = result;
                 if(!ErrorData.Any()){
                     //var resultValidate = ValidateAndSave();
@@ -2067,9 +2059,47 @@ namespace Siesa.SDK.Business
             Console.WriteLine($"Tiempo transcurrido: {elapsedTimeMs} ms");
             return new ActionResult<SDKResultImportDataDTO>{Success = true, Data = resultImport};
         }
-        private T CreateDynamicObjectFromJson(Type type, dynamic dynamicObj, string Idenum, out List<dynamic> ErrorsList ) 
+
+        //Metodos para la obtencion de los enums
+        private List<EnumSearchDTO> GetEnumDTO(Type type){
+            PropertyInfo[] Properties = type.GetProperties();
+            var EnumList = Properties.Where(x => x.PropertyType.IsEnum).ToList();
+            List<EnumSearchDTO> EnumSearchList = new();
+            using SDKContext context = CreateDbContext();
+            foreach (var item in EnumList){
+                EnumSearchList.Add(new EnumSearchDTO(){
+                    EnumName = item.PropertyType.FullName,
+                    PropertyName = item.Name,
+                    EnumValues = GetDictionaryEnum(item)
+                });
+            }
+            return EnumSearchList;
+        }
+
+        private static object SetEnumValue(Array arr, string resource){
+            foreach(var item in arr){
+                if(item.ToString()==resource) return item;
+            }
+            return null;            
+        }
+
+        private Dictionary<string, object> GetDictionaryEnum(PropertyInfo EnumInfo){
+            using SDKContext context = CreateDbContext();
+            var EnumValues = Enum.GetValues(EnumInfo.PropertyType);
+            Dictionary<string, object> ReturnDic = new();
+
+            ReturnDic = context.Set<E00022_ResourceDescription>()
+                                        .Include(x => x.Resource)
+                                        .Where(x => x.Resource.Id.Contains(EnumInfo.PropertyType.Name) && x.RowidCulture == 1)
+                                        .ToDictionary(x => x.Description, x => SetEnumValue(EnumValues, x.Resource.Id.Substring(x.Resource.Id.LastIndexOf('.') + 1)));
+            return ReturnDic;
+        }
+
+
+
+        private T CreateDynamicObjectFromJson(Type type, dynamic dynamicObj, List<EnumSearchDTO> EnumSearchList, ref List<dynamic> ErrorsList ) 
         {
-            ErrorsList = new List<dynamic>();
+            //ErrorsList = new List<dynamic>();
             List<string> ErrorsListInternal = new();
             dynamic result = Activator.CreateInstance(type);
             using (SDKContext context = CreateDbContext()){
@@ -2082,9 +2112,8 @@ namespace Siesa.SDK.Business
                     var propertyName = property.Name;
                     var propertyEntity = type.GetProperty(propertyName);
                     if(propertyEntity != null){
-                        try
-                        {
-                                var ValueValidated = GetValidatedValue(type, property.Value.Value, propertyName, Idenum );
+                        try{
+                                var ValueValidated = GetValidatedValue(type, property.Value.Value, propertyName, EnumSearchList);
                                 if(ValueValidated.Success && ValueValidated.Data != null){
                                 dynamic value = ValueValidated.Data;
                                 type.GetProperty(propertyName).SetValue(result, value);
@@ -2092,8 +2121,7 @@ namespace Siesa.SDK.Business
                                     ErrorsListInternal.AddRange(ValueValidated.Errors);
                                 }
                             }
-                            catch (Exception e)
-                            {
+                            catch (Exception e){
                                 ErrorsListInternal.Add(e.Message);
                             }
                         }
@@ -2107,63 +2135,51 @@ namespace Siesa.SDK.Business
             }
         
 
-        private ActionResult<dynamic> GetValidatedValue(Type t, dynamic DynamicValue, string NameProperty, string idEnum){ //TODO a SDK -> Cambiar a object
+        private ActionResult<dynamic> GetValidatedValue(Type t, dynamic DynamicValue, string NameProperty, List<EnumSearchDTO> EnumSearchList){ //TODO a SDK -> Cambiar a object
         Type TypeEntity  = t.GetProperty(NameProperty).PropertyType;
         Type TypeDynamicValue = DynamicValue.GetType();
         if (TypeDynamicValue == typeof(string)){
             if(string.IsNullOrEmpty(DynamicValue)) return new ActionResult<dynamic>{Success = true, Data=null};
         }
-        if(TypeEntity.BaseType == typeof(Enum) ){
-                var values = Enum.GetValues(TypeEntity);
-                // string idEnum2 = "";
-                //     string resourceTry = TypeEntity.Name;
-                //     string ValueTry = DynamicValue;
-                    // using (SDKContext context = CreateDbContext()){
-                    // var Resource = context.Set<E00022_ResourceDescription>()
-                    //                     .Include(x => x.Resource)
-                    //                     .Where(x => x.Resource.Id.Contains(resourceTry) && x.Description.Equals(ValueTry) && x.RowidCulture==1)
-                    //                     .Select(x => x.Resource.Id)
-                    //                     .FirstOrDefault();
-                    // idEnum = Resource.Substring(Resource.LastIndexOf('.') + 1);
-                //}
-            foreach (var item in values){
-                if(item.ToString() == idEnum){
-                    return new ActionResult<dynamic>{Success = true, Data=item};
-                }
+        if(TypeEntity.BaseType == typeof(Enum)){
+            var EnumSearchDTO = EnumSearchList.Where(x => x.PropertyName.Equals(NameProperty)).FirstOrDefault();
+            if(EnumSearchDTO is not null){
+                var EnumValue = EnumSearchDTO.EnumValues[DynamicValue];
+                return new ActionResult<dynamic>{Success = true, Data=EnumValue};
             }
         }
-        if(TypeDynamicValue == TypeEntity)
-        {
-            return new ActionResult<dynamic>{Success = true, Data=DynamicValue};
-        }else{
+        if(TypeDynamicValue == TypeEntity) return new ActionResult<dynamic>{Success = true, Data=DynamicValue};
 
-            bool IsNumberDynamicValue = IsNumber(TypeEntity, ref DynamicValue);
-            bool IsDateDynamicValue = IsDate(TypeEntity, ref DynamicValue);
+        if(IsDate(TypeEntity, ref DynamicValue)) return new ActionResult<dynamic>{Success = true, Data=DynamicValue};
 
-            if(IsDateDynamicValue){
-                return new ActionResult<dynamic>{Success = true, Data=DynamicValue};
-            }
-
-            if (IsNumberDynamicValue)
-            {
-                return new ActionResult<dynamic>{Success = true, Data=DynamicValue};
-            }else{
-
-                if(TypeEntity == typeof(bool)){
-                    if (IsNumberDynamicValue || TypeDynamicValue == typeof(bool))
-                    {
-                        return new ActionResult<dynamic>{Success = true, Data = TypeDynamicValue == typeof(bool)? DynamicValue : DynamicValue == 1};
-                    }
-                }
-                return new ActionResult<dynamic>{Success = false, Errors = new List<string>(){"No son compatibles"}};
-            }
+        if (IsNumber(TypeEntity, ref DynamicValue)){
+            if (TypeDynamicValue == typeof(bool)) return new ActionResult<dynamic>{Success = true, Data = TypeDynamicValue == typeof(bool)? DynamicValue : DynamicValue == 1};
+        return new ActionResult<dynamic>{Success = true, Data=DynamicValue};
         }
+        
+        return new ActionResult<dynamic>{Success = false, Errors = new List<string>(){$"{DynamicValue} no es compatible con  el campo {NameProperty}"}};
+
     }
     
     private bool IsNumber(Type valor, ref dynamic DynamicValue)
     {
-        try
-        {
+        try{
+            if(valor == typeof( int) || valor == typeof( int?)){
+                DynamicValue = (int)DynamicValue;
+                return true; 
+            }
+            if(valor == typeof( double) || valor == typeof( double?)){
+                DynamicValue = (double)DynamicValue;
+                return true; 
+            }
+            if(valor == typeof( float) || valor == typeof( float?)){
+                DynamicValue = (float)DynamicValue;
+                return true; 
+            }
+            if(valor == typeof( decimal) || valor == typeof( decimal?)){
+                DynamicValue = (decimal)DynamicValue;
+                return true; 
+            }
             if(valor == typeof( sbyte) || valor == typeof( sbyte?)){
                 DynamicValue = (sbyte)DynamicValue;
                 return true; 
@@ -2180,10 +2196,6 @@ namespace Siesa.SDK.Business
                 DynamicValue = (ushort)DynamicValue;
                 return true; 
             }
-            if(valor == typeof( int) || valor == typeof( int?)){
-                DynamicValue = (int)DynamicValue;
-                return true; 
-            }
             if(valor == typeof( uint) || valor == typeof( uint?)){
                 DynamicValue = (uint)DynamicValue;
                 return true; 
@@ -2196,42 +2208,34 @@ namespace Siesa.SDK.Business
                 DynamicValue = (ulong)DynamicValue;
                 return true; 
             }
-            if(valor == typeof( double) || valor == typeof( double?)){
-                DynamicValue = (double)DynamicValue;
-                return true; 
-            }
-            if(valor == typeof( float) || valor == typeof( float?)){
-                DynamicValue = (float)DynamicValue;
-                return true; 
-            }
-            if(valor == typeof( decimal) || valor == typeof( decimal?)){
-                DynamicValue = (decimal)DynamicValue;
-                return true; 
-            }
             return false;
         }
-        catch (System.Exception)
+        catch (Exception)
         {
             return false;
         }
     }
     private bool IsDate(Type valor, ref dynamic DynamicValue)
     {
-        Type TypeDynamicValue = DynamicValue.GetType();
-        if(TypeDynamicValue == typeof(DateTime) ){
-            if(valor == typeof(TimeSpan) || valor == typeof(TimeSpan?)){
-                DynamicValue =  DynamicValue.TimeOfDay;
-                return true;
+        try{
+            Type TypeDynamicValue = DynamicValue.GetType();
+            if(TypeDynamicValue == typeof(DateTime) ){
+                if(valor == typeof(TimeSpan) || valor == typeof(TimeSpan?)){
+                    DynamicValue =  DynamicValue.TimeOfDay;
+                    return true;
+                }
+                if(valor == typeof(DateOnly) || valor == typeof(DateOnly?)){
+                    DynamicValue = DateOnly.FromDateTime(DynamicValue);
+                    return true; 
+                }
+                if(valor == typeof(DateTime) || valor == typeof(DateTime?)){
+                    return true; 
+                }
             }
-            if(valor == typeof(DateOnly) || valor == typeof(DateOnly?)){
-                DynamicValue = DateOnly.FromDateTime(DynamicValue);
-                return true; 
-            }
-            if(valor == typeof(DateTime) || valor == typeof(DateTime?)){
-                return true; 
-            }
+            return false;
+        }catch(Exception){
+            return false;
         }
-        return false;
     }
     }
 }

@@ -22,6 +22,8 @@
 @using DevExpress.Spreadsheet;
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.EntityFrameworkCore
+@using Siesa.Global.Enums
+@using System.Diagnostics
 
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
 
@@ -279,12 +281,17 @@
         if(result.Success)
         {
             SDKResponseImportDTO response = (SDKResponseImportDTO)result.Data;
-            NotificationService.ShowSuccess(response.Message);
-            JsonObject = JsonConvert.SerializeObject(response.Guid, Newtonsoft.Json.Formatting.None);   
+            if(response.Status == enumSDKIntegrationStatus.Success){
+                NotificationService.ShowSuccess(response.Message);
+                JsonObject = JsonConvert.SerializeObject(response.Guid, Newtonsoft.Json.Formatting.None);   
+            }else if(response.Status == enumSDKIntegrationStatus.Failed){
+                NotificationService.ShowWarning(response.Message);
+                JsonObject = JsonConvert.SerializeObject(response.Guid, Newtonsoft.Json.Formatting.None);
+            }
             
         }else
         {
-            //NotificationService.ShowError(result.Errors.FirstOrDefault());
+            NotificationService.ShowError(result.Errors.FirstOrDefault());
             //JsonObject = JsonConvert.SerializeObject(result.Errors, Newtonsoft.Json.Formatting.None);
             ErrorList = result.Errors.ToList();
         }
@@ -349,9 +356,11 @@
         ErrorList.Clear();
         FileData = new List<dynamic>();
         IsLoadingGrid = false;
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
         using (var stream = new MemoryStream())
         {
-            await InputFile.File.OpenReadStream().CopyToAsync(stream);
+            await InputFile.File.OpenReadStream(51200000).CopyToAsync(stream);
             stream.Position = 0;
             @* var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
@@ -430,7 +439,10 @@
                  foreach( var gt in t){
                     var  tt = gt.Value;
                  }
-                 
+                
+                stopwatch.Stop();
+                long elapsedTimeMs = stopwatch.ElapsedMilliseconds;
+
 
                 @* var ff = workbook.Sheets;
                 
@@ -550,6 +562,8 @@
 
     private void MappingData()
     {
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
         DataMapped = new List<Dictionary<string, object>>();
         foreach (var item in FileData)
         {
@@ -568,7 +582,10 @@
             DataMapped.Add(row);
         }
 
-        JsonObject = JsonConvert.SerializeObject(DataMapped, Newtonsoft.Json.Formatting.None);
+        @* JsonObject = JsonConvert.SerializeObject(DataMapped, Newtonsoft.Json.Formatting.None); *@
+
+                        stopwatch.Stop();
+                long elapsedTimeMs = stopwatch.ElapsedMilliseconds;
 
         StateHasChanged();
     }
