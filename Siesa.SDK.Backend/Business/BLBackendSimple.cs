@@ -43,6 +43,7 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
 
 using Siesa.Global.Enums;
+using System.Diagnostics;
 
 namespace Siesa.SDK.Business
 {
@@ -2030,35 +2031,48 @@ namespace Siesa.SDK.Business
             JArray dataList = JArray.Parse(dataStr);
             List<dynamic> SuccessData = new List<dynamic>();
             List<dynamic> ErrorData = new List<dynamic>();
+            Stopwatch stopwatch = new Stopwatch();
+            string idEnum;
+            stopwatch.Start();
+            using (SDKContext context = CreateDbContext()){
+                    var Resource = context.Set<E00022_ResourceDescription>()
+                                        .Include(x => x.Resource)
+                                        .Where(x => x.Resource.Id.Contains("enumStatusBaseMaster") && x.Description.Equals("Activo") && x.RowidCulture==1)
+                                        .Select(x => x.Resource.Id)
+                                        .FirstOrDefault();
+                    idEnum = Resource.Substring(Resource.LastIndexOf('.') + 1);
+                    }
             foreach (var item in dataList){
                 JObject itemObj = (JObject)item;
                 //List<string> Errors = new();
-                dynamic result = CreateDynamicObjectFromJson(typeof(T), itemObj, out ErrorData);
+                dynamic result = CreateDynamicObjectFromJson(typeof(T), itemObj, idEnum ,out ErrorData);
                 BaseObj = result;
                 if(!ErrorData.Any()){
-                    var resultValidate = ValidateAndSave();
-                    if(resultValidate.Errors.Count > 0){
-                        itemObj.Add("Errors", JToken.FromObject(resultValidate.Errors));
-                        ErrorData.Add(itemObj);
-                    }else{
-                        SuccessData.Add(BaseObj.GetRowid());
-                    }
+                    //var resultValidate = ValidateAndSave();
+                    // if(resultValidate.Errors.Count > 0){
+                    //     itemObj.Add("Errors", JToken.FromObject(resultValidate.Errors));
+                    //     ErrorData.Add(itemObj);
+                    // }else{
+                    //     SuccessData.Add(BaseObj.GetRowid());
+                    // }
                 }
             }
+            stopwatch.Stop();
             SDKResultImportDataDTO resultImport = new SDKResultImportDataDTO
             {
                 Success = SuccessData,
                 Errors = ErrorData
             };
-
+            long elapsedTimeMs = stopwatch.ElapsedMilliseconds;
+            Console.WriteLine($"Tiempo transcurrido: {elapsedTimeMs} ms");
             return new ActionResult<SDKResultImportDataDTO>{Success = true, Data = resultImport};
         }
-        private T CreateDynamicObjectFromJson(Type type, dynamic dynamicObj, out List<dynamic> ErrorsList ) 
+        private T CreateDynamicObjectFromJson(Type type, dynamic dynamicObj, string Idenum, out List<dynamic> ErrorsList ) 
         {
             ErrorsList = new List<dynamic>();
             List<string> ErrorsListInternal = new();
+            dynamic result = Activator.CreateInstance(type);
             using (SDKContext context = CreateDbContext()){
-                dynamic result = Activator.CreateInstance(type);
                 if( dynamicObj.ContainsKey("Rowid")){
                     if(dynamicObj.Rowid.Type != JTokenType.String){
                         result = context.Set<T>().Find((int)dynamicObj.Rowid.Value);
@@ -2068,37 +2082,12 @@ namespace Siesa.SDK.Business
                     var propertyName = property.Name;
                     var propertyEntity = type.GetProperty(propertyName);
                     if(propertyEntity != null){
-                        dynamic value = "";
-                        //TODO : Revisar diferentes tipos de datos
-                        if(propertyEntity.PropertyType.BaseType == typeof(Enum) ){
-                            if(!string.IsNullOrEmpty(property.Value.Value) ){
-                                var values = Enum.GetValues(propertyEntity.PropertyType);
-                                string idEnum = "";
-                                    string resourceTry = propertyEntity.PropertyType.Name;
-                                    string ValueTry = (string)property.Value;
-                                    //GetBackend("BLResource").Call("GetResource", "BLApprovalRequest.NextApprovedEmail.Requester", AuthenticationService.User.RowidCulture);
-                                    var Resource = context.Set<E00022_ResourceDescription>()
-                                                        .Include(x => x.Resource)
-                                                        .Where(x => x.Resource.Id.Contains(resourceTry) && x.Description.Equals(ValueTry) && x.RowidCulture==1)
-                                                        .Select(x => x.Resource.Id)
-                                                        .FirstOrDefault();
-                                    idEnum = Resource.Substring(Resource.LastIndexOf('.') + 1);
-                                    dynamic enumTry = enumStatusBaseMaster.Active; 
-                                
-                                foreach (var item in values){
-                                    if(item.ToString() == idEnum){
-                                        value = item;
-                                    }
-                                }
-                                type.GetProperty(propertyName).SetValue(result, value);
-                            }
-                        }else{
-                            try
-                            {
-                                var ValueValidated = GetValidatedValue(type, property.Value.Value, propertyName );
+                        try
+                        {
+                                var ValueValidated = GetValidatedValue(type, property.Value.Value, propertyName, Idenum );
                                 if(ValueValidated.Success && ValueValidated.Data != null){
-                                    value = ValueValidated.Data;
-                                    type.GetProperty(propertyName).SetValue(result, value);
+                                dynamic value = ValueValidated.Data;
+                                type.GetProperty(propertyName).SetValue(result, value);
                                 }else{
                                     ErrorsListInternal.AddRange(ValueValidated.Errors);
                                 }
@@ -2116,45 +2105,50 @@ namespace Siesa.SDK.Business
                 }
                 return (T)result;
             }
-        }
+        
 
-        private ActionResult<dynamic> GetValidatedValue(Type t, dynamic DynamicValue, string NameProperty){ //TODO a SDK -> Cambiar a object
+        private ActionResult<dynamic> GetValidatedValue(Type t, dynamic DynamicValue, string NameProperty, string idEnum){ //TODO a SDK -> Cambiar a object
         Type TypeEntity  = t.GetProperty(NameProperty).PropertyType;
         Type TypeDynamicValue = DynamicValue.GetType();
-        //bool holib = char.IsNumber(DynamicValue);
         if (TypeDynamicValue == typeof(string)){
             if(string.IsNullOrEmpty(DynamicValue)) return new ActionResult<dynamic>{Success = true, Data=null};
+        }
+        if(TypeEntity.BaseType == typeof(Enum) ){
+                var values = Enum.GetValues(TypeEntity);
+                // string idEnum2 = "";
+                //     string resourceTry = TypeEntity.Name;
+                //     string ValueTry = DynamicValue;
+                    // using (SDKContext context = CreateDbContext()){
+                    // var Resource = context.Set<E00022_ResourceDescription>()
+                    //                     .Include(x => x.Resource)
+                    //                     .Where(x => x.Resource.Id.Contains(resourceTry) && x.Description.Equals(ValueTry) && x.RowidCulture==1)
+                    //                     .Select(x => x.Resource.Id)
+                    //                     .FirstOrDefault();
+                    // idEnum = Resource.Substring(Resource.LastIndexOf('.') + 1);
+                //}
+            foreach (var item in values){
+                if(item.ToString() == idEnum){
+                    return new ActionResult<dynamic>{Success = true, Data=item};
+                }
+            }
         }
         if(TypeDynamicValue == TypeEntity)
         {
             return new ActionResult<dynamic>{Success = true, Data=DynamicValue};
         }else{
 
-        
             bool IsNumberDynamicValue = IsNumber(TypeEntity, ref DynamicValue);
-            
-            // bool IsNumberTypeEntity = IsNumber(TypeEntity,DynamicValue);
-            if ( IsNumberDynamicValue)
+            bool IsDateDynamicValue = IsDate(TypeEntity, ref DynamicValue);
+
+            if(IsDateDynamicValue){
+                return new ActionResult<dynamic>{Success = true, Data=DynamicValue};
+            }
+
+            if (IsNumberDynamicValue)
             {
                 return new ActionResult<dynamic>{Success = true, Data=DynamicValue};
-                // string holi = DynamicValue.ToString();
-                // // return new ActionResult<dynamic>{Success = true, Data = Nullable.GetUnderlyingType(TypeEntity) != null ? DynamicValue : Convert.ChangeType(DynamicValue, TypeEntity)};
-                // if (int.TryParse(DynamicValue, out int number))
-                // {
-                //     return new ActionResult<dynamic>{Success = true, Data=number};
-                // }
-                // else if (double.TryParse(DynamicValue, NumberStyles.Any, CultureInfo.InvariantCulture, out double doubleNumber))
-                // {
-                //     return new ActionResult<dynamic>{Success = true, Data=doubleNumber};
-                // }
-                // else if (decimal.TryParse(DynamicValue, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal decimalNumber))
-                // {
-                //     return new ActionResult<dynamic>{Success = true, Data=decimalNumber};
-                // }
-                // else{
-                //     return new ActionResult<dynamic>{Success = true, Data=null};
-                // }
             }else{
+
                 if(TypeEntity == typeof(bool)){
                     if (IsNumberDynamicValue || TypeDynamicValue == typeof(bool))
                     {
@@ -2165,53 +2159,54 @@ namespace Siesa.SDK.Business
             }
         }
     }
+    
     private bool IsNumber(Type valor, ref dynamic DynamicValue)
     {
         try
         {
             if(valor == typeof( sbyte) || valor == typeof( sbyte?)){
                 DynamicValue = (sbyte)DynamicValue;
-                    return true; 
+                return true; 
             }
             if(valor == typeof( byte) || valor == typeof( byte?)){
                 DynamicValue = (byte)DynamicValue;
-                    return true; 
+                return true; 
             }
             if(valor == typeof( short) || valor == typeof( short?)){
                 DynamicValue = (short)DynamicValue;
-                    return true; 
+                return true; 
             }
             if(valor == typeof( ushort) || valor == typeof( ushort?)){
                 DynamicValue = (ushort)DynamicValue;
-                    return true; 
+                return true; 
             }
             if(valor == typeof( int) || valor == typeof( int?)){
                 DynamicValue = (int)DynamicValue;
-                    return true; 
+                return true; 
             }
             if(valor == typeof( uint) || valor == typeof( uint?)){
                 DynamicValue = (uint)DynamicValue;
-                    return true; 
+                return true; 
             }
             if(valor == typeof( long) || valor == typeof( long?)){
                 DynamicValue = (long)DynamicValue;
-                    return true; 
+                return true; 
             }
             if(valor == typeof( ulong) || valor == typeof( ulong?)){
                 DynamicValue = (ulong)DynamicValue;
-                    return true; 
+                return true; 
             }
             if(valor == typeof( double) || valor == typeof( double?)){
                 DynamicValue = (double)DynamicValue;
-                    return true; 
+                return true; 
             }
             if(valor == typeof( float) || valor == typeof( float?)){
                 DynamicValue = (float)DynamicValue;
-                    return true; 
+                return true; 
             }
             if(valor == typeof( decimal) || valor == typeof( decimal?)){
                 DynamicValue = (decimal)DynamicValue;
-                    return true; 
+                return true; 
             }
             return false;
         }
@@ -2220,6 +2215,24 @@ namespace Siesa.SDK.Business
             return false;
         }
     }
-
+    private bool IsDate(Type valor, ref dynamic DynamicValue)
+    {
+        Type TypeDynamicValue = DynamicValue.GetType();
+        if(TypeDynamicValue == typeof(DateTime) ){
+            if(valor == typeof(TimeSpan) || valor == typeof(TimeSpan?)){
+                DynamicValue =  DynamicValue.TimeOfDay;
+                return true;
+            }
+            if(valor == typeof(DateOnly) || valor == typeof(DateOnly?)){
+                DynamicValue = DateOnly.FromDateTime(DynamicValue);
+                return true; 
+            }
+            if(valor == typeof(DateTime) || valor == typeof(DateTime?)){
+                return true; 
+            }
+        }
+        return false;
+    }
     }
 }
+
