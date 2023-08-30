@@ -1021,6 +1021,14 @@ div .form-control, div .form-control:focus{
     color: var(--color_panel_back);
 }
 
+/*TODO: DarkMode*/
+.custom-checkbox .custom-control-input:indeterminate~.custom-control-label::before
+{
+    border-color: var(--color_primary) !important;
+    background-color: var(--color_primary) !important;
+    color: var(--color_panel_back);
+}
+
 
 .search_back::before {
     content: "";
