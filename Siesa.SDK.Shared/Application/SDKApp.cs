@@ -103,6 +103,10 @@ namespace Siesa.SDK.Shared.Application
             return _indexComponent;
         }
 
+        /// <summary>
+        /// Ejecuta la suscripción a colas para una lista de tipos de negocio.
+        /// </summary>
+        /// <param name="BusinessList">Lista de tipos de negocio para los cuales se realizará la suscripción.</param>
         public static void ExecuteSubscribeToQueues(IEnumerable<Type> BusinessList)
         {
             try
@@ -119,8 +123,9 @@ namespace Siesa.SDK.Shared.Application
                     }
                 }
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine($"Error SDKAPP: {ex.Message}");
             }
         }
     }

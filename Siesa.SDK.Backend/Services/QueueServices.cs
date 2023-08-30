@@ -23,13 +23,12 @@ namespace Siesa.SDK.Backend.Services
     /// </summary>
     public class QueueService : BackgroundService, IQueueService
     {
-
         private IConnection _connection;
         private IModel _channel;
-        private Dictionary<string, string> _subscriptions = new Dictionary<string, string>();
-        private Dictionary<string, List<QueueSubscribeActionDTO>> _subscriptionsActions = new();
+        private readonly Dictionary<string, string> _subscriptions = new Dictionary<string, string>();
+        private readonly Dictionary<string, List<QueueSubscribeActionDTO>> _subscriptionsActions = new();
         private int _reconectAttemp = 0;
-        private ConnectionFactory factory = new ConnectionFactory() { HostName = "coder.overjt.com" };
+        private readonly ConnectionFactory factory = new ConnectionFactory() { HostName = "coder.overjt.com" };
         private readonly IServiceProvider _serviceProvider;
 
         /// <summary>
@@ -37,8 +36,6 @@ namespace Siesa.SDK.Backend.Services
         /// </summary>
         public QueueService()
         {
-            //_connection = factory.CreateConnection();
-            //_channel = _connection.CreateModel();
             Connect();
             _serviceProvider = SDKApp.GetServiceProvider();
         }
@@ -80,11 +77,6 @@ namespace Siesa.SDK.Backend.Services
                     Console.WriteLine($"Error during reconnection: {ex.Message}");
                 }
             }
-        }
-
-        public void TestDisconection()
-        {
-            _connection.Close();
         }
 
         /// <summary>
@@ -150,19 +142,25 @@ namespace Siesa.SDK.Backend.Services
             var body = Encoding.UTF8.GetBytes(jsonMessage);
 
             _channel.BasicPublish(exchange: exchangeName, routingKey: routingKey, basicProperties: null, body: body);
-
-            //Console.WriteLine($"Sent message with routing key '{routingKey}': '{message}'");
         }
+
+        /// <summary>
+        /// Metodo para ejecutar en segundo plano el servicio de colas.
+        /// </summary>
+        /// <param name="stoppingToken"></param>
+        /// <returns></returns>
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
             {
                 await Task.Delay(200);
             }
-            // return Task.CompletedTask;
         }
 
-        public void Dispose()
+        /// <summary>
+        /// Libera los recursos utilizados por la clase <see cref="QueueService"/>.
+        /// </summary>
+        public override void Dispose()
         {
             _channel?.Dispose();
             _connection?.Dispose();
@@ -200,28 +198,23 @@ namespace Siesa.SDK.Backend.Services
                     {
                         var blInstance = ActivatorUtilities.CreateInstance(_serviceProvider, blType);
                         var method = blType.GetMethod(action.MethodName);
-                        
-                        //TODO: Check if method is async
-                        /*if (method.GetCustomAttributes(typeof(AsyncStateMachineAttribute), false).Length > 0)
-                        {
-                            var task = (Task)method.Invoke(blInstance, new object[] { message });
-                            continue;
-                        }*/
 
                         method.Invoke(blInstance, new object[] { message });
                     }
                 }
-                catch (System.Exception)
+                catch (System.Exception ex)
                 {
+                    Console.WriteLine($"Error invoking action: {ex.Message}");
                 }
             }
         }
+        /// <summary>
+        /// Metodo no implementado en Backend
+        /// </summary>
+        /// <param name="exchangeName"></param>
+        /// <param name="bindingKey"></param>
+        /// <exception cref="NotImplementedException"></exception>
         public void Unsubscribe(string exchangeName, string bindingKey)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void TestDisconnection ()
         {
             throw new NotImplementedException();
         }

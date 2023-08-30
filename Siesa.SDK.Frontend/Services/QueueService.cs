@@ -21,7 +21,7 @@ namespace Siesa.SDK.Frontend.Services
         /// </summary>
         public Grpc.Core.AsyncDuplexStreamingCall<Siesa.SDK.Protos.OpeningChannelToBackRequest, Siesa.SDK.Protos.QueueMessageDTO> DuplexStreamingCall { get; set; }
 
-        private Dictionary<string, List<Action<QueueMessageDTO>>> _subscriptionsActions = new();
+        private readonly Dictionary<string, List<Action<QueueMessageDTO>>> _subscriptionsActions = new();
 
         /// <summary>
         /// Constructor de la clase <see cref="QueueService"/>.
@@ -70,10 +70,9 @@ namespace Siesa.SDK.Frontend.Services
         {
             if (DuplexStreamingCall == null)
             {
-                DuplexStreamingCall = await _backendRouterService.OpenChannelFrontToBack(ExcuteActions);
+                DuplexStreamingCall = await _backendRouterService.OpenChannelFrontToBack(ExcuteActions).ConfigureAwait(true);
             }
-            //Cerrar canal
-            await DuplexStreamingCall.RequestStream.WriteAsync(new OpeningChannelToBackRequest() { ExchangeName = exchangeName, BindingKey = bindingKey });
+            await DuplexStreamingCall.RequestStream.WriteAsync(new OpeningChannelToBackRequest() { ExchangeName = exchangeName, BindingKey = bindingKey }).ConfigureAwait(true);
         }
 
         private void ExcuteActions(QueueMessageDTO message)
@@ -88,12 +87,6 @@ namespace Siesa.SDK.Frontend.Services
                 }
             }
         }
-
-        public void TestDisconection()
-        {
-            throw new NotImplementedException();
-        }
-
         private void SubscribeAction(string exchangeName, string bindingKey, Action<QueueMessageDTO> action = null)
         {
             var subscriptionKey = $"{exchangeName}_{bindingKey}";
@@ -120,22 +113,8 @@ namespace Siesa.SDK.Frontend.Services
         /// <param name="bindingKey">Clave de enrutamiento de la cola.</param>
         public void Unsubscribe(string exchangeName, string bindingKey)
         {
-            try
-            {
-
-                _subscriptionsActions.Remove($"{exchangeName}_{bindingKey}");
-                DuplexStreamingCall.Dispose();
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Error al cerrar el canal");
-            }
-            //_backendRouterService.RemoveChannels($"{exchangeName}_{bindingKey}");
-        }
-
-        public void TestDisconnection()
-        {
-            throw new NotImplementedException();
+            _subscriptionsActions.Remove($"{exchangeName}_{bindingKey}");
+            DuplexStreamingCall.Dispose();
         }
     }
 }
