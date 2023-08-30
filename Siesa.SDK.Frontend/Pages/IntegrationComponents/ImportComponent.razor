@@ -22,7 +22,7 @@
 @using DevExpress.Spreadsheet;
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.EntityFrameworkCore
-
+@using Siesa.SDK.Shared.Utilities
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
 
 @inject IResourceManager ResourceManager
@@ -30,6 +30,14 @@
 @inject IBackendRouterService BackendRouterService
 @inject IJSRuntime JSRuntime
 @inject SDKNotificationService NotificationService
+
+
+ 
+@using Microsoft.Extensions.DependencyInjection
+ 
+ 
+ 
+@inject IServiceProvider ServiceProvider
 
 @if(ErrorList!=null && ErrorList.Count>0){
     <ErrorsWindow GeneralErrors="@ErrorList"/>
@@ -112,7 +120,7 @@
 
                                         <CascadingValue Value="@this" >
                                                     
-                                                        <MappingData FieldFile=@data FieldsEntity="@_fieldsEntity"/>
+                                                        <MappingData FieldFile=@data FieldsEntity="@_fieldsEntity" HiddenFields="@HiddenFields"/>
 
                                         </CascadingValue>
                                         
@@ -138,28 +146,30 @@
                         
                             @foreach (var propertyKey in (DataMapped.FirstOrDefault())?.Select(x => x.Key))
                             {
-                                var title = _titleFields[propertyKey];
-                                @if((DataMapped.FirstOrDefault())?.Select(x => x.Key).Count() > 5)
-                                {
-                                    <SDKGridColumn TItem="dynamic" Property="@propertyKey" Title="@title" Width="300px">
-                                        <Template Context="data">
-                                            
-                                            @GetValueDataMapped(data, propertyKey)
+                                @if(_titleFields.ContainsKey(propertyKey) && !HiddenFields.Contains(propertyKey)){
+                                    var title = _titleFields[propertyKey];
+                                    @if((DataMapped.FirstOrDefault())?.Select(x => x.Key).Count() > 5)
+                                    {
+                                        <SDKGridColumn TItem="dynamic" Property="@propertyKey" Title="@title" Width="300px">
+                                            <Template Context="data">
+                                                
+                                                @GetValueDataMapped(data, propertyKey)
 
-                                        </Template>
-                                    </SDKGridColumn>
-                                }
-                                else
-                                {
-                                
-                                    <SDKGridColumn TItem="dynamic" Property="@propertyKey" Title="@title">
-                                        <Template Context="data">
-                                            
-                                            @GetValueDataMapped(data, propertyKey)
+                                            </Template>
+                                        </SDKGridColumn>
+                                        }
+                                    else
+                                    {
+                                    
+                                        <SDKGridColumn TItem="dynamic" Property="@propertyKey" Title="@title">
+                                            <Template Context="data">
+                                                
+                                                @GetValueDataMapped(data, propertyKey)
 
-                                        </Template>
-                                    </SDKGridColumn>
+                                            </Template>
+                                        </SDKGridColumn>
 
+                                    }
                                 }
                             }
                         </Columns>
@@ -184,9 +194,14 @@
     public int FlexRowId { get; set; } = 52;
     public Dictionary<string, object> filters = new Dictionary<string, object>();
     public List<string> ErrorList { get; set; } = new List<string>();
+    
+    private List<string> HiddenFields { get; set; } = new List<string>(); 
+    private List<Shared.DTOS.MapFkRelationsImportDTO> ListMapRelationsImport = new ();
 
     private Dictionary<string, string> _fieldsEntity = new Dictionary<string,string>();
     private Dictionary<string, string> _titleFields = new Dictionary<string,string>();
+    
+    //private 
 
     private Type EntityType = null;
     private string JsonObject = "";
@@ -212,6 +227,11 @@
     }
 
     private object GetPropertyValue(System.Dynamic.ExpandoObject obj, string propertyName)
+    {
+        return ((IDictionary<string, object>)obj)[propertyName];
+    }
+
+    private object SetPropertyValue(System.Dynamic.ExpandoObject obj, string propertyName, object value)
     {
         return ((IDictionary<string, object>)obj)[propertyName];
     }
@@ -251,21 +271,58 @@
                 if (attribute != null){
                     string foreignKeyName = attribute.Name;
                     var RelationAttribute = EntityFields.Where(x => x.Name == foreignKeyName).FirstOrDefault();
-                    IndexAttribute ForeingAttribute = RelationAttribute.PropertyType.GetCustomAttribute<IndexAttribute>();
-                    if(ForeingAttribute is not null && ForeingAttribute.IsUnique){
-                        var EntityName = await ResourceManager.GetResource($"{RelationAttribute.PropertyType.Name}.singular", AuthenticationService.GetRoiwdCulture()); 
-                        var FieldName = await ResourceManager.GetResource($"{RelationAttribute.PropertyType.Name}.{ForeingAttribute.PropertyNames[0]}", AuthenticationService.GetRoiwdCulture()); 
-                        ResourceName = $"{FieldName} - {EntityName}";
-                        importDataDTO.ForeingsKeysData.Add(field.Name, RelationAttribute.PropertyType.Name);
-                        _fieldsEntity.Add(ResourceName,field.Name);
-                        _titleFields.Add(field.Name, ResourceName);
-                    }
+
+                     await CalculateParentsRelations(RelationAttribute.PropertyType,null,field.Name,RelationAttribute.Name);
+                    
                 }else{
                     ResourceName = await ResourceManager.GetResource($"{EntityType.Name}.{field.Name}", AuthenticationService.GetRoiwdCulture()); 
                     _fieldsEntity.Add(ResourceName,field.Name);
                     _titleFields.Add(field.Name, ResourceName);
                 }
         }
+    }
+
+    private async Task CalculateParentsRelations(Type ForeignType, string baseIndex, string HiddenFieldTarget,string NamePropertyForeing)
+    {
+
+            var ResourceName = String.Empty;
+          
+             IndexAttribute ForeingAttribute = ForeignType.GetCustomAttribute<IndexAttribute>();
+
+            if(ForeingAttribute is not null && ForeingAttribute.IsUnique)
+            {
+
+                HiddenFields.Add(HiddenFieldTarget); 
+ 
+                MapFkRelationsImportDTO MapFk = new(){IdFieldFkEntity=HiddenFieldTarget, DependencyIdFieldFKEntity= baseIndex,NameInternalIndex =$"Index_{NamePropertyForeing}_FK"} ;
+
+                foreach (var propertyName in ForeingAttribute.PropertyNames)
+                {
+
+                    MapFk.ListIndexForeingFields.Add($"{propertyName}_{NamePropertyForeing}_FK");
+
+                    var EntityName = await ResourceManager.GetResource($"{ForeignType.Name}.singular", AuthenticationService.GetRoiwdCulture()); 
+                    var FieldName = await ResourceManager.GetResource($"{ForeignType.Name}.{propertyName}", AuthenticationService.GetRoiwdCulture()); 
+                    ResourceName = $"{FieldName} - {EntityName}"; 
+                    
+                    _fieldsEntity.Add(ResourceName,$"{propertyName}_{NamePropertyForeing}_FK");
+                    _titleFields.Add($"{propertyName}_{NamePropertyForeing}_FK", ResourceName);
+
+                    var propertyType= ForeignType.GetProperties().Where(x=> x.Name==propertyName).FirstOrDefault();
+
+                    ForeignKeyAttribute foreignKeyAttribute = propertyType.GetCustomAttribute<ForeignKeyAttribute>();
+                
+                    if (foreignKeyAttribute != null){
+                        string foreignKeyNameFk = foreignKeyAttribute.Name; 
+                        var RelationAttributeFk =  ForeignType.GetProperties().Where(x=> x.Name==foreignKeyNameFk).FirstOrDefault();
+                        await CalculateParentsRelations(RelationAttributeFk.PropertyType,MapFk.NameInternalIndex,$"{propertyName}_{NamePropertyForeing}_FK",foreignKeyNameFk);
+                    } 
+                } 
+
+                ListMapRelationsImport.Add(MapFk);
+
+            }
+ 
     }
 
     private async Task ImportData()
@@ -275,7 +332,11 @@
         importDataDTO.Data = DataMapped;
         importDataDTO.UrlResponse = "https://en77cb5mgajpj.x.pipedream.net";
         var bl = BackendRouterService.GetSDKBusinessModel("BLIntegrationService", AuthenticationService);
-        var result = await bl.Call("BulkImportData", importDataDTO);        
+        var result = await bl.Call("BulkImportData", importDataDTO);      
+
+
+
+
         if(result.Success)
         {
             SDKResponseImportDTO response = (SDKResponseImportDTO)result.Data;
@@ -299,7 +360,8 @@
         using (Workbook workbook = new Workbook())
             {
 
-                List<string> Headers = _fieldsEntity.Select(x => x.Key).ToList();
+
+                List<string> Headers = _fieldsEntity.Where(p=> !HiddenFields.Contains(p.Value)).Select(x => x.Key).ToList();
 
                 // Access the first worksheet in the workbook.
                 Worksheet worksheet = workbook.Worksheets[0];
@@ -467,48 +529,10 @@
 
         _ = InvokeAsync(() => StateHasChanged());     
     }
+ 
+    
 
-        private async Task Holi(InputFileChangeEventArgs InputFile)
-    {
-        ErrorList.Clear();
-        FileData = new List<dynamic>();
-        IsLoadingGrid = false;
-        using (var stream = new MemoryStream())
-        {
-            await InputFile.File.OpenReadStream().CopyToAsync(stream);
-            stream.Position = 0;
-            var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
-            {
-                HasHeaderRecord = true,
-                DetectDelimiter = true,
-            };
-
-            using (var CsvReader = new CsvReader(new StreamReader(stream), csvConfig))
-            {
-                var records = CsvReader.GetRecords<dynamic>();
-
-                foreach (var record in records)
-                {                    
-                    ExpandoObject obj = new ExpandoObject();
-
-                    foreach(var prop in record) 
-                    {
-                        var key = prop.Key;
-                        var value = prop.Value;
-                        ((IDictionary<string, object>)obj).Add(key, value);
-                    }
-
-                    FileData.Add(obj);
-                }
-            }
-        }
-
-        IsLoadingGrid = true;
-
-        _ = InvokeAsync(() => StateHasChanged());     
-    }
-
-    public void OnChangeSteps(int index)
+    public void  OnChangeSteps(int index)
     {
         SelectedIndex = index;
 
@@ -537,7 +561,7 @@
                 }else
                 {
                     ErrorList.Clear();
-                    MappingData();
+                    _= MappingData();
                 }
             break;
 
@@ -548,29 +572,152 @@
         StateHasChanged();
     }
 
-    private void MappingData()
+ 
+
+    private async Task MappingData()
     {
+
+        Dictionary<string, string> indexes = new();
+        List<string> llaves = new();
+
+        ListMapRelationsImport.ForEach(lista =>
+        {
+            llaves.AddRange(lista.ListIndexForeingFields);
+            indexes.Add(lista.NameInternalIndex, string.Empty);
+        });
+
+        string nameKey;
+
         DataMapped = new List<Dictionary<string, object>>();
         foreach (var item in FileData)
         {
             var row = new Dictionary<string, object>();
+           
 
             foreach (var key in _newKeys)
             {
+                object value = GetPropertyValue(item, key.Key);
+
                 if (GetPropertyValue(item, key.Key) != null)
                     if(row.TryGetValue(key.Value, out var val)){
-                        row[key.Value] = GetPropertyValue(item, key.Key);
+                        row[key.Value] = value;
                     }else{
-                        row.Add(key.Value, GetPropertyValue(item, key.Key));
-                    }
+                        row.Add(key.Value,value);
+                    } 
+
+                nameKey = TransformNameKey(key.Value);
+
+                if (llaves.Contains(key.Value))
+                {
+                    indexes[nameKey] += value;
+                }
+
+            }
+
+            foreach(var field in HiddenFields){
+                         row.Add(field, null);
+            }
+
+            foreach (var t in indexes)
+            {
+                row.Add(t.Key, t.Value);
             }
 
             DataMapped.Add(row);
+            
+            CleanvaluesIndexInternal(indexes);
         }
+
+   
+       try{ 
+
+            foreach (var mapRelationImport in ListMapRelationsImport)
+            {
+                Dictionary<string, List<object>> parametroFelds = new();
+
+                foreach (var dict in mapRelationImport.ListIndexForeingFields)
+                {
+                    parametroFelds.Add(dict, DataMapped.Where(p => p.ContainsKey(dict)).Select(p => p[dict]).ToList());
+                }
+
+     
+                 int star = mapRelationImport.NameInternalIndex.IndexOf ('_')+1;
+                 int end = mapRelationImport.NameInternalIndex.LastIndexOf('_');
+                string  BLName = mapRelationImport.NameInternalIndex.Substring(star,end-star);
+                BLName = $"BL{BLName}";
+
+
+                
+                var response = await BackendRouterService.GetSDKBusinessModel(BLName, AuthenticationService).Call("we",parametroFelds);
+            
+                if(response.Success){ 
+                    UpdateForeingKeysValues(response.Data, mapRelationImport.NameInternalIndex,
+                                            mapRelationImport.IdFieldFkEntity,
+                                            mapRelationImport.DependencyIdFieldFKEntity);
+                }
+ 
+                parametroFelds.Clear();
+                parametroFelds = null;
+ 
+            } 
+                     
+                     }catch(Exception e){
+
+                            var fg = 1;
+                     }    
+
+        CleanAuxiliarColumnsDataMapped();
 
         JsonObject = JsonConvert.SerializeObject(DataMapped, Newtonsoft.Json.Formatting.None);
 
         StateHasChanged();
     }
+
+
+    private void  CleanAuxiliarColumnsDataMapped(){
+
+        HashSet<Dictionary<string,object>> SetDataMapped = new HashSet<Dictionary<string, object>>(DataMapped);
+
+        foreach(var itemRelationShip in ListMapRelationsImport)
+        {  
+            SetDataMapped.Where(x => ((Dictionary<string, object>)x).Remove(itemRelationShip.NameInternalIndex)).ToList();
+
+            itemRelationShip.ListIndexForeingFields.ForEach(list=>{ SetDataMapped.Where(x => ((Dictionary<string, object>)x).Remove(list)).ToList(); });  
+        } 
+
+    }
+    static string TransformNameKey(string key)
+    {
+        return "Index" + key.Substring(key.IndexOf('_') > 0 ? key.IndexOf('_') : key.Length);
+    }
+
+    static Dictionary<string, string> CleanvaluesIndexInternal(Dictionary<string, string> dic)
+    {
+        foreach (var t in dic) { dic[t.Key] = String.Empty; }
+        return dic;
+    }
+
+     private void UpdateForeingKeysValues(List<MyDTO> DataIn, string indexFks, string fieldToRepalce, string dependencyIndex)
+    {
+        DataIn .Join(
+                      DataMapped,
+                      dataIn => dataIn.InternalIndex,
+                      dataMapped => dataMapped[indexFks],
+                      (dataIn, dataMapped) =>
+                      { 
+                            dataMapped[fieldToRepalce] = dataIn.Rowid;
+                            
+                            if(!string.IsNullOrEmpty(dependencyIndex)){ 
+                                dataMapped[dependencyIndex] += dataIn.Rowid.ToString();
+                            }
+
+                          return dataMapped;
+                      }
+                  ).ToList();
+
+    }
+
+
+
 
 }
