@@ -117,7 +117,7 @@ namespace Siesa.SDK.Frontend.Report.Controllers
                         {
                             Id = item.Id,
                             Name = item.Id,
-                            Type = "rdlx",
+                            Type = "CPL",
                         });
                     }
                 }
@@ -136,12 +136,10 @@ namespace Siesa.SDK.Frontend.Report.Controllers
             {
                 if (isTemporary)
                 {
-                    name = $"temp_{Guid.NewGuid().ToString()}.rdlx";
+                    name = $"temp_{Guid.NewGuid().ToString()}.CPL";
                 }
                 var result = BL.Call("SaveReport", xmlContent, name, isTemporary).GetAwaiter().GetResult();
-
             }
-
             return name;
 
         }
