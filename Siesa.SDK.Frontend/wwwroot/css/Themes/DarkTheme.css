@@ -168,3 +168,7 @@
     --color_chart_flex_35: #CACACA;
     --color_chart_flex_36: #989898;
 }
+
+.custom-checkbox .custom-control-input:checked~.custom-control-label::after{
+    filter: invert(16%) sepia(94%) saturate(1293%) hue-rotate(183deg) brightness(94%) contrast(95%);
+}
