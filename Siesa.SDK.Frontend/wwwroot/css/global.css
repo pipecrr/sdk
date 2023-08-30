@@ -1202,6 +1202,158 @@ div .form-control, div .form-control:focus{
     color: var(--color_text);
 }
 
+/*Fecha---------------------------------*/
+#ida2a44d27-1269-43d8-a51a-85ebfda020f9{
+    background-color: var(--color_input_back);
+    border-color: var(--color_form_border);
+}
+
+
+.btn-secondary:hover {
+    color: var(--color_primary_light)!important;
+}
+
+.card-header{
+    background-color: var(--color_back_body) !important;
+    border-bottom: none !important;
+}
+
+.btn-group>.btn-group:not(:last-child)>.btn, .btn-group>.btn:not(:last-child):not(.dropdown-toggle){
+color: var(--color_text);
+}
+
+.dxbs-calendar .dxbs-calendar-header.btn-group .dxbs-calendar-header-btn{
+    color: var(--color_text);
+}
+
+
+/* TODO: .dropdown-menu{
+    border: transparent !important;
+    background-color: transparent !important;
+} */
+
+dxbl-dropdown>.dxbs-dropdown-dialog>.dxbs-dropdown-body>*{
+    border: transparent !important;
+}
+
+.dxbs-calendar .dxbs-calendar-table-container .dxbs-calendar-table .dxbs-calendar-table-days-of-week th{
+    font-family:'Roboto', sans-serif;
+    color: var(--color_text) !important;
+}
+
+.dxbs-calendar.card{
+    border-radius: var(--border_radius_standar_max);
+}
+
+dxbl-dropdown.dxbs-dropdown>.dxbs-dropdown-dialog.dxbs-editor-dropdown{
+    border-radius: var(--border_radius_standar_max);
+    border: 1px solid var(--color_panel_back_border) !important;
+}
+
+dxbl-dropdown.dxbs-dropdown>.dxbs-dropdown-dialog.dxbs-editor-dropdown:focus{
+    box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,.15) !important;
+}
+
+.dxbs-calendar:not([disabled]):not([readonly]) .dxbs-calendar-header .dxbs-calendar-header-title-btn:hover {
+    background-color: var(--color_border);
+}
+
+.dxbs-calendar:not([disabled]):not([readonly]) .dxbs-calendar-header .dxbs-calendar-header-btn:not([disbled]):hover {
+    background-color: var(--color_border);
+}
+
+/*TODO: .btn.dx-btn, .dx-btn
+{
+    color: var(--color_primary) !important;
+    background-color: transparent !important;
+    border: 1px solid var(--color_primary) !important;
+    border-radius: var(--border_radius_btn) !important;
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+    display: inline-flex;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+} */
+
+.table{
+    color: var(--color_text) !important;
+}
+
+.text-danger{
+    color: var(--color_primary) !important;
+}
+
+/* Los valores de la clase text-weekend deben aplicarse en la clase text-danger*/
+.text-weekend{
+    color: var(--color_primary) !important;
+}
+
+
+
+.text-muted{
+    color: #6c757d!important;;
+}
+
+/* Los valores de la clase text-weekend deben aplicarse en la clase text-danger*/
+.text-mute{
+    color: var(--color_form_border) !important;
+}
+
+.text-mute:hover{
+    color: var(--color_panel_back) !important;
+}
+
+
+/* ACTIVE */
+.dxbs-calendar .dxbs-calendar-table-container .dxbs-calendar-table .dxbs-calendar-selected-item{
+    background-color: var(--color_primary_light) !important;
+    color: var(--color_panel_back) !important;
+}
+
+/* ACTIVE */
+
+/* HOVER */
+.dxbs-calendar:not([disabled]):not([readonly]) .dxbs-calendar-table td:not(.dxbs-calendar-disabled-item):not(.dxbs-calendar-table-today):not(.dxbs-calendar-table-week-number):not(.dxbs-calendar-selected-item):not(.dxbs-calendar-table-week-number):hover {
+    background-color: var(--color_border) !important;
+}
+/* HOVER */
+
+.dxbs-calendar .dxbs-calendar-table-container .dxbs-calendar-table .dxbs-calendar-table-today {
+    outline: solid 1px var(--color_primary) !important;
+    background-color: var(--color_primary) !important;
+    border-radius: 0.2rem !important;
+    color: var(--color_back) !important;
+    outline-offset: -1px !important;
+}
+
+
+
+#ida4976273-2ca3-41da-a6ea-f2f0745c837e{
+    color: var(--color_primary) !important;
+    background-color: transparent !important;
+    border: 1px solid var(--color_primary) !important;
+    border-radius: var(--border_radius_btn) !important;
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+}
+
+
+#ida4976273-2ca3-41da-a6ea-f2f0745c837e:hover{
+    background-color: var(--color_primary) !important;
+    color: var(--color_back) !important;
+}
+
+
+.card-footer{
+    background-color: transparent !important;
+    border-top: 1px solid var(--color_border_card) !important;
+}
+
+
+/*Fin Fecha*/
+
 
 
 @media (min-width: 1400px) { 
