@@ -1,4 +1,0 @@
-apiRules:
-- exclude:
-    uidRegex: ^Siesa\.SDK\.Frontend\.Components\.Documentation\..*
-    type: Namespace
