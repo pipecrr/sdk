@@ -98,9 +98,9 @@ namespace Siesa.SDK.Frontend.Components.Fields
         private async Task BusinessNotFoundError()
         {
             HasError = true;
-            var SingularMessage = await UtilsManager.GetResource($"{RelatedBusiness}.Singular"); 
-            ErrorMessage = await UtilsManager.GetResource("Custom.Generic.BusinessNotFoundInEntityField");
-            ErrorMessage = string.Format(ErrorMessage, SingularMessage);
+            var SingularMessage = await UtilsManager.GetResource($"{RelatedBusiness}.Singular").ConfigureAwait(true); 
+            ErrorMessage = await UtilsManager.GetResource("Custom.Generic.BusinessNotFoundInEntityField").ConfigureAwait(true);
+            ErrorMessage = string.Format(ErrorMessage, new object[]{SingularMessage});
         }
 
         protected async Task InitView()
@@ -121,7 +121,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
             if (relBusinessModel is null)
             {
-                await BusinessNotFoundError();
+                await BusinessNotFoundError().ConfigureAwait(true);
                 return;
             }
             
@@ -396,7 +396,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 try{
                     if (RelBusinessObj is null)
                     {
-                        await BusinessNotFoundError();
+                        await BusinessNotFoundError().ConfigureAwait(false);
                         return CacheLoadResult;
                     }
                     
