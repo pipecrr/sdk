@@ -43,6 +43,12 @@ namespace Siesa.SDK.Frontend.Controllers
             };
         }
 
+        //RedirectToDocs
+        public ActionResult RedirectToDocs(string url)
+        {
+            return Redirect("https://sdk-docs.siesadev.com/");
+        }
+
         private object[] GetArgs(ParameterInfo[] parameters, IEnumerable<KeyValuePair<string, StringValues>> collection = null)
         {
             string[] paramNames = parameters.Select(x => x.Name).ToArray();

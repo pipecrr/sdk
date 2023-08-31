@@ -139,6 +139,11 @@ namespace Siesa.SDK.Frontend
                     name: "default",
                     pattern: "api/{blname}/{blaction}/",
                     defaults: new { controller = "Api", action = "Index" });
+                //sdk-docs/* redirect
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "sdk-docs/{*url}",
+                    defaults: new { controller = "Api", action = "RedirectToDocs" });
             });
 
 
