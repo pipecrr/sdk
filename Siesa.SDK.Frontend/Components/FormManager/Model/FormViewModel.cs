@@ -26,12 +26,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         /// </summary>
         public List<string> ExtraFields { get; set; } = new List<string>();
         /// <summary>
-        /// Gets or sets the list of field options for the detail view of the form.
+        ///  Gets or sets the list of additional fields to be included in the detail view of the form.
         /// </summary>
-        public List<FieldOptions> DetailFields { get; set; } = new ();
-        /// <summary>
-        /// Gets or sets the list of additional detail fields for the BLDocument.
-        /// </summary>
-        public List<string> ExtraDetailFields { get; set; } = new List<string>();
+        public ListViewModel DetailConfig { get; set; } = new ListViewModel();
     }
 }

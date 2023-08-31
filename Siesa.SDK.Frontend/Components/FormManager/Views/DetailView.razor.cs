@@ -17,6 +17,7 @@ using Siesa.SDK.Frontend.Components.FormManager.Fields;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Siesa.SDK.Shared.Utilities;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
@@ -69,6 +70,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         [Inject] public SDKNotificationService NotificationService { get; set; }        
         protected FormViewModel FormViewModel { get; set; } = new FormViewModel();
+        /// <summary>
+        /// Gets or sets the config detail view model.
+        /// </summary>
+        protected ListViewModel DetailConfig { get; set; } = new ListViewModel();
         protected List<Panel> Panels { get { return FormViewModel.Panels; } }
         public List<Panel> PanelsCollapsable = new List<Panel>();
         public Boolean ModelLoaded = false;
@@ -82,6 +87,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public Boolean ContainAttachments = false;
         Relationship RelationshipAttachment = new Relationship();
         E00270_Attachment ParentAttachment = new E00270_Attachment();
+        /// <summary>
+        /// Gets or sets the reference grid.
+        /// </summary>
+        public dynamic RefGrid { get; set; }
 
         private bool HasExtraButtons { get; set; }
         private List<Button> ExtraButtons { get; set; }
@@ -293,7 +302,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if(IsDocument)
             {
                 List<string> extraDetailFields = new ();
-                FormViewModel.DetailFields.ForEach(x =>
+                DetailConfig = FormViewModel.DetailConfig;
+                DetailConfig.Fields.ForEach(x =>
                 {
                     x.ViewContext = "DetailView";
                     extraDetailFields.Add(x.Name);
@@ -391,15 +401,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 ExtraButtons = new List<Button>();
                 foreach (var button in FormViewModel.Buttons){
                     if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-disabled")){
-                        var disabled = await evaluateCodeButtons(button, "sdk-disabled");
+                        var disabled = await EvaluateCodeButtons(button, "sdk-disabled").ConfigureAwait(true);
                         button.Disabled = disabled;
                     }
                     if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-hide")){
-                        var hidden = await evaluateCodeButtons(button, "sdk-hide");
+                        var hidden = await EvaluateCodeButtons(button, "sdk-hide").ConfigureAwait(true);
                         button.Hidden = hidden;
                     }
                     if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-show")){
-                        var show = await evaluateCodeButtons(button, "sdk-show");
+                        var show = await EvaluateCodeButtons(button, "sdk-show").ConfigureAwait(true);
                         button.Hidden = !show;
                     }
                     if(button.Id != null){
@@ -434,8 +444,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 //_ = InvokeAsync(() => StateHasChanged());
             }
         }
-
-        public async Task<bool> evaluateCodeButtons(Button button, string condition){
+        /// <summary>
+        /// Evaluates a specified condition (sdk-disabled, sdk-hide, sdk-show) for a <paramref name="button"/> and returns the result.
+        /// </summary>
+        /// <param name="button">The <see cref="Button"/> object to evaluate the condition for.</param>
+        /// <param name="condition">The name of the condition stored in the custom attributes of the <paramref name="button"/>.</param>        
+        /// <returns>
+        /// Returns true if the condition evaluates to true; otherwise, returns false.
+        /// </returns>
+        public async Task<bool> EvaluateCodeButtons(Button button, string condition){
             bool disabled = button.Disabled;
             var sdkDisable = button.CustomAttributes[condition];
             if(sdkDisable != null){
@@ -540,14 +557,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
         }
 
-
-        private void OnClickCustomButton(Button button)
+        /// <summary>
+        /// Handles the click event of a custom button, performing the associated action.
+        /// </summary>
+        /// <param name="button">The <see cref="Button"/> object representing the clicked button.</param>
+        /// <param name="obj">An optional dynamic object that may be passed to the action associated with the button.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task OnClickCustomButton(Button button, dynamic obj = null)
         {
-            if (!string.IsNullOrEmpty(button.Href))
+            if (!string.IsNullOrEmpty(button?.Href))
             {
                 if (button.Target == "_blank")
                 {
-                    _ = JSRuntime.InvokeVoidAsync("window.open", button.Href, "_blank");
+                    await JSRuntime.InvokeVoidAsync("window.open", button.Href, "_blank").ConfigureAwait(true);
                 }
                 else
                 {
@@ -556,9 +578,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
 
             }
-            else if (!string.IsNullOrEmpty(button.Action))
+            else if (!string.IsNullOrEmpty(button?.Action))
             {
-                Evaluator.EvaluateCode(button.Action, BusinessObj);
+                await EjectMethod(obj, button.Action).ConfigureAwait(true);
+                StateHasChanged();
             }
         }
 
@@ -603,6 +626,45 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     }
                 }
             }
+        }
+        
+        /// <summary>
+        /// Executes a specified action using an evaluator and method information extracted from the provided object. 
+        /// This method can handle asynchronous methods and optionally returns a value based on the 'hasReturn' parameter.
+        /// </summary>
+        /// <param name="obj">The object on which the action will be executed.</param>
+        /// <param name="action">The action to be executed.</param>
+        /// <param name="hasReturn">Indicates whether the action has a return value.</param>
+        /// <returns>
+        /// If 'hasReturn' is true and the action has a return value, the result of the action is returned.
+        /// If 'hasReturn' is false or the action is void, no explicit return value is provided.
+        /// If the action result is of type bool, it is returned directly.
+        /// </returns>
+        public async Task<dynamic> EjectMethod(dynamic obj, string action, bool hasReturn = false)
+        {
+            var eject = await Evaluator.EvaluateCode(action, BusinessObj);
+            MethodInfo methodInfo = (MethodInfo)(eject?.GetType().GetProperty("Method")?.GetValue(eject));
+            if(methodInfo != null){
+                if(methodInfo.GetCustomAttributes(typeof(AsyncStateMachineAttribute), false).Length > 0){
+                    if (hasReturn)
+                    {
+                        return await eject(obj).ConfigureAwait(true);
+                    }else{
+                        await eject(obj).ConfigureAwait(true);
+                    }
+                }else{
+                    if (hasReturn)
+                    {
+                        return eject(obj);
+                    }else{
+                        eject(obj);
+                    }
+                }
+            }else if (eject != null && eject.GetType() == typeof(bool))
+            {
+                return eject;
+            }
+            return obj;
         }
     }
 }

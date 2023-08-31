@@ -93,31 +93,16 @@ else if (Panels == null || Panels.Count <= 0)
             }
         </SDKFormLayout>
         @if(IsDocument){
-            <SDKButton ResourceTag="Custom.Document.Button.Create" Click="@ClickAddRow"/>
-            <SDKGrid Data="@BusinessObj.ChildObjs" TItem="object" @ref="RefGrid">
-                <Columns>
-                    <SDKGridColumn Width="150px" ResourceTag="Action.Generic.Actions" TItem="object">
-                        <Template Context="dataActions">
-                            <div class="d-flex justify-content-center">
-                                <SDKButton IconCssClass="fa-trash-can" IsActionButton="true" Click="@(()=>ClickDeleteRow(dataActions))"/>
-                            </div>
-                        </Template>
-                    </SDKGridColumn>
-                    @foreach (FieldOptions column in FormViewModel.DetailFields)
-                    {
-                        <SDKGridColumn TItem="object" Title="@column.Name">
-                            <Template Context="data">
-                                    <DynamicField FieldOpt="@column" ModelObj="@data"/>
-                            </Template>
-                        </SDKGridColumn>
-                    }
-                </Columns>
-            </SDKGrid>            
+            <CascadingValue Value="@EditFormContext">
+                <CascadingValue Value="this">
+                    <SDKGridDocument BusinessObj="@BusinessObj" ButtonDeltete="@ButtonDeltete" DetailConfig="@DetailConfig"/>
+                </CascadingValue>
+            </CascadingValue>
         }
     </EditForm>
     </CascadingValue>
     @if(IsSubpanel && ShowButtons){
-        <div class="buttons-container">
+        <div clidColumnass="buttons-container">
             @foreach (var btn in FormViewModel.Buttons)
             {
                 <SDKButton RenderStyle="@btn.RenderStyle"  Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag"  />
@@ -158,7 +143,6 @@ else if (Panels == null || Panels.Count <= 0)
 }
 
 @code {
-
     protected override async Task InitView(string bName = null){
         await base.InitView(bName);
 

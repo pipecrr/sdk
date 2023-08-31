@@ -89,28 +89,11 @@ else if (BusinessObj.BaseObj.Rowid != 0)
             }
         </DxFormLayout>
         @if(IsDocument){
-            <SDKButton ResourceTag="Custom.Document.Button.Create" Click="@ClickAddRow"/>
-            <SDKGrid Data="@BusinessObj.ChildObjs" TItem="object" @ref="RefGrid">
-                <Columns>
-                    <SDKGridColumn Width="150px" ResourceTag="Action.Generic.Actions" TItem="object">
-                        <Template Context="dataActions">
-                            <div class="d-flex justify-content-center">
-                                <SDKButton IconCssClass="fa-trash-can" IsActionButton="true" Click="@(()=>ClickDeleteRow(dataActions))"/>                                        
-                            </div>
-                        </Template>
-                    </SDKGridColumn>
-                    @foreach (FieldOptions column in FormViewModel.DetailFields)
-                    {
-                        <SDKGridColumn TItem="object" Title="@column.Name">
-                            <Template Context="data">
-                                <CascadingValue Value="@EditFormContext">
-                                    <DynamicField FieldOpt="@column" ModelObj="@data"/>
-                                </CascadingValue>
-                            </Template>
-                        </SDKGridColumn>
-                    }
-                </Columns>
-            </SDKGrid>            
+            <CascadingValue Value="@EditFormContext">
+                <CascadingValue Value="this">
+                    <SDKGridDocument BusinessObj="@BusinessObj" ButtonDeltete="@ButtonDeltete" DetailConfig="@DetailConfig" IsDetail="false"/>
+                </CascadingValue>
+            </CascadingValue>
         }
 </EditForm>
     </CascadingValue>

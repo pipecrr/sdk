@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using Siesa.SDK.Frontend.Utils;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Frontend.Services;
@@ -21,6 +23,7 @@ using Siesa.SDK.Frontend.Extension;
 using Microsoft.Extensions.Configuration;
 using Siesa.Global.Enums;
 using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
+using Siesa.SDK.Frontend.Components.FormManager.Views;
 using Siesa.SDK.Shared.Utilities;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
@@ -48,6 +51,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Inject] public SDKGlobalLoaderService GlobalLoaderService { get; set; }
 
         protected FormViewModel FormViewModel { get; set; } = new FormViewModel();
+        /// <summary>
+        /// Gets or sets the config detail view model.
+        /// </summary>
+        protected ListViewModel DetailConfig { get; set; } = new ListViewModel();
 
         public List<Panel> Panels {get { return FormViewModel.Panels; } }
         public List<Panel> PanelsCollapsable = new List<Panel>();
@@ -91,7 +98,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         /// Gets or sets a value indicating whether the business object is a document.
         /// </summary>
         public bool IsDocument { get; set; }
-
+        
         public int CountUnicErrors = 0;
 
         private string _viewdefName = "";
@@ -123,7 +130,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public List<Button> ExtraButtons { get; set; }
         public Button SaveButton { get; set; }
         public bool isOnePanel { get; set; }
-
+        /// <summary>
+        /// Gets or sets the delete button config. 
+        /// </summary>
+        protected Button ButtonDeltete {get; set;  }
         /// <summary>
         /// Gets or sets the reference grid.
         /// </summary>
@@ -288,8 +298,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             }
             if(IsDocument)
             {
+                DetailConfig = FormViewModel.DetailConfig;
                 AddOnChangeCell();
-                BusinessObj.ExtraDetailFields = FormViewModel.DetailFields.Select(x => x.Name).ToList();
+                ButtonDeltete = DetailConfig.Buttons.FirstOrDefault(x => x.Id.Equals("Delete",StringComparison.Ordinal));
+                BusinessObj.ExtraDetailFields = DetailConfig.Fields.Select(x => x.Name).ToList();
+                
                 await BusinessObj.InitializeChilds().ConfigureAwait(true);
             }
             Loading = false;
@@ -305,12 +318,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         private void AddOnChangeCell()
         {
-            foreach (var item in FormViewModel.DetailFields)
+            foreach (var item in DetailConfig.Fields)
             {
                 if(item.CustomAttributes == null){
                     item.CustomAttributes = new Dictionary<string, object>();
                 }
-                item.CustomAttributes.Add("sdk-change-cell", "SdkOnChangeCell()");
+                if (!item.CustomAttributes.TryGetValue("sdk-change-cell", out object value))
+                {
+                    item.CustomAttributes.Add("sdk-change-cell", "SdkOnChangeCell");
+                }
             }
         }
 
@@ -355,15 +371,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 ExtraButtons = new List<Button>();
                 foreach (var button in FormViewModel.Buttons){
                     if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-disabled")){
-                        var disabled = await evaluateCodeButtons(button, "sdk-disabled");
+                        var disabled = await EvaluateCodeButtons(button, "sdk-disabled").ConfigureAwait(true);
                         button.Disabled = disabled;
                     }
                     if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-hide")){
-                        var hidden = await evaluateCodeButtons(button, "sdk-hide");
+                        var hidden = await EvaluateCodeButtons(button, "sdk-hide").ConfigureAwait(true);
                         button.Hidden = hidden;
                     }
                     if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-show")){
-                        var show = await evaluateCodeButtons(button, "sdk-show");
+                        var show = await EvaluateCodeButtons(button, "sdk-show").ConfigureAwait(true);
                         button.Hidden = !show;
                     }
                     if(button.Id != null){
@@ -386,16 +402,47 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 _ = InvokeAsync(() => StateHasChanged());
             }
         }
-        public async Task<bool> evaluateCodeButtons(Button button, string condition){
-            bool disabled = button.Disabled;
-            var sdkDisable = button.CustomAttributes[condition];
-            if(sdkDisable != null){
-                var eject = (bool)await Evaluator.EvaluateCode((string)sdkDisable, BusinessObj); //revisar
-                if(eject != null){
-                    disabled = eject;
+        
+        /// <summary>
+        /// Evaluates a specified condition (sdk-disabled, sdk-hide, sdk-show) for a <paramref name="button"/> and returns the result.
+        /// </summary>
+        /// <param name="button">The <see cref="Button"/> object to evaluate the condition for.</param>
+        /// <param name="condition">The name of the condition stored in the custom attributes of the <paramref name="button"/>.</param>
+        /// <param name="data">An optional dynamic object that may be passed to the evaluation process.</param>
+        /// <returns>
+        /// Returns true if the condition evaluates to true; otherwise, returns false.
+        /// </returns>
+        public async Task<bool> EvaluateCodeButtons(Button button, string condition, dynamic data = null)
+        {
+            bool result = false;
+            var sdkAttr = button?.CustomAttributes[condition];
+            if(sdkAttr != null){
+                string attrValue = sdkAttr.ToString();
+                if (data != null)
+                {
+                    attrValue = attrCode(attrValue, data);
+                    result = await EjectMethod(data, attrValue, true).ConfigureAwait(true);
+                }
+                else
+                {
+                    var eject = (bool)await Evaluator.EvaluateCode(attrValue, BusinessObj);
+                    result = eject;
                 }
             }
-            return disabled;
+            return result;
+        }
+
+        private string attrCode(string attrValue, dynamic data)
+        {
+            string result = attrValue;
+            var indexData = BusinessObj.ChildObjs.IndexOf(data);
+            if (result != null && result.Contains("data_detail", StringComparison.Ordinal))
+            {
+                result = result.Replace("data_detail", $"ChildObjs[{indexData}]",
+                    StringComparison.Ordinal);
+            }
+
+            return result;
         }
 
         private void EditContext_OnFieldChanged(object sender, FieldChangedEventArgs e)
@@ -422,86 +469,106 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         {
             foreach (var field in panelFields)
             {
-                if(field.Fields != null && field.Fields.Count > 0)
-                {
-                    EvaluateFields(field.Fields);
-                }
-
-                if(field.CustomAttributes == null){
-                    continue;
-                }
-
-                var fieldCustomAttr = field.CustomAttributes?.Where(x => x.Key.StartsWith("sdk-",StringComparison.Ordinal) && x.Key != "sdk-change");
-                
-                List<string> allowAttr = new List<string>(){
-                    "sdk-show",
-                    "sdk-hide",
-                    "sdk-required",
-                    "sdk-readonly",
-                    "sdk-disabled"
-                }; //TODO: Enum
-
                 _ = Task.Run(async () =>
                 {
-                    bool shouldUpdate = false;
-                    if(fieldCustomAttr == null){
-                        return;
-                    }
-                    foreach (var attr in fieldCustomAttr)
-                    {
-                        if(!allowAttr.Contains(attr.Key))
-                        {
-                            continue;
-                        }
-                        try
-                        {
-                            var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
-                            switch (attr.Key)
-                            {
-                                case "sdk-show":
-                                    if(field.Hidden != !result)
-                                    {
-                                        field.Hidden = !result;
-                                        shouldUpdate = true;
-                                    }
-                                    break;
-                                case "sdk-hide":
-                                    if(field.Hidden != result)
-                                    {
-                                        field.Hidden = result;
-                                        shouldUpdate = true;
-                                    }
-                                    break;
-                                case "sdk-required":
-                                    if(field.Required != result)
-                                    {
-                                        field.Required = result;
-                                        shouldUpdate = true;
-                                    }
-                                    break;
-                                case "sdk-readonly":
-                                case "sdk-disabled":
-                                    if(field.Disabled != result)
-                                    {
-                                        field.Disabled = result;
-                                        shouldUpdate = true;
-                                    }
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                        catch (System.Exception ex)
-                        {
-                            Console.WriteLine($"Error: {ex.Message}");
-                        }
-                    }
+                    bool shouldUpdate = await UpdateCustomAttr(field).ConfigureAwait(true);
                     if(shouldUpdate)
                     {
                         _ = InvokeAsync(() => StateHasChanged());
                     }
                 });
             }
+        }
+        /// <summary>
+        /// Updates the custom attributes of a <paramref name="field"/> based on evaluation results.
+        /// </summary>
+        /// <param name="field">The <see cref="FieldOptions"/> object representing the field with custom attributes.</param>
+        /// <param name="isFieldDocument">Indicates whether the field is a document field.</param>
+        /// <param name="data">Additional data used for evaluation, applicable when <paramref name="isFieldDocument"/> is true.</param>
+        /// <returns>
+        /// Returns true if any custom attribute of the field has been updated, otherwise returns false.
+        /// </returns>
+        public async Task<bool> UpdateCustomAttr(FieldOptions field, bool isFieldDocument = false, dynamic data = null)
+        {
+            if (field == null)
+            {
+                return false;
+            }
+            
+            if(field.Fields != null && field.Fields.Count > 0)
+            {
+                EvaluateFields(field.Fields);
+            }
+
+            if(field.CustomAttributes == null){
+                return false;
+            }
+            
+            bool shouldUpdate = false;
+            
+            var fieldCustomAttr = field.CustomAttributes.Where(x => x.Key.StartsWith("sdk-",StringComparison.Ordinal) && x.Key != "sdk-change");
+
+            foreach (var attr in fieldCustomAttr)
+            {
+                try
+                {
+                    shouldUpdate |= await UpdateFieldBasedOnAttr(field, attr, isFieldDocument, data);
+                }
+                catch (System.Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex.Message}");
+                }
+            }
+            return shouldUpdate;
+        }
+        private async Task<bool> UpdateFieldBasedOnAttr(FieldOptions field, KeyValuePair<string, object> attr, bool isFieldDocument, dynamic data)
+        {
+            string attrValue = (string)attr.Value;
+
+            if (isFieldDocument && data != null && attrValue.Contains("data_detail", StringComparison.Ordinal))            
+            {
+                var indexData = BusinessObj.ChildObjs.IndexOf(data);
+                attrValue = attrValue.Replace("data_detail", $"ChildObjs[{indexData}]", StringComparison.Ordinal);
+            }
+
+            var result = (bool)await Evaluator.EvaluateCode(attrValue, BusinessObj);
+
+            switch (attr.Key)
+            {
+                case "sdk-show":
+                    if (field.Hidden != !result)
+                    {
+                        field.Hidden = !result;
+                        return true;
+                    }
+                    break;
+                case "sdk-hide":
+                    if (field.Hidden != result)
+                    {
+                        field.Hidden = result;
+                        return true;
+                    }
+                    break;
+                case "sdk-required":
+                    if (field.Required != result)
+                    {
+                        field.Required = result;
+                        return true;
+                    }
+                    break;
+                case "sdk-readonly":
+                case "sdk-disabled":
+                    if (field.Disabled != result)
+                    {
+                        field.Disabled = result;
+                        return true;
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            return false;
         }
 
         protected override async Task OnInitializedAsync()
@@ -522,7 +589,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             bool changeViewContext = parameters.DidParameterChange(nameof(ViewContext), ViewContext);
             bool changeBusinessName = parameters.DidParameterChange(nameof(BusinessName), BusinessName);
 
-            await base.SetParametersAsync(parameters);
+            await base.SetParametersAsync(parameters).ConfigureAwait(true);
 
             if(changeViewContext || changeBusinessName)
             {
@@ -731,14 +798,20 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         {
             NavManager.NavigateTo($"{BusinessName}/");
         }
-
-        public async Task OnClickCustomButton(Button button)
+        
+        /// <summary>
+        /// Handles the click event of a custom button, performing the associated action.
+        /// </summary>
+        /// <param name="button">The <see cref="Button"/> object representing the clicked button.</param>
+        /// <param name="obj">An optional dynamic object that may be passed to the action associated with the button.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task OnClickCustomButton(Button button, dynamic obj = null)
         {
-            if (!string.IsNullOrEmpty(button.Href))
+            if (!string.IsNullOrEmpty(button?.Href))
             {
                 if (button.Target == "_blank")
                 {
-                    _ = JSRuntime.InvokeVoidAsync("window.open", button.Href, "_blank");
+                    await JSRuntime.InvokeVoidAsync("window.open", button.Href, "_blank").ConfigureAwait(true);
                 }
                 else
                 {
@@ -747,10 +820,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
 
             }
-            else if (!string.IsNullOrEmpty(button.Action))
+            else if (!string.IsNullOrEmpty(button?.Action))
             {
-                await Evaluator.EvaluateCode(button.Action, BusinessObj, useRoslyn: UseRoslynToEval); //Revisar
-                StateHasChanged();
+                await EjectMethod(obj, button.Action).ConfigureAwait(true);
+                _ = InvokeAsync(() => StateHasChanged());
             }
         }
         
@@ -761,7 +834,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         /// <summary>
         /// Method to add a new row to the grid.
         /// </summary>
-        public void ClickAddRow()
+        public async Task ClickAddRow()
         {
             Type typeChild = BusinessObj.ChildType();
             dynamic obj = Activator.CreateInstance(typeChild);
@@ -770,22 +843,73 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             {
                 BusinessObj.ChildObjs = Activator.CreateInstance(ListChildObj);
             }
+
+            if (!String.IsNullOrEmpty(DetailConfig.ActionAddRow))
+            {
+                obj = await EjectMethod(obj, DetailConfig.ActionAddRow, true).ConfigureAwait(true);
+            }
             BusinessObj.ChildObjs.Add(obj);
             RefGrid.Reload();
         }
-        
+
         /// <summary>
         /// Method to delete a row from the grid.
         /// </summary>
         /// <param name="obj">The object to delete.</param>
-        public void ClickDeleteRow(dynamic obj){
-            BusinessObj.ChildObjs.Remove(obj);
-            if(obj.Rowid != null && obj.Rowid > 0){
-                BusinessObj.ChildObjsDeleted.Add(obj);
-                BusinessObj.ChildRowidsUpdated.Remove(obj.Rowid);
+        public async Task ClickDeleteRow(dynamic obj){
+            bool delete = true;
+            if (!String.IsNullOrEmpty(DetailConfig.ActionDeleteRow))
+            {
+                delete = await EjectMethod(obj, DetailConfig.ActionDeleteRow, true).ConfigureAwait(true);
             }
+            if(delete){
+                BusinessObj.ChildObjs.Remove(obj);
+                if(obj.Rowid != null && obj.Rowid > 0){
+                    BusinessObj.ChildObjsDeleted.Add(obj);
+                    BusinessObj.ChildRowidsUpdated.Remove(obj.Rowid);
+                }
+            }
+
             RefGrid.Reload();
         }
-
+        
+        /// <summary>
+        /// Executes a specified action using an evaluator and method information extracted from the provided object. 
+        /// This method can handle asynchronous methods and optionally returns a value based on the 'hasReturn' parameter.
+        /// </summary>
+        /// <param name="obj">The object on which the action will be executed.</param>
+        /// <param name="action">The action to be executed.</param>
+        /// <param name="hasReturn">Indicates whether the action has a return value.</param>
+        /// <returns>
+        /// If 'hasReturn' is true and the action has a return value, the result of the action is returned.
+        /// If 'hasReturn' is false or the action is void, no explicit return value is provided.
+        /// If the action result is of type bool, it is returned directly.
+        /// </returns>
+        public async Task<dynamic> EjectMethod(dynamic obj, string action, bool hasReturn = false)
+        {
+            var eject = await Evaluator.EvaluateCode(action, BusinessObj);
+            MethodInfo methodInfo = (MethodInfo)(eject?.GetType().GetProperty("Method")?.GetValue(eject));
+            if(methodInfo != null){
+                if(methodInfo.GetCustomAttributes(typeof(AsyncStateMachineAttribute), false).Length > 0){
+                    if (hasReturn)
+                    {
+                        return await eject(obj).ConfigureAwait(true);
+                    }else{
+                        await eject(obj).ConfigureAwait(true);
+                    }
+                }else{
+                    if (hasReturn)
+                    {
+                        return eject(obj);
+                    }else{
+                        eject(obj);
+                    }
+                }
+            }else if (eject != null && eject.GetType() == typeof(bool))
+            {
+                return eject;
+            }
+            return obj;
+        }
     }
 }
