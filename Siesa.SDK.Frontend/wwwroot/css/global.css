@@ -1166,16 +1166,6 @@ div .form-control:focus {
     padding: 0px 0px 0px 10px !important;
     position: relative !important;
 }
-.floating_notification {
-    position: absolute;
-    top: 150px;
-    right: -225px !important;
-    z-index: 1000;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    padding: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
 
   .close_button {
     position: absolute;
@@ -1204,7 +1194,7 @@ div .form-control:focus {
     position: relative;
     background: none;
 }
- /*Componente Notificaciones*/ 
+ /* FIN Componente Notificaciones*/ 
 
 @media (min-width: 1400px) {
     .col-xxl-12 {

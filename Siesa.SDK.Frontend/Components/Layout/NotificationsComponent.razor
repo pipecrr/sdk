@@ -3,9 +3,10 @@
 @using Siesa.Global.Enums
 @using Siesa.SDK.Components.Visualization
 @using Siesa.SDK.Protos
+@using Blazored.Toast.Services
 @inherits SDKComponent
 @inject IQueueService QueueService
-@inject SDKNotificationService NotificationService
+@inject IToastService ToastService
 @implements IDisposable
 
 <div id="DashBoard_Notification">
@@ -21,8 +22,7 @@
         <div class="pt-3 pl-3 pr-3 pb-0">
             <h6 class="font-weight-bold m-0 border-bottom pb-3">
                 <span>
-                    <ResourceViewer ResourceTag="Custom.SDKNotification.ButtonNotifications"
-                        RowidCulture=@AuthenticationService.GetRoiwdCulture() />
+                    <ResourceViewer ResourceTag="Custom.SDKNotification.ButtonNotifications"/>
                 </span>
             </h6>
         </div>
@@ -58,22 +58,6 @@
 
 </SDKDropDown>
 
-@if (FloatingNotification)
-{
-    @foreach (var notify in TempsNotifications)
-    {
-        <div class="floating_notification">
-            <SDKButton ResourceTag="SDK.DashBoard.Notification.Close" CssClass="btn btn-sm close_button"
-                RenderStyle="SDKButtonRenderStyle.None" Click="@CloseFloatingNotification">
-                <SDKIcon Name="fa-x" />
-            </SDKButton>
-            <br />
-            <p>@notify.Message</p>
-        </div>
-    }
-    
-}
-
 
 @code
 {
@@ -99,17 +83,17 @@
 
         if (Notifications == null)
             Notifications = new List<Siesa.SDK.Protos.QueueMessageDTO>();
-            TempsNotifications = new List<Siesa.SDK.Protos.QueueMessageDTO>();
 
         if (message != null)
             Notifications.Add(message);
-            TempsNotifications.Add(message);
 
-        Task.Run(async () => await ShowFloatingNotification(message));
 
-        //StateHasChanged();
+        ToastService.ShowInfo(message: message.Message, settings: settings => {settings.Timeout = 10; settings.PauseProgressOnHover = true; });
+
+        ToastService.ShowToast<DemoToast>(settings => { settings.Timeout = 5; settings.ShowProgressBar = false; });
+
         InvokeAsync(() => StateHasChanged());
-        //FloatingNotification = true;
+
     }
 
     public void Dispose()
@@ -120,26 +104,6 @@
     private void OpenNotification()
     {
         _OpenNotifications = !_OpenNotifications;
-        StateHasChanged();
-    }
-
-    private async Task ShowFloatingNotification(QueueMessageDTO message)
-    {
-        FloatingNotification = true;
-        InvokeAsync(()=> StateHasChanged());
-
-        await Task.Delay(3000);
-
-        FloatingNotification = false;
-        TempsNotifications.Remove(message);
-
-        InvokeAsync(()=> StateHasChanged());
-    }
-
-
-    private void CloseFloatingNotification()
-    {
-        FloatingNotification = false;
         StateHasChanged();
     }
 

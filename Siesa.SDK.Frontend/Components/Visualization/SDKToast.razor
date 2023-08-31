@@ -1,0 +1,29 @@
+@using Blazored.Toast.Configuration
+@using Siesa.SDK.Frontend.Components
+@inherits SDKComponent
+
+<BlazoredToasts />
+
+@code
+{
+    [Parameter] public IconType IconType { get; set; } = IconType.Blazored;
+    [Parameter] public string? InfoClass { get; set; }
+    [Parameter] public string? InfoIcon { get; set; }
+    [Parameter] public string? SuccessClass { get; set; }
+    [Parameter] public string? SuccessIcon { get; set; }
+    [Parameter] public string? WarningClass { get; set; }
+    [Parameter] public string? WarningIcon { get; set; }
+    [Parameter] public string? ErrorClass { get; set; }
+    [Parameter] public string? ErrorIcon { get; set; }
+    [Parameter] public ToastPosition Position { get; set; } = ToastPosition.TopRight;
+    [Parameter] public int Timeout { get; set; } = 5;
+    [Parameter] public int MaxToastCount { get; set; } = int.MaxValue;
+    [Parameter] public bool RemoveToastsOnNavigation { get; set; }
+    [Parameter] public bool ShowProgressBar { get; set; }
+    [Parameter] public RenderFragment? CloseButtonContent { get; set; }
+    [Parameter] public bool ShowCloseButton { get; set; } = true;
+    [Parameter] public bool DisableTimeout { get; set; }
+    [Parameter] public bool PauseProgressOnHover { get; set; } = false;
+    [Parameter] public int ExtendedTimeout { get; set; }
+
+}
