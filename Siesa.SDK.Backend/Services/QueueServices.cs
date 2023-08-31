@@ -15,6 +15,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Protos;
+using Microsoft.Extensions.Configuration;
 
 namespace Siesa.SDK.Backend.Services
 {
@@ -23,19 +24,27 @@ namespace Siesa.SDK.Backend.Services
     /// </summary>
     public class QueueService : BackgroundService, IQueueService
     {
+        private readonly IConfiguration _configuration;
         private IConnection _connection;
         private IModel _channel;
         private readonly Dictionary<string, string> _subscriptions = new Dictionary<string, string>();
         private readonly Dictionary<string, List<QueueSubscribeActionDTO>> _subscriptionsActions = new();
         private int _reconectAttemp = 0;
-        private readonly ConnectionFactory factory = new ConnectionFactory() { HostName = "coder.overjt.com" };
+        private ConnectionFactory factory;
         private readonly IServiceProvider _serviceProvider;
 
         /// <summary>
         /// Constructor de la clase <see cref="QueueService"/>.
         /// </summary>
-        public QueueService()
+        public QueueService(IConfiguration configuration)
         {
+            _configuration = configuration;
+
+            factory = new ConnectionFactory()
+            {
+                HostName = _configuration["RabbitMQ:HostName"],
+            };
+            
             Connect();
             _serviceProvider = SDKApp.GetServiceProvider();
         }

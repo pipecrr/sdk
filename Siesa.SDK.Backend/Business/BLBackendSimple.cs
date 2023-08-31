@@ -573,7 +573,7 @@ namespace Siesa.SDK.Business
                             _queueService.Subscribe(BusinessName, enumMessageCategory.CRUD);
                             _queueService.SendMessage(BusinessName, enumMessageCategory.CRUD, new QueueMessageDTO()
                             {
-                                Message = $"Se Guardo un registro en {BusinessName}",
+                                Message = $"Custom.{BusinessName}.RecordSaved",
                                 Rowid = result.Rowid
                             });
                         }
