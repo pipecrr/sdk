@@ -98,8 +98,9 @@ namespace Siesa.SDK.Frontend.Components.Fields
         private async Task BusinessNotFoundError()
         {
             HasError = true;
+            var SingularMessage = await UtilsManager.GetResource($"{RelatedBusiness}.Singular"); 
             ErrorMessage = await UtilsManager.GetResource("Custom.Generic.BusinessNotFoundInEntityField");
-            ErrorMessage = string.Format(ErrorMessage, $"{RelatedBusiness}.Singular", RelatedBusiness);
+            ErrorMessage = string.Format(ErrorMessage, SingularMessage);
         }
 
         protected async Task InitView()
