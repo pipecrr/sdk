@@ -11,8 +11,10 @@ namespace Siesa.SDK.Frontend.Components.Visualization
     /// Represents a Toast component with customizable settings for displaying toast notifications.
     /// </summary>
     public partial class SDKToast : SDKComponent
-    {    /// Gets or sets the type of icon to be used in the toast notifications.
-         /// </summary>
+    {
+        /// <summary>
+        /// Gets or sets the type of icon to be used in the toast notifications.
+        /// </summary>
         [Parameter] public IconType IconType { get; set; } = IconType.Blazored;
 
         /// <summary>

@@ -5,8 +5,7 @@
 @using Siesa.SDK.Protos
 @using Blazored.Toast.Services
 @inherits SDKComponent
-@inject IQueueService QueueService
-@inject IToastService ToastService
+
 @implements IDisposable
 
 <div id="DashBoard_Notification">
@@ -61,56 +60,5 @@
 
 @code
 {
-
-    private List<Siesa.SDK.Protos.QueueMessageDTO> Notifications { get; set; }
-    
-    private List<Siesa.SDK.Protos.QueueMessageDTO> TempsNotifications { get; set; }
-
-    private string Message { get; set; }
-
-    private bool _OpenNotifications = false;
-    private bool FloatingNotification = false;
-
-    protected override async Task OnInitializedAsync()
-    {
-        QueueService.Subscribe("BLUser", enumMessageCategory.CRUD, OnCrudNotification);
-        await base.OnInitializedAsync();
-    }
-
-    public void OnCrudNotification(QueueMessageDTO message)
-    {
-        Console.WriteLine($"Desde Notification Component {message.Message}");
-
-        if (Notifications == null)
-            Notifications = new List<Siesa.SDK.Protos.QueueMessageDTO>();
-
-        if (message != null)
-            Notifications.Add(message);
-
-
-        ToastService.ShowInfo(message: message.Message, settings: settings => {settings.Timeout = 10; settings.PauseProgressOnHover = true; });
-
-        ToastService.ShowToast<DemoToast>(settings => { settings.Timeout = 5; settings.ShowProgressBar = false; });
-
-        InvokeAsync(() => StateHasChanged());
-
-    }
-
-    public void Dispose()
-    {
-        QueueService.Unsubscribe("BLUser", enumMessageCategory.CRUD);
-    }
-
-    private void OpenNotification()
-    {
-        _OpenNotifications = !_OpenNotifications;
-        StateHasChanged();
-    }
-
-    private void RemoveNotification(Siesa.SDK.Protos.QueueMessageDTO notify)
-    {
-        Notifications.Remove(notify);
-        StateHasChanged();
-    }
 
 }

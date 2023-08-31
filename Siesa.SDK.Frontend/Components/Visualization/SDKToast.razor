@@ -2,7 +2,26 @@
 @using Siesa.SDK.Frontend.Components
 @inherits SDKComponent
 
-<BlazoredToasts />
+<BlazoredToasts IconType="@IconType"
+                InfoClass="@InfoClass"
+                InfoIcon="@InfoIcon"
+                SuccessClass="@SuccessClass"
+                SuccessIcon="@SuccessIcon"
+                WarningClass="@WarningClass"
+                WarningIcon="@WarningIcon"
+                ErrorClass="@ErrorClass"
+                ErrorIcon="@ErrorIcon"
+                Position="@Position"
+                Timeout="@Timeout"
+                MaxToastCount="@MaxToastCount"
+                RemoveToastsOnNavigation="@RemoveToastsOnNavigation"
+                ShowProgressBar="@ShowProgressBar"
+                CloseButtonContent="@CloseButtonContent"
+                ShowCloseButton="@ShowCloseButton"
+                DisableTimeout="@DisableTimeout"
+                PauseProgressOnHover="@PauseProgressOnHover"
+                ExtendedTimeout="@ExtendedTimeout">
+</BlazoredToasts>
 
 @code
 {
