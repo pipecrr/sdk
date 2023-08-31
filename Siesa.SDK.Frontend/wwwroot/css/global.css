@@ -997,6 +997,11 @@ div .form-control, div .form-control:focus{
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='black' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e")!important;
     filter: invert(100%);
 }
+.custom-checkbox .custom-control-input:indeterminate~.custom-control-label::after
+{
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 4'%3e%3cpath stroke='black' d='M0 2h4'/%3e%3c/svg%3e");
+    filter: invert(100);
+}
 
 .custom-control-label::before,
 .custom-control-label::after {
@@ -1203,11 +1208,17 @@ div .form-control, div .form-control:focus{
 }
 
 /*Fecha---------------------------------*/
-#ida2a44d27-1269-43d8-a51a-85ebfda020f9{
-    background-color: var(--color_input_back);
-    border-color: var(--color_form_border);
+
+.dxbs-calendar:not([disabled]):not([readonly]) .dxbs-calendar-header .dxbs-calendar-header-title-btn:hover
+{
+    background-color: var(--color_border) !important;
 }
 
+
+.dxbs-calendar:not([disabled]):not([readonly]) .dxbs-calendar-header .dxbs-calendar-header-btn:not([disbled]):hover 
+{
+    background-color: var(--color_border) !important;
+}
 
 .btn-secondary:hover {
     color: var(--color_primary_light)!important;
@@ -1223,21 +1234,30 @@ color: var(--color_text);
 }
 
 .dxbs-calendar .dxbs-calendar-header.btn-group .dxbs-calendar-header-btn{
-    color: var(--color_text);
+    color: var(--color_text) !important;
 }
 
-
-/* TODO: .dropdown-menu{
-    border: transparent !important;
-    background-color: transparent !important;
-} */
-
-dxbl-dropdown>.dxbs-dropdown-dialog>.dxbs-dropdown-body>*{
-    border: transparent !important;
+.text-muted:hover 
+{
+    color: var(--color_panel_back) !important;
+    
 }
+
+.rz-colorpicker
+{
+
+}
+
+.dropdown-menu{
+    border-radius: var(--border_radius_standar_max);
+}
+
+.dxbl-dropdown>.dxbs-dropdown-dialog>.dxbs-dropdown-body>*{
+   border-radius: var(--border_radius_standar_max);
+} 
 
 .dxbs-calendar .dxbs-calendar-table-container .dxbs-calendar-table .dxbs-calendar-table-days-of-week th{
-    font-family:'Roboto', sans-serif;
+    font-family:'Roboto', sans-serif !important;
     color: var(--color_text) !important;
 }
 
@@ -1245,12 +1265,12 @@ dxbl-dropdown>.dxbs-dropdown-dialog>.dxbs-dropdown-body>*{
     border-radius: var(--border_radius_standar_max);
 }
 
-dxbl-dropdown.dxbs-dropdown>.dxbs-dropdown-dialog.dxbs-editor-dropdown{
+.dxbl-dropdown.dxbs-dropdown>.dxbs-dropdown-dialog.dxbs-editor-dropdown{
     border-radius: var(--border_radius_standar_max);
     border: 1px solid var(--color_panel_back_border) !important;
 }
 
-dxbl-dropdown.dxbs-dropdown>.dxbs-dropdown-dialog.dxbs-editor-dropdown:focus{
+.dxbl-dropdown.dxbs-dropdown>.dxbs-dropdown-dialog.dxbs-editor-dropdown:focus{
     box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,.15) !important;
 }
 
@@ -1262,7 +1282,7 @@ dxbl-dropdown.dxbs-dropdown>.dxbs-dropdown-dialog.dxbs-editor-dropdown:focus{
     background-color: var(--color_border);
 }
 
-/*TODO: .btn.dx-btn, .dx-btn
+.dxbs-calendar-footer > .btn
 {
     color: var(--color_primary) !important;
     background-color: transparent !important;
@@ -1270,12 +1290,7 @@ dxbl-dropdown.dxbs-dropdown>.dxbs-dropdown-dialog.dxbs-editor-dropdown:focus{
     border-radius: var(--border_radius_btn) !important;
     padding-left: 1.5rem !important;
     padding-right: 1.5rem !important;
-    display: inline-flex;
-    -webkit-box-pack: center;
-    justify-content: center;
-    -webkit-box-align: center;
-    align-items: center;
-} */
+} 
 
 .table{
     color: var(--color_text) !important;
@@ -1285,40 +1300,27 @@ dxbl-dropdown.dxbs-dropdown>.dxbs-dropdown-dialog.dxbs-editor-dropdown:focus{
     color: var(--color_primary) !important;
 }
 
-/* Los valores de la clase text-weekend deben aplicarse en la clase text-danger*/
-.text-weekend{
-    color: var(--color_primary) !important;
-}
-
-
 
 .text-muted{
-    color: #6c757d!important;;
-}
-
-/* Los valores de la clase text-weekend deben aplicarse en la clase text-danger*/
-.text-mute{
     color: var(--color_form_border) !important;
 }
 
-.text-mute:hover{
+.text-muted:hover{
     color: var(--color_panel_back) !important;
 }
 
 
-/* ACTIVE */
+
 .dxbs-calendar .dxbs-calendar-table-container .dxbs-calendar-table .dxbs-calendar-selected-item{
     background-color: var(--color_primary_light) !important;
     color: var(--color_panel_back) !important;
 }
 
-/* ACTIVE */
 
-/* HOVER */
 .dxbs-calendar:not([disabled]):not([readonly]) .dxbs-calendar-table td:not(.dxbs-calendar-disabled-item):not(.dxbs-calendar-table-today):not(.dxbs-calendar-table-week-number):not(.dxbs-calendar-selected-item):not(.dxbs-calendar-table-week-number):hover {
     background-color: var(--color_border) !important;
 }
-/* HOVER */
+
 
 .dxbs-calendar .dxbs-calendar-table-container .dxbs-calendar-table .dxbs-calendar-table-today {
     outline: solid 1px var(--color_primary) !important;
@@ -1328,19 +1330,7 @@ dxbl-dropdown.dxbs-dropdown>.dxbs-dropdown-dialog.dxbs-editor-dropdown:focus{
     outline-offset: -1px !important;
 }
 
-
-
-#ida4976273-2ca3-41da-a6ea-f2f0745c837e{
-    color: var(--color_primary) !important;
-    background-color: transparent !important;
-    border: 1px solid var(--color_primary) !important;
-    border-radius: var(--border_radius_btn) !important;
-    padding-left: 1.5rem !important;
-    padding-right: 1.5rem !important;
-}
-
-
-#ida4976273-2ca3-41da-a6ea-f2f0745c837e:hover{
+.dxbs-calendar-footer > .btn:hover{
     background-color: var(--color_primary) !important;
     color: var(--color_back) !important;
 }

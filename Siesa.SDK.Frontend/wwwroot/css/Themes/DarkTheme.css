@@ -172,3 +172,7 @@
 .custom-checkbox .custom-control-input:checked~.custom-control-label::after{
     filter: invert(16%) sepia(94%) saturate(1293%) hue-rotate(183deg) brightness(94%) contrast(95%);
 }
+.custom-checkbox .custom-control-input:indeterminate~.custom-control-label::after
+{
+    filter: invert(16%) sepia(94%) saturate(1293%) hue-rotate(183deg) brightness(94%) contrast(95%);
+}
