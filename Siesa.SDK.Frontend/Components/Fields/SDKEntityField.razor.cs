@@ -18,6 +18,7 @@ using Siesa.SDK.Frontend.Extension;
 using Siesa.SDK.Entities;
 using Siesa.SDK.Frontend.Components.FormManager;
 using Siesa.Global.Enums;
+using Siesa.SDK.Frontend.Components.FormManager.Views;
 
 namespace Siesa.SDK.Frontend.Components.Fields
 {
@@ -94,7 +95,15 @@ namespace Siesa.SDK.Frontend.Components.Fields
             StateHasChanged();
         }
 
-        protected async Task InitView(){
+        private async Task BusinessNotFoundError()
+        {
+            HasError = true;
+            ErrorMessage = await UtilsManager.GetResource("Custom.Generic.BusinessNotFoundInEntityField");
+            ErrorMessage = string.Format(ErrorMessage, $"{RelatedBusiness}.Singular", RelatedBusiness);
+        }
+
+        protected async Task InitView()
+        {
             idInput = Guid.NewGuid().ToString();
             CheckPermissions();
             
@@ -108,6 +117,13 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 }
             }
             relBusinessModel = BackendRouterService.GetSDKBusinessModel(RelatedBusiness, null);
+
+            if (relBusinessModel is null)
+            {
+                await BusinessNotFoundError();
+                return;
+            }
+            
             var relBusinessType = Utilities.SearchType(relBusinessModel.Namespace + "." + relBusinessModel.Name);
             RelBusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider, relBusinessType);
             if(AuthenticationService.User!=null){
@@ -128,7 +144,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
         public override async Task SetParametersAsync(ParameterView parameters){
             if (parameters.TryGetValue<dynamic>("BaseObj", out dynamic baseObjNew)){
-                if(BaseObj != null && baseObjNew != null){
+                if(BaseObj != null && baseObjNew != null && RelBusinessObj is not null){
                     BindProperty = BaseObj.GetType().GetProperty(FieldName);
                     dynamic baseObjNewRelated = baseObjNew.GetType().GetProperty(FieldName).GetValue(baseObjNew);
                     if(!IsMultiple){
@@ -377,7 +393,14 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
                 var extraFields = RelatedParams?.ExtraFields ?? new List<string>();
                 try{
+                    if (RelBusinessObj is null)
+                    {
+                        await BusinessNotFoundError();
+                        return CacheLoadResult;
+                    }
+                    
                     var result = await RelBusinessObj.EntityFieldSearchAsync(searchText, filters, 10, orderBy, extraFields);
+
                     var response = new LoadResult
                     {
                         data = result.Data,
