@@ -82,6 +82,10 @@ namespace Siesa.SDK.GRPCServices
 
         private Type FindType(string name, bool includeSystemLibs = false)
         {
+            if(string.IsNullOrEmpty(name))
+            {
+                return null;
+            }
             Type businessType = null;
             foreach (Assembly ass in AppDomain.CurrentDomain.GetAssemblies())
             {
@@ -304,7 +308,11 @@ namespace Siesa.SDK.GRPCServices
                     {
                         var paramName = methodParameter.Name;
                         var paramType = FindType(methodParameter.Type, true);
-                        var paramValue = JsonConvert.DeserializeObject(methodParameter.Value, paramType);
+                        object? paramValue = null;
+                        if(paramType != null)
+                        {
+                            paramValue = JsonConvert.DeserializeObject(methodParameter.Value, paramType);
+                        }
                         parameters = parameters.Append(paramValue).ToArray();
                     }
 
