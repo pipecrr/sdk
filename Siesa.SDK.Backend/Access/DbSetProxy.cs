@@ -7,6 +7,8 @@ using System.Collections;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Collections.Generic;
+using System.Linq.Dynamic.Core;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -16,6 +18,7 @@ using Microsoft.EntityFrameworkCore.Utilities;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Siesa.Global.Enums;
+using Siesa.SDK.Backend.Extensions;
 using Siesa.SDK.Shared.Utilities;
 //using System.Linq.Dynamic.Core;
 
@@ -67,7 +70,8 @@ namespace Siesa.SDK.Backend.Access
             this._context = context;
             this.query = query;
             //Check if the entity is a BaseSDK
-            if (typeof(BaseSDK<>).IsAssignableFrom(typeof(TEntity)))
+            bool inheritsFromBaseSDK = InheritsFromBaseSDK(typeof(TEntity));
+            if (inheritsFromBaseSDK)
             {
                 //Check if the entity has a dataannotation named "SDKAuthorization"
                 var dataAnnotation = typeof(TEntity).GetCustomAttributes(typeof(SDKAuthorization), false);
@@ -92,28 +96,25 @@ namespace Siesa.SDK.Backend.Access
                         {
                             authorizationTableName = "U" + authorizationTableName.Substring(1);
                         }
-
                         authorizationTableName = $"{typeof(TEntity).Namespace}.{authorizationTableName}";
                     }
 
+                    //Get the type of the authorization table
                     Type authEntityType = typeof(TEntity).Assembly.GetType(authorizationTableName);
-                    var authSet = (IQueryable<BaseUserPermission<TEntity, Int64>>)_context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(authEntityType).Invoke(_context, null);
+                    dynamic authSet = context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(authEntityType).Invoke(context, null);
 
-                    var sdk_query = ((IQueryable<BaseSDK<int>>)query); //TODO: Cambiar tipo de dato en el generic, según la clase
-                    var join_sql = sdk_query.Join(authSet,
-                        e => e.Rowid,
-                        u => u.RowidRecord,
-                        (e, u) => new { e, u })
-                        .Where(
-                            x => ((
-                                x.u.UserType == PermissionUserTypes.User && x.u.RowidUser == current_user
-                                && x.u.AuthorizationType == PermissionAuthTypes.Query_Tx
-                            )
-                            || false //TODO: Add other authorization types
-                            )
-                        );
-                    sdk_query = join_sql.Select(x => x.e);
-                    this.query = sdk_query.Cast<TEntity>();
+                    dynamic dataAuthorizedU = GetDataUByRestrictionType(authSet, current_user, 2);
+                    dynamic dataUnauthorizedU = GetDataUByRestrictionType(authSet, current_user, 1);
+                    
+                    var newQuery = ((IQueryable<BaseSDK<int>>)query);
+
+                    bool hasAuthDefaulConfig = ((IEnumerable<dynamic>)dataAuthorizedU).Where((Func<dynamic, bool>)(x => x.RowidRecord == null)).Any();
+                    bool hasUnAuthDefaulConfig = ((IEnumerable<dynamic>)dataUnauthorizedU).Where((Func<dynamic, bool>)(x => x.RowidRecord == null)).Any();
+                    
+                    newQuery = EvaluateAuthorization(dataAuthorizedU, newQuery, hasAuthDefaulConfig, hasUnAuthDefaulConfig, 2);
+                    newQuery = EvaluateAuthorization(dataUnauthorizedU, newQuery, hasAuthDefaulConfig, hasUnAuthDefaulConfig, 1);
+                    
+                    this.query = newQuery.Cast<TEntity>();
                 }
             }
 
@@ -158,6 +159,76 @@ namespace Siesa.SDK.Backend.Access
             }
         }
 
+        private IQueryable<BaseSDK<int>> EvaluateAuthorization(dynamic dataAuthorizedU, IQueryable<BaseSDK<int>> query, bool hasDefaulConfig, bool hasUnAuthDefaulConfig, int restrictionType)
+        {
+            string logicOperator = "&&";
+            string compare = "!=";
+            string where = "";
+            string isPrivateWhere = "";
+            if (restrictionType == 2)
+            {
+                logicOperator = "||";
+                compare = "==";
+                isPrivateWhere = "(IsPrivate == false)";
+            }
+            bool evaluateIsPrivate = false;
+            foreach (dynamic item in dataAuthorizedU)
+            {
+                if (where.Length > 0)
+                {
+                    where += $" {logicOperator} ";
+                }
+                if(item.RowidRecord != null){                    
+                    where += $"(Rowid {compare} {item.RowidRecord})";
+                }
+                if(restrictionType == 2 && item.RowidRecord == null){
+                    evaluateIsPrivate = true;
+                }
+            }            
+            if(where.Length > 0){
+                if(evaluateIsPrivate){
+                    where = $"{isPrivateWhere} || ({where})";
+                }
+                where = $"({where})";
+                query = query.Where(where);
+            }else{
+                if(evaluateIsPrivate){
+                    query = query.Where(isPrivateWhere);
+                }
+            }
+            return query;
+        }
+
+        private dynamic GetDataUByRestrictionType(dynamic authSet, int currentUser, int restrictionType)
+        {
+            Assembly _assemblyQueryableExtensions = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;				
+            var whereMethod = typeof(IQueryable).GetExtensionMethod(_assemblyQueryableExtensions, "Where", new[] { typeof(IQueryable), typeof(string), typeof(object[])});
+            string filter = $"(RowidUser == {currentUser}) AND (RestrictionType == {restrictionType})";
+            var queryUWhere = whereMethod.Invoke(authSet, new object[] { authSet, filter, new object[]{}});                    
+            var selectMethod = typeof(IQueryable).GetExtensionMethod(_assemblyQueryableExtensions, "Select", new[] { typeof(IQueryable), typeof(string), typeof(object[]) });                    
+            var queryUSelect = selectMethod.Invoke(queryUWhere, new object[] { queryUWhere, $"new (np(RowidRecord) as RowidRecord, np(RestrictionType) as RestrictionType)", null });                    
+            Assembly _assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
+            var dynamicListMethod = typeof(IEnumerable).GetExtensionMethod(_assemblyDynamic, "ToDynamicList", new[] { typeof(IEnumerable) });								
+            dynamic rowidsAuthorizationList = dynamicListMethod.Invoke(queryUSelect, new object[] { queryUSelect });
+            return rowidsAuthorizationList;
+        }
+
+        public static bool InheritsFromBaseSDK(Type derivedType)
+        {
+            Type baseSdkType = typeof(BaseSDK<>);
+
+            while (derivedType != null && derivedType != typeof(object))
+            {
+                if (derivedType.IsGenericType && derivedType.GetGenericTypeDefinition() == baseSdkType)
+                {
+                    return true;
+                }
+
+                derivedType = derivedType.BaseType;
+            }
+
+            return false;
+        }
         private IQueryable<TEntity> FilterGroupCompany<T>(IQueryable<TEntity> query)
         {
             if(AuthenticationService?.User == null)
