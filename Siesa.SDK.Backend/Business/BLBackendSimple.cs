@@ -2025,7 +2025,7 @@ namespace Siesa.SDK.Business
                 return new BadRequestResult<int>() { Success = false, Errors = new List<string>() { e.Message } };
             }
         }
-        
+
         [SDKExposedMethod]
         public ActionResult<SDKResultImportDataDTO> ImportData(string dataStr){
             JArray dataList = JArray.Parse(dataStr);
@@ -2060,7 +2060,7 @@ namespace Siesa.SDK.Business
             return new ActionResult<SDKResultImportDataDTO>{Success = true, Data = resultImport};
         }
 
-        //Metodos para la obtencion de los enums
+        //==================Metodos para la obtencion de los enums================
         private List<EnumSearchDTO> GetEnumDTO(Type type){
             PropertyInfo[] Properties = type.GetProperties();
             var EnumList = Properties.Where(x => x.PropertyType.IsEnum).ToList();
@@ -2097,44 +2097,155 @@ namespace Siesa.SDK.Business
 
 
 
-        private T CreateDynamicObjectFromJson(Type type, dynamic dynamicObj, List<EnumSearchDTO> EnumSearchList, ref List<dynamic> ErrorsList ) 
+        //========================================================
+
+        //=======Metodos de llaves foraneas===================
+
+        [SDKExposedMethod]
+        public  async Task<ActionResult<List<MyDTO>>> SetListForeingRowid( Dictionary<string,List<object>>  dataFilter)
         {
-            //ErrorsList = new List<dynamic>();
-            List<string> ErrorsListInternal = new();
-            dynamic result = Activator.CreateInstance(type);
-            using (SDKContext context = CreateDbContext()){
-                if( dynamicObj.ContainsKey("Rowid")){
-                    if(dynamicObj.Rowid.Type != JTokenType.String){
-                        result = context.Set<T>().Find((int)dynamicObj.Rowid.Value);
-                    }
+            using SDKContext context = CreateDbContext();
+            try{
+                var query = context.Set<T>().AsQueryable();
+                var rowsFitered = DynamicFilter(query, dataFilter)
+                                                .Select(
+                                                    item => new MyDTO{
+                                                        Rowid = item.GetRowid(),
+                                                        InternalIndex = ConvertInternalIndex(dataFilter.Keys.ToList(), item)
+                                                    }
+                                                ).ToList();
+
+                return new ActionResult<List<MyDTO>>() { Success = true, Data = rowsFitered };
+
+            }catch (Exception e){
+                return new BadRequestResult<List<MyDTO>>() { Success = false, Errors = new List<string> { e.Message } };
+            }
+        }
+        
+
+        private static object GetPropertyValue(object obj, string propertyName){
+            return obj.GetType().GetProperty(propertyName).GetValue(obj);
+        }
+
+        private static string ConvertInternalIndex(List<string> keys, object obj){
+            string valueReturn = String.Empty;
+            keys.ForEach(key => { valueReturn += GetPropertyValue(obj, key.Substring(0, key.IndexOf('_'))).ToString(); });
+            return valueReturn;
+        }
+        private static IQueryable<T> DynamicFilter<T>(IQueryable<T> Queryable, Dictionary<string, List<object>> FieldsAndValuesFilter)
+        {
+
+            var parameter = Expression.Parameter(typeof(T), "p");
+            var propertyExpressions = new List<Expression>();
+
+            foreach (var fieldAndValues in FieldsAndValuesFilter)
+            {
+
+                var propertyName = ((string)(fieldAndValues.Key)).Substring(0, fieldAndValues.Key.IndexOf('_'));
+                var property = Expression.Property(parameter, propertyName);
+
+                var propertyType = property.Type;
+
+                Expression containsExpression;
+
+                if (propertyType == typeof(string))
+                {
+                    containsExpression = BuildStringContainsExpression(property, fieldAndValues.Value.OfType<string>().ToList());
                 }
-                foreach (var property in dynamicObj.Properties()){
-                    var propertyName = property.Name;
-                    var propertyEntity = type.GetProperty(propertyName);
-                    if(propertyEntity != null){
-                        try{
-                                var ValueValidated = GetValidatedValue(type, property.Value.Value, propertyName, EnumSearchList);
-                                if(ValueValidated.Success && ValueValidated.Data != null){
-                                dynamic value = ValueValidated.Data;
-                                type.GetProperty(propertyName).SetValue(result, value);
-                                }else{
-                                    ErrorsListInternal.AddRange(ValueValidated.Errors);
+                else if (propertyType == typeof(int))
+                {
+                    List<int> listInt= new();
+                    fieldAndValues.Value.ForEach(x=> { 
+                        
+                        long nu = (long)x;
+                            // if (x >= int.MinValue && x <= int.MaxValue)
+                            //             {
+                            //                 int intValue = (int)longValue;
+                            //                 intList.Add(intValue);
+                            //             }
+                            //             else
+                            //             {
+                            //                 Console.WriteLine($"El valor {longValue} está fuera del rango de int y no puede convertirse.");
+                            //             }
+                        listInt.Add((int)nu); 
+                        
+                        
+                        });
+
+                    containsExpression = BuildIntContainsExpression(property, fieldAndValues.Value.Select(x=>((int)((long)x))));
+                } 
+                else
+                {
+                    throw new NotSupportedException($"Tipo de propiedad no compatible: {propertyType}");
+                }
+    
+                propertyExpressions.Add(containsExpression);
+            }
+
+            var combinedExpression = propertyExpressions.Aggregate(Expression.AndAlso);
+
+            var lambda = Expression.Lambda<Func<T, bool>>(combinedExpression, parameter);
+
+            return Queryable.Where(lambda);
+        }
+
+        private static Expression BuildStringContainsExpression(Expression property, IEnumerable<string> values)
+        {
+            var containsMethod = typeof(HashSet<string>).GetMethod("Contains", new[] { typeof(string) });
+            var value = Expression.Constant(new HashSet<string>(values), typeof(HashSet<string>));
+            var containsExpression = Expression.Call(value, containsMethod, property);
+
+            return containsExpression;
+        }
+
+        private static Expression BuildIntContainsExpression(Expression property, IEnumerable<int> values)
+        {
+            var containsMethod = typeof(HashSet<int>).GetMethod("Contains", new[] { typeof(int) });
+            var value = Expression.Constant(new HashSet<int>(values), typeof(HashSet<int>));
+            var containsExpression = Expression.Call(value, containsMethod, property);
+
+            return containsExpression;
+        }
+
+            private T CreateDynamicObjectFromJson(Type type, dynamic dynamicObj, List<EnumSearchDTO> EnumSearchList, ref List<dynamic> ErrorsList ) 
+            {
+                //ErrorsList = new List<dynamic>();
+                List<string> ErrorsListInternal = new();
+                dynamic result = Activator.CreateInstance(type);
+                using (SDKContext context = CreateDbContext()){
+                    if( dynamicObj.ContainsKey("Rowid")){
+                        if(dynamicObj.Rowid.Type != JTokenType.String){
+                            result = context.Set<T>().Find((int)dynamicObj.Rowid.Value);
+                        }
+                    }
+                    foreach (var property in dynamicObj.Properties()){
+                        var propertyName = property.Name;
+                        var propertyEntity = type.GetProperty(propertyName);
+                        if(propertyEntity != null){
+                            try{
+                                    var ValueValidated = GetValidatedValue(type, property.Value.Value, propertyName, EnumSearchList);
+                                    if(ValueValidated.Success && ValueValidated.Data != null){
+                                    dynamic value = ValueValidated.Data;
+                                    type.GetProperty(propertyName).SetValue(result, value);
+                                    }else{
+                                        ErrorsListInternal.AddRange(ValueValidated.Errors);
+                                    }
                                 }
-                            }
-                            catch (Exception e){
-                                ErrorsListInternal.Add(e.Message);
+                                catch (Exception e){
+                                    ErrorsListInternal.Add(e.Message);
+                                }
                             }
                         }
                     }
+                    if(ErrorsListInternal.Any()){
+                        dynamicObj.Add("Errors", JToken.FromObject(ErrorsListInternal));
+                        ErrorsList.Add(dynamicObj);
+                    }
+                    return (T)result;
                 }
-                if(ErrorsListInternal.Any()){
-                    dynamicObj.Add("Errors", JToken.FromObject(ErrorsListInternal));
-                    ErrorsList.Add(dynamicObj);
-                }
-                return (T)result;
-            }
-        
 
+
+        //==========================================================
         private ActionResult<dynamic> GetValidatedValue(Type t, dynamic DynamicValue, string NameProperty, List<EnumSearchDTO> EnumSearchList){ //TODO a SDK -> Cambiar a object
         Type TypeEntity  = t.GetProperty(NameProperty).PropertyType;
         Type TypeDynamicValue = DynamicValue.GetType();

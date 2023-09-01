@@ -26,6 +26,7 @@
 @using Siesa.SDK.Shared.Utilities
 @using System.Diagnostics
 
+
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
 
 @inject IResourceManager ResourceManager
@@ -33,13 +34,9 @@
 @inject IBackendRouterService BackendRouterService
 @inject IJSRuntime JSRuntime
 @inject SDKNotificationService NotificationService
+@inject SDKGlobalLoaderService SDKGlobalLoaderService
 
-
- 
 @using Microsoft.Extensions.DependencyInjection
- 
- 
- 
 @inject IServiceProvider ServiceProvider
 
 @if(ErrorList!=null && ErrorList.Count>0){
@@ -203,9 +200,6 @@
 
     private Dictionary<string, string> _fieldsEntity = new Dictionary<string,string>();
     private Dictionary<string, string> _titleFields = new Dictionary<string,string>();
-    
-    //private 
-
     private Type EntityType = null;
     private string JsonObject = "";
 
@@ -275,7 +269,7 @@
                     string foreignKeyName = attribute.Name;
                     var RelationAttribute = EntityFields.Where(x => x.Name == foreignKeyName).FirstOrDefault();
 
-                     await CalculateParentsRelations(RelationAttribute.PropertyType,null,field.Name,RelationAttribute.Name);
+                    await CalculateParentsRelations(RelationAttribute.PropertyType,null,field.Name,RelationAttribute.Name);
                     
                 }else{
                     ResourceName = await ResourceManager.GetResource($"{EntityType.Name}.{field.Name}", AuthenticationService.GetRoiwdCulture()); 
@@ -287,45 +281,28 @@
 
     private async Task CalculateParentsRelations(Type ForeignType, string baseIndex, string HiddenFieldTarget,string NamePropertyForeing)
     {
-
-            var ResourceName = String.Empty;
-          
-             IndexAttribute ForeingAttribute = ForeignType.GetCustomAttribute<IndexAttribute>();
-
-            if(ForeingAttribute is not null && ForeingAttribute.IsUnique)
-            {
-
-                HiddenFields.Add(HiddenFieldTarget); 
- 
-                MapFkRelationsImportDTO MapFk = new(){IdFieldFkEntity=HiddenFieldTarget, DependencyIdFieldFKEntity= baseIndex,NameInternalIndex =$"Index_{NamePropertyForeing}_FK"} ;
-
-                foreach (var propertyName in ForeingAttribute.PropertyNames)
-                {
-
-                    MapFk.ListIndexForeingFields.Add($"{propertyName}_{NamePropertyForeing}_FK");
-
-                    var EntityName = await ResourceManager.GetResource($"{ForeignType.Name}.singular", AuthenticationService.GetRoiwdCulture()); 
-                    var FieldName = await ResourceManager.GetResource($"{ForeignType.Name}.{propertyName}", AuthenticationService.GetRoiwdCulture()); 
-                    ResourceName = $"{FieldName} - {EntityName}"; 
-                    
-                    _fieldsEntity.Add(ResourceName,$"{propertyName}_{NamePropertyForeing}_FK");
-                    _titleFields.Add($"{propertyName}_{NamePropertyForeing}_FK", ResourceName);
-
-                    var propertyType= ForeignType.GetProperties().Where(x=> x.Name==propertyName).FirstOrDefault();
-
-                    ForeignKeyAttribute foreignKeyAttribute = propertyType.GetCustomAttribute<ForeignKeyAttribute>();
-                
-                    if (foreignKeyAttribute != null){
-                        string foreignKeyNameFk = foreignKeyAttribute.Name; 
-                        var RelationAttributeFk =  ForeignType.GetProperties().Where(x=> x.Name==foreignKeyNameFk).FirstOrDefault();
-                        await CalculateParentsRelations(RelationAttributeFk.PropertyType,MapFk.NameInternalIndex,$"{propertyName}_{NamePropertyForeing}_FK",foreignKeyNameFk);
-                    } 
-                } 
-
-                ListMapRelationsImport.Add(MapFk);
-
+        var ResourceName = String.Empty;
+        IndexAttribute ForeingAttribute = ForeignType.GetCustomAttribute<IndexAttribute>();
+        if(ForeingAttribute is not null && ForeingAttribute.IsUnique){
+            HiddenFields.Add(HiddenFieldTarget); 
+            MapFkRelationsImportDTO MapFk = new(){IdFieldFkEntity=HiddenFieldTarget, DependencyIdFieldFKEntity= baseIndex,NameInternalIndex =$"Index_{NamePropertyForeing}_FK"} ;
+            foreach (var propertyName in ForeingAttribute.PropertyNames){
+                MapFk.ListIndexForeingFields.Add($"{propertyName}_{NamePropertyForeing}_FK");
+                var EntityName = await ResourceManager.GetResource($"{ForeignType.Name}.singular", AuthenticationService.GetRoiwdCulture()); 
+                var FieldName = await ResourceManager.GetResource($"{ForeignType.Name}.{propertyName}", AuthenticationService.GetRoiwdCulture()); 
+                ResourceName = $"{FieldName} - {EntityName}"; 
+                _fieldsEntity.Add(ResourceName,$"{propertyName}_{NamePropertyForeing}_FK");
+                _titleFields.Add($"{propertyName}_{NamePropertyForeing}_FK", ResourceName);
+                var propertyType= ForeignType.GetProperties().Where(x=> x.Name==propertyName).FirstOrDefault();
+                ForeignKeyAttribute foreignKeyAttribute = propertyType.GetCustomAttribute<ForeignKeyAttribute>();
+                if (foreignKeyAttribute != null){
+                    string foreignKeyNameFk = foreignKeyAttribute.Name; 
+                    var RelationAttributeFk =  ForeignType.GetProperties().Where(x=> x.Name==foreignKeyNameFk).FirstOrDefault();
+                    await CalculateParentsRelations(RelationAttributeFk.PropertyType,MapFk.NameInternalIndex,$"{propertyName}_{NamePropertyForeing}_FK",foreignKeyNameFk);
+                }
             }
- 
+            ListMapRelationsImport.Add(MapFk);
+        }
     }
 
     private async Task ImportData()
@@ -336,9 +313,6 @@
         importDataDTO.UrlResponse = "https://en77cb5mgajpj.x.pipedream.net";
         var bl = BackendRouterService.GetSDKBusinessModel("BLIntegrationService", AuthenticationService);
         var result = await bl.Call("BulkImportData", importDataDTO);      
-
-
-
 
         if(result.Success)
         {
@@ -362,12 +336,8 @@
 
 
     private async Task DownloadFileTemplate(){
-
-  using (var stream = new MemoryStream())
-        {
-        using (Workbook workbook = new Workbook())
-            {
-
+    using (var stream = new MemoryStream()){
+        using (Workbook workbook = new Workbook()){
 
                 List<string> Headers = _fieldsEntity.Where(p=> !HiddenFields.Contains(p.Value)).Select(x => x.Key).ToList();
 
@@ -382,66 +352,43 @@
                 workbook.Unit = DevExpress.Office.DocumentUnit.Point;
 
                 workbook.BeginUpdate();
-                try
-                {
-                    // Create a multiplication table.
-                  
-
+                try{
                     for (int i = 0; i < Headers.Count(); i++){
                             worksheet.Rows["1"][i].Value = Headers[i];   
                     }
 
                     worksheet.Rows.AutoFit(0, Headers.Count()-1);     
                     worksheet.Columns.AutoFit(0, Headers.Count()-1); 
- 
                     
                 }
-                finally
-                {
+                finally{
                     workbook.EndUpdate();
                 }
-
                 // Calculate the workbook.
                 workbook.Calculate();
-
                 // Save the document file under the specified name.
                 workbook.SaveDocument(stream, DocumentFormat.OpenXml);
                 string fileName = $"{EntityType.Name}";
                 byte[] bytes = stream.ToArray();
                 await JSRuntime.InvokeVoidAsync("downloadFileFromStream", fileName, bytes);
- 
             }
         }
     }
 
-    private async Task LoadFiles(InputFileChangeEventArgs InputFile)
-    {
+    private async Task LoadFiles(InputFileChangeEventArgs InputFile){
         ErrorList.Clear();
         FileData = new List<dynamic>();
         IsLoadingGrid = false;
-        Stopwatch stopwatch = new Stopwatch();
-        stopwatch.Start();
-        using (var stream = new MemoryStream())
-        {
+        using (var stream = new MemoryStream()){
             await InputFile.File.OpenReadStream(51200000).CopyToAsync(stream);
+            SDKGlobalLoaderService.Show();
             stream.Position = 0;
-            @* var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
-            {
-                HasHeaderRecord = true,
-                DetectDelimiter = true,
-            }; *@
-
                 Workbook workbook = new Workbook();
                 workbook.LoadDocument(stream, DocumentFormat.Xlsx);
-
                 Worksheet worksheet = workbook.Worksheets[0];
-
                 var HeaderRowObj = worksheet.Rows[0];
-
                 List<string> Headers = new();
-
                 
-                //Obtencion del list de Strings con el header
                 foreach( var cellHeader in HeaderRowObj){
                     if(cellHeader.HasData){
                         var CellValueData = cellHeader.Value;
@@ -455,7 +402,6 @@
 
                 List<dynamic> DataCells = new();
                 int RowCounter = 1;
-
                 var ActualRow = worksheet.Rows[RowCounter];
 
                 do{
@@ -491,66 +437,21 @@
                     ActualRow = worksheet.Rows[RowCounter];
                 }while(ActualRow.HasData);
 
+                var t = worksheet.Rows[0];
+                var t2 = worksheet.Rows[2];
 
-
-                 var t = worksheet.Rows[0];
-                 var t2 = worksheet.Rows[2];
-
-                 var holi = t.GetType();
-
-
-                 foreach( var gt in t){
+                foreach( var gt in t){
                     var  tt = gt.Value;
-                 }
-                
-                stopwatch.Stop();
-                long elapsedTimeMs = stopwatch.ElapsedMilliseconds;
-
-
-                @* var ff = workbook.Sheets;
-                
-                for (int i =0; i <ff.Count; i++){
-                        var g = ff[i];
-
-                            g.
-
-                         g.Rows["1"][i].Value = Headers[i];   
-
-                } *@
-
-            @* using (var CsvReader = new CsvReader(new StreamReader(stream), csvConfig))
-            {
-                var records = CsvReader.GetRecords<dynamic>();
-
-                foreach (var record in records)
-                {                    
-                    ExpandoObject obj = new ExpandoObject();
-
-                    foreach(var prop in record) 
-                    {
-                        var key = prop.Key;
-                        var value = prop.Value;
-                        ((IDictionary<string, object>)obj).Add(key, value);
-                    }
-
-                    FileData.Add(obj);
                 }
-            } *@
         }
-
         IsLoadingGrid = true;
-
+        await InvokeAsync(() => SDKGlobalLoaderService.Hide());
         _ = InvokeAsync(() => StateHasChanged());     
     }
- 
-    
 
-    public void  OnChangeSteps(int index)
-    {
+    public void  OnChangeSteps(int index){
         SelectedIndex = index;
-
-        switch (index)
-        {
+        switch (index){
             case 1:
                 if(FileData == null || FileData.Count == 0)
                 {
@@ -585,155 +486,108 @@
         StateHasChanged();
     }
 
- 
-
     private async Task MappingData()
     {
-        Stopwatch stopwatch = new Stopwatch();
-        stopwatch.Start();
-tring> indexes = new();
+        Dictionary<string, string> indexes = new();
         List<string> llaves = new();
-
-        ListMapRelationsImport.ForEach(lista =>
-        {
+        ListMapRelationsImport.ForEach(lista =>{
             llaves.AddRange(lista.ListIndexForeingFields);
             indexes.Add(lista.NameInternalIndex, string.Empty);
         });
 
         string nameKey;
         DataMapped = new List<Dictionary<string, object>>();
-        foreach (var item in FileData)
-        {
+        foreach (var item in FileData){
             var row = new Dictionary<string, object>();
-           
-
-            foreach (var key in _newKeys)
-            {
+            foreach (var key in _newKeys){
                 object value = GetPropertyValue(item, key.Key);
-
-                if (GetPropertyValue(item, key.Key) != null)
+                if (GetPropertyValue(item, key.Key) != null){
                     if(row.TryGetValue(key.Value, out var val)){
                         row[key.Value] = value;
                     }else{
                         row.Add(key.Value,value);
                     } 
-
-                nameKey = TransformNameKey(key.Value);
-
-                if (llaves.Contains(key.Value))
-                {
-                    indexes[nameKey] += value;
                 }
-
+                nameKey = TransformNameKey(key.Value);
+                if (llaves.Contains(key.Value)) indexes[nameKey] += value;
             }
 
             foreach(var field in HiddenFields){
-                         row.Add(field, null);
+                row.Add(field, null);
             }
 
-            foreach (var t in indexes)
-            {
+            foreach (var t in indexes){
                 row.Add(t.Key, t.Value);
             }
-
             DataMapped.Add(row);
-            
             CleanvaluesIndexInternal(indexes);
-        }
-
-   
-       try{ 
-
-            foreach (var mapRelationImport in ListMapRelationsImport)
-            {
+        }try{ 
+            foreach (var mapRelationImport in ListMapRelationsImport){
                 Dictionary<string, List<object>> parametroFelds = new();
-
-                foreach (var dict in mapRelationImport.ListIndexForeingFields)
-                {
+                foreach (var dict in mapRelationImport.ListIndexForeingFields){
                     parametroFelds.Add(dict, DataMapped.Where(p => p.ContainsKey(dict)).Select(p => p[dict]).ToList());
                 }
-
-     
-                 int star = mapRelationImport.NameInternalIndex.IndexOf ('_')+1;
-                 int end = mapRelationImport.NameInternalIndex.LastIndexOf('_');
+                int star = mapRelationImport.NameInternalIndex.IndexOf ('_')+1;
+                int end = mapRelationImport.NameInternalIndex.LastIndexOf('_');
                 string  BLName = mapRelationImport.NameInternalIndex.Substring(star,end-star);
                 BLName = $"BL{BLName}";
-
-
-                
-                var response = await BackendRouterService.GetSDKBusinessModel(BLName, AuthenticationService).Call("we",parametroFelds);
+                var bl = BackendRouterService.GetSDKBusinessModel("BLIntegrationService", AuthenticationService);
+                var response = await bl.Call("GetForeingRowid", parametroFelds, BLName);
             
                 if(response.Success){ 
                     UpdateForeingKeysValues(response.Data, mapRelationImport.NameInternalIndex,
                                             mapRelationImport.IdFieldFkEntity,
                                             mapRelationImport.DependencyIdFieldFKEntity);
                 }
- 
                 parametroFelds.Clear();
                 parametroFelds = null;
- 
-            } 
-                     
-                     }catch(Exception e){
 
-                            var fg = 1;
-                     }    
+            } 
+        }catch(Exception e){
+
+            var fg = 1;
+        }    
 
         CleanAuxiliarColumnsDataMapped();
 
-        JsonObject = JsonConvert.SerializeObject(DataMapped, Newtonsoft.Json.Formatting.None);
-
-                        stopwatch.Stop();
-                long elapsedTimeMs = stopwatch.ElapsedMilliseconds;
-
+        @* JsonObject = JsonConvert.SerializeObject(DataMapped, Newtonsoft.Json.Formatting.None); *@
         StateHasChanged();
     }
 
 
     private void  CleanAuxiliarColumnsDataMapped(){
-
         HashSet<Dictionary<string,object>> SetDataMapped = new HashSet<Dictionary<string, object>>(DataMapped);
-
-        foreach(var itemRelationShip in ListMapRelationsImport)
-        {  
+        foreach(var itemRelationShip in ListMapRelationsImport){  
             SetDataMapped.Where(x => ((Dictionary<string, object>)x).Remove(itemRelationShip.NameInternalIndex)).ToList();
-
             itemRelationShip.ListIndexForeingFields.ForEach(list=>{ SetDataMapped.Where(x => ((Dictionary<string, object>)x).Remove(list)).ToList(); });  
         } 
 
     }
-    static string TransformNameKey(string key)
-    {
+    static string TransformNameKey(string key){
         return "Index" + key.Substring(key.IndexOf('_') > 0 ? key.IndexOf('_') : key.Length);
     }
 
-    static Dictionary<string, string> CleanvaluesIndexInternal(Dictionary<string, string> dic)
-    {
+    static Dictionary<string, string> CleanvaluesIndexInternal(Dictionary<string, string> dic){
         foreach (var t in dic) { dic[t.Key] = String.Empty; }
         return dic;
     }
 
-     private void UpdateForeingKeysValues(List<MyDTO> DataIn, string indexFks, string fieldToRepalce, string dependencyIndex)
+    private void UpdateForeingKeysValues(List<MyDTO> DataIn, string indexFks, string fieldToRepalce, string dependencyIndex)
     {
         DataIn .Join(
-                      DataMapped,
-                      dataIn => dataIn.InternalIndex,
-                      dataMapped => dataMapped[indexFks],
-                      (dataIn, dataMapped) =>
-                      { 
+                    DataMapped,
+                    dataIn => dataIn.InternalIndex,
+                    dataMapped => dataMapped[indexFks],
+                    (dataIn, dataMapped) =>
+                        { 
                             dataMapped[fieldToRepalce] = dataIn.Rowid;
                             
                             if(!string.IsNullOrEmpty(dependencyIndex)){ 
                                 dataMapped[dependencyIndex] += dataIn.Rowid.ToString();
                             }
-
-                          return dataMapped;
-                      }
-                  ).ToList();
-
+                        return dataMapped;
+                    }
+                ).ToList();
     }
-
-
-
 
 }
