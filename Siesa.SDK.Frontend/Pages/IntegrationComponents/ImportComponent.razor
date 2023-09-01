@@ -527,12 +527,17 @@
                 foreach (var dict in mapRelationImport.ListIndexForeingFields){
                     parametroFelds.Add(dict, DataMapped.Where(p => p.ContainsKey(dict)).Select(p => p[dict]).ToList());
                 }
-                int star = mapRelationImport.NameInternalIndex.IndexOf ('_')+1;
-                int end = mapRelationImport.NameInternalIndex.LastIndexOf('_');
+
+     
+     List<string> valores =     DataMapped.Where(p => p.ContainsKey(mapRelationImport.NameInternalIndex)).Select(p => (string)p[mapRelationImport.NameInternalIndex]).ToList<string>();
+
+                 int star = mapRelationImport.NameInternalIndex.IndexOf ('_')+1;
+                 int end = mapRelationImport.NameInternalIndex.LastIndexOf('_');
                 string  BLName = mapRelationImport.NameInternalIndex.Substring(star,end-star);
                 BLName = $"BL{BLName}";
                 var bl = BackendRouterService.GetSDKBusinessModel("BLIntegrationService", AuthenticationService);
                 var response = await bl.Call("GetForeingRowid", parametroFelds, BLName);
+                var response = await BackendRouterService.GetSDKBusinessModel(BLName, AuthenticationService).Call("we",mapRelationImport.ListIndexForeingFields,valores);
             
                 if(response.Success){ 
                     UpdateForeingKeysValues(response.Data, mapRelationImport.NameInternalIndex,
