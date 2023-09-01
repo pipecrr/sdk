@@ -863,14 +863,23 @@ namespace Siesa.SDK.Business
                         {
                             context.Commit();
                         }
-                    }catch(Exception ex){
+                    }catch(DbUpdateException DbEx)
+                    {
                         if (!context.Database.IsInMemory())
                         {
                             context.Rollback();
                         }
-                        response.Errors.Add(new OperationError() { Message = ex.Message });
+                        AddExceptionToResult(DbEx, result);
+                        //Validate if result.Errors.Message cotains "Foreing key" to show a custom message
+                        if (result.Errors.Where(x => x.Message.Contains("Foreing key")).Count() > 0)
+                        {
+                            response.Errors.Add(new OperationError() { Message = "Custom.Generic.Message.DeleteErrorWithRelations" });
+                        }
+                        else
+                        {
+                            response.Errors.AddRange(result.Errors);
+                        }
                     }
- 
                 }
             }
             catch (Exception e)
