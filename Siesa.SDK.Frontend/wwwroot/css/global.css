@@ -1167,6 +1167,22 @@ div .form-control:focus {
     position: relative !important;
 }
 
+.blazored-toast {
+    border-left: 8px solid lightblue;
+    display: flex;
+    position: relative;
+    flex-direction: row;
+    animation: fadein-b-jnm4noxjw5 1.5s;
+    margin-bottom: 1rem;
+    padding: 1rem 1.25rem;
+    color: #1D1D1B;
+    width: 20rem;
+    border-radius: 0.25rem;
+    box-shadow: rgba(0,0,0,0.30) 0px 10px 30px 2px;
+    background-color: #fff;
+    border-top: 6px solid #fff;
+}
+
   .close_button {
     position: absolute;
     top: 5px;
@@ -1194,6 +1210,16 @@ div .form-control:focus {
     position: relative;
     background: none;
 }
+
+.category-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    background-color: lightblue;
+    color: white;
+    font-size: 12px;
+    border-radius: 4px;
+}
+
  /* FIN Componente Notificaciones*/ 
 
 @media (min-width: 1400px) {

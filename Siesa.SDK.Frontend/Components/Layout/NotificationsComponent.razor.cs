@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Siesa.SDK.Protos;
 using Blazored.Toast.Services;
 using Siesa.SDK.Shared.Services;
+using Blazored.Toast.Configuration;
+using Blazored.Toast;
 
 
 namespace Siesa.SDK.Frontend.Components.Layout
@@ -29,9 +31,12 @@ namespace Siesa.SDK.Frontend.Components.Layout
         private bool _OpenNotifications = false;
         private bool FloatingNotification = false;
 
+         private ToastParameters _toastParameters = new ToastParameters();
+
         protected override async Task OnInitializedAsync()
         {
             QueueService.Subscribe("BLUser", enumMessageCategory.CRUD, this.OnCrudNotification);
+
             await base.OnInitializedAsync();
         }
 
@@ -45,10 +50,14 @@ namespace Siesa.SDK.Frontend.Components.Layout
             if (message != null)
                 Notifications.Add(message);
 
+            _toastParameters.Add(nameof(DemoToast.Title), "Ivan Grisales");
+            _toastParameters.Add(nameof(DemoToast.IconName), "fa-code");
+            _toastParameters.Add(nameof(DemoToast.Message), message.Message);
+            _toastParameters.Add(nameof(DemoToast.Category), message.QueueName);
 
-            ToastService.ShowInfo(message: message.Message, settings: settings => { settings.Timeout = 10; settings.PauseProgressOnHover = true; });
 
-            ToastService.ShowToast<DemoToast>(settings => { settings.Timeout = 5; settings.ShowProgressBar = false; });
+            ToastService.ShowToast<DemoToast>(_toastParameters,settings => { 
+                settings.Timeout = 3;});
 
             InvokeAsync(() => StateHasChanged());
 
