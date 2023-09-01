@@ -159,41 +159,53 @@ namespace Siesa.SDK.Backend.Access
             }
         }
 
-        private IQueryable<BaseSDK<int>> EvaluateAuthorization(dynamic dataAuthorizedU, IQueryable<BaseSDK<int>> query, bool hasDefaulConfig, bool hasUnAuthDefaulConfig, int restrictionType)
+        private IQueryable<BaseSDK<int>> EvaluateAuthorization(dynamic dataAuthorizedU, IQueryable<BaseSDK<int>> query, bool hasAuthDefaulConfig, bool hasUnAuthDefaulConfig, int restrictionType)
         {
             string logicOperator = "&&";
             string compare = "!=";
             string where = "";
             string isPrivateWhere = "";
+            string restringedWhere = "(Rowid == 0)";
             if (restrictionType == 2)
             {
                 logicOperator = "||";
                 compare = "==";
                 isPrivateWhere = "(IsPrivate == false)";
             }
+            if (hasAuthDefaulConfig)
+            {
+                restringedWhere = "";
+            }
+
             bool evaluateIsPrivate = false;
             foreach (dynamic item in dataAuthorizedU)
             {
-                if (where.Length > 0)
-                {
-                    where += $" {logicOperator} ";
-                }
-                if(item.RowidRecord != null){                    
+                if(item.RowidRecord != null){
+                    if (where.Length > 0)
+                    {
+                        where += $" {logicOperator} ";
+                    }
                     where += $"(Rowid {compare} {item.RowidRecord})";
                 }
                 if(restrictionType == 2 && item.RowidRecord == null){
                     evaluateIsPrivate = true;
                 }
-            }            
+            }
             if(where.Length > 0){
                 if(evaluateIsPrivate){
                     where = $"{isPrivateWhere} || ({where})";
+                }
+                if(restringedWhere.Length > 0){
+                    where = $"{restringedWhere} || ({where})";
                 }
                 where = $"({where})";
                 query = query.Where(where);
             }else{
                 if(evaluateIsPrivate){
                     query = query.Where(isPrivateWhere);
+                }
+                if(restringedWhere.Length > 0){
+                    query = query.Where(restringedWhere);
                 }
             }
             return query;
