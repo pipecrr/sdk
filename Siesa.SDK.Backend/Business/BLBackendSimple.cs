@@ -1491,7 +1491,7 @@ namespace Siesa.SDK.Business
             using (var context = CreateDbContext())
             {
                 context.SetProvider(_provider);
-                var query = context.Set<T>().AsQueryable();
+                var query = context.Set<T>(true).AsQueryable();
 
                 if (!string.IsNullOrEmpty(filter))
                 {
