@@ -871,7 +871,6 @@ namespace Siesa.SDK.Business
                             context.Rollback();
                         }
                         AddExceptionToResult(DbEx, result);
-                        //Validate if result.Errors.Message cotains "Foreing key" to show a custom message
                         var errorList = result.Errors.Where(x => x.Message.Contains("Foreing key")).ToList();
                         if (errorList.Count() > 0)
                         {
@@ -880,8 +879,6 @@ namespace Siesa.SDK.Business
                                                 .Select(x => x.Message)
                                                 .SelectMany(msg => regex.Matches(msg).Cast<Match>())
                                                 .Select(match => match?.Groups[1].Value.Split('.').Last()).Distinct().FirstOrDefault();
-                            
-                            
                             response.Errors.Add(new OperationError() { Message = $"Exception: Custom.Generic.Message.DeleteErrorWithRelations//{relatedTable}.Plural" });
                         }
                         else
