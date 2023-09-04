@@ -19,7 +19,7 @@ namespace Siesa.SDK.Frontend.Services
             string resourceMessage = "";
             string message = "";
 
-            if (resourceTag.StartsWith("Exception: "))
+            if (resourceTag.StartsWith("Exception: ", StringComparison.OrdinalIgnoreCase))
                 resourceTag = "Custom.Generic.Message.Error";
 
             if (rowidCulture != 0)

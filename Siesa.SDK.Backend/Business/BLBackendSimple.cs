@@ -872,7 +872,7 @@ namespace Siesa.SDK.Business
                         }
                         AddExceptionToResult(DbEx, result);
                         var errorList = result.Errors.Where(x => x.Message.Contains("Foreing key")).ToList();
-                        if (errorList.Count() > 0)
+                        if (errorList.Any())
                         {
                             var regex = new Regex(@"Table name: ([^\r\n]+)");
                             var relatedTable = errorList
