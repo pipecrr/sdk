@@ -31,7 +31,7 @@ namespace Siesa.SDK.Frontend.Services
         private int _minutesExp;
         private ISDKJWT _sdkJWT;
 
-        private IIndexedDbFactory _dbFactory;
+        private readonly IIndexedDbFactory _dbFactory;
 
         private short CustomRowidCulture = 0;
         public short RowidCultureChanged { get; set; } = 0;
@@ -233,7 +233,7 @@ namespace Siesa.SDK.Frontend.Services
         }
         public async Task setDataIndexedDB()
         {
-            await _dbFactory.Create<IndexDb>();
+            await _dbFactory.Create<IndexDb>().ConfigureAwait(true);
         }
         private async Task LoginBrowser(dynamic loginRequestData, string rowidDbConnection)
         {
