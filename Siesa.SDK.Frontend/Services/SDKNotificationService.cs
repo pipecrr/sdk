@@ -18,6 +18,10 @@ namespace Siesa.SDK.Frontend.Services
         {
             string resourceMessage = "";
             string message = "";
+
+            if (resourceTag.StartsWith("Exception: "))
+                resourceTag = "Custom.Generic.Message.DeleteError";
+
             if (rowidCulture != 0)
             {
                 resourceMessage = await UtilsManager.GetResource(resourceTag, rowidCulture);

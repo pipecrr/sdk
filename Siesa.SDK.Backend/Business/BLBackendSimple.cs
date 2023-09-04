@@ -43,6 +43,7 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
 
 using Siesa.Global.Enums;
+using System.Text.RegularExpressions;
 
 namespace Siesa.SDK.Business
 {
@@ -871,9 +872,17 @@ namespace Siesa.SDK.Business
                         }
                         AddExceptionToResult(DbEx, result);
                         //Validate if result.Errors.Message cotains "Foreing key" to show a custom message
-                        if (result.Errors.Where(x => x.Message.Contains("Foreing key")).Count() > 0)
+                        var errorList = result.Errors.Where(x => x.Message.Contains("Foreing key")).ToList();
+                        if (errorList.Count() > 0)
                         {
-                            response.Errors.Add(new OperationError() { Message = "Custom.Generic.Message.DeleteErrorWithRelations" });
+                            var regex = new Regex(@"Table name: ([^\r\n]+)");
+                            var relatedTable = errorList
+                                                .Select(x => x.Message)
+                                                .SelectMany(msg => regex.Matches(msg).Cast<Match>())
+                                                .Select(match => match?.Groups[1].Value.Split('.').Last()).Distinct().FirstOrDefault();
+                            
+                            
+                            response.Errors.Add(new OperationError() { Message = $"Exception: Custom.Generic.Message.DeleteErrorWithRelations//{relatedTable}.Plural" });
                         }
                         else
                         {
