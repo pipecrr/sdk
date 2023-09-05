@@ -204,7 +204,7 @@ namespace Siesa.SDK.Backend.Access
                 //Replace the first character of the table name with the letter "u"
                 if (authorizationTableName.Length > 0)
                 {
-                    authorizationTableName = string.Concat('U', authorizationTableName.AsSpan(1));
+                    authorizationTableName = string.Concat("U", authorizationTableName.AsSpan(1));
                 }
                 authorizationTableName = $"{entytyType.Namespace}.{authorizationTableName}";
             }
