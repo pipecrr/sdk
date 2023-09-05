@@ -172,7 +172,7 @@ namespace Siesa.SDK.Backend.Access
             return rowidsUnauthorizedU;
         }
 
-        private List<int?> GetRowidsAuthorizedU(dynamic dataAuthorizedU, dynamic dataUnauthorizedU)
+        private static List<int?> GetRowidsAuthorizedU(dynamic dataAuthorizedU, dynamic dataUnauthorizedU)
         {
             List<int?> rowidsAuthorizedU = ((IEnumerable<dynamic>)dataAuthorizedU).Where(
             (Func<dynamic, bool>)(x =>
@@ -192,7 +192,7 @@ namespace Siesa.SDK.Backend.Access
             return rowidsAuthorizedU;
         }
 
-        private string GetNameAuthorizationTable(object[] dataAnnotation, Type entytyType)
+        private static string GetNameAuthorizationTable(object[] dataAnnotation, Type entytyType)
         {
             string authorizationTableName = ((SDKAuthorization)dataAnnotation[0]).TableName;
             //Check if the table name is not empty
@@ -204,7 +204,7 @@ namespace Siesa.SDK.Backend.Access
                 //Replace the first character of the table name with the letter "u"
                 if (authorizationTableName.Length > 0)
                 {
-                    authorizationTableName = "U" + authorizationTableName.Substring(1);
+                    authorizationTableName = string.Concat('U', authorizationTableName.AsSpan(1));
                 }
                 authorizationTableName = $"{entytyType.Namespace}.{authorizationTableName}";
             }
@@ -284,12 +284,12 @@ namespace Siesa.SDK.Backend.Access
             if (evaluateIsPrivate)
             {
                 whereBuilder.Insert(0, isPrivateWhere + " || (");
-                whereBuilder.Append(")");
+                whereBuilder.Append(')');
             }
             if (restringedWhere.Length > 0)
             {
                 whereBuilder.Insert(0, restringedWhere + " || (");
-                whereBuilder.Append(")");
+                whereBuilder.Append(')');
             }
         }
 
@@ -306,7 +306,7 @@ namespace Siesa.SDK.Backend.Access
         }
 
 
-        private dynamic GetDataUByRestrictionType(dynamic authSet, int currentUser, int restrictionType, List<int> listUserGroup)
+        private static dynamic GetDataUByRestrictionType(dynamic authSet, int currentUser, int restrictionType, List<int> listUserGroup)
         {
             Assembly assemblyQueryableExtensions = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;				
             var whereMethod = typeof(IQueryable).GetExtensionMethod(assemblyQueryableExtensions, "Where", new[] { typeof(IQueryable), typeof(string), typeof(object[])});
