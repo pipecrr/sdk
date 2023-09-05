@@ -151,7 +151,7 @@ namespace Siesa.SDK.Backend.Access
             }
         }
 
-        private List<int?> GetRowidsUnauthorizedU(dynamic dataAuthorizedU, dynamic dataUnauthorizedU)
+        private static List<int?> GetRowidsUnauthorizedU(dynamic dataAuthorizedU, dynamic dataUnauthorizedU)
         {
             List<int?> rowidsUnauthorizedU = ((IEnumerable<dynamic>)dataUnauthorizedU).Where(
             (Func<dynamic, bool>)(x =>
