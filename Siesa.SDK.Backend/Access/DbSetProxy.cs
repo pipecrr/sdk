@@ -154,18 +154,10 @@ namespace Siesa.SDK.Backend.Access
             }
         }
 
-        private bool EvaluateVisibility(Type entytyType, bool ignoreVisibility, object[] dataAnnotation)
+        private static bool EvaluateVisibility(Type entityType, bool ignoreVisibility, object[] dataAnnotation)
         {
-            bool result = false;
-            bool inheritsFromBaseSdk = InheritsFromBaseSDK(typeof(TEntity));
-            if (inheritsFromBaseSdk && !ignoreVisibility)
-            {
-                //Check if the entity has a dataannotation named "SDKAuthorization"
-                if (dataAnnotation.Length > 0)
-                {
-                    result = true;
-                }
-            }
+            bool inheritsFromBaseSdk = InheritsFromBaseSDK(entityType);
+            bool result = inheritsFromBaseSdk && !ignoreVisibility && dataAnnotation.Length > 0;
             return result;
         }
 
