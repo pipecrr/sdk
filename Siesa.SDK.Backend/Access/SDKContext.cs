@@ -347,18 +347,29 @@ namespace Siesa.SDK.Backend.Access
 
         public override DbSet<TEntity> Set<TEntity>()
         {
+            return SetMethod<TEntity>();
+        }
+        
+        public DbSet<TEntity> Set<TEntity>(bool ignoreVisibility) where TEntity : class
+        {
+            return SetMethod<TEntity>(ignoreVisibility);
+        }
+
+        private DbSetProxy<TEntity> SetMethod<TEntity>(bool ignoreVisibility = false) where TEntity : class
+        {
             if (ServiceProvider != null)
             {
                 try
                 {
-                    return ActivatorUtilities.CreateInstance(ServiceProvider, typeof(DbSetProxy<TEntity>), new object[] { this, base.Set<TEntity>() }) as DbSet<TEntity>;
+                    return ActivatorUtilities.CreateInstance(ServiceProvider, typeof(DbSetProxy<TEntity>), 
+                        new object[] { this, base.Set<TEntity>(), ignoreVisibility }) as DbSetProxy<TEntity>;
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine($"{e.Message}***********");
                 }
             }
-            return new DbSetProxy<TEntity>(null, this, base.Set<TEntity>());
+            return new DbSetProxy<TEntity>(null, this, base.Set<TEntity>(), ignoreVisibility);
         }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder builder)
