@@ -70,45 +70,48 @@ namespace Siesa.SDK.Backend.Access
             this._context = context;
             this.query = query;
             //Check if the entity is a BaseSDK
-            bool inheritsFromBaseSdk = InheritsFromBaseSDK(typeof(TEntity));
-            if (inheritsFromBaseSdk && !ignoreVisibility)
-            {
-                var entytyType = typeof(TEntity);
-                //Check if the entity has a dataannotation named "SDKAuthorization"
-                var dataAnnotation = entytyType.GetCustomAttributes(typeof(SDKAuthorization), false);
-                if (dataAnnotation.Length > 0)
+
+            Type entytyType = typeof(TEntity);
+            //Check if the entity has a dataannotation named "SDKAuthorization"
+            var dataAnnotation = entytyType.GetCustomAttributes(typeof(SDKAuthorization), false);
+            if(EvaluateVisibility(entytyType, ignoreVisibility, dataAnnotation)){
+                int currentUser = 0;
+                if (AuthenticationService != null && AuthenticationService.User != null)
                 {
-                    int currentUser = 0;
-                    if (AuthenticationService != null && AuthenticationService.User != null)
-                    {
-                        currentUser = AuthenticationService.User.Rowid;
-                    }
+                    currentUser = AuthenticationService.User.Rowid;
+                }
 
-                    //Get the table name
-                    var authorizationTableName = GetNameAuthorizationTable(dataAnnotation, entytyType);
+                //Get the table name
+                var authorizationTableName = GetNameAuthorizationTable(dataAnnotation, entytyType);
 
-                    List<int> listUserGroup = context.Set<E00225_UserDataVisibilityGroup>().Include("DataVisibilityGroup").Where(x => x.RowidUser == currentUser && x.DataVisibilityGroup.Status == enumStatusBaseMaster.Active).Select(x => x.RowidDataVisibilityGroup).ToList();
+                List<int> listUserGroup = context.Set<E00225_UserDataVisibilityGroup>().Include("DataVisibilityGroup").Where(x => x.RowidUser == currentUser && x.DataVisibilityGroup.Status == enumStatusBaseMaster.Active).Select(x => x.RowidDataVisibilityGroup).ToList();
 
-                    //Get the type of the authorization table
-                    Type authEntityType = entytyType.Assembly.GetType(authorizationTableName);
-                    dynamic authSet = context.GetType().GetMethod("Set", types: Type.EmptyTypes)?.MakeGenericMethod(authEntityType).Invoke(context, null);
+                //Get the type of the authorization table
+                Type authEntityType = entytyType.Assembly.GetType(authorizationTableName);
+                dynamic authSet = context.GetType().GetMethod("Set", types: Type.EmptyTypes)?.MakeGenericMethod(authEntityType).Invoke(context, null);
 
-                    dynamic dataAuthorizedU = GetDataUByRestrictionType(authSet, currentUser, 2, listUserGroup);
-                    dynamic dataUnauthorizedU = GetDataUByRestrictionType(authSet, currentUser, 1, listUserGroup);
+                dynamic dataAuthorizedU = GetDataUByRestrictionType(authSet, currentUser, 2, listUserGroup);
+                dynamic dataUnauthorizedU = GetDataUByRestrictionType(authSet, currentUser, 1, listUserGroup);
+                
+                bool hasAuthDefaulConfig = ((IEnumerable<dynamic>)dataAuthorizedU).Any(x => x.RowidRecord == null);
 
-                    bool hasAuthDefaulConfig = ((IEnumerable<dynamic>)dataAuthorizedU).Any(x => x.RowidRecord == null);
+                List<int?> rowidsAuthorizedU = GetRowidsAuthorizedU(dataAuthorizedU, dataUnauthorizedU);
+                List<int?> rowidsUnauthorizedU = GetRowidsUnauthorizedU(dataAuthorizedU, dataUnauthorizedU);
 
-                    List<int?> rowidsAuthorizedU = GetRowidsAuthorizedU(dataAuthorizedU, dataUnauthorizedU);
-                    List<int?> rowidsUnauthorizedU = GetRowidsUnauthorizedU(dataAuthorizedU, dataUnauthorizedU);
-
-                    var newQuery = ((IQueryable<BaseSDK<int>>)query);
+                var newQuery = ((IQueryable<BaseSDK<int>>)query);
+                if (rowidsAuthorizedU.Any() || rowidsUnauthorizedU.Any()){
                     
                     newQuery = EvaluateAuthorization(rowidsAuthorizedU, newQuery, hasAuthDefaulConfig, 2);
                     newQuery = EvaluateAuthorization(rowidsUnauthorizedU, newQuery, hasAuthDefaulConfig, 1);
-                    
-                    this.query = newQuery.Cast<TEntity>();
                 }
+                else
+                {
+                    newQuery = newQuery.Where("Rowid == 0");
+                }
+                this.query = newQuery.Cast<TEntity>();
+                
             }
+
 
             if (Utilities.IsAssignableToGenericType
             (typeof(TEntity), typeof(BaseCompanyGroup<>)))
@@ -149,6 +152,21 @@ namespace Siesa.SDK.Backend.Access
             }else if(typeof(TEntity) == typeof(E00201_Company)){
                 this.query = this.FilterCompanyEntity(query);
             }
+        }
+
+        private bool EvaluateVisibility(Type entytyType, bool ignoreVisibility, object[] dataAnnotation)
+        {
+            bool result = false;
+            bool inheritsFromBaseSdk = InheritsFromBaseSDK(typeof(TEntity));
+            if (inheritsFromBaseSdk && !ignoreVisibility)
+            {
+                //Check if the entity has a dataannotation named "SDKAuthorization"
+                if (dataAnnotation.Length > 0)
+                {
+                    result = true;
+                }
+            }
+            return result;
         }
 
         private static List<int?> GetRowidsUnauthorizedU(dynamic dataAuthorizedU, dynamic dataUnauthorizedU)
@@ -229,7 +247,7 @@ namespace Siesa.SDK.Backend.Access
             }
             else
             {
-                ApplyIsPrivateAndRestriction(query, evaluateIsPrivate, isPrivateWhere, restringedWhere);
+                query = ApplyIsPrivateAndRestriction(query, evaluateIsPrivate, isPrivateWhere, restringedWhere);
             }
 
             return query;
@@ -293,7 +311,7 @@ namespace Siesa.SDK.Backend.Access
             }
         }
 
-        private static void ApplyIsPrivateAndRestriction(IQueryable<BaseSDK<int>> query, bool evaluateIsPrivate, string isPrivateWhere, string restringedWhere)
+        private static IQueryable<BaseSDK<int>> ApplyIsPrivateAndRestriction(IQueryable<BaseSDK<int>> query, bool evaluateIsPrivate, string isPrivateWhere, string restringedWhere)
         {
             if (evaluateIsPrivate)
             {
@@ -303,6 +321,8 @@ namespace Siesa.SDK.Backend.Access
             {
                 query = query.Where(restringedWhere);
             }
+
+            return query;
         }
 
 
