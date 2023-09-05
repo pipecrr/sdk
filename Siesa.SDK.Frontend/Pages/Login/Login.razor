@@ -20,8 +20,6 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Shared.DataAnnotations
 @using Siesa.SDK.Frontend.Components.Fields
-@using Blazor.IndexedDB.Framework;
-@inject IIndexedDbFactory DbFactory
 
 <PageTitle>Login</PageTitle>
 
@@ -381,13 +379,6 @@
         try
         {
             await AuthenticationService.Login(model.Username, model.Password,SelectedConnection.Rowid);
-            try
-            {
-                setDataIndexedDB(RowidCulture);            
-            }catch(Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
             NavigationManager.TryGetQueryString("returnUrl", out string returnUrl);
             if (returnUrl == null || returnUrl == "null")
             {
@@ -578,10 +569,6 @@
         catch (Exception)
         {
         }
-    }
-
-    public async Task setDataIndexedDB(short RowidCulture){
-        await DbFactory.Create<IndexDb>();
     }
 
     private string GetCountryFlagCode (E00021_Culture culture)
