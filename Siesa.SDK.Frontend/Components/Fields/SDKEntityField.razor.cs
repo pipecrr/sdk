@@ -153,23 +153,11 @@ namespace Siesa.SDK.Frontend.Components.Fields
                         Type rowidType = rowidNew.GetType();
                         dynamic rowidLastConverted = Convert.ChangeType(rowidLastValue, rowidType, System.Globalization.CultureInfo.InvariantCulture);
                         if(baseObjNewRelated != null && rowidNew != rowidLastConverted){
-                            CacheLoadResult = null;
-                            LastSearchString = null;
-                            Value = "";
-                            ItemsSelected.Clear();
-                            CacheData.Clear();
-                            CacheDataObjcts.Clear();
-                            HasValue = false;
+                            CleanComponent();
                             SetVal(BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj));
                         }
                         if(baseObjNewRelated == null && rowidNew != rowidLastConverted){
-                            CacheLoadResult = null;
-                            LastSearchString = null;
-                            Value = "";
-                            ItemsSelected.Clear();
-                            CacheData.Clear();
-                            CacheDataObjcts.Clear();
-                            HasValue = false;
+                            CleanComponent();
                             SetVal(null);
                         }
                         BaseObj = baseObjNew;
@@ -180,13 +168,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
                         rowidLastValue = rowidNew;
                     }else{
                         if(baseObjNewRelated == null || baseObjNewRelated.Count == 0){
-                            CacheLoadResult = null;
-                            LastSearchString = null;
-                            Value = "";
-                            ItemsSelected.Clear();
-                            CacheData.Clear();
-                            CacheDataObjcts.Clear();
-                            HasValue = false;
+                            CleanComponent();
                             SetVal(null);
                         }
                     }
@@ -694,15 +676,23 @@ namespace Siesa.SDK.Frontend.Components.Fields
         }
 
         public async Task Clean(){
-            ItemsSelected.Clear();
             Values.Clear();
-            Value = "";
-            HasValue = false;
+            CleanComponent();
             SetVal(null);
             if(OnChange != null){
                 OnChange();
             }
             StateHasChanged();
+        }
+        
+        private void CleanComponent(){
+            CacheLoadResult = null;
+            LastSearchString = null;
+            Value = "";
+            ItemsSelected.Clear();
+            CacheData.Clear();
+            CacheDataObjcts.Clear();
+            HasValue = false;
         }
     }
 }
