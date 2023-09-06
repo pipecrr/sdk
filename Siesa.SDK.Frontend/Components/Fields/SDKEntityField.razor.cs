@@ -161,7 +161,17 @@ namespace Siesa.SDK.Frontend.Components.Fields
                             CacheDataObjcts.Clear();
                             HasValue = false;
                             SetVal(BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj));
-                        }                        
+                        }
+                        if(baseObjNewRelated == null && rowidNew != rowidLastConverted){
+                            CacheLoadResult = null;
+                            LastSearchString = null;
+                            Value = "";
+                            ItemsSelected.Clear();
+                            CacheData.Clear();
+                            CacheDataObjcts.Clear();
+                            HasValue = false;
+                            SetVal(null);
+                        }
                         BaseObj = baseObjNew;
                         if(BaseObj !=null && BaseObj.GetType().GetProperty("Rowid") != null && BaseObj.Rowid != 0){
                             Value = string.IsNullOrEmpty(BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj)?.ToString()) ? "" : BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj)?.ToString();
