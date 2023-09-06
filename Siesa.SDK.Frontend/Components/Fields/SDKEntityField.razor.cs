@@ -150,7 +150,9 @@ namespace Siesa.SDK.Frontend.Components.Fields
                     dynamic baseObjNewRelated = baseObjNew.GetType().GetProperty(FieldName).GetValue(baseObjNew);
                     if(!IsMultiple){
                         var rowidNew = baseObjNewRelated != null ? baseObjNewRelated.GetType().GetProperty("Rowid").GetValue(baseObjNewRelated) : 0;
-                        if(baseObjNewRelated != null && rowidNew != rowidLastValue){
+                        Type rowidType = rowidNew.GetType();
+                        dynamic rowidLastConverted = Convert.ChangeType(rowidLastValue, rowidType, System.Globalization.CultureInfo.InvariantCulture);
+                        if(baseObjNewRelated != null && rowidNew != rowidLastConverted){
                             CacheLoadResult = null;
                             LastSearchString = null;
                             Value = "";
@@ -159,7 +161,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
                             CacheDataObjcts.Clear();
                             HasValue = false;
                             SetVal(BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj));
-                        }
+                        }                        
                         BaseObj = baseObjNew;
                         if(BaseObj !=null && BaseObj.GetType().GetProperty("Rowid") != null && BaseObj.Rowid != 0){
                             Value = string.IsNullOrEmpty(BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj)?.ToString()) ? "" : BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj)?.ToString();
@@ -302,8 +304,10 @@ namespace Siesa.SDK.Frontend.Components.Fields
         }
 
         private async Task OnFocusOut(){
-            await Task.Delay(200);
-            badgeContainerClass = "badge-container d-none";
+            if(IsMultiple){
+                await Task.Delay(200);
+                badgeContainerClass = "badge-container d-none";
+            }
         }
 
         private async Task OnKeyDown(KeyboardEventArgs e)

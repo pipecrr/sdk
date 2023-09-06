@@ -17,7 +17,7 @@
             </div>
         }
         
-        <div class="dropdown">
+        <div class="dropdown" data-automation-id="@GetAutomationId()_dropdown">
             <input autocomplete="nope" type="text" disabled="@Disabled" data-automation-id="@GetAutomationId()_inputtext" class="form-control" value="@Value" @onkeydown="@(async (e) => OnKeyDown(e))" @onfocus="@OnFocus" @onfocusout="@OnFocusOut" id="@idInput"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" placeholder="@placeholder" @onkeydown:preventDefault>
             <div class="whcm_select_list dropdown-menu sdk-entity-result" aria-labelledby="@idInput">
                 <ul>
