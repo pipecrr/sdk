@@ -18,13 +18,17 @@ namespace Siesa.SDK.Frontend.Services
         {
             string resourceMessage = "";
             string message = "";
+
+            if (resourceTag.StartsWith("Exception: ", StringComparison.OrdinalIgnoreCase))
+                resourceTag = "Custom.Generic.Message.Error";
+
             if (rowidCulture != 0)
             {
-                resourceMessage = await UtilsManager.GetResource(resourceTag, rowidCulture);
+                resourceMessage = await UtilsManager.GetResource(resourceTag, rowidCulture).ConfigureAwait(true);
             }
             else
             {
-                resourceMessage = await UtilsManager.GetResource(resourceTag);
+                resourceMessage = await UtilsManager.GetResource(resourceTag).ConfigureAwait(true);
             }
 
             if(resourceMessage == resourceTag)
@@ -39,7 +43,7 @@ namespace Siesa.SDK.Frontend.Services
                 for (int i = 0; i < formats.Length; i++)
                 {
                     var format = formatString[i].ToString();
-                    var resourceFormat = await UtilsManager.GetResource(format, rowidCulture);
+                    var resourceFormat = await UtilsManager.GetResource(format, rowidCulture).ConfigureAwait(true);
                     formats[i] = resourceFormat;
                 }
                 return String.Format(resourceMessage, formats);

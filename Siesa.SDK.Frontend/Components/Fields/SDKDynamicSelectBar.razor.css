@@ -1,0 +1,129 @@
+/* ESTILOS PARA LA CLASE DISABLED - SE VA A PASAR A SDK */
+.disabled{
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+}
+
+/* Estilos de button group propios del sdk INICIO*/
+
+.rz-selectbutton{
+    display: inline-flex;
+}
+.sdk-selectbar-container > .rz-selectbutton .rz-button.rz-state-active {
+    background: var(--color_primary);
+    color: var(--color_light);
+    border: 1px solid var(--color_primary) !important;
+    box-shadow: none !important;
+}
+.rz-selectbutton .rz-button.rz-button-md:first-child, .rz-selectbutton .rz-scheduler-nav-views .rz-button.rz-primary:first-child, .rz-scheduler-nav-views .rz-selectbutton .rz-button.rz-primary:first-child, .rz-selectbutton .rz-paginator-element:first-child, .rz-selectbutton .rz-date-filter-buttons .rz-button:first-child, .rz-date-filter-buttons .rz-selectbutton .rz-button:first-child, .rz-selectbutton .rz-button.rz-fileupload-choose:first-child {
+    margin-left: 0;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+.sdk-selectbar-container > .rz-selectbutton .rz-button {
+    font-size: 0.875rem !important;
+    padding: 0 1rem !important;
+    height: 1.938rem !important;
+    min-height: 1.938rem !important;
+    box-shadow: none !important;
+    color: var(--color_text);
+}
+.sdk-selectbar-container .rz-selectbutton .rz-button.rz-button-md {
+    font-weight: 400 !important;
+}
+.rz-selectbutton .rz-button.rz-button-md, .rz-selectbutton .rz-scheduler-nav-views .rz-button.rz-primary, .rz-scheduler-nav-views .rz-selectbutton .rz-button.rz-primary, .rz-selectbutton .rz-button.rz-paginator-element, .rz-selectbutton .rz-button-md.rz-paginator-element, .rz-selectbutton .rz-scheduler-nav-views .rz-paginator-element.rz-primary, .rz-scheduler-nav-views .rz-selectbutton .rz-paginator-element.rz-primary, .rz-selectbutton .rz-paginator-element, .rz-selectbutton .rz-date-filter-buttons .rz-button, .rz-selectbutton .rz-date-filter-buttons .rz-paginator-element, .rz-date-filter-buttons .rz-selectbutton .rz-button, .rz-date-filter-buttons .rz-selectbutton .rz-paginator-element, .rz-selectbutton .rz-button.rz-fileupload-choose, .rz-selectbutton .rz-fileupload-choose.rz-paginator-element {
+    margin-left: -1px;
+    display: inline-block;
+    background-color: var(--rz-selectbar-background-color);
+    color: var(--rz-selectbar-color);
+    border: 1px solid #dadfe2;
+    border-radius: 0;
+}
+.rz-button-md, .rz-scheduler-nav-views .rz-button.rz-primary, .rz-scheduler-nav-views .rz-primary.rz-paginator-element, .rz-paginator-element, .rz-date-filter-buttons .rz-button, .rz-date-filter-buttons .rz-paginator-element, .rz-fileupload-choose, .rz-selectbutton .rz-button.rz-button-md, .rz-selectbutton .rz-button.rz-paginator-element, .rz-selectbutton .rz-button-md.rz-paginator-element, .rz-selectbutton .rz-paginator-element, .rz-selectbutton .rz-date-filter-buttons .rz-button, .rz-selectbutton .rz-date-filter-buttons .rz-paginator-element, .rz-date-filter-buttons .rz-selectbutton .rz-button, .rz-date-filter-buttons .rz-selectbutton .rz-paginator-element, .rz-selectbutton .rz-button.rz-fileupload-choose, .rz-selectbutton .rz-fileupload-choose.rz-paginator-element, .rz-splitbutton .rz-button-md, .rz-splitbutton .rz-paginator-element, .rz-splitbutton .rz-fileupload-choose {
+    font-size: var(--rz-body-font-size);
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    height: auto;
+    line-height: 1.25rem;
+    min-height: 2.25rem;
+    min-width: 2.25rem;
+}
+.rz-button:not(.rz-state-disabled), .rz-paginator-element:not(.rz-state-disabled) {
+    cursor: pointer;
+}
+.rz-selectbutton .rz-button.rz-button-md:last-child, .rz-selectbutton .rz-scheduler-nav-views .rz-button.rz-primary:last-child, .rz-scheduler-nav-views .rz-selectbutton .rz-button.rz-primary:last-child, .rz-selectbutton .rz-paginator-element:last-child, .rz-selectbutton .rz-date-filter-buttons .rz-button:last-child, .rz-date-filter-buttons .rz-selectbutton .rz-button:last-child, .rz-selectbutton .rz-button.rz-fileupload-choose:last-child {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius:4px;
+}
+.rz-button, .rz-paginator-element {
+    -webkit-appearance: none;
+    display: inline-block;
+    border-radius: var(--rz-button-border-radius);
+    background-color: var(--rz-button-base-background-color);
+    color: var(--rz-button-base-color);
+    border: none;
+    outline: none;
+    line-height: var(--rz-button-line-height);
+    font-size: 1.0625rem;
+    text-decoration: none;
+    box-shadow: var(--rz-button-shadow);
+    transition: all 0.1s linear;
+    background-size: var(--rz-button-background-size);
+    background-repeat: no-repeat;
+}
+.sdk-selectbar-container > .rz-selectbutton > .rz-button > span {
+    line-height: 2 !important;
+}
+.rz-button .rz-button-text, .rz-paginator-element .rz-button-text {
+    vertical-align: top;
+}
+/* Estilos de button group propios del sdk FIN*/
+
+/* Estilos nuevos para selec bar INICIO*/
+.sdk_select_button_group > .rz-selectbutton .rz-button.rz-state-active{
+    background: var(--color_light);
+    color: var(--color_primary);
+    border: 1px solid var(--color_primary) !important;
+    box-shadow: var(--shadow_standar) !important;
+    z-index: 1;
+    width: 100%;
+    text-align: center;
+}
+.sdk_select_button_group > .rz-selectbutton > .rz-button{
+   max-width: 100%;
+}
+.sdk_select_button_group > .rz-selectbutton{
+    width: 100%;
+ }
+.sdk_select_button_group > .rz-selectbutton > .rz-button > span{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: pre;
+}
+.sdk_select_button_group > .rz-selectbutton .rz-button {
+    transition: all .4s linear;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: pre;
+}
+/* Estilos nuevos para selec bar FIN*/
+
+/* Estilos nuevos para button group INICIO*/
+.whcm_btn_group_select > .btn-primary, .whcm_btn_group_select > .btn-primary:hover{
+    background: var(--color_light) !important;
+    color: var(--color_primary) !important;
+    border: 1px solid var(--color_primary) !important;
+    box-shadow: var(--shadow_standar) !important;
+    z-index: 1;
+    transition: all .4s linear;
+    line-height: 0;
+    min-height: 1.9375rem;
+}
+.whcm_btn_group_select > .btn-secondary{
+    transition: all .4s linear;
+    line-height: 0;
+    min-height: 1.9375rem;
+}
+/* Estilos nuevos para button group FIN*/

@@ -14,6 +14,9 @@ using Microsoft.JSInterop;
 using Siesa.Global.Enums;
 using Siesa.SDK.Frontend.Criptography;
 using System.Globalization;
+using Blazor.IndexedDB.Framework;
+using Siesa.SDK.Frontend.Data;
+
 
 namespace Siesa.SDK.Frontend.Services
 {
@@ -27,6 +30,8 @@ namespace Siesa.SDK.Frontend.Services
         private string _secretKey;
         private int _minutesExp;
         private ISDKJWT _sdkJWT;
+
+        private readonly IIndexedDbFactory _dbFactory;
 
         private short CustomRowidCulture = 0;
         public short RowidCultureChanged { get; set; } = 0;
@@ -88,7 +93,8 @@ namespace Siesa.SDK.Frontend.Services
             IBackendRouterService BackendRouterService,
             IHttpContextAccessor ContextAccessor,
             IJSRuntime jsRuntime,
-            ISDKJWT sdkJWT
+            ISDKJWT sdkJWT,
+            IIndexedDbFactory dbFactory
         )
         {
             _navigationManager = navigationManager;
@@ -99,6 +105,7 @@ namespace Siesa.SDK.Frontend.Services
             _secretKey = "testsecretKeyabc$"; //TODO: get from config
             _jsRuntime = jsRuntime;
             _sdkJWT = sdkJWT;
+            _dbFactory = dbFactory;
         }
 
         public async Task Initialize()
@@ -203,6 +210,14 @@ namespace Siesa.SDK.Frontend.Services
             {
                 UserToken = loginRequest.Data.Token;
                 await LoginBrowser(loginRequest.Data, rowidDbConnection.ToString(CultureInfo.InvariantCulture)).ConfigureAwait(true);
+
+                try
+                {
+                    _ = setDataIndexedDB();            
+                }catch(Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
             else
             {
@@ -216,7 +231,10 @@ namespace Siesa.SDK.Frontend.Services
                 }
             }
         }
-
+        public async Task setDataIndexedDB()
+        {
+            await _dbFactory.Create<IndexDb>().ConfigureAwait(true);
+        }
         private async Task LoginBrowser(dynamic loginRequestData, string rowidDbConnection)
         {
             await _localStorageService.SetItemAsync("usertoken", UserToken).ConfigureAwait(true);
@@ -280,6 +298,14 @@ namespace Siesa.SDK.Frontend.Services
                 await SetPortalUserPhoto(loginRequest.Data.UserPhoto).ConfigureAwait(true);
                 await SetPreferencesPortalUser(loginRequest.Data.UserPreferences).ConfigureAwait(true);
                 await LoginBrowser(loginRequest.Data, rowidDbConnectionString).ConfigureAwait(true);
+                await setDataIndexedDB().ConfigureAwait(true);
+                try
+                {
+                    _ = setDataIndexedDB();            
+                }catch(Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
             else
             {
@@ -552,23 +578,35 @@ namespace Siesa.SDK.Frontend.Services
             }
         }
 
+        /// <summary>
+        ///  Implementation of the method to send an email to the user with the password recovery link.
+        /// </summary>
+        /// <param name="email">The email of the user.</param>
+        /// <param name="isPortal">Indicates if the password recovery is for a portal user.</param>
 
-        public async void ForgotPasswordAsync(string email)
+        public async void ForgotPasswordAsync(string email, bool isPortal = false)
         {
             HttpContext httpContext = _contextAccesor.HttpContext;
             string UrlSystem = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}";
 
             var request = await GetBLUser().ConfigureAwait(true);
 
-            await request.Call("SendEmailRecoveryPassword", email, SelectedConnection.Rowid, UrlSystem);
+            await request.Call("SendEmailRecoveryPassword", email, SelectedConnection.Rowid, UrlSystem, isPortal);
         }
 
-        public async Task<bool> ValidateUserToken(string userToken)
+        /// <summary>
+        /// Implementation of the method to validate the user token for password recovery.
+        /// </summary>
+        /// <param name="userToken">The user token for password recovery</param>
+        /// <param name="isPortal">Indicates if the password recovery is for a portal user.</param>
+        /// <returns></returns>
+
+        public async Task<bool> ValidateUserToken(string userToken,bool isPortal)
         {
 
             var request = await GetBLUser().ConfigureAwait(true);
 
-            var result = await request.Call("ValidateUserRecoveryPass", userToken, SelectedConnection.Rowid);
+            var result = await request.Call("ValidateUserRecoveryPass", userToken, SelectedConnection.Rowid, isPortal);
 
             if (result.Success)
             {
@@ -577,9 +615,20 @@ namespace Siesa.SDK.Frontend.Services
             return false;
         }
 
-        public async Task<bool> ChangePassword(string userToken,short rowIdDBConnection, string NewPassword, string ConfirmPassword)
+        /// <summary>
+        /// Implementation of the method for Changes the password of a user with the specified recovery token.
+        /// </summary>
+        /// <param name="userToken">Recovery token of the user.</param>
+        /// <param name="rowIdDBConnection">Identifier of the database connection.</param>
+        /// <param name="NewPassword">New password to be assigned to the user.</param>
+        /// <param name="ConfirmPassword">Confirmation of the new password.</param>
+        /// <param name="isPortal">Indicates if the password change is for a portal user.</param>
+        /// <returns>A boolean value indicating whether the password change was successful.</returns>
+
+        public async Task<bool> ChangePassword(string userToken,short rowIdDBConnection, string NewPassword, string ConfirmPassword,
+        bool isPortal = false)
         {
-            var request = await GetBLUser();
+            var request = await GetBLUser().ConfigureAwait(true);
             if (!string.IsNullOrEmpty(NewPassword) && !string.IsNullOrEmpty(ConfirmPassword))
             {
                 if (!NewPassword.Equals(ConfirmPassword))
@@ -587,7 +636,9 @@ namespace Siesa.SDK.Frontend.Services
                     return false;
                 }else
                 {
-                    var resultChangePassword = await request.Call("RecoveryPassword",userToken,NewPassword,SelectedConnection.Rowid);
+                    var resultChangePassword = await request.Call("RecoveryPassword",userToken,NewPassword,
+                    SelectedConnection.Rowid, isPortal);
+                    
                     if (resultChangePassword.Success)
                     {
                         return true;

@@ -14,6 +14,7 @@
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   		<DisableGclm>true</DisableGclm>
 		<VersionSuffix>dev</VersionSuffix>
+		<NoWarn>8632,8669,1591</NoWarn>
 	</PropertyGroup>
 	<PropertyGroup>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -21,40 +22,20 @@
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<OutputPath></OutputPath>
-	</PropertyGroup>
-	<ItemGroup>
-		<RazorDocumentationCode Include="Components\Documentation\**\*.razor" />
-		<!-- exclude 3 level-->
-		<RazorDocumentationCode Remove="Components\Documentation\*\*\*.razor" />
-		<RazorDocumentationCode Remove="Components\Documentation\Playground\*.razor" />
-		<RazorDocumentationCode Remove="Components\Documentation\SDKDocumentation.razor" />
-		<RazorDocumentationCode Remove="Components\Documentation\CodeViewer.razor" />
-	</ItemGroup>
+	</PropertyGroup>	
 	<ItemGroup>
 		<None Remove="Components\Layout\MainLayout.razor.css" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Content Include="Components\Layout\MainLayout.razor.css" />
-		<Content Update="Components\Documentation\CodeViewer.razor.css">
-		  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-		</Content>
-		<Content Update="Components\Documentation\Playground\PlaygroundView.razor.css">
-		  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-		</Content>
+		<Content Include="Components\Layout\MainLayout.razor.css" />				
 		<Content Update="Components\Dashboard\SDKDashboardPortal.razor.css">
 		  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 		</Content>
 	</ItemGroup>
 
-	<ItemGroup>
-		
-		<EmbeddedResource Include="Components\Documentation\SourceCode\*.txt" />
+	<ItemGroup>		
 		<EmbeddedResource Include="ActiveReport\templates\*" />
-
-		<!-- <None Remove="Components\Documentation\SourceCode\SDKPieChart.txt" />
-		<EmbeddedResource Include="Components\Documentation\SourceCode\SDKPieChart.txt" /> -->
-
 	</ItemGroup> 
 
 
@@ -83,7 +64,7 @@
 		<PackageReference Include="Microsoft.CodeAnalysis.Razor" Version="6.0.20" />
 		<PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="6.0.0" />
-		<PackageReference Include="Radzen.Blazor" Version="4.13.5" />
+		<PackageReference Include="Radzen.Blazor" Version="4.15.7" />
 		<PackageReference Include="Reshiru.Blazor.IndexedDB.Framework" Version="1.0.1" />
 		<PackageReference Include="TG.Blazor.IndexedDB" Version="1.5.0-preview" />
 		<PackageReference Include="Z.Blazor.Diagrams" Version="2.1.6" />

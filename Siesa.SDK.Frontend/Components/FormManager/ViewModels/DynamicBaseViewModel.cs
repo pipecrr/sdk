@@ -104,7 +104,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             {   
                 try
                 {
-                    businessType = Utilities.SearchType(businessModel.Namespace + "." + businessModel.Name); 
+                    businessType = Utilities.SearchType(businessModel.Namespace + "." + businessModel.Name);
+
+                    if (businessType is null)
+                    {
+                        ErrorMsg = $"Business not found in Front: {bName}";
+                        ErrorList.Add("Custom.Generic.FrontendBusinessNotFound");
+                        return;
+                    }
+                    
                     BusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider, businessType);
                     BusinessModel = businessModel;
                     BusinessObj.BusinessName = bName;
@@ -119,7 +127,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             else
             {
                 this.ErrorMsg = "404 Not Found.";
-                ErrorList.Add("404 Not Found.");
+                ErrorList.Add("Custom.Generic.BackendBusinessNotFound");
             }
             StateHasChanged();
         }

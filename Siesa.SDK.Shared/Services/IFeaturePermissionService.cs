@@ -23,7 +23,7 @@ namespace Siesa.SDK.Shared.Services
         public SDKBusinessModel Backend {get { return BackendRouterServiceBase.Instance.GetSDKBusinessModel("BLSDKAction", null); } }
 
         public bool CheckUserActionPermission(string businessName, int actionRowid, IAuthenticationService authenticationService)
-        {
+        {            
             return Siesa.SDK.Shared.Utilities.Utilities.CheckUserActionPermission(businessName, actionRowid, authenticationService);
         }
 

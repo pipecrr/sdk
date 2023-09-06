@@ -60,9 +60,16 @@
                                 </div>
 
                             </div>
-                            @if(RecoveringPassword){
-                                @* <ForgotPassword _login="@this" /> *@
-                            }else{
+                            @if(RecoveringPassword)
+                            {
+                                <ForgotPassword Click="@NavigateFormLoginView" RowidCulture="@RowidCulture" IsPortal="true" /> 
+
+                            }else if (!string.IsNullOrEmpty(UserToken))
+                            {
+                                <RecoveryPassword UserToken="@UserToken" SelectedConnection="@SelectedConnection"
+                                RowidCulture="@RowidCulture" IsPortal="true"/>
+                            }
+                            else{
                                 <div
                                     class="col-12 offset-sm-2 col-sm-8 offset-md-1 col-md-10 offset-lg-2 col-lg-8 px-md-3 px-lg-0">
                                     <EditForm id="@FormID" Model="@model" OnValidSubmit="HandleValidSubmit" OnInvalidSubmit="HandleInvalidSubmit">
@@ -100,9 +107,9 @@
                                         </SDKButton>
                                     </EditForm>
                                 </div>
-                                @* <div class="col-12 p-0 text-center pt-4"> *@
-                                @*     <SDKButton RenderStyle="SDKButtonRenderStyle.Link" ResourceTag="BLLogin.Project.ForgotPassword"/> *@
-                                @* </div> *@
+                                 <div class="col-12 p-0 text-center pt-4">
+                                     <SDKButton RenderStyle="SDKButtonRenderStyle.Link" ResourceTag="BLLogin.Project.ForgotPassword" Click="@ForgotPassword"/>
+                                 </div>
                             }
                         </div>
                     </div>
@@ -184,4 +191,10 @@
         await AuthenticationService.SetCustomRowidCulture(rowidCulture);
         StateHasChanged();
     }
+
+    public void NavigateFormLoginView()
+    {
+        RecoveringPassword = false;
+        StateHasChanged();
+    } 
 }

@@ -1,0 +1,8 @@
+@using Microsoft.AspNetCore.Components
+@using Siesa.SDK.Frontend.Components
+
+@inherits SDKComponent
+
+<input type="search" @bind="@Value" placeholder="@Placeholder" @oninput="HandleInput" disabled="@Disabled" data-automation-id="@GetAutomationId()" class="@CssClass"/>
+
+

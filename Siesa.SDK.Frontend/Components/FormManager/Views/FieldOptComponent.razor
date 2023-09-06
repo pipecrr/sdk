@@ -1,0 +1,45 @@
+﻿@using Siesa.SDK.Frontend.Components.FormManager.ViewModels
+
+<DynamicField FieldOpt="@Column" ModelObj="@Data" />
+
+@code
+{
+    /// <summary>
+    /// The row data to be displayed in the field
+    /// </summary>
+    [Parameter]
+    public dynamic Data { get; set; }
+    ///<summary>
+    /// The field options to be render the field
+    /// </summary>
+    [Parameter]
+    public FieldOptions Column { get; set; }
+    /// <summary>
+    /// If the field is in detail mode
+    /// </summary>
+    [Parameter]
+    public bool IsDetail { get; set; }
+    /// <summary>
+    /// Cascading parameter to get the form view component
+    /// </summary>
+    [CascadingParameter]
+    public FormView FormView { get; set; }
+    
+    /// <summary>
+    /// On parameters set async method
+    /// </summary>
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!IsDetail)
+        {
+            bool shouldUpdate = false;
+            shouldUpdate = await FormView.UpdateCustomAttr(Column, true, Data).ConfigureAwait(false);
+            if (shouldUpdate)
+            {
+                await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+            }
+        }
+        
+        await base.OnParametersSetAsync().ConfigureAwait(true);
+    }
+}

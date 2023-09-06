@@ -1,4 +1,5 @@
 @page "/Portal/{RowidConexion:int}"
+@page "/Portal/{RowidConexion:int}/{UserToken}"
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Frontend.Components.Layout.Header
 @using Siesa.SDK.Frontend.Components.Layout.NavMenu
@@ -19,13 +20,16 @@
         }
 else
 {
-    <LoginView LogoUrl="@LogoUrl" RowidConexion="@RowidConexion"/>
+    <LoginView LogoUrl="@LogoUrl" RowidConexion="@RowidConexion" UserToken="@UserToken"/>
 }
 
 @code {
 
     [CascadingParameter]
-    public MainLayout MainLayout { get; set; }    
+    public MainLayout MainLayout { get; set; }   
+    [Parameter]
+    public string? UserToken { get; set; }
+    
     [Parameter]
     public int RowidConexion { get; set; }
     public string LogoUrl { get; set; } = "_content/Siesa.SDK.Frontend/assets/img/siesaLogo.png";

@@ -44,6 +44,7 @@ using Newtonsoft.Json.Linq;
 
 using Siesa.Global.Enums;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace Siesa.SDK.Business
 {
@@ -450,7 +451,13 @@ namespace Siesa.SDK.Business
             }
         }
 
-        private T CreateDynamicObject(Type type, dynamic dynamicObj)
+        /// <summary>
+        /// Get the object dynamically of the type type and the dynamic object dynamicObj
+        /// </summary>
+        /// <param name="type">type of object to create</param>
+        /// <param name="dynamicObj">dynamic object to create from</param>
+        /// <returns>Object type of type created</returns>
+        public dynamic CreateDynamicObject(Type type, dynamic dynamicObj)
         {
             dynamic result = Activator.CreateInstance(type);
             foreach (var property in dynamicObj.GetType().GetProperties()){
@@ -858,14 +865,28 @@ namespace Siesa.SDK.Business
                         {
                             context.Commit();
                         }
-                    }catch(Exception ex){
+                    }catch(DbUpdateException DbEx)
+                    {
                         if (!context.Database.IsInMemory())
                         {
                             context.Rollback();
                         }
-                        response.Errors.Add(new OperationError() { Message = ex.Message });
+                        AddExceptionToResult(DbEx, result);
+                        var errorList = result.Errors.Where(x => x.Message.Contains("Foreing key")).ToList();
+                        if (errorList.Any())
+                        {
+                            var regex = new Regex(@"Table name: ([^\r\n]+)");
+                            var relatedTable = errorList
+                                                .Select(x => x.Message)
+                                                .SelectMany(msg => regex.Matches(msg).Cast<Match>())
+                                                .Select(match => match?.Groups[1].Value.Split('.').Last()).Distinct().FirstOrDefault();
+                            response.Errors.Add(new OperationError() { Message = $"Exception: Custom.Generic.Message.DeleteErrorWithRelations//{relatedTable}.Plural" });
+                        }
+                        else
+                        {
+                            response.Errors.AddRange(result.Errors);
+                        }
                     }
- 
                 }
             }
             catch (Exception e)
@@ -1083,7 +1104,21 @@ namespace Siesa.SDK.Business
             return result;
         }
 
-        private void CreateQueryExtraFields(IQueryable<T> query, List<string> inlcudesAdd, List<string> extraFields, ref string selectedFields, ref bool hasRelated, bool containAttachments = false)
+        /// <summary>
+        /// Create the query with the extra fields
+        /// </summary>
+        /// <param name="query">query to create</param>
+        /// <param name="inlcudesAdd">list of includes to add</param>
+        /// <param name="extraFields">list of extra fields</param>
+        /// <param name="selectedFields">string with the selected fields ref</param>
+        /// <param name="hasRelated">bool to know if has related ref</param>
+        /// <param name="containAttachments">bool to know if contain attachments, default false</param>
+        public void CreateQueryExtraFields(IQueryable<T> query, List<string> inlcudesAdd, List<string> extraFields, ref string selectedFields, ref bool hasRelated, bool containAttachments = false)
+        {
+            CreateQueryExtraFields<T>(query, inlcudesAdd, extraFields, ref selectedFields, ref hasRelated, containAttachments);
+        }
+
+        public void CreateQueryExtraFields<J>(IQueryable<J> query, List<string> inlcudesAdd, List<string> extraFields, ref string selectedFields, ref bool hasRelated, bool containAttachments = false)  where J : class
         {
             bool hasRelatedTmp = false;
             extraFields.Add("Rowid");
@@ -1472,7 +1507,7 @@ namespace Siesa.SDK.Business
             using (var context = CreateDbContext())
             {
                 context.SetProvider(_provider);
-                var query = context.Set<T>().AsQueryable();
+                var query = context.Set<T>(true).AsQueryable();
 
                 if (!string.IsNullOrEmpty(filter))
                 {
