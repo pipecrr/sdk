@@ -100,8 +100,11 @@ namespace Siesa.SDK.Backend.Access
 
                     List<int?> rowidsAuthorizedU = GetRowidsAuthorizedU(dataAuthorizedU, dataUnauthorizedU);
                     List<int?> rowidsUnauthorizedU = GetRowidsUnauthorizedU(dataAuthorizedU, dataUnauthorizedU);
-
-                    var newQuery = ((IQueryable<BaseSDK<int>>)query);
+                    
+                    Type typeBaseSdk = typeof(BaseSDK<>);
+                    Type elementType = entytyType.GetProperty("Rowid")?.PropertyType;
+                    Type specificBaseSdk = typeBaseSdk.MakeGenericType(elementType);
+                    var newQuery = ((IQueryable)query).Cast(specificBaseSdk);
                     if (rowidsAuthorizedU.Any() || rowidsUnauthorizedU.Any()){
                         
                         newQuery = EvaluateAuthorization(rowidsAuthorizedU, newQuery, hasAuthDefaulConfig, 2, hasPropetyIsPrivate);
@@ -231,7 +234,7 @@ namespace Siesa.SDK.Backend.Access
             return authorizationTableName;
         }
 
-        private static IQueryable<BaseSDK<int>> EvaluateAuthorization(List<int?> dataAuthorizedU, IQueryable<BaseSDK<int>> query, bool hasAuthDefaulConfig, int restrictionType, bool hasPropetyIsPrivate)
+        private static IQueryable EvaluateAuthorization(List<int?> dataAuthorizedU, IQueryable query, bool hasAuthDefaulConfig, int restrictionType, bool hasPropetyIsPrivate)
         {
             if(!dataAuthorizedU.Any()){
                 return query;
@@ -315,7 +318,7 @@ namespace Siesa.SDK.Backend.Access
             }
         }
 
-        private static IQueryable<BaseSDK<int>> ApplyIsPrivateAndRestriction(IQueryable<BaseSDK<int>> query, bool evaluateIsPrivate, string isPrivateWhere, string restringedWhere)
+        private static IQueryable ApplyIsPrivateAndRestriction(IQueryable query, bool evaluateIsPrivate, string isPrivateWhere, string restringedWhere)
         {
             if (evaluateIsPrivate)
             {
