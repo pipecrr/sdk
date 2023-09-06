@@ -176,7 +176,12 @@ namespace Siesa.SDK.Backend.Access
                 {
                     return false;
                 }
-                        
+
+                if (x.RowidRecord == null)
+                {
+                    return false;
+                }
+
                 //result is false if the record is in the authorized list as user
                 result = !(((IEnumerable<dynamic>)dataAuthorizedU)
                     .Any(y => y.RowidRecord == x.RowidRecord && y.RowidDataVisibilityGroup == null));
@@ -228,10 +233,13 @@ namespace Siesa.SDK.Backend.Access
 
         private static IQueryable<BaseSDK<int>> EvaluateAuthorization(List<int?> dataAuthorizedU, IQueryable<BaseSDK<int>> query, bool hasAuthDefaulConfig, int restrictionType, bool hasPropetyIsPrivate)
         {
+            if(!dataAuthorizedU.Any()){
+                return query;
+            }
             string logicOperator = GetLogicOperator(restrictionType);
             string compare = GetComparisonOperator(restrictionType);
             string isPrivateWhere = GetIsPrivateWhere(restrictionType, hasPropetyIsPrivate);
-            string restringedWhere = GetRestrictionWhere(hasAuthDefaulConfig);
+            string restringedWhere = GetRestrictionWhere(hasAuthDefaulConfig, restrictionType);
 
             bool evaluateIsPrivate = ShouldEvaluateIsPrivate(restrictionType, dataAuthorizedU, hasPropetyIsPrivate);
             StringBuilder whereBuilder = BuildWhereClause(dataAuthorizedU, logicOperator, compare);
@@ -264,7 +272,7 @@ namespace Siesa.SDK.Backend.Access
             return (restrictionType == 2 && hasPropetyIsPrivate) ? "(IsPrivate == false)" : "";
         }
 
-        private static string GetRestrictionWhere(bool hasAuthDefaulConfig)
+        private static string GetRestrictionWhere(bool hasAuthDefaulConfig, int restrictionType)
         {
             return hasAuthDefaulConfig ? "" : "(Rowid == 0)";
         }
