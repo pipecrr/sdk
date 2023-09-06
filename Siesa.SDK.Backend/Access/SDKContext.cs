@@ -362,14 +362,14 @@ namespace Siesa.SDK.Backend.Access
                 try
                 {
                     return ActivatorUtilities.CreateInstance(ServiceProvider, typeof(DbSetProxy<TEntity>), 
-                        new object[] { this, base.Set<TEntity>(), ignoreVisibility }) as DbSetProxy<TEntity>;
+                        new object[] { this, base.Set<TEntity>(), ServiceProvider, ignoreVisibility }) as DbSetProxy<TEntity>;
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine($"{e.Message}***********");
                 }
             }
-            return new DbSetProxy<TEntity>(null, this, base.Set<TEntity>(), ignoreVisibility);
+            return new DbSetProxy<TEntity>(null, this, base.Set<TEntity>(), null, ignoreVisibility);
         }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder builder)

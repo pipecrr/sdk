@@ -35,6 +35,8 @@ namespace Siesa.SDK.Backend.Access
         private readonly IQueryable<TEntity> query;
         private SDKContext _context;
         private IAuthenticationService AuthenticationService { get; set; }
+        private IServiceProvider _provider;
+        protected dynamic _dbFactory;
 
         private EntityEntry<TEntity> EntryWithoutDetectChanges(TEntity entity)
         => new(_context.GetDependencies().StateManager.GetOrCreateEntry(entity, EntityType));
@@ -58,17 +60,18 @@ namespace Siesa.SDK.Backend.Access
             }
         }
 
-        public DbSetProxy(IAuthenticationService authenticationService, SDKContext context, DbSet<TEntity> set, bool ignoreVisibility = false)
-        : this(authenticationService, context, set, set, ignoreVisibility)
+        public DbSetProxy(IAuthenticationService authenticationService, SDKContext context, DbSet<TEntity> set, IServiceProvider provider = null, bool ignoreVisibility = false)
+        : this(authenticationService, context, set, set, provider, ignoreVisibility)
         {
         }
 
-        public DbSetProxy(IAuthenticationService authenticationService, SDKContext context, DbSet<TEntity> set, IQueryable<TEntity> query, bool ignoreVisibility = false)
+        public DbSetProxy(IAuthenticationService authenticationService, SDKContext context, DbSet<TEntity> set, IQueryable<TEntity> query, IServiceProvider provider = null, bool ignoreVisibility = false)
         {
             AuthenticationService = authenticationService;
             this.set = set;
             this._context = context;
             this.query = query;
+            this._provider = provider;
             //Check if the entity is a BaseSDK
 
             Type entytyType = typeof(TEntity);
@@ -85,16 +88,28 @@ namespace Siesa.SDK.Backend.Access
 
                 //Get the table name
                 var authorizationTableName = GetNameAuthorizationTable(dataAnnotation, entytyType);
-
-                List<int> listUserGroup = context.AllSet<E00225_UserDataVisibilityGroup>().Include("DataVisibilityGroup").Where(x => x.RowidUser == currentUser && x.DataVisibilityGroup.Status == enumStatusBaseMaster.Active).Select(x => x.RowidDataVisibilityGroup).ToList();
+                
 
                 //Get the type of the authorization table
                 Type authEntityType = entytyType.Assembly.GetType(authorizationTableName);
-                if(authEntityType != null){
-                    dynamic authSet = context.GetType().GetMethod("Set", types: Type.EmptyTypes)?.MakeGenericMethod(authEntityType).Invoke(context, null);
+                if(authEntityType != null && _provider != null){
 
-                    dynamic dataAuthorizedU = GetDataUByRestrictionType(authSet, currentUser, 2, listUserGroup);
-                    dynamic dataUnauthorizedU = GetDataUByRestrictionType(authSet, currentUser, 1, listUserGroup);
+                    Type dbContextFactoryGenericType = typeof(IDbContextFactory<>);
+                    Type desiredType = context.GetType();
+                    Type specificDbContextFactoryType = dbContextFactoryGenericType.MakeGenericType(desiredType);
+                    _dbFactory = _provider.GetService(specificDbContextFactoryType);
+
+                    List<int> listUserGroup = new();
+                    dynamic dataAuthorizedU = null;
+                    dynamic dataUnauthorizedU = null;
+                    using (SDKContext otherContext = _dbFactory.CreateDbContext())
+                    {
+                        dynamic authSet = otherContext.GetType().GetMethod("Set", types: Type.EmptyTypes)?.MakeGenericMethod(authEntityType).Invoke(otherContext, null);
+                        otherContext.SetProvider(_provider);
+                        listUserGroup = otherContext.AllSet<E00225_UserDataVisibilityGroup>().Include("DataVisibilityGroup").Where(x => x.RowidUser == currentUser && x.DataVisibilityGroup.Status == enumStatusBaseMaster.Active).Select(x => x.RowidDataVisibilityGroup).ToList();
+                        dataAuthorizedU = GetDataUByRestrictionType(authSet, currentUser, 2, listUserGroup);
+                        dataUnauthorizedU = GetDataUByRestrictionType(authSet, currentUser, 1, listUserGroup);
+                    }                    
                     
                     bool hasAuthDefaulConfig = ((IEnumerable<dynamic>)dataAuthorizedU).Any(x => x.RowidRecord == null);
 
