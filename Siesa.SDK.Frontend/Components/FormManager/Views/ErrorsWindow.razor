@@ -1,6 +1,6 @@
 @if(_errorCount > 0 ){
     <div class=@(ClassError +" col-12 p-0")>
-        <button class="sdk_error_log_btn d-flex align-items-center justify-content-between" @onclick="showDedtail">
+        <button class="sdk_error_log_btn d-flex align-items-center justify-content-between" @onclick="showDedtail" @onclick:preventDefault>
             <div class="d-flex align-items-center justify-content-center">
                 <SDKIcon Name="fa-triangle-exclamation"/>                
                 &nbsp;&nbsp;<ResourceViewer ResourceTag= "Custom.ErrorsWindow.Title"/>&nbsp;&nbsp;
@@ -21,7 +21,7 @@
                         @_errorCount
                     </span>
                 </p>
-                <button class="btn btn-sm ml-1 p-0 text-light" @onclick="showDedtail">
+                <button class="btn btn-sm ml-1 p-0 text-light" @onclick="showDedtail" @onclick:preventDefault>
                     <SDKIcon Name="fa-xmark"/>
                 </button>
             </div>
