@@ -85,6 +85,10 @@
     --rz-dialog-title-color: #172642 !important;
     --rz-grid-column-resizer-helper-background-color: var(--color_primary) !important;
     --rz-grid-column-resizer-helper-width: 2px !important;
+    --rz-input-height: 31px !important;
+    --rz-secondary-dark: var(--color_primary) !important;
+    --rz-secondary-light: var(--color_primary_light) !important;
+    --rz-secondary: var(--color_primary_dark) !important;
 
     --rz-grid-hover-background-color: var(--color_table_hover) !important;
 
@@ -156,6 +160,8 @@
     --color_chart_flex_34: #fcbb48;
     --color_chart_flex_35: #fcd4a4;
     --color_chart_flex_36: #98b7d5;
+
+    --color_input_back_disabled: #E9E9E9;
 }
 
 
@@ -1161,9 +1167,13 @@ div .form-control, div .form-control:focus{
 }
 
 .whcm_select_box>.input-group-append>.whcm-btn-outline {
-    color: var(--color_primary_light);
+    color: var(--color_primary) !important;
     border-color:  transparent;
 }
+.whcm_select_box>.input-group-append >.whcm-btn-outline:hover{
+    color: var(--color_primary) !important;
+}
+
 .dropdown-menu
 {
   background-color: var(--color_panel_back);
@@ -1589,7 +1599,7 @@ color: var(--color_text);
 .sdk_card{
     background-color: var(--color_panel_back) !important;
     background-clip: border-box;
-    border: 1px solid var(--color_panel_back_border);
+    border: 1px solid var(--color_border);
     border-radius: var(--border_radius_standar_max) !important;
     box-shadow: var(--shadow_standar_min) !important;
 } 
@@ -1920,4 +1930,10 @@ div.dxbs-btn-group.dxbs-input-group-prepend>.btn.dx-btn.btn-sm {
 
 .sdk-btn-icon-text-cnt{
     gap: 5px;
+}
+
+.form-control:disabled, .form-control[readonly], .form-control[readonly]:focus
+{
+  background-color: var(--color_input_back_disabled) !important;
+  border-color: var(--color_form_border) !important; 
 }
