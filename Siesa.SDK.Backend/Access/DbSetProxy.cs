@@ -99,14 +99,14 @@ namespace Siesa.SDK.Backend.Access
                     Type specificDbContextFactoryType = dbContextFactoryGenericType.MakeGenericType(desiredType);
                     _dbFactory = _provider.GetService(specificDbContextFactoryType);
 
-                    List<int> listUserGroup = new();
+                    
                     dynamic dataAuthorizedU = null;
                     dynamic dataUnauthorizedU = null;
                     using (SDKContext otherContext = _dbFactory.CreateDbContext())
                     {
                         dynamic authSet = otherContext.GetType().GetMethod("Set", types: Type.EmptyTypes)?.MakeGenericMethod(authEntityType).Invoke(otherContext, null);
                         otherContext.SetProvider(_provider);
-                        listUserGroup = otherContext.AllSet<E00225_UserDataVisibilityGroup>().Include("DataVisibilityGroup").Where(x => x.RowidUser == currentUser && x.DataVisibilityGroup.Status == enumStatusBaseMaster.Active).Select(x => x.RowidDataVisibilityGroup).ToList();
+                        List<int> listUserGroup = otherContext.AllSet<E00225_UserDataVisibilityGroup>().Include("DataVisibilityGroup").Where(x => x.RowidUser == currentUser && x.DataVisibilityGroup.Status == enumStatusBaseMaster.Active).Select(x => x.RowidDataVisibilityGroup).ToList();
                         dataAuthorizedU = GetDataUByRestrictionType(authSet, currentUser, 2, listUserGroup);
                         dataUnauthorizedU = GetDataUByRestrictionType(authSet, currentUser, 1, listUserGroup);
                     }                    
@@ -257,7 +257,7 @@ namespace Siesa.SDK.Backend.Access
             string logicOperator = GetLogicOperator(restrictionType);
             string compare = GetComparisonOperator(restrictionType);
             string isPrivateWhere = GetIsPrivateWhere(restrictionType, hasPropetyIsPrivate);
-            string restringedWhere = GetRestrictionWhere(hasAuthDefaulConfig, restrictionType);
+            string restringedWhere = GetRestrictionWhere(hasAuthDefaulConfig);
 
             bool evaluateIsPrivate = ShouldEvaluateIsPrivate(restrictionType, dataAuthorizedU, hasPropetyIsPrivate);
             StringBuilder whereBuilder = BuildWhereClause(dataAuthorizedU, logicOperator, compare);
@@ -290,7 +290,7 @@ namespace Siesa.SDK.Backend.Access
             return (restrictionType == 2 && hasPropetyIsPrivate) ? "(IsPrivate == false)" : "";
         }
 
-        private static string GetRestrictionWhere(bool hasAuthDefaulConfig, int restrictionType)
+        private static string GetRestrictionWhere(bool hasAuthDefaulConfig)
         {
             return hasAuthDefaulConfig ? "" : "(Rowid == 0)";
         }
