@@ -2151,7 +2151,7 @@ namespace Siesa.SDK.Business
 
         [SDKExposedMethod]
         public ActionResult<List<MyDTO>> SetListForeingRowid( List<string> keys, List<string> values){
-            l
+            using (SDKContext context = CreateDbContext())
             try{
                 var query = context.Set<T>().AsQueryable();
                 var resultadoJoin = query.Where(BuildContainsExpression<T>(values, keys.Select(x => x.Substring(0, x.IndexOf('_'))).ToList<string>()).Compile())
