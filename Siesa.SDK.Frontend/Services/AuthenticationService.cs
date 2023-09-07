@@ -179,6 +179,8 @@ namespace Siesa.SDK.Frontend.Services
 
             string sessionId = isUpdateSession ? _contextAccesor.HttpContext?.Request.Cookies["sdksession"]?.ToString() : "";
 
+            string HostName = _contextAccesor.HttpContext?.Request.Host.Host;
+
             short lastCompanyGroupSelected = await _localStorageService.GetItemAsync<short>("rowidCompanyGroup").ConfigureAwait(true);
 
             if(lastCompanyGroupSelected > 0 && lastCompanyGroupSelected != rowIdCompanyGroup) 
@@ -197,7 +199,8 @@ namespace Siesa.SDK.Frontend.Services
                 {"sessionId", sessionId},
                 {"IsUpdateSession", isUpdateSession},
                 {"rowIdCompanyGroup", rowIdCompanyGroup},
-                {"tokenPortal", ""}
+                {"tokenPortal", ""},
+                {"hostName", HostName}
             }).ConfigureAwait(true);
             if (loginRequest.Success)
             {

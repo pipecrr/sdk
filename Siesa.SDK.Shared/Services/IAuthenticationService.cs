@@ -93,6 +93,12 @@ namespace Siesa.SDK.Shared.Services
         /// Portal user. This property represents the portal user associated with the session.
         /// </summary>
         public PortalUserJwt PortalUser { get; set; }
+    
+        /// <summary>
+        /// Gets or sets the host name of the user.
+        /// </summary>
+        public string HostName { get; set; }
+
         /// <summary>
         /// Overrides the ToString() method to provide a custom string representation of the JwtUserData.
         /// </summary>

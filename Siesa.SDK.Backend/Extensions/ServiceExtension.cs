@@ -27,10 +27,10 @@ namespace Siesa.SDK.Backend.Extensions
     {
         public static void AddSDKBackend(this IServiceCollection services, ConfigurationManager configurationManager, Type ContextType)
         {
-
+            var connectionConfig = configurationManager.GetSection("ConnectionConfig").Get<SDKConnectionConfig>();
             var dbConnections = configurationManager.GetSection("DbConnections").Get<List<SDKDbConnection>>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
-            services.AddScoped<ITenantProvider>( sp => ActivatorUtilities.CreateInstance<TenantProvider>(sp, dbConnections));
+            services.AddScoped<ITenantProvider>( sp => ActivatorUtilities.CreateInstance<TenantProvider>(sp, dbConnections, connectionConfig));
             services.AddSingleton<IFeaturePermissionService, FeaturePermissionService>();
             services.AddSingleton<IBackendRouterService, BackendRouterService>();
             services.AddScoped<EmailService>();
@@ -38,10 +38,10 @@ namespace Siesa.SDK.Backend.Extensions
 
             services.AddScoped<ISDKJWT, Siesa.SDK.Backend.Criptography.SDKJWT>();
 
-            Action<IServiceProvider, DbContextOptionsBuilder> dbContextOptionsAction = (sp, opts) =>
+            Action<IServiceProvider, DbContextOptionsBuilder> dbContextOptionsAction = async (sp, opts) => 
             {
                 var tenantProvider = sp.GetRequiredService<ITenantProvider>();
-                var tenant = tenantProvider.GetTenant();
+                var tenant = await tenantProvider.GetTenant();
                 if(tenant == null){
                     //set first tenant as default
                     if(dbConnections.Count > 0){
