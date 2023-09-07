@@ -296,8 +296,8 @@ namespace Siesa.SDK.Frontend.Components.Fields
         }
 
         private async Task OnFocusOut(){
+            await Task.Delay(200);
             if(IsMultiple){
-                await Task.Delay(200);
                 badgeContainerClass = "badge-container d-none";
             }
         }
@@ -608,8 +608,6 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 await LoadData(search, null, force);
             }
             await Task.Delay(100);
-            var elementInstance = await JsRuntime.InvokeAsync<IJSObjectReference>("$", $"#{idInput}[aria-expanded=false]");
-            await elementInstance.InvokeVoidAsync("dropdown","show");
             StateHasChanged();
         }
         public async Task closeItem(string item){
