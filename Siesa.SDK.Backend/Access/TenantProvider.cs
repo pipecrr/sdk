@@ -8,6 +8,7 @@ using Siesa.SDK.Backend.Interceptors;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Siesa.SDK.Backend.Services;
 
 namespace Siesa.SDK.Backend.Access
 {
@@ -34,6 +35,8 @@ namespace Siesa.SDK.Backend.Access
         private SDKConnectionConfig _config = null;
 
         private readonly IAuthenticationService _authenticationService;
+
+        private readonly MemoryService _memoryService;
 
         private bool UseLazyLoadingProxies = false;
 
@@ -62,9 +65,11 @@ namespace Siesa.SDK.Backend.Access
             }
         }
 
-        public TenantProvider(IAuthenticationService authenticationService, List<SDKDbConnection> tenants, SDKConnectionConfig config = null)
+        public TenantProvider(IAuthenticationService authenticationService, List<SDKDbConnection> tenants,
+         MemoryService memoryService, SDKConnectionConfig config = null)
         {
             _authenticationService = authenticationService;
+            _memoryService = memoryService;
 
             if (config != null)
             { 
@@ -170,12 +175,24 @@ namespace Siesa.SDK.Backend.Access
         {
             try
             {
-                HttpResponseMessage response = await httpClient.PostAsync(_config.ApiUrl, null);
+                if (_memoryService != null)
+                {
+                    var _tenants = _memoryService.Get(HostName);
+                    if (!string.IsNullOrEmpty(_tenants))
+                    {
+                        return _tenants;
+                    }
+                }
 
+                HttpResponseMessage response = await httpClient.PostAsync(_config.ApiUrl, null);
 
                 if (response.IsSuccessStatusCode)
                 {
                     string content = await response.Content.ReadAsStringAsync();
+                    if (_memoryService != null)
+                    {
+                        _memoryService.Set(HostName, content);
+                    }
                     return content;
                 }
                 else

@@ -34,6 +34,7 @@ namespace Siesa.SDK.Backend.Extensions
             services.AddSingleton<IFeaturePermissionService, FeaturePermissionService>();
             services.AddSingleton<IBackendRouterService, BackendRouterService>();
             services.AddScoped<EmailService>();
+            services.AddSingleton<MemoryService>();
             services.AddSingleton<IResourceManager, ResourceManager>(sp => ActivatorUtilities.CreateInstance<ResourceManager>(sp, false));
 
             services.AddScoped<ISDKJWT, Siesa.SDK.Backend.Criptography.SDKJWT>();

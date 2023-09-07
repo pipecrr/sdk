@@ -11,5 +11,6 @@ namespace Siesa.SDK.Shared.DTOS
         public string ApiUrl { get; set; }
         public string Token { get; set; }
         public JwtUserData User { get; set; }
+        public string RedisUrl { get; set; }
     }
 }
