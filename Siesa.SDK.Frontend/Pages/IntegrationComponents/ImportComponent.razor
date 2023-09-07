@@ -283,73 +283,45 @@
         }
     }
 
-    private async Task CreateCompanyRelations(Type ForeignType, string baseIndex, string HiddenFieldTarget,string NamePropertyForeing){
-        @* var ResourceName = String.Empty;
-        HiddenFields.Add(HiddenFieldTarget); 
-                MapFkRelationsImportDTO MapFk = new(){IdFieldFkEntity=HiddenFieldTarget, DependencyIdFieldFKEntity= baseIndex,NameInternalIndex =$"Index_{NamePropertyForeing}_FK"} ;
+    private async Task CalculateParentsRelations(Type ForeignType, string baseIndex, string HiddenFieldTarget,string NamePropertyForeing, string RootNameEntity = ""){
+        var ResourceName = String.Empty;
+        string ForeingName = (!string.IsNullOrEmpty(RootNameEntity)) ?  RootNameEntity.Substring(RootNameEntity.IndexOf('_')+1): "";
+        MapFkRelationsImportDTO MapFk = new(){
+                IdFieldFkEntity = HiddenFieldTarget, 
+                DependencyIdFieldFKEntity = baseIndex,
+                NameInternalIndex = (!string.IsNullOrEmpty(RootNameEntity)) ? $"Index_{NamePropertyForeing}_{ForeingName}_FK" : $"Index_{NamePropertyForeing}_FK"
+            };
+
+            
+        
+        var ForeingAttributes = ForeignType.GetCustomAttributes<IndexAttribute>().ToList();
+        
+        foreach(var ForeingAttribute in ForeingAttributes){
+            if(ForeingAttribute is not null && ForeingAttribute.IsUnique){
+                HiddenFields.Add(HiddenFieldTarget);
+                
                 foreach (var propertyName in ForeingAttribute.PropertyNames){
-                    MapFk.ListIndexForeingFields.Add($"{propertyName}_{NamePropertyForeing}_FK");
+                    string TitleField = (!string.IsNullOrEmpty(RootNameEntity)) ? $"{propertyName}_{NamePropertyForeing}_{ForeingName}_FK": $"{propertyName}_{NamePropertyForeing}_FK";
+                    MapFk.ListIndexForeingFields.Add(TitleField);
                     var EntityName = await ResourceManager.GetResource($"{ForeignType.Name}.singular", AuthenticationService.GetRoiwdCulture()); 
-                    var FieldName = await ResourceManager.GetResource($"{ForeignType.Name}.{propertyName}", AuthenticationService.GetRoiwdCulture()); 
-                    ResourceName = $"{FieldName} - {EntityName}"; 
-                    _fieldsEntity.Add(ResourceName,$"{propertyName}_{NamePropertyForeing}_FK");
-                    _titleFields.Add($"{propertyName}_{NamePropertyForeing}_FK", ResourceName);
+                    var FieldName = await ResourceManager.GetResource($"{ForeignType.Name}.{propertyName}", AuthenticationService.GetRoiwdCulture());
+                    var ResourceRoot = (!string.IsNullOrEmpty(RootNameEntity)) ? await ResourceManager.GetResource($"{RootNameEntity}.singular", AuthenticationService.GetRoiwdCulture()) : ""; 
+                    ResourceName = $"{FieldName} - {EntityName} {(!string.IsNullOrEmpty(ResourceRoot) ? "- " + ResourceRoot : "" )}"; 
+                    _fieldsEntity.Add(ResourceName,TitleField);
+                    _titleFields.Add(TitleField, ResourceName);
+
                     var propertyType= ForeignType.GetProperties().Where(x=> x.Name==propertyName).FirstOrDefault();
                     ForeignKeyAttribute foreignKeyAttribute = propertyType.GetCustomAttribute<ForeignKeyAttribute>();
+                    
                     if (foreignKeyAttribute != null){
                         string foreignKeyNameFk = foreignKeyAttribute.Name; 
                         var RelationAttributeFk =  ForeignType.GetProperties().Where(x=> x.Name==foreignKeyNameFk).FirstOrDefault();
-                        await CalculateParentsRelations(RelationAttributeFk.PropertyType,MapFk.NameInternalIndex,$"{propertyName}_{NamePropertyForeing}_FK",foreignKeyNameFk);
+                        await CalculateParentsRelations(RelationAttributeFk.PropertyType,MapFk.NameInternalIndex,$"{propertyName}_{NamePropertyForeing}_FK",foreignKeyNameFk, ForeignType.Name);
                     }
-                } *@
-    } 
-
-    private async Task CalculateParentsRelations(Type ForeignType, string baseIndex, string HiddenFieldTarget,string NamePropertyForeing)
-    {
-        var ResourceName = String.Empty;
-        MapFkRelationsImportDTO MapFk = new(){IdFieldFkEntity=HiddenFieldTarget, DependencyIdFieldFKEntity= baseIndex,NameInternalIndex =$"Index_{NamePropertyForeing}_FK"} ;
-        if(ForeignType != typeof(Siesa.SDK.Entities.E00201_Company)){
-            var ForeingAttributes = ForeignType.GetCustomAttributes<IndexAttribute>().ToList();
-            foreach(var ForeingAttribute in ForeingAttributes){
-                if(ForeingAttribute is not null && ForeingAttribute.IsUnique){
-                    HiddenFields.Add(HiddenFieldTarget); 
-                    foreach (var propertyName in ForeingAttribute.PropertyNames){
-                        MapFk.ListIndexForeingFields.Add($"{propertyName}_{NamePropertyForeing}_FK");
-                        var EntityName = await ResourceManager.GetResource($"{ForeignType.Name}.singular", AuthenticationService.GetRoiwdCulture()); 
-                        var FieldName = await ResourceManager.GetResource($"{ForeignType.Name}.{propertyName}", AuthenticationService.GetRoiwdCulture()); 
-                        ResourceName = $"{FieldName} - {EntityName}"; 
-                        _fieldsEntity.Add(ResourceName,$"{propertyName}_{NamePropertyForeing}_FK");
-                        _titleFields.Add($"{propertyName}_{NamePropertyForeing}_FK", ResourceName);
-                        var propertyType= ForeignType.GetProperties().Where(x=> x.Name==propertyName).FirstOrDefault();
-                        ForeignKeyAttribute foreignKeyAttribute = propertyType.GetCustomAttribute<ForeignKeyAttribute>();
-                        if (foreignKeyAttribute != null){
-                            string foreignKeyNameFk = foreignKeyAttribute.Name; 
-                            var RelationAttributeFk =  ForeignType.GetProperties().Where(x=> x.Name==foreignKeyNameFk).FirstOrDefault();
-                            await CalculateParentsRelations(RelationAttributeFk.PropertyType,MapFk.NameInternalIndex,$"{propertyName}_{NamePropertyForeing}_FK",foreignKeyNameFk);
-                        }
-                    }
-                    ListMapRelationsImport.Add(MapFk);
                 }
+                ListMapRelationsImport.Add(MapFk);
             }
-        }else{
-            string propertyName = "Id";
-            MapFk.ListIndexForeingFields.Add($"{propertyName}_{NamePropertyForeing}_FK");
-            var EntityName = await ResourceManager.GetResource($"{ForeignType.Name}.singular", AuthenticationService.GetRoiwdCulture()); 
-            var FieldName = await ResourceManager.GetResource($"{ForeignType.Name}.{propertyName}", AuthenticationService.GetRoiwdCulture()); 
-            ResourceName = $"{FieldName} - {EntityName}"; 
-            if(!_fieldsEntity.ContainsKey(ResourceName)) _fieldsEntity.Add(ResourceName,$"{propertyName}_{NamePropertyForeing}_FK");
-            if(!_titleFields.ContainsKey($"{propertyName}_{NamePropertyForeing}_FK")) _titleFields.Add($"{propertyName}_{NamePropertyForeing}_FK", ResourceName);
-            var propertyType= ForeignType.GetProperties().Where(x=> x.Name==propertyName).FirstOrDefault();
-            ForeignKeyAttribute foreignKeyAttribute = propertyType.GetCustomAttribute<ForeignKeyAttribute>();
-            if (foreignKeyAttribute != null){
-                string foreignKeyNameFk = foreignKeyAttribute.Name; 
-                var RelationAttributeFk =  ForeignType.GetProperties().Where(x=> x.Name==foreignKeyNameFk).FirstOrDefault();
-                await CalculateParentsRelations(RelationAttributeFk.PropertyType,MapFk.NameInternalIndex,$"{propertyName}_{NamePropertyForeing}_FK",foreignKeyNameFk);
-            }
-            ListMapRelationsImport.Add(MapFk);
-
         }
-        //IndexAttribute ForeingAttribute = ForeignType.GetCustomAttribute<IndexAttribute>();
     }
 
     private async Task ImportData()
@@ -568,7 +540,8 @@
             }
             DataMapped.Add(row);
             CleanvaluesIndexInternal(indexes);
-        }try{ 
+        }
+        try{ 
             foreach (var mapRelationImport in ListMapRelationsImport){
                 Dictionary<string, List<object>> parametroFelds = new();
                 @* foreach (var dict in mapRelationImport.ListIndexForeingFields){
@@ -577,9 +550,10 @@
                 
                 List<string> valores = DataMapped.Where(p => p.ContainsKey(mapRelationImport.NameInternalIndex)).Select(p => (string)p[mapRelationImport.NameInternalIndex]).ToList<string>();
 
-                int star = mapRelationImport.NameInternalIndex.IndexOf ('_')+1;
-                int end = mapRelationImport.NameInternalIndex.LastIndexOf('_');
-                string  BLName = mapRelationImport.NameInternalIndex.Substring(star,end-star);
+                int star = mapRelationImport.NameInternalIndex.IndexOf('_')+1;
+                int midle = mapRelationImport.NameInternalIndex.IndexOf('_', star);
+                //int end = mapRelationImport.NameInternalIndex.LastIndexOf('_');
+                string  BLName = mapRelationImport.NameInternalIndex.Substring(star,midle-star);
                 BLName = $"BL{BLName}";
                 var bl = BackendRouterService.GetSDKBusinessModel("BLIntegrationService", AuthenticationService);
                 var response = await bl.Call("GetForeingRowid", mapRelationImport.ListIndexForeingFields, valores, BLName);
