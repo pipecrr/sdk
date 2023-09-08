@@ -61,7 +61,7 @@ public partial class LoginView
         string HostName = _contextAccesor.HttpContext?.Request.Host.Host;
 
         var BLSDKPortalUser = BackendRouterService.GetSDKBusinessModel("BLSDKPortalUser", AuthenticationService);
-        var result = await BLSDKPortalUser.Call("ValidatePortal", PortalName, SelectedConnection.Rowid, HostName);
+        var result = await BLSDKPortalUser.Call("ValidatePortal", PortalName, SelectedConnection.Rowid, HostName).ConfigureAwait(true);
         if(result.Success && result.Data != null){
             return true;
         }else{

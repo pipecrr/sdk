@@ -15,14 +15,14 @@ namespace Siesa.SDK.Backend.Access
     public interface ITenantProvider
     {
         void SetTenant(SDKDbConnection tenant);
-        Task SetTenantByRowId(short rowId, string hostName);
+        Task SetTenantByRowId(short rowId, string hostName = "");
         Guid Register(Action callback);
         void Unregister(Guid id);
         Task<SDKDbConnection> GetTenant();
+        Task<List<SDKDbConnection>> GetTenants(string HostName = "");
         string GetTenantShortName();
         bool GetUseLazyLoadingProxies();
         void SetUseLazyLoadingProxies(bool value);
-        Task<List<SDKDbConnection>> GetTenants(string HostName = "");
         Task<DbContextOptionsBuilder> GetContextOptionTenant(short rowIdDBConnection, string hostName = "");
     }
     public class TenantProvider: ITenantProvider
@@ -32,7 +32,7 @@ namespace Siesa.SDK.Backend.Access
         private List<SDKDbConnection> tenants = new List<SDKDbConnection>();
 
         private SDKDbConnection tenant = null;
-        private SDKConnectionConfig _config = null;
+        private readonly SDKConnectionConfig _config = null;
 
         private readonly IAuthenticationService _authenticationService;
 
@@ -144,22 +144,22 @@ namespace Siesa.SDK.Backend.Access
                 }
 
                 this.SetTenantByRowId(rowIdDBConnection);
-                var tenant = await GetTenant();
-                if (tenant == null)
+                var _tenant = await GetTenant().ConfigureAwait(true);
+                if (_tenant == null)
                 {
                     throw new Exception("Tenant provider not found");
                 }
 
                 DbContextOptionsBuilder tenantOptions = new DbContextOptionsBuilder<SDKContext>();
 
-                if (tenant.ProviderName == EnumDBType.PostgreSQL)
+                if (_tenant.ProviderName == EnumDBType.PostgreSQL)
                 {
-                    tenantOptions.UseNpgsql(tenant.ConnectionString);
+                    tenantOptions.UseNpgsql(_tenant.ConnectionString);
                 }
                 else
                 {
                     //Default to SQL Server
-                    tenantOptions.UseSqlServer(tenant.ConnectionString);
+                    tenantOptions.UseSqlServer(_tenant.ConnectionString);
                 }
 
                 tenantOptions.AddInterceptors(new SDKDBInterceptor());
@@ -175,6 +175,7 @@ namespace Siesa.SDK.Backend.Access
         {
             try
             {
+                string content = string.Empty;
                 if (_memoryService != null)
                 {
                     var _tenants = _memoryService.Get(HostName);
@@ -188,17 +189,13 @@ namespace Siesa.SDK.Backend.Access
 
                 if (response.IsSuccessStatusCode)
                 {
-                    string content = await response.Content.ReadAsStringAsync();
+                    content = await response.Content.ReadAsStringAsync();
                     if (_memoryService != null)
                     {
                         _memoryService.Set(HostName, content);
                     }
-                    return content;
                 }
-                else
-                {
-                    throw new Exception($"Error al consumir la API: {response.StatusCode}");
-                }
+                return content;
             }
             catch (Exception e)
             {

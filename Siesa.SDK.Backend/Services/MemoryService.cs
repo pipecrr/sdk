@@ -10,7 +10,6 @@ namespace Siesa.SDK.Backend.Services
     public class MemoryService
     {
         private static string _redisUrl;
-        private readonly IConfiguration _configuration;
         private static Lazy<ConnectionMultiplexer> lazyConnection = new Lazy<ConnectionMultiplexer>(() => {
             return ConnectionMultiplexer.Connect(_redisUrl);
         });
@@ -23,9 +22,7 @@ namespace Siesa.SDK.Backend.Services
         }
         public MemoryService(IConfiguration configuration)
         {
-            _configuration = configuration;
-
-            _redisUrl = $"{_configuration["ConnectionConfig:RedisUrl"]},abortConnect=false";
+            _redisUrl = $"{configuration["ConnectionConfig:RedisUrl"]},abortConnect=false";
         }
         public string Get(string key)
         {
