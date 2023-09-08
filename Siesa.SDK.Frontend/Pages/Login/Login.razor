@@ -553,6 +553,7 @@
             {
                 await localStorageService.RemoveItemAsync("rowidCompanyGroup");
                 await localStorageService.RemoveItemAsync("imageCompanyGroup");
+                AuthenticationService.SetSelectedSuite(0);
 
                 LogoUrl = AuthenticationService.GetConnectionLogo();
             } 
