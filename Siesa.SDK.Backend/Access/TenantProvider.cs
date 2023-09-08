@@ -64,7 +64,7 @@ namespace Siesa.SDK.Backend.Access
                 SetTenant(tenant);
             }
         }
-
+    
         public TenantProvider(IAuthenticationService authenticationService, List<SDKDbConnection> tenants,
          MemoryService memoryService, SDKConnectionConfig config = null)
         {
