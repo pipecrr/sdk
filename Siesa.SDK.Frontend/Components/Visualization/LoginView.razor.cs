@@ -10,6 +10,7 @@ using System.Linq;
 using Microsoft.JSInterop;
 using Newtonsoft.Json;
 using System.Globalization;
+using Microsoft.AspNetCore.Http;
 
 namespace Siesa.SDK.Frontend.Components.Visualization;
 
@@ -19,6 +20,7 @@ public partial class LoginView
     [Inject] public IAuthenticationService AuthenticationService { get; set; }
     [Inject] public IBackendRouterService BackendRouterService { get; set; }
     [Inject] public SDKNotificationService SDKNotificationService { get; set; }
+    [Inject] private IHttpContextAccessor _contextAccesor { get; set; }
     [Inject] public IJSRuntime JSRuntime { get; set; }
     [Parameter] public string LogoUrl { get; set; }
     [Parameter] public string ImageUrl { get; set; }
@@ -53,9 +55,13 @@ public partial class LoginView
         await InitLogin();
     }
 
-    public async Task<bool> ValidatePortal(){
+    public async Task<bool> ValidatePortal()
+    {
+
+        string HostName = _contextAccesor.HttpContext?.Request.Host.Host;
+
         var BLSDKPortalUser = BackendRouterService.GetSDKBusinessModel("BLSDKPortalUser", AuthenticationService);
-        var result = await BLSDKPortalUser.Call("ValidatePortal", PortalName, SelectedConnection.Rowid);
+        var result = await BLSDKPortalUser.Call("ValidatePortal", PortalName, SelectedConnection.Rowid, HostName);
         if(result.Success && result.Data != null){
             return true;
         }else{
