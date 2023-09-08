@@ -14,6 +14,9 @@ using Microsoft.JSInterop;
 using Siesa.Global.Enums;
 using Siesa.SDK.Frontend.Criptography;
 using System.Globalization;
+using Blazor.IndexedDB.Framework;
+using Siesa.SDK.Frontend.Data;
+
 
 namespace Siesa.SDK.Frontend.Services
 {
@@ -27,6 +30,8 @@ namespace Siesa.SDK.Frontend.Services
         private string _secretKey;
         private int _minutesExp;
         private ISDKJWT _sdkJWT;
+
+        private readonly IIndexedDbFactory _dbFactory;
 
         private short CustomRowidCulture = 0;
         public short RowidCultureChanged { get; set; } = 0;
@@ -89,7 +94,8 @@ namespace Siesa.SDK.Frontend.Services
             IBackendRouterService BackendRouterService,
             IHttpContextAccessor ContextAccessor,
             IJSRuntime jsRuntime,
-            ISDKJWT sdkJWT
+            ISDKJWT sdkJWT,
+            IIndexedDbFactory dbFactory
         )
         {
             _navigationManager = navigationManager;
@@ -100,6 +106,7 @@ namespace Siesa.SDK.Frontend.Services
             _secretKey = "testsecretKeyabc$"; //TODO: get from config
             _jsRuntime = jsRuntime;
             _sdkJWT = sdkJWT;
+            _dbFactory = dbFactory;
             _hostName = _contextAccesor.HttpContext?.Request.Host.Host;
         }
 
@@ -206,6 +213,14 @@ namespace Siesa.SDK.Frontend.Services
             {
                 UserToken = loginRequest.Data.Token;
                 await LoginBrowser(loginRequest.Data, rowidDbConnection.ToString(CultureInfo.InvariantCulture)).ConfigureAwait(true);
+
+                try
+                {
+                    _ = setDataIndexedDB();            
+                }catch(Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
             else
             {
@@ -219,7 +234,10 @@ namespace Siesa.SDK.Frontend.Services
                 }
             }
         }
-
+        public async Task setDataIndexedDB()
+        {
+            await _dbFactory.Create<IndexDb>().ConfigureAwait(true);
+        }
         private async Task LoginBrowser(dynamic loginRequestData, string rowidDbConnection)
         {
             await _localStorageService.SetItemAsync("usertoken", UserToken).ConfigureAwait(true);
@@ -284,6 +302,14 @@ namespace Siesa.SDK.Frontend.Services
                 await SetPortalUserPhoto(loginRequest.Data.UserPhoto).ConfigureAwait(true);
                 await SetPreferencesPortalUser(loginRequest.Data.UserPreferences).ConfigureAwait(true);
                 await LoginBrowser(loginRequest.Data, rowidDbConnectionString).ConfigureAwait(true);
+                await setDataIndexedDB().ConfigureAwait(true);
+                try
+                {
+                    _ = setDataIndexedDB();            
+                }catch(Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
             else
             {

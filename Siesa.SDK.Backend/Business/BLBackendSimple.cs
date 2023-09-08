@@ -43,6 +43,7 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
 
 using Siesa.Global.Enums;
+using System.Text.RegularExpressions;
 
 namespace Siesa.SDK.Business
 {
@@ -863,14 +864,28 @@ namespace Siesa.SDK.Business
                         {
                             context.Commit();
                         }
-                    }catch(Exception ex){
+                    }catch(DbUpdateException DbEx)
+                    {
                         if (!context.Database.IsInMemory())
                         {
                             context.Rollback();
                         }
-                        response.Errors.Add(new OperationError() { Message = ex.Message });
+                        AddExceptionToResult(DbEx, result);
+                        var errorList = result.Errors.Where(x => x.Message.Contains("Foreing key")).ToList();
+                        if (errorList.Any())
+                        {
+                            var regex = new Regex(@"Table name: ([^\r\n]+)");
+                            var relatedTable = errorList
+                                                .Select(x => x.Message)
+                                                .SelectMany(msg => regex.Matches(msg).Cast<Match>())
+                                                .Select(match => match?.Groups[1].Value.Split('.').Last()).Distinct().FirstOrDefault();
+                            response.Errors.Add(new OperationError() { Message = $"Exception: Custom.Generic.Message.DeleteErrorWithRelations//{relatedTable}.Plural" });
+                        }
+                        else
+                        {
+                            response.Errors.AddRange(result.Errors);
+                        }
                     }
- 
                 }
             }
             catch (Exception e)
@@ -1491,7 +1506,7 @@ namespace Siesa.SDK.Business
             using (var context = CreateDbContext())
             {
                 context.SetProvider(_provider);
-                var query = context.Set<T>().AsQueryable();
+                var query = context.Set<T>(true).AsQueryable();
 
                 if (!string.IsNullOrEmpty(filter))
                 {
