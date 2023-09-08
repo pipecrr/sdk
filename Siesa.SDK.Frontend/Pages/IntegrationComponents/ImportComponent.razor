@@ -605,11 +605,16 @@
                     dataMapped => dataMapped[indexFks],
                     (dataIn, dataMapped) =>
                         { 
+                            if(!string.IsNullOrEmpty(dependencyIndex)){
+                                if(dataMapped[dependencyIndex] is null){
+                                    dataMapped[dependencyIndex] = dataIn.Rowid.ToString();
+                                }else{
+                                    dataMapped[dependencyIndex] = dataIn.Rowid.ToString() + dataMapped[dependencyIndex];
+                                }
+                            }
+                            //dataMapped[dependencyIndex] = dataIn.Rowid;
                             dataMapped[fieldToRepalce] = dataIn.Rowid;
                             
-                            if(!string.IsNullOrEmpty(dependencyIndex)){ 
-                                dataMapped[dependencyIndex] += dataIn.Rowid.ToString();
-                            }
                         return dataMapped;
                     }
                 ).ToList();
