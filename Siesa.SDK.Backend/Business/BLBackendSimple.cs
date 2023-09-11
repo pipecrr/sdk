@@ -1243,14 +1243,14 @@ namespace Siesa.SDK.Business
         }
 
         [SDKExposedMethod]
-        public virtual ActionResult<dynamic> SDKFlexPreviewData(SDKFlexRequestData requestData, bool setTop = true)
+        public virtual async Task<ActionResult<dynamic>> SDKFlexPreviewData(SDKFlexRequestData requestData, bool setTop = true)
         {
             using (var Context = CreateDbContext())
             {
                 var response = SDKFlexExtension.SDKFlexPreviewData(Context, requestData, AuthenticationService, setTop);
                 return response;
             }
-        }
+        }        
 
         [SDKExposedMethod]
         public ActionResult<long> SaveAttachmentEntity(dynamic BaseObj)
