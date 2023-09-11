@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Siesa.SDK.Entities
 {
 
-	public abstract partial class BaseCompanyData<T, U> : BaseAudit<int>
+	public abstract partial class BaseAdditionalCompanyData<T, U> : BaseAudit<int>
 	{
 		[Key]
 		[SDKRequired]
