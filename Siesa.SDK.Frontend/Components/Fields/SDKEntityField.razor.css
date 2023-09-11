@@ -11,12 +11,12 @@
     z-index: 3;
     width: 100%;
 }
-.dropdown-item.active, .dropdown-item:active {
+.sdk-dropdown-item.active, .sdk-dropdown-item:active {
     color: var(--color_text);
     text-decoration: none;
     background-color: var(--color_back_2)
 }
-.dropdown-item:hover, .dropdown-item:focus {
+.sdk-dropdown-item:hover, .sdk-dropdown-item:focus {
     background-color: var(--color_back_2)
 }
 .error-item{
@@ -41,26 +41,25 @@
     padding: 0px;
 }
 
-.input-badge-container ::deep .whcm_select_list.dropdown-menu.show{
-    width: 100%;
-    transform: translate3d(0px, 1.938rem, 0px) !important;
+.whcm_select_list.sdk-dropdown-menu{
+    width: 100%;    
     z-index: 3;
     top: 0;
     left: 0;
 }
 
-.input-badge-container > .dropdown ::deep > input{
+.input-badge-container > .sdk-dropdown ::deep > input{
     position: relative;
     border: 0;
     outline: none;
     height: 1.938rem;    
 }
 
-.input-badge-container > .dropdown ::deep > input.form-control{
+.input-badge-container > .sdk-dropdown ::deep > input.form-control{
     padding-right: 6rem;
 }
 
-.input-badge-container > .dropdown ::deep .whcm_select_list.dropdown-menu ul {
+.whcm_select_list.sdk-dropdown-menu ul {
     padding-left: 0;
 }
 
@@ -95,4 +94,11 @@
 
 .sdk_entity_field_close > i:hover{
     background: var(--color_back_2);  
+}
+
+input[type="search"].remove-x ::-webkit-search-decoration,
+input[type="search"].remove-x ::-webkit-search-cancel-button,
+input[type="search"].remove-x ::-webkit-search-results-button,
+input[type="search"].remove-x ::-webkit-search-results-decoration {
+    -webkit-appearance:none;
 }
