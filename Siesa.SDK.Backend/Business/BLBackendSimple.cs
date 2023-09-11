@@ -1241,7 +1241,13 @@ namespace Siesa.SDK.Business
             var result = Expression.MemberInit(Expression.New(resultType), bindings);
             return Expression.Lambda<Func<TSource, dynamic>>(result, source);
         }
-
+        
+        /// <summary>
+        /// Retrieves preview data using SDKFlex component.
+        /// </summary>
+        /// <param name="requestData">The request data for SDKFlex from browser.</param>
+        /// <param name="setTop">Indicates whether to set top value in query.</param>
+        /// <returns>An asynchronous task that represents the operation and returns an <see cref="ActionResult{T}"/> with dynamic content.</returns>
         [SDKExposedMethod]
         public virtual async Task<ActionResult<dynamic>> SDKFlexPreviewData(SDKFlexRequestData requestData, bool setTop = true)
         {
