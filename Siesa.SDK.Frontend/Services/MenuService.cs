@@ -62,7 +62,6 @@ namespace Siesa.SDK.Frontend.Services
             {
                 SelectedSuite = Suites.FirstOrDefault(x => x.Rowid == AuthenticationService.GetSelectedSuite());
             }
-
             _ = GetSuiteResources(Suites);
         }
         private async Task GetSuiteResources(List<E00060_Suite> _suites)
@@ -182,6 +181,9 @@ namespace Siesa.SDK.Frontend.Services
         public void ClearMenu()
         {
             Menus.Clear();
+            Suites.Clear();
+            SuiteData.Clear();
+            SelectedSuite = null;
         }
 
         public async Task LoadMenu(int suiteRowid)

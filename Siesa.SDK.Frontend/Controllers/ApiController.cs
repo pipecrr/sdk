@@ -120,7 +120,7 @@ namespace Siesa.SDK.Frontend.Controllers
             }
             if (!string.IsNullOrEmpty(sessionId)){
                 var blSession = BackendRouterService.GetSDKBusinessModel("BLSession", AuthenticationService);
-                var response = await blSession.Call("GetSession", sessionId, rowidDbConnection).ConfigureAwait(true);
+                var response = await blSession.Call("GetSession", sessionId, rowidDbConnection, Request.Host.Host).ConfigureAwait(true);
                 if(response.Success){
                     authToken = response.Data;
                 }

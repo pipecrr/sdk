@@ -20,6 +20,11 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Shared.DataAnnotations
 @using Siesa.SDK.Frontend.Components.Fields
+@using Blazor.IndexedDB.Framework;
+@using Microsoft.AspNetCore.Http
+@inject IIndexedDbFactory DbFactory
+@inject IHttpContextAccessor HttpContextAccessor
+
 
 <PageTitle>Login</PageTitle>
 
@@ -404,7 +409,9 @@
         {
             return;
         }
-        var result = await userBL.Call("GetDBConnections");
+        string HostName = HttpContextAccessor.HttpContext?.Request.Host.Host;
+
+        var result = await userBL.Call("GetDBConnections", HostName);
         if(result.Success)
         {
 
@@ -539,6 +546,7 @@
             {
                 await localStorageService.RemoveItemAsync("rowidCompanyGroup");
                 await localStorageService.RemoveItemAsync("imageCompanyGroup");
+                AuthenticationService.SetSelectedSuite(0);
 
                 LogoUrl = AuthenticationService.GetConnectionLogo();
             } 

@@ -48,6 +48,7 @@ namespace Siesa.SDK.Frontend.Services
         private string _portalUserPhoto = "";
         private string _logoPhoto = "";
         private string _portalLogoPhoto = "";
+        private string _hostName = "";
 
         
         public UserPreferencesDTO UserPreferences { get; set; } = new UserPreferencesDTO();
@@ -106,6 +107,7 @@ namespace Siesa.SDK.Frontend.Services
             _jsRuntime = jsRuntime;
             _sdkJWT = sdkJWT;
             _dbFactory = dbFactory;
+            _hostName = _contextAccesor.HttpContext?.Request.Host.Host;
         }
 
         public async Task Initialize()
@@ -150,7 +152,8 @@ namespace Siesa.SDK.Frontend.Services
                 {"accessToken", userAccesstoken},
                 {"rowidConnection", rowidDBConnection},
                 {"ipAddress", ipAddress},
-                {"browserName", browserName}
+                {"browserName", browserName},
+                {"hostName", _hostName}
             }).ConfigureAwait(true);
 
             if (loginRequest.Success){
@@ -193,7 +196,6 @@ namespace Siesa.SDK.Frontend.Services
                 rowIdCompanyGroup = lastCompanyGroupSelected;
             }
 
-            
             var loginRequest = await blUser.Call("SignInSession", new Dictionary<string, dynamic> {
                 {"username", username},
                 {"password", password},
@@ -204,7 +206,8 @@ namespace Siesa.SDK.Frontend.Services
                 {"sessionId", sessionId},
                 {"IsUpdateSession", isUpdateSession},
                 {"rowIdCompanyGroup", rowIdCompanyGroup},
-                {"tokenPortal", ""}
+                {"tokenPortal", ""},
+                {"hostName", _hostName}
             }).ConfigureAwait(true);
             if (loginRequest.Success)
             {
@@ -288,7 +291,8 @@ namespace Siesa.SDK.Frontend.Services
                 {"sessionId", sessionId},
                 {"isUpdateSession", isUpdateSession},
                 {"rowIdCompanyGroup", rowidCompanyGroup},
-                {"rowidCulture", RowidCultureChanged}
+                {"rowidCulture", RowidCultureChanged},
+                {"hostName", _hostName}
             }).ConfigureAwait(true);
             if (loginRequest.Success)
             {
@@ -591,7 +595,7 @@ namespace Siesa.SDK.Frontend.Services
 
             var request = await GetBLUser().ConfigureAwait(true);
 
-            await request.Call("SendEmailRecoveryPassword", email, SelectedConnection.Rowid, UrlSystem, isPortal);
+            await request.Call("SendEmailRecoveryPassword", email, SelectedConnection.Rowid, UrlSystem, isPortal, _hostName);
         }
 
         /// <summary>
@@ -606,7 +610,7 @@ namespace Siesa.SDK.Frontend.Services
 
             var request = await GetBLUser().ConfigureAwait(true);
 
-            var result = await request.Call("ValidateUserRecoveryPass", userToken, SelectedConnection.Rowid, isPortal);
+            var result = await request.Call("ValidateUserRecoveryPass", userToken, SelectedConnection.Rowid, isPortal, _hostName);
 
             if (result.Success)
             {
@@ -637,7 +641,7 @@ namespace Siesa.SDK.Frontend.Services
                 }else
                 {
                     var resultChangePassword = await request.Call("RecoveryPassword",userToken,NewPassword,
-                    SelectedConnection.Rowid, isPortal);
+                    SelectedConnection.Rowid, isPortal, _hostName);
                     
                     if (resultChangePassword.Success)
                     {
