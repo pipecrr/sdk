@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Siesa.SDK.Entities
 {
-	public abstract partial class BaseAdditionalData<T, U> : BaseAudit<int>
+	public abstract partial class BaseCompanyData<T, U> : BaseAudit<int>
 	{
 
 
