@@ -200,7 +200,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             {
                 if(string.IsNullOrEmpty(panels[i].ResourceTag))
                 {
-                    if(i == 0)
+                    if(i == 0 && string.IsNullOrEmpty(panels[i].Name))
                     {
                         panels[i].ResourceTag = $"Custom.Viewdef.{_viewdefName}.panel";
                     }else{

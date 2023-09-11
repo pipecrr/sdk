@@ -33,6 +33,7 @@ namespace Siesa.SDK.Backend.Access
 
         private SDKDbConnection tenant = null;
         private readonly SDKConnectionConfig _config = null;
+        private bool _isRemote => _config != null && _config.IsRemote;
 
         private readonly IAuthenticationService _authenticationService;
 
@@ -65,8 +66,7 @@ namespace Siesa.SDK.Backend.Access
             }
         }
     
-        public TenantProvider(IAuthenticationService authenticationService, List<SDKDbConnection> tenants,
-         MemoryService memoryService, SDKConnectionConfig config = null)
+        public TenantProvider(IAuthenticationService authenticationService, MemoryService memoryService, List<SDKDbConnection> tenants, SDKConnectionConfig config = null)
         {
             _authenticationService = authenticationService;
             _memoryService = memoryService;
@@ -76,7 +76,11 @@ namespace Siesa.SDK.Backend.Access
                 _config = config;
 
                 if(!_config.IsRemote)
+                {
                     this.tenants = tenants;
+                }
+            }else{
+                this.tenants = tenants;
             }
         }
 
@@ -98,7 +102,7 @@ namespace Siesa.SDK.Backend.Access
         public async Task<SDKDbConnection> GetTenant() => tenant;
         public async Task<List<SDKDbConnection>> GetTenants(string HostName = "")
         {
-            if (!string.IsNullOrEmpty(HostName))
+            if (_isRemote && !string.IsNullOrEmpty(HostName))
             {
                 var request = await GetTenantFromHost(HostName);
                 if (!string.IsNullOrEmpty(request))
