@@ -49,9 +49,11 @@
                         <p class="font-weight-bold m-0 text-truncate" data-toggle="tooltip" data-placement="bottom" title="">
                             @GetCurrentConnectionName()     
                             </p>
-                        <p class="font-weight-bold m-0 text-truncate" data-toggle="tooltip" data-placement="bottom" title="">
-                            @GetCurrentCompanyGroupName()
-                        </p>
+                        @if(_showCompanyGroups){
+                            <p class="font-weight-bold m-0 text-truncate" data-toggle="tooltip" data-placement="bottom" title="">
+                                @GetCurrentCompanyGroupName()
+                            </p>
+                        }
                     </div>
                     <div class="pl-2 pl-xl-3">
                         <SDKIcon Name="fa-chevron-down"/>
@@ -78,38 +80,42 @@
                                         <p style="margin:0px"><strong><ResourceViewer ResourceTag="Custom.SDKHeader.Connection" /></strong></p>
                                         <p style="margin:0px">@GetCurrentConnectionName()</p>
                                     </div>
-                                    <div class="connect_select_search">
-                                        <label class="col-form-label col-form-label-sm font-weight-bold" for="inputGrupo"><ResourceViewer ResourceTag="Custom.SDKHeader.Group" /></label>
-                                        <div class="d-flex form-control form-control-sm p-0">
+                                    @if(_showCompanyGroups){
+                                        <div class="connect_select_search">
+                                            <label class="col-form-label col-form-label-sm font-weight-bold" for="inputGrupo"><ResourceViewer ResourceTag="Custom.SDKHeader.Group" /></label>
+                                            <div class="d-flex form-control form-control-sm p-0">
 
-                                            <SDKEntityField
-                                                RelatedBusiness="@RelatedBusiness"
-                                                BaseObj="@this"
-                                                FieldName="SelectedGroup"
-                                                RelatedParams="@RelatedParams"
-                                                CanSearch="false"
-                                            />
+                                                <SDKEntityField
+                                                    RelatedBusiness="@RelatedBusiness"
+                                                    BaseObj="@this"
+                                                    FieldName="SelectedGroup"
+                                                    RelatedParams="@RelatedParams"
+                                                    CanSearch="false"
+                                                />
 
+                                            </div>
                                         </div>
-                                    </div>
+                                    }
                                 </div>
 
                             </BodyTemplate>
 
                                 <FooterTemplate>
-                                    <div class="p-3">
-                                        <SDKButton Click="@SetCompanyGroup" CssClass="btn btn-primary btn_primary_def_1 btn-sm w-100"
-                                        AutomationId="SDKHeader_ButtonSetCompanyGroup">
-                                            @if (loading)
-                                            {
-                                                <p style="margin-bottom: 0 !important"><ResourceViewer ResourceTag="Custom.Generic.Loading" /><span class="spinner-border spinner-border-sm mr-1"></span></p>
-                                            }
-                                            else
-                                            {
-                                                <p style="margin-bottom: 0 !important"><ResourceViewer ResourceTag="Custom.SDKHeader.ChangeSettings" /></p>
-                                            }
-                                        </SDKButton>
-                                    </div>
+                                    @if(_showCompanyGroups){
+                                        <div class="p-3">
+                                            <SDKButton Click="@SetCompanyGroup" CssClass="btn btn-primary btn_primary_def_1 btn-sm w-100"
+                                            AutomationId="SDKHeader_ButtonSetCompanyGroup">
+                                                @if (loading)
+                                                {
+                                                    <p style="margin-bottom: 0 !important"><ResourceViewer ResourceTag="Custom.Generic.Loading" /><span class="spinner-border spinner-border-sm mr-1"></span></p>
+                                                }
+                                                else
+                                                {
+                                                    <p style="margin-bottom: 0 !important"><ResourceViewer ResourceTag="Custom.SDKHeader.ChangeSettings" /></p>
+                                                }
+                                            </SDKButton>
+                                        </div>
+                                    }
                                 </FooterTemplate>
                     </SDKDropDown>
             </div>
@@ -146,6 +152,8 @@
 
     private SDKDbConnection _connection { get; set; } = new SDKDbConnection();
 
+    private bool _showCompanyGroups { get; set; }
+
     private string NameTag { get; set; } = "";
     string RelatedBusiness { get; set; } = "BLSDKCompanyGroup";
     RelatedParams RelatedParams { get; set; } = new RelatedParams(){
@@ -172,6 +180,11 @@
         await base.OnInitializedAsync(); 
 
         NameTag = GetCurrentCompanyGroupName();
+        //companyGroups > 1
+        if(CompanyGroups.Count > 1)
+        {
+            _showCompanyGroups = true;
+        }
     }
 
 
