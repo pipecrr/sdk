@@ -7,6 +7,7 @@
 @using Siesa.SDK.Shared.Services
 @using Siesa.SDK.Frontend.Components.Layout.Detail.Relationship
 @using Siesa.SDK.Frontend.Components.Layout.AditionalField
+@using Siesa.SDK.Frontend.Components.FormManager.ViewModels
 @inject SDKDialogService SDKDialogService
 @inject NavigationManager NavigationManager
 @inject NavigationService NavigationService
@@ -41,10 +42,15 @@ else if (BusinessObj.BaseObj.Rowid != 0)
               EditContext="@EditFormContext">
         <ObjectGraphDataAnnotationsValidator />
         <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
+            <CascadingValue Value="@EditFormContext">
+                <SDKCrudHeader ResourceTag="@Panels[0].ResourceTag" IconClass="@Panels[0].IconClass" ViewType="DynamicViewType.Edit">
+                    <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef" ModelObj="@BusinessObj" DefaultColSize="@Panels[0].ColSize" />
+                </SDKCrudHeader>
+            </CascadingValue>
             @if (Panels.Count > 1)
             {
                 <DxFormLayoutTabPages ScrollMode="TabsScrollMode.Auto">
-                    @foreach (var panel in Panels)
+                    @foreach (var panel in Panels.Skip(1))
                     {
                         <SDKFormLayoutTabPage ResourceTag="@panel.ResourceTag">
                             <CascadingValue Value="@EditFormContext">
@@ -55,13 +61,6 @@ else if (BusinessObj.BaseObj.Rowid != 0)
 
 
                 </DxFormLayoutTabPages>
-
-            }
-            else
-            {
-                <CascadingValue Value="@EditFormContext">
-                    <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef" ModelObj="@BusinessObj" DefaultColSize="@Panels[0].ColSize" />
-                </CascadingValue>
 
             }
             @if(PanelsCollapsable.Count>0){

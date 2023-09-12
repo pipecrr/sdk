@@ -35,6 +35,8 @@ namespace Siesa.SDK.Backend.Access
         private readonly IQueryable<TEntity> query;
         private SDKContext _context;
         private IAuthenticationService AuthenticationService { get; set; }
+        private IServiceProvider _provider;
+        protected dynamic _dbFactory;
 
         private EntityEntry<TEntity> EntryWithoutDetectChanges(TEntity entity)
         => new(_context.GetDependencies().StateManager.GetOrCreateEntry(entity, EntityType));
@@ -58,17 +60,18 @@ namespace Siesa.SDK.Backend.Access
             }
         }
 
-        public DbSetProxy(IAuthenticationService authenticationService, SDKContext context, DbSet<TEntity> set, bool ignoreVisibility = false)
-        : this(authenticationService, context, set, set, ignoreVisibility)
+        public DbSetProxy(IAuthenticationService authenticationService, SDKContext context, DbSet<TEntity> set, IServiceProvider provider = null, bool ignoreVisibility = false)
+        : this(authenticationService, context, set, set, provider, ignoreVisibility)
         {
         }
 
-        public DbSetProxy(IAuthenticationService authenticationService, SDKContext context, DbSet<TEntity> set, IQueryable<TEntity> query, bool ignoreVisibility = false)
+        public DbSetProxy(IAuthenticationService authenticationService, SDKContext context, DbSet<TEntity> set, IQueryable<TEntity> query, IServiceProvider provider = null, bool ignoreVisibility = false)
         {
             AuthenticationService = authenticationService;
             this.set = set;
             this._context = context;
             this.query = query;
+            this._provider = provider;
             //Check if the entity is a BaseSDK
 
             Type entytyType = typeof(TEntity);
@@ -85,23 +88,38 @@ namespace Siesa.SDK.Backend.Access
 
                 //Get the table name
                 var authorizationTableName = GetNameAuthorizationTable(dataAnnotation, entytyType);
-
-                List<int> listUserGroup = context.AllSet<E00225_UserDataVisibilityGroup>().Include("DataVisibilityGroup").Where(x => x.RowidUser == currentUser && x.DataVisibilityGroup.Status == enumStatusBaseMaster.Active).Select(x => x.RowidDataVisibilityGroup).ToList();
+                
 
                 //Get the type of the authorization table
                 Type authEntityType = entytyType.Assembly.GetType(authorizationTableName);
-                if(authEntityType != null){
-                    dynamic authSet = context.GetType().GetMethod("Set", types: Type.EmptyTypes)?.MakeGenericMethod(authEntityType).Invoke(context, null);
+                if(authEntityType != null && _provider != null){
 
-                    dynamic dataAuthorizedU = GetDataUByRestrictionType(authSet, currentUser, 2, listUserGroup);
-                    dynamic dataUnauthorizedU = GetDataUByRestrictionType(authSet, currentUser, 1, listUserGroup);
+                    Type dbContextFactoryGenericType = typeof(IDbContextFactory<>);
+                    Type desiredType = context.GetType();
+                    Type specificDbContextFactoryType = dbContextFactoryGenericType.MakeGenericType(desiredType);
+                    _dbFactory = _provider.GetService(specificDbContextFactoryType);
+
+                    
+                    dynamic dataAuthorizedU = null;
+                    dynamic dataUnauthorizedU = null;
+                    using (SDKContext otherContext = _dbFactory.CreateDbContext())
+                    {
+                        dynamic authSet = otherContext.GetType().GetMethod("Set", types: Type.EmptyTypes)?.MakeGenericMethod(authEntityType).Invoke(otherContext, null);
+                        otherContext.SetProvider(_provider);
+                        List<int> listUserGroup = otherContext.AllSet<E00225_UserDataVisibilityGroup>().Include("DataVisibilityGroup").Where(x => x.RowidUser == currentUser && x.DataVisibilityGroup.Status == enumStatusBaseMaster.Active).Select(x => x.RowidDataVisibilityGroup).ToList();
+                        dataAuthorizedU = GetDataUByRestrictionType(authSet, currentUser, 2, listUserGroup);
+                        dataUnauthorizedU = GetDataUByRestrictionType(authSet, currentUser, 1, listUserGroup);
+                    }                    
                     
                     bool hasAuthDefaulConfig = ((IEnumerable<dynamic>)dataAuthorizedU).Any(x => x.RowidRecord == null);
 
                     List<int?> rowidsAuthorizedU = GetRowidsAuthorizedU(dataAuthorizedU, dataUnauthorizedU);
                     List<int?> rowidsUnauthorizedU = GetRowidsUnauthorizedU(dataAuthorizedU, dataUnauthorizedU);
-
-                    var newQuery = ((IQueryable<BaseSDK<int>>)query);
+                    
+                    Type typeBaseSdk = typeof(BaseSDK<>);
+                    Type elementType = entytyType.GetProperty("Rowid")?.PropertyType;
+                    Type specificBaseSdk = typeBaseSdk.MakeGenericType(elementType);
+                    var newQuery = ((IQueryable)query).Cast(specificBaseSdk);
                     if (rowidsAuthorizedU.Any() || rowidsUnauthorizedU.Any()){
                         
                         newQuery = EvaluateAuthorization(rowidsAuthorizedU, newQuery, hasAuthDefaulConfig, 2, hasPropetyIsPrivate);
@@ -231,7 +249,7 @@ namespace Siesa.SDK.Backend.Access
             return authorizationTableName;
         }
 
-        private static IQueryable<BaseSDK<int>> EvaluateAuthorization(List<int?> dataAuthorizedU, IQueryable<BaseSDK<int>> query, bool hasAuthDefaulConfig, int restrictionType, bool hasPropetyIsPrivate)
+        private static IQueryable EvaluateAuthorization(List<int?> dataAuthorizedU, IQueryable query, bool hasAuthDefaulConfig, int restrictionType, bool hasPropetyIsPrivate)
         {
             if(!dataAuthorizedU.Any()){
                 return query;
@@ -239,7 +257,7 @@ namespace Siesa.SDK.Backend.Access
             string logicOperator = GetLogicOperator(restrictionType);
             string compare = GetComparisonOperator(restrictionType);
             string isPrivateWhere = GetIsPrivateWhere(restrictionType, hasPropetyIsPrivate);
-            string restringedWhere = GetRestrictionWhere(hasAuthDefaulConfig, restrictionType);
+            string restringedWhere = GetRestrictionWhere(hasAuthDefaulConfig);
 
             bool evaluateIsPrivate = ShouldEvaluateIsPrivate(restrictionType, dataAuthorizedU, hasPropetyIsPrivate);
             StringBuilder whereBuilder = BuildWhereClause(dataAuthorizedU, logicOperator, compare);
@@ -272,7 +290,7 @@ namespace Siesa.SDK.Backend.Access
             return (restrictionType == 2 && hasPropetyIsPrivate) ? "(IsPrivate == false)" : "";
         }
 
-        private static string GetRestrictionWhere(bool hasAuthDefaulConfig, int restrictionType)
+        private static string GetRestrictionWhere(bool hasAuthDefaulConfig)
         {
             return hasAuthDefaulConfig ? "" : "(Rowid == 0)";
         }
@@ -315,7 +333,7 @@ namespace Siesa.SDK.Backend.Access
             }
         }
 
-        private static IQueryable<BaseSDK<int>> ApplyIsPrivateAndRestriction(IQueryable<BaseSDK<int>> query, bool evaluateIsPrivate, string isPrivateWhere, string restringedWhere)
+        private static IQueryable ApplyIsPrivateAndRestriction(IQueryable query, bool evaluateIsPrivate, string isPrivateWhere, string restringedWhere)
         {
             if (evaluateIsPrivate)
             {

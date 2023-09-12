@@ -116,11 +116,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         {
             for (int i = 0; i < panels.Count; i++)
             {
-                if (String.IsNullOrEmpty(panels[i].ResourceTag))
+                if (string.IsNullOrEmpty(panels[i].ResourceTag))
                 {
-                    if (String.IsNullOrEmpty(panels[i].ResourceTag))
+                    if(i == 0 && string.IsNullOrEmpty(panels[i].Name))
                     {
-                        panels[i].ResourceTag = $"{BusinessName}.Viewdef.detail.Panel.{panels[i].Name}";
+                        panels[i].ResourceTag = $"Custom.Viewdef.{_viewdefName}.panel";
+                    }else{
+                        panels[i].ResourceTag = $"{BusinessName}.Viewdef.{_viewdefName}.Panel.{panels[i].Name}";
                     }
                 }
 

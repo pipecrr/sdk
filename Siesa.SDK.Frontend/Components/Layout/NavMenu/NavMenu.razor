@@ -59,7 +59,7 @@
                     </div>  
             </a>	
             <a class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right" 
-            title="@TitleLogout" @onclick="@(()=> AuthenticationService.Logout())" data-automation-id="Button_Logout">
+            title="@TitleLogout" @onclick="@(async ()  =>{await Logout();})" data-automation-id="Button_Logout">
                     <div class="nav_btn_standar_icon">
                         <SDKIcon Name="fa-right-from-bracket" CssClass="font_size_112"/>
                     </div>
@@ -129,6 +129,12 @@
             }
         }
         StateHasChanged();
+    }
+
+    private async Task Logout()
+    {
+        MenuService.ClearMenu();
+        await AuthenticationService.Logout();
     }
 
     protected async override Task OnInitializedAsync()
