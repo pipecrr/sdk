@@ -101,6 +101,7 @@
 .sdk_table_v2{
     border-collapse: unset;
     font-size: 0.875rem;
+    color: var(--color_text);
 }
 .sdk_table_v2 td, .sdk_table_v2 th{
     padding: 0.5rem !important;
@@ -109,7 +110,7 @@
 }
 .sdk_table_v2 > thead > tr > th {
     padding: 0.5rem !important;
-    background-color: var(--color_light);
+    background-color: var(--color_panel_back);
     border: none;
 }
 .ul_list_error{
@@ -124,6 +125,10 @@
     display: inline-block; 
     width: 1em;
     margin-left: -1em;
+}
+.sdk_table_v2 tbody tr:nth-of-type(odd)
+{
+    background-color: var(--color_table_even) !important;
 }
 
 /* -------------------- Estilos de blazor --------------------------- */

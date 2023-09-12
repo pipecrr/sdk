@@ -54,7 +54,7 @@
     /* Base: color primary (Para even de tablas) */
     --color_table_even: #0c5890;
     /* Base: color primary (Para hover de tablas) */
-    --color_table_hover: rgba(14, 121, 253, 0.1);
+    --color_table_hover: #2870ad;
 
     --color_search_back: #23ACFF;
 
@@ -167,4 +167,12 @@
     --color_chart_flex_34: #FFFFFF;
     --color_chart_flex_35: #CACACA;
     --color_chart_flex_36: #989898;
+}
+
+.custom-checkbox .custom-control-input:checked~.custom-control-label::after{
+    filter: invert(16%) sepia(94%) saturate(1293%) hue-rotate(183deg) brightness(94%) contrast(95%);
+}
+.custom-checkbox .custom-control-input:indeterminate~.custom-control-label::after
+{
+    filter: invert(16%) sepia(94%) saturate(1293%) hue-rotate(183deg) brightness(94%) contrast(95%);
 }

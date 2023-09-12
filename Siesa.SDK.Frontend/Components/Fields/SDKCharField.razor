@@ -79,8 +79,16 @@ else
         await base.OnAfterRenderAsync(firstRender);
         if(AutoFocus && firstRender)
         {
-            await Task.Delay(1000);
-            await _textBox.FocusAsync();
+            try
+            {
+                await Task.Delay(1000);
+                await _textBox.FocusAsync();
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+
         }
     }
 

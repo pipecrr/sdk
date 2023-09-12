@@ -1,0 +1,91 @@
+﻿@using Siesa.SDK.Frontend.Utils
+@using System.Reflection
+@using System.Runtime.CompilerServices
+@using DocumentFormat.OpenXml.Wordprocessing
+@using Microsoft.IdentityModel.Tokens
+@using Siesa.SDK.Frontend.Components.FormManager.ViewModels
+
+@if (!_hidden){
+    <SDKButton IconCssClass="@IconCssClass" IsActionButton="@IsActionButton" Click="@Click" Enabled="@_enabled"/>
+}
+
+@code{
+    /// <summary>
+    /// The business object that is used to evaluate the button's custom attributes
+    /// </summary>
+    [Parameter]
+    public dynamic BusinessObj { get; set; }
+    /// <summary>
+    /// Event that is triggered when the button is clicked
+    /// </summary>
+    [Parameter] 
+    public EventCallback<MouseEventArgs> Click { get; set; }
+    /// <summary>
+    /// The button that is rendered
+    /// </summary>
+    [Parameter] 
+    public Button Button { get; set; }
+    /// <summary>
+    /// The icon css class that is rendered
+    /// </summary>
+    [Parameter] 
+    public string IconCssClass { get; set; }
+    /// <summary>
+    /// Indicates if the button is an action button
+    /// </summary>
+    [Parameter] 
+    public bool IsActionButton { get; set; }
+    /// <summary>
+    /// The row data to be displayed in the field
+    /// </summary>
+    [Parameter]
+    public dynamic Data { get; set; }
+    /// <summary>
+    /// ref to the grid component where the button is rendered
+    /// </summary>
+    [Parameter]
+    public dynamic Grid { get; set; }
+    /// <summary>
+    /// Cascading parameter to get the form view component
+    /// </summary>
+    [CascadingParameter]
+    public FormView FormView { get; set; }
+    
+    
+    private bool _enabled = true;
+    private bool _hidden = false;
+    
+    /// <summary>
+    /// On parameters set async method
+    /// </summary>
+    protected override async Task OnParametersSetAsync()
+    {
+        _enabled = !Button.Disabled;
+        _hidden = Button.Hidden;
+        if(Button.CustomAttributes != null && Button.CustomAttributes.ContainsKey("sdk-disabled")){
+            var disabled = await FormView.EvaluateCodeButtons(Button, "sdk-disabled", Data);
+            if (_enabled == disabled)
+            {
+                _enabled = !disabled;
+                StateHasChanged();
+            }
+        }
+        if(Button.CustomAttributes != null && Button.CustomAttributes.ContainsKey("sdk-hide")){
+            var hidden = await FormView.EvaluateCodeButtons(Button, "sdk-hide", Data);
+            if (_hidden != hidden)
+            {
+                _hidden = hidden;
+                StateHasChanged();
+            }
+        }
+        if(Button.CustomAttributes != null && Button.CustomAttributes.ContainsKey("sdk-show")){
+            var show = await FormView.EvaluateCodeButtons(Button, "sdk-show", Data);
+            if (_hidden == show)
+            {
+                _hidden = !show;
+                StateHasChanged();
+            }
+        }        
+        await base.OnParametersSetAsync().ConfigureAwait(true);
+    }
+}

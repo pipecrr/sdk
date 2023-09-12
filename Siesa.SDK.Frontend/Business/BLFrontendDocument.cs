@@ -64,7 +64,6 @@ namespace Siesa.SDK.Business
         /// <param name="row">The full row that was update</param>
         public void SdkOnChangeCell(dynamic row)
         {
-
             if (row.Rowid > 0 && !ChildRowidsUpdated.Contains(row.Rowid))
             {
                 ChildRowidsUpdated.Add(row.Rowid);

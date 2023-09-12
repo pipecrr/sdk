@@ -21,7 +21,10 @@
 @using Siesa.SDK.Shared.DataAnnotations
 @using Siesa.SDK.Frontend.Components.Fields
 @using Blazor.IndexedDB.Framework;
+@using Microsoft.AspNetCore.Http
 @inject IIndexedDbFactory DbFactory
+@inject IHttpContextAccessor HttpContextAccessor
+
 
 <PageTitle>Login</PageTitle>
 
@@ -381,13 +384,6 @@
         try
         {
             await AuthenticationService.Login(model.Username, model.Password,SelectedConnection.Rowid);
-            try
-            {
-                setDataIndexedDB(RowidCulture);            
-            }catch(Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
             NavigationManager.TryGetQueryString("returnUrl", out string returnUrl);
             if (returnUrl == null || returnUrl == "null")
             {
@@ -413,7 +409,9 @@
         {
             return;
         }
-        var result = await userBL.Call("GetDBConnections");
+        string HostName = HttpContextAccessor.HttpContext?.Request.Host.Host;
+
+        var result = await userBL.Call("GetDBConnections", HostName);
         if(result.Success)
         {
 
@@ -548,6 +546,7 @@
             {
                 await localStorageService.RemoveItemAsync("rowidCompanyGroup");
                 await localStorageService.RemoveItemAsync("imageCompanyGroup");
+                AuthenticationService.SetSelectedSuite(0);
 
                 LogoUrl = AuthenticationService.GetConnectionLogo();
             } 
@@ -578,10 +577,6 @@
         catch (Exception)
         {
         }
-    }
-
-    public async Task setDataIndexedDB(short RowidCulture){
-        await DbFactory.Create<IndexDb>();
     }
 
     private string GetCountryFlagCode (E00021_Culture culture)

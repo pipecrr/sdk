@@ -14,6 +14,9 @@ using Microsoft.JSInterop;
 using Siesa.Global.Enums;
 using Siesa.SDK.Frontend.Criptography;
 using System.Globalization;
+using Blazor.IndexedDB.Framework;
+using Siesa.SDK.Frontend.Data;
+
 
 namespace Siesa.SDK.Frontend.Services
 {
@@ -27,6 +30,8 @@ namespace Siesa.SDK.Frontend.Services
         private string _secretKey;
         private int _minutesExp;
         private ISDKJWT _sdkJWT;
+
+        private readonly IIndexedDbFactory _dbFactory;
 
         private short CustomRowidCulture = 0;
         public short RowidCultureChanged { get; set; } = 0;
@@ -43,6 +48,7 @@ namespace Siesa.SDK.Frontend.Services
         private string _portalUserPhoto = "";
         private string _logoPhoto = "";
         private string _portalLogoPhoto = "";
+        private string _hostName = "";
 
         
         public UserPreferencesDTO UserPreferences { get; set; } = new UserPreferencesDTO();
@@ -88,7 +94,8 @@ namespace Siesa.SDK.Frontend.Services
             IBackendRouterService BackendRouterService,
             IHttpContextAccessor ContextAccessor,
             IJSRuntime jsRuntime,
-            ISDKJWT sdkJWT
+            ISDKJWT sdkJWT,
+            IIndexedDbFactory dbFactory
         )
         {
             _navigationManager = navigationManager;
@@ -99,6 +106,8 @@ namespace Siesa.SDK.Frontend.Services
             _secretKey = "testsecretKeyabc$"; //TODO: get from config
             _jsRuntime = jsRuntime;
             _sdkJWT = sdkJWT;
+            _dbFactory = dbFactory;
+            _hostName = _contextAccesor.HttpContext?.Request.Host.Host;
         }
 
         public async Task Initialize()
@@ -143,7 +152,8 @@ namespace Siesa.SDK.Frontend.Services
                 {"accessToken", userAccesstoken},
                 {"rowidConnection", rowidDBConnection},
                 {"ipAddress", ipAddress},
-                {"browserName", browserName}
+                {"browserName", browserName},
+                {"hostName", _hostName}
             }).ConfigureAwait(true);
 
             if (loginRequest.Success){
@@ -186,7 +196,6 @@ namespace Siesa.SDK.Frontend.Services
                 rowIdCompanyGroup = lastCompanyGroupSelected;
             }
 
-            
             var loginRequest = await blUser.Call("SignInSession", new Dictionary<string, dynamic> {
                 {"username", username},
                 {"password", password},
@@ -197,12 +206,21 @@ namespace Siesa.SDK.Frontend.Services
                 {"sessionId", sessionId},
                 {"IsUpdateSession", isUpdateSession},
                 {"rowIdCompanyGroup", rowIdCompanyGroup},
-                {"tokenPortal", ""}
+                {"tokenPortal", ""},
+                {"hostName", _hostName}
             }).ConfigureAwait(true);
             if (loginRequest.Success)
             {
                 UserToken = loginRequest.Data.Token;
                 await LoginBrowser(loginRequest.Data, rowidDbConnection.ToString(CultureInfo.InvariantCulture)).ConfigureAwait(true);
+
+                try
+                {
+                    _ = setDataIndexedDB();            
+                }catch(Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
             else
             {
@@ -216,7 +234,10 @@ namespace Siesa.SDK.Frontend.Services
                 }
             }
         }
-
+        public async Task setDataIndexedDB()
+        {
+            await _dbFactory.Create<IndexDb>().ConfigureAwait(true);
+        }
         private async Task LoginBrowser(dynamic loginRequestData, string rowidDbConnection)
         {
             await _localStorageService.SetItemAsync("usertoken", UserToken).ConfigureAwait(true);
@@ -270,7 +291,8 @@ namespace Siesa.SDK.Frontend.Services
                 {"sessionId", sessionId},
                 {"isUpdateSession", isUpdateSession},
                 {"rowIdCompanyGroup", rowidCompanyGroup},
-                {"rowidCulture", RowidCultureChanged}
+                {"rowidCulture", RowidCultureChanged},
+                {"hostName", _hostName}
             }).ConfigureAwait(true);
             if (loginRequest.Success)
             {
@@ -280,6 +302,14 @@ namespace Siesa.SDK.Frontend.Services
                 await SetPortalUserPhoto(loginRequest.Data.UserPhoto).ConfigureAwait(true);
                 await SetPreferencesPortalUser(loginRequest.Data.UserPreferences).ConfigureAwait(true);
                 await LoginBrowser(loginRequest.Data, rowidDbConnectionString).ConfigureAwait(true);
+                await setDataIndexedDB().ConfigureAwait(true);
+                try
+                {
+                    _ = setDataIndexedDB();            
+                }catch(Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
             else
             {
@@ -565,7 +595,7 @@ namespace Siesa.SDK.Frontend.Services
 
             var request = await GetBLUser().ConfigureAwait(true);
 
-            await request.Call("SendEmailRecoveryPassword", email, SelectedConnection.Rowid, UrlSystem, isPortal);
+            await request.Call("SendEmailRecoveryPassword", email, SelectedConnection.Rowid, UrlSystem, isPortal, _hostName);
         }
 
         /// <summary>
@@ -580,7 +610,7 @@ namespace Siesa.SDK.Frontend.Services
 
             var request = await GetBLUser().ConfigureAwait(true);
 
-            var result = await request.Call("ValidateUserRecoveryPass", userToken, SelectedConnection.Rowid, isPortal);
+            var result = await request.Call("ValidateUserRecoveryPass", userToken, SelectedConnection.Rowid, isPortal, _hostName);
 
             if (result.Success)
             {
@@ -611,7 +641,7 @@ namespace Siesa.SDK.Frontend.Services
                 }else
                 {
                     var resultChangePassword = await request.Call("RecoveryPassword",userToken,NewPassword,
-                    SelectedConnection.Rowid, isPortal);
+                    SelectedConnection.Rowid, isPortal, _hostName);
                     
                     if (resultChangePassword.Success)
                     {

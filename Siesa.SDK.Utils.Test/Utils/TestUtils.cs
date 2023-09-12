@@ -82,8 +82,8 @@ namespace Siesa.SDK.Utils.Test
                 IsTest = true
             };
 
-            tenant.Setup(x => x.GetTenant()).Returns(tenantOption);
-
+            tenant.Setup(x => x.GetTenant()).ReturnsAsync(tenantOption);
+            
             sdkjwt.Setup(x => x.Generate(It.IsAny<object>(), It.IsAny<long>()))
             .Returns((object obj, long min) =>
             {

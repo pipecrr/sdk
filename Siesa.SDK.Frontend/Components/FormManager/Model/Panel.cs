@@ -9,6 +9,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
     {
         public string Name { get; set; }
         public string ResourceTag { get; set; }
+        public string IconClass { get; set; }
 
         public bool PreserveDOM { get; set; } = true;
         public string PanelId { get; set; } = Guid.NewGuid().ToString();

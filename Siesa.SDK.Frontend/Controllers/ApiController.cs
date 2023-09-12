@@ -43,6 +43,12 @@ namespace Siesa.SDK.Frontend.Controllers
             };
         }
 
+        //RedirectToDocs
+        public ActionResult RedirectToDocs(string url)
+        {
+            return Redirect("https://sdk-docs.siesadev.com/");
+        }
+
         private object[] GetArgs(ParameterInfo[] parameters, IEnumerable<KeyValuePair<string, StringValues>> collection = null)
         {
             string[] paramNames = parameters.Select(x => x.Name).ToArray();
@@ -114,7 +120,7 @@ namespace Siesa.SDK.Frontend.Controllers
             }
             if (!string.IsNullOrEmpty(sessionId)){
                 var blSession = BackendRouterService.GetSDKBusinessModel("BLSession", AuthenticationService);
-                var response = await blSession.Call("GetSession", sessionId, rowidDbConnection).ConfigureAwait(true);
+                var response = await blSession.Call("GetSession", sessionId, rowidDbConnection, Request.Host.Host).ConfigureAwait(true);
                 if(response.Success){
                     authToken = response.Data;
                 }

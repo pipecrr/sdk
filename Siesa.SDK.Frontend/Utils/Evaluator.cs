@@ -15,10 +15,19 @@ namespace Siesa.SDK.Frontend.Utils
 {
     public static class Evaluator
     {
-        private static dynamic ProcessProperty(object context, string singleProperty)
+        private static dynamic ProcessProperty(object context, string singleProperty, int propertyIndex = -1)
         {
             //check if is a property of the context
             var contextType = context.GetType();
+            
+            var propertyName = singleProperty;
+            if (propertyName.Contains('[', StringComparison.Ordinal))
+            {
+                var index = propertyName.IndexOf('[', StringComparison.Ordinal);
+                propertyIndex = int.Parse(propertyName.Substring(index + 1, propertyName.Length - index - 2), CultureInfo.InvariantCulture);
+                propertyName = propertyName.Substring(0, index);
+                singleProperty = propertyName;
+            }
 
             string[] fieldPath = singleProperty.Split('.');
             if (fieldPath.Length > 1)
@@ -38,7 +47,7 @@ namespace Siesa.SDK.Frontend.Utils
                     var fieldValue = field.GetValue(context);
                     if (fieldValue != null)
                     {
-                        return ProcessProperty(fieldValue, string.Join(".", fieldPath.Skip(1)));
+                        return ProcessProperty(fieldValue, string.Join(".", fieldPath.Skip(1)), propertyIndex);
                     }
                     else
                     {
@@ -54,6 +63,18 @@ namespace Siesa.SDK.Frontend.Utils
             var property = contextType.GetProperty(singleProperty);
             if (property != null)
             {
+                if(propertyIndex >= 0)
+                {
+                    var list = property.GetValue(context) as System.Collections.IList;
+                    if(list != null)
+                    {
+                        return list[propertyIndex];
+                    }
+                    else
+                    {
+                        throw new ArgumentException($"Property '{singleProperty}' is not a list in type '{contextType.FullName}'.");
+                    }
+                }
                 return property.GetValue(context);
             }
             else

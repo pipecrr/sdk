@@ -17,6 +17,7 @@ namespace Siesa.SDK.Entities
 	/// Grupo compañía
 	/// </summary>
 
+	[Index(nameof(Id), Name = "IX_e00200_1", IsUnique = true)]
 	public partial class E00200_CompanyGroup : BaseSDK<short>
 	{
 		[SDKIdentity]

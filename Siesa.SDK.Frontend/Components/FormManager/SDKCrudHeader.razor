@@ -1,0 +1,43 @@
+@using Siesa.SDK.Frontend.Components.FormManager.ViewModels
+<div class="sdk-crud-header col-xs-12 col-md-12 col-sm-12 col-lg-12 col-xl-12">
+    <div class="row whcm_row">
+        <div class="sdk-crud-header-identifier col-xs-1 col-md-1 col-sm-1 col-lg-1 col-xl-1 @GetViewTypeCss()">
+            <div class="sdk-crud-header-title"><ResourceViewer ResourceTag="@ResourceTag" /></div>
+            <div class="sdk-crud-header-icon"><SDKIcon Name="@GetIconClass()" /></div>
+        </div>
+        <div class="sdk-crud-header-fields col-xs-11 col-md-11 col-sm-11 col-lg-11 col-xl-11">
+            <div class="row whcm_row">
+                @ChildContent
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent {get;set;}
+    [Parameter]
+    public string ResourceTag {get;set;}
+    [Parameter]
+    public string IconClass {get;set;} = "fa-pen-field";
+    [Parameter]
+    public DynamicViewType ViewType {get;set;}
+
+    private string GetIconClass()
+    {
+        return (!string.IsNullOrEmpty(IconClass) && !string.IsNullOrEmpty(IconClass.Trim())) ? IconClass : "fa-pen-field";
+    }
+
+    private string GetViewTypeCss()
+    {
+        switch(ViewType)
+        {
+            case DynamicViewType.Create:
+                return "sdk-crud_creation";
+            case DynamicViewType.Edit:
+                return "sdk-crud_edition";
+            default:
+                return "sdk-crud_read";
+        }
+    }
+}
