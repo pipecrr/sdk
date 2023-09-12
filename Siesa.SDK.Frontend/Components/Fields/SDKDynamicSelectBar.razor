@@ -1,0 +1,28 @@
+@using Siesa.SDK.Shared.DTOS
+@using System
+@using System.Collections.Generic
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Components
+@inherits SDKComponent
+
+<div class="sdk-selectbar-container sdk_select_button_group">
+    <div data-automation-id="@_id" class="rz-selectbutton rz-buttonset rz-buttonset-0" id="select@_id">
+        @foreach (var item in Items)
+        {
+            <div class="@(Disabled ? "disabled" : "") rz-button rz-button-md rz-button-text-only @GetActiveCss(item)" @onclick="() => OnChange(item)">
+                @if(item.On)
+                {
+                    <span class="rz-button-text">
+                        <SDKIcon Name="@item.Icon" CssClass="mr-2" Style="@GetStyle(item)" />
+                        <ResourceViewer ResourceTag="@item.ResourceTag" />
+                    </span>
+                }else
+                {
+                    <span class="rz-button-text" style="color: #808791;">
+                        <SDKIcon Name="@item.Icon" />
+                    </span>
+                }
+            </div>
+        }
+    </div>
+</div>

@@ -1,7 +1,7 @@
 ﻿.sdk_dashboard_portal{
-    padding-top: calc(48px + 0.8rem);
-    padding-left: calc(48px + 0.8rem);
-    padding-right: 0.8rem;
+    padding-top: calc(48px + 1rem);
+    padding-left: calc(48px + 1rem);
+    padding-right: 1rem;
     height: 100vh;
     overflow: hidden;
     padding-bottom: 1rem;
@@ -21,4 +21,8 @@
 
 ::deep .sdk-dashlet-portal-expanded{
     height: 100vh !important;
+}
+
+.sdk_dashboard_portal ::deep .sdk_left_dashlets::-webkit-scrollbar{
+    display: none;
 }

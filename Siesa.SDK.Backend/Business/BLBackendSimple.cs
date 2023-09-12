@@ -889,7 +889,7 @@ namespace Siesa.SDK.Business
                             _queueService.Subscribe(BusinessName, enumMessageCategory.CRUD);
                             _queueService.SendMessage(BusinessName, enumMessageCategory.CRUD, new QueueMessageDTO()
                             {
-                                Message = $"Se Elimino un registro en {BusinessName}",
+                                Message = $"Custom.{BusinessName}.RecordDeleted",
                                 Rowid = result.Rowid
                             });
                         }

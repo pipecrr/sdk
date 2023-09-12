@@ -59,7 +59,6 @@ namespace Siesa.SDK.Frontend
             services.AddScoped<SDKDialogService>();
             services.AddScoped<SDKGlobalLoaderService>();
             services.AddScoped<MenuService>();
-            services.AddScoped<CompilerService>();
             services.AddScoped<IQueueService, QueueService>();
             services.AddBlazoredToast();
             services.AddSignalR(e =>
