@@ -47,7 +47,6 @@ namespace Siesa.SDK.Frontend.Components.Fields
         [Parameter] public bool CanSearch { get; set; } = true;
         
         private bool _isOpenDropDown;
-        private ElementReference _elementDiv;
         private string _idDiv;
         private string _idTarget;
         public dynamic RelBusinessObj { get; set; }
@@ -167,7 +166,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
                         }
                         if(baseObjNewRelated == null && rowidNew != rowidLastConverted){
                             CleanComponent();
-                            SetVal(null);
+                            await SetVal(null).ConfigureAwait(true);
                         }
                         BaseObj = baseObjNew;
                         if(BaseObj !=null && BaseObj.GetType().GetProperty("Rowid") != null && BaseObj.Rowid != 0){
@@ -178,7 +177,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
                     }else{
                         if(baseObjNewRelated == null || baseObjNewRelated.Count == 0){
                             CleanComponent();
-                            SetVal(null);
+                            await SetVal(null).ConfigureAwait(true);
                         }
                     }
                 }
@@ -323,30 +322,12 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 SetVal(CacheDataObjcts.First());
                 if(IsMultiple){
                     await LoadData("", null, true).ConfigureAwait(true);
-                }
-                // else{
-                //     await BlurElement().ConfigureAwait(true);
-                // }
+                }                
                 if(OnChange != null){
                     OnChange();
                 }
             }
-            StateHasChanged();
-            // else
-            // {
-            //     //concatenate the key pressed to the search string
-            //     if (e.Key.Length == 1)
-            //     {
-            //         await OnChangeValue(Value + e.Key).ConfigureAwait(true);
-            //     }
-            //     else if (e.Key.Equals("Backspace", StringComparison.Ordinal))
-            //     {
-            //         if (Value.Length > 0)
-            //         {
-            //             await OnChangeValue(Value.Substring(0, Value.Length - 1)).ConfigureAwait(true);
-            //         }
-            //     }
-            // }
+            StateHasChanged();            
         }
 
         private async Task BlurElement()
@@ -382,8 +363,11 @@ namespace Siesa.SDK.Frontend.Components.Fields
             if (cancellationToken != null)
             {
                 try{
-                    await Task.Delay(MinMillisecondsBetweenSearch, cancellationToken.Value).ContinueWith(t => {}).ConfigureAwait(true);
-                }catch (TaskCanceledException ex){
+                    await Task.Delay(MinMillisecondsBetweenSearch, cancellationToken.Value)
+                    .ContinueWith(t => {}, cancellationToken.Value, TaskContinuationOptions.None, TaskScheduler.Default)
+                    .ConfigureAwait(true);
+
+                }catch (TaskCanceledException){
                     cancellationToken = null;
                     return CacheLoadResult;
                 }
@@ -704,18 +688,17 @@ namespace Siesa.SDK.Frontend.Components.Fields
             HasValue = false;
         }
         
-        private Task OnInputChanged(ChangeEventArgs e)
+        private async Task OnInputChanged(ChangeEventArgs e)
         {
             Value = e.Value.ToString();
-            OnChangeValue(Value);
-            return Task.CompletedTask;
+            await OnChangeValue(Value).ConfigureAwait(true);
         }
         
-        private void OnChangeValueSearch(string value)
+        private async Task OnChangeValueSearch(string value)
         {
             Value = value;
-            OnChangeValue(Value);
-            StateHasChanged();
+            await OnChangeValue(Value).ConfigureAwait(true);
+            InvokeAsync(StateHasChanged);
         }
 
         private void GetIdTarget()

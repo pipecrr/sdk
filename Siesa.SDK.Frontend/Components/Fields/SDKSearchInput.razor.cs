@@ -53,7 +53,6 @@ namespace Siesa.SDK.Frontend.Components.Fields
         ///<summary>
         /// Gets or sets the callback that is invoked when the search input is keydown.
         /// </summary>
-        /// <param name="e">The <see cref="KeyboardEventArgs"/> instance containing the event data.</param>
         [Parameter]
         public EventCallback<KeyboardEventArgs> OnEnter { get; set; }
         
@@ -82,8 +81,6 @@ namespace Siesa.SDK.Frontend.Components.Fields
         public string CssClass { get; set; }
 
         private CancellationTokenSource _cancellationToken { get; set; }
-        private bool _loading { get; set; }
-        private bool _queued { get; set; }
 
         private async Task HandleInput(ChangeEventArgs e)
         {
@@ -100,38 +97,25 @@ namespace Siesa.SDK.Frontend.Components.Fields
                     Console.WriteLine(ex.Message);
                 }
                 finally
-                {
-                    if (_cancellationToken != null)
-                    {
-                        Console.WriteLine($"ARME: {Value} TOKEN: {_cancellationToken.Token.IsCancellationRequested.ToString()}");
-                        _cancellationToken.Dispose();
-                        _cancellationToken = null;
-                    }
+                {                    
+                    _cancellationToken = null;
                 }
             }
 
             _cancellationToken = new();
 
-            var token = _cancellationToken.Token;
-            Console.WriteLine($"ARME0: {Value} TOKEN: {token.IsCancellationRequested.ToString()}");
+            var token = _cancellationToken.Token;            
             try{
                 await Task.Delay(MinMillisecondsBetweenSearch, token).ContinueWith(t => {}).ConfigureAwait(true);
             }catch (TaskCanceledException ex){
-                Console.WriteLine($"ARME1: {Value} TOKEN: {ex.Message}");                
+                
                 return;
             }
 
-            Console.WriteLine($"ARME2: {Value} TOKEN: {token.IsCancellationRequested.ToString()}");
-            if (token.IsCancellationRequested){
-                Console.WriteLine($"ARME3: {Value} TOKEN: {token.IsCancellationRequested.ToString()}");
+            if (token.IsCancellationRequested || (!string.IsNullOrEmpty(Value) && Value.Length < MinToFilter)){
                 return;
             }
-
-            if (!string.IsNullOrEmpty(Value) && Value.Length < MinToFilter){
-                Console.WriteLine($"ARME4: {Value} TOKEN: {token.IsCancellationRequested.ToString()}");
-                return;
-            }
-            Console.WriteLine($"ARME5: {Value} TOKEN: {token.IsCancellationRequested.ToString()}");
+            
             await ValueChanged.InvokeAsync(Value).ConfigureAwait(true);
             
         }
@@ -153,10 +137,10 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
         private async Task HandleKeyDown(KeyboardEventArgs e)
         { 
-            if(e.Key == "Delete" || e.Key == "Backspace"){
-                if (_cancellationToken is not null)
-                    _cancellationToken.Cancel();
-            }                
+            if((e.Key == "Delete" || e.Key == "Backspace") && _cancellationToken is not null){
+                _cancellationToken.Cancel();
+                return;
+            }
             if (e.Key != "Enter")
                 return;
             await OnEnter.InvokeAsync(e).ConfigureAwait(true);
