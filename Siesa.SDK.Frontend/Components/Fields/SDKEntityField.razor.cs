@@ -584,7 +584,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         public async Task SDKDropDown(){
             var search = "";
             if(!IsMultiple){
-                if(ItemsSelected.Count == 0 || !ItemsSelected[0].ToString().Equals(Value)){
+                if(!HasValue){
                     search = Value;
                 }else{
                     search = "";
