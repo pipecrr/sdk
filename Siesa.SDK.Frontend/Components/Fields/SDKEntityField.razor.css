@@ -11,6 +11,11 @@
     z-index: 3;
     width: 100%;
 }
+
+.sdk-dropdown-item{
+    padding: 0.5rem;
+}
+
 .sdk-dropdown-item.active, .sdk-dropdown-item:active {
     color: var(--color_text);
     text-decoration: none;
@@ -42,10 +47,12 @@
 }
 
 .whcm_select_list.sdk-dropdown-menu{
-    width: 100%;    
+    width: 400px;
     z-index: 3;
     top: 0;
     left: 0;
+    padding: 0.5rem 0;
+    margin: 0.125rem 0 0;
 }
 
 .input-badge-container > .sdk-dropdown ::deep > input{
