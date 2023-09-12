@@ -688,17 +688,11 @@ namespace Siesa.SDK.Frontend.Components.Fields
             HasValue = false;
         }
         
-        private async Task OnInputChanged(ChangeEventArgs e)
-        {
-            Value = e.Value.ToString();
-            await OnChangeValue(Value).ConfigureAwait(true);
-        }
-        
         private async Task OnChangeValueSearch(string value)
         {
             Value = value;
             await OnChangeValue(Value).ConfigureAwait(true);
-            InvokeAsync(StateHasChanged);
+            await InvokeAsync(StateHasChanged).ConfigureAwait(true);
         }
 
         private void GetIdTarget()

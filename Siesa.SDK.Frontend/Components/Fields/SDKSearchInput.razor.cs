@@ -106,8 +106,10 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
             var token = _cancellationToken.Token;            
             try{
-                await Task.Delay(MinMillisecondsBetweenSearch, token).ContinueWith(t => {}).ConfigureAwait(true);
-            }catch (TaskCanceledException ex){
+                await Task.Delay(MinMillisecondsBetweenSearch, token)
+                    .ContinueWith(t => {}, token, TaskContinuationOptions.None, TaskScheduler.Default)
+                    .ConfigureAwait(true);
+            }catch (TaskCanceledException){
                 
                 return;
             }
