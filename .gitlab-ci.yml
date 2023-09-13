@@ -140,8 +140,8 @@ uploadDoc:
       - ''
     script:
       - git clone https://${CREDS_TMP}@${REPO_DOC_MODULE} doc
-      - sudo apt-get update
-      - sudo apt-get -y install zip
+      - apt-get update
+      - apt-get -y install zip
       # compress folder public to zip file
       - zip -r public.zip public
       # move zip to repo doc/Frontend/Siesa.SDKDocumentationModule.Business.Frontend/wwwroot folder
