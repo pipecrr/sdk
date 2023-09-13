@@ -149,7 +149,7 @@ pages:
       - rm public.zip
       - ls -la
       # move to doc folder
-      - cd ../../../../
+      - cd ../../../../doc
       - ls -la
       # delete branch doc_release_$(date +%Y%m%d) if exists
       - git branch | grep doc_release_$(date +%Y%m%d) && git branch -D doc_release_$(date +%Y%m%d)
@@ -159,7 +159,7 @@ pages:
       - git config --global user.email "gitlab@siesa.com"
       - git config --global user.name "GitLab Runner"
       - git commit -m "Release doc $(date +%Y%m%d)"
-      - git push --set-upstream origin doc_release_$(date +%Y%m%d)
+      - git push -u origin doc_release_$(date +%Y%m%d)
       # merge request to develop
       - |
         curl --header "PRIVATE-TOKEN: ${TOKEN}" -X POST -F "source_branch=doc_release_$(date +%Y%m%d)" -F "target_branch=develop" -F "title=Release doc $(date +%Y%m%d)" -F "remove_source_branch=true" "https://gitlab.siesadev.com/api/v4/projects/1/merge_requests"
