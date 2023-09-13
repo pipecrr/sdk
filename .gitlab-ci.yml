@@ -6,8 +6,6 @@ variables:
   NUGET_PACKAGES_DIRECTORY: '.nuget'
   SOURCE_CODE_PATH: '*/*/'
   REPO_DOC_MODULE: "gitlab.siesadev.com/conversion/sdk/documentation-project/sdk-documentation-module.git"
-  CREDS_TMP: "arnol.meneses:sMgdR_SH3y3eszhTEnMe"
-  TOKEN_TMP: "sMgdR_SH3y3eszhTEnMe"
 
 cache:
   key: "$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
@@ -128,7 +126,7 @@ pages:
       # remove doc folder
       - rm -rf doc
       # clone repo doc
-      - git clone --depth 1 https://${CREDS_TMP}@${REPO_DOC_MODULE} doc
+      - git clone https://${GITLAB_RELEASE_CREDS}@${REPO_DOC_MODULE} doc
       # install zip
       - apt-get update
       - apt-get -y install zip
@@ -157,7 +155,7 @@ pages:
       - git push -u origin doc_release_$(date +%Y%m%d)
       # merge request to develop
       - |
-        curl --header "PRIVATE-TOKEN: ${TOKEN_TMP}" -X POST -F "source_branch=doc_release_$(date +%Y%m%d)" -F "target_branch=develop" -F "title=Release doc $(date +%Y%m%d)" -F "remove_source_branch=true" "https://gitlab.siesadev.com/api/v4/projects/175/merge_requests"
+        curl --header "PRIVATE-TOKEN: ${TOKEN}" -X POST -F "source_branch=doc_release_$(date +%Y%m%d)" -F "target_branch=develop" -F "title=Release doc $(date +%Y%m%d)" -F "remove_source_branch=true" "https://gitlab.siesadev.com/api/v4/projects/175/merge_requests"
     artifacts:
       paths:
         - public
