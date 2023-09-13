@@ -133,6 +133,8 @@ pages:
       - develop
       
 uploadDoc:
+    before_script:
+      - ''
     script:
       - git clone https://${GITLAB_RELEASE_CREDS}@${REPO_DOC_MODULE} doc
       # compress folder public to zip file
