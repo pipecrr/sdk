@@ -143,6 +143,7 @@ uploadDoc:
       - apt-get update
       - apt-get -y install zip
       # compress folder public to zip file
+      - ls -la
       - zip -r public.zip public
       # move zip to repo doc/Frontend/Siesa.SDKDocumentationModule.Business.Frontend/wwwroot folder
       - mv public.zip doc/Frontend/Siesa.SDKDocumentationModule.Business.Frontend/wwwroot
