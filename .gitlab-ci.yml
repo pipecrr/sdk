@@ -1,11 +1,12 @@
 image: mcr.microsoft.com/dotnet/sdk:6.0
-
+#force
 variables:
   PACKAGE_REGISTRY_URL: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/nuget/index.json"
   OBJECTS_DIRECTORY: 'obj'
   NUGET_PACKAGES_DIRECTORY: '.nuget'
   SOURCE_CODE_PATH: '*/*/'
-
+  REPO_DOC_MODULE: "gitlab.siesadev.com/conversion/sdk/documentation-project/sdk-documentation-module.git"
+  
 cache:
   key: "$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
   paths:
@@ -123,6 +124,39 @@ pages:
       - export PATH="$PATH:/root/.dotnet/tools"
       - docfx Siesa.SDK.Doc/docfx.json
       - mv Siesa.SDK.Doc/_site public
+      # remove doc folder
+      - rm -rf doc
+      # clone repo doc
+      - git clone --depth 1 https://${GITLAB_RELEASE_CREDS}@${REPO_DOC_MODULE} doc
+      # install zip
+      - apt-get update
+      - apt-get -y install zip
+      # compress folder public to zip file
+      - zip -r public.zip public
+      # move zip to repo doc/Frontend/Siesa.SDKDocumentationModule.Business.Frontend/wwwroot folder
+      - mv public.zip doc/Frontend/Siesa.SDKDocumentationModule.Business.Frontend/wwwroot
+      # move to repo doc/Frontend/Siesa.SDKDocumentationModule.Business.Frontend/wwwroot folder
+      - cd doc/Frontend/Siesa.SDKDocumentationModule.Business.Frontend/wwwroot
+      # remove public folder
+      - rm -rf public
+      # unzip public.zip
+      - unzip public.zip
+      # remove public.zip
+      - rm public.zip
+      # move to doc folder
+      - cd ../../../../doc
+      # delete branch doc_release_$(date +%Y%m%d) if exists
+      - git branch | grep doc_release_$(date +%Y%m%d) && git branch -D doc_release_$(date +%Y%m%d)
+      # create a new branch with the current date
+      - git checkout -b doc_release_$(date +%Y%m%d)
+      - git add .
+      - git config --global user.email "gitlab@siesa.com"
+      - git config --global user.name "GitLab Runner"
+      - git commit -m "Release doc $(date +%Y%m%d)"
+      - git push -u origin doc_release_$(date +%Y%m%d)
+      # merge request to develop
+      - |
+        curl --header "PRIVATE-TOKEN: ${TOKEN}" -X POST -F "source_branch=doc_release_$(date +%Y%m%d)" -F "target_branch=develop" -F "title=Release doc $(date +%Y%m%d)" -F "remove_source_branch=true" "https://gitlab.siesadev.com/api/v4/projects/175/merge_requests"
     artifacts:
       paths:
         - public
@@ -130,3 +164,4 @@ pages:
       - docker
     only:
       - develop
+      - /^release_.*$/

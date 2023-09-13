@@ -8,11 +8,11 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    max-width: 120px;
     color: var(--color_light_text);
 }
 .sdk-crud-header-title {
     font-size: 0.875rem;
-    word-break: break-word;
 }
 .sdk-crud-header-icon { 
     font-size: 1.75rem;
@@ -31,6 +31,7 @@
 }
 
 .sdk-crud-header-fields {
+    padding-top: 1rem;
     background-color: var(--color_back_body);
     border-top-right-radius: var(--border_radius_standar_max);
     border-bottom-right-radius: var(--border_radius_standar_max);
@@ -45,6 +46,8 @@
         border-bottom-right-radius: 0;
         flex-direction: row;
         gap: 0.5rem;
+        width: 100%;
+        max-width: unset;
     }
     .sdk-crud-header-icon{
         font-size: 1.25rem;

@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Components;
 using System.Reflection;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.IdentityModel.Tokens;
 using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
 using Siesa.SDK.Frontend.Services;
 using Microsoft.JSInterop;
@@ -44,6 +45,10 @@ namespace Siesa.SDK.Frontend.Components.Fields
         [Parameter] public bool Disabled { get; set; }
         [Parameter] public List<List<object>> Filters { get; set; }
         [Parameter] public bool CanSearch { get; set; } = true;
+        
+        private bool _isOpenDropDown;
+        private string _idDiv;
+        private string _idTarget;
         public dynamic RelBusinessObj { get; set; }
         private string Value = "";
         private long rowidLastValue = -1;
@@ -79,6 +84,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         protected override async Task OnInitializedAsync()
         {
             base.OnInitializedAsync();
+            GetIdTarget();
             await InitView();
             await LoadData("", null);
             if(RelatedParams != null && RelatedParams.AutoValueInUnique){
@@ -92,6 +98,8 @@ namespace Siesa.SDK.Frontend.Components.Fields
             if(OnReady != null){
                 OnReady(CacheDataObjcts.ToList());
             }
+
+
             StateHasChanged();
         }
 
@@ -150,15 +158,15 @@ namespace Siesa.SDK.Frontend.Components.Fields
                     dynamic baseObjNewRelated = baseObjNew.GetType().GetProperty(FieldName).GetValue(baseObjNew);
                     if(!IsMultiple){
                         var rowidNew = baseObjNewRelated != null ? baseObjNewRelated.GetType().GetProperty("Rowid").GetValue(baseObjNewRelated) : 0;
-                        if(baseObjNewRelated != null && rowidNew != rowidLastValue){
-                            CacheLoadResult = null;
-                            LastSearchString = null;
-                            Value = "";
-                            ItemsSelected.Clear();
-                            CacheData.Clear();
-                            CacheDataObjcts.Clear();
-                            HasValue = false;
+                        Type rowidType = rowidNew.GetType();
+                        dynamic rowidLastConverted = Convert.ChangeType(rowidLastValue, rowidType, System.Globalization.CultureInfo.InvariantCulture);
+                        if(baseObjNewRelated != null && rowidNew != rowidLastConverted){
+                            CleanComponent();
                             SetVal(BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj));
+                        }
+                        if(baseObjNewRelated == null && rowidNew != rowidLastConverted){
+                            CleanComponent();
+                            await SetVal(null).ConfigureAwait(true);
                         }
                         BaseObj = baseObjNew;
                         if(BaseObj !=null && BaseObj.GetType().GetProperty("Rowid") != null && BaseObj.Rowid != 0){
@@ -168,14 +176,8 @@ namespace Siesa.SDK.Frontend.Components.Fields
                         rowidLastValue = rowidNew;
                     }else{
                         if(baseObjNewRelated == null || baseObjNewRelated.Count == 0){
-                            CacheLoadResult = null;
-                            LastSearchString = null;
-                            Value = "";
-                            ItemsSelected.Clear();
-                            CacheData.Clear();
-                            CacheDataObjcts.Clear();
-                            HasValue = false;
-                            SetVal(null);
+                            CleanComponent();
+                            await SetVal(null).ConfigureAwait(true);
                         }
                     }
                 }
@@ -184,7 +186,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
             await base.SetParametersAsync(parameters);
         }
 
-        protected override async Task OnParametersSetAsync(){
+        protected override async Task OnParametersSetAsync(){            
             if(BaseObj != null && !string.IsNullOrEmpty(Value)){
                 HasValue = true;
             }
@@ -300,51 +302,32 @@ namespace Siesa.SDK.Frontend.Components.Fields
             SDKDropDown();
             badgeContainerClass = "badge-container";
         }
+        private void OnClickInput(){
+            _isOpenDropDown = true;
+            StateHasChanged();
+        }
 
         private async Task OnFocusOut(){
             await Task.Delay(200);
-            badgeContainerClass = "badge-container d-none";
+            if(IsMultiple){
+                badgeContainerClass = "badge-container d-none";
+            }
         }
 
         private async Task OnKeyDown(KeyboardEventArgs e)
         {
-            if(e == null || e.Key == null){
-                return;
-            }
-            if(!string.Equals(e.Key, "Escape", StringComparison.Ordinal) && !string.Equals(e.Key, "Enter", StringComparison.Ordinal) && !string.Equals(e.Key, "Tab", StringComparison.Ordinal)){
-                SDKDropDown();
-            }
-            if(string.Equals(e.Key, "Enter", StringComparison.Ordinal))
+            
+            if (CacheDataObjcts != null && CacheDataObjcts.Count > 0)
             {
-                if (CacheDataObjcts != null && CacheDataObjcts.Count > 0)
-                {
-                    SetVal(CacheDataObjcts.First());
-                    if(IsMultiple){
-                        await LoadData("", null, true).ConfigureAwait(true);
-                    }else{
-                        await BlurElement().ConfigureAwait(true);
-                    }
-                    if(OnChange != null){
-                        OnChange();
-                    }
-                }
-                StateHasChanged();
-            }
-            else
-            {
-                //concatenate the key pressed to the search string
-                if (e.Key.Length == 1)
-                {
-                    await OnChangeValue(Value + e.Key).ConfigureAwait(true);
-                }
-                else if (e.Key.Equals("Backspace", StringComparison.Ordinal))
-                {
-                    if (Value.Length > 0)
-                    {
-                        await OnChangeValue(Value.Substring(0, Value.Length - 1)).ConfigureAwait(true);
-                    }
+                SetVal(CacheDataObjcts.First());
+                if(IsMultiple){
+                    await LoadData("", null, true).ConfigureAwait(true);
+                }                
+                if(OnChange != null){
+                    OnChange();
                 }
             }
+            StateHasChanged();            
         }
 
         private async Task BlurElement()
@@ -379,11 +362,19 @@ namespace Siesa.SDK.Frontend.Components.Fields
             }
             if (cancellationToken != null)
             {
-                await Task.Delay(MinMillisecondsBetweenSearch, cancellationToken.Value);
+                try{
+                    await Task.Delay(MinMillisecondsBetweenSearch, cancellationToken.Value)
+                    .ContinueWith(t => {}, cancellationToken.Value, TaskContinuationOptions.None, TaskScheduler.Default)
+                    .ConfigureAwait(true);
+
+                }catch (TaskCanceledException){
+                    cancellationToken = null;
+                    return CacheLoadResult;
+                }
             }
 
             if (cancellationToken != null && cancellationToken.Value.IsCancellationRequested)
-            {
+            {                
                 return CacheLoadResult;
             }
 
@@ -593,7 +584,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         public async Task SDKDropDown(){
             var search = "";
             if(!IsMultiple){
-                if(ItemsSelected.Count == 0 || !ItemsSelected[0].ToString().Equals(Value)){
+                if(!HasValue){
                     search = Value;
                 }else{
                     search = "";
@@ -612,8 +603,6 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 await LoadData(search, null, force);
             }
             await Task.Delay(100);
-            var elementInstance = await JsRuntime.InvokeAsync<IJSObjectReference>("$", $"#{idInput}[aria-expanded=false]");
-            await elementInstance.InvokeVoidAsync("dropdown","show");
             StateHasChanged();
         }
         public async Task closeItem(string item){
@@ -680,15 +669,36 @@ namespace Siesa.SDK.Frontend.Components.Fields
         }
 
         public async Task Clean(){
-            ItemsSelected.Clear();
             Values.Clear();
-            Value = "";
-            HasValue = false;
+            CleanComponent();
             SetVal(null);
             if(OnChange != null){
                 OnChange();
             }
             StateHasChanged();
+        }
+        
+        private void CleanComponent(){
+            CacheLoadResult = null;
+            LastSearchString = null;
+            Value = "";
+            ItemsSelected.Clear();
+            CacheData.Clear();
+            CacheDataObjcts.Clear();
+            HasValue = false;
+        }
+        
+        private async Task OnChangeValueSearch(string value)
+        {
+            Value = value;
+            await OnChangeValue(Value).ConfigureAwait(true);
+            await InvokeAsync(StateHasChanged).ConfigureAwait(true);
+        }
+
+        private void GetIdTarget()
+        { 
+            _idDiv = $"entity_field_{Guid.NewGuid().ToString()}";
+            _idTarget = $"#{_idDiv}";
         }
     }
 }

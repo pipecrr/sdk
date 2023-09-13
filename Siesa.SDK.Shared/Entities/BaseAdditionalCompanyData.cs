@@ -3,12 +3,13 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Siesa.Global.Enums;
 using Siesa.SDK.Shared.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace Siesa.SDK.Entities
 {
 
-	public abstract partial class BaseAdditionalData<T, U> : BaseAudit<int>
+	public abstract partial class BaseAdditionalCompanyData<T, U> : BaseAudit<int>
 	{
 		[Key]
 		[SDKRequired]
@@ -21,6 +22,9 @@ namespace Siesa.SDK.Entities
 		public virtual short? RowidCompany { get; set; }
 
 		public virtual int? RowidAttachment { get; set; }
+
+		[SDKRequired]
+		public virtual enumStatusBaseMaster Status { get; set; }
 
 
 		public virtual T Record { get; set; }
