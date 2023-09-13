@@ -131,8 +131,8 @@ pages:
       - docker
     only:
       - develop
+      
 uploadDoc:
-    stage: uploadDoc
     script:
       - git clone https://${GITLAB_RELEASE_CREDS}@${REPO_DOC_MODULE} doc
       # compress folder public to zip file
