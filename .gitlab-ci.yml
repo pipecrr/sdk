@@ -124,18 +124,7 @@ pages:
       - export PATH="$PATH:/root/.dotnet/tools"
       - docfx Siesa.SDK.Doc/docfx.json
       - mv Siesa.SDK.Doc/_site public
-    artifacts:
-      paths:
-        - public
-    tags:
-      - docker
-    only:
-      - develop
-      
-uploadDoc:
-    before_script:
-      - ''
-    script:
+      - ls -la
       - git clone https://${GITLAB_RELEASE_CREDS}@${REPO_DOC_MODULE} doc
       # compress folder public to zip file
       - zip -r public.zip public
@@ -144,28 +133,11 @@ uploadDoc:
       # move to repo doc/Frontend/Siesa.SDKDocumentationModule.Business.Frontend/wwwroot folder
       - cd doc/Frontend/Siesa.SDKDocumentationModule.Business.Frontend/wwwroot
       - ls -la
-      # remove public folder
-      - rm -rf public
-      - ls -la
-      # unzip public.zip
-      - unzip public.zip
-      - ls -la
-      # remove public.zip
-      - rm public.zip
-      - ls -la
-      # move to doc folder
-      - cd ../../../../
-      - ls -la
-      # create a new branch with the current date
-      - git checkout -b doc_release_$(date +%Y%m%d)
-      - git add .
-      - git config --global user.email "gitlab@siesa.com"
-      - git config --global user.name "GitLab Runner"
-      - git commit -m "Release doc $(date +%Y%m%d)"
-      - git push -u origin doc_release_$(date +%Y%m%d)
-      # merge request to develop
-      - curl --header "PRIVATE-TOKEN: ${TOKEN}" -X POST -F "source_branch=doc_release_$(date +%Y%m%d)" -F "target_branch=develop" -F "title=Release doc $(date +%Y%m%d)" -F "remove_source_branch=true" "https://gitlab.siesadev.com/api/v4/projects/1/merge_requests"
-    only: 
+    artifacts:
+      paths:
+        - public
+    tags:
+      - docker
+    only:
       - develop
-      - /^release_.*$/
-    
+      
