@@ -35,6 +35,10 @@
         }
         @foreach (FieldOptions column in DetailConfig.Fields)
         {
+            @if(string.IsNullOrEmpty(column.ResourceTag))
+            {
+                column.ResourceTag = $"{BusinessObj.ChildType().Name}.{column.Name}";
+            }
             <SDKGridColumn TItem="object" ResourceTag="@column.ResourceTag" UniqueId="@column.ResourceTag">
                 <Template Context="data">
                     <FieldOptComponent Column="@column" Data="@data" @key="@GetKey(column.ResourceTag, data)" IsDetail="@IsDetail"/>
