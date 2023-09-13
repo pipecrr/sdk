@@ -122,7 +122,6 @@ deploy:
 pages:
     script:
       - dotnet tool update -g docfx
-      - export PATH="$PATH:/root/.dotnet/tools"
       - docfx Siesa.SDK.Doc/docfx.json
       - mv Siesa.SDK.Doc/_site public
     artifacts:
