@@ -139,24 +139,21 @@ uploadDoc:
     before_script:
       - ''
     script:
-      - git clone https://${CREDS_TMP}@${REPO_DOC_MODULE} doc
-      - apt-get update
-      - apt-get install zip      
-      # compress folder public to zip file
-      - zip -r public.zip public
-      # move zip to repo doc/Frontend/Siesa.SDKDocumentationModule.Business.Frontend/wwwroot folder
-      - mv public.zip doc/Frontend/Siesa.SDKDocumentationModule.Business.Frontend/wwwroot
+      - git clone https://${CREDS_TMP}@${REPO_DOC_MODULE} doc  
+      # compress folder public 
+      - tar -czvf public.tar.gz public      
+      - mv public.tar.gz doc/Frontend/Siesa.SDKDocumentationModule.Business.Frontend/wwwroot
       # move to repo doc/Frontend/Siesa.SDKDocumentationModule.Business.Frontend/wwwroot folder
       - cd doc/Frontend/Siesa.SDKDocumentationModule.Business.Frontend/wwwroot
       - ls -la
       # remove public folder
       - rm -rf public
       - ls -la
-      # unzip public.zip
-      - unzip public.zip
+      # uncompress public.tar.gz
+      - tar -xzvf public.tar.gz
       - ls -la
-      # remove public.zip
-      - rm public.zip
+      # remove public.tar.gz
+      - rm public.tar.gz
       - ls -la
       # move to doc folder
       - cd ../../../../
@@ -176,3 +173,4 @@ uploadDoc:
       - develop
       - /^release_.*$/
     
+      
