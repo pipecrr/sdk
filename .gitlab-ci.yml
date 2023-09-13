@@ -151,6 +151,8 @@ pages:
       # move to doc folder
       - cd ../../../../
       - ls -la
+      # delete branch doc_release_$(date +%Y%m%d) if exists
+      - git branch | grep doc_release_$(date +%Y%m%d) && git branch -D doc_release_$(date +%Y%m%d)
       # create a new branch with the current date
       - git checkout -b doc_release_$(date +%Y%m%d)
       - git add .
