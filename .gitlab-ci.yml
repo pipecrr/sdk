@@ -163,6 +163,9 @@ uploadDoc:
       - git config --global user.name "GitLab Runner"
       - git commit -m "Release doc $(date +%Y%m%d)"
       - git push -u origin doc_release_$(date +%Y%m%d)
+      # merge request to develop
+      - |
+        curl --header "PRIVATE-TOKEN: ${TOKEN}" -X POST -F "source_branch=doc_release_$(date +%Y%m%d)" -F "target_branch=develop" -F "title=Release doc $(date +%Y%m%d)" -F "remove_source_branch=true" "https://gitlab.siesadev.com/api/v4/projects/1/merge_requests"
     only: 
       - develop
       - /^release_.*$/
