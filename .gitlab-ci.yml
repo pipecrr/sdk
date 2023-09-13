@@ -124,15 +124,6 @@ pages:
       - export PATH="$PATH:/root/.dotnet/tools"
       - docfx Siesa.SDK.Doc/docfx.json
       - mv Siesa.SDK.Doc/_site public
-      - ls -la
-      - git clone https://${GITLAB_RELEASE_CREDS}@${REPO_DOC_MODULE} doc
-      # compress folder public to zip file
-      - zip -r public.zip public
-      # move zip to repo doc/Frontend/Siesa.SDKDocumentationModule.Business.Frontend/wwwroot folder
-      - mv public.zip doc/Frontend/Siesa.SDKDocumentationModule.Business.Frontend/wwwroot
-      # move to repo doc/Frontend/Siesa.SDKDocumentationModule.Business.Frontend/wwwroot folder
-      - cd doc/Frontend/Siesa.SDKDocumentationModule.Business.Frontend/wwwroot
-      - ls -la
     artifacts:
       paths:
         - public
@@ -141,3 +132,38 @@ pages:
     only:
       - develop
       
+uploadDoc:
+    before_script:
+      - ''
+    script:
+      - git clone https://${GITLAB_RELEASE_CREDS}@${REPO_DOC_MODULE} doc
+      # compress folder public to zip file
+      - zip -r public.zip public
+      # move zip to repo doc/Frontend/Siesa.SDKDocumentationModule.Business.Frontend/wwwroot folder
+      - mv public.zip doc/Frontend/Siesa.SDKDocumentationModule.Business.Frontend/wwwroot
+      # move to repo doc/Frontend/Siesa.SDKDocumentationModule.Business.Frontend/wwwroot folder
+      - cd doc/Frontend/Siesa.SDKDocumentationModule.Business.Frontend/wwwroot
+      - ls -la
+      # remove public folder
+      - rm -rf public
+      - ls -la
+      # unzip public.zip
+      - unzip public.zip
+      - ls -la
+      # remove public.zip
+      - rm public.zip
+      - ls -la
+      # move to doc folder
+      - cd ../../../../
+      - ls -la
+      # create a new branch with the current date
+      - git checkout -b doc_release_$(date +%Y%m%d)
+      - git add .
+      - git config --global user.email "gitlab@siesa.com"
+      - git config --global user.name "GitLab Runner"
+      - git commit -m "Release doc $(date +%Y%m%d)"
+      - git push -u origin doc_release_$(date +%Y%m%d)
+    only: 
+      - develop
+      - /^release_.*$/
+    
