@@ -149,15 +149,18 @@ pages:
       # move to doc folder
       - cd ../../../../doc
       # delete branch doc_release_$(date +%Y%m%d) if it already exists in the local repository
-      - git branch -r | grep doc_release_$(date +%Y%m%d) || echo "Branch doc_release_$(date +%Y%m%d) does not exist"
-      - git branch -r | grep doc_release_$(date +%Y%m%d) && echo "Branch doc_release_$(date +%Y%m%d) already exists" && exit 1
+      - git branch | grep doc_release_$(date +%Y%m%d) && git branch -D doc_release_$(date +%Y%m%d)
       # create a new branch with the current date
       - git checkout -b doc_release_$(date +%Y%m%d)
       - git add .
       - git config --global user.email "gitlab@siesa.com"
       - git config --global user.name "GitLab Runner"
       - git commit -m "Release doc $(date +%Y%m%d)"
-      - git push -u origin doc_release_$(date +%Y%m%d)
+      # Check if the release branch already exists in the remote repository
+      - git fetch --all
+      - git branch -r | grep origin/release_$(date +%Y%m%d) && BRANCH_EXISTS=true || BRANCH_EXISTS=false
+      # Push to the release branch with or without -u flag based on its existence
+      - git push --u origin doc_release_$(date +%Y%m%d)${BRANCH_EXISTS:+:}      
       # merge request to develop
       - |
         curl --header "PRIVATE-TOKEN: ${TOKEN_TMP}" -X POST -F "source_branch=doc_release_$(date +%Y%m%d)" -F "target_branch=develop" -F "title=Release doc $(date +%Y%m%d)" -F "remove_source_branch=true" "https://gitlab.siesadev.com/api/v4/projects/175/merge_requests"
