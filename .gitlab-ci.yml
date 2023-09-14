@@ -160,8 +160,7 @@ pages:
       - git fetch --all
       - git branch -r | grep origin/release_$(date +%Y%m%d) && BRANCH_EXISTS=true || BRANCH_EXISTS=false
       # Push to the release branch with or without -u flag based on its existence
-      - |
-        if [ $BRANCH_EXISTS = true ]; then
+      - if [ $BRANCH_EXISTS = true ]; then
           git push origin release_$(date +%Y%m%d);
         else
           git push -u origin release_$(date +%Y%m%d);
