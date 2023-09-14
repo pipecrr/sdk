@@ -8,6 +8,7 @@ variables:
   REPO_DOC_MODULE: "gitlab.siesadev.com/conversion/sdk/documentation-project/sdk-documentation-module.git"
   CREDS_TMP: "arnol.meneses:sMgdR_SH3y3eszhTEnMe"
   TOKEN_TMP: "sMgdR_SH3y3eszhTEnMe"
+  GUID: $(uuidgen | cut -c1-10)
 
   
 cache:
@@ -148,26 +149,18 @@ pages:
       - rm public.zip
       # move to doc folder
       - cd ../../../../doc
-      # delete branch doc_release_$(date +%Y%m%d) if it already exists in the local repository
-      - git branch | grep doc_release_$(date +%Y%m%d) && git branch -D doc_release_$(date +%Y%m%d)
+      # delete branch doc_release_$(date +%Y%m%d)_$GUID if it already exists in the local repository
+      - git branch | grep doc_release_$(date +%Y%m%d)_$GUID && git branch -D doc_release_$(date +%Y%m%d)_$GUID
       # create a new branch with the current date
-      - git checkout -b doc_release_$(date +%Y%m%d)
+      - git checkout -b doc_release_$(date +%Y%m%d)_$GUID
       - git add .
       - git config --global user.email "gitlab@siesa.com"
       - git config --global user.name "GitLab Runner"
-      - git commit -m "Release doc $(date +%Y%m%d)"
-      # Check if the release branch already exists in the remote repository
-      - git fetch --all
-      - git branch -r | grep origin/release_$(date +%Y%m%d) && BRANCH_EXISTS=true || BRANCH_EXISTS=false
-      # Push to the release branch with or without -u flag based on its existence
-      - if [ $BRANCH_EXISTS = true ]; then
-          git push release_$(date +%Y%m%d);
-        else
-          git push -u origin release_$(date +%Y%m%d);
-        fi
+      - git commit -m "Release doc $(date +%Y%m%d)_$GUID"
+      - git push -u origin doc_release_$(date +%Y%m%d)_$GUID
       # merge request to develop
       - |
-        curl --header "PRIVATE-TOKEN: ${TOKEN_TMP}" -X POST -F "source_branch=doc_release_$(date +%Y%m%d)" -F "target_branch=develop" -F "title=Release doc $(date +%Y%m%d)" -F "remove_source_branch=true" "https://gitlab.siesadev.com/api/v4/projects/175/merge_requests"
+        curl --header "PRIVATE-TOKEN: ${TOKEN_TMP}" -X POST -F "source_branch=doc_release_$(date +%Y%m%d)_$GUID" -F "target_branch=develop" -F "title=Release doc $(date +%Y%m%d)" -F "remove_source_branch=true" "https://gitlab.siesadev.com/api/v4/projects/175/merge_requests"
     artifacts:
       paths:
         - public
