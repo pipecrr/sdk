@@ -43,6 +43,8 @@ namespace Siesa.SDK.Backend.Services
             factory = new ConnectionFactory()
             {
                 HostName = _configuration["RabbitMQ:HostName"],
+                UserName = _configuration["RabbitMQ:UserName"],
+                Password = _configuration["RabbitMQ:Password"],
             };
             
             Connect();

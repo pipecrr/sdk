@@ -571,7 +571,7 @@ namespace Siesa.SDK.Business
                         result.Rowid = Save(context);
                         if (_queueService != null && !string.IsNullOrEmpty(BusinessName))
                         {
-                            _queueService.Subscribe(BusinessName, enumMessageCategory.CRUD);
+                            //_queueService.Subscribe(BusinessName, enumMessageCategory.CRUD);
                             _queueService.SendMessage(BusinessName, enumMessageCategory.CRUD, new QueueMessageDTO()
                             {
                                 Message = $"Custom.{BusinessName}.RecordSaved",
@@ -887,7 +887,7 @@ namespace Siesa.SDK.Business
                         }
                         if (_queueService != null && !string.IsNullOrEmpty(BusinessName))
                         {
-                            _queueService.Subscribe(BusinessName, enumMessageCategory.CRUD);
+                            //_queueService.Subscribe(BusinessName, enumMessageCategory.CRUD);
                             _queueService.SendMessage(BusinessName, enumMessageCategory.CRUD, new QueueMessageDTO()
                             {
                                 Message = $"Custom.{BusinessName}.RecordDeleted",
