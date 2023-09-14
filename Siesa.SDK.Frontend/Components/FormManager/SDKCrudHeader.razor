@@ -1,11 +1,11 @@
 @using Siesa.SDK.Frontend.Components.FormManager.ViewModels
 <div class="sdk-crud-header col-xs-12 col-md-12 col-sm-12 col-lg-12 col-xl-12">
-    <div class="row whcm_row">
-        <div class="sdk-crud-header-identifier col-xs-1 col-md-1 col-sm-1 col-lg-1 col-xl-1 @GetViewTypeCss()">
+    <div class="d-flex flex-column flex-sm-row whcm_row">
+        <div class="sdk-crud-header-identifier p-2 p-sm-3 text-center @GetViewTypeCss()">
             <div class="sdk-crud-header-title"><ResourceViewer ResourceTag="@ResourceTag" /></div>
             <div class="sdk-crud-header-icon"><SDKIcon Name="@GetIconClass()" /></div>
         </div>
-        <div class="sdk-crud-header-fields col-xs-11 col-md-11 col-sm-11 col-lg-11 col-xl-11">
+        <div class="sdk-crud-header-fields px-3 w-100">
             <div class="row whcm_row">
                 @ChildContent
             </div>
