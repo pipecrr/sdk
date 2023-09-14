@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Components;
 using Siesa.SDK.Business;
 using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
 using Siesa.SDK.Frontend.Extension;
+using Siesa.SDK.Shared.Services;
+using Siesa.SDK.Frontend.Components.FormManager.Model;
+using Newtonsoft.Json;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -15,10 +18,83 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter] public Dictionary<string, object> DefaultFields { get; set; }
 
         public dynamic ParentBaseObj { get; set; }
+
+        [Inject]
+        public IBackendRouterService BackendRouterService { get; set; }
+        private FormViewModel FormViewModel { get; set; } = new FormViewModel();
+        private List<string> _extraFields = new List<string>();
+
+        private void GetExtraFields(string bName = null)
+        {
+            try
+            {
+                string viewdefName = "detail";
+
+                if (IsSubpanel)
+                {
+                    viewdefName = "related_detail";
+                }
+
+                var metadata = BackendRouterService.GetViewdef(bName, viewdefName);
+                if (IsSubpanel && String.IsNullOrEmpty(metadata)){
+                    metadata = BackendRouterService.GetViewdef(bName, "related_default");
+                }
+                if(String.IsNullOrEmpty(metadata))
+                {
+                    metadata = BackendRouterService.GetViewdef(bName, "default");
+                }
+
+                try
+                {
+                    FormViewModel = JsonConvert.DeserializeObject<FormViewModel>(metadata);
+                }
+                catch (JsonSerializationException)
+                {
+                    //Soporte a viewdefs anteriores
+                    var panels = JsonConvert.DeserializeObject<List<Panel>>(metadata);
+                    FormViewModel.Panels = panels;
+                }
+
+                var defaultFields = FormViewModel.Panels.SelectMany(panel => panel.Fields)
+                                    .Where(f=> f.CustomComponent == null && f.Name.StartsWith("BaseObj."))
+                                    .Select(field => field.Name)
+                                    .ToList(); 
+
+                if (FormViewModel.ExtraFields.Count > 0){
+                    _extraFields =  FormViewModel.ExtraFields.Select(f => f)
+                    .Union(defaultFields)
+                    .ToList();
+
+                    _extraFields = _extraFields.Select(field => field.Replace("BaseObj.", "")).ToList();
+                }else{
+                    _extraFields = defaultFields.Select(field => field.Replace("BaseObj.", "")).ToList();
+                }
+                
+                var baseObj = BusinessObj.BaseObj;
+                List<string> extraFieldsTmp = new ();
+                foreach (string field in _extraFields){
+                    var property = baseObj.GetType().GetProperty(field);
+                    if(property != null && property.PropertyType.IsClass && !property.PropertyType.IsPrimitive && !property.PropertyType.IsEnum && property.PropertyType != typeof(string) && property.PropertyType != typeof(byte[])){
+                        var rowidNameField = "Rowid"+field;
+                        if(!_extraFields.Contains(rowidNameField)){
+                            extraFieldsTmp.Add(rowidNameField);
+                        }
+                    }
+                }
+                if(extraFieldsTmp.Count > 0){
+                    _extraFields = _extraFields.Union(extraFieldsTmp).ToList();
+                }
+            }
+            catch (Exception e)
+            {
+                ErrorList.Add("Exception: "+e.ToString());
+            }
+        }
         private async Task InitEdit(Int64 business_obj_id){
             try
             {
-                await BusinessObj.InitializeBusiness(business_obj_id);
+                GetExtraFields(BusinessName);
+                await BusinessObj.InitializeBusiness(business_obj_id, _extraFields);
             }
             catch (System.Exception e)
             {
