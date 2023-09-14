@@ -29,7 +29,6 @@ using Siesa.SDK.Frontend.Report.Services;
 using Microsoft.AspNetCore.ResponseCompression;
 using System.Linq;
 using Microsoft.Extensions.Hosting;
-using Siesa.SDK.Frontend.Components.Documentation.Services;
 using Blazored.Toast;
 
 namespace Siesa.SDK.Frontend
