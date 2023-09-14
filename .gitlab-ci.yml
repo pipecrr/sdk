@@ -6,7 +6,7 @@ variables:
   NUGET_PACKAGES_DIRECTORY: '.nuget'
   SOURCE_CODE_PATH: '*/*/'
   REPO_DOC_MODULE: "gitlab.siesadev.com/conversion/sdk/documentation-project/sdk-documentation-module.git"
-  
+
 cache:
   key: "$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
   paths:
@@ -107,7 +107,6 @@ sonarqube-check:
     - main
     - develop
 
-
 deploy:
     stage: deploy
     only: 
@@ -127,7 +126,7 @@ pages:
       # remove doc folder
       - rm -rf doc
       # clone repo doc
-      - git clone --depth 1 https://${GITLAB_RELEASE_CREDS}@${REPO_DOC_MODULE} doc
+      - git clone https://${GITLAB_RELEASE_CREDS}@${REPO_DOC_MODULE} doc
       # install zip
       - apt-get update
       - apt-get -y install zip
