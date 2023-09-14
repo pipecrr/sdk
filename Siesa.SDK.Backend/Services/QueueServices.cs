@@ -38,25 +38,23 @@ namespace Siesa.SDK.Backend.Services
         /// </summary>
         public QueueService(IConfiguration configuration)
         {
-            _configuration = configuration;
-
-            factory = new ConnectionFactory()
-            {
-                HostName = _configuration["RabbitMQ:HostName"],
-                UserName = _configuration["RabbitMQ:UserName"],
-                Password = _configuration["RabbitMQ:Password"],
-            };
-            
-            Connect();
+            _configuration = configuration;            
             _serviceProvider = SDKApp.GetServiceProvider();
+            Connect();
         }
         //TODO: Reconnect 
         private void Connect()
         {
             try
             {
+                factory = new ConnectionFactory()
+                {
+                    HostName = _configuration["RabbitMQ:HostName"],
+                    UserName = _configuration["RabbitMQ:UserName"],
+                    Password = _configuration["RabbitMQ:Password"],
+                };
                 _connection = factory.CreateConnection();
-                _channel = _connection.CreateModel();
+                _channel = _connection?.CreateModel();
                 _connection.ConnectionShutdown += OnConnectionShutdown;
                 _reconectAttemp = 0;
                 Console.WriteLine("Connection to RabbitMQ established.");
@@ -74,10 +72,11 @@ namespace Siesa.SDK.Backend.Services
         }
         private void Reconnect()
         {
-            while (!_connection.IsOpen && _reconectAttemp < 6)
+            while (_connection != null && !_connection.IsOpen && _reconectAttemp < 6)
             {
                 try
                 {
+                    //TODO: Dispose?
                     _reconectAttemp++;
                     Console.WriteLine($"Reconnecting attempt {_reconectAttemp}");
                     Connect();
@@ -109,33 +108,43 @@ namespace Siesa.SDK.Backend.Services
                 return;
             }
 
-            _subscriptions[exchangeName] = bindingKey;
-
-            _channel.ExchangeDeclare(exchange: exchangeName, type: ExchangeType.Topic);
-
-            var queueName = _channel.QueueDeclare().QueueName;
-            _channel.QueueBind(queue: queueName, exchange: exchangeName, routingKey: bindingKey);
-
-            var consumer = new EventingBasicConsumer(_channel);
-            consumer.Received += (model, ea) =>
+            try
             {
-                var body = ea.Body.ToArray();
-                var message = Encoding.UTF8.GetString(body);
-                var receivedQueueMessage = JsonConvert.DeserializeObject<QueueMessageDTO>(message);
+                _subscriptions[exchangeName] = bindingKey;
 
-                var routingKey = ea.RoutingKey;
-                var exchange = ea.Exchange;
-                
-                receivedQueueMessage.QueueName = $"{exchange}_{routingKey}";
+                _channel.ExchangeDeclare(exchange: exchangeName, type: ExchangeType.Topic);
 
-                if (_subscriptionsActions.ContainsKey($"{exchange}_{routingKey}"))
+                var queueName = _channel.QueueDeclare().QueueName;
+                _channel.QueueBind(queue: queueName, exchange: exchangeName, routingKey: bindingKey);
+
+                var consumer = new EventingBasicConsumer(_channel);
+                consumer.Received += (model, ea) =>
                 {
-                    InvokeAction(exchange, routingKey, receivedQueueMessage);
-                }
-                Console.WriteLine($"[x] Received Message: '{receivedQueueMessage.Message}', Rowid: '{receivedQueueMessage.Rowid}'");
-            };
+                    var body = ea.Body.ToArray();
+                    var message = Encoding.UTF8.GetString(body);
+                    var receivedQueueMessage = JsonConvert.DeserializeObject<QueueMessageDTO>(message);
 
-            _channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
+                    var routingKey = ea.RoutingKey;
+                    var exchange = ea.Exchange;
+                    
+                    receivedQueueMessage.QueueName = $"{exchange}_{routingKey}";
+
+                    if (_subscriptionsActions.ContainsKey($"{exchange}_{routingKey}"))
+                    {
+                        InvokeAction(exchange, routingKey, receivedQueueMessage);
+                    }
+                    Console.WriteLine($"[x] Received Message: '{receivedQueueMessage.Message}', Rowid: '{receivedQueueMessage.Rowid}'");
+                };
+
+                _channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
+                
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al suscribirse a RabbitMQ: {ex.Message}");
+                 //TODO: Reconnect
+                 Reconnect();
+            }
         }
 
         /// <summary>
@@ -146,13 +155,22 @@ namespace Siesa.SDK.Backend.Services
         /// <param name="message">Mensaje a enviar.</param>
         public void SendMessage(string exchangeName, string routingKey, QueueMessageDTO message)
         {
-            _channel.ExchangeDeclare(exchange: exchangeName, type: ExchangeType.Topic);
+            try
+            {    
+                _channel.ExchangeDeclare(exchange: exchangeName, type: ExchangeType.Topic);
 
 
-            var jsonMessage = JsonConvert.SerializeObject(message);
-            var body = Encoding.UTF8.GetBytes(jsonMessage);
+                var jsonMessage = JsonConvert.SerializeObject(message);
+                var body = Encoding.UTF8.GetBytes(jsonMessage);
 
-            _channel.BasicPublish(exchange: exchangeName, routingKey: routingKey, basicProperties: null, body: body);
+                _channel.BasicPublish(exchange: exchangeName, routingKey: routingKey, basicProperties: null, body: body);
+            }
+            catch (Exception ex)
+            {
+                 Console.WriteLine($"Error al enviar un mensaje a RabbitMQ: {ex.Message}");
+                 //TODO: Reconnect
+                 Reconnect();
+            }
         }
 
         /// <summary>
