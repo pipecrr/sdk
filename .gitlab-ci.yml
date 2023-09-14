@@ -150,14 +150,14 @@ pages:
       # move to doc folder
       - cd ../../../../doc
       # delete branch doc_release_$(date +%Y%m%d)_$GUID if it already exists in the local repository
-      - git branch | grep doc_release_$(date +%Y%m%d)_$GUID && git branch -D doc_release_$(date +%Y%m%d)_$GUID
+      - git branch | grep doc_release_$(date +%Y%m%d)_${GUID} && git branch -D doc_release_$(date +%Y%m%d)_${GUID}
       # create a new branch with the current date
-      - git checkout -b doc_release_$(date +%Y%m%d)_$GUID
+      - git checkout -b doc_release_$(date +%Y%m%d)_${GUID}
       - git add .
       - git config --global user.email "gitlab@siesa.com"
       - git config --global user.name "GitLab Runner"
-      - git commit -m "Release doc $(date +%Y%m%d)_$GUID"
-      - git push -u origin doc_release_$(date +%Y%m%d)_$GUID
+      - git commit -m "Release doc $(date +%Y%m%d)_${GUID}"
+      - git push -u origin doc_release_$(date +%Y%m%d)_${GUID}
       # merge request to develop
       - |
         curl --header "PRIVATE-TOKEN: ${TOKEN_TMP}" -X POST -F "source_branch=doc_release_$(date +%Y%m%d)_$GUID" -F "target_branch=develop" -F "title=Release doc $(date +%Y%m%d)" -F "remove_source_branch=true" "https://gitlab.siesadev.com/api/v4/projects/175/merge_requests"
