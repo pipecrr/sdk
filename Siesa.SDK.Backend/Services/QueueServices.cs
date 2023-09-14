@@ -143,7 +143,7 @@ namespace Siesa.SDK.Backend.Services
             {
                 Console.WriteLine($"Error al suscribirse a RabbitMQ: {ex.Message}");
                  //TODO: Reconnect
-                 Reconnect();
+                 //Reconnect();
             }
         }
 
@@ -169,7 +169,7 @@ namespace Siesa.SDK.Backend.Services
             {
                  Console.WriteLine($"Error al enviar un mensaje a RabbitMQ: {ex.Message}");
                  //TODO: Reconnect
-                 Reconnect();
+                 //Reconnect();
             }
         }
 
