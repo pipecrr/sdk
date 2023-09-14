@@ -149,8 +149,7 @@ pages:
       # move to doc folder
       - cd ../../../../doc
       # delete branch doc_release_$(date +%Y%m%d) if it already exists in the local repository
-      - git branch -r | grep doc_release_$(date +%Y%m%d) || echo "Branch doc_release_$(date +%Y%m%d) does not exist"
-      - git branch -r | grep doc_release_$(date +%Y%m%d) && echo "Branch doc_release_$(date +%Y%m%d) already exists" && exit 1
+      - git branch | grep doc_release_$(date +%Y%m%d) && git branch -D doc_release_$(date +%Y%m%d)
       # create a new branch with the current date
       - git checkout -b doc_release_$(date +%Y%m%d)
       - git add .
