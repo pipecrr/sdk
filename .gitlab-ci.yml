@@ -8,8 +8,6 @@ variables:
   REPO_DOC_MODULE: "gitlab.siesadev.com/conversion/sdk/documentation-project/sdk-documentation-module.git"
   CREDS_TMP: "arnol.meneses:sMgdR_SH3y3eszhTEnMe"
   TOKEN_TMP: "sMgdR_SH3y3eszhTEnMe"
-  GUID: $(uuidgen | cut -c1-10)
-
   
 cache:
   key: "$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
@@ -148,10 +146,9 @@ pages:
       # remove public.zip
       - rm public.zip
       # move to doc folder
-      - cd ../../../../doc      
-      - echo "1 doc_release_$(date +%Y%m%d)_$GUID"
-      - echo "2 doc_release_$(date +%Y%m%d)_$(GUID)"
-      - echo "3 s_GUID"
+      - cd ../../../../doc
+      # create GUID
+      - GUID=$(uuidgen | cut -c1-10)
       # create a new branch with the current date
       - git checkout -b doc_release_$(date +%Y%m%d)_$GUID
       - git add .
