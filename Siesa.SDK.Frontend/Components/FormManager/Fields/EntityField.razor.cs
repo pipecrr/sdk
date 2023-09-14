@@ -45,7 +45,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
 
         protected override async Task OnParametersSetAsync()
         {
-            await base.OnParametersSetAsync();
+            await base.OnParametersSetAsync().ConfigureAwait(true);
 
             if(FieldOpt.RelatedFilters != null)
             {
