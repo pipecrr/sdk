@@ -107,7 +107,6 @@ sonarqube-check:
     - main
     - develop
 
-
 deploy:
     stage: deploy
     only: 
