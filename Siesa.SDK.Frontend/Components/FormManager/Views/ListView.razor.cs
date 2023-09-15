@@ -58,6 +58,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter]
         public bool AllowDetail { get; set; } = true;
         [Parameter]
+        public bool AllowExport { get; set; } = true;
+        [Parameter]
         public bool ShowSearchForm { get; set; } = true;
         [Parameter]
         public bool ShowList { get; set; } = true;
@@ -183,6 +185,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private bool CanDetail;
         private bool CanAccess;
         private bool CanImport;
+        private bool CanExport;
         private string defaultStyleSearchForm = "search_back position-relative";
         private string StyleSearchForm { get; set; } = "search_back position-relative";
         private Radzen.DataGridSelectionMode SelectionMode { get; set; } = Radzen.DataGridSelectionMode.Single;
@@ -355,6 +358,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 if(ListViewModel.AllowCreate != null){
                     AllowCreate = ListViewModel.AllowCreate.Value;
                 }
+                if(ListViewModel.AllowExport != null){
+                    AllowExport = ListViewModel.AllowExport.Value;
+                }
                 //TODO: quitar cuando se pueda usar flex en los custom components
                 var fieldsCustomComponent = ListViewModel.Fields.Where(x => x.CustomComponent != null).ToList();
                 if(fieldsCustomComponent.Count > 0){
@@ -440,14 +446,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if (FeaturePermissionService != null && !string.IsNullOrEmpty(BusinessName))
             {
                
-               if(IsSubpanel && BusinessName.Equals("BLAttachmentDetail"))
+               if(IsSubpanel && BusinessName.Equals("BLAttachmentDetail",StringComparison.Ordinal))
                {
                     try
                     {
-                        CanAccess = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.AccessAttachment, AuthenticationService);
-                        CanCreate = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.UploadAttachment, AuthenticationService);
-                        CanDelete = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.DeleteAttachment, AuthenticationService);
-                        CanDetail = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.DownloadAttachment, AuthenticationService);
+                        CanAccess = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.AccessAttachment, AuthenticationService).ConfigureAwait(true);
+                        CanCreate = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.UploadAttachment, AuthenticationService).ConfigureAwait(true);
+                        CanDelete = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.DeleteAttachment, AuthenticationService).ConfigureAwait(true);
+                        CanDetail = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.DownloadAttachment, AuthenticationService).ConfigureAwait(true);
                     }
                     catch (System.Exception)
                     {
@@ -456,12 +462,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                {
                     try
                     {
-                        CanAccess = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Access, AuthenticationService);
-                        CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Create, AuthenticationService);
-                        CanEdit = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Edit, AuthenticationService);
-                        CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Delete, AuthenticationService);
-                        CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
-                        CanImport = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Import, AuthenticationService);
+                        CanAccess = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Access, AuthenticationService).ConfigureAwait(true);
+                        CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Create, AuthenticationService).ConfigureAwait(true);
+                        CanEdit = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Edit, AuthenticationService).ConfigureAwait(true);
+                        CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Delete, AuthenticationService).ConfigureAwait(true);
+                        CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService).ConfigureAwait(true);
+                        CanImport = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Import, AuthenticationService).ConfigureAwait(true);
+                        CanExport = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Export, AuthenticationService).ConfigureAwait(true);
                     }
                     catch (System.Exception)
                     {
@@ -738,20 +745,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                             if (searchValue is string && string.IsNullOrEmpty(searchValue))
                             {
                                 continue;
-                            }
-                            /*try{
-                                Type searchValueType = searchValue.GetType();
-                                dynamic defaultValue = null;
-                                if(searchValueType.IsValueType && !searchValueType.IsEnum){
-                                    defaultValue = Activator.CreateInstance(searchValueType);
-                                }
-                                if (searchValue == defaultValue)
-                                {
-                                    continue;
-                                }
-                            }catch(Exception e){
-                                Console.WriteLine(e);
-                            }*/
+                            }                            
                             switch (fieldObj.FieldType)
                             {
                                 case FieldTypes.CharField:
@@ -914,6 +908,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private void GoToImport()
         {
             NavManager.NavigateTo($"{BusinessName}/Import/");
+        }
+        
+        private async Task GoToExport()
+        {
+            await JSRuntime.InvokeAsync<object>("oreports_app_table_flexdebug_"+guidListView+".dataGridRef.instance.exportToExcel", false).ConfigureAwait(true);
         }
 
         private void GoToDetail(Int64 id)
