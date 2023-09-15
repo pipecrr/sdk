@@ -194,6 +194,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         }
 
         private async Task OnSelectItem(dynamic item){
+            _isOpenDropDown = false;
             SetVal(item);
             if(OnChange != null){
                 OnChange();
