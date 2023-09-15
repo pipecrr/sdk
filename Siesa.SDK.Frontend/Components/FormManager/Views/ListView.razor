@@ -356,7 +356,7 @@ else
                 }
                 @if (CanExport && AllowExport)
                 {
-                    <TopBarButton Click="@(async () => await GoToExport())" ResourceTag="Action.Export" IconCssClass="fa-file-excel" Enabled="@ShowList"/>
+                    <TopBarButton Click="GoToExport" ResourceTag="Action.Export" IconCssClass="fa-file-excel" Enabled="@ShowList"/>
                 }
 
                 @if(ShowSearchForm && HasSearchViewdef && !_isEditingFlex)

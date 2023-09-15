@@ -910,9 +910,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             NavManager.NavigateTo($"{BusinessName}/Import/");
         }
         
-        private async Task GoToExport()
+        private void GoToExport()
         {
-            await JSRuntime.InvokeAsync<object>("oreports_app_table_flexdebug_"+guidListView+".dataGridRef.instance.exportToExcel", false).ConfigureAwait(true);
+            _ = JSRuntime.InvokeAsync<object>("oreports_app_table_flexdebug_"+guidListView+".dataGridRef.instance.exportToExcel", false);
         }
 
         private void GoToDetail(Int64 id)
