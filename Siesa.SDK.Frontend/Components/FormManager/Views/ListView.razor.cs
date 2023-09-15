@@ -114,6 +114,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private bool _isEditingFlex = false;
         private bool _isSearchOpen = false;
+        private bool _showActions = true;
         public String ErrorMsg = "";
         public List<String> ErrorList = new List<string>();
         private IList<dynamic> SelectedObjects { get; set; } = new List<dynamic>();
@@ -346,6 +347,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 FlexTake = ListViewModel.FlexTake;
                 ShowLinkTo = ListViewModel.ShowLinkTo;
                 ServerPaginationFlex = ListViewModel.ServerPaginationFlex;
+                _showActions = ListViewModel.ShowActions;
                 if(ListViewModel.AllowEdit != null){
                     AllowEdit = ListViewModel.AllowEdit.Value;
                 }
