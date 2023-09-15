@@ -118,6 +118,7 @@ deploy:
       - dotnet nuget push "nuget/*.nupkg" --source gitlab
       
 pages:
+    allow_failure: true
     script:
       - dotnet tool update -g docfx
       - export PATH="$PATH:/root/.dotnet/tools"
