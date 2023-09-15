@@ -4,7 +4,7 @@
 {
     <SDKButton ResourceTag="Custom.Document.Button.Create" Click="@(async () => await FormView.ClickAddRow())"/>
 }
-<SDKGrid Data="@BusinessObj.ChildObjs" TItem="object" @ref="FormView.RefGrid">
+<SDKGrid Data="@BusinessObj.ChildObjs" TItem="object" @ref="FormView.RefGrid" AllowColumnResize="true">
     <Columns>
         @if (DetailConfig.CustomActions.Any() || !IsDetail)
         {
@@ -35,9 +35,13 @@
         }
         @foreach (FieldOptions column in DetailConfig.Fields)
         {
-            <SDKGridColumn TItem="object" Title="@column.Name" UniqueId="@column.Name">
+            @if(string.IsNullOrEmpty(column.ResourceTag))
+            {
+                column.ResourceTag = $"{BusinessObj.ChildType().Name}.{column.Name}";
+            }
+            <SDKGridColumn TItem="object" ResourceTag="@column.ResourceTag" UniqueId="@column.ResourceTag">
                 <Template Context="data">
-                    <FieldOptComponent Column="@column" Data="@data" @key="@GetKey(column.Name, data)" IsDetail="@IsDetail"/>
+                    <FieldOptComponent Column="@column" Data="@data" @key="@GetKey(column.ResourceTag, data)" IsDetail="@IsDetail"/>
                 </Template>
             </SDKGridColumn>
         }

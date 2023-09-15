@@ -43,6 +43,15 @@
         }
         return "";
     }
+    protected override async Task OnParametersSetAsync()
+    {
+        if(!string.IsNullOrEmpty(ResourceTag))
+        {
+            Title = await GetText();
+            InvokeAsync(() => StateHasChanged());
+        }
+        await base.OnParametersSetAsync();
+    }
 
     protected override async Task OnInitializedAsync()
     {
