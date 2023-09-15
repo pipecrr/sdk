@@ -35,7 +35,7 @@ namespace Siesa.SDK.Frontend.Components.Layout
 
         protected override async Task OnInitializedAsync()
         {
-            QueueService.Subscribe("BLUser", enumMessageCategory.CRUD, this.OnCrudNotification);
+            //QueueService.Subscribe("BLUser", enumMessageCategory.CRUD, this.OnCrudNotification);
 
             await base.OnInitializedAsync();
         }
