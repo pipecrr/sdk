@@ -354,7 +354,7 @@ else
                 {
                     <TopBarButton Click="GoToImport" ResourceTag="Action.Import" IconCssClass="fa-file-import"/>
                 }
-                @if (CanExport)
+                @if (CanExport && AllowExport)
                 {
                     <TopBarButton Click="@(async () => await GoToExport())" ResourceTag="Action.Export" IconCssClass="fa-file-excel" Enabled="@ShowList"/>
                 }
