@@ -1253,11 +1253,6 @@ color: var(--color_text);
     
 }
 
-.rz-colorpicker
-{
-
-}
-
 .dropdown-menu{
     border-radius: var(--border_radius_standar_max);
 }
@@ -1936,4 +1931,135 @@ div.dxbs-btn-group.dxbs-input-group-prepend>.btn.dx-btn.btn-sm {
 {
   background-color: var(--color_input_back_disabled) !important;
   border-color: var(--color_form_border) !important; 
+  resize: none !important; 
+}
+
+.input-group>.input-group-append>.whcm-btn-outline:disabled{
+    background-color: transparent !important;
+}
+
+/* 
+SDKColorPicker-----------------------
+*/
+
+
+.rz-colorpicker{
+    background-color:var(--color_input_back) !important;
+    border-color:var(--color_form_border) !important;
+}
+
+button.rz-colorpicker-trigger{
+    color:var(--color_primary) !important;
+}
+
+.rz-colorpicker-popup{
+    background-color:var(--color_panel_back) !important;
+    border: 1px solid var(--color_border) !important;
+}
+
+.rz-color-box .rz-spinner{
+    background-color:var(--color_input_back) !important;
+    border-color: var(--color_form_border) !important;
+}
+
+.rz-color-box .rz-textbox{
+    background-color:var(--color_input_back) !important;
+    border: var(--color_form_border) !important;
+    color:var(--color_text) !important;
+}
+
+.rz-color-box .rz-spinner .rz-spinner-input{
+    color:var(--color_text);
+}
+
+/* 
+SDKDateTimeField -----------------------
+*/
+
+.rz-calendar .rz-inputtext{
+    background-color: var(--color_input_back) !important;
+    border-color: var(--color_form_border) !important;
+}
+
+.rz-datepicker-trigger{
+    color: var(--color_primary) !important;
+}
+
+.rz-datepicker{
+    background-color:var(--color_panel_back) !important;
+}
+
+.rz-datepicker-calendar td .rz-state-default{
+    color: var(--color_text) !important;
+}
+
+.rz-datepicker-calendar td .rz-state-default:hover{
+    background-color: var(--color_border) !important;
+}
+
+.rz-datepicker-header{
+    background-color: var(--color_back_body) !important;
+}
+
+
+.rz-datepicker:not(.rz-datepicker-inline){
+    border: 1px solid var(--color_border) !important;
+    border-radius: var(--border_radius_standar_max) !important;
+}
+
+.rz-datepicker-next .rzi-chevron-right{
+    color: var(--color_text) !important;
+}
+
+
+.rz-datepicker-prev .rzi-chevron-left{
+    color: var(--color_text) !important;
+}
+
+.rz-datepicker-calendar th{
+    color: var(--color_text) !important;
+}
+
+
+.rz-datepicker-title .rz-dropdown{
+    background-color: var(--color_input_back);
+    border-color: var(--color_form_border);
+    color:var(--color_text);
+}
+
+.rz-datepicker-title .rz-dropdown:hover{
+    border-color: var(--color_form_border) !important;
+}
+
+.rz-datepicker-calendar td{
+    border-top: 1px solid var(--color_border) !important;
+}
+
+.rz-calendar .rz-inputtext{
+    color:var(--color_text) !important;
+}
+
+.rz-datepicker-calendar td .rz-state-active{
+    background-color: var(--color_primary) !important;
+    color:var(--color_input_back) !important;
+}
+
+.rz-datepicker-calendar td .rz-state-active:hover{
+    background-color: var(--color_primary) !important;
+    color:var(--color_input_back) !important;
+}
+
+.rz-dropdown-panel{
+    background-color: var(--color_panel_back) !important;
+border-color: var(--color_border) !important;
+}
+
+.rz-dropdown-item.rz-state-highlight{
+    background-color:var(--color_primary) !important;
+    color: var(--color_input_back) !important;
+}
+
+.rz-dropdown-items-wrapper .rz-dropdown-items .rz-dropdown-item:hover{
+    background-color: var(--color_back_2) !important;
+    color: var(--color_text) !important;
 }
