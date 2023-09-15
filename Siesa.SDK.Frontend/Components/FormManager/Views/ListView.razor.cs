@@ -115,6 +115,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public String ErrorMsg = "";
         public List<String> ErrorList = new List<string>();
         private IList<dynamic> SelectedObjects { get; set; } = new List<dynamic>();
+        /// <summary>
+        /// Gets or sets the selected items.
+        /// </summary>
         [Parameter] 
         public IList<dynamic> SelectedItems { get; set; }
         private ListViewModel ListViewModel { get; set; }
@@ -157,7 +160,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private List<Button> ExtraButtons { get; set; }
         private Button CreateButton { get; set; }
         public RadzenDataGrid<object> _gridRef;
-
+        
+        /// <summary>
+        /// Gets or sets the fields hidden.
+        /// </summary>
         public List<FieldOptions> FieldsHidden { get; set; } = new List<FieldOptions>();
 
         public List<FieldOptions> SavedHiddenFields { get; set; } = new List<FieldOptions>();
@@ -170,8 +176,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public string FinalViewdefName { get; set; }
 
         private List<string> _extraFields = new List<string>();
-
-
 
         private bool CanCreate;
         private bool CanEdit;
