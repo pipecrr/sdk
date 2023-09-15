@@ -4,12 +4,14 @@ import "Protos/BusinessMessages.proto";
 
 service GRPCBackendManagerService {
   rpc RegisterBackend (RegisterBackendRequest) returns (RegisterBackendResponse);
+  rpc OpeningChannelToBack (stream OpeningChannelToBackRequest) returns (stream QueueMessageDTO);
 }
 
 message BackendInfo {
   string backend_name = 1;
   string backend_url = 2;
   repeated BusinessModel businesses = 3;
+  bool isFrontendService = 4;
 }
 
 message RegisterBackendRequest {
@@ -18,4 +20,15 @@ message RegisterBackendRequest {
 
 message RegisterBackendResponse {
    repeated BusinessModel businesses = 1;
+}
+
+message OpeningChannelToBackRequest {
+  string exchangeName = 1;
+  string bindingKey = 2; 
+}
+
+message  QueueMessageDTO {
+  string queueName = 1;
+  string message = 2;
+  int64 rowid = 3;
 }

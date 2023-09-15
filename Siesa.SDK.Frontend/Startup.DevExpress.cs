@@ -29,6 +29,7 @@ using Siesa.SDK.Frontend.Report.Services;
 using Microsoft.AspNetCore.ResponseCompression;
 using System.Linq;
 using Microsoft.Extensions.Hosting;
+using Blazored.Toast;
 
 namespace Siesa.SDK.Frontend
 {
@@ -57,6 +58,8 @@ namespace Siesa.SDK.Frontend
             services.AddScoped<SDKDialogService>();
             services.AddScoped<SDKGlobalLoaderService>();
             services.AddScoped<MenuService>();
+            services.AddScoped<IQueueService, QueueService>();
+            services.AddBlazoredToast();
             services.AddSignalR(e =>
             {
                 e.MaximumReceiveMessageSize = 102400000;

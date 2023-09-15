@@ -5,6 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Siesa.SDK.Shared.Json;
+using Microsoft.Extensions.DependencyInjection;
+using Siesa.SDK.Shared.Backend;
+using Siesa.SDK.Shared.Services;
+
+
 
 namespace Siesa.SDK.Shared.Application
 {
@@ -96,6 +101,32 @@ namespace Siesa.SDK.Shared.Application
         public static Type GetIndexComponent()
         {
             return _indexComponent;
+        }
+
+        /// <summary>
+        /// Ejecuta la suscripción a colas para una lista de tipos de negocio.
+        /// </summary>
+        /// <param name="BusinessList">Lista de tipos de negocio para los cuales se realizará la suscripción.</param>
+        public static void ExecuteSubscribeToQueues(IEnumerable<Type> BusinessList)
+        {
+            try
+            {
+                foreach (var bl in BusinessList)
+                {
+                    var BLMethod = Siesa.SDK.Shared.Utilities.Utilities.SearchType($"{bl.Namespace}.{bl.Name}", true).GetMethod("SubscribeToQueues");
+
+                    if (BLMethod != null && _serviceProvider != null && BLMethod.GetBaseDefinition().DeclaringType != BLMethod.DeclaringType)
+                    {
+                        Type blType = Siesa.SDK.Shared.Utilities.Utilities.SearchType($"{bl.Namespace}.{bl.Name}", true);
+                        var blInstance = ActivatorUtilities.CreateInstance(_serviceProvider, blType);
+                        BLMethod.Invoke(blInstance, null);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error SDKAPP: {ex.Message}");
+            }
         }
     }
 }

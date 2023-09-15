@@ -41,7 +41,8 @@ using Amazon.S3;
 using Amazon.S3.Model;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
-
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 using Siesa.Global.Enums;
 using System.Text.RegularExpressions;
 
@@ -197,6 +198,8 @@ namespace Siesa.SDK.Business
         [JsonIgnore]
         protected IFeaturePermissionService FeaturePermissionService { get; set; }
 
+        private IQueueService _queueService;
+
         public SDKBusinessModel GetBackend(string business_name)
         {
             return BackendRouterService.Instance.GetSDKBusinessModel(business_name, AuthenticationService);
@@ -314,6 +317,7 @@ namespace Siesa.SDK.Business
 
             _backendRouterService = (IBackendRouterService)_provider.GetService(typeof(IBackendRouterService));
             _featurePermissionService = (IFeaturePermissionService)_provider.GetService(typeof(IFeaturePermissionService));
+            _queueService = (IQueueService)_provider.GetService(typeof(IQueueService));
             _configuration = (IConfiguration)_provider.GetService(typeof(IConfiguration));
             _useS3 = _configuration.GetValue<bool>("AWS:UseS3");
             if(_useS3){
@@ -523,6 +527,14 @@ namespace Siesa.SDK.Business
         {
             //Do nothing
         }
+
+        /// <summary>
+        /// Method used to Subscribe to queues
+        /// </summary>
+        public virtual void SubscribeToQueues()
+        {
+            //Do nothing
+        }
         public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave(bool ignorePermissions = false)
         {
             ValidateAndSaveBusinessObjResponse result = new();
@@ -557,6 +569,14 @@ namespace Siesa.SDK.Business
                         }
                         BeforeSave(ref result, context);
                         result.Rowid = Save(context);
+                        if (_queueService != null && !string.IsNullOrEmpty(BusinessName))
+                        {
+                            _queueService.SendMessage(BusinessName, enumMessageCategory.CRUD, new QueueMessageDTO()
+                            {
+                                Message = $"Custom.{BusinessName}.RecordSaved",
+                                Rowid = result.Rowid
+                            });
+                        }
                         if (DynamicEntities != null && DynamicEntities.Count > 0)
                         {
                             SaveDynamicEntity(result.Rowid, context);
@@ -863,6 +883,14 @@ namespace Siesa.SDK.Business
                         if (!context.Database.IsInMemory())
                         {
                             context.Commit();
+                        }   
+                        if (_queueService != null && !string.IsNullOrEmpty(BusinessName))
+                        {
+                            _queueService.SendMessage(BusinessName, enumMessageCategory.CRUD, new QueueMessageDTO()
+                            {
+                                Message = $"Custom.{BusinessName}.RecordDeleted",
+                                Rowid = result.Rowid
+                            });
                         }
                     }catch(DbUpdateException DbEx)
                     {
