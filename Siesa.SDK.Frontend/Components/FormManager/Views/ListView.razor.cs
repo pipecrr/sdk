@@ -179,6 +179,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private bool CanDetail;
         private bool CanAccess;
         private bool CanImport;
+        private bool CanExport = true;
         private string defaultStyleSearchForm = "search_back position-relative";
         private string StyleSearchForm { get; set; } = "search_back position-relative";
         private Radzen.DataGridSelectionMode SelectionMode { get; set; } = Radzen.DataGridSelectionMode.Single;
@@ -910,6 +911,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private void GoToImport()
         {
             NavManager.NavigateTo($"{BusinessName}/Import/");
+        }
+        
+        private async Task GoToExport()
+        {
+            await JSRuntime.InvokeAsync<object>("oreports_app_table_flexdebug_"+guidListView+".dataGridRef.instance.exportToExcel", false).ConfigureAwait(true);
         }
 
         private void GoToDetail(Int64 id)
