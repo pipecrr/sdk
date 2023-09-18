@@ -9,13 +9,11 @@
 
   <ItemGroup>
       <PackageReference Include="Moq" Version="4.16.1" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.9" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Siesa.SDK.Shared\Siesa.SDK.Shared.csproj" />
     <ProjectReference Include="..\Siesa.SDK.Backend\Siesa.SDK.Backend.csproj" />
-    <ProjectReference Include="..\Siesa.SDK.Frontend\Siesa.SDK.Frontend.csproj" />
   </ItemGroup>
 
 </Project>
