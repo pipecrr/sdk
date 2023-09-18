@@ -6,7 +6,6 @@ variables:
   NUGET_PACKAGES_DIRECTORY: '.nuget'
   SOURCE_CODE_PATH: '*/*/'
   REPO_DOC_MODULE: "gitlab.siesadev.com/conversion/sdk/documentation-project/sdk-documentation-module.git"  
-  GTABLAS_USER: $GTABLAS_USER
   
 cache:
   key: "$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
@@ -29,7 +28,7 @@ build_dev:
     tags:
       - docker
     rules:
-      - if: $GITLAB_USER_LOGIN == $GTABLAS_USER
+      - if: $GITLAB_USER_LOGIN == "gtablas"
         when: never
     artifacts:
         paths:
@@ -44,7 +43,7 @@ build_release:
     tags:
       - docker
     rules:
-      - if: $GITLAB_USER_LOGIN == $GTABLAS_USER
+      - if: $GITLAB_USER_LOGIN == "gtablas"
         when: never
     artifacts:
         paths:
@@ -78,7 +77,7 @@ generate_release:
     tags:
       - docker
     rules:
-      - if: $GITLAB_USER_LOGIN == $GTABLAS_USER
+      - if: $GITLAB_USER_LOGIN == "gtablas"
         when: never
     artifacts:
         paths:
@@ -87,7 +86,7 @@ generate_release:
 test:
     stage: test
     rules:
-      - if: $GITLAB_USER_LOGIN == $GTABLAS_USER
+      - if: $GITLAB_USER_LOGIN == "gtablas"
         when: never
     only: 
       - develop
@@ -116,7 +115,7 @@ sonarqube-check:
       - "dotnet sonarscanner end /d:sonar.login=\"$SONAR_TOKEN\""
   allow_failure: true
   rules:
-    - if: $GITLAB_USER_LOGIN == $GTABLAS_USER
+    - if: $GITLAB_USER_LOGIN == "gtablas"
       when: never
   only:
     - merge_requests
@@ -131,7 +130,7 @@ deploy:
     tags:
       - docker
     rules:
-      - if: $GITLAB_USER_LOGIN == $GTABLAS_USER
+      - if: $GITLAB_USER_LOGIN == "gtablas"
         when: never
     script:
       - dotnet nuget push "nuget/*.nupkg" --source gitlab
@@ -182,7 +181,7 @@ pages:
     tags:
       - docker
     rules:
-      - if: $GITLAB_USER_LOGIN == $GTABLAS_USER'
+      - if: $GITLAB_USER_LOGIN == "gtablas"'
         when: never
     only:
       - develop
