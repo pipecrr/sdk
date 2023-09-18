@@ -6,7 +6,7 @@ variables:
   NUGET_PACKAGES_DIRECTORY: '.nuget'
   SOURCE_CODE_PATH: '*/*/'
   REPO_DOC_MODULE: "gitlab.siesadev.com/conversion/sdk/documentation-project/sdk-documentation-module.git"
-  GTABLAS_USER: $GTABLAS_USER
+  GTABLAS_USER: "gtablas"
   
 cache:
   key: "$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
