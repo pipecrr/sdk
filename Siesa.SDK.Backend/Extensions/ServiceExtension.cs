@@ -99,6 +99,13 @@ namespace Siesa.SDK.Backend.Extensions
                         }
                         tenant.ConnectionString += $"Application Name=SDK-{appName};";
                     }
+                    //add Encrypt=False if not present
+                    if(!tenant.ConnectionString.Contains("Encrypt=")){
+                        if(tenant.ConnectionString.Last() != ';'){
+                            tenant.ConnectionString += ";";
+                        }
+                        tenant.ConnectionString += "Encrypt=False;";
+                    }
                     opts.UseSqlServer(tenant.ConnectionString);
 
                 }

@@ -1,4 +1,4 @@
-image: mcr.microsoft.com/dotnet/sdk:6.0
+image: mcr.microsoft.com/dotnet/sdk:7.0
 #force
 variables:
   PACKAGE_REGISTRY_URL: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/nuget/index.json"

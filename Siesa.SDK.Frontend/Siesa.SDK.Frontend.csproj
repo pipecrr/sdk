@@ -7,7 +7,7 @@
 		<Copy SourceFiles="@(RazorDocumentationCode)" DestinationFiles="@(RazorDocumentationCode->'Components\Documentation\SourceCode\%(Filename).txt')" />
 	</Target> 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net7.0</TargetFramework>
 		<AnalysisLevel>latest</AnalysisLevel>
 		<AnalysisMode>All</AnalysisMode>
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
@@ -55,16 +55,16 @@
 		<PackageReference Include="GrapeCity.ActiveReports.Aspnetcore.Viewer" Version="17.1.2" />
 		<PackageReference Include="GrapeCity.ActiveReports.Blazor.Viewer" Version="17.1.2" />
 		<PackageReference Include="Grpc.Net.Client" Version="2.40.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="7.0.9" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.DataAnnotations.Validation" Version="3.2.0-rc1.20223.4" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.12" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.11" />
 		<PackageReference Include="Microsoft.AspNetCore.ResponseCompression" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.0.1" />
 		<PackageReference Include="Microsoft.CodeAnalysis.Razor" Version="6.0.20" />
-		<PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.1" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="6.0.0" />
-		<PackageReference Include="Radzen.Blazor" Version="4.15.7" />
+		<PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.11" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="7.0.11" />
+		<PackageReference Include="Radzen.Blazor" Version="4.16.0" />
 		<PackageReference Include="Reshiru.Blazor.IndexedDB.Framework" Version="1.0.1" />
 		<PackageReference Include="TG.Blazor.IndexedDB" Version="1.5.0-preview" />
 		<PackageReference Include="Z.Blazor.Diagrams" Version="2.1.6" />

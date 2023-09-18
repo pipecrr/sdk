@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <DisableGclm>true</DisableGclm>
@@ -9,13 +9,11 @@
 
   <ItemGroup>
       <PackageReference Include="Moq" Version="4.16.1" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Siesa.SDK.Shared\Siesa.SDK.Shared.csproj" />
     <ProjectReference Include="..\Siesa.SDK.Backend\Siesa.SDK.Backend.csproj" />
-    <ProjectReference Include="..\Siesa.SDK.Frontend\Siesa.SDK.Frontend.csproj" />
   </ItemGroup>
 
 </Project>
