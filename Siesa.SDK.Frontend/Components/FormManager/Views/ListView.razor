@@ -349,25 +349,21 @@ else
         <SetTopBar HasExtraButtons="@HasExtraButtons" BusinessObj="@BusinessObj">
             <TopBarTitle><ResourceViewer ResourceTag="@($"{BusinessName}.Plural")" /></TopBarTitle>
             <TopBarButtons>
-                @*Boton para ir a la vista de importa, validar creacion ResoruceTag*@
-
+                
                 @if (CanImport)
                 {
                     <TopBarButton Click="GoToImport" ResourceTag="Action.Import" IconCssClass="fa-file-import"/>
                 }
-
+                @if (CanExport && AllowExport)
+                {
+                    <TopBarButton Click="GoToExport" ResourceTag="Action.Export" IconCssClass="fa-file-excel" Enabled="@ShowList"/>
+                }
 
                 @if(ShowSearchForm && HasSearchViewdef && !_isEditingFlex)
                 {
                     <TopBarButton ResourceTag="Action.AdvanceSearch" IconCssClass="fa-magnifying-glass" Click="@(()=> SetSearchFromVisibility(false))"/>
                 }
-                @*if(_isEditingFlex){
-                    <TopBarButton ResourceTag="Action.Cancel" IconCssClass="fa-times" Click="CancelEdit"/>
-                    <TopBarButton ResourceTag="Action.Flex.SaveAndClose" IconCssClass="fa-floppy-disk" Click="SaveAndCloseList" />
-                }
-                @if(UseFlex && !_isEditingFlex && !_isSearchOpen){
-                    <TopBarButton Click="GoToEditFlex" ResourceTag="Action.EditListFlex" IconCssClass="fa-pen" />
-                } *@
+                
                 @if((CanCreate && AllowCreate) && !_isEditingFlex)
                 {   
                     if(CreateButton!=null){

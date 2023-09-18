@@ -107,18 +107,8 @@ export async function InitSDK(dotnethelper){
             var resourcesDetail = ResourcesDetail.filter(x => x.CultureId == culture.Id).map(x => {return {[x.idResource]:x.description}})
             if(!window.ResourceFlex){
                 window.ResourceFlex = {};
-                if(!window.ResourceFlex[rowidCulture]){
-                    window.ResourceFlex[rowidCulture] = resourcesDetail;
-                }else{
-                    window.ResourceFlex[rowidCulture] = {...window.ResourceFlex[rowidCulture], ...resourcesDetail};
-                }
-            }else{
-                if(!window.ResourceFlex[rowidCulture]){
-                    window.ResourceFlex[rowidCulture] = resourcesDetail;
-                }else{
-                    window.ResourceFlex[rowidCulture] = {...window.ResourceFlex[rowidCulture], ...resourcesDetail};
-                }
             }
+            window.ResourceFlex[rowidCulture] = resourcesDetail;
             db.close();
         }
         localStorage.setItem('bd', 'sync');        

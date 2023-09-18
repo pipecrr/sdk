@@ -14,7 +14,9 @@ namespace Siesa.SDK.Entities
 {
 	public partial class E00518_PortalUser
 	{
-
-
+		public override string ToString()
+		{
+			return $"{ExternalUser} - {Portal}";
+		}
 	}
 }

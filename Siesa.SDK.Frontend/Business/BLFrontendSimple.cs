@@ -28,6 +28,7 @@ using Siesa.Global.Enums;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Collections;
+using Microsoft.EntityFrameworkCore;
 
 namespace Siesa.SDK.Business
 {
@@ -430,30 +431,84 @@ namespace Siesa.SDK.Business
                     return typeof(string);
             }
         }
+        
+        /// <summary>
+        /// Get the duplicate info of the current object whitoout IndexUnique fields and BaseAudit fields
+        /// </summary>
+        /// <param name="rowid"></param>
+        /// <returns></returns>
         public async virtual Task GetDuplicateInfo(Int64 rowid)
         {
-            BaseObj = await GetAsync(rowid);
-            //clear rowid
+            BaseObj = await GetAsync(rowid).ConfigureAwait(true);
             BaseObj.SetRowid(0);
             var blankBaseObj = Activator.CreateInstance<T>();
+
+            var indexAttributes = blankBaseObj.GetType().GetCustomAttributes().Where(x => x?.GetType() == typeof(IndexAttribute) && ((IndexAttribute)x).IsUnique).ToList();
+
+            if (indexAttributes.Count > 0)
+            {
+                List<string> nameProperties = new();
+                foreach (var attr in indexAttributes)
+                {
+                    var propertyNames = ((IndexAttribute)attr).PropertyNames.Where(x => !(nameProperties.Contains(x))).ToList();
+                    nameProperties.AddRange(propertyNames);
+                }
+                ProcessProperties(nameProperties, blankBaseObj);
+            }
+
             if (Utilities.IsAssignableToGenericType(BaseObj.GetType(), typeof(BaseAudit<>)))
             {
-                foreach (var field in typeof(BaseAudit<>).GetProperties())
+                ProcessAuditProperties(typeof(BaseAudit<>), blankBaseObj);
+            }
+        }
+        
+        private void SetValueInDuplicate(PropertyInfo field, T blankBaseObj)
+        {
+            if (field.PropertyType.IsGenericType && field.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                BaseObj.GetType().GetProperty(field.Name)?.SetValue(BaseObj, null);
+            }
+            else
+            {
+                BaseObj.GetType().GetProperty(field.Name)?.SetValue(BaseObj, blankBaseObj.GetType().GetProperty(field.Name)?.GetValue(blankBaseObj));
+            }
+        }
+
+        private void ProcessProperties(List<string> nameProperties, T blankBaseObj)
+        {
+            foreach (string propertyName in nameProperties)
+            {
+                var property = BaseObj.GetType().GetProperty(propertyName);
+                if (property != null)
                 {
-                    //if field is nullable, set it to null
-                    if (field.PropertyType.IsGenericType && field.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                    SetValueInDuplicate(property, blankBaseObj);
+                }
+
+                if (propertyName.StartsWith("Rowid", StringComparison.Ordinal) && propertyName != "Rowid")
+                {
+                    string relatedpropertyName = propertyName.Replace("Rowid", "", StringComparison.Ordinal);
+                    var relatedproperty = BaseObj.GetType().GetProperty(relatedpropertyName);
+                    if (relatedproperty != null)
                     {
-                        BaseObj.GetType().GetProperty(field.Name).SetValue(BaseObj, null);
-                    }
-                    else
-                    {
-                        BaseObj.GetType().GetProperty(field.Name).SetValue(BaseObj, blankBaseObj.GetType().GetProperty(field.Name).GetValue(blankBaseObj));
+                        SetValueInDuplicate(relatedproperty, blankBaseObj);
                     }
                 }
             }
         }
 
+        private void ProcessAuditProperties(Type baseAuditType, T blankBaseObj)
+        {
+            foreach (var field in baseAuditType.GetProperties())
+            {
+                SetValueInDuplicate(field, blankBaseObj);
+            }
+        }
 
+
+        /// <summary>
+        /// Save the current object
+        /// </summary>
+        /// <returns>Returns the rowid of the record created </returns>
         public virtual Int64 Save()
         {
             return SaveAsync().GetAwaiter().GetResult();

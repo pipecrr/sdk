@@ -29,7 +29,7 @@ using Siesa.SDK.Frontend.Report.Services;
 using Microsoft.AspNetCore.ResponseCompression;
 using System.Linq;
 using Microsoft.Extensions.Hosting;
-using Siesa.SDK.Frontend.Components.Documentation.Services;
+using Blazored.Toast;
 
 namespace Siesa.SDK.Frontend
 {
@@ -58,7 +58,8 @@ namespace Siesa.SDK.Frontend
             services.AddScoped<SDKDialogService>();
             services.AddScoped<SDKGlobalLoaderService>();
             services.AddScoped<MenuService>();
-            services.AddScoped<CompilerService>();
+            services.AddScoped<IQueueService, QueueService>();
+            services.AddBlazoredToast();
             services.AddSignalR(e =>
             {
                 e.MaximumReceiveMessageSize = 102400000;
@@ -135,8 +136,17 @@ namespace Siesa.SDK.Frontend
                 endpoints.MapControllers();
                 endpoints.MapControllerRoute(
                     name: "default",
+                    pattern: "api/login",
+                    defaults: new { controller = "Api", action = "GetSessionToken" });
+                endpoints.MapControllerRoute(
+                    name: "default",
                     pattern: "api/{blname}/{blaction}/",
                     defaults: new { controller = "Api", action = "Index" });
+                //sdk-docs/* redirect
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "sdk-docs/{*url}",
+                    defaults: new { controller = "Api", action = "RedirectToDocs" });
             });
 
 

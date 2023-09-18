@@ -38,7 +38,17 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         public bool? AllowDelete { get; set; }
         public bool? AllowDetail { get; set; }
         public bool? AllowCreate { get; set; }
+        public bool? AllowExport { get; set; }
 
         public List<string> ExtraFields { get; set; } = new List<string>(); 
+        /// <summary>
+        /// Gets or sets of actions to Add a row to the form.
+        /// </summary>
+        public string ActionAddRow { get; set; }
+        /// <summary>
+        /// Gets or sets of actions to Delete a row from the form.
+        /// </summary>
+        public string ActionDeleteRow { get; set; }
+
     }
 }

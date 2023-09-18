@@ -82,7 +82,7 @@
                     </h6>
 
                     <FreeForm Viewdef="user_preferences" BusinessName="BLUser" BusinessObj="@BLUser"
-                        ViewContext="@DynamicViewType" />
+                        ViewContext="@DynamicViewType"  SetTopBar="false"/>
 
                 </div>
             </div>
@@ -212,14 +212,14 @@
                     {
                         @foreach (var icon in IconsStyles)
                         {
-                            <div class="col-4 mb-3">
+                            <div class="col-4 mb-3" @onclick="()=>OnChangeSelectedIcon(icon)">
                                 <div class="sdk_card d-flex justify-content-center rounded p-4 mb-2">
                                     <i class="@GetStyleIcon(icon) fa-user fa-2x" style="color:#1079FD;"></i>
                                 </div>
-
+                                
                                 <div class="d-flex align-items-center">
                                     <input class="mr-2" type="radio" name="IconsStyles" value="@icon"
-                                        @onchange="e =>OnChangeSelectedIcon(icon)" checked="@ValidCheckedStyleIcon(icon)">
+                                        checked="@ValidCheckedStyleIcon(icon)">
                                     <label class="mb-0" style="font-size: 14px;">
                                         @GetLabelIcon(icon)
                                     </label>
@@ -394,6 +394,11 @@
         {
             { "Custom.SDK.Theme.Blue", "#1079FD" },
             { "Custom.SDK.Theme.Dark", "#042339" },
+            { "Custom.SDK.Theme.Orange", "#FF8E2C"},
+            { "Custom.SDK.Theme.Green", "#00AE3C" },
+            { "Custom.SDK.Theme.Terracotta", "#C45824" },
+            { "Custom.SDK.Theme.Ruby", "#9B111E" },
+            { "Custom.SDK.Theme.Violet", "#7244b8" }
         };
 
         IconsStyles = new List<enumThemeIconStyle>()
@@ -583,20 +588,11 @@
 
     private bool ValidCheckedStyleIcon(enumThemeIconStyle Icon)
     {
-        if (BLUser.BaseObj.ThemeIconStyle == Icon)
+        if(_selectedIconStyle == Icon)
         {
-            //_selectedIconStyle = BLUser.BaseObj.ThemeIconStyle;
             return true;
         }
-        else if (Icon == enumThemeIconStyle.Solid)
-        {
-            //_selectedIconStyle = Icon;
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return false;
     }
 
     private bool CheckedTopbarStyle(enumThemeTopbarStyle TopbarStyle)

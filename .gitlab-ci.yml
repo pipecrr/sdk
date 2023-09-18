@@ -1,11 +1,12 @@
 image: mcr.microsoft.com/dotnet/sdk:6.0
-
+#force
 variables:
   PACKAGE_REGISTRY_URL: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/nuget/index.json"
   OBJECTS_DIRECTORY: 'obj'
   NUGET_PACKAGES_DIRECTORY: '.nuget'
   SOURCE_CODE_PATH: '*/*/'
-
+  REPO_DOC_MODULE: "gitlab.siesadev.com/conversion/sdk/documentation-project/sdk-documentation-module.git"  
+  
 cache:
   key: "$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
   paths:
@@ -106,7 +107,6 @@ sonarqube-check:
     - main
     - develop
 
-
 deploy:
     stage: deploy
     only: 
@@ -116,3 +116,52 @@ deploy:
       - docker
     script:
       - dotnet nuget push "nuget/*.nupkg" --source gitlab
+      
+pages:
+    allow_failure: true
+    script:
+      - dotnet tool update -g docfx
+      - export PATH="$PATH:/root/.dotnet/tools"
+      - docfx Siesa.SDK.Doc/docfx.json
+      - mv Siesa.SDK.Doc/_site public
+      # remove doc folder
+      - rm -rf doc
+      # clone repo doc
+      - git clone https://${GITLAB_RELEASE_CREDS}@${REPO_DOC_MODULE} doc
+      # install zip
+      - apt-get update
+      - apt-get -y install zip
+      # compress folder public to zip file
+      - zip -r public.zip public
+      # move zip to repo doc/Frontend/Siesa.SDKDocumentationModule.Business.Frontend/wwwroot folder
+      - mv public.zip doc/Frontend/Siesa.SDKDocumentationModule.Business.Frontend/wwwroot
+      # move to repo doc/Frontend/Siesa.SDKDocumentationModule.Business.Frontend/wwwroot folder
+      - cd doc/Frontend/Siesa.SDKDocumentationModule.Business.Frontend/wwwroot
+      # remove public folder
+      - rm -rf public
+      # unzip public.zip
+      - unzip public.zip
+      # remove public.zip
+      - rm public.zip
+      # move to doc folder
+      - cd ../../../../doc
+      # Generar un GUID de 10 caracteres en Bash
+      - GUID=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 10)
+      # create a new branch with the current date
+      - git checkout -b doc_release_$(date +%Y%m%d)_$GUID
+      - git add .
+      - git config --global user.email "gitlab@siesa.com"
+      - git config --global user.name "GitLab Runner"
+      - git commit -m "Release doc $(date +%Y%m%d)_$GUID"
+      - git push -u origin doc_release_$(date +%Y%m%d)_$GUID
+      # merge request to develop
+      - |
+        curl --header "PRIVATE-TOKEN: ${TOKEN}" -X POST -F "source_branch=doc_release_$(date +%Y%m%d)_$GUID" -F "target_branch=develop" -F "title=Release doc $(date +%Y%m%d)_$GUID" -F "remove_source_branch=true" "https://gitlab.siesadev.com/api/v4/projects/175/merge_requests"
+    artifacts:
+      paths:
+        - public
+    tags:
+      - docker
+    only:
+      - develop
+      - /^release_.*$/

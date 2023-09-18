@@ -4,6 +4,7 @@
 @using Siesa.SDK.Entities
 @using Siesa.Global.Enums
 @using Siesa.SDK.Frontend.Components.Layout.AditionalField
+@using Microsoft.IdentityModel.Tokens
 
 @inject IAuthenticationService AuthenticationService
 @inject IBackendRouterService BackendRouterService
@@ -214,8 +215,8 @@
 
         _parent = Parent;
         
-        if (SelectedRelationship.Name.Equals("BLAttachmentDetail"))
-        {    
+        if (!SelectedRelationship.RelatedBusiness.IsNullOrEmpty() && string.Equals(SelectedRelationship.RelatedBusiness, "BLAttachmentDetail", StringComparison.Ordinal))
+        {
             var rowidAttachment = _parent.RowidAttachment;
             
             if(rowidAttachment == null && _parent?.Rowid != 0 ){

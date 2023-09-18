@@ -18,6 +18,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private async Task InitEdit(Int64 business_obj_id){
             try
             {
+               
                 await BusinessObj.InitializeBusiness(business_obj_id);
             }
             catch (System.Exception e)
@@ -59,7 +60,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             await base.SetParametersAsync(parameters);
 
             if(BusinessObjId != null && (changeBusinessObjId || changeBusinessName)){
-                ErrorMsg = "";
                 await InitEdit(Convert.ToInt64(BusinessObjId));
                 StateHasChanged();
             }

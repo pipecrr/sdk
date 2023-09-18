@@ -24,6 +24,7 @@
     AllowClear="@ClearButton"
     data-automation-id="@GetAutomationId()"
     Name="@ResourceTag"
+    class="w-100"
 >
     @ChildContent
 </RadzenDatePicker>
@@ -50,9 +51,9 @@
 
     [Parameter] public string SecondsStep  { get; set; }
 
-    [Parameter] public string DateFormat  { get; set; }
+    [Parameter] public string DateFormat  { get; set; } = "MM/dd/yyyy";
 
-    [Parameter] public string HourFormat { get; set; } 
+    [Parameter] public string HourFormat { get; set; } = "HH:mm"; 
 
     [Parameter] public bool TimeOnly { get; set; }
 

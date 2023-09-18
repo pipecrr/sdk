@@ -19,6 +19,7 @@ using Siesa.SDK.Shared.Application;
 using Amazon.S3;
 using Amazon.Extensions.NETCore.Setup;
 using Amazon.Runtime;
+using Microsoft.Extensions.Hosting;
 
 namespace Siesa.SDK.Backend.Extensions
 {
@@ -27,21 +28,30 @@ namespace Siesa.SDK.Backend.Extensions
     {
         public static void AddSDKBackend(this IServiceCollection services, ConfigurationManager configurationManager, Type ContextType)
         {
-
+            var connectionConfig = configurationManager.GetSection("ConnectionConfig").Get<SDKConnectionConfig>();
             var dbConnections = configurationManager.GetSection("DbConnections").Get<List<SDKDbConnection>>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
-            services.AddScoped<ITenantProvider>( sp => ActivatorUtilities.CreateInstance<TenantProvider>(sp, dbConnections));
+            services.AddSingleton<MemoryService>();
+            if(connectionConfig != null){
+                services.AddScoped<ITenantProvider>( sp => ActivatorUtilities.CreateInstance<TenantProvider>(sp, dbConnections, connectionConfig));
+            }else{
+                services.AddScoped<ITenantProvider>( sp => ActivatorUtilities.CreateInstance<TenantProvider>(sp, dbConnections));
+            }
+            
             services.AddSingleton<IFeaturePermissionService, FeaturePermissionService>();
             services.AddSingleton<IBackendRouterService, BackendRouterService>();
             services.AddScoped<EmailService>();
+            
             services.AddSingleton<IResourceManager, ResourceManager>(sp => ActivatorUtilities.CreateInstance<ResourceManager>(sp, false));
-
             services.AddScoped<ISDKJWT, Siesa.SDK.Backend.Criptography.SDKJWT>();
+            
+            services.AddSingleton<IQueueService, QueueService>(sp => ActivatorUtilities.CreateInstance<QueueService>(sp));
+            services.AddHostedService<QueueService>();
 
-            Action<IServiceProvider, DbContextOptionsBuilder> dbContextOptionsAction = (sp, opts) =>
+            Action<IServiceProvider, DbContextOptionsBuilder> dbContextOptionsAction = async (sp, opts) => 
             {
                 var tenantProvider = sp.GetRequiredService<ITenantProvider>();
-                var tenant = tenantProvider.GetTenant();
+                var tenant = await tenantProvider.GetTenant();
                 if(tenant == null){
                     //set first tenant as default
                     if(dbConnections.Count > 0){
@@ -54,7 +64,11 @@ namespace Siesa.SDK.Backend.Extensions
                 if(tenantProvider.GetUseLazyLoadingProxies()){
                     opts.UseLazyLoadingProxies();
                 }
-                if(tenant.ProviderName == EnumDBType.PostgreSQL)
+                if (tenant.ProviderName == EnumDBType.InMemory)
+                {
+                    //Pass
+                }
+                else if(tenant.ProviderName == EnumDBType.PostgreSQL)
                 {
                     opts.UseNpgsql(tenant.ConnectionString);
                 }else { //Default to SQL Server

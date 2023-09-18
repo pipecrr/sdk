@@ -1,19 +1,235 @@
 ﻿@using Siesa.SDK.Shared.DTOS
-
+@using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Shared.Utilities
+@using Microsoft.Extensions.DependencyInjection
+@using Siesa.SDK.Business
+@using Siesa.SDK.Entities
+@inject IServiceProvider ServiceProvider
+@inject SDKGlobalLoaderService GlobalLoaderService
+@inject IBackendRouterService BackendRouterService
+@inject IAuthenticationService AuthenticationService
 <aside class="sdk_dashboard_portal">
-    <h3>@PortalName</h3>
+    @if (PortalConfiguration != null && !IsLoading)
+    {
+        var row = 0;
+        <SDKGridLayout ColumnSpacing="0.8rem">
+            <Rows>
+                <SDKGridLayoutRow/>
+            </Rows>
+            <Columns>
+                <SDKGridLayoutColumn Width="50%"/>
+                <SDKGridLayoutColumn/>
+            </Columns>
+            <Items>
+                <SDKGridLayoutItem Row="0" Column="0" CssClass="sdk_left_dashlets">
+                    <Template>
+                        <SDKGridLayout ColumnSpacing="0.8rem" RowSpacing="0.8rem">
+                            <Rows>
+                                @for(var i = 0; i < PortalConfiguration.DashboardRows.Count; i++)
+                                {
+                                    <SDKGridLayoutRow Height="@PortalConfiguration.DashboardRows[i].Height" @key="@("sdk_portal_row_" + i)"/>
+                                }
+                            </Rows>
+                            <Columns>
+                                <SDKGridLayoutColumn/>
+                                <SDKGridLayoutColumn/>
+                                <SDKGridLayoutColumn/>
+                                <SDKGridLayoutColumn/>
+                                <SDKGridLayoutColumn/>
+                                <SDKGridLayoutColumn/>
+                                <SDKGridLayoutColumn/>
+                                <SDKGridLayoutColumn/>
+                                <SDKGridLayoutColumn/>
+                                <SDKGridLayoutColumn/>
+                                <SDKGridLayoutColumn/>
+                                <SDKGridLayoutColumn/>
+                            </Columns>
+                            <Items>
+                                @for(var i = 0; i < PortalConfiguration.DashboardRows.Count; i++)
+                                {
+                                    var item = PortalConfiguration.DashboardRows[i];
+                                    var lastColumn = 0;
+                                    bool showRow = true;                                        
+                                    if(PortalConfiguration.HasExpanded && !item.KeepInZoom ){
+                                        showRow = false;
+                                    }
+                                    @for(var j= 0; j < item.Dashlets.Count; j++)
+                                    {
+                                        var item2 = item.Dashlets[j];
+                                        var itemColumns = item2.Columns;
+                                        bool showDashlet = false;
+                                        if (itemColumns == 1)
+                                        {
+                                            itemColumns = (12 / (item.Dashlets.Count - j)) - lastColumn;
+                                        }
+                                        if (item2.Expanded)
+                                        {
+                                            itemColumns = 12;
+                                            showRow = true;
+                                            showDashlet = true;
+                                            lastColumn = 0;
+                                        }
+                                        if(!PortalConfiguration.HasExpanded || item.KeepInZoom){
+                                            showDashlet = true;
+                                        }
+                                        if (showRow && showDashlet){
+                                            <SDKGridLayoutItem Row="@row" Column="@lastColumn" ColumnSpan="@itemColumns" RowSpan="@item2.Rows">
+                                                <Template>
+                                                    <CascadingValue Value="@this">
+                                                        <CascadingValue Value="@item2">
+                                                            @if(true){
+                                                                <SDKDashletPortal Business="@Business" ComponentType="@item2.ComponentType" ResourceTag="@item2.ResourceTag" ShowTitle="@item2.ShowTitle" IndexDashlet="@j" IndexRow="@i" CssClass="@item2.CssClass"/>
+                                                            }
+                                                        </CascadingValue>
+                                                    </CascadingValue>
+                                                </Template>
+                                            </SDKGridLayoutItem>
+                                        }
+                                        lastColumn += itemColumns;
+                                    }
+                                    if(showRow){
+                                        row++;
+                                    }
+                                }
+                            </Items>
+                        </SDKGridLayout>
+                    </Template>
+                </SDKGridLayoutItem>
+                <SDKGridLayoutItem Row="0" Column="1">
+                    <Template>
+                        @if (PortalConfiguration.MainDashlet != null && !ShowDetail)
+                        {
+                            <SDKDashletPortal Business="@Business" ComponentType="@PortalConfiguration.MainDashlet.ComponentType" ResourceTag="@PortalConfiguration.MainDashlet.ResourceTag" ShowTitle="@PortalConfiguration.MainDashlet.ShowTitle" CssClass="@PortalConfiguration.MainDashlet.CssClass"/>
+                        }else if (ShowDetail)
+                        {
+                            <SDKDashletPortal Business="@Business" ComponentType="@MainDashletType" ResourceTag="@MainDashletResourceTag" ShowTitle="@MainDashletShowTitle" Parameters="@ParametersDetail" CssClass="@PortalConfiguration.MainDashlet.CssClass"/>
+                        }
+                        
+                    </Template>
+                </SDKGridLayoutItem>
+            </Items>
+        </SDKGridLayout>
+    }
+    
 </aside>
 
 @code {
-    [Parameter] public SDKPortalDTO Portal { get; set; }
-    public string PortalName { get; set; }
+    /// <summary>
+    /// The portal to display
+    /// </summary>
+    [CascadingParameter] 
+    public SDKPortalDTO Portal { get; set; }
+    private SDKPortalConfiguration PortalConfiguration { get; set; }
+    private dynamic Business { get; set; }
+    private Type MainDashletType { get; set; }
+    private String MainDashletResourceTag { get; set; }
+    private bool MainDashletShowTitle { get; set; }
+    private bool ShowDetail { get; set;}
+    private Dictionary<string, object> ParametersDetail { get; set; }
+    private bool IsLoading { get; set; }
 
-    protected override void OnParametersSet()
+    private async Task<SDKPortalConfiguration> GetPortalConfiguration()
     {
-        if(Portal != null)
+        ShowDetail = false;
+        if (string.IsNullOrEmpty(Portal?.BusinessName))
         {
-            PortalName = Portal.IdPortal;
+            return null;
         }
-        base.OnParametersSet();
+
+        var blPortalRoute = BackendRouterService.GetSDKBusinessModel(Portal.BusinessName, AuthenticationService);
+        
+        if(blPortalRoute == null){
+            return null;
+        }
+
+        var blPortalType = Utilities.SearchType($"{blPortalRoute.Namespace}.{blPortalRoute.Name}", true);
+        if (blPortalType == null)
+        {
+            return null;
+        }
+        //var baseObjType = blPortalType.GetProperty("BaseObj")?.PropertyType;
+        Business = (dynamic)ActivatorUtilities.CreateInstance(ServiceProvider, blPortalType);
+        await Business.InitializeBusiness(Portal.RowidMainRecord);
+        return Business?.GetPortalConfiguration();
     }
+
+    /// <summary>
+    /// Restart the portal
+    /// </summary>
+    /// <param name="parameters"></param>
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        var newPortal = parameters.TryGetValue<SDKPortalDTO>(nameof(Portal), out var portal) ? portal : null;
+        var shouldRestart = Portal?.RowidPortal != newPortal?.RowidPortal;
+        await base.SetParametersAsync(parameters);
+        if(shouldRestart){
+            await Init();
+        }
+    }
+
+    private async Task Init()
+    {
+        IsLoading = true;
+        GlobalLoaderService.Show();
+        PortalConfiguration = await GetPortalConfiguration();
+        GlobalLoaderService.Hide();
+        IsLoading = false;
+        StateHasChanged();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Init();
+        await base.OnInitializedAsync();
+    }
+    
+    /// <summary>
+    /// Method to expand the dashlet
+    /// </summary>
+    public void ExpandDashlet()
+    {
+        PortalConfiguration.HasExpanded = true;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Method to collapse the dashlet    
+    /// </summary>
+    public void CollapseDashlet()
+    {
+        PortalConfiguration.HasExpanded = false;
+        MainDashletType = null;
+        ShowDetail = false;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Method to show the detail dashlet in the main dashlet    
+    /// </summary>
+    /// <param name="type">The type of dashlet to display.</param>
+    /// <param name="resourceTag">The (optional) resource tag for the dashlet.</param>
+    /// <param name="parameters">The (optional) parameters for the dashlet.</param>
+    public void DetailDashlet(Type type, String resourceTag = "", Dictionary<string, object> parameters = null)
+    {
+        MainDashletType = type;
+        MainDashletResourceTag = resourceTag;
+        if(!string.IsNullOrEmpty(resourceTag)){
+            MainDashletShowTitle = true;
+        }
+        ParametersDetail = parameters;
+        ShowDetail = true;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Method to close the detail dashlet
+    /// </summary>     
+    public void CloseDetailDashlet()
+    {
+        MainDashletType = null;
+        ParametersDetail = null;
+        ShowDetail = false;
+        StateHasChanged();
+    }
+
 }

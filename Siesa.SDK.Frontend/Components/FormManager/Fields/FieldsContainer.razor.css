@@ -25,3 +25,11 @@
     opacity: 0.5;
     cursor: not-allowed;
 }
+
+.field-detail-container textarea[readonly]{
+    background: var(--color_field_detail)!important;
+}
+
+.field-detail-container textarea[readonly]:focus{
+    background: var(--color_field_detail)!important;
+}

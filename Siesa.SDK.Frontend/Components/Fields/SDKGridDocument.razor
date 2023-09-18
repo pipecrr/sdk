@@ -1,0 +1,79 @@
+@using Siesa.SDK.Frontend.Components.FormManager.ViewModels
+@using GrapeCity.ActiveReports.Core.Rendering.ReportParameters
+@if (!IsDetail)
+{
+    <SDKButton ResourceTag="Custom.Document.Button.Create" Click="@(async () => await FormView.ClickAddRow())"/>
+}
+<SDKGrid Data="@BusinessObj.ChildObjs" TItem="object" @ref="FormView.RefGrid" AllowColumnResize="true">
+    <Columns>
+        @if (DetailConfig.CustomActions.Any() || !IsDetail)
+        {
+            <SDKGridColumn Width="150px" TItem="object">
+                <Template Context="dataActions">
+                    <CascadingValue Value="this">
+                        <div class="d-flex justify-content-center" @key="@GetKey("actionButtons", dataActions)">
+                            @if (ButtonDeltete != null && !IsDetail)
+                            {
+                                <SDKButtonCustomAttr IconCssClass="fa-trash-can" IsActionButton="true" Click="@(() => FormView.ClickDeleteRow(dataActions))" BusinessObj="@BusinessObj" Button="@ButtonDeltete" Data=@dataActions Grid=@FormView.RefGrid/>
+                            }
+                            else if(!IsDetail)
+                            {
+                                <SDKButton IconCssClass="fa-trash-can" IsActionButton="true" Click="@(() => FormView.ClickDeleteRow(dataActions))"/>
+                            }
+                            @foreach (var btn in DetailConfig.CustomActions)
+                            {
+                                if (!btn.Hidden)
+                                {
+                                    <SDKButtonCustomAttr IconCssClass="@btn.IconClass" IsActionButton="true" Click="@(() => FormView.OnClickCustomButton(btn, dataActions))" BusinessObj="@BusinessObj" Button="@btn" Data=@dataActions Grid=@FormView.RefGrid/>
+                                }
+                            }
+                        </div>
+                    </CascadingValue>
+                </Template>
+            </SDKGridColumn>
+            
+        }
+        @foreach (FieldOptions column in DetailConfig.Fields)
+        {
+            @if(string.IsNullOrEmpty(column.ResourceTag))
+            {
+                column.ResourceTag = $"{BusinessObj.ChildType().Name}.{column.Name}";
+            }
+            <SDKGridColumn TItem="object" ResourceTag="@column.ResourceTag" UniqueId="@column.ResourceTag">
+                <Template Context="data">
+                    <FieldOptComponent Column="@column" Data="@data" @key="@GetKey(column.ResourceTag, data)" IsDetail="@IsDetail"/>
+                </Template>
+            </SDKGridColumn>
+        }
+    </Columns>
+</SDKGrid>
+
+@code{
+    /// <summary>
+    /// The business object that is used to evaluate the button's custom attributes
+    /// </summary>
+    [Parameter] public dynamic BusinessObj { get; set; }
+    /// <summary>
+    /// The button that is used to evaluate the custom attributes of the button
+    /// </summary>
+    [Parameter] public Button ButtonDeltete { get; set; }
+    /// <summary>
+    /// The configuration of the detail exposed in the viewdef
+    /// </summary>
+    [Parameter] public ListViewModel DetailConfig { get; set; } = new ListViewModel();
+    /// <summary>
+    /// Cascading parameter to get the form view component
+    /// </summary>
+    [CascadingParameter] public dynamic FormView { get; set; }
+    /// <summary>
+    /// If the field is in detail mode
+    /// </summary>
+    [Parameter] public bool IsDetail { get; set; }
+
+    private string GetKey(string name, dynamic data)
+    {
+        int index = BusinessObj.ChildObjs.IndexOf(data);
+        string key = $"{name}-{index}";
+        return key;
+    }
+}

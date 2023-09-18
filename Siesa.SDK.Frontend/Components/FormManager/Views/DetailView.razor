@@ -3,10 +3,13 @@
 @using Siesa.SDK.Frontend.Components.FormManager.Fields
 @using Siesa.SDK.Frontend.Components.Layout.Detail.Relationship
 @using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
 @using System.Linq
 @using Siesa.SDK.Frontend.Services
 @using Siesa.SDK.Frontend.Components.Layout.AditionalField
 @using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Frontend.Components.FormManager.ViewModels
+
 @inject SDKDialogService SDKDialogService
 @inject NavigationManager NavigationManager
 @inject SDKGlobalLoaderService SDKGlobalLoaderService
@@ -29,42 +32,44 @@ else if (ModelLoaded == true)
             <h5 class="d-flex justify-content-center">@BusinessObj</h5>
             <hr />
         }
-        <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
+    <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
+        <SDKCrudHeader ResourceTag="@Panels[0].ResourceTag" IconClass="@Panels[0].IconClass" ViewType="DynamicViewType.Detail">
+            <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef" ModelObj="@BusinessObj" DefaultColSize="@Panels[0].ColSize"/>
+        </SDKCrudHeader>
+        @if (Panels.Count > 1)
+        {
+            <DxFormLayoutTabPages ScrollMode="TabsScrollMode.Auto">
+                @foreach (var panel in Panels.Skip(1))
+                {
+                    <SDKFormLayoutTabPage ResourceTag="@panel.ResourceTag">
+                        <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" ModelObj="@BusinessObj" DefaultColSize="@panel.ColSize" />
+                    </SDKFormLayoutTabPage>
+                }
+            </DxFormLayoutTabPages>
 
-            @if (Panels.Count > 1)
-            {
-                <DxFormLayoutTabPages ScrollMode="TabsScrollMode.Auto">
-                    @foreach (var panel in Panels)
-                    {
-                        <SDKFormLayoutTabPage ResourceTag="@panel.ResourceTag">
-                            <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" ModelObj="@BusinessObj" DefaultColSize="@panel.ColSize" />
-                        </SDKFormLayoutTabPage>
-                    }
-                </DxFormLayoutTabPages>
-
-            }
-            else
-            {
-                <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef" ModelObj="@BusinessObj" DefaultColSize="@Panels[0].ColSize"/>
-
-            }
-            @if(PanelsCollapsable.Count>0){
-                <div class="w-100">
-                    <SDKCollapse>
-                        <Items>
-                            @foreach (var panel in PanelsCollapsable)
-                            {
-                                <SDKCollapseItem Text="@panel.ResourceTag">
-                                    <div class="row">
-                                        <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
-                                    </div>
-                                </SDKCollapseItem>
-                            }
+        }
+        @if(PanelsCollapsable.Count>0){
+            <div class="w-100">
+                <SDKCollapse>
+                    <Items>
+                        @foreach (var panel in PanelsCollapsable)
+                        {
+                            <SDKCollapseItem Text="@panel.ResourceTag">
+                                <div class="row">
+                                    <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                                </div>
+                            </SDKCollapseItem>
+                        }
                     </Items>
-                    </SDKCollapse>
-                </div>
-            }
-        </DxFormLayout>
+                </SDKCollapse>
+            </div>
+        }
+    </DxFormLayout>
+    @if(IsDocument){
+        <CascadingValue Value="this">
+            <SDKGridDocument BusinessObj="@BusinessObj" DetailConfig="@DetailConfig" IsDetail="true"/>
+        </CascadingValue>
+    }
         @if(ContainAttachments){
             <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" 
                 Parent="@BusinessObj.BaseObj" ContainAttachments="@ContainAttachments" BLNameParentAttatchment="@BusinessName"

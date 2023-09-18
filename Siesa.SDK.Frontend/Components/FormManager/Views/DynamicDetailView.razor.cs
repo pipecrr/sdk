@@ -12,36 +12,56 @@ using Siesa.SDK.Frontend.Services;
 using Siesa.SDK.Shared.Services;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
-{
+{   
+    /// <summary>
+    /// Represents a dynamic detail view for displaying and editing business object details.
+    /// </summary>
     public partial class DynamicDetailView : DynamicBaseViewModel
     {
+        /// <summary>
+        /// Gets or sets a value indicating whether delete functionality is allowed.
+        /// </summary>
         [Parameter] 
         public bool AllowDelete { get; set; } = true;
         
+        /// <summary>
+        /// Gets or sets the injected backend router service for obtaining view definitions.
+        /// </summary>
         [Inject]
         public IBackendRouterService BackendRouterService { get; set; }
         private FormViewModel FormViewModel { get; set; } = new FormViewModel();
 
         private List<string> _extraFields = new List<string>();
-        private async Task GetExtraFields(string bName = null)
+        private void GetExtraFields(string bName = null)
         {
             try
             {
-                string _viewdefName = "detail";
+                string viewdefName = "detail";
 
                 if (IsSubpanel)
                 {
-                    _viewdefName = "related_detail";
+                    viewdefName = "related_detail";
                 }
 
-                var metadata = BackendRouterService.GetViewdef(bName, _viewdefName);
-
+                var metadata = BackendRouterService.GetViewdef(bName, viewdefName);
+                if (IsSubpanel && String.IsNullOrEmpty(metadata)){
+                    metadata = BackendRouterService.GetViewdef(bName, "related_default");
+                }
                 if(String.IsNullOrEmpty(metadata))
                 {
                     metadata = BackendRouterService.GetViewdef(bName, "default");
                 }
 
-                FormViewModel = JsonConvert.DeserializeObject<FormViewModel>(metadata);
+                try
+                {
+                    FormViewModel = JsonConvert.DeserializeObject<FormViewModel>(metadata);
+                }
+                catch (JsonSerializationException)
+                {
+                    //Soporte a viewdefs anteriores
+                    var panels = JsonConvert.DeserializeObject<List<Panel>>(metadata);
+                    FormViewModel.Panels = panels;
+                }
 
                 var defaultFields = FormViewModel.Panels.SelectMany(panel => panel.Fields)
                                     .Where(f=> f.CustomComponent == null && f.Name.StartsWith("BaseObj."))
@@ -58,15 +78,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     _extraFields = defaultFields.Select(field => field.Replace("BaseObj.", "")).ToList();
                 }
                 
-                var BaseObj = BusinessObj.BaseObj;
+                var baseObj = BusinessObj.BaseObj;
+                List<string> extraFieldsTmp = new ();
                 foreach (string field in _extraFields){
-                    var property = BaseObj.GetType().GetProperty(field);
+                    var property = baseObj.GetType().GetProperty(field);
                     if(property != null && property.PropertyType.IsClass && !property.PropertyType.IsPrimitive && !property.PropertyType.IsEnum && property.PropertyType != typeof(string) && property.PropertyType != typeof(byte[])){
-                        var RowidNameField = "Rowid"+field;
-                        if(!_extraFields.Contains(RowidNameField)){
-                            _extraFields.Add(RowidNameField);
+                        var rowidNameField = "Rowid"+field;
+                        if(!_extraFields.Contains(rowidNameField)){
+                            extraFieldsTmp.Add(rowidNameField);
                         }
                     }
+                }
+                if(extraFieldsTmp.Count > 0){
+                    _extraFields = _extraFields.Union(extraFieldsTmp).ToList();
                 }
             }
             catch (Exception e)
@@ -75,12 +99,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
         }
 
-        private async Task InitDetail(Int64 business_obj_id)
+        private async Task InitDetail(Int64 businessObjId)
         {
-            await GetExtraFields(BusinessName);
+            GetExtraFields(BusinessName);
             try
             {
-                await BusinessObj.InitializeBusiness(business_obj_id,_extraFields);
+                await BusinessObj.InitializeBusiness(businessObjId,_extraFields);
             }
             catch (System.Exception e)
             {
@@ -123,9 +147,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             bool changeBusinessName = parameters.DidParameterChange(nameof(BusinessName), BusinessName);
 
             await base.SetParametersAsync(parameters);
-            if(BusinessObjId !=null && (changeBusinessObjId || changeBusinessName)){
-                ErrorMsg = "";
-                ErrorList = new List<string>();
+            if(BusinessObjId !=null && (changeBusinessObjId || changeBusinessName)){                
                 await InitDetail(Convert.ToInt64(BusinessObjId));
                 StateHasChanged();
             }

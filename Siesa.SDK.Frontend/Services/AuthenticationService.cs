@@ -13,6 +13,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.JSInterop;
 using Siesa.Global.Enums;
 using Siesa.SDK.Frontend.Criptography;
+using System.Globalization;
+using Blazor.IndexedDB.Framework;
+using Siesa.SDK.Frontend.Data;
+
 
 namespace Siesa.SDK.Frontend.Services
 {
@@ -27,13 +31,14 @@ namespace Siesa.SDK.Frontend.Services
         private int _minutesExp;
         private ISDKJWT _sdkJWT;
 
+        private readonly IIndexedDbFactory _dbFactory;
+
         private short CustomRowidCulture = 0;
         public short RowidCultureChanged { get; set; } = 0;
 
         private SDKDbConnection SelectedConnection = new SDKDbConnection();
 
         public string UserToken { get; private set; } = "";
-        public string PortalUserToken { get; private set; } = "";
 
         private int _selectedSuite;
 
@@ -43,13 +48,13 @@ namespace Siesa.SDK.Frontend.Services
         private string _portalUserPhoto = "";
         private string _logoPhoto = "";
         private string _portalLogoPhoto = "";
+        private string _hostName = "";
 
         
         public UserPreferencesDTO UserPreferences { get; set; } = new UserPreferencesDTO();
         public UserPreferencesDTO PortalUserPreferences { get; set; } = new UserPreferencesDTO();
 
         private JwtUserData? _user;
-        private JwtUserData? _portalUser;
         public JwtUserData User
         {
             get
@@ -72,27 +77,14 @@ namespace Siesa.SDK.Frontend.Services
                 return _user;
             }
         }
-
-        public JwtUserData PortalUser
+        /// <summary>
+        /// Portal user. This property represents the portal user associated with the session.
+        /// </summary>
+        public PortalUserJwt PortalUser
         {
             get
             {
-                if (PortalUserToken == "")
-                {
-                    return null;
-                }
-                if (_portalUser == null)
-                {
-                    try
-                    {
-                        _portalUser = _sdkJWT.Validate<JwtUserData>(PortalUserToken);
-                    }
-                    catch (System.Exception)
-                    {
-                        _portalUser = null;
-                    }
-                }
-                return _portalUser;
+                return User?.PortalUser;
             }
         }
 
@@ -102,7 +94,8 @@ namespace Siesa.SDK.Frontend.Services
             IBackendRouterService BackendRouterService,
             IHttpContextAccessor ContextAccessor,
             IJSRuntime jsRuntime,
-            ISDKJWT sdkJWT
+            ISDKJWT sdkJWT,
+            IIndexedDbFactory dbFactory
         )
         {
             _navigationManager = navigationManager;
@@ -113,12 +106,13 @@ namespace Siesa.SDK.Frontend.Services
             _secretKey = "testsecretKeyabc$"; //TODO: get from config
             _jsRuntime = jsRuntime;
             _sdkJWT = sdkJWT;
+            _dbFactory = dbFactory;
+            _hostName = _contextAccesor.HttpContext?.Request.Host.Host;
         }
 
         public async Task Initialize()
         {
             UserToken = await _localStorageService.GetItemAsync<string>("usertoken");
-            PortalUserToken = await _localStorageService.GetItemAsync<string>("portalusertoken");
             CustomRowidCulture = await _localStorageService.GetItemAsync<short>("customrowidculture");
             _selectedSuite = await _localStorageService.GetItemAsync<int>("selectedSuite");
             //_rowIdCompanyGroup = await _localStorageService.GetItemAsync<short>("rowIdCompanyGroup");
@@ -143,51 +137,90 @@ namespace Siesa.SDK.Frontend.Services
             //Console.WriteLine($"UserToken: {UserToken}");
         }
 
-        public async Task Login(string username, string password, short rowIdDBConnection, 
-        bool IsUpdateSession = false, short rowIdCompanyGroup = 1)
-        {
+        public async Task<string> LoginSessionByToken(string userAccesstoken, short rowidDBConnection){
             var BLuser = _backendRouterService.GetSDKBusinessModel("BLUser", this);
             if (BLuser == null)
+            {
+                throw new Exception("Login session not found");
+            }
+            
+            string ipAddress = _contextAccesor.HttpContext.Connection.RemoteIpAddress?.ToString();
+
+            string browserName = _contextAccesor.HttpContext.Request.Headers["User-Agent"].ToString();
+            
+            var loginRequest = await BLuser.Call("SignInSessionByToken", new Dictionary<string, dynamic> {
+                {"accessToken", userAccesstoken},
+                {"rowidConnection", rowidDBConnection},
+                {"ipAddress", ipAddress},
+                {"browserName", browserName},
+                {"hostName", _hostName}
+            }).ConfigureAwait(true);
+
+            if (loginRequest.Success){
+                return loginRequest.Data;
+            }else{
+                throw new Exception(loginRequest.Errors.FirstOrDefault());
+            }
+        }
+        
+        /// <summary>
+        /// Performs a login operation for the specified user using the provided credentials and other parameters.
+        /// </summary>
+        /// <param name="username">The username of the user trying to log in.</param>
+        /// <param name="password">The password associated with the user's account.</param>
+        /// <param name="rowidDbConnection">The short integer representing the database connection row ID.</param>
+        /// <param name="isUpdateSession">Optional. A boolean flag indicating whether to update the existing session. Default value is false.</param>
+        /// <param name="rowIdCompanyGroup">Optional. The short integer representing the row ID of the company group. Default value is 1.</param>
+        /// <returns>A Task representing the asynchronous login operation.</returns>
+        public async Task Login(string username, string password, short rowidDbConnection, 
+        bool isUpdateSession = false, short rowIdCompanyGroup = 1)
+        {
+            var blUser = _backendRouterService.GetSDKBusinessModel("BLUser", this);
+            if (blUser == null)
             {
                 throw new Exception("Login Service not found");
             }
 
             //Sacar la IP verdadera del Header**
 
-            string ipAddress = _contextAccesor.HttpContext.Connection.RemoteIpAddress?.ToString();
+            string ipAddress = _contextAccesor.HttpContext?.Connection.RemoteIpAddress?.ToString();
 
-            string browserName = _contextAccesor.HttpContext.Request.Headers["User-Agent"].ToString();
+            string browserName = _contextAccesor.HttpContext?.Request.Headers["User-Agent"].ToString();
 
-            string sessionId = IsUpdateSession ? _contextAccesor.HttpContext.Request.Cookies["sdksession"].ToString() : "";
+            string sessionId = isUpdateSession ? _contextAccesor.HttpContext?.Request.Cookies["sdksession"]?.ToString() : "";
 
-            short LastCompanyGroupSelected = await _localStorageService.GetItemAsync<short>("rowidCompanyGroup");
+            short lastCompanyGroupSelected = await _localStorageService.GetItemAsync<short>("rowidCompanyGroup").ConfigureAwait(true);
 
-            if(LastCompanyGroupSelected > 0 && LastCompanyGroupSelected != rowIdCompanyGroup) 
+            if(lastCompanyGroupSelected > 0 && lastCompanyGroupSelected != rowIdCompanyGroup) 
             {
-                rowIdCompanyGroup = LastCompanyGroupSelected;
+                rowIdCompanyGroup = lastCompanyGroupSelected;
             }
 
-            
-            var loginRequest = await BLuser.Call("SignInSession", new Dictionary<string, dynamic> {
+            var loginRequest = await blUser.Call("SignInSession", new Dictionary<string, dynamic> {
                 {"username", username},
                 {"password", password},
-                {"rowIdDBConnection", rowIdDBConnection},
+                {"rowIdDBConnection", rowidDbConnection},
                 {"ipAddress", ipAddress},
                 {"browserName", browserName},
                 {"rowidCulture", RowidCultureChanged},
                 {"sessionId", sessionId},
-                {"IsUpdateSession", IsUpdateSession},
-                {"rowIdCompanyGroup", rowIdCompanyGroup}
-            });
+                {"IsUpdateSession", isUpdateSession},
+                {"rowIdCompanyGroup", rowIdCompanyGroup},
+                {"tokenPortal", ""},
+                {"hostName", _hostName}
+            }).ConfigureAwait(true);
             if (loginRequest.Success)
             {
                 UserToken = loginRequest.Data.Token;
-                var sdksesion = loginRequest.Data.IdSession;
-                await _localStorageService.SetItemAsync("usertoken", UserToken);
-                await SetCookie("sdksession", loginRequest.Data.IdSession);
-                await SetCookie("selectedConnection", rowIdDBConnection.ToString());
-                await SetUserPhoto(loginRequest.Data.UserPhoto);
-                await SetPreferencesUser(loginRequest.Data.UserPreferences);
+                await LoginBrowser(loginRequest.Data, rowidDbConnection.ToString(CultureInfo.InvariantCulture)).ConfigureAwait(true);
+
+                try
+                {
+                    _ = setDataIndexedDB();            
+                }catch(Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
             else
             {
@@ -201,36 +234,82 @@ namespace Siesa.SDK.Frontend.Services
                 }
             }
         }
-
-        public async Task LoginPortal(string username, string password, short rowIdDBConnection, bool IsUpdateSession = false, short rowIdCompanyGroup = 1)
+        public async Task setDataIndexedDB()
         {
-            var BLSDKPortalUser = _backendRouterService.GetSDKBusinessModel("BLSDKPortalUser", this);
-            if (BLSDKPortalUser == null)
+            await _dbFactory.Create<IndexDb>().ConfigureAwait(true);
+        }
+        private async Task LoginBrowser(dynamic loginRequestData, string rowidDbConnection)
+        {
+            await _localStorageService.SetItemAsync("usertoken", UserToken).ConfigureAwait(true);
+                
+            if(await _localStorageService.ContainKeyAsync("bd").ConfigureAwait(true)){
+                await _localStorageService.RemoveItemAsync("bd").ConfigureAwait(true);
+            }
+                
+            await SetCookie("sdksession", loginRequestData.IdSession);
+            await SetCookie("selectedConnection", rowidDbConnection).ConfigureAwait(true);
+            await SetUserPhoto(loginRequestData.UserPhoto);
+            await SetPreferencesUser(loginRequestData.UserPreferences);
+        }
+        
+        /// <summary>
+        /// Performs a login operation for the specified portal user using the provided credentials and other parameters, additionally, normal user login is performed.
+        /// </summary>
+        /// <param name="username">The username of the portal user trying to log in.</param>
+        /// <param name="password">The password associated with the portal user's account.</param>
+        /// <param name="rowidDbConnection">The short integer representing the database connection row ID.</param>
+        /// <param name="isUpdateSession">Optional. A boolean flag indicating whether to update the existing session. Default value is false.</param>
+        /// <param name="rowidCompanyGroup">Optional. The short integer representing the row ID of the company group. Default value is 1.</param>
+        /// <returns>A Task representing the asynchronous login operation.</returns>
+        public async Task LoginPortal(string username, string password, short rowidDbConnection, bool isUpdateSession = false, short rowidCompanyGroup = 1)
+        {
+            var blSdkPortalUser = _backendRouterService.GetSDKBusinessModel("BLSDKPortalUser", this);
+            if (blSdkPortalUser == null)
             {
                 throw new Exception("Login Service not found");
             }
+            
+            string ipAddress = _contextAccesor.HttpContext?.Connection.RemoteIpAddress?.ToString();
 
-            short LastCompanyGroupSelected = await _localStorageService.GetItemAsync<short>("rowidCompanyGroup");
+            string browserName = _contextAccesor.HttpContext?.Request.Headers["User-Agent"].ToString();
 
-            if(LastCompanyGroupSelected > 0 && LastCompanyGroupSelected != rowIdCompanyGroup) 
+            string sessionId = isUpdateSession ? _contextAccesor.HttpContext?.Request.Cookies["sdksession"]?.ToString() : "";
+
+            short lastCompanyGroupSelected = await _localStorageService.GetItemAsync<short>("rowidCompanyGroup").ConfigureAwait(true);
+
+            if(lastCompanyGroupSelected > 0 && lastCompanyGroupSelected != rowidCompanyGroup) 
             {
-                rowIdCompanyGroup = LastCompanyGroupSelected;
+                rowidCompanyGroup = lastCompanyGroupSelected;
             }
             
-            var loginRequest = await BLSDKPortalUser.Call("SignInSessionPortal", new Dictionary<string, dynamic> {
+            var loginRequest = await blSdkPortalUser.Call("SignInSessionPortal", new Dictionary<string, dynamic> {
                 {"username", username},
                 {"password", password},
-                {"rowIdDBConnection", rowIdDBConnection},
+                {"rowidDbConnection", rowidDbConnection},
+                {"ipAddress", ipAddress},
+                {"browserName", browserName},
+                {"sessionId", sessionId},
+                {"isUpdateSession", isUpdateSession},
+                {"rowIdCompanyGroup", rowidCompanyGroup},
                 {"rowidCulture", RowidCultureChanged},
-                {"rowIdCompanyGroup", rowIdCompanyGroup}
-            });
+                {"hostName", _hostName}
+            }).ConfigureAwait(true);
             if (loginRequest.Success)
             {
-                PortalUserToken = loginRequest.Data.Token;
-                await _localStorageService.SetItemAsync("portalusertoken", PortalUserToken);
-                await SetCookie("selectedConnection", rowIdDBConnection.ToString());
-                await SetPortalUserPhoto(loginRequest.Data.UserPhoto);
-                await SetPreferencesPortalUser(loginRequest.Data.UserPreferences);
+                UserToken = loginRequest.Data.Token;
+                string rowidDbConnectionString = rowidDbConnection.ToString(CultureInfo.InvariantCulture);
+                await SetCookie("selectedConnection", rowidDbConnectionString).ConfigureAwait(true);
+                await SetPortalUserPhoto(loginRequest.Data.UserPhoto).ConfigureAwait(true);
+                await SetPreferencesPortalUser(loginRequest.Data.UserPreferences).ConfigureAwait(true);
+                await LoginBrowser(loginRequest.Data, rowidDbConnectionString).ConfigureAwait(true);
+                await setDataIndexedDB().ConfigureAwait(true);
+                try
+                {
+                    _ = setDataIndexedDB();            
+                }catch(Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
             else
             {
@@ -295,20 +374,21 @@ namespace Siesa.SDK.Frontend.Services
             _navigationManager.NavigateTo("login");
 
         }
-
+        
+        /// <summary>
+        /// Logout portal and redirect to login page
+        /// </summary>
         public async Task LogoutPortal()
         {
-            SDKDbConnection _selectedConnection = GetSelectedConnection();
-            var RowIdDBConnection = _selectedConnection != null ? _selectedConnection.Rowid : 0;
+            SDKDbConnection selectedConnection = GetSelectedConnection();
+            var rowidDbConnection = selectedConnection != null ? selectedConnection.Rowid : 0;
             
-            await _localStorageService.RemoveItemAsync("portalusertoken");
-            await _localStorageService.RemoveItemAsync("portaluserPhoto");
-            await _localStorageService.RemoveItemAsync("portalUserPreferences");
-            await RemoveCookie("selectedConnection");
-            PortalUserToken = "";
-            _portalUser = null;
+            await _localStorageService.RemoveItemAsync("portaluserPhoto").ConfigureAwait(true);
+            await _localStorageService.RemoveItemAsync("portalUserPreferences").ConfigureAwait(true);
+            await RemoveCookie("selectedConnection").ConfigureAwait(true);
+            await Logout().ConfigureAwait(true);
 
-            _navigationManager.NavigateTo($"Portal/{RowIdDBConnection}");
+            _navigationManager.NavigateTo($"Portal/{rowidDbConnection}");
         }
 
         public async Task SetToken(string token, bool saveLocalStorage = true)
@@ -317,15 +397,6 @@ namespace Siesa.SDK.Frontend.Services
             if(saveLocalStorage)
             {
                 await _localStorageService.SetItemAsync("usertoken", UserToken);
-            }
-        }
-
-        public async Task SetTokenPortal(string token, bool saveLocalStorage = true)
-        {
-            PortalUserToken = token;
-            if(saveLocalStorage)
-            {
-                await _localStorageService.SetItemAsync("portalusertoken", PortalUserToken);
             }
         }
 
@@ -511,45 +582,67 @@ namespace Siesa.SDK.Frontend.Services
             }
         }
 
+        /// <summary>
+        ///  Implementation of the method to send an email to the user with the password recovery link.
+        /// </summary>
+        /// <param name="email">The email of the user.</param>
+        /// <param name="isPortal">Indicates if the password recovery is for a portal user.</param>
 
-        public async Task<bool> ForgotPasswordAsync(string email){
-
-            var request = await GetBLUser();
-
-            var result = await request.Call("SendEmailRecoveryPassword", email, SelectedConnection.Rowid);
-
-            if (result.Success)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        public async Task<bool> ValidateUserToken(int rowidUser){
-
-            var request = await GetBLUser();
-
-            var result = await request.Call("ValidateUserToken", rowidUser,SelectedConnection.Rowid);
-
-            if (result.Success)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        public async Task<bool> ChangePassword(int rowidUser, string NewPassword, string ConfirmPassword)
+        public async void ForgotPasswordAsync(string email, bool isPortal = false)
         {
-            var request = await GetBLUser();
+            HttpContext httpContext = _contextAccesor.HttpContext;
+            string UrlSystem = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}";
+
+            var request = await GetBLUser().ConfigureAwait(true);
+
+            await request.Call("SendEmailRecoveryPassword", email, SelectedConnection.Rowid, UrlSystem, isPortal, _hostName);
+        }
+
+        /// <summary>
+        /// Implementation of the method to validate the user token for password recovery.
+        /// </summary>
+        /// <param name="userToken">The user token for password recovery</param>
+        /// <param name="isPortal">Indicates if the password recovery is for a portal user.</param>
+        /// <returns></returns>
+
+        public async Task<bool> ValidateUserToken(string userToken,bool isPortal)
+        {
+
+            var request = await GetBLUser().ConfigureAwait(true);
+
+            var result = await request.Call("ValidateUserRecoveryPass", userToken, SelectedConnection.Rowid, isPortal, _hostName);
+
+            if (result.Success)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Implementation of the method for Changes the password of a user with the specified recovery token.
+        /// </summary>
+        /// <param name="userToken">Recovery token of the user.</param>
+        /// <param name="rowIdDBConnection">Identifier of the database connection.</param>
+        /// <param name="NewPassword">New password to be assigned to the user.</param>
+        /// <param name="ConfirmPassword">Confirmation of the new password.</param>
+        /// <param name="isPortal">Indicates if the password change is for a portal user.</param>
+        /// <returns>A boolean value indicating whether the password change was successful.</returns>
+
+        public async Task<bool> ChangePassword(string userToken,short rowIdDBConnection, string NewPassword, string ConfirmPassword,
+        bool isPortal = false)
+        {
+            var request = await GetBLUser().ConfigureAwait(true);
             if (!string.IsNullOrEmpty(NewPassword) && !string.IsNullOrEmpty(ConfirmPassword))
             {
-                if (NewPassword != ConfirmPassword)
+                if (!NewPassword.Equals(ConfirmPassword))
                 {
-                    throw new Exception("Custom.ForgotPassword.ChangePasswordError");
+                    return false;
                 }else
                 {
-                    var resultChangePassword = await request.Call("RecoveryPassword",rowidUser,NewPassword,ConfirmPassword,SelectedConnection.Rowid);
+                    var resultChangePassword = await request.Call("RecoveryPassword",userToken,NewPassword,
+                    SelectedConnection.Rowid, isPortal, _hostName);
+                    
                     if (resultChangePassword.Success)
                     {
                         return true;
@@ -619,7 +712,7 @@ namespace Siesa.SDK.Frontend.Services
             _selectedSuite = rowid;
             
         }
-        public Task Login(string username, string password, short rowIdDBConnection, bool IsUpdateSession = false)
+        public Task Login(string username, string password, short rowidDbConnection, bool isUpdateSession = false)
         {
             throw new NotImplementedException();
         }
@@ -655,7 +748,21 @@ namespace Siesa.SDK.Frontend.Services
                     case "Custom.SDK.Theme.Dark":
                         _rootThemeStyle = "_content/Siesa.SDK.Frontend/css/Themes/DarkTheme.css";
                         break;
-
+                    case "Custom.SDK.Theme.Orange":
+                        _rootThemeStyle = "_content/Siesa.SDK.Frontend/css/Themes/OrangeTheme.css";
+                        break;
+                    case "Custom.SDK.Theme.Green":
+                        _rootThemeStyle = "_content/Siesa.SDK.Frontend/css/Themes/GreenTheme.css";
+                        break;
+                    case "Custom.SDK.Theme.Terracotta":
+                        _rootThemeStyle = "_content/Siesa.SDK.Frontend/css/Themes/TerracottaTheme.css";
+                        break;
+                    case "Custom.SDK.Theme.Ruby":
+                        _rootThemeStyle = "_content/Siesa.SDK.Frontend/css/Themes/RubyTheme.css";
+                        break;
+                    case "Custom.SDK.Theme.Violet":
+                        _rootThemeStyle = "_content/Siesa.SDK.Frontend/css/Themes/VioletTheme.css";
+                        break;
                     default:
                         break;
                 }       

@@ -41,8 +41,10 @@ using Amazon.S3;
 using Amazon.S3.Model;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
-
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 using Siesa.Global.Enums;
+using System.Text.RegularExpressions;
 
 namespace Siesa.SDK.Business
 {
@@ -196,6 +198,8 @@ namespace Siesa.SDK.Business
         [JsonIgnore]
         protected IFeaturePermissionService FeaturePermissionService { get; set; }
 
+        private IQueueService _queueService;
+
         public SDKBusinessModel GetBackend(string business_name)
         {
             return BackendRouterService.Instance.GetSDKBusinessModel(business_name, AuthenticationService);
@@ -313,6 +317,7 @@ namespace Siesa.SDK.Business
 
             _backendRouterService = (IBackendRouterService)_provider.GetService(typeof(IBackendRouterService));
             _featurePermissionService = (IFeaturePermissionService)_provider.GetService(typeof(IFeaturePermissionService));
+            _queueService = (IQueueService)_provider.GetService(typeof(IQueueService));
             _configuration = (IConfiguration)_provider.GetService(typeof(IConfiguration));
             _useS3 = _configuration.GetValue<bool>("AWS:UseS3");
             if(_useS3){
@@ -449,7 +454,13 @@ namespace Siesa.SDK.Business
             }
         }
 
-        private T CreateDynamicObject(Type type, dynamic dynamicObj)
+        /// <summary>
+        /// Get the object dynamically of the type type and the dynamic object dynamicObj
+        /// </summary>
+        /// <param name="type">type of object to create</param>
+        /// <param name="dynamicObj">dynamic object to create from</param>
+        /// <returns>Object type of type created</returns>
+        public dynamic CreateDynamicObject(Type type, dynamic dynamicObj)
         {
             dynamic result = Activator.CreateInstance(type);
             foreach (var property in dynamicObj.GetType().GetProperties()){
@@ -507,7 +518,20 @@ namespace Siesa.SDK.Business
         }
         //utilizado antes de eliminar el objeto, con la posibilidad de hacer rollback en caso de error.
         //comentado para luego utilizar docfx
+        /// <summary>
+        /// used before deleting the object, with the ability to rollback on error.
+        /// </summary>
+        /// <param name="result">ValidateAndSaveBusinessObjResponse object that contains the result of the transaction performed</param>
+        /// <param name="context">The current context of the transaction that is taking place while it is being deleted</param>
         public virtual void BeforeDelete(ref ValidateAndSaveBusinessObjResponse result, SDKContext context)
+        {
+            //Do nothing
+        }
+
+        /// <summary>
+        /// Method used to Subscribe to queues
+        /// </summary>
+        public virtual void SubscribeToQueues()
         {
             //Do nothing
         }
@@ -530,27 +554,44 @@ namespace Siesa.SDK.Business
 
             try
             {
-
                 Validate(ref result);
 
                 if (result.Errors.Count > 0)
                 {
                     return result;
                 }
-                using(SDKContext context = CreateDbContext()){
+                using(SDKContext context = CreateDbContext())
+                {
                     try{
-                        context.BeginTransaction();
+                        if (!context.Database.IsInMemory())
+                        {
+                            context.BeginTransaction();
+                        }
                         BeforeSave(ref result, context);
                         result.Rowid = Save(context);
+                        if (_queueService != null && !string.IsNullOrEmpty(BusinessName))
+                        {
+                            _queueService.SendMessage(BusinessName, enumMessageCategory.CRUD, new QueueMessageDTO()
+                            {
+                                Message = $"Custom.{BusinessName}.RecordSaved",
+                                Rowid = result.Rowid
+                            });
+                        }
                         if (DynamicEntities != null && DynamicEntities.Count > 0)
                         {
                             SaveDynamicEntity(result.Rowid, context);
                         }
                         AfterSave(ref result, context);
-                        context.Commit();
+                        if (!context.Database.IsInMemory())
+                        {
+                            context.Commit();
+                        }
                         AfterValidateAndSave(ref result);
                     }catch(Exception ex){
-                        context.Rollback();
+                        if (!context.Database.IsInMemory())
+                        {
+                            context.Rollback();
+                        }
                         result.Errors.Add(new OperationError() { Message = ex.Message });
                     }
                 }
@@ -828,7 +869,10 @@ namespace Siesa.SDK.Business
                 using (SDKContext context = CreateDbContext())
                 {
                     try{
-                        context.BeginTransaction();
+                        if (!context.Database.IsInMemory())
+                        {
+                            context.BeginTransaction();
+                        }
                         BeforeDelete(ref result, context);
                         DeleteDynamicEntity(context);
                         DisableRelatedProperties(BaseObj, _navigationProperties);
@@ -836,10 +880,39 @@ namespace Siesa.SDK.Business
                         context.Set<T>().Remove(BaseObj);
                         context.SaveChanges();
                         AfterDelete(ref result, context);
-                        context.Commit();
-                    }catch(Exception ex){
-                        context.Rollback();
-                        response.Errors.Add(new OperationError() { Message = ex.Message });
+                        if (!context.Database.IsInMemory())
+                        {
+                            context.Commit();
+                        }   
+                        if (_queueService != null && !string.IsNullOrEmpty(BusinessName))
+                        {
+                            _queueService.SendMessage(BusinessName, enumMessageCategory.CRUD, new QueueMessageDTO()
+                            {
+                                Message = $"Custom.{BusinessName}.RecordDeleted",
+                                Rowid = result.Rowid
+                            });
+                        }
+                    }catch(DbUpdateException DbEx)
+                    {
+                        if (!context.Database.IsInMemory())
+                        {
+                            context.Rollback();
+                        }
+                        AddExceptionToResult(DbEx, result);
+                        var errorList = result.Errors.Where(x => x.Message.Contains("Foreing key")).ToList();
+                        if (errorList.Any())
+                        {
+                            var regex = new Regex(@"Table name: ([^\r\n]+)");
+                            var relatedTable = errorList
+                                                .Select(x => x.Message)
+                                                .SelectMany(msg => regex.Matches(msg).Cast<Match>())
+                                                .Select(match => match?.Groups[1].Value.Split('.').Last()).Distinct().FirstOrDefault();
+                            response.Errors.Add(new OperationError() { Message = $"Exception: Custom.Generic.Message.DeleteErrorWithRelations//{relatedTable}.Plural" });
+                        }
+                        else
+                        {
+                            response.Errors.AddRange(result.Errors);
+                        }
                     }
                 }
             }
@@ -1058,7 +1131,21 @@ namespace Siesa.SDK.Business
             return result;
         }
 
-        private void CreateQueryExtraFields(IQueryable<T> query, List<string> inlcudesAdd, List<string> extraFields, ref string selectedFields, ref bool hasRelated, bool containAttachments = false)
+        /// <summary>
+        /// Create the query with the extra fields
+        /// </summary>
+        /// <param name="query">query to create</param>
+        /// <param name="inlcudesAdd">list of includes to add</param>
+        /// <param name="extraFields">list of extra fields</param>
+        /// <param name="selectedFields">string with the selected fields ref</param>
+        /// <param name="hasRelated">bool to know if has related ref</param>
+        /// <param name="containAttachments">bool to know if contain attachments, default false</param>
+        public void CreateQueryExtraFields(IQueryable<T> query, List<string> inlcudesAdd, List<string> extraFields, ref string selectedFields, ref bool hasRelated, bool containAttachments = false)
+        {
+            CreateQueryExtraFields<T>(query, inlcudesAdd, extraFields, ref selectedFields, ref hasRelated, containAttachments);
+        }
+
+        public void CreateQueryExtraFields<J>(IQueryable<J> query, List<string> inlcudesAdd, List<string> extraFields, ref string selectedFields, ref bool hasRelated, bool containAttachments = false)  where J : class
         {
             bool hasRelatedTmp = false;
             extraFields.Add("Rowid");
@@ -1182,16 +1269,22 @@ namespace Siesa.SDK.Business
             var result = Expression.MemberInit(Expression.New(resultType), bindings);
             return Expression.Lambda<Func<TSource, dynamic>>(result, source);
         }
-
+        
+        /// <summary>
+        /// Retrieves preview data using SDKFlex component.
+        /// </summary>
+        /// <param name="requestData">The request data for SDKFlex from browser.</param>
+        /// <param name="setTop">Indicates whether to set top value in query.</param>
+        /// <returns>An asynchronous task that represents the operation and returns an <see cref="ActionResult{T}"/> with dynamic content.</returns>
         [SDKExposedMethod]
-        public virtual ActionResult<dynamic> SDKFlexPreviewData(SDKFlexRequestData requestData, bool setTop = true)
+        public virtual async Task<ActionResult<dynamic>> SDKFlexPreviewData(SDKFlexRequestData requestData, bool setTop = true)
         {
             using (var Context = CreateDbContext())
             {
                 var response = SDKFlexExtension.SDKFlexPreviewData(Context, requestData, AuthenticationService, setTop);
                 return response;
             }
-        }
+        }        
 
         [SDKExposedMethod]
         public ActionResult<long> SaveAttachmentEntity(dynamic BaseObj)
@@ -1439,41 +1532,15 @@ namespace Siesa.SDK.Business
             }
         }
 
-        private string GetUTableEntity()
-        {
-            var dataAnnotation = typeof(T).GetCustomAttributes(typeof(SDKAuthorization), false);
-
-            string TableName = "";
-
-            if (dataAnnotation.Length > 0)
-            {
-                //Get the table name
-                TableName = ((SDKAuthorization)dataAnnotation[0]).TableName;
-
-                if (!string.IsNullOrEmpty(TableName))
-                    return TableName;
-            }
-
-            //Get table name from the context
-            TableName = typeof(T).Name;
-
-            //Replace the first character of the table name with the letter "u"
-            if (TableName.Length > 0)
-                TableName = "U" + TableName.Substring(1);
-
-            TableName = $"{typeof(T).Namespace}.{TableName}";
-            return TableName;
-        }
-
         public virtual Siesa.SDK.Shared.Business.LoadResult GetUData(int? skip, int? take, string filter = "", string uFilter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null, bool includeCount = false, List<string> selectFields = null)
         {
             this._logger.LogInformation($"Get UData {this.GetType().Name}");
 
             var result = new Siesa.SDK.Shared.Business.LoadResult();
-            using (SDKContext context = CreateDbContext())
+            using (var context = CreateDbContext())
             {
                 context.SetProvider(_provider);
-                var query = context.Set<T>().AsQueryable();
+                var query = context.Set<T>(true).AsQueryable();
 
                 if (!string.IsNullOrEmpty(filter))
                 {
@@ -1504,9 +1571,9 @@ namespace Siesa.SDK.Business
                     query = query.Take(take.Value);
                 }
 
-                List<string> LeftColumns = new() { "Rowid as ERowid", "Id as Id", "Name as Name", "Status as Status", "IsPrivate as IsPrivate" };
+                List<string> LeftColumns = new() { "Rowid as ERowid", "Id as EId", "Name as EName"};
 
-                if (selectFields != null && selectFields.Count > 0)
+                if (selectFields is { Count: > 0 })
                 {
                     LeftColumns.Clear();
                     selectFields.Add("Rowid");
@@ -1517,7 +1584,7 @@ namespace Siesa.SDK.Business
                         var Length = splitInclude.Length;
                         if (Length > 1)
                         {
-                            for (int i = 1; i <= Length; i++)
+                            for (var i = 1; i <= Length; i++)
                             {
                                 var include = string.Join(".", splitInclude.Take(i));
 
@@ -1530,11 +1597,12 @@ namespace Siesa.SDK.Business
                                         query = Result;
                                     }
                                 }
-                                catch (System.Exception)
+                                catch (Exception)
                                 {
+                                    //ignore
                                 }
                             }
-                            var Alias = string.Join("", splitInclude);
+                            var Alias = string.Join("_", splitInclude);
                             LeftColumns.Add($"{string.Join(".", splitInclude)} as E{Alias}");
                         }
                         else
@@ -1548,13 +1616,19 @@ namespace Siesa.SDK.Business
                     query = query.Select<T>($"new ({selectedFields})");
 
                 }
+                else
+                {
+                    var BaseObjType = typeof(T);
+                    string[] OptionalFields = { "Status", "IsPrivate" };
+
+                    LeftColumns.AddRange(from Field in OptionalFields where BaseObjType.GetProperty(Field) is not null select $"{Field} as E{Field}");
+                }
 
                 List<string> UExtraFields = new(){
                     "Rowid", "UserType", "AuthorizationType", "RestrictionType"
                 };
 
-                var UTableName = GetUTableEntity();
-                Type DynamicEntityType = typeof(T).Assembly.GetType(UTableName);
+                var DynamicEntityType = Utilities.GetVisibilityType(typeof(T));
                 var RowidRecordType = DynamicEntityType.GetProperty("RowidRecord");
 
                 dynamic TableProxy = context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(DynamicEntityType).Invoke(context, null);
@@ -1568,7 +1642,7 @@ namespace Siesa.SDK.Business
                 Dictionary<string, Type> virtualColumnsNameType = new();
                 virtualColumnsNameType.Add("RowidRecord", RowidRecordType.PropertyType);
 
-                Type _typeLeftJoinExtension = typeof(LeftJoinExtension);
+                var _typeLeftJoinExtension = typeof(LeftJoinExtension);
                 var leftJoinMethod = _typeLeftJoinExtension.GetMethod("LeftJoin");
 
                 var CoincidenceResult = leftJoinMethod.Invoke(null, new object[] { query, authSet, "Rowid", "RowidRecord", LeftColumns, RightColumns });
@@ -1647,11 +1721,10 @@ namespace Siesa.SDK.Business
         {
             try
             {
-                this._logger.LogInformation($"Get general UObject by UserType {this.GetType().Name}");
+                _logger.LogInformation($"Get general UObject by UserType {this.GetType().Name}");
 
                 dynamic Result = null;
-                var UTableName = GetUTableEntity();
-                Type DynamicEntityType = typeof(T).Assembly.GetType(UTableName);
+                var DynamicEntityType = Utilities.GetVisibilityType(typeof(T));
 
                 var RowidRecordType = DynamicEntityType.GetProperty("RowidRecord");
 
@@ -1663,19 +1736,12 @@ namespace Siesa.SDK.Business
                 //RowidRecord is null
                 Expression CoincidenceExpression = Expression.Equal(ColumnNameProperty, ColumnValue);
 
-                string ColumnName;
-
-                switch (UserType)
+                var ColumnName = UserType switch
                 {
-                    case PermissionUserTypes.Team:
-                        ColumnName = "RowidDataVisibilityGroup";
-                        break;
-                    case PermissionUserTypes.User:
-                        ColumnName = "RowidUser";
-                        break;
-                    default:
-                        throw new ArgumentNullException("UserType not supported");
-                }
+                    PermissionUserTypes.Team => "RowidDataVisibilityGroup",
+                    PermissionUserTypes.User => "RowidUser",
+                    _ => throw new ArgumentNullException("UserType not supported")
+                };
 
                 var _assemblyDynamicQueryable = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
 
@@ -1740,9 +1806,8 @@ namespace Siesa.SDK.Business
                     throw new Exception("Data is required");
 
                 this._logger.LogInformation($"Manage U data {this.GetType().Name} - Create, Update, Delete");
-
-                var UTableName = GetUTableEntity();
-                Type DynamicEntityType = typeof(T).Assembly.GetType(UTableName);
+                
+                var DynamicEntityType = Utilities.GetVisibilityType(typeof(T));
 
                 var DataToAdd = Data.Where(x => x.Action == BLUserActionEnum.Create)
                                     .Select(x => JsonConvert.DeserializeObject($"{x.UObject}", type: DynamicEntityType))
@@ -1822,7 +1887,7 @@ namespace Siesa.SDK.Business
             }
         }
 
-        private Expression GetInExpression(Expression ColumNameProperty, List<int> RowidRecords)
+        protected Expression GetInExpression(Expression ColumNameProperty, List<int> RowidRecords)
         {
             RowidRecords = RowidRecords.Distinct().ToList();
 
@@ -1838,7 +1903,7 @@ namespace Siesa.SDK.Business
             return InExpression;
         }
 
-        private IQueryable GetWhereExpression(dynamic Data, Type DynamicEntityType, Expression CoincidenceExpression, ParameterExpression EntityExpression)
+        protected IQueryable GetWhereExpression(dynamic Data, Type DynamicEntityType, Expression CoincidenceExpression, ParameterExpression EntityExpression)
         {
             var funcExpression = typeof(Func<,>).MakeGenericType(new Type[] { DynamicEntityType, typeof(bool) });
             var returnExp = Expression.Lambda(funcExpression, CoincidenceExpression, new ParameterExpression[] { EntityExpression });
@@ -1854,7 +1919,7 @@ namespace Siesa.SDK.Business
             return Data;
         }
 
-        private dynamic GetDynamicList(dynamic Result)
+        protected dynamic GetDynamicList(dynamic Result)
         {
             var _assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
             var dynamicListMethod = typeof(IEnumerable).GetExtensionMethod(_assemblyDynamic, "ToDynamicList", new[] { typeof(IEnumerable) });
@@ -1864,7 +1929,7 @@ namespace Siesa.SDK.Business
             return DynamicList;
         }
 
-        private bool GetDynamicAny(dynamic Data)
+        protected bool GetDynamicAny(dynamic Data)
         {
             var _assemblyAny = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
 
