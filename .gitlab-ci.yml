@@ -5,7 +5,8 @@ variables:
   OBJECTS_DIRECTORY: 'obj'
   NUGET_PACKAGES_DIRECTORY: '.nuget'
   SOURCE_CODE_PATH: '*/*/'
-  REPO_DOC_MODULE: "gitlab.siesadev.com/conversion/sdk/documentation-project/sdk-documentation-module.git"  
+  REPO_DOC_MODULE: "gitlab.siesadev.com/conversion/sdk/documentation-project/sdk-documentation-module.git"
+  GTABLAS_USER: $GTABLAS_USER
   
 cache:
   key: "$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
@@ -27,9 +28,9 @@ build_dev:
       - dotnet pack -c Release -o nuget --version-suffix "dev" --no-restore
     tags:
       - docker
-    rules:
-      - if: $GITLAB_USER_LOGIN == "gtablas"
-        when: never
+    except:
+      - variables:
+        - $GITLAB_USER_LOGIN == $GTABLAS_USER
     artifacts:
         paths:
           - nuget/
@@ -42,9 +43,9 @@ build_release:
       - dotnet pack -c Release -o nuget --no-restore
     tags:
       - docker
-    rules:
-      - if: $GITLAB_USER_LOGIN == "gtablas"
-        when: never
+    except:
+      - variables:
+        - $GITLAB_USER_LOGIN == $GTABLAS_USER
     artifacts:
         paths:
           - nuget/  
@@ -76,18 +77,18 @@ generate_release:
       - git push --set-upstream https://${GITLAB_RELEASE_CREDS}@${CI_REPOSITORY_URL#*@} release_$(date +%Y%m%d)
     tags:
       - docker
-    rules:
-      - if: $GITLAB_USER_LOGIN == "gtablas"
-        when: never
+    except:
+      - variables:
+        - $GITLAB_USER_LOGIN == $GTABLAS_USER
     artifacts:
         paths:
           - nuget/          
 
 test:
     stage: test
-    rules:
-      - if: $GITLAB_USER_LOGIN == "gtablas"
-        when: never
+    except:
+      - variables:
+        - $GITLAB_USER_LOGIN == $GTABLAS_USER
     only: 
       - develop
       - /^release_.*$/
@@ -114,9 +115,9 @@ sonarqube-check:
       - "dotnet build --no-restore"
       - "dotnet sonarscanner end /d:sonar.login=\"$SONAR_TOKEN\""
   allow_failure: true
-  rules:
-    - if: $GITLAB_USER_LOGIN == "gtablas"
-      when: never
+  except:
+    variables:
+      - $GITLAB_USER_LOGIN == $GTABLAS_USER
   only:
     - merge_requests
     - main
@@ -129,9 +130,9 @@ deploy:
       - /^release_.*$/
     tags:
       - docker
-    rules:
-      - if: $GITLAB_USER_LOGIN == "gtablas"
-        when: never
+    except:
+      - variables:
+        - $GITLAB_USER_LOGIN == $GTABLAS_USER
     script:
       - dotnet nuget push "nuget/*.nupkg" --source gitlab
       
@@ -180,9 +181,9 @@ pages:
         - public
     tags:
       - docker
-    rules:
-      - if: $GITLAB_USER_LOGIN == "gtablas"'
-        when: never
+    except:
+      variables:
+        - $GITLAB_USER_LOGIN == $GTABLAS_USER
     only:
       - develop
       - /^release_.*$/
