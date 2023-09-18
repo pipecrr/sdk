@@ -29,7 +29,7 @@ build_dev:
     tags:
       - docker
     except:
-      - variables:
+      variables:
         - $GITLAB_USER_LOGIN == $GTABLAS_USER
     artifacts:
         paths:
@@ -44,7 +44,7 @@ build_release:
     tags:
       - docker
     except:
-      - variables:
+      variables:
         - $GITLAB_USER_LOGIN == $GTABLAS_USER
     artifacts:
         paths:
@@ -78,7 +78,7 @@ generate_release:
     tags:
       - docker
     except:
-      - variables:
+      variables:
         - $GITLAB_USER_LOGIN == $GTABLAS_USER
     artifacts:
         paths:
@@ -87,7 +87,7 @@ generate_release:
 test:
     stage: test
     except:
-      - variables:
+      variables:
         - $GITLAB_USER_LOGIN == $GTABLAS_USER
     only: 
       - develop
@@ -131,7 +131,7 @@ deploy:
     tags:
       - docker
     except:
-      - variables:
+      variables:
         - $GITLAB_USER_LOGIN == $GTABLAS_USER
     script:
       - dotnet nuget push "nuget/*.nupkg" --source gitlab
