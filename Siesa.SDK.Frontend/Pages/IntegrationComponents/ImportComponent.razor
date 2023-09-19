@@ -25,6 +25,7 @@
 @using Siesa.Global.Enums
 @using Siesa.SDK.Shared.Utilities
 @using System.Diagnostics
+@using Siesa.SDK.Frontend.Utils
 
 
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
@@ -42,6 +43,20 @@
 @if(ErrorList!=null && ErrorList.Count>0){
     <ErrorsWindow GeneralErrors="@ErrorList"/>
 }
+
+
+<PageTitle>
+    <ResourceViewer ResourceTag="Custom.SDK.Integration.ImportData" />
+    <ResourceViewer ResourceTag=@($"{EntityType.Name}.plural") />
+</PageTitle>
+
+<SetTopBar>
+    <TopBarTitle>
+        <ResourceViewer ResourceTag="Custom.SDK.Integration.ImportData" />
+        <ResourceViewer ResourceTag=@($"{EntityType.Name}.plural") />
+    </TopBarTitle>
+</SetTopBar>
+
 <SDKTabs>
     <SDKTab TitleResourceTag="Custom.SDK.Import.TabImport">
         <SDKSteps ShowStepsButtons="true" SelectedIndex="@SelectedIndex" SelectedIndexChanged="@OnChangeSteps">
@@ -52,7 +67,7 @@
 
                     <h5><ResourceViewer ResourceTag="Custom.SDK.Import.LoadFile"/></h5>
 
-                    <InputFile OnChange="@LoadFiles" />
+                    <InputFile OnChange="@LoadFiles" accept=".xls, .xlsx"/>
 
                     @if (IsLoadingGrid)
                     {
@@ -258,11 +273,6 @@
                                                     || (p.DeclaringType.ToString().Split('`')[0] == "Siesa.SDK.Entities.BaseAudit")))
                                                     .Select(p => p.Name)
                                                     .ToList();
-          
-         var gt =  EntityType.BaseType.GetProperties().Where(x=>x.PropertyType == typeof(Siesa.SDK.Entities.E00201_Company));
-
-        if(EntityType.BaseType == typeof(Siesa.SDK.Entities.BaseCompany<int>)){
-        }
                                             
         foreach (var field in EntityFields.Where(x=> !ignoreEntityFields.Contains(x.Name)).ToList())
         {
@@ -290,33 +300,29 @@
                 IdFieldFkEntity = HiddenFieldTarget, 
                 DependencyIdFieldFKEntity = baseIndex,
                 NameInternalIndex = (!string.IsNullOrEmpty(RootNameEntity)) ? $"Index_{NamePropertyForeing}_{ForeingName}_FK" : $"Index_{NamePropertyForeing}_FK"
-            };
-
-            
-        
-        var ForeingAttributes = ForeignType.GetCustomAttributes<IndexAttribute>().ToList();
-        
+        };
+        var ForeingAttributes = ForeignType.GetCustomAttributes<IndexAttribute>();
         foreach(var ForeingAttribute in ForeingAttributes){
             if(ForeingAttribute is not null && ForeingAttribute.IsUnique){
                 HiddenFields.Add(HiddenFieldTarget);
-                
-                foreach (var propertyName in ForeingAttribute.PropertyNames){
+                List<string> OrderedAttributes = ForeingAttribute.PropertyNames.OrderBy(x => x).ToList();
+
+                foreach (var propertyName in OrderedAttributes){
                     string TitleField = (!string.IsNullOrEmpty(RootNameEntity)) ? $"{propertyName}_{NamePropertyForeing}_{ForeingName}_FK": $"{propertyName}_{NamePropertyForeing}_FK";
                     MapFk.ListIndexForeingFields.Add(TitleField);
-                    var EntityName = await ResourceManager.GetResource($"{ForeignType.Name}.singular", AuthenticationService.GetRoiwdCulture()); 
-                    var FieldName = await ResourceManager.GetResource($"{ForeignType.Name}.{propertyName}", AuthenticationService.GetRoiwdCulture());
+                    var EntityName = await ResourceManager.GetResource($"{ForeignType.Name}.singular", AuthenticationService); 
+                    var FieldName = await ResourceManager.GetResource($"{ForeignType.Name}.{propertyName}", AuthenticationService);
                     var ResourceRoot = (!string.IsNullOrEmpty(RootNameEntity)) ? await ResourceManager.GetResource($"{RootNameEntity}.singular", AuthenticationService.GetRoiwdCulture()) : ""; 
-                    ResourceName = $"{FieldName} - {EntityName} {(!string.IsNullOrEmpty(ResourceRoot) ? "- " + ResourceRoot : "" )}"; 
+                    ResourceName = $"{FieldName} - {EntityName} {(!string.IsNullOrEmpty(ResourceRoot) ? "/ " + ResourceRoot : "" )}"; 
                     _fieldsEntity.Add(ResourceName,TitleField);
                     _titleFields.Add(TitleField, ResourceName);
-
                     var propertyType= ForeignType.GetProperties().Where(x=> x.Name==propertyName).FirstOrDefault();
                     ForeignKeyAttribute foreignKeyAttribute = propertyType.GetCustomAttribute<ForeignKeyAttribute>();
-                    
                     if (foreignKeyAttribute != null){
                         string foreignKeyNameFk = foreignKeyAttribute.Name; 
+                        string HiddenFieldsValue = (!string.IsNullOrEmpty(ForeingName)) ? $"{propertyName}_{NamePropertyForeing}_{ForeingName}_FK" : $"{propertyName}_{NamePropertyForeing}_FK";
                         var RelationAttributeFk =  ForeignType.GetProperties().Where(x=> x.Name==foreignKeyNameFk).FirstOrDefault();
-                        await CalculateParentsRelations(RelationAttributeFk.PropertyType,MapFk.NameInternalIndex,$"{propertyName}_{NamePropertyForeing}_FK",foreignKeyNameFk, ForeignType.Name);
+                        await CalculateParentsRelations(RelationAttributeFk.PropertyType, MapFk.NameInternalIndex, HiddenFieldsValue, foreignKeyNameFk, ForeignType.Name);
                     }
                 }
                 ListMapRelationsImport.Add(MapFk);
@@ -333,8 +339,7 @@
         var bl = BackendRouterService.GetSDKBusinessModel("BLIntegrationService", AuthenticationService);
         var result = await bl.Call("BulkImportData", importDataDTO);      
 
-        if(result.Success)
-        {
+        if(result.Success){
             SDKResponseImportDTO response = (SDKResponseImportDTO)result.Data;
             if(response.Status == enumSDKIntegrationStatus.Success){
                 NotificationService.ShowSuccess(response.Message);
@@ -344,8 +349,7 @@
                 JsonObject = JsonConvert.SerializeObject(response.Guid, Newtonsoft.Json.Formatting.None);
             }
             
-        }else
-        {
+        }else{
             NotificationService.ShowError(result.Errors.FirstOrDefault());
             //JsonObject = JsonConvert.SerializeObject(result.Errors, Newtonsoft.Json.Formatting.None);
             ErrorList = result.Errors.ToList();
@@ -358,43 +362,54 @@
     using (var stream = new MemoryStream()){
         using (Workbook workbook = new Workbook()){
 
-                List<string> Headers = _fieldsEntity.Where(p=> !HiddenFields.Contains(p.Value)).Select(x => x.Key).ToList();
+            List<string> Headers = _fieldsEntity.Where(p=> !HiddenFields.Contains(p.Value)).Select(x => x.Key).ToList();
 
-                // Access the first worksheet in the workbook.
-                Worksheet worksheet = workbook.Worksheets[0];
-                
-                
-                //TO DO  Crear el recurso para que salga el nombre de la hoja "Datos"
-                //worksheet.Name ="";
+            Worksheet worksheet = workbook.Worksheets[0];
 
-                // Set the unit of measurement.
-                workbook.Unit = DevExpress.Office.DocumentUnit.Point;
+            var EntityName = await ResourceManager.GetResource($"{EntityType.Name}.plural", AuthenticationService); 
+            var TemplateResource = await ResourceManager.GetResource("Custom.SDK.Integration.Template", AuthenticationService); 
+            var DataResource= await ResourceManager.GetResource("Custom.SDK.Integration.Data", AuthenticationService); 
+            
+            worksheet.Name = $"{DataResource} - {EntityName}";
 
-                workbook.BeginUpdate();
-                try{
-                    for (int i = 0; i < Headers.Count(); i++){
-                            worksheet.Rows["1"][i].Value = Headers[i];   
-                    }
+            workbook.BeginUpdate();
 
-                    worksheet.Rows.AutoFit(0, Headers.Count()-1);     
-                    worksheet.Columns.AutoFit(0, Headers.Count()-1); 
-                    
+            try{
+                for (int i = 0; i < Headers.Count(); i++){
+                    worksheet.Rows["1"][i].Value = Headers[i];   
                 }
-                finally{
-                    workbook.EndUpdate();
-                }
-                // Calculate the workbook.
-                workbook.Calculate();
-                // Save the document file under the specified name.
-                workbook.SaveDocument(stream, DocumentFormat.OpenXml);
-                string fileName = $"{EntityType.Name}";
-                byte[] bytes = stream.ToArray();
-                await JSRuntime.InvokeVoidAsync("downloadFileFromStream", fileName, bytes);
+                worksheet.Rows.AutoFit(0, Headers.Count()-1);     
+                worksheet.Columns.AutoFit(0, Headers.Count()-1); 
+                
+            }finally{
+                workbook.EndUpdate();
+            }
+                //workbook.Calculate();
+
+            workbook.SaveDocument(stream, DocumentFormat.OpenXml);
+            byte[] bytes = stream.ToArray();
+            string FileNameResource = $"{TemplateResource} - {EntityName}";
+            await JSRuntime.InvokeVoidAsync("downloadFileFromStream", FileNameResource, bytes);
             }
         }
     }
 
+    private DocumentFormat? SetDocumentFormat(string Type){
+        
+        if(Type == MimeTypes.ExcelDocument03) return DocumentFormat.Xls;
+        
+        if(Type == MimeTypes.ExcelDocument) return DocumentFormat.Xlsx;
+
+        ErrorList.Add("Custom.SDK.Integration.Msg.ErrorFileType");
+        return null;
+
+    } 
+
     private async Task LoadFiles(InputFileChangeEventArgs InputFile){
+        var DocumentFormatType = SetDocumentFormat(InputFile.File.ContentType);
+        if(DocumentFormatType is null){
+            return;
+        }
         ErrorList.Clear();
         FileData = new List<dynamic>();
         IsLoadingGrid = false;
@@ -403,7 +418,7 @@
             SDKGlobalLoaderService.Show();
             stream.Position = 0;
                 Workbook workbook = new Workbook();
-                workbook.LoadDocument(stream, DocumentFormat.Xlsx);
+                workbook.LoadDocument(stream, DocumentFormatType.Value);
                 Worksheet worksheet = workbook.Worksheets[0];
                 var HeaderRowObj = worksheet.Rows[0];
                 List<string> Headers = new();
@@ -465,7 +480,7 @@
         }
         IsLoadingGrid = true;
         await InvokeAsync(() => SDKGlobalLoaderService.Hide());
-        _ = InvokeAsync(() => StateHasChanged());     
+        _ = InvokeAsync(() => StateHasChanged());   
     }
 
     public void  OnChangeSteps(int index){
@@ -507,6 +522,7 @@
 
     private async Task MappingData()
     {
+        
         Dictionary<string, string> indexes = new();
         List<string> llaves = new();
         ListMapRelationsImport.ForEach(lista =>{
@@ -541,42 +557,30 @@
             DataMapped.Add(row);
             CleanvaluesIndexInternal(indexes);
         }
-        try{ 
-            foreach (var mapRelationImport in ListMapRelationsImport){
-                Dictionary<string, List<object>> parametroFelds = new();
-                @* foreach (var dict in mapRelationImport.ListIndexForeingFields){
-                    parametroFelds.Add(dict, DataMapped.Where(p => p.ContainsKey(dict)).Select(p => p[dict]).ToList());
-                } *@
-                
-                List<string> valores = DataMapped.Where(p => p.ContainsKey(mapRelationImport.NameInternalIndex)).Select(p => (string)p[mapRelationImport.NameInternalIndex]).ToList<string>();
 
-                int star = mapRelationImport.NameInternalIndex.IndexOf('_')+1;
-                int midle = mapRelationImport.NameInternalIndex.IndexOf('_', star);
-                //int end = mapRelationImport.NameInternalIndex.LastIndexOf('_');
-                string  BLName = mapRelationImport.NameInternalIndex.Substring(star,midle-star);
-                BLName = $"BL{BLName}";
-                var bl = BackendRouterService.GetSDKBusinessModel("BLIntegrationService", AuthenticationService);
-                var response = await bl.Call("GetForeingRowid", mapRelationImport.ListIndexForeingFields, valores, BLName);
-                //var response = await BackendRouterService.GetSDKBusinessModel(BLName, AuthenticationService).Call("we",mapRelationImport.ListIndexForeingFields,valores);
+            foreach (var mapRelationImport in ListMapRelationsImport){
+
+                List<string> values = DataMapped.Where(p => p.ContainsKey(mapRelationImport.NameInternalIndex)).Select(p => (string)p[mapRelationImport.NameInternalIndex]).ToList<string>();
+
+                var bl = BackendRouterService.GetSDKBusinessModel(GetBLNameFromString(mapRelationImport.NameInternalIndex ,'_'), AuthenticationService);
+                var response = await bl.Call("SetListForeingRowid", mapRelationImport.ListIndexForeingFields, values);
             
                 if(response.Success){ 
                     UpdateForeingKeysValues(response.Data, mapRelationImport.NameInternalIndex,
                                             mapRelationImport.IdFieldFkEntity,
                                             mapRelationImport.DependencyIdFieldFKEntity);
                 }
-                parametroFelds.Clear();
-                parametroFelds = null;
 
-            } 
-        }catch(Exception e){
-
-            var fg = 1;
-        }    
-
+    }
         CleanAuxiliarColumnsDataMapped();
-
-        @* JsonObject = JsonConvert.SerializeObject(DataMapped, Newtonsoft.Json.Formatting.None); *@
         StateHasChanged();
+    }
+
+    private string GetBLNameFromString(string InternalIndex , char separator){
+        int starIndex = InternalIndex.IndexOf(separator) +1;
+        int midleIndex = InternalIndex.IndexOf(separator, starIndex);
+        string  BLName = InternalIndex.Substring(starIndex, midleIndex-starIndex);
+        return $"BL{BLName}";
     }
 
 
@@ -605,16 +609,10 @@
                     dataMapped => dataMapped[indexFks],
                     (dataIn, dataMapped) =>
                         { 
-                            if(!string.IsNullOrEmpty(dependencyIndex)){
-                                if(dataMapped[dependencyIndex] is null){
-                                    dataMapped[dependencyIndex] = dataIn.Rowid.ToString();
-                                }else{
-                                    dataMapped[dependencyIndex] = dataIn.Rowid.ToString() + dataMapped[dependencyIndex];
-                                }
-                            }
-                            //dataMapped[dependencyIndex] = dataIn.Rowid;
                             dataMapped[fieldToRepalce] = dataIn.Rowid;
-                            
+                            if(!string.IsNullOrEmpty(dependencyIndex)){
+                                dataMapped[dependencyIndex] += dataIn.Rowid.ToString();
+                            }
                         return dataMapped;
                     }
                 ).ToList();

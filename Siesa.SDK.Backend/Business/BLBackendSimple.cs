@@ -2066,8 +2066,6 @@ namespace Siesa.SDK.Business
             JArray dataList = JArray.Parse(dataStr);
             List<dynamic> SuccessData = new();
             List<dynamic> ErrorData = new();
-            Stopwatch stopwatch = new();
-            stopwatch.Start();
             List<EnumSearchDTO> EnumSearchList = GetEnumDTO(typeof(T));
             var holi = GetRelationalProperties(typeof(T));
             foreach (var item in dataList){
@@ -2085,14 +2083,12 @@ namespace Siesa.SDK.Business
                     }
                 }
             }
-            stopwatch.Stop();
+
             SDKResultImportDataDTO resultImport = new SDKResultImportDataDTO
             {
                 Success = SuccessData,
                 Errors = ErrorData
             };
-            long elapsedTimeMs = stopwatch.ElapsedMilliseconds;
-            Console.WriteLine($"Tiempo transcurrido: {elapsedTimeMs} ms");
             return new ActionResult<SDKResultImportDataDTO>{Success = true, Data = resultImport};
         }
 
