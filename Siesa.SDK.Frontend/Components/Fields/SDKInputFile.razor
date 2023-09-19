@@ -26,7 +26,7 @@
                 </div>
             }
             @if((RowidAttachmentDetail != 0 || _FilesSelected.Count > 0) && !_IsLoading){
-                <img src="@_UrlImage" height="100%" width="100%">
+                <img @ref="previewImageElem" src="@_UrlImage" height="100%" width="100%">
             }else{
                 <img @ref="previewImageElem" height="100%" width="100%"/>
             }
