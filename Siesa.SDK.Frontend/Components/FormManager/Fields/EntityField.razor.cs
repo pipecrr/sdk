@@ -43,6 +43,24 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
             }
         }
 
+        protected override async Task OnParametersSetAsync()
+        {
+            await base.OnParametersSetAsync().ConfigureAwait(true);
+
+            if(FieldOpt.RelatedFilters != null)
+            {
+                _relatedFilters.Clear();
+                foreach(var filter in FieldOpt.RelatedFilters){
+                    var dynamicValue = await Evaluator.EvaluateCode(filter.Value, BaseModelObj);
+                    _relatedFilters.Add(filter.Key, dynamicValue.ToString());
+                }
+            }
+
+            if(FieldOpt.Filters != null){
+                EvaluateFilters();
+            }   
+        }
+
         private void EvaluateFilters()
         {
             foreach(var filter in FieldOpt.Filters){

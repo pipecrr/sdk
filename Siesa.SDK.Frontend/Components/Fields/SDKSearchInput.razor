@@ -3,6 +3,7 @@
 
 @inherits SDKComponent
 
-<input type="search" @bind="@Value" placeholder="@Placeholder" @oninput="HandleInput" disabled="@Disabled" data-automation-id="@GetAutomationId()" class="@CssClass"/>
+<input type="search" @bind="@Value" placeholder="@Placeholder" @oninput="HandleInput" disabled="@Disabled" data-automation-id="@GetAutomationId()" class="@CssClass"
+       @onfocus="HandleFocus" @onfocusout="HandleFocusOut" @onclick="HandleClick" @onkeydown="HandleKeyDown" />
 
 

@@ -4,6 +4,8 @@
 @using Siesa.SDK.Shared.DTOS
 @using Siesa.SDK.Frontend.Components.Fields;
 @using Siesa.SDK.Frontend.Components.Visualization   
+@using Siesa.SDK.Frontend.Components.Layout
+@using Newtonsoft.Json;
 
 @inject IAuthenticationService AuthenticationService
 @inject NavigationService NavigationService
@@ -11,7 +13,6 @@
 @inject Blazored.LocalStorage.ILocalStorageService localStorageService;
 @layout EmptyLayout
 @inject IBackendRouterService BackendRouterService
-@using Newtonsoft.Json;
 @inherits SDKComponent;
 
 <header class="col-12 pl-5 sdk_header">
@@ -42,6 +43,7 @@
     </div>
     <div class="col-xl-5 col-lg-6 col-md-6 col-sm-4 col-7 p-0 d-flex justify-content-end align-items-center info_head">
         <div class="sdk_conection">
+
             <div class="position-relative">
                 <SDKButton Click="ToogleConnect" CssClass="btn btn_connect py-0 px-2 px-lg-3 d-flex align-items-center"   
                        AutomationId="SDKHeader_ButtonConfig">
@@ -49,9 +51,11 @@
                         <p class="font-weight-bold m-0 text-truncate" data-toggle="tooltip" data-placement="bottom" title="">
                             @GetCurrentConnectionName()     
                             </p>
-                        <p class="font-weight-bold m-0 text-truncate" data-toggle="tooltip" data-placement="bottom" title="">
-                            @GetCurrentCompanyGroupName()
-                        </p>
+                        @if(_showCompanyGroups){
+                            <p class="font-weight-bold m-0 text-truncate" data-toggle="tooltip" data-placement="bottom" title="">
+                                @GetCurrentCompanyGroupName()
+                            </p>
+                        }
                     </div>
                     <div class="pl-2 pl-xl-3">
                         <SDKIcon Name="fa-chevron-down"/>
@@ -78,42 +82,53 @@
                                         <p style="margin:0px"><strong><ResourceViewer ResourceTag="Custom.SDKHeader.Connection" /></strong></p>
                                         <p style="margin:0px">@GetCurrentConnectionName()</p>
                                     </div>
-                                    <div class="connect_select_search">
-                                        <label class="col-form-label col-form-label-sm font-weight-bold" for="inputGrupo"><ResourceViewer ResourceTag="Custom.SDKHeader.Group" /></label>
-                                        <div class="d-flex form-control form-control-sm p-0">
+                                    @if(_showCompanyGroups){
+                                        <div class="connect_select_search">
+                                            <label class="col-form-label col-form-label-sm font-weight-bold" for="inputGrupo"><ResourceViewer ResourceTag="Custom.SDKHeader.Group" /></label>
+                                            <div class="d-flex form-control form-control-sm p-0">
 
-                                            <SDKEntityField
-                                                RelatedBusiness="@RelatedBusiness"
-                                                BaseObj="@this"
-                                                FieldName="SelectedGroup"
-                                                RelatedParams="@RelatedParams"
-                                                CanSearch="false"
-                                            />
+                                                <SDKEntityField
+                                                    RelatedBusiness="@RelatedBusiness"
+                                                    BaseObj="@this"
+                                                    FieldName="SelectedGroup"
+                                                    RelatedParams="@RelatedParams"
+                                                    CanSearch="false"
+                                                />
 
+                                            </div>
                                         </div>
-                                    </div>
+                                    }
                                 </div>
 
                             </BodyTemplate>
 
                                 <FooterTemplate>
-                                    <div class="p-3">
-                                        <SDKButton Click="@SetCompanyGroup" CssClass="btn btn-primary btn_primary_def_1 btn-sm w-100"
-                                        AutomationId="SDKHeader_ButtonSetCompanyGroup">
-                                            @if (loading)
-                                            {
-                                                <p style="margin-bottom: 0 !important"><ResourceViewer ResourceTag="Custom.Generic.Loading" /><span class="spinner-border spinner-border-sm mr-1"></span></p>
-                                            }
-                                            else
-                                            {
-                                                <p style="margin-bottom: 0 !important"><ResourceViewer ResourceTag="Custom.SDKHeader.ChangeSettings" /></p>
-                                            }
-                                        </SDKButton>
-                                    </div>
+                                    @if(_showCompanyGroups){
+                                        <div class="p-3">
+                                            <SDKButton Click="@SetCompanyGroup" CssClass="btn btn-primary btn_primary_def_1 btn-sm w-100"
+                                            AutomationId="SDKHeader_ButtonSetCompanyGroup">
+                                                @if (loading)
+                                                {
+                                                    <p style="margin-bottom: 0 !important"><ResourceViewer ResourceTag="Custom.Generic.Loading" /><span class="spinner-border spinner-border-sm mr-1"></span></p>
+                                                }
+                                                else
+                                                {
+                                                    <p style="margin-bottom: 0 !important"><ResourceViewer ResourceTag="Custom.SDKHeader.ChangeSettings" /></p>
+                                                }
+                                            </SDKButton>
+                                        </div>
+                                    }
                                 </FooterTemplate>
                     </SDKDropDown>
             </div>
         </div>
+        @* <div class="sdk_conection">
+            <div class="position-relative">
+                <div class="px-1 d-flex align-items-center">
+                    <NotificationsComponent/>
+                </div>
+            </div>
+        </div> *@
         <div class="whcm_footer d-flex flex-row-reverse flex-md-row align-items-center justify-content-between">
             <div class="sdk_version px-2 px-lg-3 d-flex flex-sm-row flex-md-column">
                 <p class="font-weight-bold m-0 mr-2 mr-md-0">
@@ -146,6 +161,8 @@
 
     private SDKDbConnection _connection { get; set; } = new SDKDbConnection();
 
+    private bool _showCompanyGroups { get; set; }
+
     private string NameTag { get; set; } = "";
     string RelatedBusiness { get; set; } = "BLSDKCompanyGroup";
     RelatedParams RelatedParams { get; set; } = new RelatedParams(){
@@ -172,6 +189,11 @@
         await base.OnInitializedAsync(); 
 
         NameTag = GetCurrentCompanyGroupName();
+        //companyGroups > 1
+        if(CompanyGroups.Count > 1)
+        {
+            _showCompanyGroups = true;
+        }
     }
 
 

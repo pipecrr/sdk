@@ -85,6 +85,8 @@
 
     [Parameter]
     public int FlexRowId {get;set;} = 0;
+    [Parameter]
+    public bool ShowActions {get;set;} = true;
     //private enumThemeIconStyle IconsStyles {get;set;} = enumThemeIconStyle.Solid;
     [Parameter]
     public List<string> FieldsHiddenList { get; set; } = new List<string>();
@@ -201,6 +203,7 @@
         FlexAttributes.Add("flex_filters", FlexFilters);
         FlexAttributes.Add("preference_style", style);
         FlexAttributes.Add("fields_hidden_list", fieldsHiddenListString);
+        FlexAttributes.Add("show_actions", ShowActions.ToString());
         if(_flexRowId != 0)
         {
             FlexAttributes.Add("base_obj_id", _flexRowId);
@@ -278,10 +281,10 @@
 
     protected override async Task OnInitializedAsync()
     {
-        //Init();
         if(String.IsNullOrEmpty(GuidListView))
         {
             _guid = Guid.NewGuid().ToString();
+            
         }else{
             _guid = GuidListView;
         }

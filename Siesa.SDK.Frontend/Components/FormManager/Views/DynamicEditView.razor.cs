@@ -18,6 +18,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private async Task InitEdit(Int64 business_obj_id){
             try
             {
+               
                 await BusinessObj.InitializeBusiness(business_obj_id);
             }
             catch (System.Exception e)
