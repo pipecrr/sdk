@@ -311,7 +311,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                     if (modifyRow)
                     {
                         await EvaluateCellChangeAsync("SdkOnChangeCell", EditFormContext.Model).ConfigureAwait(true);
-                        StateHasChanged();
+                        _ = InvokeAsync(() => StateHasChanged());
                     }
                     
                     if (formView != null)

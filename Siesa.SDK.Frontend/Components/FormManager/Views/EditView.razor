@@ -90,7 +90,7 @@ else if (BusinessObj.BaseObj.Rowid != 0)
         @if(IsDocument){
             <CascadingValue Value="@EditFormContext">
                 <CascadingValue Value="this">
-                    <SDKGridDocument BusinessObj="@BusinessObj" ButtonDeltete="@ButtonDeltete" DetailConfig="@DetailConfig" IsDetail="false"/>
+                    <SDKGridDocument BusinessObj="@BusinessObj" ButtonDelete="@ButtonDelete" ButtonCreate="@ButtonCreate" DetailConfig="@DetailConfig" IsDetail="false"/>
                 </CascadingValue>
             </CascadingValue>
         }

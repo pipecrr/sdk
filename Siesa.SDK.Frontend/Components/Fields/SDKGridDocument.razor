@@ -1,8 +1,8 @@
 @using Siesa.SDK.Frontend.Components.FormManager.ViewModels
 @using GrapeCity.ActiveReports.Core.Rendering.ReportParameters
-@if (!IsDetail)
+@if (!IsDetail && !_hiddenCreate)
 {
-    <SDKButton ResourceTag="Custom.Document.Button.Create" Click="@(async () => await FormView.ClickAddRow())"/>
+    <SDKButton ResourceTag="Custom.Document.Button.Create" Click="@(async () => await FormView.ClickAddRow())" Enabled="@_enabledCreate"/>
 }
 <SDKGrid Data="@BusinessObj.ChildObjs" TItem="object" @ref="FormView.RefGrid" AllowColumnResize="true">
     <Columns>
@@ -12,9 +12,9 @@
                 <Template Context="dataActions">
                     <CascadingValue Value="this">
                         <div class="d-flex justify-content-center" @key="@GetKey("actionButtons", dataActions)">
-                            @if (ButtonDeltete != null && !IsDetail)
+                            @if (ButtonDelete != null && !IsDetail)
                             {
-                                <SDKButtonCustomAttr IconCssClass="fa-trash-can" IsActionButton="true" Click="@(() => FormView.ClickDeleteRow(dataActions))" BusinessObj="@BusinessObj" Button="@ButtonDeltete" Data=@dataActions Grid=@FormView.RefGrid/>
+                                <SDKButtonCustomAttr IconCssClass="fa-trash-can" IsActionButton="true" Click="@(() => FormView.ClickDeleteRow(dataActions))" BusinessObj="@BusinessObj" Button="@ButtonDelete" Data=@dataActions Grid=@FormView.RefGrid/>
                             }
                             else if(!IsDetail)
                             {
@@ -41,7 +41,9 @@
             }
             <SDKGridColumn TItem="object" ResourceTag="@column.ResourceTag" UniqueId="@column.ResourceTag">
                 <Template Context="data">
-                    <FieldOptComponent Column="@column" Data="@data" @key="@GetKey(column.ResourceTag, data)" IsDetail="@IsDetail"/>
+                    <CascadingValue Value="@EditFormContext">
+                        <FieldOptComponent Column="@column" Data="@data" @key="@GetKey(column.ResourceTag, data)" IsDetail="@IsDetail"/>
+                    </CascadingValue>
                 </Template>
             </SDKGridColumn>
         }
@@ -54,9 +56,13 @@
     /// </summary>
     [Parameter] public dynamic BusinessObj { get; set; }
     /// <summary>
-    /// The button that is used to evaluate the custom attributes of the button
+    /// The button that is used to evaluate the custom attributes of the button delete
     /// </summary>
-    [Parameter] public Button ButtonDeltete { get; set; }
+    [Parameter] public Button ButtonDelete { get; set; }
+    /// <summary>
+    /// The button that is used to evaluate the custom attributes of the button create
+    /// </summary>
+    [Parameter] public Button ButtonCreate { get; set; }
     /// <summary>
     /// The configuration of the detail exposed in the viewdef
     /// </summary>
@@ -65,15 +71,53 @@
     /// Cascading parameter to get the form view component
     /// </summary>
     [CascadingParameter] public dynamic FormView { get; set; }
+    [CascadingParameter] 
+    public EditContext EditFormContext { get; set; }
     /// <summary>
     /// If the field is in detail mode
     /// </summary>
     [Parameter] public bool IsDetail { get; set; }
+
+    private bool _enabledCreate = true;
+    private bool _hiddenCreate = false;
 
     private string GetKey(string name, dynamic data)
     {
         int index = BusinessObj.ChildObjs.IndexOf(data);
         string key = $"{name}-{index}";
         return key;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if(ButtonCreate != null){
+            _enabledCreate = !ButtonCreate.Disabled;
+            _hiddenCreate = ButtonCreate.Hidden;
+            if(ButtonCreate.CustomAttributes != null && ButtonCreate.CustomAttributes.ContainsKey("sdk-disabled")){
+                var disabled = await FormView.EvaluateCodeButtons(ButtonCreate, "sdk-disabled");
+                if (_enabledCreate == disabled)
+                {
+                    _enabledCreate = !disabled;
+                    StateHasChanged();
+                }
+            }
+            if(ButtonCreate.CustomAttributes != null && ButtonCreate.CustomAttributes.ContainsKey("sdk-hide")){
+                var hidden = await FormView.EvaluateCodeButtons(ButtonCreate, "sdk-hide");
+                if (_hiddenCreate != hidden)
+                {
+                    _hiddenCreate = hidden;
+                    StateHasChanged();  
+                }
+            }
+            if(ButtonCreate.CustomAttributes != null && ButtonCreate.CustomAttributes.ContainsKey("sdk-show")){
+                var show = await FormView.EvaluateCodeButtons(ButtonCreate, "sdk-show");
+                if (_hiddenCreate == show)
+                {
+                    _hiddenCreate = !show;
+                    StateHasChanged();
+                }
+            }
+        }
+        await base.OnParametersSetAsync().ConfigureAwait(true);
     }
 }

@@ -95,7 +95,7 @@ else if (Panels == null || Panels.Count <= 0)
         @if(IsDocument){
             <CascadingValue Value="@EditFormContext">
                 <CascadingValue Value="this">
-                    <SDKGridDocument BusinessObj="@BusinessObj" ButtonDeltete="@ButtonDeltete" DetailConfig="@DetailConfig"/>
+                    <SDKGridDocument BusinessObj="@BusinessObj" ButtonDelete="@ButtonDelete" ButtonCreate="@ButtonCreate" DetailConfig="@DetailConfig"/>
                 </CascadingValue>
             </CascadingValue>
         }
