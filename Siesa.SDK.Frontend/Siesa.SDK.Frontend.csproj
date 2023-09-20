@@ -67,8 +67,8 @@
 		<PackageReference Include="Radzen.Blazor" Version="4.16.0" />
 		<PackageReference Include="Reshiru.Blazor.IndexedDB.Framework" Version="1.0.1" />
 		<PackageReference Include="TG.Blazor.IndexedDB" Version="1.5.0-preview" />
-		<PackageReference Include="Z.Blazor.Diagrams" Version="2.1.6" />
-		<PackageReference Include="Z.Blazor.Diagrams.Algorithms" Version="0.1.0" />
+		<PackageReference Include="Z.Blazor.Diagrams" Version="3.0.0" />
+		<PackageReference Include="Z.Blazor.Diagrams.Algorithms" Version="3.0.0" />
 		<PackageReference Include="GraphShape" Version="1.2.0" />
     	<PackageReference Include="MatBlazor" Version="2.9.0-develop-042" />
 	</ItemGroup>
