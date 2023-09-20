@@ -40,12 +40,10 @@
             <div class="whcm_user_photo">
                 <img src="@ProfileImageData" alt="imagen perfil" style="max-width: 100%;">
             </div>
-            <button class="whcm_upload_photo btn btn-primary btn_primary_def_1 btn-sm"
-                onclick="@(async () => PickComponent())">
-
+            <SDKButton CssClass="whcm_upload_photo btn btn-primary btn_primary_def_1 btn-sm"
+                Click="@(async () => PickComponent())" AutomationId="UploadUserPhoto" ResourceTag="@UploadUserPhoto">
                 <SDKIcon Name="fa-camera"></SDKIcon>
-
-            </button>
+            </SDKButton>
         </div>
     </div>
 
@@ -55,35 +53,32 @@
 
                 @if (_IsEdit)
                 {
-                    <button class="btn btn-sm layout_btn_negative-sm mb-1" data-toggle="tooltip" data-placement="top"
-                        title="Editar" @onclick="@(()=> ChangeViewType())">
+                    <SDKButton CssClass="btn btn-sm layout_btn_negative-sm mb-1" 
+                        AutomationId="Confirm" Click="@(()=> ChangeViewType())" ResourceTag="@Confirm">
                         <SDKIcon Name="fa-circle-check" />
-                    </button>
+                    </SDKButton>
 
-                    <button class="btn btn-sm layout_btn_negative-sm mb-1" data-toggle="tooltip" data-placement="top"
-                        title="Editar" @onclick="@(()=> ChangeViewType())">
+                    <SDKButton CssClass="btn btn-sm layout_btn_negative-sm mb-1" 
+                        AutomationId="Cancel" Click="@(()=> ChangeViewType())" ResourceTag="@Cancel" >
                         <SDKIcon Name="fa-ban" />
-                    </button>
+                    </SDKButton>
                 }
                 else
                 {
-                    <button class="btn btn-sm layout_btn_negative-sm mb-1" data-toggle="tooltip" data-placement="top"
-                        title="@EditUser" @onclick="@(()=> ChangeViewType())">
+                    <SDKButton CssClass="btn btn-sm layout_btn_negative-sm mb-1" 
+                        AutomationId="EditUser" Click="@(()=> ChangeViewType())" ResourceTag="@EditUser">
                         <SDKIcon Name="fa-pen" />
-                    </button>
+                    </SDKButton>
                 }
 
             </div>
             <div class="col pt-2">
                 <div class="row">
-
                     <h6 class="col-12 font-weight-bold">
                         <ResourceViewer ResourceTag="Custom.SDK.UserPreference.UserData" />
                     </h6>
-
                     <FreeForm Viewdef="user_preferences" BusinessName="BLUser" BusinessObj="@BLUser"
                         ViewContext="@DynamicViewType"  SetTopBar="false"/>
-
                 </div>
             </div>
         </div>
@@ -123,7 +118,7 @@
                                             </div>
                                             <div class="d-flex align-items-center">
 
-                                                <input class="mr-2" type="radio" name="ThemeColor" value="@theme.Key"
+                                                <input class="mr-2" type="radio" name="ThemeColor" value="@theme.Key" data-automation-id="Input_ThemeColor_@theme.Key"
                                                 checked="@ValidCheckedThemeColor(theme.Key)">
 
                                                 <ResourceViewer ResourceTag=@theme.Key />
@@ -183,7 +178,7 @@
                                 <input class="mr-2" type="radio" name="ComplementaryColors" value="@item.ColorName"
                                     @onchange="OnChangeSelectedColorsComplementary"
                                     checked="@ValidCheckedComplementaryColor(item.ColorName)"
-                                    disabled="@ValidDisabledComplementaryColor(item.ColorName)">
+                                    disabled="@ValidDisabledComplementaryColor(item.ColorName)" data-automation-id="Input_ComplementaryColors_@item.ColorName">
                                 <label class="mb-0" style="font-size: 14px;">@item.ColorName</label>
                             </div>
 
@@ -219,7 +214,7 @@
                                 
                                 <div class="d-flex align-items-center">
                                     <input class="mr-2" type="radio" name="IconsStyles" value="@icon"
-                                        checked="@ValidCheckedStyleIcon(icon)">
+                                        checked="@ValidCheckedStyleIcon(icon)" data-automation-id="Input_IconsStyles_@GetLabelIcon(icon)">
                                     <label class="mb-0" style="font-size: 14px;">
                                         @GetLabelIcon(icon)
                                     </label>
@@ -257,7 +252,7 @@
 
                 <div class="d-flex align-items-center">
                     <input class="mr-2" type="radio" id="TopbarStyle" value="@_OneColor"
-                        @onchange="e =>OnChangeSelectedTopbarStyle(_OneColor)" checked="@CheckedTopbarStyle(_OneColor)">
+                        @onchange="e =>OnChangeSelectedTopbarStyle(_OneColor)" checked="@CheckedTopbarStyle(_OneColor)" data-automation-id="Input_OneColor_">
                     <ResourceViewer ResourceTag="Custom.SDK.UserPreference.OneColor" />
                 </div>
             </div>
@@ -277,7 +272,7 @@
 
                 <div class="d-flex align-items-center">
                     <input class="mr-2" type="radio" id="TopbarStyle" value="@_MultiColor"
-                        @onchange="e =>OnChangeSelectedTopbarStyle(_MultiColor)" disabled>
+                        @onchange="e =>OnChangeSelectedTopbarStyle(_MultiColor)" disabled data-automation-id="Input_MultiColor_">
                     <ResourceViewer ResourceTag="Custom.SDK.UserPreference.MultiColor" />
                 </div>
             </div>
@@ -341,6 +336,9 @@
 
     private string TitlePreferences { get; set; }
     private string EditUser { get; set; }
+    private string Cancel { get; set; }
+    private string Confirm { get; set; }
+    private string UploadUserPhoto { get; set; }
 
     private void ChangeViewType()
     {
@@ -430,6 +428,9 @@
         TitlePreferences = await UtilManager.GetResource("Custom.SDK.UserPreference");
 
         EditUser = await UtilManager.GetResource("Custom.SDK.UserPreference.EditUser");
+        Cancel = await UtilManager.GetResource("Action.Cancel");
+        Confirm = await UtilManager.GetResource("Action.Confirm");
+        UploadUserPhoto = await UtilManager.GetResource("Custom.SDK.UserPreference.UploadUserPhoto");
     }
 
     private async Task SaveUserPreferences()

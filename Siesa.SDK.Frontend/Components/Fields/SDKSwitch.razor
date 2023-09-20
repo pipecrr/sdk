@@ -1,8 +1,10 @@
 @using Siesa.SDK.Frontend.Components.FormManager.Fields
 @using System.Linq.Expressions
+@inherits SDKComponent
 
 <div class="sdk-switch-container">
-    <RadzenSwitch Value="@Value" Change="@ValueChanged" Disabled="@Disabled" ValueExpression="@ValueExpression"/>
+    <RadzenSwitch Value="@Value" Change="@ValueChanged" Disabled="@Disabled" ValueExpression="@ValueExpression"
+    data-automation-id="@GetAutomationId()"/>
 </div>
 
 
