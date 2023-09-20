@@ -133,7 +133,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         /// <summary>
         /// Gets or sets the delete button config. 
         /// </summary>
-        protected Button ButtonDeltete {get; set;  }
+        protected Button ButtonDelete {get; set;  }
+        /// <summary>
+        /// Gets or sets the create button config. 
+        /// </summary>
+        protected Button ButtonCreate {get; set;  }
         /// <summary>
         /// Gets or sets the reference grid.
         /// </summary>
@@ -303,7 +307,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             {
                 DetailConfig = FormViewModel.DetailConfig;
                 AddOnChangeCell();
-                ButtonDeltete = DetailConfig.Buttons.FirstOrDefault(x => x.Id.Equals("Delete",StringComparison.Ordinal));
+                ButtonDelete = DetailConfig.Buttons.FirstOrDefault(x => x.Id.Equals("Delete",StringComparison.Ordinal));
+                ButtonCreate = DetailConfig.Buttons.FirstOrDefault(x => x.Id.Equals("Create",StringComparison.Ordinal));
                 BusinessObj.ExtraDetailFields = DetailConfig.Fields.Select(x => x.Name).ToList();
                 
                 await BusinessObj.InitializeChilds().ConfigureAwait(true);
@@ -424,7 +429,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 if (data != null)
                 {
                     attrValue = attrCode(attrValue, data);
-                    result = await EjectMethod(data, attrValue, true).ConfigureAwait(true);
+                    if(!string.IsNullOrEmpty(attrValue)){
+                        result = await EjectMethod(data, attrValue, true).ConfigureAwait(true);
+                    }
                 }
                 else
                 {
@@ -437,7 +444,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         private string attrCode(string attrValue, dynamic data)
         {
-            string result = attrValue;
+            string result = attrValue;            
             var indexData = BusinessObj.ChildObjs.IndexOf(data);
             if (result != null && result.Contains("data_detail", StringComparison.Ordinal))
             {
@@ -852,6 +859,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 obj = await EjectMethod(obj, DetailConfig.ActionAddRow, true).ConfigureAwait(true);
             }
             BusinessObj.ChildObjs.Add(obj);
+            StateHasChanged();
             RefGrid.Reload();
         }
 
@@ -872,7 +880,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     BusinessObj.ChildRowidsUpdated.Remove(obj.Rowid);
                 }
             }
-
+            StateHasChanged();
             RefGrid.Reload();
         }
         

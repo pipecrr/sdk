@@ -24,22 +24,7 @@
     /// </summary>
     [CascadingParameter]
     public FormView FormView { get; set; }
-    
-    /// <summary>
-    /// On parameters set async method
-    /// </summary>
-    protected override async Task OnParametersSetAsync()
-    {
-        if (!IsDetail)
-        {
-            bool shouldUpdate = false;
-            shouldUpdate = await FormView.UpdateCustomAttr(Column, true, Data).ConfigureAwait(false);
-            if (shouldUpdate)
-            {
-                await InvokeAsync(StateHasChanged).ConfigureAwait(false);
-            }
-        }
+    [CascadingParameter] 
+    public EditContext EditFormContext { get; set; }
         
-        await base.OnParametersSetAsync().ConfigureAwait(true);
-    }
 }
