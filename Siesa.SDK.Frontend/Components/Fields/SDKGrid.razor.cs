@@ -86,7 +86,7 @@ public partial class SDKGrid<TItem> : SDKComponent
     /// <summary>
     /// Gets or sets the list of selected items in the grid.
     /// </summary>
-    [Parameter] public IList<TItem> Value { get; set; }
+    [Parameter] public IList<TItem> Value { get; set; } = new List<TItem>();
 
     /// <summary>
     /// Gets or sets an event callback that is invoked when the selection changes.
@@ -172,7 +172,7 @@ public partial class SDKGrid<TItem> : SDKComponent
     // Helper method to retrieve the RenderFragment for the action column
     private RenderFragment<TItem> GetActionColumn()
     {
-       var query = _grid.ColumnsCollection.Where(x=> x.CssClass == "internal-sdk-gridcolumn-action").SingleOrDefault();
+       var query = _grid.ColumnsCollection.SingleOrDefault(x=> x.CssClass == "internal-sdk-gridcolumn-action");
 
        if (query != null)
        {
