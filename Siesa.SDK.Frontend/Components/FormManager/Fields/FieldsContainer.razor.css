@@ -33,3 +33,7 @@
 .field-detail-container textarea[readonly]:focus{
     background: var(--color_field_detail)!important;
 }
+
+.field-detail-container ::deep textarea.form-control[readonly]{
+    background-color: var(--color_field_detail) !important;
+}
