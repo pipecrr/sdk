@@ -17,10 +17,11 @@ namespace Siesa.SDK.Business
     /// </summary>
     /// <typeparam name="TParent">The type of the parent object.</typeparam>
     /// <typeparam name="TChild">The type of the child object.</typeparam>
-    public class BLBackendDocument<TParent, TChild> : BLBackendSimple<TParent,BLBaseValidator<TParent>> where TParent : class,IBaseSDK where TChild : class
+    /// <typeparam name="TVal">The type of validator to BLBackendSimple</typeparam>
+    public class BLBackendDocument<TParent, TChild, TVal> : BLBackendSimple<TParent,TVal> where TParent : class,IBaseSDK where TChild : class where TVal : BLBaseValidator<TParent>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BLBackendDocument{TParent,TChild}"/> class.
+        /// Initializes a new instance of the <see cref="BLBackendDocument{TParent,TChild, TVal}"/> class.
         /// </summary>
         /// <param name="authenticationService">The authentication service.</param>
         public BLBackendDocument(IAuthenticationService authenticationService) : base(authenticationService)
