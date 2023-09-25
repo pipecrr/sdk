@@ -213,7 +213,8 @@ public partial class SDKGrid<TItem> : SDKComponent
         }
         if (result)
         {
-            await _grid.InsertRow(obj);
+            Data = Data.Append((TItem)obj);
+            await _grid.Reload().ConfigureAwait(true);
         }
     }
     /// <summary>
@@ -223,12 +224,15 @@ public partial class SDKGrid<TItem> : SDKComponent
     public async Task ClickDeleteRow(TItem item)
     {
         bool result = true;
+        int index = Data.ToList().IndexOf(item);
         if(OnDeleteRow != null){
               result = OnDeleteRow(item);
         }
         if (result)
         {
-            Data = Data.Where(x => !x.Equals(item));
+            List<TItem> list = Data.ToList();
+            list.RemoveAt(index);
+            Data = list; 
             await _grid.Reload().ConfigureAwait(true);
         }
     }
