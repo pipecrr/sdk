@@ -915,7 +915,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         
         private async Task GoToExport()
         {
-            await JSRuntime.InvokeAsync<object>("oreports_app_table_flexdebug_"+guidListView+".exportToExcel");
+            string resourceTag = $"{BusinessName}.Plural";
+            string resourceName = await UtilsManager.GetResource(resourceTag).ConfigureAwait(true);
+            await JSRuntime.InvokeAsync<object>("oreports_app_table_flexdebug_"+guidListView+".exportToExcel", resourceName);
         }
 
         private void GoToDetail(Int64 id)

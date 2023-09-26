@@ -328,9 +328,11 @@
         JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+_guid+".props.fetchPreviewData");
     }
 
-    void ExportToExcel()
+    async Task ExportToExcel()
     {
-        JSRuntime.InvokeAsync<object>("oreports_app_table_flexdebug_"+_guid+".exportToExcel");
+        string resourceTag = $"{_blName}.Plural";
+        string resourceName = await UtilsManager.GetResource(resourceTag).ConfigureAwait(true);
+        JSRuntime.InvokeAsync<object>("oreports_app_table_flexdebug_"+_guid+".exportToExcel", resourceName);
     }
 
     void GoToCreate()
