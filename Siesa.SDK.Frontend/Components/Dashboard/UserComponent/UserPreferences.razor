@@ -284,18 +284,18 @@
 
 
 <div class="row modal-footer pb-0">
-    <button class="btn btn-primary btn_secondary_def_1 btn-sm px-3" @onclick="@(async () => await InitView())">
+    <SDKButton CssClass="btn btn-primary btn_secondary_def_1 btn-sm px-3" Click="@(async () => await InitView())" AutomationId="DiscardChanges">
         <ResourceViewer ResourceTag="Custom.SDK.UserPreference.DiscardChanges" />
-    </button>
+    </SDKButton>
 
 
-    <button class="btn btn-primary btn_secondary_cancel btn-sm px-3" @onclick="@(()=> DialogService.Close(false))">
+    <SDKButton CssClass="btn btn-primary btn_secondary_cancel btn-sm px-3" Click="@(()=> DialogService.Close(false))" AutomationId="Out">
         <ResourceViewer ResourceTag="Custom.SDK.UserPreference.Out" />
-    </button>
+    </SDKButton>
 
-    <button class="btn btn-primary btn_primary_def_1 btn-sm px-3" @onclick="@(async () => await SaveUserPreferences())">
+    <SDKButton CssClass="btn btn-primary btn_primary_def_1 btn-sm px-3" Click="@(async () => await SaveUserPreferences())" AutomationId="Save">
         <ResourceViewer ResourceTag="Action.Save" />
-    </button>
+    </SDKButton>
 
 
 </div>

@@ -93,7 +93,7 @@ input#menu:checked~ ::deep .nav_dx_menu {
     transition-duration: .25s;
     width: 100%;
     /* max-width: 243px; */
-    z-index: 3;
+    z-index: 6;
     display: block;
 
 }

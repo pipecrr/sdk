@@ -253,7 +253,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         {
             CreateRelationshipAttachment();
             Loading = true;
-            IsDocument = Utilities.CheckIsDocument(BusinessObj, typeof(BLFrontendDocument<,>));
+            IsDocument = Utilities.CheckIsDocument(BusinessObj, typeof(BLFrontendDocument<,,>));
             if (bName == null)
             {
                 bName = BusinessName;
