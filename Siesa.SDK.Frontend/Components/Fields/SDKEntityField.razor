@@ -21,62 +21,60 @@
                 }
             </div>
         }
-        @if(true){
-            <div class="sdk-dropdown" id="@_idDiv">
-                <SDKSearchInput CssClass="form-control remove-x" Placeholder="@placeholder" ValueChanged="@OnChangeValueSearch" Value="@Value" OnFocus="@OnFocus" OnClick="@OnClickInput" OnEnter="@OnKeyDown" MinMillisecondsBetweenSearch="@MinMillisecondsBetweenSearch" OnFocusOut="@OnFocusOut" Disabled="@Disabled"/>
-            </div>
-            <SDKDropDown @bind-IsOpen="@_isOpenDropDown" MinWidth="300px" MaxWidth="100%" PositionTarget="@_idTarget" PositionMode="DropDownPositionMode.Bottom" CssClass="Prueba" >
+        <div class="sdk-dropdown" id="@_idDiv">
+            <SDKSearchInput CssClass="form-control remove-x" Placeholder="@placeholder" ValueChanged="@OnChangeValueSearch" Value="@Value" OnFocus="@OnFocus" OnClick="@OnClickInput" OnEnter="@OnKeyDown" MinMillisecondsBetweenSearch="@MinMillisecondsBetweenSearch" OnFocusOut="@OnFocusOut" Disabled="@Disabled"/>
+        </div>
+        <SDKDropDown @bind-IsOpen="@_isOpenDropDown" MinWidth="300px" MaxWidth="100%" PositionTarget="@_idTarget" PositionMode="DropDownPositionMode.Bottom" CssClass="Prueba" >
 
-                <BodyTemplate>
-                    <div class="whcm_select_list sdk-dropdown-menu sdk-entity-result" aria-labelledby="@idInput">
-                        <ul>
-                            @if(CacheData.Count()>0){
-                                foreach (var item in CacheData)
-                                {
-                                    <li class="d-flex justify-content-between sdk-dropdown-item" data-automation-id="@GetAutomationIdItem(item)" @onclick="@(()=> { OnSelectItem(item.Value); })">
-                                        <div class="d-flex align-items-center">
-                                            @if(FieldTemplate == 2){
-                                                <div class="whcm_select_list_img">
-                                                    <img src="" height="36px" alt="imagen">
-                                                </div>
-                                            }
-                                            <div class="ml-1">
-                                                <p class="font_size_087 m-0 font-weight-bold"><span>@item.Value.ToString()</span></p>
-                                                @if(RelatedParams != null && RelatedParams.ExtraFields.Count()>0 && !RelatedParams.ShowExtraFields){
-                                                    foreach (var field in RelatedParams.ExtraFields)
-                                                    {
-                                                        string paramValue = GetParamValue(field, item.Value);
-                                                        string resourceTag = item.Value.GetType().Name + "." + field;
-                                                                                                
-                                                        <p class="font_size_087 m-0"><span><ResourceViewer ResourceTag="@resourceTag" RowidCulture="@RowidCulture"/>:</span> <span>@paramValue</span></p>
-                                                    }
-                                                }
-                                            </div>
-                                        </div>
-                                        @if(CanEdit || CanDetail){
-                                            <div>
-                                                <button disabled="@Disabled" class="btn btn-sm layout_btn_standar-sm" data-automation-id="@GetAutomationIdItem(item)_ExpandBtn" type="button" data-toggle="tooltip" data-placement="top" title="Ampliar" @onclick="@(async ()=> { await OpenModalExpand(item.Value);})">
-                                                    <SDKIcon Name="fa-up-right-and-down-left-from-center"/>
-                                                </button>
+            <BodyTemplate>
+                <div class="whcm_select_list sdk-dropdown-menu sdk-entity-result" aria-labelledby="@idInput">
+                    <ul>
+                        @if(CacheData.Count()>0){
+                            foreach (var item in CacheData)
+                            {
+                                <li class="d-flex justify-content-between sdk-dropdown-item" data-automation-id="@GetAutomationIdItem(item)" @onclick="@(()=> { OnSelectItem(item.Value); })">
+                                    <div class="d-flex align-items-center">
+                                        @if(FieldTemplate == 2){
+                                            <div class="whcm_select_list_img">
+                                                <img src="" height="36px" alt="imagen">
                                             </div>
                                         }
-                                    </li>
-                                }
-                            }else if(HasError){
-                                <li class="d-flex justify-content-between error-item" data-automation-id="@GetAutomationIdItem(ErrorMessage)">
-                                    <div class="d-flex align-items-center">
                                         <div class="ml-1">
-                                            <p class="font_size_087 m-0 font-weight-bold"><span>@ErrorMessage</span></p>
+                                            <p class="font_size_087 m-0 font-weight-bold"><span>@item.Value.ToString()</span></p>
+                                            @if(RelatedParams != null && RelatedParams.ExtraFields.Count()>0 && !RelatedParams.ShowExtraFields){
+                                                foreach (var field in RelatedParams.ExtraFields)
+                                                {
+                                                    string paramValue = GetParamValue(field, item.Value);
+                                                    string resourceTag = item.Value.GetType().Name + "." + field;
+                                                                                            
+                                                    <p class="font_size_087 m-0"><span><ResourceViewer ResourceTag="@resourceTag" RowidCulture="@RowidCulture"/>:</span> <span>@paramValue</span></p>
+                                                }
+                                            }
                                         </div>
                                     </div>
+                                    @if(CanEdit || CanDetail){
+                                        <div>
+                                            <button disabled="@Disabled" class="btn btn-sm layout_btn_standar-sm" data-automation-id="@GetAutomationIdItem(item)_ExpandBtn" type="button" data-toggle="tooltip" data-placement="top" title="Ampliar" @onclick="@(async ()=> { await OpenModalExpand(item.Value);})">
+                                                <SDKIcon Name="fa-up-right-and-down-left-from-center"/>
+                                            </button>
+                                        </div>
+                                    }
                                 </li>
                             }
-                        </ul>
-                    </div>
-                </BodyTemplate>
-                
-            </SDKDropDown>
-        }
+                        }else if(HasError){
+                            <li class="d-flex justify-content-between error-item" data-automation-id="@GetAutomationIdItem(ErrorMessage)">
+                                <div class="d-flex align-items-center">
+                                    <div class="ml-1">
+                                        <p class="font_size_087 m-0 font-weight-bold"><span>@ErrorMessage</span></p>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </BodyTemplate>
+            
+        </SDKDropDown>
     </div>
     <div class="input-group-append sdk_btn_group_entity_field">
         @if(!IsMultiple && HasValue){
