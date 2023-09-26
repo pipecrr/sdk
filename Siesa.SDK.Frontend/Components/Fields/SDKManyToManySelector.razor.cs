@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.DependencyInjection;
 using Siesa.SDK.Frontend.Components.FormManager.Views;
 using Siesa.SDK.Frontend.Services;
+using Siesa.SDK.Shared.Services;
+using Siesa.SDK.Shared.Utilities;
 
 namespace Siesa.SDK.Frontend.Components.Fields
 {
     public partial class SDKManyToManySelector
     {
         [Parameter] public dynamic Business {get; set;}
+        [Parameter] public string RelatedBusiness {get; set;}
         [Parameter] public EventCallback<List<int>> OnAddUserAction {get; set;}
         [Parameter] public string ListResourceTag {get; set;}
         [Parameter] public string EmptyUsersResourceTag {get; set;}
@@ -19,6 +23,8 @@ namespace Siesa.SDK.Frontend.Components.Fields
         [Parameter] public Action<List<int>> OnFixedClick {get; set;}
         [Inject] public SDKGlobalLoaderService LoaderService {get; set;}
         [Inject] public SDKNotificationService NotificationService {get; set;}
+        [Inject] public IBackendRouterService BackendRouterService { get; set; }
+        [Inject] public IServiceProvider ServiceProvider { get; set; }
         //private UserComponentFixedButton UserComponentFixedButtonRef {get; set;}
         private ListView ListViewRef {get; set;}
         private SDKEntityField _sdkEntityFieldRef {get;set;}
@@ -26,12 +32,13 @@ namespace Siesa.SDK.Frontend.Components.Fields
         private string LastFilter { get; set; }
         private List<List<object>> EntityFieldFilters { get; set; } = new(); 
         private bool ShowList { get; set; } = true;
+        public dynamic FieldRelated {get; set;}
+        private dynamic BusinessRelated {get; set;}
 
         protected override async Task OnInitializedAsync()
         {
-            SetFilter();
+            //SetFilter();
             //Business.UsersToOperate = new();
-            await base.OnInitializedAsync();
         }
 
         private void SetNotIn()
