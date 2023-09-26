@@ -23,7 +23,7 @@
         }
         @if(true){
             <div class="sdk-dropdown" id="@_idDiv">
-                <SDKSearchInput CssClass="form-control remove-x" Placeholder="@placeholder" ValueChanged="@OnChangeValueSearch" Value="@Value" OnFocus="@OnFocus" OnClick="@OnClickInput" OnEnter="@OnKeyDown" MinMillisecondsBetweenSearch="@MinMillisecondsBetweenSearch" OnFocusOut="@OnFocusOut" />
+                <SDKSearchInput CssClass="form-control remove-x" Placeholder="@placeholder" ValueChanged="@OnChangeValueSearch" Value="@Value" OnFocus="@OnFocus" OnClick="@OnClickInput" OnEnter="@OnKeyDown" MinMillisecondsBetweenSearch="@MinMillisecondsBetweenSearch" OnFocusOut="@OnFocusOut" Disabled="@Disabled"/>
             </div>
             <SDKDropDown @bind-IsOpen="@_isOpenDropDown" MinWidth="300px" MaxWidth="100%" PositionTarget="@_idTarget" PositionMode="DropDownPositionMode.Bottom" CssClass="Prueba" >
 
