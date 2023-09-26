@@ -65,7 +65,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
         public void RefreshListView()
         {
-            Business.Users = Users;
+            //Business.Users = Users;
             
             SetFilter();
 
