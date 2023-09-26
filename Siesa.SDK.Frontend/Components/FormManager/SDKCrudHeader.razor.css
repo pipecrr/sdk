@@ -8,7 +8,7 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    max-width: 120px;
+    max-width: min-content;
     color: var(--color_light_text);
 }
 .sdk-crud-header-title {
@@ -19,7 +19,7 @@
 }
 
 .sdk-crud-header-identifier.sdk-crud_creation {
-    background-color: var(--color_estado_creación);
+    background-color: var(--color_estado_creacion);
 }
 
 .sdk-crud-header-identifier.sdk-crud_edition {
@@ -38,7 +38,7 @@
 }
 
 /* Responsive */
-@media (max-width: 576px) {
+@media (max-width: 575px) {
     .sdk-crud-header-identifier{
         border-top-left-radius: var(--border_radius_standar_max);
         border-top-right-radius: var(--border_radius_standar_max);

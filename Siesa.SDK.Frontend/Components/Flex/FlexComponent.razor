@@ -109,6 +109,7 @@
 
     private void Init()
     {
+        Dictionary<string, object> NewFlexAttributes = new Dictionary<string, object>();
         bool MountFlex = false;
         if(!IsListView){            
             Navigation.TryGetQueryString("sdk_debug",out string SDKDebugVar);
@@ -180,40 +181,43 @@
         
         string style = GetStyle();
 
-        FlexAttributes.Clear();
+        
         flexElementId = $"flexdebug_{_guid}";
-        FlexAttributes.Add("id", flexElementId);
-        FlexAttributes.Add("class", "root_oreports");
-        FlexAttributes.Add("current_view", _currentView);
-        FlexAttributes.Add("is_list_view", IsListView.ToString());
-        FlexAttributes.Add("bl_name_list", BlNameList);
-        FlexAttributes.Add("has_search", HasSearch.ToString());
-        FlexAttributes.Add("viewdef_name", ViewdefName);
-        //FlexAttributes.Add("guid_list_view", _guid);
-        FlexAttributes.Add("can_edit_list_view", CanEdit.ToString());
-        FlexAttributes.Add("can_delete_list_view", CanDelete.ToString());
-        FlexAttributes.Add("can_detail_list_view", CanDetail.ToString());
-        FlexAttributes.Add("editing_flex", EditingFlex.ToString());
-        FlexAttributes.Add("take", Take.ToString());
-        FlexAttributes.Add("server_pagination", ServerPagination.ToString());
-        FlexAttributes.Add("filter_search", FilterSearch);
-        FlexAttributes.Add("guid", _guid);
-        FlexAttributes.Add("action_icons", actionIconsString);
-        FlexAttributes.Add("is_multiple", IsMultiple.ToString());
-        FlexAttributes.Add("flex_filters", FlexFilters);
-        FlexAttributes.Add("preference_style", style);
-        FlexAttributes.Add("fields_hidden_list", fieldsHiddenListString);
-        FlexAttributes.Add("show_actions", ShowActions.ToString());
+        NewFlexAttributes.Add("id", flexElementId);
+        NewFlexAttributes.Add("class", "root_oreports");
+        NewFlexAttributes.Add("current_view", _currentView);
+        NewFlexAttributes.Add("is_list_view", IsListView.ToString());
+        NewFlexAttributes.Add("bl_name_list", BlNameList);
+        NewFlexAttributes.Add("has_search", HasSearch.ToString());
+        NewFlexAttributes.Add("viewdef_name", ViewdefName);
+        //NewFlexAttributes.Add("guid_list_view", _guid);
+        NewFlexAttributes.Add("can_edit_list_view", CanEdit.ToString());
+        NewFlexAttributes.Add("can_delete_list_view", CanDelete.ToString());
+        NewFlexAttributes.Add("can_detail_list_view", CanDetail.ToString());
+        NewFlexAttributes.Add("editing_flex", EditingFlex.ToString());
+        NewFlexAttributes.Add("take", Take.ToString());
+        NewFlexAttributes.Add("server_pagination", ServerPagination.ToString());
+        NewFlexAttributes.Add("filter_search", FilterSearch);
+        NewFlexAttributes.Add("guid", _guid);
+        NewFlexAttributes.Add("action_icons", actionIconsString);
+        NewFlexAttributes.Add("is_multiple", IsMultiple.ToString());
+        NewFlexAttributes.Add("flex_filters", FlexFilters);
+        NewFlexAttributes.Add("preference_style", style);
+        NewFlexAttributes.Add("fields_hidden_list", fieldsHiddenListString);
+        NewFlexAttributes.Add("show_actions", ShowActions.ToString());
         if(_flexRowId != 0)
         {
-            FlexAttributes.Add("base_obj_id", _flexRowId);
+            NewFlexAttributes.Add("base_obj_id", _flexRowId);
         }
+        //check if NewFlexAttributes is different from FlexAttributes
+        if(!NewFlexAttributes.SequenceEqual(FlexAttributes))
+        {
+            FlexAttributes = NewFlexAttributes;
+            //updateFieldsHide
+            JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+_guid+".props.updateFieldsHide", fieldsHiddenListString);
 
-        //updateFieldsHide
-        JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+_guid+".props.updateFieldsHide", fieldsHiddenListString);
-
-        StateHasChanged();
-        
+            StateHasChanged();
+        }
         
         if(MountFlex || !_isMounted)
         {
@@ -283,7 +287,7 @@
     {
         if(String.IsNullOrEmpty(GuidListView))
         {
-            _guid = Guid.NewGuid().ToString();
+            _guid = Guid.NewGuid().ToString().Replace("-","", StringComparison.Ordinal);
             
         }else{
             _guid = GuidListView;
@@ -306,7 +310,7 @@
     void Configure()
     {
         Guid guid = Guid.NewGuid();
-        JSRuntime.InvokeVoidAsync("oreports_app_flexdebug_"+_guid+".props.toggleConfigModal", guid.ToString());
+        JSRuntime.InvokeVoidAsync("oreports_app_flexdebug_"+_guid+".props.toggleConfigModal", guid.ToString().Replace("-","", StringComparison.Ordinal));
     }
 
     void SaveAndContinue()

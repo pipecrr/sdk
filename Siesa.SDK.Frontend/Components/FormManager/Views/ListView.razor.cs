@@ -654,7 +654,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private void Restart()
         {
-            guidListView = Guid.NewGuid().ToString();
+            guidListView = Guid.NewGuid().ToString().Replace("-", "", StringComparison.Ordinal);
             Loading = false;
             ErrorMsg = "";
             ErrorList = new List<string>();
@@ -695,7 +695,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             try
             {
                 Type type = BusinessObj.BaseObj.GetType();
-                if (BusinessObj.BaseObj.RowidCompany != 0)
+                bool containsRowidCompany = type.GetProperties().Any(x => x.Name == "RowidCompany");
+                if (containsRowidCompany && BusinessObj.BaseObj.RowidCompany != 0)
                 {
                     if (Utilities.IsAssignableToGenericType(type, typeof(BaseCompany<>)))
                     {

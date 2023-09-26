@@ -2,6 +2,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: sticky;
+    top: calc(48px + 1rem);
+    z-index: 3;
+}
+.sdk-breadcrumb-empty{
+    min-height: 2rem;
 }
 .breadcrumb{
     background-color: transparent !important;
@@ -52,7 +58,7 @@
    background:var(--color_estado_edición);
 }
 .toolbar_creation{
-   background:var(--color_estado_creación);
+   background:var(--color_estado_creacion);
 }
 .toolbar_default{
     background:var(--color_primary_light);
