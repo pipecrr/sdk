@@ -9,12 +9,14 @@
 @inject IJSRuntime JSRuntime
 @inject IFeaturePermissionService FeaturePermissionService
 @inherits Siesa.SDK.Frontend.Components.SDKComponent
+@using Siesa.Global.Enums
+
 @if(MenuItem.SubMenus?.Count > 0){
     <a href="#" @ref="btnRef" @attributes="@menuItemAttributes" @onclick:stopPropagation="true" @onclick="()=> OnClick(MenuItem)"  @onclick:preventDefault class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
         title="@Title" data-automation-id="@GetAutomationId()">
         @if(MenuItem.IconClass != null){
             <div class="nav_btn_standar_icon">
-                <i class=@(GetIconClass() + " font_size_112")></i>
+                <SDKIcon Name="@GetIconClass()" CssClass="font_size_112"></SDKIcon>
             </div>
         }
         
@@ -32,19 +34,21 @@
     }else{
         @if(MenuItem.Feature != null && MenuItem.Type == MenuType.Feature && string.IsNullOrEmpty(MenuItem.Url))
         {
-            @if(FeaturePermissionService.CheckUserActionPermission(MenuItem.Feature.BusinessName, 4, AuthenticationService))
+            @if(ShowItemFeature)
             {
                 <a href="@MenuItem.CurrentURL" @attributes="@menuItemAttributes" @onmouseover="MouseOver" @onmouseout="MouseOut" @onclick:stopPropagation="true" @onclick="()=> OnClickItem(MenuItem)"  @onclick:preventDefault  class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
                     title="@Title" data-automation-id="@GetAutomationId()">
                     @if(MenuItem.IconClass != null){
                         <div class="nav_btn_standar_icon">
-                            <i class=@(GetIconClass() + " font_size_112")></i>
+                            <SDKIcon Name="@GetIconClass()" CssClass="font_size_112"></SDKIcon>
                         </div>
                     }
                     <div class="nav_btn_standar_text">
                         @Title
                     </div>
-                    <div class="nav_btn_standar_text nav_btn_external" hidden="@(!ShowIconExternal)"  @onclick:stopPropagation="true"  @onclick="()=> OnClickItem(MenuItem, true)"  @onclick:preventDefault ><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
+                    <div class="nav_btn_standar_text nav_btn_external" hidden="@(!ShowIconExternal)"  @onclick:stopPropagation="true"  @onclick="()=> OnClickItem(MenuItem, true)"  @onclick:preventDefault >
+                        <SDKIcon Name="fa-arrow-up-right-from-square"></SDKIcon>
+                    </div>
                 </a>
             }
 
@@ -53,13 +57,15 @@
                 title="@Title" data-automation-id="@GetAutomationId()">
                 @if(MenuItem.IconClass != null){
                     <div class="nav_suite_box_icon" style="background: @GetStyleColor()">
-                        <i class=@(GetIconClass() + " font_size_112") ></i>
+                        <SDKIcon Name="@GetIconClass()" CssClass="font_size_112"></SDKIcon>
                     </div>
                 }
                 <div class="nav_btn_standar_text">
                     @Title
                 </div>
-                <div class="nav_btn_standar_text nav_btn_external" hidden="@(!ShowIconExternal)"  @onclick:stopPropagation="true"  @onclick="()=> OnClickItem(MenuItem, true)"  @onclick:preventDefault ><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
+                <div class="nav_btn_standar_text nav_btn_external" hidden="@(!ShowIconExternal)"  @onclick:stopPropagation="true"  @onclick="()=> OnClickItem(MenuItem, true)"  @onclick:preventDefault> 
+                    <SDKIcon Name="fa-arrow-up-right-from-square"></SDKIcon>
+                </div>
             </a>
         }
     }
@@ -78,20 +84,20 @@
     private ElementReference btnRef;
 
     private bool ShowIconExternal { get; set; }
+    private bool ShowItemFeature { get; set; }
 
     private Dictionary<string, object> menuItemAttributes { get; set; } = new Dictionary<string, object>();
 
-    private string GetIconClass(){
-        if(MenuItem.IconClass != null){
-            //check if contains fontawesome icon style
-            var iconSplit = MenuItem.IconClass.Split(" ");
-            if(iconSplit.Length == 1){
-                return "fa-duotone " + MenuItem.IconClass; //TODO: Temporal, cambiar por preferencia de usuario
-            }
+    private string GetIconClass()
+    {
+        string MenuIcon = "";
 
-            return MenuItem.IconClass;
+        if(!String.IsNullOrEmpty(MenuItem.IconClass))
+        {
+            MenuIcon = MenuItem.IconClass; 
         }
-        return "";
+
+        return MenuIcon;
     }
 
     private async Task<string> GetTitle(){
@@ -99,6 +105,15 @@
             return await ResourceManager.GetResource(MenuItem.ResourceTag, AuthenticationService);
         }
         return await ResourceManager.GetResource(Convert.ToInt64(MenuItem.RowidResource), AuthenticationService);
+    }
+
+    private async Task ItemFeature()
+    {
+        if(MenuItem.Feature != null && MenuItem.Type == MenuType.Feature && string.IsNullOrEmpty(MenuItem.Url))
+        {
+            ShowItemFeature = await FeaturePermissionService.CheckUserActionPermission(MenuItem.Feature.BusinessName, enumSDKActions.Access, AuthenticationService);
+        }
+        StateHasChanged();
     }
 
     protected override async Task OnInitializedAsync(){
@@ -109,6 +124,7 @@
         if(MenuItem.RowidResource != null && MenuItem.RowidResource != 0){
             menuItemAttributes.Add("sdk-resource-rowid", MenuItem.RowidResource);
         }
+        _ = ItemFeature();
 
         if(String.IsNullOrEmpty(MenuItem.CurrentText))
         {
@@ -135,6 +151,7 @@
             Title = MenuItem.CurrentText;
         }
         AutomationId = Title;
+        _ = ItemFeature();
     }
 
     private void OnClickItem(E00061_Menu menuItem, bool newTab = false){

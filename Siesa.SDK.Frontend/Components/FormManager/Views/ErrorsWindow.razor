@@ -1,28 +1,28 @@
 @if(_errorCount > 0 ){
     <div class=@(ClassError +" col-12 p-0")>
-        <button class="sdk_error_log_btn d-flex align-items-center justify-content-between" @onclick="showDedtail">
+        <button class="sdk_error_log_btn d-flex align-items-center justify-content-between" @onclick="showDedtail" @onclick:preventDefault>
             <div class="d-flex align-items-center justify-content-center">
-                <i class="fa-solid fa-triangle-exclamation"></i>                
+                <SDKIcon Name="fa-triangle-exclamation"/>                
                 &nbsp;&nbsp;<ResourceViewer ResourceTag= "Custom.ErrorsWindow.Title"/>&nbsp;&nbsp;
                 <span class="rz-badge rz-badge-danger rz-variant-filled rz-shade-default rz-badge-pill" id="e-ap89kcR0" _bl_ed1a2bd5-f153-4727-94d3-fc34ec66d983="">
                     @_errorCount
                 </span>
             </div>
-            <i class="ml-2 fa-solid fa-chevron-down"></i>
+            <SDKIcon Name="fa-chevron-down" CssClass="ml-2"></SDKIcon>
         </button>
     </div>
     <div class="sdk_error_log_box_detail">
         <div class="col-xl-6 offset-xl-3 col-lg-8 offset-lg-2 col-sm-12 offset-sm-0 sdk_error_log_box p-3">
             <div class="sdk_error_log_box_head">
                 <p class="m-0">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <SDKIcon Name="fa-triangle-exclamation"/>
                     &nbsp;&nbsp;<ResourceViewer ResourceTag= "Custom.ErrorsWindow.Title"/>&nbsp;&nbsp; 
                     <span class="rz-badge rz-badge-danger rz-variant-filled rz-shade-default rz-badge-pill" id="e-ap89kcR0" _bl_ed1a2bd5-f153-4727-94d3-fc34ec66d983="">
                         @_errorCount
                     </span>
                 </p>
-                <button class="btn btn-sm ml-1 p-0 text-light" @onclick="showDedtail">
-                    <i class="fa-solid fa-xmark"></i>
+                <button class="btn btn-sm ml-1 p-0 text-light" @onclick="showDedtail" @onclick:preventDefault>
+                    <SDKIcon Name="fa-xmark"/>
                 </button>
             </div>
             <div class="col-12 sdk_card sdk_error_log_box_body py-0">
@@ -42,21 +42,23 @@
                             <tbody>
                                 @foreach (var item in _errors){
                                     <tr>
-                                        <td class="align-middle">@item.Field</td>
+                                        <td class="align-middle">
+                                            <ResourceViewer ResourceTag= "@item.Field"/>
+                                        </td>
                                         <td>
                                             <ul class="ul_list_error">
                                                 @foreach (var error in item.Errors){
-                                                    <li>@error</li>
+                                                    <ResourceViewer ResourceTag= "@error.Key" FormatString="@error.Value"/>
                                                 }
                                             </ul>
                                         </td>
                                     </tr>
                                     
-                                }                            
+                                }
                             </tbody>
                         </table>
                     }
-                    @if(_generalErrors.Any()){
+                    @if(_generalErrors.Any() || _generalerrorsFormat.Any()){
                         <table class="table table-striped sdk_table_v2">
                             <thead>
                                 <tr>
@@ -67,13 +69,27 @@
                             </thead>
                             <tbody>
                                 <tr>
+                                    @if (_generalerrorsFormat.Count() > 0)
+                                    {
+                                        <td>
+                                            <ul class="ul_list_error">
+                                                @foreach (var error in _generalerrorsFormat)
+                                                {
+                                                    <li><ResourceViewer ResourceTag= "@error.Key" FormatString="@error.Value"/></li> 
+                                                }
+                                            </ul>
+                                        </td>
+                                    }
+                                    @if (_generalErrors.Count() > 0)
+                                    {
                                     <td>
                                         <ul class="ul_list_error">
                                             @foreach (var error in _generalErrors){
-                                                <li>@error</li>
+                                               <li><ResourceViewer ResourceTag= "@error"/></li> 
                                             }
                                         </ul>
                                     </td>
+                                    }
                                 </tr>
                             </tbody>
                         </table>

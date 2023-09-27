@@ -6,6 +6,7 @@
 }
 .sdk-upload-attatchment ::deep .rz-fileupload .rz-fileupload-buttonbar .rz-fileupload-choose{
     background-color: var(--color_primary) !important;
+    color: var(--color_light_text) !important;
 
 }
 

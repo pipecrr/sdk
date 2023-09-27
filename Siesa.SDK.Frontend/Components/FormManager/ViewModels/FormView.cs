@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using Siesa.SDK.Frontend.Utils;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Frontend.Services;
@@ -20,6 +22,9 @@ using Siesa.SDK.Frontend.Components.FormManager.Fields;
 using Siesa.SDK.Frontend.Extension;
 using Microsoft.Extensions.Configuration;
 using Siesa.Global.Enums;
+using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
+using Siesa.SDK.Frontend.Components.FormManager.Views;
+using Siesa.SDK.Shared.Utilities;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 {
@@ -46,8 +51,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Inject] public SDKGlobalLoaderService GlobalLoaderService { get; set; }
 
         protected FormViewModel FormViewModel { get; set; } = new FormViewModel();
+        /// <summary>
+        /// Gets or sets the config detail view model.
+        /// </summary>
+        protected ListViewModel DetailConfig { get; set; } = new ListViewModel();
 
         public List<Panel> Panels {get { return FormViewModel.Panels; } }
+        public List<Panel> PanelsCollapsable = new List<Panel>();
+        public bool ShowAditionalFields { get; set; }
 
         public Boolean Loading = true;
         public bool Saving = false;
@@ -83,12 +94,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         [Parameter]
         public List<string> ParentBaseObj { get; set; }
-
+        /// <summary>
+        /// Gets or sets a value indicating whether the business object is a document.
+        /// </summary>
+        public bool IsDocument { get; set; }
+        
         public int CountUnicErrors = 0;
 
         private string _viewdefName = "";
 
         public bool ContainAttachments = false;
+
+        protected bool loadDefaultViewdef = true;
 
         [Inject]
         public IBackendRouterService BackendRouterService { get; set; }
@@ -102,7 +119,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         protected bool CanEdit;
         protected bool CanDelete;
         protected bool CanDetail;
-        protected bool CanList;
+        protected bool CanAcess;
         public bool FormHasErrors = false;
 
         public Dictionary<string, FileField> FileFields = new Dictionary<string, FileField>();
@@ -112,17 +129,30 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public bool HasExtraButtons { get; set; }
         public List<Button> ExtraButtons { get; set; }
         public Button SaveButton { get; set; }
+        public bool isOnePanel { get; set; }
+        /// <summary>
+        /// Gets or sets the delete button config. 
+        /// </summary>
+        protected Button ButtonDelete {get; set;  }
+        /// <summary>
+        /// Gets or sets the create button config. 
+        /// </summary>
+        protected Button ButtonCreate {get; set;  }
+        /// <summary>
+        /// Gets or sets the reference grid.
+        /// </summary>
+        public dynamic RefGrid { get; set; }
         protected virtual async Task CheckPermissions()
         {
             if (FeaturePermissionService != null && !String.IsNullOrEmpty(BusinessName))
             {
                 try
                 {
-                    CanList = FeaturePermissionService.CheckUserActionPermission(BusinessName, 4, AuthenticationService);
-                    CanCreate = FeaturePermissionService.CheckUserActionPermission(BusinessName, 1, AuthenticationService);
-                    CanEdit = FeaturePermissionService.CheckUserActionPermission(BusinessName, 2, AuthenticationService);
-                    CanDelete = FeaturePermissionService.CheckUserActionPermission(BusinessName, 3, AuthenticationService);
-                    CanDetail = FeaturePermissionService.CheckUserActionPermission(BusinessName, 5, AuthenticationService);
+                    CanAcess = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
+                    CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Create, AuthenticationService);
+                    CanEdit = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Edit, AuthenticationService);
+                    CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Delete, AuthenticationService);
+                    CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
                 }
                 catch (System.Exception)
                 {
@@ -154,11 +184,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             }
 
             var data = BackendRouterService.GetViewdef(businessName, _viewdefName);
+            if (IsSubpanel && String.IsNullOrEmpty(data)){
+                data = BackendRouterService.GetViewdef(businessName, "related_default");
+            }
             if (String.IsNullOrEmpty(data) && _viewdefName != DefaultViewdefName)
             {
                 data = BackendRouterService.GetViewdef(businessName, DefaultViewdefName);
             }
-            if(String.IsNullOrEmpty(data)){
+            if(String.IsNullOrEmpty(data) && loadDefaultViewdef){
                 _viewdefName = "default";
                 data = BackendRouterService.GetViewdef(businessName, _viewdefName);
             }
@@ -169,26 +202,38 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         {
             for (int i = 0; i < panels.Count; i++)
             {
-                if(String.IsNullOrEmpty(panels[i].ResourceTag))
+                if(string.IsNullOrEmpty(panels[i].ResourceTag))
                 {
-                    if(String.IsNullOrEmpty(panels[i].ResourceTag)){
+                    if(i == 0 && string.IsNullOrEmpty(panels[i].Name))
+                    {
+                        panels[i].ResourceTag = $"Custom.Viewdef.{_viewdefName}.panel";
+                    }else{
                         panels[i].ResourceTag = $"{BusinessName}.Viewdef.{_viewdefName}.Panel.{panels[i].Name}";
                     }
                 }
                 
                 for (int j = 0; j < panels[i].Fields.Count; j++)
                 {
-                    if(viewType == DynamicViewType.Detail && String.IsNullOrEmpty(panels[i].Fields[j].ViewContext))
-                    {
-                        panels[i].Fields[j].ViewContext = "DetailView";
-                    }
-                    
-                    panels[i].Fields[j].GetFieldObj(BusinessObj);
+                    setViewContextField(panels[i].Fields[j], viewType);
                 }
                 if (panels[i].SubViewdef != null && panels[i].SubViewdef.Panels.Count > 0)
                 {
                     setViewContext(panels[i].SubViewdef.Panels, viewType);
-                }
+                }                
+            }
+        }
+
+        private void setViewContextField(FieldOptions field, DynamicViewType viewType){
+            if(viewType == DynamicViewType.Detail && String.IsNullOrEmpty(field.ViewContext)){
+                field.ViewContext = "DetailView";
+            }
+            field.GetFieldObj(BusinessObj);
+
+            if (field.Fields == null || field.Fields.Count <= 0) return;
+
+            foreach (var item in field.Fields.Select((value, i) => (value, i)))
+            {
+                setViewContextField(item.value, viewType);
             }
         }
 
@@ -207,8 +252,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         protected virtual async Task InitView(string bName = null)
         {
             CreateRelationshipAttachment();
-
             Loading = true;
+            IsDocument = Utilities.CheckIsDocument(BusinessObj, typeof(BLFrontendDocument<,,>));
             if (bName == null)
             {
                 bName = BusinessName;
@@ -233,6 +278,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     var panels = JsonConvert.DeserializeObject<List<Panel>>(metadata);
                     FormViewModel.Panels = panels;
                 }
+                if(BusinessObj.GetType().GetProperty("DynamicEntities") != null && BusinessObj.DynamicEntities != null ){
+                    ShowAditionalFields = true;
+                    if(BusinessObj.DynamicEntities.Count > 0){
+                        AddPanels(PanelsCollapsable);
+                    }
+                }
             }
             try
             {
@@ -252,6 +303,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     }
                 }
             }
+            if(IsDocument)
+            {
+                DetailConfig = FormViewModel.DetailConfig;
+                AddOnChangeCell();
+                ButtonDelete = DetailConfig.Buttons.FirstOrDefault(x => x.Id.Equals("Delete",StringComparison.Ordinal));
+                ButtonCreate = DetailConfig.Buttons.FirstOrDefault(x => x.Id.Equals("Create",StringComparison.Ordinal));
+                BusinessObj.ExtraDetailFields = DetailConfig.Fields.Select(x => x.Name).ToList();
+                
+                await BusinessObj.InitializeChilds().ConfigureAwait(true);
+            }
             Loading = false;
             EditFormContext = new EditContext(BusinessObj);
             EditFormContext.OnFieldChanged += EditContext_OnFieldChanged;
@@ -263,21 +324,70 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             StateHasChanged();
         }
 
+        private void AddOnChangeCell()
+        {
+            foreach (var item in DetailConfig.Fields)
+            {
+                if(item.CustomAttributes == null){
+                    item.CustomAttributes = new Dictionary<string, object>();
+                }
+                if (!item.CustomAttributes.TryGetValue("sdk-change-cell", out object value))
+                {
+                    item.CustomAttributes.Add("sdk-change-cell", "SdkOnChangeCell");
+                }
+            }
+        }
+
+        private void AddPanels(List<Panel> panels){
+            
+            foreach(var item in BusinessObj.DynamicEntities){
+                var index = BusinessObj.DynamicEntities.IndexOf(item);
+                var panel = new Panel();
+                panel.ResourceTag = item.Name;
+                var fields = new List<FieldOptions>();
+                int rowidGroup = item.Rowid;
+                panel.RowidGroupDynamicEntity = rowidGroup;
+                foreach(var property in item.DynamicObject.GetType().GetProperties()){
+                    var field = new FieldOptions();
+                    var name = $"DynamicEntities[{index}].DynamicObject.{property.Name}";
+                    field.Name = name;
+                    field.ResourceTag = property.Name;
+                    Dictionary<string, int> colSize = new Dictionary<string, int>();
+                    colSize.Add("MD", 4);
+                    colSize.Add("SM", 4);
+                    colSize.Add("XS", 4);
+                    field.ColSize = colSize;
+                    fields.Add(field);
+                }                
+                panel.Fields = fields;
+                panels.Add(panel);
+            }
+        }
+         public async Task<bool> DeleteGroup(int rowid)
+        {
+            var response = await BusinessObj.Backend.Call("DeleteGroupDynamicEntity", rowid);
+            if(response.Success){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
         private async Task EvaluateButtonAttributes()
         {
             if(FormViewModel.Buttons != null ){
                 ExtraButtons = new List<Button>();
                 foreach (var button in FormViewModel.Buttons){
                     if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-disabled")){
-                        var disabled = await evaluateCodeButtons(button, "sdk-disabled");
+                        var disabled = await EvaluateCodeButtons(button, "sdk-disabled").ConfigureAwait(true);
                         button.Disabled = disabled;
                     }
                     if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-hide")){
-                        var hidden = await evaluateCodeButtons(button, "sdk-hide");
+                        var hidden = await EvaluateCodeButtons(button, "sdk-hide").ConfigureAwait(true);
                         button.Hidden = hidden;
                     }
                     if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-show")){
-                        var show = await evaluateCodeButtons(button, "sdk-show");
+                        var show = await EvaluateCodeButtons(button, "sdk-show").ConfigureAwait(true);
                         button.Hidden = !show;
                     }
                     if(button.Id != null){
@@ -295,20 +405,54 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                         ExtraButtons.Add(button);
                     }
                 }
-                HasExtraButtons = ExtraButtons.Count > 0;
+
+                HasExtraButtons = ExtraButtons.Any(x => string.IsNullOrEmpty(x.Id));
                 _ = InvokeAsync(() => StateHasChanged());
             }
         }
-        public async Task<bool> evaluateCodeButtons(Button button, string condition){
-            bool disabled = button.Disabled;
-            var sdkDisable = button.CustomAttributes[condition];
-            if(sdkDisable != null){
-                var eject = (bool)await Evaluator.EvaluateCode((string)sdkDisable, BusinessObj); //revisar
-                if(eject != null){
-                    disabled = eject;
+        
+        /// <summary>
+        /// Evaluates a specified condition (sdk-disabled, sdk-hide, sdk-show) for a <paramref name="button"/> and returns the result.
+        /// </summary>
+        /// <param name="button">The <see cref="Button"/> object to evaluate the condition for.</param>
+        /// <param name="condition">The name of the condition stored in the custom attributes of the <paramref name="button"/>.</param>
+        /// <param name="data">An optional dynamic object that may be passed to the evaluation process.</param>
+        /// <returns>
+        /// Returns true if the condition evaluates to true; otherwise, returns false.
+        /// </returns>
+        public async Task<bool> EvaluateCodeButtons(Button button, string condition, dynamic data = null)
+        {
+            bool result = false;
+            var sdkAttr = button?.CustomAttributes[condition];
+            if(sdkAttr != null){
+                string attrValue = sdkAttr.ToString();
+                if (data != null)
+                {
+                    attrValue = attrCode(attrValue, data);
+                    if(!string.IsNullOrEmpty(attrValue)){
+                        result = await EjectMethod(data, attrValue, true).ConfigureAwait(true);
+                    }
+                }
+                else
+                {
+                    var eject = (bool)await Evaluator.EvaluateCode(attrValue, BusinessObj);
+                    result = eject;
                 }
             }
-            return disabled;
+            return result;
+        }
+
+        private string attrCode(string attrValue, dynamic data)
+        {
+            string result = attrValue;            
+            var indexData = BusinessObj.ChildObjs.IndexOf(data);
+            if (result != null && result.Contains("data_detail", StringComparison.Ordinal))
+            {
+                result = result.Replace("data_detail", $"ChildObjs[{indexData}]",
+                    StringComparison.Ordinal);
+            }
+
+            return result;
         }
 
         private void EditContext_OnFieldChanged(object sender, FieldChangedEventArgs e)
@@ -320,135 +464,121 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         private void EvaluateDynamicAttributes(FieldChangedEventArgs e)
         {
-            string code = "";
             foreach (var item in Panels.Select((value, i) => (value, i)))
             {
-                var panel_index = item.i;
                 var panel = item.value;
                 if (panel.Fields == null)
                 {
                     continue;
                 }
-
-                foreach (var fieldItem in panel.Fields.Select((value, i) => (value, i)))
-                {
-                    var field_index = fieldItem.i;
-                    var field = fieldItem.value;
-                    if(field.CustomAttributes == null)
-                    {
-                        continue;
-                    }
-
-                    var fieldCustomAttr = field.CustomAttributes.Where(x => x.Key.StartsWith("sdk-") && x.Key != "sdk-change");
-                    if(UseRoslynToEval)
-                    {
-                        foreach (var attr in fieldCustomAttr)
-                        {
-                            switch (attr.Key)
-                            {
-                                case "sdk-show":
-                                    code += @$"
-try {{ Panels[{panel_index}].Fields[{field_index}].Hidden = !({(string)attr.Value}); }} catch (Exception ex) {{ throw;  }}";
-                                    break;
-                                case "sdk-hide":
-                                    code += @$"
-try {{ Panels[{panel_index}].Fields[{field_index}].Hidden = ({(string)attr.Value}); }} catch (Exception ex) {{ throw;  }}";
-                                    break;
-                                case "sdk-required":
-                                    code += @$"
-try {{ Panels[{panel_index}].Fields[{field_index}].Required = ({(string)attr.Value}); }} catch (Exception ex) {{ throw;  }}";
-                                    break;
-                                case "sdk-readonly":
-                                case "sdk-disabled":
-                                    code += @$"
-try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Value}); }} catch (Exception ex) {{ throw; }}";
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                    }else{
-                        
-                        List<string> allowAttr = new List<string>(){
-                            "sdk-show",
-                            "sdk-hide",
-                            "sdk-required",
-                            "sdk-readonly",
-                            "sdk-disabled"
-                        }; //TODO: Enum
-                        
-
-                        _ = Task.Run(async () =>
-                        {
-                            bool shouldUpdate = false;
-                            foreach (var attr in fieldCustomAttr)
-                            {
-                                if(!allowAttr.Contains(attr.Key))
-                                {
-                                    continue;
-                                }
-                                
-                                try
-                                {
-                                    var result = (bool)await Evaluator.EvaluateCode((string)attr.Value, BusinessObj);
-                                    switch (attr.Key)
-                                    {
-                                        case "sdk-show":
-                                            if(field.Hidden != !result)
-                                            {
-                                                field.Hidden = !result;
-                                                shouldUpdate = true;
-                                            }
-                                            break;
-                                        case "sdk-hide":
-                                            if(field.Hidden != result)
-                                            {
-                                                field.Hidden = result;
-                                                shouldUpdate = true;
-                                            }
-                                            break;
-                                        case "sdk-required":
-                                            if(field.Required != result)
-                                            {
-                                                field.Required = result;
-                                                shouldUpdate = true;
-                                            }
-                                            break;
-                                        case "sdk-readonly":
-                                        case "sdk-disabled":
-                                            if(field.Disabled != result)
-                                            {
-                                                field.Disabled = result;
-                                                shouldUpdate = true;
-                                            }
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                }
-                                catch (System.Exception ex)
-                                {
-                                    Console.WriteLine($"Error: {ex.Message}");
-                                }
-                            }
-                            if(shouldUpdate)
-                            {
-                                _ = InvokeAsync(() => StateHasChanged());
-                            }
-                        });
-                    }
-                }
+                EvaluateFields(panel.Fields);
             }
-            //Console.WriteLine(code);
-            if(UseRoslynToEval && code != null & code != "")
+        }
+
+        private void EvaluateFields(List<FieldOptions> panelFields)
+        {
+            foreach (var field in panelFields)
             {
                 _ = Task.Run(async () =>
-                 {
-                     BusinessObj.Panels = Panels;
-                     await Evaluator.EvaluateCode(code, BusinessObj, useRoslyn: UseRoslynToEval); //Revisar
-                     _ = InvokeAsync(() => StateHasChanged());
-                 });
+                {
+                    bool shouldUpdate = await UpdateCustomAttr(field).ConfigureAwait(true);
+                    if(shouldUpdate)
+                    {
+                        _ = InvokeAsync(() => StateHasChanged());
+                    }
+                });
             }
+        }
+        /// <summary>
+        /// Updates the custom attributes of a <paramref name="field"/> based on evaluation results.
+        /// </summary>
+        /// <param name="field">The <see cref="FieldOptions"/> object representing the field with custom attributes.</param>
+        /// <param name="isFieldDocument">Indicates whether the field is a document field.</param>
+        /// <param name="data">Additional data used for evaluation, applicable when <paramref name="isFieldDocument"/> is true.</param>
+        /// <returns>
+        /// Returns true if any custom attribute of the field has been updated, otherwise returns false.
+        /// </returns>
+        public async Task<bool> UpdateCustomAttr(FieldOptions field, bool isFieldDocument = false, dynamic data = null)
+        {
+            if (field == null)
+            {
+                return false;
+            }
+            
+            if(field.Fields != null && field.Fields.Count > 0)
+            {
+                EvaluateFields(field.Fields);
+            }
+
+            if(field.CustomAttributes == null){
+                return false;
+            }
+            
+            bool shouldUpdate = false;
+            
+            var fieldCustomAttr = field.CustomAttributes.Where(x => x.Key.StartsWith("sdk-",StringComparison.Ordinal) && x.Key != "sdk-change");
+
+            foreach (var attr in fieldCustomAttr)
+            {
+                try
+                {
+                    shouldUpdate |= await UpdateFieldBasedOnAttr(field, attr, isFieldDocument, data);
+                }
+                catch (System.Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex.Message}");
+                }
+            }
+            return shouldUpdate;
+        }
+        private async Task<bool> UpdateFieldBasedOnAttr(FieldOptions field, KeyValuePair<string, object> attr, bool isFieldDocument, dynamic data)
+        {
+            string attrValue = (string)attr.Value;
+
+            if (isFieldDocument && data != null && attrValue.Contains("data_detail", StringComparison.Ordinal))            
+            {
+                var indexData = BusinessObj.ChildObjs.IndexOf(data);
+                attrValue = attrValue.Replace("data_detail", $"ChildObjs[{indexData}]", StringComparison.Ordinal);
+            }
+
+            var result = (bool)await Evaluator.EvaluateCode(attrValue, BusinessObj);
+
+            switch (attr.Key)
+            {
+                case "sdk-show":
+                    if (field.Hidden != !result)
+                    {
+                        field.Hidden = !result;
+                        return true;
+                    }
+                    break;
+                case "sdk-hide":
+                    if (field.Hidden != result)
+                    {
+                        field.Hidden = result;
+                        return true;
+                    }
+                    break;
+                case "sdk-required":
+                    if (field.Required != result)
+                    {
+                        field.Required = result;
+                        return true;
+                    }
+                    break;
+                case "sdk-readonly":
+                case "sdk-disabled":
+                    if (field.Disabled != result)
+                    {
+                        field.Disabled = result;
+                        return true;
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            return false;
         }
 
         protected override async Task OnInitializedAsync()
@@ -469,7 +599,7 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
             bool changeViewContext = parameters.DidParameterChange(nameof(ViewContext), ViewContext);
             bool changeBusinessName = parameters.DidParameterChange(nameof(BusinessName), BusinessName);
 
-            await base.SetParametersAsync(parameters);
+            await base.SetParametersAsync(parameters).ConfigureAwait(true);
 
             if(changeViewContext || changeBusinessName)
             {
@@ -501,8 +631,13 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
                 }
             }
             if(DataAttatchmentDetail != null){
-                var result = await BusinessObj.SaveAttachmentDetail(DataAttatchmentDetail, rowid);
-                return result;
+                try{
+                    var result = await BusinessObj.SaveAttachmentDetail(DataAttatchmentDetail, rowid);
+                    return result;
+                }catch(Exception ex){
+                    SavingFile = false;
+                    return rowid;
+                }
             }
             return 0;
         }
@@ -530,26 +665,9 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
                 return;
             }
             GlobalLoaderService.Show();
-            if(FileFields.Count>0){
-                foreach (var item in FileFields)
-                {
-                    var fileField = item.Value;
-                    var rowidAttatchment = 0;
-                    var field = item.Key;
-                    dynamic property = BusinessObj.BaseObj.GetType().GetProperty(field).GetValue(BusinessObj.BaseObj);
-                    if(property != null){ 
-                        var rowidProp = property.GetType().GetProperty("Rowid").GetValue(property);
-                        if(rowidProp != null)
-                            rowidAttatchment = await savingAttachment(fileField, (int)rowidProp);
-                    }else{
-                        rowidAttatchment = await savingAttachment(fileField);
-                    }
-                    if(rowidAttatchment > 0){
-                        var AttatchmentDetail = Activator.CreateInstance(BusinessObj.BaseObj.GetType().GetProperty(field).PropertyType);
-                        AttatchmentDetail.GetType().GetProperty("Rowid").SetValue(AttatchmentDetail, rowidAttatchment);
-                        BusinessObj.BaseObj.GetType().GetProperty(field).SetValue(BusinessObj.BaseObj, AttatchmentDetail);
-                    }
-                }
+            if(FileFields.Count>0)
+            {
+                await SavingFiles().ConfigureAwait(true);
             }
             dynamic result = null;
             try{
@@ -568,44 +686,45 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
             if (result.Errors.Count > 0)
             {
                 //ErrorMsg = "<ul>";
-                Type editFormCurrentType = EditFormContext.Model.GetType();
+                
                 foreach (var error in result.Errors)
                 {
                     FieldIdentifier fieldIdentifier;
+                    Type editFormCurrentType = EditFormContext.Model.GetType();
                     bool fieldInContext = false;
                     //check if attribute is in Model
-                    // if(editFormCurrentType.GetProperty(error.Attribute) != null)
-                    // {
-                    //     fieldIdentifier = new FieldIdentifier(EditFormContext.Model, error.Attribute);
-                    //     fieldInContext = true;
-                    // }
-                    // else if(((string)error.Attribute).Split('.').Count() > 1)
-                    // {
-                    //     var attr = ((string)error.Attribute).Split('.');
-                    //     foreach(string item in attr)
-                    //     {
-                    //         if(editFormCurrentType.GetProperty(item) != null)
-                    //         {
-                    //             editFormCurrentType = editFormCurrentType.GetProperty(item).PropertyType;
-                    //         }
+                    if(editFormCurrentType.GetProperty(error.Attribute) != null)
+                    {
+                        fieldIdentifier = new FieldIdentifier(EditFormContext.Model, error.Attribute);
+                        fieldInContext = true;
+                    }
+                    else if(((string)error.Attribute).Split('.').Count() > 1)
+                    {
+                        var attr = ((string)error.Attribute).Split('.');
+                        var fieldExists = true;
+                        foreach(string item in attr)
+                        {
+                            if(editFormCurrentType.GetProperty(item) != null)
+                            {
+                                editFormCurrentType = editFormCurrentType.GetProperty(item).PropertyType;
+                            }else{
+                                fieldExists = false;
+                                break;
+                            }
 
-                    //     }
-                    //     fieldIdentifier = new FieldIdentifier(EditFormContext.Model, $"BaseObj.{error.Attribute}");
-                    //     fieldInContext = true;
-                    // }
-                    // if(fieldInContext)
-                    // {
-                    //     _messageStore.Add(fieldIdentifier, (string)error.Message);
-                    // }
-                    fieldIdentifier = new FieldIdentifier(EditFormContext.Model, error.Attribute);
-                    _messageStore.Add(fieldIdentifier, (string)error.Message);
-                    // ErrorMsg += $"<li>";
-                    // ErrorMsg += !string.IsNullOrWhiteSpace(error.Attribute) ?  $"{error.Attribute} - " : string.Empty;
-                    // string ErrorTag = await ResourceManager.GetResource(error.Message, AuthenticationService.GetRoiwdCulture());
-                    // ErrorMsg += ErrorTag;//error.Message.Replace("\n", "<br />");
-                    // ErrorMsg += $"</li>";
-
-                    ErrorList.Add("Exception: "+error.Message);
+                        }
+                        if(fieldExists)
+                        {
+                            fieldIdentifier = new FieldIdentifier(EditFormContext.Model, error.Attribute);
+                            fieldInContext = true;
+                        }
+                    }
+                    if(fieldInContext)
+                    {
+                        _messageStore.Add(fieldIdentifier, (string)error.Message);
+                    }else{
+                        ErrorList.Add("Exception: "+error.Message);
+                    }
                 }
                 //ErrorMsg += "</ul>";
                 EditFormContext.NotifyValidationStateChanged();
@@ -623,6 +742,37 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
             }else{
                 NavigationService.RemoveCurrentItem();
                 NavManager.NavigateTo($"{BusinessName}/detail/{id}/");
+            }
+        }
+        
+        /// <summary>
+        /// Saves the attached files to the business object.
+        /// </summary>
+        /// <remarks>
+        /// This function iterates through the collection of attached files represented by the "FileFields" dictionary.
+        /// For each attached file, it checks whether it already exists in the business object or is new. 
+        /// If it is new, it is saved, and its "Rowid" identifier is updated.
+        /// </remarks>        
+        public async Task SavingFiles()
+        {
+            foreach (var item in FileFields)
+            {
+                var fileField = item.Value;
+                var rowidAttatchment = 0;
+                var field = item.Key;
+                dynamic property = BusinessObj.BaseObj.GetType().GetProperty(field).GetValue(BusinessObj.BaseObj);
+                if(property != null){ 
+                    var rowidProp = property.GetType().GetProperty("Rowid").GetValue(property);
+                    if(rowidProp != null)
+                        rowidAttatchment = await savingAttachment(fileField, (int)rowidProp).ConfigureAwait(true);
+                }else{
+                    rowidAttatchment = await savingAttachment(fileField).ConfigureAwait(true);
+                }
+                if(rowidAttatchment > 0){
+                    var attatchmentDetail = Activator.CreateInstance(BusinessObj.BaseObj.GetType().GetProperty(field).PropertyType);
+                    attatchmentDetail.GetType().GetProperty("Rowid").SetValue(attatchmentDetail, rowidAttatchment);
+                    BusinessObj.BaseObj.GetType().GetProperty(field).SetValue(BusinessObj.BaseObj, attatchmentDetail);
+                }
             }
         }
 
@@ -658,14 +808,20 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
         {
             NavManager.NavigateTo($"{BusinessName}/");
         }
-
-        public async Task OnClickCustomButton(Button button)
+        
+        /// <summary>
+        /// Handles the click event of a custom button, performing the associated action.
+        /// </summary>
+        /// <param name="button">The <see cref="Button"/> object representing the clicked button.</param>
+        /// <param name="obj">An optional dynamic object that may be passed to the action associated with the button.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task OnClickCustomButton(Button button, dynamic obj = null)
         {
-            if (!string.IsNullOrEmpty(button.Href))
+            if (!string.IsNullOrEmpty(button?.Href))
             {
                 if (button.Target == "_blank")
                 {
-                    _ = JSRuntime.InvokeVoidAsync("window.open", button.Href, "_blank");
+                    await JSRuntime.InvokeVoidAsync("window.open", button.Href, "_blank").ConfigureAwait(true);
                 }
                 else
                 {
@@ -674,10 +830,10 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
 
 
             }
-            else if (!string.IsNullOrEmpty(button.Action))
+            else if (!string.IsNullOrEmpty(button?.Action))
             {
-                await Evaluator.EvaluateCode(button.Action, BusinessObj, useRoslyn: UseRoslynToEval); //Revisar
-                StateHasChanged();
+                await EjectMethod(obj, button.Action).ConfigureAwait(true);
+                _ = InvokeAsync(() => StateHasChanged());
             }
         }
         
@@ -685,6 +841,86 @@ try {{ Panels[{panel_index}].Fields[{field_index}].Disabled = ({(string)attr.Val
         {
             return Saving ? "fas fa-spinner fa-pulse" : "fa-solid fa-floppy-disk";
         }
+        /// <summary>
+        /// Method to add a new row to the grid.
+        /// </summary>
+        public async Task ClickAddRow()
+        {
+            Type typeChild = BusinessObj.ChildType();
+            dynamic obj = Activator.CreateInstance(typeChild);
+            dynamic ListChildObj = typeof(List<>).MakeGenericType(new Type[] { typeChild });
+            if(BusinessObj.ChildObjs == null)
+            {
+                BusinessObj.ChildObjs = Activator.CreateInstance(ListChildObj);
+            }
 
+            if (!String.IsNullOrEmpty(DetailConfig.ActionAddRow))
+            {
+                obj = await EjectMethod(obj, DetailConfig.ActionAddRow, true).ConfigureAwait(true);
+            }
+            BusinessObj.ChildObjs.Add(obj);
+            StateHasChanged();
+            RefGrid.Reload();
+        }
+
+        /// <summary>
+        /// Method to delete a row from the grid.
+        /// </summary>
+        /// <param name="obj">The object to delete.</param>
+        public async Task ClickDeleteRow(dynamic obj){
+            bool delete = true;
+            if (!String.IsNullOrEmpty(DetailConfig.ActionDeleteRow))
+            {
+                delete = await EjectMethod(obj, DetailConfig.ActionDeleteRow, true).ConfigureAwait(true);
+            }
+            if(delete){
+                BusinessObj.ChildObjs.Remove(obj);
+                if(obj.Rowid != null && obj.Rowid > 0){
+                    BusinessObj.ChildObjsDeleted.Add(obj);
+                    BusinessObj.ChildRowidsUpdated.Remove(obj.Rowid);
+                }
+            }
+            StateHasChanged();
+            RefGrid.Reload();
+        }
+        
+        /// <summary>
+        /// Executes a specified action using an evaluator and method information extracted from the provided object. 
+        /// This method can handle asynchronous methods and optionally returns a value based on the 'hasReturn' parameter.
+        /// </summary>
+        /// <param name="obj">The object on which the action will be executed.</param>
+        /// <param name="action">The action to be executed.</param>
+        /// <param name="hasReturn">Indicates whether the action has a return value.</param>
+        /// <returns>
+        /// If 'hasReturn' is true and the action has a return value, the result of the action is returned.
+        /// If 'hasReturn' is false or the action is void, no explicit return value is provided.
+        /// If the action result is of type bool, it is returned directly.
+        /// </returns>
+        public async Task<dynamic> EjectMethod(dynamic obj, string action, bool hasReturn = false)
+        {
+            var eject = await Evaluator.EvaluateCode(action, BusinessObj);
+            MethodInfo methodInfo = (MethodInfo)(eject?.GetType().GetProperty("Method")?.GetValue(eject));
+            if(methodInfo != null){
+                if(methodInfo.GetCustomAttributes(typeof(AsyncStateMachineAttribute), false).Length > 0){
+                    if (hasReturn)
+                    {
+                        return await eject(obj).ConfigureAwait(true);
+                    }else{
+                        await eject(obj).ConfigureAwait(true);
+                    }
+                }else{
+                    if (hasReturn)
+                    {
+                        return eject(obj);
+                    }else{
+                        eject(obj);
+                    }
+                }
+            }else if (eject != null && eject.GetType() == typeof(bool))
+            {
+                return eject;
+            }
+            return obj;
+        }
     }
 }

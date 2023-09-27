@@ -20,7 +20,7 @@ else if(!string.IsNullOrEmpty(ErrorMsg) || ErrorList.Any())
 else
 {
      @if(IsSubpanel){
-        UseFlex = false;
+        //UseFlex = false;
     }
     @if(ShowSearchForm && HasSearchViewdef)
     {
@@ -50,7 +50,7 @@ else
                     <SDKButton form="@SearchFormID" CssClass="w-100" RenderStyle="SDKButtonRenderStyle.Primary" SubmitFormOnClick="true">
                         @if(LoadingSearch)
                         {
-                            <i class="mr-1 fas fa-spinner fa-pulse"></i>
+                            <SDKIcon Name="fa-spinner" CssClass="fa-spin-pulse mr-1"></SDKIcon>
                         }
                         <ResourceViewer ResourceTag="Action.Search" />
                     </SDKButton>
@@ -116,7 +116,7 @@ else
             >
             <EmptyTemplate>
                 <div class="col-12 text-center font_color_primary_dark py-4">
-                    <i class="fa-solid fa-eye-slash fa-3x"></i>
+                    <SDKIcon Name="fa-eye-slash fa-3x"/>
                     <p class="pt-3 m-0"><ResourceViewer ResourceTag="Custom.Generic.NoData" /></p>
                 </div>
             </EmptyTemplate>
@@ -158,24 +158,24 @@ else
                     <Template Context="data">
                         <div class="action-buttons d-flex justify-content-center">
                             @if(CanEdit && AllowEdit){
-                                <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToEdit(((IBaseSDK)data).GetRowid())"><i
-                                class="fa-solid fa-pen"></i></button>
+                                <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToEdit(((IBaseSDK)data).GetRowid())">
+                                    <SDKIcon Name="fa-pen"/></button>
                             }
                             @if(!ShowLinkTo && AllowDetail){
-                                <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToDetail(((IBaseSDK)data).GetRowid())"><i
-                                class="fa-solid fa-eye"></i></button>
+                                <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToDetail(((IBaseSDK)data).GetRowid())">
+                                    <SDKIcon Name="fa-eye"/></button>
                             }
                             
                             @if(CanDelete && IsSubpanel && AllowDelete){
-                                <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToDelete(((IBaseSDK)data).GetRowid(), data.ToString())"><i
-                                class="fa-solid fa-trash-can"></i></button>
+                                <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => GoToDelete(((IBaseSDK)data).GetRowid(), data.ToString())">
+                                    <SDKIcon Name="fa-trash-can"/></button>
 
                             }
                             @if(HasCustomActions){
                                 @foreach (var action in CustomActions)
                                 {
-                                    <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="async () => await OnClickCustomAction(action, ((IBaseSDK)data))"><i
-                                    class="@action.IconClass"></i></button>
+                                    <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="async () => await OnClickCustomAction(action, ((IBaseSDK)data))">
+                                        <SDKIcon Name="@action.IconClass"/></button>
                                 }
                             }
                             @* <button class="btn btn-link grid-btn-link"
@@ -340,7 +340,7 @@ else
 
     @if(ShowList && UseFlex){
         FilterFlex = GetFilters(_base_filter);
-        <FlexComponent IsListView="true" BlNameList="@BusinessName" ViewdefName="@FinalViewdefName" ListView="@this" GuidListView="@guidListView" CanEdit="@(CanEdit && AllowEdit)" CanDelete="@(CanDelete && AllowDelete)" CanDetail="@(CanDetail && AllowDetail)" EditingFlex="@_isEditingFlex" Take="@FlexTake" ServerPagination="@ServerPaginationFlex" FilterSearch="@FilterFlex" ActionIcons=@CustomActionIcons HasSearch=@HasSearchViewdef IsMultiple="@IsMultiple"></FlexComponent>
+        <FlexComponent IsListView="true" BlNameList="@BusinessName" ViewdefName="@FinalViewdefName" ListView="@this" GuidListView="@guidListView" CanEdit="@(CanEdit && AllowEdit)" CanDelete="@(CanDelete && AllowDelete)" CanDetail="@(CanDetail && AllowDetail)" EditingFlex="@_isEditingFlex" Take="@FlexTake" ServerPagination="@ServerPaginationFlex" FilterSearch="@FilterFlex" ActionIcons=@CustomActionIcons HasSearch=@HasSearchViewdef IsMultiple="@IsMultiple" FieldsHiddenList="@FieldsHiddenList" ShowActions="@_showActions"></FlexComponent>
     }
 
     @if(SetTopBar)
@@ -349,30 +349,34 @@ else
         <SetTopBar HasExtraButtons="@HasExtraButtons" BusinessObj="@BusinessObj">
             <TopBarTitle><ResourceViewer ResourceTag="@($"{BusinessName}.Plural")" /></TopBarTitle>
             <TopBarButtons>
+                
+                @if (CanImport)
+                {
+                    <TopBarButton Click="GoToImport" ResourceTag="Action.Import" IconCssClass="fa-file-import"/>
+                }
+                @if (CanExport && AllowExport)
+                {
+                    <TopBarButton Click="GoToExport" ResourceTag="Action.Export" IconCssClass="fa-file-excel" Enabled="@ShowList"/>
+                }
+
                 @if(ShowSearchForm && HasSearchViewdef && !_isEditingFlex)
                 {
-                    <TopBarButton ResourceTag="Action.AdvanceSearch" IconCssClass="fa-solid fa-magnifying-glass" Click="@(()=> SetSearchFromVisibility(false))"/>
+                    <TopBarButton ResourceTag="Action.AdvanceSearch" IconCssClass="fa-magnifying-glass" Click="@(()=> SetSearchFromVisibility(false))"/>
                 }
-                @if(_isEditingFlex){
-                    <TopBarButton ResourceTag="Action.Cancel" IconCssClass="fa-solid fa-times" Click="CancelEdit"/>
-                    <TopBarButton ResourceTag="Action.Flex.SaveAndClose" IconCssClass="fa-solid fa-floppy-disk" Click="SaveAndCloseList" />
-                }
-                @if(UseFlex && !_isEditingFlex && !_isSearchOpen){
-                    <TopBarButton Click="GoToEditFlex" ResourceTag="Action.EditListFlex" IconCssClass="fa-solid fa-pen" />
-                }                
+                
                 @if((CanCreate && AllowCreate) && !_isEditingFlex)
                 {   
                     if(CreateButton!=null){
                         if(!CreateButton.Hidden){
-                            <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus" Enabled="@(!CreateButton.Disabled)"/>    
+                            <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-circle-plus" Enabled="@(!CreateButton.Disabled)"/>    
                         }
                     }else{
-                        <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-solid fa-circle-plus"/>
+                        <TopBarButton Click="GoToCreate" ResourceTag="Action.Create" IconCssClass="fa-circle-plus"/>
                     }
                 }
             </TopBarButtons>
             <TopBarExtraButtons>
-                @foreach (var btn in ExtraButtons)
+                @foreach (var btn in ExtraButtons.Where(x => string.IsNullOrEmpty(x.Id)))
                 {
                     if(!btn.Hidden){
                         <TopBarButton Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" IconCssClass="@btn.IconClass" Enabled="@(!btn.Disabled)"/>

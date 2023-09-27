@@ -12,17 +12,16 @@
 
 <SDKSelectField 
     ItemType="TItem"
-    Options="@_options" 
+    Options="@Options" 
     Placeholder="@FieldOpt.Placeholder"
     ReadOnly="@(FieldOpt.Disabled)"
     Value="@BindValue"
     ValueChanged="@((newVal) => SetValue(newVal))"
     ValueExpression="@ValueExpression"
-    TextProperty="DisplayText"
-    ValueProperty="Type"
     FieldName="@FieldOpt.Name"
     @ref="_refField"
     OnFocusOut = "@OnFocusOutAction"
+    IsSearch="@IsSearch"
     />
 @FieldValidationTemplate
 
@@ -30,63 +29,19 @@
     private SDKSelectField<TItem> _refField;
     Expression<Func<TItem>> ValueExpression { get; set; }
     [Parameter] public IEnumerable<SDKEnumWrapper<TItem>> Options {get; set;}
+    
+    private bool IsSearch { get; set; }
 
     private Type enumType { get; set; }
-    private IEnumerable<SDKEnumWrapper<TItem>> _options {
-        get{
-            if(Options == null){
-                
-                enumType = typeof(TItem);
-                if(typeof(TItem).IsGenericType && typeof(TItem).GetGenericTypeDefinition() == typeof(Nullable<>)){
-                    enumType = typeof(TItem).GetGenericArguments()[0];
-                }
-                GetEnumValues();
-            }
-            return Options;
-        }
-    }
-
-    private async Task GetEnumValues()
-    {
-        var resourceBL = BackendRouterService.GetSDKBusinessModel("BLResource", AuthenticationService);
-        var request = await resourceBL.Call("GetEnumValues", enumType.Name, Convert.ToInt64(AuthenticationService.GetRoiwdCulture()));
-        if(request.Success){
-            var enumValues = (Dictionary<byte, string>)request.Data;
-            if(enumValues == null || enumValues.Count == 0){
-                return;
-            }
-
-           Options = Enumerable.Empty<SDKEnumWrapper<TItem>>();
-
-            if (ViewdefName == "search")
-            {
-                var SelectAllName = await ResourceManager.GetResource("Custom.Enum.SelectAll", AuthenticationService);
-                Options = Options.Append(new SDKEnumWrapper<TItem>
-                {
-                    Type = (TItem)Enum.Parse(enumType, (enumValues.Select(x => x.Key).Last() + 1).ToString()),
-                    DisplayText = SelectAllName
-                });
-                BindValue = Options.Select(x => x.Type).First();
-            }
-            
-            Options = Options.Concat(enumValues.Select(x => new SDKEnumWrapper<TItem>{
-                Type = (TItem)Enum.Parse(enumType, x.Key.ToString()),
-                DisplayText = x.Value
-            }));
-
-
-            
-            if(_refField != null){
-                _refField.RefreshCurrentText();
-            }
-
-            StateHasChanged();
-        }
-    }
 
     private Action OnFocusOutAction { get; set; } = () => {};
     protected override void OnInitialized()
     {
+        if (ViewdefName == "search")
+        {
+            IsSearch = true; 
+        }
+        
         base.OnInitialized();
         var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);
         ValueExpression = (Expression<Func<TItem>>)Expression.Lambda(typeof(Func<>).MakeGenericType(typeof(TItem)), access);

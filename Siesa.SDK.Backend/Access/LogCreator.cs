@@ -9,16 +9,16 @@ using Siesa.SDK.Shared.Services;
 
 namespace Siesa.SDK.Backend.Access
 {
+    /// <summary>
+    /// Helper class to create data change logs for entities that have the SDKLogEntity attribute.
+    /// </summary>
     internal class LogCreator
     {
-
-
         private readonly List<EntityEntry> _entityEntriesAdded;
         private readonly List<EntityEntry> _entityEntriesModified;
         private readonly List<EntityEntry> _entityEntriesDeleted;
         private readonly List<DataEntityLog> _dataEntityLogs;
         private readonly IAuthenticationService _authenticationService;
-
 
         public List<DataEntityLog> DataEntityLogs
         {
@@ -37,8 +37,12 @@ namespace Siesa.SDK.Backend.Access
 
         private LogCreator() { }
 
-
-        public LogCreator(IEnumerable<EntityEntry> entityEntries,IAuthenticationService authenticationService)
+        /// <summary>
+        /// Initializes a new instance of the LogCreator class.
+        /// </summary>
+        /// <param name="entityEntries">The entity entries to process.</param>
+        /// <param name="authenticationService">The authentication service.</param>
+        public LogCreator(IEnumerable<EntityEntry> entityEntries, IAuthenticationService authenticationService)
         {
             _entityEntriesAdded = entityEntries.Where(e => e.State == EntityState.Added && e.Entity.GetType().GetCustomAttributes(typeof(SDKLogEntity), false).Any()).ToList();
             _entityEntriesModified = entityEntries.Where(e => e.State == EntityState.Modified && e.Entity.GetType().GetCustomAttributes(typeof(SDKLogEntity), false).Any()).ToList();
@@ -47,6 +51,9 @@ namespace Siesa.SDK.Backend.Access
             _authenticationService = authenticationService;
         }
 
+        /// <summary>
+        /// Processes the entity entries after changes have been saved to the database.
+        /// </summary>
         internal void ProccessAfterSaveChanges()
         {
             if (!AreThereEntitiesToProcessAfterSaveChanges())
@@ -56,6 +63,9 @@ namespace Siesa.SDK.Backend.Access
             _dataEntityLogs.AddRange(ProccessList(LogType.Add));
         }
 
+        /// <summary>
+        /// Processes the entity entries before changes are saved to the database.
+        /// </summary>
         internal void ProccessBeforeSaveChanges()
         {
             if (!AreThereEntitiesToProcessBeforeSaveChanges())
@@ -79,17 +89,18 @@ namespace Siesa.SDK.Backend.Access
                 }
                 if (_authenticationService.User != null)
                 {
-                    result.Add(CreateDataEntityLogFromChange(change, type, properties,_authenticationService.User.Rowid, _authenticationService.User.Name));
-                }else
-                {
-                    result.Add(CreateDataEntityLogFromChange(change, type, properties, 0,"undefined"));
+                    result.Add(CreateDataEntityLogFromChange(change, type, properties, _authenticationService.User.Rowid, _authenticationService.User.Id));
                 }
-                
+                else
+                {
+                    result.Add(CreateDataEntityLogFromChange(change, type, properties, 0, "undefined"));
+                }
+
             }
             return result;
         }
 
-        private static DataEntityLog CreateDataEntityLogFromChange(EntityEntry change, LogType type, List<LogProperty> logProperties, int RowidUserLogged,  string UserNameLogged)
+        private static DataEntityLog CreateDataEntityLogFromChange(EntityEntry change, LogType type, List<LogProperty> logProperties, int RowidUserLogged, string UserNameLogged)
         {
             return new DataEntityLog()
             {
@@ -190,7 +201,5 @@ namespace Siesa.SDK.Backend.Access
             return _entityEntriesDeleted.Count > 0
                 || _entityEntriesModified.Count > 0;
         }
-
-
     }
 }

@@ -31,7 +31,7 @@ namespace Siesa.SDK.Frontend.Services
             };
         }
 
-         public async Task<dynamic> ShowConfirmDialog (RenderFragment childContent,string width="400px", string ConfirmationButtonTag="Action.Confirm", string CancelationButtonTag="Action.Cancel",string title="", string ResourceTag="", SDKModalWidth standardWidth=SDKModalWidth.Undefined)
+         public async Task<dynamic> ShowConfirmDialog (RenderFragment childContent,string width="400px", string ConfirmationButtonTag="Action.Confirm", string CancelationButtonTag="Action.Cancel",string title="", string height="", string ResourceTag="", SDKModalWidth standardWidth=SDKModalWidth.Undefined)
          {
             var _title = title;
             if(!string.IsNullOrEmpty(ResourceTag)){
@@ -47,11 +47,17 @@ namespace Siesa.SDK.Frontend.Services
                     _width = "90%";
                 }
             }
+            string _height = "fit-content";
+            if(!string.IsNullOrEmpty(height)){
+                _height = height;
+            }
+            string style = $"min-width:300px; width:{_width}; height:{_height};";
+            
             return await ds.OpenAsync(_title,GetConfirmComponent(childContent,ConfirmationButtonTag,CancelationButtonTag),
-            new SDKDialogOption(){ShowTitle=false, Style=$"min-width:300px; width:{_width};", CssClass="whcm_modal_relacion"});
+            new SDKDialogOption(){ShowTitle=false, Style=style, CssClass="whcm_modal_relacion"});
          }
 
-         public async Task<dynamic> ShowCustomDialog (RenderFragment<DialogService> childContent,string width="600px", string title="",bool ShowTitle=true , bool showClose=true, string height="", string ResourceTag="", SDKModalWidth standardWidth=SDKModalWidth.Undefined)
+         public async Task<dynamic> ShowCustomDialog (RenderFragment<DialogService> childContent,string width="600px", string title="",bool ShowTitle=true , bool showClose=true, string height="", string ResourceTag="", SDKModalWidth standardWidth=SDKModalWidth.Undefined, string CssClass="")
          {
             if(!string.IsNullOrEmpty(ResourceTag)){
                 title = await UtilsManager.GetResource(ResourceTag);
@@ -67,16 +73,17 @@ namespace Siesa.SDK.Frontend.Services
                     _width = "90%";
                 }
             }
-            string style = $"min-width:300px; width:{_width}";
+            string _height = "fit-content";
             if(!string.IsNullOrEmpty(height)){
-                style += $"; height:{height}";
+                _height = height;
             }
+            string style = $"min-width:300px; width:{_width}; height:{_height};";
             SDKDialogOption customDialogOption = new SDKDialogOption {
                 ShowTitle = ShowTitle,
                 Style=style,
                 ShowClose = showClose,
                 Resizable = true,
-                CssClass="whcm_modal_relacion"
+                CssClass=$"whcm_modal_relacion {CssClass}"
             };
            return await ds.OpenAsync(TitleTag, childContent,customDialogOption);
          }

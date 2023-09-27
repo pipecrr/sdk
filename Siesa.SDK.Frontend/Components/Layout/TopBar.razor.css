@@ -1,14 +1,16 @@
 ﻿.whcm_toolbar{
-    width: calc(100% - 2rem) !important;
-    background: var(--color_light);
+    background: var(--color_toolbar_back);
     border-radius: var(--border_radius_standar_max);
     box-shadow: var(--shadow_standar);
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-between;
-    position: absolute !important;
-    top: -2.063rem;
-    z-index: 2;
+    position: sticky !important;
+    z-index: 5;
+    top: calc(48px + 2rem + 2rem);
+    width: 100% !important;
+    margin-top: -4.625rem;
+    margin-bottom:0.6rem;
 }
 .toolbar_edition{
     border-left: .5rem solid var(--color_estado_edición);
@@ -17,7 +19,7 @@
     border-left: .5rem solid var(--color_primary_light);
 }
 .toolbar_creation{
-    border-left: .5rem solid var(--color_estado_creación);
+    border-left: .5rem solid var(--color_estado_creacion);
 }
 .layout_btn_negative-sm {
     max-width: 31px;
@@ -69,8 +71,27 @@
     max-width: 100%;
     text-overflow: ellipsis;
     overflow: hidden;
-    white-space: nowrap;    
+    white-space: nowrap; 
+    color: var(--color_text);   
 }
+
+.sdk-company-select {
+    position: sticky;
+    top: 9rem;
+    z-index: 4;
+    margin-top: -3rem;
+    float: right;
+    margin-right: 1rem;
+}
+
+
+@media (max-width: 1400px) {
+    
+    .topbarbutton_expand
+    {
+        display: none;
+    }
+ }
 
 @media (max-width: 767.98px) { 
     .whcm_toolbar_text > h3 {
@@ -81,6 +102,21 @@
 @media (max-width: 575.98px) {
     .whcm_toolbar{
         flex-wrap: wrap;
+        position: sticky !important;
+        z-index: 5;
+        top: calc(48px + 2rem + 2rem + 2rem) !important;
+        width: 100% !important;
+        margin-top: -7rem !important;
+        margin-bottom: 0.6rem;
+    }
+    .sdk-company-select{
+        position: sticky;
+        top: 13.5rem;
+        z-index: 4;
+        margin-top: -2.5rem;
+        float: none;
+        margin-right: 50%;
+        display: block;
     }
     .whcm_toolbar_text{
         width: 100%;
@@ -91,3 +127,4 @@
         justify-content: center;  
     }
  }
+

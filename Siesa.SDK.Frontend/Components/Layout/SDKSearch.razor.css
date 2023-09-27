@@ -5,11 +5,11 @@
 .sdk_search>input {
     border: transparent;
     background: #ffffff4d;
-    color: white;
+    color: var(--color_light) !important;
 }
 
 .sdk_search>input:focus {
-    color: white;
+    color: var(--color_light);
     background-color: #ffffff4d;
 }
 
@@ -17,7 +17,7 @@
     color: #ffffff80;
 }
 
-.sdk_search>i {
+.sdk_search> ::deep i {
     position: absolute;
     right: .5rem;
     top: .5rem;
@@ -30,7 +30,7 @@
     max-width: 300px;
     border-radius: var(--border_radius_standar);
     color: var(--color_text);
-    background-color: var(--color_light);
+    background-color: var(--color_panel_back);
     position: absolute;
     top: 42px;
     left: calc(50% - 150px);
@@ -38,6 +38,8 @@
     box-shadow: var(--shadow_standar);
     display: none;
     font-size: 0.875rem;
+    left: -65px;
+    top: 10px;
 }
 
 .search_tooltip::before {
@@ -49,7 +51,7 @@
     left: 146px;
     border-top: 0px solid transparent;
     border-right: 9px solid transparent;
-    border-bottom: 9px solid white;
+    border-bottom: 9px solid var(--color_panel_back);
     border-left: 9px solid transparent;
 }
 

@@ -25,6 +25,9 @@ namespace Siesa.SDK.Entities
         [NotMapped]
         [JsonIgnore]
         public virtual Action<E00061_Menu> CustomAction {get;set;}
+        [NotMapped]
+        [JsonIgnore]
+        public virtual bool? Show {get; set;}
 
         [NotMapped]
         [JsonIgnore]

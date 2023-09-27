@@ -203,6 +203,13 @@ namespace Siesa.SDK.Backend.Extensions
                     contextSet = whereMethod.Invoke(contextSet, new object[] { contextSet, filterSearch, new object[]{}});
                 }
 
+                var orderMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "OrderBy", new[] { typeof(IQueryable), typeof(string), typeof(object[]) });
+                if (!orderBy.Equals("")){
+                    contextSet = orderMethod.Invoke(contextSet, new object[] { contextSet, orderBy, null });
+                }else{
+                    contextSet = orderMethod.Invoke(contextSet, new object[] { contextSet, "Rowid", null });
+                }
+
                 var selectMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "Select", new[] { typeof(IQueryable), typeof(string), typeof(object[]) });
                 contextSet = selectMethod.Invoke(contextSet, new object[] { contextSet, $"new ({strSelect})", null });
 
@@ -254,13 +261,6 @@ namespace Siesa.SDK.Backend.Extensions
                     }
                     var strSelectMany = string.Join(", ", strColumnsMany);
                     contextSet = selectMethod.Invoke(contextSet, new object[] { contextSet, $"new ({strSelectMany})", null });
-                }
-
-                var orderMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "OrderBy", new[] { typeof(IQueryable), typeof(string), typeof(object[]) });
-                if (!orderBy.Equals("")){
-                    contextSet = orderMethod.Invoke(contextSet, new object[] { contextSet, orderBy, null });
-                }else{
-                    contextSet = orderMethod.Invoke(contextSet, new object[] { contextSet, "Rowid", null });
                 }
 
                 if (skip.HasValue)

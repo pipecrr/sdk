@@ -19,6 +19,7 @@ using Siesa.SDK.Shared.Criptography;
 using Siesa.SDK.Shared.DataAnnotations;
 using Microsoft.Extensions.Configuration;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace Siesa.SDK.Backend.Access
 {
@@ -187,6 +188,36 @@ namespace Siesa.SDK.Backend.Access
             return InternalSaveChanges(true);
         }
 
+        public void BeginTransaction()
+        {
+            this.Database.BeginTransaction();
+        }
+
+        public void Commit()
+        {
+            this.Database.CommitTransaction();
+        }
+
+        public void Rollback()
+        {
+            this.Database.RollbackTransaction();
+        }
+
+        public async Task BeginTransactionAsync()
+        {
+            await this.Database.BeginTransactionAsync();
+        }
+
+        public async Task CommitAsync()
+        {
+            await this.Database.CommitTransactionAsync();
+        }
+
+        public async Task RollbackAsync()
+        {
+            await this.Database.RollbackTransactionAsync();
+        }
+        
         internal int InternalSaveChanges(bool ValidateUser = true)
         {
             JwtUserData CurrentUser = null;
@@ -316,18 +347,29 @@ namespace Siesa.SDK.Backend.Access
 
         public override DbSet<TEntity> Set<TEntity>()
         {
+            return SetMethod<TEntity>();
+        }
+        
+        public DbSet<TEntity> Set<TEntity>(bool ignoreVisibility) where TEntity : class
+        {
+            return SetMethod<TEntity>(ignoreVisibility);
+        }
+
+        private DbSetProxy<TEntity> SetMethod<TEntity>(bool ignoreVisibility = false) where TEntity : class
+        {
             if (ServiceProvider != null)
             {
                 try
                 {
-                    return ActivatorUtilities.CreateInstance(ServiceProvider, typeof(DbSetProxy<TEntity>), new object[] { this, base.Set<TEntity>() }) as DbSet<TEntity>;
+                    return ActivatorUtilities.CreateInstance(ServiceProvider, typeof(DbSetProxy<TEntity>), 
+                        new object[] { this, base.Set<TEntity>(), ServiceProvider, ignoreVisibility }) as DbSetProxy<TEntity>;
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine($"{e.Message}***********");
                 }
             }
-            return new DbSetProxy<TEntity>(null, this, base.Set<TEntity>());
+            return new DbSetProxy<TEntity>(null, this, base.Set<TEntity>(), null, ignoreVisibility);
         }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder builder)

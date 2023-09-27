@@ -15,72 +15,127 @@ namespace Siesa.SDK.Frontend.Utils
 {
     public static class Evaluator
     {
-        private static dynamic ProcessProperty(object context, string singleProperty)
+        private static dynamic ProcessProperty(object context, string singleProperty, int propertyIndex = -1)
         {
             //check if is a property of the context
             var contextType = context.GetType();
+            
+            var propertyName = singleProperty;
+            if (propertyName.Contains('[', StringComparison.Ordinal))
+            {
+                var index = propertyName.IndexOf('[', StringComparison.Ordinal);
+                propertyIndex = int.Parse(propertyName.Substring(index + 1, propertyName.Length - index - 2), CultureInfo.InvariantCulture);
+                propertyName = propertyName.Substring(0, index);
+                singleProperty = propertyName;
+            }
 
             string[] fieldPath = singleProperty.Split('.');
-            if(fieldPath.Length > 1){
-                if(double.TryParse(singleProperty, NumberStyles.Any ,CultureInfo.InvariantCulture, out double doubleNumber)){
+            if (fieldPath.Length > 1)
+            {
+                if (double.TryParse(singleProperty, NumberStyles.Any, CultureInfo.InvariantCulture, out double doubleNumber))
+                {
                     return doubleNumber;
-                }else if(decimal.TryParse(singleProperty, NumberStyles.Any ,CultureInfo.InvariantCulture, out decimal decimalNumber)){
+                }
+                else if (decimal.TryParse(singleProperty, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal decimalNumber))
+                {
                     return decimalNumber;
                 }
 
                 var field = contextType.GetProperty(fieldPath[0]);
-                if(field != null){
+                if (field != null)
+                {
                     var fieldValue = field.GetValue(context);
-                    if(fieldValue != null){
-                        return ProcessProperty(fieldValue, string.Join(".", fieldPath.Skip(1)));
-                    }else{
+                    if (fieldValue != null)
+                    {
+                        return ProcessProperty(fieldValue, string.Join(".", fieldPath.Skip(1)), propertyIndex);
+                    }
+                    else
+                    {
                         throw new ArgumentException($"Field '{fieldPath[0]}' is null in type '{contextType.FullName}'.");
                     }
-                }else{
+                }
+                else
+                {
                     throw new ArgumentException($"Field '{fieldPath[0]}' not found in type '{contextType.FullName}'.");
                 }
             }
             // Console.WriteLine($"Evaluating property '{singleProperty}' in type '{contextType.FullName}'.");
             var property = contextType.GetProperty(singleProperty);
-            if(property != null){
+            if (property != null)
+            {
+                if(propertyIndex >= 0)
+                {
+                    var list = property.GetValue(context) as System.Collections.IList;
+                    if(list != null)
+                    {
+                        return list[propertyIndex];
+                    }
+                    else
+                    {
+                        throw new ArgumentException($"Property '{singleProperty}' is not a list in type '{contextType.FullName}'.");
+                    }
+                }
                 return property.GetValue(context);
-            }else{
+            }
+            else
+            {
                 var _method = contextType.GetMethod(singleProperty);
-                if(_method != null){
+                if (_method != null)
+                {
                     //return delegate to execute
                     var parameters = _method.GetParameters();
                     List<Type> delegateTypes = new List<Type>();
-                    foreach(var parameter in parameters){
+                    foreach (var parameter in parameters)
+                    {
                         delegateTypes.Add(parameter.ParameterType);
                     }
                     delegateTypes.Add(_method.ReturnType);
                     return Delegate.CreateDelegate(Expression.GetDelegateType(delegateTypes.ToArray()), context, _method);
                 }
                 //check if is a number
-                if(int.TryParse(singleProperty, out int number)){
+                if (int.TryParse(singleProperty, out int number))
+                {
                     return number;
-                }else if(double.TryParse(singleProperty, NumberStyles.Any ,CultureInfo.InvariantCulture, out double doubleNumber)){
+                }
+                else if (double.TryParse(singleProperty, NumberStyles.Any, CultureInfo.InvariantCulture, out double doubleNumber))
+                {
                     return doubleNumber;
-                }else if(decimal.TryParse(singleProperty, NumberStyles.Any ,CultureInfo.InvariantCulture, out decimal decimalNumber)){
+                }
+                else if (decimal.TryParse(singleProperty, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal decimalNumber))
+                {
                     return decimalNumber;
-                }else if(DateTime.TryParse(singleProperty, out DateTime date)){
+                }
+                else if (DateTime.TryParse(singleProperty, out DateTime date))
+                {
                     return date;
-                }else if(TimeSpan.TryParse(singleProperty, out TimeSpan time)){
+                }
+                else if (TimeSpan.TryParse(singleProperty, out TimeSpan time))
+                {
                     return time;
-                }else if(Guid.TryParse(singleProperty, out Guid guid)){
+                }
+                else if (Guid.TryParse(singleProperty, out Guid guid))
+                {
                     return guid;
-                }else if(singleProperty.StartsWith("'") && singleProperty.EndsWith("'")){
+                }
+                else if (singleProperty.StartsWith("'", StringComparison.OrdinalIgnoreCase) && singleProperty.EndsWith("'", StringComparison.OrdinalIgnoreCase))
+                {
                     return singleProperty.Substring(1, singleProperty.Length - 2).ToCharArray()[0];
-                }else{
+                }
+                else
+                {
                     //try json parse
-                    try{
+                    try
+                    {
                         var json = Newtonsoft.Json.JsonConvert.DeserializeObject(singleProperty);
                         return json;
-                    }catch(Exception ex){
+                    }
+                    catch (Exception)
+                    {
                         //ignore
                     }
                     //check if is a reserved word
-                    switch(singleProperty){
+                    switch (singleProperty)
+                    {
                         case "true":
                             return true;
                         case "false":
@@ -96,9 +151,18 @@ namespace Siesa.SDK.Frontend.Utils
 
         public static async Task<object> EvaluateCode(string code, object globals, bool useRoslyn = false)
         {
-            if(useRoslyn)
+            if(string.IsNullOrEmpty(code))
+            {
+                return null;
+            }
+            if (useRoslyn)
             {
                 object result;
+                var isNegated = code.Trim().StartsWith("!", StringComparison.OrdinalIgnoreCase);
+                if (isNegated)
+                {
+                    code = code.Substring(1);
+                }
                 try
                 {
                     result = await CSharpScript.EvaluateAsync(code, options: ScriptOptions.Default.WithImports("System"), globals: globals);
@@ -106,31 +170,49 @@ namespace Siesa.SDK.Frontend.Utils
                 catch (Exception ex)
                 {
                     throw new ArgumentException($"Error evaluating code: '{code}'.", ex);
-                }finally{
+                }
+                finally
+                {
                     GC.Collect(); //TODO: Check performance
                 }
 
+                if (isNegated)
+                {
+                    if (result is bool)
+                    {
+                        result = !(bool)result;
+                    }
+                    else
+                    {
+                        throw new ArgumentException($"Negation operator '!' can only be applied to boolean values.");
+                    }
+                }
+
                 return result;
-            }else{
+            }
+            else
+            {
                 // check if code starts with "await"
-                var asyncCode = code.Trim().StartsWith("await ");
+                var asyncCode = code.Trim().StartsWith("await ", StringComparison.OrdinalIgnoreCase);
                 if (asyncCode)
                 {
                     code = code.Substring(6);
                 }
+                object result;
 
                 var contextType = globals.GetType();
-                var methodPattern = @"^([\w\.]+)\((.*)\)$|^([\w\.]+)$";
+                var methodPattern = @"^(!?)([\w\.]+)\((.*)\)$|^(!?)([\w\.]+)$";
                 var match = Regex.Match(code.Trim(), methodPattern);
 
                 if (!match.Success)
                 {
                     throw new ArgumentException($"Invalid code format: '{code}'.");
                 }
-                var methodName = match.Groups[1].Value;
-                var arguments = match.Groups[2].Value.Split(',').Select(arg => arg.Trim()).ToArray();
-                var singleProperty = match.Groups[3].Value.Trim();
-                if(string.IsNullOrEmpty(singleProperty))
+                var isNegated = match.Groups[1].Value == "!";
+                var methodName = match.Groups[2].Value;
+                var arguments = match.Groups[3].Value.Split(',').Select(arg => arg.Trim()).ToArray();
+                var singleProperty = match.Groups[5].Value.Trim();
+                if (string.IsNullOrEmpty(singleProperty))
                 {
                     //remove empty arguments
                     arguments = arguments.Where(arg => !string.IsNullOrEmpty(arg)).ToArray();
@@ -161,10 +243,12 @@ namespace Siesa.SDK.Frontend.Utils
                         try
                         {
                             argumentValue = Convert.ChangeType(argumentValue, parameterType);
-                        }catch(Exception ex){
+                        }
+                        catch (Exception)
+                        {
                             //ignore
                         }
-                        
+
                         convertedArguments[i] = argumentValue;
                     }
 
@@ -175,10 +259,28 @@ namespace Siesa.SDK.Frontend.Utils
                         return task.GetType().GetProperty("Result").GetValue(task);
                     }
 
-                    var result = evalMethod.Invoke(globals, convertedArguments);
+                    result = evalMethod.Invoke(globals, convertedArguments);
+                }
+                else
+                {
+                    isNegated = match.Groups[4].Value == "!";
+                    result = ProcessProperty(globals, singleProperty);
+                }
+
+                if (isNegated)
+                {
+                    if (result is bool)
+                    {
+                        return !(bool)result;
+                    }
+                    else
+                    {
+                        throw new ArgumentException($"Negation operator '!' can only be used with boolean values.");
+                    }
+                }
+                else
+                {
                     return result;
-                }else{
-                    return ProcessProperty(globals, singleProperty);
                 }
             }
         }

@@ -8,6 +8,9 @@ using Siesa.SDK.Shared.Backend;
 using Siesa.SDK.Shared.Configurations;
 using System.Linq;
 using Siesa.SDK.Shared.GRPCServices;
+using Grpc.Core;
+using Siesa.SDK.Shared.DTOS;
+using System.IO;
 
 namespace Siesa.SDK.Shared.Services
 {
@@ -19,16 +22,50 @@ namespace Siesa.SDK.Shared.Services
         public void AddObserver(BackendInfo observer);
         public void RemoveObserver(BackendInfo observer);
         public Task NotifyObservers();
-        public Task<List<BusinessModel>> RegisterServiceInMaster(List<BusinessModel> businessNames = null);
+
+        /// <summary>
+        /// Registra un servicio en el maestro del backend.
+        /// </summary>
+        /// <param name="businessNames">Lista de nombres de negocio.</param>
+        /// <param name="_isFrontendService">Indica si el servicio es de frontend.</param>
+        /// <returns>Lista de modelos de negocio (BL) registrados.</returns>
+        public Task<List<BusinessModel>> RegisterServiceInMaster(List<BusinessModel> businessNames = null, bool _isFrontendService = false);
         public BackendRegistry GetBackendRegistry(string backendName, IAuthenticationService authenticationService);
         public SDKBusinessModel GetSDKBusinessModel(string backendName, IAuthenticationService authenticationService);
         public string GetViewdef(string businessName, string viewName);
 
         public List<BusinessModel> GetBusinessModelList();
 
+        /// <summary>
+        /// Abre un canal de comunicación asincrónica entre el frontend y el backend.
+        /// </summary>
+        /// <param name="Callback">Acción a ejecutar al recibir un mensaje en el canal.</param>
+        /// <returns>Tarea que devuelve la llamada de streaming dúplex asincrónica.</returns>
+        public Task<AsyncDuplexStreamingCall<OpeningChannelToBackRequest, QueueMessageDTO>> OpenChannelFrontToBack(Action<QueueMessageDTO> Callback);
+
+        /// <summary>
+        /// Establece los canales de comunicación para un nombre de cola dado.
+        /// </summary>
+        /// <param name="_queueName">Nombre de la cola.</param>
+        /// <param name="_channel">Canal de mensajes.</param>
+        public void SetChannels(string _queueName, System.Threading.Channels.Channel<QueueMessageDTO> _channel);
+
+        /// <summary>
+        /// Obtiene un diccionario de nombres de cola y listas de canales de mensajes.
+        /// </summary>
+        /// <returns>Diccionario de nombres de cola y listas de canales de mensajes.</returns>
+        public Dictionary<string, List<System.Threading.Channels.Channel<QueueMessageDTO>>> GetChannels();
+
+        /// <summary>
+        /// Elimina los canales de comunicación para un nombre de cola dado.
+        /// </summary>
+        /// <param name="_queueName">Nombre de la cola.</param>
+        /// <param name="_channel">Canal de mensajes a eliminar.</param>
+        public void RemoveChannels(string _queueName, System.Threading.Channels.Channel<QueueMessageDTO> _channel);
+
     }
 
-    public abstract class BackendRouterServiceBase: IBackendRouterService
+    public abstract class BackendRouterServiceBase : IBackendRouterService
     {
         private readonly IServiceConfiguration serviceConfiguration;
         private Dictionary<string, BusinessModel> _backendBusinesses = new Dictionary<string, BusinessModel>();
@@ -36,6 +73,58 @@ namespace Siesa.SDK.Shared.Services
         private List<BackendInfo> _observers = new List<BackendInfo>();
         private string _masterBackendURL;
         public static BackendRouterServiceBase Instance { get; private set; }
+        private Dictionary<string, List<System.Threading.Channels.Channel<QueueMessageDTO>>> Channels { get; set; } = new Dictionary<string, List<System.Threading.Channels.Channel<QueueMessageDTO>>>();
+
+        
+        /// <summary>
+        /// Establece los canales de comunicación para un nombre de cola dado.
+        /// </summary>
+        /// <param name="_queueName">Nombre de la cola.</param>
+        /// <param name="_channel">Canal de mensajes.</param>
+        public void SetChannels(string _queueName, System.Threading.Channels.Channel<QueueMessageDTO> _channel)
+        {
+            if (!Channels.ContainsKey(_queueName))
+            {
+                Channels.Add(_queueName, new List<System.Threading.Channels.Channel<QueueMessageDTO>>());
+            }
+
+            var queueToChannel = Channels[_queueName];
+
+            if (queueToChannel.Exists(x => x == _channel))
+            {
+                return;
+            }
+            queueToChannel.Add(_channel);
+
+        }
+
+        /// <summary>
+        /// Obtiene un diccionario de nombres de cola y listas de canales de mensajes.
+        /// </summary>
+        /// <returns>Diccionario de nombres de cola y listas de canales de mensajes.</returns>
+
+        public Dictionary<string, List<System.Threading.Channels.Channel<QueueMessageDTO>>> GetChannels()
+        {
+            return Channels;
+        }
+
+                /// <summary>
+        /// Elimina los canales de comunicación para un nombre de cola dado.
+        /// </summary>
+        /// <param name="_queueName">Nombre de la cola.</param>
+        /// <param name="_channel">Canal de mensajes a eliminar.</param>
+
+        public void RemoveChannels(string _queueName, System.Threading.Channels.Channel<QueueMessageDTO> _channel)
+        {
+            if (Channels.ContainsKey(_queueName))
+            {
+                var queueToChannel = Channels[_queueName];
+                if (queueToChannel.Exists(x => x == _channel))
+                {
+                    queueToChannel.Remove(_channel);
+                }
+            }
+        }
 
         public BackendRouterServiceBase(IOptions<ServiceConfiguration> serviceConfiguration)
         {
@@ -72,7 +161,7 @@ namespace Siesa.SDK.Shared.Services
             {
                 _observers.Add(observer);
             }
-            NotifyObservers();
+            _ = NotifyObservers();
         }
 
         public void RemoveObserver(BackendInfo observer)
@@ -82,7 +171,7 @@ namespace Siesa.SDK.Shared.Services
 
                 _observers.Remove(observer);
             }
-            NotifyObservers();
+            _ = NotifyObservers();
         }
 
 
@@ -107,11 +196,47 @@ namespace Siesa.SDK.Shared.Services
             }
         }
 
-        public async Task<List<BusinessModel>> RegisterServiceInMaster(List<BusinessModel> businessNames = null)
+        /// <summary>
+        /// Abre un canal de comunicación asincrónica entre el frontend y el backend.
+        /// </summary>
+        /// <param name="Callback">Acción a ejecutar al recibir un mensaje en el canal.</param>
+        /// <returns>Tarea que devuelve la llamada de streaming dúplex asincrónica.</returns>
+        public async Task<AsyncDuplexStreamingCall<OpeningChannelToBackRequest, QueueMessageDTO>> OpenChannelFrontToBack(Action<QueueMessageDTO> Callback)
+        {
+            var channel = GrpcUtils.GetChannel(_masterBackendURL);
+            var client = new Protos.GRPCBackendManagerService.GRPCBackendManagerServiceClient(channel);
+            var streamingCall = client.OpeningChannelToBack();
+
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await foreach (var response in streamingCall.ResponseStream.ReadAllAsync())
+                    {
+                        Callback(response);
+                    }
+                }
+                catch (System.Exception)
+                {
+
+                    Console.WriteLine("Error GRPC Bidireccional");
+                }
+            });
+
+            return streamingCall;
+        }
+        
+        /// <summary>
+        /// Registra un servicio en el maestro del backend.
+        /// </summary>
+        /// <param name="businessNames">Lista de nombres de negocio.</param>
+        /// <param name="_isFrontendService">Indica si el servicio es de frontend.</param>
+        /// <returns>Lista de modelos de negocio (BL) registrados.</returns>
+        public async Task<List<BusinessModel>> RegisterServiceInMaster(List<BusinessModel> businessNames = null, bool _isFrontendService = false)
         {
             try
             {
-                if(this.serviceConfiguration.GetCurrentUrl() == _masterBackendURL)
+                if (this.serviceConfiguration.GetCurrentUrl() == _masterBackendURL)
                 {
                     await Task.Delay(5000); //wait for the master backend to be ready
                 }
@@ -123,7 +248,8 @@ namespace Siesa.SDK.Shared.Services
                     BackendInfo = new Protos.BackendInfo
                     {
                         BackendName = "",
-                        BackendUrl = this.serviceConfiguration.GetCurrentUrl()
+                        BackendUrl = this.serviceConfiguration.GetCurrentUrl(),
+                        IsFrontendService = _isFrontendService
                     }
                 };
                 if (businessNames != null)
@@ -133,7 +259,7 @@ namespace Siesa.SDK.Shared.Services
 
                 var response = await client.RegisterBackendAsync(request);
                 return response.Businesses.ToList<BusinessModel>();
-                
+
 
 
             }
@@ -183,5 +309,6 @@ namespace Siesa.SDK.Shared.Services
         {
             throw new NotImplementedException();
         }
+
     }
 }

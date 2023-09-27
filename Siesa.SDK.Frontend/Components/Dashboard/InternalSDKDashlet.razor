@@ -1,0 +1,50 @@
+@using Siesa.SDK.Frontend.Components.Visualization 
+@using Microsoft.Extensions.DependencyInjection  
+@using Microsoft.AspNetCore.Components 
+@using Siesa.SDK.Frontend.Components.Layout
+@using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Shared.DataAnnotations
+
+@inject IServiceProvider ServiceProvider
+
+
+    <div class="col py-3 h-100">
+        <div class="sdk-dashlet">
+            <ErrorBoundary @ref="errorBoundary">
+                <ChildContent>
+                    <DynamicComponent Type="@Item" @ref="DynamicComponentRef" />
+                </ChildContent> 
+                <ErrorContent Context="Exception" >
+                    <div class="col-12 text-center font_color_primary_dark py-5">
+                        <SDKIcon Name="fa-triangle-exclamation fa-3x"/>
+                        <p class="mt-3">
+                            <ResourceViewer ResourceTag="Custom.Generic.Message.Error" />
+                        </p>
+                    </div>
+                </ErrorContent>
+            </ErrorBoundary>
+        </div>
+    </div>
+
+
+
+@code {
+    [Parameter]
+    public Type Item { get; set; }
+    private SDKDashlet Dashlet { get; set; } 
+
+    private Microsoft.AspNetCore.Components.DynamicComponent DynamicComponentRef { get; set; }
+    private ErrorBoundary? errorBoundary;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Item != null)
+        {
+           Dashlet = Item.GetCustomAttributes(typeof(SDKDashlet), false).FirstOrDefault() as SDKDashlet;
+            
+        }
+
+        await base.OnInitializedAsync();
+    }
+}

@@ -3,8 +3,15 @@
 @using Siesa.SDK.Frontend.Components.FormManager.Fields
 @using Siesa.SDK.Frontend.Components.Layout.Detail.Relationship
 @using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
 @using System.Linq
 @using Siesa.SDK.Frontend.Services
+@using Siesa.SDK.Frontend.Components.Layout.AditionalField
+@using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Frontend.Components.FormManager.ViewModels
+
+@inject SDKDialogService SDKDialogService
+@inject NavigationManager NavigationManager
 @inject SDKGlobalLoaderService SDKGlobalLoaderService
 
 @if (Loading == true)
@@ -18,40 +25,59 @@ else if (Panels == null || Panels.Count <= 0)
 }
 else if (ModelLoaded == true)
 {
-    if(!string.IsNullOrEmpty(ErrorMsg)){
+    if(!string.IsNullOrEmpty(ErrorMsg) || ErrorList.Count > 0){
         <ErrorsWindow GeneralErrors="@ErrorList"/>
     }
         @if(IsSubpanel && ShowTitle){
             <h5 class="d-flex justify-content-center">@BusinessObj</h5>
             <hr />
         }
-        <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
+    <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
+        <SDKCrudHeader ResourceTag="@Panels[0].ResourceTag" IconClass="@Panels[0].IconClass" ViewType="DynamicViewType.Detail">
+            <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef" ModelObj="@BusinessObj" DefaultColSize="@Panels[0].ColSize"/>
+        </SDKCrudHeader>
+        @if (Panels.Count > 1)
+        {
+            <DxFormLayoutTabPages ScrollMode="TabsScrollMode.Auto">
+                @foreach (var panel in Panels.Skip(1))
+                {
+                    <SDKFormLayoutTabPage ResourceTag="@panel.ResourceTag">
+                        <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" ModelObj="@BusinessObj" DefaultColSize="@panel.ColSize" />
+                    </SDKFormLayoutTabPage>
+                }
+            </DxFormLayoutTabPages>
 
-            @if (Panels.Count > 1)
-            {
-                <DxFormLayoutTabPages ScrollMode="TabsScrollMode.Auto">
-                    @foreach (var panel in Panels)
-                    {
-                        <SDKFormLayoutTabPage ResourceTag="@panel.ResourceTag">
-                            <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" ModelObj="@BusinessObj" DefaultColSize="@panel.ColSize" />
-                        </SDKFormLayoutTabPage>
-                    }
-                </DxFormLayoutTabPages>
-
-            }
-            else
-            {
-                <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef" ModelObj="@BusinessObj" DefaultColSize="@Panels[0].ColSize"/>
-
-            }
-        </DxFormLayout>
+        }
+        @if(PanelsCollapsable.Count>0){
+            <div class="w-100">
+                <SDKCollapse>
+                    <Items>
+                        @foreach (var panel in PanelsCollapsable)
+                        {
+                            <SDKCollapseItem Text="@panel.ResourceTag">
+                                <div class="row">
+                                    <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                                </div>
+                            </SDKCollapseItem>
+                        }
+                    </Items>
+                </SDKCollapse>
+            </div>
+        }
+    </DxFormLayout>
+    @if(IsDocument){
+        <CascadingValue Value="this">
+            <SDKGridDocument BusinessObj="@BusinessObj" DetailConfig="@DetailConfig" IsDetail="true"/>
+        </CascadingValue>
+    }
         @if(ContainAttachments){
             <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" 
                 Parent="@BusinessObj.BaseObj" ContainAttachments="@ContainAttachments" BLNameParentAttatchment="@BusinessName"
-                BusinessObj="@BusinessObj"/>
+                BusinessObj="@BusinessObj" BusinessName="@BusinessName"/>
         }else if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
         {
-             <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" />
+             <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" 
+                BusinessName="@BusinessName"/>
         }
         
     @if(IsSubpanel && ShowButtons){
@@ -71,7 +97,7 @@ else if (ModelLoaded == true)
     @if(SetTopBar)
     {
         <PageTitle>@BusinessObj</PageTitle>
-        <SetTopBar HasExtraButtons="@(FormViewModel.Buttons != null && FormViewModel.Buttons.Count > 0 ? true: false)" BusinessObj="@BusinessObj" DisableCompanies="true">
+        <SetTopBar HasExtraButtons="@(FormViewModel.Buttons != null && FormViewModel.Buttons.Any(x => string.IsNullOrEmpty(x.Id)) ? true: false)" BusinessObj="@BusinessObj" DisableCompanies="true">
             <TopBarTitle>@BusinessObj</TopBarTitle>
             <TopBarButtons>
 
@@ -102,7 +128,7 @@ else if (ModelLoaded == true)
                         <TopBarButton Click="GoToEdit" ResourceTag="Action.Edit" IconCssClass="fa-solid fa-pen"  />
                     }
                 }
-                @if(CanList){
+                @if(CanAcess){
                     if(ListButton != null){
                         if(!ListButton.Hidden){
                             <TopBarButton Click="GoToList" ResourceTag="Action.List" IconCssClass="fa-solid fa-list" Enabled="@(!ListButton.Disabled)"/>
@@ -123,7 +149,7 @@ else if (ModelLoaded == true)
 
             </TopBarButtons>
             <TopBarExtraButtons>
-                @foreach (var btn in ExtraButtons)
+                @foreach (var btn in ExtraButtons.Where(x => string.IsNullOrEmpty(x.Id)))
                 {
                     if(!btn.Hidden){
                         <TopBarButton Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" IconCssClass="@btn.IconClass" Enabled="@(!btn.Disabled)"/>
@@ -149,5 +175,57 @@ else if (ModelLoaded == true)
         } 
         
         SDKGlobalLoaderService.Hide();
+    }
+     public async Task ConfirmDelete(int Rowid)
+    {
+        var confirmDelete = await SDKDialogService.ShowConfirmDialog(@<div class="col-12 p-0"><ResourceViewer ResourceTag="Esta seguro que desea eliminar los campos adicionales?"/></div>);
+        if(confirmDelete != null && confirmDelete == true){
+            bool deleteGroup = await DeleteGroup(Rowid);
+            if(deleteGroup){
+                var currentUrl = NavigationManager.Uri;
+                NavigationService.NavigateTo(currentUrl, true);
+            }
+                
+        }
+    }
+
+    public async Task ClickInAdd(int Rowid)
+    {   
+        var responseDynamicEntity = await BusinessObj.Backend.Call("GetDynamicEntity", Rowid);
+        if(responseDynamicEntity != null && responseDynamicEntity.Success){
+            dynamic dynamicEntity = responseDynamicEntity.Data;
+            var modal = await SDKDialogService.ShowCustomDialog(ds =>@<AditionalFields Business="@BusinessObj" IsCreate="true" DynamicEntity="dynamicEntity"/>,
+                    ShowTitle: false,
+                    standardWidth: SDKModalWidth.Large,
+                    CssClass: "aditional_fields_padding_0"
+                );
+            if(modal != null && modal == true){
+                await ModalConfirmMessage(modal);
+            }
+        }
+    }
+
+    public async Task ClickInEdit(int Rowid)
+    {
+        var responseDynamicEntity = await BusinessObj.Backend.Call("GetDynamicEntity", Rowid);
+        if(responseDynamicEntity != null && responseDynamicEntity.Success){
+            dynamic dynamicEntity = responseDynamicEntity.Data;
+            var modal = await SDKDialogService.ShowCustomDialog(ds =>@<AditionalFields Business="@BusinessObj" IsEdit="true" DynamicEntity="dynamicEntity"/>,
+                    ShowTitle: false,
+                    standardWidth: SDKModalWidth.Large,
+                    CssClass: "aditional_fields_padding_0"
+                );
+            if(modal != null && modal == true){
+                await ModalConfirmMessage(modal);
+            }
+        }
+    }
+
+    public async Task ModalConfirmMessage(bool response){
+        var confirm = await SDKDialogService.ShowConfirmDialog(@<div class="col-12 p-0"><ResourceViewer ResourceTag="Custom.AditionalFields.ConfirmMessage"/></div>);
+        if(confirm != null && confirm == true){
+            var currentUrl = NavigationManager.Uri;
+            NavigationService.NavigateTo(currentUrl, true);
+        }
     }
 }

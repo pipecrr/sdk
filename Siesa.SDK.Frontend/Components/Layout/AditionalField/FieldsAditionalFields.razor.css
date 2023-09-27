@@ -1,0 +1,11 @@
+.sdk_fields_aditional_background{
+    background: var(--color_back_2);
+}
+
+.border_right{
+    border-right: 3px solid white;
+}
+
+.border_bottom{
+    border-bottom: 3px solid white;
+}

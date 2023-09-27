@@ -5,6 +5,7 @@
 @using System
 @using Siesa.Global.Enums
 @using Siesa.SDK.Frontend.Components.Layout
+@using Siesa.SDK.Frontend.Components.Visualization  
 @inject ILayoutService LayoutService
 @inject NavigationManager NavigationManager
 @inject MenuService MenuService
@@ -16,31 +17,39 @@
 <div class="col-12 area1 pb-3 px-0">
 @if(breadcrumb != null && breadcrumb.Count > 0)
 {
-    <div class="position-absolute">
-        <button class="btn btn-sm layout_btn_standar-sm" type="button" title="@TooltipRecentMenu"
-         @onclick="@RecentMenuClick" @onclick:preventDefault >
-            <i class="fa-solid fa-clock-rotate-left"></i>
-        </button>
-        @if(IsOpenRecentMenu)
-        {
-            <div class="whcm_recent_box">
-                <div class="pt-3 pl-3 pr-3 pb-0 text-center">
-                    <h6 class="font-weight-bold m-0 border-bottom pb-3">
-                        <span>
-                            <ResourceViewer ResourceTag="Custom.SDKBreadcrumb.ButtonRecents" RowidCulture=@AuthenticationService.GetRoiwdCulture()/>
-                        </span>
-                    </h6>
-                </div>
-                <div class="whcm_recent_list">
-                    <RecentMenuComponent Click="@RecentMenuClick"/>
-                </div>
-            </div>
-        }
-    </div>
-}
-    <nav class="pl-4 ml-3" aria-label="breadcrumb">
-        @if(breadcrumb != null && breadcrumb.Count > 0)
-        {
+    <div class="d-flex align-items-center">
+        <div>
+            <button class="btn btn-sm layout_btn_standar-sm" type="button" title="@TooltipRecentMenu"
+            @onclick="@RecentMenuClick" @onclick:preventDefault id="BreadCrum_RecentMenu">
+                <SDKIcon Name="fa-clock-rotate-left"/>
+            </button>
+
+                <SDKDropDown @bind-IsOpen="@IsOpenRecentMenu"
+                    CssClass="whcm_recent_box" 
+                    PositionTarget="#BreadCrum_RecentMenu"
+                    PositionMode="DropDownPositionMode.Bottom"
+                    FooterVisible="true" HeaderVisible="true"
+                    ResourceTag="BreadCrum_RecentMenu">
+
+                    <HeaderTemplate>
+                        <div class="pt-3 pl-3 pr-3 pb-0 text-center width_content">
+                            <h6 class="font-weight-bold m-0 border-bottom pb-3">
+                                <span>
+                                    <ResourceViewer ResourceTag="Custom.SDKBreadcrumb.ButtonRecents" RowidCulture=@AuthenticationService.GetRoiwdCulture()/>
+                                </span>
+                            </h6>
+                        </div>
+                    </HeaderTemplate>
+
+                    <BodyTemplate>
+                        <div class="whcm_recent_list">
+                            <RecentMenuComponent Click="@RecentMenuClick"/>
+                        </div>
+                    </BodyTemplate>
+
+                </SDKDropDown>
+        </div>
+        <nav class="pl-2" aria-label="breadcrumb">
             <ol class="breadcrumb p-0">
                 @for(var i = 0; i < breadcrumb.Count; i++)
                 {
@@ -66,22 +75,29 @@
                     </li>
                 }
             </ol>
-        }
-    </nav>
+        </nav>
+    </div>
+}else{
+    <div class="sdk-breadcrumb-empty">&nbsp;</div>
+}
+
     <nav class="pt-3 pt-sm-0" aria-label="breadcrumb">
+        <ol class="breadcrumb p-0">
         @if(LayoutService != null && LayoutService?.StyleName != null){
-            <ol class="breadcrumb p-0">
-                @if(LayoutService?.StyleName == "toolbar_edition")
-                {
-                    <li class="@("bullet-breadcrumb " + LayoutService?.StyleName)"></li>
-                    <li class="estado">En edición</li>
-                }else if(LayoutService?.StyleName == "toolbar_creation")
-                {
-                    <li class="@("bullet-breadcrumb " + LayoutService?.StyleName)"></li>
-                    <li class="estado">En creación</li>
-                }
-            </ol>
+            @if(LayoutService?.StyleName == "toolbar_edition")
+            {
+                <li class="@("bullet-breadcrumb " + LayoutService?.StyleName)"></li>
+                <li class="estado">En edición</li>
+            }else if(LayoutService?.StyleName == "toolbar_creation")
+            {
+                <li class="@("bullet-breadcrumb " + LayoutService?.StyleName)"></li>
+                <li class="estado">En creación</li>
+            }else{
+                <li class="estado">&nbsp;</li>
+            }
+            
         }
+        </ol>
     </nav>
 </div>
 
@@ -110,6 +126,7 @@
 
     private void OnMenuLoaded(object sender, EventArgs e)
     {
+        SetBreadCrum(NavigationManager.Uri);
         StateHasChanged();
     }
 

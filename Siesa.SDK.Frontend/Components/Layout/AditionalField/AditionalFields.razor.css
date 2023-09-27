@@ -1,0 +1,26 @@
+
+.sdk_aditional_fields_titleBar,
+.sdk_aditional_fields_footerBar
+{
+    background-color: var(--rz-dialog-title-background-color);
+    padding: var(--rz-dialog-title-padding);
+    font-size: var(--rz-dialog-title-font-size);
+    line-height: var(--rz-dialog-title-line-height);
+    border-bottom: var(--rz-dialog-title-border);
+}
+
+.sdk_aditional_fields_title{
+    font-weight: var(--rz-dialog-title-font-weight);
+    letter-spacing: var(--rz-dialog-title-letter-spacing);
+    color: var(--rz-dialog-title-color);
+    display: inline;
+}
+
+.sdk_aditional_fields_footer{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.sdk_aditional_fields_close{
+    float: right;
+}

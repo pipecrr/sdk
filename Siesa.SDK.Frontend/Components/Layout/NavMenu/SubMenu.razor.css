@@ -31,7 +31,7 @@
     width: calc(283px + 48px);
     /* cambio */
     max-width: calc(283px + 48px);
-    background: var(--color_light);
+    background: var(--color_light_nav);
      /* cambio */
     border-radius: 0;
     height: 100vh;

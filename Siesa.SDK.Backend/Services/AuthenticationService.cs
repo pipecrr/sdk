@@ -14,9 +14,10 @@ namespace Siesa.SDK.Backend.Services
         private string _secretKey;
         private int _minutesExp;
         public short RowidCultureChanged { get; set; } = 0;
-        public AuthenticationService(){
-            _minutesExp = 120; //TODO: get from config
-            _secretKey = "testsecretKeyabc$"; //TODO: get from config
+        private ISDKJWT _sdkJWT;
+        public AuthenticationService(ISDKJWT sdkJWT)
+        {
+            _sdkJWT = sdkJWT;
         }
 
         private JwtUserData? _user;
@@ -26,10 +27,28 @@ namespace Siesa.SDK.Backend.Services
                 return null;
             }
             if(_user == null){
-                _user = new SDKJWT(_secretKey, _minutesExp).Validate(UserToken);
+                try
+                {
+                     _user = _sdkJWT.Validate<JwtUserData>(UserToken);
+
+                }catch (System.Exception)
+                {
+                        
+                     _user = null;
+                }
+              
             }
             return _user;
         }}
+
+        /// <summary>
+        /// Portal user. This property represents the portal user associated with the session.
+        /// </summary>
+        public PortalUserJwt PortalUser {
+            get {
+                return User?.PortalUser;
+            }
+        }
 
         public async Task SetToken(string token, bool saveLocalStorage = true)
         {
@@ -41,8 +60,13 @@ namespace Siesa.SDK.Backend.Services
             throw new NotImplementedException();
         }
 
-        public Task Login(string username, string password, short rowIdDBConnection, 
-            bool IsUpdateSession = false,short rowIdCompanyGroup = 1)
+        public Task Login(string username, string password, short rowidDbConnection, 
+            bool isUpdateSession = false,short rowIdCompanyGroup = 1)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task LoginPortal(string username, string password, short rowidDbConnection, bool isUpdateSession = false, short rowidCompanyGroup = 1)
         {
             throw new NotImplementedException();
         }
@@ -51,7 +75,10 @@ namespace Siesa.SDK.Backend.Services
         {
             throw new NotImplementedException();
         }
-
+        public Task LogoutPortal()
+        {
+            throw new NotImplementedException();
+        }
         public Task SetCustomRowidCulture(short rowid)
         {
             throw new NotImplementedException();
@@ -64,7 +91,14 @@ namespace Siesa.SDK.Backend.Services
 
         public short GetRoiwdCulture()
         {
-            throw new NotImplementedException();
+            if (User != null)
+            {
+                return User.RowidCulture;
+            }
+            else
+            {
+                return 0;
+            }
         }
 
         public Task SetRowidCompanyGroup(short rowid)
@@ -99,16 +133,45 @@ namespace Siesa.SDK.Backend.Services
 
         public async Task<bool> IsValidToken()
         {
-            var user = new SDKJWT(_secretKey, _minutesExp).Validate(UserToken);
+            var user = _sdkJWT.Validate<JwtUserData>(UserToken);
             return user != null;
+            // var user = new SDKJWT(_secretKey, _minutesExp).Validate(UserToken);
+            // return user != null;
         }
-        public async Task<bool> ForgotPasswordAsync(string email){
+
+        /// <summary>
+        /// Method to send an email to the user with the password recovery link.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="isPortal"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void ForgotPasswordAsync(string email, bool isPortal = false){
              throw new NotImplementedException();
         }
-        public async Task<bool> ValidateUserToken(int rowidUser){
+
+
+        /// <summary>
+        /// Method to validate the user token for password recovery.
+        /// </summary>
+        /// <param name="userToken"></param>
+        /// <param name="isPortal"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<bool> ValidateUserToken(string userToken, bool isPortal){
             throw new NotImplementedException();
         }
-        public async Task<bool> ChangePassword(int rowidUser, string NewPassword="", string ConfirmPassword=""){
+
+        /// <summary>
+        /// Method to change the user password.
+        /// </summary>
+        /// <param name="userToken"></param>
+        /// <param name="rowIdDBConnection"></param>
+        /// <param name="NewPassword"></param>
+        /// <param name="ConfirmPassword"></param>
+        /// <param name="isPortal"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<bool> ChangePassword(string userToken,short rowIdDBConnection, string NewPassword, string ConfirmPassword,bool isPortal = false)
+        {
              throw new NotImplementedException();
         }
 
@@ -127,6 +190,29 @@ namespace Siesa.SDK.Backend.Services
         }
         
         public string GetUserPhoto()
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task SetPreferencesUser(UserPreferencesDTO preferences)
+        {
+            throw new NotImplementedException();
+        }
+        public UserPreferencesDTO GetPreferencesUser()
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task SetUserPhoto(string _data, bool saveLocalStorage = true){
+            throw new NotImplementedException();
+        }
+
+        public string GetThemeStyle()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> LoginSessionByToken(string userAccesstoken, short rowidDBConnection)
         {
             throw new NotImplementedException();
         }

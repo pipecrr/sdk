@@ -5,5 +5,6 @@ namespace Siesa.SDK.Shared.DTOS
         public string FileType { get; set; }
         public string FileName { get; set; }
         public byte[]? FileContent { get; set; }
+        public int RowidAttachment { get; set; }
     }
 }

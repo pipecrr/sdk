@@ -21,6 +21,20 @@ namespace Siesa.SDK.Entities
 		public List<E00040_Feature> Childs {get; set;}
 		[NotMapped]
 		public bool IsChildOfAnyFeature {get; set;}
+		[NotMapped]
+        [JsonIgnore]
+        public virtual bool? Show {get; set;}
+		[NotMapped]
+		[JsonIgnore]
+		public string ResourceMessage {get; set;}
+		[NotMapped]
+		[JsonIgnore]
+		public List<string> ActionsResourcesMessages {get; set;}
 
-	}
+        public override string ToString()
+        {
+            return $"{BusinessName}";
+        }
+
+    }
 }

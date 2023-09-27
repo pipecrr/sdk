@@ -7,6 +7,9 @@ using System.Collections;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Collections.Generic;
+using System.Linq.Dynamic.Core;
+using System.Reflection;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -16,6 +19,7 @@ using Microsoft.EntityFrameworkCore.Utilities;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Siesa.Global.Enums;
+using Siesa.SDK.Backend.Extensions;
 using Siesa.SDK.Shared.Utilities;
 //using System.Linq.Dynamic.Core;
 
@@ -30,8 +34,9 @@ namespace Siesa.SDK.Backend.Access
         private readonly DbSet<TEntity> set;
         private readonly IQueryable<TEntity> query;
         private SDKContext _context;
-
         private IAuthenticationService AuthenticationService { get; set; }
+        private IServiceProvider _provider;
+        protected dynamic _dbFactory;
 
         private EntityEntry<TEntity> EntryWithoutDetectChanges(TEntity entity)
         => new(_context.GetDependencies().StateManager.GetOrCreateEntry(entity, EntityType));
@@ -55,65 +60,76 @@ namespace Siesa.SDK.Backend.Access
             }
         }
 
-        public DbSetProxy(IAuthenticationService authenticationService, SDKContext context, DbSet<TEntity> set)
-        : this(authenticationService, context, set, set)
+        public DbSetProxy(IAuthenticationService authenticationService, SDKContext context, DbSet<TEntity> set, IServiceProvider provider = null, bool ignoreVisibility = false)
+        : this(authenticationService, context, set, set, provider, ignoreVisibility)
         {
         }
 
-        public DbSetProxy(IAuthenticationService authenticationService, SDKContext context, DbSet<TEntity> set, IQueryable<TEntity> query)
+        public DbSetProxy(IAuthenticationService authenticationService, SDKContext context, DbSet<TEntity> set, IQueryable<TEntity> query, IServiceProvider provider = null, bool ignoreVisibility = false)
         {
             AuthenticationService = authenticationService;
             this.set = set;
             this._context = context;
             this.query = query;
+            this._provider = provider;
             //Check if the entity is a BaseSDK
-            if (typeof(BaseSDK<>).IsAssignableFrom(typeof(TEntity)))
-            {
-                //Check if the entity has a dataannotation named "SDKAuthorization"
-                var dataAnnotation = typeof(TEntity).GetCustomAttributes(typeof(SDKAuthorization), false);
-                if (dataAnnotation.Length > 0)
+
+            Type entytyType = typeof(TEntity);
+            //Check if the entity has a dataannotation named "SDKAuthorization"
+            var dataAnnotation = entytyType.GetCustomAttributes(typeof(SDKAuthorization), false);
+            if(EvaluateVisibility(entytyType, ignoreVisibility, dataAnnotation)){
+                int currentUser = 0;
+                if (AuthenticationService != null && AuthenticationService.User != null)
                 {
-                    int current_user = 0;
-                    if (AuthenticationService != null && AuthenticationService.User != null)
+                    currentUser = AuthenticationService.User.Rowid;
+                }
+
+                bool hasPropetyIsPrivate = entytyType.GetProperty("IsPrivate") != null;
+
+                //Get the table name
+                var authorizationTableName = GetNameAuthorizationTable(dataAnnotation, entytyType);
+                
+
+                //Get the type of the authorization table
+                Type authEntityType = entytyType.Assembly.GetType(authorizationTableName);
+                if(authEntityType != null && _provider != null){
+
+                    Type dbContextFactoryGenericType = typeof(IDbContextFactory<>);
+                    Type desiredType = context.GetType();
+                    Type specificDbContextFactoryType = dbContextFactoryGenericType.MakeGenericType(desiredType);
+                    _dbFactory = _provider.GetService(specificDbContextFactoryType);
+
+                    
+                    dynamic dataAuthorizedU = null;
+                    dynamic dataUnauthorizedU = null;
+                    using (SDKContext otherContext = _dbFactory.CreateDbContext())
                     {
-                        current_user = AuthenticationService.User.Rowid;
-                    }
+                        dynamic authSet = otherContext.GetType().GetMethod("Set", types: Type.EmptyTypes)?.MakeGenericMethod(authEntityType).Invoke(otherContext, null);
+                        otherContext.SetProvider(_provider);
+                        List<int> listUserGroup = otherContext.AllSet<E00225_UserDataVisibilityGroup>().Include("DataVisibilityGroup").Where(x => x.RowidUser == currentUser && x.DataVisibilityGroup.Status == enumStatusBaseMaster.Active).Select(x => x.RowidDataVisibilityGroup).ToList();
+                        dataAuthorizedU = GetDataUByRestrictionType(authSet, currentUser, 2, listUserGroup);
+                        dataUnauthorizedU = GetDataUByRestrictionType(authSet, currentUser, 1, listUserGroup);
+                    }                    
+                    
+                    bool hasAuthDefaulConfig = ((IEnumerable<dynamic>)dataAuthorizedU).Any(x => x.RowidRecord == null);
 
-                    //Get the table name
-                    var authorizationTableName = ((SDKAuthorization)dataAnnotation[0]).TableName;
-                    //Check if the table name is not empty
-                    if (string.IsNullOrEmpty(authorizationTableName))
+                    List<int?> rowidsAuthorizedU = GetRowidsAuthorizedU(dataAuthorizedU, dataUnauthorizedU);
+                    List<int?> rowidsUnauthorizedU = GetRowidsUnauthorizedU(dataAuthorizedU, dataUnauthorizedU);
+                    
+                    Type typeBaseSdk = typeof(BaseSDK<>);
+                    Type elementType = entytyType.GetProperty("Rowid")?.PropertyType;
+                    Type specificBaseSdk = typeBaseSdk.MakeGenericType(elementType);
+                    var newQuery = ((IQueryable)query).Cast(specificBaseSdk);
+                    if (rowidsAuthorizedU.Any() || rowidsUnauthorizedU.Any()){
+                        
+                        newQuery = EvaluateAuthorization(rowidsAuthorizedU, newQuery, hasAuthDefaulConfig, 2, hasPropetyIsPrivate);
+                        newQuery = EvaluateAuthorization(rowidsUnauthorizedU, newQuery, hasAuthDefaulConfig, 1, hasPropetyIsPrivate);
+                    }
+                    else
                     {
-                        //Get table name from the context
-                        authorizationTableName = typeof(TEntity).Name;
-
-                        //Replace the first character of the table name with the letter "u"
-                        if (authorizationTableName.Length > 0)
-                        {
-                            authorizationTableName = "U" + authorizationTableName.Substring(1);
-                        }
-
-                        authorizationTableName = $"{typeof(TEntity).Namespace}.{authorizationTableName}";
+                        newQuery = newQuery.Where("Rowid == 0");
                     }
-
-                    Type authEntityType = typeof(TEntity).Assembly.GetType(authorizationTableName);
-                    var authSet = (IQueryable<BaseUserPermission<TEntity, Int64>>)_context.GetType().GetMethod("Set", types: Type.EmptyTypes).MakeGenericMethod(authEntityType).Invoke(_context, null);
-
-                    var sdk_query = ((IQueryable<BaseSDK<int>>)query); //TODO: Cambiar tipo de dato en el generic, según la clase
-                    var join_sql = sdk_query.Join(authSet,
-                        e => e.Rowid,
-                        u => u.RowidRecord,
-                        (e, u) => new { e, u })
-                        .Where(
-                            x => ((
-                                x.u.UserType == PermissionUserTypes.User && x.u.RowidUser == current_user
-                                && x.u.AuthorizationType == PermissionAuthTypes.Query_Tx
-                            )
-                            || false //TODO: Add other authorization types
-                            )
-                        );
-                    sdk_query = join_sql.Select(x => x.e);
-                    this.query = sdk_query.Cast<TEntity>();
+                    query = newQuery.Cast<TEntity>();
                 }
             }
 
@@ -155,9 +171,232 @@ namespace Siesa.SDK.Backend.Access
                 }
             }else if(typeof(TEntity) == typeof(E00201_Company)){
                 this.query = this.FilterCompanyEntity(query);
+            }else{
+                this.query = query;
             }
         }
 
+        private static bool EvaluateVisibility(Type entityType, bool ignoreVisibility, object[] dataAnnotation)
+        {
+            bool inheritsFromBaseSdk = InheritsFromBaseSDK(entityType);
+            bool result = inheritsFromBaseSdk && !ignoreVisibility && dataAnnotation.Length > 0;
+            return result;
+        }
+
+        private static List<int?> GetRowidsUnauthorizedU(dynamic dataAuthorizedU, dynamic dataUnauthorizedU)
+        {
+            List<int?> rowidsUnauthorizedU = ((IEnumerable<dynamic>)dataUnauthorizedU).Where(
+            (Func<dynamic, bool>)(x =>
+            {
+                bool result = true;
+                bool hasAuthDefaulConfigUser = ((IEnumerable<dynamic>)dataAuthorizedU).Any(y => y.RowidRecord == null && y.RowidDataVisibilityGroup == null);
+                if (hasAuthDefaulConfigUser && x.RowidDataVisibilityGroup != null)
+                {
+                    return false;
+                }
+
+                if (x.RowidRecord == null)
+                {
+                    return false;
+                }
+
+                //result is false if the record is in the authorized list as user
+                result = !(((IEnumerable<dynamic>)dataAuthorizedU)
+                    .Any(y => y.RowidRecord == x.RowidRecord && y.RowidDataVisibilityGroup == null));
+                        
+                return result;
+            })).Select((Func<dynamic, int?>)(x => x.RowidRecord)).Distinct().ToList();
+            return rowidsUnauthorizedU;
+        }
+
+        private static List<int?> GetRowidsAuthorizedU(dynamic dataAuthorizedU, dynamic dataUnauthorizedU)
+        {
+            List<int?> rowidsAuthorizedU = ((IEnumerable<dynamic>)dataAuthorizedU).Where(
+            (Func<dynamic, bool>)(x =>
+            {
+                bool result = true;
+                bool hasUnAuthDefaulConfigUser = ((IEnumerable<dynamic>)dataUnauthorizedU).Any(y => y.RowidRecord == null && y.RowidDataVisibilityGroup == null);
+                if (hasUnAuthDefaulConfigUser && x.RowidDataVisibilityGroup != null)
+                {
+                    return false;
+                }
+                //result is false if the record is in the unauthorized list as user 
+                result = !(((IEnumerable<dynamic>)dataUnauthorizedU)
+                    .Any(y => y.RowidRecord == x.RowidRecord && y.RowidDataVisibilityGroup == null));
+                        
+                return result;
+            })).Select((Func<dynamic, int?>)(x => x.RowidRecord)).Distinct().ToList();
+            return rowidsAuthorizedU;
+        }
+
+        private static string GetNameAuthorizationTable(object[] dataAnnotation, Type entytyType)
+        {
+            string authorizationTableName = ((SDKAuthorization)dataAnnotation[0]).TableName;
+            //Check if the table name is not empty
+            if (string.IsNullOrEmpty(authorizationTableName))
+            {
+                //Get table name from the context
+                authorizationTableName = entytyType.Name;
+
+                //Replace the first character of the table name with the letter "u"
+                if (authorizationTableName.Length > 0)
+                {
+                    authorizationTableName = string.Concat("U", authorizationTableName.AsSpan(1));
+                }
+                authorizationTableName = $"{entytyType.Namespace}.{authorizationTableName}";
+            }
+
+            return authorizationTableName;
+        }
+
+        private static IQueryable EvaluateAuthorization(List<int?> dataAuthorizedU, IQueryable query, bool hasAuthDefaulConfig, int restrictionType, bool hasPropetyIsPrivate)
+        {
+            if(!dataAuthorizedU.Any()){
+                return query;
+            }
+            string logicOperator = GetLogicOperator(restrictionType);
+            string compare = GetComparisonOperator(restrictionType);
+            string isPrivateWhere = GetIsPrivateWhere(restrictionType, hasPropetyIsPrivate);
+            string restringedWhere = GetRestrictionWhere(hasAuthDefaulConfig);
+
+            bool evaluateIsPrivate = ShouldEvaluateIsPrivate(restrictionType, dataAuthorizedU, hasPropetyIsPrivate);
+            StringBuilder whereBuilder = BuildWhereClause(dataAuthorizedU, logicOperator, compare);
+
+            if (whereBuilder.Length > 0)
+            {
+                AppendIsPrivateAndRestriction(whereBuilder, evaluateIsPrivate, isPrivateWhere, restringedWhere);
+                query = query.Where(whereBuilder.ToString());
+            }
+            else
+            {
+                query = ApplyIsPrivateAndRestriction(query, evaluateIsPrivate, isPrivateWhere, restringedWhere);
+            }
+
+            return query;
+        }
+
+        private static string GetLogicOperator(int restrictionType)
+        {
+            return (restrictionType == 2) ? "||" : "&&";
+        }
+
+        private static string GetComparisonOperator(int restrictionType)
+        {
+            return (restrictionType == 2) ? "==" : "!=";
+        }
+
+        private static string GetIsPrivateWhere(int restrictionType, bool hasPropetyIsPrivate)
+        {
+            return (restrictionType == 2 && hasPropetyIsPrivate) ? "(IsPrivate == false)" : "";
+        }
+
+        private static string GetRestrictionWhere(bool hasAuthDefaulConfig)
+        {
+            return hasAuthDefaulConfig ? "" : "(Rowid == 0)";
+        }
+
+        private static bool ShouldEvaluateIsPrivate(int restrictionType, List<int?> dataAuthorizedU, bool hasPropetyIsPrivate)
+        {
+            return (restrictionType == 2) && dataAuthorizedU.Any(item => item == null) && hasPropetyIsPrivate;
+        }
+
+        private static StringBuilder BuildWhereClause(List<int?> dataAuthorizedU, string logicOperator, string compare)
+        {
+            StringBuilder whereBuilder = new StringBuilder();
+
+            foreach (int? item in dataAuthorizedU)
+            {
+                if (item != null)
+                {
+                    if (whereBuilder.Length > 0)
+                    {
+                        whereBuilder.Append($" {logicOperator} ");
+                    }
+                    whereBuilder.Append($"(Rowid {compare} {item})");
+                }
+            }
+
+            return whereBuilder;
+        }
+
+        private static void AppendIsPrivateAndRestriction(StringBuilder whereBuilder, bool evaluateIsPrivate, string isPrivateWhere, string restringedWhere)
+        {
+            if (evaluateIsPrivate)
+            {
+                whereBuilder.Insert(0, isPrivateWhere + " || (");
+                whereBuilder.Append(')');
+            }
+            if (restringedWhere.Length > 0)
+            {
+                whereBuilder.Insert(0, restringedWhere + " || (");
+                whereBuilder.Append(')');
+            }
+        }
+
+        private static IQueryable ApplyIsPrivateAndRestriction(IQueryable query, bool evaluateIsPrivate, string isPrivateWhere, string restringedWhere)
+        {
+            if (evaluateIsPrivate)
+            {
+                query = query.Where(isPrivateWhere);
+            }
+            if (restringedWhere.Length > 0)
+            {
+                query = query.Where(restringedWhere);
+            }
+
+            return query;
+        }
+
+
+        private static dynamic GetDataUByRestrictionType(dynamic authSet, int currentUser, int restrictionType, List<int> listUserGroup)
+        {
+            Assembly assemblyQueryableExtensions = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;				
+            var whereMethod = typeof(IQueryable).GetExtensionMethod(assemblyQueryableExtensions, "Where", new[] { typeof(IQueryable), typeof(string), typeof(object[])});
+            string whereUserStr = $"RowidUser == {currentUser}";
+            if (listUserGroup.Any())
+            {
+                whereUserStr += $"{GetStrigGroup(listUserGroup)}";
+            }
+            string filter = $"({whereUserStr}) AND (RestrictionType == {restrictionType})";
+            var queryUWhere = whereMethod.Invoke(authSet, new object[] { authSet, filter, Array.Empty<object>()});                    
+            var selectMethod = typeof(IQueryable).GetExtensionMethod(assemblyQueryableExtensions, "Select", new[] { typeof(IQueryable), typeof(string), typeof(object[]) });                    
+            var queryUSelect = selectMethod.Invoke(queryUWhere, new object[] { queryUWhere, $"new (np(RowidRecord) as RowidRecord, np(RestrictionType) as RestrictionType, np(RowidUser) as RowidUser, np(RowidDataVisibilityGroup) as RowidDataVisibilityGroup)", null });
+            
+            Assembly assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
+            var dynamicListMethod = typeof(IEnumerable).GetExtensionMethod(assemblyDynamic, "ToDynamicList", new[] { typeof(IEnumerable) });								
+            dynamic rowidsAuthorizationList = dynamicListMethod.Invoke(queryUSelect, new object[] { queryUSelect });
+            return rowidsAuthorizationList;
+        }
+
+        private static string GetStrigGroup(List<int> listUserGroup)
+        {
+            StringBuilder resultBuilder = new StringBuilder();
+    
+            foreach (int item in listUserGroup)
+            {
+                resultBuilder.Append($" OR RowidDataVisibilityGroup == {item}");
+            }
+    
+            return resultBuilder.ToString();
+        }
+
+
+        public static bool InheritsFromBaseSDK(Type derivedType)
+        {
+            Type baseSdkType = typeof(BaseSDK<>);
+
+            while (derivedType != null && derivedType != typeof(object))
+            {
+                if (derivedType.IsGenericType && derivedType.GetGenericTypeDefinition() == baseSdkType)
+                {
+                    return true;
+                }
+
+                derivedType = derivedType.BaseType;
+            }
+
+            return false;
+        }
         private IQueryable<TEntity> FilterGroupCompany<T>(IQueryable<TEntity> query)
         {
             if(AuthenticationService?.User == null)

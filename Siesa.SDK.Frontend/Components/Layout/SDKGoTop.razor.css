@@ -22,13 +22,13 @@
 .sdk_go_top_button:hover{
     background: var(--color_primary_dark);
 }
-.sdk_go_top_button i{
+.sdk_go_top_button ::deep i{
     position: absolute;
     font-size: 1.2rem;
     top: 49%;
     left: 50%;
     transform: translate(-50%, -50%) scale(0);
-    color: var(--color_light);
+    color: var(--color_light_text);
     transition: 0.2s;
 }
 .sdk_show{
@@ -40,7 +40,7 @@
     height: 3rem;
     z-index: 5;
 }
-.sdk_show i{
+.sdk_show ::deep i{
     transform: translate(-50%, -50%) scale(1);
 }
 

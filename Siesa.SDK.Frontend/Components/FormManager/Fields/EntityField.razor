@@ -11,11 +11,12 @@
         SetValue="@SetValue"
         FieldName="@FieldName"
         RelatedParams="@FieldOpt.RelatedParams"
-        RelatedFilters="@FieldOpt.RelatedFilters"
+        RelatedFilters="@_relatedFilters"
         Disabled="@FieldOpt.Disabled"
-        Filters="@FieldOpt.Filters"
+        Filters="@_filters"
         ParentBusinessObj = "@BaseModelObj"
         OnReady="@OnReady"
+        OnChange="@OnChange"
     />
 
     @FieldValidationTemplate

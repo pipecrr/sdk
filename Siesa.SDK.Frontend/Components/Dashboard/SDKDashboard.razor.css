@@ -1,0 +1,127 @@
+::deep .sdk-dashboard{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+} 
+
+::deep .plk-dd-draggable
+{
+    width: calc(50% - 8px);
+}     
+
+/*add this to avoid flickering*/
+::deep .plk-dd-inprogess > * {
+    pointer-events: none;
+}
+
+/*dropzone style style*/
+::deep .plk-dd-dropzone {
+    min-height: 50px;
+}
+
+/*drag drop styles*/
+
+::deep .plk-dd-spacing {
+    height: 10px;
+}
+
+::deep .plk-dd-spacing-dragged-over {
+    padding: 25px;
+}
+
+::deep .plk-dd-dragged-over {
+    background-color: lightgray;
+    opacity: 0.6;
+    animation: blinker 1s linear infinite;
+}
+
+::deep .plk-dd-dragged-over > div {
+    background-color: lightgray;
+    opacity: 0.6;
+    animation: blinker 1s linear infinite;
+}
+
+::deep .plk-dd-dragged-over-denied {
+	background-color: red;
+	opacity: 0.6;
+	animation: blinker 1s linear infinite;
+}
+
+::deep .plk-dd-in-transit {
+    opacity: 0;
+}
+
+::deep .plk-dd-in-transit > div {
+     opacity: 0;
+}
+
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
+}
+
+::deep .blink_me {
+    animation: blinker 1s linear infinite;
+}
+
+
+::deep .plk-dd-noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
+.whcm_head_profile{
+    /* padding-left: 6.875rem !important; */
+    padding-top: 1rem !important;
+    padding-bottom: 1rem;
+}
+/* .dash_back
+{
+  
+} */
+.dash_back::before {
+    content: '';
+    background: #6E6E6E;
+    position: fixed;
+    width: 460px;
+    height: 460px;
+    left: 0;
+    top: 0;
+    clip-path: polygon(0 0, 0% 100%, 100% 0);
+    opacity: 0.08;
+}
+
+.dash_back::after {
+    content: '';
+    background: #6E6E6E;
+    position: fixed;
+    width: 460px;
+    height: 460px;
+    right: 0;
+    bottom: 0;
+    clip-path: polygon(100% 100%, 0% 100%, 100% 0);
+    opacity: 0.08;
+    z-index: -1;
+}
+
+@media (max-width: 991.98px){
+
+    ::deep .plk-dd-draggable
+    {
+        width: 100%;
+    }     
+
+}
+
+@media (max-width: 575.98px){
+    .whcm_head_profile{
+        padding-left: 1rem !important;
+        padding-top: 0rem !important;
+    }
+}

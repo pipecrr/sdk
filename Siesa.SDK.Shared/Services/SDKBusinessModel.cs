@@ -106,7 +106,12 @@ namespace Siesa.SDK.Shared.Services
             foreach (var arg in args)
             {
                 var value = JsonConvert.SerializeObject(arg, Formatting.None, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
-                exposedMethodParams.Add(new ExposedMethodParam() { Name = "", Value = value, Type = arg.GetType().FullName });
+                string typeFullName = null;
+                if(arg != null)
+                {
+                    typeFullName = arg.GetType().FullName;
+                }
+                exposedMethodParams.Add(new ExposedMethodParam() { Name = "", Value = value, Type = typeFullName });
             }
             var grpcResult = await Backend.CallBusinessMethod(Name, method, exposedMethodParams);
             return await transformCallResponse(grpcResult);
@@ -118,7 +123,12 @@ namespace Siesa.SDK.Shared.Services
             foreach (var arg in args)
             {
                 var value = JsonConvert.SerializeObject(arg.Value, Formatting.None, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
-                exposedMethodParams.Add(new ExposedMethodParam() { Name = arg.Key, Value = value, Type = arg.Value.GetType().FullName });
+                string typeFullName = null;
+                if(arg.Value != null)
+                {
+                    typeFullName = arg.Value.GetType().FullName;
+                }
+                exposedMethodParams.Add(new ExposedMethodParam() { Name = arg.Key, Value = value, Type = typeFullName });
             }
             var grpcResult = await Backend.CallBusinessMethod(Name, method, exposedMethodParams);
             return await transformCallResponse(grpcResult);
@@ -131,6 +141,22 @@ namespace Siesa.SDK.Shared.Services
             try
             {
                 result = await Backend.GetDataBusinessObj(Name, skip, take, filter, orderBy, includeCount, extraFields);
+            }
+            catch (RpcException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return result;
+        }
+        /*
+        List<string> selectFields, int? skip, int? take, string filter = "", string orderBy = "", QueryFilterDelegate<T> queryFilter = null, bool includeCount = false
+        */
+        public async Task<Protos.LoadResult> GetUData(int? skip, int? take, string filter = "", string uFilter = "", string orderBy = "", bool includeCount = false, List<string> extraFields = null)
+        {
+            Protos.LoadResult result = new();
+            try
+            {
+                result = await Backend.GetUData(Name, skip, take, filter, uFilter, orderBy, includeCount, extraFields);
             }
             catch (RpcException ex)
             {

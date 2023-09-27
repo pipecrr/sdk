@@ -1,0 +1,52 @@
+
+<select class="select_connect" id="SelectConnect" @onchange="OnChangeSelectItem">
+
+    <option ><ResourceViewer ResourceTag="Custom.SDK.Import.FieldNotAsociate"/></option>
+
+        @foreach (var field in FieldsEntity)
+        { 
+            bool selectedValue = false;
+            if(ImportComponent._newKeys.ContainsKey(FieldFile.Key.ToString()))
+            {
+                selectedValue = ImportComponent._newKeys[FieldFile.Key.ToString()] == field.Value;
+            }
+            <option value="@field.Value" selected="@selectedValue" >
+                @field.Key
+            </option>
+        }
+
+</select>
+
+@code
+{
+    [CascadingParameter] public ImportComponent ImportComponent { get; set; } 
+
+    [Parameter] public dynamic FieldFile { get; set; }
+
+    [Parameter] public Dictionary<string, string> FieldsEntity { get; set; } = new Dictionary<string, string>();
+    
+
+    public void OnChangeSelectItem(ChangeEventArgs e)
+    {
+        if(!ImportComponent._newKeys.ContainsKey(FieldFile.Key.ToString()))
+        {
+            ImportComponent._newKeys.Add(FieldFile.Key.ToString(), e.Value.ToString());
+        }else{
+            ImportComponent._newKeys[FieldFile.Key.ToString()] = e.Value.ToString();
+        }
+    }
+    protected override void OnInitialized()
+    {
+        if(FieldsEntity.Any(x=>x.Key == FieldFile.Key))
+        {
+            string newKey = FieldsEntity.Where(x=>x.Key == FieldFile.Key).Select(x=>x.Value).FirstOrDefault();
+
+            if(!ImportComponent._newKeys.ContainsKey(FieldFile.Key))
+            {
+                ImportComponent._newKeys.Add(FieldFile.Key, newKey);
+            }
+
+        }
+        base.OnInitialized();
+    }
+}

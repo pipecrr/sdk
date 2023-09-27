@@ -7,6 +7,8 @@ using Siesa.SDK.Entities;
 using Siesa.SDK.Shared.Services;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
+using System.Text;
 
 
 namespace Siesa.SDK.Shared.Criptography
@@ -18,10 +20,14 @@ namespace Siesa.SDK.Shared.Criptography
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = KeyHelper.BuildRsaSigningKey(secretKey);
 
+            var serializerSettings = new Newtonsoft.Json.JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] {
-                    new Claim("data", Newtonsoft.Json.JsonConvert.SerializeObject(data)),
+                    new Claim("data", Newtonsoft.Json.JsonConvert.SerializeObject(data,Formatting.None,serializerSettings)),
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(minutesExp),
                 SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.RsaSha256Signature, SecurityAlgorithms.Sha256Digest)
@@ -34,7 +40,8 @@ namespace Siesa.SDK.Shared.Criptography
         {
             if (String.IsNullOrEmpty(token) || String.IsNullOrEmpty(publicKey))
             {
-                throw new Exception("Invalid Token");
+                //throw new Exception("Invalid Token");
+                return default(T);
             }
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = KeyHelper.BuildRsaSigningKey(publicKey);

@@ -53,18 +53,18 @@ namespace Siesa.SDK.GRPCServices
             };
         }
 
-        private void SetCurrentUser(string token)
+        private async Task SetCurrentUser(string token)
         {
-            _authenticationService.SetToken(token);
+            await _authenticationService.SetToken(token);
             if(_tenantProvider != null && _authenticationService?.User != null)
             {
-                _tenantProvider.SetTenantByRowId(_authenticationService.User.RowIdDBConnection);
+                await _tenantProvider.SetTenantByRowId(_authenticationService.User.RowIdDBConnection, _authenticationService.User.HostName);
             }
         }
 
-        public override Task<Protos.BusinessObjResponse> GetBusinessObj(Protos.GetBusinessObjRequest request, ServerCallContext context)
+        public override async Task<Protos.BusinessObjResponse> GetBusinessObj(Protos.GetBusinessObjRequest request, ServerCallContext context)
         {
-            SetCurrentUser(request.CurrentUserToken);
+            await SetCurrentUser(request.CurrentUserToken);
             BusinessModel businessRegistry = _backendRouterService.GetBackend(request.BusinessName);
             var businessType = FindType(businessRegistry.Namespace + "." + businessRegistry.Name);
             dynamic businessObj = ActivatorUtilities.CreateInstance(_provider,businessType);
@@ -77,11 +77,15 @@ namespace Siesa.SDK.GRPCServices
 
 
             response.Response = Newtonsoft.Json.JsonConvert.SerializeObject(result, Newtonsoft.Json.Formatting.None, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
-            return Task.FromResult(response);
+            return response;
         }
 
         private Type FindType(string name, bool includeSystemLibs = false)
         {
+            if(string.IsNullOrEmpty(name))
+            {
+                return null;
+            }
             Type businessType = null;
             foreach (Assembly ass in AppDomain.CurrentDomain.GetAssemblies())
             {
@@ -94,9 +98,9 @@ namespace Siesa.SDK.GRPCServices
             return businessType;
         }
 
-        public override Task<Protos.SaveBusinessObjResponse> SaveBusinessObj(Protos.SaveBusinessObjRequest request, ServerCallContext context)
+        public override async Task<Protos.SaveBusinessObjResponse> SaveBusinessObj(Protos.SaveBusinessObjRequest request, ServerCallContext context)
         {
-            SetCurrentUser(request.CurrentUserToken);
+            await SetCurrentUser(request.CurrentUserToken);
             var response = new Protos.SaveBusinessObjResponse();
             BusinessModel businessRegistry = _backendRouterService.GetBackend(request.BusinessName);
             var businessType = FindType(businessRegistry.Namespace + "." + businessRegistry.Name);
@@ -105,12 +109,12 @@ namespace Siesa.SDK.GRPCServices
             dynamic businessObj = Newtonsoft.Json.JsonConvert.DeserializeObject(request.Business, businessType);
             businessObj.SetProvider(_provider);
             response.Id = businessObj.Save();
-            return Task.FromResult(response);
+            return response;
         }
 
-        public override Task<Protos.DeleteBusinessObjResponse> DeleteBusinessObj(Protos.DeleteBusinessObjRequest request, ServerCallContext context)
+        public override async Task<Protos.DeleteBusinessObjResponse> DeleteBusinessObj(Protos.DeleteBusinessObjRequest request, ServerCallContext context)
         {
-            SetCurrentUser(request.CurrentUserToken);
+            await SetCurrentUser(request.CurrentUserToken);
             BusinessModel businessRegistry = _backendRouterService.GetBackend(request.BusinessName);
             var businessType = FindType(businessRegistry.Namespace + "." + businessRegistry.Name);
             dynamic businessObj = ActivatorUtilities.CreateInstance(_provider,businessType);
@@ -120,12 +124,12 @@ namespace Siesa.SDK.GRPCServices
             var result = businessObj.Get(request.Id);
             businessObj.BaseObj = result;
             response = businessObj.Delete();
-            return Task.FromResult(response);
+            return response;
         }
 
-        public override Task<Protos.LoadResult> GetDataBusinessObj(Protos.GetDataBusinessObjRequest request, ServerCallContext context)
+        public override async Task<Protos.LoadResult> GetDataBusinessObj(Protos.GetDataBusinessObjRequest request, ServerCallContext context)
         {
-            SetCurrentUser(request.CurrentUserToken);
+            await SetCurrentUser(request.CurrentUserToken);
             BusinessModel businessRegistry = _backendRouterService.GetBackend(request.BusinessName);
             var businessType = FindType(businessRegistry.Namespace + "." + businessRegistry.Name);
             dynamic businessObj = ActivatorUtilities.CreateInstance(_provider,businessType);
@@ -137,12 +141,29 @@ namespace Siesa.SDK.GRPCServices
             response.TotalCount = result.TotalCount;
             response.GroupCount = result.GroupCount;
             response.Data.AddRange(((IEnumerable<object>)result.Data).Select(x => Newtonsoft.Json.JsonConvert.SerializeObject(x, Newtonsoft.Json.Formatting.None, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore })));
-            return Task.FromResult(response);
+            return response;
         }
 
-        public override Task<Protos.LoadResult> EntityFieldSearch(Protos.EntityFieldSearchRequest request, ServerCallContext context)
+        public override async Task<Protos.LoadResult> GetUDataBusinessObj(Protos.GetUDataRequest request, ServerCallContext context)
         {
-            SetCurrentUser(request.CurrentUserToken);
+            await SetCurrentUser(request.CurrentUserToken);
+            BusinessModel businessRegistry = _backendRouterService.GetBackend(request.BusinessName);
+            var businessType = FindType(businessRegistry.Namespace + "." + businessRegistry.Name);
+            dynamic businessObj = ActivatorUtilities.CreateInstance(_provider,businessType);
+            businessObj.SetProvider(_provider);
+
+            var result = businessObj.GetUData(request.Skip, request.Take, request.Filter, request.UFilter, request.OrderBy, null, request.IncludeCount, selectFields: request.SelectFields.ToList());
+
+            var response = new Protos.LoadResult();
+            response.TotalCount = result.TotalCount;
+            response.GroupCount = result.GroupCount;
+            response.Data.AddRange(((IEnumerable<object>)result.Data).Select(x => Newtonsoft.Json.JsonConvert.SerializeObject(x, Newtonsoft.Json.Formatting.None, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore })));
+            return response;
+        }
+
+        public override async Task<Protos.LoadResult> EntityFieldSearch(Protos.EntityFieldSearchRequest request, ServerCallContext context)
+        {
+            await SetCurrentUser(request.CurrentUserToken);
             BusinessModel businessRegistry = _backendRouterService.GetBackend(request.BusinessName);
             var businessType = FindType(businessRegistry.Namespace + "." + businessRegistry.Name);
             dynamic businessObj = ActivatorUtilities.CreateInstance(_provider,businessType);
@@ -154,12 +175,12 @@ namespace Siesa.SDK.GRPCServices
             response.TotalCount = result.TotalCount;
             response.GroupCount = result.GroupCount;
             response.Data.AddRange(((IEnumerable<object>)result.Data).Select(x => Newtonsoft.Json.JsonConvert.SerializeObject(x, Newtonsoft.Json.Formatting.None, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore })));
-            return Task.FromResult(response);
+            return response;
         }
 
-        public override Task<ValidateAndSaveBusinessObjResponse> ValidateAndSaveBusinessObj(ValidateAndSaveBusinessObjRequest request, ServerCallContext context)
+        public override async Task<ValidateAndSaveBusinessObjResponse> ValidateAndSaveBusinessObj(ValidateAndSaveBusinessObjRequest request, ServerCallContext context)
         {
-            SetCurrentUser(request.CurrentUserToken);
+            await SetCurrentUser(request.CurrentUserToken);
             BusinessModel businessRegistry = _backendRouterService.GetBackend(request.BusinessName);
             var businessType = FindType(businessRegistry.Namespace + "." + businessRegistry.Name);
             //dynamic x = ActivatorUtilities.CreateInstance(_provider,businessType);
@@ -168,13 +189,13 @@ namespace Siesa.SDK.GRPCServices
             businessObj.SetProvider(_provider);
 
             var response = businessObj.ValidateAndSave();
-            return Task.FromResult(response);
+            return response;
 
         }
 
-        public override Task<Protos.MenuGroupsResponse> GetMenuGroups(Protos.GetMenuGroupsRequest request, ServerCallContext context)
+        public override async Task<Protos.MenuGroupsResponse> GetMenuGroups(Protos.GetMenuGroupsRequest request, ServerCallContext context)
         {
-            SetCurrentUser(request.CurrentUserToken);
+            await SetCurrentUser(request.CurrentUserToken);
             dynamic dbFactory = _provider.GetService(typeof(IDbContextFactory<SDKContext>));
             List<E00060_Suite> menuGroups = new();
             using (SDKContext dbContext = dbFactory.CreateDbContext())
@@ -186,12 +207,12 @@ namespace Siesa.SDK.GRPCServices
             {
                 Response = JsonConvert.SerializeObject(menuGroups, Formatting.None, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore })
             };
-            return Task.FromResult(response);
+            return response;
         }
 
-        public override Task<Protos.MenuItemsResponse> GetMenuItems(Protos.GetMenuItemsRequest request, ServerCallContext context)
+        public override async Task<Protos.MenuItemsResponse> GetMenuItems(Protos.GetMenuItemsRequest request, ServerCallContext context)
         {
-            SetCurrentUser(request.CurrentUserToken);
+            await SetCurrentUser(request.CurrentUserToken);
             dynamic dbFactory = _provider.GetService(typeof(IDbContextFactory<SDKContext>));
             List<E00061_Menu> menuItems = new();
             using (SDKContext dbContext = dbFactory.CreateDbContext())
@@ -209,12 +230,12 @@ namespace Siesa.SDK.GRPCServices
             {
                 Response = JsonConvert.SerializeObject(menuItems, Formatting.None, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore })
             };
-            return Task.FromResult(response);
+            return response;
         }
 
-        public override Task<Protos.ExposedMethodResponse> ExecuteExposedMethod(Protos.ExposedMethodRequest request, ServerCallContext context)
+        public override async Task<Protos.ExposedMethodResponse> ExecuteExposedMethod(Protos.ExposedMethodRequest request, ServerCallContext context)
         {
-            SetCurrentUser(request.CurrentUserToken);
+            await SetCurrentUser(request.CurrentUserToken);
             var response = new Protos.ExposedMethodResponse();
             try
             {
@@ -230,7 +251,7 @@ namespace Siesa.SDK.GRPCServices
                 {
                     response.Success = false;
                     response.Errors.Add($"Method {methodName} not found in business {businessRegistry.Name}");
-                    return Task.FromResult(response);
+                    return response;
                 }
                 //check if method has custom attribute (SDKExposedMethod)
                 var customAttributes = method.GetCustomAttributes(typeof(SDKExposedMethod), false);
@@ -238,20 +259,20 @@ namespace Siesa.SDK.GRPCServices
                 {
                     response.Success = false;
                     response.Errors.Add($"Method {methodName} not exposed in business {businessRegistry.Name}");
-                    return Task.FromResult(response);
+                    return response;
                 }
                 var exposedMethod = customAttributes.FirstOrDefault() as SDKExposedMethod;
                 if(exposedMethod.Permissions.Length > 0){
                     var hasPermission = true;
                     if(_featurePermissionService != null){
                         try{
-                            List<int> permissions = exposedMethod.Permissions.ToList();
-                            hasPermission = _featurePermissionService.CheckUserActionPermissions(request.BusinessName,
-                                permissions, _authenticationService);
+                            List<string> permissions = exposedMethod.Permissions.ToList();
+                            hasPermission =  _featurePermissionService.CheckUserActionPermissions(request.BusinessName,
+                                permissions, _authenticationService).GetAwaiter().GetResult();
                             if(!hasPermission){
                                 response.Success = false;
                                 response.Errors.Add("Custom.Generic.Unauthorized");
-                                return Task.FromResult(response);
+                                return response;
                             }
                         }catch(Exception e){
                         }
@@ -287,8 +308,22 @@ namespace Siesa.SDK.GRPCServices
                     {
                         var paramName = methodParameter.Name;
                         var paramType = FindType(methodParameter.Type, true);
-                        var paramValue = JsonConvert.DeserializeObject(methodParameter.Value, paramType);
+                        object? paramValue = null;
+                        if(paramType != null)
+                        {
+                            paramValue = JsonConvert.DeserializeObject(methodParameter.Value, paramType);
+                        }
                         parameters = parameters.Append(paramValue).ToArray();
+                    }
+
+                    if (parameters.Length != method.GetParameters().Length)
+                    {
+                        //add missing parameters
+                        var missingParams = method.GetParameters().Length - parameters.Length;
+                        for (int i = 0; i < missingParams; i++)
+                        {
+                            parameters = parameters.Append(Type.Missing).ToArray();
+                        }
                     }
                 }
                 var resultMethod = method.Invoke(businessObj, parameters);
@@ -317,13 +352,13 @@ namespace Siesa.SDK.GRPCServices
                     response.Errors.AddRange(((IEnumerable<string>)resultMethod.GetType().GetProperty("Errors").GetValue(resultMethod)).Select(x => x));
                 }
                 
-                return Task.FromResult(response);
+                return response;
             }
             catch (System.Exception ex)
             {
                 response.Success = false;
                 response.Errors.Add($"Error executing exposed method {ex.Message}");
-                return Task.FromResult(response);
+                return response;
             }
             
         }

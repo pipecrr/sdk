@@ -116,7 +116,9 @@
                                 <tbody><tr>
                                   <td style="padding-right: 0px;padding-left: 0px;" align="left">
 
-                                    <img align="left" border="0" src="https://admin.catalogodesoftware.com/UserFiles/gen_files/multimedia/imagenes/empresa/Software_Empresas1.png" alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 20%;max-width: 113.6px;" width="113.6">
+                                    <img align="left" border="0" src="{{SiesaLogo}}" alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 20%;max-width: 113.6px;" width="113.6">
+
+                                    
 
                                   </td>
                                 </tr>
@@ -178,7 +180,7 @@
                             <td style="overflow-wrap:break-word;word-break:break-word;padding:16px 16px 0px;font-family: helvetica, sans-serif;" align="left">
 
                               <div style="color: #808791; line-height: 100%; text-align: center; word-wrap: break-word;">
-                                <p style="font-size: 14px; line-height: 100%;"><span style="font-size: 24px; line-height: 24px; font-family: helvetica, sans-serif;">Respuesta solicitud</span></p>
+                                <p style="font-size: 14px; line-height: 100%;"><span style="font-size: 24px; line-height: 24px; font-family: helvetica, sans-serif;">{{Title}}</span></p>
                               </div>
 
                             </td>
@@ -217,7 +219,7 @@
                             <td style="overflow-wrap:break-word;word-break:break-word;padding:0px 16px;font-family: helvetica, sans-serif;" align="left">
 
                               <div style="color: #585ad5; line-height: 140%; text-align: center; word-wrap: break-word;">
-                                <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 32px; line-height: 44.8px; font-family: helvetica, sans-serif;"><strong><span style="line-height: 44.8px; font-size: 32px;">Cambio de contraseña</span></strong>
+                                <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 32px; line-height: 44.8px; font-family: helvetica, sans-serif;"><strong><span style="line-height: 44.8px; font-size: 32px;">{{TitleChangePass}}</span></strong>
                                   </span>
                                 </p>
                               </div>
@@ -258,10 +260,10 @@
                             <td style="overflow-wrap:break-word;word-break:break-word;padding:4px 16px;font-family: helvetica, sans-serif;" align="left">
 
                               <div style="color: #19283f; line-height: 160%; text-align: left; word-wrap: break-word;">
-                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 14px; line-height: 22.4px;"><strong><span style="line-height: 22.4px; font-family: helvetica, sans-serif; font-size: 14px;">Tipo solicitud:</span></strong>
+                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 14px; line-height: 22.4px;"><strong><span style="line-height: 22.4px; font-family: helvetica, sans-serif; font-size: 14px;">{{RequestType}}</span></strong>
                                   </span>
                                 </p>
-                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 14px; line-height: 22.4px; font-family: helvetica, sans-serif;">Cambio de contraseña</span></p>
+                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 14px; line-height: 22.4px; font-family: helvetica, sans-serif;">{{TitleChangePass}}</span></p>
                               </div>
 
                             </td>
@@ -322,9 +324,10 @@
                                 <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 14px; line-height: 22.4px;"><strong><span style="line-height: 22.4px; font-family: helvetica, sans-serif; font-size: 14px;">Descripción:</span></strong>
                                   </span>
                                 </p>
-                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 14px; line-height: 22.4px; font-family: helvetica, sans-serif;">La solicitud realizada a través del portal de empleo para el cambio de contraseña se puede realizar haciendo click en el botón <strong>"Cambiar contraseña"</strong>, recuerde que este enlace vencerá <strong>{{LinkDueDate}}</strong>, una vez pasado el tiempo de vigencia deberá volver a iniciar el proceso de solicitud de cambio de contraseña.<br></span></p>
                                 <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 14px; line-height: 22.4px; font-family: helvetica, sans-serif;">
-                                  De clic en <strong>"Cambiar contraseña"</strong> para continuar con el proceso
+                                {{BodyText}} <strong>{{LinkDueDate}}</strong> {{BodyText2}}<br></span></p>
+                                <p style="line-height: 160%; font-size: 14px;"><span style="font-size: 14px; line-height: 22.4px; font-family: helvetica, sans-serif;">
+                                  {{TextFooter}}
                                 </p>
                               </div>
 
@@ -365,7 +368,7 @@
                               <div align="center">
                                 <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;font-family: helvetica, sans-serif;"><tr><td style="font-family: helvetica, sans-serif;" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="" style="height:35px; v-text-anchor:middle; width:193px;" arcsize="80%" stroke="f" fillcolor="#1031a3"><w:anchorlock/><center style="color:#FFFFFF;font-family: helvetica, sans-serif;"><![endif]-->
                                 <a href="{{PasswordRecoveryLink}}" target="_blank" style="box-sizing: border-box;display: inline-block;font-family: helvetica, sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #1031a3; border-radius: 28px;-webkit-border-radius: 28px; -moz-border-radius: 28px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;">
-                                  <span style="display:block;padding:8px 24px;line-height:120%;"><p style="font-size: 14px; line-height: 120%;"><span style="font-size: 16px; line-height: 19.2px; font-family: helvetica, sans-serif;"><strong><span style="line-height: 19.2px; font-size: 16px;">Cambiar contraseña</span></strong>
+                                  <span style="display:block;padding:8px 24px;line-height:120%;"><p style="font-size: 14px; line-height: 120%;"><span style="font-size: 16px; line-height: 19.2px; font-family: helvetica, sans-serif;"><strong><span style="line-height: 19.2px; font-size: 16px;">{{ButtonText}}</span></strong>
                                   </span>
                                   </p>
                                   </span>
@@ -412,7 +415,7 @@
                                 <tbody><tr>
                                   <td style="padding-right: 0px;padding-left: 0px;" align="right">
 
-                                    <img align="right" border="0" src="https://admin.catalogodesoftware.com/UserFiles/gen_files/multimedia/imagenes/empresa/Software_Empresas1.png" alt="" title="" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 34%;max-width: 68px;" width="68">
+                                    <img align="right" border="0" src="{{SiesaLogo}}" alt="" title="" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 34%;max-width: 68px;" width="68">
 
                                   </td>
                                 </tr>
@@ -442,8 +445,8 @@
                             <td style="overflow-wrap:break-word;word-break:break-word;padding:0px;font-family: helvetica, sans-serif;" align="left">
 
                               <div style="color: #19283f; line-height: 140%; text-align: left; word-wrap: break-word;">
-                                <p style="font-size: 14px; line-height: 140%; text-align: center;"><span style="font-size: 12px; line-height: 16.8px; font-family: helvetica, sans-serif;">© Siesa Enterprise 2.0</span></p>
-                              </div>
+                                <p style="font-size: 14px; line-height: 140%; text-align: center;"><span style="font-size: 12px; line-height: 16.8px; font-family: helvetica, sans-serif;">{{SiesaCopyRight}}</span></p>
+                                </div>
 
                             </td>
                           </tr>
@@ -469,7 +472,7 @@
                             <td style="overflow-wrap:break-word;word-break:break-word;padding:0px;font-family: helvetica, sans-serif;" align="left">
 
                               <div style="color: #19283f; line-height: 140%; text-align: left; word-wrap: break-word;">
-                                <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 12px; line-height: 16.8px; font-family: helvetica, sans-serif;">V 1.22.531.1</span></p>
+                                <p style="font-size: 14px; line-height: 140%;"><span style="font-size: 12px; line-height: 16.8px; font-family: helvetica, sans-serif;">{{ProjectVersion}}</span></p>
                               </div>
 
                             </td>

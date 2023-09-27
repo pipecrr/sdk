@@ -6,5 +6,6 @@ namespace Siesa.SDK.Shared.DTOS
         public string FileName { get; set; }
         public byte[] FileByte { get; set; }
         public string FileBase64 { get; set; }
+        public int Rowid { get; set; }
     }
 }

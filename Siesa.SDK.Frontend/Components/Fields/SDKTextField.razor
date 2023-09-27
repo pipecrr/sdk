@@ -12,6 +12,7 @@
     field-name="@FieldName"
     ClearButtonDisplayMode="@ClearButtonDisplayMode.Get()"
     TextExpression="@ValueExpression"
+    Rows="@Rows"
     @onfocusout="@_OnFocusOut"
     tabindex="1"
 >
@@ -32,6 +33,7 @@
     [Parameter] public string FieldName { get; set; }
     [Parameter] public Expression<Func<string>> ValueExpression { get; set; }
     [Parameter] public SDKClearButtonDisplayMode ClearButtonDisplayMode { get; set; }
+    [Parameter] public int Rows { get; set; } = 1;
     [Parameter] public Action OnFocusOut { get; set; } = () => { };
 
     private string GetCssClass()

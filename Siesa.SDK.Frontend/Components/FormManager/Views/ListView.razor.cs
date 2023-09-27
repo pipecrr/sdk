@@ -58,6 +58,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter]
         public bool AllowDetail { get; set; } = true;
         [Parameter]
+        public bool AllowExport { get; set; } = true;
+        [Parameter]
         public bool ShowSearchForm { get; set; } = true;
         [Parameter]
         public bool ShowList { get; set; } = true;
@@ -71,6 +73,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public bool ShowLinkTo {get; set;} = false;
         [Parameter]
         public bool FromEntityField {get; set;} = false;
+
+        [Parameter]
+        public string BLNameParentAttatchment { get; set; }
 
         [Inject]
         public ILocalStorageService localStorageService { get; set; }
@@ -109,9 +114,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private bool _isEditingFlex = false;
         private bool _isSearchOpen = false;
+        private bool _showActions = true;
         public String ErrorMsg = "";
         public List<String> ErrorList = new List<string>();
         private IList<dynamic> SelectedObjects { get; set; } = new List<dynamic>();
+        /// <summary>
+        /// Gets or sets the selected items.
+        /// </summary>
         [Parameter] 
         public IList<dynamic> SelectedItems { get; set; }
         private ListViewModel ListViewModel { get; set; }
@@ -154,11 +163,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private List<Button> ExtraButtons { get; set; }
         private Button CreateButton { get; set; }
         public RadzenDataGrid<object> _gridRef;
-
+        
+        /// <summary>
+        /// Gets or sets the fields hidden.
+        /// </summary>
         public List<FieldOptions> FieldsHidden { get; set; } = new List<FieldOptions>();
 
         public List<FieldOptions> SavedHiddenFields { get; set; } = new List<FieldOptions>();
-
+        public List<string> FieldsHiddenList { get; set; } = new List<string>();
         public string BLEntityName { get; set; }
 
         public string LastFilter { get; set; }
@@ -172,7 +184,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private bool CanEdit;
         private bool CanDelete;
         private bool CanDetail;
-        private bool CanList;
+        private bool CanAccess;
+        private bool CanImport;
+        private bool CanExport;
         private string defaultStyleSearchForm = "search_back position-relative";
         private string StyleSearchForm { get; set; } = "search_back position-relative";
         private Radzen.DataGridSelectionMode SelectionMode { get; set; } = Radzen.DataGridSelectionMode.Single;
@@ -327,14 +341,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                             }
                         }
                     }
-                    if(ExtraButtons.Count > 0){
-                        HasExtraButtons = true;
-                    }
+                    HasExtraButtons = ExtraButtons.Any(x => string.IsNullOrEmpty(x.Id));
                 }
                 UseFlex = ListViewModel.UseFlex;
                 FlexTake = ListViewModel.FlexTake;
                 ShowLinkTo = ListViewModel.ShowLinkTo;
                 ServerPaginationFlex = ListViewModel.ServerPaginationFlex;
+                _showActions = ListViewModel.ShowActions;
                 if(ListViewModel.AllowEdit != null){
                     AllowEdit = ListViewModel.AllowEdit.Value;
                 }
@@ -346,6 +359,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 }
                 if(ListViewModel.AllowCreate != null){
                     AllowCreate = ListViewModel.AllowCreate.Value;
+                }
+                if(ListViewModel.AllowExport != null){
+                    AllowExport = ListViewModel.AllowExport.Value;
                 }
                 //TODO: quitar cuando se pueda usar flex en los custom components
                 var fieldsCustomComponent = ListViewModel.Fields.Where(x => x.CustomComponent != null).ToList();
@@ -380,6 +396,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         }
                         HasCustomActions = true;
                     }
+                }else{
+                    CustomActionIcons = new List<dynamic>();
+                    HasCustomActions = false;
                 }
                 foreach (var field in ListViewModel.Fields)
                 {
@@ -428,19 +447,37 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         {
             if (FeaturePermissionService != null && !string.IsNullOrEmpty(BusinessName))
             {
-                try
-                {
-                    CanList = FeaturePermissionService.CheckUserActionPermission(BusinessName, 4, AuthenticationService);
-                    CanCreate = FeaturePermissionService.CheckUserActionPermission(BusinessName, 1, AuthenticationService);
-                    CanEdit = FeaturePermissionService.CheckUserActionPermission(BusinessName, 2, AuthenticationService);
-                    CanDelete = FeaturePermissionService.CheckUserActionPermission(BusinessName, 3, AuthenticationService);
-                    CanDetail = FeaturePermissionService.CheckUserActionPermission(BusinessName, 5, AuthenticationService);
-                }
-                catch (System.Exception)
-                {
-                }
+               
+               if(IsSubpanel && BusinessName.Equals("BLAttachmentDetail",StringComparison.Ordinal))
+               {
+                    try
+                    {
+                        CanAccess = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.AccessAttachment, AuthenticationService).ConfigureAwait(true);
+                        CanCreate = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.UploadAttachment, AuthenticationService).ConfigureAwait(true);
+                        CanDelete = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.DeleteAttachment, AuthenticationService).ConfigureAwait(true);
+                        CanDetail = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.DownloadAttachment, AuthenticationService).ConfigureAwait(true);
+                    }
+                    catch (System.Exception)
+                    {
+                    }
+               }else
+               {
+                    try
+                    {
+                        CanAccess = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Access, AuthenticationService).ConfigureAwait(true);
+                        CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Create, AuthenticationService).ConfigureAwait(true);
+                        CanEdit = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Edit, AuthenticationService).ConfigureAwait(true);
+                        CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Delete, AuthenticationService).ConfigureAwait(true);
+                        CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService).ConfigureAwait(true);
+                        CanImport = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Import, AuthenticationService).ConfigureAwait(true);
+                        CanExport = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Export, AuthenticationService).ConfigureAwait(true);
+                    }
+                    catch (System.Exception)
+                    {
+                    }
+               }
 
-                if (!CanList)
+                if (!CanAccess && !FromEntityField)
                 {
                     ErrorMsg = "Custom.Generic.Unauthorized";
                     ErrorList.Add("Custom.Generic.Unauthorized");
@@ -617,7 +654,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private void Restart()
         {
-            guidListView = Guid.NewGuid().ToString();
+            guidListView = Guid.NewGuid().ToString().Replace("-", "", StringComparison.Ordinal);
             Loading = false;
             ErrorMsg = "";
             ErrorList = new List<string>();
@@ -658,7 +695,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             try
             {
                 Type type = BusinessObj.BaseObj.GetType();
-                if (BusinessObj.BaseObj.RowidCompany != 0)
+                bool containsRowidCompany = type.GetProperties().Any(x => x.Name == "RowidCompany");
+                if (containsRowidCompany && BusinessObj.BaseObj.RowidCompany != 0)
                 {
                     if (Utilities.IsAssignableToGenericType(type, typeof(BaseCompany<>)))
                     {
@@ -710,20 +748,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                             if (searchValue is string && string.IsNullOrEmpty(searchValue))
                             {
                                 continue;
-                            }
-                            /*try{
-                                Type searchValueType = searchValue.GetType();
-                                dynamic defaultValue = null;
-                                if(searchValueType.IsValueType && !searchValueType.IsEnum){
-                                    defaultValue = Activator.CreateInstance(searchValueType);
-                                }
-                                if (searchValue == defaultValue)
-                                {
-                                    continue;
-                                }
-                            }catch(Exception e){
-                                Console.WriteLine(e);
-                            }*/
+                            }                            
                             switch (fieldObj.FieldType)
                             {
                                 case FieldTypes.CharField:
@@ -883,6 +908,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
         }
 
+        private void GoToImport()
+        {
+            NavManager.NavigateTo($"{BusinessName}/Import/");
+        }
+        
+        private async Task GoToExport()
+        {
+            string resourceTag = $"{BusinessName}.Plural";
+            string resourceName = await UtilsManager.GetResource(resourceTag).ConfigureAwait(true);
+            await JSRuntime.InvokeAsync<object>("oreports_app_table_flexdebug_"+guidListView+".exportToExcel", resourceName);
+        }
+
         private void GoToDetail(Int64 id)
         {
             if (OnClickDetail != null)
@@ -894,14 +931,25 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 NavManager.NavigateTo($"{BusinessName}/detail/{id}/");
             }
         }
-        
+        [JSInvokable]
+        public async Task EditFromReact(Int64 id)
+        {
+            GoToEdit(id);
+        }
+
+        [JSInvokable]
+        public async Task DetailFromReact(Int64 id)
+        {
+            GoToDetail(id);
+        }
+
         [JSInvokable]
         public async Task<bool> DeleteFromReact(Int64 id, string object_string)
         {
             if (OnClickDelete != null){
                 OnClickDelete(id.ToString(), object_string);
             }
-            if (UseFlex)
+            if (UseFlex && !IsSubpanel)
             {
                 var confirm = await ConfirmDelete();
                 SDKGlobalLoaderService.Show();
@@ -939,8 +987,21 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if(string.IsNullOrEmpty(item)){
                 return;
             }
-            IList<object> objects = JsonConvert.DeserializeObject<IList<object>>(item);
-            OnSelectionChanged(objects);
+            List<dynamic> objects = JsonConvert.DeserializeObject<List<dynamic>>(item);
+            IList<dynamic> list = new List<dynamic>();
+            foreach (var dynamicObj in objects)
+            {
+                dynamic obj = Activator.CreateInstance(BusinessObj.BaseObj.GetType());
+                foreach(var prop in dynamicObj){
+                    var propertyName = prop.Name;
+                    if(propertyName.Equals("rowid")){
+                        propertyName = "Rowid";
+                    }
+                    await SetValueObj(obj, propertyName, prop.Value);
+                }
+                list.Add(obj);
+            }
+            OnSelectionChanged(list);
         }
 
         [JSInvokable]
@@ -967,16 +1028,21 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public async Task<bool> HideActionFromReact(string dataStr, Int64 index){
             Button button = CustomActions[(int)index];
             bool res = false;
+            bool deny = false;
             if(button != null){
+                var data = JsonConvert.DeserializeObject<dynamic>(dataStr);
                 dynamic hideCondition = null;
-                if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-hide")){
-                    var sdkHide = button.CustomAttributes["sdk-hide"];
-                    if(sdkHide != null){
-                        hideCondition = sdkHide;
-                    }
+                if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-hide") && button.CustomAttributes["sdk-hide"] != null){
+                    hideCondition = button.CustomAttributes["sdk-hide"];
+                }else if(button.CustomAttributes != null && button.CustomAttributes.ContainsKey("sdk-show") && button.CustomAttributes["sdk-show"] != null){
+                    hideCondition = button.CustomAttributes["sdk-show"];
+                    deny = true;
                 }
                 if(hideCondition != null){
                     res = await EvaluateCondition(data, hideCondition);
+                    if(deny){
+                        res = !res;
+                    }
                 }
             }
             return res;
@@ -1231,6 +1297,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private void hideCustomColumn()
         {
+            FieldsHiddenList = new List<string>();
             var useRoslyn = false;
             if(useRoslyn)
             {
@@ -1326,6 +1393,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                     catch (System.Exception ex)
                                     {
                                         Console.WriteLine($"Error: {ex.Message}");
+                                    }
+                                    if(field.Hidden){
+                                        FieldsHiddenList.Add(field.Name.Replace("BaseObj.", "", StringComparison.InvariantCultureIgnoreCase));
                                     }
                                 }
                                 if(shouldUpdate)

@@ -1,82 +1,97 @@
-@using Radzen;
 @using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
 @typeparam TItem
+@inherits SDKComponent
 
-<RadzenDataGrid 
-    AllowFiltering="@AllowFiltering" 
-    FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-    FilterMode="FilterMode.Advanced" 
-    AllowPaging="@AllowPaging" 
-    PageSize="@PageSize"
-    PagerHorizontalAlign="HorizontalAlign.Center" 
-    AllowSorting="@AllowSorting" 
-    Data="@Data" 
-    TItem="@TItem" 
-    IsLoading="@Loading"
-    Count="@Count"    
-    LoadData="@LoadData"
-    AllowVirtualization="@AllowVirtualization"
-    ShowPagingSummary="@ShowPagingSummary"
-    class="whcm_table"
-    PageSizeOptions="@AllowedPageSizes"
-    SelectionMode="@SelectionMode.Get()"
-    Value="@Value"
-    Visible="@(!CardView)"
-    ValueChanged="@ValueChanged"
-    AllowColumnResize="@AllowColumnResize"
-    FilterText="Filtrar"
-    ContainsText="Contiene"
-    EqualsText="Igual"
-    NotEqualsText="Diferente"
-    GreaterThanText="Mayor que"
-    GreaterThanOrEqualsText="Mayor o igual que"
-    LessThanText="Menor que"
-    EmptyText="No hay datos"
-    IsNullText="Es nulo"
-    IsNotNullText="No es nulo"
-    ColumnsText="Columnas"
-    IsEmptyText="Está vacío"
-    EndsWithText="Termina con"
-    PageSizeText="Tamaño de página"
-    AllColumnsText="Todas las columnas"
-    GroupPanelText="Arrastre una columna aquí para agrupar por esa columna"
-    IsNotEmptyText="No está vacío"
-    OrOperatorText="O"
-    StartsWithText="Empieza con"
-    AndOperatorText="Y"
-    ApplyFilterText="Aplicar"
-    ClearFilterText="Limpiar"
-    ColumnsShowingText="Columnas mostradas"
-    DoesNotContainText="No contiene"
-    LessThanOrEqualsText="Menor o igual que"
-    EnumFilterSelectText="Seleccione"
-    PagingSummaryFormat="Página {0} de {1} ({2} registros)"
-    AllowRowSelectOnRowClick="AllowRowSelectOnRowClick"
-    @ref="_grid">
-    <EmptyTemplate>
-        @if(EmptyTemplate != null){
-            @EmptyTemplate
-        }else{
-            <div class="col-12 text-center font_color_primary_dark py-4">
-                <i class="fa-solid fa-eye-slash fa-3x"></i>
-                <p class="pt-3 m-0"><ResourceViewer ResourceTag="Custom.Generic.NoData" /></p>
-            </div>
-        }
-    </EmptyTemplate>
-    <Columns>
-        @if(ShowRadioButtons){
-            <SDKGridColumn TItem="TItem" Width="50px">
-                <Template Context="Data">
-                    <div class="d-flex justify-content-center" data-automation-id="SDKGridRadioButton_CheckItem">
-                        <input type="radio" Value="@(Value != null && Value.Contains(Data))" checked="@check(Data)">
-                    </div>
-                </Template>
-            </SDKGridColumn>
-        }
-        @Columns
-    </Columns>
-</RadzenDataGrid>
-
+<div>
+    @if (ShowButtonCreate)
+    {
+        <SDKButton ResourceTag="Custom.Document.Button.Create" RenderStyle="SDKButtonRenderStyle.Primary" Click="@(async () => await ClickAddRow())" Enabled="@EnabledCreate" CssClass="@CssClassButtonCreate"/>
+    }
+    <RadzenDataGrid 
+        AllowFiltering="@AllowFiltering" 
+        FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+        FilterMode="FilterMode.Advanced" 
+        AllowPaging="@AllowPaging" 
+        PageSize="@PageSize"
+        PagerHorizontalAlign="HorizontalAlign.Center" 
+        AllowSorting="@AllowSorting" 
+        Data="@Data" 
+        TItem="@TItem" 
+        IsLoading="@Loading"
+        Count="@Count"    
+        LoadData="@LoadData"
+        AllowVirtualization="@AllowVirtualization"
+        ShowPagingSummary="@ShowPagingSummary"
+        class="whcm_table"
+        PageSizeOptions="@AllowedPageSizes"
+        SelectionMode="@SelectionMode.Get()"
+        Value="@Value"
+        Visible="@(!CardView)"
+        ValueChanged="@ValueChanged"
+        AllowColumnResize="@AllowColumnResize"
+        FilterText="Filtrar"
+        ContainsText="Contiene"
+        EqualsText="Igual"
+        NotEqualsText="Diferente"
+        GreaterThanText="Mayor que"
+        GreaterThanOrEqualsText="Mayor o igual que"
+        LessThanText="Menor que"
+        EmptyText="No hay datos"
+        IsNullText="Es nulo"
+        IsNotNullText="No es nulo"
+        ColumnsText="Columnas"
+        IsEmptyText="Está vacío"
+        EndsWithText="Termina con"
+        PageSizeText="Tamaño de página"
+        AllColumnsText="Todas las columnas"
+        GroupPanelText="Arrastre una columna aquí para agrupar por esa columna"
+        IsNotEmptyText="No está vacío"
+        OrOperatorText="O"
+        StartsWithText="Empieza con"
+        AndOperatorText="Y"
+        ApplyFilterText="Aplicar"
+        ClearFilterText="Limpiar"
+        ColumnsShowingText="Columnas mostradas"
+        DoesNotContainText="No contiene"
+        LessThanOrEqualsText="Menor o igual que"
+        EnumFilterSelectText="Seleccione"
+        PagingSummaryFormat="Página {0} de {1} ({2} registros)"
+        AllowRowSelectOnRowClick="AllowRowSelectOnRowClick"
+        @ref="_grid">
+        <EmptyTemplate>
+            @if(EmptyTemplate != null){
+                @EmptyTemplate
+            }else{
+                <div class="col-12 text-center font_color_primary_dark py-4">
+                    <SDKIcon Name="fa-eye-slash fa-3x"/>
+                    <p class="pt-3 m-0"><ResourceViewer ResourceTag="Custom.Generic.NoData" /></p>
+                </div>
+            }
+        </EmptyTemplate>
+        <Columns>
+            @if(ShowRadioButtons){
+                <SDKGridColumn TItem="TItem" Width="50px">
+                    <Template Context="Data">
+                        <div class="d-flex justify-content-center" data-automation-id="SDKGridRadioButton_CheckItem">
+                            <input type="radio" Value="@(Value != null && Value.Contains(Data))" checked="@Check(Data)">
+                        </div>
+                    </Template>
+                </SDKGridColumn>
+            }
+            @if(ShowButtonDelete){
+                <SDKGridColumn TItem="TItem" Width="50px">
+                    <Template Context="Data">
+                        <div class="d-flex justify-content-center" data-automation-id="SDKGridButtonDelete_DeleteItem">
+                            <SDKButton IconCssClass="fa-trash-can" IsActionButton=true Click="@(async () => await ClickDeleteRow(Data))" Enabled="@EnabledDelete"/>
+                        </div>
+                    </Template>
+                </SDKGridColumn>
+            }
+            @Columns
+        </Columns>
+    </RadzenDataGrid>
+</div>
 @if (CardView)
 {
      <div class="row">
@@ -112,80 +127,4 @@
             }
         }
     </div>
-}
-
-@code {
-    [Parameter] public bool AllowRowSelectOnRowClick { get; set; } = false;
-    [Parameter] public bool ShowRadioButtons { get; set; }
-    [Parameter] public RenderFragment? EmptyTemplate { get; set; }
-    [Parameter] public RenderFragment? Columns { get; set; }
-    [Parameter] public bool AllowFiltering { get; set; }
-    [Parameter] public bool Loading { get; set; }
-    [Parameter] public int PageSize { get; set; } = 10;
-    [Parameter] public bool AllowSorting { get; set; }
-    [Parameter] public bool AllowPaging { get; set; }
-    [Parameter] public IEnumerable<TItem> Data { get; set; }
-    [Parameter] public int Count { get; set; }
-    [Parameter] public EventCallback<Radzen.LoadDataArgs> LoadData { get; set; }
-    [Parameter] public bool ShowPagingSummary { get; set; }
-    [Parameter] public IEnumerable<int> AllowedPageSizes { get; set; } = new int[] { 10, 20, 50, 100 };
-
-    [Parameter] public SDKSelectionMode SelectionMode {get; set;}
-    [Parameter] public IList<TItem> Value {get; set;} 
-    [Parameter] public EventCallback<IList<TItem>> ValueChanged {get; set;}
-    [Parameter] public Action<TItem> OnChangeSelect {get; set;}
-    
-    [Parameter] public bool CardView {get; set;} = false;
-
-    [Parameter] public bool AllowVirtualization {get; set;}
-    [Parameter] public bool AllowColumnResize  {get; set;}
-
-    private RadzenDataGrid<TItem> _grid;
-    
-    protected override void OnParametersSet()
-    {
-        base.OnParametersSet();
-        if(ShowRadioButtons){
-            AllowRowSelectOnRowClick = true;
-        }
-        if (Data != null && !LoadData.HasDelegate)
-        {
-            Count = Data.Count();
-        }
-    }
-
-    private object GetValue(TItem item, string fieldName)
-    {
-       return item.GetType().GetProperty(fieldName).GetValue(item);
-    }
-
-    private RenderFragment<TItem> GetActionColumn()
-    {
-       var query = _grid.ColumnsCollection.Where(x=> x.CssClass == "internal-sdk-gridcolumn-action").SingleOrDefault();
-
-       if (query != null)
-       {
-        var childContent = query.Template;
-        return childContent;
-       }
-       return null;
-    }
-
-    public void Reload()
-    {
-        _grid.Reload();
-    }
-
-    private bool check(TItem item){
-        if(Value.Count == 0){
-            return false;
-        }        
-        if(Value[0].Equals(item)){
-            OnChangeSelect?.Invoke(item);
-            return true;
-        }else{
-            return false;
-        }
-    }
-
 }

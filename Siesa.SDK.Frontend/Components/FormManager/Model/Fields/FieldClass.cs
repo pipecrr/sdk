@@ -9,6 +9,9 @@ using System.Linq.Expressions;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using GrapeCity.Enterprise.Data.Expressions.Evaluation;
+using Microsoft.IdentityModel.Tokens;
 using Siesa.SDK.Frontend.Utils;
 using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
 using Siesa.SDK.Frontend.Components.Visualization;
@@ -70,6 +73,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         private RenderFragment? _fieldValidationTemplate;
 
         private string OnChange { get; set; }
+        private string OnChangeCell { get; set; }
         private bool HasError { get; set; }
 
         [CascadingParameter] EditContext EditFormContext { get; set; }
@@ -142,6 +146,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 }
             }
             OnChange = (string)FieldOpt.CustomAttributes?.Where(x => x.Key == "sdk-change").FirstOrDefault().Value;
+            OnChangeCell = (string)FieldOpt.CustomAttributes?.FirstOrDefault(x => x.Key.Equals("sdk-change-cell",StringComparison.Ordinal)).Value;
             StateHasChanged();
 
         }
@@ -279,37 +284,100 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
         
         public void SetValue(TProperty value)
         {
-            var setValue = true;
-
-            if (setValue)
+            BindValue = value;
+            if (!OnChange.IsNullOrEmpty())
             {
-                BindValue = value;
-                if (OnChange != null && OnChange != "")
+                _ = Task.Run(async () =>
                 {
-                    _ = Task.Run(async () =>
+                    await Evaluator.EvaluateCode(OnChange, EditFormContext.Model).ConfigureAwait(true);
+                    if (formView != null)
                     {
-                        await Evaluator.EvaluateCode(OnChange, EditFormContext.Model);
-                        if (formView != null)
-                        {
-                            _ = InvokeAsync(() => formView.Refresh());
-                        }
-                    });
-                }
+                        _ = InvokeAsync(() => formView.Refresh());
+                    }
+                });
             }
-            else
+            if (!OnChangeCell.IsNullOrEmpty())
             {
-                //MuestreError();
+                OnChangeCell = OnChangeCellCode(OnChangeCell);
+                _ = Task.Run(async () =>
+                {
+                    bool modifyRow = true;
+
+                    if (!OnChangeCell.Equals("SdkOnChangeCell", StringComparison.Ordinal))
+                    {
+                        modifyRow = await EvaluateCellChangeAsync(OnChangeCell, EditFormContext.Model, true).ConfigureAwait(true);
+                    }
+
+                    if (modifyRow)
+                    {
+                        await EvaluateCellChangeAsync("SdkOnChangeCell", EditFormContext.Model).ConfigureAwait(true);
+                        _ = InvokeAsync(() => StateHasChanged());
+                    }
+                    
+                    if (formView != null)
+                    {
+                        _ = InvokeAsync(() => formView.Refresh());
+                    }
+                });
             }
             
             CheckUniqueValue();
+        }
 
+        private string OnChangeCellCode(string onChangeCell)
+        {
+            string result = onChangeCell;
+            if (result.Contains("data_detail", StringComparison.Ordinal))
+            {
+                var childObjs = EditFormContext.Model.GetType().GetProperty("ChildObjs")?
+                    .GetValue(EditFormContext.Model) as System.Collections.IList;
+                if (childObjs != null)
+                {
+                    var indexData = childObjs.IndexOf(BindModel);
+                    result = result.Replace("data_detail", $"ChildObjs[{indexData}]",
+                        StringComparison.Ordinal);
+                }
+            }
+            return result;
+        }
+
+
+        private async Task<bool> EvaluateCellChangeAsync(string code, object model, bool hasReturn = false)
+        {
+            dynamic eject = await Evaluator.EvaluateCode(code, model).ConfigureAwait(true);
+            MethodInfo methodInfo = (MethodInfo)(eject?.GetType().GetProperty("Method")?.GetValue(eject));
+
+            if (methodInfo != null)
+            {
+                if (methodInfo.GetCustomAttributes(typeof(AsyncStateMachineAttribute), false).Length > 0)
+                {
+                    if (hasReturn)
+                    {
+                        return await eject(BindModel).ConfigureAwait(true);
+                    }else{
+                        await eject(BindModel).ConfigureAwait(true);
+                    }
+                }
+                else
+                {
+                    if (hasReturn)
+                    {
+                        return eject(BindModel);
+                    }else{
+                        eject(BindModel);
+                    }
+                }
+            }else if(eject != null && eject.GetType() == typeof(bool) && eject){
+                return eject;
+            }
+            
+            return true;
         }
 
         public RenderFragment? FieldValidationTemplate
         {
             get
             {
-
                 return _fieldValidationTemplate != null ? _fieldValidationTemplate : builder =>
                 {
                     var access = Expression.Property(Expression.Constant(BindModel, BindModel.GetType()), FieldName);

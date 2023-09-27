@@ -1,12 +1,7 @@
 ﻿@page "/"
 @attribute [Authorize]
 @using Siesa.SDK.Shared.Application
+@using Siesa.SDK.Frontend.Components.Dashboard
 
-@if(SDKApp.GetIndexComponent() == null) 
-{
-    <PageTitle><ResourceViewer ResourceTag="Custom.Project.Name" /></PageTitle>
 
-    <ResourceViewer ResourceTag="Custom.Project.Name" />
-}else{
-    <DynamicComponent Type="@SDKApp.GetIndexComponent()" />
-}
+<SDKDashboard />

@@ -2,11 +2,15 @@
 @inject NavigationManager Navigation
 @inject NavigationService NavigationService
 @inject Radzen.DialogService dialogService
+@inject IAuthenticationService AuthenticationService
 @using Siesa.SDK.Frontend.Components.Layout
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Frontend.Components.FormManager.Views
 @using Siesa.SDK.Frontend.Components.FormManager.Model
 @using Newtonsoft.Json
+@using Siesa.Global.Enums
+@using Siesa.SDK.Shared.Services
+
 @inject UtilsManager UtilsManager
 @implements IDisposable
 
@@ -81,6 +85,11 @@
 
     [Parameter]
     public int FlexRowId {get;set;} = 0;
+    [Parameter]
+    public bool ShowActions {get;set;} = true;
+    //private enumThemeIconStyle IconsStyles {get;set;} = enumThemeIconStyle.Solid;
+    [Parameter]
+    public List<string> FieldsHiddenList { get; set; } = new List<string>();
 
     private string _guid ="";
     private bool _isDebug = false;
@@ -100,6 +109,7 @@
 
     private void Init()
     {
+        Dictionary<string, object> NewFlexAttributes = new Dictionary<string, object>();
         bool MountFlex = false;
         if(!IsListView){            
             Navigation.TryGetQueryString("sdk_debug",out string SDKDebugVar);
@@ -166,42 +176,86 @@
             _flexRowId = FlexRowId;
             _currentView = "detail";
         }
-        FlexAttributes.Clear();
-        flexElementId = "flexdebug";//$"flex_{Guid.NewGuid().ToString()}";
-        FlexAttributes.Add("id", flexElementId);
-        FlexAttributes.Add("class", "root_oreports");
-        FlexAttributes.Add("current_view", _currentView);
-        FlexAttributes.Add("is_list_view", IsListView.ToString());
-        FlexAttributes.Add("bl_name_list", BlNameList);
-        FlexAttributes.Add("has_search", HasSearch.ToString());
-        FlexAttributes.Add("viewdef_name", ViewdefName);
-        FlexAttributes.Add("guid_list_view", GuidListView);
-        FlexAttributes.Add("can_edit_list_view", CanEdit.ToString());
-        FlexAttributes.Add("can_delete_list_view", CanDelete.ToString());
-        FlexAttributes.Add("can_detail_list_view", CanDetail.ToString());
-        FlexAttributes.Add("editing_flex", EditingFlex.ToString());
-        FlexAttributes.Add("take", Take.ToString());
-        FlexAttributes.Add("server_pagination", ServerPagination.ToString());
-        FlexAttributes.Add("filter_search", FilterSearch);
-        FlexAttributes.Add("guid", _guid);
-        FlexAttributes.Add("action_icons", actionIconsString);
-        FlexAttributes.Add("is_multiple", IsMultiple.ToString());
-        FlexAttributes.Add("flex_filters", FlexFilters);
+
+        var fieldsHiddenListString = JsonConvert.SerializeObject(FieldsHiddenList);
+        
+        string style = GetStyle();
+
+        
+        flexElementId = $"flexdebug_{_guid}";
+        NewFlexAttributes.Add("id", flexElementId);
+        NewFlexAttributes.Add("class", "root_oreports");
+        NewFlexAttributes.Add("current_view", _currentView);
+        NewFlexAttributes.Add("is_list_view", IsListView.ToString());
+        NewFlexAttributes.Add("bl_name_list", BlNameList);
+        NewFlexAttributes.Add("has_search", HasSearch.ToString());
+        NewFlexAttributes.Add("viewdef_name", ViewdefName);
+        //NewFlexAttributes.Add("guid_list_view", _guid);
+        NewFlexAttributes.Add("can_edit_list_view", CanEdit.ToString());
+        NewFlexAttributes.Add("can_delete_list_view", CanDelete.ToString());
+        NewFlexAttributes.Add("can_detail_list_view", CanDetail.ToString());
+        NewFlexAttributes.Add("editing_flex", EditingFlex.ToString());
+        NewFlexAttributes.Add("take", Take.ToString());
+        NewFlexAttributes.Add("server_pagination", ServerPagination.ToString());
+        NewFlexAttributes.Add("filter_search", FilterSearch);
+        NewFlexAttributes.Add("guid", _guid);
+        NewFlexAttributes.Add("action_icons", actionIconsString);
+        NewFlexAttributes.Add("is_multiple", IsMultiple.ToString());
+        NewFlexAttributes.Add("flex_filters", FlexFilters);
+        NewFlexAttributes.Add("preference_style", style);
+        NewFlexAttributes.Add("fields_hidden_list", fieldsHiddenListString);
+        NewFlexAttributes.Add("show_actions", ShowActions.ToString());
         if(_flexRowId != 0)
         {
-            FlexAttributes.Add("base_obj_id", _flexRowId);
+            NewFlexAttributes.Add("base_obj_id", _flexRowId);
         }
+        //check if NewFlexAttributes is different from FlexAttributes
+        if(!NewFlexAttributes.SequenceEqual(FlexAttributes))
+        {
+            FlexAttributes = NewFlexAttributes;
+            //updateFieldsHide
+            JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+_guid+".props.updateFieldsHide", fieldsHiddenListString);
 
-        StateHasChanged();
-        
+            StateHasChanged();
+        }
         
         if(MountFlex || !_isMounted)
         {
             _= MountFlexComponent();
             _isMounted = true;
         }
+    }
 
+    private string GetStyle(){
+        string style = "";
+        enumThemeIconStyle IconsStyles = enumThemeIconStyle.Solid;
+        var UserPreferences = AuthenticationService?.GetPreferencesUser();
 
+        if(UserPreferences != null)
+        {
+            IconsStyles = UserPreferences.IconsStyles;
+        }
+        
+        switch(IconsStyles){
+            case enumThemeIconStyle.Solid:
+                style = "fa-solid";
+                break;
+            case enumThemeIconStyle.Regular:
+                style = "fa-regular";
+                break;
+            case enumThemeIconStyle.Light:
+                style = "fa-light";
+                break;
+            case enumThemeIconStyle.Duotone:
+                style = "fa-duotone";
+                break;
+            case enumThemeIconStyle.Thin:
+                style = "fa-thin";
+                    break;
+
+        }
+
+        return style;
     }
 
     private async Task MountFlexComponent()
@@ -231,10 +285,10 @@
 
     protected override async Task OnInitializedAsync()
     {
-        //Init();
         if(String.IsNullOrEmpty(GuidListView))
         {
-            _guid = Guid.NewGuid().ToString();
+            _guid = Guid.NewGuid().ToString().Replace("-","", StringComparison.Ordinal);
+            
         }else{
             _guid = GuidListView;
         }
@@ -256,7 +310,7 @@
     void Configure()
     {
         Guid guid = Guid.NewGuid();
-        JSRuntime.InvokeVoidAsync("oreports_app_flexdebug_"+_guid+".props.toggleConfigModal", guid.ToString());
+        JSRuntime.InvokeVoidAsync("oreports_app_flexdebug_"+_guid+".props.toggleConfigModal", guid.ToString().Replace("-","", StringComparison.Ordinal));
     }
 
     void SaveAndContinue()
@@ -274,9 +328,11 @@
         JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+_guid+".props.fetchPreviewData");
     }
 
-    void ExportToExcel()
+    async Task ExportToExcel()
     {
-        JSRuntime.InvokeAsync<object>("oreports_app_table_flexdebug_"+_guid+".dataGridRef.instance.exportToExcel", false);
+        string resourceTag = $"{_blName}.Plural";
+        string resourceName = await UtilsManager.GetResource(resourceTag).ConfigureAwait(true);
+        JSRuntime.InvokeAsync<object>("oreports_app_table_flexdebug_"+_guid+".exportToExcel", resourceName);
     }
 
     void GoToCreate()

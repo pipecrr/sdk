@@ -1,0 +1,113 @@
+.sdk_progressbar
+{
+    width:  100%;
+}
+
+.sdk_progressbar ::deep  .rz-progressbar-determinate-danger
+{
+    background-color: #e9ecef;
+}
+
+.sdk_progressbar ::deep  .rz-progressbar-determinate-warning
+{
+    background-color: #e9ecef;
+    
+}
+
+.sdk_progressbar ::deep .rz-progressbar-determinate-success
+{
+    background-color: #e9ecef;
+}
+
+.sdk_progressbar ::deep  .rz-progressbar-determinate-info
+{
+    background-color: #e9ecef;
+    
+}
+
+.sdk_progressbar ::deep  .rz-progressbar-determinate-dark
+{
+    background-color: #e9ecef;
+    
+}
+
+.sdk_progressbar ::deep  .rz-progressbar-determinate-light
+{
+    background-color: #e9ecef;
+    
+}
+
+.sdk_progressbar ::deep  .rz-progressbar-determinate-primary
+{
+    background-color: #e9ecef;
+    
+}
+
+.sdk_progressbar ::deep  .rz-progressbar-determinate-secondary
+{
+    background-color: #e9ecef;
+    
+}
+
+/* ********************* */
+
+.sdk_progressbar ::deep  .rz-progressbar-determinate-info .rz-progressbar-value
+{
+    background-color: var(--color_alert_info);
+}
+
+.sdk_progressbar ::deep .rz-progressbar-determinate-warning .rz-progressbar-value 
+{
+    background-color: var(--color_alert_warning);
+    
+}
+
+.sdk_progressbar ::deep .rz-progressbar-determinate-danger .rz-progressbar-value 
+{
+   
+    background-color: var(--color_delete);
+}
+
+.sdk_progressbar ::deep .rz-progressbar-determinate-success .rz-progressbar-value 
+{
+    background-color: var(--color_alert_success);
+}
+
+.sdk_progressbar ::deep .rz-progressbar-determinate-dark .rz-progressbar-value 
+{
+    background-color: var(--color_alert_warning);
+}
+
+.sdk_progressbar ::deep .rz-progressbar-determinate-light .rz-progressbar-value 
+{
+    background-color: var(--color_primary_light);
+}
+
+.sdk_progressbar ::deep .rz-progressbar-determinate-primary .rz-progressbar-value 
+{
+    background-color: var(--color_primary_dark);
+}
+
+.sdk_progressbar ::deep .rz-progressbar-determinate-secondary .rz-progressbar-value 
+{
+    background-color: var(--color_secondary);
+}
+
+
+
+.sdk_progressbar ::deep .rz-progressbar-value {
+    overflow: hidden;
+  }
+  
+  .sdk_progressbar ::deep .rz-progressbar-value::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);
+    background-size: 20px 20px;
+  }
+  
+

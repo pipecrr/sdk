@@ -1,0 +1,122 @@
+@using Siesa.SDK.Frontend.Components.Layout
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
+@using Plk.Blazor.DragDrop
+@using Siesa.SDK.Shared.Application
+@using Siesa.SDK.Frontend.Components.Dashboard.UserComponent
+@using Siesa.SDK.Frontend.Services
+@using Siesa.SDK.Shared.DataAnnotations
+
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService
+@inject SDKDialogService DialogService
+
+@implements IDisposable
+
+<div class="dash_back">
+    <div class="row whcm_row">
+        <div class="col-12 whcm_head_profile">
+            <UserDashboard Click="@OpenModalDashlets"/>
+        </div>
+    </div>
+
+    <div class="">
+        <Dropzone Items="@_dashlets" Class="row sdk-dashboard">
+            <InternalSDKDashlet Item="@context" />
+        </Dropzone>
+    </div>
+</div>
+
+
+@code{
+
+    [CascadingParameter] public MainLayout MainLayout { get; set; }
+    private List<Type> _dashlets = new List<Type>();
+
+    private List<string> DashletLocalStorage = new List<string>();
+    protected override async Task OnInitializedAsync()
+    {
+        MainLayout.SetDefaultArea(false);
+
+        GetDefaultDashlets();
+
+        await GetLocalStorageDaslets();
+
+        await base.OnInitializedAsync();
+    }
+
+
+    public void Dispose()
+    {
+        MainLayout?.SetDefaultArea(true);
+        MainLayout?.SetEmptyLayout(false);
+    }
+
+    private async Task AddSelectedDashlets(Type dashlet)
+    {
+        
+        _dashlets.Add(dashlet);
+
+        DashletLocalStorage.Add(dashlet.FullName);
+
+        _ = localStorageService.SetItemAsync("ListDashlets", DashletLocalStorage);
+
+        DialogService.Close(true);
+      
+        _ = InvokeAsync(()=> StateHasChanged());
+
+    }
+
+    private async Task OpenModalDashlets()
+    {
+        var ModalDashlets = await DialogService.ShowCustomDialog
+        (ds=>@<div class="">
+                        @foreach (var dashlet in SDKApp.Dashlets)
+                        {
+                            <PreviewDashlets DashletType="@dashlet" Click="@(() => AddSelectedDashlets(dashlet))" />
+                        }
+            </div>, title: "Custom.DashletTitle");
+    }
+
+    
+    private void GetDefaultDashlets()
+    {
+        if (SDKApp.Dashlets != null)
+        {     
+            var n_default = 2;
+            
+            for (int i = 0; i < n_default; i++)
+            {
+                if (SDKApp.Dashlets.Count > i)
+                {
+                    _dashlets.Add(SDKApp.Dashlets[i]);
+                }
+            }
+        }
+
+        StateHasChanged();
+    }
+
+    private async Task GetLocalStorageDaslets()
+    {
+        var dashlets = await localStorageService.GetItemAsync<List<string>>("ListDashlets");
+
+        if(dashlets != null && dashlets.Count > 0)
+        {
+            foreach(var dashlet in dashlets)
+            {
+                var findDashlet = SDKApp.Dashlets.FirstOrDefault(x => x.FullName.Equals(dashlet));
+
+                if(findDashlet != null)
+                {
+                    _dashlets.Add(findDashlet);
+                }
+            }
+        }
+
+        _ = InvokeAsync(() => StateHasChanged());
+    }
+
+    
+
+    
+} 

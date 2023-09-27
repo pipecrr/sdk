@@ -1,0 +1,36 @@
+@using Siesa.SDK.Entities
+@using Siesa.SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Shared.Services
+@using SDK.Frontend.Application
+@using Siesa.SDK.Frontend.Services
+
+@inject IResourceManager ResourceManager
+@inject IAuthenticationService AuthenticationService
+@inject MenuService MenuService
+
+
+<SDKButtonTiles Click="@(async () => await OnClickSuite(Suite))" ResourceTag="@Title" BackgroundColor="@Suite.HexColor" 
+    IconClass="@Suite.IconClass"/>
+
+
+@code{
+    [Parameter] public E00060_Suite Suite {get; set;}
+    public int lastsuite;
+    private string Title { get; set; } = "";
+
+    protected override async Task OnParametersSetAsync(){
+        Title = await GetTitle();
+    }
+
+    public async Task OnClickSuite(E00060_Suite Suite)
+    {
+        lastsuite = AuthenticationService.GetSelectedSuite();
+        if (lastsuite != Suite.Rowid){
+            await MenuService.SetSelectedSuite(Suite.Rowid);
+        }
+    }
+    private async Task<string> GetTitle(){
+        return await ResourceManager.GetResource(Convert.ToInt64(Suite.RowidResource), AuthenticationService);
+    }
+}

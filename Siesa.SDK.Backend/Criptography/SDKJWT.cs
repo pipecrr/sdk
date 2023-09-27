@@ -1,4 +1,8 @@
 using Siesa.SDK.Shared.Criptography;
+using Siesa.SDK.Shared.Services;
+using System.Collections.Generic;
+using Siesa.SDK.Entities;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Siesa.SDK.Backend.Criptography
 {

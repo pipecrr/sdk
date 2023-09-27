@@ -16,9 +16,9 @@ export function ReportDesginer(){
             designerOptions.saveAsButton.visible = true;
         
             
-            designerOptions.documentation.home = 'https://www.grapecity.com/activereports/docs/v15/online-webdesigner/overview.html';
+            //designerOptions.documentation.home = 'https://www.grapecity.com/activereports/docs/v15/online-webdesigner/overview.html';
             
-            designerOptions.documentation.reportItemsTransformation = 'https://www.grapecity.com/activereports/docs/v15/online-webdesigner/supportedcontrols.html';
+            //designerOptions.documentation.reportItemsTransformation = 'https://www.grapecity.com/activereports/docs/v15/online-webdesigner/supportedcontrols.html';
         
             designerOptions.reportItemsFeatures.table.autoFillFooter = true;
         
