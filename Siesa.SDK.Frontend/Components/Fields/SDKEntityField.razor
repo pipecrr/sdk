@@ -33,25 +33,41 @@
                             foreach (var item in CacheData)
                             {
                                 <li class="d-flex justify-content-between sdk-dropdown-item" data-automation-id="@GetAutomationIdItem(item)" @onclick="@(()=> { OnSelectItem(item.Value); })">
-                                    <div class="d-flex align-items-center">
-                                        @if(FieldTemplate == 2){
-                                            <div class="whcm_select_list_img">
-                                                <img src="" height="36px" alt="imagen">
-                                            </div>
-                                        }
-                                        <div class="ml-1">
-                                            <p class="font_size_087 m-0 font-weight-bold"><span>@item.Value.ToString()</span></p>
-                                            @if(RelatedParams != null && RelatedParams.ExtraFields.Count()>0 && !RelatedParams.ShowExtraFields){
-                                                foreach (var field in RelatedParams.ExtraFields)
-                                                {
-                                                    string paramValue = GetParamValue(field, item.Value);
-                                                    string resourceTag = item.Value.GetType().Name + "." + field;
-                                                                                            
-                                                    <p class="font_size_087 m-0"><span><ResourceViewer ResourceTag="@resourceTag" RowidCulture="@RowidCulture"/>:</span> <span>@paramValue</span></p>
-                                                }
+                                    @if(Template != null)
+                                    {
+                                        <ErrorBoundary>
+                                            <ChildContent>
+                                                @Template(item.Value)
+                                            </ChildContent> 
+                                            <ErrorContent Context="Exception" >
+                                                <div class="d-flex align-items-center">
+                                                    <div class="ml-1">
+                                                        <p class="font_size_087 m-0 font-weight-bold"><ResourceViewer ResourceTag="Custom.Generic.Message.Error" /></p>
+                                                    </div>
+                                                </div>
+                                            </ErrorContent>
+                                        </ErrorBoundary>
+                                    }else{
+                                        <div class="d-flex align-items-center">
+                                            @if(FieldTemplate == 2){
+                                                <div class="whcm_select_list_img">
+                                                    <img src="" height="36px" alt="imagen">
+                                                </div>
                                             }
+                                            <div class="ml-1">
+                                                <p class="font_size_087 m-0 font-weight-bold"><span>@item.Value.ToString()</span></p>
+                                                @if(RelatedParams != null && RelatedParams.ExtraFields.Count()>0 && !RelatedParams.ShowExtraFields){
+                                                    foreach (var field in RelatedParams.ExtraFields)
+                                                    {
+                                                        string paramValue = GetParamValue(field, item.Value);
+                                                        string resourceTag = item.Value.GetType().Name + "." + field;
+                                                                                                
+                                                        <p class="font_size_087 m-0"><span><ResourceViewer ResourceTag="@resourceTag" RowidCulture="@RowidCulture"/>:</span> <span>@paramValue</span></p>
+                                                    }
+                                                }
+                                            </div>
                                         </div>
-                                    </div>
+                                    }
                                     @if(CanEdit || CanDetail){
                                         <div>
                                             <button disabled="@Disabled" class="btn btn-sm layout_btn_standar-sm" data-automation-id="@GetAutomationIdItem(item)_ExpandBtn" type="button" data-toggle="tooltip" data-placement="top" title="Ampliar" @onclick="@(async ()=> { await OpenModalExpand(item.Value);})">
