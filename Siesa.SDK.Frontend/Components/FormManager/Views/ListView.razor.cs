@@ -77,7 +77,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         [Parameter]
         public string BLNameParentAttatchment { get; set; }
-
+        [Parameter]
+        public bool? ShowActions { get; set; }
         [Inject]
         public ILocalStorageService localStorageService { get; set; }
 
@@ -350,6 +351,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 ShowLinkTo = ListViewModel.ShowLinkTo;
                 ServerPaginationFlex = ListViewModel.ServerPaginationFlex;
                 _showActions = ListViewModel.ShowActions;
+                if(ShowActions != null){
+                    _showActions = ShowActions.Value;
+                }
                 if(ListViewModel.AllowEdit != null){
                     AllowEdit = ListViewModel.AllowEdit.Value;
                 }

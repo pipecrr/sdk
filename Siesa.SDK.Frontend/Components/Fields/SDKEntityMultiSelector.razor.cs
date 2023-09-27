@@ -12,26 +12,27 @@ using Siesa.SDK.Shared.Utilities;
 
 namespace Siesa.SDK.Frontend.Components.Fields
 {
-    public partial class SDKManyToManySelector
+    public partial class SDKEntityMultiSelector
     {
         [Parameter] public string RelatedBusiness {get; set;}
         [Parameter] public List<int> RowidRecordsRelated {get; set;}
-        [Parameter] public string RemoveButtonResourceTag {get; set;} = "Remove items";
-        [Parameter] public string AddButtonResourceTag {get; set;} = "Add items";
-        
-        
-
-        [Parameter] public EventCallback<List<int>> OnAddUserAction {get; set;}
+        [Parameter] public string ViewdefName {get; set;}
+        [Parameter] public string RemoveButtonResourceTag {get; set;} = "Custom.SDKEntityMultiSelector.RemoveItems";
+        [Parameter] public string AddButtonResourceTag {get; set;} = "Custom.SDKEntityMultiSelector.AddItems";
+        [Parameter] public string AddButtonResourceTagMulti {get; set;}
+        [Parameter] public string LabelResourceTag { get; set; }
+        [Parameter] public Action<List<int>> OnAddAction {get; set;}
+        [Parameter] public Action<List<int>> OnAddActionModal {get; set;}
+        [Parameter] public Action<List<int>> OnRemoveAction {get; set;}
         [Parameter] public string ListResourceTag {get; set;}
-        [Parameter] public string EmptyUsersResourceTag {get; set;}
-        [Parameter] public Action<List<int>> OnFixedClick {get; set;}
+        [Parameter] public string EmptyResourceTag {get; set;}
         [Inject] public SDKGlobalLoaderService LoaderService {get; set;}
         [Inject] public SDKNotificationService NotificationService {get; set;}
         [Inject] public IBackendRouterService BackendRouterService { get; set; }
         [Inject] public IServiceProvider ServiceProvider { get; set; }
-        private SDKFixedButtonManyToMany ComponentFixedButtonRef {get; set;}
+        private SDKEntityMultiSelectorFixedButton ComponentFixedButtonRef {get; set;}
         private ListView ListViewRef {get; set;}
-        private SDKEntityField _sdkEntityFieldRef {get;set;}
+        private SDKEntityField SdkEntityFieldRef {get;set;}
         private List<string> ConstantFilters { get; set; } = new();
         private string LastFilter { get; set; }
         private List<List<object>> EntityFieldFilters { get; set; } = new(); 
@@ -44,22 +45,27 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
         protected override async Task OnInitializedAsync()
         {
+            if (string.IsNullOrEmpty(LabelResourceTag))
+            {
+                LabelResourceTag = $"{RelatedBusiness}.Plural";
+            }
+            if (string.IsNullOrEmpty(AddButtonResourceTagMulti))
+            {
+                AddButtonResourceTagMulti = "Custom.SDKEntityMultiSelector.AddItems";
+            }
             var relBusinessModel = BackendRouterService.GetSDKBusinessModel(RelatedBusiness, null);
             var relBusinessType = Utilities.SearchType(relBusinessModel.Namespace + "." + relBusinessModel.Name);
             BusinessRelated = ActivatorUtilities.CreateInstance(ServiceProvider, relBusinessType);
             SetFilter();
-            //Business.UsersToOperate = new();
+            await base.OnInitializedAsync().ConfigureAwait(true);
         }
 
         private void SetNotIn()
         {
             EntityFieldFilters.Clear();
-
             if (RowidRecordsRelated is null) return;
-
-            var Filter = new { Rowid__notin = RowidRecordsRelated };
-            
-            EntityFieldFilters.Add(new List<object>(){Filter});
+            var filter = new { Rowid__notin = RowidRecordsRelated };
+            EntityFieldFilters.Add(new List<object>(){filter});
         }
 
         private void SetFilter()
@@ -67,34 +73,24 @@ namespace Siesa.SDK.Frontend.Components.Fields
             if(RowidRecordsRelated is not null && RowidRecordsRelated.Any()){
                 ConstantFilters = AddConstantFilters(RowidRecordsRelated);
             }
-            /*if(Users is not null && Users.Any())
-                Business.Users = Users;
-            else
-                Business.Users = new();
-*/
             SetNotIn();
-            
             if (RowidRecordsRelated is null) return;
-
-            var Filter = string.Empty;
-            //UserComponentUtil.SetFilter(ConstantFilters, Users, ref Filter);
-            LastFilter = Filter;
-            
+            var filter = string.Empty;
+            LastFilter = filter;
             StateHasChanged();
         }
         
-        private List<string> AddConstantFilters(List<int> rowidUsers)
+        private static List<string> AddConstantFilters(List<int> rowidItems)
         {
             var constantFilters = new List<string>();
-            var filter = rowidUsers.Select(x => $"Rowid = {x}");
+            var filter = rowidItems.Select(x => $"Rowid = {x}");
             constantFilters.Add($"({string.Join(" || ", filter)})");
             return constantFilters;
         }
 
-        public async Task RefreshListView()
+        public void RefreshListView()
         {
             SetFilter();
-
             if (ListViewRef is not null)
             {
                 _ = ListViewRef.Refresh(true);
@@ -103,17 +99,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
         protected override async Task OnParametersSetAsync()
         {
-            //var CurrentFilter = Users is null ? string.Empty : UserComponentUtil.GetFilter(Users);
-            
-            /*if (string.Equals(LastFilter, CurrentFilter, StringComparison.OrdinalIgnoreCase))
-                return;
-*/
             RefreshListView();
-
-            // if(UserComponentFixedButtonRef != null)
-            //     Business.UserComponentFixedButtonRef = UserComponentFixedButtonRef;
-
-            //Business.UsersToOperate = new();
             await base.OnParametersSetAsync();
         }
 
@@ -126,40 +112,42 @@ namespace Siesa.SDK.Frontend.Components.Fields
 
         private void AddItem()
         {
-            var itemsSelected = _sdkEntityFieldRef.GetItemsSelected();
+            var itemsSelected = SdkEntityFieldRef.GetItemsSelected();
             if(!itemsSelected.Any())
             {
-                _ = NotificationService.ShowInfo("Custom.BLUser.SelectUserMessage");
+                _ = NotificationService.ShowInfo("Custom.SDKEntityMultiSelector.SelectMessage");
                 return;
             }
-
             var rowids = itemsSelected.Where(x => !RowidRecordsRelated.Any(y=>y==x.Rowid))
                             .Select(x => (int) x.Rowid).ToList();
-
             if(!rowids.Any())
             {
-                _ = NotificationService.ShowError("Custom.BLUser.ErrorToAssignUser");
+                _ = NotificationService.ShowError("Custom.SDKEntityMultiSelector.ErrorToAssign");
                 return;
             }
-
-            if (OnAddUserAction.HasDelegate)
+            if (OnAddAction is not null)
             {
-                OnAddUserAction.InvokeAsync(rowids);
+                OnAddAction(rowids);
             }
-            
             RowidRecordsRelated.AddRange(rowids);
-            _ = _sdkEntityFieldRef.Clean();
-            _ = RefreshListView();
+            _ = SdkEntityFieldRef.Clean();
+            RefreshListView();
         }
 
         private void FixedClick()
         {
-            if (OnFixedClick is not null)
+            if (OnRemoveAction is not null)
             {
-                OnFixedClick(ItemsSelected);
+                OnRemoveAction(ItemsSelected);
             }
             RowidRecordsRelated = RowidRecordsRelated.Where(x => !ItemsSelected.Any(y => y == x)).ToList();
-            _ = RefreshListView();
+            RefreshListView();
+        }
+        
+        public void CloseModal()
+        {
+            SDKDialogService.Close();
+            RefreshListView();
         }
     }
 }

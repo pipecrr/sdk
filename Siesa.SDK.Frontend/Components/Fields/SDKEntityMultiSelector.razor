@@ -2,9 +2,6 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Components.Visualization
 @using Siesa.SDK.Frontend.Services
-@*using Siesa.MasterBackend.Business.Frontend.Components.UserComponent.Modal
-@using Siesa.MasterBackend.Business.Frontend.Components.UserComponent.Main.FixedButton
-@using Siesa.MasterBackend.Business.Frontend.Utils*@
 
 @inject SDKDialogService SDKDialogService
 
@@ -16,14 +13,14 @@
                 <div class="w-100">
                     <span class="col-form-label col-form-label-sm font-weight-bold">
                         <SDKLabel
-                            ResourceTag="BLUser.Plural"
+                            ResourceTag="@LabelResourceTag"
                             CssClass="mb-0"
                         />
                     </span>
                     <SDKEntityField
                         BaseObj="@this"
                         FieldName="FieldRelated"
-                        @ref="_sdkEntityFieldRef"
+                        @ref="SdkEntityFieldRef"
                         IsMultiple="true"
                         RelatedBusiness="@RelatedBusiness"
                         Filters="@EntityFieldFilters"
@@ -31,7 +28,7 @@
                 </div>
                 <div class="d-flex align-items-end ml-1">
                     <SDKButton
-                        ResourceTag="Multiseleccion"
+                        ResourceTag="Custom.SDKEntityMultiSelector.MultiselectMessage"
                         IconCssClass="fa-solid fa-list-check"
                         RenderStyle="SDKButtonRenderStyle.Light"
                         CssClass="btn_multiselect"
@@ -61,6 +58,7 @@
             <ListView
                 @ref="ListViewRef"
                 IsMultiple="true"
+                ViewdefName="@ViewdefName"
                 BusinessObj=@BusinessRelated
                 BusinessName="@RelatedBusiness"
                 SetTopBar="false"
@@ -68,12 +66,13 @@
                 AllowEdit="false"
                 AllowDelete="false"
                 AllowDetail="false"
+                ShowActions="false"
                 ShowSearchForm="false"
                 ConstantFilters="@ConstantFilters"
                 OnSelectedRow="@OnSelectRow"
             />
 
-            <SDKFixedButtonManyToMany
+            <SDKEntityMultiSelectorFixedButton
                 @ref="ComponentFixedButtonRef"
                 ResourceTag=@RemoveButtonResourceTag
                 OnCustomClick=@FixedClick
@@ -85,7 +84,7 @@
                 <SDKIcon Name="fa-circle-info" IconSize="fa-3x" />
                 <p class="mt-3 mb-0 font_size_087">
                     <ResourceViewer
-                        ResourceTag="@EmptyUsersResourceTag"
+                        ResourceTag="@EmptyResourceTag"
                     />
                 </p>
             </div>
@@ -98,20 +97,16 @@
     public async Task OpenModal()
     {
         await SDKDialogService.ShowCustomDialog(
-            ds =>@<SDKModalManyToMany
+            ds =>@<SDKEntityMultiSelectorModal
                         Business=@BusinessRelated
                         RowidRecordsRelated=@RowidRecordsRelated
                         ItemsSelected=@ItemsSelected
                         SDKManyToManySelectorRef=@this
+                        OnAddAction=@OnAddActionModal
+                        ResourceTagButtonAdd="@AddButtonResourceTagMulti"
                     />,
             width:"80%",
-            ResourceTag:"Custom.BLUser.MultiselectMessage"
+            ResourceTag:"Custom.SDKEntityMultiSelector.MultiselectMessage"
         );
-    }
-
-    public void CloseModal()
-    {
-        SDKDialogService.Close();
-        _ = RefreshListView();
     }
 }

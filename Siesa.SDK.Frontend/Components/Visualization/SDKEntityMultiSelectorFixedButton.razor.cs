@@ -1,12 +1,13 @@
+
+
+using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Siesa.SDK.Frontend.Services;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Siesa.SDK.Frontend.Components.Visualization
 {
-    public partial class SDKFixedButtonManyToMany : ComponentBase
+    public partial class SDKEntityMultiSelectorFixedButton : ComponentBase
     {
         [Parameter] public string ResourceTag { get; set; }
         [Parameter] public Action OnCustomClick {get; set;}

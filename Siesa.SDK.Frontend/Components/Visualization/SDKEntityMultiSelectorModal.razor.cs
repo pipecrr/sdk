@@ -12,12 +12,14 @@ using Siesa.SDK.Frontend.Services;
 
 namespace Siesa.SDK.Frontend.Components.Visualization
 {
-    public partial class SDKModalManyToMany : ComponentBase
+    public partial class SDKEntityMultiSelectorModal : ComponentBase
     {
         [Parameter] public dynamic Business {get; set;}
         [Parameter] public List<int> ItemsSelected {get; set;}
         [Parameter] public List<int> RowidRecordsRelated {get; set;}
-        [Parameter] public SDKManyToManySelector SDKManyToManySelectorRef {get; set;}
+        [Parameter] public SDKEntityMultiSelector SDKManyToManySelectorRef {get; set;}
+        [Parameter] public Action<List<int>> OnAddAction {get; set;}
+        [Parameter] public string ResourceTagButtonAdd {get; set;} = "Custom.SDKEntityMultiSelectorModal.AddItems";
         [Inject] public SDKNotificationService NotificationService {get; set;}
         private List<string> ConstantFilters { get; set; }
 
@@ -45,6 +47,11 @@ namespace Siesa.SDK.Frontend.Components.Visualization
             {
                 _ = NotificationService.ShowInfo("Custom.UserComponentModal.SelectUserMessage");
                 return;
+            }
+
+            if (OnAddAction != null)
+            {
+                OnAddAction(ItemsSelected);
             }
             RowidRecordsRelated.AddRange(ItemsSelected);
             if(SDKManyToManySelectorRef != null)
