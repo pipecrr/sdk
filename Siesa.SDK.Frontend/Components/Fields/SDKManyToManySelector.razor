@@ -25,12 +25,13 @@
                         FieldName="FieldRelated"
                         @ref="_sdkEntityFieldRef"
                         IsMultiple="true"
-                        RelatedBusiness="RelatedBusiness"
+                        RelatedBusiness="@RelatedBusiness"
+                        Filters="@EntityFieldFilters"
                     />
                 </div>
                 <div class="d-flex align-items-end ml-1">
                     <SDKButton
-                        ResourceTag="Custom.BLUser.MultiselectMessage"
+                        ResourceTag="Multiseleccion"
                         IconCssClass="fa-solid fa-list-check"
                         RenderStyle="SDKButtonRenderStyle.Light"
                         CssClass="btn_multiselect"
@@ -40,9 +41,9 @@
             </div>
             <div class="col-xl-3 col-lg-4 col-md-5 col-sm-4 col-12 d-flex align-items-end form-group">
                 <SDKButton
-                    ResourceTag="Custom.BLUser.AddUsersMessage"
+                    ResourceTag="@AddButtonResourceTag"
                     RenderStyle="SDKButtonRenderStyle.Primary"
-                    Click="@OnAddUserClick"
+                    Click="@AddItem"
                 />
             </div>
         </div>
@@ -55,14 +56,13 @@
                 CssClass="mb-0"
             />
         </span>
-        @if(Users?.Count > 0 && ConstantFilters?.Count > 0)
+        @if(RowidRecordsRelated?.Count > 0 && ConstantFilters?.Count > 0)
         {
-            @*<ListView
+            <ListView
                 @ref="ListViewRef"
                 IsMultiple="true"
-                ViewdefName="user_list"
-                BusinessObj=@Business
-                BusinessName="BLUser"
+                BusinessObj=@BusinessRelated
+                BusinessName="@RelatedBusiness"
                 SetTopBar="false"
                 AllowCreate="false"
                 AllowEdit="false"
@@ -70,16 +70,15 @@
                 AllowDetail="false"
                 ShowSearchForm="false"
                 ConstantFilters="@ConstantFilters"
-                ShowList="@ShowList"
                 OnSelectedRow="@OnSelectRow"
-            />*@
+            />
 
-            @*<UserComponentFixedButton
-                @ref="UserComponentFixedButtonRef"
-                Business=@Business
-                ResourceTag=@FixedButtonResourceTag
-                OnCustomClick=@OnFixedClick
-            />*@
+            <SDKFixedButtonManyToMany
+                @ref="ComponentFixedButtonRef"
+                ResourceTag=@RemoveButtonResourceTag
+                OnCustomClick=@FixedClick
+                ShowButton="@ShowButtonRemove"
+            />
         }else
         {
             <div class="col-12 text-center font_color_primary_dark pt-3 pb-0">
@@ -98,11 +97,12 @@
 {
     public async Task OpenModal()
     {
-        Business.CheckIsAdding = true;
-
         await SDKDialogService.ShowCustomDialog(
-            ds =>@<UserComponentModal
-                        Business=@Business
+            ds =>@<SDKModalManyToMany
+                        Business=@BusinessRelated
+                        RowidRecordsRelated=@RowidRecordsRelated
+                        ItemsSelected=@ItemsSelected
+                        SDKManyToManySelectorRef=@this
                     />,
             width:"80%",
             ResourceTag:"Custom.BLUser.MultiselectMessage"
@@ -112,7 +112,6 @@
     public void CloseModal()
     {
         SDKDialogService.Close();
-
-        Business.CheckIsAdding = false;
+        _ = RefreshListView();
     }
 }

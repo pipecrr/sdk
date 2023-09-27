@@ -30,6 +30,7 @@ using System.Reflection.Emit;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json.Linq;
 using System.Runtime.CompilerServices;
+using Siesa.SDK.Frontend.Components.Flex;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -163,6 +164,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private List<Button> ExtraButtons { get; set; }
         private Button CreateButton { get; set; }
         public RadzenDataGrid<object> _gridRef;
+        private FlexComponent _flexComponentRef;
         
         /// <summary>
         /// Gets or sets the fields hidden.
@@ -417,6 +419,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             BusinessObj.ParentComponent = this;
             
             hideCustomColumn();
+            FilterFlex = GetFilters(_base_filter);
             StateHasChanged();
 
         }
@@ -629,7 +632,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 var parameterType = typeof(ParameterAttribute);
                 if(dataAnnotationProperty == parameterType){
                     try{
-                        if (parameters.TryGetValue<string>(property.Name, out var value)){
+                        if (parameters.TryGetValue<dynamic>(property.Name, out var value)){
                             var valueProperty = property.GetValue(this, null);
                             if (value != null && value != valueProperty){
                                 result = true;

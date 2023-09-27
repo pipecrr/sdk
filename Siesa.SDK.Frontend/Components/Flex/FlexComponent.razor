@@ -215,7 +215,8 @@
             FlexAttributes = NewFlexAttributes;
             //updateFieldsHide
             JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+_guid+".props.updateFieldsHide", fieldsHiddenListString);
-
+            JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+_guid+".props.updateFilters", FlexFilters, FilterSearch);
+            RefreshData();
             StateHasChanged();
         }
         
@@ -323,7 +324,7 @@
         JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+_guid+".props.save", true);
     }
 
-    void RefreshData()
+    public void RefreshData()
     {
         JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+_guid+".props.fetchPreviewData");
     }
