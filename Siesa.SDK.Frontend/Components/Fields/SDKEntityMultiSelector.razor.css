@@ -1,0 +1,13 @@
+.font_color_primary_dark {
+    color: var(--color_primary_dark);
+}
+
+::deep .btn_multiselect{
+    font-size: 1.1rem;
+    height: 1.938rem;
+    width: 1.938rem;
+    border: 1px solid #ced4da;
+    background: var(--color_light);
+    color: var(--color_primary_light);
+    line-height: 1;
+}
