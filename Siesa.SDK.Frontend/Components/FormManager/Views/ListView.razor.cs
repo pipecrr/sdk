@@ -351,7 +351,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 ShowLinkTo = ListViewModel.ShowLinkTo;
                 ServerPaginationFlex = ListViewModel.ServerPaginationFlex;
                 _showActions = ListViewModel.ShowActions;
-                if(ShowActions != null){
+                if(ShowActions != null && ViewdefName == null){
                     _showActions = ShowActions.Value;
                 }
                 if(ListViewModel.AllowEdit != null){

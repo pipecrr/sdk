@@ -21,11 +21,11 @@ namespace Siesa.SDK.Frontend.Components.Fields
         [Parameter] public string AddButtonResourceTag {get; set;} = "Custom.SDKEntityMultiSelector.AddItems";
         [Parameter] public string AddButtonResourceTagMulti {get; set;}
         [Parameter] public string LabelResourceTag { get; set; }
-        [Parameter] public Action<List<int>> OnAddAction {get; set;}
+        [Parameter] public EventCallback<List<int>> OnAddAction {get; set;}
         [Parameter] public Action<List<int>> OnAddActionModal {get; set;}
         [Parameter] public Action<List<int>> OnRemoveAction {get; set;}
         [Parameter] public string ListResourceTag {get; set;}
-        [Parameter] public string EmptyResourceTag {get; set;}
+        [Parameter] public string EmptyResourceTag {get; set;} = "Custom.SDKEntityMultiSelector.Empty";
         [Inject] public SDKGlobalLoaderService LoaderService {get; set;}
         [Inject] public SDKNotificationService NotificationService {get; set;}
         [Inject] public IBackendRouterService BackendRouterService { get; set; }
@@ -41,7 +41,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         public bool ShowButtonRemove {get; set;}
         private dynamic BusinessRelated {get; set;}
         
-        public List<dynamic> FieldRelated {get; set;}
+        public List<dynamic> FieldRelated {get; set;} = new();
 
         protected override async Task OnInitializedAsync()
         {
@@ -63,7 +63,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         private void SetNotIn()
         {
             EntityFieldFilters.Clear();
-            if (RowidRecordsRelated is null) return;
+            if (RowidRecordsRelated is null || !RowidRecordsRelated.Any()) return;
             var filter = new { Rowid__notin = RowidRecordsRelated };
             EntityFieldFilters.Add(new List<object>(){filter});
         }
@@ -125,9 +125,9 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 _ = NotificationService.ShowError("Custom.SDKEntityMultiSelector.ErrorToAssign");
                 return;
             }
-            if (OnAddAction is not null)
+            if (OnAddAction.HasDelegate)
             {
-                OnAddAction(rowids);
+                OnAddAction.InvokeAsync(rowids);
             }
             RowidRecordsRelated.AddRange(rowids);
             _ = SdkEntityFieldRef.Clean();

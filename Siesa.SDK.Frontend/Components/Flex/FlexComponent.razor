@@ -190,7 +190,6 @@
         NewFlexAttributes.Add("bl_name_list", BlNameList);
         NewFlexAttributes.Add("has_search", HasSearch.ToString());
         NewFlexAttributes.Add("viewdef_name", ViewdefName);
-        //NewFlexAttributes.Add("guid_list_view", _guid);
         NewFlexAttributes.Add("can_edit_list_view", CanEdit.ToString());
         NewFlexAttributes.Add("can_delete_list_view", CanDelete.ToString());
         NewFlexAttributes.Add("can_detail_list_view", CanDetail.ToString());
@@ -216,6 +215,9 @@
             //updateFieldsHide
             JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+_guid+".props.updateFieldsHide", fieldsHiddenListString);
             JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+_guid+".props.updateFilters", FlexFilters, FilterSearch);
+            if(IsListView){
+                JSRuntime.InvokeVoidAsync("window.ListViewInstance", DotNetObjectReference.Create(ListView), GuidListView);
+            }
             RefreshData();
             StateHasChanged();
         }
