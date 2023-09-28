@@ -6,6 +6,7 @@ namespace Siesa.SDK.Shared.DTOS
 {
     public class Entry
     {
+        public int Rowid { get; set; }
         public string Name { get; set; }
         public bool IsDirectory { get; set; }
         public List<Entry> Children { get; set; }
