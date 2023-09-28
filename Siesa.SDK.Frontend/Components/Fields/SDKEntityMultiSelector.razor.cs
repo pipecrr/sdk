@@ -102,7 +102,6 @@ namespace Siesa.SDK.Frontend.Components.Fields
         /// </summary>
         public bool ShowButtonRemove {get; set;}
         /// <summary>
-        / <summary>
         /// Name of the field to get value from entity field component.
         /// </summary>
         public List<dynamic> FieldRelated {get; set;} = new();
@@ -217,7 +216,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         }
         /// <summary>
         /// Closes the modal dialog.
-        /// </summary
+        /// </summary>
         public void CloseModal()
         {
             SDKDialogService.Close();
