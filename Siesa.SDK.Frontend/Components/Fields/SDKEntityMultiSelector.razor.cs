@@ -12,24 +12,79 @@ using Siesa.SDK.Shared.Utilities;
 
 namespace Siesa.SDK.Frontend.Components.Fields
 {
+    /// <summary>
+    /// Represents a multi-selector component for entities.
+    /// </summary>
     public partial class SDKEntityMultiSelector
-    {
+    {   
+        /// <summary>
+        /// Gets or sets the related business name.
+        /// </summary>
         [Parameter] public string RelatedBusiness {get; set;}
+        /// <summary>
+        /// Gets or sets the list of Rowids for related records.
+        /// </summary>
         [Parameter] public List<int> RowidRecordsRelated {get; set;}
+        /// <summary>
+        /// Gets or sets the name of the view definition, optional.
+        /// </summary>
         [Parameter] public string ViewdefName {get; set;}
+        /// <summary>
+        /// Gets or sets the resource tag for the Remove button.
+        /// </summary>
         [Parameter] public string RemoveButtonResourceTag {get; set;} = "Custom.SDKEntityMultiSelector.RemoveItems";
+        /// <summary>
+        /// Gets or sets the resource tag for the Add button.
+        /// </summary>
         [Parameter] public string AddButtonResourceTag {get; set;} = "Custom.SDKEntityMultiSelector.AddItems";
+        /// <summary>
+        /// Gets or sets the resource tag for the Add button in modal.
+        /// </summary>
         [Parameter] public string AddButtonResourceTagMulti {get; set;}
+        /// <summary>
+        /// Gets or sets the resource tag for the label, default is the related business plural.
+        /// </summary>
         [Parameter] public string LabelResourceTag { get; set; }
+        /// <summary>
+        /// Gets or sets the event callback for the add action, default add elements to the list of Rowids.
+        /// </summary>
+        /// <param name="rowids">The list of Rowids to add.</param>
         [Parameter] public EventCallback<List<int>> OnAddAction {get; set;}
+        /// <summary>
+        /// Gets or sets the action for the add action in modal, default add elements to the list of Rowids.
+        /// </summary>
+        /// <param name="rowids">The list of Rowids to add.</param>
         [Parameter] public Action<List<int>> OnAddActionModal {get; set;}
+        /// <summary>
+        /// Gets or sets the action for the remove action.
+        /// </summary>
+        /// <param name="rowids">The list of Rowids to remove.</param>
         [Parameter] public Action<List<int>> OnRemoveAction {get; set;}
+        /// <summary>
+        /// Gets or sets the resource tag for the list, default not set.
+        /// </summary>
         [Parameter] public string ListResourceTag {get; set;}
+        /// <summary>
+        /// Gets or sets the resource tag for empty content.
+        /// </summary>
         [Parameter] public string EmptyResourceTag {get; set;} = "Custom.SDKEntityMultiSelector.Empty";
+        /// <summary>
+        /// Gets or sets the SDKGlobalLoaderService dependency.
+        /// </summary>
         [Inject] public SDKGlobalLoaderService LoaderService {get; set;}
+        /// <summary>
+        /// Gets or sets the SDKNotificationService dependency.
+        /// </summary>
         [Inject] public SDKNotificationService NotificationService {get; set;}
+        /// <summary>
+        /// Gets or sets the IBackendRouterService dependency.
+        /// </summary>
         [Inject] public IBackendRouterService BackendRouterService { get; set; }
+        /// <summary>
+        /// Gets or sets the IServiceProvider dependency.
+        /// </summary>
         [Inject] public IServiceProvider ServiceProvider { get; set; }
+
         private SDKEntityMultiSelectorFixedButton ComponentFixedButtonRef {get; set;}
         private ListView ListViewRef {get; set;}
         private SDKEntityField SdkEntityFieldRef {get;set;}
@@ -37,12 +92,24 @@ namespace Siesa.SDK.Frontend.Components.Fields
         private string LastFilter { get; set; }
         private List<List<object>> EntityFieldFilters { get; set; } = new(); 
         private bool ShowList { get; set; } = true;
-        public List<int> ItemsSelected {get; set;}
-        public bool ShowButtonRemove {get; set;}
         private dynamic BusinessRelated {get; set;}
-        
+        /// <summary>
+        /// Gets or sets the list of rowid items selected to modal.
+        /// </summary>
+        public List<int> ItemsSelected {get; set;}
+        /// <summary>
+        /// Gets or sets the show button remove.
+        /// </summary>
+        public bool ShowButtonRemove {get; set;}
+        /// <summary>
+        / <summary>
+        /// Name of the field to get value from entity field component.
+        /// </summary>
         public List<dynamic> FieldRelated {get; set;} = new();
 
+        /// <summary>
+        /// Initializes the component asynchronously.
+        /// </summary>
         protected override async Task OnInitializedAsync()
         {
             if (string.IsNullOrEmpty(LabelResourceTag))
@@ -88,6 +155,9 @@ namespace Siesa.SDK.Frontend.Components.Fields
             return constantFilters;
         }
 
+        /// <summary>
+        /// Refreshes the list view with updated data.
+        /// </summary>
         public void RefreshListView()
         {
             SetFilter();
@@ -96,7 +166,9 @@ namespace Siesa.SDK.Frontend.Components.Fields
                 _ = ListViewRef.Refresh(true);
             }
         }
-
+        /// <summary>
+        /// This method is called when the component is ready to start, having received its initial parameters from its parent in the render tree.
+        /// </summary>        
         protected override async Task OnParametersSetAsync()
         {
             RefreshListView();
@@ -143,7 +215,9 @@ namespace Siesa.SDK.Frontend.Components.Fields
             RowidRecordsRelated = RowidRecordsRelated.Where(x => !ItemsSelected.Any(y => y == x)).ToList();
             RefreshListView();
         }
-        
+        /// <summary>
+        /// Closes the modal dialog.
+        /// </summary
         public void CloseModal()
         {
             SDKDialogService.Close();
