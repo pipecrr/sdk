@@ -654,7 +654,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private void Restart()
         {
-            guidListView = Guid.NewGuid().ToString();
+            guidListView = Guid.NewGuid().ToString().Replace("-", "", StringComparison.Ordinal);
             Loading = false;
             ErrorMsg = "";
             ErrorList = new List<string>();
@@ -695,7 +695,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             try
             {
                 Type type = BusinessObj.BaseObj.GetType();
-                if (BusinessObj.BaseObj.RowidCompany != 0)
+                bool containsRowidCompany = type.GetProperties().Any(x => x.Name == "RowidCompany");
+                if (containsRowidCompany && BusinessObj.BaseObj.RowidCompany != 0)
                 {
                     if (Utilities.IsAssignableToGenericType(type, typeof(BaseCompany<>)))
                     {
@@ -912,9 +913,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             NavManager.NavigateTo($"{BusinessName}/Import/");
         }
         
-        private void GoToExport()
+        private async Task GoToExport()
         {
-            _ = JSRuntime.InvokeAsync<object>("oreports_app_table_flexdebug_"+guidListView+".dataGridRef.instance.exportToExcel", false);
+            string resourceTag = $"{BusinessName}.Plural";
+            string resourceName = await UtilsManager.GetResource(resourceTag).ConfigureAwait(true);
+            await JSRuntime.InvokeAsync<object>("oreports_app_table_flexdebug_"+guidListView+".exportToExcel", resourceName);
         }
 
         private void GoToDetail(Int64 id)

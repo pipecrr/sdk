@@ -45,6 +45,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         [Parameter] public bool Disabled { get; set; }
         [Parameter] public List<List<object>> Filters { get; set; }
         [Parameter] public bool CanSearch { get; set; } = true;
+        [Parameter] public RenderFragment<dynamic> Template { get; set; }
         
         private bool _isOpenDropDown;
         private string _idDiv;

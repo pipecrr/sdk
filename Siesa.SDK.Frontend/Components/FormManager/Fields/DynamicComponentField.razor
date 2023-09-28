@@ -1,0 +1,18 @@
+﻿@typeparam TItem
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.FormManager.ViewModels
+
+
+@if (IsEditable)
+{
+    <div>
+        @_editableField
+    </div>
+}
+else
+{
+    <div>
+        @GetValueColumn()
+    </div>
+}
+

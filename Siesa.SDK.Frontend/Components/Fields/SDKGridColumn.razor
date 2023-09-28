@@ -1,8 +1,19 @@
 @typeparam TItem
 @inherits SDKComponent
 @using Siesa.SDK.Frontend.Components
+@using Siesa.SDK.Frontend.Components.FormManager.Fields
 
-<RadzenDataGridColumn TItem="@TItem" Title="@Title" Width="@Width" Filterable="@Filterable" Sortable="@Sortable" Property="@Property" Type="@ColumnType" Template="@Template" TextAlign="@TextAlignInternal" FormatString="@FormatString" CssClass="@GetCssClass()" HeaderTemplate="@HeaderTemplate" UniqueID="@UniqueId">
+<RadzenDataGridColumn TItem="@TItem" Title="@Title" Width="@Width" Filterable="@Filterable" Sortable="@Sortable" Property="@Property" Type="@ColumnType"  TextAlign="@TextAlignInternal" FormatString="@FormatString" CssClass="@GetCssClass()" HeaderTemplate="@HeaderTemplate" UniqueID="@UniqueId">
+    <Template Context="context">
+        @if(Template != null && !IsEditable){
+            <div>
+                @Template(context)
+            </div>
+        }else
+        {   
+            <DynamicComponentField TItem="TItem" Context="@context" Property="@Property" IsEditable="@IsEditable" OnChangeColumn="@OnChangeColumn" RelatedBusiness="@RelatedBusiness"/>
+        }
+    </Template>
 </RadzenDataGridColumn>
 
 @code {
@@ -20,6 +31,9 @@
     [Parameter] public bool IsActionColumn {get; set;}
     [Parameter] public RenderFragment HeaderTemplate { get; set; }
     [Parameter] public string UniqueId { get; set; }
+    [Parameter] public bool IsEditable { get; set; }
+    [Parameter] public Action<TItem, object> OnChangeColumn { get; set; }
+    [Parameter] public string RelatedBusiness { get; set; }
 
     private Radzen.TextAlign TextAlignInternal
     {

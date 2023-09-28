@@ -254,7 +254,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         protected async Task InitView(string bName = null)
         {
             Loading = true;
-            IsDocument = Utilities.CheckIsDocument(BusinessObj, typeof(BLFrontendDocument<,>));
+            IsDocument = Utilities.CheckIsDocument(BusinessObj, typeof(BLFrontendDocument<,,>));
             if (bName == null)
             {
                 bName = BusinessName;
