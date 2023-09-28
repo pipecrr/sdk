@@ -48,17 +48,14 @@ namespace Siesa.SDK.Frontend.Components.Fields
         /// <summary>
         /// Gets or sets the event callback for the add action, default add elements to the list of Rowids.
         /// </summary>
-        /// <param name="rowids">The list of Rowids to add.</param>
         [Parameter] public EventCallback<List<int>> OnAddAction {get; set;}
         /// <summary>
         /// Gets or sets the action for the add action in modal, default add elements to the list of Rowids.
         /// </summary>
-        /// <param name="rowids">The list of Rowids to add.</param>
         [Parameter] public Action<List<int>> OnAddActionModal {get; set;}
         /// <summary>
         /// Gets or sets the action for the remove action.
         /// </summary>
-        /// <param name="rowids">The list of Rowids to remove.</param>
         [Parameter] public Action<List<int>> OnRemoveAction {get; set;}
         /// <summary>
         /// Gets or sets the resource tag for the list, default not set.
@@ -171,7 +168,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
         protected override async Task OnParametersSetAsync()
         {
             RefreshListView();
-            await base.OnParametersSetAsync();
+            await base.OnParametersSetAsync().ConfigureAwait(true);
         }
 
         private void OnSelectRow(IList<dynamic> items)
