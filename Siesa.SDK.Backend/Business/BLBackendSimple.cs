@@ -46,6 +46,7 @@ using RabbitMQ.Client.Events;
 using Siesa.Global.Enums;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.IO;
 
 namespace Siesa.SDK.Business
 {
@@ -143,11 +144,12 @@ namespace Siesa.SDK.Business
             _backendRouterService = _provider.GetService(typeof(IBackendRouterService)) as IBackendRouterService;
             _configuration = (IConfiguration)_provider.GetService(typeof(IConfiguration));
             _useS3 = _configuration.GetValue<bool>("AWS:UseS3");
-            if(_useS3){
+            if (_useS3)
+            {
                 _s3Client = (IAmazonS3)_provider.GetService(typeof(IAmazonS3)) as IAmazonS3;
             }
 
-            if(string.IsNullOrEmpty(BusinessName))
+            if (string.IsNullOrEmpty(BusinessName))
             {
                 BusinessName = this.GetType().Name;
             }
@@ -258,8 +260,9 @@ namespace Siesa.SDK.Business
                 ).Select(x =>
                     x.GetType().GetProperty("PropertyNames").GetValue(x, null)
                 ).ToList();
-                
-            if(BaseObj.GetType().GetProperty("RowidAttachment") != null){
+
+            if (BaseObj.GetType().GetProperty("RowidAttachment") != null)
+            {
                 _containAttachments = true;
             }
 
@@ -321,11 +324,12 @@ namespace Siesa.SDK.Business
             _queueService = (IQueueService)_provider.GetService(typeof(IQueueService));
             _configuration = (IConfiguration)_provider.GetService(typeof(IConfiguration));
             _useS3 = _configuration.GetValue<bool>("AWS:UseS3");
-            if(_useS3){
+            if (_useS3)
+            {
                 _s3Client = (IAmazonS3)_provider.GetService(typeof(IAmazonS3));
             }
 
-            if(string.IsNullOrEmpty(BusinessName))
+            if (string.IsNullOrEmpty(BusinessName))
             {
                 BusinessName = this.GetType().Name;
             }
@@ -438,15 +442,19 @@ namespace Siesa.SDK.Business
                 }
 
                 query = query.Where("Rowid == @0", ConvertToRowidType(rowid));
-                if(hasRelated){
+                if (hasRelated)
+                {
                     var dynamicQuery = query.Select($"new ({selectedFields})");
                     dynamic dynamicObj = dynamicQuery.FirstOrDefault();
 
                     dynamic result = (T)CreateDynamicObject(typeof(T), dynamicObj);
-    
+
                     return result;
-                }else{
-                    if(hasExtraFields){
+                }
+                else
+                {
+                    if (hasExtraFields)
+                    {
                         query = query.Select<T>($"new ({selectedFields})");
                     }
                     return query.FirstOrDefault();
@@ -464,27 +472,37 @@ namespace Siesa.SDK.Business
         public dynamic CreateDynamicObject(Type type, dynamic dynamicObj)
         {
             dynamic result = Activator.CreateInstance(type);
-            foreach (var property in dynamicObj.GetType().GetProperties()){
+            foreach (var property in dynamicObj.GetType().GetProperties())
+            {
                 var propertyName = property.Name;
                 var splitProperty = propertyName.Split('_');
-                if(splitProperty.Length > 1){
+                if (splitProperty.Length > 1)
+                {
                     var auxType = result;
-                    for (int i = 0; i < splitProperty.Length; i++){
+                    for (int i = 0; i < splitProperty.Length; i++)
+                    {
                         propertyName = splitProperty[i];
-                        if(i == splitProperty.Length-1){
+                        if (i == splitProperty.Length - 1)
+                        {
                             auxType.GetType().GetProperty(propertyName).SetValue(auxType, property.GetValue(dynamicObj, null));
-                        }else{
+                        }
+                        else
+                        {
                             dynamic InstanceDynamicProp = auxType.GetType().GetProperty(propertyName).GetValue(auxType, null);
-                            if(InstanceDynamicProp == null){
+                            if (InstanceDynamicProp == null)
+                            {
                                 InstanceDynamicProp = Activator.CreateInstance(auxType.GetType().GetProperty(propertyName).PropertyType);
                             }
                             auxType.GetType().GetProperty(propertyName).SetValue(auxType, InstanceDynamicProp);
                             auxType = InstanceDynamicProp;
                         }
                     }
-                }else{
+                }
+                else
+                {
                     bool existProperty = type.GetProperty(propertyName) != null;
-                    if(existProperty){
+                    if (existProperty)
+                    {
                         var propertyValue = property.GetValue(dynamicObj, null);
                         type.GetProperty(propertyName).SetValue(result, propertyValue);
                     }
@@ -561,9 +579,10 @@ namespace Siesa.SDK.Business
                 {
                     return result;
                 }
-                using(SDKContext context = CreateDbContext())
+                using (SDKContext context = CreateDbContext())
                 {
-                    try{
+                    try
+                    {
                         if (!context.Database.IsInMemory())
                         {
                             context.BeginTransaction();
@@ -588,7 +607,9 @@ namespace Siesa.SDK.Business
                             context.Commit();
                         }
                         AfterValidateAndSave(ref result);
-                    }catch(Exception ex){
+                    }
+                    catch (Exception ex)
+                    {
                         if (!context.Database.IsInMemory())
                         {
                             context.Rollback();
@@ -615,7 +636,7 @@ namespace Siesa.SDK.Business
         protected virtual void SaveDynamicEntity(Int64 rowid, SDKContext context)
         {
             var nameSpaceEntity = typeof(T).Namespace;
-            var nameDynamicEntity = "D"+typeof(T).Name.Substring(1);
+            var nameDynamicEntity = "D" + typeof(T).Name.Substring(1);
             var dynamicEntityType = Utilities.SearchType(nameSpaceEntity + "." + nameDynamicEntity, true);
 
             var dynamicEntitiesType = typeof(List<>).MakeGenericType(new Type[] { dynamicEntityType });
@@ -627,7 +648,7 @@ namespace Siesa.SDK.Business
             bool existUpdate = false;
             foreach (dynamic dynamicEntityDTO in DynamicEntities)
             {
-                var rowidGroup = dynamicEntityDTO.Rowid; 
+                var rowidGroup = dynamicEntityDTO.Rowid;
                 var DynamicEntityFieldsType = typeof(DynamicEntityFieldsDTO<>).MakeGenericType(BaseObj.GetRowidType());
                 dynamic fields = dynamicEntityDTO.Fields;
                 var dynamicObject = JObject.Parse(dynamicEntityDTO.DynamicObject.ToString());
@@ -636,28 +657,36 @@ namespace Siesa.SDK.Business
                     dynamic dynamicEntity = Activator.CreateInstance(dynamicEntityType);
                     dynamicEntity.GetType().GetProperty("RowidRecord").SetValue(dynamicEntity, Convert.ChangeType(rowidGroup, dynamicEntity.GetType().GetProperty("RowidRecord").PropertyType));
                     SetValuesDynamicEntity(dynamicEntity, dynamicObject, prop, fields, dynamicEntityType, rowid);
-                    
-                    if(dynamicEntity.Rowid == 0){
+
+                    if (dynamicEntity.Rowid == 0)
+                    {
                         methodAdd.Invoke(dynamicEntitiesToInsert, new object[] { dynamicEntity });
                         existInsert = true;
-                    }else{
+                    }
+                    else
+                    {
                         methodAdd.Invoke(dynamicEntitiesToUpdate, new object[] { dynamicEntity });
                         existUpdate = true;
                     }
                 }
             }
 
-            try{
-                if(existUpdate){
+            try
+            {
+                if (existUpdate)
+                {
                     Assembly assembly = typeof(DbContextExtensions).Assembly;
                     var updateRangeMethod = typeof(DbContext).GetMethod("UpdateRange", new Type[] { typeof(IEnumerable<>).MakeGenericType(dynamicEntityType) });
                     updateRangeMethod.Invoke(context, new object[] { dynamicEntitiesToUpdate });
                 }
-                if(existInsert){
+                if (existInsert)
+                {
                     var AddRangeMethod = typeof(DbContext).GetMethod("AddRange", new Type[] { typeof(IEnumerable<>).MakeGenericType(dynamicEntityType) });
                     AddRangeMethod.Invoke(context, new object[] { dynamicEntitiesToInsert });
                 }
-            }catch(Exception ex){
+            }
+            catch (Exception ex)
+            {
                 throw new Exception("Error updating or inserting aditional fields", ex);
             }
 
@@ -665,7 +694,7 @@ namespace Siesa.SDK.Business
         }
 
         private void SetValuesDynamicEntity(dynamic dynamicEntity, dynamic dynamicObject, dynamic prop, dynamic fields, Type dynamicEntityType, dynamic rowidRecord)
-        {   
+        {
             var value = prop.Value;
             if (value.Type == JTokenType.Date)
             {
@@ -810,7 +839,7 @@ namespace Siesa.SDK.Business
         private Int64 Save(SDKContext context)
         {
             this._logger.LogInformation($"Save {this.GetType().Name}");
-            
+
             context.SetProvider(_provider);
             if (BaseObj.GetRowid() == 0)
             {
@@ -869,7 +898,8 @@ namespace Siesa.SDK.Business
                 }
                 using (SDKContext context = CreateDbContext())
                 {
-                    try{
+                    try
+                    {
                         if (!context.Database.IsInMemory())
                         {
                             context.BeginTransaction();
@@ -884,7 +914,7 @@ namespace Siesa.SDK.Business
                         if (!context.Database.IsInMemory())
                         {
                             context.Commit();
-                        }   
+                        }
                         if (_queueService != null && !string.IsNullOrEmpty(BusinessName))
                         {
                             _queueService.SendMessage(BusinessName, enumMessageCategory.CRUD, new QueueMessageDTO()
@@ -893,7 +923,8 @@ namespace Siesa.SDK.Business
                                 Rowid = result.Rowid
                             });
                         }
-                    }catch(DbUpdateException DbEx)
+                    }
+                    catch (DbUpdateException DbEx)
                     {
                         if (!context.Database.IsInMemory())
                         {
@@ -926,52 +957,66 @@ namespace Siesa.SDK.Business
         }
 
         [SDKExposedMethod]
-        public void DeleteDynamicEntityColumns(List<int> rowidsEnityColumn){
-            try{
+        public void DeleteDynamicEntityColumns(List<int> rowidsEnityColumn)
+        {
+            try
+            {
                 using (SDKContext context = CreateDbContext())
                 {
                     context.SetProvider(_provider);
                     var columns = context.Set<E00251_DynamicEntityColumn>().Where(x => rowidsEnityColumn.Contains(x.Rowid)).ToList();
-                    if(columns != null){
+                    if (columns != null)
+                    {
                         context.RemoveRange(columns);
                         rowidsEnityColumn = columns.Select(x => x.Rowid).ToList();
                         DeleteDynamicEntity(context, rowidsEnityColumn);
                     }
                     context.SaveChanges();
                 }
-            }catch(Exception ex){
+            }
+            catch (Exception ex)
+            {
                 throw new Exception("Error deleting aditional fields", ex);
             }
         }
 
 
-        protected virtual void DeleteDynamicEntity(SDKContext Context, List<int> rowidsEnityColumn = null){
+        protected virtual void DeleteDynamicEntity(SDKContext Context, List<int> rowidsEnityColumn = null)
+        {
             var nameSpaceEntity = typeof(T).Namespace;
-            var nameDynamicEntity = "D"+typeof(T).Name.Substring(1);
+            var nameDynamicEntity = "D" + typeof(T).Name.Substring(1);
             var dynamicEntityType = Utilities.SearchType(nameSpaceEntity + "." + nameDynamicEntity, true);
 
-            if(dynamicEntityType != null){
-                try{
+            if (dynamicEntityType != null)
+            {
+                try
+                {
                     var dynamicContextSet = Context.GetType().GetMethod("AllSet", types: Type.EmptyTypes).MakeGenericMethod(dynamicEntityType).Invoke(Context, null);
                     var rowid = BaseObj.GetRowid();
                     Assembly assemblyWhere = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
-                    var whereMethod = typeof(IQueryable).GetExtensionMethod(assemblyWhere, "Where", new[] { typeof(IQueryable), typeof(string), typeof(object[])});
+                    var whereMethod = typeof(IQueryable).GetExtensionMethod(assemblyWhere, "Where", new[] { typeof(IQueryable), typeof(string), typeof(object[]) });
 
-                    if(rowidsEnityColumn != null){
+                    if (rowidsEnityColumn != null)
+                    {
                         dynamicContextSet = whereMethod.Invoke(dynamicContextSet, new object[] { dynamicContextSet, "RowidEntityColumn in @0", new object[] { rowidsEnityColumn } });
-                    }else{
+                    }
+                    else
+                    {
                         dynamicContextSet = whereMethod.Invoke(dynamicContextSet, new object[] { dynamicContextSet, "RowidRecord = @0", new object[] { rowid } });
                     }
 
                     Assembly assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
                     var dynamicListMethod = typeof(IEnumerable).GetExtensionMethod(assemblyDynamic, "ToDynamicList", new[] { typeof(IEnumerable) });
                     dynamic dynamicEntitiesToDelete = dynamicListMethod.Invoke(dynamicContextSet, new object[] { dynamicContextSet });
-                    
-                    if(dynamicEntitiesToDelete.Count > 0){
+
+                    if (dynamicEntitiesToDelete.Count > 0)
+                    {
                         var DeleteRangeMethod = typeof(DbContext).GetMethod("RemoveRange", new Type[] { typeof(IEnumerable<>).MakeGenericType(dynamicEntityType) });
                         DeleteRangeMethod.Invoke(Context, new object[] { dynamicEntitiesToDelete });
                     }
-                }catch(Exception e){
+                }
+                catch (Exception e)
+                {
                     throw new Exception($"Error deleting aditional fields {nameDynamicEntity} {e.Message}");
                 }
 
@@ -1110,8 +1155,9 @@ namespace Siesa.SDK.Business
                 }
                 //total data
                 result.TotalCount = total;
-                
-                if(hasRelated){
+
+                if (hasRelated)
+                {
                     var dynamicQuery = query.Select($"new ({selectedFields})");
                     dynamic dynamicList = dynamicQuery.ToDynamicList();
                     dynamic listEntities = new List<T>();
@@ -1120,10 +1166,13 @@ namespace Siesa.SDK.Business
                         dynamic entity = (T)CreateDynamicObject(typeof(T), dynamicObj);
                         listEntities.Add(entity);
                     }
-    
+
                     result.Data = listEntities;
-                }else{
-                    if(hasExtraFields){
+                }
+                else
+                {
+                    if (hasExtraFields)
+                    {
                         query = query.Select<T>($"new ({selectedFields})");
                     }
                     result.Data = query.ToList();
@@ -1146,11 +1195,11 @@ namespace Siesa.SDK.Business
             CreateQueryExtraFields<T>(query, inlcudesAdd, extraFields, ref selectedFields, ref hasRelated, containAttachments);
         }
 
-        public void CreateQueryExtraFields<J>(IQueryable<J> query, List<string> inlcudesAdd, List<string> extraFields, ref string selectedFields, ref bool hasRelated, bool containAttachments = false)  where J : class
+        public void CreateQueryExtraFields<J>(IQueryable<J> query, List<string> inlcudesAdd, List<string> extraFields, ref string selectedFields, ref bool hasRelated, bool containAttachments = false) where J : class
         {
             bool hasRelatedTmp = false;
             extraFields.Add("Rowid");
-            if(containAttachments)
+            if (containAttachments)
             {
                 extraFields.Add("RowidAttachment");
             }
@@ -1161,23 +1210,24 @@ namespace Siesa.SDK.Business
                 {
                     hasRelatedTmp = true;
                     List<string> inlcudes = new List<string>();
-                    for (int i = 0; i < splitInclude.Length-1; i++)
+                    for (int i = 0; i < splitInclude.Length - 1; i++)
                     {
                         inlcudes.Add(splitInclude[i]);
                     }
                     string include = string.Join(".", inlcudes);
-                    if(!inlcudesAdd.Contains(include)){
+                    if (!inlcudesAdd.Contains(include))
+                    {
                         inlcudesAdd.Add(include);
                         query = query.Include(include);
 
                     }
                 }
-                return x+" as "+x.Replace(".","_");
+                return x + " as " + x.Replace(".", "_");
             }).Distinct());
             hasRelated = hasRelatedTmp;
         }
 
-        public Task<T> GetAsync(Int64 rowid,List<string> extraFields = null)
+        public Task<T> GetAsync(Int64 rowid, List<string> extraFields = null)
         {
             throw new NotImplementedException();
         }
@@ -1270,7 +1320,7 @@ namespace Siesa.SDK.Business
             var result = Expression.MemberInit(Expression.New(resultType), bindings);
             return Expression.Lambda<Func<TSource, dynamic>>(result, source);
         }
-        
+
         /// <summary>
         /// Retrieves preview data using SDKFlex component.
         /// </summary>
@@ -1285,7 +1335,7 @@ namespace Siesa.SDK.Business
                 var response = SDKFlexExtension.SDKFlexPreviewData(Context, requestData, AuthenticationService, setTop);
                 return response;
             }
-        }        
+        }
 
         [SDKExposedMethod]
         public ActionResult<long> SaveAttachmentEntity(dynamic BaseObj)
@@ -1307,50 +1357,60 @@ namespace Siesa.SDK.Business
         [SDKExposedMethod]
         public async Task<ActionResult<SDKFileUploadDTO>> SaveFile(byte[] fileBytes, string name, string contentType, bool SaveBytes = false)
         {
-            CanUploadAttachment = await _featurePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.UploadAttachment ,AuthenticationService);
+            CanUploadAttachment = await _featurePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.UploadAttachment, AuthenticationService);
 
-            if(!CanUploadAttachment)
-                return new BadRequestResult<SDKFileUploadDTO>{Success = false, Errors = new List<string> { "You don't have permission to upload attachment" }};
+            if (!CanUploadAttachment)
+                return new BadRequestResult<SDKFileUploadDTO> { Success = false, Errors = new List<string> { "You don't have permission to upload attachment" } };
 
             MemoryStream stream = new MemoryStream(fileBytes);
             var result = new SDKFileUploadDTO();
             var untrustedFileName = name;
             var guid = Guid.NewGuid().ToString();
-            untrustedFileName = string.Concat(guid.Substring(1,10), "_", untrustedFileName);
+            untrustedFileName = string.Concat(guid.Substring(1, 10), "_", untrustedFileName);
             IFormFile file = new FormFile(stream, 0, fileBytes.Length, untrustedFileName, untrustedFileName);
-            if(_useS3){
+            if (_useS3)
+            {
                 return await SaveFileS3(file, contentType);
             }
             IWebHostEnvironment env = _provider.GetRequiredService<IWebHostEnvironment>();
-            try{
+            try
+            {
                 result.FileName = untrustedFileName;
-                if(!SaveBytes){
-                    var path = Path.Combine(env.ContentRootPath,"Uploads");
+                if (!SaveBytes)
+                {
+                    var path = Path.Combine(env.ContentRootPath, "Uploads");
                     Directory.CreateDirectory(path);
                     var filePath = Path.Combine(path, untrustedFileName);
                     await using FileStream fs = new(filePath, FileMode.Create);
                     await file.CopyToAsync(fs);
                     result.Url = filePath;
-                }else{
+                }
+                else
+                {
                     result.Url = untrustedFileName;
                     result.FileContent = fileBytes;
                 }
             }
-            catch (IOException ex){
-                return new BadRequestResult<SDKFileUploadDTO>{Success = false, Errors = new List<string> { ex.Message }};
+            catch (IOException ex)
+            {
+                return new BadRequestResult<SDKFileUploadDTO> { Success = false, Errors = new List<string> { ex.Message } };
             }
-            return new ActionResult<SDKFileUploadDTO>{Success = true, Data = result};
+            return new ActionResult<SDKFileUploadDTO> { Success = true, Data = result };
         }
 
-        private async Task<ActionResult<SDKFileUploadDTO>> SaveFileS3(IFormFile file, string contentType){
+        private async Task<ActionResult<SDKFileUploadDTO>> SaveFileS3(IFormFile file, string contentType)
+        {
             var result = new SDKFileUploadDTO();
             var name = file.FileName;
             var bucketName = _configuration.GetValue<string>("AWS:S3BucketName");
-            if(string.IsNullOrEmpty(bucketName)){
-                return new BadRequestResult<SDKFileUploadDTO>{Success = false, Errors = new List<string> { "Custom.S3.BucketName.NotFound" }};
+            if (string.IsNullOrEmpty(bucketName))
+            {
+                return new BadRequestResult<SDKFileUploadDTO> { Success = false, Errors = new List<string> { "Custom.S3.BucketName.NotFound" } };
             }
-            try{
-                PutObjectRequest request = new PutObjectRequest{
+            try
+            {
+                PutObjectRequest request = new PutObjectRequest
+                {
                     BucketName = bucketName,
                     Key = name,
                     InputStream = file.OpenReadStream(),
@@ -1360,25 +1420,29 @@ namespace Siesa.SDK.Business
                 var response = await _s3Client.PutObjectAsync(request);
                 result.Url = name;
                 result.FileName = name;
-            }catch(AmazonS3Exception ex){
-                return new BadRequestResult<SDKFileUploadDTO>{Success = false, Errors = new List<string> { ex.Message }};
-            }catch(Exception ex){
-                return new BadRequestResult<SDKFileUploadDTO>{Success = false, Errors = new List<string> { ex.Message }};
             }
-            return new ActionResult<SDKFileUploadDTO>{Success = true, Data = result};
+            catch (AmazonS3Exception ex)
+            {
+                return new BadRequestResult<SDKFileUploadDTO> { Success = false, Errors = new List<string> { ex.Message } };
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestResult<SDKFileUploadDTO> { Success = false, Errors = new List<string> { ex.Message } };
+            }
+            return new ActionResult<SDKFileUploadDTO> { Success = true, Data = result };
         }
 
         [SDKExposedMethod]
         public async Task<ActionResult<string>> DownloadFile(string url, string contentType)
         {
-            CanDownloadAttachment = await _featurePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.DownloadAttachment ,AuthenticationService);
+            CanDownloadAttachment = await _featurePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.DownloadAttachment, AuthenticationService);
 
-            if(!CanDownloadAttachment)
-                return new BadRequestResult<string>{Success = false, Errors = new List<string> { "You don't have permission to download attachment" }};
-            
+            if (!CanDownloadAttachment)
+                return new BadRequestResult<string> { Success = false, Errors = new List<string> { "You don't have permission to download attachment" } };
+
             var urlRes = "";
-            if(_useS3)
-        {
+            if (_useS3)
+            {
                 return await DownloadFileS3(url);
             }
             IWebHostEnvironment env = _provider.GetRequiredService<IWebHostEnvironment>();
@@ -1389,28 +1453,31 @@ namespace Siesa.SDK.Business
                 var fileBytes = await File.ReadAllBytesAsync(filePath);
                 var base64 = Convert.ToBase64String(fileBytes);
                 urlRes = $"data:{contentType};base64,{base64}";
-                return new ActionResult<string>{Success = true, Data = urlRes};
+                return new ActionResult<string> { Success = true, Data = urlRes };
                 return new ActionResult<string> { Success = true, Data = base64 };
             }
-            return new BadRequestResult<string>{Success = false, Errors = new List<string> { "Custom.Attatchment.FileNotFound" }};
+            return new BadRequestResult<string> { Success = false, Errors = new List<string> { "Custom.Attatchment.FileNotFound" } };
         }
 
-        public bool GetUses3(){
+        public bool GetUses3()
+        {
             return _useS3;
         }
 
         public async Task<ActionResult<string>> DownloadFileS3(string url)
         {
             var bucketName = _configuration.GetValue<string>("AWS:S3BucketName");
-            if(string.IsNullOrEmpty(bucketName)){
-                return new BadRequestResult<string>{Success = false, Errors = new List<string> { "Custom.S3.BucketName.NotFound" }};
+            if (string.IsNullOrEmpty(bucketName))
+            {
+                return new BadRequestResult<string> { Success = false, Errors = new List<string> { "Custom.S3.BucketName.NotFound" } };
             }
             var duration = _configuration.GetValue<int>("AWS:TimeoutDuration");
-            if(duration == 0){
+            if (duration == 0)
+            {
                 duration = 60;
             }
             try
-            {            
+            {
                 var request = new GetPreSignedUrlRequest
                 {
                     BucketName = bucketName,
@@ -1418,11 +1485,15 @@ namespace Siesa.SDK.Business
                     Expires = DateTime.UtcNow.AddMinutes(duration)
                 };
                 var urlS3 = _s3Client.GetPreSignedURL(request);
-                return new ActionResult<string>{Success = true, Data = urlS3};
-            }catch (AmazonS3Exception ex){
-                return new BadRequestResult<string>{Success = false, Errors = new List<string> { ex.Message }};
-            }catch (Exception ex){
-                return new BadRequestResult<string>{Success = false, Errors = new List<string> { ex.Message }};
+                return new ActionResult<string> { Success = true, Data = urlS3 };
+            }
+            catch (AmazonS3Exception ex)
+            {
+                return new BadRequestResult<string> { Success = false, Errors = new List<string> { ex.Message } };
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestResult<string> { Success = false, Errors = new List<string> { ex.Message } };
             }
         }
 
@@ -1434,9 +1505,11 @@ namespace Siesa.SDK.Business
             var BLAttatchmentDetail = GetBackend("BLAttachmentDetail");
             var response = await BLAttatchmentDetail.Call("GetAttachmentDetail", rowid);
             SDKFileFieldDTO SDKFileField = new SDKFileFieldDTO();
-            if(response.Success){
+            if (response.Success)
+            {
                 var data = response.Data;
-                SDKFileField = new SDKFileFieldDTO{
+                SDKFileField = new SDKFileFieldDTO
+                {
                     Url = data.Url,
                     FileName = data.FileName,
                     FileType = data.FileType,
@@ -1448,20 +1521,25 @@ namespace Siesa.SDK.Business
                 var errors = JsonConvert.DeserializeObject<List<string>>(response.Errors.ToString());
                 throw new ArgumentException(errors[0]);
             }
-            if(_useS3){
+            if (_useS3)
+            {
                 var downloadS3 = await DownloadFileS3(SDKFileField.Url);
-                if(downloadS3.Success){
+                if (downloadS3.Success)
+                {
                     SDKFileField.Url = downloadS3.Data;
-                    return new ActionResult<SDKFileFieldDTO>{Success = true, Data = SDKFileField};
-                }else{
-                    return new BadRequestResult<SDKFileFieldDTO>{Success = false, Errors = downloadS3.Errors};
+                    return new ActionResult<SDKFileFieldDTO> { Success = true, Data = SDKFileField };
+                }
+                else
+                {
+                    return new BadRequestResult<SDKFileFieldDTO> { Success = false, Errors = downloadS3.Errors };
                 }
             }
-            if(SDKFileField.FileByte != null){
+            if (SDKFileField.FileByte != null)
+            {
                 var base64 = Convert.ToBase64String(SDKFileField.FileByte);
                 SDKFileField.FileBase64 = base64;
                 SDKFileField.Url = $"data:{SDKFileField.FileType};base64,{base64}";
-                return new ActionResult<SDKFileFieldDTO>{Success = true, Data = SDKFileField};
+                return new ActionResult<SDKFileFieldDTO> { Success = true, Data = SDKFileField };
             }
             IWebHostEnvironment env = _provider.GetRequiredService<IWebHostEnvironment>();
             var filePath = Path.Combine(SDKFileField.Url);
@@ -1472,9 +1550,9 @@ namespace Siesa.SDK.Business
                 var base64 = Convert.ToBase64String(fileBytes);
                 SDKFileField.FileBase64 = base64;
                 SDKFileField.Url = $"data:{SDKFileField.FileType};base64,{base64}";
-                return new ActionResult<SDKFileFieldDTO>{Success = true, Data = SDKFileField};
+                return new ActionResult<SDKFileFieldDTO> { Success = true, Data = SDKFileField };
             }
-            return new BadRequestResult<SDKFileFieldDTO>{Success = false, Errors = new List<string> { "Custom.Attatchment.FileNotFound" }};
+            return new BadRequestResult<SDKFileFieldDTO> { Success = false, Errors = new List<string> { "Custom.Attatchment.FileNotFound" } };
         }
 
         [SDKExposedMethod]
@@ -1518,10 +1596,10 @@ namespace Siesa.SDK.Business
                 Assembly _assemblyInclude = typeof(Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions).Assembly;
                 var includeMethod = typeof(IQueryable<object>).GetExtensionMethod(_assemblyInclude, "Include", new[] { typeof(IQueryable<object>), typeof(string) });
                 var includeMethodGeneric = includeMethod.MakeGenericMethod(dynamicEntityType);
-                contextSet = includeMethodGeneric.Invoke(contextSet, new object[] { contextSet,"EntityColumn" });
+                contextSet = includeMethodGeneric.Invoke(contextSet, new object[] { contextSet, "EntityColumn" });
                 //where
-                var whereMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "Where", new[] { typeof(IQueryable), typeof(string), typeof(object[])});
-                contextSet = whereMethod.Invoke(null, new object[] { contextSet, "RowidRecord == @0", new object[] { rowid }});
+                var whereMethod = typeof(IQueryable).GetExtensionMethod(_assemblySelect, "Where", new[] { typeof(IQueryable), typeof(string), typeof(object[]) });
+                contextSet = whereMethod.Invoke(null, new object[] { contextSet, "RowidRecord == @0", new object[] { rowid } });
                 Assembly _assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
                 var dynamicListMethod = typeof(IEnumerable).GetExtensionMethod(_assemblyDynamic, "ToDynamicList", new[] { typeof(IEnumerable) });
                 var dynamicList = dynamicListMethod.Invoke(contextSet, new object[] { contextSet });
@@ -1572,7 +1650,7 @@ namespace Siesa.SDK.Business
                     query = query.Take(take.Value);
                 }
 
-                List<string> LeftColumns = new() { "Rowid as ERowid", "Id as EId", "Name as EName"};
+                List<string> LeftColumns = new() { "Rowid as ERowid", "Id as EId", "Name as EName" };
 
                 if (selectFields is { Count: > 0 })
                 {
@@ -1807,7 +1885,7 @@ namespace Siesa.SDK.Business
                     throw new Exception("Data is required");
 
                 this._logger.LogInformation($"Manage U data {this.GetType().Name} - Create, Update, Delete");
-                
+
                 var DynamicEntityType = Utilities.GetVisibilityType(typeof(T));
 
                 var DataToAdd = Data.Where(x => x.Action == BLUserActionEnum.Create)
@@ -1942,7 +2020,8 @@ namespace Siesa.SDK.Business
         }
 
         [SDKExposedMethod]
-        public ActionResult<E00250_DynamicEntity> GetDynamicEntity(int rowid){
+        public ActionResult<E00250_DynamicEntity> GetDynamicEntity(int rowid)
+        {
             using (SDKContext context = CreateDbContext())
             {
                 var resource = context.Set<E00250_DynamicEntity>().Where(x => x.Rowid == rowid).FirstOrDefault();
@@ -2000,18 +2079,26 @@ namespace Siesa.SDK.Business
         [SDKExposedMethod]
         public ActionResult<int> SaveDynamicEntityColumn(E00251_DynamicEntityColumn dynamicEntityColumn)
         {
-            try{                
-                using(SDKContext context = CreateDbContext()){
+            try
+            {
+                using (SDKContext context = CreateDbContext())
+                {
                     var entityColumn = context.Set<E00251_DynamicEntityColumn>().Where(x => x.Rowid == dynamicEntityColumn.Rowid).FirstOrDefault();
-                    if(entityColumn != null){                        
-                        context.Entry(entityColumn).CurrentValues.SetValues(dynamicEntityColumn);                        
+                    if (entityColumn != null)
+                    {
+                        context.Entry(entityColumn).CurrentValues.SetValues(dynamicEntityColumn);
                         context.SaveChanges();
                         return new ActionResult<int>() { Success = true, Data = dynamicEntityColumn.Rowid };
-                    }else{
+                    }
+                    else
+                    {
                         var LastEntity = context.Set<E00251_DynamicEntityColumn>().OrderByDescending(x => x.Rowid).FirstOrDefault();
-                        if(LastEntity == null){
+                        if (LastEntity == null)
+                        {
                             dynamicEntityColumn.Rowid = 1;
-                        }else{
+                        }
+                        else
+                        {
                             dynamicEntityColumn.Rowid = LastEntity.Rowid + 1;
                         }
 
@@ -2021,7 +2108,9 @@ namespace Siesa.SDK.Business
                     }
                 }
 
-            }catch (Exception e){
+            }
+            catch (Exception e)
+            {
                 return new BadRequestResult<int>() { Success = false, Errors = new List<string>() { e.Message } };
             }
         }
@@ -2029,7 +2118,8 @@ namespace Siesa.SDK.Business
         [SDKExposedMethod]
         public ActionResult<int> SaveGroupsDynamicEntity(E00250_DynamicEntity dynamicEntity)
         {
-            try{
+            try
+            {
                 using (SDKContext context = CreateDbContext())
                 {
                     var resource = context.Set<E00250_DynamicEntity>().Where(x => x.Rowid == dynamicEntity.Rowid).FirstOrDefault();
@@ -2045,14 +2135,17 @@ namespace Siesa.SDK.Business
                         resource.IsDisable = dynamicEntity.IsDisable;
                         resource.IsLocked = dynamicEntity.IsLocked;
                         context.SaveChanges();
-                        return new ActionResult<int>() { Success=true, Data = resource.Rowid };
+                        return new ActionResult<int>() { Success = true, Data = resource.Rowid };
                     }
                     else
                     {
                         var LastEntity = context.Set<E00250_DynamicEntity>().OrderByDescending(x => x.Rowid).FirstOrDefault();
-                        if(LastEntity == null){
+                        if (LastEntity == null)
+                        {
                             dynamicEntity.Rowid = 1;
-                        }else{
+                        }
+                        else
+                        {
                             dynamicEntity.Rowid = LastEntity.Rowid + 1;
                         }
                         dynamicEntity.RowidCompanyGroup = AuthenticationService.User.RowidCompanyGroup;
@@ -2061,19 +2154,24 @@ namespace Siesa.SDK.Business
                         return new ActionResult<int>() { Success = true, Data = dynamicEntity.Rowid };
                     }
                 }
-            }catch(Exception e){
+            }
+            catch (Exception e)
+            {
                 return new BadRequestResult<int>() { Success = false, Errors = new List<string>() { e.Message } };
             }
 
         }
 
         [SDKExposedMethod]
-        public ActionResult<int> DeleteGroupDynamicEntity(int rowid){
-            try{
+        public ActionResult<int> DeleteGroupDynamicEntity(int rowid)
+        {
+            try
+            {
                 using (SDKContext context = CreateDbContext())
                 {
                     var columns = context.Set<E00251_DynamicEntityColumn>().Where(x => x.RowidDynamicEntity == rowid).ToList();
-                    if(columns != null){
+                    if (columns != null)
+                    {
                         context.RemoveRange(columns);
                         List<int> rowidsEnityColumn = columns.Select(x => x.Rowid).ToList();
                         DeleteDynamicEntity(context, rowidsEnityColumn);
@@ -2090,73 +2188,94 @@ namespace Siesa.SDK.Business
                         return new NotFoundResult<int>();
                     }
                 }
-            }catch(Exception e){
+            }
+            catch (Exception e)
+            {
                 return new BadRequestResult<int>() { Success = false, Errors = new List<string>() { e.Message } };
             }
         }
 
+
         [SDKExposedMethod]
-        public ActionResult<SDKResultImportDataDTO> ImportData(string dataStr){
+        public ActionResult<SDKResultImportDataDTO> ImportData(string dataStr)
+        {
             JArray dataList = JArray.Parse(dataStr);
             List<dynamic> SuccessData = new();
             List<dynamic> ErrorData = new();
             List<EnumSearchDTO> EnumSearchList = GetEnumDTO(typeof(T));
-            var holi = GetRelationalProperties(typeof(T));
-            foreach (var item in dataList){
-                JObject itemObj = (JObject)item;
+            List<ForeignObjectDTO> ForeingDictionary = CalculateForeingList(typeof(T));
+            List<T> BaseObjToImport = new();
+
+            Parallel.ForEach(dataList, item =>
+            {
+                dynamic result = CreateDynamicObjectFromJson(typeof(T), (JObject)item, EnumSearchList, ForeingDictionary, ref ErrorData);
+                BaseObjToImport.Add(result);
+            });
+
+            /*foreach (var item in dataList){
+                //JObject itemObj = (JObject)item;
                 //List<string> Errors = new();
-                dynamic result = CreateDynamicObjectFromJson(typeof(T), itemObj, EnumSearchList ,ref ErrorData);
+                dynamic result = CreateDynamicObjectFromJson(typeof(T), (JObject)item, EnumSearchList, ForeingDictionary, ref ErrorData);
+                BaseObjToImport.Add(result);
                 BaseObj = result;
                 if(!ErrorData.Any()){
-                    var resultValidate = ValidateAndSave();
-                    if(resultValidate.Errors.Count > 0){
-                        itemObj.Add("Errors", JToken.FromObject(resultValidate.Errors));
-                        ErrorData.Add(itemObj);
-                    }else{
-                        SuccessData.Add(BaseObj.GetRowid());
-                    }
+                    // var resultValidate = ValidateAndSave();
+                    // if(resultValidate.Errors.Count > 0){
+                    //     itemObj.Add("Errors", JToken.FromObject(resultValidate.Errors));
+                    //     ErrorData.Add(itemObj);
+                    // }else{
+                    //     SuccessData.Add(BaseObj.GetRowid());
+                    // }
                 }
-            }
+            }*/
 
             SDKResultImportDataDTO resultImport = new SDKResultImportDataDTO
             {
                 Success = SuccessData,
                 Errors = ErrorData
             };
-            return new ActionResult<SDKResultImportDataDTO>{Success = true, Data = resultImport};
+            return new ActionResult<SDKResultImportDataDTO> { Success = true, Data = resultImport };
+
         }
 
         //==================Metodos para la obtencion de los enums================
-        private List<EnumSearchDTO> GetEnumDTO(Type type){
-            PropertyInfo[] Properties = type.GetProperties();
-            var EnumList = Properties.Where(x => x.PropertyType.IsEnum).ToList();
+        private List<EnumSearchDTO> GetEnumDTO(Type type)
+        {
+            List<PropertyInfo> EnumList = type.GetProperties().Where(x => x.PropertyType.IsEnum).ToList();
             List<EnumSearchDTO> EnumSearchList = new();
-            using SDKContext context = CreateDbContext();
-            foreach (var item in EnumList){
-                EnumSearchList.Add(new EnumSearchDTO(){
-                    EnumName = item.PropertyType.FullName,
-                    PropertyName = item.Name,
-                    EnumValues = GetDictionaryEnum(item)
-                });
+            if(EnumList is not null && EnumList.Any())
+            {
+                foreach (var item in EnumList)
+                {
+                    EnumSearchList.Add(new EnumSearchDTO()
+                    {
+                        EnumName = item.PropertyType.FullName,
+                        PropertyName = item.Name,
+                        EnumValues = GetDictionaryEnum(item)
+                    });
+                }
             }
             return EnumSearchList;
         }
 
-        private static object SetEnumValue(Array arr, string resource){
-            foreach(var item in arr){
-                if(item.ToString()==resource) return item;
+        private static object SetEnumValue(Array arr, string resource)
+        {
+            foreach (var item in arr)
+            {
+                if (item.ToString() == resource) return item;
             }
-            return null;            
+            return null;
         }
 
-        private Dictionary<string, object> GetDictionaryEnum(PropertyInfo EnumInfo){
+        private Dictionary<string, object> GetDictionaryEnum(PropertyInfo EnumInfo)
+        {
             using SDKContext context = CreateDbContext();
             var EnumValues = Enum.GetValues(EnumInfo.PropertyType);
             Dictionary<string, object> ReturnDic = new();
 
             ReturnDic = context.Set<E00022_ResourceDescription>()
                                         .Include(x => x.Resource)
-                                        .Where(x => x.Resource.Id.Contains(EnumInfo.PropertyType.Name) && x.RowidCulture == 1)
+                                        .Where(x => x.Resource.Id.Contains(EnumInfo.PropertyType.Name) && x.RowidCulture == AuthenticationService.GetRoiwdCulture())
                                         .ToDictionary(x => x.Description, x => SetEnumValue(EnumValues, x.Resource.Id.Substring(x.Resource.Id.LastIndexOf('.') + 1)));
             return ReturnDic;
         }
@@ -2165,48 +2284,46 @@ namespace Siesa.SDK.Business
 
         //========================================================
 
-        private List<dynamic> GetRelationalProperties(Type type){
-            List<dynamic> ReturnList = new();
-            var RelationalList = type.GetProperties().Where(x => x.GetCustomAttribute(typeof(SDKCheckRelationship)) != null && x.Name != "Attachment" ).ToList();
-            foreach (var item in RelationalList)
-            {
-                dynamic result2 = Activator.CreateInstance(item.PropertyType);
-                ReturnList.Add(result2); 
-            }
-            return ReturnList;
-        }
-
         //=======Metodos de llaves foraneas===================
 
 
         [SDKExposedMethod]
-        public ActionResult<List<MyDTO>> SetListForeingRowid( List<string> keys, List<string> values){
+        public ActionResult<List<MyDTO>> SetListForeingRowid(List<string> keys, List<string> values)
+        {
             using (SDKContext context = CreateDbContext())
-            try{
-                var query = context.Set<T>().AsQueryable();
-                var resultadoJoin = query.Where(BuildContainsExpression<T>(values, keys.Select(x => x.Substring(0, x.IndexOf('_'))).ToList<string>()).Compile())
-                                            .Select(
-                                                    item => new MyDTO{
-                                                        Rowid = item.GetRowid(),
-                                                        InternalIndex = ConvertInternalIndex(keys, item)
-                                                    }
-                                                ).ToList();
-                return new ActionResult<List<MyDTO>>() { Success = true, Data = resultadoJoin };
-            }
-            catch (Exception e){
-                return new BadRequestResult<List<MyDTO>>() { Success = false, Errors = new List<string> { e.Message } };
-            }
+                try
+                {
+                    var query = context.Set<T>().AsQueryable();
+                    var resultadoJoin = query.Where(BuildContainsExpression<T>(values, keys.Select(x => x.Substring(0, x.IndexOf('_'))).ToList<string>()).Compile())
+                                                .Select(
+                                                        item => new MyDTO
+                                                        {
+                                                            Rowid = item.GetRowid(),
+                                                            InternalIndex = ConvertInternalIndex(keys, item)
+                                                        }
+                                                    ).ToList();
+                    return new ActionResult<List<MyDTO>>() { Success = true, Data = resultadoJoin };
+                }
+                catch (Exception e)
+                {
+                    return new BadRequestResult<List<MyDTO>>() { Success = false, Errors = new List<string> { e.Message } };
+                }
         }
 
-        private static Expression<Func<T, bool>> BuildContainsExpression<T>(List<string> values, List<string> fields){
+        private static Expression<Func<T, bool>> BuildContainsExpression<T>(List<string> values, List<string> fields)
+        {
             var parameter = Expression.Parameter(typeof(T), "x");
             Expression concatExpression = null;
-            foreach (var field in fields){
+            foreach (var field in fields)
+            {
                 var propertyExpression = Expression.Property(parameter, field);
                 var stringExpression = Expression.Call(propertyExpression, "ToString", Type.EmptyTypes);
-                if (concatExpression == null){
+                if (concatExpression == null)
+                {
                     concatExpression = stringExpression;
-                }else{
+                }
+                else
+                {
                     concatExpression = Expression.Call(
                         typeof(string).GetMethod("Concat", new[] { typeof(string), typeof(string) }),
                         concatExpression,
@@ -2220,183 +2337,259 @@ namespace Siesa.SDK.Business
             return Expression.Lambda<Func<T, bool>>(containsCall, parameter);
         }
 
-        private static string ConvertInternalIndex(List<string> keys, object obj){
+        private static string ConvertInternalIndex(List<string> keys, object obj)
+        {
             string valueReturn = String.Empty;
             keys.ForEach(key => { valueReturn += GetPropertyValue(obj, key.Substring(0, key.IndexOf('_'))).ToString(); });
             return valueReturn;
         }
-        private static object GetPropertyValue(object obj, string propertyName){
+        private static object GetPropertyValue(object obj, string propertyName)
+        {
             return obj.GetType().GetProperty(propertyName).GetValue(obj);
         }
 
         //==========================================================
 
-        private void CreateForeingObject(Type type, dynamic dynamicObj, ref dynamic result){
+        //==============Metodo objetos foraneos=======================
+
+        private List<ForeignObjectDTO> CalculateForeingList(Type type)
+        {
             List<PropertyInfo> ForeignKeys = type.GetProperties().Where(x => x.GetCustomAttribute(typeof(ForeignKeyAttribute)) != null).ToList();
-            if(ForeignKeys is not null && ForeignKeys.Any()){
-                foreach (var ForeignKey in ForeignKeys){
-                    if(dynamicObj.ContainsKey(ForeignKey.Name)){
-                        string EntityName = ForeignKey.GetCustomAttribute<ForeignKeyAttribute>().Name;
-                        var value = GetForeingObject(type, EntityName);
+            List<ForeignObjectDTO> ForeingTypeList = new();
+            if (ForeignKeys is not null && ForeignKeys.Any())
+            {
+                foreach (var ForeignKey in ForeignKeys)
+                {
+                    string EntityName = ForeignKey.GetCustomAttribute<ForeignKeyAttribute>().Name;
+                    PropertyInfo ForeignInfo = type.GetProperty(EntityName);
+                    ForeingTypeList.Add(new ForeignObjectDTO()
+                    {
+                        PropertyForeing = ForeignKey.Name,
+                        ForeingObjectType = ForeignInfo.PropertyType,
+                        ForeingObjectName = EntityName
+                    });
+                }
+            }
+            return ForeingTypeList;
+        }
+
+        private void CreateForeingObject(Type type, List<ForeignObjectDTO> ForeignList, dynamic dynamicObj, dynamic result)
+        {
+
+            if (ForeignList is not null && ForeignList.Any())
+            {
+                Parallel.ForEach(ForeignList, (ForeignAttribute) =>
+                {
+                    if (dynamicObj.ContainsKey(ForeignAttribute.PropertyForeing))
+                    {
+                        var value = GetForeingObject(ForeignAttribute.ForeingObjectType);
                         Type RowidType = value.Rowid.GetType();
-                        dynamic RowidValue = dynamicObj.GetValue(ForeignKey.Name).Value;
-                        if(IsNumber(RowidType, ref RowidValue)){
+                        dynamic RowidValue = dynamicObj.GetValue(ForeignAttribute.PropertyForeing).Value;
+                        if (RowidValue != null && IsNumber(RowidType, ref RowidValue))
+                        {
                             value.Rowid = RowidValue;
-                            type.GetProperty(EntityName).SetValue(result, value);
+                            type.GetProperty(ForeignAttribute.ForeingObjectName).SetValue(result, value);
                         }
                     }
-                }
+                });
             }
         }
 
-        private dynamic GetForeingObject(Type Originaltype, string name){
-            PropertyInfo ForeignInfo = Originaltype.GetProperty(name);
-            object ReturnInstance = Activator.CreateInstance(ForeignInfo.PropertyType);
+        private dynamic GetForeingObject(Type InstanceType)
+        {
+            object ReturnInstance = Activator.CreateInstance(InstanceType);
             return ReturnInstance;
-        } 
-        private T CreateDynamicObjectFromJson(Type type, dynamic dynamicObj, List<EnumSearchDTO> EnumSearchList, ref List<dynamic> ErrorsList )  {
+        }
+
+        //===================================================================
+        private T CreateDynamicObjectFromJson(Type type, JObject dynamicObj, List<EnumSearchDTO> EnumSearchList, List<ForeignObjectDTO> ForeignList, ref List<dynamic> ErrorsList)
+        {
             List<string> ErrorsListInternal = new();
             dynamic result = Activator.CreateInstance(type);
-            using (SDKContext context = CreateDbContext()){
-            if( dynamicObj.ContainsKey("Rowid")){
-                dynamic RowidValue = dynamicObj.Rowid.Value;
-                if(IsNumber(result.Rowid.GetType(), ref RowidValue)){
-                    result = context.Set<T>().Find(RowidValue);
-                }
-            }
-            CreateForeingObject(type, dynamicObj, ref result);
-            foreach (var property in dynamicObj.Properties()){
-                var propertyName = property.Name;
-                var propertyEntity = type.GetProperty(propertyName);
-                if(propertyEntity != null){
-                    try{
-                            var ValueValidated = GetValidatedValue(type, property.Value.Value, propertyName, EnumSearchList);
-                            if(ValueValidated.Success && ValueValidated.Data != null){
-                            dynamic value = ValueValidated.Data;
-                            
-                            type.GetProperty(propertyName).SetValue(result, value);
-                            }else{
-                                ErrorsListInternal.AddRange(ValueValidated.Errors);
-                            }
-                        }
-                        catch (Exception e){
-                            ErrorsListInternal.Add(e.Message);
-                        }
+
+            if (dynamicObj.ContainsKey("Rowid"))
+            {
+                dynamic RowidValue = ((dynamic)dynamicObj).Rowid.Value;
+                if (IsNumber(result.Rowid.GetType(), ref RowidValue))
+                {
+                    using (SDKContext context = CreateDbContext())
+                    {
+                        result = context.Set<T>().Find(RowidValue);
                     }
                 }
             }
-            if(ErrorsListInternal.Any()){
+            CreateForeingObject(type, ForeignList, dynamicObj, result);
+            Parallel.ForEach(dynamicObj.Properties(), property =>
+            {
+                string propertyName = property.Name;
+                var propertyEntity = type.GetProperty(propertyName).PropertyType;
+                if (propertyEntity != null)
+                {
+                    try
+                    {
+                        var ValueValidated = GetValidatedValue(propertyEntity, ((dynamic)property).Value.Value, propertyName, EnumSearchList);
+                        if (ValueValidated.Success && ValueValidated.Data != null)
+                        {
+                            dynamic value = ValueValidated.Data;
+                            type.GetProperty(propertyName).SetValue(result, value);
+                        }
+                        else
+                        {
+                            ErrorsListInternal.AddRange(ValueValidated.Errors);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        ErrorsListInternal.Add(e.Message);
+                    }
+                }
+            });
+
+            if (ErrorsListInternal.Any())
+            {
                 dynamicObj.Add("Errors", JToken.FromObject(ErrorsListInternal));
                 ErrorsList.Add(dynamicObj);
             }
             return (T)result;
         }
 
-        private ActionResult<dynamic> GetValidatedValue(Type t, dynamic DynamicValue, string NameProperty, List<EnumSearchDTO> EnumSearchList){ //TODO a SDK -> Cambiar a object
-        Type TypeEntity  = t.GetProperty(NameProperty).PropertyType;
-        DynamicValue = DynamicValue == null ? "" : DynamicValue;
-        Type TypeDynamicValue = DynamicValue.GetType();
-        if (TypeDynamicValue == typeof(string)){
-            if(string.IsNullOrEmpty(DynamicValue)) return new ActionResult<dynamic>{Success = true, Data=null};
-        }
-        if(TypeEntity == typeof(string)){
-            return new ActionResult<dynamic>{Success = true, Data=DynamicValue.ToString()};
-        }
-        if(TypeEntity.BaseType == typeof(Enum)){
-            var EnumSearchDTO = EnumSearchList.Where(x => x.PropertyName.Equals(NameProperty)).FirstOrDefault();
-            if(EnumSearchDTO is not null){
-                var EnumValue = EnumSearchDTO.EnumValues[DynamicValue];
-                return new ActionResult<dynamic>{Success = true, Data=EnumValue};
-            }
-        }
-        if(TypeDynamicValue == TypeEntity) return new ActionResult<dynamic>{Success = true, Data=DynamicValue};
-
-        if(IsDate(TypeEntity, ref DynamicValue)) return new ActionResult<dynamic>{Success = true, Data=DynamicValue};
-
-        if (IsNumber(TypeEntity, ref DynamicValue)){
-            if (TypeDynamicValue == typeof(bool)) return new ActionResult<dynamic>{Success = true, Data = TypeDynamicValue == typeof(bool)? DynamicValue : DynamicValue == 1};
-        return new ActionResult<dynamic>{Success = true, Data=DynamicValue};
-        }
-        
-        return new ActionResult<dynamic>{Success = false, Errors = new List<string>(){$"{DynamicValue} no es compatible con  el campo {NameProperty}"}};
-
-    }
-    
-    private bool IsNumber(Type value, ref dynamic DynamicValue)
-    {
-        try{
-            if(value == typeof( int) || value == typeof( int?)){
-                DynamicValue = (int)DynamicValue;
-                return true; 
-            }
-            if(value == typeof( double) || value == typeof( double?)){
-                DynamicValue = (double)DynamicValue;
-                return true; 
-            }
-            if(value == typeof( float) || value == typeof( float?)){
-                DynamicValue = (float)DynamicValue;
-                return true; 
-            }
-            if(value == typeof( decimal) || value == typeof( decimal?)){
-                DynamicValue = (decimal)DynamicValue;
-                return true; 
-            }
-            if(value == typeof( sbyte) || value == typeof( sbyte?)){
-                DynamicValue = (sbyte)DynamicValue;
-                return true; 
-            }
-            if(value == typeof( byte) || value == typeof( byte?)){
-                DynamicValue = (byte)DynamicValue;
-                return true; 
-            }
-            if(value == typeof( short) || value == typeof( short?)){
-                DynamicValue = (short)DynamicValue;
-                return true; 
-            }
-            if(value == typeof( ushort) || value == typeof( ushort?)){
-                DynamicValue = (ushort)DynamicValue;
-                return true; 
-            }
-            if(value == typeof( uint) || value == typeof( uint?)){
-                DynamicValue = (uint)DynamicValue;
-                return true; 
-            }
-            if(value == typeof( long) || value == typeof( long?)){
-                DynamicValue = (long)DynamicValue;
-                return true; 
-            }
-            if(value == typeof( ulong) || value == typeof( ulong?)){
-                DynamicValue = (ulong)DynamicValue;
-                return true; 
-            }
-            return false;
-        }
-        catch (Exception){
-            return false;
-        }
-    }
-    private bool IsDate(Type value, ref dynamic DynamicValue)
-    {
-        try{
+        private ActionResult<dynamic> GetValidatedValue(Type TypeEntity, dynamic DynamicValue, string NameProperty, List<EnumSearchDTO> EnumSearchList)
+        { //TODO a SDK -> Cambiar a object
+            DynamicValue = DynamicValue == null ? "" : DynamicValue;
             Type TypeDynamicValue = DynamicValue.GetType();
-            if(TypeDynamicValue == typeof(DateTime) ){
-                if(value == typeof(TimeSpan) || value == typeof(TimeSpan?)){
-                    DynamicValue =  DynamicValue.TimeOfDay;
-                    return true;
+            if (TypeDynamicValue == typeof(string))
+            {
+                if (string.IsNullOrEmpty(DynamicValue)) return new ActionResult<dynamic> { Success = true, Data = null };
+            }
+            if (TypeEntity == typeof(string))
+            {
+                return new ActionResult<dynamic> { Success = true, Data = DynamicValue.ToString() };
+            }
+            if (TypeEntity.BaseType == typeof(Enum))
+            {
+                var EnumSearchDTO = EnumSearchList.Where(x => x.PropertyName.Equals(NameProperty)).FirstOrDefault();
+                if (EnumSearchDTO is not null)
+                {
+                    var EnumValue = EnumSearchDTO.EnumValues[DynamicValue];
+                    return new ActionResult<dynamic> { Success = true, Data = EnumValue };
                 }
-                if(value == typeof(DateOnly) || value == typeof(DateOnly?)){
-                    DynamicValue = DateOnly.FromDateTime(DynamicValue);
-                    return true; 
+            }
+            if (TypeDynamicValue == TypeEntity) return new ActionResult<dynamic> { Success = true, Data = DynamicValue };
+
+            if (IsDate(TypeEntity, ref DynamicValue)) return new ActionResult<dynamic> { Success = true, Data = DynamicValue };
+
+            if (IsNumber(TypeEntity, ref DynamicValue))
+            {
+                if (TypeDynamicValue == typeof(bool)) return new ActionResult<dynamic> { Success = true, Data = TypeDynamicValue == typeof(bool) ? DynamicValue : DynamicValue == 1 };
+                return new ActionResult<dynamic> { Success = true, Data = DynamicValue };
+            }
+
+            return new ActionResult<dynamic> { Success = false, Errors = new List<string>() { $"{DynamicValue} no es compatible con  el campo {NameProperty}" } };
+
+        }
+
+        private bool IsNumber(Type value, ref dynamic DynamicValue)
+        {
+            if (DynamicValue is not null)
+            {
+                try
+                {
+                    if (value == typeof(int) || value == typeof(int?))
+                    {
+                        DynamicValue = (int)DynamicValue;
+                        return true;
+                    }
+                    if (value == typeof(double) || value == typeof(double?))
+                    {
+                        DynamicValue = (double)DynamicValue;
+                        return true;
+                    }
+                    if (value == typeof(float) || value == typeof(float?))
+                    {
+                        DynamicValue = (float)DynamicValue;
+                        return true;
+                    }
+                    if (value == typeof(decimal) || value == typeof(decimal?))
+                    {
+                        DynamicValue = (decimal)DynamicValue;
+                        return true;
+                    }
+                    if (value == typeof(sbyte) || value == typeof(sbyte?))
+                    {
+                        DynamicValue = (sbyte)DynamicValue;
+                        return true;
+                    }
+                    if (value == typeof(byte) || value == typeof(byte?))
+                    {
+                        DynamicValue = (byte)DynamicValue;
+                        return true;
+                    }
+                    if (value == typeof(short) || value == typeof(short?))
+                    {
+                        DynamicValue = (short)DynamicValue;
+                        return true;
+                    }
+                    if (value == typeof(ushort) || value == typeof(ushort?))
+                    {
+                        DynamicValue = (ushort)DynamicValue;
+                        return true;
+                    }
+                    if (value == typeof(uint) || value == typeof(uint?))
+                    {
+                        DynamicValue = (uint)DynamicValue;
+                        return true;
+                    }
+                    if (value == typeof(long) || value == typeof(long?))
+                    {
+                        DynamicValue = (long)DynamicValue;
+                        return true;
+                    }
+                    if (value == typeof(ulong) || value == typeof(ulong?))
+                    {
+                        DynamicValue = (ulong)DynamicValue;
+                        return true;
+                    }
+                    return false;
                 }
-                if(value == typeof(DateTime) || value == typeof(DateTime?)){
-                    return true; 
+                catch (Exception)
+                {
+                    return false;
                 }
             }
             return false;
-        }catch(Exception){
+        }
+        private bool IsDate(Type value, ref dynamic DynamicValue)
+        {
+            if(DynamicValue is not null){
+                try
+                {
+                    Type TypeDynamicValue = DynamicValue.GetType();
+                    if (TypeDynamicValue == typeof(DateTime))
+                    {
+                        if (value == typeof(TimeSpan) || value == typeof(TimeSpan?))
+                        {
+                            DynamicValue = DynamicValue.TimeOfDay;
+                            return true;
+                        }
+                        if (value == typeof(DateOnly) || value == typeof(DateOnly?))
+                        {
+                            DynamicValue = DateOnly.FromDateTime(DynamicValue);
+                            return true;
+                        }
+                        if (value == typeof(DateTime) || value == typeof(DateTime?))
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
             return false;
         }
-    }
     }
 }
 

@@ -248,6 +248,8 @@
         return ((IDictionary<string, object>)obj)[propertyName];
     }
 
+    private bool IsByCompanyGroup {get; set;}
+
     protected override async Task OnInitializedAsync()
     {
         filters.Add("Feature.BusinessName", BusinessName);
@@ -284,7 +286,6 @@
                     string RelationAttributeName = RelationAttribute.PropertyType.Name;
                     string ForeingName = RelationAttributeName.Substring(RelationAttributeName.IndexOf('_')+1);
                     await CalculateParentsRelations(RelationAttribute.PropertyType, null, field.Name, ForeingName);
-                    
                 }else{
                     ResourceName = await ResourceManager.GetResource($"{EntityType.Name}.{field.Name}", AuthenticationService.GetRoiwdCulture()); 
                     _fieldsEntity.Add(ResourceName,field.Name);
@@ -294,6 +295,7 @@
     }
 
     private async Task CalculateParentsRelations(Type ForeignType, string baseIndex, string HiddenFieldTarget,string NamePropertyForeing, string RootNameEntity = ""){
+        
         var ResourceName = String.Empty;
         string ForeingName = (!string.IsNullOrEmpty(RootNameEntity)) ?  RootNameEntity.Substring(RootNameEntity.IndexOf('_')+1): "";
         MapFkRelationsImportDTO MapFk = new(){
@@ -314,8 +316,17 @@
                     var FieldName = await ResourceManager.GetResource($"{ForeignType.Name}.{propertyName}", AuthenticationService);
                     var ResourceRoot = (!string.IsNullOrEmpty(RootNameEntity)) ? await ResourceManager.GetResource($"{RootNameEntity}.singular", AuthenticationService.GetRoiwdCulture()) : ""; 
                     ResourceName = $"{FieldName} - {EntityName} {(!string.IsNullOrEmpty(ResourceRoot) ? "/ " + ResourceRoot : "" )}"; 
-                    _fieldsEntity.Add(ResourceName,TitleField);
-                    _titleFields.Add(TitleField, ResourceName);
+                    if(NamePropertyForeing.Contains("CompanyGroup")){
+                        if(!IsByCompanyGroup){
+                            IsByCompanyGroup = true;
+                            _fieldsEntity.Add("Grupo de compañia","Index_CompanyGroup");
+                            _titleFields.Add("Index_CompanyGroup", "Grupo de compañia");
+                        }
+                    }else{
+                        _fieldsEntity.Add(ResourceName,TitleField);
+                        _titleFields.Add(TitleField, ResourceName);
+
+                    }
                     var propertyType= ForeignType.GetProperties().Where(x=> x.Name==propertyName).FirstOrDefault();
                     ForeignKeyAttribute foreignKeyAttribute = propertyType.GetCustomAttribute<ForeignKeyAttribute>();
                     if (foreignKeyAttribute != null){
@@ -414,7 +425,7 @@
         FileData = new List<dynamic>();
         IsLoadingGrid = false;
         using (var stream = new MemoryStream()){
-            await InputFile.File.OpenReadStream(51200000).CopyToAsync(stream);
+            await InputFile.File.OpenReadStream(512000000).CopyToAsync(stream);
             SDKGlobalLoaderService.Show();
             stream.Position = 0;
                 Workbook workbook = new Workbook();
@@ -558,18 +569,37 @@
             CleanvaluesIndexInternal(indexes);
         }
 
+        bool valoresRepetidos = DataMapped
+            .SelectMany(diccionario => diccionario.Where(kv => kv.Key.Contains("Index_CompanyGroup")))
+            .DistinctBy(x => x.Value).Any();
+
             foreach (var mapRelationImport in ListMapRelationsImport){
 
                 List<string> values = DataMapped.Where(p => p.ContainsKey(mapRelationImport.NameInternalIndex)).Select(p => (string)p[mapRelationImport.NameInternalIndex]).ToList<string>();
 
-                var bl = BackendRouterService.GetSDKBusinessModel(GetBLNameFromString(mapRelationImport.NameInternalIndex ,'_'), AuthenticationService);
-                var response = await bl.Call("SetListForeingRowid", mapRelationImport.ListIndexForeingFields, values);
-            
-                if(response.Success){ 
-                    UpdateForeingKeysValues(response.Data, mapRelationImport.NameInternalIndex,
-                                            mapRelationImport.IdFieldFkEntity,
-                                            mapRelationImport.DependencyIdFieldFKEntity);
+
+                if(mapRelationImport.IdFieldFkEntity.Contains("RowidCompanyGroup")){
+                    var holi1 = new List<MyDTO>();
+                    holi1.Add(new MyDTO()
+                            {
+                                Rowid = 1,
+                                InternalIndex = "01"
+                            });   
+                        UpdateForeingKeysValues(holi1, mapRelationImport.NameInternalIndex,
+                                                mapRelationImport.IdFieldFkEntity,
+                                                mapRelationImport.DependencyIdFieldFKEntity);
+                    
+                }else{ 
+                    var bl = BackendRouterService.GetSDKBusinessModel(GetBLNameFromString(mapRelationImport.NameInternalIndex ,'_'), AuthenticationService);
+                    var response = await bl.Call("SetListForeingRowid", mapRelationImport.ListIndexForeingFields, values);
+                    if(response.Success){ 
+                        UpdateForeingKeysValues(response.Data, mapRelationImport.NameInternalIndex,
+                                                mapRelationImport.IdFieldFkEntity,
+                                                mapRelationImport.DependencyIdFieldFKEntity);
+                    }
                 }
+                
+
 
     }
         CleanAuxiliarColumnsDataMapped();

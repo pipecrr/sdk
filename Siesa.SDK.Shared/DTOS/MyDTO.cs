@@ -8,6 +8,5 @@ namespace Siesa.SDK.Shared.DTOS
         
         public dynamic InternalIndex { get; set; }
         public dynamic Rowid { get; set; }
-        public Dictionary<string, string> FieldValues { get; set; }
     }
 }
