@@ -1,0 +1,12 @@
+@using System.Linq
+
+@if(ShowButton)
+{
+    <div class="whcm_fixed_button">
+        <SDKButton
+            CssClass="btn btn-primary btn_primary_def_1 btn-sm px-4"
+            ResourceTag="@ResourceTag"
+            Click="@OnClick"
+        />
+    </div>
+}

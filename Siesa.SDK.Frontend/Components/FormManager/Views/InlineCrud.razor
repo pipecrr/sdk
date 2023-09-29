@@ -16,7 +16,7 @@
         @if (!string.IsNullOrEmpty(BLNameParentAttatchment) && BusinessName.Equals("BLAttachmentDetail"))
         {
             <SDKButton BusinessName="@BLNameParentAttatchment" ListPermission="@ListPermission" CssClass="mb-1"
-                RenderStyle="SDKButtonRenderStyle.Primary" Click="@(async ()=> { await OpenModalCreate(); })">
+                RenderStyle="SDKButtonRenderStyle.Primary" Click="@(async ()=> { await OpenModalCreate(); })" Enabled="@(!_createOpened)">
                 <ResourceViewer ResourceTag="Action.Create" />
                 <ResourceViewer ResourceTag="@($"{BusinessName}.Singular")" />
             </SDKButton>
@@ -25,7 +25,7 @@
         else
         {
             <SDKButton BusinessName="@BusinessName" ListPermission="@ListPermission" CssClass="mb-1"
-                RenderStyle="SDKButtonRenderStyle.Primary" Click="@(async ()=> { await OpenModalCreate(); })">
+                RenderStyle="SDKButtonRenderStyle.Primary" Click="@(async ()=> { await OpenModalCreate(); })" Enabled="@(!_createOpened)">
                 <ResourceViewer ResourceTag="Action.Create" />
                 <ResourceViewer ResourceTag="@($"{BusinessName}.Singular")" />
             </SDKButton>
@@ -46,6 +46,7 @@
 
 @code {
     private bool DefaultTitle = false;
+    private bool _createOpened = false;
 
     private int _rowidPermission;
 
@@ -77,11 +78,13 @@
     /// </summary>
     public async Task OpenModalCreate()
     {
+        _createOpened = true;
         bool DefaultTitle = false;
 
         var ShowCreateDialog = await SDKDialogService.ShowCustomDialog(ds => @<DynamicCreateView BusinessName="@BusinessName" IsSubpanel=true DefaultFields="@DefaultFieldsCreate"
     BLNameParentAttatchment="@BLNameParentAttatchment" ShowTitle="@DefaultTitle" />, Width, $"{BusinessName}.Singular",
 true, true, Height, standardWidth: ModalWidth);
+        _createOpened = false;
         listview_key = Guid.NewGuid();
         if (ShowCreateDialog != null && ShowCreateDialog.GetType() != typeof(bool))
         {
