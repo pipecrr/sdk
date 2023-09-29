@@ -636,7 +636,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 var parameterType = typeof(ParameterAttribute);
                 if(dataAnnotationProperty == parameterType){
                     try{
-                        if (parameters.TryGetValue<dynamic>(property.Name, out var value)){
+                        if (parameters.TryGetValue<string>(property.Name, out var value)){
                             var valueProperty = property.GetValue(this, null);
                             if (value != null && value != valueProperty){
                                 result = true;
