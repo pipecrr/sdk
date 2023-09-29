@@ -17,23 +17,72 @@
 </RadzenDataGridColumn>
 
 @code {
+    /// <summary>
+    /// Gets or sets The RenderFragment that defines the template for this column.
+    /// </summary>
     [Parameter] public RenderFragment<TItem> Template { get; set; }
+    /// <summary>
+    /// The title of the column (deprecated in favor of ResourceTag).
+    /// </summary>
     [Obsolete("Use ResourceTag instead")]
     [Parameter] 
     public string Title { get; set; }
+    /// <summary>
+    /// Gets or sets that Indicates whether the column is filterable.
+    /// </summary>
     [Parameter] public bool Filterable { get; set; } = true;
+    /// <summary>
+    /// Gets or sets that Indicates whether the column is sortable.
+    /// </summary>
     [Parameter] public bool Sortable { get; set; }
+    /// <summary>
+    /// Gets or sets the width of the column.
+    /// </summary>
     [Parameter] public string Width { get; set; } = "auto";
+    /// <summary>
+    /// Gets or sets the property associated with the column.
+    /// </summary>
     [Parameter] public string Property { get; set; }
+    /// <summary>
+    /// Gets or sets the data type of the column.
+    /// </summary>
     [Parameter] public Type? ColumnType { get; set; }
+    /// <summary>
+    /// Gets or sets the text alignment of the column.
+    /// </summary>
     [Parameter] public SDKColumnAlign TextAlign { get; set; } = SDKColumnAlign.Left;
-    [Parameter] public string FormatString { get; set; } 
+    /// <summary>
+    /// Gets or sets the format string for the column.
+    /// </summary>
+    [Parameter] public string FormatString { get; set; }
+    /// <summary>
+    /// Gets or sets a value indicating whether the column is an action column.
+    /// </summary>
     [Parameter] public bool IsActionColumn {get; set;}
+    /// <summary>
+    /// Gets or sets the header template for the column.
+    /// </summary>
     [Parameter] public RenderFragment HeaderTemplate { get; set; }
+    /// <summary>
+    /// Gets or sets a unique identifier for the column.
+    /// </summary>
     [Parameter] public string UniqueId { get; set; }
+    /// <summary>
+    /// Gets or sets a value indicating whether the column is editable.
+    /// </summary>
     [Parameter] public bool IsEditable { get; set; }
+    /// <summary>
+    /// Gets or sets an action to be invoked when the column changes.
+    /// </summary>
     [Parameter] public Action<TItem, object> OnChangeColumn { get; set; }
+    /// <summary>
+    /// Gets or sets the related business for the column.
+    /// </summary>
     [Parameter] public string RelatedBusiness { get; set; }
+    /// <summary>
+    /// Gets or sets for indicate if the column is mergeable
+    /// </summary>
+    [Parameter] public bool Mergeable { get; set; }
 
     private Radzen.TextAlign TextAlignInternal
     {

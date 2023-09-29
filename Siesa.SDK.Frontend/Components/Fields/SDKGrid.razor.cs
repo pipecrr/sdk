@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Radzen;
 using Radzen.Blazor;
+using Siesa.SDK.Shared.DTOS;
 
 namespace Siesa.SDK.Frontend.Components.Fields;
 /// <summary>
@@ -151,6 +153,11 @@ public partial class SDKGrid<TItem> : SDKComponent
     [Parameter] public string CssClassButtonCreate { get; set; } = "";
     private RadzenDataGrid<TItem> _grid;
     /// <summary>
+    /// Get or sets that allow merge cells in the grid.
+    /// </summary>
+    [Parameter] public bool AllowMerge { get; set; }
+    private Dictionary<string, List<SDKColumnMergeDTO>> _dicRowSpans = new Dictionary<string, List<SDKColumnMergeDTO>>();
+    /// <summary>
     /// This method is called when parameter values are set or changed.
     /// </summary>
     protected override void OnParametersSet()
@@ -235,5 +242,46 @@ public partial class SDKGrid<TItem> : SDKComponent
             Data = list; 
             await _grid.Reload().ConfigureAwait(true);
         }
+    }
+
+    private void CellRender(DataGridCellRenderEventArgs<TItem> obj)
+    {
+        var property = obj.Column.Property;
+        if(property == null)
+        {
+            return;
+        }
+        bool mergeable = false;
+        if(AllowMerge)
+        {
+            mergeable = (bool)(obj.Column.Template.Target?.GetType().GetProperty("Mergeable")?
+                .GetValue(obj.Column.Template.Target) ?? false);
+        }
+        if(mergeable){
+            CalculateRowspans(property);
+            int rowspan = 1;
+            string value = GetValue(obj.Data, property)?.ToString() ?? "";
+            var list = _dicRowSpans[property];
+            var item = list.SingleOrDefault(x => x.Value == value);
+            if(item != null){
+                rowspan = item.RowSpan;
+            }
+            obj.Attributes.Add("rowspan", rowspan);
+        }
+    }
+
+    private void CalculateRowspans(string columnName)
+    {
+        if(_dicRowSpans.ContainsKey(columnName)){
+            return;
+        }
+        var property = typeof(TItem).GetProperty(columnName);
+        if(property == null)
+        {
+            return;
+        }
+        List<SDKColumnMergeDTO> list = new List<SDKColumnMergeDTO>();
+        list = Data.GroupBy(x => property.GetValue(x)).Select(x => new SDKColumnMergeDTO { Value = x.Key.ToString(), RowSpan = x.Count() }).ToList();
+        _dicRowSpans.Add(columnName, list);
     }
 }
