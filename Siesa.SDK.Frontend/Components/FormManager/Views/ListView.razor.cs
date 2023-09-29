@@ -30,6 +30,7 @@ using System.Reflection.Emit;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json.Linq;
 using System.Runtime.CompilerServices;
+using Siesa.SDK.Frontend.Components.Flex;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -76,7 +77,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         [Parameter]
         public string BLNameParentAttatchment { get; set; }
-
+        [Parameter]
+        public bool? ShowActions { get; set; }
         [Inject]
         public ILocalStorageService localStorageService { get; set; }
 
@@ -163,6 +165,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private List<Button> ExtraButtons { get; set; }
         private Button CreateButton { get; set; }
         public RadzenDataGrid<object> _gridRef;
+        private FlexComponent _flexComponentRef;
         
         /// <summary>
         /// Gets or sets the fields hidden.
@@ -348,6 +351,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 ShowLinkTo = ListViewModel.ShowLinkTo;
                 ServerPaginationFlex = ListViewModel.ServerPaginationFlex;
                 _showActions = ListViewModel.ShowActions;
+                if(ShowActions != null && ViewdefName == null){
+                    _showActions = ShowActions.Value;
+                }
                 if(ListViewModel.AllowEdit != null){
                     AllowEdit = ListViewModel.AllowEdit.Value;
                 }
@@ -417,6 +423,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             BusinessObj.ParentComponent = this;
             
             hideCustomColumn();
+            FilterFlex = GetFilters(_base_filter);
             StateHasChanged();
 
         }

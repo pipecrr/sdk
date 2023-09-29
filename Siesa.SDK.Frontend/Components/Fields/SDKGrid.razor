@@ -58,7 +58,9 @@
         EnumFilterSelectText="Seleccione"
         PagingSummaryFormat="Página {0} de {1} ({2} registros)"
         AllowRowSelectOnRowClick="AllowRowSelectOnRowClick"
-        @ref="_grid">
+        @ref="_grid"
+        CellRender="@CellRender"
+        >
         <EmptyTemplate>
             @if(EmptyTemplate != null){
                 @EmptyTemplate
