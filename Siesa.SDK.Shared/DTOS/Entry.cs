@@ -21,10 +21,10 @@ namespace Siesa.SDK.Shared.DTOS
             var parent = Parent;
             while (parent != null)
             {
-                path = parent.GetPath() + "/" + path;
+                path = parent.Name + "/" + path;
                 parent = parent.Parent;
             }
-
+            
             return path;
         }
     }
