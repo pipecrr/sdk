@@ -1,0 +1,74 @@
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.Global.Enums
+@using Siesa.SDK.Shared.Services
+@using Siesa.SDK.Frontend.Components.FormManager.ViewModels
+
+<SDKCard >
+    <div class="row px-2 py-3">
+        <div class="col-2 border-right">
+            <p class="col-form-label-sm font-weight-bold"> <ResourceViewer ResourceTag=@IdResourceTagSwitch/> </p> 
+            <SDKSwitch Value=@SwitchValue ValueChanged="@SwitchValueChanged" Disabled="@Disabled" />
+        </div>
+        <div class="col-10">
+            @if(ChildContent != null){
+                <CascadingValue Value="@SwitchValue">
+                    @ChildContent
+                </CascadingValue>
+            }else if(BusinessName != null){
+                <FreeForm  
+                    BusinessObj=@BusinessObj
+                    Viewdef=@Viewdef
+                    SetTopBar=false
+                    BusinessName=@BusinessName
+                    ViewContext=@ViewContext
+                />
+            }
+        </div>
+    </div>
+</SDKCard>
+
+@code{
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter] public bool SwitchValue { get; set; }
+
+    [Parameter] public string IdResourceTagSwitch { get; set; }
+
+    [Parameter] public EventCallback<bool> SwitchValueChanged { get; set; }
+
+    [Parameter] public string? BusinessName { get; set; }
+
+    [Parameter] public dynamic? BusinessObj { get; set; }
+
+    [Parameter] public string? Viewdef { get; set; }
+
+    [Parameter] public DynamicViewType ViewContext { get; set; } = DynamicViewType.Create;
+
+    [Parameter] public bool DisabledFreeForm { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if(ChildContent is null && BusinessName is null){
+            throw new Exception("Error rendering component. Insufficient parameters");
+        }
+        await base.OnInitializedAsync();
+    }
+
+    protected override void OnParametersSet()
+    {
+        SetDinamicView();
+    }
+
+    private void SetDinamicView(){
+        if(DisabledFreeForm){
+            ViewContext = SwitchValue? DynamicViewType.Create : DynamicViewType.Detail;
+        }
+        if(Disabled){
+            ViewContext = DynamicViewType.Detail;
+        }
+    }
+
+}
