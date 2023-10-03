@@ -179,27 +179,4 @@ public partial class SDKScheduler<TItem>
             await scheduler.Reload().ConfigureAwait(true);
         }
     }
-
-
-
-    /*public ISchedulerView SelectedView
-    {
-        get
-        {
-            return Views.ElementAtOrDefault(SelectedIndex);
-        }
-    }
-
-    
-
-    private async Task InvokeLoadData()
-    {
-        if (SelectedView != null)
-        {
-            await LoadData.InvokeAsync(new SchedulerLoadDataEventArgs { Start = SelectedView.StartDate, End = SelectedView.EndDate }).ConfigureAwait(true);
-        }
-    }*/
-
-
-
 }
