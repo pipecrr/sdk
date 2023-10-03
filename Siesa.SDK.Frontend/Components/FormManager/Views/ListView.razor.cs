@@ -636,16 +636,45 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 var parameterType = typeof(ParameterAttribute);
                 if(dataAnnotationProperty == parameterType){
                     try{
-                        if (parameters.TryGetValue<string>(property.Name, out var value)){
-                            var valueProperty = property.GetValue(this, null);
-                            if (value != null && value != valueProperty){
-                                result = true;
-                                break;
-                            }
-                        }
+                        result = CompareValues(parameters, property);
+                        if(result){                            
+                            break;
+                        }                        
                     }catch (Exception e){}
                 }
             }
+            return result;
+        }
+
+        private bool CompareValues(ParameterView parameters, PropertyInfo property)
+        {
+            bool result = false;
+            Type typeProp = property.PropertyType;
+
+            if (typeProp == typeof(string))
+            {
+                parameters.TryGetValue<string>(property.Name, out var value);
+                var valueProperty = property.GetValue(this, null);
+                if(value != null){
+                    result = !value?.Equals(valueProperty) ?? false;
+                }
+            }else if (typeProp.IsGenericType && typeProp.GetGenericTypeDefinition() == typeof(List<>))
+            {
+                parameters.TryGetValue<IEnumerable>(property.Name, out var value);
+                var valueProperty = property.GetValue(this, null);
+                if(value != null){
+                    result = !(value as IEnumerable<object>)?.SequenceEqual(valueProperty as IEnumerable<object>) ?? false;
+                }
+            }
+            else
+            {
+                parameters.TryGetValue<string>(property.Name, out var value);
+                var valueProperty = property.GetValue(this, null);
+                if(value != null){
+                    result = value != valueProperty;
+                }
+            }
+
             return result;
         }
 
