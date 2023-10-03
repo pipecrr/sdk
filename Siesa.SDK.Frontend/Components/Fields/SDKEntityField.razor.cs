@@ -44,7 +44,8 @@ namespace Siesa.SDK.Frontend.Components.Fields
         [Parameter] public bool IsMultiple { get; set; } = false;
         [Parameter] public bool Disabled { get; set; }
         [Parameter] public List<List<object>> Filters { get; set; }
-        [Parameter] public bool CanSearch { get; set; } = true;
+        [Parameter] public bool ShowSearch { get; set; } = true;
+        [Parameter] public bool ShowCreate { get; set; } = true;
         [Parameter] public RenderFragment<dynamic> Template { get; set; }
         
         private bool _isOpenDropDown;
