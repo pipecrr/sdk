@@ -656,7 +656,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 parameters.TryGetValue<string>(property.Name, out var value);
                 var valueProperty = property.GetValue(this, null);
                 if(value != null){
-                    result = !value?.Equals(valueProperty) ?? false;
+                    result = !value.Equals(valueProperty);
                 }
             }else if (typeProp.IsGenericType && typeProp.GetGenericTypeDefinition() == typeof(List<>))
             {
