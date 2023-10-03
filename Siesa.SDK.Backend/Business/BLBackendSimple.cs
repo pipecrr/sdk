@@ -568,6 +568,11 @@ namespace Siesa.SDK.Business
                             context.BeginTransaction();
                         }
                         BeforeSave(ref result, context);
+                        if (result.Errors.Count > 0)
+                        {
+                            context.Rollback();
+                            return result;
+                        }
                         result.Rowid = Save(context);
                         if (_queueService != null && !string.IsNullOrEmpty(BusinessName))
                         {
@@ -582,6 +587,11 @@ namespace Siesa.SDK.Business
                             SaveDynamicEntity(result.Rowid, context);
                         }
                         AfterSave(ref result, context);
+                        if(result.Errors.Count > 0)
+                        {
+                            context.Rollback();
+                            return result;
+                        }
                         if (!context.Database.IsInMemory())
                         {
                             context.Commit();
@@ -874,12 +884,22 @@ namespace Siesa.SDK.Business
                             context.BeginTransaction();
                         }
                         BeforeDelete(ref result, context);
+                        if(result.Errors.Count > 0){
+                            context.Rollback();
+                            response.Errors.AddRange(result.Errors);
+                            return response;
+                        }
                         DeleteDynamicEntity(context);
                         DisableRelatedProperties(BaseObj, _navigationProperties);
                         context.SetProvider(_provider);
                         context.Set<T>().Remove(BaseObj);
                         context.SaveChanges();
                         AfterDelete(ref result, context);
+                        if(result.Errors.Count > 0){
+                            context.Rollback();
+                            response.Errors.AddRange(result.Errors);
+                            return response;
+                        }
                         if (!context.Database.IsInMemory())
                         {
                             context.Commit();
