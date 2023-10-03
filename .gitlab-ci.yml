@@ -122,6 +122,8 @@ sonarqube-check:
     - merge_requests
     - main
     - develop
+  tags:
+    - sonar
 
 deploy:
     stage: deploy
