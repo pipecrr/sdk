@@ -36,7 +36,7 @@ namespace Siesa.SDK.Entities
 
 		[SDKCheckRelationship]
 		[SDKRequired]
-		public virtual E00010_Module Module { get; set; }
+		public virtual E00010_Service Module { get; set; }
 
 		[SDKCheckRelationship]
 		[SDKRequired]

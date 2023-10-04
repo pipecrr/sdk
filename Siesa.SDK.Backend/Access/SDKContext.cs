@@ -132,7 +132,7 @@ namespace Siesa.SDK.Backend.Access
 
         public DbSet<E00021_Culture>? E00021_Culture { get; set; }
 
-        public DbSet<E00010_Module>? E00010_Module { get; set; }
+	public DbSet<E00010_Service>? E00010_Service { get; set; }
 
         public DbSet<E00020_Resource>? E00020_Resource { get; set; }
 
