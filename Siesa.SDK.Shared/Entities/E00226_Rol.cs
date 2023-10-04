@@ -18,12 +18,8 @@ namespace Siesa.SDK.Entities
 	/// </summary>
 	[SDKLogEntity]
 	[Index(nameof(RowidCompanyGroup), nameof(Id), Name = "IX_e00226_1", IsUnique = true)]
-	public partial class E00226_Rol : BaseMasterCompanyGroup<int, string>
+	public partial class E00226_Rol : BaseMasterCompanyGroup<string>
 	{
-		[Key]
-		[SDKRequired]
-		public override int Rowid { get; set; }
-
 		[SDKRequired]
 		[SDKStringLength(20)]
 		public override string Id { get; set; }
