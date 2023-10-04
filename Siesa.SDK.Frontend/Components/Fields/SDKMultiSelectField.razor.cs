@@ -9,6 +9,7 @@ using Radzen.Blazor;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Frontend.Services;
 using System.Collections;
+using System.Reflection;
 
 namespace Siesa.SDK.Frontend.Components.Fields;
 
@@ -41,8 +42,6 @@ public partial class SDKMultiSelectField<TItem> : SDKComponent
 
     /// <summary>
     /// Gets or sets the Options. Represents the list of options
-    /// can be of type enum or SDKEnumWrapper
-    /// If it is of type Enum, it is only necessary to specify the type in TItem
     /// </summary>
     [Parameter] public IEnumerable Options { get; set; }
 
@@ -121,16 +120,17 @@ public partial class SDKMultiSelectField<TItem> : SDKComponent
     [Parameter] public string ValueProperty { get; set; }
 
     /// <summary>
-    /// Gets or sets the enumType. Represents the type of the enum
+    /// Gets or sets the EnumType. Represents the type of the enum
     /// </summary>
     [Parameter]
-    public Type enumType { get; set; }
+    public Type EnumType { get; set; }
 
-    private IEnumerable<SDKEnumWrapper<int>> _optionsEnums;
+    private IEnumerable<object> _optionsEnums = Enumerable.Empty<object>();
+    
 
     protected override async Task OnInitializedAsync()
     {   
-        if (enumType != null)
+        if (EnumType != null)
         {
             await GetEnumValues().ConfigureAwait(true);
         }
@@ -155,29 +155,33 @@ public partial class SDKMultiSelectField<TItem> : SDKComponent
     }
     private async Task GetEnumValues()
     {
-        if (enumType.IsEnum || (enumType.IsGenericType && enumType.GetGenericTypeDefinition() == typeof(Nullable<>) && enumType.GetGenericArguments()[0].IsEnum))
+        if (EnumType.IsEnum || (EnumType.IsGenericType && EnumType.GetGenericTypeDefinition() == typeof(Nullable<>) && EnumType.GetGenericArguments()[0].IsEnum))
         {
-            if (enumType.IsGenericType && enumType.GetGenericTypeDefinition() == typeof(Nullable<>))
+            if (EnumType.IsGenericType && EnumType.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
-                enumType = enumType.GetGenericArguments()[0];
+                EnumType = EnumType.GetGenericArguments()[0];
             }
 
-            Dictionary<byte, string> enumValues = await ResourceManager.GetEnumValues(enumType.Name, AuthenticationService.GetRoiwdCulture()).ConfigureAwait(true);
+
+            Dictionary<byte, string> enumValues = await ResourceManager.GetEnumValues(EnumType.Name, AuthenticationService.GetRoiwdCulture()).ConfigureAwait(true);
 
             if (enumValues == null || enumValues.Count == 0)
             {
                 return;
             }
-            _optionsEnums = new List<SDKEnumWrapper<int>>();
-
 
             foreach (var option in enumValues)
             {
-                _optionsEnums = _optionsEnums.Append(new SDKEnumWrapper<int>
-                {
-                    DisplayText = option.Value,
-                    Type = option.Key
-                });
+                Type sdkEnumWrapperType = typeof(SDKEnumWrapper<>).MakeGenericType(EnumType);
+                dynamic sdkEnumWrapperInstance = Activator.CreateInstance(sdkEnumWrapperType);
+
+                sdkEnumWrapperInstance.DisplayText = option.Value;
+
+                PropertyInfo propertyInfo = sdkEnumWrapperType.GetProperty("Type");
+                propertyInfo.SetValue(sdkEnumWrapperInstance, Enum.ToObject(EnumType, option.Key));
+
+                _optionsEnums = _optionsEnums.Concat(new[] { sdkEnumWrapperInstance });
+
             }
 
             TextProperty = "DisplayText";
