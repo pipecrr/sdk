@@ -1,0 +1,22 @@
+@typeparam TItem
+@inherits SDKComponent
+
+<div class="sdk-dropdown-container">
+    <RadzenDropDown 
+        Disabled="@ReadOnly"
+        Data="@Options"
+        TValue="TItem"
+        TextProperty="@TextProperty"
+        ValueProperty="@ValueProperty"
+        Value="@Value" 
+        ValueChanged="@ValueChanged" 
+        ValueExpression="@ValueExpression"
+        Multiple="@Multiple"
+        AllowClear="@AllowClear"
+        MaxSelectedLabels="@MaxSelectedLabels"
+        Chips="@Badges"
+        data-automation-id="@GetAutomationId()"
+        field-name="@FieldName"
+        @onfocusout="@_OnFocusOut"
+    />
+</div>
