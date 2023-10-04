@@ -330,6 +330,11 @@
     {
         JSRuntime.InvokeAsync<object>("oreports_app_flexdebug_"+_guid+".props.fetchPreviewData");
     }
+    
+    public void ClearSelection()
+    {
+        JSRuntime.InvokeAsync<object>("window.oreports_app_table_flexdebug_"+_guid+".dataGridRef.instance.clearSelection");
+    }
 
     async Task ExportToExcel()
     {

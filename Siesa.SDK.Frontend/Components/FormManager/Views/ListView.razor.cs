@@ -1466,5 +1466,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 SelectedObjects.Remove(data);
             }
         }
+        /// <summary>
+        /// Clear the selection of the list
+        /// </summary>
+        public void ClearSelection(){
+            if(UseFlex && _flexComponentRef != null){
+                _flexComponentRef.ClearSelection();
+            }
+        }
     }
 }
