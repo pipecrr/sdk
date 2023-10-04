@@ -4,32 +4,62 @@
 @using System.Linq.Expressions
 
 <div class="h-100">
-    <RadzenDatePicker 
-        @ref="@DatePickerRef"
-        TValue="ItemType"
-        Value=@Value 
-        ValueChanged ="@ValueChanged" 
-        ReadOnly="@ReadOnly" 
-        Disabled="@Disabled"
-        ShowTime="@ShowTime" 
-        ShowSeconds="@ShowSeconds" 
-        HoursStep="@HoursStep" 
-        MinutesStep="@MinutesStep" 
-        SecondsStep="@SecondsStep" 
-        DateFormat="@DateFormat" 
-        HourFormat="@HourFormat"
-        TimeOnly="@TimeOnly"
-        DateRender="@DateRender"
-        Max="@Max"
-        Min="@Min"
-        Inline="@AsCalendar"
-        AllowClear="@ClearButton"
-        data-automation-id="@GetAutomationId()"
-        Name="@ResourceTag"
-        class="w-100"
-    >
-        @ChildContent
-    </RadzenDatePicker>
+    @if(UseValue)
+    {
+        <RadzenDatePicker 
+            @ref="@DatePickerRef"
+            TValue="ItemType"
+            Value=@Value 
+            ValueChanged ="@ValueChanged" 
+            ReadOnly="@ReadOnly" 
+            Disabled="@Disabled"
+            ShowTime="@ShowTime" 
+            ShowSeconds="@ShowSeconds" 
+            HoursStep="@HoursStep" 
+            MinutesStep="@MinutesStep" 
+            SecondsStep="@SecondsStep" 
+            DateFormat="@DateFormat" 
+            HourFormat="@HourFormat"
+            TimeOnly="@TimeOnly"
+            DateRender="@DateRender"
+            Max="@Max"
+            Min="@Min"
+            Inline="@AsCalendar"
+            AllowClear="@ClearButton"
+            data-automation-id="@GetAutomationId()"
+            Name="@ResourceTag"
+            class="w-100"
+        >
+            @ChildContent
+        </RadzenDatePicker>
+    }else
+    {
+        <RadzenDatePicker 
+            @ref="@DatePickerRef"
+            TValue="ItemType"
+            ValueChanged ="@ValueChanged" 
+            ReadOnly="@ReadOnly" 
+            Disabled="@Disabled"
+            ShowTime="@ShowTime" 
+            ShowSeconds="@ShowSeconds" 
+            HoursStep="@HoursStep" 
+            MinutesStep="@MinutesStep" 
+            SecondsStep="@SecondsStep" 
+            DateFormat="@DateFormat" 
+            HourFormat="@HourFormat"
+            TimeOnly="@TimeOnly"
+            DateRender="@DateRender"
+            Max="@Max"
+            Min="@Min"
+            Inline="@AsCalendar"
+            AllowClear="@ClearButton"
+            data-automation-id="@GetAutomationId()"
+            Name="@ResourceTag"
+            class="w-100"
+        >
+            @ChildContent
+        </RadzenDatePicker>
+    }
 </div>
 
 @code {
@@ -79,6 +109,7 @@
     [Parameter] public Expression<System.Func<ItemType>> ValueExpression { get; set; }
 
     [Parameter] public string Placeholder { get; set; }
+    [Parameter] public bool UseValue {get; set;} = true;
     public RadzenDatePicker<ItemType> DatePickerRef { get; set; }
 
 
