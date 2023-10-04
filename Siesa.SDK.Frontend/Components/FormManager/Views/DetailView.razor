@@ -18,7 +18,7 @@
 {
     <ResourceViewer ResourceTag="Custom.Generic.Loading" />
 }
-else if (Panels == null || Panels.Count <= 0)
+else if ((Panels == null || Panels.Count <= 0) && !IsDocument)
 {
     @* <ResourceViewer ResourceTag="Custom.Formview.NotDefinition" /> *@
     <ErrorsWindow GeneralErrors="@ErrorList"/>
@@ -33,10 +33,12 @@ else if (ModelLoaded == true)
             <hr />
         }
     <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
-        <SDKCrudHeader ResourceTag="@Panels[0].ResourceTag" IconClass="@Panels[0].IconClass" ViewType="DynamicViewType.Detail">
-            <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef" ModelObj="@BusinessObj" DefaultColSize="@Panels[0].ColSize"/>
-        </SDKCrudHeader>
-        @if (Panels.Count > 1)
+        @if(Panels?.Count > 0){
+            <SDKCrudHeader ResourceTag="@Panels[0].ResourceTag" IconClass="@Panels[0].IconClass" ViewType="DynamicViewType.Detail">
+                <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef" ModelObj="@BusinessObj" DefaultColSize="@Panels[0].ColSize"/>
+            </SDKCrudHeader>
+        }
+        @if (Panels?.Count > 1)
         {
             <DxFormLayoutTabPages ScrollMode="TabsScrollMode.Auto">
                 @foreach (var panel in Panels.Skip(1))
@@ -48,7 +50,7 @@ else if (ModelLoaded == true)
             </DxFormLayoutTabPages>
 
         }
-        @if(PanelsCollapsable.Count>0){
+        @if(PanelsCollapsable?.Count>0){
             <div class="w-100">
                 <SDKCollapse>
                     <Items>
