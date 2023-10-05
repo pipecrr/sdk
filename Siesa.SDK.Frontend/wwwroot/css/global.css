@@ -77,6 +77,8 @@
     /* Base: color error log */
     --color_error_log_back_180: linear-gradient(180deg, rgba(224, 0, 82, 0) 0%, rgba(224, 0, 82, 1) 100%);
 
+    --dxbl-fl-caption-font-weight: 700;
+
     --rz-notification-error-icon-color: #FFFFFF !important;
     --rz-notification-warning-icon-color: #FFFFFF !important;
     --rz-notification-success-icon-color: #FFFFFF !important;
@@ -193,6 +195,7 @@
 
 *:focus {
     box-shadow: 0 0 0 0.25rem var(--color_focus_general) !important;
+    outline: none !important;
 }
 
 html {
@@ -2176,3 +2179,43 @@ border-color: var(--color_border) !important;
 .input-group-append .btn, .input-group-prepend .btn {
     z-index: 1;
 }
+
+.dxbl-text-edit>.dxbl-text-edit-input, .dxbl-text-edit>.dxbl-text-edit-template, .dxbl-text-edit>.dxbl-text-edit-template .dxbl-text-edit-input, .dxbl-text-edit>textarea{
+    background-color: var(--color_input_back) !important;
+}
+
+.dxbl-row{
+    position: relative !important;
+}
+
+.dxbl-text{
+    font-weight: 700 !important;
+}
+
+.dxbl-tabs-tablist{
+    background: transparent !important;
+}
+
+.dxbl-scroll-viewer-content .dxbl-active{
+    border: none;
+    border-color: transparent !important;
+    background-color: transparent !important;
+    box-shadow: inset 0px -3px 0px var(--color_primary);
+    color: var(--color_text) !important;
+    padding: 0.7rem 1.2rem !important;
+    font-size: 1rem;
+}
+
+.dxbl-scroll-viewer-content .dxbl-active .dxbl-text{
+    line-height: 1;
+}
+
+/* .dxbl-scroll-viewer-content .dxbl-tabs-item{
+    border: none;
+    border-color: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none;
+    color: var(--color_text_2) !important;
+    padding: 0.7rem 1.2rem !important;
+    font-size: 1rem;
+} */

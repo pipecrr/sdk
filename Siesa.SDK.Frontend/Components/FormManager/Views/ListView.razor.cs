@@ -190,8 +190,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private bool CanAccess;
         private bool CanImport;
         private bool CanExport;
-        private string defaultStyleSearchForm = "search_back position-relative";
-        private string StyleSearchForm { get; set; } = "search_back position-relative";
+        private string defaultStyleSearchForm = "search_back position-relative px-3";
+        private string StyleSearchForm { get; set; } = "search_back position-relative px-3";
         private Radzen.DataGridSelectionMode SelectionMode { get; set; } = Radzen.DataGridSelectionMode.Single;
         Guid needUpdate;
         private string _base_filter = "";
