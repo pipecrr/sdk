@@ -1,0 +1,51 @@
+
+@typeparam TItem
+
+<RadzenScheduler
+    @ref="scheduler"
+    SlotRender=@SlotRender 
+    TItem="TItem"
+    Data=@Data 
+    StartProperty=@StartProperty 
+    EndProperty=@EndProperty
+    TextProperty="@TextProperty"
+    SelectedIndex=@SelectedIndex
+    SlotSelect=@SlotSelect 
+    AppointmentSelect=@AppointmentSelect 
+    AppointmentRender=@AppointmentRender>
+    
+    @if(ShowDayView)
+    {
+        <RadzenDayView />
+    }
+
+    @if(ShowWeekView)
+    {
+        <RadzenWeekView />
+    }
+    
+    @if(ShowMonthView)
+    {
+        <RadzenMonthView />
+    }
+    
+    @if(ShowYearView)
+    {
+        <RadzenYearView />
+    }
+
+    @if(ShowYearPlannerView)
+    {
+       <RadzenYearPlannerView />
+    }
+    
+    @if(ShowYearTimelineView)
+    {
+        <RadzenYearTimelineView />
+    }
+
+    @if(ChildContent != null)
+    {
+        @ChildContent
+    }
+</RadzenScheduler>

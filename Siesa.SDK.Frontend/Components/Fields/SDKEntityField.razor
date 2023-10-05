@@ -96,11 +96,11 @@
         @if(!IsMultiple && HasValue){
             <button disabled="@Disabled" class="btn sdk_entity_field_close" type="button"  data-automation-id="@GetAutomationId()_CloseBtn" data-toggle="tooltip" data-placement="top" title="Limpiar" @onclick="@(async ()=> { await Clean();})"><SDKIcon Name="fa-xmark"/></button>
         }
-        @if (CanSearch)
+        @if (ShowSearch)
         {
             <button disabled="@Disabled" class="btn whcm-btn-outline" type="button"  data-automation-id="@GetAutomationId()_SearchBtn" data-toggle="tooltip" data-placement="top" title="Buscar" @onclick="@(async ()=> { await OpenModalList();})"><SDKIcon Name="fa-magnifying-glass"/></button>
         }
-        @if(CanCreate){
+        @if(CanCreate && ShowCreate){
             <button disabled="@Disabled" class="btn whcm-btn-outline" type="button" data-automation-id="@GetAutomationId()_CreateBtn" data-toggle="tooltip" data-placement="top" title="Crear" @onclick="@(async ()=> { await OpenModalCreate(); })" ><SDKIcon Name="fa-circle-plus"/></button>
         }
     </div>
