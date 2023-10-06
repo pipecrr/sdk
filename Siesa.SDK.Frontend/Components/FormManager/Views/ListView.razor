@@ -13,7 +13,7 @@
 {
     <ResourceViewer ResourceTag="Custom.Generic.Loading" />
 }
-else if(!string.IsNullOrEmpty(ErrorMsg) || ErrorList.Any())
+else if((!string.IsNullOrEmpty(ErrorMsg) || ErrorList.Any()) && !ErroInAction)
 {
     <ErrorsWindow GeneralErrors="@ErrorList"/>
 }
@@ -341,6 +341,9 @@ else
     @if(ShowList && UseFlex){
         FilterFlex = GetFilters(_base_filter);
         <FlexComponent IsListView="true" BlNameList="@BusinessName" ViewdefName="@FinalViewdefName" ListView="@this" GuidListView="@guidListView" CanEdit="@(CanEdit && AllowEdit)" CanDelete="@(CanDelete && AllowDelete)" CanDetail="@(CanDetail && AllowDetail)" EditingFlex="@_isEditingFlex" Take="@FlexTake" ServerPagination="@ServerPaginationFlex" FilterSearch="@FilterFlex" ActionIcons=@CustomActionIcons HasSearch=@HasSearchViewdef IsMultiple="@IsMultiple" FieldsHiddenList="@FieldsHiddenList" ShowActions="@_showActions" @ref="@_flexComponentRef"></FlexComponent>
+
+        <ErrorsWindow GeneralErrors="@ErrorList"/>
+
     }
 
     @if(SetTopBar)
