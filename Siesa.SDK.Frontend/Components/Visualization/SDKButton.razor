@@ -162,9 +162,11 @@
             
             case SDKButtonRenderStyle.Link:
                 return $"btn_secondary_link {CssClass}";
+            case SDKButtonRenderStyle.None:
+                return CssClass;
 
             default:
-                return CssClass;
+                return $"btn_primary_def_1 {CssClass}";
         }
     }
 
