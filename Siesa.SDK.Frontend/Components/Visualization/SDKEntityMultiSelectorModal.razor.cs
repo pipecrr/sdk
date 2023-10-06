@@ -9,12 +9,15 @@ using Siesa.Global.Enums;
 using Siesa.SDK.Entities;
 using Siesa.SDK.Frontend.Components.Fields;
 using Siesa.SDK.Frontend.Services;
+using Siesa.SDK.Shared.Utilities;
 
 namespace Siesa.SDK.Frontend.Components.Visualization
 {
     public partial class SDKEntityMultiSelectorModal : ComponentBase
     {
         [Parameter] public dynamic Business {get; set;}
+        [Parameter] public string RelatedBusinessName {get; set;}
+        [Parameter] public string ViewdefName {get; set;}
         [Parameter] public List<int> ItemsSelected {get; set;}
         [Parameter] public List<int> RowidRecordsRelated {get; set;}
         [Parameter] public SDKEntityMultiSelector SDKManyToManySelectorRef {get; set;}
@@ -25,10 +28,16 @@ namespace Siesa.SDK.Frontend.Components.Visualization
 
         protected override void OnInitialized()
         {
-            ConstantFilters = new()
+            ConstantFilters = new();
+
+            if(Utilities.IsAssignableToGenericType(Business.BaseObj.GetType(), typeof(BaseMaster<,>)))
             {
-                $"Status = {(int) enumStatusBaseMaster.Active}"
-            };
+                ConstantFilters.AddRange(
+                new List<string>
+                {
+                    $"Status = {(int) enumStatusBaseMaster.Active}"
+                });
+            }
             var notInFilter = RowidRecordsRelated.Select(x => $"Rowid != {x}");
             ConstantFilters.AddRange(notInFilter);
             ItemsSelected = new();
@@ -41,7 +50,7 @@ namespace Siesa.SDK.Frontend.Components.Visualization
             ItemsSelected = items.Select(x => (int) x.GetType().GetProperty("Rowid").GetValue(x)).ToList();
         }
 
-        private void AddUsers()
+        private void AddItem()
         {
             if(!ItemsSelected.Any())
             {
