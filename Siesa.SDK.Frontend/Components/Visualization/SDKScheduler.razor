@@ -1,6 +1,7 @@
 
+@using Siesa.SDK.Frontend.Components
 @typeparam TItem
-
+@inherits SDKComponent
 <div>
     <RadzenScheduler
         @ref="scheduler"
@@ -18,6 +19,7 @@
         Template="@Template"
         TodayText="@TodayText"
         Date="@Date"
+        data-automation-id="@GetAutomationId()"
     >
         
         @if(ShowDayView)

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 using Radzen.Blazor;
+using Siesa.SDK.Frontend.Components;
 
 namespace Siesa.SDK.Frontend.Components.Visualization;
 
@@ -11,7 +12,7 @@ namespace Siesa.SDK.Frontend.Components.Visualization;
 /// Partial class representing a generic scheduler with options for displaying various time views.
 /// </summary>
 /// <typeparam name="TItem">The type of items to be displayed in the scheduler.</typeparam>
-public partial class SDKScheduler<TItem>
+public partial class SDKScheduler<TItem> : SDKComponent
 {
     /// <summary>
     /// Gets or sets a value indicating whether the daily view should be shown in the scheduler. Default is true.
