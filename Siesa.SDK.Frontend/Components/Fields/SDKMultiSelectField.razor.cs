@@ -123,11 +123,9 @@ public partial class SDKMultiSelectField<TItem> : SDKComponent
     /// Gets or sets the EnumType. Represents the type of the enum
     /// </summary>
     [Parameter]
-    public Type EnumType { get; set; }
+    public Type? EnumType { get; set; }
 
-    private IEnumerable<dynamic> _optionsEnums = new List<dynamic>();
-    private IEnumerable<SDKEnumWrapper<Enum>> _options = new List<SDKEnumWrapper<Enum>>();
-
+    private List<object> _optionsEnums = new List<object>();
 
     protected override async Task OnInitializedAsync()
     {   
@@ -163,8 +161,6 @@ public partial class SDKMultiSelectField<TItem> : SDKComponent
                 EnumType = EnumType.GetGenericArguments()[0];
             }
 
-            //_optionsEnums = Enum.GetValues(EnumType).Cast<Enum>();
-
             Dictionary<byte, string> enumValues = await ResourceManager.GetEnumValues(EnumType.Name, AuthenticationService.GetRoiwdCulture()).ConfigureAwait(true);
 
             if (enumValues == null || enumValues.Count == 0)
@@ -172,33 +168,28 @@ public partial class SDKMultiSelectField<TItem> : SDKComponent
                 return;
             }
 
-
             foreach (var option in enumValues)
             {
-                // Type sdkEnumWrapperType = typeof(SDKEnumWrapper<>).MakeGenericType(EnumType);
-                // dynamic sdkEnumWrapperInstance = Activator.CreateInstance(sdkEnumWrapperType);
+                Type sdkEnumWrapperType = typeof(SDKEnumWrapper<>).MakeGenericType(EnumType);
+                dynamic sdkEnumWrapperInstance = Activator.CreateInstance(sdkEnumWrapperType);
 
-                //  sdkEnumWrapperInstance.DisplayText = option.Value;
+                 sdkEnumWrapperInstance.DisplayText = option.Value;
 
-                //  PropertyInfo propertyInfo = sdkEnumWrapperType.GetProperty("Type");
-                //  propertyInfo.SetValue(sdkEnumWrapperInstance, Enum.ToObject(EnumType, option.Key));
+                PropertyInfo propertyInfo = sdkEnumWrapperType.GetProperty("Type");
+                propertyInfo.SetValue(sdkEnumWrapperInstance, Enum.ToObject(EnumType, option.Key));
 
-                // _optionsEnums = _optionsEnums.Concat(new[] { sdkEnumWrapperInstance });
-                 
-
-                _options = _options.Append(new SDKEnumWrapper<Enum>
-                {
-                    Type= (Enum)Enum.ToObject(EnumType, option.Key),
-                    DisplayText = option.Value
-                });
+                _optionsEnums.Add(sdkEnumWrapperInstance);
             }
 
             TextProperty = "DisplayText";
             ValueProperty = "Type";
 
-            _options = _options.Distinct();
+            _optionsEnums = _optionsEnums.Distinct().ToList();
+            Options = _optionsEnums;
+
+            //_options = _options.Distinct();
             
-            Options = _options;
+            //Options = _options;
         }
         StateHasChanged();
     }
