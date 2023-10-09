@@ -1090,6 +1090,18 @@ div .form-control:focus {
     width: 100%;
 }
 
+.rz-dialog-content .search_back{
+    transition: all 1s ease;
+    min-height: 1px;
+    max-height: auto;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    overflow: hidden;
+    padding-top: 1rem;
+    margin-top: 0;
+    width: 100%;
+}
+
 .search_back_hide {
     transition: all 1s ease;
     min-height: 1px;
