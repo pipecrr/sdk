@@ -47,7 +47,7 @@
 }
 .sdk_error_log_box_head{
     background-color: var(--color_error_log);
-    color: var(--color_light);
+    color: var(--color_light_text);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -74,7 +74,7 @@
     transition: var(--animate_faster);
 }
 .sdk_error_log_show_detail ~ .sdk_error_log_box_detail > .sdk_error_log_back{
-    height: 35vh;
+    height: 0;
     transition: var(--animate_faster);  
 }
 .sdk_error_log_show_detail ~ .sdk_error_log_box_detail > .sdk_error_log_box{

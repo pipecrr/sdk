@@ -31,6 +31,7 @@ using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json.Linq;
 using System.Runtime.CompilerServices;
 using Siesa.SDK.Frontend.Components.Flex;
+using Siesa.SDK.Protos;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -195,6 +196,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private Radzen.DataGridSelectionMode SelectionMode { get; set; } = Radzen.DataGridSelectionMode.Single;
         Guid needUpdate;
         private string _base_filter = "";
+        private bool ErroInAction;
 
         public dynamic BusinessObjNullable { get; set; }
 
@@ -991,12 +993,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 SDKGlobalLoaderService.Show();
                 if (confirm){
                     BusinessObj.BaseObj.Rowid = Convert.ChangeType(id, BusinessObj.BaseObj.Rowid.GetType());
-                    var result = await BusinessObj.DeleteAsync();
+                    DeleteBusinessObjResponse result = await BusinessObj.DeleteAsync();
                     SDKGlobalLoaderService.Hide();
                     if (result != null && result.Errors.Count == 0){
                         return true;
+                    }else{
+                        ErrorList.AddRange(result.Errors.Select(x => x.Message));
+                        ErroInAction = true;
+                        NotificationService.ShowError("Custom.Generic.Message.DeleteError");
+                        StateHasChanged();                        
                     }
                 }
+
                 SDKGlobalLoaderService.Hide();
             }
             return false;
@@ -1493,6 +1501,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 SelectedObjects.Add(data);
             }else{
                 SelectedObjects.Remove(data);
+            }
+        }
+        /// <summary>
+        /// Clear the selection of the list
+        /// </summary>
+        public void ClearSelection(){
+            if(UseFlex && _flexComponentRef != null){
+                _flexComponentRef.ClearSelection();
             }
         }
     }

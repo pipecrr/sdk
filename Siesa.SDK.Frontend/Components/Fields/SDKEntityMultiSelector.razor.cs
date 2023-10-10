@@ -208,7 +208,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
             {
                 OnRemoveAction(ItemsSelected);
             }
-            RowidRecordsRelated = RowidRecordsRelated.Where(x => !ItemsSelected.Any(y => y == x)).ToList();
+            RowidRecordsRelated.RemoveAll(x => ItemsSelected.Any(y => y == x));
             RefreshListView();
         }
         /// <summary>

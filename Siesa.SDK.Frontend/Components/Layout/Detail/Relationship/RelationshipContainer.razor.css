@@ -1,20 +1,20 @@
 /*New RelationshipPanel */
 .whcm_data_related_box_hide{
-    position: absolute !important;
+    position: sticky !important;
     right: 0;
-    top: 1.5rem;
+    top: 13rem;
     z-index: 1;
 }
 .whcm_data_related_box{
-    position: absolute !important;
+    position: sticky !important;
     right: 0;
-    top: 1.5rem;
+    top: 13rem;
     z-index: 11;
 }
 .whcm_data_related_box_crud{
-    position: absolute !important;
+    position: sticky !important;
     right: 0;
-    top: 1.5rem;
+    top: 13rem;
     z-index: 11;
 }
 .whcm_data_related_back{
@@ -41,10 +41,10 @@
     z-index: -1;
 }
 
-.whcm_data_related_box_hide > .sdk_container_data_related_btn, .whcm_data_related_box_crud > .sdk_container_data_related_btn{
+.whcm_data_related_box_hide > .sdk_container_data_related_btn, .whcm_data_related_box_crud > .sdk_container_data_related_btn {
     position: absolute;
     right: -1.813rem;
-    padding: 0.5rem 0.35rem;
+    /* padding: 0.5rem 0.35rem; */
     line-height: 1;
     font-size: 0.875rem;
     color: var(--color_light_text);
@@ -127,6 +127,7 @@
     border: none;
     margin-top: 5rem;
     display: block;
+    position: absolute;
 }
 .index_btn_related{
     z-index: 2;
@@ -136,8 +137,12 @@
     box-shadow: var(--shadow_standar);
     border-radius: var(--border_radius_standar_max);
     border: none;
-    margin-top: 5rem;
-    display: none;
+    margin-top: 4.2rem;
+    display: block;
+    position: absolute;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    max-height: calc(100vh - 284px);
 }
 .whcm_data_related_btn{
     padding: 0.5rem 0.35rem;
@@ -158,4 +163,11 @@
 
 .sdk-data-related-order{
     flex-direction: column;
+}
+.whcm_data_open_box ::deep .oreports-container {
+    min-height: 180px;
+}
+
+.whcm_data_open_box ::deep .root_oreports .dx-gridbase-container>.dx-datagrid-rowsview.dx-scrollable{
+    max-height: 42vh !important;
 }

@@ -32,6 +32,15 @@ else if (ModelLoaded == true)
             <h5 class="d-flex justify-content-center">@BusinessObj</h5>
             <hr />
         }
+    @if(ContainAttachments){
+        <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" 
+                               Parent="@BusinessObj.BaseObj" ContainAttachments="@ContainAttachments" BLNameParentAttatchment="@BusinessName"
+                               BusinessObj="@BusinessObj" BusinessName="@BusinessName"/>
+    }else if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
+    {
+        <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" 
+                               BusinessName="@BusinessName"/>
+    }
     <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
         @if(Panels?.Count > 0){
             <SDKCrudHeader ResourceTag="@Panels[0].ResourceTag" IconClass="@Panels[0].IconClass" ViewType="DynamicViewType.Detail">
@@ -72,15 +81,6 @@ else if (ModelLoaded == true)
             <SDKGridDocument BusinessObj="@BusinessObj" DetailConfig="@DetailConfig" IsDetail="true"/>
         </CascadingValue>
     }
-        @if(ContainAttachments){
-            <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" 
-                Parent="@BusinessObj.BaseObj" ContainAttachments="@ContainAttachments" BLNameParentAttatchment="@BusinessName"
-                BusinessObj="@BusinessObj" BusinessName="@BusinessName"/>
-        }else if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
-        {
-             <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" 
-                BusinessName="@BusinessName"/>
-        }
         
     @if(IsSubpanel && ShowButtons){
         <div class="buttons-container pt-3">

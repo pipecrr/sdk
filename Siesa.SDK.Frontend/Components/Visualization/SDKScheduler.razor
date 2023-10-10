@@ -1,51 +1,60 @@
 
+@using Siesa.SDK.Frontend.Components
 @typeparam TItem
+@inherits SDKComponent
+<div class="h-100">
+    <RadzenScheduler
+        @ref="scheduler"
+        SlotRender=@SlotRender 
+        TItem="TItem"
+        Data=@Data 
+        StartProperty=@StartProperty 
+        EndProperty=@EndProperty
+        TextProperty="@TextProperty"
+        SelectedIndex=@SelectedIndex
+        SlotSelect=@SlotSelect 
+        AppointmentSelect=@AppointmentSelect 
+        AppointmentRender=@AppointmentRender
+        LoadData="@LoadData"
+        Template="@Template"
+        TodayText="@TodayText"
+        Date="@Date"
+        data-automation-id="@GetAutomationId()"
+    >
+        
+        @if(ShowDayView)
+        {
+            <RadzenDayView />
+        }
 
-<RadzenScheduler
-    @ref="scheduler"
-    SlotRender=@SlotRender 
-    TItem="TItem"
-    Data=@Data 
-    StartProperty=@StartProperty 
-    EndProperty=@EndProperty
-    TextProperty="@TextProperty"
-    SelectedIndex=@SelectedIndex
-    SlotSelect=@SlotSelect 
-    AppointmentSelect=@AppointmentSelect 
-    AppointmentRender=@AppointmentRender>
-    
-    @if(ShowDayView)
-    {
-        <RadzenDayView />
-    }
+        @if(ShowWeekView)
+        {
+            <RadzenWeekView />
+        }
+        
+        @if(ShowMonthView)
+        {
+            <RadzenMonthView />
+        }
+        
+        @if(ShowYearView)
+        {
+            <RadzenYearView />
+        }
 
-    @if(ShowWeekView)
-    {
-        <RadzenWeekView />
-    }
-    
-    @if(ShowMonthView)
-    {
-        <RadzenMonthView />
-    }
-    
-    @if(ShowYearView)
-    {
-        <RadzenYearView />
-    }
+        @if(ShowYearPlannerView)
+        {
+        <RadzenYearPlannerView />
+        }
+        
+        @if(ShowYearTimelineView)
+        {
+            <RadzenYearTimelineView />
+        }
 
-    @if(ShowYearPlannerView)
-    {
-       <RadzenYearPlannerView />
-    }
-    
-    @if(ShowYearTimelineView)
-    {
-        <RadzenYearTimelineView />
-    }
-
-    @if(ChildContent != null)
-    {
-        @ChildContent
-    }
-</RadzenScheduler>
+        @if(ChildContent != null)
+        {
+            @ChildContent
+        }
+    </RadzenScheduler>
+</div>
