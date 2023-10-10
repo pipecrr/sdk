@@ -1132,6 +1132,7 @@ div .form-control:focus {
 
 .whcm_modal_relacion {
     overflow: unset !important;
+    border-radius: var(--border_radius_standar_max) !important;
 }
 
 .whcm_modal_relacion.aditional_fields_padding_0>.rz-dialog-content {
@@ -1141,6 +1142,7 @@ div .form-control:focus {
 .whcm_modal_relacion>.rz-dialog-content {
     overflow: unset !important;
     background: var(--color_panel_back);
+    padding: 1rem;
 }
 
 .rz-dialog-wrapper {
@@ -2190,10 +2192,29 @@ border-color: var(--color_border) !important;
 
 .dxbl-text{
     font-weight: 700 !important;
+    color: var(--color_text);
 }
 
 .dxbl-tabs-tablist{
     background: transparent !important;
+}
+
+
+.dxbl-scroll-viewer-content .dxbl-tabs-item .dxbl-text{
+    line-height: 1;
+}
+
+.dxbl-scroll-viewer-content .dxbl-tabs-item{
+    border: none;
+    border-color: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none;
+    padding: 0.7rem 1.2rem !important;
+    font-size: 1rem;
+}
+
+.dxbl-scroll-viewer-content .dxbl-tabs-item .dxbl-text{
+    color: var(--color_text_2) !important;
 }
 
 .dxbl-scroll-viewer-content .dxbl-active{
@@ -2201,21 +2222,19 @@ border-color: var(--color_border) !important;
     border-color: transparent !important;
     background-color: transparent !important;
     box-shadow: inset 0px -3px 0px var(--color_primary);
-    color: var(--color_text) !important;
     padding: 0.7rem 1.2rem !important;
     font-size: 1rem;
 }
 
 .dxbl-scroll-viewer-content .dxbl-active .dxbl-text{
-    line-height: 1;
+    color: var(--color_text) !important;
 }
 
-/* .dxbl-scroll-viewer-content .dxbl-tabs-item{
-    border: none;
-    border-color: transparent !important;
-    background-color: transparent !important;
-    box-shadow: none;
-    color: var(--color_text_2) !important;
-    padding: 0.7rem 1.2rem !important;
-    font-size: 1rem;
-} */
+.dxbl-tabs-content{
+    padding-top: 1rem;
+}
+
+.rz-dialog-titlebar {
+    border-top-left-radius: var(--border_radius_standar_max);
+    border-top-right-radius: var(--border_radius_standar_max);
+}
