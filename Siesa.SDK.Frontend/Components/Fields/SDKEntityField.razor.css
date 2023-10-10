@@ -47,12 +47,10 @@
 }
 
 .whcm_select_list.sdk-dropdown-menu{
-    width: 400px;
+    width: 300px;
     z-index: 3;
-    top: 0;
-    left: 0;
-    padding: 0.5rem 0;
-    margin: 0.125rem 0 0;
+    padding: 0;
+    margin: 0;
 }
 
 .input-badge-container > .sdk-dropdown ::deep > input{
@@ -76,7 +74,7 @@
 
 .sdk-entity-result{
     overflow-y: auto;
-    max-height: 10rem;
+    max-height: 14rem;
 }
 
 .sdk_btn_group_entity_field{

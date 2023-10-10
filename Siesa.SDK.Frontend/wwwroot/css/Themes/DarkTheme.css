@@ -84,9 +84,9 @@
     --color_delete: #e00052;
     --color_delete_dark: #910047;
 
-    --color_error_log: #E00052;
+    --color_error_log: #E4EFFE;
     /* Base: color error log */
-    --color_error_log_back_180: linear-gradient(180deg, rgba(224, 0, 82,0) 0%, rgba(224, 0, 82,1) 100%);
+    --color_error_log_back_180: transparent;
 
     --rz-notification-error-icon-color: #FFFFFF !important;
     --rz-notification-warning-icon-color: #FFFFFF !important;

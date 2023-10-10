@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Siesa.SDK.Entities
 {
-	public partial class E00046_ModuleFeature
+	public partial class E00046_ServiceFeature
 	{
 
 

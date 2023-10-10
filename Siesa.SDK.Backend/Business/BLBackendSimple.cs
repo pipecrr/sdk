@@ -588,6 +588,11 @@ namespace Siesa.SDK.Business
                             context.BeginTransaction();
                         }
                         BeforeSave(ref result, context);
+                        if (result.Errors.Count > 0)
+                        {
+                            context.Rollback();
+                            return result;
+                        }
                         result.Rowid = Save(context);
                         if (_queueService != null && !string.IsNullOrEmpty(BusinessName))
                         {
@@ -602,6 +607,11 @@ namespace Siesa.SDK.Business
                             SaveDynamicEntity(result.Rowid, context);
                         }
                         AfterSave(ref result, context);
+                        if (result.Errors.Count > 0)
+                        {
+                            context.Rollback();
+                            return result;
+                        }
                         if (!context.Database.IsInMemory())
                         {
                             context.Commit();
@@ -905,12 +915,24 @@ namespace Siesa.SDK.Business
                             context.BeginTransaction();
                         }
                         BeforeDelete(ref result, context);
+                        if (result.Errors.Count > 0)
+                        {
+                            context.Rollback();
+                            response.Errors.AddRange(result.Errors);
+                            return response;
+                        }
                         DeleteDynamicEntity(context);
                         DisableRelatedProperties(BaseObj, _navigationProperties);
                         context.SetProvider(_provider);
                         context.Set<T>().Remove(BaseObj);
                         context.SaveChanges();
                         AfterDelete(ref result, context);
+                        if (result.Errors.Count > 0)
+                        {
+                            context.Rollback();
+                            response.Errors.AddRange(result.Errors);
+                            return response;
+                        }
                         if (!context.Database.IsInMemory())
                         {
                             context.Commit();
@@ -930,18 +952,13 @@ namespace Siesa.SDK.Business
                         {
                             context.Rollback();
                         }
-                        AddExceptionToResult(DbEx, result);
-                        var errorList = result.Errors.Where(x => x.Message.Contains("Foreing key")).ToList();
-                        if (errorList.Any())
+
+                        string relatedTable = HandleDbUpdateException(DbEx, ref result);
+
+                        if(!string.IsNullOrEmpty(relatedTable))
                         {
-                            var regex = new Regex(@"Table name: ([^\r\n]+)");
-                            var relatedTable = errorList
-                                                .Select(x => x.Message)
-                                                .SelectMany(msg => regex.Matches(msg).Cast<Match>())
-                                                .Select(match => match?.Groups[1].Value.Split('.').Last()).Distinct().FirstOrDefault();
                             response.Errors.Add(new OperationError() { Message = $"Exception: Custom.Generic.Message.DeleteErrorWithRelations//{relatedTable}.Plural" });
-                        }
-                        else
+                        }else
                         {
                             response.Errors.AddRange(result.Errors);
                         }
@@ -954,6 +971,26 @@ namespace Siesa.SDK.Business
                 response.Errors.Add(new OperationError() { Message = "Custom.Generic.Message.DeleteError" });
             }
             return response;
+        }
+
+        public string HandleDbUpdateException(DbUpdateException dbEx, ref ValidateAndSaveBusinessObjResponse result)
+        {
+            AddExceptionToResult(dbEx, result);
+
+            var errorList = result.Errors.Where(x => x.Message.Contains("Foreing key")).ToList();
+
+            string relatedTable = "";
+
+            if (errorList.Any())
+            {
+                var regex = new Regex(@"Table name: ([^\r\n]+)");
+                relatedTable = errorList
+                                    .Select(x => x.Message)
+                                    .SelectMany(msg => regex.Matches(msg).Cast<Match>())
+                                    .Select(match => match?.Groups[1].Value.Split('.').Last()).Distinct().FirstOrDefault();
+            }
+
+            return relatedTable;
         }
 
         [SDKExposedMethod]
@@ -2167,9 +2204,15 @@ namespace Siesa.SDK.Business
         {
             try
             {
+        public ActionResult<int> DeleteGroupDynamicEntity(int rowid)
+        {
+            try
+            {
                 using (SDKContext context = CreateDbContext())
                 {
                     var columns = context.Set<E00251_DynamicEntityColumn>().Where(x => x.RowidDynamicEntity == rowid).ToList();
+                    if (columns != null)
+                    {
                     if (columns != null)
                     {
                         context.RemoveRange(columns);
@@ -2188,6 +2231,9 @@ namespace Siesa.SDK.Business
                         return new NotFoundResult<int>();
                     }
                 }
+            }
+            catch (Exception e)
+            {
             }
             catch (Exception e)
             {

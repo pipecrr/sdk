@@ -14,36 +14,33 @@ using Siesa.Global.Enums;
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
-	/// Modulos
+	/// Característica módulo
 	/// </summary>
 
-	[Index(nameof(Id), Name = "IX_e00010_1", IsUnique = true)]
-	public partial class E00010_Module : BaseSDK<short>
+	[Index(nameof(RowidModule), nameof(RowidFeature), Name = "IX_e00046_1", IsUnique = true)]
+	public partial class E00046_ServiceFeature : BaseSDK<int>
 	{
 		[SDKIdentity]
 		[Key]
 		[SDKRequired]
-		public override short Rowid { get; set; }
+		public override int Rowid { get; set; }
 
+		[ForeignKey("Module")]
 		[SDKRequired]
-		[SDKStringLength(20)]
-		public string Id { get; set; }
+		public short RowidModule { get; set; }
 
+		[ForeignKey("Feature")]
 		[SDKRequired]
-		[SDKStringLength(250)]
-		public string Description { get; set; }
-
-		[ForeignKey("Resource")]
-		[SDKRequired]
-		public int RowidResource { get; set; }
-
-		[SDKRequired]
-		public byte LicenceType { get; set; }
+		public int RowidFeature { get; set; }
 
 
 		[SDKCheckRelationship]
 		[SDKRequired]
-		public virtual E00020_Resource Resource { get; set; }
+		public virtual E00010_Service Module { get; set; }
+
+		[SDKCheckRelationship]
+		[SDKRequired]
+		public virtual E00040_Feature Feature { get; set; }
 
 	}
 }

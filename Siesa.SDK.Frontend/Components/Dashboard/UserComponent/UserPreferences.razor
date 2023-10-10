@@ -12,6 +12,7 @@
 @using System.IO
 @using Microsoft.AspNetCore.Http
 @using Siesa.SDK.Frontend.Components.FormManager.Model
+@using Siesa.SDK.Components.Visualization
 
 
 @inject IServiceProvider ServiceProvider
@@ -41,7 +42,7 @@
                 <img src="@ProfileImageData" alt="imagen perfil" style="max-width: 100%;">
             </div>
             <SDKButton CssClass="whcm_upload_photo btn btn-primary btn_primary_def_1 btn-sm"
-                Click="@(async () => PickComponent())" AutomationId="UploadUserPhoto" ResourceTag="@UploadUserPhoto">
+                Click="@(async () => PickComponent())" AutomationId="UploadUserPhoto" ResourceTag="@UploadUserPhoto" RenderStyle="SDKButtonRenderStyle.None">
                 <SDKIcon Name="fa-camera"></SDKIcon>
             </SDKButton>
         </div>
@@ -54,19 +55,19 @@
                 @if (_IsEdit)
                 {
                     <SDKButton CssClass="btn btn-sm layout_btn_negative-sm mb-1" 
-                        AutomationId="Confirm" Click="@(()=> ChangeViewType())" ResourceTag="@Confirm">
+                        AutomationId="Confirm" Click="@(()=> ChangeViewType())" ResourceTag="@Confirm" RenderStyle="SDKButtonRenderStyle.None">
                         <SDKIcon Name="fa-circle-check" />
                     </SDKButton>
 
                     <SDKButton CssClass="btn btn-sm layout_btn_negative-sm mb-1" 
-                        AutomationId="Cancel" Click="@(()=> ChangeViewType())" ResourceTag="@Cancel" >
+                        AutomationId="Cancel" Click="@(()=> ChangeViewType())" ResourceTag="@Cancel" RenderStyle="SDKButtonRenderStyle.None">
                         <SDKIcon Name="fa-ban" />
                     </SDKButton>
                 }
                 else
                 {
                     <SDKButton CssClass="btn btn-sm layout_btn_negative-sm mb-1" 
-                        AutomationId="EditUser" Click="@(()=> ChangeViewType())" ResourceTag="@EditUser">
+                        AutomationId="EditUser" Click="@(()=> ChangeViewType())" ResourceTag="@EditUser" RenderStyle="SDKButtonRenderStyle.None">
                         <SDKIcon Name="fa-pen" />
                     </SDKButton>
                 }
@@ -284,16 +285,16 @@
 
 
 <div class="row modal-footer pb-0">
-    <SDKButton CssClass="btn btn-primary btn_secondary_def_1 btn-sm px-3" Click="@(async () => await InitView())" AutomationId="DiscardChanges">
+    <SDKButton CssClass="btn btn-primary btn_secondary_def_1 btn-sm px-3" Click="@(async () => await InitView())" AutomationId="DiscardChanges" RenderStyle="SDKButtonRenderStyle.None">
         <ResourceViewer ResourceTag="Custom.SDK.UserPreference.DiscardChanges" />
     </SDKButton>
 
 
-    <SDKButton CssClass="btn btn-primary btn_secondary_cancel btn-sm px-3" Click="@(()=> DialogService.Close(false))" AutomationId="Out">
+    <SDKButton CssClass="btn btn-primary btn_secondary_cancel btn-sm px-3" Click="@(()=> DialogService.Close(false))" AutomationId="Out" RenderStyle="SDKButtonRenderStyle.None">
         <ResourceViewer ResourceTag="Custom.SDK.UserPreference.Out" />
     </SDKButton>
 
-    <SDKButton CssClass="btn btn-primary btn_primary_def_1 btn-sm px-3" Click="@(async () => await SaveUserPreferences())" AutomationId="Save">
+    <SDKButton CssClass="btn btn-primary btn_primary_def_1 btn-sm px-3" Click="@(async () => await SaveUserPreferences())" AutomationId="Save" RenderStyle="SDKButtonRenderStyle.None">
         <ResourceViewer ResourceTag="Action.Save" />
     </SDKButton>
 

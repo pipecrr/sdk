@@ -1,0 +1,16 @@
+.whcm_fixed_button{
+    position: fixed !important;
+    z-index: 4;
+    right: 2rem;
+    bottom: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: right;
+}
+
+ @media (max-width: 767.98px) { 
+    ::deep .whcm_fixed_button{
+        right: 2rem;
+        bottom: 3rem;
+    }
+}

@@ -1,0 +1,42 @@
+@using Siesa.SDK.Frontend.Components.FormManager.Model
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Components.Visualization
+
+<div class="row">
+    @if(ConstantFilters?.Count > 0)
+    {
+        <div class="col-12">
+            <ListView
+                IsMultiple="true"
+                ViewdefName="@ViewdefName"
+                BusinessObj=@Business
+                BusinessName="@RelatedBusinessName"
+                SetTopBar="false"
+                AllowCreate="false"
+                AllowEdit="false"
+                AllowDelete="false"
+                AllowDetail="false"
+                ShowSearchForm="false"
+                ConstantFilters="@ConstantFilters"
+                OnSelectedRow="@OnSelectItems"
+            />
+        </div>
+        <div class="col-12 d-flex justify-content-end">
+            <SDKButton
+                RenderStyle="SDKButtonRenderStyle.Primary"
+                ResourceTag="@ResourceTagButtonAdd"
+                Click="@AddItem"
+            />
+        </div>
+    }else
+    {
+        <div class="col-12 text-center font_color_primary_dark pt-3 pb-0">
+            <i class="fa-solid fa-circle-info fa-3x"></i>
+            <p class="mt-3 mb-0 font_size_087">
+                <ResourceViewer
+                    ResourceTag="Custom.SDKEntityMultiSelectorModal.ItemsNotFound"
+                />
+            </p>
+        </div>
+    }
+</div>
