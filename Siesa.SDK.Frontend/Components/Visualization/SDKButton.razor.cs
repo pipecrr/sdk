@@ -1,3 +1,4 @@
+using System;
 using DevExpress.Blazor;
 
 namespace Siesa.SDK.Components.Visualization
@@ -16,7 +17,8 @@ namespace Siesa.SDK.Components.Visualization
                 SDKButtonRenderStyle.Warning => ButtonRenderStyle.Warning,
                 SDKButtonRenderStyle.Danger => ButtonRenderStyle.Danger,
                 SDKButtonRenderStyle.Cancel => ButtonRenderStyle.Dark,
-                SDKButtonRenderStyle.Light => ButtonRenderStyle.Light
+                SDKButtonRenderStyle.Light => ButtonRenderStyle.Light,
+                _ =>  ButtonRenderStyle.Primary
             };
         }
 

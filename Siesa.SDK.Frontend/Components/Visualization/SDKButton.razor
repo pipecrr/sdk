@@ -59,7 +59,9 @@
 }
 
 @code {
-    [Parameter] public SDKButtonRenderStyle RenderStyle { get; set; }
+
+    [Parameter]
+    public SDKButtonRenderStyle RenderStyle { get; set; } = SDKButtonRenderStyle.Primary;
     [Parameter] public SDKButtonRenderStyleMode RenderStyleMode { get; set; }
     [Parameter] public EventCallback<MouseEventArgs> Click { get; set; }
     [Parameter] public bool IsActionButton { get; set; }
@@ -164,9 +166,8 @@
                 return $"btn_secondary_link {CssClass}";
             case SDKButtonRenderStyle.None:
                 return CssClass;
-
             default:
-                return $"btn_primary_def_1 {CssClass}";
+                return CssClass;
         }
     }
 
