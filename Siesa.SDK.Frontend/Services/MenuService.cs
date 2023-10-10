@@ -27,7 +27,6 @@ namespace Siesa.SDK.Frontend.Services
         private IAuthenticationService AuthenticationService;
         private UtilsManager UtilsManager { get; set; }
         public Dictionary<int, List<E00061_Menu>> SuiteData {get; set;} = new();
-        public Dictionary<int, List<E00061_Menu>> SecondarySuiteData {get; set;} = new();
 
         public E00060_Suite SelectedSuite { get; set; } = new();
 
@@ -194,7 +193,7 @@ namespace Siesa.SDK.Frontend.Services
             if(menuRequest.Success)
             {
                 var Data = menuRequest.Data;
-                MenuManagerBySuite(_menuBL, suiteRowid, Data, SuiteData);
+                MenuManagerBySuite(_menuBL, suiteRowid, Data);
             }
         }
 
@@ -207,7 +206,7 @@ namespace Siesa.SDK.Frontend.Services
             if(!menuRequest.Success) return false;
 
             var Data = menuRequest.Data;
-            MenuManagerBySuite(menuBL, RowidSuite, Data, SecondarySuiteData, true, true);
+            MenuManagerBySuite(menuBL, RowidSuite, Data, true, true);
 
             return true;
         }
@@ -221,7 +220,7 @@ namespace Siesa.SDK.Frontend.Services
             if(!menuRequest.Success) return null;
 
             var Data = menuRequest.Data;
-            MenuManagerBySuite(menuBL, 0, Data, SecondarySuiteData, true, false);
+            MenuManagerBySuite(menuBL, 0, Data, true, false);
 
             return Data;
         }
@@ -236,7 +235,7 @@ namespace Siesa.SDK.Frontend.Services
 
             var Data = Request.Data;
 
-            MenuManagerBySuite(menuBL, RowidSuite, Data, SecondarySuiteData, true, true);
+            MenuManagerBySuite(menuBL, RowidSuite, Data, true, true);
 
             return true;
         }
@@ -251,12 +250,12 @@ namespace Siesa.SDK.Frontend.Services
 
             var Data = Request.Data;
 
-            MenuManagerBySuite(menuBL, RowidSuite, Data, SecondarySuiteData, true, true);
+            MenuManagerBySuite(menuBL, RowidSuite, Data, true, true);
 
             return true;
         }
 
-        public void MenuManagerBySuite(SDKBusinessModel menuBL, int RowidSuite, List<E00061_Menu> menuResponse, Dictionary<int, List<E00061_Menu>> DataRef, bool IgnoreGeneralMenu = false, bool SetInSuiteData = false)
+        public void MenuManagerBySuite(SDKBusinessModel menuBL, int RowidSuite, List<E00061_Menu> menuResponse, bool IgnoreGeneralMenu = false, bool SetInSuiteData = false)
         {
             menuResponse = menuResponse.OrderBy(x => x.Order).ToList();
 
@@ -266,9 +265,9 @@ namespace Siesa.SDK.Frontend.Services
                 Menus.AddRange(menuResponse);
             }else
             {
-                if(SetInSuiteData && !DataRef.ContainsKey(RowidSuite))
+                if(SetInSuiteData && !SuiteData.ContainsKey(RowidSuite))
                 {
-                    DataRef.Add(RowidSuite, menuResponse);
+                    SuiteData.Add(RowidSuite, menuResponse);
                 }
             }
 
@@ -332,6 +331,7 @@ namespace Siesa.SDK.Frontend.Services
                 if (SuiteData.ContainsKey(suiteRowid))
                 {
                     Menus.AddRange(SuiteData[suiteRowid]);
+                    NotifyMenuLoaded();
                 }
                 else
                 {
