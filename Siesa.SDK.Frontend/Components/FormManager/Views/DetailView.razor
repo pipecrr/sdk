@@ -83,7 +83,7 @@ else if (ModelLoaded == true)
     }
         
     @if(IsSubpanel && ShowButtons){
-        <div class="buttons-container">
+        <div class="buttons-container pt-3">
             @foreach (var btn in FormViewModel.Buttons)
             {
                 <SDKButton RenderStyle="@btn.RenderStyle" Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag" />

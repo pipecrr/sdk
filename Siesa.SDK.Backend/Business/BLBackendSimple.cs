@@ -607,7 +607,7 @@ namespace Siesa.SDK.Business
                             SaveDynamicEntity(result.Rowid, context);
                         }
                         AfterSave(ref result, context);
-                        if (result.Errors.Count > 0)
+                        if(result.Errors.Count > 0)
                         {
                             context.Rollback();
                             return result;
@@ -915,8 +915,7 @@ namespace Siesa.SDK.Business
                             context.BeginTransaction();
                         }
                         BeforeDelete(ref result, context);
-                        if (result.Errors.Count > 0)
-                        {
+                        if(result.Errors.Count > 0){
                             context.Rollback();
                             response.Errors.AddRange(result.Errors);
                             return response;
@@ -927,8 +926,7 @@ namespace Siesa.SDK.Business
                         context.Set<T>().Remove(BaseObj);
                         context.SaveChanges();
                         AfterDelete(ref result, context);
-                        if (result.Errors.Count > 0)
-                        {
+                        if(result.Errors.Count > 0){
                             context.Rollback();
                             response.Errors.AddRange(result.Errors);
                             return response;
@@ -952,13 +950,18 @@ namespace Siesa.SDK.Business
                         {
                             context.Rollback();
                         }
-
-                        string relatedTable = HandleDbUpdateException(DbEx, ref result);
-
-                        if(!string.IsNullOrEmpty(relatedTable))
+                        AddExceptionToResult(DbEx, result);
+                        var errorList = result.Errors.Where(x => x.Message.Contains("Foreing key")).ToList();
+                        if (errorList.Any())
                         {
+                            var regex = new Regex(@"Table name: ([^\r\n]+)");
+                            var relatedTable = errorList
+                                                .Select(x => x.Message)
+                                                .SelectMany(msg => regex.Matches(msg).Cast<Match>())
+                                                .Select(match => match?.Groups[1].Value.Split('.').Last()).Distinct().FirstOrDefault();
                             response.Errors.Add(new OperationError() { Message = $"Exception: Custom.Generic.Message.DeleteErrorWithRelations//{relatedTable}.Plural" });
-                        }else
+                        }
+                        else
                         {
                             response.Errors.AddRange(result.Errors);
                         }
@@ -971,26 +974,6 @@ namespace Siesa.SDK.Business
                 response.Errors.Add(new OperationError() { Message = "Custom.Generic.Message.DeleteError" });
             }
             return response;
-        }
-
-        public string HandleDbUpdateException(DbUpdateException dbEx, ref ValidateAndSaveBusinessObjResponse result)
-        {
-            AddExceptionToResult(dbEx, result);
-
-            var errorList = result.Errors.Where(x => x.Message.Contains("Foreing key")).ToList();
-
-            string relatedTable = "";
-
-            if (errorList.Any())
-            {
-                var regex = new Regex(@"Table name: ([^\r\n]+)");
-                relatedTable = errorList
-                                    .Select(x => x.Message)
-                                    .SelectMany(msg => regex.Matches(msg).Cast<Match>())
-                                    .Select(match => match?.Groups[1].Value.Split('.').Last()).Distinct().FirstOrDefault();
-            }
-
-            return relatedTable;
         }
 
         [SDKExposedMethod]

@@ -250,11 +250,22 @@
 
     private bool IsByCompanyGroup {get; set;}
 
+    private bool UniqueCompanyGroup {get; set;}
+
     protected override async Task OnInitializedAsync()
     {
         filters.Add("Feature.BusinessName", BusinessName);
         await GetEntityFields();
         await base.OnInitializedAsync();  
+    }
+
+    private async Task HasUniqueCompanyGroup(){
+        var bl = BackendRouterService.GetSDKBusinessModel("BLIntegrationService", AuthenticationService);
+        var result = await bl.Call("GetCompaniesGroup");  
+
+        if(result.Success){
+            
+        }
     }
 
     private async Task GetEntityFields()
@@ -375,27 +386,33 @@
 
             List<string> Headers = _fieldsEntity.Where(p=> !HiddenFields.Contains(p.Value)).Select(x => x.Key).ToList();
 
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet Config = workbook.Worksheets[0];
+            
+            Worksheet DataWorkSheet = workbook.Worksheets[1];
 
             var EntityName = await ResourceManager.GetResource($"{EntityType.Name}.plural", AuthenticationService); 
             var TemplateResource = await ResourceManager.GetResource("Custom.SDK.Integration.Template", AuthenticationService); 
             var DataResource= await ResourceManager.GetResource("Custom.SDK.Integration.Data", AuthenticationService); 
             
-            worksheet.Name = $"{DataResource} - {EntityName}";
+            DataWorkSheet.Name = $"{DataResource} - {EntityName}";
+            Config.Name = $"Configuración";
+
+            Config["A1"].Value="Holi";
+            Config["A2"].Value = AuthenticationService.GetRowidCompanyGroup();
 
             workbook.BeginUpdate();
 
             try{
                 for (int i = 0; i < Headers.Count(); i++){
-                    worksheet.Rows["1"][i].Value = Headers[i];   
+                    DataWorkSheet.Rows["1"][i].Value = Headers[i];   
                 }
-                worksheet.Rows.AutoFit(0, Headers.Count()-1);     
-                worksheet.Columns.AutoFit(0, Headers.Count()-1); 
+                DataWorkSheet.Rows.AutoFit(0, Headers.Count()-1);     
+                DataWorkSheet.Columns.AutoFit(0, Headers.Count()-1);
+                DataWorkSheet.DataValidations.Add(DataWorkSheet["A4"], DataValidationType.List, "PASS, FAIL, holi"); 
                 
             }finally{
                 workbook.EndUpdate();
             }
-                //workbook.Calculate();
 
             workbook.SaveDocument(stream, DocumentFormat.OpenXml);
             byte[] bytes = stream.ToArray();
@@ -430,8 +447,14 @@
             stream.Position = 0;
                 Workbook workbook = new Workbook();
                 workbook.LoadDocument(stream, DocumentFormatType.Value);
-                Worksheet worksheet = workbook.Worksheets[0];
-                var HeaderRowObj = worksheet.Rows[0];
+                Worksheet Config = workbook.Worksheets[0];
+
+
+                if(Config.Name != "holi"){
+
+                }
+                Worksheet DataWorkSheet = workbook.Worksheets[1];
+                var HeaderRowObj = DataWorkSheet.Rows[0];
                 List<string> Headers = new();
                 
                 foreach( var cellHeader in HeaderRowObj){
@@ -447,7 +470,7 @@
 
                 List<dynamic> DataCells = new();
                 int RowCounter = 1;
-                var ActualRow = worksheet.Rows[RowCounter];
+                var ActualRow = DataWorkSheet.Rows[RowCounter];
 
                 do{
                     ExpandoObject obj = new ExpandoObject();
@@ -479,11 +502,11 @@
                     }
                     FileData.Add(obj);
                     RowCounter ++;
-                    ActualRow = worksheet.Rows[RowCounter];
+                    ActualRow = DataWorkSheet.Rows[RowCounter];
                 }while(ActualRow.HasData);
 
-                var t = worksheet.Rows[0];
-                var t2 = worksheet.Rows[2];
+                var t = DataWorkSheet.Rows[0];
+                var t2 = DataWorkSheet.Rows[2];
 
                 foreach( var gt in t){
                     var  tt = gt.Value;
