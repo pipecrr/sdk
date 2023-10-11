@@ -22,11 +22,15 @@ namespace Siesa.SDK.Entities
 		public virtual string? Source { get; set; }
 
 		[SDKRequired]
+		[ForeignKey("UserCreates")]
 		public virtual int RowidUserCreates { get; set; }
-
+		[ForeignKey("UserLastUpdate")]
 		public virtual int? RowidUserLastUpdate { get; set; }
 
 		public virtual int? RowidSession { get; set; }
+
+		public virtual E00220_User UserCreates { get; set; }
+		public virtual E00220_User? UserLastUpdate { get; set; }
 
 
 	}
