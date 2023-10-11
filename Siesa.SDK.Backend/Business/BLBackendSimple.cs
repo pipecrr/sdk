@@ -2182,7 +2182,6 @@ namespace Siesa.SDK.Business
 
         }
 
-        [SDKExposedMethod]
         public ActionResult<int> DeleteGroupDynamicEntity(int rowid)
         {
             try
@@ -2500,8 +2499,12 @@ namespace Siesa.SDK.Business
 
             if (IsNumber(TypeEntity, ref DynamicValue))
             {
-                if (TypeDynamicValue == typeof(bool)) return new ActionResult<dynamic> { Success = true, Data = TypeDynamicValue == typeof(bool) ? DynamicValue : DynamicValue == 1 };
+                /*if (TypeDynamicValue == typeof(bool)) return new ActionResult<dynamic> { Success = true, Data = TypeDynamicValue == typeof(bool) ? DynamicValue : DynamicValue == 1 };*/
                 return new ActionResult<dynamic> { Success = true, Data = DynamicValue };
+            }
+            if(TypeEntity == typeof(bool))
+            {
+                return new ActionResult<dynamic> { Success = true, Data = DynamicValue == 1 };
             }
 
             return new ActionResult<dynamic> { Success = false, Errors = new List<string>() { $"{DynamicValue} no es compatible con  el campo {NameProperty}" } };
