@@ -331,6 +331,7 @@ namespace Siesa.SDK.Frontend.Services
                 if (SuiteData.ContainsKey(suiteRowid))
                 {
                     Menus.AddRange(SuiteData[suiteRowid]);
+                    NotifyMenuLoaded();
                 }
                 else
                 {
