@@ -3,12 +3,13 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Siesa.Global.Enums;
 using Siesa.SDK.Shared.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace Siesa.SDK.Entities
 {
 
-	public abstract partial class BaseUserPermission<T, U> : BaseAudit<int> where U : struct
+	public abstract partial class BaseUserPermission<T, U> : BaseAudit<int>
 	{
 		[Key]
 		[SDKRequired]
@@ -33,7 +34,7 @@ namespace Siesa.SDK.Entities
 		public virtual int? RowidUser { get; set; }
 
 
-		public virtual T? Record { get; set; }
+		public virtual T Record { get; set; }
 
 
 
