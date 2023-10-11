@@ -21,5 +21,6 @@ namespace Siesa.SDK.Shared.DTOS
         public bool is_dynamic_field { get; set; }
         public string aggregate { get; set; }
         public bool hide { get; set; }
+        public bool is_sensitive_data { get; set; }
     }
 }

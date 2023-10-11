@@ -380,11 +380,16 @@ a:hover
     border-color: var(--color_cancel_dark) !important;
 }
 
+.btn-outline-danger{
+    color: var(--color_delete) !important;
+    background-color: var(--color_light) !important;
+}
+
 .btn_secondary_danger {
-    background-color: var(--color_delete) !important;
-    border-color: var(--color_delete) !important;
-    border-radius: var(--border_radius_btn) !important;
-    font-weight: 700 !important;
+    background-color: var(--color_delete);
+    border-color: var(--color_delete);
+    border-radius: var(--border_radius_btn);
+    font-weight: 700;
 }
 
 .btn_secondary_danger:hover {
