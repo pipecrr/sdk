@@ -256,6 +256,7 @@
     {
         filters.Add("Feature.BusinessName", BusinessName);
         await GetEntityFields();
+        await HasUniqueCompanyGroup();
         await base.OnInitializedAsync();  
     }
 
@@ -264,7 +265,7 @@
         var result = await bl.Call("GetCompaniesGroup");  
 
         if(result.Success){
-            
+            UniqueCompanyGroup = result.Data;
         }
     }
 
@@ -386,6 +387,10 @@
 
             List<string> Headers = _fieldsEntity.Where(p=> !HiddenFields.Contains(p.Value)).Select(x => x.Key).ToList();
 
+            @* if(UniqueCompanyGroup){
+                workbook.Worksheets.Add()
+            } *@
+
             Worksheet Config = workbook.Worksheets[0];
             
             Worksheet DataWorkSheet = workbook.Worksheets[1];
@@ -395,8 +400,8 @@
             var DataResource= await ResourceManager.GetResource("Custom.SDK.Integration.Data", AuthenticationService); 
             
             DataWorkSheet.Name = $"{DataResource} - {EntityName}";
-            Config.Name = $"Configuración";
-
+            Config.Name = await ResourceManager.GetResource("Custom.SDK.Integration.Config", AuthenticationService); ;
+            
             Config["A1"].Value="Holi";
             Config["A2"].Value = AuthenticationService.GetRowidCompanyGroup();
 
