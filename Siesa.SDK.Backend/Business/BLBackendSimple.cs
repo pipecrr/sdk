@@ -716,6 +716,11 @@ namespace Siesa.SDK.Business
             {
                 dynamicEntity.GetType().GetProperty("NumericData").SetValue(dynamicEntity, value.ToObject<decimal>());
             }
+            else if(value.Type == JTokenType.Boolean)
+            {
+                var valueToNumeric = value.ToObject<bool>() ? 1 : 0;
+                dynamicEntity.GetType().GetProperty("NumericData").SetValue(dynamicEntity, (decimal)valueToNumeric);
+            }
             if (fields.ContainsKey(prop.Name))
             {
                 dynamic field = fields[prop.Name];

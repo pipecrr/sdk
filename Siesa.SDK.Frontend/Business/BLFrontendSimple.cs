@@ -289,6 +289,10 @@ namespace Siesa.SDK.Business
                         var valueDate = Convert.ChangeType(item.DateData, typeof(DateTime));
                         DynamicObject.GetType().GetProperty(columnName).SetValue(DynamicObject, valueDate);
                         break;
+                    case enumDynamicEntityDataType.Boolean:
+                        var valueBool = Convert.ChangeType(item.NumericData, typeof(bool));
+                        DynamicObject.GetType().GetProperty(columnName).SetValue(DynamicObject, valueBool);
+                        break;
                     default:
                         break;
                 }
@@ -427,6 +431,8 @@ namespace Siesa.SDK.Business
                     return typeof(Decimal);
                 case enumDynamicEntityDataType.Date:
                     return typeof(DateTime);
+                case enumDynamicEntityDataType.Boolean:
+                    return typeof(bool);
                 default:
                     return typeof(string);
             }
