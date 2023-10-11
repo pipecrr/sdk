@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Siesa.Global.Enums;
 using Siesa.SDK.Shared.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace Siesa.SDK.Entities
