@@ -2182,11 +2182,6 @@ namespace Siesa.SDK.Business
 
         }
 
-        [SDKExposedMethod]
-        public ActionResult<int> DeleteGroupDynamicEntity(int rowid)
-        {
-            try
-            {
         public ActionResult<int> DeleteGroupDynamicEntity(int rowid)
         {
             try
@@ -2194,8 +2189,6 @@ namespace Siesa.SDK.Business
                 using (SDKContext context = CreateDbContext())
                 {
                     var columns = context.Set<E00251_DynamicEntityColumn>().Where(x => x.RowidDynamicEntity == rowid).ToList();
-                    if (columns != null)
-                    {
                     if (columns != null)
                     {
                         context.RemoveRange(columns);
@@ -2214,9 +2207,6 @@ namespace Siesa.SDK.Business
                         return new NotFoundResult<int>();
                     }
                 }
-            }
-            catch (Exception e)
-            {
             }
             catch (Exception e)
             {
@@ -2509,8 +2499,12 @@ namespace Siesa.SDK.Business
 
             if (IsNumber(TypeEntity, ref DynamicValue))
             {
-                if (TypeDynamicValue == typeof(bool)) return new ActionResult<dynamic> { Success = true, Data = TypeDynamicValue == typeof(bool) ? DynamicValue : DynamicValue == 1 };
+                /*if (TypeDynamicValue == typeof(bool)) return new ActionResult<dynamic> { Success = true, Data = TypeDynamicValue == typeof(bool) ? DynamicValue : DynamicValue == 1 };*/
                 return new ActionResult<dynamic> { Success = true, Data = DynamicValue };
+            }
+            if(TypeEntity == typeof(bool))
+            {
+                return new ActionResult<dynamic> { Success = true, Data = DynamicValue == 1 };
             }
 
             return new ActionResult<dynamic> { Success = false, Errors = new List<string>() { $"{DynamicValue} no es compatible con  el campo {NameProperty}" } };
