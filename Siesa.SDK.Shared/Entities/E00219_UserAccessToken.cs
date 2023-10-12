@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Siesa.Global.Enums;
 
 
+
 namespace Siesa.SDK.Entities
 {
 	/// <summary>
@@ -30,6 +31,7 @@ namespace Siesa.SDK.Entities
 
 		public DateTime? LastUsedDate { get; set; }
 
+		[ForeignKey("User")]
 		[SDKRequired]
 		public int RowidUser { get; set; }
 
@@ -42,6 +44,10 @@ namespace Siesa.SDK.Entities
 		[SDKStringLength(40)]
 		public string Token { get; set; }
 
+
+		[SDKCheckRelationship]
+		[SDKRequired]
+		public virtual E00220_User User { get; set; }
 
 	}
 }
