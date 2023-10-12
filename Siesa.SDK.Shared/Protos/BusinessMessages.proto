@@ -46,6 +46,13 @@ message ValidateAndSaveBusinessObjRequest {
   string currentUserToken = 3;
   google.protobuf.Int32Value currentUserRowid = 4;
 }
+message ValidateAndSaveBusinessMultiObjRequest {
+  string business = 1;
+  string businessName = 2;
+  string currentUserToken = 3;
+  google.protobuf.Int32Value currentUserRowid = 4;
+  string listBaseObj = 5;
+}
 
 message OperationError {
 	string message = 1;
@@ -55,6 +62,11 @@ message OperationError {
 message ValidateAndSaveBusinessObjResponse {
   //string json = 1;
   int64 Rowid = 1;
+  repeated OperationError errors = 2;
+}
+
+message ValidateAndSaveBusinessMultiObjResponse {
+  repeated int64 Rowids = 1;
   repeated OperationError errors = 2;
 }
 
