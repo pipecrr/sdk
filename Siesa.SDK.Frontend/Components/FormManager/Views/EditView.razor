@@ -114,7 +114,7 @@ else if (BusinessObj.BaseObj.Rowid != 0)
     }
     @if(SetTopBar && !IsSubpanel)
     {
-        <PageTitle><ResourceViewer ResourceTag="Action.Edit" /> @BusinessObj</PageTitle>
+        <PageTitle><ResourceViewer ResourceTag="Action.Edit" /> @BusinessObj | <ResourceViewer ResourceTag="Custom.Project.Name" /></PageTitle>
         <SetTopBar StyleName="toolbar_edition" HasExtraButtons="@HasExtraButtons" BusinessObj="@BusinessObj">
             <TopBarTitle><ResourceViewer ResourceTag="Action.Edit" /> @BusinessObj</TopBarTitle>
             <TopBarButtons>

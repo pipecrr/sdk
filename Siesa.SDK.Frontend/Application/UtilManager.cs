@@ -33,7 +33,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
                 return await this.ResourceManager.GetResource(resourceRowid, cultureRowid);
             }            
             if(AuthenticationService.User != null){
-                cultureRowid = AuthenticationService.GetRoiwdCulture();
+                cultureRowid = AuthenticationService.GetRowidCulture();
                 return await ResourceManager.GetResource(resourceRowid, cultureRowid);
             }
             return "";
@@ -44,7 +44,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
             {
                 return await ResourceManager.GetResource(resourceTag, rowidculture);
             }else if(AuthenticationService.User != null){
-                Int64 cultureRowid = AuthenticationService.GetRoiwdCulture();
+                Int64 cultureRowid = AuthenticationService.GetRowidCulture();
                 return await ResourceManager.GetResource(resourceTag, cultureRowid);
             }
             return resourceTag;
@@ -63,7 +63,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
                 }
             }
             if(AuthenticationService.User != null){
-                cultureRowid = AuthenticationService.GetRoiwdCulture();
+                cultureRowid = AuthenticationService.GetRowidCulture();
                 if(resourceValuesDictUtil.ContainsKey(cultureRowid)){
                     if(resourceValuesDictUtil[cultureRowid].ContainsKey(resourceTag)){
                         return resourceValuesDictUtil[cultureRowid][resourceTag];
@@ -86,7 +86,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
                 return await ResourceManager.GetEnumValues(enumName, rowidCulture);
             }
             if(AuthenticationService.User != null){
-                rowidCulture = AuthenticationService.GetRoiwdCulture();
+                rowidCulture = AuthenticationService.GetRowidCulture();
                 return await ResourceManager.GetEnumValues(enumName, rowidCulture);
             }
             return null;

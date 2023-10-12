@@ -348,7 +348,7 @@ else
 
     @if(SetTopBar)
     {
-        <PageTitle><ResourceViewer ResourceTag="@($"{BusinessName}.Plural")" /></PageTitle>
+        <PageTitle><ResourceViewer ResourceTag="@($"{BusinessName}.Plural")" /> | <ResourceViewer ResourceTag="Custom.Project.Name" /></PageTitle>
         <SetTopBar HasExtraButtons="@HasExtraButtons" BusinessObj="@BusinessObj">
             <TopBarTitle><ResourceViewer ResourceTag="@($"{BusinessName}.Plural")" /></TopBarTitle>
             <TopBarButtons>

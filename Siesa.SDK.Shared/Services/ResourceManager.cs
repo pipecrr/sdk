@@ -158,16 +158,16 @@ namespace Siesa.SDK.Shared.Services
 
         public async Task<string> GetResource(Int64 resourceRowid, IAuthenticationService authenticationService)
         {
-            if(authenticationService != null && authenticationService.GetRoiwdCulture() != 0){
-                return await GetResource(resourceRowid, authenticationService.GetRoiwdCulture());
+            if(authenticationService != null && authenticationService.GetRowidCulture() != 0){
+                return await GetResource(resourceRowid, authenticationService.GetRowidCulture());
             }
             return  "Invalid User";
         }
 
         public async Task<string> GetResource(string resourceTag, IAuthenticationService authenticationService)
         {
-            if(authenticationService != null && authenticationService.GetRoiwdCulture() != 0){
-                return await GetResource(resourceTag, authenticationService.GetRoiwdCulture());
+            if(authenticationService != null && authenticationService.GetRowidCulture() != 0){
+                return await GetResource(resourceTag, authenticationService.GetRowidCulture());
             }
             return "Invalid User";
         }

@@ -28,7 +28,7 @@
 @inject IConfiguration Configuration
 
 
-<PageTitle>Login</PageTitle>
+<PageTitle>Login | <ResourceViewer ResourceTag="Custom.Project.Name" /></PageTitle>
 
 @if(SelectedConnection != null && SelectedConnection.Rowid != 0 && !string.IsNullOrEmpty(SelectedConnection.StyleUrl)){
      <head>
@@ -293,7 +293,7 @@
             {
                 returnUrl = "/";
             }
-            SDKNotificationService.ShowSuccess(message, culture: AuthenticationService.GetRoiwdCulture());
+            SDKNotificationService.ShowSuccess(message, culture: AuthenticationService.GetRowidCulture());
             NavigationManager.NavigateTo(returnUrl);
         }
         catch (Exception ex)
@@ -388,7 +388,7 @@
         short userlang;
         try
         {
-            userlang = AuthenticationService.GetRoiwdCulture();
+            userlang = AuthenticationService.GetRowidCulture();
         }
         catch (Exception ex)
         {
