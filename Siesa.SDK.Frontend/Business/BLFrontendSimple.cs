@@ -122,7 +122,7 @@ namespace Siesa.SDK.Business
             return null;
         }
 
-        public ValidateAndSaveBusinessObjResponse ValidateAndSave(List<BaseSDK<int>> listBaseObj, bool ignorePermissions = false)
+        public ValidateAndSaveBusinessMultiObjResponse ValidateAndSave(List<BaseSDK<int>> listBaseObj, bool ignorePermissions = false)
         {
             return null;
         }
@@ -530,7 +530,7 @@ namespace Siesa.SDK.Business
             return ValidateAndSaveAsync().GetAwaiter().GetResult();
         }
 
-        public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave(List<T> listBaseObj, bool ignorePermissions = false)
+        public virtual ValidateAndSaveBusinessMultiObjResponse ValidateAndSave(List<T> listBaseObj, bool ignorePermissions = false)
         {
             return ValidateAndSaveAsync(listBaseObj).GetAwaiter().GetResult();
         }
@@ -670,16 +670,21 @@ namespace Siesa.SDK.Business
             return result;
         }
 
-        public async virtual Task<ValidateAndSaveBusinessObjResponse> ValidateAndSaveAsync(List<T> listBaseObj)
+        public async virtual Task<ValidateAndSaveBusinessMultiObjResponse> ValidateAndSaveAsync(List<T> listBaseObj)
         {
-            ValidateAndSaveBusinessObjResponse resultValidationFront = new();
-            Validate(ref resultValidationFront, listBaseObj);
+            ValidateAndSaveBusinessMultiObjResponse resultValidationFront = new();
+            ValidateMulti(ref resultValidationFront, listBaseObj);
             if (resultValidationFront.Errors.Count > 0)
             {
                 return resultValidationFront;
             }
             var result = await Backend.ValidateAndSave(this, listBaseObj.Cast<object>().ToList());
             return result;
+        }
+
+        private void ValidateMulti(ref ValidateAndSaveBusinessMultiObjResponse resultValidationFront, List<T> listBaseObj)
+        {
+            throw new NotImplementedException();
         }
 
 

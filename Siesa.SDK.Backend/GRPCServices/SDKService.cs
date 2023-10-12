@@ -193,7 +193,7 @@ namespace Siesa.SDK.GRPCServices
 
         }
 
-        public override Task<ValidateAndSaveBusinessObjResponse> ValidateAndSaveBusinessMultiObj(ValidateAndSaveBusinessMultiObjRequest request, ServerCallContext context)
+        public override Task<ValidateAndSaveBusinessMultiObjResponse> ValidateAndSaveBusinessMultiObj(ValidateAndSaveBusinessMultiObjRequest request, ServerCallContext context)
         {
             SetCurrentUser(request.CurrentUserToken);
             BusinessModel businessRegistry = _backendRouterService.GetBackend(request.BusinessName);

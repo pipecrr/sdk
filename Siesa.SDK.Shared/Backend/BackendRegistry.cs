@@ -56,7 +56,7 @@ namespace Siesa.SDK.Shared.Backend
             return response;
         }
 
-        public async Task<ValidateAndSaveBusinessObjResponse> ValidateAndSaveBusinessMulti(string business_name, dynamic obj, IList<dynamic> listBaseObj = null)
+        public async Task<ValidateAndSaveBusinessMultiObjResponse> ValidateAndSaveBusinessMulti(string business_name, dynamic obj, IList<dynamic> listBaseObj = null)
         {
             using var channel = GrpcUtils.GetChannel(this.Url);
             var client = new Protos.SDK.SDKClient(channel);

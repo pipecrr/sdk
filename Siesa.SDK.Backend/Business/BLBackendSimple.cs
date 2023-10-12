@@ -119,7 +119,7 @@ namespace Siesa.SDK.Business
             return null;
         }
 
-        public ValidateAndSaveBusinessObjResponse ValidateAndSave(List<BaseSDK<int>> listBaseObj, bool ignorePermissions = false)
+        public ValidateAndSaveBusinessMultiObjResponse ValidateAndSave(List<BaseSDK<int>> listBaseObj, bool ignorePermissions = false)
         {
             return null;
         }
@@ -563,20 +563,13 @@ namespace Siesa.SDK.Business
         public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave(bool ignorePermissions = false)
         {
             ValidateAndSaveBusinessObjResponse result = new();
-            if (!ignorePermissions)
+            
+            if (!ignorePermissions && !ValidatePermissions())
             {
-                if (_featurePermissionService != null && !string.IsNullOrEmpty(BusinessName) && !BusinessName.Equals("BLAttachmentDetail"))
-                {
-                    CanCreate = _featurePermissionService.CheckUserActionPermission(BusinessName, 1, AuthenticationService);
-                    CanEdit = _featurePermissionService.CheckUserActionPermission(BusinessName, 2, AuthenticationService);
-                }
-                if (!CanCreate && !CanEdit)
-                {
-                    AddMessageToResult("Custom.Generic.Unauthorized", result);
-                    return result;
-                }
+                AddMessageToResult("Custom.Generic.Unauthorized", result);
+                return result;
             }
-
+            
             try
             {
                 Validate(ref result);
@@ -647,6 +640,61 @@ namespace Siesa.SDK.Business
                 _logger.LogError(exception, "Error saving in BLBackend");
             }
             return result;
+        }
+
+        private bool ValidatePermissions()
+        {
+            if (_featurePermissionService != null && !string.IsNullOrEmpty(BusinessName) && !BusinessName.Equals("BLAttachmentDetail"))
+            {
+                CanCreate = _featurePermissionService.CheckUserActionPermission(BusinessName, 1, AuthenticationService);
+                CanEdit = _featurePermissionService.CheckUserActionPermission(BusinessName, 2, AuthenticationService);
+            }
+            if (!CanCreate && !CanEdit)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public virtual ValidateAndSaveBusinessMultiObjResponse ValidateAndSave(List<T> listBaseObj, bool ignorePermissions = false)
+        {
+            ValidateAndSaveBusinessMultiObjResponse result = new();
+            if (!ignorePermissions && !ValidatePermissions())
+            {
+                AddMessageToResult("Custom.Generic.Unauthorized", result);
+                return result;
+            }
+            try
+            {
+                //ValidateMulti(ref result, listBaseObj);
+                if (result.Errors.Count > 0)
+                {
+                    return result;
+                }
+                
+            }
+            catch (Exception e)
+            {
+                
+            }
+
+            return null;   
+        }
+
+        private void ValidateMulti(ref ValidateAndSaveBusinessObjResponse baseOperation, List<T> listBaseObj = null)
+        {
+            if (listBaseObj == null)
+            {
+                listBaseObj = new List<T>();
+                listBaseObj.Add(BaseObj);
+            }
+            foreach (var item in listBaseObj)
+            {
+                ValidateBussines(ref baseOperation, item.GetRowid() == 0 ? BLUserActionEnum.Create : BLUserActionEnum.Update);
+                K validator = Activator.CreateInstance<K>();
+                validator.ValidatorType = "BaseObj";
+                SDKValidator.Validate<T>(BaseObj, validator, ref baseOperation);
+            }
         }
 
         protected virtual void SaveDynamicEntity(Int64 rowid, SDKContext context)
@@ -760,11 +808,7 @@ namespace Siesa.SDK.Business
             }
 
         }
-
-        public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave(List<T> listBaseObj, bool ignorePermissions = false)
-        {
-            return null;   
-        }
+        
         private void AddExceptionToResult(DbUpdateException exception, ValidateAndSaveBusinessObjResponse result)
         {
             var message = BackendExceptionManager.ExceptionToString(exception, ContextMetadata);
@@ -777,7 +821,7 @@ namespace Siesa.SDK.Business
             AddMessageToResult(message, result);
         }
 
-        private void AddMessageToResult(string message, ValidateAndSaveBusinessObjResponse result)
+        private void AddMessageToResult(string message, dynamic result)
         {
             message += $"Bussiness Name: {BusinessName}";
             message += $"\nObject {BaseObj}";
@@ -2240,7 +2284,8 @@ namespace Siesa.SDK.Business
             List<EnumSearchDTO> EnumSearchList = GetEnumDTO(typeof(T));
             List<ForeignObjectDTO> ForeingDictionary = CalculateForeingList(typeof(T));
             List<T> BaseObjToImport = new();
-
+            //start take time
+            var watch = System.Diagnostics.Stopwatch.StartNew();            
             Parallel.ForEach(dataList, item =>
             {
                 dynamic result = CreateDynamicObjectFromJson(typeof(T), (JObject)item, EnumSearchList, ForeingDictionary, ref ErrorData);
@@ -2263,6 +2308,24 @@ namespace Siesa.SDK.Business
                     // }
                 }
             }*/
+
+            foreach (var baseObj in BaseObjToImport)
+            {
+                BaseObj = baseObj;
+                if(!ErrorData.Any()){
+                    var resultValidate = ValidateAndSave();
+                    if(resultValidate.Errors.Count > 0){
+                        ErrorData.Add(resultValidate.Errors);
+                    }else{
+                        SuccessData.Add(BaseObj.GetRowid());
+                    }
+                }
+            }
+            
+            //stop take time
+            watch.Stop();
+            var elapsedMs = watch.ElapsedMilliseconds;
+            Console.WriteLine("Time elapsed: " + elapsedMs);
 
             SDKResultImportDataDTO resultImport = new SDKResultImportDataDTO
             {
