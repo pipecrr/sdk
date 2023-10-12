@@ -241,18 +241,16 @@ namespace Siesa.SDK.GRPCServices
             {
                 BusinessModel businessRegistry = _backendRouterService.GetBackend(request.BusinessName);
                 var businessType = FindType(businessRegistry.Namespace + "." + businessRegistry.Name);
-                dynamic businessObj = ActivatorUtilities.CreateInstance(_provider,businessType);
-                businessObj.SetProvider(_provider);
-
-
+                
                 var methodName = request.MethodName;
-                var method = businessType.GetMethod(methodName, BindingFlags.Public | BindingFlags.Instance);
+                var method = businessType.GetMethod(methodName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
                 if(method == null)
                 {
                     response.Success = false;
                     response.Errors.Add($"Method {methodName} not found in business {businessRegistry.Name}");
                     return response;
                 }
+                
                 //check if method has custom attribute (SDKExposedMethod)
                 var customAttributes = method.GetCustomAttributes(typeof(SDKExposedMethod), false);
                 if (customAttributes.Length == 0)
@@ -325,6 +323,12 @@ namespace Siesa.SDK.GRPCServices
                             parameters = parameters.Append(Type.Missing).ToArray();
                         }
                     }
+                }
+                dynamic businessObj = null;
+                if (!method.IsStatic)
+                { 
+                    businessObj = ActivatorUtilities.CreateInstance(_provider,businessType); 
+                    businessObj.SetProvider(_provider); 
                 }
                 var resultMethod = method.Invoke(businessObj, parameters);
 
