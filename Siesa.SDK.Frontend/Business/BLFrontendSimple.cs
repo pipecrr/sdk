@@ -290,7 +290,12 @@ namespace Siesa.SDK.Business
                         DynamicObject.GetType().GetProperty(columnName).SetValue(DynamicObject, valueDate);
                         break;
                     case enumDynamicEntityDataType.Boolean:
-                        var valueBool = Convert.ChangeType(item.NumericData, typeof(bool));
+                        var currentVal = item.NumericData;
+                        if(currentVal == null)
+                        {
+                            currentVal = 0;
+                        }
+                        var valueBool = Convert.ChangeType(currentVal, typeof(bool));
                         DynamicObject.GetType().GetProperty(columnName).SetValue(DynamicObject, valueBool);
                         break;
                     default:
