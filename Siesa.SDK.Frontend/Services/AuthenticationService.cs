@@ -547,7 +547,13 @@ namespace Siesa.SDK.Frontend.Services
             return rowid;   
         }
 
+        [Obsolete("Use GetRowidCulture() instead")]
         public short GetRoiwdCulture()
+        {
+            return GetRowidCulture();
+        }
+
+        public short GetRowidCulture()
         {
             if (CustomRowidCulture > 0)
             {

@@ -92,7 +92,7 @@
             enumType = typeof(TItem).GetGenericArguments()[0];
         }
 
-        Dictionary<byte, string> enumValues = await ResourceManager.GetEnumValues(enumType.Name, AuthenticationService.GetRoiwdCulture());
+        Dictionary<byte, string> enumValues = await ResourceManager.GetEnumValues(enumType.Name, AuthenticationService.GetRowidCulture());
 
         if (enumValues == null || enumValues.Count == 0)
         {

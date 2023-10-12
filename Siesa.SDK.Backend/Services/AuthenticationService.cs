@@ -89,7 +89,13 @@ namespace Siesa.SDK.Backend.Services
             throw new NotImplementedException();
         }
 
+        [Obsolete("Use GetRowidCulture() instead")]
         public short GetRoiwdCulture()
+        {
+            return GetRowidCulture();
+        }
+
+        public short GetRowidCulture()
         {
             if (User != null)
             {

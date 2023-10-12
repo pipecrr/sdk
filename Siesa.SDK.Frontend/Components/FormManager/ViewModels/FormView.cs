@@ -262,7 +262,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             var metadata = GetViewdef(bName);
             if (metadata == null || metadata == "")
             {
-                //string ErrorTag = await ResourceManager.GetResource("Custom.Formview.NotDefinition", AuthenticationService.GetRoiwdCulture());
+                //string ErrorTag = await ResourceManager.GetResource("Custom.Formview.NotDefinition", AuthenticationService.GetRowidCulture());
                 ErrorMsg = $"Custom.Generic.ViewdefNotFound";
                 ErrorList.Add($"Custom.Generic.ViewdefNotFound");
             }

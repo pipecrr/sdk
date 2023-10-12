@@ -18,14 +18,14 @@
 
     private async Task<string> GetText()
     {
-        if (DefaultRowidCulture != 0 && RowidCulture == 0 && (AuthenticationService.GetRoiwdCulture() == 0))
+        if (DefaultRowidCulture != 0 && RowidCulture == 0 && (AuthenticationService.GetRowidCulture() == 0))
         {
             RowidCulture = DefaultRowidCulture;
         }
 
         if (!String.IsNullOrEmpty(ResourceTag))
         {
-            if (RowidCulture != 0 && (AuthenticationService == null || AuthenticationService.GetRoiwdCulture() == 0))
+            if (RowidCulture != 0 && (AuthenticationService == null || AuthenticationService.GetRowidCulture() == 0))
             {
                 return await ResourceManager.GetResource(ResourceTag, RowidCulture);
             }
@@ -36,7 +36,7 @@
         }
         if (RowidResource != 0 && RowidResource != null)
         {
-            if (RowidCulture != 0 && (AuthenticationService == null || AuthenticationService.GetRoiwdCulture() == 0))
+            if (RowidCulture != 0 && (AuthenticationService == null || AuthenticationService.GetRowidCulture() == 0))
             {
                 return await ResourceManager.GetResource(Convert.ToInt64(RowidResource), RowidCulture);
             }
