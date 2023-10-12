@@ -59,14 +59,14 @@
                 <div class="col-12 pl-1 pr-1 pb-1">
                     <div class="whcm_panel d-flex justify-content-start align-items-center position-relative h-100">
                         <div class="h-100 w-100">
-                            @* @if((RowidAttachmentDetail != 0 || _FilesSelected.Count > 0) && !_IsLoading)
+                            @if((RowidAttachmentDetail != 0 || _FilesSelected.Count > 0) && !_IsLoading)
                             {
                                 <img @ref="previewImageElem" src="@_UrlImage" height="100%" width="100%"  title="imagen_perfil.jpg">
                             }else
                             {
-                                
-                            } *@
-                            <img @ref="previewImageElem" height="100%" width="100%" title="imagen_perfil.jpg"/>
+                                <img @ref="previewImageElem" height="100%" width="100%" title="imagen_perfil.jpg"/>
+                            } 
+                            
                         </div>
                          @if(ShowInfoImg)
                         {
