@@ -45,7 +45,7 @@ else
         {
             return;
         }
-        await SDKDialogService.ShowCustomDialog(@<DynamicDetailView BusinessName="@FieldOpt.RelatedBusiness" BusinessObjId="@_rowidValue" IsSubpanel="true" ShowTitle="false"/>, width: "90%", title: $"{FieldOpt.RelatedBusiness}.Singular");
+        await SDKDialogService.ShowCustomDialog((_)=>@<DynamicDetailView BusinessName="@FieldOpt.RelatedBusiness" BusinessObjId="@_rowidValue" IsSubpanel="true" ShowTitle="false"/>, width: "90%", title: $"{FieldOpt.RelatedBusiness}.Singular");
     }
 
     private async Task ObtainEntityURL()
