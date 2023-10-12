@@ -119,7 +119,7 @@ else if ((Panels == null || Panels.Count <= 0) && !IsDocument)
     }
     @if(SetTopBar && !IsSubpanel)
     {
-        <PageTitle><ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer ResourceTag="@($"{BusinessName}.Singular")" /></PageTitle>
+        <PageTitle><ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer ResourceTag="@($"{BusinessName}.Singular")" /> | <ResourceViewer ResourceTag="Custom.Project.Name" /></PageTitle>
         <SetTopBar StyleName="toolbar_creation" HasExtraButtons="@HasExtraButtons" BusinessObj="@BusinessObj">
             <TopBarTitle><ResourceViewer ResourceTag="Action.Create" /> <ResourceViewer ResourceTag="@($"{BusinessName}.Singular")" /></TopBarTitle>
             <TopBarButtons>
