@@ -17,10 +17,13 @@
                                 }else if(!IsDetail){
                                     <SDKIcon Name="fa-arrow-up-from-bracket" IconSize="fa-2x" OnClick="@ClickIcon"></SDKIcon>
                                 }
-                                <p class="mb-0 mt-2">Selecciona o arrastra tu archivo</p>
+                                <p class="mb-0 mt-2">
+                                    <ResourceViewer ResourceTag="Custom.SDK.InputFile.DragAndDropFile"  />
+                                </p>
                             </div>
                         }
-                        <button class="btn btn-primary btn_primary_def_1 btn-sm px-3">Seleccionar archivo</button>
+                        <SDKButton CssClass="btn btn-primary btn_primary_def_1 btn-sm px-3" ResourceTag="Custom.SDK.InputFile.SelectFile">
+                        </SDKButton>
                     </div>
                 </div>
             }
