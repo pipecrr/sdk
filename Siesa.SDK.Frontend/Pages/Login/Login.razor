@@ -35,125 +35,131 @@
         <link rel="stylesheet" href="@AuthenticationService.GetConnectionStyle()">
     </head> 
 }
+@if (loading)
+{
+    <div class="sdk-loader">
+        <div class="sdk-loader-logo"></div>
+    </div>
+}
 <div class="s_login_content col-12">
-        <div class="row h-100">
-            <div class="col-xl-7 col-lg-7 col-md-12 col-sm-12 p-0">
-                <img class="s_image_back" src="@_imageLogin" alt="imagen_login">
-                <div class="s_product_name">
-                    <img class="s_siesa_log_min" src="_content/Siesa.SDK.Frontend/assets/img/LogoSiesaBlanco.svg" alt="logo_business"> 
-                    <div class="s_product_text"><ResourceViewer ResourceTag="Custom.Project.Copy" RowidCulture=@RowidCulture /></div>
-                </div>
+    <div class="row h-100">
+        <div class="col-xl-7 col-lg-7 col-md-12 col-sm-12 p-0">
+            <img class="s_image_back" src="@_imageLogin" alt="imagen_login">
+            <div class="s_product_name">
+                <img class="s_siesa_log_min" src="_content/Siesa.SDK.Frontend/assets/img/LogoSiesaBlanco.svg" alt="logo_business">
+                <div class="s_product_text"><ResourceViewer ResourceTag="Custom.Project.Copy" RowidCulture=@RowidCulture/></div>
             </div>
-            <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 d-flex justify-content-center align-items-center s_form_content ">
-                <div class="s_siesa_logo_top">
-                    <img src="_content/Siesa.SDK.Frontend/assets/img/siesaLogo.png" height="42px" alt="logo_siesa">
-                </div>
-                <div class="s_form_box">
-                    <div class="col-12 p-0 pb-5 d-flex justify-content-center align-items-center">   
-                        @if(string.IsNullOrEmpty(UserToken))
-                        {
-                            <select class="select_connect" id="SelectConnect" @onchange="OnChangeConnection">
-                                <option value=""><ResourceViewer ResourceTag="BLUser.Login.Message.SelectDbConnection" RowidCulture=@RowidCulture /></option>
-                                @if(ConnectionList != null && ConnectionList.Count > 0)
+        </div>
+        <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 d-flex justify-content-center align-items-center s_form_content ">
+            <div class="s_siesa_logo_top">
+                <img src="_content/Siesa.SDK.Frontend/assets/img/siesaLogo.png" height="42px" alt="logo_siesa">
+            </div>
+            <div class="s_form_box">
+                <div class="col-12 p-0 pb-5 d-flex justify-content-center align-items-center">
+                    @if (string.IsNullOrEmpty(UserToken))
+                    {
+                        <select class="select_connect" id="SelectConnect" @onchange="OnChangeConnection">
+                            <option value=""><ResourceViewer ResourceTag="BLUser.Login.Message.SelectDbConnection" RowidCulture=@RowidCulture/></option>
+                            @if (ConnectionList != null && ConnectionList.Count > 0)
+                            {
+                                @foreach (var db in ConnectionList)
                                 {
-                                    @foreach(var db in ConnectionList)
-                                    {
-                                        <option value="@db.Rowid" selected="@(db.Rowid == SelectedConnection.Rowid)" >@db.Name</option>
-                                    }
+                                    <option value="@db.Rowid" selected="@(db.Rowid == SelectedConnection.Rowid)">@db.Name</option>
                                 }
-                            </select>
-                            <i class="ml-2 fa-solid fa-globe"></i>
-                        }
-                        <div class="position-relative">
-                            <div id="lang">
-                                <button class="btn ml-2 d-flex btn_region" style="padding:0"
+                            }
+                        </select>
+                        <i class="ml-2 fa-solid fa-globe"></i>
+                    }
+                    <div class="position-relative">
+                        <div id="lang">
+                            <button class="btn ml-2 d-flex btn_region" style="padding:0"
                                     @onclick="() => IsOpen = !IsOpen" data-automation-id="Button_Select_Culture">
-                                    @if(selectedCulture != null)
-                                    {
-                                        <span class="@classCulture"
-                                        style="height:16px"></span>
-                                    }else{
-                                        <span class="fi fi-globe fis rounded-circle" style="height:16px"></span>
-                                    }     
-                                </button> 
-                            </div>
+                                @if (selectedCulture != null)
+                                {
+                                    <span class="@classCulture"
+                                          style="height:16px"></span>
+                                }
+                                else
+                                {
+                                    <span class="fi fi-globe fis rounded-circle" style="height:16px"></span>
+                                }
+                            </button>
                         </div>
                     </div>
-                    <div class="mb-5 text-center w-100">
-                        <img class="s_business_logo" src="@LogoUrl"/>
-                    </div>
-                    <div class="form-group title_2">
-                        <ResourceViewer ResourceTag="BLLogin.InputYourData" RowidCulture=@RowidCulture />
-                    </div>
-                    @if(RecoveringPassword)
-                    {
-                        <ForgotPassword Click="@NavigateFormLogin" RowidCulture="@RowidCulture"/>
+                </div>
+                <div class="mb-5 text-center w-100">
+                    <img class="s_business_logo" src="@LogoUrl"/>
+                </div>
+                <div class="form-group title_2">
+                    <ResourceViewer ResourceTag="BLLogin.InputYourData" RowidCulture=@RowidCulture/>
+                </div>
+                @if (RecoveringPassword)
+                {
+                    <ForgotPassword Click="@NavigateFormLogin" RowidCulture="@RowidCulture"/>
 
-                    }else if (!string.IsNullOrEmpty(UserToken))
-                    {
-                        <RecoveryPassword UserToken="@UserToken" SelectedConnection="@SelectedConnection"
-                        RowidCulture="@RowidCulture" />
-                    }
-                    else
-                    {
-                        <EditForm id="@FormID" Model="@model" OnValidSubmit="HandleValidSubmit" OnInvalidSubmit="HandleInvalidSubmit">
-                            <DataAnnotationsValidator />
-                            <div class="form-group">
-                                <label class="col-form-label col-form-label-sm font-weight-bold" for="Username">
-                                    <ResourceViewer ResourceTag="BLUser.Username" RowidCulture=@RowidCulture />
-                                </label>
-                                <SDKCharField 
-                                    @bind-Value="model.Username" 
-                                    AllowAutoComplete="true" 
-                                    AutomationId="BLLogin.Username"
-                                    AutoFocus=true
-                                />
-                                <SDKValidationMessage For="@(() => model.Username)" />
-                            </div>
-                            <div class="form-group">
-                                <label class="col-form-label col-form-label-sm font-weight-bold" for="Password">
-                                    <ResourceViewer ResourceTag="BLUser.Password" RowidCulture=@RowidCulture />
-                                </label>
-                                <SDKCharField 
-                                    @bind-Value="model.Password" 
-                                    Password="true" 
-                                    AllowAutoComplete="true"
-                                    AutomationId="BLLogin.Password"
-                                />
-                                <SDKValidationMessage For="@(() => model.Password)" />
-                            </div>
-                            <div class="pt-2 form-group">
-                                <SDKButton form="@FormID" SubmitFormOnClick="true" RenderStyle="SDKButtonRenderStyle.Primary" CssClass="btn-sm w-100 mt-2" Enabled="@(!loading)">
-                                    @if (loading)
-                                    {
-                                        <span class="spinner-border spinner-border-sm mr-1"></span>
-                                    }
-                                    <ResourceViewer ResourceTag="BLUser.Login" RowidCulture=@RowidCulture />
-                                </SDKButton>
-                            </div>
-                        </EditForm>
-                        <div class="p-0 text-center">
-                            <div class="col-12 p-0 text-center pt-4">
-                                <SDKButton RenderStyle="SDKButtonRenderStyle.Link" Click="@ForgotPassword" ResourceTag="BLLogin.Project.ForgotPassword"/>
-                            </div>
+                }
+                else if (!string.IsNullOrEmpty(UserToken))
+                {
+                    <RecoveryPassword UserToken="@UserToken" SelectedConnection="@SelectedConnection"
+                                      RowidCulture="@RowidCulture"/>
+                }
+                else
+                {
+                    <EditForm id="@FormID" Model="@model" OnValidSubmit="HandleValidSubmit" OnInvalidSubmit="HandleInvalidSubmit">
+                        <DataAnnotationsValidator/>
+                        <div class="form-group">
+                            <label class="col-form-label col-form-label-sm font-weight-bold" for="Username">
+                                <ResourceViewer ResourceTag="BLUser.Username" RowidCulture=@RowidCulture/>
+                            </label>
+                            <SDKCharField
+                                @bind-Value="model.Username"
+                                AllowAutoComplete="true"
+                                AutomationId="BLLogin.Username"
+                                AutoFocus=true/>
+                            <SDKValidationMessage For="@(() => model.Username)"/>
                         </div>
-                    }
-                </div>
-                <div class="text-center copy_right_text">
-                    <ResourceViewer ResourceTag="Custom.Project.Version" RowidCulture=@RowidCulture /> 
-                </div>
+                        <div class="form-group">
+                            <label class="col-form-label col-form-label-sm font-weight-bold" for="Password">
+                                <ResourceViewer ResourceTag="BLUser.Password" RowidCulture=@RowidCulture/>
+                            </label>
+                            <SDKCharField
+                                @bind-Value="model.Password"
+                                Password="true"
+                                AllowAutoComplete="true"
+                                AutomationId="BLLogin.Password"/>
+                            <SDKValidationMessage For="@(() => model.Password)"/>
+                        </div>
+                        <div class="pt-2 form-group">
+                            <SDKButton form="@FormID" SubmitFormOnClick="true" RenderStyle="SDKButtonRenderStyle.Primary" CssClass="btn-sm w-100 mt-2" Enabled="@(!loading)">
+                                @if (loading)
+                                {
+                                    <span class="spinner-border spinner-border-sm mr-1"></span>
+                                }
+                                <ResourceViewer ResourceTag="BLUser.Login" RowidCulture=@RowidCulture/>
+                            </SDKButton>
+                        </div>
+                    </EditForm>
+                    <div class="p-0 text-center">
+                        <div class="col-12 p-0 text-center pt-4">
+                            <SDKButton RenderStyle="SDKButtonRenderStyle.Link" Click="@ForgotPassword" ResourceTag="BLLogin.Project.ForgotPassword"/>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="text-center copy_right_text">
+                <ResourceViewer ResourceTag="Custom.Project.Version" RowidCulture=@RowidCulture/>
             </div>
         </div>
     </div>
+</div>
 <SDKDropDown @bind-IsOpen="@IsOpen" PositionMode="DropDownPositionMode.Bottom" PositionTarget="#lang"
-    RestrictionTarget="#Navigation-DropDown-Customization" CloseMode="DropDownCloseMode.Close"
-    PreventCloseOnPositionTargetClick="true"  CssClass="region_tooltip" MinWidth="230px" MaxWidth="250px" HeaderVisible="false"
-    FooterVisible="false" AutomationId="Cultures_Login">
+             RestrictionTarget="#Navigation-DropDown-Customization" CloseMode="DropDownCloseMode.Close"
+             PreventCloseOnPositionTargetClick="true" CssClass="region_tooltip" MinWidth="230px" MaxWidth="250px" HeaderVisible="false"
+             FooterVisible="false" AutomationId="Cultures_Login">
     <BodyTemplate>
-        <Lang _Cultures="@cultures" _idRow="@RowidCulture" OnChangeCulture="@((rowid)=> OnChangeCulture(rowid))" />
+        <Lang _Cultures="@cultures" _idRow="@RowidCulture" OnChangeCulture="@((rowid) => OnChangeCulture(rowid))"/>
     </BodyTemplate>
 </SDKDropDown>
-
 @code {
 
     [Parameter] public bool? RecoveryPassword { get; set; }
@@ -195,15 +201,6 @@
     {
         RecoveringPassword = false;
         StateHasChanged();
-    } 
-
-    private string GetCssLoding()
-    {
-        if (!init_loading)
-        {
-            return "login_loading_close";
-        }
-        return "";
     }
 
     protected override async Task OnInitializedAsync()
