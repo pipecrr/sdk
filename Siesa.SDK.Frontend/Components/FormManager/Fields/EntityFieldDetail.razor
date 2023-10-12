@@ -1,75 +1,91 @@
 ﻿@inherits FieldClass<object>
 @using Siesa.SDK.Shared.Services
+@using Siesa.Global.Enums
 @inject IAuthenticationService AuthenticationService
 @inject IBackendRouterService BackendRouterService
-
-<a href="@RelatedEntityURL"><p style="word-wrap: break-word">@Label</p></a>
+@inject SDKDialogService SDKDialogService
+@inject IFeaturePermissionService FeaturePermissionService
+@if (_canDetail)
+{
+    <a href="#" @onclick="@OnClick" @onclick:preventDefault>
+        <p style="word-wrap: break-word">@_label</p>
+    </a>
+}
+else
+{
+    <p style="word-wrap: break-word">@_label</p>
+}
 
 @code {
     private string _relatedEntityURL;
-    private string Label;
+    private string _label;
     private bool _isLoaded;
+    private string _rowidValue;
+    private bool _canDetail;
 
-    private async Task GetObjectString(string relBusiness, Int64 relRowid)
+    private async Task GetObjectString(string relBusiness, long relRowid)
     {
-        if(_isLoaded)
+        if (_isLoaded)
         {
             return;
         }
         var backend = BackendRouterService.GetSDKBusinessModel(relBusiness, AuthenticationService);
         var request = await backend.Call("GetObjectString", relRowid);
-        if(request.Success)
+        if (request.Success)
         {
-            Label = (string)request.Data;
+            _label = (string)request.Data;
             _isLoaded = true;
         }
         StateHasChanged();
     }
 
-    private string ObtainEntityURL(){
+    private async Task OnClick()
+    {
+        if (FieldOpt.RelatedBusiness == "" || BindValue == null || !_canDetail)
+        {
+            return;
+        }
+        await SDKDialogService.ShowCustomDialog(@<DynamicDetailView BusinessName="@FieldOpt.RelatedBusiness" BusinessObjId="@_rowidValue" IsSubpanel="true" ShowTitle="false"/>, width: "90%", title: $"{FieldOpt.RelatedBusiness}.Singular");
+    }
 
+    private async Task ObtainEntityURL()
+    {
         if (FieldOpt.RelatedBusiness == "" || BindValue == null)
         {
-            return "";
+            return;
         }
+        _canDetail = await FeaturePermissionService.CheckUserActionPermission(@FieldOpt.RelatedBusiness, enumSDKActions.Detail, AuthenticationService).ConfigureAwait(true);
         var typeRelatedEntity = BindValue.GetType();
-        // Checks if contains a property named "ID" or "Rowid" and returns the value of it
+    // Checks if contains a property named "ID" or "Rowid" and returns the value of it
         var idProperty = typeRelatedEntity.GetProperty("Rowid");
-        if(idProperty == null)
+        if (idProperty == null)
         {
             idProperty = typeRelatedEntity.GetProperty("ID");
         }
         if (idProperty != null)
         {
-            var rowidValue = idProperty.GetValue(BindValue);
-            _relatedEntityURL = $"/{FieldOpt.RelatedBusiness}/detail/{rowidValue}/";
-            _ = GetObjectString(FieldOpt.RelatedBusiness, Convert.ToInt64(rowidValue));
-            return _relatedEntityURL;
+            _rowidValue = idProperty.GetValue(BindValue) != null ? idProperty.GetValue(BindValue)?.ToString() : null;
+            _relatedEntityURL = $"/{FieldOpt.RelatedBusiness}/detail/{_rowidValue}/";
+            await GetObjectString(FieldOpt.RelatedBusiness, Convert.ToInt64(_rowidValue));
         }
-        
-        return "";
-    } 
-
-    public string RelatedEntityURL { get
-        {
-            return _relatedEntityURL != "" && _relatedEntityURL != null ? _relatedEntityURL : ObtainEntityURL();
-        } }
+        StateHasChanged();
+    }
 
     private void SetLocalLabel()
     {
         if (BindValue == null)
         {
-            Label = "";
+            _label = "";
         }
         else
         {
             try
             {
-                Label = BindValue.ToString();
+                _label = BindValue.ToString();
             }
-            catch (System.Exception)
+            catch (Exception)
             {
-                Label = "";
+                _label = "";
             }
         }
     }
@@ -78,12 +94,17 @@
     {
         SetLocalLabel();
         base.OnInitialized();
+        _ = ObtainEntityURL();
     }
+
     public override async Task SetParametersAsync(ParameterView parameters)
     {
         _relatedEntityURL = null;
         _isLoaded = false;
+        _rowidValue = null;
         await base.SetParametersAsync(parameters);
         SetLocalLabel();
+        _ = ObtainEntityURL();
     }
+
 }
