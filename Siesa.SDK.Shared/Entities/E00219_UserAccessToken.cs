@@ -33,7 +33,7 @@ namespace Siesa.SDK.Entities
 
 		[ForeignKey("User")]
 		[SDKRequired]
-		public int RoiwdUser { get; set; }
+		public int RowidUser { get; set; }
 
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		[SDKRequired]
