@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.JSInterop;
+using DevExpress.Data.Mask.Internal;
 
 
 
@@ -196,9 +197,18 @@ public partial class SDKInputFile : SDKComponent
     {
         if (_refinputFile != null)
         {
-            await JSRuntime.InvokeVoidAsync("previewImage", _refinputFile!.Element, previewImageElem);
+            await JSRuntime.InvokeVoidAsync("previewImage", _refinputFile!.Element, previewImageElem).ConfigureAwait(true);
         }
         StateHasChanged();
+    }
+    private async Task ClosePreviewFile()
+    {
+        if (!string.IsNullOrEmpty(previewImageElem.Id))
+        {
+            await JSRuntime.InvokeVoidAsync("closePreviewImage", previewImageElem).ConfigureAwait(true);
+            InputFile = null;
+            StateHasChanged();
+        }
     }
     private void ClickIcon()
     {

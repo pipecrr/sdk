@@ -2,8 +2,8 @@
 @inherits SDKComponent
 
 <div class="@CssClass">
-    @if(ShowPreview){
-        <div class="file-upload-container">
+    <div class="file-upload-container">
+        @if(ShowPreview){
             @if(!_IsLoading && !IsDetail){
                 <div class="input-container position-relative">
                     <InputFile OnChange="@_OnChange" multiple="@IsMultiple" style="width: 300px; height: 200px; " accept="@FilterType" @ref="_refinputFile" class="sdk-upload-input"/>
@@ -21,73 +21,72 @@
                     </div>
                 </div>
             }
-        </div>
-    }
-    @if(IsMultiple){
-        @foreach (var url in _FilesSelected)
+        }
+        @if(IsMultiple)
+        {
+            @foreach (var url in _FilesSelected)
+            {
+                <div class="col-12 pt-1 upload_img_cont">
+                    <div class="row whcm_row">
+                        <div class="@_breakpoints pl-1 pr-1 pb-1">
+                            <div class="whcm_panel d-flex justify-content-start align-items-center position-relative h-100">
+                                <div class="h-100 w-100">
+                                    <img  src="@url.Url" onclick="@(() => ClickImg(url))" 
+                                        height="100%" width="100%" data-toggle="tooltip" title="Imagen_perfil.jpg">
+                                </div>
+                                @if(ShowInfoImg)
+                                {
+                                    <div class="upload_text_box p-1">
+                                        <p class="img_name mb-0">@url.FileName</p>
+                                        <p class="img_size mb-0">@url.FileSize/Kb</p>
+                                    </div>
+                                }
+                                @if(!IsDetail)
+                                {
+                                    <button @onclick:preventDefault class="close-preview" onclick="@(()=> CloseItem(url))">
+                                        <SDKIcon Name="fa-xmark" CssClass="icon-close"/>
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }else 
         {
             <div class="col-12 pt-1 upload_img_cont">
                 <div class="row whcm_row">
-                    <div class="@_breakpoints pl-1 pr-1 pb-1">
+                    <div class="col-12 pl-1 pr-1 pb-1">
                         <div class="whcm_panel d-flex justify-content-start align-items-center position-relative h-100">
                             <div class="h-100 w-100">
-                                <img  src="@url.Url" onclick="@(() => ClickImg(url))" 
-                                    height="100%" width="100%" data-toggle="tooltip" title="Imagen_perfil.jpg">
+                                @if((RowidAttachmentDetail != 0 || _FilesSelected.Count > 0) && !_IsLoading)
+                                {
+                                    <img @ref="previewImageElem" src="@_UrlImage" height="100%" width="100%"  >
+                                }else
+                                {
+                                    <img @ref="previewImageElem" height="100%" width="100%"/>
+                                } 
+                                
                             </div>
                             @if(ShowInfoImg)
                             {
                                 <div class="upload_text_box p-1">
-                                    <p class="img_name mb-0">@url.FileName</p>
-                                    <p class="img_size mb-0">@url.FileSize/Kb</p>
+                                    <p class="img_name mb-0">@InputFile?.File?.Name</p>
+                                    <p class="img_size mb-0">@SingleFileSize/Kb</p>
                                 </div>
                             }
-                            @if(!IsDetail)
+
+                            @if(!IsDetail && InputFile != null)
                             {
-                                <button @onclick:preventDefault class="close-preview" onclick="@(()=> CloseItem(url))">
+                                <button @onclick:preventDefault class="close-preview" @onclick="()=> ClosePreviewFile()">
                                     <SDKIcon Name="fa-xmark" CssClass="icon-close"/>
-                                </button>
+                                </button> 
                             }
                         </div>
                     </div>
                 </div>
             </div>
         }
-    }else
-    {
-        <div class="col-12 pt-1 upload_img_cont">
-            <div class="row whcm_row">
-                <div class="col-12 pl-1 pr-1 pb-1">
-                    <div class="whcm_panel d-flex justify-content-start align-items-center position-relative h-100">
-                        <div class="h-100 w-100">
-                            @if((RowidAttachmentDetail != 0 || _FilesSelected.Count > 0) && !_IsLoading)
-                            {
-                                <img @ref="previewImageElem" src="@_UrlImage" height="100%" width="100%"  title="imagen_perfil.jpg">
-                            }else
-                            {
-                                <img @ref="previewImageElem" height="100%" width="100%" title="imagen_perfil.jpg"/>
-                            } 
-                            
-                        </div>
-                         @if(ShowInfoImg)
-                        {
-                            <div class="upload_text_box p-1">
-                                <p class="img_name mb-0">@InputFile?.File?.Name</p>
-                                <p class="img_size mb-0">@SingleFileSize/Kb</p>
-                            </div>
-                        }
-
-                        @if(!IsDetail)
-                        {
-                            <button @onclick:preventDefault class="close-preview" >
-                                <SDKIcon Name="fa-xmark" CssClass="icon-close"/>
-                            </button> 
-                        }
-
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-    }
+    </div>
 </div>
 
