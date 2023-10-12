@@ -150,7 +150,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
                     enumType = enumType.GetGenericArguments()[0];
                 }
 
-                Dictionary<byte, string> enumValues = await ResourceManager.GetEnumValues(enumType.Name, AuthenticationService.GetRoiwdCulture()).ConfigureAwait(true);
+                Dictionary<byte, string> enumValues = await ResourceManager.GetEnumValues(enumType.Name, AuthenticationService.GetRowidCulture()).ConfigureAwait(true);
 
                 if (enumValues == null || enumValues.Count == 0)
                 {

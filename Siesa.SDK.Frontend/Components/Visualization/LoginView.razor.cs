@@ -95,7 +95,7 @@ public partial class LoginView
         short userlang;
         try
         {
-            userlang = AuthenticationService.GetRoiwdCulture();
+            userlang = AuthenticationService.GetRowidCulture();
         }
         catch (Exception ex)
         {

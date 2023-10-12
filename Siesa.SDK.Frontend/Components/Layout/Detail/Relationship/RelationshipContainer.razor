@@ -18,14 +18,14 @@
     <div class='@($"sdk_container_data_related_btn {classOrderContainer}")'>
         <button class='@($"whcm_data_related_btn {classExpandBtn1}")' @onclick="() => OnClickRelationshipButton()" data-automation-id="Button_RelationShip_Container">
             <p>
-                <ResourceViewer ResourceTag="@tagBtnAttachment" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
+                <ResourceViewer ResourceTag="@tagBtnAttachment" RowidCulture=@AuthenticationService.GetRowidCulture() />
                 <SDKIcon Name="fa-folder-tree"/>
             </p>
         </button>   
         @if(ShowAditionalFields){
             <button class='@($"whcm_data_related_btn2 {classExpandBtn2}")' @onclick="() => OnClickAditionalButton()">
                 <p>
-                    <ResourceViewer ResourceTag="@tagBtnAdditionalField" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
+                    <ResourceViewer ResourceTag="@tagBtnAdditionalField" RowidCulture=@AuthenticationService.GetRowidCulture() />
                     <SDKIcon Name="fa-diagram-subtask"/>
                 </p>
             </button>
@@ -34,9 +34,9 @@
     <div class="whcm_data_related_content p-3">
         @if(_isOpenRelationship){
             <div class="border-bottom pb-3 pt-1 text-center">
-                <h6><span><ResourceViewer ResourceTag="Custom.SDK.RelationshipPanel" RowidCulture=@AuthenticationService.GetRoiwdCulture() /></span></h6>
+                <h6><span><ResourceViewer ResourceTag="Custom.SDK.RelationshipPanel" RowidCulture=@AuthenticationService.GetRowidCulture() /></span></h6>
                 <p class="m-0 font_size_087 text-left">
-                    <ResourceViewer ResourceTag="Custom.SDK.RelationshipInformation" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
+                    <ResourceViewer ResourceTag="Custom.SDK.RelationshipInformation" RowidCulture=@AuthenticationService.GetRowidCulture() />
                 </p>
             </div>
             <div class="whcm_row panel_box_data">
@@ -46,7 +46,7 @@
                         <button class="nav_btn_standar index_btn_related my-1" @onclick="async ()=>await OpenModal(RelationshipAttatchment)" 
                             data-automation-id="Button_RelationShip_Attachments" >
                             <div class="nav_btn_standar_text">
-                                <ResourceViewer ResourceTag="@RelationshipAttatchment.ResourceTag" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
+                                <ResourceViewer ResourceTag="@RelationshipAttatchment.ResourceTag" RowidCulture=@AuthenticationService.GetRowidCulture() />
                             </div>
                         </button> 
                     }
@@ -55,7 +55,7 @@
                         <button class="nav_btn_standar index_btn_related my-1" @onclick="async ()=>await OpenModal(Relationship)" 
                             data-automation-id="Button_@Relationship.ResourceTag">
                             <div class="nav_btn_standar_text">
-                                <ResourceViewer ResourceTag="@Relationship.ResourceTag" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
+                                <ResourceViewer ResourceTag="@Relationship.ResourceTag" RowidCulture=@AuthenticationService.GetRowidCulture() />
                             </div>
                         </button>
                     }
@@ -64,16 +64,16 @@
         }
         @if(_isOpenAditional){
             <div class="border-bottom pb-3 pt-1 text-center">
-                <h6><span><ResourceViewer ResourceTag="Custom.SDK.RelationshipPanel.AddtitionalFields" RowidCulture=@AuthenticationService.GetRoiwdCulture() /></span></h6>
+                <h6><span><ResourceViewer ResourceTag="Custom.SDK.RelationshipPanel.AddtitionalFields" RowidCulture=@AuthenticationService.GetRowidCulture() /></span></h6>
                 <p class="m-0 font_size_087 text-left">
-                    <ResourceViewer ResourceTag="Custom.SDK.RelationshipPanel.AddtitionalFields.Info" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
+                    <ResourceViewer ResourceTag="Custom.SDK.RelationshipPanel.AddtitionalFields.Info" RowidCulture=@AuthenticationService.GetRowidCulture() />
                 </p>
             </div>
             <div class="whcm_row panel_box_data">
                 <div class="col-12">
                     <button class="nav_btn_standar index_btn_related my-1" @onclick="async ()=>await OpenModalAditionalField()" >
                         <div class="nav_btn_standar_text">
-                            <ResourceViewer ResourceTag="Custom.RelationshipPanel.AddtitionalFields.BtnCreate" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
+                            <ResourceViewer ResourceTag="Custom.RelationshipPanel.AddtitionalFields.BtnCreate" RowidCulture=@AuthenticationService.GetRowidCulture() />
                         </div>
                     </button>
                 </div>
@@ -84,8 +84,8 @@
         {
             <div class="col-12 whcm_data_open_box p-3">
                 <div class="d-flex justify-content-between align-items-center border-bottom pb-1">
-                    <h6 class="mb-0 font-weight-bold">
-                        <ResourceViewer ResourceTag="@SelectedRelationship.ResourceTag" RowidCulture=@AuthenticationService.GetRoiwdCulture() />
+                    <h6 class="mb-0">
+                        <ResourceViewer ResourceTag="@SelectedRelationship.ResourceTag" RowidCulture=@AuthenticationService.GetRowidCulture() />
                     </h6>
                     <div class="d-flex">
                         <button class="btn btn-sm layout_btn_standar-sm ml-1" @onclick="() => _openModal = !_openModal">
@@ -207,7 +207,7 @@
     {
         if(Parent.Rowid == 0 && isCreateView)
         {
-           _ = SDKNotificationService.ShowError("Custom.RelationshipContainer.Error",new object[] {$"{BusinessObj.BusinessName}.Singular"} , culture: AuthenticationService.GetRoiwdCulture());
+           _ = SDKNotificationService.ShowError("Custom.RelationshipContainer.Error",new object[] {$"{BusinessObj.BusinessName}.Singular"} , culture: AuthenticationService.GetRowidCulture());
            _isOpenRelationship = false;
             return;
         }

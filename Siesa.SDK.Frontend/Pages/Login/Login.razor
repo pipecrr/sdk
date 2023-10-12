@@ -389,7 +389,7 @@
             {
                 returnUrl = "/";
             }
-            SDKNotificationService.ShowSuccess(message, culture: AuthenticationService.GetRoiwdCulture());
+            SDKNotificationService.ShowSuccess(message, culture: AuthenticationService.GetRowidCulture());
             NavigationManager.NavigateTo(returnUrl);
         }
         catch (Exception ex)
@@ -484,7 +484,7 @@
         short userlang;
         try
         {
-            userlang = AuthenticationService.GetRoiwdCulture();
+            userlang = AuthenticationService.GetRowidCulture();
         }
         catch (Exception ex)
         {
