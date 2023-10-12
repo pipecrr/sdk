@@ -121,6 +121,11 @@ namespace Siesa.SDK.Business
         {
             return null;
         }
+
+        public ValidateAndSaveBusinessObjResponse ValidateAndSave(List<BaseSDK<int>> listBaseObj, bool ignorePermissions = false)
+        {
+            return null;
+        }
     }
 
 
@@ -525,6 +530,11 @@ namespace Siesa.SDK.Business
             return ValidateAndSaveAsync().GetAwaiter().GetResult();
         }
 
+        public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave(List<T> listBaseObj, bool ignorePermissions = false)
+        {
+            return ValidateAndSaveAsync(listBaseObj).GetAwaiter().GetResult();
+        }
+
         public virtual void Update()
         {
             throw new NotImplementedException();
@@ -660,12 +670,32 @@ namespace Siesa.SDK.Business
             return result;
         }
 
-        private void Validate(ref ValidateAndSaveBusinessObjResponse baseOperation)
+        public async virtual Task<ValidateAndSaveBusinessObjResponse> ValidateAndSaveAsync(List<T> listBaseObj)
         {
-            ValidateBussines(ref baseOperation, BaseObj.GetRowid() == 0 ? BLUserActionEnum.Create : BLUserActionEnum.Update);
-            K validator = Activator.CreateInstance<K>();
-            validator.ValidatorType = "BaseObj";
-            SDKValidator.Validate<T>(BaseObj, validator, ref baseOperation);
+            ValidateAndSaveBusinessObjResponse resultValidationFront = new();
+            Validate(ref resultValidationFront, listBaseObj);
+            if (resultValidationFront.Errors.Count > 0)
+            {
+                return resultValidationFront;
+            }
+            var result = await Backend.ValidateAndSave(this, listBaseObj.Cast<object>().ToList());
+            return result;
+        }
+
+
+        private void Validate(ref ValidateAndSaveBusinessObjResponse baseOperation, List<T> listBaseObj = null)
+        {
+            if(listBaseObj == null){
+                listBaseObj = new List<T>();
+                listBaseObj.Add(BaseObj);
+            }
+            foreach (var item in listBaseObj)
+            {
+                ValidateBussines(ref baseOperation, item.GetRowid() == 0 ? BLUserActionEnum.Create : BLUserActionEnum.Update);
+                K validator = Activator.CreateInstance<K>();
+                validator.ValidatorType = "BaseObj";
+                SDKValidator.Validate<T>(BaseObj, validator, ref baseOperation);
+            }
         }
 
         protected virtual void ValidateBussines(ref ValidateAndSaveBusinessObjResponse operationResult, BLUserActionEnum action)

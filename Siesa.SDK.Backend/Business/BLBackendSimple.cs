@@ -118,6 +118,12 @@ namespace Siesa.SDK.Business
         {
             return null;
         }
+
+        public ValidateAndSaveBusinessObjResponse ValidateAndSave(List<BaseSDK<int>> listBaseObj, bool ignorePermissions = false)
+        {
+            return null;
+        }
+        
         public void ShareProvider(dynamic bl)
         {
             bl.SetProvider(_provider);
@@ -753,6 +759,11 @@ namespace Siesa.SDK.Business
                 dynamicEntity.GetType().GetProperty("NumericData").SetValue(dynamicEntity, value.ToObject<decimal>());
             }
 
+        }
+
+        public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave(List<T> listBaseObj, bool ignorePermissions = false)
+        {
+            return null;   
         }
         private void AddExceptionToResult(DbUpdateException exception, ValidateAndSaveBusinessObjResponse result)
         {
