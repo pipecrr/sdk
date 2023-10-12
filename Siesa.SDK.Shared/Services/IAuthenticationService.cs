@@ -205,11 +205,18 @@ namespace Siesa.SDK.Shared.Services
         Task SetCustomRowidCulture(short rowid);
 
         /// <summary>
+        /// OBSOLETE Gets the custom rowid for the culture changed.
+        /// </summary>
+        /// <returns>The custom rowid for the culture changed.</returns>
+        [System.Obsolete("Use GetRowidCulture() instead.")]
+        short GetRoiwdCulture();
+
+        /// <summary>
         /// Gets the custom rowid for the culture changed.
         /// </summary>
         /// <returns>The custom rowid for the culture changed.</returns>
-
-        short GetRoiwdCulture();
+        short GetRowidCulture();
+        
         /// <summary>
         /// Sets the rowid for the selected company group.
         /// </summary>
