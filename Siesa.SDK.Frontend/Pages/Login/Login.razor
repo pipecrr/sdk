@@ -28,7 +28,7 @@
 @inject IConfiguration Configuration
 
 
-<PageTitle>Login | <ResourceViewer ResourceTag="Custom.Project.Name" /></PageTitle>
+<PageTitle>Login | <ResourceViewer ResourceTag="Custom.Project.Name" RowidCulture=@RowidCulture /></PageTitle>
 
 @if(SelectedConnection != null && SelectedConnection.Rowid != 0 && !string.IsNullOrEmpty(SelectedConnection.StyleUrl)){
      <head>
