@@ -2008,6 +2008,25 @@ div.dxbs-btn-group.dxbs-input-group-prepend>.btn.dx-btn.btn-sm {
     border-color: var(--color_alert_info) !important;
 }
 
+.card_tabs {
+    height: 90%;
+    border-radius: var(--border_radius_standar) !important;
+    display: flex;
+    cursor: pointer;
+    border: 0.25rem solid transparent;
+	box-shadow: 0 0 8px #959595;
+	position: relative; 
+}
+
+.icon_tabs {
+    position: absolute;
+    top: -5px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+}
+
+
+
 .alert-success {
     color: var(--color_alert_text) !important;
     background-color: var(--color_alert_success) !important;
