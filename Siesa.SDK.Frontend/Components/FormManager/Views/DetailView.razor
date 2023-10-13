@@ -99,7 +99,7 @@ else if (ModelLoaded == true)
     }
     @if(SetTopBar)
     {
-        <PageTitle>@BusinessObj</PageTitle>
+        <PageTitle>@BusinessObj | <ResourceViewer ResourceTag="Custom.Project.Name" /></PageTitle>
         <SetTopBar HasExtraButtons="@(FormViewModel.Buttons != null && FormViewModel.Buttons.Any(x => string.IsNullOrEmpty(x.Id)) ? true: false)" BusinessObj="@BusinessObj" DisableCompanies="true">
             <TopBarTitle>@BusinessObj</TopBarTitle>
             <TopBarButtons>
