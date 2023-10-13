@@ -487,8 +487,12 @@ namespace Siesa.SDK.Business
 
         private void ProcessProperties(List<string> nameProperties, T blankBaseObj)
         {
+            var byCompanyGroup = Utilities.IsAssignableToGenericType(blankBaseObj.GetType(), typeof(BaseCompanyGroup<>));
             foreach (string propertyName in nameProperties)
             {
+                if(byCompanyGroup && propertyName == "RowidCompanyGroup"){
+                    continue;
+                }
                 var property = BaseObj.GetType().GetProperty(propertyName);
                 if (property != null)
                 {
