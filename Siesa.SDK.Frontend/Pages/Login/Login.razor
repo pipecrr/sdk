@@ -130,7 +130,7 @@
                             <SDKValidationMessage For="@(() => model.Password)"/>
                         </div>
                         <div class="pt-2 form-group">
-                            <SDKButton form="@FormID" SubmitFormOnClick="true" RenderStyle="SDKButtonRenderStyle.Primary" CssClass="btn-sm w-100 mt-2" Enabled="@(!loading)">
+                            <SDKButton form="@FormID" SubmitFormOnClick="true" RenderStyle="SDKButtonRenderStyle.Primary" CssClass="btn-sm w-100" Enabled="@(!loading)">
                                 @if (loading)
                                 {
                                     <span class="spinner-border spinner-border-sm mr-1"></span>
@@ -139,10 +139,8 @@
                             </SDKButton>
                         </div>
                     </EditForm>
-                    <div class="p-0 text-center">
-                        <div class="col-12 p-0 text-center pt-4">
-                            <SDKButton RenderStyle="SDKButtonRenderStyle.Link" Click="@ForgotPassword" ResourceTag="BLLogin.Project.ForgotPassword"/>
-                        </div>
+                    <div class="p-0 text-center">   
+                        <SDKButton RenderStyle="SDKButtonRenderStyle.Link" Click="@ForgotPassword" ResourceTag="BLLogin.Project.ForgotPassword"/>
                     </div>
                 }
             </div>

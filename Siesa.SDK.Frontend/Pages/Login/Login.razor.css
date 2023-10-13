@@ -15,6 +15,7 @@
  }
  .s_login_content{
     height: 100vh;
+    background: #FFF;
  }
  .s_image_back {
     object-fit: cover;
@@ -167,6 +168,10 @@
  }
  button:focus, .form-control:focus{
     box-shadow: 0 0 0 0.25rem var(--color_focus_general) !important;
+ }
+ .form-group 
+ {
+   margin-bottom: 1rem;
  }
  @media (max-width: 991px){
     .s_image_back{
