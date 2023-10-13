@@ -240,6 +240,8 @@ namespace Siesa.SDK.Business
 
         private bool _containAttachments;
 
+        private bool _statusTransaccion = false; 
+
         public void DetachedBaseObj()
         {
             //TODO: Complete
@@ -671,47 +673,104 @@ namespace Siesa.SDK.Business
                 return result;
             }
             try
-            {            
+            {   
+                var watch = System.Diagnostics.Stopwatch.StartNew();            
                 ValidateMulti(ref result, listBaseObj);
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Console.WriteLine($"ValidateMulti: {elapsedMs} ms");
 
                 if (result.Errors.Count > 0)
                 {
                     return result;
                 }
-                using (SDKContext context = CreateDbContext())
-                {
-                    try
+                if(_statusTransaccion){
+                    //valida todos, uno a uno en transaccion diferentes
+                    foreach (var baseObj in listBaseObj)
                     {
-                        if (!context.Database.IsInMemory())
+                        using (SDKContext context = CreateDbContext())
                         {
-                            context.BeginTransaction();
-                        }
-                        foreach (var baseObj in listBaseObj)
-                        {
-                            ValidateAndSaveBusinessObjResponse baseOperationObj = new();
-                            baseOperationObj.Rowid = baseObj.GetRowid();
-                            InternalSave(ref baseOperationObj, context, baseObj);
-                            if (baseOperationObj.Errors.Count > 0)
+                            try
                             {
-                                result.Errors.AddRange(baseOperationObj.Errors);
+                                if (!context.Database.IsInMemory())
+                                {
+                                    context.BeginTransaction();
+                                }
+                                ValidateAndSaveBusinessObjResponse baseOperationObj = new();
+                                baseOperationObj.Rowid = baseObj.GetRowid();
+                                InternalSave(ref baseOperationObj, context, baseObj);
+                                if (baseOperationObj.Errors.Count > 0)
+                                {
+                                    result.Errors.AddRange(baseOperationObj.Errors);
+                                }
+                                else
+                                {
+                                    result.Rowids.Add(baseOperationObj.Rowid);
+                                }
+                                if (!context.Database.IsInMemory())
+                                {
+                                    context.Commit();
+                                }
+                            }catch (DbUpdateException exception){
+                                if (!context.Database.IsInMemory())
+                                {
+                                    context.Rollback();
+                                }
+                                result.Errors.Add(new OperationError() { Message = exception.InnerException.Message });
                             }
-                            else
+                            catch (Exception ex)
                             {
-                                result.Rowids.Add(baseOperationObj.Rowid);
+                                if (!context.Database.IsInMemory())
+                                {
+                                    context.Rollback();
+                                }
+                                result.Errors.Add(new OperationError() { Message = ex.Message });
                             }
                         }
-                        if (!context.Database.IsInMemory())
-                        {
-                            context.Commit();
-                        }
-                    }catch (Exception ex)
-                    {
-                        if (!context.Database.IsInMemory())
-                        {
-                            context.Rollback();
-                        }
-                        throw ex;
                     }
+                    // cierra valida todos, uno a uno en transaccion diferentes
+                }else{
+                    // valida todos, uno a uno en la misma transaccion
+                    using (SDKContext context = CreateDbContext())
+                    {
+                        try
+                        {
+                            if (!context.Database.IsInMemory())
+                            {
+                                context.BeginTransaction();
+                            }
+                            foreach (var baseObj in listBaseObj)
+                            {
+                                ValidateAndSaveBusinessObjResponse baseOperationObj = new();
+                                baseOperationObj.Rowid = baseObj.GetRowid();
+                                var watchInternal = System.Diagnostics.Stopwatch.StartNew();
+                                InternalSave(ref baseOperationObj, context, baseObj);
+                                watchInternal.Stop();
+                                var elapsedMsInternal = watchInternal.ElapsedMilliseconds;
+                                Console.WriteLine($"InternalSave: {elapsedMsInternal} ms");
+                                if (baseOperationObj.Errors.Count > 0)
+                                {
+                                    result.Errors.AddRange(baseOperationObj.Errors);
+                                }
+                                else
+                                {
+                                    result.Rowids.Add(baseOperationObj.Rowid);
+                                }
+                            }
+                            if (!context.Database.IsInMemory())
+                            {
+                                context.Commit();
+                            }
+                        }catch (Exception ex)
+                        {
+                            if (!context.Database.IsInMemory())
+                            {
+                                context.Rollback();
+                            }
+                            throw ex;
+                        }
+                    }
+                    // cierra valida todos, uno a uno en la misma transaccion
                 }
             }
             catch (DbUpdateException exception)
@@ -2343,8 +2402,9 @@ namespace Siesa.SDK.Business
 
 
         [SDKExposedMethod]
-        public ActionResult<SDKResultImportDataDTO> ImportData(string dataStr)
+        public ActionResult<SDKResultImportDataDTO> ImportData(string dataStr, bool statusTransaccion = false)
         {
+            _statusTransaccion = statusTransaccion;
             JArray dataList = JArray.Parse(dataStr);
             List<dynamic> SuccessData = new();
             List<dynamic> ErrorData = new();
@@ -2353,7 +2413,7 @@ namespace Siesa.SDK.Business
             List<T> BaseObjToImport = new();
             //start take time
             Console.WriteLine("Start");
-            var watch = System.Diagnostics.Stopwatch.StartNew();            
+            var watch = System.Diagnostics.Stopwatch.StartNew();
             Parallel.ForEach(dataList, item =>
             {
                 dynamic result = CreateDynamicObjectFromJson(typeof(T), (JObject)item, EnumSearchList, ForeingDictionary, ref ErrorData);
@@ -2390,18 +2450,32 @@ namespace Siesa.SDK.Business
                 }
             }*/
             ValidateAndSaveBusinessMultiObjResponse resultValidate = ValidateAndSave(BaseObjToImport);
-            if(resultValidate.Errors.Count > 0){
+
+            if(statusTransaccion){
+                // valida todos, uno a uno en transaccion diferentes
                 ErrorData.AddRange(resultValidate.Errors);
-            }else{
                 foreach (var rowid in resultValidate.Rowids)
                 {
                     SuccessData.Add(rowid);
                 }
+                // cierra valida todos, uno a uno en transaccion diferentes
+            }else{
+                // valida todos en una sola transaccion
+                if(resultValidate.Errors.Count > 0){
+                    ErrorData.AddRange(resultValidate.Errors);
+                }else{
+                    foreach (var rowid in resultValidate.Rowids)
+                    {
+                        SuccessData.Add(rowid);
+                    }
+                }
+                // cierra valida todos en una sola transaccion
             }
             
             //stop take time
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
+            _logger.LogInformation($"Time elapsed: {elapsedMs}");
             Console.WriteLine("Time elapsed: " + elapsedMs);
 
             SDKResultImportDataDTO resultImport = new SDKResultImportDataDTO
