@@ -16,124 +16,23 @@ namespace Siesa.SDK.Frontend.Components.Fields;
 /// <summary>
 /// Multi Select Field component
 /// </summary>
-/// <typeparam name="TData">The type of the data.</typeparam>
 /// <typeparam name="TValue">The type of the value.</typeparam>
-public partial class SDKMultiSelectField<TData, TValue> : SDKComponent
+public partial class SDKMultiSelectField<TValue> : RadzenDropDown<TValue>
 {
-    /// <summary>
-    /// Gets or sets the ValueExpression.
-    /// </summary>
-    [Parameter]
-    public Expression<Func<IEnumerable<TValue>>> ValuesExpression { get; set; }
+    [Inject]
+    private IResourceManager ResourceManager { get; set; }
 
-    /// <summary>
-    /// Gets or sets the Values. Represents the Selected Values
-    /// </summary>
-    [Parameter]
-    public IEnumerable<TValue> Values { get; set; }
+    [Inject]
+    private IAuthenticationService AuthenticationService { get; set; }
 
-    /// <summary>
-    /// Gets or sets the ValueChanged. Event when a new Value is selected
-    /// </summary>
-    [Parameter] public Action<IEnumerable<TValue>> ValuesChanged { get; set; } = (value) => { };
-
-
-    /// <summary>
-    /// Gets or sets the Options. Represents the list of options
-    /// </summary>
-    [Parameter] public IEnumerable Options { get; set; }
-
-    /// <summary>
-    /// Gets or sets the ChildContent. Represents the content of the component
-    /// 
-    /// </summary>
-    [Parameter] public RenderFragment ChildContent { get; set; }
-
-
-    /// <summary>
-    /// Gets or sets the Placeholder.
-    /// </summary>
-    [Parameter] public string Placeholder { get; set; }
-
-    /// <summary>
-    /// Gets or sets the Disabled.
-    /// </summary>
-    [Parameter] public bool Disabled { get; set; }
-
-    /// <summary>
-    /// Gets or sets the ReadOnly.
-    /// </summary>
-    [Parameter] public bool ReadOnly { get; set; }
-
-    /// <summary>
-    /// Gets or sets the Required.
-    /// </summary>
-
-    [Parameter] public bool Required { get; set; }
-
-    /// <summary>
-    /// Gets or sets the CssClass.
-    /// </summary>
-    /// 
-    [Parameter] public string CssClass { get; set; }
-
-    /// <summary>
-    /// Gets or sets the FieldName.
-    /// </summary>
-    [Parameter] public string FieldName { get; set; }
-
-    /// <summary>
-    /// Gets or sets the OnFocusOut.
-    /// </summary>
-    [Parameter] public Action OnFocusOut { get; set; } = () => { };
-
-    /// <summary>
-    /// Gets or sets IsSearch.
-    /// Is true when the component is to be painted in a lookup view.
-    ///false for any of the other views
-    /// </summary>
-    [Parameter] public bool IsSearch { get; set; }
-
-    /// <summary>
-    /// Gets or sets the multiple selector, dafault true
-    /// </summary>
-    [Parameter] public bool Multiple { get; set; } = true;
-
-    /// <summary>
-    /// Gets or sets the AllowClear, dafault true
-    /// </summary>
-    [Parameter] public bool AllowClear { get; set; } = true;
-
-    /// <summary>
-    /// Gets or sets whether selected values are displayed as badges, dafault false
-    /// </summary>
-    [Parameter] public bool Badges { get; set; }
-
-    /// <summary>
-    /// Gets or sets the maximum number of selected values displayed in the field, dafault 4
-    /// </summary>
-    [Parameter] public int MaxSelectedLabels { get; set; }
-
-    /// <summary>
-    /// Gets or sets the TextProperty. Represents the property of the object that will be displayed in the dropdown
-    /// </summary>
-    [Parameter] public string TextProperty { get; set; }
-
-    /// <summary>
-    /// Gets or sets the ValueProperty. Represents the property of the object that will be used as the value of the dropdown
-    /// </summary>
-    [Parameter] public string ValueProperty { get; set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
     [Parameter]
     public bool IsEnum { get; set; }
 
-    private IEnumerable<SDKEnumWrapper<TData>> _optionsEnums;
-
+    private List<SDKEnumWrapper<TValue>> _optionsEnums = new();
     protected override async Task OnInitializedAsync()
-    {   
+    {
+        Multiple = true;
+
         if (IsEnum)
         {
             await GetEnumValues().ConfigureAwait(true);
@@ -141,25 +40,9 @@ public partial class SDKMultiSelectField<TData, TValue> : SDKComponent
         await base.OnInitializedAsync().ConfigureAwait(true);
     }
 
-    protected override string GetAutomationId()
-    {
-        if (string.IsNullOrEmpty(AutomationId))
-        {
-            AutomationId = FieldName;
-        }
-        return base.GetAutomationId();
-    }
-
-    private void _OnFocusOut()
-    {
-        if (OnFocusOut != null)
-        {
-            OnFocusOut();
-        }
-    }
     private async Task GetEnumValues()
     {
-        Type EnumType = typeof(TData);
+        Type EnumType = typeof(TValue);
         if (EnumType.IsEnum || (EnumType.IsGenericType && EnumType.GetGenericTypeDefinition() == typeof(Nullable<>) && EnumType.GetGenericArguments()[0].IsEnum))
         {
             if (EnumType.IsGenericType && EnumType.GetGenericTypeDefinition() == typeof(Nullable<>))
@@ -176,11 +59,11 @@ public partial class SDKMultiSelectField<TData, TValue> : SDKComponent
 
             foreach (var option in enumValues)
             {
-                _optionsEnums = _optionsEnums.Append(new SDKEnumWrapper<TData>
-                    {
-                        Type = (TData)Enum.Parse(EnumType, option.Key.ToString(CultureInfo.InvariantCulture)),
-                        DisplayText = option.Value
-                    });
+                _optionsEnums.Add(new SDKEnumWrapper<TValue> 
+                { 
+                    DisplayText = option.Value, 
+                    Type = (TValue)Enum.ToObject(EnumType, option.Key) 
+                });
             }
 
             TextProperty = "DisplayText";
@@ -188,11 +71,11 @@ public partial class SDKMultiSelectField<TData, TValue> : SDKComponent
 
             _optionsEnums = _optionsEnums.Distinct().ToList();
 
-            Options =  _optionsEnums;
+            Data = _optionsEnums;
 
         }
         StateHasChanged();
     }
 
-    
+
 }
