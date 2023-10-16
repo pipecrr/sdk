@@ -16,6 +16,7 @@ namespace Siesa.SDK.Frontend.Components.Fields;
 /// <summary>
 /// Multi Select Field component
 /// </summary>
+/// <typeparam name="TData">The type of the data.</typeparam>
 /// <typeparam name="TValue">The type of the value.</typeparam>
 public partial class SDKMultiSelectField<TData, TValue> : SDKComponent
 {
@@ -40,7 +41,7 @@ public partial class SDKMultiSelectField<TData, TValue> : SDKComponent
     /// <summary>
     /// Gets or sets the Options. Represents the list of options
     /// </summary>
-    [Parameter] public IEnumerable<TData> Options { get; set; }
+    [Parameter] public IEnumerable Options { get; set; }
 
     /// <summary>
     /// Gets or sets the ChildContent. Represents the content of the component
@@ -129,7 +130,7 @@ public partial class SDKMultiSelectField<TData, TValue> : SDKComponent
     [Parameter]
     public bool IsEnum { get; set; }
 
-    private List<object> _optionsEnums = new List<object>();
+    private IEnumerable<SDKEnumWrapper<TData>> _optionsEnums;
 
     protected override async Task OnInitializedAsync()
     {   
@@ -175,26 +176,20 @@ public partial class SDKMultiSelectField<TData, TValue> : SDKComponent
 
             foreach (var option in enumValues)
             {
-                Type sdkEnumWrapperType = typeof(SDKEnumWrapper<>).MakeGenericType(EnumType);
-                dynamic sdkEnumWrapperInstance = Activator.CreateInstance(sdkEnumWrapperType);
-
-                 sdkEnumWrapperInstance.DisplayText = option.Value;
-
-                PropertyInfo propertyInfo = sdkEnumWrapperType.GetProperty("Type");
-                propertyInfo.SetValue(sdkEnumWrapperInstance, Enum.ToObject(EnumType, option.Key));
-
-                _optionsEnums.Add(sdkEnumWrapperInstance);
+                _optionsEnums = _optionsEnums.Append(new SDKEnumWrapper<TData>
+                    {
+                        Type = (TData)Enum.Parse(EnumType, option.Key.ToString(CultureInfo.InvariantCulture)),
+                        DisplayText = option.Value
+                    });
             }
 
             TextProperty = "DisplayText";
             ValueProperty = "Type";
 
             _optionsEnums = _optionsEnums.Distinct().ToList();
-            Options = _optionsEnums;
 
-            //_options = _options.Distinct();
-            
-            //Options = _options;
+            Options =  _optionsEnums;
+
         }
         StateHasChanged();
     }

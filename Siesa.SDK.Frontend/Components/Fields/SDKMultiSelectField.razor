@@ -1,16 +1,17 @@
-@typeparam TItem
+@typeparam TData
+@typeparam TValue
 @inherits SDKComponent
 
 <div class="sdk-dropdown-container">
     <RadzenDropDown 
         Disabled="@ReadOnly"
         Data="@Options"
-        TValue="TItem"
+        TValue="TValue"
         TextProperty="@TextProperty"
         ValueProperty="@ValueProperty"
-        Value="@Value" 
-        ValueChanged="@ValueChanged" 
-        ValueExpression="@ValueExpression"
+        Value="@Values" 
+        ValueChanged="@ValuesChanged" 
+        ValueExpression="@ValuesExpression"
         Multiple="@Multiple"
         AllowClear="@AllowClear"
         MaxSelectedLabels="@MaxSelectedLabels"
