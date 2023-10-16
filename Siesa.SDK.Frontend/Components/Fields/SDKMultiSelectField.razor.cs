@@ -14,8 +14,10 @@ using System.Reflection;
 namespace Siesa.SDK.Frontend.Components.Fields;
 
 /// <summary>
-/// Multi Select Field component
+/// SDKMultiSelectField is a wrapper of the RadzenDropDown component.
 /// </summary>
+/// See the definition more parameters in: <see cref="https://blazor.radzen.com/dropdown-multiple"/>,
+/// You can also enter the GitHub repository
 /// <typeparam name="TValue">The type of the value.</typeparam>
 public partial class SDKMultiSelectField<TValue> : RadzenDropDown<TValue>
 {
@@ -28,10 +30,14 @@ public partial class SDKMultiSelectField<TValue> : RadzenDropDown<TValue>
     [Parameter]
     public bool IsEnum { get; set; }
 
+    [Parameter]
+    public bool Badges { get; set; }
+
     private List<SDKEnumWrapper<TValue>> _optionsEnums = new();
     protected override async Task OnInitializedAsync()
     {
         Multiple = true;
+        Chips = Badges;
 
         if (IsEnum)
         {
