@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Siesa.SDK.Entities
 {
-	public abstract partial class BaseMasterCompanyGroup<T> : BaseCompanyGroup<int>
+	public abstract partial class BaseMasterCompanyGroup<T, U> : BaseCompanyGroup<T>
 	{
 		public override string ToString()
         {

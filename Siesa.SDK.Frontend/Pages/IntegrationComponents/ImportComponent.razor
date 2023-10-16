@@ -238,7 +238,7 @@
                                             
         foreach (var field in EntityFields.Where(x=> !ignoreEntityFields.Contains(x.Name)).ToList())
         {
-            var ResourceName = await ResourceManager.GetResource($"{EntityType.Name}.{field.Name}", AuthenticationService.GetRoiwdCulture()); 
+            var ResourceName = await ResourceManager.GetResource($"{EntityType.Name}.{field.Name}", AuthenticationService.GetRowidCulture()); 
 
             _fieldsEntity.Add(ResourceName,field.Name);
             _titleFields.Add(field.Name, ResourceName);

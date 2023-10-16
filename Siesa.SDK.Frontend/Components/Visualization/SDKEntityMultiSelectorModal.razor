@@ -8,9 +8,9 @@
         <div class="col-12">
             <ListView
                 IsMultiple="true"
-                ViewdefName="remain_users_list"
+                ViewdefName="@ViewdefName"
                 BusinessObj=@Business
-                BusinessName="BLUser"
+                BusinessName="@RelatedBusinessName"
                 SetTopBar="false"
                 AllowCreate="false"
                 AllowEdit="false"
@@ -25,7 +25,7 @@
             <SDKButton
                 RenderStyle="SDKButtonRenderStyle.Primary"
                 ResourceTag="@ResourceTagButtonAdd"
-                Click="@AddUsers"
+                Click="@AddItem"
             />
         </div>
     }else
@@ -34,7 +34,7 @@
             <i class="fa-solid fa-circle-info fa-3x"></i>
             <p class="mt-3 mb-0 font_size_087">
                 <ResourceViewer
-                    ResourceTag="Custom.BLUser.UsersNotFound"
+                    ResourceTag="Custom.SDKEntityMultiSelectorModal.ItemsNotFound"
                 />
             </p>
         </div>

@@ -61,7 +61,10 @@ namespace Siesa.SDK.Frontend.Components.Layout.AditionalField
                     break;
                 case enumDynamicEntityDataType.Date:
                     Type = 3;
-                    break;                
+                    break;
+                case enumDynamicEntityDataType.Boolean:
+                    Type = 4;
+                    break;
                 default:
                     Type = 2;
                     break;
@@ -91,6 +94,9 @@ namespace Siesa.SDK.Frontend.Components.Layout.AditionalField
                     break;
                 case 3:
                     DynamicEntityColumn.DataType = enumDynamicEntityDataType.Date;
+                    break;
+                case 5:
+                    DynamicEntityColumn.DataType = enumDynamicEntityDataType.Boolean;
                     break;
                 default:
                     DynamicEntityColumn.DataType = enumDynamicEntityDataType.Text;

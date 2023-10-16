@@ -3,18 +3,17 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Siesa.Global.Enums;
 using Siesa.SDK.Shared.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace Siesa.SDK.Entities
 {
 
-	public abstract partial class BaseMasterCompanyGroup<T> : BaseCompanyGroup<int>
+	public abstract partial class BaseMasterCompanyGroup<T, U> : BaseCompanyGroup<T>
 	{
-		[Key]
-		[SDKRequired]
-		public override int Rowid { get; set; }
+		
 
-		public virtual T Id { get; set; }
+		public virtual U Id { get; set; }
 
 		[SDKRequired]
 		[SDKStringLength(250)]

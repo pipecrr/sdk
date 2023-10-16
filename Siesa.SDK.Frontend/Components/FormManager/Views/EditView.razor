@@ -16,7 +16,7 @@
 {
     <ResourceViewer ResourceTag="Custom.Generic.Loading" />
 }
-else if (Panels == null || Panels.Count <= 0)
+else if ((Panels == null || Panels.Count <= 0) && !IsDocument)
 {
     <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList" VerifyContext="@ClickInSave"/>
 }
@@ -43,11 +43,13 @@ else if (BusinessObj.BaseObj.Rowid != 0)
         <ObjectGraphDataAnnotationsValidator />
         <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
             <CascadingValue Value="@EditFormContext">
-                <SDKCrudHeader ResourceTag="@Panels[0].ResourceTag" IconClass="@Panels[0].IconClass" ViewType="DynamicViewType.Edit">
-                    <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef" ModelObj="@BusinessObj" DefaultColSize="@Panels[0].ColSize" />
-                </SDKCrudHeader>
+                @if(Panels?.Count > 0){
+                    <SDKCrudHeader ResourceTag="@Panels[0].ResourceTag" IconClass="@Panels[0].IconClass" ViewType="DynamicViewType.Edit">
+                        <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef" ModelObj="@BusinessObj" DefaultColSize="@Panels[0].ColSize" />
+                    </SDKCrudHeader>
+                }
             </CascadingValue>
-            @if (Panels.Count > 1)
+            @if (Panels?.Count > 1)
             {
                 <DxFormLayoutTabPages ScrollMode="TabsScrollMode.Auto">
                     @foreach (var panel in Panels.Skip(1))
@@ -63,7 +65,7 @@ else if (BusinessObj.BaseObj.Rowid != 0)
                 </DxFormLayoutTabPages>
 
             }
-            @if(PanelsCollapsable.Count>0){
+            @if(PanelsCollapsable?.Count>0){
                 <div class="w-100">
                     <SDKCollapse>
                         <Items>
@@ -76,7 +78,7 @@ else if (BusinessObj.BaseObj.Rowid != 0)
                                         </CascadingValue>
                                     </div>
                                         <div class="buttons-aditional-fiels mb-2">
-                                            <SDKButton RenderStyleMode="SDKButtonRenderStyleMode.Outline" RenderStyle="SDKButtonRenderStyle.Danger" ResourceTag="Borrar" Click="@(()=>ConfirmDelete(panel.RowidGroupDynamicEntity))"/>
+                                            <SDKButton RenderStyle="SDKButtonRenderStyle.Danger" ResourceTag="Borrar" Click="@(()=>ConfirmDelete(panel.RowidGroupDynamicEntity))"/>
                                             <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Editar campos" Click="@(()=>ClickInEdit(panel.RowidGroupDynamicEntity))"/>
                                             <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Agregar campos" Click="@(()=>ClickInAdd(panel.RowidGroupDynamicEntity))"/>
                                         </div>
@@ -112,7 +114,7 @@ else if (BusinessObj.BaseObj.Rowid != 0)
     }
     @if(SetTopBar && !IsSubpanel)
     {
-        <PageTitle><ResourceViewer ResourceTag="Action.Edit" /> @BusinessObj</PageTitle>
+        <PageTitle><ResourceViewer ResourceTag="Action.Edit" /> @BusinessObj | <ResourceViewer ResourceTag="Custom.Project.Name" /></PageTitle>
         <SetTopBar StyleName="toolbar_edition" HasExtraButtons="@HasExtraButtons" BusinessObj="@BusinessObj">
             <TopBarTitle><ResourceViewer ResourceTag="Action.Edit" /> @BusinessObj</TopBarTitle>
             <TopBarButtons>

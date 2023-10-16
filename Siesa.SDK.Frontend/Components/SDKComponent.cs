@@ -31,7 +31,7 @@ namespace Siesa.SDK.Frontend.Components
 
         protected async Task<string> GetText(){
             if((RowidResource == null || RowidResource == 0) && ResourceTag != null){
-                if (AuthenticationService != null && AuthenticationService.GetRoiwdCulture() != 0)
+                if (AuthenticationService != null && AuthenticationService.GetRowidCulture() != 0)
                 {
                     return await ResourceManager.GetResource(ResourceTag, AuthenticationService);
                 }else

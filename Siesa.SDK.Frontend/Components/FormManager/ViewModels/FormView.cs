@@ -262,7 +262,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             var metadata = GetViewdef(bName);
             if (metadata == null || metadata == "")
             {
-                //string ErrorTag = await ResourceManager.GetResource("Custom.Formview.NotDefinition", AuthenticationService.GetRoiwdCulture());
+                //string ErrorTag = await ResourceManager.GetResource("Custom.Formview.NotDefinition", AuthenticationService.GetRowidCulture());
                 ErrorMsg = $"Custom.Generic.ViewdefNotFound";
                 ErrorList.Add($"Custom.Generic.ViewdefNotFound");
             }
@@ -428,7 +428,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 string attrValue = sdkAttr.ToString();
                 if (data != null)
                 {
-                    attrValue = attrCode(attrValue, data);
+                    attrValue = AttrCode(attrValue, data);
                     if(!string.IsNullOrEmpty(attrValue)){
                         result = await EjectMethod(data, attrValue, true).ConfigureAwait(true);
                     }
@@ -442,12 +442,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             return result;
         }
 
-        private string attrCode(string attrValue, dynamic data)
+        private string AttrCode(string attrValue, dynamic data)
         {
             string result = attrValue;            
-            var indexData = BusinessObj.ChildObjs.IndexOf(data);
             if (result != null && result.Contains("data_detail", StringComparison.Ordinal))
             {
+                var indexData = BusinessObj.ChildObjs.IndexOf(data);
+                if(indexData == -1){
+                    return null;
+                }
                 result = result.Replace("data_detail", $"ChildObjs[{indexData}]",
                     StringComparison.Ordinal);
             }

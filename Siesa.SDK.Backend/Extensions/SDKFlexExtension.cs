@@ -118,6 +118,7 @@ namespace Siesa.SDK.Backend.Extensions
                     if(column.customFn){
                         continue;
                     }
+                    
                     if(column.is_dynamic_field){
                         virtualColumnsName.Add(column.key_name);
                         virtualColumnsNameType.Add(column.key_name, column.type);
@@ -126,6 +127,11 @@ namespace Siesa.SDK.Backend.Extensions
 
                     if (column.sortType != null){
                         orderBy = column.key_name + " " + column.sortType.ToUpper();
+                    }
+                    if (column.is_sensitive_data)
+                    {
+                        strColumns.Add("\"***\"" + " as " + column.key_name);
+                        continue;
                     }
                     var i = columns.IndexOf(column);
                     var columnPath = column.path.Split("::");

@@ -31,6 +31,7 @@ using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json.Linq;
 using System.Runtime.CompilerServices;
 using Siesa.SDK.Frontend.Components.Flex;
+using Siesa.SDK.Protos;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -195,6 +196,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private Radzen.DataGridSelectionMode SelectionMode { get; set; } = Radzen.DataGridSelectionMode.Single;
         Guid needUpdate;
         private string _base_filter = "";
+        private bool ErroInAction;
 
         public dynamic BusinessObjNullable { get; set; }
 
@@ -636,16 +638,45 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 var parameterType = typeof(ParameterAttribute);
                 if(dataAnnotationProperty == parameterType){
                     try{
-                        if (parameters.TryGetValue<string>(property.Name, out var value)){
-                            var valueProperty = property.GetValue(this, null);
-                            if (value != null && value != valueProperty){
-                                result = true;
-                                break;
-                            }
-                        }
+                        result = CompareValues(parameters, property);
+                        if(result){                            
+                            break;
+                        }                        
                     }catch (Exception e){}
                 }
             }
+            return result;
+        }
+
+        private bool CompareValues(ParameterView parameters, PropertyInfo property)
+        {
+            bool result = false;
+            Type typeProp = property.PropertyType;
+
+            if (typeProp == typeof(string))
+            {
+                parameters.TryGetValue<string>(property.Name, out var value);
+                var valueProperty = property.GetValue(this, null);
+                if(value != null){
+                    result = !value.Equals(valueProperty);
+                }
+            }else if (typeProp.IsGenericType && typeProp.GetGenericTypeDefinition() == typeof(List<>))
+            {
+                parameters.TryGetValue<IEnumerable>(property.Name, out var value);
+                var valueProperty = property.GetValue(this, null);
+                if(value != null){
+                    result = !(value as IEnumerable<object>)?.SequenceEqual(valueProperty as IEnumerable<object>) ?? false;
+                }
+            }
+            else
+            {
+                parameters.TryGetValue<string>(property.Name, out var value);
+                var valueProperty = property.GetValue(this, null);
+                if(value != null){
+                    result = value != valueProperty;
+                }
+            }
+
             return result;
         }
 
@@ -962,12 +993,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 SDKGlobalLoaderService.Show();
                 if (confirm){
                     BusinessObj.BaseObj.Rowid = Convert.ChangeType(id, BusinessObj.BaseObj.Rowid.GetType());
-                    var result = await BusinessObj.DeleteAsync();
+                    DeleteBusinessObjResponse result = await BusinessObj.DeleteAsync();
                     SDKGlobalLoaderService.Hide();
                     if (result != null && result.Errors.Count == 0){
                         return true;
+                    }else{
+                        ErrorList.AddRange(result.Errors.Select(x => x.Message));
+                        ErroInAction = true;
+                        NotificationService.ShowError("Custom.Generic.Message.DeleteError");
+                        StateHasChanged();                        
                     }
                 }
+
                 SDKGlobalLoaderService.Hide();
             }
             return false;
@@ -1167,8 +1204,27 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if(ServerPaginationFlex && UseFlex){
                 Data = await BusinessObj.GetDataWithTop(filters);
                  if (Data != null && Data.Count() == 1){
-                    GoToDetail((dynamic)Data.First());
-                     return;
+                     if (!FromEntityField)
+                     { 
+                         GoToDetail((dynamic)Data.First());
+                         return;
+                     }
+                     else
+                     {
+                         try
+                         {
+                             long dataRowid = (long)Data.First();
+                             var dataObj = await BusinessObj.GetAsync(dataRowid);
+                             IList<object> objects = new List<object> { dataObj };
+                             OnSelectionChanged(objects);
+                             return;
+                         }
+                         catch (Exception e)
+                         {
+                             Console.WriteLine(e);
+                         }
+                         
+                     }
                  }
                 // Data = dbData.Data;
                 // if (Data.Count() == 1)
@@ -1464,6 +1520,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 SelectedObjects.Add(data);
             }else{
                 SelectedObjects.Remove(data);
+            }
+        }
+        /// <summary>
+        /// Clear the selection of the list
+        /// </summary>
+        public void ClearSelection(){
+            if(UseFlex && _flexComponentRef != null){
+                _flexComponentRef.ClearSelection();
             }
         }
     }

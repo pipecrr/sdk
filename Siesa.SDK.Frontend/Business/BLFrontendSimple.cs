@@ -289,6 +289,15 @@ namespace Siesa.SDK.Business
                         var valueDate = Convert.ChangeType(item.DateData, typeof(DateTime));
                         DynamicObject.GetType().GetProperty(columnName).SetValue(DynamicObject, valueDate);
                         break;
+                    case enumDynamicEntityDataType.Boolean:
+                        var currentVal = item.NumericData;
+                        if(currentVal == null)
+                        {
+                            currentVal = 0;
+                        }
+                        var valueBool = Convert.ChangeType(currentVal, typeof(bool));
+                        DynamicObject.GetType().GetProperty(columnName).SetValue(DynamicObject, valueBool);
+                        break;
                     default:
                         break;
                 }
@@ -427,6 +436,8 @@ namespace Siesa.SDK.Business
                     return typeof(Decimal);
                 case enumDynamicEntityDataType.Date:
                     return typeof(DateTime);
+                case enumDynamicEntityDataType.Boolean:
+                    return typeof(bool);
                 default:
                     return typeof(string);
             }
@@ -476,8 +487,12 @@ namespace Siesa.SDK.Business
 
         private void ProcessProperties(List<string> nameProperties, T blankBaseObj)
         {
+            var byCompanyGroup = Utilities.IsAssignableToGenericType(blankBaseObj.GetType(), typeof(BaseCompanyGroup<>));
             foreach (string propertyName in nameProperties)
             {
+                if(byCompanyGroup && propertyName == "RowidCompanyGroup"){
+                    continue;
+                }
                 var property = BaseObj.GetType().GetProperty(propertyName);
                 if (property != null)
                 {
