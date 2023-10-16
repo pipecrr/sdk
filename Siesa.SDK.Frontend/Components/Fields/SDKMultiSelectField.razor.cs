@@ -16,23 +16,31 @@ namespace Siesa.SDK.Frontend.Components.Fields;
 /// <summary>
 /// Multi Select Field component
 /// </summary>
-/// <typeparam name="TItem">The type of the value.</typeparam>
-public partial class SDKMultiSelectField<TItem> : SDKComponent
+/// <typeparam name="TValue">The type of the value.</typeparam>
+public partial class SDKMultiSelectField<TData, TValue> : SDKComponent
 {
     /// <summary>
     /// Gets or sets the ValueExpression.
     /// </summary>
-    [Parameter] public Expression<Func<TItem>> ValueExpression { get; set; }
+    [Parameter]
+    public Expression<Func<IEnumerable<TValue>>> ValuesExpression { get; set; }
 
     /// <summary>
-    /// Gets or sets the Value. Represents the Selected Value
+    /// Gets or sets the Values. Represents the Selected Values
     /// </summary>
-    [Parameter] public TItem Value { get; set; } = default!;
+    [Parameter]
+    public IEnumerable<TValue> Values { get; set; }
 
     /// <summary>
     /// Gets or sets the ValueChanged. Event when a new Value is selected
     /// </summary>
-    [Parameter] public Action<TItem> ValueChanged { get; set; } = (value) => { };
+    [Parameter] public Action<IEnumerable<TValue>> ValuesChanged { get; set; } = (value) => { };
+
+
+    /// <summary>
+    /// Gets or sets the Options. Represents the list of options
+    /// </summary>
+    [Parameter] public IEnumerable<TData> Options { get; set; }
 
     /// <summary>
     /// Gets or sets the ChildContent. Represents the content of the component
@@ -40,10 +48,6 @@ public partial class SDKMultiSelectField<TItem> : SDKComponent
     /// </summary>
     [Parameter] public RenderFragment ChildContent { get; set; }
 
-    /// <summary>
-    /// Gets or sets the Options. Represents the list of options
-    /// </summary>
-    [Parameter] public IEnumerable Options { get; set; }
 
     /// <summary>
     /// Gets or sets the Placeholder.
@@ -120,16 +124,16 @@ public partial class SDKMultiSelectField<TItem> : SDKComponent
     [Parameter] public string ValueProperty { get; set; }
 
     /// <summary>
-    /// Gets or sets the EnumType. Represents the type of the enum
+    /// 
     /// </summary>
     [Parameter]
-    public Type? EnumType { get; set; }
+    public bool IsEnum { get; set; }
 
     private List<object> _optionsEnums = new List<object>();
 
     protected override async Task OnInitializedAsync()
     {   
-        if (EnumType != null)
+        if (IsEnum)
         {
             await GetEnumValues().ConfigureAwait(true);
         }
@@ -154,6 +158,7 @@ public partial class SDKMultiSelectField<TItem> : SDKComponent
     }
     private async Task GetEnumValues()
     {
+        Type EnumType = typeof(TData);
         if (EnumType.IsEnum || (EnumType.IsGenericType && EnumType.GetGenericTypeDefinition() == typeof(Nullable<>) && EnumType.GetGenericArguments()[0].IsEnum))
         {
             if (EnumType.IsGenericType && EnumType.GetGenericTypeDefinition() == typeof(Nullable<>))
@@ -161,7 +166,7 @@ public partial class SDKMultiSelectField<TItem> : SDKComponent
                 EnumType = EnumType.GetGenericArguments()[0];
             }
 
-            Dictionary<byte, string> enumValues = await ResourceManager.GetEnumValues(EnumType.Name, AuthenticationService.GetRoiwdCulture()).ConfigureAwait(true);
+            Dictionary<byte, string> enumValues = await ResourceManager.GetEnumValues(EnumType.Name, AuthenticationService.GetRowidCulture()).ConfigureAwait(true);
 
             if (enumValues == null || enumValues.Count == 0)
             {
