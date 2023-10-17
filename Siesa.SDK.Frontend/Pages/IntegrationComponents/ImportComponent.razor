@@ -189,7 +189,10 @@
                             }
                         </Columns>
                     </SDKGrid>
-
+                    @if(BusinessName.Equals("BLDemoDummy")){
+                        <p>transaccion diferentes</p>
+                        <SDKSwitch @bind-Value="@StatusTransaction"/>
+                    }
                     <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Custom.SDK.Import.ImportData" Click="@ImportData" />
 
                     <SDKTextField Value="@JsonObject"  ReadOnly="true"/>
@@ -205,7 +208,7 @@
 </SDKTabs>
 
 @code {
-
+    public bool StatusTransaction {get; set;}
     public int FlexRowId { get; set; } = 52;
     public Dictionary<string, object> filters = new Dictionary<string, object>();
     public List<string> ErrorList { get; set; } = new List<string>();
@@ -254,6 +257,9 @@
 
     protected override async Task OnInitializedAsync()
     {
+        if(BusinessName.Equals("BLDemoDummy")){
+            FlexRowId = 7;
+        }
         filters.Add("Feature.BusinessName", BusinessName);
         await GetEntityFields();
         await HasUniqueCompanyGroup();
@@ -360,7 +366,7 @@
         importDataDTO.Data = DataMapped;
         importDataDTO.UrlResponse = "https://en77cb5mgajpj.x.pipedream.net";
         var bl = BackendRouterService.GetSDKBusinessModel("BLIntegrationService", AuthenticationService);
-        var result = await bl.Call("BulkImportData", importDataDTO);      
+        var result = await bl.Call("BulkImportData", importDataDTO, StatusTransaction);
 
         if(result.Success){
             SDKResponseImportDTO response = (SDKResponseImportDTO)result.Data;

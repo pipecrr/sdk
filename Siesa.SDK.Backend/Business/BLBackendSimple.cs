@@ -47,6 +47,7 @@ using Siesa.Global.Enums;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.IO;
+using Google.Protobuf.Collections;
 
 namespace Siesa.SDK.Business
 {
@@ -238,6 +239,8 @@ namespace Siesa.SDK.Business
         private List<object> unique_indexes = new List<object>();
 
         private bool _containAttachments;
+
+        private bool _statusTransaccion = false; 
 
         public void DetachedBaseObj()
         {
@@ -560,10 +563,10 @@ namespace Siesa.SDK.Business
         {
             //Do nothing
         }
+
         public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave(bool ignorePermissions = false)
         {
             ValidateAndSaveBusinessObjResponse result = new();
-            
             if (!ignorePermissions && !ValidatePermissions())
             {
                 AddMessageToResult("Custom.Generic.Unauthorized", result);
@@ -586,26 +589,7 @@ namespace Siesa.SDK.Business
                         {
                             context.BeginTransaction();
                         }
-                        BeforeSave(ref result, context);
-                        if (result.Errors.Count > 0)
-                        {
-                            context.Rollback();
-                            return result;
-                        }
-                        result.Rowid = Save(context);
-                        if (_queueService != null && !string.IsNullOrEmpty(BusinessName))
-                        {
-                            _queueService.SendMessage(BusinessName, enumMessageCategory.CRUD, new QueueMessageDTO()
-                            {
-                                Message = $"Custom.{BusinessName}.RecordSaved",
-                                Rowid = result.Rowid
-                            });
-                        }
-                        if (DynamicEntities != null && DynamicEntities.Count > 0)
-                        {
-                            SaveDynamicEntity(result.Rowid, context);
-                        }
-                        AfterSave(ref result, context);
+                        InternalSave(ref result, context,BaseObj);
                         if(result.Errors.Count > 0)
                         {
                             context.Rollback();
@@ -614,6 +598,7 @@ namespace Siesa.SDK.Business
                         if (!context.Database.IsInMemory())
                         {
                             context.Commit();
+                            BaseObj.SetRowid(result.Rowid);
                         }
                         AfterValidateAndSave(ref result);
                     }
@@ -642,6 +627,29 @@ namespace Siesa.SDK.Business
             return result;
         }
 
+        private void InternalSave(ref ValidateAndSaveBusinessObjResponse result, SDKContext context, T baseObj)
+        {
+            BeforeSave(ref result, context);
+            if (result.Errors.Count > 0)
+            {
+                context.Rollback();
+            }
+            result.Rowid = Save(context, baseObj);
+            if (_queueService != null && !string.IsNullOrEmpty(BusinessName))
+            {
+                _queueService.SendMessage(BusinessName, enumMessageCategory.CRUD, new QueueMessageDTO()
+                {
+                    Message = $"Custom.{BusinessName}.RecordSaved",
+                    Rowid = result.Rowid
+                });
+            }
+            if (DynamicEntities != null && DynamicEntities.Count > 0)
+            {
+                SaveDynamicEntity(result.Rowid, context);
+            }
+            AfterSave(ref result, context);
+        }
+
         private bool ValidatePermissions()
         {
             if (_featurePermissionService != null && !string.IsNullOrEmpty(BusinessName) && !BusinessName.Equals("BLAttachmentDetail"))
@@ -665,36 +673,146 @@ namespace Siesa.SDK.Business
                 return result;
             }
             try
-            {
-                //ValidateMulti(ref result, listBaseObj);
+            {   
+                var watch = System.Diagnostics.Stopwatch.StartNew();            
+                ValidateMulti(ref result, listBaseObj);
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Console.WriteLine($"ValidateMulti: {elapsedMs} ms");
+
                 if (result.Errors.Count > 0)
                 {
                     return result;
                 }
-                
+                if(_statusTransaccion){
+                    //valida todos, uno a uno en transaccion diferentes
+                    foreach (var baseObj in listBaseObj)
+                    {
+                        using (SDKContext context = CreateDbContext())
+                        {
+                            try
+                            {
+                                if (!context.Database.IsInMemory())
+                                {
+                                    context.BeginTransaction();
+                                }
+                                ValidateAndSaveBusinessObjResponse baseOperationObj = new();
+                                baseOperationObj.Rowid = baseObj.GetRowid();
+                                InternalSave(ref baseOperationObj, context, baseObj);
+                                if (baseOperationObj.Errors.Count > 0)
+                                {
+                                    result.Errors.AddRange(baseOperationObj.Errors);
+                                }
+                                else
+                                {
+                                    result.Rowids.Add(baseOperationObj.Rowid);
+                                }
+                                if (!context.Database.IsInMemory())
+                                {
+                                    context.Commit();
+                                }
+                            }catch (DbUpdateException exception){
+                                if (!context.Database.IsInMemory())
+                                {
+                                    context.Rollback();
+                                }
+                                result.Errors.Add(new OperationError() { Message = exception.InnerException.Message });
+                            }
+                            catch (Exception ex)
+                            {
+                                if (!context.Database.IsInMemory())
+                                {
+                                    context.Rollback();
+                                }
+                                result.Errors.Add(new OperationError() { Message = ex.Message });
+                            }
+                        }
+                    }
+                    // cierra valida todos, uno a uno en transaccion diferentes
+                }else{
+                    // valida todos, uno a uno en la misma transaccion
+                    using (SDKContext context = CreateDbContext())
+                    {
+                        try
+                        {
+                            if (!context.Database.IsInMemory())
+                            {
+                                context.BeginTransaction();
+                            }
+                            foreach (var baseObj in listBaseObj)
+                            {
+                                ValidateAndSaveBusinessObjResponse baseOperationObj = new();
+                                baseOperationObj.Rowid = baseObj.GetRowid();
+                                var watchInternal = System.Diagnostics.Stopwatch.StartNew();
+                                InternalSave(ref baseOperationObj, context, baseObj);
+                                watchInternal.Stop();
+                                var elapsedMsInternal = watchInternal.ElapsedMilliseconds;
+                                Console.WriteLine($"InternalSave: {elapsedMsInternal} ms");
+                                if (baseOperationObj.Errors.Count > 0)
+                                {
+                                    result.Errors.AddRange(baseOperationObj.Errors);
+                                }
+                                else
+                                {
+                                    result.Rowids.Add(baseOperationObj.Rowid);
+                                }
+                            }
+                            if (!context.Database.IsInMemory())
+                            {
+                                context.Commit();
+                            }
+                        }catch (Exception ex)
+                        {
+                            if (!context.Database.IsInMemory())
+                            {
+                                context.Rollback();
+                            }
+                            throw ex;
+                        }
+                    }
+                    // cierra valida todos, uno a uno en la misma transaccion
+                }
             }
-            catch (Exception e)
+            catch (DbUpdateException exception)
             {
-                
+                exception.Data.Add("Entity:", "entityName");
+                AddExceptionToResult(exception, result);
+                _logger.LogError(exception, "Error saving in BLBackend");
+                _logger.LogError("Text information");
+            }
+            catch (Exception exception)
+            {
+                AddExceptionToResult(exception, result);
+                _logger.LogError(exception, "Error saving in BLBackend");
             }
 
-            return null;   
+            return result;
         }
 
-        private void ValidateMulti(ref ValidateAndSaveBusinessObjResponse baseOperation, List<T> listBaseObj = null)
+        private void ValidateMulti(ref ValidateAndSaveBusinessMultiObjResponse baseOperation, List<T> listBaseObj = null)
         {
             if (listBaseObj == null)
             {
                 listBaseObj = new List<T>();
-                listBaseObj.Add(BaseObj);
             }
-            foreach (var item in listBaseObj)
+            ValidateAndSaveBusinessMultiObjResponse baseOperationTmp = baseOperation;
+            Parallel.ForEach(listBaseObj, baseObj =>
             {
-                ValidateBussines(ref baseOperation, item.GetRowid() == 0 ? BLUserActionEnum.Create : BLUserActionEnum.Update);
-                K validator = Activator.CreateInstance<K>();
+                if(baseObj == null)
+                {
+                    baseObj = BaseObj;
+                }
+                ValidateAndSaveBusinessObjResponse baseOperationObj = new();
+                ValidateBussines(ref baseOperationObj, baseObj.GetRowid() == 0 ? BLUserActionEnum.Create : BLUserActionEnum.Update);
+                K validator = ActivatorUtilities.CreateInstance(_provider, typeof(K)) as K;
                 validator.ValidatorType = "BaseObj";
-                SDKValidator.Validate<T>(BaseObj, validator, ref baseOperation);
-            }
+                SDKValidator.Validate<T>(baseObj, validator, ref baseOperationObj);
+                if (baseOperationObj.Errors.Count > 0)
+                {
+                    baseOperationTmp.Errors.AddRange(baseOperationObj.Errors);
+                }
+            });
+            baseOperation = baseOperationTmp;
         }
 
         protected virtual void SaveDynamicEntity(Int64 rowid, SDKContext context)
@@ -809,13 +927,13 @@ namespace Siesa.SDK.Business
 
         }
         
-        private void AddExceptionToResult(DbUpdateException exception, ValidateAndSaveBusinessObjResponse result)
+        private void AddExceptionToResult(DbUpdateException exception, dynamic result)
         {
             var message = BackendExceptionManager.ExceptionToString(exception, ContextMetadata);
             AddMessageToResult(message, result);
         }
 
-        private void AddExceptionToResult(Exception exception, ValidateAndSaveBusinessObjResponse result)
+        private void AddExceptionToResult(Exception exception, dynamic result)
         {
             var message = ExceptionManager.ExceptionToString(exception);
             AddMessageToResult(message, result);
@@ -828,13 +946,17 @@ namespace Siesa.SDK.Business
             result.Errors.Add(new OperationError() { Message = message });
         }
 
-        private void Validate(ref ValidateAndSaveBusinessObjResponse baseOperation)
+        private void Validate(ref ValidateAndSaveBusinessObjResponse baseOperation, T baseObj = null)
         {
-            ValidateBussines(ref baseOperation, BaseObj.GetRowid() == 0 ? BLUserActionEnum.Create : BLUserActionEnum.Update);
+            if(baseObj == null)
+            {
+                baseObj = BaseObj;
+            }
+            ValidateBussines(ref baseOperation, baseObj.GetRowid() == 0 ? BLUserActionEnum.Create : BLUserActionEnum.Update);
             //K validator = Activator.CreateInstance<K>();
             K validator = ActivatorUtilities.CreateInstance(_provider, typeof(K)) as K;
             validator.ValidatorType = "BaseObj";
-            SDKValidator.Validate<T>(BaseObj, validator, ref baseOperation);
+            SDKValidator.Validate<T>(baseObj, validator, ref baseOperation);
         }
 
         private Dictionary<string, object> GetPrimaryKey()
@@ -906,15 +1028,15 @@ namespace Siesa.SDK.Business
             }
         }
 
-        private Int64 Save(SDKContext context)
+        private Int64 Save(SDKContext context, T baseObj)
         {
             this._logger.LogInformation($"Save {this.GetType().Name}");
 
             context.SetProvider(_provider);
-            if (BaseObj.GetRowid() == 0)
+            if (baseObj.GetRowid() == 0)
             {
-                DisableRelatedProperties(BaseObj, _navigationProperties, RelFieldsToSave);
-                var entry = context.Add<T>(BaseObj);
+                DisableRelatedProperties(baseObj, _navigationProperties, RelFieldsToSave);
+                var entry = context.Add<T>(baseObj);
             }
             else
             {
@@ -924,10 +1046,10 @@ namespace Siesa.SDK.Business
                 // {
                 //     query = query.Include(relatedProperty);
                 // }
-                var rowidSearch = BaseObj.GetRowid();
+                var rowidSearch = baseObj.GetRowid();
                 try
                 {
-                    rowidSearch = ((dynamic)BaseObj).Rowid;
+                    rowidSearch = ((dynamic)baseObj).Rowid;
                 }
                 catch (System.Exception)
                 {
@@ -943,8 +1065,12 @@ namespace Siesa.SDK.Business
                 }
             }
 
-            context.SaveChanges(); //TODO: Capturar errores db y hacer rollback
-            return BaseObj.GetRowid();
+            try{
+                context.SaveChanges(); //TODO: Capturar errores db y hacer rollback
+            }catch(Exception ex){
+                throw ex;
+            }
+            return baseObj.GetRowid();
         }
 
         public virtual void Update()
@@ -2276,8 +2402,9 @@ namespace Siesa.SDK.Business
 
 
         [SDKExposedMethod]
-        public ActionResult<SDKResultImportDataDTO> ImportData(string dataStr)
+        public ActionResult<SDKResultImportDataDTO> ImportData(string dataStr, bool statusTransaccion = false)
         {
+            _statusTransaccion = statusTransaccion;
             JArray dataList = JArray.Parse(dataStr);
             List<dynamic> SuccessData = new();
             List<dynamic> ErrorData = new();
@@ -2285,7 +2412,8 @@ namespace Siesa.SDK.Business
             List<ForeignObjectDTO> ForeingDictionary = CalculateForeingList(typeof(T));
             List<T> BaseObjToImport = new();
             //start take time
-            var watch = System.Diagnostics.Stopwatch.StartNew();            
+            Console.WriteLine("Start");
+            var watch = System.Diagnostics.Stopwatch.StartNew();
             Parallel.ForEach(dataList, item =>
             {
                 dynamic result = CreateDynamicObjectFromJson(typeof(T), (JObject)item, EnumSearchList, ForeingDictionary, ref ErrorData);
@@ -2308,8 +2436,8 @@ namespace Siesa.SDK.Business
                     // }
                 }
             }*/
-
-            foreach (var baseObj in BaseObjToImport)
+            //ejemplo 1
+            /*foreach (var baseObj in BaseObjToImport)
             {
                 BaseObj = baseObj;
                 if(!ErrorData.Any()){
@@ -2320,11 +2448,34 @@ namespace Siesa.SDK.Business
                         SuccessData.Add(BaseObj.GetRowid());
                     }
                 }
+            }*/
+            ValidateAndSaveBusinessMultiObjResponse resultValidate = ValidateAndSave(BaseObjToImport);
+
+            if(statusTransaccion){
+                // valida todos, uno a uno en transaccion diferentes
+                ErrorData.AddRange(resultValidate.Errors);
+                foreach (var rowid in resultValidate.Rowids)
+                {
+                    SuccessData.Add(rowid);
+                }
+                // cierra valida todos, uno a uno en transaccion diferentes
+            }else{
+                // valida todos en una sola transaccion
+                if(resultValidate.Errors.Count > 0){
+                    ErrorData.AddRange(resultValidate.Errors);
+                }else{
+                    foreach (var rowid in resultValidate.Rowids)
+                    {
+                        SuccessData.Add(rowid);
+                    }
+                }
+                // cierra valida todos en una sola transaccion
             }
             
             //stop take time
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
+            _logger.LogInformation($"Time elapsed: {elapsedMs}");
             Console.WriteLine("Time elapsed: " + elapsedMs);
 
             SDKResultImportDataDTO resultImport = new SDKResultImportDataDTO
