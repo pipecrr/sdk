@@ -22,7 +22,7 @@ namespace Siesa.SDK.Entities
 		public virtual EnumPermissionUserTypes UserType { get; set; }
 
 		[SDKRequired]
-		public virtual PermissionAuthTypes AuthorizationType { get; set; }
+		public virtual EnumPermissionAuthTypes AuthorizationType { get; set; }
 
 		[SDKRequired]
 		public virtual PermissionRestrictionType RestrictionType { get; set; }
