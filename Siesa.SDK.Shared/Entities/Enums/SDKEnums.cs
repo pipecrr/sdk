@@ -20,14 +20,6 @@ namespace Siesa.Global.Enums
 		Manual = 1
 	}
 
-	public enum MenuType
-	{
-		Separator = 1,
-		Submenu = 2,
-		Feature = 3,
-		CustomMenu = 4
-	}
-
 	public enum CustomTypeField
 	{
 		SwitchField = 1,
@@ -108,5 +100,13 @@ namespace Siesa.Global.Enums
 		Not_Applicable = 0,
 		Enabled = 1,
 		Disabled = 2
+	}
+
+	public enum EnumMenuType
+	{
+		Separator = 1,
+		Submenu = 2,
+		Feature = 3,
+		CustomMenu = 4
 	}
 }
