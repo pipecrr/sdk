@@ -51,19 +51,34 @@ else if (BusinessObj.BaseObj.Rowid != 0)
             </CascadingValue>
             @if (Panels?.Count > 1)
             {
-                <DxFormLayoutTabPages ScrollMode="TabsScrollMode.Auto">
+                @if(Panels?.Count == 2)
+                {
                     @foreach (var panel in Panels.Skip(1))
                     {
-                        <SDKFormLayoutTabPage ResourceTag="@panel.ResourceTag">
-                            <CascadingValue Value="@EditFormContext">
-                                <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" ModelObj="@BusinessObj" DefaultColSize="@panel.ColSize" />
-                            </CascadingValue>
-                        </SDKFormLayoutTabPage>
+                        <CascadingValue Value="@EditFormContext">
+                            <div class="row pt-3">
+                                <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                            </div>
+                        </CascadingValue>
                     }
-
-
-                </DxFormLayoutTabPages>
-
+                }else
+                {
+                    <div class="pt-2">
+                        <SDKTabs>
+                            @foreach (var panel in Panels.Skip(1))
+                            {
+                                <SDKTab IconCssClass="@panel.IconClass" TitleResourceTag="@panel.ResourceTag">
+                                    <CascadingValue Value="@EditFormContext">
+                                        <div class="row pt-3">
+                                            <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                                        </div>
+                                    </CascadingValue>
+                                </SDKTab>
+                            }
+                        </SDKTabs>
+                    </div>
+                    
+                }
             }
             @if(PanelsCollapsable?.Count>0){
                 <div class="w-100">
