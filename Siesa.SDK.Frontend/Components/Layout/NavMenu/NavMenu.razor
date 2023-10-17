@@ -146,7 +146,7 @@
         {
             ResourceTag = "Custom.Menu.Suite",
             SubMenus = new List<E00061_Menu>(),
-            Type  = MenuType.CustomMenu
+            Type  = EnumMenuType.CustomMenu
         };
 
         if(AuthenticationService.User != null)
@@ -161,13 +161,13 @@
             {
                 ResourceTag = "BLUser.EditProfile",
                 Url = $"/BLUser/edit/{AuthenticationService.User.Rowid}/",
-                Type = MenuType.CustomMenu
+                Type = EnumMenuType.CustomMenu
             });
             ProfileMenu.SubMenus.Add(new E00061_Menu()
             {
                 ResourceTag = "BLUser.Logout",
                 Url = "logout",
-                Type = MenuType.CustomMenu
+                Type = EnumMenuType.CustomMenu
             });
         }
 
@@ -227,7 +227,7 @@
                     SuiteMenu.SubMenus.Add(new E00061_Menu()
                     {
                         CurrentText = suite.CurrentText,
-                        Type = MenuType.CustomMenu,
+                        Type = EnumMenuType.CustomMenu,
                         IconClass = suite.IconClass,
                         StyleColor = suite.HexColor,
                         Rowid = suite.Rowid,

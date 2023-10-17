@@ -8,8 +8,8 @@ namespace Siesa.SDK.Shared.DataAnnotations
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = false)]
     public class SDKCustomType: Attribute 
     {
-        public CustomTypeField _customType {get; set;}
-        public SDKCustomType(CustomTypeField customType)
+        public EnumCustomTypeField _customType {get; set;}
+        public SDKCustomType(EnumCustomTypeField customType)
         {
             _customType = customType;
         }

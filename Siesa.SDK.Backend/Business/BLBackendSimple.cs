@@ -1836,7 +1836,7 @@ namespace Siesa.SDK.Business
         }
 
         [SDKExposedMethod]
-        public ActionResult<dynamic> UGetByUserType(int Rowid, PermissionUserTypes UserType, List<string> ExtraFields)
+        public ActionResult<dynamic> UGetByUserType(int Rowid, EnumPermissionUserTypes UserType, List<string> ExtraFields)
         {
             try
             {
@@ -1857,8 +1857,8 @@ namespace Siesa.SDK.Business
 
                 var ColumnName = UserType switch
                 {
-                    PermissionUserTypes.Team => "RowidDataVisibilityGroup",
-                    PermissionUserTypes.User => "RowidUser",
+                    EnumPermissionUserTypes.Team => "RowidDataVisibilityGroup",
+                    EnumPermissionUserTypes.User => "RowidUser",
                     _ => throw new ArgumentNullException("UserType not supported")
                 };
 

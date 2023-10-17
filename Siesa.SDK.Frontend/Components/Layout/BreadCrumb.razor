@@ -166,7 +166,7 @@
         if (_newSelectedMenu != null && _newSelectedMenu != _selectedMenu)
         {
             _selectedMenu = _newSelectedMenu;
-            if(_selectedMenu.Type != MenuType.Submenu && _selectedMenu.Type != MenuType.Separator)
+            if(_selectedMenu.Type != EnumMenuType.Submenu && _selectedMenu.Type != EnumMenuType.Separator)
             {
                 try
                 {
@@ -219,7 +219,7 @@
     private void SearchMenuItem(string currentUrl, ICollection<E00061_Menu> menus, ref List<E00061_Menu> result, E00061_Menu parent = null)
     {
         string blName = currentUrl.Substring(0, currentUrl.IndexOf("/", 1) + 1);
-        foreach (var menu in menus.Where(x => x.Type != MenuType.Separator))
+        foreach (var menu in menus.Where(x => x.Type != EnumMenuType.Separator))
         {
             if(menu.ResourceTag == "SDKDev-DevMenu")
             {

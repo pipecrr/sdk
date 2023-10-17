@@ -38,13 +38,13 @@ namespace Siesa.SDK.Entities
             {
                 url = $"/Menu/{Rowid}/";
             }else{
-                if(this.Type == MenuType.Feature){
+                if(this.Type == EnumMenuType.Feature){
                     if(this.Feature != null && !string.IsNullOrEmpty(this.Url)){
                         url = $"/{this.Feature.BusinessName}/{this.Url}/";
                     }else{
                         url = $"/{this.Feature.BusinessName}/";
                     }
-                }else if (this.Type == MenuType.CustomMenu)
+                }else if (this.Type == EnumMenuType.CustomMenu)
                 {
                     if (!string.IsNullOrEmpty(this.Url)) 
                     {

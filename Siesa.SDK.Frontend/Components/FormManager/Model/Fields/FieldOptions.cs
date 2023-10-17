@@ -122,7 +122,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
             if (string.IsNullOrEmpty(CustomType))
             {
                 var EnumValue = attribute._customType;
-                string customType = Enum.GetName(typeof(CustomTypeField), EnumValue);
+                string customType = Enum.GetName(typeof(EnumCustomTypeField), EnumValue);
                 CustomType = customType;
             }
         }

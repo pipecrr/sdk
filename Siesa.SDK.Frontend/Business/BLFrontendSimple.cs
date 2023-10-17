@@ -794,7 +794,7 @@ namespace Siesa.SDK.Business
             return null;
         }
 
-        public async Task<dynamic> GetUByUserType(int Rowid, PermissionUserTypes UserType, List<string> ExtraFields = null)
+        public async Task<dynamic> GetUByUserType(int Rowid, EnumPermissionUserTypes UserType, List<string> ExtraFields = null)
         {
             dynamic Result = null;
 

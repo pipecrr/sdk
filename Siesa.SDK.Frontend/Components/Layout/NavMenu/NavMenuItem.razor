@@ -28,11 +28,11 @@
     </a>
 
 }else{
-    @if(MenuItem.Type == MenuType.Separator)
+    @if(MenuItem.Type == EnumMenuType.Separator)
     {
        <hr class="m-0 sdk_separator"> 
     }else{
-        @if(MenuItem.Feature != null && MenuItem.Type == MenuType.Feature && string.IsNullOrEmpty(MenuItem.Url))
+        @if(MenuItem.Feature != null && MenuItem.Type == EnumMenuType.Feature && string.IsNullOrEmpty(MenuItem.Url))
         {
             @if(ShowItemFeature)
             {
@@ -109,7 +109,7 @@
 
     private async Task ItemFeature()
     {
-        if(MenuItem.Feature != null && MenuItem.Type == MenuType.Feature && string.IsNullOrEmpty(MenuItem.Url))
+        if(MenuItem.Feature != null && MenuItem.Type == EnumMenuType.Feature && string.IsNullOrEmpty(MenuItem.Url))
         {
             ShowItemFeature = await FeaturePermissionService.CheckUserActionPermission(MenuItem.Feature.BusinessName, enumSDKActions.Access, AuthenticationService);
         }
