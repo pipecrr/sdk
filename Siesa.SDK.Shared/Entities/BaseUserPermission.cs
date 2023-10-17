@@ -19,7 +19,7 @@ namespace Siesa.SDK.Entities
 		public virtual U? RowidRecord { get; set; }
 
 		[SDKRequired]
-		public virtual PermissionUserTypes UserType { get; set; }
+		public virtual EnumPermissionUserTypes UserType { get; set; }
 
 		[SDKRequired]
 		public virtual PermissionAuthTypes AuthorizationType { get; set; }
