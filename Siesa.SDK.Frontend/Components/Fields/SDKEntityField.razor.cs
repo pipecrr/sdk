@@ -162,6 +162,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
                         var rowidNew = baseObjNewRelated != null ? baseObjNewRelated.GetType().GetProperty("Rowid").GetValue(baseObjNewRelated) : 0;
                         Type rowidType = rowidNew.GetType();
                         dynamic rowidLastConverted = Convert.ChangeType(rowidLastValue, rowidType, System.Globalization.CultureInfo.InvariantCulture);
+                        BaseObj = baseObjNew;
                         if(baseObjNewRelated != null && rowidNew != rowidLastConverted){
                             CleanComponent();
                             SetVal(BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj));
@@ -170,8 +171,7 @@ namespace Siesa.SDK.Frontend.Components.Fields
                             CleanComponent();
                             await SetVal(null).ConfigureAwait(true);
                         }
-                        BaseObj = baseObjNew;
-                        if(BaseObj !=null && BaseObj.GetType().GetProperty("Rowid") != null && BaseObj.Rowid != 0){
+                        if(BaseObj !=null && BaseObj.GetType().GetProperty(FieldName) != null && BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj) != null && BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj).Rowid != 0){
                             Value = string.IsNullOrEmpty(BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj)?.ToString()) ? "" : BaseObj.GetType().GetProperty(FieldName).GetValue(BaseObj)?.ToString();
                         }
                         RelBusinessObj.GetType().GetProperty("BaseObj").SetValue(RelBusinessObj, baseObjNewRelated);
