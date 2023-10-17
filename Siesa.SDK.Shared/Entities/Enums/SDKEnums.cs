@@ -93,14 +93,6 @@ namespace Siesa.Global.Enums
 		Disabled = 2
 	}
 
-	public enum EnumMenuType
-	{
-		Separator = 1,
-		Submenu = 2,
-		Feature = 3,
-		CustomMenu = 4
-	}
-
 	public enum EnumCustomTypeField
 	{
 		SwitchField = 1,
@@ -108,5 +100,13 @@ namespace Siesa.Global.Enums
 		TextField = 3,
 		EmailField = 4,
 		RadioButtonField = 5
+	}
+
+	public enum EEnumMenuType
+	{
+		Separator = 1,
+		Submenu = 2,
+		Feature = 3,
+		CustomMenu = 4
 	}
 }
