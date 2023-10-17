@@ -2,12 +2,6 @@
 namespace Siesa.Global.Enums
 {
 
-	public enum PermissionUserTypes
-	{
-		User = 1,
-		Team = 2
-	}
-
 	public enum PermissionRestrictionType
 	{
 		Not_Applicable = 0,
@@ -108,5 +102,11 @@ namespace Siesa.Global.Enums
 		Edit = 3,
 		Delete = 4,
 		Detail = 5
+	}
+
+	public enum EnumPermissionUserTypes
+	{
+		User = 1,
+		Team = 2
 	}
 }
