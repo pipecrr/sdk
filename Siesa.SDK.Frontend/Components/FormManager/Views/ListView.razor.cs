@@ -1204,8 +1204,27 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if(ServerPaginationFlex && UseFlex){
                 Data = await BusinessObj.GetDataWithTop(filters);
                  if (Data != null && Data.Count() == 1){
-                    GoToDetail((dynamic)Data.First());
-                     return;
+                     if (!FromEntityField)
+                     { 
+                         GoToDetail((dynamic)Data.First());
+                         return;
+                     }
+                     else
+                     {
+                         try
+                         {
+                             long dataRowid = (long)Data.First();
+                             var dataObj = await BusinessObj.GetAsync(dataRowid);
+                             IList<object> objects = new List<object> { dataObj };
+                             OnSelectionChanged(objects);
+                             return;
+                         }
+                         catch (Exception e)
+                         {
+                             Console.WriteLine(e);
+                         }
+                         
+                     }
                  }
                 // Data = dbData.Data;
                 // if (Data.Count() == 1)

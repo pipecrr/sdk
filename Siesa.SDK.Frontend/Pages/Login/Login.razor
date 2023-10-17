@@ -1,6 +1,7 @@
 @page "/login"
 @page "/login/recoverypassword/{RowIdDBConnection}/{UserToken}"
 
+@layout EmptyLayout
 @using System.ComponentModel.DataAnnotations
 @using SDK.Components.Visualization
 @using Siesa.SDK.Shared.Services
@@ -9,6 +10,12 @@
 @using Siesa.SDK.Frontend.Components.Layout
 @using Siesa.SDK.Entities;
 @using Newtonsoft.Json;
+@using Microsoft.Extensions.Configuration
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Shared.DataAnnotations
+@using Siesa.SDK.Frontend.Components.Fields
+@using Blazor.IndexedDB.Framework;
+@using Microsoft.AspNetCore.Http
 @inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavigationManager
 @inject IBackendRouterService BackendRouterService
@@ -16,242 +23,141 @@
 @inject SDKNotificationService SDKNotificationService
 @inject Blazored.LocalStorage.ILocalStorageService localStorageService
 @inject UtilsManager UtilsManager
-@layout EmptyLayout
-@using Siesa.SDK.Frontend.Components.Visualization
-@using Siesa.SDK.Shared.DataAnnotations
-@using Siesa.SDK.Frontend.Components.Fields
-@using Blazor.IndexedDB.Framework;
-@using Microsoft.AspNetCore.Http
 @inject IIndexedDbFactory DbFactory
 @inject IHttpContextAccessor HttpContextAccessor
+@inject IConfiguration Configuration
 
 
-<PageTitle>Login</PageTitle>
+<PageTitle>Login | <ResourceViewer ResourceTag="Custom.Project.Name" RowidCulture=@RowidCulture /></PageTitle>
 
 @if(SelectedConnection != null && SelectedConnection.Rowid != 0 && !string.IsNullOrEmpty(SelectedConnection.StyleUrl)){
      <head>
         <link rel="stylesheet" href="@AuthenticationService.GetConnectionStyle()">
     </head> 
 }
-<div class="back_login">
-    <div class="col-12 offset-md-1 col-md-10 px-0 px-md-3" hidden="@init_loading">
-        <div class="card_login col-12">
-            <div class="row image_back">
-                <div class="info_area col-md-12 col-lg-7 p-3 p-lg-4">
-                    @* <div class="col-12 p-0 pb-5 mb-5 mb-md-4 d-flex justify-content-between">
-                        <div>
-                            <img src="_content/Siesa.SDK.Frontend/assets/img/LogoSiesaBlanco.svg" height="38px" />
-                        </div>
-                        <div class="d-sm-block d-md-none">
-                            <button class="btn btn-primary btn_ghost_def_1 btn-sm ml-2" data-toggle="modal"
-                                data-target="#infoModal"><SDKIcon Name="fa-info"/></button>
-                        </div>
-                    </div> *@
-                    <div class="info_card d-none d-sm-none d-md-none col-12 p-3 p-md-3 p-lg-4 mt-4">
-                        <h2 class="mb-md-2 mb-lg-3"><ResourceViewer ResourceTag="BLLogin.Demo.NewsTitle" RowidCulture=@RowidCulture /></h2>
-                        <p class="mb-md-2 mb-lg-3"><ResourceViewer ResourceTag="BLLogin.Demo.NewsBody" RowidCulture=@RowidCulture /></p>
-                        <div class="d-flex justify-content-between">
-                            <SDKButton CssClass="btn btn-primary btn_ghost_def_1 btn-sm px-4" ResourceTag="BLLogin.MoreInfo" RowidCulture=@RowidCulture />
-                            <div>
-                                <button class="btn btn-primary btn_ghost_def_1 btn-sm"><i
-                                        class="fa-solid fa-chevron-left"></i></button>
-                                <button class="btn btn-primary btn_ghost_def_1 btn-sm ml-2"><i
-                                        class="fa-solid fa-chevron-right"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="title_0">
-                         <ResourceViewer ResourceTag="Custom.Project.Copy" RowidCulture=@RowidCulture />
-                    </div>
-                </div>
-                <div class="login_area col-12 col-lg-5 p-3 p-lg-3">
-                    <div class="text-left text-md-center text-lg-left pb-5">
-                        <img src="_content/Siesa.SDK.Frontend/assets/img/siesaLogo.png" height="35px" alt="logo_siesa"> 
-                    </div>
-                    <div class="col-12 p-0 d-flex justify-content-center align-items-center">
-                        @if(string.IsNullOrEmpty(UserToken))
-                        {
-                            <select class="select_connect" id="SelectConnect" @onchange="OnChangeConnection">
-                                <option value=""><ResourceViewer ResourceTag="BLUser.Login.Message.SelectDbConnection" RowidCulture=@RowidCulture /></option>
-                                @if(ConnectionList != null && ConnectionList.Count > 0)
+@if (loading)
+{
+    <div class="sdk-loader">
+        <div class="sdk-loader-logo"></div>
+    </div>
+}
+<div class="s_login_content col-12">
+    <div class="row h-100">
+        <div class="col-xl-7 col-lg-7 col-md-12 col-sm-12 p-0">
+            <img class="s_image_back" src="@_imageLogin" alt="imagen_login">
+            <div class="s_product_name">
+                <img class="s_siesa_log_min" src="_content/Siesa.SDK.Frontend/assets/img/LogoSiesaBlanco.svg" alt="logo_business">
+                <div class="s_product_text"><ResourceViewer ResourceTag="Custom.Project.Copy" RowidCulture=@RowidCulture/></div>
+            </div>
+        </div>
+        <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 d-flex justify-content-center align-items-center s_form_content ">
+            <div class="s_siesa_logo_top">
+                <img src="_content/Siesa.SDK.Frontend/assets/img/siesaLogo.png" height="42px" alt="logo_siesa">
+            </div>
+            <div class="s_form_box">
+                <div class="col-12 p-0 pb-5 d-flex justify-content-center align-items-center">
+                    @if (string.IsNullOrEmpty(UserToken))
+                    {
+                        <select class="select_connect" id="SelectConnect" @onchange="OnChangeConnection">
+                            <option value=""><ResourceViewer ResourceTag="BLUser.Login.Message.SelectDbConnection" RowidCulture=@RowidCulture/></option>
+                            @if (ConnectionList != null && ConnectionList.Count > 0)
+                            {
+                                @foreach (var db in ConnectionList)
                                 {
-                                    @foreach(var db in ConnectionList)
-                                    {
-                                        <option value="@db.Rowid" selected="@(db.Rowid == SelectedConnection.Rowid)" >@db.Name</option>
-                                    }
+                                    <option value="@db.Rowid" selected="@(db.Rowid == SelectedConnection.Rowid)">@db.Name</option>
                                 }
-                            </select>
-                            <i class="ml-2 fa-solid fa-globe"></i>
-                        }
-
+                            }
+                        </select>
+                        <i class="ml-2 fa-solid fa-globe"></i>
+                    }
+                    <div class="position-relative">
                         <div id="lang">
-                            <div class="position-relative">
-                                <button class="btn ml-2 d-flex btn_region" style="padding:0"
+                            <button class="btn ml-2 d-flex btn_region" style="padding:0"
                                     @onclick="() => IsOpen = !IsOpen" data-automation-id="Button_Select_Culture">
-                                    @if(selectedCulture != null)
-                                    {
-                                        @*fi fi-selectedCulture.CountryCode fis rounded-circle*@
-                                        <span class="@classCulture"
-                                        style="height:16px"></span>
-                                    }else{
-                                        <span class="fi fi-globe fis rounded-circle" style="height:16px"></span>
-                                    }
-                                    
-                                    
-                                </button>
-                            </div>
+                                @if (selectedCulture != null)
+                                {
+                                    <span class="@classCulture"
+                                          style="height:16px"></span>
+                                }
+                                else
+                                {
+                                    <span class="fi fi-globe fis rounded-circle" style="height:16px"></span>
+                                }
+                            </button>
                         </div>
-                    </div>
-                    <div class="row align-items-center py-5">
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-12">
-                            <div class="row">
-                                <div class="col-12 p-0 d-flex justify-content-center pb-5 pb-md-0 pb-lg-5">
-                                    <img class="logo_company_login" src="@LogoUrl"/>
-                                </div>
-                                @* <div class="col-12 pb-3 pb-md-0 pb-lg-3">
-                                    <div class="col-12 text-center title_1">
-                                        <ResourceViewer ResourceTag="BLLogin.Project.Welcome" RowidCulture=@RowidCulture />
-                                    </div> 
-                                    <div class="col-12 offset-sm-2 col-sm-8 offset-md-1 col-md-10 offset-lg-2 col-lg-8 px-md-3 px-lg-0 title_2 text-center text-lg-left">
-
-                                        <ResourceViewer ResourceTag="BLLogin.InputYourData" RowidCulture=@RowidCulture />
-
-                                    </div> 
-                                </div> *@
-                            </div>
-                        </div>
-                        <div class="border_left_md col-12 col-sm-12 col-md-6 col-lg-12">
-
-
-                            <div class="col-12 offset-sm-2 col-sm-8 offset-md-1 col-md-10 offset-lg-2 col-lg-8 px-md-3 px-lg-0">
-                                <div class="col-12 px-0 pb-3 title_2 text-center text-lg-left">
-                                        <ResourceViewer ResourceTag="BLLogin.InputYourData" RowidCulture=@RowidCulture />
-                                </div>
-
-                            </div>
-                            @if(RecoveringPassword)
-                            {
-                                <ForgotPassword Click="@NavigateFormLogin" RowidCulture="@RowidCulture"/>
-
-                            }else if (!string.IsNullOrEmpty(UserToken))
-                            {
-                                <RecoveryPassword UserToken="@UserToken" SelectedConnection="@SelectedConnection"
-                                RowidCulture="@RowidCulture" />
-                            }
-                            else
-                            {
-                                <div
-                                    class="col-12 offset-sm-2 col-sm-8 offset-md-1 col-md-10 offset-lg-2 col-lg-8 px-md-3 px-lg-0">
-                                    <EditForm id="@FormID" Model="@model" OnValidSubmit="HandleValidSubmit" OnInvalidSubmit="HandleInvalidSubmit">
-                                        <DataAnnotationsValidator />
-                                        <div class="form-group">
-                                            <label class="col-form-label col-form-label-sm font-weight-bold" for="Username">
-                                                <ResourceViewer ResourceTag="BLUser.Username" RowidCulture=@RowidCulture />
-                                            </label>
-                                            <SDKCharField 
-                                                @bind-Value="model.Username" 
-                                                AllowAutoComplete="true" 
-                                                AutomationId="BLLogin.Username"
-                                                AutoFocus=true
-                                            />
-                                            <SDKValidationMessage For="@(() => model.Username)" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-form-label col-form-label-sm font-weight-bold" for="Password">
-                                                <ResourceViewer ResourceTag="BLUser.Password" RowidCulture=@RowidCulture />
-                                            </label>
-                                            <SDKCharField 
-                                                @bind-Value="model.Password" 
-                                                Password="true" 
-                                                AllowAutoComplete="true"
-                                                AutomationId="BLLogin.Password"
-                                            />
-                                            <SDKValidationMessage For="@(() => model.Password)" />
-                                        </div>
-                                        <SDKButton form="@FormID" SubmitFormOnClick="true" RenderStyle="SDKButtonRenderStyle.Primary" CssClass="btn-sm w-100 mt-2" Enabled="@(!loading)">
-                                            @if (loading)
-                                            {
-                                                <span class="spinner-border spinner-border-sm mr-1"></span>
-                                            }
-                                            <ResourceViewer ResourceTag="BLUser.Login" RowidCulture=@RowidCulture />
-                                        </SDKButton>
-                                    </EditForm>
-                                </div>
-                                <div class="col-12 p-0 text-center pt-4">
-                                    <SDKButton RenderStyle="SDKButtonRenderStyle.Link" Click="@ForgotPassword" ResourceTag="BLLogin.Project.ForgotPassword"/>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                    <div class="text-center copy_right_text">
-                        <ResourceViewer ResourceTag="Custom.Project.Version" RowidCulture=@RowidCulture /> -
-                        <ResourceViewer ResourceTag="Custom.Project.Copy" RowidCulture=@RowidCulture />
                     </div>
                 </div>
+                <div class="mb-5 text-center w-100">
+                    <img class="s_business_logo" src="@LogoUrl"/>
+                </div>
+                <div class="form-group title_2">
+                    <ResourceViewer ResourceTag="BLLogin.InputYourData" RowidCulture=@RowidCulture/>
+                </div>
+                @if (RecoveringPassword)
+                {
+                    <ForgotPassword Click="@NavigateFormLogin" RowidCulture="@RowidCulture"/>
+
+                }
+                else if (!string.IsNullOrEmpty(UserToken))
+                {
+                    <RecoveryPassword UserToken="@UserToken" SelectedConnection="@SelectedConnection"
+                                      RowidCulture="@RowidCulture"/>
+                }
+                else
+                {
+                    <EditForm id="@FormID" Model="@model" OnValidSubmit="HandleValidSubmit" OnInvalidSubmit="HandleInvalidSubmit">
+                        <DataAnnotationsValidator/>
+                        <div class="form-group">
+                            <label class="col-form-label col-form-label-sm font-weight-bold" for="Username">
+                                <ResourceViewer ResourceTag="BLUser.Username" RowidCulture=@RowidCulture/>
+                            </label>
+                            <SDKCharField
+                                @bind-Value="model.Username"
+                                AllowAutoComplete="true"
+                                AutomationId="BLLogin.Username"
+                                AutoFocus=true/>
+                            <SDKValidationMessage For="@(() => model.Username)"/>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-form-label col-form-label-sm font-weight-bold" for="Password">
+                                <ResourceViewer ResourceTag="BLUser.Password" RowidCulture=@RowidCulture/>
+                            </label>
+                            <SDKCharField
+                                @bind-Value="model.Password"
+                                Password="true"
+                                AllowAutoComplete="true"
+                                AutomationId="BLLogin.Password"/>
+                            <SDKValidationMessage For="@(() => model.Password)"/>
+                        </div>
+                        <div class="pt-2 form-group">
+                            <SDKButton form="@FormID" SubmitFormOnClick="true" RenderStyle="SDKButtonRenderStyle.Primary" CssClass="btn-sm w-100" Enabled="@(!loading)">
+                                @if (loading)
+                                {
+                                    <span class="spinner-border spinner-border-sm mr-1"></span>
+                                }
+                                <ResourceViewer ResourceTag="BLUser.Login" RowidCulture=@RowidCulture/>
+                            </SDKButton>
+                        </div>
+                    </EditForm>
+                    <div class="p-0 text-center">   
+                        <SDKButton RenderStyle="SDKButtonRenderStyle.Link" Click="@ForgotPassword" ResourceTag="BLLogin.Project.ForgotPassword"/>
+                    </div>
+                }
+            </div>
+            <div class="text-center copy_right_text">
+                <ResourceViewer ResourceTag="Custom.Project.Version" RowidCulture=@RowidCulture/>
             </div>
         </div>
     </div>
-    <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content info_card_modal">
-                <div class="modal-body">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span class="text-white" aria-hidden="true">&times;</span>
-                    </button>
-                    <h2 class="mb-2 pr-3"><ResourceViewer ResourceTag="BLLogin.Demo.NewsTitle" RowidCulture=@RowidCulture /></h2>
-                    <p class="mb-2"><ResourceViewer ResourceTag="BLLogin.Demo.NewsBody" RowidCulture=@RowidCulture /></p>
-                    <div class="d-flex justify-content-between">
-                        <SDKButton CssClass="btn btn-primary btn_ghost_def_1 btn-sm px-4" ResourceTag="BLLogin.MoreInfo"/>
-                        <div>
-                            <button class="btn btn-primary btn_ghost_def_1 btn-sm"><i
-                                    class="fa-solid fa-chevron-left"></i></button>
-                            <button class="btn btn-primary btn_ghost_def_1 btn-sm ml-2"><i
-                                    class="fa-solid fa-chevron-right"></i></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="modal fade" id="LangModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span class="text-white" aria-hidden="true">&times;</span>
-                    </button>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-        <div class="login_loading @GetCssLoding()">
-            <div>
-                <div class="text-center fa-4x font_color_primary_light mb-4">
-                    <i class="fas fa-spinner fa-pulse"></i>
-                </div>
-                <div class="text-center">
-                    <img src="@LogoUrl" height="82px" />
-                </div>
-            </div>
-        </div>
-        
 </div>
-
 <SDKDropDown @bind-IsOpen="@IsOpen" PositionMode="DropDownPositionMode.Bottom" PositionTarget="#lang"
-    RestrictionTarget="#Navigation-DropDown-Customization" CloseMode="DropDownCloseMode.Close"
-    PreventCloseOnPositionTargetClick="true"  CssClass="region_tooltip" MinWidth="230px" MaxWidth="250px" HeaderVisible="false"
-    FooterVisible="false" AutomationId="Cultures_Login">
+             RestrictionTarget="#Navigation-DropDown-Customization" CloseMode="DropDownCloseMode.Close"
+             PreventCloseOnPositionTargetClick="true" CssClass="region_tooltip" MinWidth="230px" MaxWidth="250px" HeaderVisible="false"
+             FooterVisible="false" AutomationId="Cultures_Login">
     <BodyTemplate>
-        <Lang _Cultures="@cultures" _idRow="@RowidCulture" OnChangeCulture="@((rowid)=> OnChangeCulture(rowid))" />
+        <Lang _Cultures="@cultures" _idRow="@RowidCulture" OnChangeCulture="@((rowid) => OnChangeCulture(rowid))"/>
     </BodyTemplate>
 </SDKDropDown>
-
 @code {
 
     [Parameter] public bool? RecoveryPassword { get; set; }
@@ -283,8 +189,8 @@
 
     private bool RecoveringPassword { get; set; } = false;
 
+    private string _imageLogin { get; set; } 
     
-
     private void ForgotPassword()
     {
         RecoveringPassword = true;
@@ -293,19 +199,15 @@
     {
         RecoveringPassword = false;
         StateHasChanged();
-    } 
-
-    private string GetCssLoding()
-    {
-        if (!init_loading)
-        {
-            return "login_loading_close";
-        }
-        return "";
     }
 
     protected override async Task OnInitializedAsync()
     {
+        _imageLogin = Configuration["ImageLogin"];
+        
+        if (string.IsNullOrEmpty(_imageLogin))
+            _imageLogin = "_content/Siesa.SDK.Frontend/assets/img/log_image_2.png";
+        
         LogoUrl = AuthenticationService.GetConnectionLogo();
         // redirect to home if already logged in
         if (AuthenticationService.User != null)
@@ -340,9 +242,6 @@
         await ImportJs();
         StateHasChanged();
     }
-
-    
-
     private async Task OnChangeCulture(short rowidCulture)
     {
         RowidCulture = rowidCulture;
