@@ -117,6 +117,11 @@ function downloadFileFromStream(fileName, bytes) {
     imgElem.src = url;
   }
 
+  function closePreviewImage (imgElem) 
+  {
+    imgElem.src = '';
+  }
+
   function getUrlsImage (inputElem){
     let files = inputElem.files;
     var urls = [];
@@ -147,6 +152,7 @@ window.deleteCookie = deleteCookie;
 window.SetFocusToElement = SetFocusToElement;
 window.preloadFlex = preloadFlex;
 window.previewImage = previewImage;
+window.closePreviewImage = closePreviewImage;
 window.getUrlsImage = getUrlsImage;
 window.clickInputFile = clickInputFile;
 window.globalVariableExists = globalVariableExists;
