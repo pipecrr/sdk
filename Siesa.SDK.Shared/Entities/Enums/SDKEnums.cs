@@ -20,15 +20,6 @@ namespace Siesa.Global.Enums
 		Manual = 1
 	}
 
-	public enum CustomTypeField
-	{
-		SwitchField = 1,
-		SelectBarField = 2,
-		TextField = 3,
-		EmailField = 4,
-		RadioButtonField = 5
-	}
-
 	public enum enumTypeButton
 	{
 		Create = 1,
@@ -108,5 +99,14 @@ namespace Siesa.Global.Enums
 		Submenu = 2,
 		Feature = 3,
 		CustomMenu = 4
+	}
+
+	public enum EnumCustomTypeField
+	{
+		SwitchField = 1,
+		SelectBarField = 2,
+		TextField = 3,
+		EmailField = 4,
+		RadioButtonField = 5
 	}
 }
