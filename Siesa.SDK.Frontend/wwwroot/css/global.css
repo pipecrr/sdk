@@ -2010,6 +2010,14 @@ div.dxbs-btn-group.dxbs-input-group-prepend>.btn.dx-btn.btn-sm {
 
 .card_tabs {
     height: 90%;
+    display: flex;
+    cursor: pointer;
+    border: 0.25rem solid transparent;
+	position: relative; 
+}
+
+.card_tabs_active {
+    height: 90%;
     border-radius: var(--border_radius_standar) !important;
     display: flex;
     cursor: pointer;
@@ -2023,6 +2031,13 @@ div.dxbs-btn-group.dxbs-input-group-prepend>.btn.dx-btn.btn-sm {
     top: -5px; 
     left: 50%; 
     transform: translateX(-50%); 
+}
+.icon_tabs_active {
+    position: absolute;
+    top: -5px; 
+    left: 50%; 
+    transform: translateX(-50%);
+    color: var(--color_primary); 
 }
 
 

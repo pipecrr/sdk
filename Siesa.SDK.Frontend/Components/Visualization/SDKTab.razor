@@ -25,6 +25,18 @@ else
             <TabTemplate>
                 @if(GetCss().Equals("active"))
                 {
+                    <div class="card_tabs_active">
+                        <a role="tab" class="nav-link">
+                            <div class="icon_tabs_active">
+                                <SDKIcon Name="@IconCssClass" />
+                            </div>
+                            <div>
+                                @TitleText
+                            </div>
+                        </a>
+                    </div>
+                }else
+                {
                     <div class="card_tabs">
                         <a role="tab" class="nav-link">
                             <div class="icon_tabs">
@@ -35,12 +47,6 @@ else
                             </div>
                         </a>
                     </div>
-                }else
-                {
-                    <a role="tab" class="nav-link">
-                        <SDKIcon Name="@IconCssClass" />
-                        @TitleText
-                    </a>
                 }
             </TabTemplate>
         </DxTabPage>
