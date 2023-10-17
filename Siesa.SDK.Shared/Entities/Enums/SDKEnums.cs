@@ -44,12 +44,6 @@ namespace Siesa.Global.Enums
 		RadioButtonField = 5
 	}
 
-	public enum PermissionAuthTypes
-	{
-		Query = 1,
-		Query_Tx = 2
-	}
-
 	public enum enumTypeButton
 	{
 		Create = 1,
@@ -108,5 +102,11 @@ namespace Siesa.Global.Enums
 	{
 		User = 1,
 		Team = 2
+	}
+
+	public enum EnumPermissionAuthTypes
+	{
+		Query = 1,
+		Query_Tx = 2
 	}
 }
