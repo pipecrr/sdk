@@ -93,20 +93,20 @@ namespace Siesa.Global.Enums
 		Disabled = 2
 	}
 
-	public enum EnumCustomTypeField
-	{
-		SwitchField = 1,
-		SelectBarField = 2,
-		TextField = 3,
-		EmailField = 4,
-		RadioButtonField = 5
-	}
-
 	public enum EnumMenuType
 	{
 		Separator = 1,
 		Submenu = 2,
 		Feature = 3,
 		CustomMenu = 4
+	}
+
+	public enum EEnumCustomTypeField
+	{
+		SwitchField = 1,
+		SelectBarField = 2,
+		TextField = 3,
+		EmailField = 4,
+		RadioButtonField = 5
 	}
 }
