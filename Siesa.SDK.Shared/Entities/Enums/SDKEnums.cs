@@ -2,13 +2,6 @@
 namespace Siesa.Global.Enums
 {
 
-	public enum PermissionRestrictionType
-	{
-		Not_Applicable = 0,
-		Enabled = 1,
-		Disabled = 2
-	}
-
 	public enum enumStatusBaseMaster
 	{
 		Active = 1,
@@ -108,5 +101,12 @@ namespace Siesa.Global.Enums
 	{
 		Query = 1,
 		Query_Tx = 2
+	}
+
+	public enum EnumPermissionRestrictionType
+	{
+		Not_Applicable = 0,
+		Enabled = 1,
+		Disabled = 2
 	}
 }
