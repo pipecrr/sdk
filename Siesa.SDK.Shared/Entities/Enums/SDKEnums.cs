@@ -102,7 +102,7 @@ namespace Siesa.Global.Enums
 		RadioButtonField = 5
 	}
 
-	public enum EEnumMenuType
+	public enum EnumMenuType
 	{
 		Separator = 1,
 		Submenu = 2,
