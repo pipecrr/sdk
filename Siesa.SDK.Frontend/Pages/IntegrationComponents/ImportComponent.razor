@@ -386,24 +386,26 @@
         using (Workbook workbook = new Workbook()){
 
             List<string> Headers = _fieldsEntity.Where(p=> !HiddenFields.Contains(p.Value)).Select(x => x.Key).ToList();
-
-            @* if(UniqueCompanyGroup){
-                workbook.Worksheets.Add()
-            } *@
-
-            Worksheet Config = workbook.Worksheets[0];
             
-            Worksheet DataWorkSheet = workbook.Worksheets[1];
+            Worksheet DataWorkSheet = workbook.Worksheets.ActiveWorksheet;
+
+            if(!UniqueCompanyGroup){
+                Worksheet Config = workbook.Worksheets.Insert(0);
+                Config.Name = await ResourceManager.GetResource("Custom.SDK.Integration.Config", AuthenticationService); 
+                Config["A1"].Value="Holi";
+                Config["A2"].Value = AuthenticationService.GetRowidCompanyGroup();
+
+            }
+
+            
 
             var EntityName = await ResourceManager.GetResource($"{EntityType.Name}.plural", AuthenticationService); 
             var TemplateResource = await ResourceManager.GetResource("Custom.SDK.Integration.Template", AuthenticationService); 
             var DataResource= await ResourceManager.GetResource("Custom.SDK.Integration.Data", AuthenticationService); 
             
             DataWorkSheet.Name = $"{DataResource} - {EntityName}";
-            Config.Name = await ResourceManager.GetResource("Custom.SDK.Integration.Config", AuthenticationService); ;
             
-            Config["A1"].Value="Holi";
-            Config["A2"].Value = AuthenticationService.GetRowidCompanyGroup();
+
 
             workbook.BeginUpdate();
 
@@ -438,6 +440,30 @@
 
     } 
 
+    private async Task<bool> VaidateDocumentConfiguration(Workbook workbook){
+        if(!UniqueCompanyGroup){
+            var ConfigName = await ResourceManager.GetResource("Custom.SDK.Integration.Config", AuthenticationService); 
+            if(workbook.Worksheets.Count >= 2){
+                var ConfigPage = workbook.Worksheets.Where(x => x.Name.Equals(ConfigName)).FirstOrDefault();
+                if(ConfigPage is not null){
+                    return CheckConfigPage(ConfigPage);
+                }
+                ErrorList.Add("No cuenta con la pagina de configuración");
+                return true;
+                
+            }else{
+                ErrorList.Add("No cuenta con la cantidad de paginas requeridas");
+                return true;
+            }
+        }else{
+            return false;
+        }
+    }
+
+    private bool CheckConfigPage(Worksheet Config){
+        return false;
+    }
+
     private async Task LoadFiles(InputFileChangeEventArgs InputFile){
         var DocumentFormatType = SetDocumentFormat(InputFile.File.ContentType);
         if(DocumentFormatType is null){
@@ -452,69 +478,68 @@
             stream.Position = 0;
                 Workbook workbook = new Workbook();
                 workbook.LoadDocument(stream, DocumentFormatType.Value);
-                Worksheet Config = workbook.Worksheets[0];
 
-
-                if(Config.Name != "holi"){
-
+                if(VaidateDocumentConfiguration(workbook).Result){
+                    await InvokeAsync(() => SDKGlobalLoaderService.Hide());
+                    _ = InvokeAsync(() => StateHasChanged());   
+                    return;
                 }
-                Worksheet DataWorkSheet = workbook.Worksheets[1];
-                var HeaderRowObj = DataWorkSheet.Rows[0];
-                List<string> Headers = new();
+
+                var DataResource= await ResourceManager.GetResource("Custom.SDK.Integration.Data", AuthenticationService); 
+                var DataWorkSheets = workbook.Worksheets.Where(x => x.Name.Contains(DataResource)).ToList();
+
+                foreach(var DataWorkSheet in DataWorkSheets){
                 
-                foreach( var cellHeader in HeaderRowObj){
-                    if(cellHeader.HasData){
-                        var CellValueData = cellHeader.Value;
-                        if(CellValueData.IsText){
-                            Headers.Add(CellValueData.TextValue);
-                        }
-                    }else{
-                        break;
-                    }
-                }
-
-                List<dynamic> DataCells = new();
-                int RowCounter = 1;
-                var ActualRow = DataWorkSheet.Rows[RowCounter];
-
-                do{
-                    ExpandoObject obj = new ExpandoObject();
-                    for(int i = 0; i < Headers.Count(); i++){
-                        var cellData = ActualRow[i];
-                        dynamic value = "";
-                        if(cellData.HasData){
-                            var CellValueData = cellData.Value;
-                            switch (CellValueData.Type){
-                                case CellValueType.Text:
-                                DataCells.Add(CellValueData.TextValue);
-                                value = CellValueData.TextValue;
-                                break;
-                                case CellValueType.Numeric:
-                                DataCells.Add(CellValueData.NumericValue);
-                                value = CellValueData.NumericValue;
-                                break;
-                                case CellValueType.DateTime:
-                                DataCells.Add(CellValueData.DateTimeValue);
-                                value = CellValueData.DateTimeValue;
-                                break;
-                                case CellValueType.Boolean:
-                                DataCells.Add(CellValueData.BooleanValue);
-                                value = CellValueData.BooleanValue;
-                                break;
+                    var HeaderRowObj = DataWorkSheet.Rows[0];
+                    List<string> Headers = new();
+                    
+                    foreach( var cellHeader in HeaderRowObj){
+                        if(cellHeader.HasData){
+                            var CellValueData = cellHeader.Value;
+                            if(CellValueData.IsText){
+                                Headers.Add(CellValueData.TextValue);
                             }
+                        }else{
+                            break;
                         }
-                        ((IDictionary<string, object>)obj).Add(Headers[i], value);
                     }
-                    FileData.Add(obj);
-                    RowCounter ++;
-                    ActualRow = DataWorkSheet.Rows[RowCounter];
-                }while(ActualRow.HasData);
 
-                var t = DataWorkSheet.Rows[0];
-                var t2 = DataWorkSheet.Rows[2];
+                    List<dynamic> DataCells = new();
+                    int RowCounter = 1;
+                    var ActualRow = DataWorkSheet.Rows[RowCounter];
 
-                foreach( var gt in t){
-                    var  tt = gt.Value;
+                    do{
+                        ExpandoObject obj = new ExpandoObject();
+                        for(int i = 0; i < Headers.Count(); i++){
+                            var cellData = ActualRow[i];
+                            dynamic value = "";
+                            if(cellData.HasData){
+                                var CellValueData = cellData.Value;
+                                switch (CellValueData.Type){
+                                    case CellValueType.Text:
+                                    DataCells.Add(CellValueData.TextValue);
+                                    value = CellValueData.TextValue;
+                                    break;
+                                    case CellValueType.Numeric:
+                                    DataCells.Add(CellValueData.NumericValue);
+                                    value = CellValueData.NumericValue;
+                                    break;
+                                    case CellValueType.DateTime:
+                                    DataCells.Add(CellValueData.DateTimeValue);
+                                    value = CellValueData.DateTimeValue;
+                                    break;
+                                    case CellValueType.Boolean:
+                                    DataCells.Add(CellValueData.BooleanValue);
+                                    value = CellValueData.BooleanValue;
+                                    break;
+                                }
+                            }
+                            ((IDictionary<string, object>)obj).Add(Headers[i], value);
+                        }
+                        FileData.Add(obj);
+                        RowCounter ++;
+                        ActualRow = DataWorkSheet.Rows[RowCounter];
+                    }while(ActualRow.HasData);
                 }
         }
         IsLoadingGrid = true;
@@ -564,10 +589,16 @@
         
         Dictionary<string, string> indexes = new();
         List<string> llaves = new();
-        ListMapRelationsImport.ForEach(lista =>{
+        foreach(var lista in ListMapRelationsImport){
+            llaves.AddRange(lista.ListIndexForeingFields);
+            if(!indexes.ContainsKey(lista.NameInternalIndex)){
+                indexes.Add(lista.NameInternalIndex, string.Empty);
+            }
+        }
+        @* ListMapRelationsImport.ForEach(lista =>{
             llaves.AddRange(lista.ListIndexForeingFields);
             indexes.Add(lista.NameInternalIndex, string.Empty);
-        });
+        }); *@
 
         string nameKey;
         DataMapped = new List<Dictionary<string, object>>();
@@ -597,9 +628,14 @@
             CleanvaluesIndexInternal(indexes);
         }
 
-        bool valoresRepetidos = DataMapped
-            .SelectMany(diccionario => diccionario.Where(kv => kv.Key.Contains("Index_CompanyGroup")))
-            .DistinctBy(x => x.Value).Any();
+        //var filteredRelation = ListMapRelationsImport.Where(x => x.)
+
+        DataMapped.ForEach(x => {
+            var holi = x.Keys.Where(y => y.Contains("Index_CompanyGroup")).ToList();
+            holi.ForEach(z => {
+                x[z] = "01";
+            });
+        });
 
             foreach (var mapRelationImport in ListMapRelationsImport){
 
