@@ -38,7 +38,7 @@ namespace Siesa.SDK.Entities
 		public byte Order { get; set; }
 
 		[SDKRequired]
-		public EnumMenuType Type { get; set; }
+		public EEnumMenuType Type { get; set; }
 
 		[SDKRequired]
 		public byte Level { get; set; }
