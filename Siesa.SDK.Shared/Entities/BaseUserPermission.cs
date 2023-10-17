@@ -25,7 +25,7 @@ namespace Siesa.SDK.Entities
 		public virtual EnumPermissionAuthTypes AuthorizationType { get; set; }
 
 		[SDKRequired]
-		public virtual PermissionRestrictionType RestrictionType { get; set; }
+		public virtual EnumPermissionRestrictionType RestrictionType { get; set; }
 
 		[ForeignKey("DataVisibilityGroup")]
 		public virtual int? RowidDataVisibilityGroup { get; set; }
