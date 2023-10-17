@@ -295,7 +295,12 @@ namespace Siesa.SDK.Business
                         DynamicObject.GetType().GetProperty(columnName).SetValue(DynamicObject, valueDate);
                         break;
                     case enumDynamicEntityDataType.Boolean:
-                        var valueBool = Convert.ChangeType(item.NumericData, typeof(bool));
+                        var currentVal = item.NumericData;
+                        if(currentVal == null)
+                        {
+                            currentVal = 0;
+                        }
+                        var valueBool = Convert.ChangeType(currentVal, typeof(bool));
                         DynamicObject.GetType().GetProperty(columnName).SetValue(DynamicObject, valueBool);
                         break;
                     default:
@@ -487,8 +492,12 @@ namespace Siesa.SDK.Business
 
         private void ProcessProperties(List<string> nameProperties, T blankBaseObj)
         {
+            var byCompanyGroup = Utilities.IsAssignableToGenericType(blankBaseObj.GetType(), typeof(BaseCompanyGroup<>));
             foreach (string propertyName in nameProperties)
             {
+                if(byCompanyGroup && propertyName == "RowidCompanyGroup"){
+                    continue;
+                }
                 var property = BaseObj.GetType().GetProperty(propertyName);
                 if (property != null)
                 {

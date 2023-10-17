@@ -2261,3 +2261,32 @@ border-color: var(--color_border) !important;
     border-top-left-radius: var(--border_radius_standar_max);
     border-top-right-radius: var(--border_radius_standar_max);
 }
+
+.sdk-loader {
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, .75);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99999;
+}
+.sdk-loader > .sdk-loader-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100px;
+    height: 100px;
+    background-image: url("/_content/Siesa.SDK.Frontend/assets/img/sprite_siesa.png");
+    background-position: 0 0;
+    animation: sprite-logo steps(59) 1500ms infinite;
+}
+@keyframes sprite-logo {
+    0% {
+        background-position-y: 0;
+    }
+    100% {
+        background-position-y: -5900px;
+    }
+}
