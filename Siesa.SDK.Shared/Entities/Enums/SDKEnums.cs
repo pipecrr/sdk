@@ -101,7 +101,7 @@ namespace Siesa.Global.Enums
 		CustomMenu = 4
 	}
 
-	public enum EEnumCustomTypeField
+	public enum EnumCustomTypeField
 	{
 		SwitchField = 1,
 		SelectBarField = 2,
