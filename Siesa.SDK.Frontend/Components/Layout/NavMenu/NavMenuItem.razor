@@ -32,41 +32,20 @@
     {
        <hr class="m-0 sdk_separator"> 
     }else{
-        @if(MenuItem.Feature != null && MenuItem.Type == EnumMenuType.Feature && string.IsNullOrEmpty(MenuItem.Url))
-        {
+        @if(MenuItem.Feature != null && MenuItem.Type == EnumMenuType.Feature)
+        {   
             @if(ShowItemFeature)
             {
-                <a href="@MenuItem.CurrentURL" @attributes="@menuItemAttributes" @onmouseover="MouseOver" @onmouseout="MouseOut" @onclick:stopPropagation="true" @onclick="()=> OnClickItem(MenuItem)"  @onclick:preventDefault  class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
-                    title="@Title" data-automation-id="@GetAutomationId()">
-                    @if(MenuItem.IconClass != null){
-                        <div class="nav_btn_standar_icon">
-                            <SDKIcon Name="@GetIconClass()" CssClass="font_size_112"></SDKIcon>
-                        </div>
-                    }
-                    <div class="nav_btn_standar_text">
-                        @Title
-                    </div>
-                    <div class="nav_btn_standar_text nav_btn_external" hidden="@(!ShowIconExternal)"  @onclick:stopPropagation="true"  @onclick="()=> OnClickItem(MenuItem, true)"  @onclick:preventDefault >
-                        <SDKIcon Name="fa-arrow-up-right-from-square"></SDKIcon>
-                    </div>
-                </a>
+                <MenuItem Menu="@MenuItem" MenuItemAttributes="@menuItemAttributes" Title="@Title" OnClick="@OnClick" />
             }
 
-        }else{
-            <a href="@MenuItem.CurrentURL" @attributes="@menuItemAttributes" @onmouseover="MouseOver" @onmouseout="MouseOut" @onclick:stopPropagation="true" @onclick="()=> OnClickItem(MenuItem)"  @onclick:preventDefault class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
-                title="@Title" data-automation-id="@GetAutomationId()">
-                @if(MenuItem.IconClass != null){
-                    <div class="nav_suite_box_icon" style="background: @GetStyleColor()">
-                        <SDKIcon Name="@GetIconClass()" CssClass="font_size_112"></SDKIcon>
-                    </div>
-                }
-                <div class="nav_btn_standar_text">
-                    @Title
-                </div>
-                <div class="nav_btn_standar_text nav_btn_external" hidden="@(!ShowIconExternal)"  @onclick:stopPropagation="true"  @onclick="()=> OnClickItem(MenuItem, true)"  @onclick:preventDefault> 
-                    <SDKIcon Name="fa-arrow-up-right-from-square"></SDKIcon>
-                </div>
-            </a>
+        }else if(MenuItem.Type == EnumMenuType.Suite)
+        {
+
+            <MenuItem Menu="@MenuItem" MenuItemAttributes="@menuItemAttributes" Title="@Title" OnClick="@OnClick" IsSuite="true" />
+        }else
+        {   
+            <MenuItem Menu="@MenuItem" MenuItemAttributes="@menuItemAttributes" Title="@Title" OnClick="@OnClick" />
         }
     }
 }
@@ -75,6 +54,7 @@
     [Parameter] public E00061_Menu MenuItem { get; set; }
 
     [Parameter] public Action<E00061_Menu> OnClick { get; set; }
+
     [CascadingParameter] public Action HideSubmenu { get; set; }
 
     [Parameter] public bool Focus { get; set; }
@@ -83,7 +63,6 @@
 
     private ElementReference btnRef;
 
-    private bool ShowIconExternal { get; set; }
     private bool ShowItemFeature { get; set; }
 
     private Dictionary<string, object> menuItemAttributes { get; set; } = new Dictionary<string, object>();
@@ -109,7 +88,7 @@
 
     private async Task ItemFeature()
     {
-        if(MenuItem.Feature != null && MenuItem.Type == EnumMenuType.Feature && string.IsNullOrEmpty(MenuItem.Url))
+        if(MenuItem.Feature != null && MenuItem.Type == EnumMenuType.Feature)
         {
             ShowItemFeature = await FeaturePermissionService.CheckUserActionPermission(MenuItem.Feature.BusinessName, enumSDKActions.Access, AuthenticationService);
         }
@@ -153,65 +132,4 @@
         AutomationId = Title;
         _ = ItemFeature();
     }
-
-    private void OnClickItem(E00061_Menu menuItem, bool newTab = false){
-        if(menuItem != null && menuItem.CustomAction != null){
-            menuItem.CustomAction.Invoke(menuItem);
-            return;
-        }
-        if(newTab)
-        {
-            try
-            {
-                JSRuntime.InvokeAsync<object>("open", menuItem.CurrentURL, "_blank");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }else{
-            NavigationManager.NavigateTo(menuItem.CurrentURL);
-        }
-        if(HideSubmenu != null){
-            HideSubmenu();
-        }
-    }
-    private void MouseOver(MouseEventArgs e)
-    { 
-        ShowIconExternal=true; 
-    }
-    private void MouseOut(MouseEventArgs e)
-    { 
-        ShowIconExternal=false; 
-    }
-
-    private string GetStyleColor(){
-
-        if(!string.IsNullOrEmpty(MenuItem.StyleColor))
-        {
-            return $"#{MenuItem.StyleColor};";
-        }
-        return "";
-    }
-
-    protected override string GetAutomationId()
-    {
-        if(!string.IsNullOrEmpty(AutomationId))
-        {
-            if (MenuItem != null && MenuItem.Level > 1 && OnClick.Target != null)
-            {
-                var ParentMenu =  OnClick.Target.GetType().GetProperty("MainItem").GetValue(OnClick.Target);
-                if (ParentMenu != null)
-                {
-                    var ParentMenuName = ParentMenu.GetType().GetProperty("CurrentText").GetValue(ParentMenu);
-                    if (!string.IsNullOrEmpty(ParentMenuName.ToString()))
-                    {
-                        AutomationId = $"{ParentMenuName}_SubMenu_{Title}";
-                    }
-                }
-            }
-        }
-        return base.GetAutomationId();
-    }
-
 }
