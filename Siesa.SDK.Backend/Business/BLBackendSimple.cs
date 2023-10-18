@@ -925,6 +925,7 @@ namespace Siesa.SDK.Business
                             return response;
                         }
                         DeleteDynamicEntity(context);
+                        DeleteVisibilityEntity(context);
                         DisableRelatedProperties(BaseObj, _navigationProperties);
                         context.SetProvider(_provider);
                         context.Set<T>().Remove(BaseObj);
@@ -1060,6 +1061,36 @@ namespace Siesa.SDK.Business
                     throw new Exception($"Error deleting aditional fields {nameDynamicEntity} {e.Message}");
                 }
 
+            }
+        }
+
+        protected virtual void DeleteVisibilityEntity(SDKContext context)
+        {
+            var nameSpaceEntity = typeof(T).Namespace;
+            var nameVisibilityEntity = "U" + typeof(T).Name.Substring(1);
+            var visibilityEntityType = Utilities.SearchType(nameSpaceEntity + "." + nameVisibilityEntity, true);
+            if (visibilityEntityType != null)
+            {
+                try
+                {
+                    var visibilityContextSet = context.GetType().GetMethod("AllSet", types: Type.EmptyTypes).MakeGenericMethod(visibilityEntityType).Invoke(context, null);
+                    var rowid = BaseObj.GetRowid();
+                    Assembly assemblyWhere = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
+                    var whereMethod = typeof(IQueryable).GetExtensionMethod(assemblyWhere, "Where", new[] { typeof(IQueryable), typeof(string), typeof(object[]) });
+                    visibilityContextSet = whereMethod.Invoke(visibilityContextSet, new object[] { visibilityContextSet, "RowidRecord = @0", new object[] { rowid } });
+                    Assembly assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
+                    var dynamicListMethod = typeof(IEnumerable).GetExtensionMethod(assemblyDynamic, "ToDynamicList", new[] { typeof(IEnumerable) });
+                    dynamic visibilityEntitiesToDelete = dynamicListMethod.Invoke(visibilityContextSet, new object[] { visibilityContextSet });
+                    if (visibilityEntitiesToDelete.Count > 0)
+                    {
+                        var DeleteRangeMethod = typeof(DbContext).GetMethod("RemoveRange", new Type[] { typeof(IEnumerable<>).MakeGenericType(visibilityEntityType) });
+                        DeleteRangeMethod.Invoke(context, new object[] { visibilityEntitiesToDelete });
+                    }
+                }
+                catch (Exception e)
+                {
+                    throw new Exception($"Error deleting visibility fields {nameVisibilityEntity} {e.Message}");
+                }
             }
         }
 
