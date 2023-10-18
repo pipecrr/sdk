@@ -1063,7 +1063,12 @@ namespace Siesa.SDK.Business
 
             }
         }
-
+        
+        /// <summary>
+        /// Method used to delete visibility records from table U{EntityName}
+        /// </summary>
+        /// <param name="context"></param>
+        /// <exception cref="Exception"></exception>
         protected virtual void DeleteVisibilityEntity(SDKContext context)
         {
             var nameSpaceEntity = typeof(T).Namespace;
