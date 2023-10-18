@@ -32,8 +32,8 @@
     {
        <hr class="m-0 sdk_separator"> 
     }else{
-        @if(MenuItem.Feature != null && MenuItem.Type == EnumMenuType.Feature && string.IsNullOrEmpty(MenuItem.Url))
-        {
+        @if(MenuItem.Feature != null && MenuItem.Type == EnumMenuType.Feature)
+        {   
             @if(ShowItemFeature)
             {
                 <a href="@MenuItem.CurrentURL" @attributes="@menuItemAttributes" @onmouseover="MouseOver" @onmouseout="MouseOut" @onclick:stopPropagation="true" @onclick="()=> OnClickItem(MenuItem)"  @onclick:preventDefault  class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
@@ -52,7 +52,7 @@
                 </a>
             }
 
-        }else{
+        }else if(MenuItem.Type == EnumMenuType.Suite){
             <a href="@MenuItem.CurrentURL" @attributes="@menuItemAttributes" @onmouseover="MouseOver" @onmouseout="MouseOut" @onclick:stopPropagation="true" @onclick="()=> OnClickItem(MenuItem)"  @onclick:preventDefault class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
                 title="@Title" data-automation-id="@GetAutomationId()">
                 @if(MenuItem.IconClass != null){
@@ -66,6 +66,22 @@
                 <div class="nav_btn_standar_text nav_btn_external" hidden="@(!ShowIconExternal)"  @onclick:stopPropagation="true"  @onclick="()=> OnClickItem(MenuItem, true)"  @onclick:preventDefault> 
                     <SDKIcon Name="fa-arrow-up-right-from-square"></SDKIcon>
                 </div>
+            </a>
+        }else
+        {   
+            <a href="@MenuItem.CurrentURL" @attributes="@menuItemAttributes" @onmouseover="MouseOver" @onmouseout="MouseOut" @onclick:stopPropagation="true" @onclick="()=> OnClickItem(MenuItem)"  @onclick:preventDefault  class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
+                    title="@Title" data-automation-id="@GetAutomationId()">
+                    @if(MenuItem.IconClass != null){
+                        <div class="nav_btn_standar_icon">
+                            <SDKIcon Name="@GetIconClass()" CssClass="font_size_112"></SDKIcon>
+                        </div>
+                    }
+                    <div class="nav_btn_standar_text">
+                        @Title
+                    </div>
+                    <div class="nav_btn_standar_text nav_btn_external" hidden="@(!ShowIconExternal)"  @onclick:stopPropagation="true"  @onclick="()=> OnClickItem(MenuItem, true)"  @onclick:preventDefault >
+                        <SDKIcon Name="fa-arrow-up-right-from-square"></SDKIcon>
+                    </div>
             </a>
         }
     }
@@ -109,7 +125,7 @@
 
     private async Task ItemFeature()
     {
-        if(MenuItem.Feature != null && MenuItem.Type == EnumMenuType.Feature && string.IsNullOrEmpty(MenuItem.Url))
+        if(MenuItem.Feature != null && MenuItem.Type == EnumMenuType.Feature)
         {
             ShowItemFeature = await FeaturePermissionService.CheckUserActionPermission(MenuItem.Feature.BusinessName, enumSDKActions.Access, AuthenticationService);
         }
