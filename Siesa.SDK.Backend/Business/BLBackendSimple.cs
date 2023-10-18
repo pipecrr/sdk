@@ -1072,7 +1072,7 @@ namespace Siesa.SDK.Business
         protected virtual void DeleteVisibilityEntity(SDKContext context)
         {
             var nameSpaceEntity = typeof(T).Namespace;
-            var nameVisibilityEntity = "U" + string.Concat(typeof(T).Name.AsSpan(1).ToString());
+            var nameVisibilityEntity = "U" + string.Concat(values: typeof(T).Name.AsSpan(1).ToString());
             var visibilityEntityType = Utilities.SearchType(nameSpaceEntity + "." + nameVisibilityEntity, true);
             if (visibilityEntityType != null)
             {
