@@ -1,0 +1,24 @@
+@inherits SDKComponent
+
+<a href="@Menu.CurrentURL" @attributes="@MenuItemAttributes" @onmouseover="MouseOver" @onmouseout="MouseOut" @onclick:stopPropagation="true" @onclick="()=> OnClickItem(Menu)"  @onclick:preventDefault  class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right" title="@Title" data-automation-id="@GetAutomationId()">
+    @if(Menu.IconClass != null)
+    {
+        @if(IsSuite)
+        {
+            <div class="nav_suite_box_icon" style="background: @GetStyleColor()">
+                <SDKIcon Name="@GetIconClass()" CssClass="font_size_112"></SDKIcon>
+            </div>
+        }else
+        {
+            <div class="nav_btn_standar_icon">
+                <SDKIcon Name="@GetIconClass()" CssClass="font_size_112"></SDKIcon>
+            </div>
+        }
+    }
+        <div class="nav_btn_standar_text">
+            @Title
+        </div>
+        <div class="nav_btn_standar_text nav_btn_external" hidden="@(!ShowIconExternal)"  @onclick:stopPropagation="true"  @onclick="()=> OnClickItem(Menu, true)"  @onclick:preventDefault >
+            <SDKIcon Name="fa-arrow-up-right-from-square"></SDKIcon>
+        </div>
+</a>

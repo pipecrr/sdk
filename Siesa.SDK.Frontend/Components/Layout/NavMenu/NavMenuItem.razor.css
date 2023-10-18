@@ -24,11 +24,6 @@
     left: -0.5rem;
 }
 
-.nav_btn_external {
-    margin-left: auto;
-    text-overflow: unset;
-}
-
 .sdk_separator {
    border-top: 2px solid #ccc;
 }	
