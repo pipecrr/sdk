@@ -27,16 +27,3 @@
 .sdk_separator {
    border-top: 2px solid #ccc;
 }	
-
-::deep .nav_suite_box_icon{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: var(--color_light);
-    border-radius: var(--border_radius_standar);
-    min-width: 28px;
-    min-height: 28px;
-    max-width: 28px;
-    max-height: 28px;
-    margin-left: 0.75rem;
-}

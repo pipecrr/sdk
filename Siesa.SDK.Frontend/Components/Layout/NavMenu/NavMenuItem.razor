@@ -41,21 +41,8 @@
 
         }else if(MenuItem.Type == EnumMenuType.Suite)
         {
-            @* <a href="@MenuItem.CurrentURL" @attributes="@menuItemAttributes" @onmouseover="MouseOver" @onmouseout="MouseOut" @onclick:stopPropagation="true" @onclick="()=> OnClickItem(MenuItem)"  @onclick:preventDefault class="nav_btn_standar my-1" data-toggle="tooltip" data-placement="right"
-                title="@Title" data-automation-id="@GetAutomationId()">
-                @if(MenuItem.IconClass != null){
-                    <div class="nav_suite_box_icon" style="background: @GetStyleColor()">
-                        <SDKIcon Name="@GetIconClass()" CssClass="font_size_112"></SDKIcon>
-                    </div>
-                }
-                <div class="nav_btn_standar_text">
-                    @Title
-                </div>
-                <div class="nav_btn_standar_text nav_btn_external" hidden="@(!ShowIconExternal)"  @onclick:stopPropagation="true"  @onclick="()=> OnClickItem(MenuItem, true)"  @onclick:preventDefault> 
-                    <SDKIcon Name="fa-arrow-up-right-from-square"></SDKIcon>
-                </div>
-            </a> *@
-            <MenuItem Menu="@MenuItem" MenuItemAttributes="@menuItemAttributes" Title="@Title" OnClick="@OnClick" />
+
+            <MenuItem Menu="@MenuItem" MenuItemAttributes="@menuItemAttributes" Title="@Title" OnClick="@OnClick" IsSuite="true" />
         }else
         {   
             <MenuItem Menu="@MenuItem" MenuItemAttributes="@menuItemAttributes" Title="@Title" OnClick="@OnClick" />
