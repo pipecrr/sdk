@@ -26,6 +26,7 @@
 @using Siesa.SDK.Shared.Utilities
 @using System.Diagnostics
 @using Siesa.SDK.Frontend.Utils
+@using Newtonsoft.Json.Linq
 
 
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
@@ -255,6 +256,8 @@
 
     private bool UniqueCompanyGroup {get; set;}
 
+    private string IdCompanyGroup {get; set;}
+
     protected override async Task OnInitializedAsync()
     {
         if(BusinessName.Equals("BLDemoDummy")){
@@ -262,18 +265,19 @@
         }
         filters.Add("Feature.BusinessName", BusinessName);
         await GetEntityFields();
-        await HasUniqueCompanyGroup();
+        await GetCompaniesGroupsValues();
         await base.OnInitializedAsync();  
     }
 
-    private async Task HasUniqueCompanyGroup(){
-        var bl = BackendRouterService.GetSDKBusinessModel("BLIntegrationService", AuthenticationService);
-        var result = await bl.Call("GetCompaniesGroup");  
-
-        if(result.Success){
-            UniqueCompanyGroup = result.Data;
-        }
+    private async Task GetCompaniesGroupsValues(){
+        var CompaniesGroups = await BackendRouterService.GetSDKBusinessModel("BLCompanyGroup", AuthenticationService).GetData(0, null, includeCount: true, extraFields: new List<string>(){
+                "Id",
+            });
+        var ListCompanies = CompaniesGroups.Data.Select(x => JsonConvert.DeserializeObject<JObject>(x)).ToList();
+        IdCompanyGroup = ListCompanies.Where(x => x.Value<short>("Rowid").Equals(AuthenticationService.GetRowidCompanyGroup())).Select(x => x.Value<string>("Id")).First();
+        UniqueCompanyGroup = CompaniesGroups.Data.Count == 1;
     }
+
 
     private async Task GetEntityFields()
     {   
@@ -305,7 +309,7 @@
                     string ForeingName = RelationAttributeName.Substring(RelationAttributeName.IndexOf('_')+1);
                     await CalculateParentsRelations(RelationAttribute.PropertyType, null, field.Name, ForeingName);
                 }else{
-                    ResourceName = await ResourceManager.GetResource($"{EntityType.Name}.{field.Name}", AuthenticationService.GetRoiwdCulture()); 
+                    ResourceName = await ResourceManager.GetResource($"{EntityType.Name}.{field.Name}", AuthenticationService); 
                     _fieldsEntity.Add(ResourceName,field.Name);
                     _titleFields.Add(field.Name, ResourceName);
                 }
@@ -332,13 +336,11 @@
                     MapFk.ListIndexForeingFields.Add(TitleField);
                     var EntityName = await ResourceManager.GetResource($"{ForeignType.Name}.singular", AuthenticationService); 
                     var FieldName = await ResourceManager.GetResource($"{ForeignType.Name}.{propertyName}", AuthenticationService);
-                    var ResourceRoot = (!string.IsNullOrEmpty(RootNameEntity)) ? await ResourceManager.GetResource($"{RootNameEntity}.singular", AuthenticationService.GetRoiwdCulture()) : ""; 
+                    var ResourceRoot = (!string.IsNullOrEmpty(RootNameEntity)) ? await ResourceManager.GetResource($"{RootNameEntity}.singular", AuthenticationService) : ""; 
                     ResourceName = $"{FieldName} - {EntityName} {(!string.IsNullOrEmpty(ResourceRoot) ? "/ " + ResourceRoot : "" )}"; 
                     if(NamePropertyForeing.Contains("CompanyGroup")){
                         if(!IsByCompanyGroup){
                             IsByCompanyGroup = true;
-                            _fieldsEntity.Add("Grupo de compañia","Index_CompanyGroup");
-                            _titleFields.Add("Index_CompanyGroup", "Grupo de compañia");
                         }
                     }else{
                         _fieldsEntity.Add(ResourceName,TitleField);
@@ -398,8 +400,8 @@
             if(!UniqueCompanyGroup){
                 Worksheet Config = workbook.Worksheets.Insert(0);
                 Config.Name = await ResourceManager.GetResource("Custom.SDK.Integration.Config", AuthenticationService); 
-                Config["A1"].Value="Holi";
-                Config["A2"].Value = AuthenticationService.GetRowidCompanyGroup();
+                Config["A1"].Value="Codigo grupo de compañia";
+                Config["B1"].Value = IdCompanyGroup;
 
             }
 
@@ -417,11 +419,13 @@
 
             try{
                 for (int i = 0; i < Headers.Count(); i++){
-                    DataWorkSheet.Rows["1"][i].Value = Headers[i];   
+                    var ActualWorkCell = DataWorkSheet.Rows["1"][i];
+                    ActualWorkCell.Value = Headers[i]; 
+                    ActualWorkCell.Alignment.Vertical = SpreadsheetVerticalAlignment.Center;
+                    ActualWorkCell.Alignment.Horizontal = SpreadsheetHorizontalAlignment.Center;
+                    ActualWorkCell.Font.FontStyle = SpreadsheetFontStyle.Bold;
+                    ActualWorkCell.AutoFitColumns();
                 }
-                DataWorkSheet.Rows.AutoFit(0, Headers.Count()-1);     
-                DataWorkSheet.Columns.AutoFit(0, Headers.Count()-1);
-                DataWorkSheet.DataValidations.Add(DataWorkSheet["A4"], DataValidationType.List, "PASS, FAIL, holi"); 
                 
             }finally{
                 workbook.EndUpdate();
@@ -447,7 +451,7 @@
     } 
 
     private async Task<bool> VaidateDocumentConfiguration(Workbook workbook){
-        if(!UniqueCompanyGroup){
+        if(!UniqueCompanyGroup && IsByCompanyGroup){
             var ConfigName = await ResourceManager.GetResource("Custom.SDK.Integration.Config", AuthenticationService); 
             if(workbook.Worksheets.Count >= 2){
                 var ConfigPage = workbook.Worksheets.Where(x => x.Name.Equals(ConfigName)).FirstOrDefault();
@@ -467,7 +471,17 @@
     }
 
     private bool CheckConfigPage(Worksheet Config){
-        return false;
+        if(Config.HasData){
+            if(Config["B1"].Value.IsText && Config["B1"].Value.TextValue == IdCompanyGroup){
+                return false;
+            }else{
+                ErrorList.Add("El grupo de compañia es diferente al actual en sesion");
+                return true;
+            }
+        }else{
+            ErrorList.Add("La pagina de configuraciones se encuentra vacia");
+            return true;
+        }
     }
 
     private async Task LoadFiles(InputFileChangeEventArgs InputFile){
@@ -634,32 +648,13 @@
             CleanvaluesIndexInternal(indexes);
         }
 
-        //var filteredRelation = ListMapRelationsImport.Where(x => x.)
 
-        DataMapped.ForEach(x => {
-            var holi = x.Keys.Where(y => y.Contains("Index_CompanyGroup")).ToList();
-            holi.ForEach(z => {
-                x[z] = "01";
-            });
-        });
+        UpdateCompanyGroup();
 
             foreach (var mapRelationImport in ListMapRelationsImport){
 
-                List<string> values = DataMapped.Where(p => p.ContainsKey(mapRelationImport.NameInternalIndex)).Select(p => (string)p[mapRelationImport.NameInternalIndex]).ToList<string>();
-
-
-                if(mapRelationImport.IdFieldFkEntity.Contains("RowidCompanyGroup")){
-                    var holi1 = new List<MyDTO>();
-                    holi1.Add(new MyDTO()
-                            {
-                                Rowid = 1,
-                                InternalIndex = "01"
-                            });   
-                        UpdateForeingKeysValues(holi1, mapRelationImport.NameInternalIndex,
-                                                mapRelationImport.IdFieldFkEntity,
-                                                mapRelationImport.DependencyIdFieldFKEntity);
-                    
-                }else{ 
+                if(!mapRelationImport.IdFieldFkEntity.Contains("RowidCompanyGroup")){
+                    List<string> values = DataMapped.Where(p => p.ContainsKey(mapRelationImport.NameInternalIndex)).Select(p => (string)p[mapRelationImport.NameInternalIndex]).ToList<string>();
                     var bl = BackendRouterService.GetSDKBusinessModel(GetBLNameFromString(mapRelationImport.NameInternalIndex ,'_'), AuthenticationService);
                     var response = await bl.Call("SetListForeingRowid", mapRelationImport.ListIndexForeingFields, values);
                     if(response.Success){ 
@@ -674,6 +669,17 @@
     }
         CleanAuxiliarColumnsDataMapped();
         StateHasChanged();
+    }
+
+    private void UpdateCompanyGroup(){
+        if(IsByCompanyGroup){
+            DataMapped.ForEach(x => {
+                var listP = ListMapRelationsImport.Where( x=> x.DependencyIdFieldFKEntity == null && x.ListIndexForeingFields.Any(y => y.Contains("RowidCompanyGroup"))).Select(x => x.NameInternalIndex).ToList();
+                foreach(var item in listP){
+                    x[item] += AuthenticationService.GetRowidCompanyGroup().ToString(); 
+                }
+            });
+        }
     }
 
     private string GetBLNameFromString(string InternalIndex , char separator){
