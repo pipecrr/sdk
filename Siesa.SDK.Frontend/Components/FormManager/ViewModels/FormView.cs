@@ -22,6 +22,7 @@ using Siesa.SDK.Frontend.Components.FormManager.Fields;
 using Siesa.SDK.Frontend.Extension;
 using Microsoft.Extensions.Configuration;
 using Siesa.Global.Enums;
+using Siesa.SDK.Entities;
 using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
 using Siesa.SDK.Frontend.Components.FormManager.Views;
 using Siesa.SDK.Shared.Utilities;
@@ -33,12 +34,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Parameter]
         public string BusinessName { get; set; }
         [Parameter]
+        public string BusinessNameParent { get; set; }
+        [Parameter]
         public dynamic BusinessObj { get; set; }
-
         [Parameter] 
         public bool IsSubpanel { get; set; }
         [Inject] public  Radzen.DialogService dialogService { get; set; }
-
         [Inject] public IJSRuntime JSRuntime { get; set; }
         [Inject] public NavigationManager NavManager { get; set; }
         [Inject] public NavigationService NavigationService { get; set; }
@@ -94,6 +95,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         [Parameter]
         public List<string> ParentBaseObj { get; set; }
+        [Parameter]
+        public bool IsTableA { get; set; }
         /// <summary>
         /// Gets or sets a value indicating whether the business object is a document.
         /// </summary>
@@ -130,6 +133,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public List<Button> ExtraButtons { get; set; }
         public Button SaveButton { get; set; }
         public bool isOnePanel { get; set; }
+        internal bool HasTableA;
+        internal Type BaseObjAType;
+        internal string BusinessNameA { get; set; }
+        public dynamic BaseObjA { get; set; }
+        public dynamic BusinessObjA { get; set; }
+        internal List<E00201_Company> Companies { get; set; } = new List<E00201_Company>();
         /// <summary>
         /// Gets or sets the delete button config. 
         /// </summary>
@@ -148,11 +157,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             {
                 try
                 {
-                    CanAcess = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
-                    CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Create, AuthenticationService);
-                    CanEdit = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Edit, AuthenticationService);
-                    CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Delete, AuthenticationService);
-                    CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
+                    string businessName = BusinessName;
+                    if (IsTableA)
+                    {
+                        businessName = BusinessNameParent;
+                    }
+                    CanAcess = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Detail, AuthenticationService);
+                    CanCreate = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Create, AuthenticationService);
+                    CanEdit = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Edit, AuthenticationService);
+                    CanDelete = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Delete, AuthenticationService);
+                    CanDetail = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Detail, AuthenticationService);
                 }
                 catch (System.Exception)
                 {
@@ -258,9 +272,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             {
                 bName = BusinessName;
             }
-            await CheckPermissions();
+            
+            if (!IsTableA)
+            {
+                await InitViewTableA().ConfigureAwait(true);
+            }
+            
+            await CheckPermissions().ConfigureAwait(true);
             var metadata = GetViewdef(bName);
-            if (metadata == null || metadata == "")
+            if (String.IsNullOrEmpty(metadata))
             {
                 //string ErrorTag = await ResourceManager.GetResource("Custom.Formview.NotDefinition", AuthenticationService.GetRowidCulture());
                 ErrorMsg = $"Custom.Generic.ViewdefNotFound";
@@ -322,6 +342,27 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             EvaluateButtonAttributes();
             BusinessObj.ParentComponent = this;
             StateHasChanged();
+        }
+
+        private async Task InitViewTableA()
+        {
+            BusinessNameA = BusinessObj.GetType().Name.Replace("BL", "BLA");
+            Type blTypeBussinessA = Utilities.SearchType(BusinessObj.GetType().Namespace + "." + BusinessNameA);
+            if (blTypeBussinessA != null)
+            {
+                BusinessObjA = Activator.CreateInstance(blTypeBussinessA, AuthenticationService);
+                BaseObjAType = BusinessObjA?.BaseObj.GetType();
+                HasTableA = true;
+                if (BaseObjAType == null)
+                {
+                    return;
+                }
+                BaseObjA = Activator.CreateInstance(BaseObjAType);
+                var bL = BackendRouterService.GetSDKBusinessModel("BLSDKCompany",AuthenticationService);
+                int rowidCompanyGroup = AuthenticationService.GetRowidCompanyGroup();
+                var dataCompany = await bL.GetData(null, null, $"RowidCompanyGroup == {rowidCompanyGroup}").ConfigureAwait(true);
+                Companies = dataCompany.Data.Select(x => JsonConvert.DeserializeObject<E00201_Company>(x)).ToList();
+            }
         }
 
         private void AddOnChangeCell()
