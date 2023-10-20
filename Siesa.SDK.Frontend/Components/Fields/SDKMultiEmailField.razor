@@ -1,0 +1,87 @@
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Services
+
+
+
+<div class="">
+
+    <SDKEmailField 
+    Value="@Value" 
+    ValueChanged="@ValueChanged"
+    Disabled="@Disabled" 
+    Required="@Required" 
+    CssClass="@CssClass"
+    Placeholder="@Placeholder"
+    OnKeyDown="@OnKeyDown"/>
+
+                
+        <div class="d-flex align-items-center">
+            @foreach (var email in EmailList)
+            {
+                <div class="chip-correo">
+                    <span>@email</span>
+                    <button class="btn btn-sm" @onclick="() => RemoveEmail(email)">
+                    <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            }
+        </div>
+
+</div>
+
+
+@code {
+
+    [Parameter]
+    public string Value {get; set;} = "";
+
+    [Parameter]
+    public string Placeholder {get;set;} = "Ingresa la dirección de correo electrónico";
+
+    [Parameter] public Action<string> ValueChanged { get; set; } = (value) => {};
+
+    [Parameter] public bool Disabled { get; set; }
+
+    [Parameter] public bool Required { get; set; }
+
+    [Parameter] public string CssClass {get; set;}
+
+    private List<string> EmailList { get; set; } = new List<string>();
+
+    private async Task OnChange(ChangeEventArgs args)
+    {
+        Value = args?.Value?.ToString();
+
+        if(ValueChanged != null)
+            ValueChanged.Invoke(Value);
+            
+       _ = InvokeAsync(() => StateHasChanged());
+    }
+
+    private void AddEmail()
+    {
+        if (!string.IsNullOrWhiteSpace(Value))
+        {
+            EmailList.Add(Value);
+            Value = "";
+        }
+    }
+
+    private void RemoveEmail(string email)
+    {
+        EmailList.Remove(email);
+    }
+
+    private void OnKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key.Equals("Enter") || e.Code.Equals("Space") || e.Key.Equals(" "))
+        {
+            AddEmail();
+            StateHasChanged();
+        }
+    }
+
+    List<string> EmailValues = new List<string>();
+
+}
