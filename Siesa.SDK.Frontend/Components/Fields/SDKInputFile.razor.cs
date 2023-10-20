@@ -142,6 +142,7 @@ public partial class SDKInputFile : SDKComponent
     private long? SingleFileSize;
 
     private CancellationTokenSource _cancellationToken;
+    private string _display = "none"; 
 
     protected override async Task OnInitializedAsync()
     {
@@ -188,6 +189,7 @@ public partial class SDKInputFile : SDKComponent
                 };
                 _UrlImage = inputFieldDTO.Url;
             }
+            _display = "block";
         }
         _IsLoading = false;
         StateHasChanged();
@@ -208,6 +210,7 @@ public partial class SDKInputFile : SDKComponent
         {
             await JSRuntime.InvokeVoidAsync("closePreviewImage", previewImageElem).ConfigureAwait(true);
             InputFile = null;
+            _display = "none";
             StateHasChanged();
         }
     }
@@ -228,6 +231,7 @@ public partial class SDKInputFile : SDKComponent
         if (_InputFile != null)
         {
             InputFile = _InputFile;
+            _display = "block";
             if (IsMultiple)
             {
                 var files = InputFile.GetMultipleFiles();
@@ -252,7 +256,7 @@ public partial class SDKInputFile : SDKComponent
             {
                 SingleFileSize = InputFile.File.Size / 1024;
 
-                await GetPreviewFile();
+                await GetPreviewFile().ConfigureAwait(true);
             }
             OnInputFile?.Invoke(_InputFile);
         }

@@ -58,9 +58,9 @@
             }
                 </div>
             </div>
-        }else if((RowidAttachmentDetail != 0 || _FilesSelected.Count > 0 || InputFile != null)  && !_IsLoading  )
+        }else if(!_IsLoading)
         {
-            <div class="col-12 pt-1 upload_img_cont">
+            <div class="col-12 pt-1 upload_img_cont" style="display: @_display">
                 <div class="row whcm_row">
                     <div class="col-12 pl-1 pr-1 pb-1">
                         <div class="whcm_panel d-flex justify-content-start align-items-center position-relative h-100">
@@ -71,8 +71,7 @@
                                 }else
                                 {
                                     <img @ref="previewImageElem" height="100%" width="100%"/>
-                                } 
-                                
+                                }
                             </div>
                             @if(ShowInfoImg)
                             {
