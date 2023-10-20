@@ -57,7 +57,7 @@ public partial class MenuItem : SDKComponent
 
     protected override string GetAutomationId()
     {
-        if(!string.IsNullOrEmpty(AutomationId))
+        if(string.IsNullOrEmpty(AutomationId))
         {
             if (Menu != null && Menu.Level > 1 && OnClick.Target != null)
             {
