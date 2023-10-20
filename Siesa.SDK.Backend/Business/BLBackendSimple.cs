@@ -190,7 +190,11 @@ namespace Siesa.SDK.Business
             return retContext;
         }
     }
-    public class BLBackendSimple<T, K> : IBLBase<T> where T : class, IBaseSDK where K : BLBaseValidator<T>
+
+    //public class BLBackendSimple<T, K> : IBLBase<T> where T : class, IBaseSDK where K : BLBaseValidator<T>
+    //BLBaseValidator<M>, donde M puede ser cualquie tipo
+
+    public class BLBackendSimple<T,K>: IBLBase<T> where T : class, IBaseSDK where K : BLBaseValidator<T>
     {
         [JsonIgnore]
         protected IAuthenticationService AuthenticationService { get; set; }
