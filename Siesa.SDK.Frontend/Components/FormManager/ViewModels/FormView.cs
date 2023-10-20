@@ -36,6 +36,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Parameter]
         public string BusinessNameParent { get; set; }
         [Parameter]
+        public FormView ParentForm { get; set; }
+        [Parameter]
         public dynamic BusinessObj { get; set; }
         [Parameter] 
         public bool IsSubpanel { get; set; }
@@ -138,6 +140,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         internal string BusinessNameA { get; set; }
         public dynamic BaseObjA { get; set; }
         public dynamic BusinessObjA { get; set; }
+        public List<FormView> FormViewsTablesA { get; set; } = new List<FormView>();
         internal List<E00201_Company> Companies { get; set; } = new List<E00201_Company>();
         /// <summary>
         /// Gets or sets the delete button config. 
@@ -277,33 +280,21 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             {
                 await InitViewTableA().ConfigureAwait(true);
             }
+            else
+            {
+                ParentForm.FormViewsTablesA.Add(this);
+            }
             
             await CheckPermissions().ConfigureAwait(true);
             var metadata = GetViewdef(bName);
             if (String.IsNullOrEmpty(metadata))
             {
-                //string ErrorTag = await ResourceManager.GetResource("Custom.Formview.NotDefinition", AuthenticationService.GetRowidCulture());
                 ErrorMsg = $"Custom.Generic.ViewdefNotFound";
                 ErrorList.Add($"Custom.Generic.ViewdefNotFound");
             }
             else
             {
-                try
-                {
-                    FormViewModel = JsonConvert.DeserializeObject<FormViewModel>(metadata);
-                }
-                catch (System.Exception)
-                {
-                    //Soporte a viewdefs anteriores
-                    var panels = JsonConvert.DeserializeObject<List<Panel>>(metadata);
-                    FormViewModel.Panels = panels;
-                }
-                if(BusinessObj.GetType().GetProperty("DynamicEntities") != null && BusinessObj.DynamicEntities != null ){
-                    ShowAditionalFields = true;
-                    if(BusinessObj.DynamicEntities.Count > 0){
-                        AddPanels(PanelsCollapsable);
-                    }
-                }
+                CreateFormViewModel(metadata);
             }
             try
             {
@@ -337,11 +328,42 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             EditFormContext = new EditContext(BusinessObj);
             EditFormContext.OnFieldChanged += EditContext_OnFieldChanged;
             _messageStore = new ValidationMessageStore(EditFormContext);
-            EditFormContext.OnValidationRequested += (s, e) => _messageStore.Clear();
+            EditFormContext.OnValidationRequested += EditFormContext_OnValidationRequested;
             EvaluateDynamicAttributes(null);
             EvaluateButtonAttributes();
             BusinessObj.ParentComponent = this;
             StateHasChanged();
+        }
+
+        private void CreateFormViewModel(string metadata)
+        {
+            try
+            {
+                FormViewModel = JsonConvert.DeserializeObject<FormViewModel>(metadata);
+            }
+            catch (System.Exception)
+            {
+                //Soporte a viewdefs anteriores
+                var panels = JsonConvert.DeserializeObject<List<Panel>>(metadata);
+                FormViewModel.Panels = panels;
+            }
+            if(BusinessObj.GetType().GetProperty("DynamicEntities") != null && BusinessObj.DynamicEntities != null ){
+                ShowAditionalFields = true;
+                if(BusinessObj.DynamicEntities.Count > 0){
+                    AddPanels(PanelsCollapsable);
+                }
+            }
+        }
+
+        private void EditFormContext_OnValidationRequested(object sender, ValidationRequestedEventArgs e)
+        {
+            _messageStore.Clear();
+            if(FormViewsTablesA != null && FormViewsTablesA.Count > 0){
+                foreach (var formView in FormViewsTablesA)
+                {
+                    formView.EditFormContext.Validate();
+                }
+            }
         }
 
         private async Task InitViewTableA()
@@ -352,12 +374,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             {
                 BusinessObjA = Activator.CreateInstance(blTypeBussinessA, AuthenticationService);
                 BaseObjAType = BusinessObjA?.BaseObj.GetType();
-                HasTableA = true;
-                if (BaseObjAType == null)
+                if (BusinessObjA == null || BaseObjAType == null)
                 {
                     return;
                 }
                 BaseObjA = Activator.CreateInstance(BaseObjAType);
+                HasTableA = true;
                 var bL = BackendRouterService.GetSDKBusinessModel("BLSDKCompany",AuthenticationService);
                 int rowidCompanyGroup = AuthenticationService.GetRowidCompanyGroup();
                 var dataCompany = await bL.GetData(null, null, $"RowidCompanyGroup == {rowidCompanyGroup}").ConfigureAwait(true);

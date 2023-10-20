@@ -318,7 +318,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                     }
                 });
             }
-            
             CheckUniqueValue();
         }
 
