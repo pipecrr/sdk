@@ -7,16 +7,12 @@ using Siesa.SDK.Frontend.Components.FormManager.Model;
 using Microsoft.JSInterop;
 using Siesa.SDK.Business;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.CodeAnalysis.CSharp.Scripting;
-using Microsoft.CodeAnalysis.Scripting;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Siesa.SDK.Frontend.Utils;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Frontend.Services;
-using Siesa.SDK.Frontend.Application;
-using Siesa.SDK.Frontend.Components.Fields;
 using Siesa.SDK.Shared.DTOS;
 using Siesa.SDK.Frontend.Components.FormManager.Fields;
 using Siesa.SDK.Frontend.Extension;
@@ -24,7 +20,6 @@ using Microsoft.Extensions.Configuration;
 using Siesa.Global.Enums;
 using Siesa.SDK.Entities;
 using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
-using Siesa.SDK.Frontend.Components.FormManager.Views;
 using Siesa.SDK.Shared.Utilities;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
@@ -41,6 +36,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public dynamic BusinessObj { get; set; }
         [Parameter] 
         public bool IsSubpanel { get; set; }
+        [Parameter]
+        public Type BusinessObjAType { get; set; }
         [Inject] public  Radzen.DialogService dialogService { get; set; }
         [Inject] public IJSRuntime JSRuntime { get; set; }
         [Inject] public NavigationManager NavManager { get; set; }
@@ -99,6 +96,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public List<string> ParentBaseObj { get; set; }
         [Parameter]
         public bool IsTableA { get; set; }
+        [Parameter]
+        public long RowidCompany { get; set; }
         /// <summary>
         /// Gets or sets a value indicating whether the business object is a document.
         /// </summary>
@@ -136,7 +135,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public Button SaveButton { get; set; }
         public bool isOnePanel { get; set; }
         internal bool HasTableA;
-        internal Type BaseObjAType;
+        internal Type _businessObjAType;
         internal string BusinessNameA { get; set; }
         public dynamic BaseObjA { get; set; }
         public dynamic BusinessObjA { get; set; }
@@ -165,11 +164,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     {
                         businessName = BusinessNameParent;
                     }
-                    CanAcess = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Detail, AuthenticationService);
-                    CanCreate = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Create, AuthenticationService);
-                    CanEdit = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Edit, AuthenticationService);
-                    CanDelete = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Delete, AuthenticationService);
-                    CanDetail = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Detail, AuthenticationService);
+                    CanAcess = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Detail, AuthenticationService).ConfigureAwait(true);
+                    CanCreate = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Create, AuthenticationService).ConfigureAwait(true);
+                    CanEdit = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Edit, AuthenticationService).ConfigureAwait(true);
+                    CanDelete = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Delete, AuthenticationService).ConfigureAwait(true);
+                    CanDetail = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Detail, AuthenticationService).ConfigureAwait(true);
                 }
                 catch (System.Exception)
                 {
@@ -215,7 +214,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             return data;
         }
 
-        private void setViewContext(List<Panel> panels, DynamicViewType viewType)
+        private void SetViewContext(List<Panel> panels, DynamicViewType viewType)
         {
             for (int i = 0; i < panels.Count; i++)
             {
@@ -231,16 +230,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 
                 for (int j = 0; j < panels[i].Fields.Count; j++)
                 {
-                    setViewContextField(panels[i].Fields[j], viewType);
+                    SetViewContextField(panels[i].Fields[j], viewType);
                 }
                 if (panels[i].SubViewdef != null && panels[i].SubViewdef.Panels.Count > 0)
                 {
-                    setViewContext(panels[i].SubViewdef.Panels, viewType);
+                    SetViewContext(panels[i].SubViewdef.Panels, viewType);
                 }                
             }
         }
 
-        private void setViewContextField(FieldOptions field, DynamicViewType viewType){
+        private void SetViewContextField(FieldOptions field, DynamicViewType viewType){
             if(viewType == DynamicViewType.Detail && String.IsNullOrEmpty(field.ViewContext)){
                 field.ViewContext = "DetailView";
             }
@@ -250,7 +249,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
             foreach (var item in field.Fields.Select((value, i) => (value, i)))
             {
-                setViewContextField(item.value, viewType);
+                SetViewContextField(item.value, viewType);
             }
         }
 
@@ -275,14 +274,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             {
                 bName = BusinessName;
             }
-            
+
             if (!IsTableA)
             {
-                await InitViewTableA().ConfigureAwait(true);
-            }
-            else
-            {
-                ParentForm.FormViewsTablesA.Add(this);
+                await VerifyTableA().ConfigureAwait(true);
             }
             
             await CheckPermissions().ConfigureAwait(true);
@@ -298,7 +293,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             }
             try
             {
-                setViewContext(FormViewModel.Panels, ViewContext);
+                SetViewContext(FormViewModel.Panels, ViewContext);
             }
             catch (System.Exception)
             {
@@ -325,7 +320,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 await BusinessObj.InitializeChilds().ConfigureAwait(true);
             }
             Loading = false;
-            EditFormContext = new EditContext(BusinessObj);
+            if(EditFormContext == null)
+            {
+                EditFormContext = new EditContext(BusinessObj);
+            }
             EditFormContext.OnFieldChanged += EditContext_OnFieldChanged;
             _messageStore = new ValidationMessageStore(EditFormContext);
             EditFormContext.OnValidationRequested += EditFormContext_OnValidationRequested;
@@ -334,7 +332,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             BusinessObj.ParentComponent = this;
             StateHasChanged();
         }
-
         private void CreateFormViewModel(string metadata)
         {
             try
@@ -358,27 +355,53 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         private void EditFormContext_OnValidationRequested(object sender, ValidationRequestedEventArgs e)
         {
             _messageStore.Clear();
-            if(FormViewsTablesA != null && FormViewsTablesA.Count > 0){
-                foreach (var formView in FormViewsTablesA)
+            if(FormViewsTablesA != null && FormViewsTablesA.Any()){
+                FormViewsTablesA.Select(formView => formView.EditFormContext).ToList().ForEach(editContext => {
+                    if(editContext.GetValidationMessages().Any())
+                    {
+                        foreach (var item in editContext.GetValidationMessages())
+                        {
+                            _messageStore.Add(editContext.Field(item), item);
+                        }
+                    }
+                });
+            }
+        }
+        internal void InitViewTableA()
+        {
+            dynamic businessObj = null;
+            EditContext editFormContext = null;
+            if (ParentForm.FormViewsTablesA.Any())
+            {
+                foreach (var formview in ParentForm.FormViewsTablesA)
                 {
-                    formView.EditFormContext.Validate();
+                    if(formview.RowidCompany == RowidCompany)
+                    {
+                        businessObj = formview.BusinessObj;
+                        editFormContext = formview.EditFormContext;
+                        break;
+                    }
                 }
+            }
+            if (BusinessObjAType != null && businessObj == null)
+            {
+                BusinessObj = Activator.CreateInstance(BusinessObjAType, AuthenticationService);
+                ParentForm.FormViewsTablesA.Add(this);
+            }else
+            {
+                BusinessObj = businessObj;
+            }
+            if (editFormContext != null){
+                EditFormContext = editFormContext;
             }
         }
 
-        private async Task InitViewTableA()
+        private async Task VerifyTableA()
         {
             BusinessNameA = BusinessObj.GetType().Name.Replace("BL", "BLA");
-            Type blTypeBussinessA = Utilities.SearchType(BusinessObj.GetType().Namespace + "." + BusinessNameA);
-            if (blTypeBussinessA != null)
+            _businessObjAType = Utilities.SearchType(BusinessObj.GetType().Namespace + "." + BusinessNameA);
+            if (_businessObjAType != null)
             {
-                BusinessObjA = Activator.CreateInstance(blTypeBussinessA, AuthenticationService);
-                BaseObjAType = BusinessObjA?.BaseObj.GetType();
-                if (BusinessObjA == null || BaseObjAType == null)
-                {
-                    return;
-                }
-                BaseObjA = Activator.CreateInstance(BaseObjAType);
                 HasTableA = true;
                 var bL = BackendRouterService.GetSDKBusinessModel("BLSDKCompany",AuthenticationService);
                 int rowidCompanyGroup = AuthenticationService.GetRowidCompanyGroup();
@@ -659,7 +682,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             }
             //await InitView();
         }
-
         public override async Task SetParametersAsync(ParameterView parameters)
         {
             bool changeViewContext = parameters.DidParameterChange(nameof(ViewContext), ViewContext);
