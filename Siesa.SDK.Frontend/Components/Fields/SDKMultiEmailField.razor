@@ -1,5 +1,5 @@
+@inherits SDKComponent
 @using Siesa.SDK.Frontend.Components.Visualization
-
 @using Siesa.SDK.Frontend.Components.Fields
 @using Siesa.SDK.Frontend.Services
 @using System.Linq.Expressions
@@ -12,111 +12,15 @@
       @foreach(var email in EmailList)
       {
         <SDKBadge IsPill="true" Style="SDKBadgeStyle.Light" Value="@email" >
-        <SDKButton RenderStyle="SDKButtonRenderStyle.None" 
-         Click="() => RemoveEmail(email)">
-            <P>@email</p>
-            <SDKIcon CssClass="pl-1" Name="fa-x"/>
-        </SDKButton>
+            <SDKButton RenderStyle="SDKButtonRenderStyle.None" 
+            Click="() => RemoveEmail(email)">
+                <P>@email</p>
+                <SDKIcon CssClass="pl-1" Name="fa-x"/>
+            </SDKButton>
         </SDKBadge>
       }
     </div>
-    <InputText class="sdk-email-multiple-input" Value="@Value" disabled="@Disabled"
-        readonly="@ReadOnly" ValueExpression="@ValueExpression" ValueChanged="@ValueChanged" @oninput="OnInput" @onkeydown="OnKeyDown" />
+        <input class="sdk-email-multiple-input" value="@Value" disabled="@Disabled"
+               readonly="@ReadOnly" @oninput="OnInput" @onkeydown="OnKeyDown" />
   </div>
 </div>
-@code {
-
-    [Parameter]
-    public string Value {get; set;} = "";
-
-    [Parameter]
-    public string Placeholder {get;set;} = "Ingresa la dirección de correo electrónico";
-
-    [Parameter] public Action<string> ValueChanged { get; set; } = (value) => {};
-
-    [Parameter] public Expression<Func<string>> ValueExpression { get; set; }
-
-    [Parameter] public bool Disabled { get; set; }
-
-    [Parameter] public bool ReadOnly { get; set; }
-
-    [Parameter] public string CssClass {get; set;}
-
-    private List<string> EmailList { get; set; } = new List<string>();
-    
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-    }
-
-
-
-    private void AddEmail()
-    {
-        if (!string.IsNullOrEmpty(Value) && !EmailList.Contains(Value))
-        {
-            EmailList.Add(Value);
-            Value = string.Empty;
-            StateHasChanged();
-        }
-    }
-
-    private void RemoveEmail(string email)
-    {
-        EmailList.Remove(email);
-        StateHasChanged();
-    }
-
-    private void OnKeyDown(KeyboardEventArgs e)
-    {
-        if (e.Key.Equals("Enter"))
-        {
-            AddEmail();
-            StateHasChanged();
-        }else if(e.Key.Equals("Backspace"))
-        {
-            if (string.IsNullOrEmpty(Value) && EmailList.Count > 0)
-            {
-                var last = EmailList[EmailList.Count - 1];
-                EmailList.Remove(last);
-                StateHasChanged();
-            }
-        }
-    }
-    
-    @* public void OnBlur(FocusEventArgs args)
-    {
-        if (!string.IsNullOrEmpty(Value))
-        {
-            AddEmail();
-        }
-    } *@
-
-  
-    private void OnInput(ChangeEventArgs args)
-    {
-        var value = args.Value.ToString();
-        if (value.Contains(","))
-        {
-            var emails = value.Split(",");
-            foreach (var email in emails)
-            {
-                if (!string.IsNullOrEmpty(email))
-                {
-                    Value = email;
-                    AddEmail();
-                }
-            }
-        }else if(value.Contains(" "))
-        {
-            var email = value.Split(" ")[0];
-            if(!string.IsNullOrEmpty(email))
-            {
-                Value = email;
-                AddEmail();
-            }
-        }
-
-        StateHasChanged();
-    }
-}
