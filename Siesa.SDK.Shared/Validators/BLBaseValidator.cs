@@ -7,10 +7,7 @@ using System.Threading.Tasks;
 
 namespace Siesa.SDK.Shared.Validators
 {
-    public interface IBLBaseValidator<T,K> 
-    {
 
-    }
     public class BLBaseValidator<T> : AbstractValidator<T>
     {
         public string ValidatorType { get; set; }
