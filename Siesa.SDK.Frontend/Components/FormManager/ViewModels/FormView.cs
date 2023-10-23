@@ -328,7 +328,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             _messageStore = new ValidationMessageStore(EditFormContext);
             EditFormContext.OnValidationRequested += EditFormContext_OnValidationRequested;
             EvaluateDynamicAttributes(null);
-            EvaluateButtonAttributes();
+            await EvaluateButtonAttributes().ConfigureAwait(true);
             BusinessObj.ParentComponent = this;
             StateHasChanged();
         }
@@ -357,9 +357,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             _messageStore.Clear();
             if(FormViewsTablesA != null && FormViewsTablesA.Any()){
                 FormViewsTablesA.Select(formView => formView.EditFormContext).ToList().ForEach(editContext => {
+                    _messageStore.Clear();
+                    editContext.Validate();
                     if(editContext.GetValidationMessages().Any())
                     {
-                        foreach (var item in editContext.GetValidationMessages())
+                        foreach (var item in editContext.GetValidationMessages().Distinct())
                         {
                             _messageStore.Add(editContext.Field(item), item);
                         }
