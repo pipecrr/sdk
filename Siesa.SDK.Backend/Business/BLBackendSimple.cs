@@ -812,8 +812,10 @@ namespace Siesa.SDK.Business
 
                     MethodInfo validateMethod = typeof(SDKValidator).GetMethod("Validate").MakeGenericMethod(genericT);
 
+                    SDKValidator _sdkValidator = new ();
+
                     object[] parameters = new object[] { this, basevalidator, baseOperation };
-                    validateMethod.Invoke(null, parameters);
+                    validateMethod.Invoke(_sdkValidator, parameters);
                 }
             }
         }
