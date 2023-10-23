@@ -194,7 +194,7 @@ namespace Siesa.SDK.Business
     //public class BLBackendSimple<T, K> : IBLBase<T> where T : class, IBaseSDK where K : BLBaseValidator<T>
     //BLBaseValidator<M>, donde M puede ser cualquie tipo
 
-    public class BLBackendSimple<T,K>: IBLBase<T> where T : class, IBaseSDK 
+    public class BLBackendSimple<T,K>: IBLBase<T> where T : class, IBaseSDK where K : class
     {
         [JsonIgnore]
         protected IAuthenticationService AuthenticationService { get; set; }
@@ -777,44 +777,45 @@ namespace Siesa.SDK.Business
 
         private void Validate(ref ValidateAndSaveBusinessObjResponse baseOperation)
         {
-
-            //public class BLBackendSimple<T,K>: IBLBase<T> where T : class, IBaseSDK where K : BLBaseValidator<T>
+            /*
+             ValidateBussines(ref baseOperation, BaseObj.GetRowid() == 0 ? BLUserActionEnum.Create : BLUserActionEnum.Update);
+            //K validator = Activator.CreateInstance<K>();
+            K validator = ActivatorUtilities.CreateInstance(_provider, typeof(K)) as K;
+            validator.ValidatorType = "BaseObj";
+            SDKValidator.Validate<T>(BaseObj, validator, ref baseOperation);
+            */
 
             ValidateBussines(ref baseOperation, BaseObj.GetRowid() == 0 ? BLUserActionEnum.Create : BLUserActionEnum.Update);
-            //K validator = Activator.CreateInstance<K>();
-            //K validator = ActivatorUtilities.CreateInstance(_provider, typeof(K));
-            //validator.ValidatorType = "BaseObj";
-            //Create instance of K, and cast to BLBaseValidator
-            //BLBaseValidator<T> validator = Activator.CreateInstance<K>();
-
-            BLBaseValidator<T> validator = ActivatorUtilities.CreateInstance(_provider, typeof(K)) as BLBaseValidator<T>;
-
 
             Type parentType = typeof(K).BaseType;
-            if (parentType == typeof(BLBaseValidator<>))
+
+            Type[] genericArguments = parentType.GetGenericArguments();
+
+            //K validator = Activator.CreateInstance<K>();
+
+            K validator = ActivatorUtilities.CreateInstance(_provider, typeof(K)) as K;
+
+            if (genericArguments.Length > 0)
             {
-                Type[] genericArguments = parentType.GetGenericArguments();
-                if (genericArguments.Length > 0)
+                Type genericT = genericArguments[0];
+
+                if (genericT == typeof(T))
                 {
-                    Type genericT = genericArguments[0];
+                    BLBaseValidator<T> baseValidator = validator as BLBaseValidator<T>;
 
-                    if (genericT == typeof(T))
-                    {
-                        SDKValidator.Validate<T>(BaseObj, validator, ref baseOperation);;
-                    }
-                    else
-                    {
-                        MethodInfo validateMethod = typeof(SDKValidator).GetMethod("Validate").MakeGenericMethod(genericT);
+                    SDKValidator.Validate<T>(BaseObj, baseValidator, ref baseOperation);
+                }
+                else
+                {
+                    var _validator = typeof(BLBaseValidator<>).MakeGenericType(genericT);
+                    var basevalidator = Activator.CreateInstance(_validator);
 
-                        object[] parameters = new object[] { BaseObj, validator, baseOperation };
-                        validateMethod.Invoke(null, parameters);
-                    }
+                    MethodInfo validateMethod = typeof(SDKValidator).GetMethod("Validate").MakeGenericMethod(genericT);
+
+                    object[] parameters = new object[] { this, basevalidator, baseOperation };
+                    validateMethod.Invoke(null, parameters);
                 }
             }
-           
-           var c = "";
-
-           SDKValidator.Validate<T>(BaseObj, validator, ref baseOperation);
         }
 
         private Dictionary<string, object> GetPrimaryKey()
