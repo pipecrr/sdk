@@ -17,6 +17,8 @@ using System.Threading.Tasks;
 using Microsoft.JSInterop;
 using DevExpress.Data.Mask.Internal;
 using Siesa.SDK.Frontend.Components.Layout;
+using Siesa.Global.Enums;
+using Siesa.SDK.Frontend.Services;
 
 
 
@@ -125,6 +127,12 @@ public partial class SDKInputFile : SDKComponent
     [Inject]
     private IServiceProvider ServiceProvider { get; set; }
 
+    [Inject]
+    private IFeaturePermissionService FeaturePermissionService { get; set; }
+
+    [Inject]
+    private SDKNotificationService Notification { get; set; }
+
     private ElementReference previewImageElem;
 
     private InputFileChangeEventArgs InputFile;
@@ -143,9 +151,15 @@ public partial class SDKInputFile : SDKComponent
 
     private CancellationTokenSource _cancellationToken;
     private string _display = "none"; 
+    private bool CanAcess { get; set; }
+    private bool CanCreate { get; set; }
+    private bool CanEdit { get; set; }
+    private bool CanDelete { get; set; }
+
 
     protected override async Task OnInitializedAsync()
     {
+        await CheckPermissions().ConfigureAwait(true);
         base.OnInitialized();
     }
 
@@ -156,11 +170,11 @@ public partial class SDKInputFile : SDKComponent
             _cancellationToken.Cancel();
         }
         _cancellationToken = new CancellationTokenSource();
-        await Task.Delay(500, _cancellationToken.Token);
+        await Task.Delay(500, _cancellationToken.Token).ConfigureAwait(true);
         _IsLoading = true;
-        if (IsMultiple && _FilesSelected.Count == 0)
+        if (IsMultiple && _FilesSelected.Count == 0 && CanAcess)
         {
-            var response = await BackendRouterService.GetSDKBusinessModel("BLAttachmentDetail", AuthenticationService).Call("GetAttachmentsDetail", RowidAttachmentRelationship, SaveBytes);
+            var response = await BackendRouterService.GetSDKBusinessModel("BLAttachmentDetail", AuthenticationService).Call("GetAttachmentsDetail", RowidAttachmentRelationship, SaveBytes).ConfigureAwait(true);
             if (response.Success && response.Data != null && response.Data.Count > 0)
             {
                 var attachments = response.Data;
@@ -176,9 +190,9 @@ public partial class SDKInputFile : SDKComponent
                 _UrlImage = _FilesSelected[0].Url;
             }
         }
-        else if (RowidAttachmentDetail > 0)
+        else if (RowidAttachmentDetail > 0 && CanAcess)
         {
-            var response = await BackendRouterService.GetSDKBusinessModel("BLAttachmentDetail", AuthenticationService).Call("GetAttachmentDetail", RowidAttachmentDetail);
+            var response = await BackendRouterService.GetSDKBusinessModel("BLAttachmentDetail", AuthenticationService).Call("GetAttachmentDetail", RowidAttachmentDetail).ConfigureAwait(true);
             if (response.Success && response.Data != null)
             {
                 var attachment = response.Data;
@@ -193,7 +207,8 @@ public partial class SDKInputFile : SDKComponent
         }
         _IsLoading = false;
         StateHasChanged();
-        base.OnParametersSetAsync();
+
+        await base.OnParametersSetAsync().ConfigureAwait(true);
     }
 
     private async Task GetPreviewFile()
@@ -216,7 +231,7 @@ public partial class SDKInputFile : SDKComponent
     }
     private void ClickIcon()
     {
-        JSRuntime.InvokeVoidAsync("clickInputFile", _refinputFile.Element);
+       JSRuntime.InvokeVoidAsync("clickInputFile", _refinputFile.Element);
     }
 
     private void ClickImg(SDKInputFieldDTO sdkInputFieldDTO)
@@ -237,8 +252,8 @@ public partial class SDKInputFile : SDKComponent
                 var files = InputFile.GetMultipleFiles();
                 foreach (var itemFile in files)
                 {
-                    var file = await ConvertToIFormFile(itemFile);
-                    var urlImage = await GetFileUrl(file);
+                    var file = await ConvertToIFormFile(itemFile).ConfigureAwait(true);
+                    var urlImage = await GetFileUrl(file).ConfigureAwait(true);
 
                     SDKInputFieldDTO inputFieldDTO = new()
                     {
@@ -265,7 +280,7 @@ public partial class SDKInputFile : SDKComponent
     private async Task<string> GetFileUrl(IFormFile file)
     {
         var ms = new MemoryStream();
-        await file.CopyToAsync(ms);
+        await file.CopyToAsync(ms).ConfigureAwait(true);
         var base64 = Convert.ToBase64String(ms.ToArray());
         var url = $"data:{file.ContentType};base64,{base64}";
 
@@ -308,9 +323,9 @@ public partial class SDKInputFile : SDKComponent
                 {
                     throw new Exception("Debe especificar el RowidAttachmentRelationship");
                 }
-                if (_FilesDeleted.Count > 0)
+                if (_FilesDeleted.Count > 0 && CanDelete)
                 {
-                    var response = await BackendRouterService.GetSDKBusinessModel("BLAttachmentDetail", AuthenticationService).Call("DeleteMultiAttachmentDetail", _FilesDeleted);
+                    var response = await BackendRouterService.GetSDKBusinessModel("BLAttachmentDetail", AuthenticationService).Call("DeleteMultiAttachmentDetail", _FilesDeleted).ConfigureAwait(true);
                     if (!response.Success)
                     {
                         throw new Exception(response.Errors.First());
@@ -318,13 +333,13 @@ public partial class SDKInputFile : SDKComponent
                 }
                 foreach (var itemFile in _FilesToSave)
                 {
-                    await SaveAttachment(itemFile.File, itemFile);
+                    await SaveAttachment(itemFile.File, itemFile).ConfigureAwait(true);
                     _FilesToSave = new();
                 }
             }
             else
             {
-                await SaveAttachment(InputFile.File);
+                await SaveAttachment(InputFile.File).ConfigureAwait(true);
             }
         }
         catch (Exception ex)
@@ -335,7 +350,13 @@ public partial class SDKInputFile : SDKComponent
 
     private async Task SaveAttachment(IBrowserFile itemFile, SDKInputFieldDTO item = null)
     {
-        var formFile = await ConvertToIFormFile(itemFile);
+        if (!CanAcess || !CanCreate)
+        {
+            _ = Notification.ShowError("Custom.Generic.Unauthorized");
+            return;
+        }
+        
+        var formFile = await ConvertToIFormFile(itemFile).ConfigureAwait(true);
         var fileUploadDTO = new SDKFileUploadDTO();
 
         if (SaveBytes)
@@ -379,7 +400,7 @@ public partial class SDKInputFile : SDKComponent
             throw new Exception("El archivo es demasiado grande");
         }
 
-        await browserFile.OpenReadStream(maxAllowedSize: MaxSize).CopyToAsync(ms);
+        await browserFile.OpenReadStream(maxAllowedSize: MaxSize).CopyToAsync(ms).ConfigureAwait(true);
 
         var file = new FormFile(ms, 0, ms.Length, null, browserFile.Name)
         {
@@ -403,6 +424,23 @@ public partial class SDKInputFile : SDKComponent
             }
         }
     }
+    private async Task CheckPermissions()
+    {
+        if (FeaturePermissionService != null && !String.IsNullOrEmpty(BusinessName))
+        {
+            try
+            {
+                CanAcess = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.AccessAttachment, AuthenticationService).ConfigureAwait(true);
+                CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.UploadAttachment, AuthenticationService).ConfigureAwait(true);
+                CanEdit = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.DeleteAttachment, AuthenticationService).ConfigureAwait(true);
+                CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.DeleteAttachment, AuthenticationService).ConfigureAwait(true);
+            }
+            catch (Exception)
+            {
+                
+            }
+        }
+    } 
 }
 
 
