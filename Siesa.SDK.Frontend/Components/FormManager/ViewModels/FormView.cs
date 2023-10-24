@@ -743,7 +743,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         private async Task SaveBusiness()
         {
             Saving = true;
-            //var id = await BusinessObj.SaveAsync();
             if(CountUnicErrors>0){
                 GlobalLoaderService.Hide();
                 Saving = false;
@@ -762,6 +761,26 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             dynamic result = null;
             try{
                 result = await BusinessObj.ValidateAndSaveAsync();
+                if (FormViewsTablesA.Any())
+                {
+                    /*foreach (var formView in FormViewsTablesA)
+                    {
+                        dynamic resultA = null;
+                        try
+                        {
+                            resultA = await formView.BusinessObj.ValidateAndSaveAsync();
+                            result.Errors.AddRange(resultA.Errors);
+                        }
+                        catch(System.Exception ex)
+                        {
+                            GlobalLoaderService.Hide();
+                            Saving = false;
+                            ErrorMsg = ex.Message;
+                            ErrorList.Add("Exception: " + ex.Message);
+                            return;
+                        }
+                    }*/
+                }
             }catch(Exception ex){
                 GlobalLoaderService.Hide();
                 Saving = false;

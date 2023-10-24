@@ -559,8 +559,13 @@ namespace Siesa.SDK.Business
             {
                 if (_featurePermissionService != null && !string.IsNullOrEmpty(BusinessName) && !BusinessName.Equals("BLAttachmentDetail"))
                 {
-                    CanCreate = _featurePermissionService.CheckUserActionPermission(BusinessName, 1, AuthenticationService);
-                    CanEdit = _featurePermissionService.CheckUserActionPermission(BusinessName, 2, AuthenticationService);
+                    string businessName = BusinessName;
+                    if(businessName.StartsWith("BLA"))
+                    {
+                        businessName = businessName.Replace("BLA", "BL"); 
+                    }
+                    CanCreate = _featurePermissionService.CheckUserActionPermission(businessName, 1, AuthenticationService);
+                    CanEdit = _featurePermissionService.CheckUserActionPermission(businessName, 2, AuthenticationService);
                 }
                 if (!CanCreate && !CanEdit)
                 {
