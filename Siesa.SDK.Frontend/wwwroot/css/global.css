@@ -2008,36 +2008,63 @@ div.dxbs-btn-group.dxbs-input-group-prepend>.btn.dx-btn.btn-sm {
     border-color: var(--color_alert_info) !important;
 }
 
-.card_tabs {
-    height: 90%;
-    display: flex;
-    cursor: pointer;
-    border: 0.25rem solid transparent;
-	position: relative; 
+.card_tabs a, .card_tabs_active a {
+    position: relative;
+    padding: 0.875rem 1rem 0.25rem 1rem !important;
+    margin-top: 0.875rem;
+    margin-bottom: 0.25rem;
+    margin-right: 0.25rem;
+    line-height: 1;
+    border-radius: var(--border_radius_standar_max);
+    background: var(--color_panel_back);
+    border-width: 0px !important;
 }
-
-.card_tabs_active {
-    height: 90%;
-    border-radius: var(--border_radius_standar) !important;
-    display: flex;
-    cursor: pointer;
-    border: 0.25rem solid transparent;
-	box-shadow: 0 0 8px #959595;
-	position: relative; 
+.card_tabs a {
+    box-shadow: none;
 }
-
+.card_tabs_active a {
+    box-shadow: var(--shadow_standar);
+}
+.card_tabs_active a .tab_text{
+    color: var(--color_text) !important;
+    font-weight: bold;
+}
+.card_tabs a .tab_text {
+    color: var(--color_text_2) !important;
+}
+.nav-tabs 
+{
+    border-bottom: 1px solid var(--color_border) !important;
+}
 .icon_tabs {
     position: absolute;
-    top: -5px; 
-    left: 50%; 
-    transform: translateX(-50%); 
+    top: -0.875rem;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 1.5rem;
+    width: 1.5rem;
+    border-radius: 50%;
+    color: var(--color_light_text);
+    font-size: 0.875rem;
+    background: var(--color_text_2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .icon_tabs_active {
     position: absolute;
-    top: -5px; 
-    left: 50%; 
+    top: -0.875rem;
+    left: 50%;
     transform: translateX(-50%);
-    color: var(--color_primary); 
+    height: 1.5rem;
+    width: 1.5rem;
+    border-radius: 50%;
+    color: var(--color_light_text);
+    font-size: 0.875rem;
+    background: var(--color_primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 
