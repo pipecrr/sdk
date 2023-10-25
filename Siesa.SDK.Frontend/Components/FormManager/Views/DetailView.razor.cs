@@ -100,6 +100,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private Button ListButton { get; set; }
         private Button DeleteButton { get; set; }
         private string _viewdefName;
+        private List<string> StackTrace = new ();
 
         private void setViewContextField(FieldOptions field)
         {
@@ -521,8 +522,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             try{
                 result = await BusinessObj.DeleteAsync();
             }catch(Exception ex){
-                ErrorMsg = ex.Message;
-                ErrorList.Add(ErrorMsg);
+                //ErrorMsg = ex.Message;
+                ErrorList.Add("Custom.Generic.Message.Error");
+                StackTrace.Add(ex.Message);
             }
 
             if (result != null && result.Errors.Count > 0)

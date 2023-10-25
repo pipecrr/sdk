@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Frontend.Components.FormManager.Model;
 using Siesa.SDK.Shared.DTOS;
+using Microsoft.Extensions.Hosting;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -16,6 +18,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter] public List<string> GeneralErrors { get; set; }
         [Parameter] public List<string> ErrorMsg { get; set; }
         [Parameter] public bool VerifyContext { get; set; }
+        [Parameter] public List<string> StackTrace { get; set; } = new List<string>();
         private bool _detailVisible = false;
         private int _errorCount = 0;
         private string ClassError = "sdk_error_log_box_sup";
@@ -25,10 +28,17 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private Dictionary<string, object[]> _generalerrorsFormat = new Dictionary<string, object[]>();
 
         private List<string> _generalErrors = new List<string>();
+
+        private string? _environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"); 
         protected override async Task OnParametersSetAsync(){
             _errorCount = 0;
             _generalErrors = new List<string>();
             _errors = new List<SDKErrorsWindowDTO>();
+
+            if (_environment == Environments.Development && StackTrace.Any())
+                _generalErrors.AddRange(StackTrace);
+            
+            
             if (EditFormContext != null && EditFormContext.GetValidationMessages().Count() > 0 && VerifyContext){
                 var groupErrors = EditFormContext.GetValidationMessages().GroupBy(x => {
                     var errorsSplit = x.Split("//");
@@ -133,7 +143,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }else{
                 ClassError = "sdk_error_log_box_sup";
             }
-            base.OnParametersSetAsync();
+            await base.OnParametersSetAsync();
         }
 
         public void showDedtail(){

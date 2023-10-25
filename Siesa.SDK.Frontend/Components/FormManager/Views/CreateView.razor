@@ -26,7 +26,9 @@
 else if ((Panels == null || Panels.Count <= 0) && !IsDocument)
 {
     @* <ResourceViewer ResourceTag="Custom.Formview.NotDefinition" /> *@
-    <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList" VerifyContext="@ClickInSave"/>
+    <ErrorsWindow EditFormContext="@EditFormContext" 
+    GeneralErrors="@ErrorList" VerifyContext="@ClickInSave" StackTrace="@StackTrace"/>
+
 } else if (BusinessObj.BaseObj != null)
 {
     @if(IsSubpanel && ShowTitle){        
@@ -43,7 +45,7 @@ else if ((Panels == null || Panels.Count <= 0) && !IsDocument)
         <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" isCreateView="true" ShowAditionalFields="@ShowAditionalFields"/>
     }
     <CascadingValue Value="@this">
-       <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList" VerifyContext="@ClickInSave"/>
+       <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList" VerifyContext="@ClickInSave" StackTrace="@StackTrace"/>
     <EditForm id="@FormID"
               OnValidSubmit="@HandleValidSubmit"
               OnInvalidSubmit="@HandleInvalidSubmit"

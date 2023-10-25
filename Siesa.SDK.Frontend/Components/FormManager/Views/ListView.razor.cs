@@ -120,6 +120,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private bool _showActions = true;
         public String ErrorMsg = "";
         public List<String> ErrorList = new List<string>();
+        private List<string> StackTrace = new ();
         private IList<dynamic> SelectedObjects { get; set; } = new List<dynamic>();
         /// <summary>
         /// Gets or sets the selected items.
@@ -913,9 +914,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if(!UseFlex){
                 includeCount = true;
             }
-            var dbData = await BusinessObj.GetDataAsync(args.Skip, args.Top, filters, args.OrderBy, includeCount, _extraFields);
+        var dbData = await BusinessObj.GetDataAsync(args.Skip, args.Top, filters, args.OrderBy, includeCount, _extraFields);
             if(dbData.Errors != null && dbData.Errors.Count > 0){
-                ErrorList = dbData.Errors;
+                ErrorList.Add("Custom.Generic.Message.Error");
+                StackTrace.AddRange(dbData.Errors);
             }
             data = dbData.Data;
             count = dbData.TotalCount;
@@ -998,7 +1000,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     if (result != null && result.Errors.Count == 0){
                         return true;
                     }else{
-                        ErrorList.AddRange(result.Errors.Select(x => x.Message));
+                        StackTrace.AddRange(result.Errors.Select(x => x.Message));
+                        ErrorList.Add("Custom.Generic.Message.Error");
                         ErroInAction = true;
                         NotificationService.ShowError("Custom.Generic.Message.DeleteError");
                         StateHasChanged();                        
@@ -1248,6 +1251,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 }
                 var dbData = await BusinessObj.GetDataAsync(skip, take, filters, "", includeCount, _extraFields);
                 if(dbData.Errors != null && dbData.Errors.Count > 0){
+                    ErrorList.Add("Custom.Generic.Message.Error");
+                    StackTrace.AddRange(dbData.Errors);
                     ErrorList = dbData.Errors;
                 }
                 count = dbData.TotalCount;

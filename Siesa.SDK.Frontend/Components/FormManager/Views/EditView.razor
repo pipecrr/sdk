@@ -18,7 +18,7 @@
 }
 else if ((Panels == null || Panels.Count <= 0) && !IsDocument)
 {
-    <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList" VerifyContext="@ClickInSave"/>
+    <ErrorsWindow EditFormContext="@EditFormContext" GeneralErrors="@ErrorList" StackTrace="@StackTrace" VerifyContext="@ClickInSave"/>
 }
 else if (BusinessObj.BaseObj.Rowid != 0)
 {

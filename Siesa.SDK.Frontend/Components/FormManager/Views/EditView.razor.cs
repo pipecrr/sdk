@@ -12,15 +12,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         protected override async Task OnInitializedAsync()
         {
             DefaultViewdefName = String.IsNullOrEmpty(DefaultViewdefName) ? "edit" : DefaultViewdefName;
-            await base.OnInitializedAsync();
+            await base.OnInitializedAsync().ConfigureAwait(true);
         }
 
         protected override async Task CheckPermissions()
         {
-            await base.CheckPermissions();
+            await base.CheckPermissions().ConfigureAwait(true);
             if(!CanEdit)
             {
-                NotificationService.ShowError("Custom.Generic.Unauthorized");
+                _ = NotificationService.ShowError("Custom.Generic.Unauthorized");
                 ErrorMsg = "Custom.Generic.Unauthorized";
                 if(!IsSubpanel){
                     // NavigationService.NavigateTo("/", replace:true);

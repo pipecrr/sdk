@@ -103,6 +103,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         private string _viewdefName = "";
 
+        public List<string> StackTrace = new ();
+
         public bool ContainAttachments = false;
 
         protected bool loadDefaultViewdef = true;
@@ -679,7 +681,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 GlobalLoaderService.Hide();
                 Saving = false;
                 ErrorMsg = ex.Message;
-                ErrorList.Add("Exception: "+ex.Message);
+                StackTrace.Add(ex.Message);
                 return;
             }
 
@@ -726,7 +728,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     {
                         _messageStore.Add(fieldIdentifier, (string)error.Message);
                     }else{
-                        ErrorList.Add("Exception: "+error.Message);
+                        StackTrace.Add(error.Message);
+                        ErrorList.Add("Custom.Generic.Message.Error");
                     }
                 }
                 //ErrorMsg += "</ul>";
