@@ -612,6 +612,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 ErrorMsg = "";
                 ErrorList = new List<string>();
                 await InitView();
+                //TODO:Capture All Excepcion
             }
         }
         public void OnError(SDKUploadErrorEventArgsDTO args){
@@ -681,6 +682,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 GlobalLoaderService.Hide();
                 Saving = false;
                 ErrorMsg = ex.Message;
+                ErrorList.Add("Custom.Generic.Message.Error");
                 StackTrace.Add(ex.Message);
                 return;
             }
