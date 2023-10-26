@@ -41,6 +41,10 @@
     object-fit: contain;
 }
 
+.nav_logo:focus{
+    box-shadow:none !important;
+}
+
 @media (max-width: 767.98px) {    
     .whcm_logo_compania {
         max-width: 160px;

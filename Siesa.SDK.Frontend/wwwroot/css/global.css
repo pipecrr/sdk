@@ -1110,6 +1110,18 @@ div .form-control:focus {
     width: 100%;
 }
 
+.rz-dialog-content .search_back_hide{
+    transition: all 1s ease;
+    min-height: 1px;
+    max-height: auto;
+    padding-bottom: 0rem !important;
+    margin-bottom: 1rem;
+    overflow: hidden;
+    padding-top: 1rem;
+    margin-top: 0;
+    width: 100%;
+}
+
 .search_back_hide {
     transition: all 1s ease;
     min-height: 1px;
@@ -1909,7 +1921,7 @@ textarea.form-control{
 }
 
 .rz-dialog-content {
-    height: 100%;
+    height: auto;
 }
 
 .required-caption:after {
@@ -2343,6 +2355,11 @@ border-color: var(--color_border) !important;
     background-position: 0 0;
     animation: sprite-logo steps(59) 1500ms infinite;
 }
+
+.nav_logo:focus{
+    box-shadow:none !important;
+}
+
 @keyframes sprite-logo {
     0% {
         background-position-y: 0;
