@@ -156,8 +156,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Delete, AuthenticationService);
                     CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
                 }
-                catch (System.Exception)
+                catch (System.Exception ex)
                 {
+                    StackTrace.Add(ex.Message);
                 }
             }
         }
@@ -171,9 +172,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 }
                 ContainAttachments = true;
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
                 ContainAttachments = false;
+                StackTrace.Add(ex.Message);
             }
         }
         private string GetViewdef(string businessName)
@@ -246,8 +248,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             {
                 StateHasChanged();
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
+                StackTrace.Add(ex.Message);
                 _ = InvokeAsync(() => StateHasChanged());
             }
         }
@@ -293,7 +296,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             }
             catch (System.Exception)
             {
-                Console.WriteLine("Error");
+                StackTrace.Add(ex.Message);
             }
             if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
             {
@@ -531,7 +534,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 }
                 catch (System.Exception ex)
                 {
-                    Console.WriteLine($"Error: {ex.Message}");
+                    StackTrace.Add(ex.Message);
                 }
             }
             return shouldUpdate;
@@ -595,6 +598,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             }
             catch (System.Exception ex)
             {
+                StackTrace.Add(ex.Message);
             }
             //await InitView();
         }
@@ -612,7 +616,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 ErrorMsg = "";
                 ErrorList = new List<string>();
                 await InitView();
-                //TODO:Capture All Excepcion
             }
         }
         public void OnError(SDKUploadErrorEventArgsDTO args){
@@ -628,6 +631,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 //TODO: pdte por revision 
                 SavingFile = false;
                 return 0;
+                StackTrace.Add(ex.Message);
             }
             var horaInicio = DateTime.Now.Minute;
             while(SavingFile){
@@ -643,6 +647,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 }catch(Exception ex){
                     SavingFile = false;
                     return rowid;
+                    StackTrace.Add(ex.Message);
                 }
             }
             return 0;

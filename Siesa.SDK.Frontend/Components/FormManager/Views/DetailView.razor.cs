@@ -236,7 +236,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     }
                     catch (System.Exception ex)
                     {
-                        Console.WriteLine($"Error: {ex.Message}");
+                        StackTrace.Add(ex.Message);
                     }
                 }
 
@@ -602,8 +602,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         CanDelete = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.DeleteAttachment, AuthenticationService);
                         CanDetail = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.DownloadAttachment, AuthenticationService);
                     }
-                    catch (System.Exception)
+                    catch (System.Exception ex)
                     {
+                        StackTrace.Add(ex.Message);
                     }
                 }else
                 {
@@ -615,8 +616,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Delete, AuthenticationService);
                         CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
                     }
-                    catch (System.Exception)
+                    catch (System.Exception ex)
                     {
+                        StackTrace.Add(ex.Message);
                     }
                 }
 

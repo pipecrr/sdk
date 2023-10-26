@@ -276,18 +276,20 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         }
                         _isSearchOpen = true;
                     }
-                    catch (System.Exception)
+                    catch (System.Exception ex)
                     {
                         ShowList = true;
                         FieldsHidden = new List<FieldOptions>();
+                        StackTrace.Add(ex.Message);
                     }
 
                     try
                     {
                         SavedHiddenFields = await localStorageService.GetItemAsync<List<FieldOptions>>($"{BusinessName}.Search.HiddenFields");
                     }
-                    catch (System.Exception)
+                    catch (System.Exception ex)
                     {
+                        StackTrace.Add(ex.Message);
                     }
 
                 }
@@ -446,7 +448,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if(FeaturePermissionService != null){
                 try{
                     showButton = FeaturePermissionService.CheckUserActionPermissions(BusinessName, ListPermission, AuthenticationService);
-                }catch(System.Exception){
+                }catch(System.Exception ex)
+                {
+                    StackTrace.Add(ex.Message);
 
                 }
             }
@@ -467,8 +471,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         CanDelete = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.DeleteAttachment, AuthenticationService).ConfigureAwait(true);
                         CanDetail = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.DownloadAttachment, AuthenticationService).ConfigureAwait(true);
                     }
-                    catch (System.Exception)
+                    catch (System.Exception ex)
                     {
+                        StackTrace.Add(ex.Message);
                     }
                }else
                {
@@ -482,8 +487,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         CanImport = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Import, AuthenticationService).ConfigureAwait(true);
                         CanExport = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Export, AuthenticationService).ConfigureAwait(true);
                     }
-                    catch (System.Exception)
+                    catch (System.Exception ex)
                     {
+                        StackTrace.Add(ex.Message);
                     }
                }
 
@@ -643,7 +649,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         if(result){                            
                             break;
                         }                        
-                    }catch (Exception e){}
+                    }catch (Exception ex)
+                    {
+                        StackTrace.Add(ex.Message);
+                    }
                 }
             }
             return result;
@@ -750,9 +759,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     }
                 }
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
-
+                StackTrace.Add(ex.Message);
             }
             if (ConstantFilters != null)
             {
@@ -876,8 +885,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     }
                 }
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
+                StackTrace.Add(ex.Message);
             }
 
             return filters;
@@ -1222,9 +1232,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                              OnSelectionChanged(objects);
                              return;
                          }
-                         catch (Exception e)
+                         catch (Exception ex)
                          {
-                             Console.WriteLine(e);
+                             StackTrace.Add(ex.Message);
                          }
                          
                      }
@@ -1302,9 +1312,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 StateHasChanged();
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
                 _ = InvokeAsync(() => StateHasChanged());
+                StackTrace.Add(ex.Message);
             }
         }
 
@@ -1387,7 +1398,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                 }
                                 catch (Exception e)
                                 {
-                                    throw;
+                                    StackTrace.Add(e.Message);
                                 }
                             }
                             if (CustomAttr.Key == "sdk-show")
@@ -1399,7 +1410,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                 }
                                 catch (Exception e)
                                 {
-                                    throw;
+                                    StackTrace.Add(e.Message);
                                 }
                             }
                         }
@@ -1460,7 +1471,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                     }
                                     catch (System.Exception ex)
                                     {
-                                        Console.WriteLine($"Error: {ex.Message}");
+                                        StackTrace.Add(ex.Message);
                                     }
                                     if(field.Hidden){
                                         FieldsHiddenList.Add(field.Name.Replace("BaseObj.", "", StringComparison.InvariantCultureIgnoreCase));
