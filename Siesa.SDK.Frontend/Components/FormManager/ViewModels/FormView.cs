@@ -294,7 +294,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             {
                 setViewContext(FormViewModel.Panels, ViewContext);
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
                 StackTrace.Add(ex.Message);
             }
