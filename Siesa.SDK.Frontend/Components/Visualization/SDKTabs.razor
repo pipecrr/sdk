@@ -2,7 +2,7 @@
 
 <CascadingValue Value="this">
     <DxTabs ChildContent="@ChildContent" ActiveTabIndex="@ActiveTabIndex"
-        ActiveTabIndexChanged=@OnActiveTabIndexChanged ScrollMode="TabsScrollMode.Auto" data-automation-id="@GetAutomationId()"/>
+        ActiveTabIndexChanged=@OnActiveTabIndexChanged ScrollMode="@ScrollMode" data-automation-id="@GetAutomationId()" CssClass="@CssClass"/>
 </CascadingValue>
 @code {
     [Parameter]
@@ -10,7 +10,13 @@
     [Parameter]
     public Action<int> OnChangeActiveTab { get; set; }
 
+    [Parameter]
+    public string CssClass { get; set; }
+
     public List<SDKTab> Tabs { get; set; } = new List<SDKTab>();
+
+    [Parameter]
+    public TabsScrollMode ScrollMode { get; set; }
 
 
     [Parameter] public int ActiveTabIndex {get; set;}
@@ -24,5 +30,4 @@
     {
             return base.GetAutomationId();
     }
-
 }

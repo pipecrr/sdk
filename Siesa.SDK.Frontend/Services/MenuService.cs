@@ -107,7 +107,7 @@ namespace Siesa.SDK.Frontend.Services
                         {
                             ResourceTag = $"SDKDev-{business.Name}.Plural",
                             Url = $"/{business.Name}/explorer/",
-                            Type = MenuType.CustomMenu
+                            Type = EnumMenuType.CustomMenu
                         };
                         DevMenu.Add(customActionMenu);
                     }
@@ -118,7 +118,7 @@ namespace Siesa.SDK.Frontend.Services
                             ResourceTag = $"SDKDev-{business.Name}.Plural",
                             Url = $"/{business.Name}/",
                             SubMenus = new List<E00061_Menu>(),
-                            Type = MenuType.CustomMenu
+                            Type = EnumMenuType.CustomMenu
                         };
                         //search methods that return a RenderFragment
                         var customActions = businessType.GetMethods().Where(m => m.ReturnType == typeof(RenderFragment) && m.Name != "Main");
@@ -128,7 +128,7 @@ namespace Siesa.SDK.Frontend.Services
                             {
                                 ResourceTag = $"SDKDev-{business.Name}.CustomAction.{customAction.Name}",
                                 Url = $"/{business.Name}/{customAction.Name}/",
-                                Type = MenuType.CustomMenu
+                                Type = EnumMenuType.CustomMenu
                             };
                             submenuItem.SubMenus.Add(customActionMenu);
                         }
@@ -280,7 +280,7 @@ namespace Siesa.SDK.Frontend.Services
         {
             foreach (var menuItem in _menus)
             {
-                if(menuItem.Type == MenuType.Separator)
+                if(menuItem.Type == EnumMenuType.Separator)
                 {
                     menuItem.CurrentText = " ";
                     continue;

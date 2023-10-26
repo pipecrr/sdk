@@ -11,9 +11,9 @@
 @inject IFeaturePermissionService FeaturePermissionService
 @inject IAuthenticationService AuthenticationService
 
-@if (Menu.Type != MenuType.Separator)
+@if (Menu.Type != EnumMenuType.Separator)
 {
-    @if(Menu.Feature != null && Menu.Type == MenuType.Feature && string.IsNullOrEmpty(Menu.Url))
+    @if(Menu.Feature != null && Menu.Type == EnumMenuType.Feature && string.IsNullOrEmpty(Menu.Url))
     {
         @if(ShowItemFeature)
         {
@@ -152,7 +152,7 @@
 
     private async Task ItemFeature()
     {
-        if(Menu.Feature != null && Menu.Type == MenuType.Feature && string.IsNullOrEmpty(Menu.Url))
+        if(Menu.Feature != null && Menu.Type == EnumMenuType.Feature && string.IsNullOrEmpty(Menu.Url))
         {
             ShowItemFeature = await FeaturePermissionService.CheckUserActionPermission(Menu.Feature.BusinessName, enumSDKActions.Access, AuthenticationService);
         }

@@ -1,4 +1,5 @@
 @using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Components.Visualization
 @inject UtilsManager UtilManager
 
 
@@ -18,8 +19,41 @@ else
                 </a>
             </TabTemplate>
         </DxTabPage>
-    }else{
-        <DxTabPage Text="@TitleText" ChildContent="@ChildContent" TabIconCssClass=@IconCssClass CssClass="@CssClass" />
+    }else if(!string.IsNullOrEmpty(IconCssClass))
+    {
+        <DxTabPage Text="@TitleText" ChildContent="@ChildContent" CssClass="@CssClass" >
+            <TabTemplate>
+                @if(GetCss().Equals("active"))
+                {
+                    <div class="card_tabs_active">
+                        <a role="tab" class="nav-link">
+                            <div class="icon_tabs_active">
+                                <SDKIcon Name="@IconCssClass" />
+                            </div>
+                            <div class="tab_text">
+                                @TitleText
+                            </div>
+                        </a>
+                    </div>
+                }else
+                {
+                    <div class="card_tabs">
+                        <a role="tab" class="nav-link">
+                            <div class="icon_tabs">
+                                <SDKIcon Name="@IconCssClass" />
+                            </div>
+                            <div class="tab_text">
+                                @TitleText
+                            </div>
+                        </a>
+                    </div>
+                }
+            </TabTemplate>
+        </DxTabPage>
+
+    }else
+    {
+        <DxTabPage Text="@TitleText" ChildContent="@ChildContent" CssClass="@CssClass" />
     }
 }
 

@@ -49,15 +49,30 @@ else if (ModelLoaded == true)
         }
         @if (Panels?.Count > 1)
         {
-            <DxFormLayoutTabPages ScrollMode="TabsScrollMode.Auto">
+            @if(Panels?.Count == 2)
+            {
                 @foreach (var panel in Panels.Skip(1))
                 {
-                    <SDKFormLayoutTabPage ResourceTag="@panel.ResourceTag">
-                        <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" ModelObj="@BusinessObj" DefaultColSize="@panel.ColSize" />
-                    </SDKFormLayoutTabPage>
+                    <div class="row pt-3">
+                        <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                    </div>
                 }
-            </DxFormLayoutTabPages>
-
+                
+            }else
+            {
+                <div class="pt-2">
+                    <SDKTabs>
+                        @foreach (var panel in Panels.Skip(1))
+                        {
+                            <SDKTab IconCssClass="@panel.IconClass" TitleResourceTag="@panel.ResourceTag">
+                                <div class="row pt-3">
+                                    <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                                </div>
+                            </SDKTab>
+                        }
+                    </SDKTabs>
+                </div>
+            }
         }
         @if(PanelsCollapsable?.Count>0){
             <div class="w-100">

@@ -2,19 +2,6 @@
 namespace Siesa.Global.Enums
 {
 
-	public enum PermissionUserTypes
-	{
-		User = 1,
-		Team = 2
-	}
-
-	public enum PermissionRestrictionType
-	{
-		Not_Applicable = 0,
-		Enabled = 1,
-		Disabled = 2
-	}
-
 	public enum enumStatusBaseMaster
 	{
 		Active = 1,
@@ -31,29 +18,6 @@ namespace Siesa.Global.Enums
 	{
 		Automatic = 0,
 		Manual = 1
-	}
-
-	public enum MenuType
-	{
-		Separator = 1,
-		Submenu = 2,
-		Feature = 3,
-		CustomMenu = 4
-	}
-
-	public enum CustomTypeField
-	{
-		SwitchField = 1,
-		SelectBarField = 2,
-		TextField = 3,
-		EmailField = 4,
-		RadioButtonField = 5
-	}
-
-	public enum PermissionAuthTypes
-	{
-		Query = 1,
-		Query_Tx = 2
 	}
 
 	public enum enumTypeButton
@@ -108,5 +72,42 @@ namespace Siesa.Global.Enums
 		Edit = 3,
 		Delete = 4,
 		Detail = 5
+	}
+
+	public enum EnumPermissionUserTypes
+	{
+		User = 1,
+		Team = 2
+	}
+
+	public enum EnumPermissionAuthTypes
+	{
+		Query = 1,
+		Query_Tx = 2
+	}
+
+	public enum EnumPermissionRestrictionType
+	{
+		Not_Applicable = 0,
+		Enabled = 1,
+		Disabled = 2
+	}
+
+	public enum EnumCustomTypeField
+	{
+		SwitchField = 1,
+		SelectBarField = 2,
+		TextField = 3,
+		EmailField = 4,
+		RadioButtonField = 5
+	}
+
+	public enum EnumMenuType
+	{
+		Separator = 1,
+		Submenu = 2,
+		Feature = 3,
+		CustomMenu = 4,
+		Suite = 5
 	}
 }

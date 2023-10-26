@@ -19,13 +19,13 @@ namespace Siesa.SDK.Entities
 		public virtual U? RowidRecord { get; set; }
 
 		[SDKRequired]
-		public virtual PermissionUserTypes UserType { get; set; }
+		public virtual EnumPermissionUserTypes UserType { get; set; }
 
 		[SDKRequired]
-		public virtual PermissionAuthTypes AuthorizationType { get; set; }
+		public virtual EnumPermissionAuthTypes AuthorizationType { get; set; }
 
 		[SDKRequired]
-		public virtual PermissionRestrictionType RestrictionType { get; set; }
+		public virtual EnumPermissionRestrictionType RestrictionType { get; set; }
 
 		[ForeignKey("DataVisibilityGroup")]
 		public virtual int? RowidDataVisibilityGroup { get; set; }
