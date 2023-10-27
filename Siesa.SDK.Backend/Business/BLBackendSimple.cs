@@ -194,7 +194,7 @@ namespace Siesa.SDK.Business
     //public class BLBackendSimple<T, K> : IBLBase<T> where T : class, IBaseSDK where K : BLBaseValidator<T>
     //BLBaseValidator<M>, donde M puede ser cualquie tipo
 
-    public class BLBackendSimple<T,K>: IBLBase<T> where T : class, IBaseSDK where K : class
+    public class BLBackendSimple<T,K>: IBLBase<T> where T : class, IBaseSDK where K : class, IBLBaseValidator
     {
         [JsonIgnore]
         protected IAuthenticationService AuthenticationService { get; set; }
@@ -805,17 +805,13 @@ namespace Siesa.SDK.Business
 
                     SDKValidator.Validate<T>(BaseObj, baseValidator, ref baseOperation);
                 }
-                else
+                else if (genericT == this.GetType())
                 {
-                    var _validator = typeof(BLBaseValidator<>).MakeGenericType(genericT);
-                    var basevalidator = Activator.CreateInstance(_validator);
-
+                   
                     MethodInfo validateMethod = typeof(SDKValidator).GetMethod("Validate").MakeGenericMethod(genericT);
 
-                    SDKValidator _sdkValidator = new ();
-
-                    object[] parameters = new object[] { this, basevalidator, baseOperation };
-                    validateMethod.Invoke(_sdkValidator, parameters);
+                    object[] parameters = new object[] { this, validator, baseOperation };
+                    validateMethod.Invoke(null, parameters);
                 }
             }
         }
