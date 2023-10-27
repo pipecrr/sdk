@@ -429,7 +429,7 @@ else
         var result = false;
 
         var dialog = await dialogService.ShowCustomDialog(ds =>
-            @<ConfirmDelete DialogService=@ds />
+            @<ConfirmDelete DialogService=@ds />, ShowTitle: false, standardWidth: SDKModalWidth.Small
         );
 
         if(dialog){

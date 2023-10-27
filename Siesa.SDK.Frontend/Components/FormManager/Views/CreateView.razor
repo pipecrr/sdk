@@ -124,7 +124,7 @@ else if ((Panels == null || Panels.Count <= 0) && !IsDocument)
     </EditForm>
     </CascadingValue>
     @if(IsSubpanel && ShowButtons){
-        <div clidColumnass="buttons-container">
+        <div clidColumnass="buttons-container pt-3">
             @foreach (var btn in FormViewModel.Buttons)
             {
                 <SDKButton RenderStyle="@btn.RenderStyle"  Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag"  />

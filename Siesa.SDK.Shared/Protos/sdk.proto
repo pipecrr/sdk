@@ -12,6 +12,7 @@ service SDK {
 
   rpc SaveBusinessObj (SaveBusinessObjRequest) returns (SaveBusinessObjResponse);
   rpc ValidateAndSaveBusinessObj (ValidateAndSaveBusinessObjRequest) returns (ValidateAndSaveBusinessObjResponse);
+  rpc ValidateAndSaveBusinessMultiObj (ValidateAndSaveBusinessMultiObjRequest) returns (ValidateAndSaveBusinessMultiObjResponse);
   rpc DeleteBusinessObj (DeleteBusinessObjRequest) returns (DeleteBusinessObjResponse);
 
   rpc GetMenuGroups (GetMenuGroupsRequest) returns (MenuGroupsResponse);
