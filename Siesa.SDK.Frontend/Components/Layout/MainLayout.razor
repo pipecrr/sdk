@@ -37,7 +37,6 @@
 <NotificationServiceSDK />
 <SDKGlobalLoader />
 <SDKToast />
-
 <SDKGridLayout>
     <Rows>
         <SDKGridLayoutRow Height="auto" />
@@ -106,6 +105,11 @@
 
 
 <SDKGoTop />
+@if (_showExtendedLayout)
+{
+    <InternalSDKMainLayoutExtend />
+}
+
 @code {
     private bool showNavMenu = false;
     [Parameter]
@@ -127,9 +131,21 @@
 
     private List<string> GeneralErrors = new List<string>();
     private List<string> FieldErrors = new List<string>();
+    private bool _showExtendedLayout = true;
     public async Task ToogleMaximize()
     {
         isMaximized = !isMaximized;
+        StateHasChanged();
+    }
+    
+    public bool IsShowingExtendedLayout()
+    {
+        return _showExtendedLayout;
+    }
+    
+    public void SetShowingExtendedLayout(bool showExtendedLayout)
+    {
+        _showExtendedLayout = showExtendedLayout;
         StateHasChanged();
     }
 

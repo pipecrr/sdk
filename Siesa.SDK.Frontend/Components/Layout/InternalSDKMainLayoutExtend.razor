@@ -1,0 +1,14 @@
+@using Siesa.SDK.Shared.Application
+
+@if (_types != null && _types.Any())
+{
+    @foreach (var type in _types)
+    {
+        <DynamicComponent Type="type" />
+    }
+}
+@code {
+
+    private List<Type> _types => SDKApp.GetExtraComponentsMainLayout();
+
+}
