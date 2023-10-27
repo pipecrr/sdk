@@ -124,7 +124,7 @@ namespace Siesa.SDK.Business
     }
 
 
-    public class BLFrontendSimple<T, K> : IBLBase<T> where T : class, IBaseSDK where K : BLBaseValidator<T>
+    public class BLFrontendSimple<T, K> : IBLBase<T> where T : class, IBaseSDK where K : class, IBLBaseValidator
     {
         [JsonIgnore]
         public dynamic ParentComponent {get;set;}
@@ -672,9 +672,32 @@ namespace Siesa.SDK.Business
         private void Validate(ref ValidateAndSaveBusinessObjResponse baseOperation)
         {
             ValidateBussines(ref baseOperation, BaseObj.GetRowid() == 0 ? BLUserActionEnum.Create : BLUserActionEnum.Update);
+
+            Type parentType = typeof(K).BaseType;
+
+            Type[] genericArguments = parentType.GetGenericArguments();
+
             K validator = Activator.CreateInstance<K>();
-            validator.ValidatorType = "BaseObj";
-            SDKValidator.Validate<T>(BaseObj, validator, ref baseOperation);
+
+            if (genericArguments.Length > 0)
+            {
+                Type genericT = genericArguments[0];
+
+                if (genericT == typeof(T))
+                {
+                    BLBaseValidator<T> baseValidator = validator as BLBaseValidator<T>;
+
+                    SDKValidator.Validate<T>(BaseObj, baseValidator, ref baseOperation);
+                }
+                else if (genericT == this.GetType())
+                {
+                   
+                    MethodInfo validateMethod = typeof(SDKValidator).GetMethod("Validate").MakeGenericMethod(genericT);
+
+                    object[] parameters = new object[] { this, validator, baseOperation };
+                    validateMethod.Invoke(null, parameters);
+                }
+            }
         }
 
         protected virtual void ValidateBussines(ref ValidateAndSaveBusinessObjResponse operationResult, BLUserActionEnum action)
