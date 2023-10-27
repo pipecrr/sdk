@@ -24,39 +24,41 @@ else
     }
     @if(ShowSearchForm && HasSearchViewdef)
     {
-        <div class="@StyleSearchForm">
-            <FreeForm 
-                @ref="@SearchFormRef" 
-                @key="@GetFormKey()"  
-                FormID="@SearchFormID" 
-                Viewdef="search" 
-                BusinessName="@BusinessName" 
-                BusinessObj="@BusinessObjNullable" 
-                SetTopBar="false" 
-                ValidateForm="false" 
-                OnSubmit="@OnClickSearch"
-                OnReady="@OnReadySearchForm"
+        <CascadingValue Value="this">
+            <div class="@StyleSearchForm">
+                <FreeForm 
+                    @ref="@SearchFormRef" 
+                    @key="@GetFormKey()"  
+                    FormID="@SearchFormID" 
+                    Viewdef="search" 
+                    BusinessName="@BusinessName" 
+                    BusinessObj="@BusinessObjNullable" 
+                    SetTopBar="false" 
+                    ValidateForm="false" 
+                    OnSubmit="@OnClickSearch"
+                    OnReady="@OnReadySearchForm"
                 />
-            <div class="d-flex flex-wrap justify-content-center">
-                @if(FieldsHidden.Any())
-                {
+                <div class="d-flex flex-wrap justify-content-center">
+                    @if(FieldsHidden.Any())
+                    {
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
+                            <SDKButton CssClass="w-100 mb-3 mb-sm-0" RenderStyle="SDKButtonRenderStyle.Secondary" Click="@OpenModalFilter">
+                                <ResourceViewer ResourceTag="Action.AddFilter" />
+                            </SDKButton>
+                        </div>
+                    }
                     <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
-                        <SDKButton CssClass="w-100 mb-3 mb-sm-0" RenderStyle="SDKButtonRenderStyle.Secondary" Click="@OpenModalFilter">
-                            <ResourceViewer ResourceTag="Action.AddFilter" />
+                        <SDKButton form="@SearchFormID" CssClass="w-100" RenderStyle="SDKButtonRenderStyle.Primary" SubmitFormOnClick="true">
+                            @if(LoadingSearch)
+                            {
+                                <SDKIcon Name="fa-spinner" CssClass="fa-spin-pulse mr-1"></SDKIcon>
+                            }
+                            <ResourceViewer ResourceTag="Action.Search" />
                         </SDKButton>
                     </div>
-                }
-                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
-                    <SDKButton form="@SearchFormID" CssClass="w-100" RenderStyle="SDKButtonRenderStyle.Primary" SubmitFormOnClick="true">
-                        @if(LoadingSearch)
-                        {
-                            <SDKIcon Name="fa-spinner" CssClass="fa-spin-pulse mr-1"></SDKIcon>
-                        }
-                        <ResourceViewer ResourceTag="Action.Search" />
-                    </SDKButton>
                 </div>
             </div>
-        </div>
+        </CascadingValue> 
     }
 
     @if(ShowList && !UseFlex)
