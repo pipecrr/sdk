@@ -805,15 +805,33 @@ namespace Siesa.SDK.Business
                 }
                 ValidateAndSaveBusinessObjResponse baseOperationObj = new();
                 ValidateBussines(ref baseOperationObj, baseObj.GetRowid() == 0 ? BLUserActionEnum.Create : BLUserActionEnum.Update);
+                Type parentType = typeof(K).BaseType;
+                Type[] genericArguments = parentType.GetGenericArguments();
                 K validator = ActivatorUtilities.CreateInstance(_provider, typeof(K)) as K;
-                validator.ValidatorType = "BaseObj";
-                SDKValidator.Validate<T>(baseObj, validator, ref baseOperationObj);
-                if (baseOperationObj.Errors.Count > 0)
+                if (genericArguments.Length > 0)
                 {
-                    baseOperationTmp.Errors.AddRange(baseOperationObj.Errors);
+                    Type genericT = genericArguments[0];
+                    if (genericT == typeof(T))                    {
+                        BLBaseValidator<T> baseValidator = validator as BLBaseValidator<T>;
+                        SDKValidator.Validate<T>(BaseObj, baseValidator, ref baseOperationObj);
+                        if(baseOperationObj.Errors.Count > 0)
+                        {
+                            baseOperationTmp.Errors.AddRange(baseOperationObj.Errors);
+                        }
+                    }
+                    else if (genericT == this.GetType())
+                    {                    
+                        MethodInfo validateMethod = typeof(SDKValidator).GetMethod("Validate").MakeGenericMethod(genericT);
+                        object[] parameters = new object[] { this, validator, baseOperationObj };
+                        validateMethod.Invoke(null, parameters);
+                        if(baseOperationObj.Errors.Count > 0)
+                        {
+                            baseOperationTmp.Errors.AddRange(baseOperationObj.Errors);
+                        }
+                    }
                 }
             });
-            baseOperation = baseOperationTmp;
+            baseOperation = baseOperationTmp;            
         }
 
         protected virtual void SaveDynamicEntity(Int64 rowid, SDKContext context)

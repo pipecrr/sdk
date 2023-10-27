@@ -270,7 +270,7 @@
     }
 
     private async Task GetCompaniesGroupsValues(){
-        var CompaniesGroups = await BackendRouterService.GetSDKBusinessModel("BLCompanyGroup", AuthenticationService).GetData(0, null, includeCount: true, extraFields: new List<string>(){
+        var CompaniesGroups = await BackendRouterService.GetSDKBusinessModel("BLSDKCompanyGroup", AuthenticationService).GetData(0, null, includeCount: true, extraFields: new List<string>(){
                 "Id",
             });
         var ListCompanies = CompaniesGroups.Data.Select(x => JsonConvert.DeserializeObject<JObject>(x)).ToList();

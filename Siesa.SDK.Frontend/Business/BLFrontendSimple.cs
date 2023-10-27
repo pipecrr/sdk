@@ -695,8 +695,7 @@ namespace Siesa.SDK.Business
         {
             throw new NotImplementedException();
         }
-
-
+        
         private void Validate(ref ValidateAndSaveBusinessObjResponse baseOperation, List<T> listBaseObj = null)
         {
             if(listBaseObj == null){
@@ -705,10 +704,33 @@ namespace Siesa.SDK.Business
             }
             foreach (var item in listBaseObj)
             {
-                ValidateBussines(ref baseOperation, item.GetRowid() == 0 ? BLUserActionEnum.Create : BLUserActionEnum.Update);
+                ValidateBussines(ref baseOperation, BaseObj.GetRowid() == 0 ? BLUserActionEnum.Create : BLUserActionEnum.Update);
+
+                Type parentType = typeof(K).BaseType;
+
+                Type[] genericArguments = parentType.GetGenericArguments();
+
                 K validator = Activator.CreateInstance<K>();
-                validator.ValidatorType = "BaseObj";
-                SDKValidator.Validate<T>(BaseObj, validator, ref baseOperation);
+
+                if (genericArguments.Length > 0)
+                {
+                    Type genericT = genericArguments[0];
+
+                    if (genericT == typeof(T))
+                    {
+                        BLBaseValidator<T> baseValidator = validator as BLBaseValidator<T>;
+
+                        SDKValidator.Validate<T>(BaseObj, baseValidator, ref baseOperation);
+                    }
+                    else if (genericT == this.GetType())
+                    {
+                    
+                        MethodInfo validateMethod = typeof(SDKValidator).GetMethod("Validate").MakeGenericMethod(genericT);
+
+                        object[] parameters = new object[] { this, validator, baseOperation };
+                        validateMethod.Invoke(null, parameters);
+                    }
+                }
             }
         }
 
