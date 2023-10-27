@@ -12,6 +12,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         protected override async Task OnInitializedAsync()
         {
             DefaultViewdefName = String.IsNullOrEmpty(DefaultViewdefName) ? "edit" : DefaultViewdefName;
+            if (IsTableA)
+            {
+                InitViewTableA();
+            }
             await base.OnInitializedAsync();
         }
 

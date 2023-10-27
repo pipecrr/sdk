@@ -111,7 +111,20 @@ else if (BusinessObj.BaseObj.Rowid != 0)
                 </CascadingValue>
             </CascadingValue>
         }
-</EditForm>
+        @if (HasTableA && !IsTableA)
+        {
+            <SDKCollapse>
+                <Items>
+                    @foreach (var company in Companies)
+                    {
+                        <SDKCollapseItem Text="@company.Name">
+                            <CreateView BusinessName="@BusinessNameA" BusinessNameParent="@BusinessName" BusinessObjAType="@_businessObjAType" RowidCompany="@company.Rowid" IsTableA="true" IsSubpanel="true" ShowTitle="false" ShowButtons="false" ParentForm="@this" ></CreateView>
+                        </SDKCollapseItem>
+                    }
+                </Items>
+            </SDKCollapse>
+        }
+    </EditForm>
     </CascadingValue>
     @if(IsSubpanel && ShowButtons){
         <div class="buttons-container">

@@ -55,7 +55,11 @@ namespace Siesa.SDK.Backend.Extensions
                 }else if (prefix.StartsWith("d"))
                 {
                     prefix = "cd" + prefix.Substring(1);
-                }else{
+                }else if (prefix.StartsWith("a"))
+                {
+                    prefix = "ca" + prefix.Substring(1);   
+                }
+                else{
                     prefix = "c" + prefix.Substring(1);
                 }
 

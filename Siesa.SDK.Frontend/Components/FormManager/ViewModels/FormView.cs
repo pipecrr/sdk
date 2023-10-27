@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
@@ -388,6 +389,21 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             if (BusinessObjAType != null && businessObj == null)
             {
                 BusinessObj = Activator.CreateInstance(BusinessObjAType, AuthenticationService);
+                if (BusinessObj != null)
+                {
+                    Int16? rowidCompany = (Int16?)(RowidCompany);
+                    dynamic baseObj = Activator.CreateInstance(BusinessObj.BaseObj.GetType());
+                    if (ParentForm.BusinessObj.BaseObj.rowid > 0)
+                    {
+                        
+                    }
+                    else
+                    {
+                        baseObj.RowidCompany = rowidCompany;
+                        BusinessObj.BaseObj = baseObj;
+                    }
+                }
+                
                 ParentForm.FormViewsTablesA.Add(this);
             }else
             {
@@ -763,11 +779,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 result = await BusinessObj.ValidateAndSaveAsync();
                 if (FormViewsTablesA.Any())
                 {
-                    /*foreach (var formView in FormViewsTablesA)
+                    foreach (var formView in FormViewsTablesA)
                     {
                         dynamic resultA = null;
                         try
                         {
+                            dynamic baseObj = formView.BusinessObj.BaseObj;
+                            Type typeRowidRecord = baseObj.GetType().GetProperty("RowidRecord").PropertyType; 
+                            dynamic rowidRecord = Convert.ChangeType(result.Rowid, typeRowidRecord);
+                            baseObj.RowidRecord = rowidRecord;
+                            formView.BusinessObj.BaseObj = baseObj;
                             resultA = await formView.BusinessObj.ValidateAndSaveAsync();
                             result.Errors.AddRange(resultA.Errors);
                         }
@@ -779,7 +800,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                             ErrorList.Add("Exception: " + ex.Message);
                             return;
                         }
-                    }*/
+                    }
                 }
             }catch(Exception ex){
                 GlobalLoaderService.Hide();
