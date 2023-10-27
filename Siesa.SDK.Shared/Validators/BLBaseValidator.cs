@@ -14,6 +14,6 @@ namespace Siesa.SDK.Shared.Validators
 
     public class BLBaseValidator<T> : AbstractValidator<T>, IBLBaseValidator
     {
-        public string ValidatorType { get; set; }
+        public string ValidatorType { get; set; } = "BaseObj";
     }
 }
