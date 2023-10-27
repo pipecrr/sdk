@@ -191,9 +191,6 @@ namespace Siesa.SDK.Business
         }
     }
 
-    //public class BLBackendSimple<T, K> : IBLBase<T> where T : class, IBaseSDK where K : BLBaseValidator<T>
-    //BLBaseValidator<M>, donde M puede ser cualquie tipo
-
     public class BLBackendSimple<T,K>: IBLBase<T> where T : class, IBaseSDK where K : class, IBLBaseValidator
     {
         [JsonIgnore]
@@ -777,14 +774,6 @@ namespace Siesa.SDK.Business
 
         private void Validate(ref ValidateAndSaveBusinessObjResponse baseOperation)
         {
-            /*
-             ValidateBussines(ref baseOperation, BaseObj.GetRowid() == 0 ? BLUserActionEnum.Create : BLUserActionEnum.Update);
-            //K validator = Activator.CreateInstance<K>();
-            K validator = ActivatorUtilities.CreateInstance(_provider, typeof(K)) as K;
-            validator.ValidatorType = "BaseObj";
-            SDKValidator.Validate<T>(BaseObj, validator, ref baseOperation);
-            */
-
             ValidateBussines(ref baseOperation, BaseObj.GetRowid() == 0 ? BLUserActionEnum.Create : BLUserActionEnum.Update);
 
             Type parentType = typeof(K).BaseType;
