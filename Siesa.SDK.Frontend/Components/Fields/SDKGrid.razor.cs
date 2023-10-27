@@ -160,6 +160,7 @@ public partial class SDKGrid<TItem> : SDKComponent
     /// <summary>
     /// This method is called when parameter values are set or changed.
     /// </summary>
+    
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
@@ -247,7 +248,9 @@ public partial class SDKGrid<TItem> : SDKComponent
     private void CellRender(DataGridCellRenderEventArgs<TItem> obj)
     {
         var property = obj.Column.Property;
-        if(property == null)
+        bool isActionColumn = (bool)(obj.Column.Template.Target?.GetType().GetProperty("IsActionColumn")?
+                .GetValue(obj.Column.Template.Target) ?? false);
+        if(property == null && !isActionColumn )
         {
             return;
         }
@@ -258,6 +261,16 @@ public partial class SDKGrid<TItem> : SDKComponent
                 .GetValue(obj.Column.Template.Target) ?? false);
         }
         if(mergeable){
+            if (isActionColumn)
+            {
+                var nextColumn = _grid.ColumnsCollection.SkipWhile(x => x.Property != property).Skip(1).FirstOrDefault(x => (bool)(x.Template.Target?.GetType().GetProperty("Mergeable")?.GetValue(x.Template.Target) ?? false));
+                property = nextColumn?.Property;
+            }
+
+            if (property == null)
+            {
+                return;
+            }
             CalculateRowspans(property);
             int rowspan = 1;
             string value = GetValue(obj.Data, property)?.ToString() ?? "";
