@@ -2,7 +2,7 @@ using System.Drawing;
 using DevExpress.Blazor;
 using Microsoft.AspNetCore.Components;
 
-namespace Siesa.SDK.Frontend.Components.Visualization;
+namespace Siesa.SDK.Frontend.Components.Visualization.Charts;
 
 public partial class SDKChartSeriesLabel : SDKComponent
 {

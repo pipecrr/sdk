@@ -1,6 +1,9 @@
+@using Siesa.SDK.Frontend.Components
+
 @typeparam TData
 @typeparam TArgument
 @typeparam TValue
+
 @inherits SDKComponent
 
 <DxChartAreaSeries
@@ -11,6 +14,17 @@ TValue="TValue"
 HoverMode="@HoverMode"
 Opacity="@Opacity"
 SelectionMode="@SelectionMode"
+Data= "@Data"
+ArgumentField="@ArgumentField"
+ValueField="@ValueField"
+Name="@Name"
+Color="@Color"
+Filter="@Filter"
+Pane="@Pane"
+BreakOnEmptyPoints="@BreakOnEmptyPoints"
+Axis="@Axis"
 >
+
+ @ChildContent
 
 </DxChartAreaSeries>
