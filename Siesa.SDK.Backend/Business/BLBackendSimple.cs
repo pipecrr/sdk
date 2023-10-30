@@ -1151,6 +1151,7 @@ namespace Siesa.SDK.Business
                         }
                         DeleteDynamicEntity(context);
                         DeleteVisibilityEntity(context);
+                        DeleteCompanyEntity(context);
                         DisableRelatedProperties(BaseObj, _navigationProperties);
                         context.SetProvider(_provider);
                         context.Set<T>().Remove(BaseObj);
@@ -1304,6 +1305,41 @@ namespace Siesa.SDK.Business
                 catch (Exception e)
                 {
                     throw new Exception($"Error deleting visibility fields {nameVisibilityEntity} {e.Message}");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Method used to delete records by company from table A{EntityName}
+        /// </summary>
+        /// <param name="context"></param>
+        /// <exception cref="Exception"></exception>
+        protected virtual void DeleteCompanyEntity(SDKContext context)
+        {
+            var nameSpaceEntity = typeof(T).Namespace;
+            var nameCompanyEntity = "A" + string.Concat(values: typeof(T).Name.AsSpan(1).ToString());
+            var companyEntityType = Utilities.SearchType(nameSpaceEntity + "." + nameCompanyEntity, true);
+            if (companyEntityType != null)
+            {
+                try
+                {
+                    var companyContextSet = context.GetType().GetMethod("AllSet", types: Type.EmptyTypes)?.MakeGenericMethod(companyEntityType).Invoke(context, null);
+                    var rowid = BaseObj.GetRowid();
+                    Assembly assemblyWhere = typeof(System.Linq.Dynamic.Core.DynamicQueryableExtensions).Assembly;
+                    var whereMethod = typeof(IQueryable).GetExtensionMethod(assemblyWhere, "Where", new[] { typeof(IQueryable), typeof(string), typeof(object[]) });
+                    companyContextSet = whereMethod.Invoke(companyContextSet, new object[] { companyContextSet, "RowidRecord = @0", new object[] { rowid } });
+                    Assembly assemblyDynamic = typeof(System.Linq.Dynamic.Core.DynamicEnumerableExtensions).Assembly;
+                    var dynamicListMethod = typeof(IEnumerable).GetExtensionMethod(assemblyDynamic, "ToDynamicList", new[] { typeof(IEnumerable) });
+                    dynamic companyEntitiesToDelete = dynamicListMethod.Invoke(companyContextSet, new object[] { companyContextSet });
+                    if (companyEntitiesToDelete?.Count > 0)
+                    {
+                        var deleteRangeMethod = typeof(DbContext).GetMethod("RemoveRange", new Type[] { typeof(IEnumerable<>).MakeGenericType(companyEntityType) });
+                        deleteRangeMethod?.Invoke(context, new object[] { companyEntitiesToDelete });
+                    }
+                }
+                catch (Exception e)
+                {
+                    throw new Exception($"Error deleting company fields {nameCompanyEntity} {e.Message}");
                 }
             }
         }
