@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using GrapeCity.ActiveReports.SectionReportModel;
 using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Model

@@ -394,21 +394,23 @@ public partial class SDKInputFile : SDKComponent
 
     private async Task<IFormFile> ConvertToIFormFile(IBrowserFile browserFile)
     {
-        var ms = new MemoryStream();
-        if (browserFile.Size > MaxSize)
-        {
-            throw new Exception("El archivo es demasiado grande");
-        }
-
-        await browserFile.OpenReadStream(maxAllowedSize: MaxSize).CopyToAsync(ms).ConfigureAwait(true);
-
-        var file = new FormFile(ms, 0, ms.Length, null, browserFile.Name)
-        {
-            Headers = new HeaderDictionary(),
-            ContentType = (browserFile.ContentType == "" ? "application/octet-stream" : browserFile.ContentType)
-        };
-
-        return file;
+        throw new NotImplementedException();
+        //TODO: Implementar el metodo para convertir el IBrowserFile a IFormFile y eliminar el codigo comentado (WASM)
+        // var ms = new MemoryStream();
+        // if (browserFile.Size > MaxSize)
+        // {
+        //     throw new Exception("El archivo es demasiado grande");
+        // }
+        //
+        // await browserFile.OpenReadStream(maxAllowedSize: MaxSize).CopyToAsync(ms).ConfigureAwait(true);
+        //
+        // var file = new FormFile(ms, 0, ms.Length, null, browserFile.Name)
+        // {
+        //     Headers = new HeaderDictionary(),
+        //     ContentType = (browserFile.ContentType == "" ? "application/octet-stream" : browserFile.ContentType)
+        // };
+        //
+        // return file;
     }
 
 

@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Siesa.SDK.Frontend.Test", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Siesa.SDK.Utils.Test", "Siesa.SDK.Utils.Test\Siesa.SDK.Utils.Test.csproj", "{7D76DD6B-35C5-407C-AF70-B795F98B41EF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Siesa.SDK.Frontend.BlazorServer", "Siesa.SDK.Frontend.BlazorServer\Siesa.SDK.Frontend.BlazorServer.csproj", "{7C3D5B12-6BF9-4789-89BE-BD50B0F06A2C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Siesa.SDK.Frontend.BlazorWasm", "Siesa.SDK.Frontend.BlazorWasm\Siesa.SDK.Frontend.BlazorWasm.csproj", "{D0466B40-0125-4BD2-B4C4-714A32FD67AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{7D76DD6B-35C5-407C-AF70-B795F98B41EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D76DD6B-35C5-407C-AF70-B795F98B41EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D76DD6B-35C5-407C-AF70-B795F98B41EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C3D5B12-6BF9-4789-89BE-BD50B0F06A2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C3D5B12-6BF9-4789-89BE-BD50B0F06A2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C3D5B12-6BF9-4789-89BE-BD50B0F06A2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C3D5B12-6BF9-4789-89BE-BD50B0F06A2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0466B40-0125-4BD2-B4C4-714A32FD67AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0466B40-0125-4BD2-B4C4-714A32FD67AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0466B40-0125-4BD2-B4C4-714A32FD67AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0466B40-0125-4BD2-B4C4-714A32FD67AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

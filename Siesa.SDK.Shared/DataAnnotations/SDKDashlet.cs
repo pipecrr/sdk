@@ -1,5 +1,4 @@
 using System;
-using Microsoft.AspNetCore.Components;
 
 namespace Siesa.SDK.Shared.DataAnnotations
 {

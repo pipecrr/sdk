@@ -647,24 +647,24 @@
         }
 
         await browserFile.OpenReadStream(maxAllowedSize: 3000000).CopyToAsync(ms);
-
-        var file = new FormFile(ms, 0, ms.Length, null, browserFile.Name)
-            {
-                Headers = new HeaderDictionary(),
-                ContentType = (browserFile.ContentType == "" ? "application/octet-stream" : browserFile.ContentType)
-            };
-
-        if (file != null)
-        {
-            ProfileImageData = $"data:{file.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}";
-            HasFile = true;
-            StateHasChanged();
-        }
-        else
-        {
-            HasFile = false;
-            Console.WriteLine("Error al cargar la imagen");
-        }
+        //TODO: fix wasm
+        // var file = new FormFile(ms, 0, ms.Length, null, browserFile.Name)
+        //     {
+        //         Headers = new HeaderDictionary(),
+        //         ContentType = (browserFile.ContentType == "" ? "application/octet-stream" : browserFile.ContentType)
+        //     };
+        //
+        // if (file != null)
+        // {
+        //     ProfileImageData = $"data:{file.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}";
+        //     HasFile = true;
+        //     StateHasChanged();
+        // }
+        // else
+        // {
+        //     HasFile = false;
+        //     Console.WriteLine("Error al cargar la imagen");
+        // }
     }
 
     public class ComplementaryColor //Temporal
