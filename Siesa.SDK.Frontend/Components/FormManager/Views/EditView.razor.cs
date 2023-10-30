@@ -14,7 +14,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             DefaultViewdefName = String.IsNullOrEmpty(DefaultViewdefName) ? "edit" : DefaultViewdefName;
             if (IsTableA)
             {
-                InitViewTableA();
+                await InitViewTableA().ConfigureAwait(true);
             }
             await base.OnInitializedAsync();
         }

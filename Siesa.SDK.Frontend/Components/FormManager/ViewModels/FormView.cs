@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Components.Forms;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using DevExpress.DataAccess.Native.Web;
 using Siesa.SDK.Frontend.Utils;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Frontend.Services;
@@ -370,7 +371,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 });
             }
         }
-        internal void InitViewTableA()
+        internal async Task InitViewTableA()
         {
             dynamic businessObj = null;
             EditContext editFormContext = null;
@@ -393,15 +394,22 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 {
                     Int16? rowidCompany = (Int16?)(RowidCompany);
                     dynamic baseObj = Activator.CreateInstance(BusinessObj.BaseObj.GetType());
-                    if (ParentForm.BusinessObj.BaseObj.rowid > 0)
+                    if (ParentForm.BusinessObj.BaseObj.Rowid > 0)
                     {
-                        
+                        string where = $"RowidCompany == {RowidCompany} && RowidRecord == {ParentForm.BusinessObj.BaseObj.Rowid}";
+                        var response = await BusinessObj.GetDataAsync(null, null, where, "");
+                        var totalCount = response.TotalCount;
+                        if (totalCount > 0)
+                        {
+                            dynamic data = response.Data[0];
+                            baseObj = data;
+                        }
                     }
                     else
                     {
                         baseObj.RowidCompany = rowidCompany;
-                        BusinessObj.BaseObj = baseObj;
                     }
+                    BusinessObj.BaseObj = baseObj;
                 }
                 
                 ParentForm.FormViewsTablesA.Add(this);

@@ -23,7 +23,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             DefaultViewdefName = String.IsNullOrEmpty(DefaultViewdefName) ? "create" : DefaultViewdefName;
             if (IsTableA)
             {
-                InitViewTableA();
+                await InitViewTableA().ConfigureAwait(true);
             }
             await BusinessObj.InstanceDynamicEntities(BusinessName);
             
