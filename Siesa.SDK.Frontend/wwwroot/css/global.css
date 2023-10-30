@@ -77,6 +77,8 @@
     /* Base: color error log */
     --color_error_log_back_180: transparent;
 
+    --dxbl-fl-caption-font-weight: 700;
+
     --rz-notification-error-icon-color: #FFFFFF !important;
     --rz-notification-warning-icon-color: #FFFFFF !important;
     --rz-notification-success-icon-color: #FFFFFF !important;
@@ -193,6 +195,7 @@
 
 *:focus {
     box-shadow: 0 0 0 0.25rem var(--color_focus_general) !important;
+    outline: none !important;
 }
 
 html {
@@ -741,18 +744,30 @@ input#collapse_open:checked~.collapse_open_btn>.nav_btn_standar_text {
 }
 
 .layout_btn_standar-sm {
-    max-width: 31px;
-    min-width: 31px;
-    max-height: 31px;
-    min-height: 31px;
+    max-width: 1.938rem;
+    min-width: 1.938rem;
+    max-height: 1.938rem;
+    min-height: 1.938rem;
     color: var(--color_primary) !important;
     padding: 0.25rem !important;
     font-size: 1.3rem !important;
     display: flex !important;
-    justify-content: center;
-    align-items: center;
+    justify-content: center !important;
+    align-items: center !important;
     position: relative;
     background: none;
+    background-color: transparent !important;
+    border: none !important;
+}
+
+.layout_btn_standar-sm:hover {
+    max-width: 1.938rem;
+    min-width: 1.938rem;
+    max-height: 1.938rem;
+    min-height: 1.938rem;    
+    background: none;
+    background-color: transparent !important;
+    border: none !important;
 }
 
 .layout_btn_standar-sm::before {
@@ -775,6 +790,10 @@ input#collapse_open:checked~.collapse_open_btn>.nav_btn_standar_text {
     width: 100%;
     opacity: 1;
     transition-duration: .2s;
+}
+
+.layout_btn_standar-sm i{
+    line-height: 0;
 }
 
 .layout_btn_standar-sm:hover i,
@@ -1107,6 +1126,18 @@ div .form-control:focus {
     width: 100%;
 }
 
+.rz-dialog-content .search_back_hide{
+    transition: all 1s ease;
+    min-height: 1px;
+    max-height: auto;
+    padding-bottom: 0rem !important;
+    margin-bottom: 1rem;
+    overflow: hidden;
+    padding-top: 1rem;
+    margin-top: 0;
+    width: 100%;
+}
+
 .search_back_hide {
     transition: all 1s ease;
     min-height: 1px;
@@ -1146,6 +1177,7 @@ div .form-control:focus {
 
 .whcm_modal_relacion {
     overflow: unset !important;
+    border-radius: var(--border_radius_standar_max) !important;
 }
 
 .whcm_modal_relacion.aditional_fields_padding_0>.rz-dialog-content {
@@ -1155,6 +1187,7 @@ div .form-control:focus {
 .whcm_modal_relacion>.rz-dialog-content {
     overflow: unset !important;
     background: var(--color_panel_back);
+    padding: 1rem;
 }
 
 .rz-dialog-wrapper {
@@ -1904,7 +1937,7 @@ textarea.form-control{
 }
 
 .rz-dialog-content {
-    height: 100%;
+    height: auto;
 }
 
 .required-caption:after {
@@ -2261,6 +2294,63 @@ border-color: var(--color_border) !important;
     z-index: 1;
 }
 
+.dxbl-text-edit>.dxbl-text-edit-input, .dxbl-text-edit>.dxbl-text-edit-template, .dxbl-text-edit>.dxbl-text-edit-template .dxbl-text-edit-input, .dxbl-text-edit>textarea{
+    background-color: var(--color_input_back) !important;
+}
+
+.dxbl-row{
+    position: relative !important;
+}
+
+.dxbl-text{
+    font-weight: 700 !important;
+    color: var(--color_text);
+}
+
+.dxbl-tabs-tablist{
+    background: transparent !important;
+}
+
+
+.dxbl-scroll-viewer-content .dxbl-tabs-item .dxbl-text{
+    line-height: 1;
+}
+
+.dxbl-scroll-viewer-content .dxbl-tabs-item{
+    border: none;
+    border-color: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none;
+    padding: 0.7rem 1.2rem !important;
+    font-size: 1rem;
+}
+
+.dxbl-scroll-viewer-content .dxbl-tabs-item .dxbl-text{
+    color: var(--color_text_2) !important;
+}
+
+.dxbl-scroll-viewer-content .dxbl-active{
+    border: none;
+    border-color: transparent !important;
+    background-color: transparent !important;
+    box-shadow: inset 0px -3px 0px var(--color_primary);
+    padding: 0.7rem 1.2rem !important;
+    font-size: 1rem;
+}
+
+.dxbl-scroll-viewer-content .dxbl-active .dxbl-text{
+    color: var(--color_text) !important;
+}
+
+.dxbl-tabs-content{
+    padding-top: 1rem;
+}
+
+.rz-dialog-titlebar {
+    border-top-left-radius: var(--border_radius_standar_max);
+    border-top-right-radius: var(--border_radius_standar_max);
+}
+
 .sdk-loader {
     width: 100vw;
     height: 100vh;
@@ -2281,6 +2371,11 @@ border-color: var(--color_border) !important;
     background-position: 0 0;
     animation: sprite-logo steps(59) 1500ms infinite;
 }
+
+.nav_logo:focus{
+    box-shadow:none !important;
+}
+
 @keyframes sprite-logo {
     0% {
         background-position-y: 0;

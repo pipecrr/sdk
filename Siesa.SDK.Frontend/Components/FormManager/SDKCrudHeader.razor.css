@@ -9,7 +9,7 @@
     justify-content: center;
     flex-direction: column;
     max-width: min-content;
-    color: var(--color_light_text);
+    color: var(--color_light);
 }
 .sdk-crud-header-title {
     font-size: 0.875rem;
@@ -31,7 +31,7 @@
 }
 
 .sdk-crud-header-fields {
-    padding-top: 1rem;
+    padding-bottom: 1rem;
     background-color: var(--color_back_body);
     border-top-right-radius: var(--border_radius_standar_max);
     border-bottom-right-radius: var(--border_radius_standar_max);

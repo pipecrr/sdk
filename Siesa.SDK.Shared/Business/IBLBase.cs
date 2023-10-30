@@ -17,6 +17,7 @@ namespace Siesa.SDK.Shared.Business
         T Get(Int64 rowid, List<string> extraFields = null);
         Task<T> GetAsync(Int64 rowid, List<string> extraFields = null);
         ValidateAndSaveBusinessObjResponse ValidateAndSave(bool ignorePermissions = false);
+        ValidateAndSaveBusinessMultiObjResponse ValidateAndSave(List<T> listBaseObj, bool ignorePermissions = false);
         void Update();
         DeleteBusinessObjResponse Delete();
         Siesa.SDK.Shared.Business.LoadResult GetData(int? skip, int? take, string filter, string orderBy, QueryFilterDelegate<T> queryFilter, bool includeCount = false, bool includeAttachments = true,  List<string> extraFields = null);
