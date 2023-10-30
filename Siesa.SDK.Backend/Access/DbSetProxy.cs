@@ -457,24 +457,40 @@ namespace Siesa.SDK.Backend.Access
 
         IAsyncEnumerator<TEntity> IAsyncEnumerable<TEntity>.GetAsyncEnumerator(CancellationToken cancellationToken)
         {
-            return set.GetAsyncEnumerator(cancellationToken);
+            return query.AsAsyncEnumerable().GetAsyncEnumerator(cancellationToken);
         }
 
         public override TEntity? Find(params object?[]? keyValues)
         {
+            if (FirstOrDefault(keyValues, out var tEntity)) return tEntity;
             return set.Find(keyValues);
         }
 
-
         public override ValueTask<TEntity?> FindAsync(params object?[]? keyValues)
         {
+            if(FirstOrDefault(keyValues, out var tEntity)) return new ValueTask<TEntity?>(tEntity);
             return set.FindAsync(keyValues);
         }
 
 
         public override ValueTask<TEntity?> FindAsync(object?[]? keyValues, CancellationToken cancellationToken)
         {
+            if(FirstOrDefault(keyValues, out var tEntity)) return new ValueTask<TEntity?>(tEntity);
             return set.FindAsync(keyValues, cancellationToken);
+        }
+        
+        private bool FirstOrDefault(object[] keyValues, out TEntity tEntity)
+        {
+            if (keyValues != null && keyValues.Length == 1 && keyValues[0] != null)
+            {
+                {
+                    tEntity = query.Where("Rowid == @0", keyValues[0]).FirstOrDefault();
+                    return true;
+                }
+            }
+
+            tEntity = null;
+            return false;
         }
 
         public override LocalView<TEntity> Local => set.Local;
