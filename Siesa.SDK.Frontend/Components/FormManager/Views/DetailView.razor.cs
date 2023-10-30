@@ -35,6 +35,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         [Parameter]
         public bool IsSubpanel { get; set; }
+        [Parameter]
+        public Type BusinessObjAType { get; set; }
 
         [Parameter]
         public bool ShowTitle { get; set; } = true;
@@ -51,6 +53,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         [Parameter]
         public string BLNameParentAttatchment { get; set; }
+        [Parameter]
+        public string BusinessNameParent { get; set; }
+        
+        [Parameter]
+        public DetailView ParentDetail { get; set; }
+        
+        [Parameter]
+        public List<string> ParentBaseObj { get; set; }
+        [Parameter]
+        public bool IsTableA { get; set; }
+        [Parameter]
+        public long RowidCompany { get; set; }
         /// <summary>
         /// Gets or sets a value indicating whether the business object is a document.
         /// </summary>
@@ -100,6 +114,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private Button ListButton { get; set; }
         private Button DeleteButton { get; set; }
         private string _viewdefName;
+        
+        internal bool HasTableA;
+        internal Type InternalBusinessObjAType;
+        internal string BusinessNameA { get; set; }
+        public List<DetailView> DetailViewsTablesA { get; set; } = new List<DetailView>();
+        internal List<E00201_Company> Companies { get; set; } = new List<E00201_Company>();
 
         private void setViewContextField(FieldOptions field)
         {
@@ -259,6 +279,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 bName = BusinessName;
             }
+            
+            if (!IsTableA)
+            {
+                await VerifyTableA().ConfigureAwait(true);
+            }
+            
             await CheckPermissions().ConfigureAwait(true);
             await CreateRelationshipAttachment().ConfigureAwait(true);
 
@@ -483,7 +509,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         protected override async Task OnInitializedAsync()
         {
-            await base.OnInitializedAsync();
+            if (IsTableA)
+            {
+                await InitViewTableA().ConfigureAwait(true);
+            }
+            await base.OnInitializedAsync().ConfigureAwait(true);
             //InitView();
         }
 
@@ -595,10 +625,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 {
                     try
                     {
-                        CanAcess = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.AccessAttachment, AuthenticationService);
-                        CanCreate = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.UploadAttachment, AuthenticationService);
-                        CanDelete = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.DeleteAttachment, AuthenticationService);
-                        CanDetail = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.DownloadAttachment, AuthenticationService);
+                        CanAcess = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.AccessAttachment, AuthenticationService);
+                        CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.UploadAttachment, AuthenticationService);
+                        CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.DeleteAttachment, AuthenticationService);
+                        CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.DownloadAttachment, AuthenticationService);
                     }
                     catch (System.Exception)
                     {
@@ -607,11 +637,17 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 {
                     try
                     {
-                        CanAcess = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
-                        CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Create, AuthenticationService);
-                        CanEdit = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Edit, AuthenticationService);
-                        CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Delete, AuthenticationService);
-                        CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
+                        string businessName = BusinessName;
+                        if (IsTableA)
+                        {
+                            businessName = BusinessNameParent;
+                        }
+                        
+                        CanAcess = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Detail, AuthenticationService).ConfigureAwait(true);
+                        CanCreate = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Create, AuthenticationService).ConfigureAwait(true);
+                        CanEdit = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Edit, AuthenticationService).ConfigureAwait(true);
+                        CanDelete = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Delete, AuthenticationService).ConfigureAwait(true);
+                        CanDetail = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Detail, AuthenticationService).ConfigureAwait(true);
                     }
                     catch (System.Exception)
                     {
@@ -667,6 +703,66 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 return eject;
             }
             return obj;
+        }
+        
+        private async Task VerifyTableA()
+        {
+            BusinessNameA = BusinessObj.GetType().Name.Replace("BL", "BLA");
+            InternalBusinessObjAType = Utilities.SearchType(BusinessObj.GetType().Namespace + "." + BusinessNameA);
+            if (InternalBusinessObjAType != null)
+            {
+                HasTableA = true;
+                var bL = BackendRouterService.GetSDKBusinessModel("BLSDKCompany",AuthenticationService);
+                int rowidCompanyGroup = AuthenticationService.GetRowidCompanyGroup();
+                var dataCompany = await bL.GetData(null, null, $"RowidCompanyGroup == {rowidCompanyGroup}").ConfigureAwait(true);
+                Companies = dataCompany.Data.Select(x => JsonConvert.DeserializeObject<E00201_Company>(x)).ToList();
+            }
+        }
+        
+        internal async Task InitViewTableA()
+        {
+            dynamic businessObj = null;
+            if (ParentDetail.DetailViewsTablesA.Any())
+            {
+                foreach (var formview in ParentDetail.DetailViewsTablesA)
+                {
+                    if(formview.RowidCompany == RowidCompany)
+                    {
+                        businessObj = formview.BusinessObj;
+                        break;
+                    }
+                }
+            }
+            if (BusinessObjAType != null && businessObj == null)
+            {
+                BusinessObj = Activator.CreateInstance(BusinessObjAType, AuthenticationService);
+                if (BusinessObj != null)
+                {
+                    Int16? rowidCompany = (Int16?)(RowidCompany);
+                    dynamic baseObj = Activator.CreateInstance(BusinessObj.BaseObj.GetType());
+                    if (ParentDetail.BusinessObj.BaseObj.Rowid > 0)
+                    {
+                        string where = $"RowidCompany == {RowidCompany} && RowidRecord == {ParentDetail.BusinessObj.BaseObj.Rowid}";
+                        var response = await BusinessObj.GetDataAsync(null, null, where, "");
+                        var totalCount = response.TotalCount;
+                        if (totalCount > 0)
+                        {
+                            dynamic data = response.Data[0];
+                            baseObj = data;
+                        }
+                    }
+                    else
+                    {
+                        baseObj.RowidCompany = rowidCompany;
+                    }
+                    BusinessObj.BaseObj = baseObj;
+                }
+                
+                ParentDetail.DetailViewsTablesA.Add(this);
+            }else
+            {
+                BusinessObj = businessObj;
+            }
         }
     }
 }

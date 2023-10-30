@@ -137,7 +137,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         public Button SaveButton { get; set; }
         public bool isOnePanel { get; set; }
         internal bool HasTableA;
-        internal Type _businessObjAType;
+        internal Type InternalBusinessObjAType;
         internal string BusinessNameA { get; set; }
         public dynamic BaseObjA { get; set; }
         public dynamic BusinessObjA { get; set; }
@@ -425,8 +425,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         private async Task VerifyTableA()
         {
             BusinessNameA = BusinessObj.GetType().Name.Replace("BL", "BLA");
-            _businessObjAType = Utilities.SearchType(BusinessObj.GetType().Namespace + "." + BusinessNameA);
-            if (_businessObjAType != null)
+            InternalBusinessObjAType = Utilities.SearchType(BusinessObj.GetType().Namespace + "." + BusinessNameA);
+            if (InternalBusinessObjAType != null)
             {
                 HasTableA = true;
                 var bL = BackendRouterService.GetSDKBusinessModel("BLSDKCompany",AuthenticationService);
