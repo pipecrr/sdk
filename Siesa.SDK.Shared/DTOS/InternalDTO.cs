@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Siesa.SDK.Shared.DTOS
 {
-    public class MyDTO
+    public class InternalDTO
     {
         
         public dynamic InternalIndex { get; set; }
