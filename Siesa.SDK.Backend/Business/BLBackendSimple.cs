@@ -36,18 +36,11 @@ using Siesa.Global.Enums;
 using Siesa.SDK.Shared.Utilities;
 using System.Collections;
 using Siesa.SDK.Backend.LinqHelper.DynamicLinqHelper;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
-using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
-using Siesa.Global.Enums;
-using System.Diagnostics;
 using System.Text.RegularExpressions;
-using System.IO;
-using Google.Protobuf.Collections;
 
 namespace Siesa.SDK.Business
 {
@@ -1105,7 +1098,7 @@ namespace Siesa.SDK.Business
             try{
                 context.SaveChanges(); //TODO: Capturar errores db y hacer rollback
             }catch(Exception ex){
-                throw ex;
+                throw;
             }
             return baseObj.GetRowid();
         }
@@ -2492,36 +2485,7 @@ namespace Siesa.SDK.Business
                 dynamic result = CreateDynamicObjectFromJson(typeof(T), (JObject)item, EnumSearchList, ForeingDictionary, ref ErrorData);
                 BaseObjToImport.Add(result);
             });
-
-            /*foreach (var item in dataList){
-                //JObject itemObj = (JObject)item;
-                //List<string> Errors = new();
-                dynamic result = CreateDynamicObjectFromJson(typeof(T), (JObject)item, EnumSearchList, ForeingDictionary, ref ErrorData);
-                BaseObjToImport.Add(result);
-                BaseObj = result;
-                if(!ErrorData.Any()){
-                    // var resultValidate = ValidateAndSave();
-                    // if(resultValidate.Errors.Count > 0){
-                    //     itemObj.Add("Errors", JToken.FromObject(resultValidate.Errors));
-                    //     ErrorData.Add(itemObj);
-                    // }else{
-                    //     SuccessData.Add(BaseObj.GetRowid());
-                    // }
-                }
-            }*/
-            //ejemplo 1
-            /*foreach (var baseObj in BaseObjToImport)
-            {
-                BaseObj = baseObj;
-                if(!ErrorData.Any()){
-                    var resultValidate = ValidateAndSave();
-                    if(resultValidate.Errors.Count > 0){
-                        ErrorData.Add(resultValidate.Errors);
-                    }else{
-                        SuccessData.Add(BaseObj.GetRowid());
-                    }
-                }
-            }*/
+            
             ValidateAndSaveBusinessMultiObjResponse resultValidate = ValidateAndSave(BaseObjToImport);
 
             if(statusTransaccion){
@@ -2589,20 +2553,16 @@ namespace Siesa.SDK.Business
             return null;
         }
 
-        private Dictionary<string, object> GetDictionaryEnum(PropertyInfo EnumInfo)
+        private Dictionary<string, object> GetDictionaryEnum(PropertyInfo enumInfo)
         {
             using SDKContext context = CreateDbContext();
-            var EnumValues = Enum.GetValues(EnumInfo.PropertyType);
-            Dictionary<string, object> ReturnDic = new();
-
-            ReturnDic = context.Set<E00022_ResourceDescription>()
+            var enumValues = Enum.GetValues(enumInfo.PropertyType);
+            Dictionary<string, object> returnDic = context.Set<E00022_ResourceDescription>()
                                         .Include(x => x.Resource)
-                                        .Where(x => x.Resource.Id.Contains(EnumInfo.PropertyType.Name) && x.RowidCulture == AuthenticationService.GetRoiwdCulture())
-                                        .ToDictionary(x => x.Description, x => SetEnumValue(EnumValues, x.Resource.Id.Substring(x.Resource.Id.LastIndexOf('.') + 1)));
-            return ReturnDic;
+                                        .Where(x => x.Resource.Id.Contains(enumInfo.PropertyType.Name) && x.RowidCulture == AuthenticationService.GetRowidCulture())
+                                        .ToDictionary(x => x.Description, x => SetEnumValue(enumValues, x.Resource.Id.Substring(x.Resource.Id.LastIndexOf('.') + 1)));
+            return returnDic;
         }
-
-
 
         //========================================================
 
@@ -2610,7 +2570,7 @@ namespace Siesa.SDK.Business
 
 
         [SDKExposedMethod]
-        public ActionResult<List<MyDTO>> SetListForeingRowid(List<string> keys, List<string> values)
+        public ActionResult<List<InternalDTO>> SetListForeingRowid(List<string> keys, List<string> values)
         {
             using (SDKContext context = CreateDbContext())
                 try
@@ -2618,23 +2578,23 @@ namespace Siesa.SDK.Business
                     var query = context.Set<T>().AsQueryable();
                     var resultadoJoin = query.Where(BuildContainsExpression<T>(values, keys.Select(x => x.Substring(0, x.IndexOf('_'))).ToList<string>()).Compile())
                                                 .Select(
-                                                        item => new MyDTO
+                                                        item => new InternalDTO
                                                         {
                                                             Rowid = item.GetRowid(),
                                                             InternalIndex = ConvertInternalIndex(keys, item)
                                                         }
                                                     ).ToList();
-                    return new ActionResult<List<MyDTO>>() { Success = true, Data = resultadoJoin };
+                    return new ActionResult<List<InternalDTO>>() { Success = true, Data = resultadoJoin };
                 }
                 catch (Exception e)
                 {
-                    return new BadRequestResult<List<MyDTO>>() { Success = false, Errors = new List<string> { e.Message } };
+                    return new BadRequestResult<List<InternalDTO>>() { Success = false, Errors = new List<string> { e.Message } };
                 }
         }
 
-        private static Expression<Func<T, bool>> BuildContainsExpression<T>(List<string> values, List<string> fields)
+        private static Expression<Func<TEntity, bool>> BuildContainsExpression<TEntity>(List<string> values, List<string> fields)
         {
-            var parameter = Expression.Parameter(typeof(T), "x");
+            var parameter = Expression.Parameter(typeof(TEntity), "x");
             Expression concatExpression = null;
             foreach (var field in fields)
             {
@@ -2646,17 +2606,25 @@ namespace Siesa.SDK.Business
                 }
                 else
                 {
-                    concatExpression = Expression.Call(
-                        typeof(string).GetMethod("Concat", new[] { typeof(string), typeof(string) }),
-                        concatExpression,
-                        stringExpression
-                    );
+                    var concatMethod = typeof(string).GetMethod("Concat", new[] { typeof(string), typeof(string) });
+                    if (concatMethod != null)
+                    {
+                        concatExpression = Expression.Call(
+                            concatMethod,
+                            concatExpression,
+                            stringExpression
+                        );
+                    }
                 }
             }
             var containsMethod = typeof(List<string>).GetMethod("Contains");
             var valuesExpression = Expression.Constant(values);
+            if (containsMethod == null || concatExpression == null)
+            {
+                return null;
+            }
             var containsCall = Expression.Call(valuesExpression, containsMethod, concatExpression);
-            return Expression.Lambda<Func<T, bool>>(containsCall, parameter);
+            return Expression.Lambda<Func<TEntity, bool>>(containsCall, parameter);
         }
 
         private static string ConvertInternalIndex(List<string> keys, object obj)
@@ -2674,7 +2642,7 @@ namespace Siesa.SDK.Business
 
         //==============Metodo objetos foraneos=======================
 
-        private List<ForeignObjectDTO> CalculateForeingList(Type type)
+        private static List<ForeignObjectDTO> CalculateForeingList(Type type)
         {
             List<PropertyInfo> ForeignKeys = type.GetProperties().Where(x => x.GetCustomAttribute(typeof(ForeignKeyAttribute)) != null).ToList();
             List<ForeignObjectDTO> ForeingTypeList = new();
@@ -2717,10 +2685,10 @@ namespace Siesa.SDK.Business
             }
         }
 
-        private dynamic GetForeingObject(Type InstanceType)
+        private static dynamic GetForeingObject(Type instanceType)
         {
-            object ReturnInstance = Activator.CreateInstance(InstanceType);
-            return ReturnInstance;
+            object returnInstance = Activator.CreateInstance(instanceType);
+            return returnInstance;
         }
 
         //===================================================================
@@ -2775,42 +2743,41 @@ namespace Siesa.SDK.Business
             return (T)result;
         }
 
-        private ActionResult<dynamic> GetValidatedValue(Type TypeEntity, dynamic DynamicValue, string NameProperty, List<EnumSearchDTO> EnumSearchList)
-        { //TODO a SDK -> Cambiar a object
-            DynamicValue = DynamicValue == null ? "" : DynamicValue;
-            Type TypeDynamicValue = DynamicValue.GetType();
-            if (TypeDynamicValue == typeof(string))
+        private ActionResult<dynamic> GetValidatedValue(Type typeEntity, dynamic dynamicValue, string nameProperty, List<EnumSearchDTO> enumSearchList)
+        {
+            dynamicValue = dynamicValue == null ? "" : dynamicValue;
+            Type typeDynamicValue = dynamicValue.GetType();
+            if (typeDynamicValue == typeof(string) && string.IsNullOrEmpty(dynamicValue))
             {
-                if (string.IsNullOrEmpty(DynamicValue)) return new ActionResult<dynamic> { Success = true, Data = null };
+                return new ActionResult<dynamic> { Success = true, Data = null };
             }
-            if (TypeEntity == typeof(string))
+            if (typeEntity == typeof(string))
             {
-                return new ActionResult<dynamic> { Success = true, Data = DynamicValue.ToString() };
+                return new ActionResult<dynamic> { Success = true, Data = dynamicValue.ToString() };
             }
-            if (TypeEntity.BaseType == typeof(Enum))
+            if (typeEntity.BaseType == typeof(Enum))
             {
-                var EnumSearchDTO = EnumSearchList.Where(x => x.PropertyName.Equals(NameProperty)).FirstOrDefault();
-                if (EnumSearchDTO is not null)
+                var enumSearchDto = enumSearchList.FirstOrDefault(x => x.PropertyName.Equals(nameProperty));
+                if (enumSearchDto is not null)
                 {
-                    var EnumValue = EnumSearchDTO.EnumValues[DynamicValue];
-                    return new ActionResult<dynamic> { Success = true, Data = EnumValue };
+                    var enumValue = enumSearchDto.EnumValues[dynamicValue];
+                    return new ActionResult<dynamic> { Success = true, Data = enumValue };
                 }
             }
-            if (TypeDynamicValue == TypeEntity) return new ActionResult<dynamic> { Success = true, Data = DynamicValue };
+            if (typeDynamicValue == typeEntity) return new ActionResult<dynamic> { Success = true, Data = dynamicValue };
 
-            if (IsDate(TypeEntity, ref DynamicValue)) return new ActionResult<dynamic> { Success = true, Data = DynamicValue };
+            if (IsDate(typeEntity, ref dynamicValue)) return new ActionResult<dynamic> { Success = true, Data = dynamicValue };
 
-            if (IsNumber(TypeEntity, ref DynamicValue))
+            if (IsNumber(typeEntity, ref dynamicValue))
             {
-                /*if (TypeDynamicValue == typeof(bool)) return new ActionResult<dynamic> { Success = true, Data = TypeDynamicValue == typeof(bool) ? DynamicValue : DynamicValue == 1 };*/
-                return new ActionResult<dynamic> { Success = true, Data = DynamicValue };
+                return new ActionResult<dynamic> { Success = true, Data = dynamicValue };
             }
-            if(TypeEntity == typeof(bool))
+            if(typeEntity == typeof(bool))
             {
-                return new ActionResult<dynamic> { Success = true, Data = DynamicValue == 1 };
+                return new ActionResult<dynamic> { Success = true, Data = dynamicValue == 1 };
             }
 
-            return new ActionResult<dynamic> { Success = false, Errors = new List<string>() { $"{DynamicValue} no es compatible con  el campo {NameProperty}" } };
+            return new ActionResult<dynamic> { Success = false, Errors = new List<string>() { $"{dynamicValue} no es compatible con  el campo {nameProperty}" } };
 
         }
 
