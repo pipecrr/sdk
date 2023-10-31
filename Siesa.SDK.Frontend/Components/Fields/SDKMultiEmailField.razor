@@ -14,13 +14,13 @@
         <SDKBadge IsPill="true" Style="SDKBadgeStyle.Light" Value="@email" >
             <SDKButton RenderStyle="SDKButtonRenderStyle.None" 
             Click="() => RemoveEmail(email)">
-                <P>@email</p>
+                <p>@email</p>
                 <SDKIcon CssClass="pl-1" Name="fa-x"/>
             </SDKButton>
         </SDKBadge>
       }
     </div>
-        <input class="sdk-email-multiple-input" value="@Value" disabled="@Disabled"
-               readonly="@ReadOnly" @oninput="OnInput" @onkeydown="OnKeyDown" />
+        <input type="text" class="sdk-email-multiple-input" value="@Value" disabled="@Disabled"
+               readonly="@ReadOnly" @oninput="OnInput" @onkeydown="OnKeyDown" @onchange="@OnChange"  />
   </div>
 </div>

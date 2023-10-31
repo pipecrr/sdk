@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using System.Threading.Tasks;
 
 namespace Siesa.SDK.Frontend.Components.Fields;
 
@@ -26,8 +27,7 @@ public partial class SDKMultiEmailField : SDKComponent
     /// <summary>
     /// Gets or sets the action to be executed when the field's value changes.
     /// </summary>
-    [Parameter]
-    public Action<string> ValueChanged { get; set; } = (value) => { };
+    [Parameter] public Action<string> ValueChanged { get; set; } = (value) => {};
 
     /// <summary>
     /// Gets or sets the expression representing the field's value.
@@ -108,5 +108,15 @@ public partial class SDKMultiEmailField : SDKComponent
     private void OnInput(ChangeEventArgs e)
     {
         Value = e.Value.ToString();
+    }
+
+    private async Task OnChange(ChangeEventArgs args )
+    {
+        Value = args?.Value?.ToString();
+
+        if(ValueChanged != null)
+            ValueChanged.Invoke(Value);
+            
+       _ = InvokeAsync(() => StateHasChanged());
     }
 }
