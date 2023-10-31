@@ -623,39 +623,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         {
             if (FeaturePermissionService != null && !string.IsNullOrEmpty(BusinessName))
             {
-                if(IsSubpanel && BusinessName.Equals("BLAttachmentDetail"))
+                if(IsSubpanel && BusinessName.Equals("BLAttachmentDetail", StringComparison.Ordinal))
                 {
-                    try
-                    {
-                        CanAcess = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.AccessAttachment, AuthenticationService);
-                        CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.UploadAttachment, AuthenticationService);
-                        CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.DeleteAttachment, AuthenticationService);
-                        CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.DownloadAttachment, AuthenticationService);
-                    }
-                    catch (System.Exception ex)
-                    {
-                        StackTrace.Add(ex.Message);
-                    }
+                    await CheckPermissionsByBussinessName(BusinessName).ConfigureAwait(true);
                 }else
                 {
-                    try
+                    string businessName = BusinessName;
+                    if (IsTableA)
                     {
-                        string businessName = BusinessName;
-                        if (IsTableA)
-                        {
-                            businessName = BusinessNameParent;
-                        }
-                        
-                        CanAcess = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Detail, AuthenticationService).ConfigureAwait(true);
-                        CanCreate = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Create, AuthenticationService).ConfigureAwait(true);
-                        CanEdit = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Edit, AuthenticationService).ConfigureAwait(true);
-                        CanDelete = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Delete, AuthenticationService).ConfigureAwait(true);
-                        CanDetail = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Detail, AuthenticationService).ConfigureAwait(true);
+                        businessName = BusinessNameParent;
                     }
-                    catch (System.Exception ex)
-                    {
-                        StackTrace.Add(ex.Message);
-                    }
+                    CanEdit = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Edit, AuthenticationService).ConfigureAwait(true);
+                    await CheckPermissionsByBussinessName(businessName).ConfigureAwait(true);
                 }
 
                 if (!CanDetail)
@@ -669,7 +648,26 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 }
             }
         }
-        
+
+        private async Task CheckPermissionsByBussinessName(string businessName)
+        {
+            try
+            {
+                CanAcess = await FeaturePermissionService.CheckUserActionPermission(businessName,
+                    enumSDKActions.AccessAttachment, AuthenticationService).ConfigureAwait(true);
+                CanCreate = await FeaturePermissionService.CheckUserActionPermission(businessName,
+                    enumSDKActions.UploadAttachment, AuthenticationService).ConfigureAwait(true);
+                CanDelete = await FeaturePermissionService.CheckUserActionPermission(businessName,
+                    enumSDKActions.DeleteAttachment, AuthenticationService).ConfigureAwait(true);
+                CanDetail = await FeaturePermissionService.CheckUserActionPermission(businessName,
+                    enumSDKActions.DownloadAttachment, AuthenticationService).ConfigureAwait(true);
+            }
+            catch (System.Exception ex)
+            {
+                StackTrace.Add(ex.Message);
+            }
+        }
+
         /// <summary>
         /// Executes a specified action using an evaluator and method information extracted from the provided object. 
         /// This method can handle asynchronous methods and optionally returns a value based on the 'hasReturn' parameter.
@@ -742,24 +740,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 BusinessObj = Activator.CreateInstance(BusinessObjAType, AuthenticationService);
                 if (BusinessObj != null)
                 {
-                    Int16? rowidCompany = (Int16?)(RowidCompany);
-                    dynamic baseObj = Activator.CreateInstance(BusinessObj.BaseObj.GetType());
-                    if (ParentDetail.BusinessObj.BaseObj.Rowid > 0)
-                    {
-                        string where = $"RowidCompany == {RowidCompany} && RowidRecord == {ParentDetail.BusinessObj.BaseObj.Rowid}";
-                        var response = await BusinessObj.GetDataAsync(null, null, where, "");
-                        var totalCount = response.TotalCount;
-                        if (totalCount > 0)
-                        {
-                            dynamic data = response.Data[0];
-                            baseObj = data;
-                        }
-                    }
-                    else
-                    {
-                        baseObj.RowidCompany = rowidCompany;
-                    }
-                    BusinessObj.BaseObj = baseObj;
+                    await GenerateBaseObj().ConfigureAwait(true);
                 }
                 
                 ParentDetail.DetailViewsTablesA.Add(this);
@@ -767,6 +748,29 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 BusinessObj = businessObj;
             }
+        }
+
+        private async Task GenerateBaseObj()
+        {
+            Int16? rowidCompany = (Int16?)(RowidCompany);
+            dynamic baseObj = Activator.CreateInstance(BusinessObj.BaseObj.GetType());
+            if (ParentDetail.BusinessObj.BaseObj.Rowid > 0)
+            {
+                string where = $"RowidCompany == {RowidCompany} && RowidRecord == {ParentDetail.BusinessObj.BaseObj.Rowid}";
+                var response = await BusinessObj.GetDataAsync(null, null, where, "");
+                var totalCount = response.TotalCount;
+                if (totalCount > 0)
+                {
+                    dynamic data = response.Data[0];
+                    baseObj = data;
+                }
+            }
+            else
+            {
+                baseObj.RowidCompany = rowidCompany;
+            }
+
+            BusinessObj.BaseObj = baseObj;
         }
     }
 }

@@ -382,37 +382,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             EditContext editFormContext = null;
             if (ParentForm.FormViewsTablesA.Any())
             {
-                foreach (var formview in ParentForm.FormViewsTablesA)
-                {
-                    if(formview.RowidCompany == RowidCompany)
-                    {
-                        businessObj = formview.BusinessObj;
-                        editFormContext = formview.EditFormContext;
-                        break;
-                    }
-                }
+                businessObj = GetFormViewInfo(ref editFormContext);
             }
             if (BusinessObjAType != null && businessObj == null)
             {
                 BusinessObj = Activator.CreateInstance(BusinessObjAType, AuthenticationService);
                 if (BusinessObj != null)
                 {
-                    Int16? rowidCompany = (Int16?)(RowidCompany);
-                    dynamic baseObj = Activator.CreateInstance(BusinessObj.BaseObj.GetType());
-                    if (ParentForm.BusinessObj.BaseObj.Rowid > 0)
-                    {
-                        string where = $"RowidCompany == {RowidCompany} && RowidRecord == {ParentForm.BusinessObj.BaseObj.Rowid}";
-                        var response = await BusinessObj.GetDataAsync(null, null, where, "");
-                        var totalCount = response.TotalCount;
-                        if (totalCount > 0)
-                        {
-                            dynamic data = response.Data[0];
-                            baseObj = data;
-                        }
-                        baseObj.RowidRecord = ParentForm.BusinessObj.BaseObj.Rowid;
-                    }
-                    baseObj.RowidCompany = rowidCompany;
-                    BusinessObj.BaseObj = baseObj;
+                    await GenerateBaseObj().ConfigureAwait(true);
                 }
                 
                 ParentForm.FormViewsTablesA.Add(this);
@@ -423,6 +400,44 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             if (editFormContext != null){
                 EditFormContext = editFormContext;
             }
+        }
+
+        private async Task GenerateBaseObj()
+        {
+            Int16? rowidCompany = (Int16?)(RowidCompany);
+            dynamic baseObj = Activator.CreateInstance(BusinessObj.BaseObj.GetType());
+            if (ParentForm.BusinessObj.BaseObj.Rowid > 0)
+            {
+                string where = $"RowidCompany == {RowidCompany} && RowidRecord == {ParentForm.BusinessObj.BaseObj.Rowid}";
+                var response = await BusinessObj.GetDataAsync(null, null, where, "");
+                var totalCount = response.TotalCount;
+                if (totalCount > 0)
+                {
+                    dynamic data = response.Data[0];
+                    baseObj = data;
+                }
+
+                baseObj.RowidRecord = ParentForm.BusinessObj.BaseObj.Rowid;
+            }
+
+            baseObj.RowidCompany = rowidCompany;
+            BusinessObj.BaseObj = baseObj;
+        }
+
+        private dynamic GetFormViewInfo(ref EditContext editFormContext)
+        {
+            dynamic businessObj = null;
+            foreach (var formview in ParentForm.FormViewsTablesA)
+            {
+                if (formview.RowidCompany == RowidCompany)
+                {
+                    businessObj = formview.BusinessObj;
+                    editFormContext = formview.EditFormContext;
+                    break;
+                }
+            }
+
+            return businessObj;
         }
 
         private async Task VerifyTableA()
