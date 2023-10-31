@@ -404,11 +404,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                             dynamic data = response.Data[0];
                             baseObj = data;
                         }
+                        baseObj.RowidRecord = ParentForm.BusinessObj.BaseObj.Rowid;
                     }
-                    else
-                    {
-                        baseObj.RowidCompany = rowidCompany;
-                    }
+                    baseObj.RowidCompany = rowidCompany;
                     BusinessObj.BaseObj = baseObj;
                 }
                 

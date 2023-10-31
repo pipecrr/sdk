@@ -16,6 +16,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 await InitViewTableA().ConfigureAwait(true);
             }
+            await BusinessObj.InstanceDynamicEntities(BusinessName);
+            
             await base.OnInitializedAsync();
         }
 
