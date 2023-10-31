@@ -23,27 +23,29 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             DefaultViewdefName = String.IsNullOrEmpty(DefaultViewdefName) ? "create" : DefaultViewdefName;
             await BusinessObj.InstanceDynamicEntities(BusinessName);
             
-            await base.OnInitializedAsync();
+            await base.OnInitializedAsync().ConfigureAwait(true);
         }
 
         protected override async Task CheckPermissions()
         {
-            if(IsSubpanel && BusinessName.Equals("BLAttachmentDetail"))
+            if(IsSubpanel && BusinessName.Equals("BLAttachmentDetail", StringComparison.Ordinal))
             {
                 try
                 {
-                    CanCreate = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.UploadAttachment, AuthenticationService);
+                    CanCreate = await FeaturePermissionService.CheckUserActionPermission(BLNameParentAttatchment, enumSDKActions.UploadAttachment, AuthenticationService).ConfigureAwait(true);
                 }
-                catch (System.Exception)
+                catch (System.Exception ex)
                 {
+                    StackTrace.Add(ex.Message);
+                    ErrorList.Add("Custom.Generic.Message.Error");
                 }
             }else
             {
-                await base.CheckPermissions();
+                await base.CheckPermissions().ConfigureAwait(true);
             }
             if(!CanCreate)
             {
-                NotificationService.ShowError("Custom.Generic.Unauthorized");
+                _ = NotificationService.ShowError("Custom.Generic.Unauthorized");
                 ErrorMsg = "Custom.Generic.Unauthorized";
                 ErrorList.Add("Custom.Generic.Unauthorized");
                 if(!IsSubpanel){

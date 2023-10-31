@@ -38,6 +38,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         [Parameter]
         public Action OnCancel {get; set;} = null;
+        
+        [Parameter] 
+        public bool IsSubpanel { get; set; }
 
         [Inject]
         public IServiceProvider ServiceProvider { get; set; }
@@ -66,12 +69,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         protected IDictionary<string, object> parameters = new Dictionary<string, object>();
 
-        [Parameter] 
-        public bool IsSubpanel { get; set; }
 
         public DynamicViewType ViewType { get; set; }
 
         protected bool CanAccess { get; set; }
+
+        public List<string> StackTrace { get; set; } = new List<string>();
 
 
         protected virtual async Task CheckAccessPermission(bool disableAccessValidation = false)
@@ -121,7 +124,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 {
                     Console.WriteLine("Error BaseViewModel" + e.ToString());
                     ErrorMsg = e.ToString();
-                    ErrorList.Add("Exception: "+e.ToString());
+                    StackTrace.Add(e.ToString());
+                    ErrorList.Add("Custom.Generic.Message.Error");
                 }
             }
             else
@@ -196,7 +200,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             }
             catch (Exception e)
             {
-
+                StackTrace.Add(e.ToString());
+                ErrorList.Add("Custom.Generic.FrontendBusinessNotFound");
             }
 
             await base.SetParametersAsync(parameters);

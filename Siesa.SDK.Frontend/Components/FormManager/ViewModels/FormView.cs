@@ -103,6 +103,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 
         private string _viewdefName = "";
 
+        public List<string> StackTrace = new ();
+
         public bool ContainAttachments = false;
 
         protected bool loadDefaultViewdef = true;
@@ -154,8 +156,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Delete, AuthenticationService);
                     CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.Detail, AuthenticationService);
                 }
-                catch (System.Exception)
+                catch (System.Exception ex)
                 {
+                    StackTrace.Add(ex.Message);
                 }
             }
         }
@@ -169,9 +172,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 }
                 ContainAttachments = true;
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
                 ContainAttachments = false;
+                StackTrace.Add(ex.Message);
             }
         }
         private string GetViewdef(string businessName)
@@ -244,8 +248,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             {
                 StateHasChanged();
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
+                StackTrace.Add(ex.Message);
                 _ = InvokeAsync(() => StateHasChanged());
             }
         }
@@ -289,9 +294,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             {
                 setViewContext(FormViewModel.Panels, ViewContext);
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
-                Console.WriteLine("Error");
+                StackTrace.Add(ex.Message);
             }
             if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
             {
@@ -529,7 +534,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 }
                 catch (System.Exception ex)
                 {
-                    Console.WriteLine($"Error: {ex.Message}");
+                    StackTrace.Add(ex.Message);
                 }
             }
             return shouldUpdate;
@@ -593,6 +598,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             }
             catch (System.Exception ex)
             {
+                StackTrace.Add(ex.Message);
             }
             //await InitView();
         }
@@ -625,6 +631,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 //TODO: pdte por revision 
                 SavingFile = false;
                 return 0;
+                StackTrace.Add(ex.Message);
             }
             var horaInicio = DateTime.Now.Minute;
             while(SavingFile){
@@ -640,6 +647,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 }catch(Exception ex){
                     SavingFile = false;
                     return rowid;
+                    StackTrace.Add(ex.Message);
                 }
             }
             return 0;
@@ -679,7 +687,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 GlobalLoaderService.Hide();
                 Saving = false;
                 ErrorMsg = ex.Message;
-                ErrorList.Add("Exception: "+ex.Message);
+                ErrorList.Add("Custom.Generic.Message.Error");
+                StackTrace.Add(ex.Message);
                 return;
             }
 
@@ -726,7 +735,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     {
                         _messageStore.Add(fieldIdentifier, (string)error.Message);
                     }else{
-                        ErrorList.Add("Exception: "+error.Message);
+                        StackTrace.Add(error.Message);
+                        ErrorList.Add("Custom.Generic.Message.Error");
                     }
                 }
                 //ErrorMsg += "</ul>";
