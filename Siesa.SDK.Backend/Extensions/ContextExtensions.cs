@@ -49,13 +49,17 @@ namespace Siesa.SDK.Backend.Extensions
                 //get text before first underscore
                 var prefix = table_name_parts[0];
                 //if first character is an "U" then replaceit with "CU"
-                if (prefix.StartsWith("u"))
+                if (prefix.StartsWith("u", StringComparison.Ordinal))
                 {
                     prefix = "cu" + prefix.Substring(1);
-                }else if (prefix.StartsWith("d"))
+                }else if (prefix.StartsWith("d", StringComparison.Ordinal))
                 {
                     prefix = "cd" + prefix.Substring(1);
-                }else{
+                }else if (prefix.StartsWith("a", StringComparison.Ordinal))
+                {
+                    prefix = string.Concat("ca", prefix.AsSpan(1).ToString());   
+                }
+                else{
                     prefix = "c" + prefix.Substring(1);
                 }
 

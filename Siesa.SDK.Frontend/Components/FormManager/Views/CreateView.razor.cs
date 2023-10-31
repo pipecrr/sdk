@@ -21,6 +21,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         protected override async Task OnInitializedAsync()
         {
             DefaultViewdefName = String.IsNullOrEmpty(DefaultViewdefName) ? "create" : DefaultViewdefName;
+            if (IsTableA)
+            {
+                await InitViewTableA().ConfigureAwait(true);
+            }
             await BusinessObj.InstanceDynamicEntities(BusinessName);
             
             await base.OnInitializedAsync().ConfigureAwait(true);

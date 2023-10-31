@@ -26,7 +26,7 @@ else if (BusinessObj.BaseObj.Rowid != 0)
         <h5 class="d-flex justify-content-center"><ResourceViewer ResourceTag="Action.Edit" /> @BusinessObj</h5>
         <hr />
     }
-    @if(ContainAttachments){
+    @if(ContainAttachments && !IsTableA){
         <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" 
             Parent="@BusinessObj.BaseObj" ContainAttachments="@ContainAttachments" BLNameParentAttatchment="@BusinessName"
             BusinessObj="@BusinessObj" ShowAditionalFields="@ShowAditionalFields"/>
@@ -44,9 +44,16 @@ else if (BusinessObj.BaseObj.Rowid != 0)
         <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
             <CascadingValue Value="@EditFormContext">
                 @if(Panels?.Count > 0){
-                    <SDKCrudHeader ResourceTag="@Panels[0].ResourceTag" IconClass="@Panels[0].IconClass" ViewType="DynamicViewType.Edit">
-                        <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef" ModelObj="@BusinessObj" DefaultColSize="@Panels[0].ColSize" />
-                    </SDKCrudHeader>
+                    if (!IsTableA)
+                    {
+                        <SDKCrudHeader ResourceTag="@Panels[0].ResourceTag" IconClass="@Panels[0].IconClass" ViewType="DynamicViewType.Edit">
+                            <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef" ModelObj="@BusinessObj" DefaultColSize="@Panels[0].ColSize"/>
+                        </SDKCrudHeader>
+                    }
+                    else
+                    {
+                        <FieldsContainer Fields="@Panels[0].Fields" SubViewdef="@Panels[0].SubViewdef" ModelObj="@BusinessObj" DefaultColSize="@Panels[0].ColSize"/>
+                    }
                 }
             </CascadingValue>
             @if (Panels?.Count > 1)
@@ -111,7 +118,20 @@ else if (BusinessObj.BaseObj.Rowid != 0)
                 </CascadingValue>
             </CascadingValue>
         }
-</EditForm>
+        @if (HasTableA && !IsTableA)
+        {
+            <SDKCollapse>
+                <Items>
+                    @foreach (var company in Companies)
+                    {
+                        <SDKCollapseItem Text="@company.Name">
+                            <CreateView BusinessName="@BusinessNameA" BusinessNameParent="@BusinessName" BusinessObjAType="@InternalBusinessObjAType" RowidCompany="@company.Rowid" IsTableA="true" IsSubpanel="true" ShowTitle="false" ShowButtons="false" ParentForm="@this" ></CreateView>
+                        </SDKCollapseItem>
+                    }
+                </Items>
+            </SDKCollapse>
+        }
+    </EditForm>
     </CascadingValue>
     @if(IsSubpanel && ShowButtons){
         <div class="buttons-container pt-3">

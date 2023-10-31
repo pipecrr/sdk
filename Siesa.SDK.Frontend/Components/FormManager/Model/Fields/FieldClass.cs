@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using System.Collections.Generic;
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -10,7 +9,6 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using GrapeCity.Enterprise.Data.Expressions.Evaluation;
 using Microsoft.IdentityModel.Tokens;
 using Siesa.SDK.Frontend.Utils;
 using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
@@ -320,7 +318,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                     }
                 });
             }
-            
             CheckUniqueValue();
         }
 
