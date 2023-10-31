@@ -59,7 +59,7 @@ public partial class MenuItem : SDKComponent
     {
         if(string.IsNullOrEmpty(AutomationId))
         {
-            if (Menu != null && Menu.Level > 1 && OnClick.Target != null)
+            if (Menu != null  && OnClick.Target != null)
             {
                 var ParentMenu =  OnClick.Target.GetType().GetProperty("MainItem").GetValue(OnClick.Target);
                 if (ParentMenu != null)

@@ -55,6 +55,25 @@ namespace Siesa.SDK.Shared.Backend
             var response = await client.ValidateAndSaveBusinessObjAsync(request);
             return response;
         }
+
+        public async Task<ValidateAndSaveBusinessMultiObjResponse> ValidateAndSaveBusinessMulti(string business_name, dynamic obj, IList<dynamic> listBaseObj = null)
+        {
+            using var channel = GrpcUtils.GetChannel(this.Url);
+            var client = new Protos.SDK.SDKClient(channel);
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(obj);
+            var listObjJson = Newtonsoft.Json.JsonConvert.SerializeObject(listBaseObj);
+            var request = new Protos.ValidateAndSaveBusinessMultiObjRequest
+            {
+                Business = json,
+                BusinessName = business_name,
+                CurrentUserToken = (AuthenticationService != null && AuthenticationService.UserToken != null ? AuthenticationService.UserToken : ""),
+                CurrentUserRowid = (AuthenticationService != null && AuthenticationService.User != null ? AuthenticationService.User.Rowid: 0),
+                ListBaseObj = listObjJson
+            };
+            var response = await client.ValidateAndSaveBusinessMultiObjAsync(request);
+            return response;
+        }
+
         public async Task<Protos.LoadResult> EntityFieldSearch(string business_name, string searchText, string filters, int? top = null, string orderBy = "", List<string> extraFields = null)
         {
             var channel = GrpcUtils.GetChannel(this.Url);

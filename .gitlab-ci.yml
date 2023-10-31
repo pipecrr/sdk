@@ -123,7 +123,7 @@ sonarqube-check:
     - main
     - develop
   tags:
-    - sonart3
+    - sonar
 
 deploy:
     stage: deploy

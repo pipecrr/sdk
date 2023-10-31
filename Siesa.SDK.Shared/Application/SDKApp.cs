@@ -31,6 +31,8 @@ namespace Siesa.SDK.Shared.Application
         /// Gets or sets the list of dashlets registered with the SDK application.
         /// </summary>
         public static List<Type> Dashlets { get; set; }
+        
+        public static List<Type> ExtraComponentsMainLayout { get; set; }
 
         static SDKApp()
         {
@@ -41,6 +43,7 @@ namespace Siesa.SDK.Shared.Application
                 ContractResolver = new SDKContractResolver()
             };
             Dashlets = new List<Type>();
+            ExtraComponentsMainLayout = new List<Type>();
         }
 
         /// <summary>
@@ -101,6 +104,30 @@ namespace Siesa.SDK.Shared.Application
         public static Type GetIndexComponent()
         {
             return _indexComponent;
+        }
+        
+        /// <summary>
+        /// Register a component to be added to the main layout.
+        /// </summary>
+        /// <param name="component"></param>
+        public static void RegisterExtraComponentsMainLayout(Type component)
+        {
+            if (ExtraComponentsMainLayout == null)
+                ExtraComponentsMainLayout = new List<Type>();
+
+            if (!ExtraComponentsMainLayout.Contains(component))
+            {
+                ExtraComponentsMainLayout.Add(component);
+            }
+        }
+        
+        /// <summary>
+        /// Gets the list of components to be added to the main layout.
+        /// </summary>
+        /// <returns></returns>
+        public static List<Type> GetExtraComponentsMainLayout()
+        {
+            return ExtraComponentsMainLayout;
         }
 
         /// <summary>

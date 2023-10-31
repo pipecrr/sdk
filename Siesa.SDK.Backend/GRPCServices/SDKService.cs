@@ -193,6 +193,23 @@ namespace Siesa.SDK.GRPCServices
 
         }
 
+        public override Task<ValidateAndSaveBusinessMultiObjResponse> ValidateAndSaveBusinessMultiObj(ValidateAndSaveBusinessMultiObjRequest request, ServerCallContext context)
+        {
+            SetCurrentUser(request.CurrentUserToken);
+            BusinessModel businessRegistry = _backendRouterService.GetBackend(request.BusinessName);
+            var businessType = FindType(businessRegistry.Namespace + "." + businessRegistry.Name);
+            //dynamic x = ActivatorUtilities.CreateInstance(_provider,businessType);
+            //json deserialize using Newtonsoft.Json
+            dynamic businessObj = Newtonsoft.Json.JsonConvert.DeserializeObject(request.Business, businessType);
+            businessObj.SetProvider(_provider);
+
+            List<dynamic> listBaseObj = Newtonsoft.Json.JsonConvert.DeserializeObject<List<dynamic>>(request.ListBaseObj);
+
+            var response = businessObj.ValidateAndSave(listBaseObj);
+            return Task.FromResult(response);
+
+        }
+
         public override async Task<Protos.MenuGroupsResponse> GetMenuGroups(Protos.GetMenuGroupsRequest request, ServerCallContext context)
         {
             await SetCurrentUser(request.CurrentUserToken);

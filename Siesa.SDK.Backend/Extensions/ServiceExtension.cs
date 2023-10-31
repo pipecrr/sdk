@@ -20,7 +20,9 @@ using Amazon.S3;
 using Amazon.Extensions.NETCore.Setup;
 using Amazon.Runtime;
 using Microsoft.Extensions.Hosting;
-
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.AspNetCore.Http.Features;
 namespace Siesa.SDK.Backend.Extensions
 {
 
@@ -29,6 +31,23 @@ namespace Siesa.SDK.Backend.Extensions
         public static void AddSDKBackend(this IServiceCollection services, ConfigurationManager configurationManager, Type ContextType)
         {
             var connectionConfig = configurationManager.GetSection("ConnectionConfig").Get<SDKConnectionConfig>();
+            services.Configure<IISServerOptions>(options =>
+            {
+                options.MaxRequestBodySize = int.MaxValue;
+            });
+
+            services.Configure<KestrelServerOptions>(options =>
+            {
+                options.Limits.MaxRequestBodySize = int.MaxValue; // if don't set default value is: 30 MB
+            });
+
+            services.Configure<FormOptions>(x =>
+            {
+                x.ValueLengthLimit = int.MaxValue;
+                x.MultipartBodyLengthLimit = int.MaxValue; // if don't set default value is: 128 MB
+                x.MultipartHeadersLengthLimit = int.MaxValue;
+            });
+
             var dbConnections = configurationManager.GetSection("DbConnections").Get<List<SDKDbConnection>>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddSingleton<MemoryService>();

@@ -36,14 +36,10 @@ using Siesa.Global.Enums;
 using Siesa.SDK.Shared.Utilities;
 using System.Collections;
 using Siesa.SDK.Backend.LinqHelper.DynamicLinqHelper;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
-using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
-using Siesa.Global.Enums;
 using System.Text.RegularExpressions;
 
 namespace Siesa.SDK.Business
@@ -116,6 +112,12 @@ namespace Siesa.SDK.Business
         {
             return null;
         }
+
+        public ValidateAndSaveBusinessMultiObjResponse ValidateAndSave(List<BaseSDK<int>> listBaseObj, bool ignorePermissions = false)
+        {
+            return null;
+        }
+        
         public void ShareProvider(dynamic bl)
         {
             bl.SetProvider(_provider);
@@ -190,7 +192,8 @@ namespace Siesa.SDK.Business
             return retContext;
         }
     }
-    public class BLBackendSimple<T, K> : IBLBase<T> where T : class, IBaseSDK where K : BLBaseValidator<T>
+
+    public class BLBackendSimple<T,K>: IBLBase<T> where T : class, IBaseSDK where K : class, IBLBaseValidator
     {
         [JsonIgnore]
         protected IAuthenticationService AuthenticationService { get; set; }
@@ -230,6 +233,8 @@ namespace Siesa.SDK.Business
         private List<object> unique_indexes = new List<object>();
 
         private bool _containAttachments;
+
+        private bool _statusTransaccion = false; 
 
         public void DetachedBaseObj()
         {
@@ -552,23 +557,16 @@ namespace Siesa.SDK.Business
         {
             //Do nothing
         }
+
         public virtual ValidateAndSaveBusinessObjResponse ValidateAndSave(bool ignorePermissions = false)
         {
             ValidateAndSaveBusinessObjResponse result = new();
-            if (!ignorePermissions)
+            if (!ignorePermissions && !ValidatePermissions())
             {
-                if (_featurePermissionService != null && !string.IsNullOrEmpty(BusinessName) && !BusinessName.Equals("BLAttachmentDetail"))
-                {
-                    CanCreate = _featurePermissionService.CheckUserActionPermission(BusinessName, 1, AuthenticationService);
-                    CanEdit = _featurePermissionService.CheckUserActionPermission(BusinessName, 2, AuthenticationService);
-                }
-                if (!CanCreate && !CanEdit)
-                {
-                    AddMessageToResult("Custom.Generic.Unauthorized", result);
-                    return result;
-                }
+                AddMessageToResult("Custom.Generic.Unauthorized", result);
+                return result;
             }
-
+            
             try
             {
                 Validate(ref result);
@@ -585,27 +583,8 @@ namespace Siesa.SDK.Business
                         {
                             context.BeginTransaction();
                         }
-                        BeforeSave(ref result, context);
-                        if (result.Errors.Count > 0)
-                        {
-                            context.Rollback();
-                            return result;
-                        }
-                        result.Rowid = Save(context);
-                        if (_queueService != null && !string.IsNullOrEmpty(BusinessName))
-                        {
-                            _queueService.SendMessage(BusinessName, enumMessageCategory.CRUD, new QueueMessageDTO()
-                            {
-                                Message = $"Custom.{BusinessName}.RecordSaved",
-                                Rowid = result.Rowid
-                            });
-                        }
-                        if (DynamicEntities != null && DynamicEntities.Count > 0)
-                        {
-                            SaveDynamicEntity(result.Rowid, context);
-                        }
-                        AfterSave(ref result, context);
-                        if (result.Errors.Count > 0)
+                        InternalSave(ref result, context,BaseObj);
+                        if(result.Errors.Count > 0)
                         {
                             context.Rollback();
                             return result;
@@ -613,6 +592,7 @@ namespace Siesa.SDK.Business
                         if (!context.Database.IsInMemory())
                         {
                             context.Commit();
+                            BaseObj.SetRowid(result.Rowid);
                         }
                         AfterValidateAndSave(ref result);
                     }
@@ -639,6 +619,212 @@ namespace Siesa.SDK.Business
                 _logger.LogError(exception, "Error saving in BLBackend");
             }
             return result;
+        }
+
+        private void InternalSave(ref ValidateAndSaveBusinessObjResponse result, SDKContext context, T baseObj)
+        {
+            BeforeSave(ref result, context);
+            if (result.Errors.Count > 0)
+            {
+                context.Rollback();
+            }
+            result.Rowid = Save(context, baseObj);
+            if (_queueService != null && !string.IsNullOrEmpty(BusinessName))
+            {
+                _queueService.SendMessage(BusinessName, enumMessageCategory.CRUD, new QueueMessageDTO()
+                {
+                    Message = $"Custom.{BusinessName}.RecordSaved",
+                    Rowid = result.Rowid
+                });
+            }
+            if (DynamicEntities != null && DynamicEntities.Count > 0)
+            {
+                SaveDynamicEntity(result.Rowid, context);
+            }
+            AfterSave(ref result, context);
+        }
+
+        private bool ValidatePermissions()
+        {
+            if (_featurePermissionService != null && !string.IsNullOrEmpty(BusinessName) && !BusinessName.Equals("BLAttachmentDetail"))
+            {
+                CanCreate = _featurePermissionService.CheckUserActionPermission(BusinessName, 1, AuthenticationService);
+                CanEdit = _featurePermissionService.CheckUserActionPermission(BusinessName, 2, AuthenticationService);
+            }
+            if (!CanCreate && !CanEdit)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public virtual ValidateAndSaveBusinessMultiObjResponse ValidateAndSave(List<T> listBaseObj, bool ignorePermissions = false)
+        {
+            ValidateAndSaveBusinessMultiObjResponse result = new();
+            if (!ignorePermissions && !ValidatePermissions())
+            {
+                AddMessageToResult("Custom.Generic.Unauthorized", result);
+                return result;
+            }
+            try
+            {   
+                var watch = System.Diagnostics.Stopwatch.StartNew();            
+                ValidateMulti(ref result, listBaseObj);
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Console.WriteLine($"ValidateMulti: {elapsedMs} ms");
+
+                if (result.Errors.Count > 0)
+                {
+                    return result;
+                }
+                if(_statusTransaccion){
+                    //valida todos, uno a uno en transaccion diferentes
+                    foreach (var baseObj in listBaseObj)
+                    {
+                        using (SDKContext context = CreateDbContext())
+                        {
+                            try
+                            {
+                                if (!context.Database.IsInMemory())
+                                {
+                                    context.BeginTransaction();
+                                }
+                                ValidateAndSaveBusinessObjResponse baseOperationObj = new();
+                                baseOperationObj.Rowid = baseObj.GetRowid();
+                                InternalSave(ref baseOperationObj, context, baseObj);
+                                if (baseOperationObj.Errors.Count > 0)
+                                {
+                                    result.Errors.AddRange(baseOperationObj.Errors);
+                                }
+                                else
+                                {
+                                    result.Rowids.Add(baseOperationObj.Rowid);
+                                }
+                                if (!context.Database.IsInMemory())
+                                {
+                                    context.Commit();
+                                }
+                            }catch (DbUpdateException exception){
+                                if (!context.Database.IsInMemory())
+                                {
+                                    context.Rollback();
+                                }
+                                result.Errors.Add(new OperationError() { Message = exception.InnerException.Message });
+                            }
+                            catch (Exception ex)
+                            {
+                                if (!context.Database.IsInMemory())
+                                {
+                                    context.Rollback();
+                                }
+                                result.Errors.Add(new OperationError() { Message = ex.Message });
+                            }
+                        }
+                    }
+                    // cierra valida todos, uno a uno en transaccion diferentes
+                }else{
+                    // valida todos, uno a uno en la misma transaccion
+                    using (SDKContext context = CreateDbContext())
+                    {
+                        try
+                        {
+                            if (!context.Database.IsInMemory())
+                            {
+                                context.BeginTransaction();
+                            }
+                            foreach (var baseObj in listBaseObj)
+                            {
+                                ValidateAndSaveBusinessObjResponse baseOperationObj = new();
+                                baseOperationObj.Rowid = baseObj.GetRowid();
+                                var watchInternal = System.Diagnostics.Stopwatch.StartNew();
+                                InternalSave(ref baseOperationObj, context, baseObj);
+                                watchInternal.Stop();
+                                var elapsedMsInternal = watchInternal.ElapsedMilliseconds;
+                                Console.WriteLine($"InternalSave: {elapsedMsInternal} ms");
+                                if (baseOperationObj.Errors.Count > 0)
+                                {
+                                    result.Errors.AddRange(baseOperationObj.Errors);
+                                }
+                                else
+                                {
+                                    result.Rowids.Add(baseOperationObj.Rowid);
+                                }
+                            }
+                            if (!context.Database.IsInMemory())
+                            {
+                                context.Commit();
+                            }
+                        }catch (Exception ex)
+                        {
+                            if (!context.Database.IsInMemory())
+                            {
+                                context.Rollback();
+                            }
+                            throw ex;
+                        }
+                    }
+                    // cierra valida todos, uno a uno en la misma transaccion
+                }
+            }
+            catch (DbUpdateException exception)
+            {
+                exception.Data.Add("Entity:", "entityName");
+                AddExceptionToResult(exception, result);
+                _logger.LogError(exception, "Error saving in BLBackend");
+                _logger.LogError("Text information");
+            }
+            catch (Exception exception)
+            {
+                AddExceptionToResult(exception, result);
+                _logger.LogError(exception, "Error saving in BLBackend");
+            }
+
+            return result;
+        }
+
+        private void ValidateMulti(ref ValidateAndSaveBusinessMultiObjResponse baseOperation, List<T> listBaseObj = null)
+        {
+            if (listBaseObj == null)
+            {
+                listBaseObj = new List<T>();
+            }
+            ValidateAndSaveBusinessMultiObjResponse baseOperationTmp = baseOperation;
+            Parallel.ForEach(listBaseObj, baseObj =>
+            {
+                if(baseObj == null)
+                {
+                    baseObj = BaseObj;
+                }
+                ValidateAndSaveBusinessObjResponse baseOperationObj = new();
+                ValidateBussines(ref baseOperationObj, baseObj.GetRowid() == 0 ? BLUserActionEnum.Create : BLUserActionEnum.Update);
+                Type parentType = typeof(K).BaseType;
+                Type[] genericArguments = parentType.GetGenericArguments();
+                K validator = ActivatorUtilities.CreateInstance(_provider, typeof(K)) as K;
+                if (genericArguments.Length > 0)
+                {
+                    Type genericT = genericArguments[0];
+                    if (genericT == typeof(T))                    {
+                        BLBaseValidator<T> baseValidator = validator as BLBaseValidator<T>;
+                        SDKValidator.Validate<T>(BaseObj, baseValidator, ref baseOperationObj);
+                        if(baseOperationObj.Errors.Count > 0)
+                        {
+                            baseOperationTmp.Errors.AddRange(baseOperationObj.Errors);
+                        }
+                    }
+                    else if (genericT == this.GetType())
+                    {                    
+                        MethodInfo validateMethod = typeof(SDKValidator).GetMethod("Validate").MakeGenericMethod(genericT);
+                        object[] parameters = new object[] { this, validator, baseOperationObj };
+                        validateMethod.Invoke(null, parameters);
+                        if(baseOperationObj.Errors.Count > 0)
+                        {
+                            baseOperationTmp.Errors.AddRange(baseOperationObj.Errors);
+                        }
+                    }
+                }
+            });
+            baseOperation = baseOperationTmp;            
         }
 
         protected virtual void SaveDynamicEntity(Int64 rowid, SDKContext context)
@@ -752,32 +938,55 @@ namespace Siesa.SDK.Business
             }
 
         }
-        private void AddExceptionToResult(DbUpdateException exception, ValidateAndSaveBusinessObjResponse result)
+        
+        private void AddExceptionToResult(DbUpdateException exception, dynamic result)
         {
             var message = BackendExceptionManager.ExceptionToString(exception, ContextMetadata);
             AddMessageToResult(message, result);
         }
 
-        private void AddExceptionToResult(Exception exception, ValidateAndSaveBusinessObjResponse result)
+        private void AddExceptionToResult(Exception exception, dynamic result)
         {
             var message = ExceptionManager.ExceptionToString(exception);
             AddMessageToResult(message, result);
         }
 
-        private void AddMessageToResult(string message, ValidateAndSaveBusinessObjResponse result)
+        private void AddMessageToResult(string message, dynamic result)
         {
             message += $"Bussiness Name: {BusinessName}";
             message += $"\nObject {BaseObj}";
             result.Errors.Add(new OperationError() { Message = message });
         }
 
-        private void Validate(ref ValidateAndSaveBusinessObjResponse baseOperation)
+        private void Validate(ref ValidateAndSaveBusinessObjResponse baseOperation, T baseObj = null)
         {
             ValidateBussines(ref baseOperation, BaseObj.GetRowid() == 0 ? BLUserActionEnum.Create : BLUserActionEnum.Update);
-            //K validator = Activator.CreateInstance<K>();
+
+            Type parentType = typeof(K).BaseType;
+
+            Type[] genericArguments = parentType.GetGenericArguments();
+
             K validator = ActivatorUtilities.CreateInstance(_provider, typeof(K)) as K;
-            validator.ValidatorType = "BaseObj";
-            SDKValidator.Validate<T>(BaseObj, validator, ref baseOperation);
+
+            if (genericArguments.Length > 0)
+            {
+                Type genericT = genericArguments[0];
+
+                if (genericT == typeof(T))
+                {
+                    BLBaseValidator<T> baseValidator = validator as BLBaseValidator<T>;
+
+                    SDKValidator.Validate<T>(BaseObj, baseValidator, ref baseOperation);
+                }
+                else if (genericT == this.GetType())
+                {
+                   
+                    MethodInfo validateMethod = typeof(SDKValidator).GetMethod("Validate").MakeGenericMethod(genericT);
+
+                    object[] parameters = new object[] { this, validator, baseOperation };
+                    validateMethod.Invoke(null, parameters);
+                }
+            }
         }
 
         private Dictionary<string, object> GetPrimaryKey()
@@ -849,15 +1058,15 @@ namespace Siesa.SDK.Business
             }
         }
 
-        private Int64 Save(SDKContext context)
+        private Int64 Save(SDKContext context, T baseObj)
         {
             this._logger.LogInformation($"Save {this.GetType().Name}");
 
             context.SetProvider(_provider);
-            if (BaseObj.GetRowid() == 0)
+            if (baseObj.GetRowid() == 0)
             {
-                DisableRelatedProperties(BaseObj, _navigationProperties, RelFieldsToSave);
-                var entry = context.Add<T>(BaseObj);
+                DisableRelatedProperties(baseObj, _navigationProperties, RelFieldsToSave);
+                var entry = context.Add<T>(baseObj);
             }
             else
             {
@@ -867,10 +1076,10 @@ namespace Siesa.SDK.Business
                 // {
                 //     query = query.Include(relatedProperty);
                 // }
-                var rowidSearch = BaseObj.GetRowid();
+                var rowidSearch = baseObj.GetRowid();
                 try
                 {
-                    rowidSearch = ((dynamic)BaseObj).Rowid;
+                    rowidSearch = ((dynamic)baseObj).Rowid;
                 }
                 catch (System.Exception)
                 {
@@ -886,8 +1095,12 @@ namespace Siesa.SDK.Business
                 }
             }
 
-            context.SaveChanges(); //TODO: Capturar errores db y hacer rollback
-            return BaseObj.GetRowid();
+            try{
+                context.SaveChanges(); //TODO: Capturar errores db y hacer rollback
+            }catch(Exception ex){
+                throw;
+            }
+            return baseObj.GetRowid();
         }
 
         public virtual void Update()
@@ -918,8 +1131,7 @@ namespace Siesa.SDK.Business
                             context.BeginTransaction();
                         }
                         BeforeDelete(ref result, context);
-                        if (result.Errors.Count > 0)
-                        {
+                        if(result.Errors.Count > 0){
                             context.Rollback();
                             response.Errors.AddRange(result.Errors);
                             return response;
@@ -931,8 +1143,7 @@ namespace Siesa.SDK.Business
                         context.Set<T>().Remove(BaseObj);
                         context.SaveChanges();
                         AfterDelete(ref result, context);
-                        if (result.Errors.Count > 0)
-                        {
+                        if(result.Errors.Count > 0){
                             context.Rollback();
                             response.Errors.AddRange(result.Errors);
                             return response;
@@ -956,13 +1167,18 @@ namespace Siesa.SDK.Business
                         {
                             context.Rollback();
                         }
-
-                        string relatedTable = HandleDbUpdateException(DbEx, ref result);
-
-                        if(!string.IsNullOrEmpty(relatedTable))
+                        AddExceptionToResult(DbEx, result);
+                        var errorList = result.Errors.Where(x => x.Message.Contains("Foreing key")).ToList();
+                        if (errorList.Any())
                         {
+                            var regex = new Regex(@"Table name: ([^\r\n]+)");
+                            var relatedTable = errorList
+                                                .Select(x => x.Message)
+                                                .SelectMany(msg => regex.Matches(msg).Cast<Match>())
+                                                .Select(match => match?.Groups[1].Value.Split('.').Last()).Distinct().FirstOrDefault();
                             response.Errors.Add(new OperationError() { Message = $"Exception: Custom.Generic.Message.DeleteErrorWithRelations//{relatedTable}.Plural" });
-                        }else
+                        }
+                        else
                         {
                             response.Errors.AddRange(result.Errors);
                         }
@@ -975,26 +1191,6 @@ namespace Siesa.SDK.Business
                 response.Errors.Add(new OperationError() { Message = "Custom.Generic.Message.DeleteError" });
             }
             return response;
-        }
-
-        public string HandleDbUpdateException(DbUpdateException dbEx, ref ValidateAndSaveBusinessObjResponse result)
-        {
-            AddExceptionToResult(dbEx, result);
-
-            var errorList = result.Errors.Where(x => x.Message.Contains("Foreing key")).ToList();
-
-            string relatedTable = "";
-
-            if (errorList.Any())
-            {
-                var regex = new Regex(@"Table name: ([^\r\n]+)");
-                relatedTable = errorList
-                                    .Select(x => x.Message)
-                                    .SelectMany(msg => regex.Matches(msg).Cast<Match>())
-                                    .Select(match => match?.Groups[1].Value.Split('.').Last()).Distinct().FirstOrDefault();
-            }
-
-            return relatedTable;
         }
 
         [SDKExposedMethod]
@@ -2238,7 +2434,6 @@ namespace Siesa.SDK.Business
 
         }
 
-        [SDKExposedMethod]
         public ActionResult<int> DeleteGroupDynamicEntity(int rowid)
         {
             try
@@ -2271,67 +2466,423 @@ namespace Siesa.SDK.Business
             }
         }
 
+
         [SDKExposedMethod]
-        public ActionResult<SDKResultImportDataDTO> ImportData(string dataStr)
+        public ActionResult<SDKResultImportDataDTO> ImportData(string dataStr, bool statusTransaccion = false)
         {
+            _statusTransaccion = statusTransaccion;
             JArray dataList = JArray.Parse(dataStr);
-            List<dynamic> SuccessData = new List<dynamic>();
-            List<dynamic> ErrorData = new List<dynamic>();
-            foreach (var item in dataList)
+            List<dynamic> SuccessData = new();
+            List<dynamic> ErrorData = new();
+            List<EnumSearchDTO> EnumSearchList = GetEnumDTO(typeof(T));
+            List<ForeignObjectDTO> ForeingDictionary = CalculateForeingList(typeof(T));
+            List<T> BaseObjToImport = new();
+            //start take time
+            Console.WriteLine("Start");
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+            Parallel.ForEach(dataList, item =>
             {
-                JObject itemObj = (JObject)item;
-                dynamic result = CreateDynamicObjectFromJson(typeof(T), itemObj);
-                BaseObj = result;
-                var resultValidate = ValidateAndSave();
-                if (resultValidate.Errors.Count > 0)
+                dynamic result = CreateDynamicObjectFromJson(typeof(T), (JObject)item, EnumSearchList, ForeingDictionary, ref ErrorData);
+                BaseObjToImport.Add(result);
+            });
+            
+            ValidateAndSaveBusinessMultiObjResponse resultValidate = ValidateAndSave(BaseObjToImport);
+
+            if(statusTransaccion){
+                // valida todos, uno a uno en transaccion diferentes
+                ErrorData.AddRange(resultValidate.Errors);
+                foreach (var rowid in resultValidate.Rowids)
                 {
-                    itemObj.Add("Errors", JToken.FromObject(resultValidate.Errors));
-                    ErrorData.Add(itemObj);
+                    SuccessData.Add(rowid);
+                }
+                // cierra valida todos, uno a uno en transaccion diferentes
+            }else{
+                // valida todos en una sola transaccion
+                if(resultValidate.Errors.Count > 0){
+                    ErrorData.AddRange(resultValidate.Errors);
+                }else{
+                    foreach (var rowid in resultValidate.Rowids)
+                    {
+                        SuccessData.Add(rowid);
+                    }
+                }
+                // cierra valida todos en una sola transaccion
+            }
+            
+            //stop take time
+            watch.Stop();
+            var elapsedMs = watch.ElapsedMilliseconds;
+            _logger.LogInformation($"Time elapsed: {elapsedMs}");
+            Console.WriteLine("Time elapsed: " + elapsedMs);
+
+            SDKResultImportDataDTO resultImport = new SDKResultImportDataDTO
+            {
+                Success = SuccessData,
+                Errors = ErrorData
+            };
+            return new ActionResult<SDKResultImportDataDTO> { Success = true, Data = resultImport };
+
+        }
+
+        //==================Metodos para la obtencion de los enums================
+        private List<EnumSearchDTO> GetEnumDTO(Type type)
+        {
+            List<PropertyInfo> EnumList = type.GetProperties().Where(x => x.PropertyType.IsEnum).ToList();
+            List<EnumSearchDTO> EnumSearchList = new();
+            if(EnumList is not null && EnumList.Any())
+            {
+                foreach (var item in EnumList)
+                {
+                    EnumSearchList.Add(new EnumSearchDTO()
+                    {
+                        EnumName = item.PropertyType.FullName,
+                        PropertyName = item.Name,
+                        EnumValues = GetDictionaryEnum(item)
+                    });
+                }
+            }
+            return EnumSearchList;
+        }
+
+        private static object SetEnumValue(Array arr, string resource)
+        {
+            foreach (var item in arr)
+            {
+                if (item.ToString() == resource) return item;
+            }
+            return null;
+        }
+
+        private Dictionary<string, object> GetDictionaryEnum(PropertyInfo enumInfo)
+        {
+            using SDKContext context = CreateDbContext();
+            var enumValues = Enum.GetValues(enumInfo.PropertyType);
+            Dictionary<string, object> returnDic = context.Set<E00022_ResourceDescription>()
+                                        .Include(x => x.Resource)
+                                        .Where(x => x.Resource.Id.Contains(enumInfo.PropertyType.Name) && x.RowidCulture == AuthenticationService.GetRowidCulture())
+                                        .ToDictionary(x => x.Description, x => SetEnumValue(enumValues, x.Resource.Id.Substring(x.Resource.Id.LastIndexOf('.') + 1)));
+            return returnDic;
+        }
+
+        //========================================================
+
+        //=======Metodos de llaves foraneas===================
+
+
+        [SDKExposedMethod]
+        public ActionResult<List<InternalDTO>> SetListForeingRowid(List<string> keys, List<string> values)
+        {
+            using (SDKContext context = CreateDbContext())
+                try
+                {
+                    var query = context.Set<T>().AsQueryable();
+                    var resultadoJoin = query.Where(BuildContainsExpression<T>(values, keys.Select(x => x.Substring(0, x.IndexOf('_'))).ToList<string>()).Compile())
+                                                .Select(
+                                                        item => new InternalDTO
+                                                        {
+                                                            Rowid = item.GetRowid(),
+                                                            InternalIndex = ConvertInternalIndex(keys, item)
+                                                        }
+                                                    ).ToList();
+                    return new ActionResult<List<InternalDTO>>() { Success = true, Data = resultadoJoin };
+                }
+                catch (Exception e)
+                {
+                    return new BadRequestResult<List<InternalDTO>>() { Success = false, Errors = new List<string> { e.Message } };
+                }
+        }
+
+        private static Expression<Func<TEntity, bool>> BuildContainsExpression<TEntity>(List<string> values, List<string> fields)
+        {
+            var parameter = Expression.Parameter(typeof(TEntity), "x");
+            Expression concatExpression = null;
+            foreach (var field in fields)
+            {
+                var propertyExpression = Expression.Property(parameter, field);
+                var stringExpression = Expression.Call(propertyExpression, "ToString", Type.EmptyTypes);
+                if (concatExpression == null)
+                {
+                    concatExpression = stringExpression;
                 }
                 else
                 {
-                    SuccessData.Add(BaseObj.GetRowid());
+                    var concatMethod = typeof(string).GetMethod("Concat", new[] { typeof(string), typeof(string) });
+                    if (concatMethod != null)
+                    {
+                        concatExpression = Expression.Call(
+                            concatMethod,
+                            concatExpression,
+                            stringExpression
+                        );
+                    }
                 }
             }
-            SDKResultImportDataDTO resultImport = new SDKResultImportDataDTO();
-            resultImport.Success = SuccessData;
-            resultImport.Errors = ErrorData;
-
-            return new ActionResult<SDKResultImportDataDTO> { Success = true, Data = resultImport };
+            var containsMethod = typeof(List<string>).GetMethod("Contains");
+            var valuesExpression = Expression.Constant(values);
+            if (containsMethod == null || concatExpression == null)
+            {
+                return null;
+            }
+            var containsCall = Expression.Call(valuesExpression, containsMethod, concatExpression);
+            return Expression.Lambda<Func<TEntity, bool>>(containsCall, parameter);
         }
-        private static T CreateDynamicObjectFromJson(Type type, dynamic dynamicObj)
+
+        private static string ConvertInternalIndex(List<string> keys, object obj)
         {
+            string valueReturn = String.Empty;
+            keys.ForEach(key => { valueReturn += GetPropertyValue(obj, key.Substring(0, key.IndexOf('_'))).ToString(); });
+            return valueReturn;
+        }
+        private static object GetPropertyValue(object obj, string propertyName)
+        {
+            return obj.GetType().GetProperty(propertyName).GetValue(obj);
+        }
+
+        //==========================================================
+
+        //==============Metodo objetos foraneos=======================
+
+        private static List<ForeignObjectDTO> CalculateForeingList(Type type)
+        {
+            List<PropertyInfo> ForeignKeys = type.GetProperties().Where(x => x.GetCustomAttribute(typeof(ForeignKeyAttribute)) != null).ToList();
+            List<ForeignObjectDTO> ForeingTypeList = new();
+            if (ForeignKeys is not null && ForeignKeys.Any())
+            {
+                foreach (var ForeignKey in ForeignKeys)
+                {
+                    string EntityName = ForeignKey.GetCustomAttribute<ForeignKeyAttribute>().Name;
+                    PropertyInfo ForeignInfo = type.GetProperty(EntityName);
+                    ForeingTypeList.Add(new ForeignObjectDTO()
+                    {
+                        PropertyForeing = ForeignKey.Name,
+                        ForeingObjectType = ForeignInfo.PropertyType,
+                        ForeingObjectName = EntityName
+                    });
+                }
+            }
+            return ForeingTypeList;
+        }
+
+        private void CreateForeingObject(Type type, List<ForeignObjectDTO> ForeignList, dynamic dynamicObj, dynamic result)
+        {
+
+            if (ForeignList is not null && ForeignList.Any())
+            {
+                Parallel.ForEach(ForeignList, (ForeignAttribute) =>
+                {
+                    if (dynamicObj.ContainsKey(ForeignAttribute.PropertyForeing))
+                    {
+                        var value = GetForeingObject(ForeignAttribute.ForeingObjectType);
+                        Type RowidType = value.Rowid.GetType();
+                        dynamic RowidValue = dynamicObj.GetValue(ForeignAttribute.PropertyForeing).Value;
+                        if (RowidValue != null && IsNumber(RowidType, ref RowidValue))
+                        {
+                            value.Rowid = RowidValue;
+                            type.GetProperty(ForeignAttribute.ForeingObjectName).SetValue(result, value);
+                        }
+                    }
+                });
+            }
+        }
+
+        private static dynamic GetForeingObject(Type instanceType)
+        {
+            object returnInstance = Activator.CreateInstance(instanceType);
+            return returnInstance;
+        }
+
+        //===================================================================
+        private T CreateDynamicObjectFromJson(Type type, JObject dynamicObj, List<EnumSearchDTO> EnumSearchList, List<ForeignObjectDTO> ForeignList, ref List<dynamic> ErrorsList)
+        {
+            List<string> ErrorsListInternal = new();
             dynamic result = Activator.CreateInstance(type);
 
-            foreach (var property in dynamicObj.Properties())
+            if (dynamicObj.ContainsKey("Rowid"))
             {
-                var propertyName = property.Name;
-                var propertyEntity = type.GetProperty(propertyName);
+                dynamic RowidValue = ((dynamic)dynamicObj).Rowid.Value;
+                if (IsNumber(result.Rowid.GetType(), ref RowidValue))
+                {
+                    using (SDKContext context = CreateDbContext())
+                    {
+                        result = context.Set<T>().Find(RowidValue);
+                    }
+                }
+            }
+            CreateForeingObject(type, ForeignList, dynamicObj, result);
+            Parallel.ForEach(dynamicObj.Properties(), property =>
+            {
+                string propertyName = property.Name;
+                var propertyEntity = type.GetProperty(propertyName).PropertyType;
                 if (propertyEntity != null)
                 {
-                    dynamic value;
-                    //TODO : Revisar diferentes tipos de datos
-                    if (propertyEntity.PropertyType == typeof(bool))
+                    try
                     {
-                        if (property.Value == 1)
+                        var ValueValidated = GetValidatedValue(propertyEntity, ((dynamic)property).Value.Value, propertyName, EnumSearchList);
+                        if (ValueValidated.Success && ValueValidated.Data != null)
                         {
-                            value = true;
+                            dynamic value = ValueValidated.Data;
+                            type.GetProperty(propertyName).SetValue(result, value);
                         }
                         else
                         {
-                            value = false;
+                            ErrorsListInternal.AddRange(ValueValidated.Errors);
                         }
                     }
-                    else
+                    catch (Exception e)
                     {
-                        value = Convert.ChangeType(property.Value, propertyEntity.PropertyType);
+                        ErrorsListInternal.Add(e.Message);
                     }
-                    type.GetProperty(propertyName).SetValue(result, value);
                 }
+            });
+
+            if (ErrorsListInternal.Any())
+            {
+                dynamicObj.Add("Errors", JToken.FromObject(ErrorsListInternal));
+                ErrorsList.Add(dynamicObj);
             }
             return (T)result;
         }
 
-    }
+        private ActionResult<dynamic> GetValidatedValue(Type typeEntity, dynamic dynamicValue, string nameProperty, List<EnumSearchDTO> enumSearchList)
+        {
+            dynamicValue = dynamicValue == null ? "" : dynamicValue;
+            Type typeDynamicValue = dynamicValue.GetType();
+            if (typeDynamicValue == typeof(string) && string.IsNullOrEmpty(dynamicValue))
+            {
+                return new ActionResult<dynamic> { Success = true, Data = null };
+            }
+            if (typeEntity == typeof(string))
+            {
+                return new ActionResult<dynamic> { Success = true, Data = dynamicValue.ToString() };
+            }
+            if (typeEntity.BaseType == typeof(Enum))
+            {
+                var enumSearchDto = enumSearchList.FirstOrDefault(x => x.PropertyName.Equals(nameProperty));
+                if (enumSearchDto is not null)
+                {
+                    var enumValue = enumSearchDto.EnumValues[dynamicValue];
+                    return new ActionResult<dynamic> { Success = true, Data = enumValue };
+                }
+            }
+            if (typeDynamicValue == typeEntity) return new ActionResult<dynamic> { Success = true, Data = dynamicValue };
 
+            if (IsDate(typeEntity, ref dynamicValue)) return new ActionResult<dynamic> { Success = true, Data = dynamicValue };
+
+            if (IsNumber(typeEntity, ref dynamicValue))
+            {
+                return new ActionResult<dynamic> { Success = true, Data = dynamicValue };
+            }
+            if(typeEntity == typeof(bool))
+            {
+                return new ActionResult<dynamic> { Success = true, Data = dynamicValue == 1 };
+            }
+
+            return new ActionResult<dynamic> { Success = false, Errors = new List<string>() { $"{dynamicValue} no es compatible con  el campo {nameProperty}" } };
+
+        }
+
+        private bool IsNumber(Type value, ref dynamic DynamicValue)
+        {
+            if (DynamicValue is not null)
+            {
+                try
+                {
+                    if (value == typeof(int) || value == typeof(int?))
+                    {
+                        DynamicValue = (int)DynamicValue;
+                        return true;
+                    }
+                    if (value == typeof(double) || value == typeof(double?))
+                    {
+                        DynamicValue = (double)DynamicValue;
+                        return true;
+                    }
+                    if (value == typeof(float) || value == typeof(float?))
+                    {
+                        DynamicValue = (float)DynamicValue;
+                        return true;
+                    }
+                    if (value == typeof(decimal) || value == typeof(decimal?))
+                    {
+                        DynamicValue = (decimal)DynamicValue;
+                        return true;
+                    }
+                    if (value == typeof(sbyte) || value == typeof(sbyte?))
+                    {
+                        DynamicValue = (sbyte)DynamicValue;
+                        return true;
+                    }
+                    if (value == typeof(byte) || value == typeof(byte?))
+                    {
+                        DynamicValue = (byte)DynamicValue;
+                        return true;
+                    }
+                    if (value == typeof(short) || value == typeof(short?))
+                    {
+                        DynamicValue = (short)DynamicValue;
+                        return true;
+                    }
+                    if (value == typeof(ushort) || value == typeof(ushort?))
+                    {
+                        DynamicValue = (ushort)DynamicValue;
+                        return true;
+                    }
+                    if (value == typeof(uint) || value == typeof(uint?))
+                    {
+                        DynamicValue = (uint)DynamicValue;
+                        return true;
+                    }
+                    if (value == typeof(long) || value == typeof(long?))
+                    {
+                        DynamicValue = (long)DynamicValue;
+                        return true;
+                    }
+                    if (value == typeof(ulong) || value == typeof(ulong?))
+                    {
+                        DynamicValue = (ulong)DynamicValue;
+                        return true;
+                    }
+                    return false;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
+        private bool IsDate(Type value, ref dynamic DynamicValue)
+        {
+            if(DynamicValue is not null){
+                try
+                {
+                    Type TypeDynamicValue = DynamicValue.GetType();
+                    if (TypeDynamicValue == typeof(DateTime))
+                    {
+                        if (value == typeof(TimeSpan) || value == typeof(TimeSpan?))
+                        {
+                            DynamicValue = DynamicValue.TimeOfDay;
+                            return true;
+                        }
+                        if (value == typeof(DateOnly) || value == typeof(DateOnly?))
+                        {
+                            DynamicValue = DateOnly.FromDateTime(DynamicValue);
+                            return true;
+                        }
+                        if (value == typeof(DateTime) || value == typeof(DateTime?))
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
+    }
 }
+

@@ -1,3 +1,4 @@
+
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 	<!-- <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     	<Exec Command="npm run buildcss" />
@@ -47,8 +48,8 @@
 		<Reference Include="System.Reflection.Emit" />
 		<PackageReference Include="blazor-dragdrop" Version="2.4.0" />
 		<PackageReference Include="Blazored.LocalStorage" Version="4.2.0" />
-		<PackageReference Include="DevExpress.Blazor" Version="22.1.4" />
-		<PackageReference Include="DevExpress.Blazor.es" Version="22.1.4" />
+		<PackageReference Include="DevExpress.Blazor" Version="23.1.4" />
+		<PackageReference Include="DevExpress.Blazor.es" Version="23.1.4" />
 		<PackageReference Include="Google.Protobuf" Version="3.19.1" />
 		<PackageReference Include="GrapeCity.ActiveReports.Aspnetcore.Designer" Version="17.1.2" />
 		<PackageReference Include="GrapeCity.ActiveReports.Aspnetcore.Viewer" Version="17.1.2" />

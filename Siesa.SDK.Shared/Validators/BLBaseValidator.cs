@@ -7,8 +7,13 @@ using System.Threading.Tasks;
 
 namespace Siesa.SDK.Shared.Validators
 {
-    public class BLBaseValidator<T> : AbstractValidator<T>
+    public interface IBLBaseValidator : IValidator
     {
-        public string ValidatorType { get; set; }
+        string ValidatorType { get; set; }
+    }
+
+    public class BLBaseValidator<T> : AbstractValidator<T>, IBLBaseValidator
+    {
+        public string ValidatorType { get; set; } = "BaseObj";
     }
 }
