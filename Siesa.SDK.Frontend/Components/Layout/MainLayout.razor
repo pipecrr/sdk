@@ -81,7 +81,7 @@
                                                         @Body
                                                         @if(GeneralErrors?.Count > 0 || FieldErrors?.Count > 0)
                                                         {
-                                                            <ErrorsWindow GeneralErrors="@GeneralErrors" ErrorMsg="FieldErrors" />
+                                                            <ErrorsWindow GeneralErrors="@GeneralErrors" StackTrace="@StackTrace" ErrorMsg="FieldErrors" />
                                                         }
                                                     </ChildContent> 
                                                     <ErrorContent Context="Exception" >
@@ -89,7 +89,7 @@
                                                             List<string> errors = new List<string>();
                                                             errors.Add("Exception: " + Exception.Message + " " + Exception.StackTrace);
                                                         }
-                                                        <ErrorsWindow GeneralErrors="@errors" />
+                                                        <ErrorsWindow GeneralErrors="@errors" StackTrace="@StackTrace" />
                                                     </ErrorContent>
                                                 </ErrorBoundary>
                                             </div>
@@ -130,6 +130,7 @@
     private bool isMaximized = false;
 
     private List<string> GeneralErrors = new List<string>();
+    private List<string> StackTrace = new ();
     private List<string> FieldErrors = new List<string>();
     private bool _showExtendedLayout = true;
     public async Task ToogleMaximize()
@@ -364,8 +365,10 @@
                     FieldErrors.Add(err);
                 }
             }else{
-                if(!GeneralErrors.Contains(err)){
-                    GeneralErrors.Add(err);
+                if(!GeneralErrors.Contains(err))
+                {
+                    StackTrace.Add(err);
+                    GeneralErrors.Add("Custom.Generic.Message.Error");
                 }
             }
         }

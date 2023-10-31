@@ -21,12 +21,12 @@
 else if ((Panels == null || Panels.Count <= 0) && !IsDocument)
 {
     @* <ResourceViewer ResourceTag="Custom.Formview.NotDefinition" /> *@
-    <ErrorsWindow GeneralErrors="@ErrorList"/>
+    <ErrorsWindow GeneralErrors="@ErrorList" StackTrace="@StackTrace"/>
 }
 else if (ModelLoaded == true)
 {
-    if(!string.IsNullOrEmpty(ErrorMsg) || ErrorList.Count > 0){
-        <ErrorsWindow GeneralErrors="@ErrorList"/>
+    if(!string.IsNullOrEmpty(ErrorMsg) || ErrorList.Count > 0 || StackTrace.Any()){
+        <ErrorsWindow GeneralErrors="@ErrorList" StackTrace="@StackTrace"/>
     }
         @if(IsSubpanel && ShowTitle){
             <h5 class="d-flex justify-content-center">@BusinessObj</h5>

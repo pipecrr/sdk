@@ -1,0 +1,26 @@
+@inherits SDKComponent
+@using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Components.Fields
+@using Siesa.SDK.Frontend.Services
+@using System.Linq.Expressions
+@using Siesa.SDK.Components.Visualization
+
+ 
+<div class="container-fluid m-2">
+  <div class="sdk-email-multiple">
+    <div class="sdk-email-multiple-container">
+      @foreach(var email in EmailList)
+      {
+        <SDKBadge IsPill="true" Style="SDKBadgeStyle.Light" Value="@email" >
+            <SDKButton RenderStyle="SDKButtonRenderStyle.None" 
+            Click="() => RemoveEmail(email)">
+                <p>@email</p>
+                <SDKIcon CssClass="pl-1" Name="fa-x"/>
+            </SDKButton>
+        </SDKBadge>
+      }
+    </div>
+        <input type="text" class="sdk-email-multiple-input" value="@Value" disabled="@Disabled"
+               readonly="@ReadOnly" @oninput="OnInput" @onkeydown="OnKeyDown" @onchange="@OnChange"  />
+  </div>
+</div>

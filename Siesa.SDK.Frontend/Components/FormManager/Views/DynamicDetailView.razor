@@ -2,9 +2,9 @@
 @attribute [Authorize]
 @using Microsoft.AspNetCore.Authorization
 @inherits Siesa.SDK.Frontend.Components.FormManager.ViewModels.DynamicBaseViewModel
-@if (ErrorMsg != null && ErrorMsg != "")
+@if (!string.IsNullOrEmpty(ErrorMsg) || ErrorList.Any() || StackTrace.Any())
 {
-    <ErrorsWindow GeneralErrors="@ErrorList" />
+    <ErrorsWindow GeneralErrors="@ErrorList" StackTrace="@StackTrace" />
 }
 else if (BusinessObj.BaseObj == null)
 {

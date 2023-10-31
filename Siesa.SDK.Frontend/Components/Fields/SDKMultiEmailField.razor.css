@@ -1,0 +1,36 @@
+.sdk-email-multiple-input{
+    border: none;
+    outline: none;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    font-size: 1rem;
+    background-color: transparent;
+  }
+  .sdk-email-multiple-input:focus{
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  .sdk-email-multiple-container{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .sdk-email-multiple{
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    background-color: #fff;
+    padding: 0;
+    flex-direction: column;
+  }
+
+  .sdk-email-multiple:focus-within{
+    box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+  }

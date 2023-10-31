@@ -120,6 +120,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         internal string BusinessNameA { get; set; }
         public List<DetailView> DetailViewsTablesA { get; set; } = new List<DetailView>();
         internal List<E00201_Company> Companies { get; set; } = new List<E00201_Company>();
+        private List<string> StackTrace = new ();
 
         private void setViewContextField(FieldOptions field)
         {
@@ -255,7 +256,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     }
                     catch (System.Exception ex)
                     {
-                        Console.WriteLine($"Error: {ex.Message}");
+                        StackTrace.Add(ex.Message);
                     }
                 }
 
@@ -551,8 +552,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             try{
                 result = await BusinessObj.DeleteAsync();
             }catch(Exception ex){
-                ErrorMsg = ex.Message;
-                ErrorList.Add(ErrorMsg);
+                //ErrorMsg = ex.Message;
+                ErrorList.Add("Custom.Generic.Message.Error");
+                StackTrace.Add(ex.Message);
             }
 
             if (result != null && result.Errors.Count > 0)
@@ -630,8 +632,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.DeleteAttachment, AuthenticationService);
                         CanDetail = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.DownloadAttachment, AuthenticationService);
                     }
-                    catch (System.Exception)
+                    catch (System.Exception ex)
                     {
+                        StackTrace.Add(ex.Message);
                     }
                 }else
                 {
@@ -649,8 +652,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         CanDelete = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Delete, AuthenticationService).ConfigureAwait(true);
                         CanDetail = await FeaturePermissionService.CheckUserActionPermission(businessName, enumSDKActions.Detail, AuthenticationService).ConfigureAwait(true);
                     }
-                    catch (System.Exception)
+                    catch (System.Exception ex)
                     {
+                        StackTrace.Add(ex.Message);
                     }
                 }
 
