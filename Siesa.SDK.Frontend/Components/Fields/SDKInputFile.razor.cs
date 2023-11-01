@@ -151,11 +151,6 @@ public partial class SDKInputFile : SDKComponent
 
     private CancellationTokenSource _cancellationToken;
     private string _display = "none"; 
-    private bool CanAcess { get; set; }
-    private bool CanCreate { get; set; }
-    private bool CanEdit { get; set; }
-    private bool CanDelete { get; set; }
-
 
     protected override async Task OnInitializedAsync()
     {
@@ -172,7 +167,7 @@ public partial class SDKInputFile : SDKComponent
         _cancellationToken = new CancellationTokenSource();
         await Task.Delay(500, _cancellationToken.Token).ConfigureAwait(true);
         _IsLoading = true;
-        if (IsMultiple && _FilesSelected.Count == 0 && CanAcess)
+        if (IsMultiple && _FilesSelected.Count == 0)
         {
             var response = await BackendRouterService.GetSDKBusinessModel("BLAttachmentDetail", AuthenticationService).Call("GetAttachmentsDetail", RowidAttachmentRelationship, SaveBytes).ConfigureAwait(true);
             if (response.Success && response.Data != null && response.Data.Count > 0)
@@ -190,7 +185,7 @@ public partial class SDKInputFile : SDKComponent
                 _UrlImage = _FilesSelected[0].Url;
             }
         }
-        else if (RowidAttachmentDetail > 0 && CanAcess)
+        else if (RowidAttachmentDetail > 0)
         {
             var response = await BackendRouterService.GetSDKBusinessModel("BLAttachmentDetail", AuthenticationService).Call("GetAttachmentDetail", RowidAttachmentDetail).ConfigureAwait(true);
             if (response.Success && response.Data != null)
@@ -307,7 +302,7 @@ public partial class SDKInputFile : SDKComponent
         StateHasChanged();
     }
 
-    public async Task SDKUploadFile()
+    public async Task SDKUploadFile(bool ignorePermissions = false)
     {
         try
         {
@@ -323,7 +318,7 @@ public partial class SDKInputFile : SDKComponent
                 {
                     throw new Exception("Debe especificar el RowidAttachmentRelationship");
                 }
-                if (_FilesDeleted.Count > 0 && CanDelete)
+                if (_FilesDeleted.Count > 0)
                 {
                     var response = await BackendRouterService.GetSDKBusinessModel("BLAttachmentDetail", AuthenticationService).Call("DeleteMultiAttachmentDetail", _FilesDeleted).ConfigureAwait(true);
                     if (!response.Success)
@@ -333,39 +328,33 @@ public partial class SDKInputFile : SDKComponent
                 }
                 foreach (var itemFile in _FilesToSave)
                 {
-                    await SaveAttachment(itemFile.File, itemFile).ConfigureAwait(true);
+                    await SaveAttachment(itemFile.File,ignorePermissions, itemFile).ConfigureAwait(true);
                     _FilesToSave = new();
                 }
             }
             else
             {
-                await SaveAttachment(InputFile.File).ConfigureAwait(true);
+                await SaveAttachment(InputFile.File, ignorePermissions).ConfigureAwait(true);
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Prueba " + ex.Message);
+            Console.WriteLine(ex.Message);
         }
     }
 
-    private async Task SaveAttachment(IBrowserFile itemFile, SDKInputFieldDTO item = null)
-    {
-        if (!CanAcess || !CanCreate)
-        {
-            _ = Notification.ShowError("Custom.Generic.Unauthorized");
-            return;
-        }
-        
+    private async Task SaveAttachment(IBrowserFile itemFile,bool ignorePermissions, SDKInputFieldDTO item = null)
+    {        
         var formFile = await ConvertToIFormFile(itemFile).ConfigureAwait(true);
         var fileUploadDTO = new SDKFileUploadDTO();
 
         if (SaveBytes)
         {
-            fileUploadDTO = await BusinessObj.UploadSingleByte(formFile);
+            fileUploadDTO = await BusinessObj.UploadSingleByte(formFile, ignorePermissions);
         }
         else
         {
-            fileUploadDTO = await BusinessObj.UploadSingle(formFile);
+            fileUploadDTO = await BusinessObj.UploadSingle(formFile, ignorePermissions);
         }
 
         if (fileUploadDTO != null)
@@ -424,23 +413,6 @@ public partial class SDKInputFile : SDKComponent
             }
         }
     }
-    private async Task CheckPermissions()
-    {
-        if (FeaturePermissionService != null && !String.IsNullOrEmpty(BusinessName))
-        {
-            try
-            {
-                CanAcess = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.AccessAttachment, AuthenticationService).ConfigureAwait(true);
-                CanCreate = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.UploadAttachment, AuthenticationService).ConfigureAwait(true);
-                CanEdit = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.DeleteAttachment, AuthenticationService).ConfigureAwait(true);
-                CanDelete = await FeaturePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.DeleteAttachment, AuthenticationService).ConfigureAwait(true);
-            }
-            catch (Exception)
-            {
-                
-            }
-        }
-    } 
 }
 
 
