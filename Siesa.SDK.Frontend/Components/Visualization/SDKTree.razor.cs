@@ -18,11 +18,5 @@ public partial class SDKTree : SDKComponent
     [Parameter]
     public string Style {get; set;}
 
-    // [Parameter]
-    // public object Value { get; set; }
-    // [Parameter]
-    // public EventCallback<object> ValueChanged { get; set; }
-    // [Parameter] 
-    // public string Style { get; set; }
 
 }
