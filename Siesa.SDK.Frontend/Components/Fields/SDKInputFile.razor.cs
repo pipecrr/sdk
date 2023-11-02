@@ -154,8 +154,7 @@ public partial class SDKInputFile : SDKComponent
 
     protected override async Task OnInitializedAsync()
     {
-        await CheckPermissions().ConfigureAwait(true);
-        base.OnInitialized();
+       await base.OnInitializedAsync().ConfigureAwait(true);
     }
 
     protected override async Task OnParametersSetAsync()
