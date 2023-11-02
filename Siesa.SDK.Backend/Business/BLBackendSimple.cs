@@ -1676,12 +1676,15 @@ namespace Siesa.SDK.Business
         }
 
         [SDKExposedMethod]
-        public async Task<ActionResult<SDKFileUploadDTO>> SaveFile(byte[] fileBytes, string name, string contentType, bool SaveBytes = false)
+        public async Task<ActionResult<SDKFileUploadDTO>> SaveFile(byte[] fileBytes, string name, string contentType, bool SaveBytes = false, bool ignorePermissions = false)
         {
-            CanUploadAttachment = await _featurePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.UploadAttachment, AuthenticationService);
+            if (!ignorePermissions)
+            {    
+                CanUploadAttachment = await _featurePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.UploadAttachment, AuthenticationService);
 
-            if (!CanUploadAttachment)
-                return new BadRequestResult<SDKFileUploadDTO> { Success = false, Errors = new List<string> { "You don't have permission to upload attachment" } };
+                if (!CanUploadAttachment)
+                    return new BadRequestResult<SDKFileUploadDTO> { Success = false, Errors = new List<string> { "You don't have permission to upload attachment" } };
+            }
 
             MemoryStream stream = new MemoryStream(fileBytes);
             var result = new SDKFileUploadDTO();
