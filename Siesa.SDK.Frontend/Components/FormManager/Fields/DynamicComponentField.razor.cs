@@ -163,7 +163,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
                     {
                         Type actionType = typeof(Action<>).MakeGenericType(type);
                         Delegate actionDelegate = Delegate.CreateDelegate(actionType, this, "OnChange", false, false);
-                        var action = (Action<object>)actionDelegate;
                         _editableField = builder =>
                         {
                             builder.OpenComponent(0, typeof(SDKSelectField<>).MakeGenericType(type));
