@@ -146,45 +146,47 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
                     };
                     break;
                 default:
-                    _editableField = builder =>
+                    var bannedTypes = new List<Type>() { typeof(string), typeof(byte[]) };
+                    if (type.IsClass && !type.IsPrimitive && !type.IsEnum && !bannedTypes.Contains(type) && !string.IsNullOrEmpty(RelatedBusiness))
                     {
-                        builder.OpenComponent(0, typeof(SDKCharField));
-                        builder.AddAttribute(1, "ValueExpression", lambda);
-                        builder.AddAttribute(2, "Value", (string)Context.GetType().GetProperty(Property)?.GetValue(Context));
-                        builder.AddAttribute(3, "ValueChanged", new Action<string>(value => OnChange(value)));
-                        builder.CloseComponent();
-                    };
+                        _editableField = builder =>
+                        {
+                            builder.OpenComponent(0, typeof(SDKEntityField));
+                            builder.AddAttribute(1, "RelatedBusiness", RelatedBusiness);
+                            builder.AddAttribute(2, "BaseObj", Context);
+                            builder.AddAttribute(3, "FieldName", Property);
+                            builder.AddAttribute(4, "OnChange", new Action(() => OnChangeEntity()));
+                            builder.AddComponentReferenceCapture(5, (element) => _entityReference = (SDKEntityField)element);
+                            builder.CloseComponent();
+                        };
+                    }else if (type.IsEnum)
+                    {
+                        Type actionType = typeof(Action<>).MakeGenericType(type);
+                        _editableField = builder =>
+                        {
+                            builder.OpenComponent(0, typeof(SDKSelectField<>).MakeGenericType(type));
+                            builder.AddAttribute(1, "ValueExpression", lambda);
+                            builder.AddAttribute(2, "Value", Context.GetType().GetProperty(Property)?.GetValue(Context));
+                            builder.AddAttribute(3, "ValueChanged", Delegate.CreateDelegate(actionType, this, "OnChange", false, false));
+                            builder.CloseComponent();
+                        };
+                    }
+                    else
+                    {
+                        _editableField = builder =>
+                        {
+                            builder.OpenComponent(0, typeof(SDKCharField));
+                            builder.AddAttribute(1, "ValueExpression", lambda);
+                            builder.AddAttribute(2, "Value", (string)Context.GetType().GetProperty(Property)?.GetValue(Context));
+                            builder.AddAttribute(3, "ValueChanged", new Action<string>(value => OnChange(value)));
+                            builder.CloseComponent();
+                        };
+                    }
                     break;
-            }
-            var bannedTypes = new List<Type>() { typeof(string), typeof(byte[]) };
-            if (type.IsClass && !type.IsPrimitive && !type.IsEnum && !bannedTypes.Contains(type) && !string.IsNullOrEmpty(RelatedBusiness))
-            {
-                _editableField = builder =>
-                {
-                    builder.OpenComponent(0, typeof(SDKEntityField));
-                    builder.AddAttribute(1, "RelatedBusiness", RelatedBusiness);
-                    builder.AddAttribute(2, "BaseObj", Context);
-                    builder.AddAttribute(3, "FieldName", Property);
-                    builder.AddAttribute(4, "OnChange", new Action(() => OnChangeEntity()));
-                    builder.AddComponentReferenceCapture(5, (element) => _entityReference = (SDKEntityField)element);
-                    builder.CloseComponent();
-                };
-            }
-
-            if (type.IsEnum)
-            {
-                _editableField = builder =>
-                {
-                    builder.OpenComponent(0, typeof(SDKSelectField<>).MakeGenericType(type));
-                    builder.AddAttribute(1, "ValueExpression", lambda);
-                    builder.AddAttribute(2, "Value", Context.GetType().GetProperty(Property)?.GetValue(Context));
-                    builder.AddAttribute(3, "ValueChanged", new Action<object>(value => OnChange(value)));
-                    builder.CloseComponent();
-                };
             }
         }
         
-        private void OnChange(object value)
+        private void OnChange(dynamic value)
         {
             if(OnChangeColumn != null)
             {
