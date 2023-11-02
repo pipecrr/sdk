@@ -162,7 +162,6 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
                     }else if (type.IsEnum)
                     {
                         Type actionType = typeof(Action<>).MakeGenericType(type);
-                        Delegate actionDelegate = Delegate.CreateDelegate(actionType, this, "OnChange", false, false);
                         _editableField = builder =>
                         {
                             builder.OpenComponent(0, typeof(SDKSelectField<>).MakeGenericType(type));
