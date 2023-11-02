@@ -20,8 +20,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CsvHelper" Version="30.0.1" />
-		<PackageReference Include="DevExpress.Document.Processor" Version="23.1.4" />
+		<PackageReference Include="CsvHelper" Version="30.0.1" />		
 		<PackageReference Include="FluentValidation" Version="10.3.4" />
 		<PackageReference Include="Google.Protobuf" Version="3.19.1" />
 		<PackageReference Include="Grpc" Version="2.41.1" />
