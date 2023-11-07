@@ -107,13 +107,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         
         public int CountUnicErrors = 0;
 
-        public IEnumerable<object> FielsdUniqueIndex ;
+        public IEnumerable<object> FielsdUniqueIndex { get; set; }
 
-        public string FieldUniqueIndex = "";
+        public string FieldUniqueIndex { get; set; } = "";
 
         private string _viewdefName = "";
 
-        public List<string> StackTrace = new ();
+        public List<string> StackTrace { get; set; } = new ();
 
         public bool ContainAttachments = false;
 

@@ -184,7 +184,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                         .Where(x => 
                         {
                             return x.GetType().GetProperty("IsUnique").GetValue(x, null).Equals(true) 
-                                && ((List<string>)x.GetType().GetProperty("PropertyNames").GetValue(x)).Count() > 1
+                                && ((List<string>)x.GetType().GetProperty("PropertyNames").GetValue(x)).Count > 1
                                 && ((List<string>)x.GetType().GetProperty("PropertyNames").GetValue(x)).Contains(FieldName);
                         })
                         .Select(x => x.GetType().GetProperty("PropertyNames").GetValue(x, null));
