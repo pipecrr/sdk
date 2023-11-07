@@ -557,7 +557,7 @@ a:hover
 .nav_profile_btn:focus .nav_btn_standar_text,
 .nav_btn_standar_selected .nav_btn_standar_icon,
 .nav_btn_standar_selected .nav_btn_standar_text {
-    color: var(--color_light);
+    color: var(--color_light_text);
     transition-duration: .2s;
 }
 
@@ -798,7 +798,7 @@ input#collapse_open:checked~.collapse_open_btn>.nav_btn_standar_text {
 
 .layout_btn_standar-sm:hover i,
 .layout_btn_standar-sm:focus i {
-    color: var(--color_light);
+    color: var(--color_light_text);
     z-index: 1;
     transition-duration: .2s;
 }
@@ -1413,7 +1413,17 @@ color: var(--color_text);
 
 .dxbl-dropdown>.dxbs-dropdown-dialog>.dxbs-dropdown-body>*{
    border-radius: var(--border_radius_standar_max);
-} 
+}
+
+.dxbl-dropdown>.dxbl-dropdown-dialog{
+    background: var(--color_panel_back)!important;
+    border: 1px solid var(--color_panel_back_border) !important;
+}
+
+.dxbl-popup-cell .dxbl-dropdown .dxbl-dropdown-dialog{
+    background-color: var(--color_panel_back)!important;
+    border: 1px solid var(--color_panel_back_border)!important;
+}
 
 .dxbs-calendar .dxbs-calendar-table-container .dxbs-calendar-table .dxbs-calendar-table-days-of-week th{
     font-family:'Roboto', sans-serif !important;
@@ -1458,7 +1468,6 @@ color: var(--color_text);
 .text-danger{
     color: var(--color_primary) !important;
 }
-
 
 .text-muted{
     color: var(--color_form_border) !important;
@@ -2168,6 +2177,10 @@ div.dxbs-btn-group.dxbs-input-group-prepend>.btn.dx-btn.btn-sm {
 SDKColorPicker-----------------------
 */
 
+.rz-color-box
+{
+    color: var(--color_text) !important;
+}
 
 .rz-colorpicker{
     background-color:var(--color_input_back) !important;

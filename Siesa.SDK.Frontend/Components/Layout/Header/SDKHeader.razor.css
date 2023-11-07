@@ -275,7 +275,7 @@
         left: 0;
         bottom: 0;
         padding: 0.5rem;
-        background-color: var(--color_light);
+        background-color: var(--color_light_nav);
         box-shadow: var(--shadow_standar);
     }
     .header_circles_box {
