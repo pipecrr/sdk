@@ -792,27 +792,29 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         private async Task SaveBusiness()
         {   
             Saving = true;
-            if(CountUnicErrors>0){
+            if(CountUnicErrors>0)
+            {
                 GlobalLoaderService.Hide();
                 Saving = false;
-                var existeUniqueIndexValidation = NotificationService.Messages.Where(x => x.Summary == "Custom.Generic.UniqueIndexValidation").Any();
-                if(existeUniqueIndexValidation)
-                {
-                    /*if(FielsdUniqueIndex.Any())
-                    {
-                        string fields = "";
-                        foreach (var item in FielsdUniqueIndex)
-                        {
-                            fields += $"{BusinessObj.BaseObj.Name}.{item}, ";                                    
-                        }
-                        
-                        ErrorList.Add($"Custom.Generic.UniqueIndexValidation//{fields}");
 
-                    }else
+                if(FielsdUniqueIndex.Any())
+                {
+                    string fields = "";
+                    foreach (var compoundIndex in FielsdUniqueIndex)
                     {
-                        ErrorList.Add($"Custom.Generic.UniqueIndexValidation//{FieldUniqueIndex}");
-                    }*/
+                        foreach (var item in (List<string>)compoundIndex)
+                        {
+                            fields += $"{BusinessObj.BaseObj.GetType().Name}.{item},";
+                        }
+                    }
+                    
+                    ErrorList.Add($"Custom.Generic.UniqueIndexValidation.Compound//{fields}");
+
+                }else
+                {
+                    ErrorList.Add($"Custom.Generic.UniqueIndexValidation//{FieldUniqueIndex}");
                 }
+                
                 return;
             }
             GlobalLoaderService.Show();
