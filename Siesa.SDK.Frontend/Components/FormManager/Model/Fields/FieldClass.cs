@@ -16,6 +16,7 @@ using Siesa.SDK.Frontend.Components.Visualization;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Frontend.Services;
 using Siesa.SDK.Shared.DataAnnotations;
+using System.Collections.Generic;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 {
@@ -176,12 +177,45 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                     if (request.Data == true)
                     {
                         var existeUniqueIndexValidation = _NotificationService.Messages.Where(x => x.Summary == "Custom.Generic.UniqueIndexValidation").Any();
-                        if(!existeUniqueIndexValidation){
-                            _NotificationService.ShowError("Custom.Generic.UniqueIndexValidation");
+                        if(!existeUniqueIndexValidation)
+                        {
+                            var entityName = BindModel.GetType().Name;
+
+                            this.formView.FielsdUniqueIndex = BindModel.GetType()
+                            .GetCustomAttributes(typeof(Microsoft.EntityFrameworkCore.IndexAttribute), false)
+                            .Where(x => 
+                            {
+                                return x.GetType().GetProperty("IsUnique").GetValue(x, null).Equals(true) 
+                                    && ((List<string>)x.GetType().GetProperty("PropertyNames").GetValue(x)).Count() > 1
+                                    && ((List<string>)x.GetType().GetProperty("PropertyNames").GetValue(x)).Contains(FieldName);
+                            })
+                            .Select(x => x.GetType().GetProperty("PropertyNames").GetValue(x, null));
+
+                            if(this.formView.FielsdUniqueIndex.Any())
+                            {
+                                List<string> fields = new();
+                                
+                                foreach (var compoundIndex in this.formView.FielsdUniqueIndex)
+                                {
+                                    foreach (var item in (List<string>)compoundIndex)
+                                    {
+                                        fields.Add($"{entityName}.{item}");
+                                    }
+                                }
+                                _ = _NotificationService.ShowError("Custom.Generic.UniqueIndexValidation.Compound",
+                                    new object [] { fields }  );
+                            }else
+                            {
+                                this.formView.FieldUniqueIndex = $"{entityName}.{FieldName}";
+
+                                _ = _NotificationService.ShowError("Custom.Generic.UniqueIndexValidation", new object [] 
+                                        { $"{this.formView.FieldUniqueIndex}"}  );
+                            }
+
                         }
 
                         if(this.FieldOpt.CssClass == null)
-                        {
+                        { 
                             this.FieldOpt.CssClass = "";
                         }
 

@@ -103,38 +103,45 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     });
                 }
             }
-            if(GeneralErrors?.Count() > 0) {
+            if(GeneralErrors?.Count() > 0) 
+            {
                 _errorCount += GeneralErrors.Count();
-                foreach (var err in GeneralErrors){
+
+                foreach (var err in GeneralErrors)
+                {
+                    if (err.Split("//").Count() > 1)
+                    {
+                        var errorSplit = err.Split("//");
+                        var resourceTag = errorSplit[0];
+
+                        var errorFormat = errorSplit.Skip(1).ToArray();
+
+                        if(!_generalerrorsFormat.ContainsKey(resourceTag))
+                        {
+                            _generalerrorsFormat.Add(resourceTag, errorFormat);
+                        }
+                    }else
+                    {
+                        _generalErrors.Add(err);
+                    }
+
                     var errorMsg = "";
-                    if(err.StartsWith("Exception: ")){
+                    if(err.StartsWith("Exception: "))
+                    {
                          errorMsg = err.Replace("Exception: ", "");
-                         if(_generalErrors.Contains(errorMsg)){
+                         if(_generalErrors.Contains(errorMsg))
+                         {
                             _generalErrors.Remove(errorMsg);
                             //errorMsg = await UtilsManager.GetResource(errorMsg);
                             errorMsg = errorMsg;
-                         }
-                         if (errorMsg.Split("//").Count() > 1)
-                         {
-                                var errorSplit = errorMsg.Split("//");
-                                var resourceTag = errorSplit[0];
-
-                                var errorFormat = errorSplit.Skip(1).ToArray();
-
-                                if(!_generalerrorsFormat.ContainsKey(resourceTag))
-                                {
-                                    _generalerrorsFormat.Add(resourceTag, errorFormat);
-                                }
-                         }else
-                         {
-                            _generalErrors.Add(errorMsg);
                          }
                     }else{
                         //errorMsg = await UtilsManager.GetResource(err);
                         errorMsg = err;
                         _generalErrors.Add(errorMsg);
-                        _generalErrors = _generalErrors.Distinct().ToList();
                     }
+
+                    _generalErrors = _generalErrors.Distinct().ToList();
                 }
             }
             if (_errorCount > 0){

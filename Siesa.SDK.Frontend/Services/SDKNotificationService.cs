@@ -52,6 +52,8 @@ namespace Siesa.SDK.Frontend.Services
             {
                 return resourceMessage;
             }
+
+            //Tener un Recuerdo con un indice {d} indicando que es dinamico, y reemplazar
         }
         public async Task ShowError(string resourceMessage, object?[] variables = null, int duration = 7000, Int64 culture = 0)
         {

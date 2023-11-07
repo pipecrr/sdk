@@ -107,6 +107,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         
         public int CountUnicErrors = 0;
 
+        public IEnumerable<object> FielsdUniqueIndex ;
+
+        public string FieldUniqueIndex = "";
+
         private string _viewdefName = "";
 
         public List<string> StackTrace = new ();
@@ -786,15 +790,28 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 			SavingFile = false;
         }
         private async Task SaveBusiness()
-        {
+        {   
             Saving = true;
             if(CountUnicErrors>0){
                 GlobalLoaderService.Hide();
                 Saving = false;
                 var existeUniqueIndexValidation = NotificationService.Messages.Where(x => x.Summary == "Custom.Generic.UniqueIndexValidation").Any();
-                if(!existeUniqueIndexValidation){
-                    NotificationService.ShowError("Custom.Generic.UniqueIndexValidation");
-                    ErrorList.Add("Custom.Generic.UniqueIndexValidation");
+                if(existeUniqueIndexValidation)
+                {
+                    /*if(FielsdUniqueIndex.Any())
+                    {
+                        string fields = "";
+                        foreach (var item in FielsdUniqueIndex)
+                        {
+                            fields += $"{BusinessObj.BaseObj.Name}.{item}, ";                                    
+                        }
+                        
+                        ErrorList.Add($"Custom.Generic.UniqueIndexValidation//{fields}");
+
+                    }else
+                    {
+                        ErrorList.Add($"Custom.Generic.UniqueIndexValidation//{FieldUniqueIndex}");
+                    }*/
                 }
                 return;
             }
