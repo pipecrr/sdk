@@ -44,9 +44,10 @@
     --color_primary_shadow_min: #2345CB0D;
     --shadow_standar_min: 0px 3px 12px var(--color_primary_shadow_min);
     /* Base: color primary (Para even de tablas) */
-    --color_table_even: #eff6fe;
+    --color_table_even: #f5f5f5;
     /* Base: color primary (Para hover de tablas) */
     --color_table_hover: rgba(14, 121, 253, 0.1);
+    --color_table_focus: #E6F1FF;
     --color_search_back: #23ACFF;
     --border_radius_card_login: 0.5rem;
     --border_radius_standar: .25rem;
@@ -2383,4 +2384,10 @@ border-color: var(--color_border) !important;
     100% {
         background-position-y: -5900px;
     }
+}
+.dxbl-dropdown>.dxbl-dropdown-dialog{
+    background: var(--color_panel_back) !important;
+    border-radius: var(--border_radius_standar) !important;
+    border: 1px solid var(--color_border) !important;
+    box-shadow: var(--shadow_standar) !important;
 }
