@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Radzen;
 using Siesa.SDK.Frontend.Components;
@@ -43,8 +45,29 @@ namespace Siesa.SDK.Frontend.Services
                 for (int i = 0; i < formats.Length; i++)
                 {
                     var format = formatString[i].ToString();
-                    var resourceFormat = await UtilsManager.GetResource(format, rowidCulture).ConfigureAwait(true);
-                    formats[i] = resourceFormat;
+
+                    if (format.Contains(',', StringComparison.Ordinal))
+                    {
+                        var formatSplits = format.Split(',').Where(item => !string.IsNullOrEmpty(item)).ToArray();
+
+                        if (formatSplits.Length > 0)
+                        {
+                            var messageFragments = new List<string>();
+
+                            foreach (var item in formatSplits)
+                            {
+                                var resourceFormat = await UtilsManager.GetResource(item, rowidCulture).ConfigureAwait(true);
+                                messageFragments.Add(resourceFormat);
+                            }
+
+                            formats[i] = string.Join("-", messageFragments);
+                        }
+                    }
+                    else
+                    {
+                        var resourceFormat = await UtilsManager.GetResource(format, rowidCulture).ConfigureAwait(true);
+                        formats[i] = resourceFormat;
+                    }
                 }
                 return String.Format(resourceMessage, formats);
             }

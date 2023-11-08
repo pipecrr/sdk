@@ -103,38 +103,58 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     });
                 }
             }
-            if(GeneralErrors?.Count() > 0) {
-                _errorCount += GeneralErrors.Count();
-                foreach (var err in GeneralErrors){
-                    var errorMsg = "";
-                    if(err.StartsWith("Exception: ")){
-                         errorMsg = err.Replace("Exception: ", "");
-                         if(_generalErrors.Contains(errorMsg)){
-                            _generalErrors.Remove(errorMsg);
-                            //errorMsg = await UtilsManager.GetResource(errorMsg);
-                            errorMsg = errorMsg;
-                         }
-                         if (errorMsg.Split("//").Count() > 1)
-                         {
-                                var errorSplit = errorMsg.Split("//");
-                                var resourceTag = errorSplit[0];
+            if(GeneralErrors?.Count > 0) 
+            {
+                _errorCount += GeneralErrors.Count;
+                var errorMsg = "";
 
-                                var errorFormat = errorSplit.Skip(1).ToArray();
+                foreach (var err in GeneralErrors)
+                {
+                    if (err.Split("//").Length > 1)
+                    {
+                        var errorSplit = err.Split("//");
+                        var resourceTag = errorSplit[0];
 
-                                if(!_generalerrorsFormat.ContainsKey(resourceTag))
+                        var errorFormat = errorSplit.Skip(1).ToArray();
+
+                        if (errorFormat[0].Contains(',', StringComparison.Ordinal))
+                        {
+                            var formatSplits = errorFormat[0].Split(',').Where(item => !string.IsNullOrEmpty(item)).ToArray();
+
+                            if (formatSplits.Length > 0)
+                            {
+                                var messageFragments = new List<string>();
+
+                                foreach (var item in formatSplits)
                                 {
-                                    _generalerrorsFormat.Add(resourceTag, errorFormat);
+                                    var resourceFormat = await UtilsManager.GetResource(item).ConfigureAwait(true);
+                                    messageFragments.Add(resourceFormat);
                                 }
-                         }else
-                         {
-                            _generalErrors.Add(errorMsg);
-                         }
-                    }else{
-                        //errorMsg = await UtilsManager.GetResource(err);
-                        errorMsg = err;
+
+                                var formats = string.Join("-", messageFragments);
+
+                                _generalerrorsFormat.Add(resourceTag, new object[]{formats});
+                            }
+                            
+                        }else if(!_generalerrorsFormat.ContainsKey(resourceTag))
+                        {
+                            _generalerrorsFormat.Add(resourceTag, errorFormat);
+                        }
+                    }else if(err.StartsWith("Exception: ", StringComparison.Ordinal))
+                    {
+                        errorMsg = err.Replace("Exception: ", "", StringComparison.Ordinal);
+                        if(_generalErrors.Contains(errorMsg, StringComparer.Ordinal))
+                        {
+                            _generalErrors.Remove(errorMsg);
+                        }
                         _generalErrors.Add(errorMsg);
-                        _generalErrors = _generalErrors.Distinct().ToList();
+
+                    }else
+                    {
+                        _generalErrors.Add(err);
                     }
+
+                    _generalErrors = _generalErrors.Distinct().ToList();
                 }
             }
             if (_errorCount > 0){

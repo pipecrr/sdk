@@ -16,6 +16,7 @@ using Siesa.SDK.Frontend.Components.Visualization;
 using Siesa.SDK.Shared.Services;
 using Siesa.SDK.Frontend.Services;
 using Siesa.SDK.Shared.DataAnnotations;
+using System.Collections.Generic;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
 {
@@ -170,46 +171,73 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model.Fields
                 {
                     return;
                 }
-                var request = await _backendRouterService.GetSDKBusinessModel(this.formView.BusinessName, _authenticationService).Call("CheckUnique", this.BindModel);
-                if (request.Success)
+                var request = await _backendRouterService.GetSDKBusinessModel(this.formView.BusinessName, _authenticationService).Call("CheckUnique", this.BindModel).ConfigureAwait(true);
+                if (request.Success && request.Data)
                 {
-                    if (request.Data == true)
+                    var existeUniqueIndexValidation = _NotificationService.Messages.Where(x => x.Summary == "Custom.Generic.UniqueIndexValidation").Any();
+                    if(!existeUniqueIndexValidation)
                     {
-                        var existeUniqueIndexValidation = _NotificationService.Messages.Where(x => x.Summary == "Custom.Generic.UniqueIndexValidation").Any();
-                        if(!existeUniqueIndexValidation){
-                            _NotificationService.ShowError("Custom.Generic.UniqueIndexValidation");
+                        var entityName = BindModel.GetType().Name;
+
+                        this.formView.FielsdUniqueIndex = BindModel.GetType()
+                        .GetCustomAttributes(typeof(Microsoft.EntityFrameworkCore.IndexAttribute), false)
+                        .Where(x => 
+                        {
+                            return x.GetType().GetProperty("IsUnique").GetValue(x, null).Equals(true) 
+                                && ((List<string>)x.GetType().GetProperty("PropertyNames").GetValue(x)).Count > 1
+                                && ((List<string>)x.GetType().GetProperty("PropertyNames").GetValue(x)).Contains(FieldName);
+                        })
+                        .Select(x => x.GetType().GetProperty("PropertyNames").GetValue(x, null));
+
+                        if(this.formView.FielsdUniqueIndex.Any())
+                        {
+                            string fields = "";
+                            
+                            foreach (var compoundIndex in this.formView.FielsdUniqueIndex)
+                            {
+                                foreach (var item in (List<string>)compoundIndex)
+                                {
+                                    fields += $"{entityName}.{item},";
+                                }
+                            }
+                            _ = _NotificationService.ShowError("Custom.Generic.UniqueIndexValidation.Compound",
+                                new object [] { fields }  );
+                        }else
+                        {
+                            this.formView.FieldUniqueIndex = $"{entityName}.{FieldName}";
+
+                            _ = _NotificationService.ShowError("Custom.Generic.UniqueIndexValidation", new object [] 
+                                    { $"{this.formView.FieldUniqueIndex}"}  );
                         }
 
-                        if(this.FieldOpt.CssClass == null)
-                        {
-                            this.FieldOpt.CssClass = "";
-                        }
+                    }
 
-                        if(!this.FieldOpt.CssClass.Contains("sdk-unique-invalid"))
-                        {
-                            this.FieldOpt.CssClass += " sdk-unique-invalid";
-                        }
-                        var typeComp = typeComponent();
-                        var dataAutomationId = $"{typeComp}_{this.FieldOpt.Name}";
-                        await jsRuntime.InvokeVoidAsync("SetFocusToElement", dataAutomationId);
-                        if(!HasError){
-                            this.formView.CountUnicErrors += 1;
-                            HasError = true;
-                        }
-                    }else{
-                        if(this.FieldOpt.CssClass != null && this.FieldOpt.CssClass.Contains("sdk-unique-invalid"))
-                        {
-                            this.FieldOpt.CssClass = this.FieldOpt.CssClass.Replace(" sdk-unique-invalid", "");
-                        }
-                        this.formView.CountUnicErrors -= 1;
-                        HasError = false;
+                    if(this.FieldOpt.CssClass == null)
+                    { 
+                        this.FieldOpt.CssClass = "";
                     }
-                }else{
-                    if(this.FieldOpt.CssClass != null && this.FieldOpt.CssClass.Contains("sdk-unique-invalid"))
+
+                    if(!this.FieldOpt.CssClass.Contains("sdk-unique-invalid", StringComparison.Ordinal))
                     {
-                        this.FieldOpt.CssClass = this.FieldOpt.CssClass.Replace(" sdk-unique-invalid", "");
+                        this.FieldOpt.CssClass += " sdk-unique-invalid";
                     }
-                    this.formView.CountUnicErrors -= 1;
+                    var typeComp = typeComponent();
+                    var dataAutomationId = $"{typeComp}_{this.FieldOpt.Name}";
+                    await jsRuntime.InvokeVoidAsync("SetFocusToElement", dataAutomationId).ConfigureAwait(true);
+
+                    if(!HasError)
+                    {
+                        this.formView.CountUnicErrors += 1;
+                        HasError = true;
+                    }
+                    
+                }else
+                {
+                    if(this.FieldOpt.CssClass != null && this.FieldOpt.CssClass.Contains("sdk-unique-invalid", StringComparison.Ordinal))
+                    {
+                        this.FieldOpt.CssClass = this.FieldOpt.CssClass.Replace(" sdk-unique-invalid", "", StringComparison.Ordinal);
+                    }
+                    this.formView.CountUnicErrors = this.formView.CountUnicErrors > 0 ? this.formView.CountUnicErrors - 1 : 0;
                     HasError = false;
                 }
                 StateHasChanged();
