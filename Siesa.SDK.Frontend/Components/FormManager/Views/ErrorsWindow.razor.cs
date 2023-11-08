@@ -37,7 +37,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 return StackTrace;
             else
                 return new List<string>();
-        } }
+        }}
 
         protected override async Task OnParametersSetAsync()
         {
@@ -45,7 +45,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             _generalErrors = new List<string>();
             _errors = new List<SDKErrorsWindowDTO>();
 
-            if(_environment == Environments.Development)
+            if(_environment == Environments.Development && StackTrace.Any())
             {
                 _generalErrors.AddRange(_stackTrace);
             }
