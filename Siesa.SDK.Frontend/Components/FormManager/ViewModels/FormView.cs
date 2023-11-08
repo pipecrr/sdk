@@ -754,8 +754,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             }catch(Exception ex){
                 //TODO: pdte por revision 
                 SavingFile = false;
-                return 0;
                 StackTrace.Add(ex.Message);
+                return 0;
             }
             var horaInicio = DateTime.Now.Minute;
             while(SavingFile){
@@ -770,8 +770,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     return result;
                 }catch(Exception ex){
                     SavingFile = false;
-                    return rowid;
                     StackTrace.Add(ex.Message);
+                    return rowid;
                 }
             }
             return 0;
@@ -826,7 +826,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                             GlobalLoaderService.Hide();
                             Saving = false;
                             ErrorMsg = ex.Message;
-                            ErrorList.Add("Exception: " + ex.Message);
+                            ErrorList.Add("Custom.Generic.Message.Error");
+                            StackTrace.Add(ErrorMsg);
                             return;
                         }
                     }
@@ -882,15 +883,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                     if(fieldInContext)
                     {
                         _messageStore.Add(fieldIdentifier, (string)error.Message);
-                    }else{
+                    }else
+                    {
                         StackTrace.Add(error.Message);
                         ErrorList.Add("Custom.Generic.Message.Error");
                     }
                 }
-                //ErrorMsg += "</ul>";
+
                 EditFormContext.NotifyValidationStateChanged();
-
-
+                
                 return;
             }
             var id = result.Rowid;
@@ -949,7 +950,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             FormHasErrors = false;
             ErrorMsg = "";
             ErrorList.Clear();
-            await SaveBusiness();
+            StackTrace.Clear();
+            await SaveBusiness().ConfigureAwait(true);
             ClickInSave = true;
         }
         protected void HandleInvalidSubmit()
@@ -962,6 +964,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 ErrorList.Add("Custom.Generic.UniqueIndexValidation");
             }else{
                 ErrorList.Clear();
+                StackTrace.Clear();
             }
             ClickInSave = true;
         }
