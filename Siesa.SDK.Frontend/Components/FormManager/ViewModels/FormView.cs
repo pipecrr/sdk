@@ -107,9 +107,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         
         public int CountUnicErrors = 0;
 
+        public IEnumerable<object> FielsdUniqueIndex { get; set; }
+
+        public string FieldUniqueIndex { get; set; } = "";
+
         private string _viewdefName = "";
 
-        public List<string> StackTrace = new ();
+        public List<string> StackTrace { get; set; } = new ();
 
         public bool ContainAttachments = false;
 
@@ -786,16 +790,31 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
 			SavingFile = false;
         }
         private async Task SaveBusiness()
-        {
+        {   
             Saving = true;
-            if(CountUnicErrors>0){
+            if(CountUnicErrors>0)
+            {
                 GlobalLoaderService.Hide();
                 Saving = false;
-                var existeUniqueIndexValidation = NotificationService.Messages.Where(x => x.Summary == "Custom.Generic.UniqueIndexValidation").Any();
-                if(!existeUniqueIndexValidation){
-                    NotificationService.ShowError("Custom.Generic.UniqueIndexValidation");
-                    ErrorList.Add("Custom.Generic.UniqueIndexValidation");
+
+                if(FielsdUniqueIndex.Any())
+                {
+                    string fields = "";
+                    foreach (var compoundIndex in FielsdUniqueIndex)
+                    {
+                        foreach (var item in (List<string>)compoundIndex)
+                        {
+                            fields += $"{BusinessObj.BaseObj.GetType().Name}.{item},";
+                        }
+                    }
+                    
+                    ErrorList.Add($"Custom.Generic.UniqueIndexValidation.Compound//{fields}");
+
+                }else
+                {
+                    ErrorList.Add($"Custom.Generic.UniqueIndexValidation//{FieldUniqueIndex}");
                 }
+                
                 return;
             }
             GlobalLoaderService.Show();
