@@ -2126,7 +2126,7 @@ div.dxbs-btn-group.dxbs-input-group-prepend>.btn.dx-btn.btn-sm {
     padding: 0 !important;
     margin-bottom: 1rem;
     max-width: 100%;
-    font-size: 16px;
+    font-size: 1rem;
 }
 
 .sdk-formlayout-group-border-right {
@@ -2146,7 +2146,7 @@ div.dxbs-btn-group.dxbs-input-group-prepend>.btn.dx-btn.btn-sm {
 }
 
 .sdk-formlayout-group {
-    margin-right: 10px !important;
+    margin-right: 0px !important;
 }
 
 .sdk-btn-icon-text-cnt {
