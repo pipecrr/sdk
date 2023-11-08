@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Components;
 using Radzen;
 using Siesa.SDK.Frontend.Components;
 
+namespace Siesa.SDK.Frontend.Components.Visualization;
 /// <summary>
 /// Represents a tree component for data visualization.
 /// </summary>

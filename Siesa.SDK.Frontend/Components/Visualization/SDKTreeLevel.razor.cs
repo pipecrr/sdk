@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components;
 using Radzen.Blazor;
 using Siesa.SDK.Frontend.Components;
 
+namespace Siesa.SDK.Frontend.Components.Visualization;
 /// <summary>
 /// Represents a tree level component for organizing hierarchical data within a tree.
 /// </summary>

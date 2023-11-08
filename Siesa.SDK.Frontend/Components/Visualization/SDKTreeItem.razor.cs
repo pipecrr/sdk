@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components;
 using Radzen.Blazor;
 using Siesa.SDK.Frontend.Components;
 
+namespace Siesa.SDK.Frontend.Components.Visualization;
 /// <summary>
 /// Represents a tree item component for data visualization within a tree.
 /// </summary>
