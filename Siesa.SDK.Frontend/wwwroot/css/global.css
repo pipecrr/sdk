@@ -2433,3 +2433,27 @@ border-color: var(--color_border) !important;
     background-color: var(--color_table_focus) !important;
     opacity: 1;
 }
+.sdk_dashboard_portal > .dxbl-gridlayout>.dxbl-gridlayout-root > .sdk_left_dashlets > .dxbl-gridlayout > .dxbl-gridlayout-root
+{
+    grid-template:
+    ". . . . . . . . . . . ." 32%
+    ". . . . . . . . . . . ." 32%
+    ". . . . . . . . . . . ." 32% / minmax(0px, 1fr) minmax(0px, 1fr) minmax(0px, 1fr) minmax(0px, 1fr) minmax(0px, 1fr) minmax(0px, 1fr) minmax(0px, 1fr) minmax(0px, 1fr) minmax(0px, 1fr) minmax(0px, 1fr) minmax(0px, 1fr) minmax(0px, 1fr) !important;
+   
+    gap: 0.8rem !important;
+    position: relative !important;
+}
+
+.sdk_left_dashlets > .dxbl-gridlayout > .dxbl-gridlayout-root > .dxbl-gridlayout-item
+{
+    position: sticky;
+    top: 0px;
+    /* z-index: 10 !important; */
+}
+
+.first-row-dashlet
+{
+    z-index: 10 !important;
+}
+
+       
