@@ -24,7 +24,7 @@ public partial class SDKTreeItem : SDKComponent
     /// Gets or sets the text content of the tree item.
     /// </summary>
     [Parameter]
-    public string Text { get; set; }
+    public string TextItem { get; set; }
 
     /// <summary>
     /// Gets or sets a flag indicating whether the tree item is initially expanded.

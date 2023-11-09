@@ -43,7 +43,7 @@ public partial class SDKTreeLevel : SDKComponent
     /// Gets or sets a function to retrieve text content from tree items for rendering.
     /// </summary>
     [Parameter]
-    public Func<object, string> Text { get; set; }
+    public Func<object, string> TextLevel { get; set; }
 
     /// <summary>
     /// Gets or sets a template for rendering tree items within this level.
