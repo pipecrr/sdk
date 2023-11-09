@@ -14,7 +14,8 @@
 
 
 export function checkAndRenewToken(dotnethelper) {
-    var timeout_seconds = 10;
+    dotnethelper.invokeMethodAsync("ShowLogin");
+    /*var timeout_seconds = 10;
     var token = localStorage.getItem('usertoken');
     if (token) {
         var tokenData = JSON.parse(atob(token.split('.')[1]));
@@ -37,7 +38,7 @@ export function checkAndRenewToken(dotnethelper) {
     }
     setTimeout(function () {
         checkAndRenewToken(dotnethelper);
-    }, 1000 * timeout_seconds);
+    }, 1000 * timeout_seconds);*/
     
 } 
 

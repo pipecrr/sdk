@@ -2433,3 +2433,8 @@ border-color: var(--color_border) !important;
     background-color: var(--color_table_focus) !important;
     opacity: 1;
 }
+
+.sdk-modal-login > .image_modal_login
+{
+    
+}
