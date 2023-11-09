@@ -90,6 +90,8 @@
     //private enumThemeIconStyle IconsStyles {get;set;} = enumThemeIconStyle.Solid;
     [Parameter]
     public List<string> FieldsHiddenList { get; set; } = new List<string>();
+    [Parameter]
+    public bool FromEntityField { get; set; }
 
     private string _guid ="";
     private bool _isDebug = false;
@@ -204,6 +206,7 @@
         NewFlexAttributes.Add("preference_style", style);
         NewFlexAttributes.Add("fields_hidden_list", fieldsHiddenListString);
         NewFlexAttributes.Add("show_actions", ShowActions.ToString());
+        NewFlexAttributes.Add("from_entity_field", FromEntityField.ToString());
         if(_flexRowId != 0)
         {
             NewFlexAttributes.Add("base_obj_id", _flexRowId);
