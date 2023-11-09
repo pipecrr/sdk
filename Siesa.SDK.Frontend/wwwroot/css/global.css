@@ -2444,16 +2444,23 @@ border-color: var(--color_border) !important;
     position: relative !important;
 }
 
-.sdk_left_dashlets > .dxbl-gridlayout > .dxbl-gridlayout-root > .dxbl-gridlayout-item
+.sdk_left_dashlets > .dxbl-gridlayout > .dxbl-gridlayout-root > .dxbl-gridlayout-item:first-of-type
 {
     position: sticky;
     top: 0px;
-    /* z-index: 10 !important; */
+    z-index: 10 !important; 
 }
 
-.first-row-dashlet
+.sdk_left_dashlets > .dxbl-gridlayout > .dxbl-gridlayout-root > .dxbl-gridlayout-item:first-of-type::after
 {
-    z-index: 10 !important;
+    content: "";
+    position: absolute;
+    left: 0px;
+    width: 100%;
+    height: 1rem;
+    z-index: -1;
+    background-image: linear-gradient(to bottom, rgba(245,245,245,1), rgba(245,245,245,0));
 }
+
 
        
