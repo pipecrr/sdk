@@ -16,7 +16,18 @@
 @using Siesa.SDK.Frontend.Components.Visualization
 @using Siesa.SDK.Shared.DataAnnotations
 @using Siesa.SDK.Frontend.Components.Fields
+
+
 <div class="sdk-modal-login">
+    @* content image and description text
+    *@
+
+        <img src="images/login.svg" />
+
+        <h1>
+            <ResourceViewer ResourceTag="BLUser.Login" />
+        </h1>
+           
     <EditForm id="@FormID" Model="@model" OnValidSubmit="HandleValidSubmit" OnInvalidSubmit="HandleInvalidSubmit">
         <DataAnnotationsValidator />
         <div class="form-group">
