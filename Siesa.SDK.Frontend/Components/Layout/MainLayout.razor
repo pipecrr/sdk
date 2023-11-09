@@ -252,7 +252,7 @@
         if(!_showingLogin)
         {
             _showingLogin = true;
-            var confirmDialogPolitic = await SDKDialogService.ShowCustomDialog(ds => @<ModalLogin DialogService=@ds />, "600px", "",false, false);
+            var confirmDialogPolitic = await SDKDialogService.ShowCustomDialog(ds => @<ModalLogin DialogService=@ds />, "400px", "",false, false);
             _showingLogin = false;
         }else{
             if(AuthenticationService != null && AuthenticationService.User != null && await AuthenticationService.IsValidToken()){
