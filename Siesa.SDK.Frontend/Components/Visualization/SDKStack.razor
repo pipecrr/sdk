@@ -1,8 +1,12 @@
 
 @inherits SDKComponent
 <RadzenStack
-Wrap="@Wrap"
-Orientation="@Orientation"
+Wrap="@SDKWrap.Get()"
+Orientation="@SDKOrientation.Get()"
+AlignItems="@SDKAlignItems.Get()"
+JustifyContent="@SDKJustifyContent.Get()"
 Gap="@Gap"
 Reverse="@Reverse"
-></RadzenStack>
+Style="@Style">
+    @ChildContent
+</RadzenStack>

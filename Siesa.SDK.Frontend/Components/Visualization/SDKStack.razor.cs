@@ -11,11 +11,26 @@ namespace Siesa.SDK.Frontend.Components.Visualization;
 public partial class SDKStack : SDKComponent
 {
     [Parameter]
-    public FlexWrap Wrap { get; set; } = FlexWrap.NoWrap;
+    public SDKFlexWrap SDKWrap { get; set; } = SDKFlexWrap.NoWrap;
+    
     [Parameter]
-    public Orientation Orientation { get; set; } = Orientation.Vertical;
+    public SDKOrientation SDKOrientation { get; set; } = SDKOrientation.Vertical;
+
+    [Parameter]
+    public SDKAlignItems SDKAlignItems { get; set; } = SDKAlignItems.Stretch;
+
+    [Parameter]
+    public SDKJustifyContent SDKJustifyContent { get; set; }
+
     [Parameter]
     public string Gap { get; set; }
+
     [Parameter]
-    public bool Reverse { get; set; }    
+    public bool Reverse { get; set; }
+
+    [Parameter]
+    public string Style { get; set; } 
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }   
 }
