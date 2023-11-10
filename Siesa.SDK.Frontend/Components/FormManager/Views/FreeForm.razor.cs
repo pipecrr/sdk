@@ -25,7 +25,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         protected override async Task OnInitializedAsync()
         {
             ViewdefName = Viewdef;
-            if(ViewdefName.Equals("search")){
+            if(ViewdefName.Equals("search",StringComparison.Ordinal)){
                 IsSearch = true;
             }
             loadDefaultViewdef = false;
