@@ -1,0 +1,19 @@
+@inherits SDKComponent
+
+<RadzenTree
+Change="@OnChange"
+Collapse="@EventCollapse"
+Expand="@EventExpand"
+Data="@Data"
+Value="@Value"
+ValueChanged="@ValueChanged"
+AllowCheckBoxes="@AllowCheckBoxes"
+AllowCheckChildren="@AllowCheckChildren"
+AllowCheckParents="@AllowCheckParents"
+CheckedValues="@CheckedValues"
+CheckedValuesChanged="@CheckedValuesChanged"
+Style="@Style"
+SingleExpand="@SingleExpand"
+>
+@ChildContent
+</RadzenTree>

@@ -29,17 +29,29 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         private List<string> _generalErrors = new List<string>();
 
-        private string? _environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"); 
-        protected override async Task OnParametersSetAsync(){
+        private string? _environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+        private List<string> _stackTrace { get 
+        { 
+            if(_environment == Environments.Development && StackTrace.Any())
+                return StackTrace;
+            else
+                return new List<string>();
+        }}
+
+        protected override async Task OnParametersSetAsync()
+        {
             _errorCount = 0;
             _generalErrors = new List<string>();
             _errors = new List<SDKErrorsWindowDTO>();
 
-            if (_environment == Environments.Development && StackTrace.Any())
-                _generalErrors.AddRange(StackTrace);
+            if(_environment == Environments.Development && StackTrace.Any())
+            {
+                _generalErrors.AddRange(_stackTrace);
+            }
             
-            
-            if (EditFormContext != null && EditFormContext.GetValidationMessages().Count() > 0 && VerifyContext){
+            if (EditFormContext != null && EditFormContext.GetValidationMessages().Count() > 0 && VerifyContext)
+            {
                 var groupErrors = EditFormContext.GetValidationMessages().GroupBy(x => {
                     var errorsSplit = x.Split("//");
                     if(errorsSplit.Count() > 1){
@@ -163,14 +175,17 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }else{
                 ClassError = "sdk_error_log_box_sup";
             }
+            
             await base.OnParametersSetAsync();
         }
 
         public void showDedtail(){
-            if(_detailVisible){
+            if(_detailVisible)
+            {
                 ClassError = "sdk_error_log_box_sup sdk_error_log_show";
                 _detailVisible = false;
-            }else{
+            }else
+            {
                 ClassError = "sdk_error_log_box_sup sdk_error_log_show sdk_error_log_show_detail";
                 _detailVisible = true;
             }
