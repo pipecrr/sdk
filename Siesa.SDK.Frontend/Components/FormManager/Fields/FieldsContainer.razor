@@ -64,6 +64,16 @@
     
     [Parameter] public bool ValidateForm { get; set; } = true;
 
+    [Parameter] public bool IsSearch { get; set; }
+
+    private Dictionary<string, int> DefaultColSizeSearch { get; set; } = new Dictionary<string, int>()
+    {
+        {"LG", 4},
+        {"MD", 6},
+        {"SM", 6},
+        {"XS", 12},
+    };
+
     private string UniqueId;
 
     protected override void OnInitialized()
@@ -79,7 +89,12 @@
 
     private int GetColSize(FieldOptions fld, string screen_size)
     {
-        var colsize = DefaultColSize.ContainsKey(screen_size) ? DefaultColSize[screen_size] : 0;
+        var colsize = 0;
+        if(IsSearch){
+            colsize = DefaultColSizeSearch.ContainsKey(screen_size) ? DefaultColSizeSearch[screen_size] : 0;
+        }else{
+            colsize = DefaultColSize.ContainsKey(screen_size) ? DefaultColSize[screen_size] : 0;
+        }
 
         if (fld.ColSize.ContainsKey(screen_size))
         {
