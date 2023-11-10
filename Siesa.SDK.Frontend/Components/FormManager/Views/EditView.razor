@@ -63,8 +63,10 @@ else if (BusinessObj.BaseObj.Rowid != 0)
                     @foreach (var panel in Panels.Skip(1))
                     {
                         <CascadingValue Value="@EditFormContext">
-                            <div class="row pt-3">
-                                <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                            <div class="col-12">
+                                <div class="row pt-3">
+                                    <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                                </div>
                             </div>
                         </CascadingValue>
                     }
@@ -76,8 +78,10 @@ else if (BusinessObj.BaseObj.Rowid != 0)
                             {
                                 <SDKTab IconCssClass="@panel.IconClass" TitleResourceTag="@panel.ResourceTag">
                                     <CascadingValue Value="@EditFormContext">
-                                        <div class="row pt-3">
-                                            <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                                        <div class="col-12">
+                                            <div class="row pt-3">
+                                                <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                                            </div>
                                         </div>
                                     </CascadingValue>
                                 </SDKTab>

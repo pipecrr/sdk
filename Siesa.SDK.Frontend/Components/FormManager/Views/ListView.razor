@@ -48,7 +48,7 @@ else
                         </div>
                     }
                     <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
-                        <SDKButton form="@SearchFormID" CssClass="w-100" RenderStyle="SDKButtonRenderStyle.Primary" SubmitFormOnClick="true">
+                        <SDKButton form="@SearchFormID" CssClass="w-100 mt-3" RenderStyle="SDKButtonRenderStyle.Primary" SubmitFormOnClick="true">
                             @if(LoadingSearch)
                             {
                                 <SDKIcon Name="fa-spinner" CssClass="fa-spin-pulse mr-1"></SDKIcon>
@@ -342,7 +342,7 @@ else
 
     @if(ShowList && UseFlex){
         FilterFlex = GetFilters(_base_filter);
-        <FlexComponent IsListView="true" BlNameList="@BusinessName" ViewdefName="@FinalViewdefName" ListView="@this" GuidListView="@guidListView" CanEdit="@(CanEdit && AllowEdit)" CanDelete="@(CanDelete && AllowDelete)" CanDetail="@(CanDetail && AllowDetail)" EditingFlex="@_isEditingFlex" Take="@FlexTake" ServerPagination="@ServerPaginationFlex" FilterSearch="@FilterFlex" ActionIcons=@CustomActionIcons HasSearch=@HasSearchViewdef IsMultiple="@IsMultiple" FieldsHiddenList="@FieldsHiddenList" ShowActions="@_showActions" @ref="@_flexComponentRef"></FlexComponent>
+        <FlexComponent IsListView="true" BlNameList="@BusinessName" ViewdefName="@FinalViewdefName" ListView="@this" GuidListView="@guidListView" CanEdit="@(CanEdit && AllowEdit)" CanDelete="@(CanDelete && AllowDelete)" CanDetail="@(CanDetail && AllowDetail)" EditingFlex="@_isEditingFlex" Take="@FlexTake" ServerPagination="@ServerPaginationFlex" FilterSearch="@FilterFlex" ActionIcons=@CustomActionIcons HasSearch=@HasSearchViewdef IsMultiple="@IsMultiple" FieldsHiddenList="@FieldsHiddenList" ShowActions="@_showActions" @ref="@_flexComponentRef" FromEntityField="@FromEntityField"></FlexComponent>
 
         <ErrorsWindow GeneralErrors="@ErrorList" StackTrace="@StackTrace"/>
 
@@ -350,9 +350,9 @@ else
 
     @if(SetTopBar)
     {
-        <PageTitle><ResourceViewer ResourceTag="@($"{BusinessName}.Plural")" /> | <ResourceViewer ResourceTag="Custom.Project.Name" /></PageTitle>
+        <PageTitle><ResourceViewer ResourceTag="@ResourceTag" /> | <ResourceViewer ResourceTag="Custom.Project.Name" /></PageTitle>
         <SetTopBar HasExtraButtons="@HasExtraButtons" BusinessObj="@BusinessObj">
-            <TopBarTitle><ResourceViewer ResourceTag="@($"{BusinessName}.Plural")" /></TopBarTitle>
+            <TopBarTitle><ResourceViewer ResourceTag="@ResourceTag" /></TopBarTitle>
             <TopBarButtons>
                 
                 @if (CanImport)

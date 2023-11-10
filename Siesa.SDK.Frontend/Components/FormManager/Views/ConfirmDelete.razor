@@ -4,7 +4,7 @@
 @inject UtilsManager UtilManager
 
 <div class="modal-content">
-    <div class="modal-body">                                        
+    <div class="modal-body p-0">                                        
         <div class="d-flex justify-content-center mb-3">
             <div class="modal_circle_back_warning d-flex justify-content-center align-items-center">
                 <div class="modal_circle_front_warning d-flex justify-content-center align-items-center">
@@ -13,9 +13,9 @@
             </div>
         </div>
         <div class="font-weight-bold text-center text-uppercase mb-4 font_size_087 font_color_primary">@Title</div>
-        <div class="text-center font_size_087">@Text</div>
+        <div class="text-center font_size_087 pb-3">@Text</div>
     </div>
-    <div class="modal-footer">
+    <div class="modal-footer pb-0">
         <SDKButton RenderStyle="SDKButtonRenderStyle.Cancel" CssClass="btn-sm px-4 w-50" ResourceTag="Action.ConfirmCancel" Click="@ClickCancel"/>
         <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" CssClass="btn-sm px-4 w-50"  ResourceTag="Action.ConfirmDelete" Click="@ClickDelete" />
     </div>
