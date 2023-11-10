@@ -74,10 +74,9 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        model.Username = AuthenticationService.User.Id;
+
+        model.Username = IsPortal ? AuthenticationService?.PortalUser?.Email : AuthenticationService?.User?.Id;
     }
-
-
 
     private async void HandleValidSubmit()
     {
@@ -105,7 +104,16 @@
 
         try
         {
-            await AuthenticationService.Login(model.Username, model.Password,SelectedConnection.Rowid, true);
+            if(IsPortal)
+            {
+                await AuthenticationService.LoginPortal(model.Username, model.Password,SelectedConnection.Rowid, true);
+            }
+            else
+            {
+                await AuthenticationService.Login(model.Username, model.Password,SelectedConnection.Rowid, true);
+            }
+            
+
             NavigationManager.TryGetQueryString("returnUrl", out string returnUrl);
             if (returnUrl == null || returnUrl == "null")
             {
