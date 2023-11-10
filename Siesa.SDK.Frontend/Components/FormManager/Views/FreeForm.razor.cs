@@ -19,10 +19,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         [Parameter] public EventCallback OnSubmit { get; set; }
 
         [Parameter] public EventCallback<FreeForm> OnReady { get; set; }
+
+        private bool IsSearch { get; set; }
         
         protected override async Task OnInitializedAsync()
         {
             ViewdefName = Viewdef;
+            if(ViewdefName.Equals("search")){
+                IsSearch = true;
+            }
             loadDefaultViewdef = false;
             if(string.IsNullOrEmpty(BusinessName) && BusinessObj != null)
             {
