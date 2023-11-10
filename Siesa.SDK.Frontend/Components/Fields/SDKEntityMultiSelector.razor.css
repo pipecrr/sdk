@@ -4,10 +4,11 @@
 
 ::deep .btn_multiselect{
     font-size: 1.1rem;
-    height: 1.938rem;
-    width: 1.938rem;
+    height: 2.063rem;
+    width: 2.163rem;
     border: 1px solid #ced4da;
     background: var(--color_light);
-    color: var(--color_primary_light);
+    color: var(--color_primary);
     line-height: 1;
 }
+

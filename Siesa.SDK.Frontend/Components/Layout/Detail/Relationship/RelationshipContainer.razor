@@ -35,9 +35,6 @@
         @if(_isOpenRelationship){
             <div class="border-bottom pb-3 pt-1 text-center">
                 <h6><span><ResourceViewer ResourceTag="Custom.SDK.RelationshipPanel" RowidCulture=@AuthenticationService.GetRowidCulture() /></span></h6>
-                <p class="m-0 font_size_087 text-left">
-                    <ResourceViewer ResourceTag="Custom.SDK.RelationshipInformation" RowidCulture=@AuthenticationService.GetRowidCulture() />
-                </p>
             </div>
             <div class="whcm_row panel_box_data">
                 <div class="col-12">
@@ -49,6 +46,18 @@
                                 <ResourceViewer ResourceTag="@RelationshipAttatchment.ResourceTag" RowidCulture=@AuthenticationService.GetRowidCulture() />
                             </div>
                         </button> 
+                    }else
+                    {
+                        <div class="d-flex my-3 align-items-center justify-content-center panel_icon_information flex-column">
+                            <SDKIcon Name="fa-circle-info"/>
+                        </div>
+                        
+                        <div class="col-12 panel_text_information"> 
+                            <p class="m-0 text-center font_size_087 font-weight-bold ">  
+                                <ResourceViewer ResourceTag="Custom.SDK.RelationshipInformation"/>
+                            </p>          
+                        </div>
+                        
                     }
                     @foreach (var Relationship in Relationships)
                     {    

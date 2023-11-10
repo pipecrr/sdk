@@ -2433,3 +2433,11 @@ border-color: var(--color_border) !important;
     background-color: var(--color_table_focus) !important;
     opacity: 1;
 }
+
+.dxbl-btn:not(.dxbl-disabled):not(:disabled):hover
+{
+    background-color: var(--color_back_2) !important;
+    color: var(--color_primary) !important;
+    border-color: var(--color_border) !important;
+}
+
