@@ -75,8 +75,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public bool ShowLinkTo {get; set;} = false;
         [Parameter]
         public bool FromEntityField {get; set;} = false;
+        /// <summary>
+        /// Gets or sets of parameters to pass to the Detail View.
+        /// </summary>
         [Parameter]
         public bool RedirectDetail { get; set; } = true;
+        /// <summary>
+        /// Gets or sets of parameters to pass to the Create View.
+        /// </summary>
         [Parameter]
         public bool RedirectCreate { get; set; }
         [Parameter]

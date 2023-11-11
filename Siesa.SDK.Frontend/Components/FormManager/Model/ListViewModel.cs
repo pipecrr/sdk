@@ -39,8 +39,14 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         public bool? AllowDetail { get; set; }
         public bool? AllowCreate { get; set; }
         public bool? AllowExport { get; set; }
-        
-        public bool? RedirectDetail { get; set; }
+
+        /// <summary>
+        /// Gets or sets of parameters to pass to the Detail View.
+        /// </summary>
+        public bool? RedirectDetail { get; set; } = true;
+        /// <summary>
+        /// Gets or sets of parameters to pass to the Create View.
+        /// </summary>
         public bool? RedirectCreate { get; set; }
         /// <summary>
         /// Gets or sets of ExtraFields to show in the list.
