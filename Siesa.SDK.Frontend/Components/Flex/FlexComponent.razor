@@ -182,8 +182,10 @@
         var fieldsHiddenListString = JsonConvert.SerializeObject(FieldsHiddenList);
         
         string style = GetStyle();
-
         
+        bool redirectDetail = ListView?.RedirectDetail ?? false;
+        bool redirectCreate = ListView?.RedirectCreate ?? false;
+
         flexElementId = $"flexdebug_{_guid}";
         NewFlexAttributes.Add("id", flexElementId);
         NewFlexAttributes.Add("class", "root_oreports");
@@ -207,6 +209,8 @@
         NewFlexAttributes.Add("fields_hidden_list", fieldsHiddenListString);
         NewFlexAttributes.Add("show_actions", ShowActions.ToString());
         NewFlexAttributes.Add("from_entity_field", FromEntityField.ToString());
+        NewFlexAttributes.Add("redirect_detail", redirectDetail.ToString());
+        NewFlexAttributes.Add("redirect_create", redirectCreate.ToString());
         if(_flexRowId != 0)
         {
             NewFlexAttributes.Add("base_obj_id", _flexRowId);
