@@ -75,7 +75,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public bool ShowLinkTo {get; set;} = false;
         [Parameter]
         public bool FromEntityField {get; set;} = false;
-
+        [Parameter]
+        public bool RedirectDetail { get; set; } = true;
+        [Parameter]
+        public bool RedirectCreate { get; set; }
         [Parameter]
         public string BLNameParentAttatchment { get; set; }
         [Parameter]
@@ -382,6 +385,12 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 }
                 if(ListViewModel.ResourceTag != null){
                     ResourceTag = ListViewModel.ResourceTag;
+                }
+                if(ListViewModel.RedirectDetail != null){
+                    RedirectDetail = ListViewModel.RedirectDetail.Value;
+                }
+                if(ListViewModel.RedirectCreate != null){
+                    RedirectCreate = ListViewModel.RedirectCreate.Value;
                 }
                 //TODO: quitar cuando se pueda usar flex en los custom components
                 var fieldsCustomComponent = ListViewModel.Fields.Where(x => x.CustomComponent != null).ToList();
@@ -1225,7 +1234,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             var filters = GetFilters(_base_filter);
             if(ServerPaginationFlex && UseFlex){
                 Data = await BusinessObj.GetDataWithTop(filters);
-                 if (Data != null && Data.Count() == 1){
+                 if (Data != null && Data.Count() == 1 && RedirectDetail){
                      if (!FromEntityField)
                      { 
                          GoToDetail((dynamic)Data.First());
@@ -1276,7 +1285,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 }
                 count = dbData.TotalCount;
                 data = dbData.Data;
-                if (count == 1){
+                if (count == 1 && RedirectDetail){
                     if(!FromEntityField){
                         GoToDetail(((dynamic)data.First()).Rowid);
                     }else{

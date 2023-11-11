@@ -46,6 +46,10 @@ else if (BusinessObj != null)
     [Parameter] public bool IsEntityField {get; set;} 
     [Parameter] public bool ShowSearchForm { get; set; } = true;
 
+    [Parameter]
+    public bool RedirectDetail { get; set; } = true;
+    [Parameter]
+    public bool RedirectCreate { get; set; }
     private RenderFragment RenderMain = null;
 
     protected override async Task OnInitializedAsync()
@@ -75,6 +79,8 @@ else if (BusinessObj != null)
             new_params.Add("IsMultiple", IsMultiple);
             new_params.Add("SelectedItems", SelectedItems);
             new_params.Add("ShowSearchForm", ShowSearchForm);
+            new_params.Add("RedirectDetail", RedirectDetail);
+            new_params.Add("RedirectCreate", RedirectCreate);
             if (IsSubpanel)
             {
                 new_params.Add("BLNameParentAttatchment", BLNameParentAttatchment);

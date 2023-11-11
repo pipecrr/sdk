@@ -39,6 +39,9 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         public bool? AllowDetail { get; set; }
         public bool? AllowCreate { get; set; }
         public bool? AllowExport { get; set; }
+        
+        public bool? RedirectDetail { get; set; }
+        public bool? RedirectCreate { get; set; }
         /// <summary>
         /// Gets or sets of ExtraFields to show in the list.
         /// </summary>
