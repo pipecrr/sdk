@@ -28,8 +28,6 @@ public partial class SDKFieldset : SDKComponent
     [Parameter]
     public string IconColor { get; set; }
     [Parameter]
-    public string Text { get; set; } = "";
-    [Parameter]
     public RenderFragment HeaderTemplate { get; set; }
     [Parameter]
     public RenderFragment ChildContent { get; set; }

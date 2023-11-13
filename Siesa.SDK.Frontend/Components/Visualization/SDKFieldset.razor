@@ -1,6 +1,6 @@
 @inherits SDKComponent
 
-<RazorFieldset
+<RadzenFieldset
 AllowCollapse="@AllowCollapse"
 Collapsed="@Collapsed"
 ExpandTitle="@ExpandTitle"
@@ -9,11 +9,24 @@ ExpandAriaLabel="@ExpandAriaLabel"
 CollapseAriaLabel="@CollapseAriaLabel"
 Icon="@Icon"
 IconColor="@IconColor"
-Text="@Text"
-HeaderTemplate="@HeaderTemplate"
-SummaryTemplate="@SummaryTemplate"
+Text="@ResourceTag"
 Expand="@Expand"
 Collapse="@Collapse"
 Style="@Style">
-@ChildContent
-</RazorFieldset>
+
+@if (HeaderTemplate != null)
+{
+    @HeaderTemplate
+}
+
+@if (ChildContent != null)
+{
+    @ChildContent
+}
+
+@if (SummaryTemplate != null)
+{
+    @SummaryTemplate
+}
+
+</RadzenFieldset>
