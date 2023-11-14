@@ -1,14 +1,16 @@
 @inherits SDKComponent
 
-<RazorHtmlEditor
+<RadzenHtmlEditor
 ShowToolbar="@ShowToolbar"
-Mode="@Mode"
+Mode="@Mode.Get()"
 UploadHeaders="@UploadHeaders"
 Input="@Input"
 Paste="@Paste"
 UploadError="@UploadError"
 Execute="@Execute"
 UploadUrl="@UploadUrl"
+Change="@ChangeValue"
 
 >
-@ChildContent</RazorHtmlEditor>
+@ChildContent
+</RadzenHtmlEditor>

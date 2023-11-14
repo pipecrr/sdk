@@ -134,6 +134,14 @@ namespace Siesa.SDK.Frontend.Components
                 SDKChartOrientation.Vertical => DevExpress.Blazor.Orientation.Vertical
             };
         }
+        public static Radzen.HtmlEditorMode Get(this SDKHtmlEditorMode htmlEditorMode)
+        {
+            return htmlEditorMode switch
+            {
+                SDKHtmlEditorMode.Design => Radzen.HtmlEditorMode.Design,
+                SDKHtmlEditorMode.Source => Radzen.HtmlEditorMode.Source
+            };
+        }
     }
 
     public enum SDKClearButtonDisplayMode
@@ -239,5 +247,11 @@ namespace Siesa.SDK.Frontend.Components
     {
         Determinate = ProgressBarMode.Determinate,
         Indeterminate = ProgressBarMode.Indeterminate
+    }
+
+    public enum SDKHtmlEditorMode
+    {
+        Design = HtmlEditorMode.Design,
+        Source = HtmlEditorMode.Source
     }
 }
