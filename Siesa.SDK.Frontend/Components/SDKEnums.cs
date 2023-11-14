@@ -252,6 +252,12 @@ namespace Siesa.SDK.Frontend.Components
     public enum SDKHtmlEditorMode
     {
         Design = HtmlEditorMode.Design,
-        Source = HtmlEditorMode.Source
+        Source = HtmlEditorMode.Source  
+    }
+    public enum SDKHtmlEditorExecute
+    {
+     
+        
+        
     }
 }

@@ -7,7 +7,7 @@ using Radzen.Blazor;
 using Siesa.SDK.Frontend.Components;
 
 namespace Siesa.SDK.Frontend.Components.Visualization;
-public partial class SDKHtmlEditor : SDKComponent
+public partial class SDKHtmlEditorCustomTool : SDKComponent
 {
     /// <summary>
     /// Determines if the tools is visible.
