@@ -2434,6 +2434,28 @@ border-color: var(--color_border) !important;
     opacity: 1;
 }
 
+.sdk-modal-login > .image_modal_login
+{
+    width: 300px; 
+    height: auto;   
+    margin-left: 30px;
+}
+.sdk-modal-login > .title_modal_login
+{
+    font-size: 1.5rem;
+    color: var(--color_primary);
+    margin-bottom: 1rem;
+    text-align: center;
+    font-weight: bold;
+}
+.sdk-modal-login > .text_modal_login
+{
+    font-size: 1rem;
+    color: var(--color_text);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
 .dxbl-btn:not(.dxbl-disabled):not(:disabled):hover
 {
     background-color: var(--color_back_2) !important;
