@@ -9,7 +9,7 @@ using Siesa.SDK.Frontend.Components;
 namespace Siesa.SDK.Frontend.Components.Visualization;
 
 /// <summary>
-/// Represents a stack component for managing layout properties using flexbox.
+/// Represents a SDKStack component for managing layout properties using flexbox.
 /// </summary>
 public partial class SDKStack : SDKComponent
 {
