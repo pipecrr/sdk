@@ -6,12 +6,11 @@ using Radzen;
 using Siesa.SDK.Shared.DTOS;
 using Siesa.SDK.Frontend.Components;
 
+
 namespace Siesa.SDK.Frontend.Components.Visualization.HtmlEditor;
 
 public partial class SDKHtmlEditor : SDKComponent
 {
-
-
     /// <summary>
     /// Gets or sets the current value of the editor.
     /// </summary>
@@ -54,18 +53,7 @@ public partial class SDKHtmlEditor : SDKComponent
     /// <summary>
     /// A callback that will be invoked when the user pastes content in the editor. Commonly used to filter unwanted HTML.
     /// </summary>
-    /// <example>
-    /// <code>
-    /// &lt;RadzenHtmlEditor @bind-Value=@html Paste=@OnPaste /&gt;
-    /// @code {
-    ///   string html = "@lt;strong&gt;Hello&lt;/strong&gt; world!";
-    ///   void OnPaste(HtmlEditorPasteEventArgs args)
-    ///   {
-    ///     // Set args.Html to filter unwanted tags.
-    ///     args.Html = args.Html.Replace("&lt;br&gt;", "");
-    ///   }
-    /// </code>
-    /// </example>
+
     [Parameter]
     public EventCallback<SDKHtmlEditorPasteEventArgs> Paste { get; set; }
 
@@ -86,7 +74,7 @@ public partial class SDKHtmlEditor : SDKComponent
     public string UploadUrl { get; set; }
 
     [Parameter]
-    public EventCallback<string> ChangeValue { get; set; }
+    public EventCallback<string> ValueChanged { get; set; }
 
     private async Task _onUploadError(UploadErrorEventArgs args)
     {

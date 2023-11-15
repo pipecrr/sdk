@@ -1,6 +1,7 @@
 @inherits SDKComponent
 
 <RadzenHtmlEditor
+Value="@Value"
 ShowToolbar="@ShowToolbar"
 Mode="@Mode.Get()"
 UploadHeaders="@UploadHeaders"
@@ -9,10 +10,6 @@ Paste="@_onPaste"
 UploadError="@_onUploadError"
 Execute="@_onExecute"
 UploadUrl="@UploadUrl"
-Change="@ChangeValue"
->
-@if (ChildContent != null)
-{
-    @ChildContent
-}
-</RadzenHtmlEditor>
+Change="@ValueChanged"
+/>
+
