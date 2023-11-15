@@ -57,9 +57,9 @@ public partial class SDKHtmlEditor : SDKComponent
     [Parameter]
     public EventCallback<SDKHtmlEditorPasteEventArgs> Paste { get; set; }
 
-    // /// <summary>
-    // /// A callback that will be invoked when there is an error during upload.
-    /// </summary>
+    /// <summary>
+    /// A callback that will be invoked when there is an error during upload.
+    ///</summary>
     [Parameter]
     public EventCallback<SDKUploadErrorEventArgs> UploadError { get; set; }
 
@@ -83,7 +83,7 @@ public partial class SDKHtmlEditor : SDKComponent
             SDKUploadErrorEventArgs sDKUploadErrorEventArgs = new();
             sDKUploadErrorEventArgs.Message = args.Message;
 
-            await UploadError.InvokeAsync(sDKUploadErrorEventArgs);
+            await UploadError.InvokeAsync(sDKUploadErrorEventArgs).ConfigureAwait(true);
         }
     }
     private async Task _onPaste(HtmlEditorPasteEventArgs args)
@@ -93,7 +93,7 @@ public partial class SDKHtmlEditor : SDKComponent
             SDKHtmlEditorPasteEventArgs sDKHtmlEditorPasteEventArgs = new();
             sDKHtmlEditorPasteEventArgs.Html = args.Html;
 
-            await Paste.InvokeAsync(sDKHtmlEditorPasteEventArgs);
+            await Paste.InvokeAsync(sDKHtmlEditorPasteEventArgs).ConfigureAwait(true);
         }
     }
     private async Task _onExecute(HtmlEditorExecuteEventArgs args)
@@ -106,7 +106,7 @@ public partial class SDKHtmlEditor : SDKComponent
             sDKHtmlEditorExecuteEventArgs.CommandName = args.CommandName;
             sDKHtmlEditorExecuteEventArgs.Editor = this;
 
-            await Execute.InvokeAsync(sDKHtmlEditorExecuteEventArgs);
+            await Execute.InvokeAsync(sDKHtmlEditorExecuteEventArgs).ConfigureAwait(true);
         }
     }
 

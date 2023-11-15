@@ -187,7 +187,8 @@ namespace Siesa.SDK.Frontend.Components
             return htmlEditorMode switch
             {
                 SDKHtmlEditorMode.Design => Radzen.HtmlEditorMode.Design,
-                SDKHtmlEditorMode.Source => Radzen.HtmlEditorMode.Source
+                SDKHtmlEditorMode.Source => Radzen.HtmlEditorMode.Source,
+                _ => Radzen.HtmlEditorMode.Design
             };
         }
     }
