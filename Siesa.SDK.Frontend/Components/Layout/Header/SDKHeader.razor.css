@@ -108,6 +108,10 @@
     border: none;
     line-height: 1.2;  
 }
+.sdk_conection>div> ::deep .btn_connect:hover, .sdk_conection>div> ::deep .btn_connect:focus{
+    background: none !important;
+    box-shadow: none !important;
+}
 .sdk_conection>div>.btn_connect>div>p{
     max-width: 160px;
 }
@@ -275,7 +279,7 @@
         left: 0;
         bottom: 0;
         padding: 0.5rem;
-        background-color: var(--color_light);
+        background-color: var(--color_light_nav);
         box-shadow: var(--shadow_standar);
     }
     .header_circles_box {

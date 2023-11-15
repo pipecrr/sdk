@@ -75,7 +75,16 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public bool ShowLinkTo {get; set;} = false;
         [Parameter]
         public bool FromEntityField {get; set;} = false;
-
+        /// <summary>
+        /// Gets or sets of parameters to pass to the Detail View.
+        /// </summary>
+        [Parameter]
+        public bool RedirectDetail { get; set; } = true;
+        /// <summary>
+        /// Gets or sets of parameters to pass to the Create View.
+        /// </summary>
+        [Parameter]
+        public bool RedirectCreate { get; set; }
         [Parameter]
         public string BLNameParentAttatchment { get; set; }
         [Parameter]
@@ -155,7 +164,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         [Parameter]
         public bool IsMultiple { get; set; } = false;
-
+        [Parameter]
+        public string ResourceTag { get; set; }
         private IEnumerable<object> data;
 
         private bool HasCustomActions { get; set; } = false;
@@ -238,6 +248,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             if (bName == null)
             {
                 bName = BusinessName;
+            }
+
+            if (ResourceTag == null)
+            {
+                ResourceTag = $"{BusinessName}.Plural";
             }
             await CheckPermissions();
             var metadata = GetViewdef(bName);
@@ -373,6 +388,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 }
                 if(ListViewModel.AllowExport != null){
                     AllowExport = ListViewModel.AllowExport.Value;
+                }
+                if(ListViewModel.ResourceTag != null){
+                    ResourceTag = ListViewModel.ResourceTag;
+                }
+                if(ListViewModel.RedirectDetail != null){
+                    RedirectDetail = ListViewModel.RedirectDetail.Value;
+                }
+                if(ListViewModel.RedirectCreate != null){
+                    RedirectCreate = ListViewModel.RedirectCreate.Value;
                 }
                 //TODO: quitar cuando se pueda usar flex en los custom components
                 var fieldsCustomComponent = ListViewModel.Fields.Where(x => x.CustomComponent != null).ToList();
@@ -965,7 +989,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         
         private async Task GoToExport()
         {
-            string resourceTag = $"{BusinessName}.Plural";
+            string resourceTag = ResourceTag;
             string resourceName = await UtilsManager.GetResource(resourceTag).ConfigureAwait(true);
             await JSRuntime.InvokeAsync<object>("oreports_app_table_flexdebug_"+guidListView+".exportToExcel", resourceName);
         }
@@ -1216,7 +1240,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             var filters = GetFilters(_base_filter);
             if(ServerPaginationFlex && UseFlex){
                 Data = await BusinessObj.GetDataWithTop(filters);
-                 if (Data != null && Data.Count() == 1){
+                 if (Data != null && Data.Count() == 1 && RedirectDetail){
                      if (!FromEntityField)
                      { 
                          GoToDetail((dynamic)Data.First());
@@ -1267,7 +1291,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 }
                 count = dbData.TotalCount;
                 data = dbData.Data;
-                if (count == 1){
+                if (count == 1 && RedirectDetail){
                     if(!FromEntityField){
                         GoToDetail(((dynamic)data.First()).Rowid);
                     }else{

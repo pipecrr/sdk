@@ -790,7 +790,7 @@ namespace Siesa.SDK.Business
         }
 
         [SDKApiMethod("POST")]
-        public virtual async Task<SDKFileUploadDTO> UploadSingle(IFormFile file){
+        public virtual async Task<SDKFileUploadDTO> UploadSingle(IFormFile file, bool ignorePermissions = false){
             var result = new SDKFileUploadDTO();
             if (file == null){
                 throw new Exception("File is null");
@@ -800,7 +800,7 @@ namespace Siesa.SDK.Business
                 file.CopyTo(ms);
                 fileBytes = ms.ToArray();
             }
-            var response = await Backend.Call("SaveFile", fileBytes, file.FileName, file.ContentType, false);
+            var response = await Backend.Call("SaveFile", fileBytes, file.FileName, file.ContentType, false, ignorePermissions);
             if(response.Success){
                 result.Url = response.Data.Url;
                 result.FileType = file.ContentType;
@@ -813,7 +813,7 @@ namespace Siesa.SDK.Business
         }
 
         [SDKApiMethod("POST")]
-        public virtual async Task<SDKFileUploadDTO> UploadSingleByte(IFormFile file){
+        public virtual async Task<SDKFileUploadDTO> UploadSingleByte(IFormFile file,bool ignorePermissions = false){
             var result = new SDKFileUploadDTO();
             if (file == null){
                 throw new Exception("File is null");
@@ -823,7 +823,7 @@ namespace Siesa.SDK.Business
                 file.CopyTo(ms);
                 fileBytes = ms.ToArray();
             }
-            var response = await Backend.Call("SaveFile", fileBytes, file.FileName, file.ContentType, true);
+            var response = await Backend.Call("SaveFile", fileBytes, file.FileName, file.ContentType, true, ignorePermissions);
             if(response.Success){
                 result.Url = response.Data.Url;
                 result.FileType = file.ContentType;

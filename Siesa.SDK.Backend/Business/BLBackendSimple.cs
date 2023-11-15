@@ -681,7 +681,12 @@ namespace Siesa.SDK.Business
             }
             try
             {   
-                var watch = System.Diagnostics.Stopwatch.StartNew();            
+                var watch = System.Diagnostics.Stopwatch.StartNew(); 
+                if (listBaseObj == null)
+                {
+                    listBaseObj = new List<T>();
+                    listBaseObj.Add(BaseObj);
+                }           
                 ValidateMulti(ref result, listBaseObj);
                 watch.Stop();
                 var elapsedMs = watch.ElapsedMilliseconds;
@@ -798,17 +803,9 @@ namespace Siesa.SDK.Business
 
         private void ValidateMulti(ref ValidateAndSaveBusinessMultiObjResponse baseOperation, List<T> listBaseObj = null)
         {
-            if (listBaseObj == null)
-            {
-                listBaseObj = new List<T>();
-            }
             ValidateAndSaveBusinessMultiObjResponse baseOperationTmp = baseOperation;
             Parallel.ForEach(listBaseObj, baseObj =>
             {
-                if(baseObj == null)
-                {
-                    baseObj = BaseObj;
-                }
                 ValidateAndSaveBusinessObjResponse baseOperationObj = new();
                 ValidateBussines(ref baseOperationObj, baseObj.GetRowid() == 0 ? BLUserActionEnum.Create : BLUserActionEnum.Update);
                 Type parentType = typeof(K).BaseType;
@@ -819,7 +816,7 @@ namespace Siesa.SDK.Business
                     Type genericT = genericArguments[0];
                     if (genericT == typeof(T))                    {
                         BLBaseValidator<T> baseValidator = validator as BLBaseValidator<T>;
-                        SDKValidator.Validate<T>(BaseObj, baseValidator, ref baseOperationObj);
+                        SDKValidator.Validate<T>(baseObj, baseValidator, ref baseOperationObj);
                         if(baseOperationObj.Errors.Count > 0)
                         {
                             baseOperationTmp.Errors.AddRange(baseOperationObj.Errors);
@@ -1676,12 +1673,15 @@ namespace Siesa.SDK.Business
         }
 
         [SDKExposedMethod]
-        public async Task<ActionResult<SDKFileUploadDTO>> SaveFile(byte[] fileBytes, string name, string contentType, bool SaveBytes = false)
+        public async Task<ActionResult<SDKFileUploadDTO>> SaveFile(byte[] fileBytes, string name, string contentType, bool SaveBytes = false, bool ignorePermissions = false)
         {
-            CanUploadAttachment = await _featurePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.UploadAttachment, AuthenticationService);
+            if (!ignorePermissions)
+            {    
+                CanUploadAttachment = await _featurePermissionService.CheckUserActionPermission(BusinessName, enumSDKActions.UploadAttachment, AuthenticationService);
 
-            if (!CanUploadAttachment)
-                return new BadRequestResult<SDKFileUploadDTO> { Success = false, Errors = new List<string> { "You don't have permission to upload attachment" } };
+                if (!CanUploadAttachment)
+                    return new BadRequestResult<SDKFileUploadDTO> { Success = false, Errors = new List<string> { "You don't have permission to upload attachment" } };
+            }
 
             MemoryStream stream = new MemoryStream(fileBytes);
             var result = new SDKFileUploadDTO();
@@ -2521,53 +2521,61 @@ namespace Siesa.SDK.Business
         {
             _statusTransaccion = statusTransaccion;
             JArray dataList = JArray.Parse(dataStr);
-            List<dynamic> SuccessData = new();
-            List<dynamic> ErrorData = new();
-            List<EnumSearchDTO> EnumSearchList = GetEnumDTO(typeof(T));
-            List<ForeignObjectDTO> ForeingDictionary = CalculateForeingList(typeof(T));
-            List<T> BaseObjToImport = new();
+            List<dynamic> successData = new();
+            List<dynamic> errorData = new();
+            List<EnumSearchDTO> enumSearchList = GetEnumDTO(typeof(T));
+            List<ForeignObjectDTO> foreingDictionary = CalculateForeingList(typeof(T));
+            List<T> baseObjToImport = new();
             //start take time
             Console.WriteLine("Start");
             var watch = System.Diagnostics.Stopwatch.StartNew();
             Parallel.ForEach(dataList, item =>
             {
-                dynamic result = CreateDynamicObjectFromJson(typeof(T), (JObject)item, EnumSearchList, ForeingDictionary, ref ErrorData);
-                BaseObjToImport.Add(result);
+                dynamic result = CreateDynamicObjectFromJson(typeof(T), (JObject)item, enumSearchList, foreingDictionary, ref errorData);
+                baseObjToImport.Add(result);
             });
-            
-            ValidateAndSaveBusinessMultiObjResponse resultValidate = ValidateAndSave(BaseObjToImport);
 
-            if(statusTransaccion){
-                // valida todos, uno a uno en transaccion diferentes
-                ErrorData.AddRange(resultValidate.Errors);
-                foreach (var rowid in resultValidate.Rowids)
-                {
-                    SuccessData.Add(rowid);
-                }
-                // cierra valida todos, uno a uno en transaccion diferentes
-            }else{
-                // valida todos en una sola transaccion
-                if(resultValidate.Errors.Count > 0){
-                    ErrorData.AddRange(resultValidate.Errors);
-                }else{
-                    foreach (var rowid in resultValidate.Rowids)
+            if (errorData.Count == 0){
+                if(statusTransaccion){
+                    // valida todos, uno a uno en transaccion diferentes
+                    foreach (var item in baseObjToImport)
                     {
-                        SuccessData.Add(rowid);
+                        BaseObj = item;
+                        ValidateAndSaveBusinessMultiObjResponse tmpResultValidate = ValidateAndSave(null);
+                        if(tmpResultValidate.Errors.Count > 0){
+                            errorData.AddRange(tmpResultValidate.Errors);
+                        }else{
+                            successData.Add(tmpResultValidate.Rowids[0]);
+                        }
+                            
                     }
+                    // cierra valida todos, uno a uno en transaccion diferentes
+                }else{
+                    // valida todos en una sola transaccion
+                    ValidateAndSaveBusinessMultiObjResponse resultValidate = ValidateAndSave(baseObjToImport);
+                    if(resultValidate.Errors.Count > 0){
+                        errorData.AddRange(resultValidate.Errors);
+                    }else{
+                        Parallel.ForEach(resultValidate.Rowids, rowid =>
+                        {
+                            successData.Add(rowid);
+                        });
+                    }
+                    // cierra valida todos en una sola transaccion
                 }
-                // cierra valida todos en una sola transaccion
+                
+                //stop take time
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                _logger.LogInformation($"Time elapsed: {elapsedMs}");
+                Console.WriteLine("Time elapsed: " + elapsedMs);
             }
-            
-            //stop take time
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            _logger.LogInformation($"Time elapsed: {elapsedMs}");
-            Console.WriteLine("Time elapsed: " + elapsedMs);
+
 
             SDKResultImportDataDTO resultImport = new SDKResultImportDataDTO
             {
-                Success = SuccessData,
-                Errors = ErrorData
+                Success = successData,
+                Errors = errorData
             };
             return new ActionResult<SDKResultImportDataDTO> { Success = true, Data = resultImport };
 

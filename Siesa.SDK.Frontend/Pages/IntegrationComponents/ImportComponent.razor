@@ -260,7 +260,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if(BusinessName.Equals("BLDemoDummy")){
+        if(BusinessName.Equals("BLDemoDummy") || BusinessName.Equals("BLDemoMaster")){
             FlexRowId = 7;
         }
         filters.Add("Feature.BusinessName", BusinessName);

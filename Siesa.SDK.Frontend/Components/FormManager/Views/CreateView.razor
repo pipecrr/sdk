@@ -73,23 +73,27 @@ else if ((Panels == null || Panels.Count <= 0) && !IsDocument)
                     @foreach (var panel in Panels.Skip(1))
                     {    
                         <CascadingValue Value="@EditFormContext">
-                            <div class="row pt-3">
-                                <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                            <div class="col-12">
+                                <div class="row pt-3">
+                                    <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                                </div>
                             </div>
                         </CascadingValue>
                     }
                     
                 }else
                 {
-                    <div class="pt-2">
+                    <div class="col-12 pt-2">
                         <SDKTabs>
                             @foreach (var panel in Panels.Skip(1))
                             {
                                 <SDKTab IconCssClass="@panel.IconClass" TitleResourceTag="@panel.ResourceTag">
 
                                     <CascadingValue Value="@EditFormContext">
-                                        <div class="row pt-3">
-                                            <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                                        <div class="col-12">
+                                            <div class="row pt-3">
+                                                <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
+                                            </div>
                                         </div>
                                     </CascadingValue>
 

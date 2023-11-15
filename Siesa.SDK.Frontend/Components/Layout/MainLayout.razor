@@ -247,12 +247,12 @@
     }
 
     [JSInvokable]
-    public async Task ShowLogin()
+    public async Task ShowLogin(bool IsPortal = false)
     {
         if(!_showingLogin)
         {
             _showingLogin = true;
-            var confirmDialogPolitic = await SDKDialogService.ShowCustomDialog(ds => @<ModalLogin DialogService=@ds />, "600px", "",false, false);
+            var confirmDialogPolitic = await SDKDialogService.ShowCustomDialog(ds => @<ModalLogin IsPortal="@IsPortal" DialogService=@ds />, "400px", "",false, false);
             _showingLogin = false;
         }else{
             if(AuthenticationService != null && AuthenticationService.User != null && await AuthenticationService.IsValidToken()){
@@ -339,7 +339,7 @@
             return "";
         }
 
-        return "col-12 px-0 py-3";
+        return "col-12 px-0 py-4";
     }
 
     [JSInvokable]

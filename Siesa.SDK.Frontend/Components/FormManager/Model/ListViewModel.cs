@@ -40,6 +40,17 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         public bool? AllowCreate { get; set; }
         public bool? AllowExport { get; set; }
 
+        /// <summary>
+        /// Gets or sets of parameters to pass to the Detail View.
+        /// </summary>
+        public bool? RedirectDetail { get; set; } = true;
+        /// <summary>
+        /// Gets or sets of parameters to pass to the Create View.
+        /// </summary>
+        public bool? RedirectCreate { get; set; }
+        /// <summary>
+        /// Gets or sets of ExtraFields to show in the list.
+        /// </summary>
         public List<string> ExtraFields { get; set; } = new List<string>(); 
         /// <summary>
         /// Gets or sets of actions to Add a row to the form.
@@ -49,6 +60,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Model
         /// Gets or sets of actions to Delete a row from the form.
         /// </summary>
         public string ActionDeleteRow { get; set; }
-
+        
+        /// <summary>
+        /// Gets or sets of actions to Edit a row from the form.
+        /// </summary>
+        public string ResourceTag { get; set; }
     }
 }

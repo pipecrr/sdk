@@ -24,7 +24,7 @@
         <div class="sdk-dropdown" id="@_idDiv">
             <SDKSearchInput CssClass="form-control remove-x" Placeholder="@placeholder" ValueChanged="@OnChangeValueSearch" Value="@Value" OnFocus="@OnFocus" OnClick="@OnClickInput" OnEnter="@OnKeyDown" MinMillisecondsBetweenSearch="@MinMillisecondsBetweenSearch" OnFocusOut="@OnFocusOut" Disabled="@Disabled"/>
         </div>
-        <SDKDropDown @bind-IsOpen="@_isOpenDropDown" MinWidth="300px" MaxWidth="100%" PositionTarget="@_idTarget" PositionMode="DropDownPositionMode.Bottom" CssClass="Prueba" >
+        <SDKDropDown @bind-IsOpen="@_isOpenDropDown" MinWidth="300px" MaxWidth="100%" PositionTarget="@_idTarget" PositionMode="DropDownPositionMode.Bottom">
 
             <BodyTemplate>
                 <div class="whcm_select_list sdk-dropdown-menu sdk-entity-result" aria-labelledby="@idInput">
@@ -141,7 +141,7 @@
     
     public async Task OpenModalList(){
         var filters = await GetFilters();
-        var listDialog = await SDKDialogService.ShowCustomDialog(ds => @<div><DynamicListView BusinessName="@RelatedBusiness" IsSubpanel=true  ShowTitle="false" OnSelectedRow="OnSelectedRow" SubpanelFilter="@filters" FromEntityField=true IsMultiple="@IsMultiple" SelectedItems="@ItemsSelected" businessObj="@RelBusinessObj" IsEntityField=true/>@if(IsMultiple){<div class="float-right pt-2"><SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Custom.EntityField.SelectButton" Click="@(() => SelectValues())"/></div>}
+        var listDialog = await SDKDialogService.ShowCustomDialog(ds => @<div><DynamicListView BusinessName="@RelatedBusiness" IsSubpanel=true  ShowTitle="false" OnSelectedRow="OnSelectedRow" SubpanelFilter="@filters" FromEntityField=true RedirectDetail=false IsMultiple="@IsMultiple" SelectedItems="@ItemsSelected" businessObj="@RelBusinessObj" IsEntityField=true/>@if(IsMultiple){<div class="float-right pt-2"><SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Custom.EntityField.SelectButton" Click="@(() => SelectValues())"/></div>}
         </div>, width: "90%", title:$"{RelatedBusiness}.Singular");
         if(listDialog != null && listDialog){
             StateHasChanged();
