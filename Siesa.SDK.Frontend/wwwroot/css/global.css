@@ -2455,12 +2455,17 @@ border-color: var(--color_border) !important;
     margin-bottom: 1rem;
     text-align: center;
 }
-
+/* 
 .dxbl-btn:not(.dxbl-disabled):not(:disabled):hover
 {
     background-color: var(--color_back_2) !important;
     color: var(--color_primary) !important;
     border-color: var(--color_border) !important;
+} */
+
+.dx-checkbox-icon
+{
+    border: 2px solid var(--color_border) !important;
 }
 
 
@@ -2492,6 +2497,7 @@ border-color: var(--color_border) !important;
     z-index: -1;
     background-image: linear-gradient(to bottom, rgba(245,245,245,1), rgba(245,245,245,0));
 }
+
 
 
        
