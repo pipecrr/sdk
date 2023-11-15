@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Radzen;
+using Siesa.SDK.Shared.DTOS;
+
 
 using Siesa.SDK.Frontend.Components;
 
-namespace Siesa.SDK.Frontend.Components.Visualization;
+namespace Siesa.SDK.Frontend.Components.Visualization.HtmlEditor;
 public partial class SDKHtmlEditor : SDKComponent
 {
+
+
     /// <summary>
     /// Gets or sets the current value of the editor.
     /// </summary>
@@ -64,35 +68,17 @@ public partial class SDKHtmlEditor : SDKComponent
     /// </code>
     /// </example>
     [Parameter]
-    public EventCallback<HtmlEditorPasteEventArgs> Paste { get; set; }
+    public EventCallback<SDKHtmlEditorPasteEventArgs> Paste { get; set; }
 
-    /// <summary>
-    /// A callback that will be invoked when there is an error during upload.
+    // /// <summary>
+    // /// A callback that will be invoked when there is an error during upload.
     /// </summary>
     [Parameter]
-    public EventCallback<UploadErrorEventArgs> UploadError { get; set; }
+    public EventCallback<SDKUploadErrorEventArgs> UploadError { get; set; }
 
-    /// <summary>
-    /// A callback that will be invoked when the user executes a command of the editor (e.g. by clicking one of the tools).
-    /// </summary>
-    /// <example>
-    /// <code>
-    /// &lt;RadzenHtmlEditor Execute=@OnExecute&gt;
-    ///   &lt;RadzenHtmlEditorCustomTool CommandName="InsertToday" Icon="today" Title="Insert today" /&gt;
-    /// &lt;/RadzenHtmlEditor&gt;
-    /// @code {
-    ///   string html = "@lt;strong&gt;Hello&lt;/strong&gt; world!";
-    ///   async Task OnExecute(HtmlEditorExecuteEventArgs args)
-    ///   {
-    ///     if (args.CommandName == "InsertToday")
-    ///     {
-    ///       await args.Editor.ExecuteCommandAsync(HtmlEditorCommands.InsertHtml, DateTime.Today.ToLongDateString());
-    ///     }
-    ///  }
-    /// </code>
-    /// </example>
+
     [Parameter]
-    public EventCallback<HtmlEditorExecuteEventArgs> Execute { get; set; }
+    public EventCallback<SDKHtmlEditorExecuteEventArgs> Execute { get; set; }
 
     /// <summary>
     /// Specifies the URL to which RadzenHtmlEditor will submit files.
@@ -103,4 +89,39 @@ public partial class SDKHtmlEditor : SDKComponent
     [Parameter]
     public EventCallback<string> ChangeValue { get; set; }
 
+    private async Task _onUploadError(UploadErrorEventArgs args)
+    {
+        if (UploadError.HasDelegate)
+        {
+            SDKUploadErrorEventArgs sDKUploadErrorEventArgs = new();
+            sDKUploadErrorEventArgs.Message = args.Message;
+
+            UploadError.Invoke(sDKUploadErrorEventArgs);
+        }
+    }
+    private async Task _onPaste(HtmlEditorPasteEventArgs args)
+    {
+        if (Paste.HasDelegate)
+        {
+            SDKHtmlEditorPasteEventArgs sDKHtmlEditorPasteEventArgs = new();
+            sDKHtmlEditorPasteEventArgs.Html = args.Html;
+
+            Paste.Invoke(sDKHtmlEditorPasteEventArgs);
+        }
+    }
+    private async Task _onExecute(HtmlEditorExecuteEventArgs args)
+    {
+
+        if (Execute.HasDelegate)
+        {
+            SDKHtmlEditorExecuteEventArgs sDKHtmlEditorExecuteEventArgs = new();
+
+            sDKHtmlEditorExecuteEventArgs.CommandName = args.CommandName;
+            sDKHtmlEditorExecuteEventArgs.Editor = this;
+
+            Execute.Invoke(sDKHtmlEditorExecuteEventArgs);
+        }
+    }
+
 }
+
