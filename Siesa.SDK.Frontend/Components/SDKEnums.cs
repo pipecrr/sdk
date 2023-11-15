@@ -182,6 +182,15 @@ namespace Siesa.SDK.Frontend.Components
                 SDKJustifyContent.Stretch => Radzen.JustifyContent.Stretch
             };
         }
+        public static Radzen.HtmlEditorMode Get(this SDKHtmlEditorMode htmlEditorMode)
+        {
+            return htmlEditorMode switch
+            {
+                SDKHtmlEditorMode.Design => Radzen.HtmlEditorMode.Design,
+                SDKHtmlEditorMode.Source => Radzen.HtmlEditorMode.Source,
+                _ => Radzen.HtmlEditorMode.Design
+            };
+        }
     }
 
     public enum SDKClearButtonDisplayMode
@@ -323,5 +332,11 @@ namespace Siesa.SDK.Frontend.Components
         SpaceEvenly = Radzen.JustifyContent.SpaceEvenly,
         Start = Radzen.JustifyContent.Start,
         Stretch = Radzen.JustifyContent.Stretch
+    }
+
+    public enum SDKHtmlEditorMode
+    {
+        Design = HtmlEditorMode.Design,
+        Source = HtmlEditorMode.Source  
     }
 }
