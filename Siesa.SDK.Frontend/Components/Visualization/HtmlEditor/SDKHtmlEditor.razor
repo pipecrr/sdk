@@ -10,8 +10,9 @@ UploadError="@_onUploadError"
 Execute="@_onExecute"
 UploadUrl="@UploadUrl"
 Change="@ChangeValue"
-
-
 >
-@ChildContent
+@if (ChildContent != null)
+{
+    @ChildContent
+}
 </RadzenHtmlEditor>

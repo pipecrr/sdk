@@ -4,11 +4,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 using Siesa.SDK.Shared.DTOS;
-
-
 using Siesa.SDK.Frontend.Components;
 
 namespace Siesa.SDK.Frontend.Components.Visualization.HtmlEditor;
+
 public partial class SDKHtmlEditor : SDKComponent
 {
 
@@ -36,7 +35,7 @@ public partial class SDKHtmlEditor : SDKComponent
     /// </summary>
     /// <value>The child content.</value>
     [Parameter]
-    public RenderFragment ChildContent { get; set; }
+    public RenderFragment? ChildContent { get; set; }
 
 
     /// <summary>
@@ -96,7 +95,7 @@ public partial class SDKHtmlEditor : SDKComponent
             SDKUploadErrorEventArgs sDKUploadErrorEventArgs = new();
             sDKUploadErrorEventArgs.Message = args.Message;
 
-            UploadError.Invoke(sDKUploadErrorEventArgs);
+            await UploadError.InvokeAsync(sDKUploadErrorEventArgs);
         }
     }
     private async Task _onPaste(HtmlEditorPasteEventArgs args)
@@ -106,7 +105,7 @@ public partial class SDKHtmlEditor : SDKComponent
             SDKHtmlEditorPasteEventArgs sDKHtmlEditorPasteEventArgs = new();
             sDKHtmlEditorPasteEventArgs.Html = args.Html;
 
-            Paste.Invoke(sDKHtmlEditorPasteEventArgs);
+            await Paste.InvokeAsync(sDKHtmlEditorPasteEventArgs);
         }
     }
     private async Task _onExecute(HtmlEditorExecuteEventArgs args)
@@ -119,7 +118,7 @@ public partial class SDKHtmlEditor : SDKComponent
             sDKHtmlEditorExecuteEventArgs.CommandName = args.CommandName;
             sDKHtmlEditorExecuteEventArgs.Editor = this;
 
-            Execute.Invoke(sDKHtmlEditorExecuteEventArgs);
+            await Execute.InvokeAsync(sDKHtmlEditorExecuteEventArgs);
         }
     }
 
