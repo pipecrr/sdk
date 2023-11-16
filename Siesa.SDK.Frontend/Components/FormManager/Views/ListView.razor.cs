@@ -28,6 +28,7 @@ using System.Collections;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using Newtonsoft.Json.Linq;
 using System.Runtime.CompilerServices;
 using Siesa.SDK.Frontend.Components.Flex;
@@ -540,6 +541,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
             //Restart();
         }
+
         public async Task<bool> evaluateCodeButtons(Button button, string condition){
             bool disabled = button.Disabled;
             var sdkDisable = button.CustomAttributes[condition];
@@ -935,7 +937,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                             var EnumValues = Enum.GetValues(enumType);
                             var LastValue = EnumValues.GetValue(EnumValues.Length - 1);
 
-                            if (Convert.ToInt32(LastValue) + 1 != Convert.ToInt32(searchValue))
+                            if (Convert.ToInt32(LastValue, CultureInfo.InvariantCulture) + 1 != Convert.ToInt32(searchValue))
                             {
                                 tmpFilter = $"{fieldName} == {Convert.ToInt32(searchValue)}";
                             }
