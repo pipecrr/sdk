@@ -19,9 +19,6 @@ else if((!string.IsNullOrEmpty(ErrorMsg) || ErrorList.Any()) && !ErroInAction)
 }
 else
 {
-     @if(IsSubpanel){
-        //UseFlex = false;
-    }
     @if(ShowSearchForm && HasSearchViewdef)
     {
         <CascadingValue Value="this">
@@ -60,7 +57,6 @@ else
             </div>
         </CascadingValue> 
     }
-
     @if(ShowList && !UseFlex)
     {
         <RadzenDataGrid 
@@ -339,15 +335,16 @@ else
             </Columns>
         </RadzenDataGrid>
     }
-
-    @if(ShowList && UseFlex){
+    @if (UseFlex)
+    {
         FilterFlex = GetFilters(_base_filter);
+    }
+    @if(ShowList && UseFlex){
         <FlexComponent IsListView="true" BlNameList="@BusinessName" ViewdefName="@FinalViewdefName" ListView="@this" GuidListView="@guidListView" CanEdit="@(CanEdit && AllowEdit)" CanDelete="@(CanDelete && AllowDelete)" CanDetail="@(CanDetail && AllowDetail)" EditingFlex="@_isEditingFlex" Take="@FlexTake" ServerPagination="@ServerPaginationFlex" FilterSearch="@FilterFlex" ActionIcons=@CustomActionIcons HasSearch=@HasSearchViewdef IsMultiple="@IsMultiple" FieldsHiddenList="@FieldsHiddenList" ShowActions="@_showActions" @ref="@_flexComponentRef" FromEntityField="@FromEntityField"></FlexComponent>
 
         <ErrorsWindow GeneralErrors="@ErrorList" StackTrace="@StackTrace"/>
 
     }
-
     @if(SetTopBar)
     {
         <PageTitle><ResourceViewer ResourceTag="@ResourceTag" /> | <ResourceViewer ResourceTag="Custom.Project.Name" /></PageTitle>
