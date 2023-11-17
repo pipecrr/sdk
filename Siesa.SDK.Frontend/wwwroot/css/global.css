@@ -2379,7 +2379,11 @@ border-color: var(--color_border) !important;
 }
 
 .dxbl-tabs-content{
-    padding-top: 1rem;
+    padding-top: 0.5rem;
+}
+
+.dxbl-fl-ctrl{
+    margin-top:0 !important;
 }
 
 .rz-dialog-titlebar {

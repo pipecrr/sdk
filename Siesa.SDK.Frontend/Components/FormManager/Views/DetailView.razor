@@ -61,7 +61,7 @@ else if (ModelLoaded == true)
                 @foreach (var panel in Panels.Skip(1))
                 {
                     <div class="col-12">
-                        <div class="row pt-3">
+                        <div class="row">
                             <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
                         </div>
                     </div>
@@ -70,13 +70,13 @@ else if (ModelLoaded == true)
                 
             }else
             {
-                <div class="pt-2">
+                <div class="col-12 pt-2">
                     <SDKTabs>
                         @foreach (var panel in Panels.Skip(1))
                         {
                             <SDKTab IconCssClass="@panel.IconClass" TitleResourceTag="@panel.ResourceTag">
-                                <div class="col-12">
-                                    <div class="row pt-3">
+                                <div class="col-12 px-0">
+                                    <div class="row">
                                         <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
                                     </div>
                                 </div>
