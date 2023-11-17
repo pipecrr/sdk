@@ -1,3 +1,5 @@
+@using Siesa.SDK.Frontend.Components
+
 @typeparam TData
 @typeparam TArgument
 @typeparam TValue
@@ -22,5 +24,7 @@ Pane="@Pane"
 Width="@Width"
 Name="@Name"
 Visible="@Visible"
-
-></DxChartStackedLineSeries>
+SummaryMethod="@SummaryMethod"
+>
+@ChildContent
+</DxChartStackedLineSeries>

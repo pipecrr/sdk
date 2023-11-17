@@ -49,5 +49,9 @@ public partial class SDKChartStackedLineSeries<TData, TArgument, TValue> : SDKCo
     public string Name { get; set; }
     [Parameter]
     public bool Visible { get; set; }
+    [Parameter]
+    public Func<IEnumerable<TValue>, TValue> SummaryMethod { get; set; }
+    [Parameter] 
+    public RenderFragment? ChildContent { get; set; }
 
 }
