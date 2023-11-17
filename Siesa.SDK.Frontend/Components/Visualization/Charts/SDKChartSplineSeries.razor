@@ -1,0 +1,31 @@
+@using Siesa.SDK.Frontend.Components
+
+@typeparam TData
+@typeparam TArgument
+@typeparam TValue
+
+@inherits SDKComponent
+
+<DxChartSplineSeries
+T ="TData"
+TArgument ="TArgument"
+TValue="TValue"
+ArgumentField="@ArgumentField"
+Axis="@Axis"
+BreakOnEmptyPoints="@BreakOnEmptyPoints"
+Color="@Color"
+DashStyle="@DashStyle"
+Data= "@Data"
+Filter="@Filter"
+HoverMode="@HoverMode"
+Name="@Name"
+Pane="@Pane"
+SelectionMode="@SelectionMode"
+Settings="@Settings"
+SummaryMethod="@SummaryMethod"
+ValueField="@ValueField"
+Visible="@Visible"
+Width="@Width"
+>
+@ChildContent
+</DxChartSplineSeries>
