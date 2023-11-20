@@ -73,7 +73,6 @@ namespace Siesa.SDK.Backend.Access
             this.query = query;
             this._provider = provider;
             //Check if the entity is a BaseSDK
-
             Type entytyType = typeof(TEntity);
             //Check if the entity has a dataannotation named "SDKAuthorization"
             var dataAnnotation = entytyType.GetCustomAttributes(typeof(SDKAuthorization), false);
@@ -146,7 +145,6 @@ namespace Siesa.SDK.Backend.Access
                     case "Int16":
                         this.query = this.FilterGroupCompany<short>(query);
                         break;
-                    case "Int32":
                     default:
                         this.query = this.FilterGroupCompany<int>(query);
                         break;
@@ -164,7 +162,6 @@ namespace Siesa.SDK.Backend.Access
                     case "Int16":
                         this.query = this.FilterCompany<short>(query);
                         break;
-                    case "Int32":
                     default:
                         this.query = this.FilterCompany<int>(query);
                         break;
@@ -404,8 +401,7 @@ namespace Siesa.SDK.Backend.Access
                  return query; //TODO: Validar si devolver todo o nada
             }
             var group_company_session = AuthenticationService.User.RowidCompanyGroup;
-            var sdk_query = (IQueryable<BaseCompanyGroup<T>>)query;
-            sdk_query = sdk_query.Where(x => x.RowidCompanyGroup == group_company_session);
+            var sdk_query = query.Include("CompanyGroup").Where("CompanyGroup.Rowid == @0", group_company_session);
             return sdk_query.Cast<TEntity>();
         }
 
@@ -416,8 +412,7 @@ namespace Siesa.SDK.Backend.Access
                  return query; //TODO: Validar si devolver todo o nada
             }
             var group_company_session = AuthenticationService.User.RowidCompanyGroup;
-            var sdk_query = (IQueryable<BaseCompany<T>>)query;
-            sdk_query = sdk_query.Include("Company").Where(x => x.Company.RowidCompanyGroup == group_company_session);
+            var sdk_query = query.Include("Company").Where("Company.RowidCompanyGroup == @0", group_company_session);
             return sdk_query.Cast<TEntity>();
         }
 
@@ -428,8 +423,7 @@ namespace Siesa.SDK.Backend.Access
                  return query; //TODO: Validar si devolver todo o nada
             }
             var group_company_session = AuthenticationService.User.RowidCompanyGroup;
-            var sdk_query = (IQueryable<E00201_Company>)query;
-            sdk_query = sdk_query.Where(x => x.RowidCompanyGroup == group_company_session);
+            var sdk_query = query.Where("RowidCompanyGroup == @0", group_company_session);
             return sdk_query.Cast<TEntity>();
         }
 
