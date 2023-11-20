@@ -74,25 +74,6 @@ public partial class MenuItem : SDKComponent
         }
         return base.GetAutomationId();
     }
-    /*protected override string GetAutomationId()
-    {
-        if(!string.IsNullOrEmpty(AutomationId))
-        {
-            if (MenuItem != null && MenuItem.Level > 1 && OnClick.Target != null)
-            {
-                var ParentMenu =  OnClick.Target.GetType().GetProperty("MainItem").GetValue(OnClick.Target);
-                if (ParentMenu != null)
-                {
-                    var ParentMenuName = ParentMenu.GetType().GetProperty("CurrentText").GetValue(ParentMenu);
-                    if (!string.IsNullOrEmpty(ParentMenuName.ToString()))
-                    {
-                        AutomationId = $"{ParentMenuName}_SubMenu_{Title}";
-                    }
-                }
-            }
-        }
-        return base.GetAutomationId();
-    }*/
 
     private string GetIconClass()
     {
