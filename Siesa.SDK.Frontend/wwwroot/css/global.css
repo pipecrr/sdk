@@ -165,6 +165,9 @@
     --color_chart_flex_36: #98b7d5;
 
     --color_input_back_disabled: #E9E9E9;
+
+    --dxbl-fl-item-spacing-x: 2rem; 
+    --dxbl-fl-item-spacing-y: 1rem:
 }
 
 
@@ -483,6 +486,13 @@ a:hover
     text-decoration: underline;
     text-underline-offset: 0.25rem;
     margin: 0;
+    background: none !important;
+    border: none !important;
+}
+.btn_link_def_1:hover
+{
+    background: none !important;
+    border: none !important;
 }
 
 .nav_btn_standar {
@@ -2554,6 +2564,8 @@ opacity:40%
     background-color: var(--color_primary) !important;
     color: var(--color_light_text)!important;
 }
+
+
 
 
        

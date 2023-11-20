@@ -329,8 +329,8 @@ input#collapse_open:checked~.collapse_open_btn {
     opacity: 1;
     transition: all .2s ease;
 }
-.nav_btn_standar_suite:hover .nav_btn_standar_icon_suite > i{
-    color: var(--color_light) !important;
+::deep .nav_btn_standar_suite:hover .nav_btn_standar_icon_suite > i{
+    color: var(--color_light) !important;   
 }
 .nav_btn_standar_suite:hover > .nav_btn_standar_text{
     color: var(--color_light) !important;
@@ -355,6 +355,7 @@ input#collapse_open:checked~.collapse_open_btn {
     justify-content: center;
     transition-duration: .2s; 
 }
+
 .nav_section_2>hr{
     border-top: 1px solid var(--color_primary);
     margin: 0;
