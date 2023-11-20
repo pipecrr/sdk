@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
 using Siesa.SDK.Business;
 using Siesa.SDK.Frontend.Components.FormManager.Model;
+using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
 using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
 using Siesa.SDK.Frontend.Extension;
 using Siesa.SDK.Frontend.Services;
@@ -32,25 +33,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private FormViewModel FormViewModel { get; set; } = new FormViewModel();
 
         private List<string> _extraFields = new List<string>();
+        public string DefaultViewdefName { get; set; } = "detail";
         private void GetExtraFields(string bName = null)
         {
             try
             {
-                string viewdefName = "detail";
+                string viewdefName = DefaultViewdefName;
 
                 if (IsSubpanel)
                 {
                     viewdefName = "related_detail";
                 }
 
-                var metadata = BackendRouterService.GetViewdef(bName, viewdefName);
-                if (IsSubpanel && String.IsNullOrEmpty(metadata)){
-                    metadata = BackendRouterService.GetViewdef(bName, "related_default");
-                }
-                if(String.IsNullOrEmpty(metadata))
-                {
-                    metadata = BackendRouterService.GetViewdef(bName, "default");
-                }
+                var metadata = GetMetadata(bName, viewdefName);
 
                 try
                 {
@@ -63,19 +58,21 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     FormViewModel.Panels = panels;
                 }
 
-                var defaultFields = FormViewModel.Panels.SelectMany(panel => panel.Fields)
-                                    .Where(f=> f.CustomComponent == null && f.Name.StartsWith("BaseObj."))
+                var defaultFields = FormViewModel.Panels.SelectMany(panel =>
+                    {
+                        return GetAllNestedFields(panel.Fields);
+                    }).Where(f=> f.CustomComponent == null && f.Name.StartsWith("BaseObj.", StringComparison.Ordinal))
                                     .Select(field => field.Name)
-                                    .ToList(); 
+                                    .ToList();
 
                 if (FormViewModel.ExtraFields.Count > 0){
                     _extraFields =  FormViewModel.ExtraFields.Select(f => f)
                     .Union(defaultFields)
                     .ToList();
 
-                    _extraFields = _extraFields.Select(field => field.Replace("BaseObj.", "")).ToList();
+                    _extraFields = _extraFields.Select(field => field.Replace("BaseObj.", "",StringComparison.Ordinal)).ToList();
                 }else{
-                    _extraFields = defaultFields.Select(field => field.Replace("BaseObj.", "")).ToList();
+                    _extraFields = defaultFields.Select(field => field.Replace("BaseObj.", "",StringComparison.Ordinal)).ToList();
                 }
                 
                 var baseObj = BusinessObj.BaseObj;
@@ -99,6 +96,44 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 ErrorList.Add("Exception: "+e.ToString());
             }
+        }
+
+        private string GetMetadata(string bName, string viewdefName)
+        {
+            var metadata = BackendRouterService.GetViewdef(bName, viewdefName);
+            if (IsSubpanel && String.IsNullOrEmpty(metadata))
+            {
+                metadata = BackendRouterService.GetViewdef(bName, "related_default");
+            }
+
+            if (String.IsNullOrEmpty(metadata) && viewdefName != DefaultViewdefName)
+            {
+                metadata = BackendRouterService.GetViewdef(bName, DefaultViewdefName);
+            }
+
+            if (String.IsNullOrEmpty(metadata))
+            {
+                metadata = BackendRouterService.GetViewdef(bName, "default");
+            }
+
+            return metadata;
+        }
+
+        private List<FieldOptions> GetAllNestedFields(List<FieldOptions> panelFields)
+        {
+            List<FieldOptions> nestedFields = new List<FieldOptions>();
+            foreach (var field in panelFields)
+            {
+                if (field.Fields != null && field.Fields.Count > 0)
+                {
+                    nestedFields.AddRange(GetAllNestedFields(field.Fields));
+                }
+                else
+                {
+                    nestedFields.Add(field);
+                }
+            }
+            return nestedFields;
         }
 
         private async Task InitDetail(Int64 businessObjId)
