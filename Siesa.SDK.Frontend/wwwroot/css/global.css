@@ -1847,7 +1847,7 @@ color: var(--color_text);
 
 .rz-card {
     margin: 0px !important;
-    padding: 0px !important;
+    padding: 1rem !important;
     background-color: var(--color_panel_back) !important;
     box-shadow: var(--shadow_standar) !important;
     border: var(--color_border) !important;
