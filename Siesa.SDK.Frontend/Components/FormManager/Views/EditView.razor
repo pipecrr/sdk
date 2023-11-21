@@ -92,7 +92,7 @@ else if (BusinessObj.BaseObj.Rowid != 0)
                 }
             }
             @if(PanelsCollapsable?.Count>0){
-                <div class="w-100">
+                <div class="col-12">
                     <SDKCollapse>
                         <Items>
                             @foreach (var panel in PanelsCollapsable)
@@ -103,7 +103,7 @@ else if (BusinessObj.BaseObj.Rowid != 0)
                                             <FieldsContainer Fields="@panel.Fields" SubViewdef="@panel.SubViewdef" DefaultColSize="@panel.ColSize" ModelObj="@BusinessObj" />
                                         </CascadingValue>
                                     </div>
-                                        <div class="buttons-aditional-fiels mb-2">
+                                        <div class="buttons-aditional-fiels mt-3">
                                             <SDKButton RenderStyle="SDKButtonRenderStyle.Danger" ResourceTag="Borrar" Click="@(()=>ConfirmDelete(panel.RowidGroupDynamicEntity))"/>
                                             <SDKButton RenderStyle="SDKButtonRenderStyle.Secondary" ResourceTag="Editar campos" Click="@(()=>ClickInEdit(panel.RowidGroupDynamicEntity))"/>
                                             <SDKButton RenderStyle="SDKButtonRenderStyle.Primary" ResourceTag="Agregar campos" Click="@(()=>ClickInAdd(panel.RowidGroupDynamicEntity))"/>
