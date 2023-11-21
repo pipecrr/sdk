@@ -135,6 +135,16 @@ namespace Siesa.SDK.Frontend.Components
             };
         }
 
+        public static DevExpress.Blazor.ChartLegendHoverMode Get(this SDKChartLegendHoverMode hoverMode)
+        {
+            return hoverMode switch
+            {
+                SDKChartLegendHoverMode.LegendMarkerAndSeriesWithPoints => DevExpress.Blazor.ChartLegendHoverMode.LegendMarkerAndSeriesWithPoints,
+                SDKChartLegendHoverMode.LegendMarkerAndSeries => DevExpress.Blazor.ChartLegendHoverMode.LegendMarkerAndSeries,
+                SDKChartLegendHoverMode.None => DevExpress.Blazor.ChartLegendHoverMode.None
+            };
+        }
+
         public static FlexWrap Get(this SDKFlexWrap flexWrap)
         {
             return flexWrap switch
@@ -270,6 +280,13 @@ namespace Siesa.SDK.Frontend.Components
     public enum SDKChartOrientation {
         Horizontal = DevExpress.Blazor.Orientation.Horizontal,
         Vertical = DevExpress.Blazor.Orientation.Vertical
+    }
+
+    public enum SDKChartLegendHoverMode 
+    {
+        LegendMarkerAndSeriesWithPoints = DevExpress.Blazor.ChartLegendHoverMode.LegendMarkerAndSeriesWithPoints,
+        LegendMarkerAndSeries = DevExpress.Blazor.ChartLegendHoverMode.LegendMarkerAndSeries,
+        None = DevExpress.Blazor.ChartLegendHoverMode.None
     }
 
     public enum SDKModalWidth {
