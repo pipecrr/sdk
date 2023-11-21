@@ -10,16 +10,17 @@
             <RadzenSelectBar Value=@Value Change="@ValueChanged" TValue="ItemType" Disabled = "@Disabled" ValueExpression="@ValueExpression"  
                     data-automation-id="@GetAutomationId()">
                     <Items>
-                            <SDKSelectBarItem Text="@AffirmationText" Value="true" />
-                            <SDKSelectBarItem Text="@DenialText" Value="false" />
+                            <SDKSelectBarItem ResourceTag="@AffirmationResourceTag" Value="true" />
+                            <SDKSelectBarItem ResourceTag="@DenialResourceTag" Value="false" />
                     </Items>
             </RadzenSelectBar>
         }else
         {
+                <RadzenSelectBar Value=@Value Change="@ValueChanged" TValue="ItemType"
+                        Data="@Data" TextProperty="Name" ValueProperty="Key" Disabled = "@Disabled" ValueExpression="@ValueExpression"  
+                        data-automation-id="@GetAutomationId()" Items="@Items">
 
-            <RadzenSelectBar Value=@Value Change="@ValueChanged" TValue="ItemType"
-                    Data="@Data" TextProperty="Name" ValueProperty="Key" Disabled = "@Disabled" ValueExpression="@ValueExpression"  
-                    data-automation-id="@GetAutomationId()" />
-        
+                </RadzenSelectBar>
+
         }
 </div>   
