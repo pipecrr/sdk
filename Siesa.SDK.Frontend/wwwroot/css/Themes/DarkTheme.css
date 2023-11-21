@@ -167,6 +167,9 @@
     --color_chart_flex_34: #FFFFFF;
     --color_chart_flex_35: #CACACA;
     --color_chart_flex_36: #989898;
+
+    --color_switch:#3f7eaf;
+    --color_input_back_disabled: #386c95;
 }
 
 .custom-checkbox .custom-control-input:checked~.custom-control-label::after{
