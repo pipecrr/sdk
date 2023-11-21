@@ -165,8 +165,28 @@
     --color_chart_flex_36: #98b7d5;
 
     --color_input_back_disabled: #E9E9E9;
+
+    /*Variables Scrollbar para el Modo Predeterminado*/
+
+    --color_scroll_hover: #7b7b7b;
+    --color_scroll_track: transparent;
+    --color_scroll_handle: #c4c4c4;
+    --color_scroll_border: #c4c4c4;
+
+    --color_switch:#d9d9d9;
+
+
 }
 
+    /*Modificar las siguientes propiedades:*/
+
+    /* Handle on hover */
+
+::-webkit-scrollbar-thumb:hover 
+{
+    background: var(--color_scroll_hover)!important;
+    border:var(--color_scroll_hover);
+}
 
 ::-webkit-scrollbar {
     width: 6px;
@@ -1841,6 +1861,8 @@ color: var(--color_text);
     background-color: var(--color_panel_back) !important;
     box-shadow: var(--shadow_standar) !important;
     border: var(--color_border) !important;
+    display: flex;
+    flex-direction: column;
 }
 
 .sdk_card p {
