@@ -2482,7 +2482,7 @@ namespace Siesa.SDK.Business
             }
 
         }
-
+        [SDKExposedMethod]
         public ActionResult<int> DeleteGroupDynamicEntity(int rowid)
         {
             try
