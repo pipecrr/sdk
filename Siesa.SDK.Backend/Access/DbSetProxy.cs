@@ -131,44 +131,19 @@ namespace Siesa.SDK.Backend.Access
                     query = newQuery.Cast<TEntity>();
                 }
             }
-
             if (Utilities.IsAssignableToGenericType
             (typeof(TEntity), typeof(BaseCompanyGroup<>)))
             {
-                Type rowidType = typeof(TEntity).GetProperty("Rowid").GetType();
-
-                switch (rowidType.Name)
-                {
-                    case "Int64":
-                        this.query = this.FilterGroupCompany<long>(query);
-                        break;
-                    case "Int16":
-                        this.query = this.FilterGroupCompany<short>(query);
-                        break;
-                    default:
-                        this.query = this.FilterGroupCompany<int>(query);
-                        break;
-                }
+                this.query = this.FilterGroupCompany(query);
             }  else if (Utilities.IsAssignableToGenericType
             (typeof(TEntity), typeof(BaseCompany<>)))
             {
-                Type rowidType = typeof(TEntity).GetProperty("Rowid").GetType();
-
-                switch (rowidType.Name)
-                {
-                    case "Int64":
-                        this.query = this.FilterCompany<long>(query);
-                        break;
-                    case "Int16":
-                        this.query = this.FilterCompany<short>(query);
-                        break;
-                    default:
-                        this.query = this.FilterCompany<int>(query);
-                        break;
-                }
-            }else if(typeof(TEntity) == typeof(E00201_Company)){
+                this.query = this.FilterCompany(query);
+            }else if(typeof(TEntity) == typeof(E00201_Company))
+            {
                 this.query = this.FilterCompanyEntity(query);
-            }else{
+            }else
+            {
                 this.query = query;
             }
         }
@@ -394,7 +369,7 @@ namespace Siesa.SDK.Backend.Access
 
             return false;
         }
-        private IQueryable<TEntity> FilterGroupCompany<T>(IQueryable<TEntity> query)
+        private IQueryable<TEntity> FilterGroupCompany(IQueryable<TEntity> query)
         {
             if(AuthenticationService?.User == null)
             {
@@ -405,7 +380,7 @@ namespace Siesa.SDK.Backend.Access
             return sdk_query.Cast<TEntity>();
         }
 
-        private IQueryable<TEntity> FilterCompany<T>(IQueryable<TEntity> query)
+        private IQueryable<TEntity> FilterCompany(IQueryable<TEntity> query)
         {
             if(AuthenticationService?.User == null)
             {
