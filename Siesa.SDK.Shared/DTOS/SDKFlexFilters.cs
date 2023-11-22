@@ -21,5 +21,6 @@ namespace Siesa.SDK.Shared.DTOS
         public bool alow_edit { get; set; }
         public SDKSelectFieldParams selectfield_params { get; set; }
         public string id_enum { get; set; }
+        public bool special_filter { get; set; }
     }
 }
