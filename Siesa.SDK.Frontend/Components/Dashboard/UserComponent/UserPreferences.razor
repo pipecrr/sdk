@@ -13,6 +13,7 @@
 @using Microsoft.AspNetCore.Http
 @using Siesa.SDK.Frontend.Components.FormManager.Model
 @using Siesa.SDK.Components.Visualization
+@using Siesa.SDK.Frontend.Utils
 
 
 @inject IServiceProvider ServiceProvider
@@ -622,8 +623,7 @@
     {
         if (firstRender || _jsModule == null)
         {
-            _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import",
-            "./_content/Siesa.SDK.Frontend/Components/Dashboard/UserComponent/UserPreferences.razor.js");
+            _jsModule = await jsRuntime.ImportJsModule("./_content/Siesa.SDK.Frontend/Components/Dashboard/UserComponent/UserPreferences.razor.js");
         }
     }
 

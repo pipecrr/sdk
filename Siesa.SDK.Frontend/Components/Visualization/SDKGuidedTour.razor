@@ -1,3 +1,4 @@
+@using Siesa.SDK.Frontend.Utils
 @inject IJSRuntime JSRuntime
 
 
@@ -15,14 +16,14 @@
     {
         try
         {
-            _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/Components/Visualization/SDKGuidedTour.razor.js");
+            _jsModule = await JSRuntime.ImportJsModule("./_content/Siesa.SDK.Frontend/Components/Visualization/SDKGuidedTour.razor.js");
         }
         catch (Exception)
         {
         }
         /*
         {
-            await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/js/utils.js");
+            await JSRuntime.ImportJsModule("./_content/Siesa.SDK.Frontend/js/utils.js");
         }catch (Exception)
         {
         }*/

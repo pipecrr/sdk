@@ -9,6 +9,7 @@
 @inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavigationManager
 @using Siesa.SDK.Frontend.Services
+@using Siesa.SDK.Frontend.Utils
 @inject MenuService MenuService
 @inject UtilsManager UtilManager
 @inject SDKNotificationService NotificationService
@@ -255,7 +256,7 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if(firstRender){
-            _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/Components/Layout/NavMenu/NavMenu.razor.js");
+            _jsModule = await JSRuntime.ImportJsModule("./_content/Siesa.SDK.Frontend/Components/Layout/NavMenu/NavMenu.razor.js");
         }
     }
 

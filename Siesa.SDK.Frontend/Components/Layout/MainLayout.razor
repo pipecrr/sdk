@@ -9,6 +9,7 @@
 @using Siesa.SDK.Frontend.Components.FormManager.Model
 @using Siesa.SDK.Frontend.Pages.Login
 @using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Frontend.Utils
 @inject UtilsManager UtilsManager 
 @inject IJSRuntime JSRuntime
 @inject NavigationService NavigationService
@@ -212,14 +213,14 @@
     {
         try
         {
-            _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/Components/Layout/MainLayout.razor.js");
+            _jsModule = await JSRuntime.ImportJsModule("./_content/Siesa.SDK.Frontend/Components/Layout/MainLayout.razor.js");
         }
         catch (Exception)
         {
         }
         try
         {
-            await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/js/utils.js");
+            await JSRuntime.ImportJsModule("./_content/Siesa.SDK.Frontend/js/utils.js");
         }catch (Exception)
         {
         }

@@ -2,6 +2,7 @@
 @using Siesa.SDK.Components.Visualization
 @using Microsoft.AspNetCore.Http
 @using System.IO
+@using Siesa.SDK.Frontend.Utils
 @inject UtilsManager UtilsManager 
 @inject IJSRuntime jsRuntime
 @inject SDKNotificationService NotificationService
@@ -33,8 +34,8 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if(firstRender || _jsModule == null){
-            await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/vendor/recorderjs/recorder.js");
-            _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Siesa.SDK.Frontend/Components/Fields/SDKRecorder.razor.js");
+            await jsRuntime.ImportJsModule("./_content/Siesa.SDK.Frontend/vendor/recorderjs/recorder.js");
+            _jsModule = await jsRuntime.ImportJsModule("./_content/Siesa.SDK.Frontend/Components/Fields/SDKRecorder.razor.js");
         }
     }
     private async Task ActionRecord()
