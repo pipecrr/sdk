@@ -119,7 +119,19 @@ function downloadFileFromStream(fileName, bytes) {
 
   function closePreviewImage (imgElem) 
   {
-    imgElem.src = '';
+    
+    if (imgElem == null) {
+        
+        var element = document.getElementById("single_file_icon");
+
+        if (element) {
+            element.parentNode.removeChild(element);
+        }
+    } else 
+    {
+        
+        imgElem.src = '';
+    }
   }
 
   function getUrlsImage (inputElem){

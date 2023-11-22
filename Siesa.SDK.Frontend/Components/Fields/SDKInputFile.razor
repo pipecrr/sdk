@@ -3,32 +3,33 @@
 
 <div class="@CssClass">
     <div class="file-upload-container">
-        @if(ShowPreview){
-            @if(!_IsLoading && !IsDetail){
-                <div class="input-container position-relative">
-                    <InputFile OnChange="@_OnChange" multiple="@IsMultiple" style="width: 300px; height: 200px; " accept="@FilterType" @ref="_refinputFile" class="sdk-upload-input"/>
 
-                    <div class="file-upload-icon" >
-                        @if(InputFile == null &&  _FilesSelected.Count == 0)
-                        {
-                            <div class="upload-box mb-2">
-                                @if(_IsLoading){
-                                    <SDKIcon Name="fa-spinner fa-spin"/>
-                                }else if(!IsDetail){
-                                    <SDKIcon Name="fa-arrow-up-from-bracket" IconSize="fa-2x" OnClick="@ClickIcon"></SDKIcon>
-                                }
-                                <p class="mb-0 mt-2">
-                                    <ResourceViewer ResourceTag="Custom.SDK.InputFile.DragAndDropFile"  />
-                                </p>
-                            </div>
-                        }
-                        <SDKButton CssClass="btn btn-primary btn_primary_def_1 btn-sm px-3" ResourceTag="Custom.SDK.InputFile.SelectFile">
-                        </SDKButton>
-                    </div>
+
+        @if(!_IsLoading && !IsDetail){
+            <div class="input-container position-relative">
+                <InputFile OnChange="@_OnChange" multiple="@IsMultiple" style="width: 300px; height: 200px; " accept="@FilterType" @ref="_refinputFile" class="sdk-upload-input"/>
+
+                <div class="file-upload-icon" >
+                    @if(InputFile == null &&  _FilesSelected.Count == 0)
+                    {
+                        <div class="upload-box mb-2">
+                            @if(_IsLoading){
+                                <SDKIcon Name="fa-spinner fa-spin"/>
+                            }else if(!IsDetail){
+                                <SDKIcon Name="fa-arrow-up-from-bracket" IconSize="fa-2x" OnClick="@ClickIcon"></SDKIcon>
+                            }
+                            <p class="mb-0 mt-2">
+                                <ResourceViewer ResourceTag="Custom.SDK.InputFile.DragAndDropFile"  />
+                            </p>
+                        </div>
+                    }
+                    <SDKButton CssClass="btn btn-primary btn_primary_def_1 btn-sm px-3" ResourceTag="Custom.SDK.InputFile.SelectFile">
+                    </SDKButton>
                 </div>
-            }
+            </div>
         }
-        @if(IsMultiple && _FilesSelected.Count > 0)
+        
+        @if(IsMultiple)
         {
             <div class="col-12 pt-1 upload_img_cont">
                 <div class="row whcm_row">
@@ -37,9 +38,32 @@
                 <div class="@_breakpoints pl-1 pr-1 pb-1">
                     <div class="whcm_panel d-flex justify-content-start align-items-center position-relative h-100">
                         <div class="h-100 w-100">
-                            <img  src="@url.Url" onclick="@(() => ClickImg(url))" 
-                                height="100%" width="100%" data-toggle="tooltip" title="@url.FileName">
+                            @if(_ExtensionsImage.Contains(url.File?.ContentType.Split("/")[1]))
+                                {
+                                    @if(!ShowPreview)
+                                    {
+                                        <div class="upload_file_icon">
+                                            <SDKIcon Name="fa-image"></SDKIcon>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        if(!string.IsNullOrEmpty(_UrlImage))
+                                        {
+                                            <img @ref="previewImageElem" src="@_UrlImage" height="100%" width="100%"  >
+                                        }else
+                                        {
+                                            <img @ref="previewImageElem" height="100%" width="100%"/>
+                                        }
+                                    }
+                                }else
+                                {                                
+                                    <div class="upload_file_icon">
+                                        <SDKIcon Name="@GetIconExtension(url.File?.ContentType)"></SDKIcon>
+                                    </div> 
+                                }
                         </div>
+
                         @if(ShowInfoImg)
                         {
                             <div class="upload_text_box p-1">
@@ -65,12 +89,29 @@
                     <div class="col-12 pl-1 pr-1 pb-1">
                         <div class="whcm_panel d-flex justify-content-start align-items-center position-relative h-100">
                             <div class="h-100 w-100">
-                                @if(!string.IsNullOrEmpty(_UrlImage))
+                                @if(_ExtensionsImage.Contains(InputFile?.File?.ContentType.Split("/")[1]))
                                 {
-                                    <img @ref="previewImageElem" src="@_UrlImage" height="100%" width="100%"  >
+                                    @if(!ShowPreview)
+                                    {
+                                        <div class="upload_file_icon">
+                                            <SDKIcon Name="fa-image"></SDKIcon>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        if(!string.IsNullOrEmpty(_UrlImage))
+                                        {
+                                            <img @ref="previewImageElem" src="@_UrlImage" height="100%" width="100%"  >
+                                        }else
+                                        {
+                                            <img @ref="previewImageElem" height="100%" width="100%"/>
+                                        }
+                                    }
                                 }else
-                                {
-                                    <img @ref="previewImageElem" height="100%" width="100%"/>
+                                {                                
+                                    <div class="upload_file_icon" id="single_file_icon">
+                                        <SDKIcon Name="@GetIconExtension(InputFile?.File?.ContentType)"></SDKIcon>
+                                    </div> 
                                 }
                             </div>
                             @if(ShowInfoImg)
