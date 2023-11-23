@@ -1,0 +1,29 @@
+@using Siesa.SDK.Frontend.Components
+
+@typeparam TData
+@typeparam TArgument
+@typeparam TValue
+
+@inherits SDKComponent
+
+<DxChartStackedSplineAreaSeries
+
+T ="TData"
+TArgument ="TArgument"
+TValue="TValue"
+HoverMode="@HoverMode"
+SelectionMode="@SelectionMode"
+Data= "@Data"
+ArgumentField="@ArgumentField"
+ValueField="@ValueField"
+Name="@Name"
+Color="@Color"
+Filter="@Filter"
+Pane="@Pane"
+BreakOnEmptyPoints="@BreakOnEmptyPoints"
+Axis="@Axis"
+>
+
+ @ChildContent
+
+</DxChartStackedSplineAreaSeries>
