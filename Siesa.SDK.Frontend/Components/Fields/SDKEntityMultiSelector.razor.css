@@ -6,9 +6,15 @@
     font-size: 1.1rem;
     height: 2.063rem;
     width: 2.163rem;
-    border: 1px solid #ced4da;
-    background: var(--color_light);
+    border: 1px solid var(--color_border);
+    background: var(--color_input_back);
     color: var(--color_primary);
     line-height: 1;
+    border-radius: var(--border_radius_standar) !important;
+}
+
+::deep .btn_multiselect:hover
+{
+    background-color: var(--color_back_2) !important;
 }
 
