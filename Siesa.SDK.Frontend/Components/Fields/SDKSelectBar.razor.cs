@@ -48,12 +48,11 @@ public partial class SDKSelectBar<ItemType> : SDKComponent
     /// <summary>
     /// Gets or sets the resource tag for denial messages associated with the SDKSelectBar.
     /// </summary>
-    [Parameter] public string DenialResourceTag { get; set; } //Valor por defecto: "DenialMessage"
-
+    [Parameter] public string DenialResourceTag { get; set; } = "Custom.Selectbar.Boolean.No";
     /// <summary>
     /// Gets or sets the resource tag for affirmation messages associated with the SDKSelectBar.
     /// </summary>
-    [Parameter] public string AffirmationResourceTag { get; set; }// Valor por defecto: "AffirmationMessage"
+    [Parameter] public string AffirmationResourceTag { get; set; } = "Custom.Selectbar.Boolean.Yes";
 
     /// <summary>
     /// Gets or sets the render fragment for customizing the appearance of items in the SDKSelectBar.
