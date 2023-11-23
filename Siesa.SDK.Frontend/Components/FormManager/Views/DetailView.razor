@@ -35,11 +35,10 @@ else if (ModelLoaded == true)
     @if(ContainAttachments && !IsTableA){
         <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" 
                                Parent="@BusinessObj.BaseObj" ContainAttachments="@ContainAttachments" BLNameParentAttatchment="@BusinessName"
-                               BusinessObj="@BusinessObj" BusinessName="@BusinessName"/>
+                               BusinessObj="@BusinessObj" BusinessName="@BusinessName" IsDetail="true" />
     }else if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
     {
-        <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" 
-                               BusinessName="@BusinessName"/>
+        <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj"  BusinessName="@BusinessName"  IsDetail="true"/>
     }
     <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
         @if(Panels?.Count > 0){
