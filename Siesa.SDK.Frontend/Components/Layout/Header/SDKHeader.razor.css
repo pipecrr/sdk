@@ -10,6 +10,7 @@
     align-items: center;
     padding: .5rem 0.875rem;
 }
+
 .header_circles_box{
     height: 48px;
     width: 690px;
@@ -219,6 +220,8 @@
         max-width: 140px;
     }
 }
+
+
 
 @media (max-width: 991.98px) { 
     .header_circles_box {

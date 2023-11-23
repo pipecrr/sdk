@@ -168,8 +168,28 @@
 
     --dxbl-fl-item-spacing-x: 2rem; 
     --dxbl-fl-item-spacing-y: 1rem:
+
+    /*Variables Scrollbar para el Modo Predeterminado*/
+
+    --color_scroll_hover: #7b7b7b;
+    --color_scroll_track: transparent;
+    --color_scroll_handle: #c4c4c4;
+    --color_scroll_border: #c4c4c4;
+
+    --color_switch:#d9d9d9;
+
+
 }
 
+    /*Modificar las siguientes propiedades:*/
+
+    /* Handle on hover */
+
+::-webkit-scrollbar-thumb:hover 
+{
+    background: var(--color_scroll_hover)!important;
+    border:var(--color_scroll_hover);
+}
 
 ::-webkit-scrollbar {
     width: 6px;
@@ -395,9 +415,9 @@ a:hover
 }
 
 .btn_secondary_danger {
-    background-color: var(--color_delete);
-    border-color: var(--color_delete);
-    border-radius: var(--border_radius_btn);
+    background-color: var(--color_delete) !important;
+    border-color: var(--color_delete) !important;
+    border-radius: var(--border_radius_btn) !important;
     font-weight: 700;
 }
 
@@ -1851,6 +1871,8 @@ color: var(--color_text);
     background-color: var(--color_panel_back) !important;
     box-shadow: var(--shadow_standar) !important;
     border: var(--color_border) !important;
+    display: flex;
+    flex-direction: column;
 }
 
 .sdk_card p {
@@ -2510,6 +2532,36 @@ border-color: var(--color_border) !important;
     height: 1rem;
     z-index: -1;
     background-image: linear-gradient(to bottom, rgba(245,245,245,1), rgba(245,245,245,0));
+}
+
+.dxbl-col
+{
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+}
+
+.dxbl-expandable-container
+{
+    padding: 0rem 1rem 1rem 1rem !important;
+    background: var(--color_panel_back);
+}
+
+.dxbl-accordion-group
+{
+    border: 1px solid var(--color_border) !important;
+    background-color: var(--color_panel_back) !important
+}
+
+.dxbl-accordion-group-header 
+{
+    background-color: var(--color_panel_back) !important;
+    margin: 0 1rem;
+    padding: 0.5rem 0rem !important;
+}
+
+.expanded .dxbl-accordion-group-header 
+{
+    border-bottom: 1px solid var(--color_border) !important;
 }
 
 .rz-html-editor-content
