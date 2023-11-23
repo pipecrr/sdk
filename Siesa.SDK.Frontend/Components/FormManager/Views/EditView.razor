@@ -129,7 +129,7 @@ else if (BusinessObj.BaseObj.Rowid != 0)
                     @foreach (var company in Companies)
                     {
                         <SDKCollapseItem Text="@company.Name">
-                            <CreateView BusinessName="@BusinessNameA" BusinessNameParent="@BusinessName" BusinessObjAType="@InternalBusinessObjAType" RowidCompany="@company.Rowid" IsTableA="true" IsSubpanel="true" ShowTitle="false" ShowButtons="false" ParentForm="@this" ></CreateView>
+                            <CreateView BusinessName="@BusinessNameA" BusinessNameParent="@BusinessName" BusinessObjAType="@InternalBusinessObjAType" RowidCompany="@company.Rowid" IsTableA="true" IsSubpanel="true" ShowTitle="false" ShowButtons="false" ParentForm="@this" ViewContext="@_viewContext" ></CreateView>
                         </SDKCollapseItem>
                     }
                 </Items>

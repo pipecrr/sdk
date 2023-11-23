@@ -18,6 +18,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
 using Siesa.SDK.Shared.Utilities;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
@@ -741,8 +742,17 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 if (BusinessObj != null)
                 {
                     await GenerateBaseObj().ConfigureAwait(true);
+                    long rowid;
+                    try
+                    {
+                        rowid = Convert.ToInt64(BusinessObj.BaseObj.Rowid);
+                    }
+                    catch (System.Exception)
+                    {
+                        rowid = 0;
+                    }
+                    BusinessObj.OnReady(DynamicViewType.Detail, rowid);
                 }
-                
                 ParentDetail.DetailViewsTablesA.Add(this);
             }else
             {
