@@ -395,8 +395,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                 if (BusinessObj != null)
                 {
                     await GenerateBaseObj().ConfigureAwait(true);
+                    long rowid;
+                    try
+                    {
+                        rowid = Convert.ToInt64(BusinessObj.BaseObj.Rowid);
+                    }
+                    catch (System.Exception)
+                    {
+                        rowid = 0;
+                    }
+                    BusinessObj.OnReady(ViewContext, rowid);
+                    BusinessObj.BusinessNameParent = BusinessNameParent;
                 }
-                
                 ParentForm.FormViewsTablesA.Add(this);
             }else
             {
