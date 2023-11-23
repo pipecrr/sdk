@@ -285,7 +285,14 @@ public partial class SDKInputFile : SDKComponent
                 var files = InputFile.GetMultipleFiles();
                 foreach (var itemFile in files)
                 {
+                    if (itemFile.Size > MaxSize)
+                    {
+                        _ = Notification.ShowError("Custom.SDKInputFile.FileMaxSize", new object[] { itemFile.Name });
+                        InputFile = null;
+                        break;
+                    }
                     var file = await ConvertToIFormFile(itemFile).ConfigureAwait(true);
+                    
                     var urlImage = await GetFileUrl(file).ConfigureAwait(true);
 
                     SDKInputFieldDTO inputFieldDTO = new()
@@ -302,10 +309,21 @@ public partial class SDKInputFile : SDKComponent
             }
             else
             {
+                if (InputFile.File.Size > MaxSize)
+                {
+                    _ = Notification.ShowError("Custom.SDKInputFile.FileMaxSize", new object[] { InputFile.File.Name });
+                    InputFile = null;
+                    _display = "none";
+                    return ;
+                }
                 SingleFileSize = InputFile.File.Size / 1024;
 
-                await GetPreviewFile().ConfigureAwait(true);
+                var singleFile = await ConvertToIFormFile(_InputFile.File).ConfigureAwait(true);
+                var urlImage = await GetFileUrl(singleFile).ConfigureAwait(true);
+
+                _UrlImage = urlImage;
             }
+
             OnInputFile?.Invoke(_InputFile);
         }
     }
@@ -336,6 +354,7 @@ public partial class SDKInputFile : SDKComponent
         else
         {
             _UrlImage = "";
+            InputFile = null;
         }
         StateHasChanged();
     }
@@ -422,17 +441,13 @@ public partial class SDKInputFile : SDKComponent
     private async Task<IFormFile> ConvertToIFormFile(IBrowserFile browserFile)
     {
         var ms = new MemoryStream();
-        if (browserFile.Size > MaxSize)
-        {
-            throw new Exception("El archivo es demasiado grande");
-        }
 
         await browserFile.OpenReadStream(maxAllowedSize: MaxSize).CopyToAsync(ms).ConfigureAwait(true);
 
         var file = new FormFile(ms, 0, ms.Length, null, browserFile.Name)
         {
             Headers = new HeaderDictionary(),
-            ContentType = (browserFile.ContentType == "" ? "application/octet-stream" : browserFile.ContentType)
+            ContentType = browserFile.ContentType ?? "application/octet-stream"
         };
 
         return file;
