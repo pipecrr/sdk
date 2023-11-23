@@ -48,12 +48,11 @@ public partial class SDKSelectBar<ItemType> : SDKComponent
     /// <summary>
     /// Gets or sets the resource tag for denial messages associated with the SDKSelectBar.
     /// </summary>
-    [Parameter] public string DenialResourceTag { get; set; }
-
+    [Parameter] public string DenialResourceTag { get; set; } = "Custom.Selectbar.Boolean.No";
     /// <summary>
     /// Gets or sets the resource tag for affirmation messages associated with the SDKSelectBar.
     /// </summary>
-    [Parameter] public string AffirmationResourceTag { get; set; }
+    [Parameter] public string AffirmationResourceTag { get; set; } = "Custom.Selectbar.Boolean.Yes";
 
     /// <summary>
     /// Gets or sets the render fragment for customizing the appearance of items in the SDKSelectBar.
@@ -90,6 +89,12 @@ public partial class SDKSelectBar<ItemType> : SDKComponent
                 }
             }
         }
+        if(typeof(ItemType) == typeof(bool))
+            {   
+                DenialResourceTag = await UtilManager.GetResource(DenialResourceTag).ConfigureAwait(true);
+                AffirmationResourceTag = await UtilManager.GetResource(AffirmationResourceTag).ConfigureAwait(true);
+                StateHasChanged();
+            }
     }
 
     protected override async Task OnInitializedAsync()
@@ -104,5 +109,5 @@ public partial class SDKSelectBar<ItemType> : SDKComponent
         await GetResources().ConfigureAwait(true);
     }
 
-    }
+}
 
