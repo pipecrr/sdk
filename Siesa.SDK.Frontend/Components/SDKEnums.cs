@@ -240,4 +240,19 @@ namespace Siesa.SDK.Frontend.Components
         Determinate = ProgressBarMode.Determinate,
         Indeterminate = ProgressBarMode.Indeterminate
     }
+    public enum SDKChartContinuousSeriesHoverMode 
+    {
+    NearestPoint = 0,
+    SeriesAndAllPoints = 1,
+    Series = 2,
+    None = 3
+
+    }
+
+    public enum SDKChartContinuousSeriesSelectionMode
+    {
+    Single = 0,
+    Multiple = 1,
+    None = 2
+    }
 }
