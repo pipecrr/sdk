@@ -1,4 +1,4 @@
-const version = '20231109';
+const version = '20231124';
 
 function loadScript(url, in_head = false, callback = null) {
 
