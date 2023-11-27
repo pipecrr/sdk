@@ -17,57 +17,84 @@ using System.Linq.Expressions;
 
 namespace Siesa.SDK.Frontend.Components.Visualization.Charts;
 
+
 public partial class SDKChartStackedLineSeries<TData, TArgument, TValue> : SDKComponent
 {
-    // Colección de datos para la serie del gráfico.
+    /// <summary>
+    /// Collection of data for the chart series.
+    /// </summary>
     [Parameter]
     public IEnumerable<TData> Data { get; set; }
 
-    // Expresión que representa el campo de argumentos de la serie del gráfico.
+    /// <summary>
+    /// Expression representing the argument field of the chart series.
+    /// </summary>
     [Parameter]
     public Expression<Func<TData, TArgument>> ArgumentField { get; set; }
 
-    // Configuración específica de la serie del gráfico.
+    /// <summary>
+    /// Specific settings for the chart series.
+    /// </summary>
     [Parameter]
     public ChartSeriesSettings<TData, TValue, TArgument> Settings { get; set; }
 
-    // Expresión que representa el campo de valores de la serie del gráfico.
+    /// <summary>
+    /// Expression representing the value field of the chart series.
+    /// </summary>
     [Parameter]
     public Expression<Func<TData, TValue>> ValueField { get; set; }
 
-    // Define el eje asociado a la serie del gráfico.
+    /// <summary>
+    /// Defines the axis associated with the chart series.
+    /// </summary>
     [Parameter]
     public string Axis { get; set; }
 
-    // Modo de visualización al pasar el mouse sobre la serie del gráfico.
+    /// <summary>
+    /// Mouse hover mode for the chart series.
+    /// </summary>
     [Parameter]
     public ChartContinuousSeriesHoverMode HoverMode { get; set; }
 
-    // Modo de selección de la serie del gráfico.
+    /// <summary>
+    /// Selection mode for the chart series.
+    /// </summary>
     [Parameter]
     public ChartContinuousSeriesSelectionMode SelectionMode { get; set; }
 
-    // Determina si se debe interrumpir en puntos vacíos.
+    /// <summary>
+    /// Determines if it should break on empty points.
+    /// </summary>
     [Parameter]
     public bool BreakOnEmptyPoints { get; set; }
 
-    // Color de la serie del gráfico.
+    /// <summary>
+    /// Color of the chart series.
+    /// </summary>
     [Parameter]
     public Color Color { get; set; }
 
-    // Expresión para filtrar los datos de la serie del gráfico.
+    /// <summary>
+    /// Expression to filter the data for the chart series.
+    /// </summary>
     [Parameter]
     public Expression<Func<TData, bool>> Filter { get; set; }
 
-    // Define el panel asociado a la serie del gráfico.
+    /// <summary>
+    /// Defines the pane associated with the chart series.
+    /// </summary>
     [Parameter]
     public string Pane { get; set; }
 
-    // Nombre de la serie del gráfico.
+    /// <summary>
+    /// Name of the chart series.
+    /// </summary>
     [Parameter]
     public string Name { get; set; }
 
-    // Contenido adicional que se puede incrustar en el componente.
+    /// <summary>
+    /// Additional content that can be embedded within the component.
+    /// </summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 }
