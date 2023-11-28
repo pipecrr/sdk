@@ -48,7 +48,9 @@ public partial class SDKSelectBar<ItemType> : SDKComponent
     /// <summary>
     /// Gets or sets the resource tag for denial messages associated with the SDKSelectBar.
     /// </summary>
+
     [Parameter] public string DenialResourceTag { get; set; } = "Custom.Selectbar.Boolean.No";
+
     /// <summary>
     /// Gets or sets the resource tag for affirmation messages associated with the SDKSelectBar.
     /// </summary>

@@ -17,6 +17,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         public bool SetTopBar { get; set; } = true;
         [Parameter]
         public string BLNameParentAttatchment { get; set; }
+        
+        private DynamicViewType _viewContext { get; set; } = DynamicViewType.Create;
 
         protected override async Task OnInitializedAsync()
         {

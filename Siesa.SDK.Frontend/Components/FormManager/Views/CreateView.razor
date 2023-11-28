@@ -39,7 +39,7 @@ else if ((Panels == null || Panels.Count <= 0) && !IsDocument)
     @if(ContainAttachments && !IsTableA){
         <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" 
             Parent="@BusinessObj.BaseObj" ContainAttachments="@ContainAttachments" BLNameParentAttatchment="@BusinessName"
-            BusinessObj="@BusinessObj" isCreateView="true" ShowAditionalFields="@ShowAditionalFields"/>
+            BusinessObj="@BusinessObj" IsCreateView="true" ShowAditionalFields="@ShowAditionalFields"/>
     }else if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
     {
         <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" isCreateView="true" ShowAditionalFields="@ShowAditionalFields"/>
@@ -141,7 +141,7 @@ else if ((Panels == null || Panels.Count <= 0) && !IsDocument)
                     @foreach (var company in Companies)
                     {
                         <SDKCollapseItem Text="@company.Name">
-                            <CreateView BusinessName="@BusinessNameA" BusinessNameParent="@BusinessName" BusinessObjAType="@InternalBusinessObjAType" RowidCompany="@company.Rowid" IsTableA="true" IsSubpanel="true" ShowTitle="false" ShowButtons="false" ParentForm="@this" ></CreateView>
+                            <CreateView BusinessName="@BusinessNameA" BusinessNameParent="@BusinessName" BusinessObjAType="@InternalBusinessObjAType" RowidCompany="@company.Rowid" IsTableA="true" IsSubpanel="true" ShowTitle="false" ShowButtons="false" ParentForm="@this" ViewContext="@_viewContext"></CreateView>
                         </SDKCollapseItem>
                     }
                 </Items>

@@ -18,6 +18,8 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Microsoft.Extensions.DependencyInjection;
+using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
 using Siesa.SDK.Shared.Utilities;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
@@ -81,7 +83,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
 
         [Inject] public IFeaturePermissionService FeaturePermissionService { get; set; }
         [Inject] public IAuthenticationService AuthenticationService { get; set; }
-
+        [Inject] public IServiceProvider ServiceProvider { get; set; }
         [Inject] public SDKNotificationService NotificationService { get; set; }        
         protected FormViewModel FormViewModel { get; set; } = new FormViewModel();
         /// <summary>
@@ -737,12 +739,18 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
             if (BusinessObjAType != null && businessObj == null)
             {
-                BusinessObj = Activator.CreateInstance(BusinessObjAType, AuthenticationService);
-                if (BusinessObj != null)
+                BusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider, BusinessObjAType);
+                await GenerateBaseObj().ConfigureAwait(true);
+                long rowid;
+                try
                 {
-                    await GenerateBaseObj().ConfigureAwait(true);
+                    rowid = Convert.ToInt64(BusinessObj.BaseObj.Rowid);
                 }
-                
+                catch (System.Exception)
+                {
+                    rowid = 0;
+                }
+                BusinessObj.OnReady(DynamicViewType.Detail, rowid);
                 ParentDetail.DetailViewsTablesA.Add(this);
             }else
             {

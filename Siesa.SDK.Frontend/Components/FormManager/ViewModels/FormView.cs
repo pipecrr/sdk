@@ -19,6 +19,7 @@ using Siesa.SDK.Shared.DTOS;
 using Siesa.SDK.Frontend.Components.FormManager.Fields;
 using Siesa.SDK.Frontend.Extension;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Siesa.Global.Enums;
 using Siesa.SDK.Entities;
 using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
@@ -47,7 +48,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         [Inject] public SDKNotificationService NotificationService { get; set; }
         [Inject] public IConfiguration configuration { get; set; }
         private bool UseRoslynToEval { get; set; }
-
+        [Inject]
+        public IServiceProvider ServiceProvider { get; set; }
         [Inject] protected IAuthenticationService AuthenticationService { get; set; }
 
         [Inject] public SDKGlobalLoaderService GlobalLoaderService { get; set; }
@@ -391,12 +393,19 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
             }
             if (BusinessObjAType != null && businessObj == null)
             {
-                BusinessObj = Activator.CreateInstance(BusinessObjAType, AuthenticationService);
-                if (BusinessObj != null)
+                BusinessObj = ActivatorUtilities.CreateInstance(ServiceProvider, BusinessObjAType);
+                await GenerateBaseObj().ConfigureAwait(true);
+                long rowid;
+                try
                 {
-                    await GenerateBaseObj().ConfigureAwait(true);
+                    rowid = Convert.ToInt64(BusinessObj.BaseObj.Rowid);
                 }
-                
+                catch (System.Exception)
+                {
+                    rowid = 0;
+                }
+                BusinessObj.OnReady(ViewContext, rowid);
+                BusinessObj.BusinessNameParent = BusinessNameParent;
                 ParentForm.FormViewsTablesA.Add(this);
             }else
             {

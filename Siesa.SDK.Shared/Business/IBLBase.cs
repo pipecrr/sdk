@@ -13,6 +13,7 @@ namespace Siesa.SDK.Shared.Business
     public interface IBLBase<T> where T: IBaseSDK
     {
         string BusinessName { get; set; }
+        string BusinessNameParent { get; set; }
         T BaseObj { get; set; }
         T Get(Int64 rowid, List<string> extraFields = null);
         Task<T> GetAsync(Int64 rowid, List<string> extraFields = null);

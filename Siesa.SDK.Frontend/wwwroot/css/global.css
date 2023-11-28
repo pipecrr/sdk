@@ -1233,6 +1233,14 @@ div .form-control:focus {
     padding: 1rem;
 }
 
+.sdk_modal_autogestion>.rz-dialog-content
+{
+    overflow: unset !important;
+    background: var(--color_panel_back);
+    padding: 1rem;
+    height: 100% !important;
+}
+
 .rz-dialog-wrapper {
     overflow-y: scroll;
 }

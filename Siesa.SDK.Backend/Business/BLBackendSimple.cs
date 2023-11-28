@@ -76,6 +76,7 @@ namespace Siesa.SDK.Business
         }
 
         public string BusinessName { get; set; }
+        public string BusinessNameParent {get;set;}
         public BaseSDK<int> BaseObj { get; set; }
         public List<dynamic> DynamicEntities { get; set; }
 
@@ -218,6 +219,7 @@ namespace Siesa.SDK.Business
         protected IFeaturePermissionService _featurePermissionService;
 
         public string BusinessName { get; set; }
+        public string BusinessNameParent {get;set;}
         public T BaseObj { get; set; }
         public List<dynamic> DynamicEntities { get; set; }
         private string[] _relatedProperties = null;
@@ -565,11 +567,7 @@ namespace Siesa.SDK.Business
             {
                 if (_featurePermissionService != null && !string.IsNullOrEmpty(BusinessName) && !BusinessName.Equals("BLAttachmentDetail"))
                 {
-                    string businessName = BusinessName;
-                    if(businessName.StartsWith("BLA"))
-                    {
-                        businessName = businessName.Replace("BLA", "BL"); 
-                    }
+                    string businessName = string.IsNullOrEmpty(BusinessNameParent) ? BusinessName : BusinessNameParent;                    
                     CanCreate = _featurePermissionService.CheckUserActionPermission(businessName, 1, AuthenticationService);
                     CanEdit = _featurePermissionService.CheckUserActionPermission(businessName, 2, AuthenticationService);
                 }

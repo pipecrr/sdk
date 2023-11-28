@@ -445,6 +445,8 @@
         
         if(Type == MimeTypes.ExcelDocument) return DocumentFormat.Xlsx;
 
+        if(Type == "application/wps-office.xlsx") return DocumentFormat.Xlsx;
+
         ErrorList.Add("Custom.SDK.Integration.Msg.ErrorFileType");
         return null;
 
