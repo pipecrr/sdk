@@ -37,7 +37,7 @@ namespace Siesa.SDK.Business
         [JsonIgnore]
         public dynamic ParentComponent {get;set;}
         
-        public string BLParentBusinessName {get;set;}
+        public string BusinessNameParent {get;set;}
 
         public string BusinessName { get; set; }
         [JsonIgnore]
@@ -134,6 +134,7 @@ namespace Siesa.SDK.Business
         [JsonIgnore]
         public dynamic ParentComponent {get;set;}
         public string BusinessName { get; set; }
+        public string BusinessNameParent {get;set;}
         [JsonIgnore]
         public SDKBusinessModel Backend {get { return BackendRouterService.Instance.GetSDKBusinessModel(BusinessName, AuthenticationService); } }
 
