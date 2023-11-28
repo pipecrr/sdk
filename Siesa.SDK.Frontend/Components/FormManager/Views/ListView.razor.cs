@@ -276,8 +276,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         HasSearchViewdef = !String.IsNullOrEmpty(searchMetadata);
                         ShowList = !HasSearchViewdef;
 
-                        //if (!string.IsNullOrEmpty(searchMetadata))
-                        //{
+                        if (!string.IsNullOrEmpty(searchMetadata))
+                        {
                             var searchForm = JsonConvert.DeserializeObject<FormViewModel>(searchMetadata);
                             if (searchForm != null)
                             {
@@ -296,7 +296,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                 FieldsHidden = new List<FieldOptions>();
                             }
                             _isSearchOpen = true;
-                        //}
+                        }
                     }
                     catch (System.Exception ex)
                     {
