@@ -42,8 +42,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 }
                 catch (System.Exception ex)
                 {
-                    StackTrace.Add(ex.Message);
-                    ErrorList.Add("Custom.Generic.Message.Error");
+                    ErrorList.Add(new Shared.DTOS.ModelMessagesDTO()
+                    {
+                        Message = "Custom.Generic.Message.Error",
+                        StackTrace = ex.StackTrace
+                    });
                 }
             }else
             {
@@ -53,7 +56,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 _ = NotificationService.ShowError("Custom.Generic.Unauthorized");
                 ErrorMsg = "Custom.Generic.Unauthorized";
-                ErrorList.Add("Custom.Generic.Unauthorized");
+                ErrorList.Add(new Shared.DTOS.ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.Unauthorized"
+                });
+                
                 if(!IsSubpanel){
                     // NavigationService.NavigateTo("/", replace:true);
                 }

@@ -10,6 +10,7 @@
 @using Siesa.SDK.Frontend.Components.FormManager.Model
 @using Siesa.SDK.Frontend.Pages.Login
 @using Siesa.SDK.Frontend.Components.Visualization
+@using Siesa.SDK.Shared.DTOS
 @inject UtilsManager UtilsManager 
 @inject IJSRuntime JSRuntime
 @inject NavigationService NavigationService
@@ -79,17 +80,16 @@
                                                 <ErrorBoundary @ref="errorBoundary">
                                                     <ChildContent>
                                                         @Body
-                                                        @if(GeneralErrors?.Count > 0 || FieldErrors?.Count > 0)
+                                                        @if(GeneralErrors?.Count > 0)
                                                         {
-                                                            <ErrorsWindow GeneralErrors="@GeneralErrors" StackTrace="@StackTrace" ErrorMsg="FieldErrors" />
+                                                            <ErrorsWindow MessagesDTO="@GeneralErrors" />
                                                         }
                                                     </ChildContent> 
                                                     <ErrorContent Context="Exception" >
                                                         @{
-                                                            List<string> errors = new List<string>();
-                                                            errors.Add("Exception: " + Exception.Message + " " + Exception.StackTrace);
+                                                            GetExceptionError(Exception);
                                                         }
-                                                        <ErrorsWindow GeneralErrors="@errors" StackTrace="@StackTrace" />
+                                                        <ErrorsWindow MessagesDTO="@GeneralErrors" />
                                                     </ErrorContent>
                                                 </ErrorBoundary>
                                             </div>
@@ -129,9 +129,7 @@
 
     private bool isMaximized = false;
 
-    private List<string> GeneralErrors = new List<string>();
-    private List<string> StackTrace = new ();
-    private List<string> FieldErrors = new List<string>();
+    private List<ModelMessagesDTO> GeneralErrors = new ();
     private bool _showExtendedLayout = true;
     public async Task ToogleMaximize()
     {
@@ -148,6 +146,18 @@
     {
         _showExtendedLayout = showExtendedLayout;
         StateHasChanged();
+    }
+
+    private void GetExceptionError(Exception ex)
+    {
+        if(ex != null)
+        {
+            GeneralErrors.Add(new ModelMessagesDTO() 
+            { 
+                Message = "Custom.Generic.Message.Error",
+                StackTrace = ex.StackTrace
+            });
+        }
     }
 
     public bool IsMaximized()
@@ -177,8 +187,7 @@
 
     protected override async Task OnParametersSetAsync(){
         errorBoundary?.Recover();
-        FieldErrors = new List<string>();
-        GeneralErrors = new List<string>();
+        GeneralErrors = new();
         base.OnParametersSetAsync();
     }
 
@@ -187,8 +196,7 @@
         IsDefaultArea = true;
         base.OnInitializedAsync();
         errorBoundary = new ErrorBoundary();
-        FieldErrors = new List<string>();
-        GeneralErrors = new List<string>();
+        GeneralErrors = new();
         InitSDKJS();
     }
 
@@ -350,25 +358,39 @@
 
     [JSInvokable]
     public async Task ShowSuccess(string msg, object?[] variables = null){
-        FieldErrors.Clear();
         GeneralErrors.Clear();
         StateHasChanged();
         await SDKNotificationService.ShowSuccess(msg, variables);
     }
 
     [JSInvokable]
-    public async Task ErrorsFlex(object?[] errors){
-        foreach (var error in errors){
+    public async Task ErrorsFlex(object?[] errors)
+    {
+        foreach (var error in errors)
+        {
             var err = error.ToString();
-            if(err.Contains("//")){
-                if(!FieldErrors.Contains(err)){
-                    FieldErrors.Add(err);
-                }
-            }else{
-                if(!GeneralErrors.Contains(err))
+            if(err.Contains("//") && err.Split("//").Length > 1)
+            {
+                var groupErrors = err.Split("//");
+                var field = groupErrors[0];
+                var fieldsError = groupErrors.Skip(1).ToList();
+
+                if(!GeneralErrors.Any(x => x.MessageFormat.ContainsKey(field)))
                 {
-                    StackTrace.Add(err);
-                    GeneralErrors.Add("Custom.Generic.Message.Error");
+                    GeneralErrors.Add(new ModelMessagesDTO() 
+                    { 
+                        MessageFormat = new Dictionary<string, List<string>>()
+                        {
+                            { field, fieldsError }
+                        }
+                    });
+                }
+                
+            }else
+            {
+                if(!GeneralErrors.Any(x => x.Message.Equals(err)))
+                {
+                    GeneralErrors.Add(new ModelMessagesDTO() { Message = err });
                 }
             }
         }
@@ -377,7 +399,6 @@
 
     [JSInvokable]
     public async Task SuccessFlex(){
-        FieldErrors.Clear();
         GeneralErrors.Clear();
         StateHasChanged();
     }

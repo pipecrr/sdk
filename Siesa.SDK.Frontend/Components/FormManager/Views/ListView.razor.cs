@@ -33,6 +33,7 @@ using Newtonsoft.Json.Linq;
 using System.Runtime.CompilerServices;
 using Siesa.SDK.Frontend.Components.Flex;
 using Siesa.SDK.Protos;
+using Siesa.SDK.Shared.DTOS;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
@@ -129,8 +130,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
         private bool _isSearchOpen = false;
         private bool _showActions = true;
         public String ErrorMsg = "";
-        public List<String> ErrorList = new List<string>();
-        private List<string> StackTrace = new ();
+        public List<ModelMessagesDTO> ErrorList = new();
         private IList<dynamic> SelectedObjects { get; set; } = new List<dynamic>();
         /// <summary>
         /// Gets or sets the selected items.
@@ -261,7 +261,10 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             {
                 //ErrorMsg = "No hay definición para la vista de lista";
                 ErrorMsg = "Custom.Generic.ViewdefNotFound";
-                ErrorList.Add("Custom.Generic.ViewdefNotFound");
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.ViewdefNotFound"
+                });
             }
             else
             {
@@ -296,16 +299,25 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     {
                         ShowList = true;
                         FieldsHidden = new List<FieldOptions>();
-                        StackTrace.Add(ex.Message);
+                        ErrorList.Add(new ModelMessagesDTO()
+                        {
+                            Message = "Custom.Generic.Message.Error",
+                            StackTrace = ex.StackTrace
+                        });
                     }
 
                     try
                     {
-                        SavedHiddenFields = await localStorageService.GetItemAsync<List<FieldOptions>>($"{BusinessName}.Search.HiddenFields");
+                        SavedHiddenFields = await localStorageService.GetItemAsync<List<FieldOptions>>($"{BusinessName}.Search.HiddenFields").ConfigureAwait(true);
                     }
                     catch (System.Exception ex)
                     {
-                        StackTrace.Add(ex.Message);
+                        ErrorList.Add(new ModelMessagesDTO()
+                        {
+                            Message = "Custom.Generic.Message.Error",
+                            StackTrace = ex.StackTrace
+                        });
+
                     }
 
                 }
@@ -475,7 +487,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     showButton = FeaturePermissionService.CheckUserActionPermissions(BusinessName, ListPermission, AuthenticationService);
                 }catch(System.Exception ex)
                 {
-                    StackTrace.Add(ex.Message);
+                    ErrorList.Add(new ModelMessagesDTO()
+                    {
+                        Message = "Custom.Generic.Message.Error",
+                        StackTrace = ex.StackTrace
+                    });
 
                 }
             }
@@ -498,7 +514,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     }
                     catch (System.Exception ex)
                     {
-                        StackTrace.Add(ex.Message);
+                        ErrorList.Add(new ModelMessagesDTO()
+                        {
+                            Message = "Custom.Generic.Message.Error",
+                            StackTrace = ex.StackTrace
+                        });
                     }
                }else
                {
@@ -514,15 +534,22 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     }
                     catch (System.Exception ex)
                     {
-                        StackTrace.Add(ex.Message);
+                        ErrorList.Add(new ModelMessagesDTO()
+                        {
+                            Message = "Custom.Generic.Message.Error",
+                            StackTrace = ex.StackTrace
+                        });
                     }
                }
 
                 if (!CanAccess && !FromEntityField)
                 {
                     ErrorMsg = "Custom.Generic.Unauthorized";
-                    ErrorList.Add("Custom.Generic.Unauthorized");
-                    NotificationService.ShowError("Custom.Generic.Unauthorized");
+                    ErrorList.Add(new ModelMessagesDTO()
+                    {
+                        Message = "Custom.Generic.Unauthorized"
+                    });
+                    _ = NotificationService.ShowError("Custom.Generic.Unauthorized");
                     if(!IsSubpanel){
                         // NavigationService.NavigateTo("/", replace: true);
                     }
@@ -676,7 +703,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         }                        
                     }catch (Exception ex)
                     {
-                        StackTrace.Add(ex.Message);
+                        ErrorList.Add(new ModelMessagesDTO()
+                        {
+                            Message = "Custom.Generic.Message.Error",
+                            StackTrace = ex.StackTrace
+                        });
                     }
                 }
             }
@@ -730,7 +761,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             guidListView = Guid.NewGuid().ToString().Replace("-", "", StringComparison.Ordinal);
             Loading = false;
             ErrorMsg = "";
-            ErrorList = new List<string>();
+            ErrorList = new();
             _extraFields = new List<string>();
             InitView();
             if(ShowSearchForm && HasSearchViewdef){
@@ -786,7 +817,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
             catch (System.Exception ex)
             {
-                StackTrace.Add(ex.Message);
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.Message.Error",
+                    StackTrace = ex.StackTrace
+                });
             }
             if (ConstantFilters != null)
             {
@@ -839,7 +874,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             }
             catch (System.Exception ex)
             {
-                StackTrace.Add(ex.Message);
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.Message.Error",
+                    StackTrace = ex.StackTrace
+                });
             }
 
             return filters;
@@ -985,9 +1024,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 includeCount = true;
             }
         var dbData = await BusinessObj.GetDataAsync(args.Skip, args.Top, filters, args.OrderBy, includeCount, _extraFields);
-            if(dbData.Errors != null && dbData.Errors.Count > 0){
-                ErrorList.Add("Custom.Generic.Message.Error");
-                StackTrace.AddRange(dbData.Errors);
+            if(dbData.Errors != null && dbData.Errors.Count > 0)
+            {
+                foreach (var error in dbData.Errors)
+                {
+                    ErrorList.Add(new ModelMessagesDTO()
+                    {
+                        Message = error
+                    });
+                }
             }
             data = dbData.Data;
             count = dbData.TotalCount;
@@ -1069,11 +1114,17 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     SDKGlobalLoaderService.Hide();
                     if (result != null && result.Errors.Count == 0){
                         return true;
-                    }else{
-                        StackTrace.AddRange(result.Errors.Select(x => x.Message));
-                        ErrorList.Add("Custom.Generic.Message.Error");
+                    }else
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            ErrorList.Add(new ModelMessagesDTO()
+                            {
+                                Message = error.Message
+                            });
+                        }
                         ErroInAction = true;
-                        NotificationService.ShowError("Custom.Generic.Message.DeleteError");
+                        _ = NotificationService.ShowError("Custom.Generic.Message.DeleteError");
                         StateHasChanged();                        
                     }
                 }
@@ -1294,7 +1345,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                          }
                          catch (Exception ex)
                          {
-                             StackTrace.Add(ex.Message);
+                            ErrorList.Add(new ModelMessagesDTO()
+                            {
+                                Message = "Custom.Generic.Message.Error",
+                                StackTrace = ex.StackTrace
+                            });
                          }
                          
                      }
@@ -1320,10 +1375,15 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                     }
                 }
                 var dbData = await BusinessObj.GetDataAsync(skip, take, filters, "", includeCount, _extraFields);
-                if(dbData.Errors != null && dbData.Errors.Count > 0){
-                    ErrorList.Add("Custom.Generic.Message.Error");
-                    StackTrace.AddRange(dbData.Errors);
-                    ErrorList = dbData.Errors;
+                if(dbData.Errors != null && dbData.Errors.Count > 0)
+                {
+                    foreach (var error in dbData.Errors)
+                    {
+                        ErrorList.Add(new ModelMessagesDTO()
+                        {
+                            Message = error
+                        });
+                    }
                 }
                 count = dbData.TotalCount;
                 data = dbData.Data;
@@ -1375,7 +1435,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             catch (System.Exception ex)
             {
                 _ = InvokeAsync(() => StateHasChanged());
-                StackTrace.Add(ex.Message);
+                ErrorList.Add(new ModelMessagesDTO()
+                {
+                    Message = "Custom.Generic.Message.Error",
+                    StackTrace = ex.StackTrace
+                });
             }
         }
 
@@ -1456,9 +1520,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                     code += @$"
                                     try {{ ListViewFields[{i}].Hidden = ({(string)CustomAttr.Value}); }} catch (Exception ex) {{ throw;}}";
                                 }
-                                catch (Exception e)
+                                catch (Exception ex)
                                 {
-                                    StackTrace.Add(e.Message);
+                                    ErrorList.Add(new ModelMessagesDTO()
+                                    {
+                                        Message = "Custom.Generic.Message.Error",
+                                        StackTrace = ex.StackTrace
+                                    });
                                 }
                             }
                             if (CustomAttr.Key == "sdk-show")
@@ -1468,9 +1536,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                     code += @$"
                                     try {{ ListViewFields[{i}].Hidden = !({(string)CustomAttr.Value}); }} catch (Exception ex) {{ throw;}}";
                                 }
-                                catch (Exception e)
+                                catch (Exception ex)
                                 {
-                                    StackTrace.Add(e.Message);
+                                    ErrorList.Add(new ModelMessagesDTO()
+                                    {
+                                        Message = "Custom.Generic.Message.Error",
+                                        StackTrace = ex.StackTrace
+                                    });
                                 }
                             }
                         }
@@ -1531,7 +1603,11 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                                     }
                                     catch (System.Exception ex)
                                     {
-                                        StackTrace.Add(ex.Message);
+                                        ErrorList.Add(new ModelMessagesDTO()
+                                        {
+                                            Message = "Custom.Generic.Message.Error",
+                                            StackTrace = ex.StackTrace
+                                        });
                                     }
                                     if(field.Hidden){
                                         FieldsHiddenList.Add(field.Name.Replace("BaseObj.", "", StringComparison.InvariantCultureIgnoreCase));
