@@ -57,6 +57,7 @@ message ValidateAndSaveBusinessMultiObjRequest {
 message OperationError {
 	string message = 1;
 	string attribute = 2;
+  repeated string format = 3;
 }
 
 message ValidateAndSaveBusinessObjResponse {

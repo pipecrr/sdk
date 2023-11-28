@@ -1,3 +1,6 @@
+@using Siesa.SDK.Frontend.Components.Fields;
+@using Siesa.SDK.Components.Visualization;
+
 @if(_errorCount > 0 )
 {
     <div class=@(ClassError +" col-12 p-0")>
@@ -65,20 +68,9 @@
                         <table class="table table-striped sdk_table_v2">
                             <thead>
                                 <tr>
-                                    @if (_environment == Microsoft.Extensions.Hosting.Environments.Development)
-                                    {
-                                        <th class="col-6">
-                                            <ResourceViewer ResourceTag= "Custom.ErrorsWindow.GeneralError"/> 
-                                        </th>
-                                        <th class="col-6">
-                                            <ResourceViewer ResourceTag= "Custom.ErrorsWindow.StackTrace"/> 
-                                        </th>
-                                    }else
-                                    {
-                                        <th class="col-12">
-                                            <ResourceViewer ResourceTag= "Custom.ErrorsWindow.GeneralError"/>
-                                        </th>
-                                    }
+                                    <th class="col-12">
+                                        <ResourceViewer ResourceTag= "Custom.ErrorsWindow.GeneralError"/>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -102,18 +94,16 @@
                                         {
                                         <td>
                                             <ul class="ul_list_error">
-                                                <li><ResourceViewer ResourceTag= "@item.Message"/></li> 
+                                                <li>
+                                                    <ResourceViewer ResourceTag= "@item.Message"/>
+                                                    <SDKButton  RenderStyle="SDKButtonRenderStyle.None"
+                                                    Click="@(()=> ShowModalStackTrace(item.StackTrace))" CssClass="ml-2"
+                                                    >
+                                                        <SDKIcon Name="fa-info-circle" Style="color: #E00052;"/>
+                                                    </SDKButton>
+                                                </li> 
                                             </ul>
                                         </td>
-                                        }
-
-                                        @if (_environment == Microsoft.Extensions.Hosting.Environments.Development && !string.IsNullOrEmpty(item.StackTrace))
-                                        {
-                                            <td>
-                                                <ul class="ul_list_error">
-                                                    <li><p>@item.StackTrace</p></li> 
-                                                </ul>
-                                            </td>
                                         }
                                     } 
                                 </tr>
@@ -126,4 +116,13 @@
 
         <div class="sdk_error_log_back"></div>
     </div>
+}
+
+
+@code
+{
+    private void ShowModalStackTrace(string stackTrace)
+    {
+        _ = _sdkDialogService.ShowCustomDialog(ds => @<SDKTextField Value="@stackTrace" CssClass="modal_stacktrace"/>, standardWidth: SDKModalWidth.Medium, title: "Custom.ErrorsWindow.StackTrace", height: "600px");
+    }
 }

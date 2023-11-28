@@ -25,7 +25,7 @@ else if ((Panels == null || Panels.Count <= 0) && !IsDocument)
 }
 else if (ModelLoaded == true)
 {
-    if(!string.IsNullOrEmpty(ErrorMsg) || ErrorList.Count > 0 || StackTrace.Any()){
+    if(!string.IsNullOrEmpty(ErrorMsg) || ErrorList.Count > 0){
         <ErrorsWindow MessagesDTO="@ErrorList" />
     }
         @if(IsSubpanel && ShowTitle){

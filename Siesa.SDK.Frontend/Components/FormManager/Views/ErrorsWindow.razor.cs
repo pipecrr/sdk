@@ -9,12 +9,16 @@ using Siesa.SDK.Frontend.Components.FormManager.Model;
 using Siesa.SDK.Shared.DTOS;
 using Microsoft.Extensions.Hosting;
 using Siesa.Global.Enums;
+using Siesa.SDK.Frontend.Services;
+using Siesa.SDK.Frontend.Components.Fields;
+using Siesa.SDK.Components.Visualization;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Views
 {
     public partial class ErrorsWindow {
         [Inject] public IAuthenticationService AuthenticationService { get; set; }
         [Inject] public UtilsManager UtilsManager { get; set; }
+        [Inject] public SDKDialogService _sdkDialogService { get; set; }
         [Parameter] public EditContext EditFormContext { get; set; }
         [Parameter] public bool VerifyContext { get; set; }
         [Parameter] public List<ModelMessagesDTO> MessagesDTO { get; set; } = new List<ModelMessagesDTO>();
@@ -87,7 +91,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
             await base.OnParametersSetAsync().ConfigureAwait(true);
         }
 
-        public void showDedtail(){
+        public void showDedtail()
+        {
             if(_detailVisible)
             {
                 ClassError = "sdk_error_log_box_sup sdk_error_log_show";
@@ -98,5 +103,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                 _detailVisible = true;
             }
         }
+
+        
     }
 }

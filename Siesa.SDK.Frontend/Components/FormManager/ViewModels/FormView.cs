@@ -846,7 +846,8 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
         private async Task SaveBusiness()
         {   
             Saving = true;
-            if(CountUnicErrors>0)
+            var existeUniqueIndexValidation = NotificationService.Messages.Where(x => x.Summary == "Custom.Generic.UniqueIndexValidation").Any();
+            if(existeUniqueIndexValidation)
             {
                 GlobalLoaderService.Hide();
                 Saving = false;
@@ -862,7 +863,7 @@ namespace Siesa.SDK.Frontend.Components.FormManager.ViewModels
                         }
                     }
 
-                    ErrorList.Add(new ModelMessagesDTO()5
+                    ErrorList.Add(new ModelMessagesDTO()
                     {
                         MessageFormat = new Dictionary<string, List<string>>()
                         {

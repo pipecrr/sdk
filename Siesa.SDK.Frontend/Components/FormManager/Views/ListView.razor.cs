@@ -276,24 +276,27 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         HasSearchViewdef = !String.IsNullOrEmpty(searchMetadata);
                         ShowList = !HasSearchViewdef;
 
-                        var searchForm = JsonConvert.DeserializeObject<FormViewModel>(searchMetadata);
-                        if (searchForm != null)
-                        {
-                            foreach (var panel in searchForm.Panels)
+                        //if (!string.IsNullOrEmpty(searchMetadata))
+                        //{
+                            var searchForm = JsonConvert.DeserializeObject<FormViewModel>(searchMetadata);
+                            if (searchForm != null)
                             {
-                                foreach (var field in panel.Fields)
+                                foreach (var panel in searchForm.Panels)
                                 {
-                                    field.GetFieldObj(BusinessObj);
+                                    foreach (var field in panel.Fields)
+                                    {
+                                        field.GetFieldObj(BusinessObj);
+                                    }
                                 }
-                            }
 
-                            FieldsHidden = searchForm.Panels.SelectMany(x => x.Fields).Where(x => x.Hidden).ToList();
-                        }
-                        else
-                        {
-                            FieldsHidden = new List<FieldOptions>();
-                        }
-                        _isSearchOpen = true;
+                                FieldsHidden = searchForm.Panels.SelectMany(x => x.Fields).Where(x => x.Hidden).ToList();
+                            }
+                            else
+                            {
+                                FieldsHidden = new List<FieldOptions>();
+                            }
+                            _isSearchOpen = true;
+                        //}
                     }
                     catch (System.Exception ex)
                     {
@@ -1116,12 +1119,26 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Views
                         return true;
                     }else
                     {
+                        _ = NotificationService.ShowError("Custom.Generic.Message.Error");
                         foreach (var error in result.Errors)
                         {
-                            ErrorList.Add(new ModelMessagesDTO()
+                            if (error.Format != null && error.Format.Any())
                             {
-                                Message = error.Message
-                            });
+                               
+                                ErrorList.Add(new ModelMessagesDTO()
+                                {
+                                     MessageFormat = new Dictionary<string, List<string>>()
+                                    {
+                                        { error.Message, error.Format.ToList() }
+                                    },
+                                });
+                            }else
+                            {
+                                ErrorList.Add(new ModelMessagesDTO()
+                                {
+                                    Message = error.Message
+                                });
+                            }
                         }
                         ErroInAction = true;
                         _ = NotificationService.ShowError("Custom.Generic.Message.DeleteError");
