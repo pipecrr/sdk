@@ -32,14 +32,17 @@ else if (ModelLoaded == true)
             <h5 class="d-flex justify-content-center">@BusinessObj</h5>
             <hr />
         }
-    @if(ContainAttachments && !IsTableA){
-        <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" 
-                               Parent="@BusinessObj.BaseObj" ContainAttachments="@ContainAttachments" BLNameParentAttatchment="@BusinessName"
-                               BusinessObj="@BusinessObj" BusinessName="@BusinessName"/>
-    }else if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
+    @if(!HideRelationshipContainer)
     {
-        <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" 
-                               BusinessName="@BusinessName"/>
+        @if(ContainAttachments && !IsTableA){
+            <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" 
+                                Parent="@BusinessObj.BaseObj" ContainAttachments="@ContainAttachments" BLNameParentAttatchment="@BusinessName"
+                                BusinessObj="@BusinessObj" BusinessName="@BusinessName" IsDetail="true"/>
+        }else if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
+        {
+            <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" 
+                                BusinessName="@BusinessName" IsDetail="true"/>
+        }
     }
     <DxFormLayout CaptionPosition="CaptionPosition.Vertical">
         @if(Panels?.Count > 0){

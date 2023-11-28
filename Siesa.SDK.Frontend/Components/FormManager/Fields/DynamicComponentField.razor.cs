@@ -10,11 +10,14 @@ using Siesa.SDK.Frontend.Components.FormManager.Model.Fields;
 using Siesa.SDK.Entities;
 using Siesa.SDK.Frontend.Components.FormManager.ViewModels;
 using Siesa.SDK.Frontend.Components.Fields;
+using Siesa.SDK.Frontend.Components.FormManager.Model;
 
 namespace Siesa.SDK.Frontend.Components.FormManager.Fields
 {
     public partial class DynamicComponentField<TItem> : ComponentBase
     {   
+        [Inject] 
+        private UtilsManager UtilManager {get; set;}
         [Parameter] public TItem Context { get; set; }
         [Parameter] public string Property { get; set; }
         [Parameter] public bool IsEditable { get; set; }
@@ -22,6 +25,13 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
         [Parameter] public string RelatedBusiness { get; set; }
         private RenderFragment? _editableField;
         private SDKEntityField _entityReference;
+        private dynamic _valueColumn;
+
+        protected override async Task OnInitializedAsync()
+        {
+            await GetValueColumn().ConfigureAwait(true);
+            await base.OnInitializedAsync().ConfigureAwait(true);
+        }
         
         private void InitField()
         {
@@ -216,13 +226,26 @@ namespace Siesa.SDK.Frontend.Components.FormManager.Fields
             await base.OnParametersSetAsync().ConfigureAwait(true);
         }
 
-        private dynamic GetValueColumn()
+        private async Task GetValueColumn()
         {
-            object val = Context.GetType().GetProperty(Property)?.GetValue(Context);
-            if(val == null){
-                return "";
+            var property = Context.GetType().GetProperty(Property);
+            if(property != null)
+            {
+                object val = property.GetValue(Context);
+                if(property.PropertyType.IsEnum)
+                {
+                    string enumTag = $"Enum.{property.PropertyType.Name}.{val}";
+                    val = await UtilManager.GetResource(enumTag).ConfigureAwait(true);
+                }
+                if(val == null)
+                {
+                    _valueColumn = "";
+                }
+                else
+                {
+                    _valueColumn = val;
+                }
             }
-            return val;
         }
     }
 }

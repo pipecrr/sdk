@@ -39,7 +39,7 @@ else if ((Panels == null || Panels.Count <= 0) && !IsDocument)
     @if(ContainAttachments && !IsTableA){
         <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" 
             Parent="@BusinessObj.BaseObj" ContainAttachments="@ContainAttachments" BLNameParentAttatchment="@BusinessName"
-            BusinessObj="@BusinessObj" isCreateView="true" ShowAditionalFields="@ShowAditionalFields"/>
+            BusinessObj="@BusinessObj" IsCreateView="true" ShowAditionalFields="@ShowAditionalFields"/>
     }else if(FormViewModel.Relationships != null && FormViewModel.Relationships.Count > 0)
     {
         <RelationshipContainer Relationships="@FormViewModel.Relationships.Where(x=>x.Enabled).ToList()" Parent="@BusinessObj.BaseObj" isCreateView="true" ShowAditionalFields="@ShowAditionalFields"/>
@@ -150,7 +150,7 @@ else if ((Panels == null || Panels.Count <= 0) && !IsDocument)
     </EditForm>
     </CascadingValue>
     @if(IsSubpanel && ShowButtons){
-        <div clidColumnass="buttons-container pt-3">
+        <div class="buttons-container pt-3">
             @foreach (var btn in FormViewModel.Buttons)
             {
                 <SDKButton RenderStyle="@btn.RenderStyle"  Click="@(()=> { OnClickCustomButton(@btn); })" ResourceTag="@btn.ResourceTag"  />

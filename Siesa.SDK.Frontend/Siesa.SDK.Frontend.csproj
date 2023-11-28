@@ -14,7 +14,7 @@
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   		<DisableGclm>true</DisableGclm>
 		<VersionSuffix>dev</VersionSuffix>
-		<Version>1.0.0</Version>
+		<Version>1.0.0-dev</Version>
 		<NoWarn>8632,8669,1591</NoWarn>
 	</PropertyGroup>
 	<PropertyGroup>
