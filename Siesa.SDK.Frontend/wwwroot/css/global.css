@@ -178,6 +178,67 @@
 
     --color_switch:#d9d9d9;
 
+    /*VARIABLES PORTAL AUTOGESTIÓN*/
+
+    /*COLOR*/
+
+    --pa_color_text:#555555;
+    --pa_color_text_alt:#FFFFFF;
+    --pa_color_text_secondary:#9D9D9D;
+    --pa_color_text_tertiary:#7B7B7B;
+    --pa_color_calendar_task:#FF4343;
+    --pa_color_calendar_okr:#FACA2B;
+    --pa_color_calendar_okr_text:#8B6B00;
+    --pa_color_calendar_goal:#1ABEA4;
+    --pa_color_icon:#555555;
+    --pa_color_icon_disabled:#C4C4C4;
+    --pa_color_calendar_preview_hour:#BDBDBD;
+    --pa_color_vacant_salary:#008D00;
+    --pa_color_border:#D2D2D2;
+    --pa_color_body:#F5F5F5;
+    --pa_color_bg:#FFFFFF;
+    --pa_color_bg_2:#FAFAFA;
+    --pa_color_selected:#D9D9D9;
+    --pa_color_hover:#E9E9E9;
+    --pa_color_module_shadow:0px 1px 10px 4px rgba(217,217,217,1);
+
+
+    /*FONT SIZES*/
+
+    --pa_size_hello:1.438rem /*23px*/;
+    --pa_size_name:1.625rem /*26px*/;
+    --pa_size_module_title:1.125rem /*18px*/;
+    --pa_size_text_xxs:0.438rem /*7px*/;
+    --pa_size_text_xs:0.563rem /*9px*/;
+    --pa_size_text_s:0.625rem /*10px*/;
+    --pa_size_text_s_2:0.688rem /*11px*/;
+    --pa_size_text_md:0.75rem /*12px*/;
+    --pa_size_text_md:0.813rem /*13px*/;
+    --pa_size_text_lg:0.875rem /*14px*/;
+    --pa_size_text_xl:1rem /*16px*/;
+    --pa_size_text_xxl:1.125 /*18px*/;
+    --pa_size_task_title:1.75rem /*28px*/;
+    --pa_size_vacant_title:1.5rem /*24px*/;
+    --pa_size_no_detail:2.375rem /*38px*/;
+    --pa_size_no_detail_info:1.313rem /*21px*/;
+
+
+    /*BORDER RADIUS*/
+
+    --pa_border_radius_body:0.625rem /*10px*/;
+    --pa_border_radius_module:0.5rem /*8px*/;
+    --pa_border_radius_action_button:0.5rem /*8px*/;
+    --pa_border_radius_profile_pic:0.5rem /*8px*/;
+    --pa_border_radius_vacant_item:0.375rem /*6px*/;
+    --pa_border_radius_team_item:0.25rem /*4px*/;
+    --pa_border_radius_post_flair:0.125rem /*2px*/;
+    --pa_border_radius_post:0.625rem /*10px*/;
+    --pa_border_radius_post_photo:0.5rem /*8px*/;
+    --pa_border_radius_calendar_border:0.25rem /*4px*/;
+    --pa_border_radius_calendar_event_card:0.25rem /*4px*/;
+    --pa_border_radius_calendar_button:0.25rem /*4px*/;
+    --pa_border_radius_calendar_day:0.125rem /*2px*/;
+
 
 }
 
@@ -2650,6 +2711,8 @@ opacity:40%
   background-color: var(--color_input_back_disabled) !important;
   border-color: var(--color_form_border) !important; 
 }
+
+
 
 
 
